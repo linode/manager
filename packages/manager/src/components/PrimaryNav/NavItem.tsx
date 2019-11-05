@@ -19,6 +19,7 @@ export interface PrimaryLink {
   QAKey: string;
   display: string;
   logo?: React.ComponentType<any>;
+  icon?: JSX.Element;
   isDisabled?: () => string | undefined;
 }
 
@@ -30,6 +31,7 @@ const NavItem: React.SFC<CombinedProps> = props => {
     onClick,
     QAKey,
     display,
+    icon,
     isDisabled,
     linkClasses,
     listItemClasses,
@@ -54,6 +56,7 @@ const NavItem: React.SFC<CombinedProps> = props => {
           data-qa-nav-item={QAKey}
           className={linkClasses(href)}
         >
+          {icon && <div className="icon">{icon}</div>}
           <ListItemText
             primary={display}
             disableTypography={true}

@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { compose } from 'recompose';
 import NavItem, { PrimaryLink } from './NavItem';
+
+import Help from 'src/assets/icons/help.svg';
 // import { sendAdaEvent } from 'src/utilities/ga';
 
 interface Props {
@@ -44,7 +46,12 @@ const AdditionalMenuItems: React.FC<CombinedProps> = props => {
   // };
 
   const links: PrimaryLink[] = [
-    { display: 'Get Help', href: '/support', QAKey: 'help' }
+    {
+      display: 'Get Help',
+      href: '/support',
+      QAKey: 'help',
+      icon: <Help className="small wBorder" />
+    }
     // {
     //   display: 'Support Bot',
     //   key: 'chat',

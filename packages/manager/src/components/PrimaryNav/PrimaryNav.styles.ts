@@ -67,16 +67,40 @@ const styles = (theme: Theme) =>
       }
     },
     listItem: {
+      display: 'flex',
+      alignItems: 'center',
       position: 'relative',
       cursor: 'pointer',
       transition: theme.transitions.create(['background-color']),
-      padding: `${theme.spacing(2)}px ${theme.spacing(4) - 2}px ${theme.spacing(
-        2
-      ) - 1}px ${theme.spacing(4) + 1}px`,
+      padding: `
+        ${theme.spacing(1.5)}px
+        ${theme.spacing(4) - 2}px
+        ${theme.spacing(1.5) - 1}px
+        ${theme.spacing(4) + 1}px
+      `,
       '&:hover': {
         backgroundColor: theme.bg.primaryNavActiveBG,
         '& $linkItem': {
           color: 'white'
+        }
+      },
+      '& .icon': {
+        marginRight: theme.spacing(2),
+        color: theme.color.primaryNavText,
+        '& svg': {
+          width: 26,
+          height: 26,
+          transform: 'scale(1.75)',
+          fill: theme.color.primaryNavText,
+          '&.small': {
+            transform: 'scale(1)'
+          },
+          '&:not(.wBorder) circle': {
+            display: 'none'
+          },
+          '& *': {
+            stroke: theme.color.primaryNavText
+          }
         }
       }
     },

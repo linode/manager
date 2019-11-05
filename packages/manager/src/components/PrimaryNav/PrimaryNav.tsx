@@ -23,13 +23,25 @@ import {
   isKubernetesEnabled,
   isObjectStorageEnabled
 } from 'src/utilities/accountCapabilities';
+import { sendOneClickNavigationEvent } from 'src/utilities/ga';
 import AdditionalMenuItems from './AdditionalMenuItems';
 import styled, { StyleProps } from './PrimaryNav.styles';
 import SpacingToggle from './SpacingToggle';
 import ThemeToggle from './ThemeToggle';
 import { linkIsActive } from './utils';
 
-import { sendOneClickNavigationEvent } from 'src/utilities/ga';
+import Dashboard from 'src/assets/icons/dashboard.svg';
+import Storage from 'src/assets/icons/entityIcons/bucket.svg';
+import Domain from 'src/assets/icons/entityIcons/domain.svg';
+import Image from 'src/assets/icons/entityIcons/linode.svg';
+import Linode from 'src/assets/icons/entityIcons/linode.svg';
+import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
+import StackScript from 'src/assets/icons/entityIcons/stackscript.svg';
+import Volume from 'src/assets/icons/entityIcons/volume.svg';
+import Firewall from 'src/assets/icons/firewall.svg';
+import Longview from 'src/assets/icons/longview.svg';
+import Managed from 'src/assets/icons/managednav.svg';
+import Account from 'src/assets/icons/user.svg';
 
 type Entity =
   | 'Linodes'
@@ -52,6 +64,7 @@ interface PrimaryLink {
   href: string;
   key: string;
   attr?: { [key: string]: any };
+  icon?: JSX.Element;
   onClick?: (e: React.ChangeEvent<any>) => void;
 }
 
@@ -136,13 +149,19 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
         link: {
           display: 'Object Storage',
           href: '/object-storage/buckets',
-          key: 'object-storage'
+          key: 'object-storage',
+          icon: <Storage />
         }
       },
       {
         conditionToAdd: () => isManagedAccount,
         insertAfter: 'Longview',
-        link: { display: 'Managed', href: '/managed', key: 'managed' }
+        link: {
+          display: 'Managed',
+          href: '/managed',
+          key: 'managed',
+          icon: <Managed />
+        }
       },
       {
         conditionToAdd: () => isKubernetesEnabled(accountCapabilities),
@@ -169,30 +188,71 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
       {
         conditionToAdd: () => hasAccountAccess,
         insertAfter: 'Images',
-        link: { display: 'Account', href: '/account/billing', key: 'account' }
+        link: {
+          display: 'Account',
+          href: '/account/billing',
+          key: 'account',
+          icon: <Account className="small" />
+        }
       },
       {
         conditionToAdd: () => !!flags.firewalls,
         insertAfter: 'Domains',
-        link: { display: 'Firewalls', href: '/firewalls', key: 'firewalls' }
+        link: {
+          display: 'Firewalls',
+          href: '/firewalls',
+          key: 'firewalls',
+          icon: <Firewall />
+        }
       }
     ];
   };
 
   createMenuItems = () => {
     const primaryLinks: PrimaryLink[] = [
-      { display: 'Dashboard', href: '/dashboard', key: 'dashboard' },
-      { display: 'Linodes', href: '/linodes', key: 'linodes' },
-      { display: 'Volumes', href: '/volumes', key: 'volumes' },
+      {
+        display: 'Dashboard',
+        href: '/dashboard',
+        key: 'dashboard',
+        icon: <Dashboard className="small" />
+      },
+      {
+        display: 'Linodes',
+        href: '/linodes',
+        key: 'linodes',
+        icon: <Linode />
+      },
+      {
+        display: 'Volumes',
+        href: '/volumes',
+        key: 'volumes',
+        icon: <Volume />
+      },
       {
         display: 'NodeBalancers',
         href: '/nodebalancers',
-        key: 'nodebalancers'
+        key: 'nodebalancers',
+        icon: <NodeBalancer />
       },
-      { display: 'Domains', href: '/domains', key: 'domains' },
-      { display: 'Longview', href: '/longview', key: 'longview' },
-      { display: 'StackScripts', href: '/stackscripts', key: 'stackscripts' },
-      { display: 'Images', href: '/images', key: 'images' }
+      {
+        display: 'Domains',
+        href: '/domains',
+        key: 'domains',
+        icon: <Domain style={{ transform: 'scale(1.5)' }} />
+      },
+      {
+        display: 'Longview',
+        href: '/longview',
+        key: 'longview',
+        icon: <Longview className="small" />
+      },
+      {
+        display: 'StackScripts',
+        href: '/stackscripts',
+        key: 'stackscripts',
+        icon: <StackScript />
+      },
+      { display: 'Images', href: '/images', key: 'images', icon: <Image /> }
     ];
 
     const potentialMenuItemsToAdd = this.primaryNavManipulator();
@@ -266,6 +326,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
             [classes.active]: linkIsActive(primaryLink.href)
           })}
         >
+          {primaryLink.icon && <div className="icon">{primaryLink.icon}</div>}
           <ListItemText
             primary={primaryLink.display}
             disableTypography={true}
