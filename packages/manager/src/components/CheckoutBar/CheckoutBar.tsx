@@ -155,7 +155,7 @@ class CheckoutBar extends React.Component<CombinedProps> {
           <Button
             buttonType="primary"
             className={classes.createButton}
-            disabled={disabled}
+            disabled={isMakingRequest || disabled}
             onClick={onDeploy}
             data-qa-deploy-linode
             loading={isMakingRequest}
