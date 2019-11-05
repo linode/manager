@@ -72,6 +72,7 @@ interface Props {
   closeMenu: () => void;
   toggleTheme: () => void;
   toggleSpacing: () => void;
+  isCollapsed: boolean;
 }
 
 interface State {
@@ -306,7 +307,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
   };
 
   renderPrimaryLink = (primaryLink: PrimaryLink, isLast: boolean) => {
-    const { classes } = this.props;
+    const { classes, isCollapsed } = this.props;
 
     return (
       <React.Fragment key={primaryLink.key}>
@@ -326,12 +327,15 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
             [classes.active]: linkIsActive(primaryLink.href)
           })}
         >
-          {primaryLink.icon && <div className="icon">{primaryLink.icon}</div>}
+          {primaryLink.icon && isCollapsed && (
+            <div className="icon">{primaryLink.icon}</div>
+          )}
           <ListItemText
             primary={primaryLink.display}
             disableTypography={true}
             className={classNames({
-              [classes.linkItem]: true
+              [classes.linkItem]: true,
+              hiddenWhenCollapsed: isCollapsed
             })}
           />
         </Link>
@@ -341,7 +345,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, isCollapsed } = this.props;
     const { expandedMenus, anchorEl } = this.state;
 
     return (
@@ -395,6 +399,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
               })}
               closeMenu={this.props.closeMenu}
               dividerClasses={classes.divider}
+              isCollapsed={isCollapsed}
             />
 
             <Hidden mdUp>

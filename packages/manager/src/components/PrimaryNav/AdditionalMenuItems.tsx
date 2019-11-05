@@ -10,11 +10,13 @@ interface Props {
   linkClasses: (href?: string) => string;
   listItemClasses: string;
   dividerClasses: string;
+  isCollapsed?: boolean;
 }
 
 type CombinedProps = Props;
 
 const AdditionalMenuItems: React.FC<CombinedProps> = props => {
+  const { isCollapsed } = props;
   // const [adaError, setAdaError] = React.useState<string>('');
 
   // React.useEffect(() => {
@@ -66,7 +68,14 @@ const AdditionalMenuItems: React.FC<CombinedProps> = props => {
   return (
     <React.Fragment>
       {links.map(eachLink => {
-        return <NavItem {...eachLink} {...props} key={eachLink.QAKey} />;
+        return (
+          <NavItem
+            {...eachLink}
+            {...props}
+            key={eachLink.QAKey}
+            isCollapsed={isCollapsed}
+          />
+        );
       })}
     </React.Fragment>
   );

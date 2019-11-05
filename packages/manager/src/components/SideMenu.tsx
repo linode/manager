@@ -36,10 +36,11 @@ const styles = (theme: Theme) =>
       transition: theme.transitions.create('margin-left')
     },
     collapsedDesktopMenu: {
-      marginLeft: -(theme.spacing(14) + 103),
-      [theme.breakpoints.up('xl')]: {
-        marginLeft: -(theme.spacing(22) + 99)
-      }
+      // marginLeft: -(theme.spacing(14) + 103),
+      // [theme.breakpoints.up('xl')]: {
+      //   marginLeft: -(theme.spacing(22) + 99)
+      // }
+      width: 90
     }
   });
 
@@ -80,6 +81,7 @@ class SideMenu extends React.Component<CombinedProps> {
               closeMenu={closeMenu}
               toggleTheme={toggleTheme}
               toggleSpacing={toggleSpacing}
+              isCollapsed={false}
             />
           </Drawer>
         </Hidden>
@@ -88,18 +90,19 @@ class SideMenu extends React.Component<CombinedProps> {
             variant="permanent"
             open
             classes={{
-              paper: classes.menuPaper,
+              paper: `${classes.menuPaper} ${
+                !desktopOpen ? classes.collapsedDesktopMenu : ''
+              }`,
               docked: classes.menuDocked
             }}
-            className={`
-              ${classes.desktopMenu}
-              ${!desktopOpen ? classes.collapsedDesktopMenu : ''}
-            `}
+            className={classes.desktopMenu}
           >
             <PrimaryNav
               closeMenu={closeMenu}
               toggleTheme={toggleTheme}
               toggleSpacing={toggleSpacing}
+              isCollapsed={!desktopOpen}
+              // isCollapsed={true}
             />
           </Drawer>
         </Hidden>

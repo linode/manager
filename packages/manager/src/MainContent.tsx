@@ -72,7 +72,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   fullWidthContent: {
-    marginLeft: 0
+    marginLeft: 0,
+    [theme.breakpoints.up('md')]: {
+      marginLeft: 90
+    }
   },
   hidden: {
     display: 'none',
