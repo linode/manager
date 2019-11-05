@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import {
+  matchPath,
+  Redirect,
+  Route,
+  RouteComponentProps,
+  Switch
+} from 'react-router-dom';
 import { compose } from 'recompose';
 
 import Breadcrumb from 'src/components/Breadcrumb';
@@ -7,10 +13,9 @@ import AppBar from 'src/components/core/AppBar';
 import Box from 'src/components/core/Box';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
-
 import DocumentationButton from 'src/components/DocumentationButton';
+import TabLink from 'src/components/TabLink';
 
-import { safeGetTabRender } from 'src/utilities/safeGetTabRender';
 import Overview from './LongviewDetailOverview';
 
 import withLongviewClients, {
@@ -49,64 +54,59 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
     {
       title: 'Overview',
       display: true,
-      render: () => {
-        return <Overview />;
-      }
+      routeName: `${props.match.url}`
     },
     {
       title: 'Processes',
       display: true,
-      render: () => {
-        // return <Overview />;
-      }
+      routeName: `${props.match.url}/processes`
     },
     {
       title: 'Network',
       display: true,
-      render: () => {
-        // return <Overview />;
-      }
+      routeName: `${props.match.url}/network`
     },
     {
       title: 'Disks',
       display: true,
-      render: () => {
-        // return <Overview />;
-      }
+      routeName: `${props.match.url}/disks`
     },
     {
       title: 'Apache',
-      display: client.apps.apache,
-      render: () => {
-        // return <Overview />;
-      }
+      display: (client && client.apps.apache) || false,
+      routeName: `${props.match.url}/apache`
     },
     {
       title: 'Nginx',
-      display: client.apps.nginx,
-      render: () => {
-        // return <Overview />;
-      }
+      display: (client && client.apps.nginx) || false,
+      routeName: `${props.match.url}/nginx`
     },
     {
       title: 'MySQL',
-      display: client.apps.mysql,
-      render: () => {
-        // return <Overview />;
-      }
+      display: (client && client.apps.mysql) || false,
+      routeName: `${props.match.url}/mysql`
     },
     {
       title: 'Installation',
       display: true,
-      render: () => {
-        // return <Overview />;
-      }
+      routeName: `${props.match.url}/installation`
     }
   ];
 
   const tabs = tabOptions.filter(tab => tab.display === true);
 
-  const tabRender = safeGetTabRender(tabs, 0);
+  const handleTabChange = (
+    _: React.ChangeEvent<HTMLDivElement>,
+    value: number
+  ) => {
+    const routeName = tabs[value].routeName;
+    props.history.push(`${routeName}`);
+  };
+
+  const url = props.match.url;
+  const matches = (p: string) => {
+    return Boolean(matchPath(p, { path: props.location.pathname }));
+  };
 
   return (
     <React.Fragment>
@@ -114,26 +114,87 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
         <Breadcrumb
           pathname={props.location.pathname}
           removeCrumbX={2}
-          labelTitle={client.label}
+          labelTitle={(client && client.label) || 'Client Label'}
         />
         <DocumentationButton href={'https://google.com'} />
       </Box>
       <AppBar position="static" color="default">
-        {/* TODO make this functional */}
         <Tabs
-          value={0}
-          // onChange={handleTabChange}
+          value={tabs.findIndex(tab => matches(tab.routeName))}
+          onChange={handleTabChange}
           indicatorColor="primary"
           textColor="primary"
           variant="scrollable"
           scrollButtons="on"
         >
           {tabs.map(tab => (
-            <Tab key={tab.title} label={tab.title} data-qa-tab={tab.title} />
+            <Tab
+              key={tab.title}
+              data-qa-tab={tab.title}
+              component={React.forwardRef((forwardedProps, ref) => (
+                <TabLink
+                  to={tab.routeName}
+                  title={tab.title}
+                  {...forwardedProps}
+                  ref={ref}
+                />
+              ))}
+            />
           ))}
         </Tabs>
       </AppBar>
-      {tabRender()}
+      <Switch>
+        <Route exact strict path={`${url}`} render={() => <Overview />} />
+        <Route
+          exact
+          strict
+          path={`${url}/processes`}
+          render={() => <h2>Processes</h2>}
+        />
+        <Route
+          exact
+          strict
+          path={`${url}/network`}
+          render={() => <h2>Network</h2>}
+        />
+        <Route
+          exact
+          strict
+          path={`${url}/disks`}
+          render={() => <h2>Disks</h2>}
+        />
+        {client && client.apps.apache && (
+          <Route
+            exact
+            strict
+            path={`${url}/apache`}
+            render={() => <h2>Apache</h2>}
+          />
+        )}
+        {client && client.apps.nginx && (
+          <Route
+            exact
+            strict
+            path={`${url}/nginx`}
+            render={() => <h2>Nginx</h2>}
+          />
+        )}
+        {client && client.apps.mysql && (
+          <Route
+            exact
+            strict
+            path={`${url}/mysql`}
+            render={() => <h2>MySQL</h2>}
+          />
+        )}
+        <Route
+          exact
+          strict
+          path={`${url}/installation`}
+          render={() => <h2>Installation</h2>}
+        />
+        <Redirect to={`${url}`} />
+      </Switch>
     </React.Fragment>
   );
 };
