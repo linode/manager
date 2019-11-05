@@ -282,13 +282,13 @@ export const createVolumes = (volumeObjArray, waitForToast) => {
 
 export const switchTab = () => {
   browser.waitUntil(() => {
-    return browser.getTabIds().length === 2;
+    return browser.getWindowHandles().length === 2;
   }, constants.wait.normal);
   browser.pause(2000);
-  const tabs = browser.getTabIds();
+  const tabs = browser.getWindowHandles();
   const manager = tabs[0];
   const newTab = tabs[1];
-  browser.switchTab(newTab);
+  browser.switchToFrame(newTab);
 };
 
 export const getDistributionLabel = distributionTags => {
