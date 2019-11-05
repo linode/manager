@@ -3,11 +3,10 @@ import Request, { setData, setMethod, setURL } from '../request';
 import { ResourcePage as Page } from '../types';
 import { nodeBalancerConfigNodeSchema } from './nodebalancers.schema';
 import {
-  CreateNodeBalancerConfigNode,
+  CreateNodeBalancerConfigNodePayload,
   NodeBalancerConfigNode,
   UpdateNodeBalancerConfigNode
 } from './types';
-import { mergeAddressAndPort } from './utils';
 
 /**
  * getNodeBalancerConfigNodes
@@ -55,20 +54,6 @@ export const getNodeBalancerConfigNode = (
  * Creates a NodeBalancer Node, a backend that can accept traffic for
  * this NodeBalancer Config. Nodes are routed requests on the configured port based on their status.
  *
- * Note: The Linode API does not accept separate port and IP address parameters. This method will join
- * the IP and port after validation:
- *
- * data: {
- *  address: '0.0.0.0',
- *  port: 80
- * }
- *
- * will become:
- *
- * data: {
- *  address: '0.0.0.0:80'
- * }
- *
  * @param nodeBalancerId { number } The ID of the NodeBalancer the config belongs to.
  * @param configId { number } The configuration profile to add a node to.
  * @param data
@@ -76,34 +61,18 @@ export const getNodeBalancerConfigNode = (
 export const createNodeBalancerConfigNode = (
   nodeBalancerId: number,
   configId: number,
-  data: CreateNodeBalancerConfigNode
+  data: CreateNodeBalancerConfigNodePayload
 ) =>
   Request<NodeBalancerConfigNode>(
     setMethod('POST'),
     setURL(
       `${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes`
     ),
-    setData(data, nodeBalancerConfigNodeSchema, mergeAddressAndPort)
+    setData(data, nodeBalancerConfigNodeSchema)
   ).then(response => response.data);
 
 /**
  * createNodeBalancerConfigNode
- *
- * Updates a backend node for the specified NodeBalancer configuration profile.
- *
- * Note: The Linode API does not accept separate port and IP address parameters. This method will join
- * the IP and port after validation:
- *
- * data: {
- *  address: '0.0.0.0',
- *  port: 80
- * }
- *
- * will become:
- *
- * data: {
- *  address: '0.0.0.0:80'
- * }
  *
  * @param nodeBalancerId { number } The ID of the NodeBalancer the config belongs to.
  * @param configId { number } The configuration profile to add a node to.
@@ -120,7 +89,7 @@ export const updateNodeBalancerConfigNode = (
     setURL(
       `${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes/${nodeId}`
     ),
-    setData(data, nodeBalancerConfigNodeSchema, mergeAddressAndPort)
+    setData(data, nodeBalancerConfigNodeSchema)
   ).then(response => response.data);
 
 /**

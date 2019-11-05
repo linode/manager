@@ -2,4 +2,4 @@ import { getNodeBalancers as _getNodeBalancers } from 'linode-js-sdk/lib/nodebal
 
 export const getNodeBalancers = _getNodeBalancers;
 
-export { ExtendedNodeBalancer } from './types';
+export { ExtendedNodeBalancer, NodeBalancerWithConfigs } from './types';
