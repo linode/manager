@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 
+import Box from 'src/components/core/Box';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 // import Select from 'src/components/EnhancedSelect/Select';
@@ -11,6 +13,19 @@ import withLongviewClients, {
   DispatchProps,
   Props as LVProps
 } from 'src/containers/longview.container';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  paperSection: {
+    padding: theme.spacing(3) + 1,
+    marginBottom: theme.spacing(1) + 3
+  },
+  detailsLink: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    position: 'relative',
+    top: 3
+  }
+}));
 
 interface Props {
   clients: LVProps['longviewClientsData'];
@@ -22,11 +37,34 @@ type CombinedProps = RouteComponentProps<{ id: string }> &
   DispatchProps;
 
 const LongviewDetailOverview: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+  const url = props.match.url;
   return (
     <React.Fragment>
       <Grid container>
         <Grid item xs={12}>
-          <Paper>Header section here</Paper>
+          <Paper className={classes.paperSection}>
+            <Grid container justify="space-between" item xs={12} spacing={0}>
+              <Grid item xs={12} md={3}>
+                Icons
+              </Grid>
+              <Grid item xs={12} md={6}>
+                Gauges
+              </Grid>
+              <Grid item xs={12} md={3}>
+                <Box
+                  display="flex"
+                  flexDirection="row"
+                  justifyContent="space-between"
+                >
+                  <Typography variant="h2">Top Processes</Typography>
+                  <Link to={`${url}/processes`} className={classes.detailsLink}>
+                    View Details
+                  </Link>
+                </Box>
+              </Grid>
+            </Grid>
+          </Paper>
         </Grid>
         <Grid
           container
@@ -57,7 +95,7 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <Paper>Graphs here</Paper>
+          <Paper className={classes.paperSection}>Graphs here</Paper>
         </Grid>
         <Grid container item xs={12}>
           <Grid item xs={12} md={8}>
