@@ -20,19 +20,29 @@ export type NodeBalancerConfigNodeMode =
 
 export type ConfigNodeStatus = 'unknown' | 'UP' | 'DOWN';
 
+export type Protocol = 'http' | 'https' | 'tcp';
+
+export type Algorithm = 'roundrobin' | 'leastconn' | 'source';
+
+export type Stickiness = 'none' | 'table' | 'http_cookie';
+
+export type Check = 'none' | 'connection' | 'http' | 'http_body';
+
+export type CipherSuite = 'recommended' | 'legacy';
+
 export interface CreateNodeBalancerConfigPayload {
   port?: number;
-  protocol?: 'http' | 'https' | 'tcp';
-  algorithm?: 'roundrobin' | 'leastconn' | 'source';
-  stickiness?: 'none' | 'table' | 'http_cookie';
-  check?: 'none' | 'connection' | 'http' | 'http_body';
+  protocol?: Protocol;
+  algorithm?: Algorithm;
+  stickiness?: Stickiness;
+  check?: Check;
   check_interval?: number;
   check_timeout?: number;
   check_attempts?: number;
   check_path?: string;
   check_body?: string;
   check_passive?: boolean;
-  cipher_suite?: 'recommended' | 'legacy';
+  cipher_suite?: CipherSuite;
   ssl_cert?: string;
   ssl_key?: string;
   nodes?: CreateNodeBalancerConfigNodePayload[];
@@ -122,17 +132,17 @@ export interface NodeBalancerConfig {
 
 export interface NEWCreateNodeBalancerConfigPayload {
   port: number;
-  protocol: 'http' | 'https' | 'tcp';
-  algorithm: 'roundrobin' | 'leastconn' | 'source';
-  stickiness?: 'none' | 'table' | 'http_cookie';
-  check: 'none' | 'connection' | 'http' | 'http_body';
+  protocol: Protocol;
+  algorithm: Algorithm;
+  stickiness?: Stickiness;
+  check: Check;
   check_interval: number;
   check_timeout: number;
   check_attempts: number;
   check_path: string;
   check_body: string;
   check_passive: boolean;
-  cipher_suite: 'recommended' | 'legacy';
+  cipher_suite: CipherSuite;
   ssl_cert?: string;
   ssl_key?: string;
 }

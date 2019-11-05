@@ -1,4 +1,3 @@
-import { NEWCreateNodeBalancerConfigPayload } from 'linode-js-sdk/lib/nodebalancers';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
@@ -8,6 +7,8 @@ import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ExpansionPanel from 'src/components/ExpansionPanel';
+
+import CreateNewConfigForm from './Forms/CreateConfigForm';
 
 import withNodeBalancerConfigs, {
   Props as ConfigProps,
@@ -37,9 +38,14 @@ type CombinedProps = Props &
 const EditNodeBalancerConfigs: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const [newConfigs, setNewConfigs] = React.useState<
-    NEWCreateNodeBalancerConfigPayload[]
-  >([]);
+  /**
+   * This is just a boolean value because we only want the user to have
+   * the ability to create one config at a time.
+   *
+   * So once they hit the "create new config" button, we'll add a blank form
+   * but not allow them to keep adding more blank forms.
+   */
+  const [newConfigQueued, setNewConfigQueued] = React.useState<boolean>(true);
 
   React.useEffect(() => {
     /**
@@ -52,6 +58,13 @@ const EditNodeBalancerConfigs: React.FC<CombinedProps> = props => {
       props.getAllNodeBalancerConfigNodes(+eachKey);
     });
   }, []);
+
+  const onConfigCreate = () => {
+    props
+      .getAllNodeBalancerConfigs(props.nodeBalancerID)
+      .catch(e => e /** do nothing */);
+    setNewConfigQueued(false);
+  };
 
   const {
     nodeBalancerLabel,
@@ -74,18 +87,22 @@ const EditNodeBalancerConfigs: React.FC<CombinedProps> = props => {
         );
       })}
       {/** create an expansion panel for each new config */
-      newConfigs.map((eachConfig, idx) => {
-        return <ExpansionPanel key={`config-${idx}`} heading="hello world" />;
-      })}
-      <Button
-        buttonType="secondary"
-        onClick={() =>
-          setNewConfigs([...newConfigs, generateDefaultNodeBalancerConfig()])
-        }
-        data-qa-add-config
-      >
-        {hasNoConfigs ? 'Add a Configuration' : 'Add another Configuration'}
-      </Button>
+      newConfigQueued && (
+        <CreateNewConfigForm
+          userCannotCreateNodeBalancerConfig={false}
+          onSuccessfulConfigCreation={onConfigCreate}
+        />
+      )}
+      {/** only allow us to create one new config at a time */
+      !newConfigQueued && (
+        <Button
+          buttonType="secondary"
+          onClick={() => setNewConfigQueued(true)}
+          data-qa-add-config
+        >
+          {hasNoConfigs ? 'Add a Configuration' : 'Add another Configuration'}
+        </Button>
+      )}
     </React.Fragment>
   );
 };
@@ -121,23 +138,3 @@ export default compose<CombinedProps, Props>(
     })
   )
 )(EditNodeBalancerConfigs);
-
-/**
- * generates a new nodebalancer config with defaults
- */
-const generateDefaultNodeBalancerConfig = (): NEWCreateNodeBalancerConfigPayload => ({
-  port: 0,
-  protocol: 'http',
-  algorithm: 'roundrobin',
-  stickiness: 'table',
-  check_attempts: 2,
-  check_interval: 5,
-  check_passive: true,
-  check_timeout: 3,
-  check: 'none',
-  ssl_cert: '',
-  ssl_key: '',
-  check_body: '',
-  check_path: '',
-  cipher_suite: 'recommended'
-});

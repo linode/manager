@@ -23,11 +23,11 @@ const styles = (theme: Theme) =>
     disabled: {}
   });
 
-interface Props {
+export interface Props extends SwitchProps {
   tooltipText?: string;
 }
 
-type CombinedProps = Props & SwitchProps & WithStyles<CSSClasses>;
+type CombinedProps = Props & WithStyles<CSSClasses>;
 
 const LinodeSwitchControl: React.StatelessComponent<CombinedProps> = props => {
   const { classes, tooltipText, ...rest } = props;
