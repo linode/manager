@@ -57,7 +57,7 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
     {
       title: 'Overview',
       display: true,
-      routeName: `${props.match.url}`
+      routeName: `${props.match.url}/overview`
     },
     {
       title: 'Processes',
@@ -148,7 +148,12 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
         </Tabs>
       </AppBar>
       <Switch>
-        <Route exact strict path={`${url}`} render={() => <Overview />} />
+        <Route
+          exact
+          strict
+          path={`${url}/overview`}
+          render={() => <Overview {...props} />}
+        />
         <Route
           exact
           strict
@@ -167,37 +172,31 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
           path={`${url}/disks`}
           render={() => <h2>Disks</h2>}
         />
-        {client && client.apps.apache && (
-          <Route
-            exact
-            strict
-            path={`${url}/apache`}
-            render={() => <h2>Apache</h2>}
-          />
-        )}
-        {client && client.apps.nginx && (
-          <Route
-            exact
-            strict
-            path={`${url}/nginx`}
-            render={() => <h2>Nginx</h2>}
-          />
-        )}
-        {client && client.apps.mysql && (
-          <Route
-            exact
-            strict
-            path={`${url}/mysql`}
-            render={() => <h2>MySQL</h2>}
-          />
-        )}
+        <Route
+          exact
+          strict
+          path={`${url}/apache`}
+          render={() => <h2>Apache</h2>}
+        />
+        <Route
+          exact
+          strict
+          path={`${url}/nginx`}
+          render={() => <h2>Nginx</h2>}
+        />
+        <Route
+          exact
+          strict
+          path={`${url}/mysql`}
+          render={() => <h2>MySQL</h2>}
+        />
         <Route
           exact
           strict
           path={`${url}/installation`}
           render={() => <h2>Installation</h2>}
         />
-        <Redirect to={`${url}`} />
+        <Redirect to={`${url}/overview`} />
       </Switch>
     </React.Fragment>
   );
