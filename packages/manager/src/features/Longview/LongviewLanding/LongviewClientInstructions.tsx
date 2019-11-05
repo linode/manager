@@ -6,6 +6,7 @@ import CopyTooltip from 'src/components/CopyTooltip';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import EditableEntityLabel from 'src/components/EditableEntityLabel';
 import Grid from 'src/components/Grid';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -61,11 +62,17 @@ export const LongviewClientInstructions: React.FC<Props> = props => {
         direction="row"
         wrap="nowrap"
         justify="space-between"
-        alignItems="center"
+        alignItems="flex-start"
         spacing={4}
       >
         <Grid item xs={3}>
-          Waiting for data...
+          <EditableEntityLabel
+            text={'longview3347837'}
+            iconVariant="linode"
+            subText="Waiting for data..."
+            onEdit={() => Promise.resolve(null)}
+            loading={false}
+          />
         </Grid>
         <Grid container item spacing={1}>
           <Grid item>
@@ -106,7 +113,7 @@ export const LongviewClientInstructions: React.FC<Props> = props => {
             </Typography>
           </Grid>
         </Grid>
-        <Grid item style={{ alignSelf: 'flex-start' }}>
+        <Grid item>
           <Button
             className={classes.button}
             onClick={() => triggerDeleteLongviewClient(clientID, clientLabel)}
