@@ -20,12 +20,23 @@ import SwapGauge from './Gauges/Swap';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(4),
-    padding: `0px ${theme.spacing()}px ${theme.spacing(2)}px ${theme.spacing(
-      2
-    )}px`
+    padding: `0px ${theme.spacing()}px ${theme.spacing(
+      3
+    )}px ${theme.spacing()}px`
   },
   container: {
-    height: 176
+    height: 176,
+    '@media (max-width: 1100px)': {
+      flexDirection: 'column',
+      height: 'inherit'
+    }
+  },
+  button: {
+    padding: 0,
+    color: theme.color.black,
+    '&:hover': {
+      color: theme.color.red
+    }
   }
 }));
 
@@ -106,9 +117,10 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
           </Grid>
           <Grid item>
             <Button
+              className={classes.button}
               onClick={() => triggerDeleteLongviewClient(clientID, clientLabel)}
             >
-              <Close width={25} height={25} />
+              <Close width={30} height={30} />
             </Button>
           </Grid>
         </Grid>
@@ -121,6 +133,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
       <Grid
         container
         direction="row"
+        wrap="nowrap"
         justify="space-between"
         alignItems="center"
         className={classes.container}
@@ -145,8 +158,9 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
         <Grid item style={{ alignSelf: 'flex-start' }}>
           <Button
             onClick={() => triggerDeleteLongviewClient(clientID, clientLabel)}
+            className={classes.button}
           >
-            <Close width={25} height={25} />
+            <Close width={30} height={30} />
           </Button>
         </Grid>
       </Grid>
