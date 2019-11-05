@@ -74,8 +74,8 @@ export const RebuildFromImage: React.StatelessComponent<
 > = props => {
   const {
     classes,
-    images,
-    imageError,
+    imagesData,
+    imagesError,
     userSSHKeys,
     sshError,
     requestKeys,
@@ -168,8 +168,10 @@ export const RebuildFromImage: React.StatelessComponent<
             {status && <Notice error>{status.generalError}</Notice>}
             <ImageSelect
               title="Select Image"
-              images={Object.keys(images).map(thisKey => images[thisKey])}
-              error={imageError || errors.image}
+              images={Object.values(imagesData)}
+              error={
+                (imagesError.read && imagesError.read[0].reason) || errors.image
+              }
               selectedImageID={values.image}
               handleSelectImage={selected => setFieldValue('image', selected)}
               disabled={disabled}

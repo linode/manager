@@ -7,6 +7,7 @@ import MUITab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import { WithImages } from 'src/containers/withImages.container';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts
@@ -29,7 +30,6 @@ import {
   AppsData,
   ReduxStatePropsAndSSHKeys,
   WithDisplayData,
-  WithImagesProps,
   WithLinodesProps,
   WithRegionsProps,
   WithTypesProps
@@ -40,7 +40,7 @@ interface Props {
 }
 
 type CombinedProps = Props &
-  WithImagesProps &
+  WithImages &
   WithLinodesProps &
   WithRegionsProps &
   WithTypesProps &
@@ -222,7 +222,7 @@ export class LinodeCreate extends React.PureComponent<
           <FromImageContent
             variant={'private'}
             imagePanelTitle="Choose an Image"
-            imagesData={imagesData!}
+            imagesData={imagesData}
             regionsData={regionsData!}
             typesData={typesData!}
             {...rest}

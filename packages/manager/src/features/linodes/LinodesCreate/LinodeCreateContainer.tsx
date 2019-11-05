@@ -19,7 +19,7 @@ import withTypes from 'src/containers/types.container';
 import withFlags, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container';
-import withImages from 'src/containers/withImages.container';
+import withImages, { WithImages } from 'src/containers/withImages.container';
 import withLinodes from 'src/containers/withLinodes.container';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import {
@@ -53,7 +53,6 @@ import {
   ReduxStateProps,
   ReduxStatePropsAndSSHKeys,
   TypeInfo,
-  WithImagesProps,
   WithLinodesProps,
   WithRegionsProps,
   WithTypesProps
@@ -101,7 +100,7 @@ interface State {
 type CombinedProps = WithSnackbarProps &
   CreateType &
   LinodeActionsProps &
-  WithImagesProps &
+  WithImages &
   WithTypesProps &
   WithLinodesProps &
   WithRegionsProps &
@@ -644,12 +643,7 @@ export default recompose<CombinedProps, {}>(
       oldProps.location.search !== newProps.location.search,
     true
   ),
-  withImages((ownProps, imagesData, imagesLoading, imagesError) => ({
-    ...ownProps,
-    imagesData,
-    imagesLoading,
-    imagesError
-  })),
+  withImages(),
   withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
     linodesData,
     linodesLoading,

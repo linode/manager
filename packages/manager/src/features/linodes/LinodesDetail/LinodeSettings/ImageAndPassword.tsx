@@ -25,14 +25,14 @@ interface Props {
   sshError?: string;
 }
 
-type CombinedProps = Props & ContextProps & WithImages;
+type CombinedProps = Props & ContextProps & Omit<WithImages, 'imagesLoading'>;
 
 export const ImageAndPassword: React.StatelessComponent<
   CombinedProps
 > = props => {
   const {
-    images,
-    imageError,
+    imagesData,
+    imagesError,
     imageFieldError,
     onImageChange,
     onPasswordChange,
@@ -50,8 +50,8 @@ export const ImageAndPassword: React.StatelessComponent<
     <React.Fragment>
       {disabled && <LinodePermissionsError />}
       <ImageSelect
-        images={Object.keys(images).map(eachKey => images[eachKey])}
-        imageError={imageError}
+        images={Object.values(imagesData)}
+        imageError={imagesError.read ? imagesError.read[0].reason : undefined}
         imageFieldError={imageFieldError}
         onSelect={onImageChange}
         disabled={disabled}
@@ -80,13 +80,8 @@ const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
 }));
 
 const enhanced = compose<CombinedProps, Props>(
-  withImages((ownProps, images, imagesLoading, imageError) => ({
-    ...ownProps,
-    linodeContext,
-    images,
-    imagesLoading,
-    imageError
-  }))
+  linodeContext,
+  withImages()
 )(ImageAndPassword);
 
 export default enhanced;
