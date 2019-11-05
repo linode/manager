@@ -128,7 +128,7 @@ interface Props {
 
 type CombinedProps = Props &
   WithDisplayType &
-  WithImages &
+  Pick<WithImages, 'imagesData'> &
   WithStyles<ClassNames>;
 
 const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
