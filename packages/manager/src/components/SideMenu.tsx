@@ -24,6 +24,7 @@ const styles = (theme: Theme) =>
       borderColor: theme.bg.primaryNavBorder,
       left: 'inherit',
       boxShadow: 'none',
+      transition: 'width linear .1s',
       [theme.breakpoints.up('xl')]: {
         width: theme.spacing(22) + 99 // 275
       }
@@ -32,15 +33,10 @@ const styles = (theme: Theme) =>
       height: '100%'
     },
     desktopMenu: {
-      transform: 'none',
-      transition: theme.transitions.create('margin-left')
+      transform: 'none'
     },
     collapsedDesktopMenu: {
-      // marginLeft: -(theme.spacing(14) + 103),
-      // [theme.breakpoints.up('xl')]: {
-      //   marginLeft: -(theme.spacing(22) + 99)
-      // }
-      width: 90
+      width: 92
     }
   });
 
