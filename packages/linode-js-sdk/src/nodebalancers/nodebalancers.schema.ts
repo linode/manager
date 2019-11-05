@@ -14,19 +14,18 @@ export const nodeBalancerConfigNodeSchema = object({
 
   address: string()
     .matches(
-      /^192\.168\.\d{1,3}\.\d{1,3}$/,
-      'Must be a valid private IPv4 address.'
+      /**
+       * The API wants the port and address as a combined value here
+       * e.g 192.168.12.12:80
+       */
+      /^192\.168\.\d{1,3}\.\d{1,3}\:\d{1,5}$/,
+      'Must be a valid private IPv4 address with a specified port.'
     )
     .required('IP address is required.'),
 
-  port: number()
-    .typeError('Port must be a number.')
-    .required('Port is required.')
-    .min(1, 'Port must be between 1 and 65535.')
-    .max(65535, 'Port must be between 1 and 65535.'),
-
   weight: number()
-    .typeError('Weight must be a number.')
+    .typeError('Weight is required.')
+    .required('Weight is required.')
     .min(1, `Weight must be between 1 and 255.`)
     .max(255, `Weight must be between 1 and 255.`),
 

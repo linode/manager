@@ -1,5 +1,5 @@
 import {
-  CreateNodeBalancerConfigNode,
+  CreateNodeBalancerConfigNodePayload as CreateNodeBalancerConfigNode,
   NodeBalancerConfigNode,
   UpdateNodeBalancerConfigNode
 } from 'linode-js-sdk/lib/nodebalancers';

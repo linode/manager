@@ -1,4 +1,3 @@
-import { NodeBalancerWithConfigs } from 'linode-js-sdk/lib/nodebalancers';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import {
@@ -10,6 +9,7 @@ import {
 import TableBody from 'src/components/core/TableBody';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
+import { NodeBalancerWithConfigs } from 'src/services/nodebalancers';
 import NodeBalancersLandingTableRows from './NodeBalancersLandingTableRows';
 import NodeBalancersTableWrapper from './NodeBalancersTableWrapper';
 

@@ -1,3 +1,4 @@
+import { CreateNodeBalancerPayload } from 'linode-js-sdk/lib/nodebalancers';
 import { APIError } from 'linode-js-sdk/lib/types';
 import {
   append,
@@ -52,9 +53,9 @@ import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import NodeBalancerConfigPanel from './NodeBalancerConfigPanel';
 import {
+  CreateConfig,
   createNewNodeBalancerConfig,
   createNewNodeBalancerConfigNode,
-  NodeBalancerConfigFieldsWithStatus,
   transformConfigsForRequest
 } from './utils';
 
@@ -82,16 +83,14 @@ type CombinedProps = WithNodeBalancerActions &
   RouteComponentProps<{}> &
   WithStyles<ClassNames>;
 
-interface NodeBalancerFieldsState {
-  label?: string;
-  region?: string;
-  tags?: string[];
-  configs: (NodeBalancerConfigFieldsWithStatus & { errors?: any })[];
+interface ExtendedNodeBalancerCreate
+  extends Omit<CreateNodeBalancerPayload, 'configs'> {
+  configs: CreateConfig[];
 }
 
 interface State {
   submitting: boolean;
-  nodeBalancerFields: NodeBalancerFieldsState;
+  nodeBalancerFields: ExtendedNodeBalancerCreate;
   errors?: APIError[];
   deleteConfigConfirmDialog: {
     open: boolean;
@@ -117,6 +116,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   };
 
   static defaultFieldsStates = {
+    region: '',
     configs: [createNewNodeBalancerConfig(true)]
   };
 
@@ -234,7 +234,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     // Build paths to all node errors
     const nodePaths = this.state.nodeBalancerFields.configs.map(
       (config, idxC) => {
-        return config.nodes.map((nodes, idxN) => {
+        return (config.nodes || []).map((nodes, idxN) => {
           return ['configs', idxC, 'nodes', idxN, 'errors'];
         });
       }
@@ -298,19 +298,16 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     } = this.props;
     const { nodeBalancerFields } = this.state;
 
-    /* transform node data for the requests */
-    const nodeBalancerRequestData = clone(nodeBalancerFields);
-    nodeBalancerRequestData.configs = transformConfigsForRequest(
-      nodeBalancerRequestData.configs
-    );
-
     /* Clear node errors */
     this.clearNodeErrors();
 
     /* Clear config errors */
     this.setState({ submitting: true, errors: undefined });
 
-    createNodeBalancer(nodeBalancerRequestData)
+    createNodeBalancer({
+      ...nodeBalancerFields,
+      configs: transformConfigsForRequest(nodeBalancerFields.configs)
+    })
       .then(nodeBalancer => {
         this.props.history.push(`/nodebalancers/${nodeBalancer.id}/summary`);
         // GA Event
@@ -360,11 +357,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     this.setState({
       nodeBalancerFields: {
         ...this.state.nodeBalancerFields,
-        configs: this.state.nodeBalancerFields.configs.filter(
-          (config: NodeBalancerConfigFieldsWithStatus, idx: number) => {
-            return idx !== idxToDelete;
-          }
-        )
+        configs: this.state.nodeBalancerFields.configs.filter((config, idx) => {
+          return idx !== idxToDelete;
+        })
       }
     });
 
@@ -614,7 +609,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                         )}
                         privateKey={view(L.privateKeyLens, this.state)}
                         onPrivateKeyChange={this.updateState(L.privateKeyLens)}
-                        nodes={this.state.nodeBalancerFields.configs[idx].nodes}
+                        nodes={
+                          this.state.nodeBalancerFields.configs[idx].nodes || []
+                        }
                         addNode={this.addNodeBalancerConfigNode(idx)}
                         removeNode={this.removeNodeBalancerConfigNode(idx)}
                         onNodeLabelChange={(nodeIndex, value) =>

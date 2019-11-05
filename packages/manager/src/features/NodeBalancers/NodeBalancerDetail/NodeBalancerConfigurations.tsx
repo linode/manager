@@ -1,12 +1,12 @@
 import * as Promise from 'bluebird';
 import {
   createNodeBalancerConfigNode,
+  CreateNodeBalancerConfigPayload,
   deleteNodeBalancerConfigNode,
   getNodeBalancerConfigNodes,
   getNodeBalancerConfigs,
   NodeBalancerConfig,
   NodeBalancerConfigNode,
-  NodeBalancerConfigNodeFields,
   updateNodeBalancerConfigNode
 } from 'linode-js-sdk/lib/nodebalancers';
 import { APIError, ResourcePage } from 'linode-js-sdk/lib/types';
@@ -53,10 +53,8 @@ import {
   clampNumericString,
   createNewNodeBalancerConfig,
   createNewNodeBalancerConfigNode,
-  NodeBalancerConfigFieldsWithStatus,
-  nodeForRequest,
-  parseAddress,
-  parseAddresses,
+  CreateNodeWithStatus,
+  RequestedConfig,
   transformConfigsForRequest
 } from '../utils';
 
@@ -92,13 +90,11 @@ interface MatchProps {
 type RouteProps = RouteComponentProps<MatchProps>;
 
 interface PreloadedProps {
-  configs: PromiseLoaderResponse<
-    ResourcePage<NodeBalancerConfigFieldsWithStatus>
-  >;
+  configs: PromiseLoaderResponse<ResourcePage<ConfigWithNodes>>;
 }
 
 interface State {
-  configs: NodeBalancerConfigFieldsWithStatus[];
+  configs: (RequestedConfig)[];
   configErrors: APIError[][];
   configSubmitting: boolean[];
   panelMessages: string[];
@@ -123,6 +119,8 @@ type CombinedProps = Props &
   WithStyles<ClassNames> &
   PreloadedProps;
 
+type ConfigWithNodes = NodeBalancerConfig & { nodes: NodeBalancerConfigNode[] };
+
 const getConfigsWithNodes = (nodeBalancerId: number) => {
   return getNodeBalancerConfigs(nodeBalancerId).then(configs => {
     return Promise.map(configs.data, config => {
@@ -130,7 +128,7 @@ const getConfigsWithNodes = (nodeBalancerId: number) => {
         ({ data: nodes }) => {
           return {
             ...config,
-            nodes: parseAddresses(nodes)
+            nodes
           };
         }
       );
@@ -138,7 +136,7 @@ const getConfigsWithNodes = (nodeBalancerId: number) => {
   });
 };
 
-const formatNodesStatus = (nodes: NodeBalancerConfigNodeFields[]) => {
+const formatNodesStatus = (nodes: CreateNodeWithStatus[]) => {
   const statuses = nodes.reduce(
     (acc, node) => {
       if (node.status) {
@@ -153,6 +151,7 @@ const formatNodesStatus = (nodes: NodeBalancerConfigNodeFields[]) => {
     statuses.unknown ? `, ${statuses.unknown} unknown` : ''
   }`;
 };
+
 class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   static defaultDeleteConfigConfirmDialogState = {
     submitting: false,
@@ -197,9 +196,11 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
   clearNodeErrors = (configIdx: number) => {
     // Build paths to all node errors
-    const paths = this.state.configs[configIdx].nodes.map((nodes, idxN) => {
-      return ['nodes', idxN, 'errors'];
-    });
+    const paths = (this.state.configs[configIdx].nodes || []).map(
+      (nodes, idxN) => {
+        return ['nodes', idxN, 'errors'];
+      }
+    );
     if (paths.length === 0) {
       return;
     }
@@ -284,8 +285,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
   saveConfigUpdatePath = (
     idx: number,
-    config: NodeBalancerConfigFieldsWithStatus,
-    configPayload: NodeBalancerConfigFieldsWithStatus
+    config: RequestedConfig,
+    configPayload: CreateNodeBalancerConfigPayload
   ) => {
     /* Update a config and its nodes simultaneously */
     const {
@@ -350,7 +351,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       });
 
     // These Node operations execute while the config update request is being made
-    const nodeUpdates = config.nodes.map((node, nodeIdx) => {
+    const nodeUpdates = (config.nodes || []).map((node, nodeIdx) => {
       if (node.modifyStatus === 'delete') {
         return this.deleteNode(idx, nodeIdx);
       }
@@ -401,8 +402,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
   saveConfigNewPath = (
     idx: number,
-    config: NodeBalancerConfigFieldsWithStatus,
-    configPayload: NodeBalancerConfigFieldsWithStatus
+    config: RequestedConfig,
+    configPayload: CreateNodeBalancerConfigPayload
   ) => {
     /*
      * Create a config and then its nodes.
@@ -457,7 +458,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
             });
 
             // Execute Node operations now that the config has been created
-            const nodeUpdates = config.nodes.map((node, nodeIdx) => {
+            const nodeUpdates = (config.nodes || []).map((node, nodeIdx) => {
               if (node.modifyStatus !== 'delete') {
                 /* All of the Nodes are new since the config was just created */
                 return this.createNode(idx, nodeIdx);
@@ -520,9 +521,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   saveConfig = (idx: number) => {
     const config = this.state.configs[idx];
 
-    const configPayload: NodeBalancerConfigFieldsWithStatus = transformConfigsForRequest(
-      [config]
-    )[0];
+    const configPayload = transformConfigsForRequest([config])[0];
 
     // clear node errors for this config if there are any
     this.clearNodeErrors(idx);
@@ -637,7 +636,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
   removeNode = (configIdx: number) => (nodeIdx: number) => {
     this.clearMessages();
-    if (this.state.configs[configIdx].nodes[nodeIdx].id !== undefined) {
+    if ((this.state.configs[configIdx].nodes || [])[nodeIdx].id !== undefined) {
       /* If the node has an ID, mark it for deletion when the user saves the config */
       this.setState(
         set(
@@ -675,7 +674,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     if (!config || !config.id) {
       return;
     }
-    const node = config.nodes[nodeIdx];
+    const node = (config.nodes || [])[nodeIdx];
     if (!node || !node.id) {
       return;
     }
@@ -708,7 +707,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       set(
         lensPath(['configs', configIdx, 'nodes']),
         append(createNewNodeBalancerConfigNode())(
-          this.state.configs[configIdx].nodes
+          pathOr([], [configIdx, 'nodes'], this.state.configs)
         )
       )
     );
@@ -721,9 +720,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       }
     } = this.props;
     const config = this.state.configs[configIdx];
-    const node = this.state.configs[configIdx].nodes[nodeIdx];
-
-    const nodeData = nodeForRequest(node);
+    const node = pathOr({}, [configIdx, 'nodes', nodeIdx], this.state.configs);
 
     if (!nodeBalancerId) {
       return;
@@ -732,19 +729,22 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       return;
     }
 
+    /** Need to post to API in _address:port_ format */
+    const cleanedNode = {
+      ...node,
+      address: `${node.address}:${node.port}`
+    };
+
     return createNodeBalancerConfigNode(
       Number(nodeBalancerId),
       config.id,
-      nodeData
+      cleanedNode
     )
       .then(responseNode => {
         /* Set the new Node data including the ID
            This also clears the errors and modify status. */
         this.setState(
-          set(
-            lensPath(['configs', configIdx, 'nodes', nodeIdx]),
-            parseAddress(responseNode)
-          )
+          set(lensPath(['configs', configIdx, 'nodes', nodeIdx]), responseNode)
         );
         /* Return true as a Promise for the sake of aggregating results */
         return true;
@@ -761,7 +761,11 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   setNodeValue = (cidx: number, nodeidx: number, key: string, value: any) => {
     this.clearMessages();
     /* Check if the node is new */
-    const { modifyStatus } = this.state.configs[cidx].nodes[nodeidx];
+    const { modifyStatus } = pathOr(
+      '',
+      [cidx, 'nodes', nodeidx],
+      this.state.configs
+    );
     /* If it's not new or for deletion set it to be updated */
     if (!(modifyStatus === 'new' || modifyStatus === 'delete')) {
       this.setState(
@@ -783,10 +787,12 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         params: { nodeBalancerId }
       }
     } = this.props;
-    const config = this.state.configs[configIdx];
-    const node = this.state.configs[configIdx].nodes[nodeIdx];
-
-    const nodeData = nodeForRequest(node);
+    const config = (this.state.configs || [])[configIdx];
+    const node = pathOr(
+      {},
+      ['configs', configIdx, 'nodes', nodeIdx],
+      this.state
+    );
 
     if (!nodeBalancerId) {
       return;
@@ -798,20 +804,30 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       return;
     }
 
+    /**
+     * We need to PUT to the API with _address:port_ format here,
+     * so we need to get the user-inputted address and concat that with that
+     * user-inputted port
+     */
+    const [pureAddress, existingPort] = node.address.split(':');
+
+    const cleanedNode = {
+      ...node,
+      address: `${pureAddress}:${node.port || existingPort}`,
+      weight: +node.weight
+    };
+
     return updateNodeBalancerConfigNode(
       Number(nodeBalancerId),
       config.id,
       node.id,
-      nodeData
+      cleanedNode
     )
       .then(responseNode => {
         /* Set the new Node data including the ID
              This also clears the errors and modify status. */
         this.setState(
-          set(
-            lensPath(['configs', configIdx, 'nodes', nodeIdx]),
-            parseAddress(responseNode)
-          )
+          set(lensPath(['configs', configIdx, 'nodes', nodeIdx]), responseNode)
         );
         /* Return true as a Promise for the sake of aggregating results */
         return true;
@@ -827,7 +843,10 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
   addNodeBalancerConfig = () => {
     this.setState({
-      configs: append(createNewNodeBalancerConfig(false), this.state.configs),
+      configs: append(
+        createNewNodeBalancerConfig(false) as any,
+        this.state.configs
+      ),
       configErrors: append([], this.state.configErrors),
       configSubmitting: append(false, this.state.configSubmitting),
       hasUnsavedConfig: true
@@ -942,12 +961,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     panelMessages: string[],
     configErrors: any[],
     configSubmitting: any[]
-  ) => (
-    config: NodeBalancerConfig & {
-      nodes: NodeBalancerConfigNode[];
-    },
-    idx: number
-  ) => {
+  ) => (config: RequestedConfig, idx: number) => {
     const isNewConfig =
       this.state.hasUnsavedConfig && idx === this.state.configs.length - 1;
     const { panelNodeMessages } = this.state;
@@ -1008,7 +1022,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           configIdx={idx}
           onSave={this.onSaveConfig(idx)}
           submitting={configSubmitting[idx]}
-          onDelete={this.onDeleteConfig(idx, config.port)}
+          onDelete={this.onDeleteConfig(idx, config.port || -1)}
           errors={configErrors[idx]}
           nodeMessage={panelNodeMessages[idx]}
           algorithm={view(L.algorithmLens, this.state)}

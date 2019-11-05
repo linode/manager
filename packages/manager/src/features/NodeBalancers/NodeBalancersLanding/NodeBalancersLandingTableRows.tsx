@@ -1,4 +1,3 @@
-import { NodeBalancerWithConfigs } from 'linode-js-sdk/lib/nodebalancers';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -14,6 +13,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
+import { NodeBalancerWithConfigs } from 'src/services/nodebalancers';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import NodeBalancerActionMenu from './NodeBalancerActionMenu';
 

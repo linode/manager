@@ -1,4 +1,3 @@
-import { NodeBalancerWithConfigs } from 'linode-js-sdk/lib/nodebalancers';
 import { compose } from 'ramda';
 import * as React from 'react';
 import {
@@ -13,6 +12,7 @@ import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
+import { NodeBalancerWithConfigs } from 'src/services/nodebalancers';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 import NodeBalancersLandingTableRows from './NodeBalancersLandingTableRows';
 import TableWrapper from './NodeBalancersTableWrapper';
