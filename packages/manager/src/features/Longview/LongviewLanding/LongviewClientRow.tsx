@@ -17,6 +17,7 @@ import RAMGauge from './Gauges/RAM';
 import StorageGauge from './Gauges/Storage';
 import SwapGauge from './Gauges/Swap';
 import LongviewClientHeader from './LongviewClientHeader';
+import LongviewClientInstructions from './LongviewClientInstructions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -110,21 +111,12 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
    */
   if (!authed || lastUpdated === 0) {
     return (
-      <Paper className={classes.root}>
-        <Grid container direction="row" justify="space-between">
-          <Grid item>
-            Waiting for data...(installation instructions go here)
-          </Grid>
-          <Grid item>
-            <Button
-              className={classes.button}
-              onClick={() => triggerDeleteLongviewClient(clientID, clientLabel)}
-            >
-              <Close width={30} height={30} />
-            </Button>
-          </Grid>
-        </Grid>
-      </Paper>
+      <LongviewClientInstructions
+        clientID={clientID}
+        clientLabel={clientLabel}
+        installCode={'D3DD4F69-817B-4FF5-8F4C80029AD4F815'}
+        triggerDeleteLongviewClient={triggerDeleteLongviewClient}
+      />
     );
   }
 
