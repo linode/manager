@@ -13,10 +13,9 @@ import AppBar from 'src/components/core/AppBar';
 import Box from 'src/components/core/Box';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
+import DefaultLoader from 'src/components/DefaultLoader';
 import DocumentationButton from 'src/components/DocumentationButton';
 import TabLink from 'src/components/TabLink';
-
-import Overview from './LongviewDetailOverview';
 
 import withLongviewClients, {
   DispatchProps,
@@ -27,6 +26,10 @@ interface Props {
   clients: LVProps['longviewClientsData'];
   longviewClientsLastUpdated: number;
 }
+
+const Overview = DefaultLoader({
+  loader: () => import('./LongviewDetailOverview')
+});
 
 type CombinedProps = RouteComponentProps<{ id: string }> &
   Props &
@@ -93,6 +96,7 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
     }
   ];
 
+  // Filtering out conditional tabs if they don't exist on client
   const tabs = tabOptions.filter(tab => tab.display === true);
 
   const handleTabChange = (
