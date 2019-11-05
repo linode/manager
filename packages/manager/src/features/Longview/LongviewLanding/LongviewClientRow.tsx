@@ -16,6 +16,7 @@ import NetworkGauge from './Gauges/Network';
 import RAMGauge from './Gauges/RAM';
 import StorageGauge from './Gauges/Storage';
 import SwapGauge from './Gauges/Swap';
+import LongviewClientHeader from './LongviewClientHeader';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -33,7 +34,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   button: {
     padding: 0,
-    color: theme.color.black,
     '&:hover': {
       color: theme.color.red
     }
@@ -134,11 +134,13 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
         container
         direction="row"
         wrap="nowrap"
-        justify="space-between"
+        justify="space-evenly"
         alignItems="center"
         className={classes.container}
       >
-        <Grid item xs={2}>{`${clientLabel}`}</Grid>
+        <Grid item xs={2}>
+          <LongviewClientHeader />
+        </Grid>
         <CPUGauge clientAPIKey={clientAPIKey} lastUpdated={lastUpdated} />
         <Grid item>
           <RAMGauge token={clientAPIKey} lastUpdated={lastUpdated} />
