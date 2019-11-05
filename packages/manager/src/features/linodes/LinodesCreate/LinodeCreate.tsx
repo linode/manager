@@ -460,7 +460,7 @@ export class LinodeCreate extends React.PureComponent<
       return <CircleProgress />;
     }
 
-    if (regionsError || imagesError || linodesError || typesError) {
+    if (regionsError || imagesError.read || linodesError || typesError) {
       return (
         <ErrorState errorText="There was an issue loading Linode creation options." />
       );
