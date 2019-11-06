@@ -1,6 +1,6 @@
 <svg width="26px" height="26px" viewBox="0 0 26 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
-        <g id="left-nav" transform="translate(-31.000000, -766.000000)" stroke="#BFBFBF" stroke-width="1.5">
+        <g id="left-nav" transform="translate(-31.000000, -766.000000)" stroke-width="1">
             <g id="nav/side-navigation">
                 <g id="sub-nav" transform="translate(32.000000, 726.000000)">
                     <g id="Group-5" transform="translate(0.000000, 41.000000)">
