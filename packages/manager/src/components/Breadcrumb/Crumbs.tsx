@@ -112,7 +112,7 @@ const Crumbs: React.FC<CombinedProps> = props => {
         );
       })}
 
-      {/* 
+      {/*
         for prepending some SVG or other element before the final crumb.
         See users detail page for example
       */}
@@ -123,7 +123,7 @@ const Crumbs: React.FC<CombinedProps> = props => {
         />
       )}
 
-      {/* 
+      {/*
         the final crumb has the possibility of being a link, editable text
         or just static text
       */}
@@ -133,7 +133,7 @@ const Crumbs: React.FC<CombinedProps> = props => {
         onEditHandlers={onEditHandlers}
       />
 
-      {/* 
+      {/*
         for appending some SVG or other element after the final crumb.
         See support ticket detail as an example
       */}

@@ -18,6 +18,7 @@
   "dependencies": {
     "@material-ui/core": "^4.4.2",
     "@material-ui/icons": "^4.4.1",
+    "@material-ui/lab": "^4.0.0-alpha.29",
     "@material-ui/styles": "^4.4.1",
     "@sentry/browser": "^5.7.1",
     "@types/sanitize-html": "^1.18.3",
@@ -98,8 +99,8 @@
     "start": "node scripts/start.js",
     "lint": "tslint 'src/**/*.ts' 'src/**/*.tsx'",
     "build": "node scripts/build.js",
-    "precommit": "lint-staged && npx madge --circular --extensions ts src/ && ./scripts/pre-commit.sh",
-    "prepush": "./scripts/pre-push.sh",
+    "precommit": "lint-staged && tsc --noEmit",
+    "prepush": "./scripts/pre-push.sh && yarn test --color",
     "mock": "./scripts/mb.js",
     "test": "node scripts/test.js",
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
@@ -117,18 +118,21 @@
     "e2e:modified": "./scripts/e2e-modified.sh",
     "e2e:browserstack": "npx wdio ./e2e/config/browserstack.conf.js",
     "mb": "npx mb",
-    "release": "./scripts/release_changelog.sh"
+    "release": "./scripts/release_changelog.sh",
+    "typecheck": "tsc --noEmit"
   },
   "lint-staged": {
     "*.{ts,tsx,js}": [
       "prettier --write",
-      "git add"
+      "tslint",
+      "git add",
+      "npx madge --circular --extensions ts"
     ]
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.2.3",
-    "@babel/preset-typescript": "^7.1.0",
+    "@babel/preset-typescript": "^7.6.0",
     "@babel/register": "^7.0.0",
     "@hapi/hapi": "^18.4.0",
     "@storybook/addon-actions": "^4.1.6",
@@ -217,7 +221,7 @@
     "jest": "^24.8.0",
     "jest-junit": "^7.0.0",
     "js-yaml": "^3.13.1",
-    "lint-staged": "^8.1.0",
+    "lint-staged": "^9.4.2",
     "madge": "^3.4.3",
     "mini-css-extract-plugin": "^0.7.0",
     "mixin-deep": "^2.0.1",
@@ -239,11 +243,6 @@
     "ts-jest": "^24.0.2",
     "ts-loader": "^6.0.4",
     "tsconfig-paths-webpack-plugin": "^3.2.0",
-    "tslint": "^5.12.1",
-    "tslint-config-airbnb": "^5.6.0",
-    "tslint-config-prettier": "^1.17.0",
-    "tslint-react": "^3.6.0",
-    "typescript": "^3.2.2",
     "url-loader": "^1.1.2",
     "utility-types": "^2.1.0",
     "wdio-browserstack-service": "^0.1.16",

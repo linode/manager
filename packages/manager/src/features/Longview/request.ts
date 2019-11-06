@@ -83,6 +83,9 @@ interface Get {
     action: 'getLatestValue',
     field: ('cpu' | 'sysinfo')[]
   ): Promise<Partial<LongviewCPU & LongviewSystemInfo>>;
+  (token: string, action: 'getLatestValue', field: ('disk')[]): Promise<
+    Partial<LongviewDisk>
+  >;
   (token: string, action: LongviewAction, field?: LongviewFieldName[]): Promise<
     Partial<AllData>
   >;

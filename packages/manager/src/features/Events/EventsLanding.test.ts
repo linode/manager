@@ -6,6 +6,7 @@ const someEvent: Event[] = [
   {
     id: 1234,
     time_remaining: 50,
+    secondary_entity: null,
     seen: true,
     created: '2018-12-02T20:23:43',
     action: 'linode_boot',

@@ -43,7 +43,8 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
    lastUpdated _might_ come back from the endpoint as 0, so it's important
    that we differentiate between _0_ and _undefined_
    */
-  const [lastUpdated, setLastUpdated] = React.useState<number | undefined>();
+  const [lastUpdated, setLastUpdated] = React.useState<number | undefined>(0);
+  const [authed, setAuthed] = React.useState<boolean>(true);
 
   const requestAndSetLastUpdated = () => {
     return getLastUpdated(clientAPIKey)
@@ -56,7 +57,16 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
           setLastUpdated(response.updated);
         }
       })
-      .catch(e => e);
+      .catch(e => {
+        /**
+         * The first request we make after creating a new client will almost always
+         * return an authentication failed error.
+         */
+        const reason = pathOr('', [0, 'reason'], e);
+        if (reason.match(/authentication/i)) {
+          setAuthed(false);
+        }
+      });
   };
 
   /** request on first mount */
@@ -73,6 +83,27 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
     return () => clearInterval(requestInterval);
   });
 
+  /**
+   * We want to show a "waiting for data" state
+   * until data has been returned.
+   */
+  if (!authed || lastUpdated === 0) {
+    return (
+      <TableRow>
+        <TableCell colSpan={7}>
+          Waiting for data...(installation instructions go here)
+        </TableCell>
+        <TableCell>
+          <ActionMenu
+            longviewClientID={clientID}
+            longviewClientLabel={clientLabel}
+            {...actionHandlers}
+          />
+        </TableCell>
+      </TableRow>
+    );
+  }
+
   return (
     <TableRow className={classes.root} rowLink={`longview/clients/${clientID}`}>
       <TableCell>{`${clientLabel}`}</TableCell>
@@ -83,7 +114,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
         <RAMGauge token={clientAPIKey} lastUpdated={lastUpdated} />
       </TableCell>
       <TableCell>
-        <SwapGauge />
+        <SwapGauge token={clientAPIKey} lastUpdated={lastUpdated} />
       </TableCell>
       <TableCell>
         <LoadGauge token={clientAPIKey} lastUpdated={lastUpdated} />
@@ -92,7 +123,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
         <NetworkGauge />
       </TableCell>
       <TableCell>
-        <StorageGauge />
+        <StorageGauge clientAPIKey={clientAPIKey} lastUpdated={lastUpdated} />
       </TableCell>
       <TableCell>
         <ActionMenu

@@ -16,11 +16,14 @@ interface Props {
 const LongviewGauge: React.FC<Props> = props => {
   const { clientAPIKey, lastUpdated } = props;
 
+  const [dataHasResolvedAtLeastOnce, setDataResolved] = React.useState<boolean>(
+    false
+  );
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<APIError | undefined>();
 
-  const [usedCPU, setUsedCPU] = React.useState<number | undefined>();
-  const [numCores, setNumCores] = React.useState<number | undefined>();
+  const [usedCPU, setUsedCPU] = React.useState<number>(0);
+  const [numCores, setNumCores] = React.useState<number>(0);
 
   React.useEffect(() => {
     requestStats(clientAPIKey, 'getLatestValue', ['cpu', 'sysinfo'])
@@ -35,6 +38,10 @@ const LongviewGauge: React.FC<Props> = props => {
           return;
         }
 
+        if (!dataHasResolvedAtLeastOnce) {
+          setDataResolved(true);
+        }
+
         setNumCores(cores);
 
         const used = sumCPUUsage(data.CPU);
@@ -42,7 +49,7 @@ const LongviewGauge: React.FC<Props> = props => {
         setUsedCPU(normalizedUsed);
       })
       .catch(_ => {
-        if (!usedCPU) {
+        if (!dataHasResolvedAtLeastOnce) {
           setError({
             reason: 'Error' // @todo: Error message?
           });
@@ -56,8 +63,8 @@ const LongviewGauge: React.FC<Props> = props => {
       {...baseGaugeProps}
       // The MAX depends on the number of CPU cores. Default to 1 if cores
       // doesn't exist or is 0.
-      max={typeof numCores === 'undefined' ? 1 : 100 * numCores}
-      value={typeof usedCPU === 'undefined' ? 0 : usedCPU}
+      max={100 * numCores}
+      value={usedCPU}
       innerText={innerText(usedCPU || 0, loading, error)}
       subTitle={
         <>
