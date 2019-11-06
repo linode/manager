@@ -117,7 +117,7 @@ const useStyles = makeStyles((theme: Theme) => {
 // accountSettings.longview_subscription will be `null`. We'd rather use
 // a string identifer in this component to be keep track of the "free" plan, so
 // we'll create a fake ID for it.
-const LONGVIEW_FREE_ID = 'longview-free';
+export const LONGVIEW_FREE_ID = 'longview-free';
 
 export type CombinedProps = SettingsProps & DispatchProps;
 
@@ -216,6 +216,7 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
           onClick={onSubmit}
           loading={updateLoading}
           disabled={Boolean(subscriptions.error)}
+          data-testid="submit-button"
         >
           Change Plan
         </Button>
@@ -330,8 +331,9 @@ export const LongviewSubscriptionRow: React.FC<
       key={id}
       onClick={() => onRowSelect(id)}
       rowLink={() => onRowSelect(id)}
+      data-testid={`lv-sub-table-row-${id}`}
     >
-      <TableCell>
+      <TableCell data-testid={`plan-cell-${id}`}>
         <div className={styles.currentSubscriptionLabel}>
           <Radio
             value={id}
@@ -339,6 +341,7 @@ export const LongviewSubscriptionRow: React.FC<
             onChange={onRadioSelect}
             className={styles.radio}
             id={id}
+            data-testid={`lv-sub-radio-${id}`}
           />
           {plan}
           {currentSubscriptionOnAccount === id && (
@@ -346,14 +349,27 @@ export const LongviewSubscriptionRow: React.FC<
           )}
         </div>
       </TableCell>
-      <TableCell className={styles.clientCell}>{clients}</TableCell>
-      <TableCell className={styles.dataRetentionCell}>
+      <TableCell
+        className={styles.clientCell}
+        data-testid={`clients-cell-${id}`}
+      >
+        {clients}
+      </TableCell>
+      <TableCell
+        className={styles.dataRetentionCell}
+        data-testid={`data-retention-cell-${id}`}
+      >
         {dataRetention}
       </TableCell>
-      <TableCell className={styles.dataResolutionCell}>
+      <TableCell
+        className={styles.dataResolutionCell}
+        data-testid={`data-resolution-cell-${id}`}
+      >
         {dataResolution}
       </TableCell>
-      <TableCell className={styles.priceCell}>{price}</TableCell>
+      <TableCell className={styles.priceCell} data-testid={`price-cell-${id}`}>
+        {price}
+      </TableCell>
     </TableRow>
   );
 };
