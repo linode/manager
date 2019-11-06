@@ -26,72 +26,92 @@ import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: `${theme.spacing(3)}px ${theme.spacing(3)}px 0px ${theme.spacing(
-      3
-    )}px`
-  },
-  table: {
-    border: `1px solid ${theme.bg.main}`,
-    borderBottom: 0,
-    '& td, th': {
-      borderBottom: `1px solid ${theme.bg.main}`
+const useStyles = makeStyles((theme: Theme) => {
+  const border = `1px solid ${theme.bg.main}`;
+
+  return {
+    root: {
+      padding: theme.spacing(3),
+      paddingBottom: 0,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      // These values represent the table size with 5 elements in compact
+      // and normal mode. It's brittle, I know, but I'm not sure of another way.
+      minHeight: theme.spacing() === COMPACT_SPACING_UNIT ? 311 : 419
     },
-    '& tbody > tr': {
-      cursor: 'pointer'
+    table: {
+      borderTop: border,
+      borderRight: border,
+      borderLeft: border,
+      '& td': {
+        whiteSpace: 'nowrap',
+        borderBottom: border
+      },
+      '& tbody tr': {
+        cursor: 'pointer'
+      },
+      '& th, thead > tr:first-child:before': {
+        borderBottom: border
+      },
+      '& tr:before': {
+        borderBottom: border
+      }
     },
-    '& tr:before': {
-      borderBottom: `1px solid ${theme.bg.main}`
+    radio: {
+      marginLeft: theme.spacing(1) - 3,
+      marginRight: theme.spacing(2) - 1,
+      padding: 2
     },
-    minHeight: theme.spacing() === COMPACT_SPACING_UNIT ? 238 : 286
-  },
-  radio: {
-    marginLeft: theme.spacing(1) - 3,
-    marginRight: theme.spacing(2) - 1,
-    padding: 2
-  },
-  currentSubscriptionLabel: {
-    display: 'flex',
-    alignItems: 'center',
-    marginTop: 0,
-    marginBottom: 0,
-    marginLeft: 'auto',
-    paddingRight: theme.spacing(3)
-  },
-  chip: {
-    backgroundColor: theme.color.green,
-    color: '#fff',
-    textTransform: 'uppercase',
-    height: theme.spacing(3) + 3,
-    paddingLeft: 9,
-    paddingRight: 9,
-    marginTop: 0,
-    marginBottom: 0,
-    marginLeft: 'auto'
-  },
-  planCell: {
-    width: '30%'
-  },
-  clientCell: {
-    textAlign: 'right',
-    paddingRight: theme.spacing(6.5),
-    width: '10%'
-  },
-  dataRetentionCell: {
-    width: '15%'
-  },
-  dataResolutionCell: {
-    width: '25%'
-  },
-  priceCell: {
-    width: '15%'
-  },
-  submitButton: {
-    marginTop: theme.spacing(4) - 2,
-    marginBottom: theme.spacing(4) - 2
-  }
-}));
+    currentSubscriptionLabel: {
+      display: 'flex',
+      alignItems: 'center',
+      marginTop: 0,
+      marginBottom: 0,
+      marginLeft: 'auto',
+      paddingRight: theme.spacing(3),
+      [theme.breakpoints.down('md')]: {
+        paddingRight: 0
+      }
+    },
+    chip: {
+      backgroundColor: theme.color.green,
+      color: '#fff',
+      textTransform: 'uppercase',
+      height: theme.spacing(3) + 3,
+      paddingLeft: 9,
+      paddingRight: 9,
+      marginTop: 0,
+      marginBottom: 0,
+      marginLeft: 'auto',
+      [theme.breakpoints.down('md')]: {
+        marginLeft: theme.spacing(2)
+      }
+    },
+    planCell: {
+      width: '30%'
+    },
+    clientCell: {
+      textAlign: 'right',
+      paddingRight: theme.spacing(6.5),
+      width: '15%'
+    },
+    dataRetentionCell: {
+      width: '15%'
+    },
+    dataResolutionCell: {
+      width: '25%'
+    },
+    priceCell: {
+      width: '15%'
+    },
+    submitButton: {
+      alignSelf: 'flex-start',
+      marginTop: theme.spacing(4) - 2,
+      marginBottom: theme.spacing(4) - 2
+    }
+  };
+});
 
 // If an account has the "free" Longview plan,
 // accountSettings.longview_subscription will be `null`. We'd rather use
@@ -178,15 +198,17 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
               <TableCell className={styles.priceCell}>Price</TableCell>
             </TableRow>
           </TableHead>
-          <LongviewPlansTableBody
-            loading={subscriptions.loading}
-            error={subscriptions.error}
-            subscriptions={subscriptions.data}
-            onRadioSelect={onRadioSelect}
-            onRowSelect={setSelectedSub}
-            currentSubscriptionOnAccount={currentSubscriptionOnAccount}
-            selectedSub={selectedSub}
-          />
+          <TableBody>
+            <LongviewPlansTableBody
+              loading={subscriptions.loading}
+              error={subscriptions.error}
+              subscriptions={subscriptions.data}
+              onRadioSelect={onRadioSelect}
+              onRowSelect={setSelectedSub}
+              currentSubscriptionOnAccount={currentSubscriptionOnAccount}
+              selectedSub={selectedSub}
+            />
+          </TableBody>
         </Table>
         <Button
           className={styles.submitButton}
@@ -236,7 +258,7 @@ export const LongviewPlansTableBody: React.FC<
   }
 
   return (
-    <TableBody>
+    <>
       <LongviewSubscriptionRow
         key={LONGVIEW_FREE_ID}
         id={LONGVIEW_FREE_ID}
@@ -261,7 +283,7 @@ export const LongviewPlansTableBody: React.FC<
           {...rest}
         />
       ))}
-    </TableBody>
+    </>
   );
 };
 
