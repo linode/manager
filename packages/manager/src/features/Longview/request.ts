@@ -92,6 +92,9 @@ interface Get {
   (token: string, action: 'getLatestValue', field: 'memory'[]): Promise<
     Partial<LongviewMemory>
   >;
+  (token: string, action: 'getLatestValue', field: 'network'[]): Promise<
+    Partial<LongviewNetwork>
+  >;
 }
 
 export type LongviewAction =

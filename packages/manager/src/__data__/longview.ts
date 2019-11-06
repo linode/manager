@@ -1,6 +1,7 @@
 import {
   LongviewLoad,
   LongviewMemory,
+  LongviewNetwork,
   LongviewSystemInfo
 } from 'src/features/Longview/request.types';
 
@@ -72,6 +73,42 @@ export const memory: LongviewMemory = {
           x: 100
         }
       ]
+    }
+  }
+};
+
+export const network: LongviewNetwork = {
+  Network: {
+    mac_addr: '8c:85:90:05:c2:bf',
+    Interface: {
+      eth0: {
+        rx_bytes: [
+          {
+            x: 0,
+            y: 131072
+          }
+        ],
+        tx_bytes: [
+          {
+            x: 0,
+            y: 131072
+          }
+        ]
+      },
+      eth1: {
+        rx_bytes: [
+          {
+            x: 0,
+            y: 131072
+          }
+        ],
+        tx_bytes: [
+          {
+            x: 0,
+            y: 131072
+          }
+        ]
+      }
     }
   }
 };
