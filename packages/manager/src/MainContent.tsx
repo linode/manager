@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   fullWidthContent: {
     marginLeft: 0,
     [theme.breakpoints.up('md')]: {
-      marginLeft: 92
+      marginLeft: theme.spacing(7) + 36
     }
   },
   hidden: {
