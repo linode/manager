@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "0.76.0",
+  "version": "0.77.0",
   "private": true,
   "engines": {
     "node": ">= 10.16.0"
@@ -40,7 +40,7 @@
     "jspdf": "^1.5.3",
     "jspdf-autotable": "^3.2.4",
     "launchdarkly-react-client-sdk": "^2.11.0",
-    "linode-js-sdk": "^0.10.0-alpha.0",
+    "linode-js-sdk": "^0.11.0-alpha.0",
     "logic-query-parser": "^0.0.5",
     "md5": "^2.2.1",
     "memoizee": "^0.4.14",
