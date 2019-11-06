@@ -24,10 +24,11 @@ interface Props {
   iconVariant: Variant;
   loading: boolean;
   subText?: string;
+  status?: string;
 }
 
 export const EditableEntityLabel: React.FC<Props> = props => {
-  const { iconVariant, loading, subText, text, onEdit } = props;
+  const { iconVariant, loading, status, subText, text, onEdit } = props;
   const [isEditing, toggleEditing] = React.useState<boolean>(false);
   const [inputText, setInputText] = React.useState<string>(text);
   const [error, setError] = React.useState<string | undefined>();
@@ -65,7 +66,7 @@ export const EditableEntityLabel: React.FC<Props> = props => {
     >
       {!isEditing && (
         <Grid item className="py0">
-          <EntityIcon variant={iconVariant} />
+          <EntityIcon variant={iconVariant} status={status} />
         </Grid>
       )}
       <Grid

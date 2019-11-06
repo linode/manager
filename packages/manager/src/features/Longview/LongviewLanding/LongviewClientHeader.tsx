@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
-import EntityIcon from 'src/components/EntityIcon';
+import EditableEntityLabel from 'src/components/EditableEntityLabel';
 import Grid from 'src/components/Grid';
 
 export const LongviewClientHeader: React.FC<{}> = props => {
@@ -21,15 +21,14 @@ export const LongviewClientHeader: React.FC<{}> = props => {
         justify="flex-start"
         alignItems="center"
       >
-        <Grid item>
-          <EntityIcon status="running" variant="linode" />
-        </Grid>
-        <Grid item>
-          <Typography>
-            <strong>Dev Server 1</strong>
-          </Typography>
-          <Typography>dev.hostname.com</Typography>
-        </Grid>
+        <EditableEntityLabel
+          text={'Dev Server 1'}
+          iconVariant="linode"
+          subText="dev.hostname.com"
+          status="running"
+          onEdit={() => Promise.resolve(null)}
+          loading={false}
+        />
       </Grid>
       <Grid item>
         <Typography>Up 47d 19h 22m</Typography>
