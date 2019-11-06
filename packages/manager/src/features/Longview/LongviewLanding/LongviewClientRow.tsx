@@ -3,7 +3,7 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 
-import Button from 'src/components/Button';
+import IconButton from 'src/components/core/IconButton';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
@@ -38,6 +38,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       color: theme.color.red
     }
+  },
+  label: {
+    paddingLeft: theme.spacing(2)
   }
 }));
 
@@ -126,11 +129,12 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
         container
         direction="row"
         wrap="nowrap"
-        justify="space-evenly"
+        justify="space-between"
         alignItems="center"
         className={classes.container}
+        aria-label="List of Your Longview Clients"
       >
-        <Grid item xs={2}>
+        <Grid item xs={2} className={classes.label}>
           <LongviewClientHeader />
         </Grid>
         <CPUGauge clientAPIKey={clientAPIKey} lastUpdated={lastUpdated} />
@@ -150,12 +154,12 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
           <StorageGauge clientAPIKey={clientAPIKey} lastUpdated={lastUpdated} />
         </Grid>
         <Grid item style={{ alignSelf: 'flex-start' }}>
-          <Button
+          <IconButton
             onClick={() => triggerDeleteLongviewClient(clientID, clientLabel)}
             className={classes.button}
           >
             <Close width={30} height={30} />
-          </Button>
+          </IconButton>
         </Grid>
       </Grid>
     </Paper>

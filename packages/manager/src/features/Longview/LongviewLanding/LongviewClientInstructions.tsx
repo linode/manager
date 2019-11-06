@@ -1,8 +1,8 @@
 import Close from '@material-ui/icons/Close';
 import * as React from 'react';
 
-import Button from 'src/components/Button';
 import CopyTooltip from 'src/components/CopyTooltip';
+import IconButton from 'src/components/core/IconButton';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -27,7 +27,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   helpText: {
     fontSize: '1em',
-    lineHeight: '1.2em'
+    lineHeight: '1.2em',
+    paddingTop: theme.spacing()
   },
   footer: {
     '& span:nth-child(n+2)': {
@@ -35,8 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingLeft: theme.spacing(2),
       borderLeft: `solid 1px ${theme.color.grey3}`
     }
-  },
-  snippet: {}
+  }
 }));
 
 interface Props {
@@ -63,7 +63,8 @@ export const LongviewClientInstructions: React.FC<Props> = props => {
         wrap="nowrap"
         justify="space-between"
         alignItems="flex-start"
-        spacing={4}
+        spacing={2}
+        aria-label="Installation instructions for the Longview agent"
       >
         <Grid item xs={3}>
           <EditableEntityLabel
@@ -84,7 +85,7 @@ export const LongviewClientInstructions: React.FC<Props> = props => {
             </Typography>
           </Grid>
           <Grid item>
-            <pre className={classes.snippet}>
+            <pre>
               <CopyTooltip text={command} />
               <code>{command}</code>
             </pre>
@@ -114,12 +115,12 @@ export const LongviewClientInstructions: React.FC<Props> = props => {
           </Grid>
         </Grid>
         <Grid item>
-          <Button
+          <IconButton
             className={classes.button}
             onClick={() => triggerDeleteLongviewClient(clientID, clientLabel)}
           >
             <Close width={30} height={30} />
-          </Button>
+          </IconButton>
         </Grid>
       </Grid>
     </Paper>
