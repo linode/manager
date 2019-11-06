@@ -29,6 +29,8 @@ import SpacingToggle from './SpacingToggle';
 import ThemeToggle from './ThemeToggle';
 import { linkIsActive } from './utils';
 
+import Kubernetes from 'src/assets/addnewmenu/kubernetes.svg';
+import OCA from 'src/assets/addnewmenu/oneclick.svg';
 import Account from 'src/assets/icons/account.svg';
 import Dashboard from 'src/assets/icons/dashboard.svg';
 import Storage from 'src/assets/icons/entityIcons/bucket.svg';
@@ -169,7 +171,8 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
         link: {
           display: 'Kubernetes',
           href: '/kubernetes/clusters',
-          key: 'kubernetes'
+          key: 'kubernetes',
+          icon: <Kubernetes />
         }
       },
       {
@@ -180,6 +183,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
           href: '/linodes/create?type=One-Click',
           key: 'one-click',
           attr: { 'data-qa-one-click-nav-btn': true },
+          icon: <OCA />,
           onClick: () => {
             sendOneClickNavigationEvent('Primary Nav');
           }
