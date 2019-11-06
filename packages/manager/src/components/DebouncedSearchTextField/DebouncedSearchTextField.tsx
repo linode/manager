@@ -7,16 +7,16 @@ import InputAdornment from 'src/components/core/InputAdornment';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 
+import usePrevious from 'src/hooks/usePrevious';
+
 const useStyles = makeStyles((theme: Theme) => ({
   searchIcon: {
     color: `${theme.color.grey1} !important`
   }
 }));
 
-interface Props<T extends any = any> extends TextFieldProps {
-  // updateList: (list: T | undefined) => void;
-  originalList: T;
-  onSearch: (query: string, originalList: T) => void;
+interface Props extends TextFieldProps {
+  onSearch: (query: string) => void;
   debounceTime?: number;
   isSearching?: boolean;
   className?: string;
@@ -24,45 +24,51 @@ interface Props<T extends any = any> extends TextFieldProps {
 
 type CombinedProps = Props;
 
-const ClientSearch: React.FC<CombinedProps> = props => {
+const DebouncedSearch: React.FC<CombinedProps> = props => {
   const {
     className,
     isSearching,
     InputProps,
     debounceTime,
-    originalList,
     onSearch,
     ...restOfTextFieldProps
   } = props;
   const [query, setQuery] = React.useState<string>('');
+  const prevQuery = usePrevious<string>(query);
 
   const classes = useStyles();
 
   React.useEffect(() => {
-    /* This `didCancel` business is to prevent a warning from React.
-     * See: https://github.com/facebook/react/issues/14369#issuecomment-468267798
-     */
+    /*
+      This `didCancel` business is to prevent a warning from React.
+      See: https://github.com/facebook/react/issues/14369#issuecomment-468267798
+    */
     let didCancel = false;
-
-    if (debounceTime) {
+    /* 
+      don't run the search if the query hasn't changed.
+      This is mostly to prevent this effect from running on first mount
+    */
+    if (prevQuery || '' !== query) {
       setTimeout(() => {
         if (!didCancel) {
-          onSearch(query, originalList);
+          onSearch(query);
         }
-      }, debounceTime);
-    } else {
-      onSearch(query, originalList);
+      }, debounceTime || 400);
     }
     return () => {
       didCancel = true;
     };
   }, [query]);
 
+  const _setQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+  };
+
   return (
     <TextField
       className={className}
       placeholder="Filter by query"
-      onChange={e => setQuery(e.target.value)}
+      onChange={_setQuery}
       InputProps={{
         startAdornment: (
           <InputAdornment position="end">
@@ -83,6 +89,4 @@ const ClientSearch: React.FC<CombinedProps> = props => {
   );
 };
 
-export default (compose<CombinedProps, Props>(React.memo)(
-  ClientSearch
-) as unknown) as <T>(props: Props<T>) => React.ReactElement;
+export default compose<CombinedProps, Props>(React.memo)(DebouncedSearch);

@@ -19,8 +19,9 @@ class Example extends React.Component<Props, State> {
     isSearching: false
   };
 
-  handleSearch = (value: string, list: string[]) => {
+  handleSearch = (value: string) => {
     this.setState({ isSearching: true });
+    const { list } = this.state;
     action('searching')(value);
     return new Promise(resolve => {
       setTimeout(() => {
@@ -44,9 +45,8 @@ class Example extends React.Component<Props, State> {
   render() {
     return (
       <React.Fragment>
-        <DebouncedSearchTextField<string[]>
+        <DebouncedSearchTextField
           placeholder="Search for something"
-          originalList={this.state.list}
           debounceTime={400}
           onSearch={this.handleSearch}
           isSearching={this.state.isSearching}

@@ -475,11 +475,10 @@ const withStackScriptBase = (isSelecting: boolean) => (
           ) : (
             <React.Fragment>
               <div className={classes.searchWrapper}>
-                <DebouncedSearch<StackScript[]>
+                <DebouncedSearch
                   placeholder="Search by Label, Username, or Description"
                   onSearch={this.handleSearch}
                   debounceTime={400}
-                  originalList={this.state.listOfStackScripts}
                   className={classes.searchBar}
                   isSearching={isSearching}
                   tooltipText={
