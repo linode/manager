@@ -1,5 +1,7 @@
+import { AccountSettings } from 'linode-js-sdk/lib/account';
 import { getLongviewSubscriptions } from 'linode-js-sdk/lib/longview';
 import { LongviewSubscription } from 'linode-js-sdk/lib/longview/types';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
@@ -20,6 +22,7 @@ import accountSettingsContainer, {
   DispatchProps,
   SettingsProps
 } from 'src/containers/accountSettings.container';
+import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -90,69 +93,56 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
+// If an account has the "free" Longview plan,
+// accountSettings.longview_subscription will be `null`. We'd rather use
+// a string identifer in this component to be keep track of the "free" plan, so
+// we'll create a fake ID for it.
+const LONGVIEW_FREE_ID = 'longview-free';
+
 export type CombinedProps = SettingsProps & DispatchProps;
 
 export const LongviewPlans: React.FC<CombinedProps> = props => {
-  const { accountSettings } = props;
+  const { accountSettings, updateAccountSettings } = props;
+  const styles = useStyles();
 
-  const initialSelected =
-    accountSettings && accountSettings.longview_subscription !== null
-      ? accountSettings.longview_subscription
-      : '';
-
-  const [subscriptions, setSubscriptions] = React.useState<
-    LongviewSubscription[]
-  >([]);
-  const [selectedSubscription, setSelectedSubscription] = React.useState<
-    string
-  >(initialSelected);
-
-  const [fetchLoading, setFetchLoading] = React.useState<boolean>(false);
-  const [updateLoading, setUpdateLoading] = React.useState<boolean>(false);
-
-  const [fetchErrorMessage, setFetchErrorMessage] = React.useState<string>('');
-  const [updateErrorMessage, setUpdateErrorMessage] = React.useState<string>(
-    ''
+  const subscriptions = useAPIRequest<LongviewSubscription[]>(
+    () => getLongviewSubscriptions().then(response => response.data),
+    []
   );
 
-  const currentSubscriptionOnAccount =
-    accountSettings && accountSettings.longview_subscription
-      ? accountSettings.longview_subscription
-      : '';
+  const currentSubscriptionOnAccount = getCurrentSubscriptionOnAccount(
+    accountSettings
+  );
 
-  React.useEffect(() => {
-    setFetchLoading(true);
-    getLongviewSubscriptions()
-      .then(response => {
-        setFetchLoading(false);
-
-        setSubscriptions(response.data);
-      })
-      .catch(err => {
-        const normalizedError = getAPIErrorOrDefault(
-          err,
-          'There was an error fetching Longview Plans.'
-        );
-        setFetchLoading(false);
-        setFetchErrorMessage(normalizedError[0].reason);
-      });
-  }, []);
+  const [selectedSub, setSelectedSub] = React.useState<string>(
+    currentSubscriptionOnAccount
+  );
+  const [updateLoading, setUpdateLoading] = React.useState<boolean>(false);
+  const [updateErrorMsg, setUpdateErrorMsg] = React.useState<string>('');
 
   const onSubmit = () => {
-    if (selectedSubscription === currentSubscriptionOnAccount) {
+    // No need to do anything if the user hasn't selected a different plan.
+    if (selectedSub === currentSubscriptionOnAccount) {
       return;
     }
 
     setUpdateLoading(true);
-    setUpdateErrorMessage('');
+    setUpdateErrorMsg('');
 
-    props
-      .updateAccountSettings({
-        longview_subscription: selectedSubscription || null
-      })
+    // If the user has selected the free plan, which need to make a switch for
+    // `null`, which is what the API wants.
+    const newSubscriptionID =
+      selectedSub === LONGVIEW_FREE_ID ? null : selectedSub;
+
+    updateAccountSettings({
+      longview_subscription: newSubscriptionID
+    })
       .then(_ => {
         setUpdateLoading(false);
-        if (selectedSubscription === '') {
+        // If the user has selected the free plan, the response to the PUT
+        // request will have the old longview_subscription. I don't know why.
+        // We need to manually update the store in this case.
+        if (selectedSub === LONGVIEW_FREE_ID) {
           props.updateAccountSettingsInStore({ longview_subscription: null });
         }
       })
@@ -162,87 +152,48 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
           'There was an error updating your Longview Plan.'
         );
         setUpdateLoading(false);
-        setUpdateErrorMessage(normalizedError[0].reason);
-        // @todo: handle error
+        setUpdateErrorMsg(normalizedError[0].reason);
       });
   };
 
   const onRadioSelect = (e: React.FormEvent<HTMLInputElement>) =>
-    setSelectedSubscription(e.currentTarget.value);
-
-  const styles = useStyles();
-
-  const rowProps = {
-    onRadioSelect,
-    onRowSelect: setSelectedSubscription,
-    currentSubscriptionOnAccount,
-    selectedSubscription
-  };
-
-  const Head = (
-    <TableRow>
-      <TableCell className={styles.planCell}>Plan</TableCell>
-      <TableCell className={styles.clientCell}>Clients</TableCell>
-      <TableCell className={styles.dataRetentionCell}>Data Retention</TableCell>
-      <TableCell className={styles.dataResolutionCell}>
-        Data Resolution
-      </TableCell>
-      <TableCell className={styles.priceCell}>Price</TableCell>
-    </TableRow>
-  );
-
-  const renderBody = () => {
-    if (fetchLoading) {
-      return <TableRowLoading colSpan={12} />;
-    }
-
-    if (fetchErrorMessage) {
-      return <TableRowError colSpan={12} message={fetchErrorMessage} />;
-    }
-
-    return (
-      <>
-        <LongviewSubscriptionRow
-          key={'lv-free'}
-          id={''}
-          plan="Longview Free"
-          clients={10}
-          dataRetention="Limited to 12 hours"
-          dataResolution="Every 5 minutes"
-          price="FREE"
-          {...rowProps}
-        />
-        {subscriptions.map(subscription => (
-          <LongviewSubscriptionRow
-            key={subscription.id}
-            id={subscription.id}
-            plan={subscription.label}
-            clients={subscription.clients_included}
-            dataRetention="Unlimited"
-            dataResolution="Every minute"
-            price={formatPrice(subscription.price)}
-            {...rowProps}
-          />
-        ))}
-      </>
-    );
-  };
+    setSelectedSub(e.currentTarget.value);
 
   return (
     <>
       <DocumentTitleSegment segment="Plan Details" />
       <Paper className={styles.root}>
-        {updateErrorMessage && <Notice error text={updateErrorMessage} />}
+        {updateErrorMsg && <Notice error text={updateErrorMsg} />}
         <Table className={styles.table} isResponsive={false}>
-          <TableHead>{Head}</TableHead>
-          <TableBody>{renderBody()}</TableBody>
+          <TableHead>
+            <TableRow>
+              <TableCell className={styles.planCell}>Plan</TableCell>
+              <TableCell className={styles.clientCell}>Clients</TableCell>
+              <TableCell className={styles.dataRetentionCell}>
+                Data Retention
+              </TableCell>
+              <TableCell className={styles.dataResolutionCell}>
+                Data Resolution
+              </TableCell>
+              <TableCell className={styles.priceCell}>Price</TableCell>
+            </TableRow>
+          </TableHead>
+          <LongviewPlansTableBody
+            loading={subscriptions.loading}
+            error={subscriptions.error}
+            subscriptions={subscriptions.data}
+            onRadioSelect={onRadioSelect}
+            onRowSelect={setSelectedSub}
+            currentSubscriptionOnAccount={currentSubscriptionOnAccount}
+            selectedSub={selectedSub}
+          />
         </Table>
         <Button
           className={styles.submitButton}
           buttonType="primary"
           onClick={onSubmit}
           loading={updateLoading}
-          disabled={Boolean(fetchErrorMessage)}
+          disabled={Boolean(subscriptions.error)}
         >
           Change Plan
         </Button>
@@ -258,10 +209,65 @@ const enhanced = compose<CombinedProps, {}>(
 
 export default enhanced(LongviewPlans);
 
-export const formatPrice = (price: LongviewSubscription['price']): string => {
-  return `$${price.hourly.toFixed(2)}/hr ($${price.monthly}/mo)`;
+// =============================================================================
+// LongviewPlansTableBody
+// =============================================================================
+interface LongviewPlansTableBodyProps {
+  loading: boolean;
+  error: APIError[] | undefined;
+  subscriptions: LongviewSubscription[];
+  onRowSelect: (plan: string) => void;
+  onRadioSelect: (e: React.FormEvent<HTMLInputElement>) => void;
+  currentSubscriptionOnAccount: string;
+  selectedSub: string;
+}
+
+export const LongviewPlansTableBody: React.FC<
+  LongviewPlansTableBodyProps
+> = props => {
+  const { loading, error, subscriptions, selectedSub, ...rest } = props;
+
+  if (loading) {
+    return <TableRowLoading colSpan={12} />;
+  }
+
+  if (error && error.length > 0) {
+    return <TableRowError colSpan={12} message={error[0].reason} />;
+  }
+
+  return (
+    <TableBody>
+      <LongviewSubscriptionRow
+        key={LONGVIEW_FREE_ID}
+        id={LONGVIEW_FREE_ID}
+        plan="Longview Free"
+        clients={10}
+        dataRetention="Limited to 12 hours"
+        dataResolution="Every 5 minutes"
+        price="FREE"
+        isSelected={selectedSub === LONGVIEW_FREE_ID}
+        {...rest}
+      />
+      {subscriptions.map(sub => (
+        <LongviewSubscriptionRow
+          key={sub.id}
+          id={sub.id}
+          plan={sub.label}
+          clients={sub.clients_included}
+          dataRetention="Unlimited"
+          dataResolution="Every minute"
+          price={formatPrice(sub.price)}
+          isSelected={selectedSub === sub.id}
+          {...rest}
+        />
+      ))}
+    </TableBody>
+  );
 };
 
+// =============================================================================
+// LongviewSubscriptionRow
+// =============================================================================
 interface LongviewSubscriptionRowProps {
   id: string;
   plan: string;
@@ -272,7 +278,7 @@ interface LongviewSubscriptionRowProps {
   onRowSelect: (plan: string) => void;
   onRadioSelect: (e: React.FormEvent<HTMLInputElement>) => void;
   currentSubscriptionOnAccount: string;
-  selectedSubscription: string;
+  isSelected: boolean;
 }
 
 export const LongviewSubscriptionRow: React.FC<
@@ -288,7 +294,7 @@ export const LongviewSubscriptionRow: React.FC<
     onRowSelect,
     onRadioSelect,
     currentSubscriptionOnAccount,
-    selectedSubscription
+    isSelected
   } = props;
 
   const styles = useStyles();
@@ -303,7 +309,7 @@ export const LongviewSubscriptionRow: React.FC<
         <div className={styles.currentSubscriptionLabel}>
           <Radio
             value={id}
-            checked={selectedSubscription === id}
+            checked={isSelected}
             onChange={onRadioSelect}
             className={styles.radio}
             id={id}
@@ -324,4 +330,24 @@ export const LongviewSubscriptionRow: React.FC<
       <TableCell className={styles.priceCell}>{price}</TableCell>
     </TableRow>
   );
+};
+
+// =============================================================================
+// Utilities
+// =============================================================================
+export const formatPrice = (price: LongviewSubscription['price']): string => {
+  return `$${price.hourly.toFixed(2)}/hr ($${price.monthly}/mo)`;
+};
+
+// Return the Longview subscription on the account, or the default if
+// accountSettings is undefined or if the account has the "free" plan enabled
+// (in which case accountSettings.longview_subscription will be `null`).
+export const getCurrentSubscriptionOnAccount = (
+  accountSettings?: AccountSettings,
+  defaultSubscriptionID = LONGVIEW_FREE_ID
+) => {
+  return accountSettings &&
+    typeof accountSettings.longview_subscription === 'string'
+    ? accountSettings.longview_subscription
+    : defaultSubscriptionID;
 };
