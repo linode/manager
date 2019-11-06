@@ -92,9 +92,9 @@ const styles = (theme: Theme) =>
           color: 'white'
         },
         '& svg': {
-          fill: theme.color.white,
+          fill: 'white',
           '& *': {
-            stroke: theme.color.white
+            stroke: 'white'
           }
         }
       },
@@ -206,9 +206,8 @@ const styles = (theme: Theme) =>
     },
     settings: {
       width: 30,
-      margin: '24px auto 16px',
+      margin: `auto 16px 16px ${theme.spacing(4) - 1}px`,
       alignItems: 'center',
-      marginTop: 'auto',
       justifyContent: 'center',
       display: 'flex',
       color: '#e7e7e7',

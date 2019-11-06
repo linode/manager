@@ -107,7 +107,6 @@ class SideMenu extends React.Component<CombinedProps> {
               toggleTheme={toggleTheme}
               toggleSpacing={toggleSpacing}
               isCollapsed={!desktopOpen}
-              // isCollapsed={true}
             />
           </Drawer>
         </Hidden>
