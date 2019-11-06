@@ -121,6 +121,11 @@ export const ImageSelect: React.FC<Props> = props => {
   const classes = useStyles();
 
   const filteredImages = images.filter(thisImage => {
+    if (thisImage.label.match(/kube/i)) {
+      // NOTE: Temporarily hide public Kubernetes images until ImageSelect redesign.
+      return false;
+    }
+    
     switch (variant) {
       case 'public':
         return thisImage.is_public;
