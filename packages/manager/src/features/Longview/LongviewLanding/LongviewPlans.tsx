@@ -259,6 +259,8 @@ export const LongviewPlansTableBody: React.FC<
 
   return (
     <>
+      {/* The first row is hard-coded, as the "free" plan is not returned from
+      the API. */}
       <LongviewSubscriptionRow
         key={LONGVIEW_FREE_ID}
         id={LONGVIEW_FREE_ID}
@@ -270,6 +272,8 @@ export const LongviewPlansTableBody: React.FC<
         isSelected={selectedSub === LONGVIEW_FREE_ID}
         {...rest}
       />
+      {/* We use data from /longview/subscriptions to generate the remaining
+      rows. */}
       {subscriptions.map(sub => (
         <LongviewSubscriptionRow
           key={sub.id}
