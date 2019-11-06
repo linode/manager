@@ -119,6 +119,7 @@ const styles = (theme: Theme) =>
         }
       }
     },
+    listItemCollpased: {},
     collapsible: {
       fontSize: '0.9rem'
     },
@@ -138,9 +139,9 @@ const styles = (theme: Theme) =>
         content: "''",
         borderStyle: 'solid',
         borderWidth: `
-          ${theme.spacing(2) + 3}px
-          ${theme.spacing(2) - 2}px 
-          ${theme.spacing(2) + 3}px 
+          ${theme.spacing(1) + 11}px
+          ${theme.spacing(1) + 6}px 
+          ${theme.spacing(1) + 11}px 
           0
         `,
         borderColor: `transparent ${
@@ -148,7 +149,7 @@ const styles = (theme: Theme) =>
         } transparent transparent`,
         position: 'absolute',
         right: 0,
-        top: 'calc(8% - 1px)'
+        top: theme.spacing(1) === 8 ? 2 : 0
       },
       '&:hover': {
         '&:before': {
@@ -161,6 +162,11 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.down('sm')]: {
         '&:before': {
           display: 'none'
+        }
+      },
+      '&.listItemCollpased': {
+        '&:before': {
+          top: theme.spacing(1) === 8 ? 2 : 4
         }
       }
     },

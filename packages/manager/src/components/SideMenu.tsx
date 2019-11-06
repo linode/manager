@@ -36,12 +36,9 @@ const styles = (theme: Theme) =>
       transform: 'none'
     },
     collapsedDesktopMenu: {
-      width: 92,
+      width: theme.spacing(7) + 36,
       '&:hover': {
-        width: theme.spacing(14) + 103, // 215
-        [theme.breakpoints.up('xl')]: {
-          width: theme.spacing(22) + 99 // 275
-        },
+        width: theme.spacing(9) + 150,
         '& .logoLetters, & .primaryNavLink': {
           opacity: 1
         }

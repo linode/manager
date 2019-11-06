@@ -18,7 +18,6 @@ import withFeatureFlagConsumer, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container';
 import { MapState } from 'src/store/types';
-import { NORMAL_SPACING_UNIT } from 'src/themeFactory';
 import {
   isKubernetesEnabled,
   isObjectStorageEnabled
@@ -329,7 +328,8 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
           {...primaryLink.attr}
           className={classNames({
             [classes.listItem]: true,
-            [classes.active]: linkIsActive(primaryLink.href)
+            [classes.active]: linkIsActive(primaryLink.href),
+            listItemCollpased: isCollapsed
           })}
         >
           {primaryLink.icon && isCollapsed && (
@@ -368,24 +368,16 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
           role="menu"
         >
           <Grid item>
-            {NORMAL_SPACING_UNIT ? (
-              <div
-                className={classNames({
-                  [classes.logoItem]: true,
-                  [classes.logoCollapsed]: isCollapsed
-                })}
-              >
-                <Link to={`/dashboard`} onClick={() => this.props.closeMenu()}>
-                  <Logo width={115} height={43} />
-                </Link>
-              </div>
-            ) : (
-              <div className={classes.logoItemCompact}>
-                <Link to={`/dashboard`}>
-                  <Logo width={100} height={37} />
-                </Link>
-              </div>
-            )}
+            <div
+              className={classNames({
+                [classes.logoItem]: true,
+                [classes.logoCollapsed]: isCollapsed
+              })}
+            >
+              <Link to={`/dashboard`} onClick={() => this.props.closeMenu()}>
+                <Logo width={115} height={43} />
+              </Link>
+            </div>
           </Grid>
           <div
             className={classNames({
