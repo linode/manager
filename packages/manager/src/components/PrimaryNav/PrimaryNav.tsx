@@ -375,7 +375,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
                   [classes.logoCollapsed]: isCollapsed
                 })}
               >
-                <Link to={`/dashboard`}>
+                <Link to={`/dashboard`} onClick={() => this.props.closeMenu()}>
                   <Logo width={115} height={43} />
                 </Link>
               </div>
