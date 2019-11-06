@@ -148,7 +148,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
           <LoadGauge token={clientAPIKey} lastUpdated={lastUpdated} />
         </Grid>
         <Grid item>
-          <NetworkGauge />
+          <NetworkGauge token={clientAPIKey} lastUpdated={lastUpdated} />
         </Grid>
         <Grid item>
           <StorageGauge clientAPIKey={clientAPIKey} lastUpdated={lastUpdated} />

@@ -300,9 +300,12 @@ export const getDistributionLabel = distributionTags => {
   });
   return distributionLabel;
 };
-
+//TODO figure out why this is not working
+//follows
 export const getLocalStorageValue = key => {
-  return browser.localStorage('GET', key).value;
+  //This is not working for some reason
+  //https://webdriver.io/docs/api/jsonwp.html#getlocalstorage
+  return browser.getLocalStorageItem(key).value;
 };
 
 export const apiCreateDomains = domainObjArray => {
