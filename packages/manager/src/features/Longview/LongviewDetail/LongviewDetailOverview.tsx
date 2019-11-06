@@ -8,7 +8,6 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 
 import withLongviewClients, {
-  DispatchProps,
   Props as LVProps
 } from 'src/containers/longview.container';
 
@@ -17,9 +16,12 @@ interface Props {
   longviewClientsLastUpdated: number;
 }
 
-type CombinedProps = RouteComponentProps<{ id: string }> &
-  Props &
-  DispatchProps;
+type CombinedProps = RouteComponentProps<{ id: string }> & Props;
+
+interface PartialLongviewProps {
+  clients: LVProps['longviewClientsData'];
+  longviewClientsLastUpdated: LVProps['longviewClientsLastUpdated'];
+}
 
 const LongviewDetailOverview: React.FC<CombinedProps> = props => {
   return (
@@ -74,7 +76,7 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
 
 export default compose<CombinedProps, Props>(
   React.memo,
-  withLongviewClients<Props, {}>(
+  withLongviewClients<PartialLongviewProps, {}>(
     (own, { longviewClientsData, longviewClientsLastUpdated }) => ({
       clients: longviewClientsData,
       longviewClientsLastUpdated

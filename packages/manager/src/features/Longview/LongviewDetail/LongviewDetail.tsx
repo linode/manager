@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   matchPath,
-  Redirect,
   Route,
   RouteComponentProps,
   Switch
@@ -156,12 +155,6 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
         <Route
           exact
           strict
-          path={`${url}/overview`}
-          render={() => <Overview {...props} />}
-        />
-        <Route
-          exact
-          strict
           path={`${url}/processes`}
           render={() => <h2>Processes</h2>}
         />
@@ -201,7 +194,7 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
           path={`${url}/installation`}
           render={() => <h2>Installation</h2>}
         />
-        <Redirect to={`${url}/overview`} />
+        <Route strict render={() => <Overview {...props} />} />
       </Switch>
     </React.Fragment>
   );
