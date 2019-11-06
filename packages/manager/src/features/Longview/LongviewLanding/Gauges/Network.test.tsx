@@ -52,9 +52,7 @@ describe('Longview Network Gauge UI', () => {
       }
     ]);
 
-    const resolvedDiv = await waitForElement(() => getByText(/Error/));
-
-    expect(resolvedDiv).toHaveTextContent(/Error/);
+    await waitForElement(() => getByText(/Error/));
   });
 
   it('should render a data state on 200 responses', async () => {
@@ -77,7 +75,7 @@ describe('Longview Network Gauge UI', () => {
     );
     const subtext = await waitForElement(() => getByTestId('gauge-subtext'));
 
-    expect(innerText).toHaveTextContent('4.00 Mb/s');
+    expect(innerText).toHaveTextContent('4 Mb/s');
     expect(subtext).toHaveTextContent('Network');
   });
 });

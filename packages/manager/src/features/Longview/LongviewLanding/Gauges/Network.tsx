@@ -7,6 +7,7 @@ import GaugePercent from 'src/components/GaugePercent';
 import { baseGaugeProps } from './common';
 
 import requestStats from '../../request';
+import { LongviewNetwork } from '../../request.types';
 
 interface Props {
   lastUpdated?: number;
@@ -28,7 +29,7 @@ const NetworkGauge: React.FC<Props> = props => {
           {},
           ['Network', 'Interface'],
           response
-        ) as Record<string, any>;
+        ) as LongviewNetwork['Network']['Interface'];
 
         if (mounted) {
           setNetworkUsed(generateUsedNetworkAsBytes(interfaces));
@@ -93,7 +94,7 @@ const NetworkGauge: React.FC<Props> = props => {
     const { value, unit } = generateUnits(networkUsed);
 
     return {
-      innerText: `${value.toFixed(2)} ${unit}/s`,
+      innerText: `${value} ${unit}/s`,
       subTitle: (
         <React.Fragment>
           <Typography>
@@ -141,20 +142,16 @@ interface Units {
  */
 export const generateUnits = (networkUsed: number): Units => {
   /** Thanks to http://www.matisse.net/bitcalc/ */
-  const howManyKilobitsInAByte = 0.0078125;
-  const networkUsedToKilobits = networkUsed * howManyKilobitsInAByte;
+  const networkUsedToKilobits = (networkUsed * 8) / 1024;
 
   if (networkUsedToKilobits <= 1000) {
     return {
-      value: networkUsedToKilobits,
+      value: Math.round(networkUsedToKilobits),
       unit: 'Kb'
     };
   } else {
-    const howManyMegabitsInAKilobit = 0.0009765625;
-    const networkUsedToMegabits =
-      networkUsedToKilobits * howManyMegabitsInAKilobit;
     return {
-      value: networkUsedToMegabits,
+      value: Math.round(networkUsedToKilobits / 1024),
       unit: 'Mb'
     };
   }
@@ -189,18 +186,19 @@ export const generateUnits = (networkUsed: number): Units => {
 
   usedInboundNetwork + usedOutboundNetwork
 */
-export const generateUsedNetworkAsBytes = (interfaces: Record<string, any>) => {
-  return Object.keys(interfaces).reduce((acc, eachInterface) => {
-    const thisInterfaceData = interfaces[eachInterface];
-    if (!!thisInterfaceData && typeof thisInterfaceData === 'object') {
-      acc += Object.keys(thisInterfaceData).reduce(
+export const generateUsedNetworkAsBytes = (
+  interfaces: LongviewNetwork['Network']['Interface']
+) => {
+  return Object.values(interfaces).reduce((acc, inboundAndOutBoundBytes) => {
+    if (typeof inboundAndOutBoundBytes === 'object') {
+      acc += Object.values(inboundAndOutBoundBytes).reduce(
         (secondAcc, secondElement) => {
           /**
            * secondElement at this point might be
            *
            * [{ x: 1234, y: 1234 }],
            */
-          secondAcc += pathOr(0, [0, 'y'], thisInterfaceData[secondElement]);
+          secondAcc += pathOr(0, [0, 'y'], secondElement);
           return secondAcc;
         },
         0
