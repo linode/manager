@@ -27,6 +27,7 @@ export type ClassNames =
   | 'menu'
   | 'paper'
   | 'settings'
+  | 'settingsCollapsed'
   | 'activeSettings'
   | 'settingsBackdrop';
 
@@ -212,7 +213,7 @@ const styles = (theme: Theme) =>
     },
     settings: {
       width: 30,
-      margin: `auto 16px 16px ${theme.spacing(4) - 1}px`,
+      margin: `auto auto 16px`,
       alignItems: 'center',
       justifyContent: 'center',
       display: 'flex',
@@ -224,6 +225,9 @@ const styles = (theme: Theme) =>
       '&:hover': {
         color: theme.color.green
       }
+    },
+    settingsCollapsed: {
+      margin: `auto 16px 16px ${theme.spacing(4) - 1}px`
     },
     activeSettings: {
       color: theme.color.green,

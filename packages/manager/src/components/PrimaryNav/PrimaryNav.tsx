@@ -454,6 +454,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
               onClick={this.handleClick}
               className={classNames({
                 [classes.settings]: true,
+                [classes.settingsCollapsed]: isCollapsed,
                 [classes.activeSettings]: anchorEl
               })}
             >

@@ -28,6 +28,7 @@ const mockClasses: Record<ClassNames, string> = {
   sublinkActive: '',
   sublinkPanel: '',
   settings: '',
+  settingsCollapsed: '',
   settingsBackdrop: '',
   activeSettings: '',
   menu: '',
