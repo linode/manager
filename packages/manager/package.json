@@ -311,7 +311,8 @@
       "ts-jest": {
         "tsConfig": "tsconfig.test.json"
       }
-    }
+    },
+    "testResultsProcessor": "jest-sonar-reporter"
   },
   "babel": {
     "presets": [
