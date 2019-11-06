@@ -4,7 +4,7 @@ import * as React from 'react';
 import { longviewLoad, systemInfo } from 'src/__data__/longview';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { baseRequest } from '../../request';
-import Load, { getOverallocationPercent } from './Load';
+import Load from './Load';
 
 const mockApi = new MockAdapter(baseRequest);
 
@@ -12,16 +12,6 @@ afterEach(cleanup);
 
 afterAll(async done => {
   done();
-});
-
-describe('Utility Functions', () => {
-  it('should return overallocation correctly', () => {
-    expect(getOverallocationPercent(4, 5)).toBe(100);
-    expect(getOverallocationPercent(3, 2)).toBe(0);
-    expect(getOverallocationPercent(10, 5)).toBe(0);
-    expect(getOverallocationPercent(1, 3)).toBe(200);
-    expect(getOverallocationPercent(2, 5)).toBe(300);
-  });
 });
 
 describe('Longview Load Gauge UI', () => {
@@ -67,9 +57,7 @@ describe('Longview Load Gauge UI', () => {
     const innerText = await waitForElement(() =>
       getByTestId('gauge-innertext')
     );
-    const subtext = await waitForElement(() => getByTestId('gauge-subtext'));
 
     expect(innerText).toHaveTextContent('2');
-    expect(subtext).toHaveTextContent('100% Overallocated');
   });
 });
