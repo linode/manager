@@ -94,7 +94,7 @@ const useStyles = makeStyles((theme: Theme) => {
     clientCell: {
       textAlign: 'right',
       paddingRight: theme.spacing(6.5),
-      width: '15%'
+      width: '10%'
     },
     dataRetentionCell: {
       width: '15%'
