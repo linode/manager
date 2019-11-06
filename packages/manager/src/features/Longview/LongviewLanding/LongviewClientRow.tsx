@@ -39,7 +39,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
 
   const { clientID, clientLabel, clientAPIKey, ...actionHandlers } = props;
 
-  /* 
+  /*
    lastUpdated _might_ come back from the endpoint as 0, so it's important
    that we differentiate between _0_ and _undefined_
    */
@@ -49,7 +49,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
   const requestAndSetLastUpdated = () => {
     return getLastUpdated(clientAPIKey)
       .then(response => {
-        /* 
+        /*
           only update _lastUpdated_ state if it hasn't already been set
           or the API response is in a time past what's already been set.
         */
@@ -105,7 +105,10 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
   }
 
   return (
-    <TableRow className={classes.root} rowLink={`longview/clients/${clientID}`}>
+    <TableRow
+      className={classes.root}
+      rowLink={`/longview/clients/${clientID}`}
+    >
       <TableCell>{`${clientLabel}`}</TableCell>
       <TableCell>
         <CPUGauge clientAPIKey={clientAPIKey} lastUpdated={lastUpdated} />
