@@ -12,6 +12,7 @@ RUN yarn global add lerna
 
 # Copy the root level package.json and run yarn if anything changes
 COPY --chown=node:node package.json .
+COPY --chown=node:node yarn.lock .
 RUN yarn
 
 # Copy lerna.json
