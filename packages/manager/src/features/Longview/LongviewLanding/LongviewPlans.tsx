@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme: Theme) => {
       backgroundColor: theme.color.green,
       color: '#fff',
       textTransform: 'uppercase',
-      minHheight: theme.spacing(2) + 11,
+      minHeight: theme.spacing(2) + 11,
       paddingLeft: theme.spacing(0.5),
       paddingRight: theme.spacing(0.5),
       marginTop: 0,
