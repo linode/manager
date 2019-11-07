@@ -8,7 +8,6 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import CPUGauge from './Gauges/CPU';
-import { ActionHandlers } from './LongviewActionMenu';
 
 import { getLastUpdated } from '../request';
 import LoadGauge from './Gauges/Load';
@@ -44,10 +43,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface Props extends ActionHandlers {
+interface Props {
   clientID: number;
   clientLabel: string;
   clientAPIKey: string;
+  triggerDeleteLongviewClient: (
+    longviewClientID: number,
+    longviewClientLabel: string
+  ) => void;
 }
 
 type CombinedProps = Props;
@@ -150,7 +153,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
         aria-label="List of Your Longview Clients"
       >
         <Grid item xs={2} className={classes.label}>
-          <LongviewClientHeader />
+          <LongviewClientHeader clientID={clientID} clientLabel={clientLabel} />
         </Grid>
         <CPUGauge clientAPIKey={clientAPIKey} lastUpdated={lastUpdated} />
         <Grid item>

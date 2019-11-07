@@ -8,7 +8,6 @@ import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import { Props as LVProps } from 'src/containers/longview.container';
-import { ActionHandlers } from './LongviewActionMenu';
 import LongviewRows from './LongviewListRows';
 
 type LongviewProps = Omit<
@@ -19,7 +18,14 @@ type LongviewProps = Omit<
   | 'updateLongviewClient'
 >;
 
-type CombinedProps = LongviewProps & ActionHandlers;
+interface Props {
+  triggerDeleteLongviewClient: (
+    longviewClientID: number,
+    longviewClientLabel: string
+  ) => void;
+}
+
+type CombinedProps = Props & LongviewProps;
 
 const LongviewList: React.FC<CombinedProps> = props => {
   const {
@@ -28,7 +34,7 @@ const LongviewList: React.FC<CombinedProps> = props => {
     longviewClientsLastUpdated,
     longviewClientsLoading,
     longviewClientsResults,
-    ...actionMenuHandlers
+    triggerDeleteLongviewClient
   } = props;
 
   if (longviewClientsLoading && longviewClientsLastUpdated === 0) {
@@ -75,8 +81,7 @@ const LongviewList: React.FC<CombinedProps> = props => {
                 <Box flexDirection="column">
                   <LongviewRows
                     longviewClientsData={paginatedAndOrderedData}
-                    longviewClientsResults={longviewClientsResults}
-                    {...actionMenuHandlers}
+                    triggerDeleteLongviewClient={triggerDeleteLongviewClient}
                   />
                 </Box>
                 <PaginationFooter
@@ -96,6 +101,4 @@ const LongviewList: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, LongviewProps & ActionHandlers>(
-  React.memo
-)(LongviewList);
+export default compose<CombinedProps, CombinedProps>(React.memo)(LongviewList);
