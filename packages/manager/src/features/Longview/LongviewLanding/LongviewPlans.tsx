@@ -59,16 +59,14 @@ const useStyles = makeStyles((theme: Theme) => {
       }
     },
     radio: {
-      marginLeft: theme.spacing(1) - 3,
+      marginLeft: -(theme.spacing(1) / 2),
       marginRight: theme.spacing(2) - 1,
       padding: 2
     },
     currentSubscriptionLabel: {
       display: 'flex',
       alignItems: 'center',
-      marginTop: 0,
-      marginBottom: 0,
-      marginLeft: 'auto',
+      marginLeft: 2,
       paddingRight: theme.spacing(3),
       [theme.breakpoints.down('md')]: {
         paddingRight: 0
@@ -78,29 +76,24 @@ const useStyles = makeStyles((theme: Theme) => {
       backgroundColor: theme.color.green,
       color: '#fff',
       textTransform: 'uppercase',
-      height: theme.spacing(3) + 3,
-      paddingLeft: 9,
-      paddingRight: 9,
+      minHheight: theme.spacing(2) + 11,
+      paddingLeft: theme.spacing(0.5),
+      paddingRight: theme.spacing(0.5),
       marginTop: 0,
       marginBottom: 0,
-      marginLeft: 'auto',
-      [theme.breakpoints.down('md')]: {
-        marginLeft: theme.spacing(2)
-      }
+      marginLeft: theme.spacing(2)
     },
     planCell: {
-      width: '30%'
+      width: '40%'
     },
     clientCell: {
-      textAlign: 'right',
-      paddingRight: theme.spacing(6.5),
       width: '10%'
     },
     dataRetentionCell: {
       width: '15%'
     },
     dataResolutionCell: {
-      width: '25%'
+      width: '15%'
     },
     priceCell: {
       width: '15%'
@@ -184,7 +177,7 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
       <DocumentTitleSegment segment="Plan Details" />
       <Paper className={styles.root}>
         {updateErrorMsg && <Notice error text={updateErrorMsg} />}
-        <Table className={styles.table} isResponsive={false}>
+        <Table className={styles.table}>
           <TableHead>
             <TableRow>
               <TableCell className={styles.planCell}>Plan</TableCell>
