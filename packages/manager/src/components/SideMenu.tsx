@@ -25,6 +25,7 @@ const styles = (theme: Theme) =>
       left: 'inherit',
       boxShadow: 'none',
       transition: 'width linear .1s',
+      overflowX: 'hidden',
       [theme.breakpoints.up('xl')]: {
         width: theme.spacing(22) + 99 // 275
       }

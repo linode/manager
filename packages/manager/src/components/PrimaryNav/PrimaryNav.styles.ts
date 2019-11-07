@@ -110,7 +110,7 @@ const styles = (theme: Theme) =>
           '&.small': {
             transform: 'scale(1)'
           },
-          '&:not(.wBorder) circle': {
+          '&:not(.wBorder) circle, & .circle': {
             display: 'none'
           },
           '& *': {
