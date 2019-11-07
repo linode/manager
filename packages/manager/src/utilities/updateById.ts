@@ -1,5 +1,6 @@
+import { captureException } from '@sentry/browser';
 import { adjust } from 'ramda';
-// import { reportException } from 'src/exceptionReporting';
+import { initSentry } from 'src/initSentry';
 
 export default <T extends { id: string | number }>(
   updater: (v: T) => T,
@@ -34,9 +35,8 @@ export default <T extends { id: string | number }>(
      *
      * this will most likely be invoked whenever we upgrade ramda
      */
-    // This introduces a circular dependency. Should not report exceptions (using this method)
-    // from anything that will be used inside the Redux store.
-    // reportException(`Error with running ramda adjust: ${e}`);
+    initSentry();
+    captureException(`Error with running ramda adjust: ${e}`);
     /* tslint:disable */
     console.error(`Error with running ramda adjust: ${e}`);
     console.error(`Check the ramda docs and make sure you are invoking the function
