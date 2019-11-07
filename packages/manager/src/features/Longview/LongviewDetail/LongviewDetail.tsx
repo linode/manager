@@ -1,3 +1,4 @@
+import { LongviewClient } from 'linode-js-sdk/lib/longview';
 import * as React from 'react';
 import {
   matchPath,
@@ -21,12 +22,11 @@ import NotFound from 'src/components/NotFound';
 import TabLink from 'src/components/TabLink';
 
 import withLongviewClients, {
-  DispatchProps,
-  Props as LVProps
+  DispatchProps, Props as LVProps
 } from 'src/containers/longview.container';
 
 interface Props {
-  clients: LVProps['longviewClientsData'];
+  client?: LongviewClient;
   longviewClientsLastUpdated: number;
   longviewClientsLoading: LVProps['longviewClientsLoading'];
   longviewClientsError: LVProps['longviewClientsError'];
@@ -36,22 +36,28 @@ const Overview = DefaultLoader({
   loader: () => import('./LongviewDetailOverview')
 });
 
+const Installation = DefaultLoader({
+  loader: () => import('./DetailTabs/Installation')
+});
+
 type CombinedProps = RouteComponentProps<{ id: string }> &
   Props &
   DispatchProps;
 
 const LongviewDetail: React.FC<CombinedProps> = props => {
   const {
-    match: {
-      params: { id }
-    },
-    clients,
+    client,
     longviewClientsLastUpdated,
     longviewClientsLoading,
     longviewClientsError
   } = props;
 
-  const client = clients[id];
+  React.useEffect(() => {
+    /** request clients if they haven't already been requested */
+    if (longviewClientsLastUpdated === 0) {
+      props.getLongviewClients();
+    }
+  }, []);
 
   const tabOptions = [
     {
@@ -139,13 +145,22 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
     return <NotFound />;
   }
 
+  if(!client) {
+    /* 
+      this is already handled from the case above, but this is here
+      so that we don't have to do undefined checking in the render method
+      below
+     */
+    return null;
+  }
+
   return (
     <React.Fragment>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Breadcrumb
           pathname={props.location.pathname}
           firstAndLastOnly
-          labelTitle={client && client.label}
+          labelTitle={client.label}
         />
         <DocumentationButton href={'https://google.com'} />
       </Box>
@@ -215,9 +230,14 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
           exact
           strict
           path={`${url}/installation`}
-          render={() => <h2>Installation</h2>}
+          render={routerProps => (
+            <Installation
+              clientInstallationKey={client.install_code}
+              {...routerProps}
+            />
+          )}
         />
-        <Route strict render={() => <Overview {...props} />} />
+        <Route strict component={Overview} />
       </Switch>
     </React.Fragment>
   );
@@ -225,7 +245,7 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
 
 export default compose<CombinedProps, {}>(
   React.memo,
-  withLongviewClients<Props, {}>(
+  withLongviewClients<Props, RouteComponentProps<{ id: string }>>(
     (
       own,
       {
@@ -235,10 +255,9 @@ export default compose<CombinedProps, {}>(
         longviewClientsError
       }
     ) => ({
-      clients: longviewClientsData,
+      client: longviewClientsData[own.match.params.id],
       longviewClientsLastUpdated,
       longviewClientsLoading,
       longviewClientsError
-    })
-  )
+    }))
 )(LongviewDetail);
