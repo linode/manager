@@ -22,7 +22,9 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
 
   const handleUpdateLabel = (newLabel: string) => {
     setUpdating(true);
-    return updateLongviewClient(clientID, newLabel);
+    return updateLongviewClient(clientID, newLabel).finally(() => {
+      setUpdating(false);
+    });
   };
 
   return (

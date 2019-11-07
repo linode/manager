@@ -158,6 +158,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
       nextProps.disabled !== this.props.disabled ||
       nextProps.helperText !== this.props.helperText ||
       nextProps.classes !== this.props.classes ||
+      nextProps.loading !== this.props.loading ||
       Boolean(
         this.props.select && nextProps.children !== this.props.children
       ) ||
