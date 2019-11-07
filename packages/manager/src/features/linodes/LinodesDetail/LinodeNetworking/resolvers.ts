@@ -117,6 +117,7 @@ export const ipv4DNSResolvers: Record<ZoneName, string[]> = {
     '172.105.42.5',
     '172.105.43.5'
   ],
+  // TODO need actual resolvers for sydney
   sydney1: [
     '172.105.34.5',
     '172.105.35.5',
@@ -173,5 +174,6 @@ export const ipv6DNSResolverPrefixes: Record<ZoneName, string> = {
   shinagawa1: '2400:8902::',
   toronto1: '2600:3C04::',
   mumbai1: '2400:8904::',
+  // TODO verify this
   sydney1: '2400:8907::'
 };
