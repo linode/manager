@@ -106,6 +106,12 @@ const styles = (theme: Theme) =>
     }
   });
 
+/**
+ * WARNING: If you add anything to this list
+ * that could possibly be dynamic,
+ * you will need to add it to
+ * shouldComponentUpdate below.
+ */
 interface BaseProps {
   errorText?: string;
   errorGroup?: string;
