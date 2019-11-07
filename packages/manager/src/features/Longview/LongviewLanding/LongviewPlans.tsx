@@ -179,6 +179,10 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
   const onRadioSelect = (e: React.FormEvent<HTMLInputElement>) =>
     setSelectedSub(e.currentTarget.value);
 
+  const isButtonDisabled =
+    Boolean(subscriptions.error) ||
+    currentSubscriptionOnAccount === selectedSub;
+
   return (
     <>
       <DocumentTitleSegment segment="Plan Details" />
@@ -215,7 +219,7 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
           buttonType="primary"
           onClick={onSubmit}
           loading={updateLoading}
-          disabled={Boolean(subscriptions.error)}
+          disabled={isButtonDisabled}
           data-testid="submit-button"
         >
           Change Plan
