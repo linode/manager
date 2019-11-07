@@ -91,6 +91,7 @@ interface Get {
   >;
   (token: string, action: 'getLatestValue', field: 'network'[]): Promise<
     Partial<LongviewNetwork>
+  >;
   (
     token: string,
     action: 'getLatestValue',
