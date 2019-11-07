@@ -140,7 +140,7 @@ export const extendedDCDisplayNames = {
   'ca-central': 'Canada: Toronto, ON',
   'ca-east': 'Canada: Toronto, ON',
   'ap-west': 'Asia-Pacific West: Mumbai, IN',
-  'ap-southeast': 'Asia-Pacific AU: Sydney, AU'
+  'ap-southeast': 'Asia-Pacific Southeast: Sydney, AU'
 };
 
 export const dcDisplayCountry = {
