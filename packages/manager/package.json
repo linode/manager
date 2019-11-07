@@ -102,7 +102,7 @@
     "precommit": "lint-staged && tsc --noEmit",
     "prepush": "./scripts/pre-push.sh && yarn test --color",
     "mock": "./scripts/mb.js",
-    "test": "node scripts/test.js",
+    "test": "node scripts/test.js --coverage --coverageDirectory=output/coverage/jest",
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
     "storybook": "start-storybook -p 6006 --ci",
     "storybook-static": "build-storybook -c .storybook -o .out",
