@@ -16,7 +16,7 @@ import withLongviewClients, {
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import DeleteDialog from './LongviewDeleteDialog';
-import LongviewTable from './LongviewTable';
+import LongviewList from './LongviewList';
 import UpdateDrawer from './UpdateClientDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -116,7 +116,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
           />
         </Grid>
       </Grid>
-      <LongviewTable
+      <LongviewList
         longviewClientsData={
           !!filteredClientList ? filteredClientList : longviewClientsData
         }

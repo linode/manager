@@ -1,4 +1,4 @@
-import { LongviewClient } from 'linode-js-sdk/lib/longview'
+import { LongviewClient } from 'linode-js-sdk/lib/longview';
 import {
   LongviewLoad,
   LongviewMemory,
@@ -114,7 +114,9 @@ export const network: LongviewNetwork = {
   }
 };
 
-export const longviewClientFactory = (data: Partial<LongviewClient>): LongviewClient => ({
+export const longviewClientFactory = (
+  data: Partial<LongviewClient>
+): LongviewClient => ({
   id: 1,
   apps: {
     nginx: true,
@@ -127,10 +129,10 @@ export const longviewClientFactory = (data: Partial<LongviewClient>): LongviewCl
   label: 'new-longview-client',
   api_key: '456-456-456',
   ...data
-})
+});
 
 export const longviewClients = [
   longviewClientFactory({ label: 'my-client1', id: 1 }),
   longviewClientFactory({ label: 'my-client2', id: 2 }),
   longviewClientFactory({ label: 'my-client3', id: 3 })
-]
+];

@@ -63,7 +63,7 @@ const CPUGauge: React.FC<Props> = props => {
 
     return () => {
       mounted = false;
-    }
+    };
   }, [lastUpdated]);
 
   return (
