@@ -54,11 +54,14 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     props.getLongviewClients();
   }, []);
 
-  const openDeleteDialog = (id: number, label: string) => {
-    toggleDeleteDialog(true);
-    setClientID(id);
-    setClientLabel(label);
-  };
+  const openDeleteDialog = React.useCallback(
+    (id: number, label: string) => {
+      toggleDeleteDialog(true);
+      setClientID(id);
+      setClientLabel(label);
+    },
+    [selectedClientID, setClientLabel]
+  );
 
   const handleAddClient = () => {
     setNewClientLoading(true);

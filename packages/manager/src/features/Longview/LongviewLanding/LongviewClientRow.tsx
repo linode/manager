@@ -72,7 +72,9 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
    lastUpdated _might_ come back from the endpoint as 0, so it's important
    that we differentiate between _0_ and _undefined_
    */
-  const [lastUpdated, setLastUpdated] = React.useState<number | undefined>(0);
+  const [lastUpdated, setLastUpdated] = React.useState<number | undefined>(
+    undefined
+  );
   const [authed, setAuthed] = React.useState<boolean>(true);
 
   const requestAndSetLastUpdated = () => {
