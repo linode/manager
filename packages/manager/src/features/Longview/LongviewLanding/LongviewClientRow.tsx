@@ -153,6 +153,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
         alignItems="center"
         className={classes.container}
         aria-label="List of Your Longview Clients"
+        data-testid="longview-client-row"
       >
         <Grid item xs={2} className={classes.label}>
           <LongviewClientHeader clientID={clientID} clientLabel={clientLabel} />
