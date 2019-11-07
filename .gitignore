@@ -107,6 +107,6 @@ localStorage.json
 *.swp
 
 # sonar
-scannerwork/
-packages/manager/test-reportxml
-
+.scannerwork/
+packages/manager/test-report.xml
+.sonar/
