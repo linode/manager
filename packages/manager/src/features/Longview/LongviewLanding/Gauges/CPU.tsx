@@ -12,8 +12,6 @@ import withClientStats, {
 } from 'src/containers/longview.stats.container';
 
 interface Props {
-  clientAPIKey: string;
-  lastUpdated?: number;
   clientID: number;
 }
 

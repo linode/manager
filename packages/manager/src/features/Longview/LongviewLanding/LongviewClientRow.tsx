@@ -157,11 +157,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
         <Grid item xs={2} className={classes.label}>
           <LongviewClientHeader />
         </Grid>
-        <CPUGauge
-          clientID={clientID}
-          clientAPIKey={clientAPIKey}
-          lastUpdated={lastUpdated}
-        />
+        <CPUGauge clientID={clientID} />
         <Grid item>
           <RAMGauge token={clientAPIKey} lastUpdated={lastUpdated} />
         </Grid>
