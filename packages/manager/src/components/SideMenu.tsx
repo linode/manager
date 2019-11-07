@@ -94,7 +94,7 @@ class SideMenu extends React.Component<CombinedProps> {
             open
             classes={{
               paper: `${classes.menuPaper} ${
-                !desktopOpen ? classes.collapsedDesktopMenu : ''
+                desktopOpen ? classes.collapsedDesktopMenu : ''
               }`,
               docked: classes.menuDocked
             }}
@@ -104,7 +104,7 @@ class SideMenu extends React.Component<CombinedProps> {
               closeMenu={closeMenu}
               toggleTheme={toggleTheme}
               toggleSpacing={toggleSpacing}
-              isCollapsed={!desktopOpen}
+              isCollapsed={desktopOpen}
             />
           </Drawer>
         </Hidden>
