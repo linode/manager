@@ -109,12 +109,12 @@ export interface EntitiesAsObjectState<T> {
  * Or for Longview Client Stats - the key is the Longview Client
  * and the data is the actual stats for the Client
  */
-export type RelationalDataSet<T extends {}> = Record<
+export type RelationalDataSet<T extends {}, E = EntityError> = Record<
   string,
   Partial<{
     data: T;
     loading: boolean;
-    error: Partial<EntityError>;
+    error: E;
     lastUpdated: number;
   }>
 >;

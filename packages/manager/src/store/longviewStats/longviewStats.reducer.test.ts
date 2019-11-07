@@ -44,9 +44,7 @@ describe('Longview Client Stats Reducer', () => {
     expect(state1).toEqual({
       123: {
         loading: false,
-        error: {
-          read: mockError
-        }
+        error: mockError
       }
     });
 
@@ -56,9 +54,7 @@ describe('Longview Client Stats Reducer', () => {
       },
       999: {
         loading: false,
-        error: {
-          read: mockError
-        }
+        error: mockError
       }
     });
   });
@@ -85,7 +81,7 @@ describe('Longview Client Stats Reducer', () => {
       },
       999: {
         loading: false,
-        error: {},
+        error: undefined,
         data: {
           ...systemInfo,
           ...memory,

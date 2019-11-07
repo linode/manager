@@ -1,14 +1,15 @@
-import { pathOr } from 'ramda';
+import { APIError } from 'linode-js-sdk/lib/types';
+import { path, pathOr } from 'ramda';
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { ReturnType } from 'src/store/longviewStats/longviewStats.actions';
 import { getClientStats } from 'src/store/longviewStats/longviewStats.requests';
-import { EntityError, ThunkDispatch } from 'src/store/types';
+import { ThunkDispatch } from 'src/store/types';
 
 export interface LVClientData {
   longviewClientData: ReturnType;
   longviewClientDataLoading: boolean;
-  longviewClientDataError: Partial<EntityError>;
+  longviewClientDataError?: APIError[];
 }
 
 export interface DispatchProps {
@@ -57,7 +58,7 @@ const connected = <OwnProps extends {}>(
       return {
         longviewClientData: pathOr({}, ['data'], foundClient),
         longviewClientDataLoading: pathOr(true, ['loading'], foundClient),
-        longviewClientDataError: pathOr({}, ['error'], foundClient)
+        longviewClientDataError: path(['error'], foundClient)
       };
     },
     (dispatch: ThunkDispatch, ownProps: OwnProps) => ({

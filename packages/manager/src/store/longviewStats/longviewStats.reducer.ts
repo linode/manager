@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { RelationalDataSet } from '../types';
 import {
@@ -5,7 +6,7 @@ import {
   ReturnType as LVClientData
 } from './longviewStats.actions';
 
-export type State = RelationalDataSet<LVClientData>;
+export type State = RelationalDataSet<LVClientData, APIError[]>;
 
 export const defaultState: State = {};
 
@@ -34,7 +35,7 @@ const reducer = reducerWithInitialState(defaultState)
       [params.clientID]: {
         data: result,
         loading: false,
-        error: {}
+        error: undefined
       }
     })
   )
@@ -53,9 +54,7 @@ const reducer = reducerWithInitialState(defaultState)
             ...state,
             [params.clientID]: {
               loading: false,
-              error: {
-                read: error
-              }
+              error
             }
           };
     }
