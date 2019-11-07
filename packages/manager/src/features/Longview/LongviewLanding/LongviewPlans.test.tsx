@@ -1,11 +1,4 @@
-import {
-  cleanup,
-  waitForDomChange,
-  waitForElementToBeRemoved,
-  within
-} from '@testing-library/react';
-import MockAdapter from 'axios-mock-adapter';
-import { baseRequest } from 'linode-js-sdk/lib/request';
+import { cleanup, waitForDomChange, within } from '@testing-library/react';
 import * as React from 'react';
 import { accountSettings } from 'src/__data__/account';
 import { withDocumentTitleProvider } from 'src/components/DocumentTitle';
@@ -18,13 +11,7 @@ import {
   LongviewPlans
 } from './LongviewPlans';
 
-const mockApi = new MockAdapter(baseRequest);
-
 const mockLongviewSubscriptions = longviewSubscriptionFactory.buildList(4);
-
-mockApi.onGet('/longview/subscriptions').reply(200, {
-  data: mockLongviewSubscriptions
-});
 
 afterEach(cleanup);
 
@@ -34,7 +21,14 @@ const props: CombinedProps = {
   accountSettingsLoading: false,
   requestAccountSettings: jest.fn(),
   updateAccountSettings: jest.fn(),
-  updateAccountSettingsInStore: jest.fn()
+  updateAccountSettingsInStore: jest.fn(),
+  subscriptionRequestHook: {
+    data: mockLongviewSubscriptions,
+    lastUpdated: 0,
+    update: jest.fn(),
+    transformData: jest.fn(),
+    loading: false
+  }
 };
 
 describe('LongviewPlans', () => {
@@ -64,9 +58,6 @@ describe('LongviewPlans', () => {
       );
       within(getByTestId(`price-cell-${id}`)).getByText(price);
     };
-
-    // Wait for data to resolve
-    await waitForElementToBeRemoved(() => getByTestId('table-row-loading'));
 
     testRow(
       LONGVIEW_FREE_ID,
@@ -101,8 +92,6 @@ describe('LongviewPlans', () => {
         {...props}
       />
     );
-    // Wait for data to resolve
-    await waitForElementToBeRemoved(() => getByTestId('table-row-loading'));
 
     within(getByTestId(`lv-sub-table-row-${currentLVSub}`)).getByText(
       'Current Plan'

@@ -2,7 +2,7 @@ import produce from 'immer';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { useEffect, useState } from 'react';
 
-interface UseAPIRequest<T> {
+export interface UseAPIRequest<T> {
   data: T;
   loading: boolean;
   lastUpdated: number;

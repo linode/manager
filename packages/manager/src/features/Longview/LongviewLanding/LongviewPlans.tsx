@@ -1,6 +1,5 @@
 import * as classnames from 'classnames';
 import { AccountSettings } from 'linode-js-sdk/lib/account';
-import { getLongviewSubscriptions } from 'linode-js-sdk/lib/longview';
 import { LongviewSubscription } from 'linode-js-sdk/lib/longview/types';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
@@ -24,7 +23,7 @@ import accountSettingsContainer, {
   DispatchProps,
   SettingsProps
 } from 'src/containers/accountSettings.container';
-import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import { UseAPIRequest } from 'src/hooks/useAPIRequest';
 import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -124,16 +123,19 @@ const useStyles = makeStyles((theme: Theme) => {
 // we'll create a fake ID for it.
 export const LONGVIEW_FREE_ID = 'longview-free';
 
-export type CombinedProps = SettingsProps & DispatchProps;
+interface Props {
+  subscriptionRequestHook: UseAPIRequest<LongviewSubscription[]>;
+}
+
+export type CombinedProps = Props & SettingsProps & DispatchProps;
 
 export const LongviewPlans: React.FC<CombinedProps> = props => {
-  const { accountSettings, updateAccountSettings } = props;
+  const {
+    accountSettings,
+    subscriptionRequestHook: subscriptions,
+    updateAccountSettings
+  } = props;
   const styles = useStyles();
-
-  const subscriptions = useAPIRequest<LongviewSubscription[]>(
-    () => getLongviewSubscriptions().then(response => response.data),
-    []
-  );
 
   const currentSubscriptionOnAccount = getCurrentSubscriptionOnAccount(
     accountSettings
@@ -265,7 +267,7 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
   );
 };
 
-const enhanced = compose<CombinedProps, {}>(
+const enhanced = compose<CombinedProps, Props>(
   React.memo,
   accountSettingsContainer()
 );
