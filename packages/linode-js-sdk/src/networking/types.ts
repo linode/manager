@@ -9,7 +9,8 @@ export type ZoneName =
   | 'frankfurt'
   | 'shinagawa1'
   | 'toronto1'
-  | 'mumbai1';
+  | 'mumbai1'
+  | 'sydney1';
 
 export interface IPAddress {
   address: string;

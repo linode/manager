@@ -90,7 +90,8 @@ export const ZONES: Record<string, ZoneName> = {
   'ap-south-1a': 'singapore',
   'ca-central': 'toronto1',
   'ca-east': 'toronto1', // @todo Fallback for old Toronto ID; remove once DB has been updated.
-  'ap-west': 'mumbai1'
+  'ap-west': 'mumbai1',
+  'ap-au': 'sydney1'
 };
 
 export const dcDisplayNames = {
@@ -114,7 +115,8 @@ export const dcDisplayNames = {
   'ap-northeast': 'Tokyo 2, JP',
   'ca-central': 'Toronto, ON',
   'ca-east': 'Toronto, ON', // @todo Fallback for old Toronto ID; remove once DB has been updated.
-  'ap-west': 'Mumbai, IN'
+  'ap-west': 'Mumbai, IN',
+  'ap-au': 'Sydney, AU'
 };
 
 // @todo no longer in use; remove if current design is approved.
@@ -137,7 +139,8 @@ export const extendedDCDisplayNames = {
   'ap-northeast': 'Asia-Pacific Northeast: Tokyo 2, JP',
   'ca-central': 'Canada: Toronto, ON',
   'ca-east': 'Canada: Toronto, ON',
-  'ap-west': 'Asia-Pacific West: Mumbai, IN'
+  'ap-west': 'Asia-Pacific West: Mumbai, IN',
+  'ap-au': 'Asia-Pacific AU: Sydney, AU'
 };
 
 export const dcDisplayCountry = {
@@ -159,7 +162,8 @@ export const dcDisplayCountry = {
   'ap-northeast': 'JP',
   'ca-central': 'CA',
   'ca-east': 'CA',
-  'ap-west': 'IN'
+  'ap-west': 'IN',
+  'ap-au': 'AU'
 };
 
 export const objectStorageClusterDisplay: Record<
