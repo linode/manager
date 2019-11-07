@@ -144,7 +144,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
         aria-label="List of Your Longview Clients"
       >
         <Grid item xs={2} className={classes.label}>
-          <LongviewClientHeader />
+          <LongviewClientHeader clientID={clientID} />
         </Grid>
         <Grid item>
           <CPUGauge clientID={clientID} />

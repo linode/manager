@@ -1,11 +1,15 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
-import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
 import EditableEntityLabel from 'src/components/EditableEntityLabel';
 import Grid from 'src/components/Grid';
 
-export const LongviewClientHeader: React.FC<{}> = props => {
+interface Props {
+  clientID: number;
+}
+
+export const LongviewClientHeader: React.FC<Props> = props => {
   return (
     <Grid
       container
@@ -35,9 +39,7 @@ export const LongviewClientHeader: React.FC<{}> = props => {
         <Typography>2 packages have updates</Typography>
       </Grid>
       <Grid item>
-        <Button onClick={() => null} buttonType="secondary">
-          View details
-        </Button>
+        <Link to={`/longview/clients/${props.clientID}`}>View details</Link>
       </Grid>
     </Grid>
   );

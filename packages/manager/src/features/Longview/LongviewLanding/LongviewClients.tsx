@@ -9,6 +9,9 @@ import AddNewLink from 'src/components/AddNewLink';
 import Search from 'src/components/DebouncedSearchTextField';
 import Grid from 'src/components/Grid';
 
+import withSettings, {
+  SettingsProps
+} from 'src/containers/accountSettings.container';
 import withLongviewClients, {
   Props as LongviewProps
 } from 'src/containers/longview.container';
@@ -34,7 +37,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-type CombinedProps = RouteComponentProps & LongviewProps & WithSnackbarProps;
+type CombinedProps = RouteComponentProps &
+  LongviewProps &
+  WithSnackbarProps &
+  SettingsProps;
 
 export const LongviewClients: React.FC<CombinedProps> = props => {
   const [newClientLoading, setNewClientLoading] = React.useState<boolean>(
@@ -49,6 +55,15 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     undefined
   );
   const [selectedClientLabel, setClientLabel] = React.useState<string>('');
+
+  /**
+   * Subscription warning modal (shown when a user has used all of their plan's
+   * available LV clients)
+   */
+
+  const [subscriptionDialogOpen, setSubscriptionDialogOpen] = React.useState<
+    boolean
+  >(false);
 
   const classes = useStyles();
 
@@ -96,6 +111,13 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     deleteLongviewClient,
     updateLongviewClient
   } = props;
+
+  React.useEffect(() => {
+    const subscriptionLimit = 10;
+    if (Object.values(longviewClientsData).length > subscriptionLimit) {
+      setSubscriptionDialogOpen(true);
+    }
+  }, [longviewClientsData]);
 
   const handleSearch = (query: string) => {
     return filterClientList(
@@ -151,6 +173,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
 export default compose<CombinedProps, RouteComponentProps>(
   React.memo,
   withLongviewClients(),
+  withSettings(),
   withSnackbar
 )(LongviewClients);
 
