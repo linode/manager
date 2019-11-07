@@ -13,7 +13,7 @@ interface Props {
   lastUpdated?: number;
 }
 
-const LongviewGauge: React.FC<Props> = props => {
+const CPUGauge: React.FC<Props> = props => {
   const { clientAPIKey, lastUpdated } = props;
 
   const [dataHasResolvedAtLeastOnce, setDataResolved] = React.useState<boolean>(
@@ -26,36 +26,44 @@ const LongviewGauge: React.FC<Props> = props => {
   const [numCores, setNumCores] = React.useState<number>(0);
 
   React.useEffect(() => {
+    let mounted = true;
+
     requestStats(clientAPIKey, 'getLatestValue', ['cpu', 'sysinfo'])
       .then(data => {
-        setLoading(false);
-        setError(undefined);
+        if (mounted) {
+          setLoading(false);
+          setError(undefined);
 
-        const cores = path<number>(['SysInfo', 'cpu', 'cores'], data);
+          const cores = path<number>(['SysInfo', 'cpu', 'cores'], data);
 
-        // If we don't have the number of cores, we can't determine the value.
-        if (!cores) {
-          return;
+          // If we don't have the number of cores, we can't determine the value.
+          if (!cores) {
+            return;
+          }
+
+          if (!dataHasResolvedAtLeastOnce) {
+            setDataResolved(true);
+          }
+
+          setNumCores(cores);
+
+          const used = sumCPUUsage(data.CPU);
+          const normalizedUsed = normalizeValue(used, cores);
+          setUsedCPU(normalizedUsed);
         }
-
-        if (!dataHasResolvedAtLeastOnce) {
-          setDataResolved(true);
-        }
-
-        setNumCores(cores);
-
-        const used = sumCPUUsage(data.CPU);
-        const normalizedUsed = normalizeValue(used, cores);
-        setUsedCPU(normalizedUsed);
       })
       .catch(_ => {
-        if (!dataHasResolvedAtLeastOnce) {
+        if (mounted && !dataHasResolvedAtLeastOnce) {
           setError({
             reason: 'Error' // @todo: Error message?
           });
           setLoading(false);
         }
       });
+
+    return () => {
+      mounted = false;
+    }
   }, [lastUpdated]);
 
   return (
@@ -80,7 +88,7 @@ const LongviewGauge: React.FC<Props> = props => {
   );
 };
 
-export default LongviewGauge;
+export default CPUGauge;
 
 // UTILITIES
 export const sumCPUUsage = (CPUData: Record<string, CPU> = {}) => {

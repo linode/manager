@@ -23,6 +23,7 @@ const LoadGauge: React.FC<Props> = props => {
 
   React.useEffect(() => {
     let mounted = true;
+
     requestStats(props.token, 'getLatestValue', ['sysinfo', 'load'])
       .then(response => {
         if (mounted) {
@@ -39,7 +40,7 @@ const LoadGauge: React.FC<Props> = props => {
         }
       })
       .catch(() => {
-        if (!dataHasResolvedAtLeastOnce && mounted) {
+        if (mounted && !dataHasResolvedAtLeastOnce) {
           setError({
             reason: 'Error'
           });
