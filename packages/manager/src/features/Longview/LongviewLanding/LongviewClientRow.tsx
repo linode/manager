@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     )}px ${theme.spacing()}px`
   },
   container: {
-    height: 176,
+    height: 150,
     '@media (max-width: 1100px)': {
       flexDirection: 'column',
       height: 'inherit'

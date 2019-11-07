@@ -12,7 +12,7 @@ export const LongviewClientHeader: React.FC<{}> = props => {
       item
       direction="column"
       spacing={2}
-      style={{ paddingTop: '8px', paddingLeft: '16px' }}
+      style={{ paddingTop: '16px', paddingLeft: '16px' }}
     >
       <Grid
         container
