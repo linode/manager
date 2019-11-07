@@ -22,9 +22,9 @@ const RAMGauge: React.FC<Props> = props => {
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<APIError | undefined>();
 
-  let mounted = true;
-
   React.useEffect(() => {
+    let mounted = true;
+
     requestStats(props.token, 'getLatestValue', ['memory'])
       .then(response => {
         /**

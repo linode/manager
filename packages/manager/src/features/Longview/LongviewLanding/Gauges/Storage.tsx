@@ -25,20 +25,28 @@ const StorageGauge: React.FC<Props> = props => {
   >();
 
   React.useEffect(() => {
+    let mounted = true;
+
     requestStats(clientAPIKey, 'getLatestValue', ['disk'])
       .then(data => {
-        setLoading(false);
-        setError(undefined);
-        setStorageInBytes(sumStorage(data.Disk));
+        if (mounted) {
+          setLoading(false);
+          setError(undefined);
+          setStorageInBytes(sumStorage(data.Disk));
+        }
       })
       .catch(_ => {
-        if (!storageInBytes) {
+        if (mounted && !storageInBytes) {
           setError({
             reason: 'Error' // @todo: Error message?
           });
           setLoading(false);
         }
       });
+
+    return () => {
+      mounted = false;
+    };
   }, [lastUpdated]);
 
   const usedStorage = storageInBytes
