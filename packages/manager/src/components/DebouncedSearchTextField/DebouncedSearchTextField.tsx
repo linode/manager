@@ -48,7 +48,7 @@ const DebouncedSearch: React.FC<CombinedProps> = props => {
       don't run the search if the query hasn't changed.
       This is mostly to prevent this effect from running on first mount
     */
-    if (prevQuery || '' !== query) {
+    if ((prevQuery || '') !== query) {
       setTimeout(() => {
         if (!didCancel) {
           onSearch(query);
