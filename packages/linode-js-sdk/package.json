@@ -15,7 +15,7 @@
   },
   "description": "JavaScript wrapper around the Linode APIv4",
   "author": "Linode",
-  "license": "MIT",
+  "license": "APLv2",
   "private": false,
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
