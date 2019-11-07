@@ -1,3 +1,4 @@
+import * as classnames from 'classnames';
 import { AccountSettings } from 'linode-js-sdk/lib/account';
 import { getLongviewSubscriptions } from 'linode-js-sdk/lib/longview';
 import { LongviewSubscription } from 'linode-js-sdk/lib/longview/types';
@@ -13,6 +14,7 @@ import TableHead from 'src/components/core/TableHead';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
+import SupportLink from 'src/components/SupportLink';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -39,6 +41,9 @@ const useStyles = makeStyles((theme: Theme) => {
       // These values represent the table size with 5 elements in compact
       // and normal mode. It's brittle, I know, but I'm not sure of another way.
       minHeight: theme.spacing() === COMPACT_SPACING_UNIT ? 311 : 419
+    },
+    collapsedTable: {
+      minHeight: 0
     },
     table: {
       borderTop: border,
@@ -182,6 +187,8 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
     []
   );
 
+  const isManaged = accountSettings ? accountSettings.managed : false;
+
   const isButtonDisabled =
     Boolean(subscriptions.error) ||
     currentSubscriptionOnAccount === selectedSub;
@@ -189,44 +196,70 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
   return (
     <>
       <DocumentTitleSegment segment="Plan Details" />
-      <Paper className={styles.root}>
+      <Paper
+        className={classnames({
+          [styles.root]: true,
+          [styles.collapsedTable]: isManaged
+        })}
+      >
         {updateErrorMsg && <Notice error text={updateErrorMsg} />}
-        <Table className={styles.table} isResponsive={false}>
-          <TableHead>
-            <TableRow>
-              <TableCell className={styles.planCell}>Plan</TableCell>
-              <TableCell className={styles.clientCell}>Clients</TableCell>
-              <TableCell className={styles.dataRetentionCell}>
-                Data Retention
-              </TableCell>
-              <TableCell className={styles.dataResolutionCell}>
-                Data Resolution
-              </TableCell>
-              <TableCell className={styles.priceCell}>Price</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <LongviewPlansTableBody
-              loading={subscriptions.loading}
-              error={subscriptions.error}
-              subscriptions={subscriptions.data}
-              onRadioSelect={onRadioSelect}
-              onRowSelect={setSelectedSub}
-              currentSubscriptionOnAccount={currentSubscriptionOnAccount}
-              selectedSub={selectedSub}
-            />
-          </TableBody>
-        </Table>
-        <Button
-          className={styles.submitButton}
-          buttonType="primary"
-          onClick={onSubmit}
-          loading={updateLoading}
-          disabled={isButtonDisabled}
-          data-testid="submit-button"
-        >
-          Change Plan
-        </Button>
+        {isManaged && (
+          <Notice
+            success
+            text={
+              <span>
+                Managed customers receive a complimentary Longview Pro 10 Pack.
+                If you need more than 10 clients, please{' '}
+                <SupportLink
+                  title="Request for additional Longview clients"
+                  description=""
+                  text="contact Support"
+                />{' '}
+                for additional Longview plan options.
+              </span>
+            }
+          />
+        )}
+        {!isManaged && (
+          <>
+            <Table className={styles.table} isResponsive={false}>
+              <TableHead>
+                <TableRow>
+                  <TableCell className={styles.planCell}>Plan</TableCell>
+                  <TableCell className={styles.clientCell}>Clients</TableCell>
+                  <TableCell className={styles.dataRetentionCell}>
+                    Data Retention
+                  </TableCell>
+                  <TableCell className={styles.dataResolutionCell}>
+                    Data Resolution
+                  </TableCell>
+                  <TableCell className={styles.priceCell}>Price</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <LongviewPlansTableBody
+                  loading={subscriptions.loading}
+                  error={subscriptions.error}
+                  subscriptions={subscriptions.data}
+                  onRadioSelect={onRadioSelect}
+                  onRowSelect={setSelectedSub}
+                  currentSubscriptionOnAccount={currentSubscriptionOnAccount}
+                  selectedSub={selectedSub}
+                />
+              </TableBody>
+            </Table>
+            <Button
+              className={styles.submitButton}
+              buttonType="primary"
+              onClick={onSubmit}
+              loading={updateLoading}
+              disabled={isButtonDisabled}
+              data-testid="submit-button"
+            >
+              Change Plan
+            </Button>
+          </>
+        )}
       </Paper>
     </>
   );
@@ -395,8 +428,15 @@ export const getCurrentSubscriptionOnAccount = (
   accountSettings?: AccountSettings,
   defaultSubscriptionID = LONGVIEW_FREE_ID
 ) => {
-  return accountSettings &&
-    typeof accountSettings.longview_subscription === 'string'
-    ? accountSettings.longview_subscription
-    : defaultSubscriptionID;
+  if (!accountSettings || accountSettings.longview_subscription === null) {
+    return defaultSubscriptionID;
+  }
+
+  // If the customer has Managed, their Longview client limit is 10. However,
+  // account/settings.longview_subscription comes back as 'longview-100'!
+  if (accountSettings.managed) {
+    return 'longview-10';
+  }
+
+  return accountSettings.longview_subscription;
 };
