@@ -19,6 +19,10 @@ import SwapGauge from './Gauges/Swap';
 import LongviewClientHeader from './LongviewClientHeader';
 import LongviewClientInstructions from './LongviewClientInstructions';
 
+import withClientStats, {
+  Props as LVDataProps
+} from 'src/containers/longview.stats.container';
+
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(4),
@@ -50,7 +54,7 @@ interface Props extends ActionHandlers {
   clientAPIKey: string;
 }
 
-type CombinedProps = Props;
+type CombinedProps = Props & LVDataProps;
 
 const LongviewClientRow: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -84,6 +88,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
           (!lastUpdated || pathOr(0, ['updated'], response) > lastUpdated)
         ) {
           setLastUpdated(response.updated);
+          props.getClientStats(props.clientAPIKey);
         }
       })
       .catch(e => {
@@ -152,7 +157,11 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
         <Grid item xs={2} className={classes.label}>
           <LongviewClientHeader />
         </Grid>
-        <CPUGauge clientAPIKey={clientAPIKey} lastUpdated={lastUpdated} />
+        <CPUGauge
+          clientID={clientID}
+          clientAPIKey={clientAPIKey}
+          lastUpdated={lastUpdated}
+        />
         <Grid item>
           <RAMGauge token={clientAPIKey} lastUpdated={lastUpdated} />
         </Grid>
@@ -181,4 +190,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(LongviewClientRow);
+export default compose<CombinedProps, Props>(
+  React.memo,
+  withClientStats<Props>(ownProps => ownProps.clientID)
+)(LongviewClientRow);
