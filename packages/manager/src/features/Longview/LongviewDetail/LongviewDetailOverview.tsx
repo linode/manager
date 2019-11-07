@@ -68,7 +68,14 @@ interface PartialLongviewProps {
 
 const LongviewDetailOverview: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const {
+    match: {
+      params: { id }
+    }
+  } = props;
+  const client = props.clients[id];
   const url = props.match.url;
+
   return (
     <React.Fragment>
       <Grid container>
@@ -83,7 +90,7 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
                   alignItems="flex-start"
                   className={classes.iconSection}
                 >
-                  <Grid item className="py0">
+                  <Grid item>
                     <EntityIcon
                       variant="linode"
                       status={status}
@@ -91,11 +98,9 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
                     />
                   </Grid>
                   <Grid item>
-                    <div className={classes.labelStatusWrapper}>
-                      <Typography variant="h3" className={classes.wrapHeader}>
-                        File Server
-                      </Typography>
-                    </div>
+                    <Typography variant="h3" className={classes.wrapHeader}>
+                      {client.label}
+                    </Typography>
                     <Typography>dev.hostname.com</Typography>
                     <Typography>Up 47d 19h 22m</Typography>
                   </Grid>
