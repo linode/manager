@@ -274,7 +274,7 @@ const MainContent: React.FC<CombinedProps> = props => {
   return (
     <PreferenceToggle<boolean>
       preferenceKey="desktop_sidebar_open"
-      preferenceOptions={[false, true]}
+      preferenceOptions={[true, false]}
     >
       {({
         preference: desktopMenuIsOpen,
@@ -292,7 +292,7 @@ const MainContent: React.FC<CombinedProps> = props => {
           >
             <SideMenu
               open={menuIsOpen}
-              desktopOpen={desktopMenuIsOpen}
+              desktopOpen={desktopMenuIsOpen || false}
               closeMenu={() => toggleMenu(false)}
               toggleTheme={props.toggleTheme}
               toggleSpacing={props.toggleSpacing}
@@ -300,7 +300,12 @@ const MainContent: React.FC<CombinedProps> = props => {
             <main
               className={`
                 ${classes.content}
-                ${!desktopMenuIsOpen ? classes.fullWidthContent : ''}
+                ${
+                  desktopMenuIsOpen ||
+                  (desktopMenuIsOpen && desktopMenuIsOpen === true)
+                    ? classes.fullWidthContent
+                    : ''
+                }
               `}
             >
               <TopMenu
