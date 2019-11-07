@@ -4,9 +4,11 @@ import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouterProps } from 'react-router';
 import { MemoryRouter } from 'react-router-dom';
+import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 import { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-import store from 'src/store';
+import store, { ApplicationState } from 'src/store';
 
 export let createPromiseLoaderResponse: <T>(r: T) => PromiseLoaderResponse<T>;
 createPromiseLoaderResponse = response => ({ response });
@@ -24,11 +26,47 @@ interface Options {
   MemoryRouter?: MemoryRouterProps;
 }
 
+/**
+ * preference state is necessary for all tests using the
+ * renderWithTheme() helper function, since the whole app is wrapped with
+ * the TogglePreference component
+ */
+export const baseStore = (customStore: Partial<ApplicationState> = {}) =>
+  configureStore<Partial<ApplicationState>>([thunk])({
+    preferences: {
+      data: {},
+      loading: false,
+      lastUpdated: 0
+    },
+    ...customStore
+  });
+
 export const wrapWithTheme = (ui: any, options: Options = {}) => {
   return (
     <Provider store={store}>
       <LinodeThemeWrapper theme="dark" spacing="normal">
         <MemoryRouter {...options.MemoryRouter}>{ui}</MemoryRouter>
+      </LinodeThemeWrapper>
+    </Provider>
+  );
+};
+
+/**
+ *
+ * @param ui The React DOM tree you want to render
+ * @param customStore _Optional_ Object that mimics values contained in Redux state to
+ * override the default store
+ */
+export const renderWithTheme = (
+  ui: any,
+  customStore?: Partial<ApplicationState>
+) => {
+  const storeToPass = customStore ? baseStore(customStore) : store;
+
+  return render(
+    <Provider store={storeToPass}>
+      <LinodeThemeWrapper theme="dark" spacing="normal">
+        <MemoryRouter>{ui}</MemoryRouter>
       </LinodeThemeWrapper>
     </Provider>
   );
@@ -61,8 +99,8 @@ export const toPassAxeCheck = {
         return {
           message: () => `anchors has no href - specify a value for href
         \nsee: https://a11yproject.com/posts/creating-valid-and-accessible-links/:\n${received.debug(
-          e
-        )}`,
+            e
+          )}`,
           pass: false
         };
       }
@@ -71,8 +109,8 @@ export const toPassAxeCheck = {
         return {
           message: () => `anchors has bad href - specify a non null value for href
         \nsee: https://a11yproject.com/posts/creating-valid-and-accessible-links/:\n${received.debug(
-          e
-        )}`,
+            e
+          )}`,
           pass: false
         };
       }
@@ -81,8 +119,8 @@ export const toPassAxeCheck = {
         return {
           message: () => `anchors has invalid href - specify a valid value not #,'' or javascript(void)
         \nsee: https://a11yproject.com/posts/creating-valid-and-accessible-links/:\n${received.debug(
-          e
-        )}`,
+            e
+          )}`,
           pass: false
         };
       }
@@ -91,16 +129,6 @@ export const toPassAxeCheck = {
     }
     return { pass: true, message: () => '!' };
   }
-};
-
-export const renderWithTheme = (ui: any) => {
-  return render(
-    <Provider store={store}>
-      <LinodeThemeWrapper theme="dark" spacing="normal">
-        <MemoryRouter>{ui}</MemoryRouter>
-      </LinodeThemeWrapper>
-    </Provider>
-  );
 };
 
 export const includesActions = (

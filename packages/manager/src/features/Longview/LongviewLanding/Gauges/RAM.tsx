@@ -1,90 +1,49 @@
-import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
-import requestStats from '../../request';
 import { baseGaugeProps } from './common';
 
 import { readableBytes } from 'src/utilities/unitConversions';
 
+import withClientData, {
+  Props as LVDataProps
+} from 'src/containers/longview.stats.container';
+
 interface Props {
-  lastUpdated?: number;
-  token: string;
+  clientID: number;
 }
 
-const RAMGauge: React.FC<Props> = props => {
-  const [dataHasResolvedAtLeastOnce, setDataResolved] = React.useState<boolean>(
-    false
+const RAMGauge: React.FC<Props & LVDataProps> = props => {
+  const {
+    longviewClientDataError: error,
+    longviewClientDataLoading: loading,
+    longviewClientData
+  } = props;
+
+  const usedMemory = pathOr(
+    0,
+    ['Memory', 'real', 'used', 0, 'y'],
+    longviewClientData
   );
-  const [memory, setMemory] = React.useState<number>(0);
-  const [totalMemory, setTotalMemory] = React.useState<number>(0);
-  const [loading, setLoading] = React.useState<boolean>(true);
-  const [error, setError] = React.useState<APIError | undefined>();
+  const freeMemory = pathOr(
+    0,
+    ['Memory', 'real', 'free', 0, 'y'],
+    longviewClientData
+  );
+  const buffers = pathOr(
+    0,
+    ['Memory', 'real', 'buffers', 0, 'y'],
+    longviewClientData
+  );
+  const cache = pathOr(
+    0,
+    ['Memory', 'real', 'cache', 0, 'y'],
+    longviewClientData
+  );
 
-  React.useEffect(() => {
-    let mounted = true;
-
-    requestStats(props.token, 'getLatestValue', ['memory'])
-      .then(response => {
-        /**
-         * The likelihood of any of these paths being undefined is a big
-         * unknown, so we learn towards safety.
-         */
-        const free = pathOr<number>(
-          0,
-          ['Memory', 'real', 'free', 0, 'y'],
-          response
-        );
-        const used = pathOr<number>(
-          0,
-          ['Memory', 'real', 'used', 0, 'y'],
-          response
-        );
-        const buffers = pathOr<number>(
-          0,
-          ['Memory', 'real', 'buffers', 0, 'y'],
-          response
-        );
-        const cache = pathOr<number>(
-          0,
-          ['Memory', 'real', 'cache', 0, 'y'],
-          response
-        );
-
-        if (mounted) {
-          setError(undefined);
-          /**
-           * All units come back in KB. We will do our converting in the render methods
-           */
-          setMemory(generateUsedMemory(used, buffers, cache));
-          setTotalMemory(generateTotalMemory(used, free));
-          if (!!loading) {
-            setLoading(false);
-          }
-          if (!dataHasResolvedAtLeastOnce) {
-            setDataResolved(true);
-          }
-        }
-      })
-      .catch(() => {
-        if (mounted) {
-          if (!dataHasResolvedAtLeastOnce) {
-            setError({
-              reason: 'Error'
-            });
-          }
-
-          if (!!loading) {
-            setLoading(false);
-          }
-        }
-      });
-
-    return () => {
-      mounted = false;
-    };
-  }, [props.lastUpdated]);
+  const finalUsedMemory = generateUsedMemory(usedMemory, buffers, cache);
+  const totalMemory = generateTotalMemory(usedMemory, freeMemory);
 
   const generateText = (): {
     innerText: string;
@@ -113,7 +72,7 @@ const RAMGauge: React.FC<Props> = props => {
     }
 
     /** first convert memory from KB to bytes */
-    const usedMemoryToBytes = memory * 1024;
+    const usedMemoryToBytes = finalUsedMemory * 1024;
     const howManyBytesInGB = 1073741824;
 
     const convertedUsedMemory = readableBytes(
@@ -149,7 +108,7 @@ const RAMGauge: React.FC<Props> = props => {
     <GaugePercent
       {...baseGaugeProps}
       max={totalMemory}
-      value={memory}
+      value={finalUsedMemory}
       filledInColor="#D38ADB"
       {...generateText()}
     />
@@ -170,4 +129,4 @@ export const generateUsedMemory = (
 
 export const generateTotalMemory = (used: number, free: number) => used + free;
 
-export default RAMGauge;
+export default withClientData<Props>(ownProps => ownProps.clientID)(RAMGauge);
