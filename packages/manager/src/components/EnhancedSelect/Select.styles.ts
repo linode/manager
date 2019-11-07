@@ -127,7 +127,8 @@ export const styles = (theme: Theme) =>
       },
       '& .react-select__single-value': {
         color: theme.palette.text.primary,
-        overflow: 'hidden'
+        overflow: 'hidden',
+        paddingBottom: 1
       },
       '& .react-select__indicator-separator': {
         display: 'none'

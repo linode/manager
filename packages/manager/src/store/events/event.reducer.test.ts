@@ -19,6 +19,7 @@ describe('events.reducer', () => {
           {
             id: 18029572,
             time_remaining: 0,
+            secondary_entity: null,
             seen: true,
             created: '2018-12-03T22:34:09',
             action: 'linode_reboot',
@@ -37,6 +38,7 @@ describe('events.reducer', () => {
           {
             id: 18022171,
             time_remaining: 0,
+            secondary_entity: null,
             seen: false,
             created: '2018-12-03T19:59:53',
             action: 'linode_shutdown',

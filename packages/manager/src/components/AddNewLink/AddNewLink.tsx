@@ -26,7 +26,7 @@ const AddNewLink: React.StatelessComponent<CombinedProps> = props => {
     className,
     disabledReason,
     children,
-    ...remaningPropsAsTooltipProps
+    ...remainingPropsAsTooltipProps
   } = props;
 
   const baseProps = {
@@ -42,7 +42,7 @@ const AddNewLink: React.StatelessComponent<CombinedProps> = props => {
   if (!!disabled && !!disabledReason) {
     return (
       <Tooltip
-        {...remaningPropsAsTooltipProps}
+        {...remainingPropsAsTooltipProps}
         data-qa-disabled-text-icon-tooltip
         enterTouchDelay={0}
         leaveTouchDelay={5000}

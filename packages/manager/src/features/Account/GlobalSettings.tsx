@@ -142,7 +142,7 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
           onChange={this.toggleNetworkHelper}
           networkHelperEnabled={networkHelperEnabled}
         />
-        {flags.objectStorage && (
+        {flags.objectStorageCancel && (
           <EnableObjectStorage
             object_storage={object_storage}
             update={this.props.actions.updateAccountSettingsInStore}

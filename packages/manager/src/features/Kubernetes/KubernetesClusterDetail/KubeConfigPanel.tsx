@@ -30,7 +30,7 @@ const styles = (theme: Theme) =>
     },
     item: {
       paddingBottom: theme.spacing(2),
-      [theme.breakpoints.up('lg')]: {
+      [theme.breakpoints.up('xl')]: {
         display: 'flex',
         flexFlow: 'row nowrap'
       }
@@ -41,14 +41,14 @@ const styles = (theme: Theme) =>
       fontSize: '0.9rem',
       marginRight: 12,
       minWidth: 124,
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('lg')]: {
         marginBottom: theme.spacing(2),
         marginRight: 0
       }
     },
     buttonSecondary: {
       minWidth: 88,
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('lg')]: {
         marginBottom: 0,
         marginRight: 0
       }
