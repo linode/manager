@@ -351,7 +351,7 @@ export const getCountryCodeFromSlug = (regionSlug: string) => {
     return 'in';
   }
 
-  if (regionSlug.match(/ap-au/i)) {
+  if (regionSlug.match(/ap-southeast/i)) {
     return 'au';
   }
 

@@ -9,7 +9,7 @@ export const regions: Region[] = [
   {
     capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
     country: 'au',
-    id: 'ap-au'
+    id: 'ap-southeast'
   },
   {
     capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
