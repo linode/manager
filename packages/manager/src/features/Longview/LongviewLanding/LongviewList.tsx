@@ -1,14 +1,40 @@
+import { LongviewClient } from 'linode-js-sdk/lib/longview';
 import * as React from 'react';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import { Props as LVProps } from 'src/containers/longview.container';
 import LongviewRows from './LongviewListRows';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  empty: {
+    height: '20em',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  button: {
+    background: 'none',
+    color: theme.palette.primary.main,
+    border: 'none',
+    padding: 0,
+    font: 'inherit',
+    cursor: 'pointer',
+    '&:hover': {
+      textDecoration: 'underline'
+    }
+  },
+  emptyText: {
+    fontSize: '1.1em'
+  }
+}));
 
 type LongviewProps = Omit<
   LVProps,
@@ -19,6 +45,7 @@ type LongviewProps = Omit<
 >;
 
 interface Props {
+  createLongviewClient: () => Promise<LongviewClient>;
   triggerDeleteLongviewClient: (
     longviewClientID: number,
     longviewClientLabel: string
@@ -29,6 +56,7 @@ type CombinedProps = Props & LongviewProps;
 
 const LongviewList: React.FC<CombinedProps> = props => {
   const {
+    createLongviewClient,
     longviewClientsData,
     longviewClientsError,
     longviewClientsLastUpdated,
@@ -37,7 +65,30 @@ const LongviewList: React.FC<CombinedProps> = props => {
     triggerDeleteLongviewClient
   } = props;
 
-  if (longviewClientsLoading && longviewClientsLastUpdated === 0) {
+  const classes = useStyles();
+  const [newClientLoading, setNewClientLoading] = React.useState<boolean>(
+    false
+  );
+  const [newClientError, setNewClientError] = React.useState<
+    string | undefined
+  >();
+
+  const handleAddClient = () => {
+    setNewClientLoading(true);
+    createLongviewClient()
+      .then(_ => {
+        setNewClientLoading(false);
+      })
+      .catch(errorResponse => {
+        setNewClientError(errorResponse[0].reason);
+        setNewClientLoading(false);
+      });
+  };
+
+  if (
+    (longviewClientsLoading && longviewClientsLastUpdated === 0) ||
+    newClientLoading
+  ) {
     return (
       <Paper>
         <CircleProgress />
@@ -48,16 +99,32 @@ const LongviewList: React.FC<CombinedProps> = props => {
   /**
    * only display error if we don't already have data
    */
-  if (longviewClientsError.read && longviewClientsLastUpdated === 0) {
+  if (
+    (longviewClientsError.read && longviewClientsLastUpdated === 0) ||
+    newClientError
+  ) {
+    const errorText = longviewClientsError.read
+      ? longviewClientsData.read[0].reason
+      : newClientError;
     return (
       <Paper>
-        <ErrorState errorText={longviewClientsError.read[0].reason} />
+        <ErrorState errorText={errorText} />
       </Paper>
     );
   }
 
+  /** Empty state */
   if (longviewClientsLastUpdated !== 0 && longviewClientsResults === 0) {
-    return <div>Empty</div>;
+    return (
+      <Paper className={classes.empty}>
+        <Typography variant="body1" className={classes.emptyText}>
+          You have no Longview clients configured.{' '}
+          <button className={classes.button} onClick={handleAddClient}>
+            Click here to add one.
+          </button>
+        </Typography>
+      </Paper>
+    );
   }
 
   return (

@@ -119,6 +119,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
         longviewClientsLoading={longviewClientsLoading}
         longviewClientsResults={longviewClientsResults}
         triggerDeleteLongviewClient={openDeleteDialog}
+        createLongviewClient={createLongviewClient}
       />
       <DeleteDialog
         selectedLongviewClientID={selectedClientID}
