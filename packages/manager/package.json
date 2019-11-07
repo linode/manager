@@ -73,7 +73,7 @@
     "react-text-mask": "^5.4.3",
     "react-waypoint": "^8.0.3",
     "recompose": "^0.30.0",
-    "redux": "^4.0.1",
+    "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "rxjs": "^5.5.6",
