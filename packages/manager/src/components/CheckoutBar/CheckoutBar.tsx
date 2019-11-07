@@ -128,6 +128,7 @@ class CheckoutBar extends React.Component<CombinedProps> {
               )}
               {details && (
                 <Typography
+                  component="span"
                   data-qa-details={details}
                   className={classes.detail}
                 >
@@ -157,8 +158,9 @@ class CheckoutBar extends React.Component<CombinedProps> {
             disabled={disabled}
             onClick={onDeploy}
             data-qa-deploy-linode
+            loading={isMakingRequest}
           >
-            {!isMakingRequest ? 'Create' : 'Creating...'}
+            Create
           </Button>
         </div>
       </div>

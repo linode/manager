@@ -1,3 +1,4 @@
+import { ObjectStorageKey } from 'linode-js-sdk/lib/object-storage';
 import * as React from 'react';
 import { compose } from 'recompose';
 import CopyTooltip from 'src/components/CopyTooltip';
@@ -47,13 +48,13 @@ const styles = (theme: Theme) =>
 
 interface Props {
   isRestrictedUser: boolean;
-  openRevokeDialog: (objectStorageKey: Linode.ObjectStorageKey) => void;
-  openDrawerForEditing: (objectStorageKey: Linode.ObjectStorageKey) => void;
+  openRevokeDialog: (objectStorageKey: ObjectStorageKey) => void;
+  openDrawerForEditing: (objectStorageKey: ObjectStorageKey) => void;
 }
 
 export type CombinedProps = Props &
   WithStyles<ClassNames> &
-  PaginationProps<Linode.ObjectStorageKey>;
+  PaginationProps<ObjectStorageKey>;
 
 export const AccessKeyTable: React.StatelessComponent<
   CombinedProps
@@ -93,8 +94,8 @@ export const AccessKeyTable: React.StatelessComponent<
     );
   };
 
-  const renderRows = (objectStorageKeys: Linode.ObjectStorageKey[]) => {
-    return objectStorageKeys.map((eachKey: Linode.ObjectStorageKey) => (
+  const renderRows = (objectStorageKeys: ObjectStorageKey[]) => {
+    return objectStorageKeys.map((eachKey: ObjectStorageKey) => (
       <TableRow key={eachKey.id} data-qa-table-row={eachKey.label}>
         <TableCell parentColumn="Label">
           <Typography variant="h3" data-qa-key-label>
@@ -148,7 +149,7 @@ const styled = withStyles(styles);
 
 const enhanced = compose<
   CombinedProps,
-  Props & PaginationProps<Linode.ObjectStorageKey>
+  Props & PaginationProps<ObjectStorageKey>
 >(styled);
 
 export default enhanced(AccessKeyTable);

@@ -1,3 +1,7 @@
+import {
+  ObjectStorageBucket,
+  ObjectStorageCluster
+} from 'linode-js-sdk/lib/object-storage';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -169,8 +173,8 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 });
 
 interface DispatchProps {
-  requestBuckets: () => Promise<Linode.Bucket[]>;
-  requestClusters: () => Promise<Linode.Cluster[]>;
+  requestBuckets: () => Promise<ObjectStorageBucket[]>;
+  requestClusters: () => Promise<ObjectStorageCluster[]>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (

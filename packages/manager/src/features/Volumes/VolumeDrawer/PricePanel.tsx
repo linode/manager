@@ -35,7 +35,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const PricePanel: React.StatelessComponent<CombinedProps> = ({
+const PricePanel: React.FC<CombinedProps> = ({
   currentSize,
   value,
   classes

@@ -1,4 +1,5 @@
 import { ZoneName } from 'linode-js-sdk/lib/networking';
+import { ObjectStorageClusterID } from 'linode-js-sdk/lib/object-storage';
 
 const PRODUCTION = 'production';
 
@@ -29,6 +30,10 @@ export const ALGOLIA_SEARCH_KEY =
   process.env.REACT_APP_ALGOLIA_SEARCH_KEY || '';
 export const LAUNCH_DARKLY_API_KEY =
   process.env.REACT_APP_LAUNCH_DARKLY_ID || '';
+
+// Sets Paypal Environment, valid values: 'sandbox|production'
+export const PAYPAL_CLIENT_ENV =
+  process.env.REACT_APP_PAYPAL_ENV || 'production';
 
 export const LONGVIEW_ROOT = 'https://longview.linode.com/fetch';
 
@@ -157,7 +162,10 @@ export const dcDisplayCountry = {
   'ap-west': 'IN'
 };
 
-export const objectStorageClusterDisplay: Record<Linode.ClusterID, string> = {
+export const objectStorageClusterDisplay: Record<
+  ObjectStorageClusterID,
+  string
+> = {
   'us-east-1': 'Newark, NJ',
   'us-east': 'Newark, NJ'
 };

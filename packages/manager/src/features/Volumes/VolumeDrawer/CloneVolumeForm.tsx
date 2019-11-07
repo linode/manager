@@ -30,7 +30,7 @@ const validationScheme = CloneVolumeSchema;
 
 const initialValues = { label: '' };
 
-const CloneVolumeForm: React.StatelessComponent<CombinedProps> = props => {
+const CloneVolumeForm: React.FC<CombinedProps> = props => {
   const {
     onClose,
     volumeId,

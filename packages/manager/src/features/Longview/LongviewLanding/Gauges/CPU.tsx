@@ -13,42 +13,57 @@ interface Props {
   lastUpdated?: number;
 }
 
-const LongviewGauge: React.FC<Props> = props => {
+const CPUGauge: React.FC<Props> = props => {
   const { clientAPIKey, lastUpdated } = props;
 
+  const [dataHasResolvedAtLeastOnce, setDataResolved] = React.useState<boolean>(
+    false
+  );
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<APIError | undefined>();
 
   const [usedCPU, setUsedCPU] = React.useState<number>(0);
-  const [numCores, setNumCores] = React.useState<number>(1);
+  const [numCores, setNumCores] = React.useState<number>(0);
 
   React.useEffect(() => {
+    let mounted = true;
+
     requestStats(clientAPIKey, 'getLatestValue', ['cpu', 'sysinfo'])
       .then(data => {
-        setLoading(false);
-        setError(undefined);
+        if (mounted) {
+          setLoading(false);
+          setError(undefined);
 
-        const cores = path<number>(['SysInfo', 'cpu', 'cores'], data);
+          const cores = path<number>(['SysInfo', 'cpu', 'cores'], data);
 
-        // If we don't have the number of cores, we can't determine the value.
-        if (!cores) {
-          return;
+          // If we don't have the number of cores, we can't determine the value.
+          if (!cores) {
+            return;
+          }
+
+          if (!dataHasResolvedAtLeastOnce) {
+            setDataResolved(true);
+          }
+
+          setNumCores(cores);
+
+          const used = sumCPUUsage(data.CPU);
+          const normalizedUsed = normalizeValue(used, cores);
+          setUsedCPU(normalizedUsed);
         }
-
-        setNumCores(cores);
-
-        const used = sumCPUUsage(data.CPU);
-        const normalizedUsed = normalizeValue(used, cores);
-        setUsedCPU(normalizedUsed);
       })
       .catch(_ => {
-        if (!usedCPU) {
+        if (mounted && !dataHasResolvedAtLeastOnce) {
           setError({
             reason: 'Error' // @todo: Error message?
           });
           setLoading(false);
         }
       });
+
+    return () => {
+      mounted = false;
+    };
   }, [lastUpdated]);
 
   return (
@@ -56,16 +71,16 @@ const LongviewGauge: React.FC<Props> = props => {
       {...baseGaugeProps}
       // The MAX depends on the number of CPU cores. Default to 1 if cores
       // doesn't exist or is 0.
-      max={100 * numCores || 1}
-      value={usedCPU || 100}
-      innerText={innerText(usedCPU, loading, error)}
+      max={100 * numCores}
+      value={usedCPU}
+      innerText={innerText(usedCPU || 0, loading, error)}
       subTitle={
         <>
           <Typography>
             <strong>CPU</strong>
           </Typography>
           {!error && !loading && (
-            <Typography>{pluralize('Core', 'Cores', numCores)}</Typography>
+            <Typography>{pluralize('Core', 'Cores', numCores || 0)}</Typography>
           )}
         </>
       }
@@ -73,7 +88,7 @@ const LongviewGauge: React.FC<Props> = props => {
   );
 };
 
-export default LongviewGauge;
+export default CPUGauge;
 
 // UTILITIES
 export const sumCPUUsage = (CPUData: Record<string, CPU> = {}) => {

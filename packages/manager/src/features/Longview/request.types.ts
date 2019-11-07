@@ -11,7 +11,7 @@ interface FS {
   path: string;
 }
 
-interface Disk {
+export interface Disk {
   dm: number;
   children: number;
   mounted: number;
@@ -82,15 +82,15 @@ export interface LongviewLoad {
   Load: Stat[];
 }
 
+export interface InboundOutboundNetwork {
+  rx_bytes: Stat[];
+  tx_bytes: Stat[];
+}
+
 export interface LongviewNetwork {
   Network: {
     mac_addr: string;
-    Interface: {
-      eth0: {
-        rx_bytes: Stat[];
-        tx_bytes: Stat[];
-      };
-    };
+    Interface: Record<string, InboundOutboundNetwork>;
   };
 }
 

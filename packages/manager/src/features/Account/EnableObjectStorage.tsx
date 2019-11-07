@@ -1,4 +1,5 @@
 import { AccountSettings } from 'linode-js-sdk/lib/account';
+import { cancelObjectStorage } from 'linode-js-sdk/lib/object-storage';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -9,7 +10,6 @@ import Typography from 'src/components/core/Typography';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
-import { cancelObjectStorage } from 'src/services/objectStorage/account';
 
 interface Props {
   update: (data: Partial<AccountSettings>) => void;

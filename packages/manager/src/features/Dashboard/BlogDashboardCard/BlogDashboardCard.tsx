@@ -3,6 +3,7 @@ import { decode } from 'he';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { compose, map, pathOr, take } from 'ramda';
 import * as React from 'react';
+import * as sanitize from 'sanitize-html';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -65,7 +66,7 @@ export class BlogDashboardCard extends React.Component<CombinedProps, State> {
     this.mounted = true;
 
     req
-      .get(`https://linode.com/blog/feed/`, { responseType: 'text' })
+      .get(`https://www.linode.com/blog/feed/`, { responseType: 'text' })
       .then(({ data }) => parseXMLStringPromise(data))
       .then(processXMLData)
       .then(
@@ -106,8 +107,25 @@ export class BlogDashboardCard extends React.Component<CombinedProps, State> {
   renderItem = (item: BlogItem, idx: number) => {
     const { classes } = this.props;
 
-    const cleanedDescription = decode(item.description);
-    const cleanedTitle = decode(item.title);
+    /** remove all HTML tags from the title and description */
+    const cleanedDescription = decode(
+      sanitize(item.description, {
+        allowedTags: []
+      })
+    );
+    const cleanedTitle = decode(
+      sanitize(item.title, {
+        allowedTags: []
+      })
+    );
+
+    /** string that starts with "the post" and ends with anything */
+    const appearedFirstOnLinode = /^the post.*$/gim;
+    const finalDesc = cleanedDescription.replace(appearedFirstOnLinode, '');
+
+    if (!cleanedTitle) {
+      return null;
+    }
 
     return (
       <Paper key={idx} className={classes.root}>
@@ -123,7 +141,7 @@ export class BlogDashboardCard extends React.Component<CombinedProps, State> {
           </a>
         </Typography>
         <Typography variant="body1" data-qa-post-desc>
-          {cleanedDescription}
+          {finalDesc}
         </Typography>
       </Paper>
     );
@@ -132,7 +150,7 @@ export class BlogDashboardCard extends React.Component<CombinedProps, State> {
   renderAction = () => (
     <ViewAllLink
       text="Read More"
-      link={'https://linode.com/blog/'}
+      link={'https://www.linode.com/blog/'}
       data-qa-read-more
       external
     />
