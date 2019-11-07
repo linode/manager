@@ -176,8 +176,11 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
       });
   };
 
-  const onRadioSelect = (e: React.FormEvent<HTMLInputElement>) =>
-    setSelectedSub(e.currentTarget.value);
+  const onRadioSelect = React.useCallback(
+    (e: React.FormEvent<HTMLInputElement>) =>
+      setSelectedSub(e.currentTarget.value),
+    []
+  );
 
   const isButtonDisabled =
     Boolean(subscriptions.error) ||
@@ -251,7 +254,7 @@ interface LongviewPlansTableBodyProps {
 
 export const LongviewPlansTableBody: React.FC<
   LongviewPlansTableBodyProps
-> = props => {
+> = React.memo(props => {
   const { loading, error, subscriptions, selectedSub, ...rest } = props;
 
   if (loading) {
@@ -294,7 +297,7 @@ export const LongviewPlansTableBody: React.FC<
       ))}
     </>
   );
-};
+});
 
 // =============================================================================
 // LongviewSubscriptionRow
@@ -314,7 +317,7 @@ interface LongviewSubscriptionRowProps {
 
 export const LongviewSubscriptionRow: React.FC<
   LongviewSubscriptionRowProps
-> = props => {
+> = React.memo(props => {
   const {
     id,
     plan,
@@ -376,7 +379,7 @@ export const LongviewSubscriptionRow: React.FC<
       </TableCell>
     </TableRow>
   );
-};
+});
 
 // =============================================================================
 // Utilities
