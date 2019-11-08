@@ -105,7 +105,7 @@ export const LongviewClientInstructions: React.FC<Props> = props => {
                 </a>
               </span>
               <span>
-                <a href="https://www.linode.com/docs/platform/longview/longview/">
+                <a href="https://www.linode.com/docs/platform/longview/longview/#install-the-longview-client">
                   Manual installation instructions
                 </a>
               </span>
