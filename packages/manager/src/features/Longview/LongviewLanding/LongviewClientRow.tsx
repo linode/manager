@@ -92,7 +92,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
          * return an authentication failed error.
          */
         const reason = pathOr('', [0, 'reason'], e);
-        if (reason.match(/authentication/i)) {
+        if (mounted && reason.match(/authentication/i)) {
           setAuthed(false);
         }
       });
@@ -100,22 +100,11 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
 
   /** request on first mount */
   React.useEffect(() => {
-    if (mounted) {
-      requestAndSetLastUpdated();
-    }
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  /** then request on an interval of 10 seconds */
-  React.useEffect(() => {
-    if (mounted) {
+    requestAndSetLastUpdated().then(() => {
       requestInterval = setInterval(() => {
         requestAndSetLastUpdated();
       }, 10000);
-    }
+    });
 
     return () => {
       mounted = false;
