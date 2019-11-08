@@ -1,5 +1,5 @@
 import { Event } from 'linode-js-sdk/lib/account';
-import { ExtendedEvent } from 'src/store/events/event.helpers';
+import { ExtendedEvent } from 'src/store/events/event.types';
 
 export const events: Event[] = [
   {
