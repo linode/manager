@@ -3,7 +3,9 @@ import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import Button from 'src/components/Button';
+import ButtonBase from 'src/components/core/ButtonBase';
 import { default as MDivider } from 'src/components/core/Divider';
+import Typography from 'src/components/core/Typography';
 
 const Divider = () => (
   <MDivider style={{ marginBottom: '8px', marginTop: '8px' }} />
@@ -26,6 +28,10 @@ storiesOf('Button', module)
       <Divider />
       <Button buttonType="remove" data-qa-button="remove" />
       <Divider />
+
+      <ButtonBase href="#" component="a" focusRipple>
+        <Typography variant="button">Primary as link</Typography>
+      </ButtonBase>
     </React.Fragment>
   ))
   .add('Disabled', () => (
