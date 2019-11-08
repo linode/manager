@@ -58,8 +58,7 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.down('sm')]: {
         justifyContent: 'flex-end !important' as 'flex-end',
         padding: 0,
-        paddingRight: '0 !important' as '0',
-        width: '10%'
+        paddingRight: '0 !important' as '0'
       }
     },
     editableCount: {
@@ -72,11 +71,9 @@ const styles = (theme: Theme) =>
     },
     priceTableCell: {
       // prevents position shift as price grows/shrinks
-      minWidth: 130,
-      width: '20%'
+      minWidth: 130
     },
     regularCell: {
-      width: '25%',
       height: 70
     }
   });
