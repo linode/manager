@@ -3,7 +3,9 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import { contains, equals, path, remove, update } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import Button from 'src/components/Button';
 import Grid from 'src/components/core/Grid';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import { DispatchProps } from 'src/containers/kubernetes.container';
 import { WithTypesProps } from 'src/containers/types.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -11,11 +13,21 @@ import scrollTo from 'src/utilities/scrollTo';
 import { getMonthlyPrice } from '.././kubeUtils';
 import { ExtendedCluster, PoolNodeWithPrice } from '.././types';
 import NodePoolPanel from '../CreateCluster/NodePoolPanel';
+import KubernetesDialog from './KubernetesDialog';
 import NodePoolsDisplay from './NodePoolsDisplay';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  deleteSection: {
+    [theme.breakpoints.up('md')]: {
+      marginLeft: theme.spacing(3)
+    }
+  }
+}));
 
 interface Props {
   cluster: ExtendedCluster;
   nodePoolsLoading: boolean;
+  clusterDeleteError?: APIError[];
 }
 
 export type ResizeProps = Props &
@@ -35,6 +47,12 @@ export const ResizeCluster: React.FC<ResizeProps> = props => {
   if (!cluster) {
     return null;
   }
+
+  const classes = useStyles();
+
+  /** Deletion confirmation modal */
+  const [confirmationOpen, setConfirmation] = React.useState<boolean>(false);
+  const [deleting, setDeleting] = React.useState<boolean>(false);
 
   /** Holds the local state of the cluster's node pools when editing */
   const [pools, updatePools] = React.useState<PoolNodeWithPrice[]>(
@@ -61,6 +79,19 @@ export const ResizeCluster: React.FC<ResizeProps> = props => {
       setSubmitDisabled(true);
     }
   }, [pools, cluster.node_pools]);
+
+  const handleDeleteCluster = () => {
+    setDeleting(true);
+    props
+      .deleteCluster({ clusterID: cluster.id })
+      .then(() => props.history.push('/kubernetes'))
+      .catch(_ => setDeleting(false)); // Handle errors through Redux
+  };
+
+  const openDeleteConfirmation = () => {
+    props.setKubernetesErrors({ delete: undefined });
+    setConfirmation(true);
+  };
   /**
    * These three handlers update the local pools state in the event of an error. If an update
    * is fully successful, we'll exit editing mode, the table will show
@@ -253,7 +284,26 @@ export const ResizeCluster: React.FC<ResizeProps> = props => {
               : undefined
           }
         />
+        <Grid item xs={12} className={classes.deleteSection}>
+          <Button
+            destructive
+            buttonType="secondary"
+            onClick={openDeleteConfirmation}
+          >
+            Delete Cluster
+          </Button>
+        </Grid>
       </Grid>
+
+      <KubernetesDialog
+        open={confirmationOpen}
+        loading={deleting}
+        error={path([0, 'reason'], props.clusterDeleteError)}
+        clusterLabel={cluster.label}
+        clusterPools={cluster.node_pools}
+        onClose={() => setConfirmation(false)}
+        onDelete={handleDeleteCluster}
+      />
     </>
   );
 };

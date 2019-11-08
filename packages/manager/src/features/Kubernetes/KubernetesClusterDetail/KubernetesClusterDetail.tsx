@@ -1,12 +1,10 @@
 import { getKubernetesClusterEndpoint } from 'linode-js-sdk/lib/kubernetes';
 import { APIError } from 'linode-js-sdk/lib/types';
-import { path } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import Breadcrumb from 'src/components/Breadcrumb';
-import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/core/Grid';
 import {
@@ -25,7 +23,6 @@ import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedCluster } from '.././types';
 import KubeConfigPanel from './KubeConfigPanel';
-import KubernetesDialog from './KubernetesDialog';
 import KubeSummaryPanel from './KubeSummaryPanel';
 
 import Navigation from './DetailNavigation';
@@ -38,7 +35,6 @@ type ClassNames =
   | 'section'
   | 'panelItem'
   | 'button'
-  | 'deleteSection'
   | 'titleGridWrapper'
   | 'tagHeading'
   | 'sectionMain'
@@ -71,11 +67,6 @@ const styles = (theme: Theme) =>
         [theme.breakpoints.only('md')]: {
           padding: `${theme.spacing(2)}px ${theme.spacing(1)}px`
         }
-      }
-    },
-    deleteSection: {
-      [theme.breakpoints.up('md')]: {
-        marginLeft: theme.spacing(3)
       }
     },
     titleGridWrapper: {
@@ -117,7 +108,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   const {
     classes,
     cluster,
-    clusterDeleteError,
     clustersLoadError,
     clustersLoading,
     lastUpdated,
@@ -125,9 +115,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     ...rest
   } = props;
 
-  /** Deletion confirmation modal */
-  const [confirmationOpen, setConfirmation] = React.useState<boolean>(false);
-  const [deleting, setDeleting] = React.useState<boolean>(false);
   const [endpoint, setEndpoint] = React.useState<string | null>(null);
   const [endpointError, setEndpointError] = React.useState<string | undefined>(
     undefined
@@ -185,19 +172,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   if (cluster === null) {
     return null;
   }
-
-  const handleDeleteCluster = () => {
-    setDeleting(true);
-    props
-      .deleteCluster({ clusterID: cluster.id })
-      .then(() => props.history.push('/kubernetes'))
-      .catch(_ => setDeleting(false)); // Handle errors through Redux
-  };
-
-  const openDeleteConfirmation = () => {
-    props.setKubernetesErrors({ delete: undefined });
-    setConfirmation(true);
-  };
 
   const handleLabelChange = async (newLabel: string) => {
     props.updateCluster({ clusterID: cluster.id, label: newLabel });
@@ -271,63 +245,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<
             updateNodePool={props.updateNodePool}
             {...rest}
           />
-          {/* <Grid item xs={12}>
-            <NodePoolsDisplay
-              submittingForm={submitting}
-              submitForm={submitForm}
-              submissionSuccess={success}
-              submissionError={generalError}
-              editing={editing}
-              toggleEditing={toggleEditing}
-              updatePool={updatePool}
-              deletePool={handleDeletePool}
-              resetForm={resetFormState}
-              pools={cluster.node_pools}
-              poolsForEdit={pools}
-              types={typesData || []}
-              loading={nodePoolsLoading}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <NodePoolPanel
-              hideTable
-              selectedType={selectedType}
-              types={typesData || []}
-              nodeCount={count}
-              addNodePool={handleAddNodePool}
-              handleTypeSelect={newType => setSelectedType(newType)}
-              updateNodeCount={newCount => setCount(newCount)}
-              typesLoading={typesLoading}
-              typesError={
-                typesError
-                  ? getAPIErrorOrDefault(
-                      typesError,
-                      'Error loading Linode type information.'
-                    )[0].reason
-                  : undefined
-              }
-            />
-          </Grid> */}
-          <Grid item xs={12} className={classes.deleteSection}>
-            <Button
-              destructive
-              buttonType="secondary"
-              onClick={openDeleteConfirmation}
-            >
-              Delete Cluster
-            </Button>
-          </Grid>
         </Grid>
       </Grid>
-      <KubernetesDialog
-        open={confirmationOpen}
-        loading={deleting}
-        error={path([0, 'reason'], clusterDeleteError)}
-        clusterLabel={cluster.label}
-        clusterPools={cluster.node_pools}
-        onClose={() => setConfirmation(false)}
-        onDelete={handleDeleteCluster}
-      />
     </React.Fragment>
   );
 };
