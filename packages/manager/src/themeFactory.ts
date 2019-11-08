@@ -306,6 +306,31 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         fontSize: '1.075rem',
         lineHeight: '1.5rem',
         color: primaryColors.text
+      },
+      button: {
+        textTransform: 'inherit',
+        borderRadius: 0,
+        fontSize: '1rem',
+        lineHeight: 1,
+        fontFamily: spacingUnit === 4 ? primaryFonts.normal : primaryFonts.bold,
+        color: '#fff',
+        backgroundColor: primaryColors.main,
+        padding: `${spacingUnit * 2}px ${spacingUnit * 3 +
+          spacingUnit / 2}px ${spacingUnit * 2}px`,
+        maxHeight: 48,
+        cursor: 'pointer',
+        '& a': {
+          color: '#fff',
+          '&:focus': {
+            outline: 'none'
+          }
+        },
+        '&:hover, &:focus': {
+          backgroundColor: primaryColors.light
+        },
+        '&:active': {
+          backgroundColor: primaryColors.dark
+        }
       }
     },
     visually: {
