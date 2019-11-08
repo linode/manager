@@ -90,6 +90,10 @@ import longview, {
   defaultState as defaultLongviewState,
   State as LongviewState
 } from 'src/store/longview/longview.reducer';
+import longviewStats, {
+  defaultState as defaultLongviewStatsState,
+  State as LongviewStatsState
+} from 'src/store/longviewStats/longviewStats.reducer';
 import managedIssues, {
   defaultState as defaultManagedIssuesState,
   State as ManagedIssuesState
@@ -130,7 +134,7 @@ import volumes, {
 import volumeDrawer, {
   defaultState as volumeDrawerDefaultState,
   State as VolumeDrawerState
-} from 'src/store/volumeDrawer';
+} from 'src/store/volumeForm';
 import initialLoad, {
   defaultState as initialLoadState,
   State as InitialLoadState
@@ -219,6 +223,7 @@ export interface ApplicationState {
   firewalls: FirewallState;
   globalErrors: GlobalErrorState;
   longviewClients: LongviewState;
+  longviewStats: LongviewStatsState;
 }
 
 const defaultState: ApplicationState = {
@@ -237,7 +242,8 @@ const defaultState: ApplicationState = {
   initialLoad: initialLoadState,
   firewalls: defaultFirewallState,
   globalErrors: defaultGlobalErrorState,
-  longviewClients: defaultLongviewState
+  longviewClients: defaultLongviewState,
+  longviewStats: defaultLongviewStatsState
 };
 
 /**
@@ -282,7 +288,8 @@ const reducers = combineReducers<ApplicationState>({
   initialLoad,
   firewalls,
   globalErrors,
-  longviewClients: longview
+  longviewClients: longview,
+  longviewStats
 });
 
 const enhancers = compose(

@@ -1,7 +1,9 @@
 {
   "name": "root",
   "private": true,
+  "license": "APLv2",
   "devDependencies": {
+    "factory.ts": "^0.5.0",
     "husky": "^3.0.1",
     "lerna": "^3.16.4",
     "tslint": "^5.20.0",
