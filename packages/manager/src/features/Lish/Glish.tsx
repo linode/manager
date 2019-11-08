@@ -9,7 +9,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
-import { getLishSchemeAndHostname, resizeViewPort } from '.';
+import { getLishSchemeAndHostname, resizeViewPort } from './lishUtils';
 import VncDisplay from './VncDisplay';
 
 type ClassNames = 'container' | 'errorState' | 'message';
