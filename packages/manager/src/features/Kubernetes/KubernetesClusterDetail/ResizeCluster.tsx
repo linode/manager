@@ -2,6 +2,7 @@ import * as Bluebird from 'bluebird';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { contains, equals, path, remove, update } from 'ramda';
 import * as React from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import Grid from 'src/components/core/Grid';
 import { DispatchProps } from 'src/containers/kubernetes.container';
 import { WithTypesProps } from 'src/containers/types.container';
@@ -17,9 +18,12 @@ interface Props {
   nodePoolsLoading: boolean;
 }
 
-export type CombinedProps = Props & DispatchProps & WithTypesProps;
+export type ResizeProps = Props &
+  DispatchProps &
+  WithTypesProps &
+  RouteComponentProps<{}>;
 
-export const ResizeCluster: React.FC<CombinedProps> = props => {
+export const ResizeCluster: React.FC<ResizeProps> = props => {
   const {
     cluster,
     typesData,
