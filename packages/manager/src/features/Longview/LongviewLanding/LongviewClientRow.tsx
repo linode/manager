@@ -65,7 +65,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
     triggerDeleteLongviewClient
   } = props;
 
-  /* 
+  /*
    lastUpdated _might_ come back from the endpoint as 0, so it's important
    that we differentiate between _0_ and _undefined_
    */
@@ -75,7 +75,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
   const requestAndSetLastUpdated = () => {
     return getLastUpdated(clientAPIKey)
       .then(response => {
-        /* 
+        /*
           only update _lastUpdated_ state if it hasn't already been set
           or the API response is in a time past what's already been set.
         */
@@ -121,7 +121,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
       mounted = false;
       clearInterval(requestInterval);
     };
-  });
+  }, []);
 
   /**
    * We want to show a "waiting for data" state
