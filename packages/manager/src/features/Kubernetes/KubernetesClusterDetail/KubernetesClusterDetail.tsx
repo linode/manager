@@ -33,6 +33,8 @@ import KubernetesDialog from './KubernetesDialog';
 import KubeSummaryPanel from './KubeSummaryPanel';
 import NodePoolsDisplay from './NodePoolsDisplay';
 
+import Navigation from './DetailNavigation';
+
 type ClassNames =
   | 'root'
   | 'title'
@@ -128,7 +130,17 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     nodePoolsLoading,
     typesData,
     typesError,
-    typesLoading
+    typesLoading,
+    requestClusterForStore,
+    requestKubernetesClusters,
+    requestNodePools,
+    updateCluster,
+    updateNodePool,
+    createNodePool,
+    deleteCluster,
+    deleteNodePool,
+    setKubernetesErrors,
+    ...routerProps
   } = props;
 
   const [editing, setEditing] = React.useState<boolean>(false);
@@ -480,7 +492,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<
           md={9}
           className={classes.sectionMain}
         >
-          <Grid item xs={12}>
+          <Navigation location={location} {...routerProps} />
+          {/* <Grid item xs={12}>
             <NodePoolsDisplay
               submittingForm={submitting}
               submitForm={submitForm}
@@ -516,7 +529,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
                   : undefined
               }
             />
-          </Grid>
+          </Grid> */}
           <Grid item xs={12} className={classes.deleteSection}>
             <Button
               destructive
