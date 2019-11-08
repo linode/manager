@@ -51,6 +51,16 @@ export const ResizeCluster: React.FC<ResizeProps> = props => {
     undefined
   );
   const [success, setSuccess] = React.useState<boolean>(false);
+
+  const [submitDisabled, setSubmitDisabled] = React.useState<boolean>(true);
+
+  React.useEffect(() => {
+    if (!equals(pools, cluster.node_pools)) {
+      setSubmitDisabled(false);
+    } else {
+      setSubmitDisabled(true);
+    }
+  }, [pools, cluster.node_pools]);
   /**
    * These three handlers update the local pools state in the event of an error. If an update
    * is fully successful, we'll exit editing mode, the table will show
@@ -134,6 +144,7 @@ export const ResizeCluster: React.FC<ResizeProps> = props => {
       .then(() => {
         setSuccess(true);
         setSubmitting(false);
+        setSubmitDisabled(true);
       })
       .catch(err => {
         setErrors(
@@ -212,6 +223,7 @@ export const ResizeCluster: React.FC<ResizeProps> = props => {
           submitForm={submitForm}
           submissionSuccess={success}
           submissionError={generalError}
+          submitDisabled={submitDisabled}
           editing={true}
           updatePool={updatePool}
           deletePool={handleDeletePool}
