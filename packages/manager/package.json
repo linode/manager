@@ -161,7 +161,6 @@
     "@types/node": "^12.6.8",
     "@types/normalizr": "^2.0.18",
     "@types/pretty-bytes": "^5.1.0",
-    "@types/promise.prototype.finally": "^2.0.2",
     "@types/qrcode.react": "^0.8.0",
     "@types/qs": "^6.5.1",
     "@types/ramda": "0.25.16",

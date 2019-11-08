@@ -1,4 +1,3 @@
-import { LongviewClient } from 'linode-js-sdk/lib/longview';
 import * as React from 'react';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
@@ -45,7 +44,8 @@ type LongviewProps = Omit<
 >;
 
 interface Props {
-  createLongviewClient: () => Promise<LongviewClient>;
+  loading: boolean;
+  createLongviewClient: () => void;
   triggerDeleteLongviewClient: (
     longviewClientID: number,
     longviewClientLabel: string
@@ -57,6 +57,7 @@ type CombinedProps = Props & LongviewProps;
 const LongviewList: React.FC<CombinedProps> = props => {
   const {
     createLongviewClient,
+    loading,
     longviewClientsData,
     longviewClientsError,
     longviewClientsLastUpdated,
@@ -66,28 +67,13 @@ const LongviewList: React.FC<CombinedProps> = props => {
   } = props;
 
   const classes = useStyles();
-  const [newClientLoading, setNewClientLoading] = React.useState<boolean>(
-    false
-  );
-  const [newClientError, setNewClientError] = React.useState<
-    string | undefined
-  >();
 
-  const handleAddClient = () => {
-    setNewClientLoading(true);
-    createLongviewClient()
-      .then(_ => {
-        setNewClientLoading(false);
-      })
-      .catch(errorResponse => {
-        setNewClientError(errorResponse[0].reason);
-        setNewClientLoading(false);
-      });
-  };
+  // Empty state and a new client is being created
+  const newClientIsLoading = loading && longviewClientsResults === 0;
 
   if (
     (longviewClientsLoading && longviewClientsLastUpdated === 0) ||
-    newClientLoading
+    newClientIsLoading
   ) {
     return (
       <Paper>
@@ -97,15 +83,10 @@ const LongviewList: React.FC<CombinedProps> = props => {
   }
 
   /**
-   * only display error if we don't already have data
+   * Only show an error if we haven't received data
    */
-  if (
-    (longviewClientsError.read && longviewClientsLastUpdated === 0) ||
-    newClientError
-  ) {
-    const errorText = longviewClientsError.read
-      ? longviewClientsData.read[0].reason
-      : newClientError;
+  if (longviewClientsError.read && longviewClientsLastUpdated === 0) {
+    const errorText = longviewClientsData.read[0].reason;
     return (
       <Paper>
         <ErrorState errorText={errorText} />
@@ -119,7 +100,7 @@ const LongviewList: React.FC<CombinedProps> = props => {
       <Paper className={classes.empty}>
         <Typography variant="body1" className={classes.emptyText}>
           You have no Longview clients configured.{' '}
-          <button className={classes.button} onClick={handleAddClient}>
+          <button className={classes.button} onClick={createLongviewClient}>
             Click here to add one.
           </button>
         </Typography>
