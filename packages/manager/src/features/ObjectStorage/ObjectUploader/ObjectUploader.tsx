@@ -335,7 +335,12 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
       })}
     >
       <div {...getRootProps({ className: `${classes.dropzone} ${className}` })}>
-        <input {...getInputProps()} />
+        <input
+          {...getInputProps()}
+          placeholder={
+            'You can browse your device to upload files or drop them here.'
+          }
+        />
 
         <div className={classes.fileUploads}>
           {state.files.map((upload, idx) => {

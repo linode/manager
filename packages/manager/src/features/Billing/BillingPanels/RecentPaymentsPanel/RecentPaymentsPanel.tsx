@@ -1,7 +1,13 @@
-import { Account, getPayments, Payment } from 'linode-js-sdk/lib/account'
+import { Account, getPayments, Payment } from 'linode-js-sdk/lib/account';
 import { compose } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
@@ -22,9 +28,26 @@ import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
 import { ThunkDispatch } from 'src/store/types';
 
-interface Props extends PaginationProps<Payment> { }
+type ClassNames = 'downloadButton';
 
-type CombinedProps = Props & StateProps;
+const styles = (theme: Theme) =>
+  createStyles({
+    downloadButton: {
+      background: 'none',
+      color: theme.palette.primary.main,
+      border: 'none',
+      padding: 0,
+      font: 'inherit',
+      cursor: 'pointer',
+      '&:hover': {
+        textDecoration: 'underline'
+      }
+    }
+  });
+
+interface Props extends PaginationProps<Payment> {}
+
+type CombinedProps = Props & StateProps & WithStyles<ClassNames>;
 
 interface PdfGenerationError {
   itemId: number | undefined;
@@ -104,8 +127,8 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
     return data && data.length > 0 ? (
       this.renderItems(data)
     ) : (
-        <TableRowEmptyState colSpan={3} />
-      );
+      <TableRowEmptyState colSpan={3} />
+    );
   };
 
   renderItems = (items: Payment[]) => items.map(this.renderRow);
@@ -129,7 +152,7 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
   }
 
   renderRow = (item: Payment) => {
-    const { account } = this.props;
+    const { account, classes } = this.props;
     const { pdfGenerationError } = this.state;
 
     return (
@@ -143,15 +166,14 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
         </TableCell>
         <TableCell>
           {account.data && (
-            <a
-              href="#"
-              onClick={() =>
-                this.printPayment(account.data as Account, item)
-              }
-              className="secondaryLink"
+            <button
+              role="button"
+              onClick={() => this.printPayment(account.data as Account, item)}
+              className={classes.downloadButton}
+              title="Download PDF"
             >
               Download PDF
-            </a>
+            </button>
           )}
           {pdfGenerationError.itemId === item.id && (
             <Notice
@@ -196,9 +218,12 @@ const updatedRequest = (ownProps: any, params: any) =>
 
 const paginated = paginate(updatedRequest);
 
+const styled = withStyles(styles);
+
 const enhanced = compose(
   connected,
-  paginated
+  paginated,
+  styled
 );
 
 export default enhanced(RecentPaymentsPanel);

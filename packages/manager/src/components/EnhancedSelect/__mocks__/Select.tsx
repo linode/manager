@@ -26,7 +26,11 @@ export default ({ options, value, onChange, errorText }: any) => {
     <>
       <select data-testid="select" value={value || ''} onBlur={handleChange}>
         {_options.map((thisOption: any) => (
-          <option key={thisOption.value || ''} value={thisOption.value || ''} aria-selected={thisOption.value==value}>
+          <option
+            key={thisOption.value || ''}
+            value={thisOption.value || ''}
+            aria-selected={thisOption.value === value}
+          >
             {thisOption.label}
           </option>
         ))}

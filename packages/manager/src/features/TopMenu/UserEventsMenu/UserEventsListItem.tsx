@@ -118,7 +118,7 @@ class UserEventsListItem extends React.Component<CombinedProps> {
           className
         )}
         component="li"
-        tabIndex={1}
+        tabIndex={0}
         onClick={onClick}
         role="menuitem"
       >
