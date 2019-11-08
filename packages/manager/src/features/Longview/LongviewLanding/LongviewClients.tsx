@@ -20,6 +20,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import DeleteDialog from './LongviewDeleteDialog';
 import LongviewList from './LongviewList';
+import SubscriptionDialog from './SubscriptionDialog';
 import UpdateDrawer from './UpdateClientDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -90,14 +91,21 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
         setNewClientLoading(false);
       })
       .catch(errorResponse => {
-        props.enqueueSnackbar(
-          getAPIErrorOrDefault(
-            errorResponse,
-            'Error creating Longview client.'
-          )[0].reason,
-          { variant: 'error' }
-        ),
+        if (errorResponse[0].reason.match(/subscription/)) {
+          // The user has reached their subscription limit.
+          setSubscriptionDialogOpen(true);
           setNewClientLoading(false);
+        } else {
+          // Any network or other errors handled with a toast
+          props.enqueueSnackbar(
+            getAPIErrorOrDefault(
+              errorResponse,
+              'Error creating Longview client.'
+            )[0].reason,
+            { variant: 'error' }
+          ),
+            setNewClientLoading(false);
+        }
       });
   };
 
@@ -165,6 +173,11 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
         deleteClient={deleteLongviewClient}
         open={deleteDialogOpen}
         closeDialog={() => toggleDeleteDialog(false)}
+      />
+      <SubscriptionDialog
+        isOpen={subscriptionDialogOpen}
+        onClose={() => setSubscriptionDialogOpen(false)}
+        clientLimit={10}
       />
     </React.Fragment>
   );
