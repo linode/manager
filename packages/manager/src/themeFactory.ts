@@ -319,12 +319,6 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           spacingUnit / 2}px ${spacingUnit * 2}px`,
         maxHeight: 48,
         cursor: 'pointer',
-        '& a': {
-          color: '#fff',
-          '&:focus': {
-            outline: 'none'
-          }
-        },
         '&:hover, &:focus': {
           backgroundColor: primaryColors.light
         },
