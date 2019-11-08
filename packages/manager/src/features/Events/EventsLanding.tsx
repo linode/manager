@@ -27,10 +27,10 @@ import withPerfMetrics, {
 } from 'src/components/withPerfMetrics';
 import { ApplicationState } from 'src/store';
 import { setDeletedEvents } from 'src/store/events/event.helpers';
+import { ExtendedEvent } from 'src/store/events/event.types';
 import areEntitiesLoading from 'src/store/selectors/entitiesLoading';
 import { removeBlacklistedEvents } from 'src/utilities/eventUtils';
 
-import { ExtendedEvent } from 'src/store/events/event.helpers';
 import { filterUniqueEvents, shouldUpdateEvents } from './Event.helpers';
 import EventRow from './EventRow';
 
