@@ -3,6 +3,7 @@ import { AccountSettings } from 'linode-js-sdk/lib/account';
 import { LongviewSubscription } from 'linode-js-sdk/lib/longview/types';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import Chip from 'src/components/core/Chip';
@@ -23,7 +24,12 @@ import accountSettingsContainer, {
   DispatchProps,
   SettingsProps
 } from 'src/containers/accountSettings.container';
+import {
+  hasGrant,
+  isRestrictedUser
+} from 'src/features/Profile/permissionsHelpers';
 import { UseAPIRequest } from 'src/hooks/useAPIRequest';
+import { MapState } from 'src/store/types';
 import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -106,6 +112,9 @@ const useStyles = makeStyles((theme: Theme) => {
       alignSelf: 'flex-start',
       marginTop: theme.spacing(4) - 2,
       marginBottom: theme.spacing(4) - 2
+    },
+    disabledTableRow: {
+      cursor: 'not-allowed !important'
     }
   };
 });
@@ -120,22 +129,28 @@ interface Props {
   subscriptionRequestHook: UseAPIRequest<LongviewSubscription[]>;
 }
 
-export type CombinedProps = Props & SettingsProps & DispatchProps;
+export type CombinedProps = Props &
+  SettingsProps &
+  DispatchProps &
+  ReduxStateProps;
 
 export const LongviewPlans: React.FC<CombinedProps> = props => {
   const {
     accountSettings,
     subscriptionRequestHook: subscriptions,
-    updateAccountSettings
+    updateAccountSettings,
+    mayUserViewAccountSettings,
+    mayUserModifyLVSubscription
   } = props;
   const styles = useStyles();
 
   const currentSubscriptionOnAccount = getCurrentSubscriptionOnAccount(
+    mayUserViewAccountSettings,
     accountSettings
   );
 
   const [selectedSub, setSelectedSub] = React.useState<string>(
-    currentSubscriptionOnAccount
+    currentSubscriptionOnAccount || ''
   );
   const [updateLoading, setUpdateLoading] = React.useState<boolean>(false);
   const [updateErrorMsg, setUpdateErrorMsg] = React.useState<string>('');
@@ -186,7 +201,8 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
 
   const isButtonDisabled =
     Boolean(subscriptions.error) ||
-    currentSubscriptionOnAccount === selectedSub;
+    currentSubscriptionOnAccount === selectedSub ||
+    !mayUserModifyLVSubscription;
 
   return (
     <>
@@ -198,6 +214,13 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
         })}
       >
         {updateErrorMsg && <Notice error text={updateErrorMsg} />}
+        {!mayUserModifyLVSubscription && !isManaged && (
+          <Notice
+            error
+            important
+            text="You don't have permissions to change the Longview plan. Please contact an account administrator for details."
+          />
+        )}
         {isManaged && (
           <Notice
             success
@@ -240,6 +263,7 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
                   onRowSelect={setSelectedSub}
                   currentSubscriptionOnAccount={currentSubscriptionOnAccount}
                   selectedSub={selectedSub}
+                  disabled={!mayUserModifyLVSubscription}
                 />
               </TableBody>
             </Table>
@@ -260,8 +284,27 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
   );
 };
 
+interface ReduxStateProps {
+  mayUserViewAccountSettings: boolean;
+  mayUserModifyLVSubscription: boolean;
+}
+
+const mapStateToProps: MapState<ReduxStateProps, CombinedProps> = state => ({
+  mayUserViewAccountSettings:
+    !isRestrictedUser(state) ||
+    hasGrant(state, 'account_access') === 'read_only' ||
+    hasGrant(state, 'account_access') === 'read_write',
+  mayUserModifyLVSubscription:
+    !isRestrictedUser(state) ||
+    (hasGrant(state, 'longview_subscription') &&
+      hasGrant(state, 'account_access') === 'read_write')
+});
+
+const connected = connect(mapStateToProps);
+
 const enhanced = compose<CombinedProps, Props>(
   React.memo,
+  connected,
   accountSettingsContainer()
 );
 
@@ -276,8 +319,9 @@ interface LongviewPlansTableBodyProps {
   subscriptions: LongviewSubscription[];
   onRowSelect: (plan: string) => void;
   onRadioSelect: (e: React.FormEvent<HTMLInputElement>) => void;
-  currentSubscriptionOnAccount: string;
+  currentSubscriptionOnAccount?: string;
   selectedSub: string;
+  disabled: boolean;
 }
 
 export const LongviewPlansTableBody: React.FC<
@@ -339,8 +383,9 @@ interface LongviewSubscriptionRowProps {
   price: string;
   onRowSelect: (plan: string) => void;
   onRadioSelect: (e: React.FormEvent<HTMLInputElement>) => void;
-  currentSubscriptionOnAccount: string;
+  currentSubscriptionOnAccount?: string;
   isSelected: boolean;
+  disabled: boolean;
 }
 
 export const LongviewSubscriptionRow: React.FC<
@@ -356,16 +401,27 @@ export const LongviewSubscriptionRow: React.FC<
     onRowSelect,
     onRadioSelect,
     currentSubscriptionOnAccount,
-    isSelected
+    isSelected,
+    disabled
   } = props;
 
   const styles = useStyles();
 
+  const handleClick = () => {
+    if (disabled) {
+      return;
+    }
+    onRowSelect(id);
+  };
+
   return (
     <TableRow
       key={id}
-      onClick={() => onRowSelect(id)}
-      rowLink={() => onRowSelect(id)}
+      onClick={handleClick}
+      rowLink={disabled ? undefined : handleClick}
+      className={classnames({
+        [styles.disabledTableRow]: disabled
+      })}
       data-testid={`lv-sub-table-row-${id}`}
     >
       <TableCell data-testid={`plan-cell-${id}`}>
@@ -377,6 +433,7 @@ export const LongviewSubscriptionRow: React.FC<
             className={styles.radio}
             id={id}
             data-testid={`lv-sub-radio-${id}`}
+            disabled={disabled}
           />
           {plan}
           {currentSubscriptionOnAccount === id && (
@@ -420,18 +477,16 @@ export const formatPrice = (price: LongviewSubscription['price']): string => {
 // accountSettings is undefined or if the account has the "free" plan enabled
 // (in which case accountSettings.longview_subscription will be `null`).
 export const getCurrentSubscriptionOnAccount = (
+  mayUserViewAccountSettings: boolean,
   accountSettings?: AccountSettings,
   defaultSubscriptionID = LONGVIEW_FREE_ID
 ) => {
-  if (!accountSettings || accountSettings.longview_subscription === null) {
-    return defaultSubscriptionID;
+  if (!mayUserViewAccountSettings) {
+    return undefined;
   }
 
-  // If the customer has Managed, their Longview client limit is 10. However,
-  // account/settings.longview_subscription comes back as 'longview-100'!
-  if (accountSettings.managed) {
-    return 'longview-10';
-  }
-
-  return accountSettings.longview_subscription;
+  return accountSettings &&
+    typeof accountSettings.longview_subscription === 'string'
+    ? accountSettings.longview_subscription
+    : defaultSubscriptionID;
 };

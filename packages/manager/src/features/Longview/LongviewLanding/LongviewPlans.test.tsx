@@ -22,6 +22,8 @@ const props: CombinedProps = {
   requestAccountSettings: jest.fn(),
   updateAccountSettings: jest.fn(),
   updateAccountSettingsInStore: jest.fn(),
+  mayUserModifyLVSubscription: true,
+  mayUserViewAccountSettings: true,
   subscriptionRequestHook: {
     data: mockLongviewSubscriptions,
     lastUpdated: 0,
@@ -96,5 +98,12 @@ describe('LongviewPlans', () => {
     within(getByTestId(`lv-sub-table-row-${currentLVSub}`)).getByText(
       'Current Plan'
     );
+  });
+
+  it('displays a notice if the user does not have permissions to modify', () => {
+    const { getByText } = renderWithTheme(
+      <LongviewPlans {...props} mayUserModifyLVSubscription={false} />
+    );
+    getByText(/don't have permission/gi);
   });
 });
