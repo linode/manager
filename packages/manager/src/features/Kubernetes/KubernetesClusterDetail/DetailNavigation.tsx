@@ -6,10 +6,17 @@ import {
   Switch
 } from 'react-router-dom';
 import AppBar from 'src/components/core/AppBar';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import DefaultLoader from 'src/components/DefaultLoader';
 import TabLink from 'src/components/TabLink';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  tabBar: {
+    marginTop: 0
+  }
+}));
 
 const Details = DefaultLoader({
   loader: () => import('./Details')
@@ -24,6 +31,7 @@ interface Props {}
 type CombinedProps = Props & RouteComponentProps<{}>;
 
 export const DetailNavigation: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
   const {
     match: { url }
   } = props;
@@ -53,6 +61,7 @@ export const DetailNavigation: React.FC<CombinedProps> = props => {
           textColor="primary"
           variant="scrollable"
           scrollButtons="on"
+          className={classes.tabBar}
         >
           {tabs.map(tab => (
             <Tab
