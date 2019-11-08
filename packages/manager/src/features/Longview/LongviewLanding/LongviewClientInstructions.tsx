@@ -100,10 +100,14 @@ export const LongviewClientInstructions: React.FC<Props> = props => {
           <Grid item>
             <Typography className={classes.footer}>
               <span>
-                <a>Troubleshooting guide</a>
+                <a href="https://www.linode.com/docs/platform/longview/longview/">
+                  Troubleshooting guide
+                </a>
               </span>
               <span>
-                <a>Manual installation instructions</a>
+                <a href="https://www.linode.com/docs/platform/longview/longview/#install-the-longview-client">
+                  Manual installation instructions
+                </a>
               </span>
               <span>
                 API Key:{' '}
