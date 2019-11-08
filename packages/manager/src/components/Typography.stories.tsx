@@ -77,9 +77,12 @@ storiesOf('Typography', module).add('Text', () => (
       typography component is declared without a specific variant.
     </Typography>
     <Divider />
-    <Typography variant="button" gutterBottom>
+    {/* <Typography variant="button" gutterBottom>
       Button. Implemented using the 'button' variant. This is part of MUI.
       Manager does not presently utilize this variant.
+    </Typography> */}
+    <Typography variant="button" gutterBottom>
+      <a href="#">Link</a>
     </Typography>
     <Divider />
   </React.Fragment>
