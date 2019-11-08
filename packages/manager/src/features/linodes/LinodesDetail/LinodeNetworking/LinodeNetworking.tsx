@@ -239,7 +239,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         <TableCell parentColumn="Reverse DNS" data-qa-rdns>
           {ip.rdns}
         </TableCell>
-        <TableCell parentColumn="Type" data-qa-type>
+        <TableCell parentColumn="Type" data-qa-type={ip.type}>
           {type}
         </TableCell>
         <TableCell className={classes.action} data-qa-action>

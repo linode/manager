@@ -1,6 +1,9 @@
+import { EventAction } from 'linode-js-sdk/lib/account';
 import { reduxEvent, uniqueEvents } from 'src/__data__/events';
 import {
   filterUniqueEvents,
+  formatEventWithUsername,
+  maybeRemoveTrailingPeriod,
   percentCompleteHasUpdated,
   shouldUpdateEvents
 } from './Event.helpers';
@@ -88,5 +91,45 @@ describe('Utility Functions', () => {
         }
       )
     ).toBeFalsy();
+  });
+
+  describe('formatEventWithUsername utility', () => {
+    it('it should return a message for an event without a username unchanged', () => {
+      const message = 'a message';
+      expect(
+        formatEventWithUsername('linode_boot' as EventAction, null, message)
+      ).toEqual(message);
+    });
+
+    it('should append the username to a normal event', () => {
+      const message = 'a message';
+      expect(
+        formatEventWithUsername(
+          'linode_boot' as EventAction,
+          'test-user-001',
+          message
+        )
+      ).toEqual('a message by test-user-001.');
+    });
+
+    it('should append the username to a normal event', () => {
+      const message = 'a message';
+      expect(
+        formatEventWithUsername(
+          'lassie_reboot' as EventAction,
+          'test-user-001',
+          message
+        )
+      ).toEqual(message);
+    });
+  });
+
+  describe('maybeRemoveTrailingPeriod', () => {
+    it('should remove trailing periods', () => {
+      expect(maybeRemoveTrailingPeriod('hello world.')).toBe('hello world');
+      expect(maybeRemoveTrailingPeriod('hello wor..ld')).toBe('hello wor..ld');
+      expect(maybeRemoveTrailingPeriod('hello world')).toBe('hello world');
+      expect(maybeRemoveTrailingPeriod('hello. world')).toBe('hello. world');
+    });
   });
 });

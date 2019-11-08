@@ -10,7 +10,7 @@ import withVolumesRequests, {
 } from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/events';
 import { MapState } from 'src/store/types';
-import { openForCreating } from 'src/store/volumeDrawer';
+import { openForCreating } from 'src/store/volumeForm';
 import {
   handleFieldErrors,
   handleGeneralErrors
@@ -44,9 +44,7 @@ const validationScheme = object({
 
 const initialValues = { volume_id: -1, config_id: -1 };
 
-const AttachVolumeToLinodeForm: React.StatelessComponent<
-  CombinedProps
-> = props => {
+const AttachVolumeToLinodeForm: React.FC<CombinedProps> = props => {
   const {
     actions,
     onClose,

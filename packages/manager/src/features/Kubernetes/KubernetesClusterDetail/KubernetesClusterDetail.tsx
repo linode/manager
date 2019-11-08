@@ -1,4 +1,5 @@
 import * as Bluebird from 'bluebird';
+import { getKubernetesClusterEndpoint } from 'linode-js-sdk/lib/kubernetes';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { contains, equals, path, pathOr, remove, update } from 'ramda';
 import * as React from 'react';
@@ -9,17 +10,14 @@ import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/core/Grid';
-import Paper from 'src/components/core/Paper';
 import {
   createStyles,
   Theme,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
-import TagsPanel from 'src/components/TagsPanel';
 import KubeContainer, {
   DispatchProps
 } from 'src/containers/kubernetes.container';
@@ -43,13 +41,11 @@ type ClassNames =
   | 'section'
   | 'panelItem'
   | 'button'
-  | 'tagSectionInner'
   | 'deleteSection'
   | 'titleGridWrapper'
   | 'tagHeading'
   | 'sectionMain'
-  | 'sectionSideBar'
-  | 'tagSection';
+  | 'sectionSideBar';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -80,11 +76,6 @@ const styles = (theme: Theme) =>
         }
       }
     },
-    tagSectionInner: {
-      padding: `${theme.spacing(2) + 3}px ${theme.spacing(3)}px ${theme.spacing(
-        1
-      ) - 1}px`
-    },
     deleteSection: {
       [theme.breakpoints.up('md')]: {
         marginLeft: theme.spacing(3)
@@ -105,11 +96,6 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.up('md')]: {
         order: 2,
         display: 'inline-block'
-      }
-    },
-    tagSection: {
-      [theme.breakpoints.down('sm')]: {
-        order: 3
       }
     }
   });
@@ -153,8 +139,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     undefined
   );
   const [count, setCount] = React.useState<number>(1);
-  /** For adding tags */
-  const [tags, updateTags] = React.useState<string[]>([]);
   /** Form submission */
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [generalError, setErrors] = React.useState<APIError[] | undefined>(
@@ -164,11 +148,32 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   /** Deletion confirmation modal */
   const [confirmationOpen, setConfirmation] = React.useState<boolean>(false);
   const [deleting, setDeleting] = React.useState<boolean>(false);
+  const [endpoint, setEndpoint] = React.useState<string | null>(null);
+  const [endpointError, setEndpointError] = React.useState<string | undefined>(
+    undefined
+  );
+  const [endpointLoading, setEndpointLoading] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     const clusterID = +props.match.params.clusterID;
     if (clusterID) {
       props.requestClusterForStore(clusterID);
+      // The cluster endpoint has its own API...uh, endpoint, so we need
+      // to request it separately.
+      setEndpointLoading(true);
+      getKubernetesClusterEndpoint(clusterID)
+        .then(response => {
+          setEndpointError(undefined);
+          setEndpoint(response.endpoints[0]); // @todo will there ever be multiple values here?
+          setEndpointLoading(false);
+        })
+        .catch(error => {
+          setEndpointLoading(false);
+          setEndpointError(
+            getAPIErrorOrDefault(error, 'Cluster endpoint not available.')[0]
+              .reason
+          );
+        });
     }
 
     /**
@@ -196,7 +201,11 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   }, []);
 
   if (clustersLoadError) {
-    return <ErrorState errorText="Unable to load cluster data." />;
+    const error = getAPIErrorOrDefault(
+      clustersLoadError,
+      'Unable to load cluster data.'
+    )[0].reason;
+    return <ErrorState errorText={error} />;
   }
 
   if (
@@ -206,6 +215,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   ) {
     return <CircleProgress />;
   }
+
   if (cluster === null) {
     return null;
   }
@@ -405,15 +415,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     setConfirmation(true);
   };
 
-  const handleUpdateTags = (newTags: string[]) => {
-    return props
-      .updateCluster({ clusterID: cluster.id, tags: newTags })
-      .then(response => {
-        updateTags(newTags);
-        return response;
-      });
-  };
-
   const handleLabelChange = async (newLabel: string) => {
     props.updateCluster({ clusterID: cluster.id, label: newLabel });
     return cluster.label;
@@ -463,21 +464,12 @@ export const KubernetesClusterDetail: React.FunctionComponent<
             />
           </Grid>
           <Grid item xs={12} className={classes.section}>
-            <KubeSummaryPanel cluster={cluster} />
-          </Grid>
-          <Grid item xs={12} className={classes.tagSection}>
-            <Paper className={classes.tagSectionInner}>
-              <Typography
-                variant="h2"
-                className={classes.tagHeading}
-                data-qa-title
-              >
-                Cluster Tags
-              </Typography>
-              <div>
-                <TagsPanel tags={tags} updateTags={handleUpdateTags} />
-              </div>
-            </Paper>
+            <KubeSummaryPanel
+              cluster={cluster}
+              endpoint={endpoint}
+              endpointError={endpointError}
+              endpointLoading={endpointLoading}
+            />
           </Grid>
         </Grid>
         <Grid

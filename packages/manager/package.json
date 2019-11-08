@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "0.75.0",
+  "version": "0.77.0",
   "private": true,
   "engines": {
     "node": ">= 10.16.0"
@@ -10,7 +10,7 @@
   "bugs": {
     "url": "https://github.com/Linode/manager/issues"
   },
-  "license": "BSD-3-Clause",
+  "license": "APLv2",
   "repository": {
     "type": "git",
     "url": "https://github.com/Linode/manager.git"
@@ -18,8 +18,9 @@
   "dependencies": {
     "@material-ui/core": "^4.4.2",
     "@material-ui/icons": "^4.4.1",
+    "@material-ui/lab": "^4.0.0-alpha.29",
     "@material-ui/styles": "^4.4.1",
-    "@sentry/browser": "^5.4.3",
+    "@sentry/browser": "^5.7.1",
     "@types/sanitize-html": "^1.18.3",
     "algoliasearch": "^3.30.0",
     "axios": "^0.18.1",
@@ -37,8 +38,9 @@
     "invariant": "^2.2.4",
     "js-cookie": "^2.2.0",
     "jspdf": "^1.5.3",
+    "jspdf-autotable": "^3.2.4",
     "launchdarkly-react-client-sdk": "^2.11.0",
-    "linode-js-sdk": "^0.9.0-alpha.0",
+    "linode-js-sdk": "^0.11.0-alpha.0",
     "logic-query-parser": "^0.0.5",
     "md5": "^2.2.1",
     "memoizee": "^0.4.14",
@@ -87,7 +89,7 @@
     "typescript-fsa": "^3.0.0-beta-2",
     "typescript-fsa-reducers": "^1.2.0",
     "xml2js": "^0.4.19",
-    "xterm": "^3.3.0",
+    "xterm": "^4.2.0",
     "yup": "^0.26.3",
     "zxcvbn": "^4.4.2"
   },
@@ -99,8 +101,8 @@
     "start": "node scripts/start.js",
     "lint": "tslint 'src/**/*.ts' 'src/**/*.tsx'",
     "build": "node scripts/build.js",
-    "precommit": "lint-staged && npx madge --circular --extensions ts src/ && ./scripts/pre-commit.sh",
-    "prepush": "./scripts/pre-push.sh",
+    "precommit": "lint-staged && tsc --noEmit",
+    "prepush": "./scripts/pre-push.sh && yarn test --color",
     "mock": "./scripts/mb.js",
     "test": "node scripts/test.js",
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
@@ -118,19 +120,23 @@
     "e2e:modified": "./scripts/e2e-modified.sh",
     "e2e:browserstack": "npx wdio ./e2e/config/browserstack.conf.js",
     "mb": "npx mb",
-    "release": "./scripts/release_changelog.sh"
+    "release": "./scripts/release_changelog.sh",
+    "typecheck": "tsc --noEmit"
   },
   "lint-staged": {
     "*.{ts,tsx,js}": [
       "prettier --write",
-      "git add"
+      "tslint",
+      "git add",
+      "npx madge --circular --extensions ts"
     ]
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.2.3",
-    "@babel/preset-typescript": "^7.1.0",
+    "@babel/preset-typescript": "^7.6.0",
     "@babel/register": "^7.0.0",
+    "@hapi/hapi": "^18.4.0",
     "@storybook/addon-actions": "^4.1.6",
     "@storybook/addon-knobs": "^4.1.6",
     "@storybook/addon-links": "^4.1.6",
@@ -145,7 +151,6 @@
     "@types/chart.js": "^2.7.54",
     "@types/classnames": "^2.2.3",
     "@types/enzyme": "^3.9.3",
-    "@types/hapi": "^17.0.17",
     "@types/he": "^1.1.0",
     "@types/inert": "^5.1.1",
     "@types/invariant": "^2.2.29",
@@ -212,14 +217,13 @@
     "fork-ts-checker-webpack-plugin": "^0.5.2",
     "fs-extra": "^8.0.1",
     "handlebars": "^4.2.0",
-    "hapi": "^17.5.3",
     "html-webpack-plugin": "^4.0.0-beta.5",
     "inert": "^5.1.0",
     "inquirer": "^6.2.0",
     "jest": "^24.8.0",
     "jest-junit": "^7.0.0",
     "js-yaml": "^3.13.1",
-    "lint-staged": "^8.1.0",
+    "lint-staged": "^9.4.2",
     "madge": "^3.4.3",
     "mini-css-extract-plugin": "^0.7.0",
     "mixin-deep": "^2.0.1",
@@ -241,11 +245,6 @@
     "ts-jest": "^24.0.2",
     "ts-loader": "^6.0.4",
     "tsconfig-paths-webpack-plugin": "^3.2.0",
-    "tslint": "^5.12.1",
-    "tslint-config-airbnb": "^5.6.0",
-    "tslint-config-prettier": "^1.17.0",
-    "tslint-react": "^3.6.0",
-    "typescript": "^3.2.2",
     "url-loader": "^1.1.2",
     "utility-types": "^2.1.0",
     "wdio-browserstack-service": "^0.1.16",
@@ -331,6 +330,7 @@
     "set-value": "^3.0.1",
     "handlebars": "^4.4.3",
     "js-yaml": "^3.13.1",
-    "braces": "^3.0.2"
+    "braces": "^3.0.2",
+    "https-proxy-agent": "^3.0.1"
   }
 }

@@ -1,7 +1,6 @@
 export interface KubernetesCluster {
   created: string;
   region: string;
-  tags: string[];
   status: string; // @todo enum this
   label: string;
   version: string;
@@ -33,10 +32,13 @@ export interface KubernetesVersion {
   id: string;
 }
 
+export interface KubernetesEndpointResponse {
+  endpoints: string[];
+}
+
 export interface CreateKubeClusterPayload {
   label?: string; // Label will be assigned by the API if not provided
   region?: string; // Will be caught by Yup if undefined
   node_pools: PoolNodeRequest[];
   version?: string; // Will be caught by Yup if undefined
-  tags: string[];
 }

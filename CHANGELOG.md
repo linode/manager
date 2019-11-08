@@ -4,6 +4,53 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.77.0] - 2019-11-06
+
+### Added:
+- Supply the LKE Cluster options from APIv4
+- Longview Client Gauges for Swap and Storage
+- Ability to paste clipboard content into the Glish interface from your local machine
+- Longview landing tabs
+- Skeleton loader to table rows
+
+### Changed:
+- [SDK] - Implement Object Storage endpoints
+- Longview Client creation workflow
+- Display the booted configuration in Linode Boot and Reboot event messages
+- Pre-fill Disk select fields rescue tab with available Disks
+- Refactor Create Volume Workflow
+- Update Object Storage confirmation modal copy
+- Client-side validation for CVV field on the Billing page
+- Making CVV code a required field within Billing page
+- Update favicon
+- Updated syntax for Linode details specs
+- Filter out GPU from plan selection for LKE
+- Filter out regions that don’t have LKE capabilities
+
+### Fixed:
+- Blog feed on Dashboard
+- StackScript detail breadcrumbs
+- Adjustments to Kubeconfig buttons on smaller breakpoints
+
+
+## [v0.76.0] - 2019-10-30
+
+### Added:
+- cPanel and Plesk One-Click Apps
+- Confirmation modal when adding Object Storage service
+- Option to cancel Object Storage service in account/settings
+- Object Storage to list of Personal Access Token scopes
+
+### Changed:
+- Download Objects instead of opening them in a new window
+- Make Object Storage Bucket URLs clickable
+- Invoice/Payment PDF Updates
+- Remove tags from Kubernetes cluster creation and detail
+
+### Fixed:
+- Error handling for 404s on Kubernetes cluster detail
+
+
 ## [v0.75.0] - 2019-10-22
 
 ### Added:

@@ -8,34 +8,39 @@ import { baseGaugeProps } from './common';
 import requestStats from '../../request';
 
 interface Props {
-  lastUpdated: number;
+  lastUpdated?: number;
   token: string;
 }
 
 const LoadGauge: React.FC<Props> = props => {
-  const [load, setLoad] = React.useState<number | undefined>(undefined);
-  const [amountOfCores, setCores] = React.useState<number | undefined>(
-    undefined
+  const [dataHasResolvedAtLeastOnce, setDataResolved] = React.useState<boolean>(
+    false
   );
+  const [load, setLoad] = React.useState<number>(0);
+  const [amountOfCores, setCores] = React.useState<number>(0);
   const [loading, setLoading] = React.useState<boolean>(true);
-  const [error, setError] = React.useState<APIError | undefined>(undefined);
+  const [error, setError] = React.useState<APIError | undefined>();
 
   React.useEffect(() => {
     let mounted = true;
+
     requestStats(props.token, 'getLatestValue', ['sysinfo', 'load'])
       .then(response => {
         if (mounted) {
-          setLoad(response.Load[0].y);
+          setLoad(pathOr(0, ['Load', 0, 'y'], response));
           setCores(pathOr(0, ['cpu', 'cores'], response.SysInfo));
           setError(undefined);
 
           if (!!loading) {
             setLoading(false);
           }
+          if (!dataHasResolvedAtLeastOnce) {
+            setDataResolved(true);
+          }
         }
       })
       .catch(() => {
-        if (!load && mounted) {
+        if (mounted && !dataHasResolvedAtLeastOnce) {
           setError({
             reason: 'Error'
           });
@@ -83,12 +88,6 @@ const LoadGauge: React.FC<Props> = props => {
           <Typography>
             <strong>Load</strong>
           </Typography>
-          <Typography>
-            {`${getOverallocationPercent(
-              amountOfCores || 0,
-              load || 0
-            )}% Overallocated`}
-          </Typography>
         </React.Fragment>
       )
     };
@@ -97,26 +96,12 @@ const LoadGauge: React.FC<Props> = props => {
   return (
     <GaugePercent
       {...baseGaugeProps}
-      max={amountOfCores || 1}
-      value={load || 1}
+      max={amountOfCores}
+      value={load}
       filledInColor="#FADB50"
       {...generateCopy()}
     />
   );
-};
-
-export const getOverallocationPercent = (
-  amountOfCores: number,
-  load: number
-) => {
-  /** we have a negative number meaning we're overallocated */
-  const allocation = amountOfCores - load;
-  if (allocation < 0) {
-    /** turn into a positive number as a percent */
-    return Math.round(allocation * 100 * -1);
-  }
-
-  return 0;
 };
 
 export default LoadGauge;

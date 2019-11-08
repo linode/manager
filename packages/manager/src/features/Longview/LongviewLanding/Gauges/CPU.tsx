@@ -1,71 +1,52 @@
 import { APIError } from 'linode-js-sdk/lib/types';
-import { clamp, path, pathOr } from 'ramda';
+import { clamp, pathOr } from 'ramda';
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
 import { pluralize } from 'src/utilities/pluralize';
-import requestStats from '../../request';
 import { CPU } from '../../request.types';
 import { baseGaugeProps } from './common';
 
+import withClientStats, {
+  Props as LVDataProps
+} from 'src/containers/longview.stats.container';
+
 interface Props {
-  clientAPIKey: string;
-  lastUpdated: number;
+  clientID: number;
 }
 
-const LongviewGauge: React.FC<Props> = props => {
-  const { clientAPIKey, lastUpdated } = props;
+const CPUGauge: React.FC<Props & LVDataProps> = props => {
+  const {
+    longviewClientDataLoading: loading,
+    longviewClientDataError: error,
+    longviewClientData
+  } = props;
 
-  const [loading, setLoading] = React.useState<boolean>(true);
-  const [error, setError] = React.useState<APIError | undefined>();
-
-  const [usedCPU, setUsedCPU] = React.useState<number>(0);
-  const [numCores, setNumCores] = React.useState<number>(1);
-
-  React.useEffect(() => {
-    requestStats(clientAPIKey, 'getLatestValue', ['cpu', 'sysinfo'])
-      .then(data => {
-        setLoading(false);
-        setError(undefined);
-
-        const cores = path<number>(['SysInfo', 'cpu', 'cores'], data);
-
-        // If we don't have the number of cores, we can't determine the value.
-        if (!cores) {
-          return;
-        }
-
-        setNumCores(cores);
-
-        const used = sumCPUUsage(data.CPU);
-        const normalizedUsed = normalizeValue(used, cores);
-        setUsedCPU(normalizedUsed);
-      })
-      .catch(_ => {
-        if (!usedCPU) {
-          setError({
-            reason: 'Error' // @todo: Error message?
-          });
-          setLoading(false);
-        }
-      });
-  }, [lastUpdated]);
+  const numberOfCores = pathOr(
+    0,
+    ['SysInfo', 'cpu', 'cores'],
+    longviewClientData
+  );
+  const usedCPU = sumCPUUsage(longviewClientData.CPU);
+  const finalUsedCPU = normalizeValue(usedCPU, numberOfCores);
 
   return (
     <GaugePercent
       {...baseGaugeProps}
       // The MAX depends on the number of CPU cores. Default to 1 if cores
       // doesn't exist or is 0.
-      max={100 * numCores || 1}
-      value={usedCPU || 100}
-      innerText={innerText(usedCPU, loading, error)}
+      max={100 * numberOfCores}
+      value={usedCPU}
+      innerText={innerText(finalUsedCPU || 0, loading, error)}
       subTitle={
         <>
           <Typography>
             <strong>CPU</strong>
           </Typography>
           {!error && !loading && (
-            <Typography>{pluralize('Core', 'Cores', numCores)}</Typography>
+            <Typography>
+              {pluralize('Core', 'Cores', numberOfCores || 0)}
+            </Typography>
           )}
         </>
       }
@@ -73,7 +54,7 @@ const LongviewGauge: React.FC<Props> = props => {
   );
 };
 
-export default LongviewGauge;
+export default withClientStats<Props>(ownProps => ownProps.clientID)(CPUGauge);
 
 // UTILITIES
 export const sumCPUUsage = (CPUData: Record<string, CPU> = {}) => {
@@ -97,10 +78,10 @@ export const normalizeValue = (value: number, numCores: number) => {
 export const innerText = (
   value: number,
   loading: boolean,
-  error?: APIError
+  error?: APIError[]
 ) => {
   if (error) {
-    return error.reason;
+    return 'Error';
   }
 
   if (loading) {

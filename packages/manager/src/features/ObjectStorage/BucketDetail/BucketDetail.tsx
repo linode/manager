@@ -1,3 +1,9 @@
+import {
+  getObjectList,
+  getObjectURL,
+  ObjectStorageClusterID,
+  ObjectStorageObject
+} from 'linode-js-sdk/lib/object-storage';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { prop, sortBy } from 'ramda';
@@ -27,8 +33,6 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
-import { getObjectList } from 'src/services/objectStorage/buckets';
-import { getObjectURL } from 'src/services/objectStorage/objects';
 import { sendDownloadObjectEvent } from 'src/utilities/ga';
 import { getQueryParam } from 'src/utilities/queryParams';
 import { truncateMiddle } from 'src/utilities/truncate';
@@ -98,7 +102,7 @@ const styles = (theme: Theme) =>
   });
 
 interface MatchProps {
-  clusterId: Linode.ClusterID;
+  clusterId: ObjectStorageClusterID;
   bucketName: string;
 }
 
@@ -233,7 +237,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
       });
   };
 
-  handleDownload = async (objectName: string, newTab = false) => {
+  handleDownload = async (objectName: string) => {
     const { clusterId, bucketName } = this.props.match.params;
 
     try {
@@ -241,16 +245,14 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
         clusterId,
         bucketName,
         objectName,
-        'GET'
+        'GET',
+        // Force download with content_disposition: attachment
+        { content_disposition: 'attachment' }
       );
 
       sendDownloadObjectEvent();
 
-      if (newTab) {
-        window.open(url, '_blank', 'noopener');
-      } else {
-        window.location.assign(url);
-      }
+      window.location.assign(url);
     } catch (err) {
       this.props.enqueueSnackbar('Error downloading Object', {
         variant: 'error'
@@ -327,7 +329,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
   addOneFile = (objectName: string, sizeInBytes: number) => {
     const prefix = getQueryParam(this.props.location.search, 'prefix');
 
-    const object: Linode.Object = {
+    const object: ObjectStorageObject = {
       name: prefix + objectName,
       etag: '',
       owner: '',
@@ -358,7 +360,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
   addOneFolder = (objectName: string) => {
     const prefix = getQueryParam(this.props.location.search, 'prefix');
 
-    const folder: Linode.Object = {
+    const folder: ObjectStorageObject = {
       name: prefix + objectName + '/',
       etag: null,
       owner: null,

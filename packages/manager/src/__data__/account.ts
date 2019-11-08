@@ -47,5 +47,6 @@ export const accountSettings: AccountSettings = {
   backups_enabled: true,
   managed: false,
   longview_subscription: null,
-  network_helper: false
+  network_helper: false,
+  object_storage: 'active'
 };

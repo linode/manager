@@ -1,3 +1,8 @@
+import {
+  ObjectStorageBucket,
+  ObjectStorageCluster
+} from 'linode-js-sdk/lib/object-storage';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import {
@@ -23,6 +28,7 @@ import { ApplicationState } from 'src/store';
 import { getAllBuckets } from 'src/store/bucket/bucket.requests';
 import { requestClusters as _requestClusters } from 'src/store/clusters/clusters.actions';
 import { MapState } from 'src/store/types';
+import BucketDrawer from './BucketLanding/BucketDrawer';
 
 const BucketLanding = DefaultLoader({
   loader: () => import('./BucketLanding/BucketLanding')
@@ -55,9 +61,16 @@ export const ObjectStorageLanding: React.FunctionComponent<
     const {
       bucketsLastUpdated,
       clustersLastUpdated,
+      isRestrictedUser,
       requestBuckets,
       requestClusters
     } = props;
+
+    // Object Storage is not available for restricted users, so we avoid these
+    // requests if the user is restricted.
+    if (isRestrictedUser) {
+      return;
+    }
 
     /**
      * @todo: Move these requests to App.tsx like other entities when OBJ is generally available.
@@ -76,7 +89,7 @@ export const ObjectStorageLanding: React.FunctionComponent<
         /** We choose to do nothing, relying on the Redux error state. */
       });
     }
-  }, []);
+  }, [props.isRestrictedUser]);
 
   const url = props.match.url;
   const matches = (p: string) => {
@@ -120,15 +133,25 @@ export const ObjectStorageLanding: React.FunctionComponent<
         </Tabs>
       </AppBar>
       <Switch>
-        <Route exact strict path={`${url}/buckets`} component={BucketLanding} />
+        <Route
+          exact
+          strict
+          path={`${url}/buckets`}
+          render={() => (
+            <BucketLanding isRestrictedUser={props.isRestrictedUser} />
+          )}
+        />
         <Route
           exact
           strict
           path={`${url}/access-keys`}
-          component={AccessKeyLanding}
+          render={() => (
+            <AccessKeyLanding isRestrictedUser={props.isRestrictedUser} />
+          )}
         />
         <Redirect to={`${url}/buckets`} />
       </Switch>
+      <BucketDrawer isRestrictedUser={props.isRestrictedUser} />
     </React.Fragment>
   );
 };
@@ -136,16 +159,22 @@ export const ObjectStorageLanding: React.FunctionComponent<
 interface StateProps {
   bucketsLastUpdated: number;
   clustersLastUpdated: number;
+  isRestrictedUser: boolean;
 }
 
 const mapStateToProps: MapState<StateProps, {}> = state => ({
   bucketsLastUpdated: state.__resources.buckets.lastUpdated,
-  clustersLastUpdated: state.__resources.clusters.lastUpdated
+  clustersLastUpdated: state.__resources.clusters.lastUpdated,
+  isRestrictedUser: pathOr(
+    true,
+    ['__resources', 'profile', 'data', 'restricted'],
+    state
+  )
 });
 
 interface DispatchProps {
-  requestBuckets: () => Promise<Linode.Bucket[]>;
-  requestClusters: () => Promise<Linode.Cluster[]>;
+  requestBuckets: () => Promise<ObjectStorageBucket[]>;
+  requestClusters: () => Promise<ObjectStorageCluster[]>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
