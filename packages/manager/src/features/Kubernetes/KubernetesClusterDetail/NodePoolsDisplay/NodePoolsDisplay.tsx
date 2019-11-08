@@ -93,7 +93,6 @@ interface Props {
   poolsForEdit: PoolNodeWithPrice[];
   types: ExtendedType[];
   loading: boolean;
-  toggleEditing: () => void;
   updatePool: (poolIdx: number, updatedPool: PoolNodeWithPrice) => void;
   deletePool: (poolID: number) => void;
   resetForm: () => void;
@@ -119,7 +118,6 @@ export const NodePoolsDisplay: React.FunctionComponent<
     submissionError,
     submissionSuccess,
     submittingForm,
-    toggleEditing,
     types,
     updatePool
   } = props;

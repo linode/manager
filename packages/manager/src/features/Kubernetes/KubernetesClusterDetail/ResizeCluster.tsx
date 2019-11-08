@@ -209,7 +209,6 @@ export const ResizeCluster: React.FC<CombinedProps> = props => {
           submissionSuccess={success}
           submissionError={generalError}
           editing={true}
-          toggleEditing={() => null}
           updatePool={updatePool}
           deletePool={handleDeletePool}
           resetForm={resetFormState}
