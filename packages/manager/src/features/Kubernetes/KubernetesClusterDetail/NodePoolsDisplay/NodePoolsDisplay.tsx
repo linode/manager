@@ -163,11 +163,6 @@ export const NodePoolsDisplay: React.FunctionComponent<
               classes={{ tooltip: classes.tooltipOuter }}
             />
           </Grid>
-          <Grid item>
-            <Button buttonType="secondary" onClick={toggleEditing}>
-              {editing ? 'Cancel' : 'Edit'}
-            </Button>
-          </Grid>
         </Grid>
         {submissionSuccess && (
           <Grid item xs={12}>

@@ -11,6 +11,9 @@ import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import DefaultLoader from 'src/components/DefaultLoader';
 import TabLink from 'src/components/TabLink';
+import { DispatchProps } from 'src/containers/kubernetes.container';
+import { WithTypesProps } from 'src/containers/types.container';
+import { ExtendedCluster } from '.././types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   tabBar: {
@@ -26,9 +29,15 @@ const Resize = DefaultLoader({
   loader: () => import('./ResizeCluster')
 });
 
-interface Props {}
+interface Props {
+  cluster: ExtendedCluster;
+  nodePoolsLoading: boolean;
+}
 
-type CombinedProps = Props & RouteComponentProps<{}>;
+type CombinedProps = Props &
+  DispatchProps &
+  WithTypesProps &
+  RouteComponentProps<{}>;
 
 export const DetailNavigation: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -81,8 +90,16 @@ export const DetailNavigation: React.FC<CombinedProps> = props => {
         </Tabs>
       </AppBar>
       <Switch>
-        <Route exact path={`${url}/details`} component={Details} />
-        <Route exact path={`${url}/resize`} component={Resize} />
+        <Route
+          exact
+          path={`${url}/resize`}
+          render={() => <Resize {...props} />}
+        />
+        <Route
+          exact
+          path={`${url}/details`}
+          render={() => <Details {...props} />}
+        />
       </Switch>
     </>
   );
