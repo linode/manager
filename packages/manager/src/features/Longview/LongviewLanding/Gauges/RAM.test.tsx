@@ -1,14 +1,45 @@
 import { cleanup, waitForElement } from '@testing-library/react';
-import MockAdapter from 'axios-mock-adapter';
 import * as React from 'react';
-import { memory as mockMemory } from 'src/__data__/longview';
+import { memory } from 'src/__data__/longview';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { baseRequest } from '../../request';
 import RAM, { generateTotalMemory, generateUsedMemory } from './RAM';
 
-const mockApi = new MockAdapter(baseRequest);
-
 afterEach(cleanup);
+
+const loadingStore = {
+  longviewStats: {
+    123: {
+      loading: true,
+      data: {
+        ...memory
+      }
+    }
+  }
+};
+
+const dataStore = {
+  longviewStats: {
+    123: {
+      loading: false,
+      data: {
+        ...memory
+      }
+    }
+  }
+};
+
+const errorStore = {
+  longviewStats: {
+    123: {
+      loading: false,
+      error: [
+        {
+          reason: 'this is an error'
+        }
+      ]
+    }
+  }
+};
 
 describe('Utility Functions', () => {
   it('should generate used memory correctly', () => {
@@ -26,23 +57,17 @@ describe('Utility Functions', () => {
 
 describe('Longview RAM Gauge UI', () => {
   it('should render a loading state initially', () => {
-    const { getByText } = renderWithTheme(<RAM lastUpdated={0} token="" />);
+    const { getByText } = renderWithTheme(<RAM clientID={123} />, {
+      customStore: loadingStore
+    });
 
     expect(getByText(/Loading/)).toBeInTheDocument();
   });
 
-  it('should render an error state on 400 responses', async done => {
-    const { getByText } = renderWithTheme(<RAM lastUpdated={0} token="" />);
-
-    mockApi.onPost().reply(400, [
-      {
-        /** everything inside is the response from the Longview API */
-        NOTIFICATIONS: [],
-        DATA: {
-          ...mockMemory
-        }
-      }
-    ]);
+  it('should render error UI if an error comes back from Redux State', async done => {
+    const { getByText } = renderWithTheme(<RAM clientID={123} />, {
+      customStore: errorStore
+    });
 
     const resolvedDiv = await waitForElement(() => getByText(/Error/));
 
@@ -50,18 +75,10 @@ describe('Longview RAM Gauge UI', () => {
     done();
   });
 
-  it('should render a data state on 200 responses', async done => {
-    const { getByTestId } = renderWithTheme(<RAM lastUpdated={0} token="" />);
-
-    mockApi.onPost().reply(200, [
-      {
-        /** everything inside is the response from the Longview API */
-        NOTIFICATIONS: [],
-        DATA: {
-          ...mockMemory
-        }
-      }
-    ]);
+  it('should render a data state UI if data comes back from Redux State', async done => {
+    const { getByTestId } = renderWithTheme(<RAM clientID={123} />, {
+      customStore: dataStore
+    });
 
     const innerText = await waitForElement(() =>
       getByTestId('gauge-innertext')

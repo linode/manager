@@ -84,7 +84,11 @@ describe('Longview clients list view', () => {
   });
 
   it('should render a row for each client', () => {
-    const { queryAllByText } = renderWithTheme(<LongviewClients {...props} />);
-    expect(queryAllByText(/waiting/i)).toHaveLength(clients.length);
+    const { queryAllByTestId } = renderWithTheme(
+      <LongviewClients {...props} />
+    );
+    expect(queryAllByTestId('longview-client-row')).toHaveLength(
+      clients.length
+    );
   });
 });
