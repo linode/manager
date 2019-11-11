@@ -1,16 +1,12 @@
 import * as React from 'react';
-import {
-  matchPath,
-  Route,
-  RouteComponentProps,
-  Switch
-} from 'react-router-dom';
+import { matchPath, Route, Switch } from 'react-router-dom';
 import AppBar from 'src/components/core/AppBar';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import DefaultLoader from 'src/components/DefaultLoader';
 import TabLink from 'src/components/TabLink';
+import { ResizeProps } from './ResizeCluster';
 
 const useStyles = makeStyles((theme: Theme) => ({
   tabBar: {
@@ -26,11 +22,7 @@ const Resize = DefaultLoader({
   loader: () => import('./ResizeCluster')
 });
 
-interface Props {}
-
-type CombinedProps = Props & RouteComponentProps<{}>;
-
-export const DetailNavigation: React.FC<CombinedProps> = props => {
+export const DetailNavigation: React.FC<ResizeProps> = props => {
   const classes = useStyles();
   const {
     match: { url }
@@ -81,8 +73,16 @@ export const DetailNavigation: React.FC<CombinedProps> = props => {
         </Tabs>
       </AppBar>
       <Switch>
-        <Route exact path={`${url}/details`} component={Details} />
-        <Route exact path={`${url}/resize`} component={Resize} />
+        <Route
+          exact
+          path={`${url}/resize`}
+          render={() => <Resize {...props} />}
+        />
+        <Route
+          exact
+          path={`${url}/details`}
+          render={() => <Details {...props} />}
+        />
       </Switch>
     </>
   );
