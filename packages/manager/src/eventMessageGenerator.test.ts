@@ -71,6 +71,13 @@ describe('Event message generation', () => {
           'booted'
         )
       ).toMatch('booted');
+      expect(
+        safeSecondaryEntityLabel(
+          mockEventWithoutSecondaryEntity,
+          'booted with',
+          'booted'
+        )
+      ).not.toMatch('booted with');
     });
   });
 });
