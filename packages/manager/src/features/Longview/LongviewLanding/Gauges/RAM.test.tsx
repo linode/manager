@@ -57,13 +57,17 @@ describe('Utility Functions', () => {
 
 describe('Longview RAM Gauge UI', () => {
   it('should render a loading state initially', () => {
-    const { getByText } = renderWithTheme(<RAM clientID={123} />, loadingStore);
+    const { getByText } = renderWithTheme(<RAM clientID={123} />, {
+      customStore: loadingStore
+    });
 
     expect(getByText(/Loading/)).toBeInTheDocument();
   });
 
   it('should render error UI if an error comes back from Redux State', async done => {
-    const { getByText } = renderWithTheme(<RAM clientID={123} />, errorStore);
+    const { getByText } = renderWithTheme(<RAM clientID={123} />, {
+      customStore: errorStore
+    });
 
     const resolvedDiv = await waitForElement(() => getByText(/Error/));
 
@@ -72,7 +76,9 @@ describe('Longview RAM Gauge UI', () => {
   });
 
   it('should render a data state UI if data comes back from Redux State', async done => {
-    const { getByTestId } = renderWithTheme(<RAM clientID={123} />, dataStore);
+    const { getByTestId } = renderWithTheme(<RAM clientID={123} />, {
+      customStore: dataStore
+    });
 
     const innerText = await waitForElement(() =>
       getByTestId('gauge-innertext')

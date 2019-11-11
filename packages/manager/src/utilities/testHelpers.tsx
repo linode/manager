@@ -24,6 +24,7 @@ createResourcePage = data => ({
 
 interface Options {
   MemoryRouter?: MemoryRouterProps;
+  customStore?: Partial<ApplicationState>;
 }
 
 /**
@@ -57,10 +58,8 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
  * @param customStore _Optional_ Object that mimics values contained in Redux state to
  * override the default store
  */
-export const renderWithTheme = (
-  ui: any,
-  customStore?: Partial<ApplicationState>
-) => {
+export const renderWithTheme = (ui: any, options: Options = {}) => {
+  const { customStore } = options;
   const storeToPass = customStore ? baseStore(customStore) : store;
 
   return render(
@@ -99,8 +98,8 @@ export const toPassAxeCheck = {
         return {
           message: () => `anchors has no href - specify a value for href
         \nsee: https://a11yproject.com/posts/creating-valid-and-accessible-links/:\n${received.debug(
-            e
-          )}`,
+          e
+        )}`,
           pass: false
         };
       }
@@ -109,8 +108,8 @@ export const toPassAxeCheck = {
         return {
           message: () => `anchors has bad href - specify a non null value for href
         \nsee: https://a11yproject.com/posts/creating-valid-and-accessible-links/:\n${received.debug(
-            e
-          )}`,
+          e
+        )}`,
           pass: false
         };
       }
@@ -119,8 +118,8 @@ export const toPassAxeCheck = {
         return {
           message: () => `anchors has invalid href - specify a valid value not #,'' or javascript(void)
         \nsee: https://a11yproject.com/posts/creating-valid-and-accessible-links/:\n${received.debug(
-            e
-          )}`,
+          e
+        )}`,
           pass: false
         };
       }
