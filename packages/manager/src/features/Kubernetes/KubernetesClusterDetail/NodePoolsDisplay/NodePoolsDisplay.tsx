@@ -17,7 +17,6 @@ import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-import useFlags from 'src/hooks/useFlags';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import NodePoolDisplayTable from '../../CreateCluster/NodePoolDisplayTable';
@@ -93,7 +92,7 @@ interface Props {
   poolsForEdit: PoolNodeWithPrice[];
   types: ExtendedType[];
   loading: boolean;
-  toggleEditing: () => void;
+  submitDisabled?: boolean;
   updatePool: (poolIdx: number, updatedPool: PoolNodeWithPrice) => void;
   deletePool: (poolID: number) => void;
   resetForm: () => void;
@@ -119,12 +118,10 @@ export const NodePoolsDisplay: React.FunctionComponent<
     submissionError,
     submissionSuccess,
     submittingForm,
-    toggleEditing,
+    submitDisabled,
     types,
     updatePool
   } = props;
-
-  const flags = useFlags();
 
   const TooltipText = () => {
     return (
@@ -162,11 +159,6 @@ export const NodePoolsDisplay: React.FunctionComponent<
               interactive
               classes={{ tooltip: classes.tooltipOuter }}
             />
-          </Grid>
-          <Grid item>
-            <Button buttonType="secondary" onClick={toggleEditing}>
-              {editing ? 'Cancel' : 'Edit'}
-            </Button>
           </Grid>
         </Grid>
         {submissionSuccess && (
@@ -209,12 +201,12 @@ export const NodePoolsDisplay: React.FunctionComponent<
               {`$${getTotalClusterPrice(poolsForEdit)}/month`}
             </Typography>
           )}
-          {(!flags.lkeHideButtons || editing) && (
+          {editing && (
             <Grid item container xs={12} className={classes.ctaOuter}>
               <Button
                 className={classes.button}
                 buttonType="primary"
-                disabled={!editing || submittingForm}
+                disabled={submitDisabled || submittingForm}
                 loading={submittingForm}
                 onClick={submitForm}
               >
