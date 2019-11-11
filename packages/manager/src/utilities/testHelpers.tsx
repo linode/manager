@@ -43,8 +43,10 @@ export const baseStore = (customStore: Partial<ApplicationState> = {}) =>
   });
 
 export const wrapWithTheme = (ui: any, options: Options = {}) => {
+  const { customStore } = options;
+  const storeToPass = customStore ? baseStore(customStore) : store;
   return (
-    <Provider store={store}>
+    <Provider store={storeToPass}>
       <LinodeThemeWrapper theme="dark" spacing="normal">
         <MemoryRouter {...options.MemoryRouter}>{ui}</MemoryRouter>
       </LinodeThemeWrapper>
@@ -52,23 +54,8 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
   );
 };
 
-/**
- *
- * @param ui The React DOM tree you want to render
- * @param customStore _Optional_ Object that mimics values contained in Redux state to
- * override the default store
- */
 export const renderWithTheme = (ui: any, options: Options = {}) => {
-  const { customStore } = options;
-  const storeToPass = customStore ? baseStore(customStore) : store;
-
-  return render(
-    <Provider store={storeToPass}>
-      <LinodeThemeWrapper theme="dark" spacing="normal">
-        <MemoryRouter>{ui}</MemoryRouter>
-      </LinodeThemeWrapper>
-    </Provider>
-  );
+  return render(wrapWithTheme(ui, options));
 };
 
 declare global {
