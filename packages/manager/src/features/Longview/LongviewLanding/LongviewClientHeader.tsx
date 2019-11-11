@@ -1,11 +1,34 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
-import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
 import EditableEntityLabel from 'src/components/EditableEntityLabel';
 import Grid from 'src/components/Grid';
 
-export const LongviewClientHeader: React.FC<{}> = props => {
+import withLongviewClients, {
+  DispatchProps
+} from 'src/containers/longview.container';
+
+interface Props {
+  clientID: number;
+  clientLabel: string;
+}
+
+type CombinedProps = Props & DispatchProps;
+
+export const LongviewClientHeader: React.FC<CombinedProps> = props => {
+  const { clientID, clientLabel, updateLongviewClient } = props;
+  const [updating, setUpdating] = React.useState<boolean>(false);
+
+  const handleUpdateLabel = (newLabel: string) => {
+    setUpdating(true);
+    return updateLongviewClient(clientID, newLabel)
+      .then(_ => {
+        setUpdating(false);
+      })
+      .catch(_ => setUpdating(false));
+  };
+
   return (
     <Grid
       container
@@ -22,12 +45,12 @@ export const LongviewClientHeader: React.FC<{}> = props => {
         alignItems="center"
       >
         <EditableEntityLabel
-          text={'Dev Server 1'}
+          text={clientLabel}
           iconVariant="linode"
           subText="dev.hostname.com"
           status="running"
-          onEdit={() => Promise.resolve(null)}
-          loading={false}
+          onEdit={handleUpdateLabel}
+          loading={updating}
         />
       </Grid>
       <Grid item>
@@ -35,12 +58,11 @@ export const LongviewClientHeader: React.FC<{}> = props => {
         <Typography>2 packages have updates</Typography>
       </Grid>
       <Grid item>
-        <Button onClick={() => null} buttonType="secondary">
-          View details
-        </Button>
+        <Link to={`/longview/clients/${clientID}`}>View details</Link>
       </Grid>
     </Grid>
   );
 };
 
-export default LongviewClientHeader;
+/** We only need the update action here, easier than prop drilling through 4 components */
+export default withLongviewClients(() => ({}))(LongviewClientHeader);

@@ -2,22 +2,20 @@ import { LongviewClient } from 'linode-js-sdk/lib/longview';
 import * as React from 'react';
 import { compose } from 'recompose';
 
-import { ActionHandlers } from './LongviewActionMenu';
 import ClientRow from './LongviewClientRow';
 
-interface Props extends ActionHandlers {
-  longviewClientsResults: number;
+interface Props {
   longviewClientsData: LongviewClient[];
+  triggerDeleteLongviewClient: (
+    longviewClientID: number,
+    longviewClientLabel: string
+  ) => void;
 }
 
-type CombinedProps = Props & ActionHandlers;
+type CombinedProps = Props;
 
 const LongviewListRows: React.FC<CombinedProps> = props => {
-  const {
-    longviewClientsData,
-    longviewClientsResults,
-    ...actionMenuHandlers
-  } = props;
+  const { longviewClientsData, triggerDeleteLongviewClient } = props;
 
   return (
     <React.Fragment>
@@ -28,7 +26,7 @@ const LongviewListRows: React.FC<CombinedProps> = props => {
             clientID={eachClient.id}
             clientLabel={eachClient.label}
             clientAPIKey={eachClient.api_key}
-            {...actionMenuHandlers}
+            triggerDeleteLongviewClient={triggerDeleteLongviewClient}
           />
         );
       })}
@@ -36,6 +34,4 @@ const LongviewListRows: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, Props & ActionHandlers>(React.memo)(
-  LongviewListRows
-);
+export default compose<CombinedProps, Props>(React.memo)(LongviewListRows);

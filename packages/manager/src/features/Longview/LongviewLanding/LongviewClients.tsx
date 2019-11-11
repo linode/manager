@@ -17,7 +17,6 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import DeleteDialog from './LongviewDeleteDialog';
 import LongviewList from './LongviewList';
-import UpdateDrawer from './UpdateClientDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   headingWrapper: {
@@ -43,7 +42,6 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
   const [filteredClientList, filterClientList] = React.useState<
     Record<string, LongviewClient> | undefined
   >();
-  const [editDrawerOpen, toggleEditDrawer] = React.useState<boolean>(false);
   const [deleteDialogOpen, toggleDeleteDialog] = React.useState<boolean>(false);
   const [selectedClientID, setClientID] = React.useState<number | undefined>(
     undefined
@@ -56,17 +54,14 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     props.getLongviewClients();
   }, []);
 
-  const openDeleteDialog = (id: number, label: string) => {
-    toggleDeleteDialog(true);
-    setClientID(id);
-    setClientLabel(label);
-  };
-
-  const openEditDrawer = (id: number, label: string) => {
-    toggleEditDrawer(true);
-    setClientID(id);
-    setClientLabel(label);
-  };
+  const openDeleteDialog = React.useCallback(
+    (id: number, label: string) => {
+      toggleDeleteDialog(true);
+      setClientID(id);
+      setClientLabel(label);
+    },
+    [selectedClientID, setClientLabel]
+  );
 
   const handleAddClient = () => {
     setNewClientLoading(true);
@@ -93,8 +88,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     longviewClientsLoading,
     longviewClientsResults,
     createLongviewClient,
-    deleteLongviewClient,
-    updateLongviewClient
+    deleteLongviewClient
   } = props;
 
   const handleSearch = (query: string) => {
@@ -125,17 +119,8 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
         longviewClientsLoading={longviewClientsLoading}
         longviewClientsResults={longviewClientsResults}
         triggerDeleteLongviewClient={openDeleteDialog}
-        triggerEditLongviewClient={openEditDrawer}
-      />
-      <UpdateDrawer
-        title={`Rename Longview Client${
-          selectedClientLabel ? `: ${selectedClientLabel}` : ''
-        }`}
-        selectedID={selectedClientID}
-        selectedLabel={selectedClientLabel}
-        updateClient={updateLongviewClient}
-        open={editDrawerOpen}
-        onClose={() => toggleEditDrawer(false)}
+        createLongviewClient={handleAddClient}
+        loading={newClientLoading}
       />
       <DeleteDialog
         selectedLongviewClientID={selectedClientID}

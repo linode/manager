@@ -106,6 +106,12 @@ const styles = (theme: Theme) =>
     }
   });
 
+/**
+ * WARNING: If you add anything to this list
+ * that could possibly be dynamic,
+ * you will need to add it to
+ * shouldComponentUpdate below.
+ */
 interface BaseProps {
   errorText?: string;
   errorGroup?: string;
@@ -158,6 +164,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
       nextProps.disabled !== this.props.disabled ||
       nextProps.helperText !== this.props.helperText ||
       nextProps.classes !== this.props.classes ||
+      nextProps.loading !== this.props.loading ||
       Boolean(
         this.props.select && nextProps.children !== this.props.children
       ) ||
