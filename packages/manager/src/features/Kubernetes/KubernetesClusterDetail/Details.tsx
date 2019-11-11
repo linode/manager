@@ -9,7 +9,7 @@ import ExternalLink from 'src/components/ExternalLink';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import NodePoolsDisplay from './NodePoolsDisplay';
 
-import { ExtendedCluster, PoolNodeWithPrice } from '.././types';
+import { ExtendedCluster } from '.././types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   docsWrapper: {
@@ -47,9 +47,6 @@ export const Details: React.FC<Props> = props => {
     return null;
   }
 
-  /** Holds the local state of the cluster's node pools when editing */
-  const [pools] = React.useState<PoolNodeWithPrice[]>(cluster.node_pools || []);
-
   const links = [
     {
       href:
@@ -77,7 +74,7 @@ export const Details: React.FC<Props> = props => {
         <NodePoolsDisplay
           editing={false}
           pools={cluster.node_pools}
-          poolsForEdit={pools}
+          poolsForEdit={[]}
           types={typesData || []}
           loading={nodePoolsLoading}
         />
