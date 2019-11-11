@@ -79,13 +79,15 @@ const maybeAddCustomFingerprint = (event: SentryEvent): SentryEvent => {
   const fingerprint = Object.keys(customFingerPrintMap).reduce((acc, value) => {
     /** if our sentry error matches one of the keys in the map */
     const exception = event.exception;
-    if (exception && !!exception.values && exception.values.length > 0)
-      if (
-        !!exception.values[0].value &&
-        !!exception.values[0].value.match(new RegExp(value, 'gmi'))
-      ) {
-        acc = customFingerPrintMap[value];
-      }
+    if (
+      exception &&
+      exception.values &&
+      exception.values.length > 0 &&
+      !!exception.values[0].value &&
+      !!exception.values[0].value.match(new RegExp(value, 'gmi'))
+    ) {
+      acc = customFingerPrintMap[value];
+    }
     return acc;
   }, '');
 

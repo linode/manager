@@ -4,9 +4,11 @@ import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouterProps } from 'react-router';
 import { MemoryRouter } from 'react-router-dom';
+import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 import { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-import store from 'src/store';
+import store, { ApplicationState } from 'src/store';
 
 export let createPromiseLoaderResponse: <T>(r: T) => PromiseLoaderResponse<T>;
 createPromiseLoaderResponse = response => ({ response });
@@ -22,16 +24,38 @@ createResourcePage = data => ({
 
 interface Options {
   MemoryRouter?: MemoryRouterProps;
+  customStore?: Partial<ApplicationState>;
 }
 
+/**
+ * preference state is necessary for all tests using the
+ * renderWithTheme() helper function, since the whole app is wrapped with
+ * the TogglePreference component
+ */
+export const baseStore = (customStore: Partial<ApplicationState> = {}) =>
+  configureStore<Partial<ApplicationState>>([thunk])({
+    preferences: {
+      data: {},
+      loading: false,
+      lastUpdated: 0
+    },
+    ...customStore
+  });
+
 export const wrapWithTheme = (ui: any, options: Options = {}) => {
+  const { customStore } = options;
+  const storeToPass = customStore ? baseStore(customStore) : store;
   return (
-    <Provider store={store}>
+    <Provider store={storeToPass}>
       <LinodeThemeWrapper theme="dark" spacing="normal">
         <MemoryRouter {...options.MemoryRouter}>{ui}</MemoryRouter>
       </LinodeThemeWrapper>
     </Provider>
   );
+};
+
+export const renderWithTheme = (ui: any, options: Options = {}) => {
+  return render(wrapWithTheme(ui, options));
 };
 
 declare global {
@@ -91,16 +115,6 @@ export const toPassAxeCheck = {
     }
     return { pass: true, message: () => '!' };
   }
-};
-
-export const renderWithTheme = (ui: any) => {
-  return render(
-    <Provider store={store}>
-      <LinodeThemeWrapper theme="dark" spacing="normal">
-        <MemoryRouter>{ui}</MemoryRouter>
-      </LinodeThemeWrapper>
-    </Provider>
-  );
 };
 
 export const includesActions = (
