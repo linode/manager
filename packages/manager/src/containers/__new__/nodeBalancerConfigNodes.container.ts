@@ -58,11 +58,11 @@ interface Connected {
   >;
 }
 
-const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
-  mapStateToProps?: MapProps<ReduxState, OwnProps>
+const connected: Connected = <ReduxStateProps extends {}, OwnProps extends {}>(
+  mapStateToProps?: MapProps<ReduxStateProps, OwnProps>
 ) =>
   connect<
-    (ReduxState & Partial<StateProps>) | StateProps,
+    (ReduxStateProps & Partial<StateProps>) | StateProps,
     DispatchProps,
     OwnProps,
     ApplicationState
@@ -75,23 +75,16 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
         results,
         lastUpdated
       } = state.__resources.nodeBalancerConfigNodes;
-      if (mapStateToProps) {
-        return mapStateToProps(ownProps, {
-          nodeBalancerConfigNodesData: entities,
-          nodeBalancerConfigNodesError: error,
-          nodeBalancerConfigNodesLastUpdated: lastUpdated,
-          nodeBalancerConfigNodesLoading: loading,
-          nodeBalancerConfigNodesResults: results.length
-        });
-      }
 
-      return {
-        nodeBalancerConfigNodesError: error,
-        nodeBalancerConfigNodesLoading: loading,
+      const result = {
         nodeBalancerConfigNodesData: entities,
-        nodeBalancerConfigNodesResults: results.length,
-        nodeBalancerConfigNodesLastUpdated: lastUpdated
+        nodeBalancerConfigNodesError: error,
+        nodeBalancerConfigNodesLastUpdated: lastUpdated,
+        nodeBalancerConfigNodesLoading: loading,
+        nodeBalancerConfigNodesResults: results.length
       };
+
+      return mapStateToProps ? mapStateToProps(ownProps, result) : result;
     },
     (dispatch: ThunkDispatch) => ({
       getAllNodeBalancerConfigNodes: params => dispatch(_getAll(params)),
