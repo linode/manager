@@ -23,6 +23,7 @@ const LoadGauge: React.FC<Props> = props => {
 
   React.useEffect(() => {
     let mounted = true;
+
     requestStats(props.token, 'getLatestValue', ['sysinfo', 'load'])
       .then(response => {
         if (mounted) {
@@ -39,7 +40,7 @@ const LoadGauge: React.FC<Props> = props => {
         }
       })
       .catch(() => {
-        if (!dataHasResolvedAtLeastOnce && mounted) {
+        if (mounted && !dataHasResolvedAtLeastOnce) {
           setError({
             reason: 'Error'
           });
@@ -87,12 +88,6 @@ const LoadGauge: React.FC<Props> = props => {
           <Typography>
             <strong>Load</strong>
           </Typography>
-          <Typography>
-            {`${getOverallocationPercent(
-              amountOfCores || 0,
-              load || 0
-            )}% Overallocated`}
-          </Typography>
         </React.Fragment>
       )
     };
@@ -107,20 +102,6 @@ const LoadGauge: React.FC<Props> = props => {
       {...generateCopy()}
     />
   );
-};
-
-export const getOverallocationPercent = (
-  amountOfCores: number,
-  load: number
-) => {
-  /** we have a negative number meaning we're overallocated */
-  const allocation = amountOfCores - load;
-  if (allocation < 0) {
-    /** turn into a positive number as a percent */
-    return Math.round(allocation * 100 * -1);
-  }
-
-  return 0;
 };
 
 export default LoadGauge;
