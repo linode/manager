@@ -71,7 +71,8 @@ const Crumbs: React.FC<CombinedProps> = props => {
   const allCrumbsButLast = pathMap.slice(0, -1);
   const firstCrumb = [pathMap[0]];
   const lastCrumb = pathMap.slice(-1)[0];
-  const finalCrumbs = firstAndLastOnly ? firstCrumb : allCrumbsButLast;
+  const finalCrumbs =
+    firstAndLastOnly && pathMap.length > 1 ? firstCrumb : allCrumbsButLast;
 
   return (
     <>
