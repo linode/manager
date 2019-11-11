@@ -162,7 +162,6 @@
     "@types/node": "^12.6.8",
     "@types/normalizr": "^2.0.18",
     "@types/pretty-bytes": "^5.1.0",
-    "@types/promise.prototype.finally": "^2.0.2",
     "@types/qrcode.react": "^0.8.0",
     "@types/qs": "^6.5.1",
     "@types/ramda": "0.25.16",
@@ -332,6 +331,6 @@
     "js-yaml": "^3.13.1",
     "braces": "^3.0.2",
     "https-proxy-agent": "^3.0.1",
-    "axe-core":"^3.4.0"
+    "axe-core": "^3.4.0"
   }
 }
