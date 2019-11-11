@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { matchPath, Route, Switch } from 'react-router-dom';
+import { matchPath, Redirect, Route, Switch } from 'react-router-dom';
 import AppBar from 'src/components/core/AppBar';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
@@ -83,6 +83,7 @@ export const DetailNavigation: React.FC<ResizeProps> = props => {
           path={`${url}/details`}
           render={() => <Details {...props} />}
         />
+        <Redirect to={`${url}/details`} />
       </Switch>
     </>
   );
