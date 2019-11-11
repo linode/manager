@@ -1,9 +1,10 @@
 import { LongviewClient } from 'linode-js-sdk/lib/longview';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 
 import AddNewLink from 'src/components/AddNewLink';
 import Search from 'src/components/DebouncedSearchTextField';
@@ -30,6 +31,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& >div': {
       width: '300px'
     }
+  },
+  cta: {
+    marginTop: theme.spacing(2)
   }
 }));
 
@@ -122,6 +126,21 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
         createLongviewClient={handleAddClient}
         loading={newClientLoading}
       />
+      {true && (
+        <Grid
+          className={classes.cta}
+          container
+          direction="column"
+          alignItems="center"
+          justify="center"
+        >
+          <Typography>
+            <Link to={'/longview/plan-details'}>Update to Longview Pro</Link>
+            {` `}for more clients, longer data retention, and more frequent data
+            updates.
+          </Typography>
+        </Grid>
+      )}
       <DeleteDialog
         selectedLongviewClientID={selectedClientID}
         selectedLongviewClientLabel={selectedClientLabel}
