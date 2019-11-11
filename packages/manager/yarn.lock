@@ -2748,11 +2748,6 @@
   resolved "https://registry.yarnpkg.com/@types/pretty-bytes/-/pretty-bytes-5.1.0.tgz#1df59db5c7def05dbbb0df2ad80b46863d9fafda"
   integrity sha512-rc7x/HkZyguytBsCUVvcdARplUf0DsrRXqv3yO0v0CIgXuuwNlgYZRfYGCFHxr1CTnKHjCIJ13tB9t49ZixOIw==
 
-"@types/promise.prototype.finally@^2.0.2":
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/@types/promise.prototype.finally/-/promise.prototype.finally-2.0.2.tgz#68fefb8f0e23f21893a33740c931c79f44be3499"
-  integrity sha512-Fs99h+iFQZ4ZY2vO3+uJCrx+5KQnJ4FPerZ3oT/1L5aA7vnmK/d7Z/Ml1yHtNCh9UQcjFTR4Xo/Jss2f39Fgtw==
-
 "@types/prop-types@*":
   version "15.7.1"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.1.tgz#f1a11e7babb0c3cad68100be381d1e064c68f1f6"
