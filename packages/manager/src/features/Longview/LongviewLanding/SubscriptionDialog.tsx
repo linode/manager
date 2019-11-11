@@ -9,10 +9,11 @@ interface Props {
   clientLimit: number;
   isOpen: boolean;
   onClose: () => void;
+  onSubmit: () => void;
 }
 
 export const SubscriptionDialog: React.FC<Props> = props => {
-  const { clientLimit, isOpen, onClose } = props;
+  const { clientLimit, isOpen, onClose, onSubmit } = props;
 
   const actions = () => (
     <ActionsPanel>
@@ -20,7 +21,7 @@ export const SubscriptionDialog: React.FC<Props> = props => {
         Cancel
       </Button>
 
-      <Button buttonType="primary" onClick={() => null} role="link">
+      <Button buttonType="primary" onClick={onSubmit} role="link">
         View upgrade options
       </Button>
     </ActionsPanel>

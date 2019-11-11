@@ -95,7 +95,12 @@ export const LongviewLanding: React.FunctionComponent<
           exact
           strict
           path={`${url}/clients`}
-          render={() => <LongviewClients {...props} />}
+          render={() => (
+            <LongviewClients
+              subscriptionsData={subscriptionRequestHook.data || []}
+              {...props}
+            />
+          )}
         />
         <Route
           exact

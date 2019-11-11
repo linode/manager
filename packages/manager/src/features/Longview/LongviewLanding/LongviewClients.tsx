@@ -1,5 +1,9 @@
-import { LongviewClient } from 'linode-js-sdk/lib/longview';
+import {
+  LongviewClient,
+  LongviewSubscription
+} from 'linode-js-sdk/lib/longview/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -38,7 +42,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-type CombinedProps = RouteComponentProps &
+interface Props {
+  subscriptionsData: LongviewSubscription[];
+}
+
+type CombinedProps = Props &
+  RouteComponentProps &
   LongviewProps &
   WithSnackbarProps &
   SettingsProps;
@@ -78,6 +87,10 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     setClientLabel(label);
   };
 
+  const navigateToPlanDetails = () => {
+    props.history.push('/longview/plan-details');
+  };
+
   const openEditDrawer = (id: number, label: string) => {
     toggleEditDrawer(true);
     setClientID(id);
@@ -115,23 +128,24 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     longviewClientsLastUpdated,
     longviewClientsLoading,
     longviewClientsResults,
+    subscriptionsData,
+    accountSettings,
     createLongviewClient,
     deleteLongviewClient,
     updateLongviewClient
   } = props;
-
-  React.useEffect(() => {
-    const subscriptionLimit = 10;
-    if (Object.values(longviewClientsData).length > subscriptionLimit) {
-      setSubscriptionDialogOpen(true);
-    }
-  }, [longviewClientsData]);
 
   const handleSearch = (query: string) => {
     return filterClientList(
       filterLongviewClientsByQuery(query, longviewClientsData)
     );
   };
+
+  const activeSubscription = subscriptionsData.find(
+    thisSubscription =>
+      thisSubscription.id ===
+      pathOr('', ['longview_subscription'], accountSettings)
+  );
 
   return (
     <React.Fragment>
@@ -177,13 +191,16 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
       <SubscriptionDialog
         isOpen={subscriptionDialogOpen}
         onClose={() => setSubscriptionDialogOpen(false)}
-        clientLimit={10}
+        onSubmit={navigateToPlanDetails}
+        clientLimit={
+          activeSubscription ? activeSubscription.clients_included : 10
+        }
       />
     </React.Fragment>
   );
 };
 
-export default compose<CombinedProps, RouteComponentProps>(
+export default compose<CombinedProps, Props & RouteComponentProps>(
   React.memo,
   withLongviewClients(),
   withSettings(),
