@@ -23,7 +23,7 @@ import {
   linodeInTransition,
   transitionText
 } from 'src/features/linodes/transitions';
-import { lishLaunch } from 'src/features/Lish';
+import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { typeLabelDetails } from '../presentation';
 import hasMutationAvailable, {

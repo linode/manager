@@ -766,7 +766,7 @@ const typeMap = {
   master: 'SOA',
   slave: 'SOA',
   A: 'A',
-  AAAA: 'AAAA',
+  AAAA: 'A/AAAA',
   CAA: 'CAA',
   CNAME: 'CNAME',
   MX: 'MX',
