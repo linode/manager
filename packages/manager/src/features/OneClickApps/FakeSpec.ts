@@ -34,7 +34,7 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://survivetheark.com/',
-        href: 'https://survivetheark.com/',
+        href: 'https://survivetheark.com/'
       }
     ],
     logo_url: 'assets/ark_color.svg'
@@ -42,7 +42,8 @@ export const oneClickApps: OCA[] = [
   {
     name: 'cPanel',
     description: `The cPanel &amp; WHM&reg; One-Click App streamlines publishing and managing a website on your Linode. cPanel 	&amp; WHM is a Linux&reg; based web hosting control panel and platform that helps you create and manage websites, servers, databases and more with a suite of hosting automation and optimization tools.`,
-    summary: 'The leading hosting automation platform that has simplified site and server management for 20 years.',
+    summary:
+      'The leading hosting automation platform that has simplified site and server management for 20 years.',
     tips: [
       `Please note that it will take approximately 15 minutes for cPanel to boot after you launch.`,
       `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:2087</em> in a browser, where you'll be prompted to log in and begin your trial.`,
@@ -51,7 +52,7 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://www.cpanel.net/',
-        href: 'https://www.cpanel.net/',
+        href: 'https://www.cpanel.net/'
       }
     ],
     logo_url: 'assets/cpanel_color.svg'
@@ -73,7 +74,7 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://blog.counter-strike.net/index.php/about/',
-        href: 'https://blog.counter-strike.net/index.php/about/',
+        href: 'https://blog.counter-strike.net/index.php/about/'
       }
     ],
     logo_url: 'assets/csgo_color.svg'
@@ -109,7 +110,7 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://about.gitlab.com/',
-        href: 'https://about.gitlab.com/',
+        href: 'https://about.gitlab.com/'
       }
     ],
     logo_url: 'assets/gitlab_color.svg'
@@ -139,7 +140,7 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://www.drupal.org/',
-        href: 'https://www.drupal.org/',
+        href: 'https://www.drupal.org/'
       }
     ],
     logo_url: 'assets/drupal_color.svg'
@@ -168,7 +169,8 @@ export const oneClickApps: OCA[] = [
   {
     name: 'Plesk',
     description: `Plesk is a leading WordPress and website management platform and control panel. Plesk lets you build and manage multiple websites from a single dashboard to configure web services, email, and other applications. Plesk features hundreds of extensions, plus a complete WordPress toolkit. Use the Plesk One-Click App to manage websites hosted on your Linode.`,
-    summary: 'A secure, scalable, and versatile website and WordPress management platform.',
+    summary:
+      'A secure, scalable, and versatile website and WordPress management platform.',
     tips: [
       `Please allow the script around 15 minutes to finish.`,
       `Once the script finishes, go to <em>https://[your-Linode's-IP-address]</em> in a browser, where you'll be prompted to log in and begin your trial.`,
@@ -177,10 +179,33 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://www.plesk.com/',
-        href: 'https://www.plesk.com/',
+        href: 'https://www.plesk.com/'
       }
     ],
-    logo_url: 'assets/plesk_color.svg',
+    logo_url: 'assets/plesk_color.svg'
+  },
+  {
+    name: 'Redis',
+    description: `Redis is an open-source, in-memory, data-structure store with optional disk writes
+  for persistence, which can be used as key-value database, cache and message broker. Redis features
+  built-in transactions, replication, and support for a variety of data structures such as strings,
+  hashes, lists, sets and others.`,
+    summary:
+      'Flexible, in-memory, NoSQL database service supported in many different coding languages',
+    related_guides: [
+      {
+        title: 'How to Install a Redia Server on Ubuntu or Debian 8',
+        href:
+          'https://www.linode.com/docs/databases/redis/how-to-install-a-redis-server-on-ubuntu-or-debian8/'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://redis.io/',
+        href: 'https://redis.io/'
+      }
+    ],
+    logo_url: 'assets/redis_color.png'
   },
   {
     name: 'Rust',
@@ -201,7 +226,7 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://rust.facepunch.com/',
-        href: 'https://rust.facepunch.com/',
+        href: 'https://rust.facepunch.com/'
       }
     ],
     logo_url: 'assets/rust_color.svg'
@@ -225,7 +250,7 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://terraria.org/',
-        href: 'https://terraria.org/',
+        href: 'https://terraria.org/'
       }
     ],
     logo_url: 'assets/terraria_color.svg'
@@ -251,7 +276,7 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'http://www.teamfortress.com/',
-        href: 'http://www.teamfortress.com/',
+        href: 'http://www.teamfortress.com/'
       }
     ],
     logo_url: 'assets/teamfortress_color.svg'
@@ -273,7 +298,7 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://woocommerce.com/features/',
-        href: 'https://woocommerce.com/features/',
+        href: 'https://woocommerce.com/features/'
       }
     ],
     logo_url: 'assets/woocommerce_color.svg'
@@ -353,7 +378,7 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://www.minecraft.net/',
-        href: 'https://www.minecraft.net/',
+        href: 'https://www.minecraft.net/'
       }
     ],
     logo_url: 'assets/minecraft_color.svg'
@@ -378,7 +403,7 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://www.wireguard.com/',
-        href: 'https://www.wireguard.com/',
+        href: 'https://www.wireguard.com/'
       }
     ],
     logo_url: 'assets/wireguard_color.svg'
@@ -401,7 +426,7 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://woocommerce.com/features/',
-        href: 'https://woocommerce.com/features/',
+        href: 'https://woocommerce.com/features/'
       }
     ],
     logo_url: 'assets/woocommerce_color.svg'
@@ -434,7 +459,7 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://wordpress.org/',
-        href: 'https://wordpress.org/',
+        href: 'https://wordpress.org/'
       }
     ],
     logo_url: 'assets/wordpress_color.svg'
