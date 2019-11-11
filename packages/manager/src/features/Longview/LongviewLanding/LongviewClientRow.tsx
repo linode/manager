@@ -8,7 +8,6 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import CPUGauge from './Gauges/CPU';
-import { ActionHandlers } from './LongviewActionMenu';
 
 import { getLastUpdated } from '../request';
 import LoadGauge from './Gauges/Load';
@@ -48,10 +47,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface Props extends ActionHandlers {
+interface Props {
   clientID: number;
   clientLabel: string;
   clientAPIKey: string;
+  triggerDeleteLongviewClient: (
+    longviewClientID: number,
+    longviewClientLabel: string
+  ) => void;
 }
 
 type CombinedProps = Props & LVDataProps;
@@ -73,7 +76,9 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
    lastUpdated _might_ come back from the endpoint as 0, so it's important
    that we differentiate between _0_ and _undefined_
    */
-  const [lastUpdated, setLastUpdated] = React.useState<number | undefined>(0);
+  const [lastUpdated, setLastUpdated] = React.useState<number | undefined>(
+    undefined
+  );
   const [authed, setAuthed] = React.useState<boolean>(true);
 
   const requestAndSetLastUpdated = () => {
@@ -142,9 +147,10 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
         alignItems="center"
         className={classes.container}
         aria-label="List of Your Longview Clients"
+        data-testid="longview-client-row"
       >
         <Grid item xs={2} className={classes.label}>
-          <LongviewClientHeader clientID={clientID} />
+          <LongviewClientHeader clientID={clientID} clientLabel={clientLabel} />
         </Grid>
         <Grid item>
           <CPUGauge clientID={clientID} />
