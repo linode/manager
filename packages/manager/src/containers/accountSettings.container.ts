@@ -4,7 +4,10 @@ import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { ApplicationState } from 'src/store';
 import { updateSettingsInStore } from 'src/store/accountSettings/accountSettings.actions';
-import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
+import {
+  requestAccountSettings,
+  updateAccountSettings
+} from 'src/store/accountSettings/accountSettings.requests';
 import { EntityError } from 'src/store/types';
 
 export interface SettingsProps {
@@ -17,6 +20,9 @@ export interface SettingsProps {
 export interface DispatchProps {
   requestAccountSettings: () => Promise<any>;
   updateAccountSettingsInStore: (data: Partial<AccountSettings>) => void;
+  updateAccountSettings: (
+    data: Partial<AccountSettings>
+  ) => Promise<AccountSettings>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
@@ -24,7 +30,9 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 ) => ({
   requestAccountSettings: () => dispatch(requestAccountSettings()),
   updateAccountSettingsInStore: (data: Partial<AccountSettings>) =>
-    dispatch(updateSettingsInStore(data))
+    dispatch(updateSettingsInStore(data)),
+  updateAccountSettings: (data: Partial<AccountSettings>) =>
+    dispatch(updateAccountSettings(data))
 });
 
 export default <TInner extends {}, TOuter extends {}>(

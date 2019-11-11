@@ -670,9 +670,10 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 alignItems="flex-end"
                 className={classes.root}
               >
-                <Grid item>
-                  <a ref={ref} />
+                <Grid item ref={ref}>
                   <Typography
+                    role="heading"
+                    aria-level={2}
                     variant="h2"
                     className={classes.titles}
                     data-qa-domain-record={type.title}

@@ -282,13 +282,13 @@ export const createVolumes = (volumeObjArray, waitForToast) => {
 
 export const switchTab = () => {
   browser.waitUntil(() => {
-    return browser.getTabIds().length === 2;
+    return browser.getWindowHandles().length === 2;
   }, constants.wait.normal);
   browser.pause(2000);
-  const tabs = browser.getTabIds();
+  const tabs = browser.getWindowHandles();
   const manager = tabs[0];
   const newTab = tabs[1];
-  browser.switchTab(newTab);
+  browser.switchToFrame(newTab);
 };
 
 export const getDistributionLabel = distributionTags => {
@@ -300,9 +300,12 @@ export const getDistributionLabel = distributionTags => {
   });
   return distributionLabel;
 };
-
+//TODO figure out why this is not working
+//follows
 export const getLocalStorageValue = key => {
-  return browser.localStorage('GET', key).value;
+  //This is not working for some reason
+  //https://webdriver.io/docs/api/jsonwp.html#getlocalstorage
+  return browser.getLocalStorageItem(key).value;
 };
 
 export const apiCreateDomains = domainObjArray => {

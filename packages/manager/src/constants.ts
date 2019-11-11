@@ -66,6 +66,12 @@ export const ISO_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 export const MAX_VOLUME_SIZE = 10240;
 
 /**
+ * The lowest interval at which to make an Events request. This is later multiplied by the pollIteration
+ * to get the actual interval.
+ */
+export const INTERVAL = 1000;
+
+/**
  * Used by e.g. LISH to determine the websocket connection address.
  * Whenever updating this, also update the corresponding name in resolvers.ts
  */
@@ -90,7 +96,8 @@ export const ZONES: Record<string, ZoneName> = {
   'ap-south-1a': 'singapore',
   'ca-central': 'toronto1',
   'ca-east': 'toronto1', // @todo Fallback for old Toronto ID; remove once DB has been updated.
-  'ap-west': 'mumbai1'
+  'ap-west': 'mumbai1',
+  'ap-southeast': 'sydney1'
 };
 
 export const dcDisplayNames = {
@@ -114,7 +121,8 @@ export const dcDisplayNames = {
   'ap-northeast': 'Tokyo 2, JP',
   'ca-central': 'Toronto, ON',
   'ca-east': 'Toronto, ON', // @todo Fallback for old Toronto ID; remove once DB has been updated.
-  'ap-west': 'Mumbai, IN'
+  'ap-west': 'Mumbai, IN',
+  'ap-southeast': 'Sydney, AU'
 };
 
 // @todo no longer in use; remove if current design is approved.
@@ -137,7 +145,8 @@ export const extendedDCDisplayNames = {
   'ap-northeast': 'Asia-Pacific Northeast: Tokyo 2, JP',
   'ca-central': 'Canada: Toronto, ON',
   'ca-east': 'Canada: Toronto, ON',
-  'ap-west': 'Asia-Pacific West: Mumbai, IN'
+  'ap-west': 'Asia-Pacific West: Mumbai, IN',
+  'ap-southeast': 'Asia-Pacific Southeast: Sydney, AU'
 };
 
 export const dcDisplayCountry = {
@@ -159,7 +168,8 @@ export const dcDisplayCountry = {
   'ap-northeast': 'JP',
   'ca-central': 'CA',
   'ca-east': 'CA',
-  'ap-west': 'IN'
+  'ap-west': 'IN',
+  'ap-southeast': 'AU'
 };
 
 export const objectStorageClusterDisplay: Record<
