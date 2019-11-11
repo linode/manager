@@ -56,7 +56,9 @@ const styles = (theme: Theme) =>
       },
       padding: 0
     },
-    section: {},
+    section: {
+      alignItems: 'flex-start'
+    },
     panelItem: {},
     button: {
       marginBottom: theme.spacing(3),
