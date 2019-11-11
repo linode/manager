@@ -36,12 +36,12 @@ const styles = (theme: Theme) =>
     root: {
       padding: `${theme.spacing(3) + 5}px ${theme.spacing(3) +
         1}px ${theme.spacing(2) - 3}px`,
-      [theme.breakpoints.up('lg')]: {
+      [theme.breakpoints.up('md')]: {
         marginTop: 66
       }
     },
     rootCompact: {
-      [theme.breakpoints.up('lg')]: {
+      [theme.breakpoints.up('md')]: {
         marginTop: 42
       }
     },
