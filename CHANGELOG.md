@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.77.1] - 2019-11-11
+
+### Fixed:
+- Hotfix: Safe access event.secondary_entity
+
 ## [v0.77.0] - 2019-11-06
 
 ### Added:
@@ -31,7 +36,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Blog feed on Dashboard
 - StackScript detail breadcrumbs
 - Adjustments to Kubeconfig buttons on smaller breakpoints
-
 
 ## [v0.76.0] - 2019-10-30
 
