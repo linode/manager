@@ -1,6 +1,6 @@
 {
   "name": "linode-js-sdk",
-  "version": "0.10.0-alpha.0",
+  "version": "0.11.0-alpha.0",
   "homepage": "https://github.com/linode/manager/tree/develop/packages/linode-js-sdk",
   "bugs": {
     "url": "https://github.com/linode/manager/issues",
@@ -15,7 +15,7 @@
   },
   "description": "JavaScript wrapper around the Linode APIv4",
   "author": "Linode",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "private": false,
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",

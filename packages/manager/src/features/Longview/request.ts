@@ -86,11 +86,19 @@ interface Get {
   (token: string, action: 'getLatestValue', field: ('disk')[]): Promise<
     Partial<LongviewDisk>
   >;
-  (token: string, action: LongviewAction, field?: LongviewFieldName[]): Promise<
-    Partial<AllData>
-  >;
   (token: string, action: 'getLatestValue', field: 'memory'[]): Promise<
     Partial<LongviewMemory>
+  >;
+  (token: string, action: 'getLatestValue', field: 'network'[]): Promise<
+    Partial<LongviewNetwork>
+  >;
+  (
+    token: string,
+    action: 'getLatestValue',
+    field: ('cpu' | 'disk' | 'load' | 'memory' | 'network' | 'sysinfo')[]
+  ): Promise<Partial<Omit<AllData, 'updated'>>>;
+  (token: string, action: LongviewAction, field?: LongviewFieldName[]): Promise<
+    Partial<AllData>
   >;
 }
 

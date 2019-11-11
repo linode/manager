@@ -84,13 +84,14 @@ export const KubeConfigDrawer: React.FC<CombinedProps> = props => {
             <Typography variant="h3">{clusterLabel}</Typography>
           </Grid>
           <Grid item>
-            <a
+            <button
               onClick={() => downloadFile('kubeconfig.yaml', kubeConfig)}
               className={classes.iconLink}
-              href="#"
+              role="button"
+              title="Download"
             >
               <Download className={classes.icon} />
-            </a>
+            </button>
             <CopyTooltip className={classes.tooltip} text={kubeConfig} />
           </Grid>
         </Grid>

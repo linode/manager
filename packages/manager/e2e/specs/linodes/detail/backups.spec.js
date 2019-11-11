@@ -40,7 +40,6 @@ describe('Linode Detail - Backups Suite', () => {
   // One on the new snapshot dialog and one on the Name Snapshot field
   xit('should fail to take a snapshot without a name', () => {
     Backups.snapshotButton.click();
-    browser.debug();
     const toastMsg = 'A snapshot label is required.';
     Backups.toastDisplays(toastMsg);
 
