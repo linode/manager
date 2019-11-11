@@ -113,24 +113,38 @@ export const LongviewClientInstructions: React.FC<Props> = props => {
                   </Typography>
                 </Grid>
                 <Grid item>
-                  <Typography className={classes.footer}>
-                    <span>
-                      <a href="https://www.linode.com/docs/platform/longview/longview/">
-                        Troubleshooting guide
-                      </a>
-                    </span>
-                    <span>
-                      <a href="https://www.linode.com/docs/platform/longview/longview/#install-the-longview-client">
-                        Manual installation instructions
-                      </a>
-                    </span>
-                    <span>
-                      API Key:{' '}
-                      <span className={classes.apiKey}>
-                        DCDC2FEB-3E84-42E5-A00909870A3E618C
-                      </span>
-                    </span>
-                  </Typography>
+                  <Grid container>
+                    <Grid item>
+                      <Typography>
+                        <a
+                          href="https://www.linode.com/docs/platform/longview/longview/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Troubleshooting guide
+                        </a>
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography>
+                        <a
+                          href="https://www.linode.com/docs/platform/longview/longview/#install-the-longview-client"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Manual installation instructions
+                        </a>
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography>
+                        API Key:{' '}
+                        <span className={classes.apiKey}>
+                          DCDC2FEB-3E84-42E5-A00909870A3E618C
+                        </span>
+                      </Typography>
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
