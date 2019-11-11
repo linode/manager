@@ -201,7 +201,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
               onEdit: handleLabelChange,
               onCancel: resetEditableLabel
             }}
-            removeCrumbX={2}
+            firstAndLastOnly
             pathname={location.pathname}
             data-qa-breadcrumb
           />
