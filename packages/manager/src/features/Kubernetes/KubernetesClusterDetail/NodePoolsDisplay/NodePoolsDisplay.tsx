@@ -85,18 +85,18 @@ const styles = (theme: Theme) =>
 
 interface Props {
   editing: boolean;
-  submittingForm: boolean;
-  submissionSuccess: boolean;
+  submittingForm?: boolean;
+  submissionSuccess?: boolean;
   submissionError?: APIError[];
   pools: PoolNodeWithPrice[];
   poolsForEdit: PoolNodeWithPrice[];
   types: ExtendedType[];
   loading: boolean;
   submitDisabled?: boolean;
-  updatePool: (poolIdx: number, updatedPool: PoolNodeWithPrice) => void;
-  deletePool: (poolID: number) => void;
-  resetForm: () => void;
-  submitForm: () => void;
+  updatePool?: (poolIdx: number, updatedPool: PoolNodeWithPrice) => void;
+  deletePool?: (poolID: number) => void;
+  resetForm?: () => void;
+  submitForm?: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
