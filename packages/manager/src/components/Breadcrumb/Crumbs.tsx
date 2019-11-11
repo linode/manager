@@ -48,6 +48,7 @@ export interface CrumbOverridesProps {
 interface Props {
   pathMap: string[];
   crumbOverrides?: CrumbOverridesProps[];
+  firstAndLastOnly?: boolean;
   labelTitle?: string;
   labelOptions?: LabelProps;
   onEditHandlers?: EditableProps;
@@ -61,17 +62,20 @@ const Crumbs: React.FC<CombinedProps> = props => {
   const {
     pathMap,
     crumbOverrides,
+    firstAndLastOnly,
     labelOptions,
     labelTitle,
     onEditHandlers
   } = props;
 
   const allCrumbsButLast = pathMap.slice(0, -1);
+  const firstCrumb = [pathMap[0]];
   const lastCrumb = pathMap.slice(-1)[0];
+  const finalCrumbs = firstAndLastOnly ? firstCrumb : allCrumbsButLast;
 
   return (
     <>
-      {allCrumbsButLast.map((crumb: string, key: number) => {
+      {finalCrumbs.map((crumb: string, key: number) => {
         const link =
           '/' + pathMap.slice(0, -(pathMap.length - (key + 1))).join('/');
         const override =
