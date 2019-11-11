@@ -93,7 +93,7 @@ export const Details: React.FC<Props> = props => {
               <LibraryBook className={classes.docsIcon} />
             </Grid>
             <Grid item>
-              <Typography variant="h3">Additional Guides</Typography>
+              <Typography variant="h3">Guides</Typography>
             </Grid>
           </Grid>
           <Grid item>
