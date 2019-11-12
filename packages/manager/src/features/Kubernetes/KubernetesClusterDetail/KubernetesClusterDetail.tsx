@@ -18,7 +18,6 @@ import ErrorState from 'src/components/ErrorState';
 import KubeContainer, {
   DispatchProps
 } from 'src/containers/kubernetes.container';
-import { ExtendedNodePool } from 'src/store/kubernetes/nodePools.actions';
 
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 
