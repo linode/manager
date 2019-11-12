@@ -206,6 +206,9 @@ export const oneClickApps: OCA[] = [
       }
     ],
     logo_url: 'assets/redis_color.png'
+      }
+    ],
+    logo_url: 'assets/plesk_color.svg'
   },
   {
     name: 'Rust',
