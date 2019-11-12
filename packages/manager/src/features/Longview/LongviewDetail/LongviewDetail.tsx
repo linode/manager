@@ -17,6 +17,7 @@ import Tabs from 'src/components/core/Tabs';
 import DefaultLoader from 'src/components/DefaultLoader';
 import DocumentationButton from 'src/components/DocumentationButton';
 import ErrorState from 'src/components/ErrorState';
+import NotFound from 'src/components/NotFound';
 import TabLink from 'src/components/TabLink';
 
 import withLongviewClients, {
@@ -134,19 +135,23 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
     );
   }
 
+  if (!client && !longviewClientsLoading) {
+    return <NotFound />;
+  }
+
   return (
     <React.Fragment>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Breadcrumb
           pathname={props.location.pathname}
-          removeCrumbX={2}
-          labelTitle={(client && client.label) || 'Client Label'}
+          firstAndLastOnly
+          labelTitle={client && client.label}
         />
         <DocumentationButton href={'https://google.com'} />
       </Box>
       <AppBar position="static" color="default">
         <Tabs
-          value={tabs.findIndex(tab => matches(tab.routeName))}
+          value={tabs.findIndex(tab => matches(tab.routeName)) || 0}
           onChange={handleTabChange}
           indicatorColor="primary"
           textColor="primary"
