@@ -18,6 +18,7 @@ import ErrorState from 'src/components/ErrorState';
 import KubeContainer, {
   DispatchProps
 } from 'src/containers/kubernetes.container';
+
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -126,7 +127,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   React.useEffect(() => {
     const clusterID = +props.match.params.clusterID;
     if (clusterID) {
-      props.requestClusterForStore(clusterID);
+      props.requestClusterForStore(clusterID).catch(_ => null); // Handle in Redux
       // The cluster endpoint has its own API...uh, endpoint, so we need
       // to request it separately.
       setEndpointLoading(true);
