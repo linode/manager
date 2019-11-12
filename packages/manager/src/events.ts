@@ -21,6 +21,7 @@ import {
 } from 'src/store/events/event.actions';
 import { resetEventsPolling as _resetEventsPolling } from 'src/store/events/event.helpers';
 import { getEvents } from 'src/store/events/event.request';
+import { ThunkDispatch } from 'src/store/types';
 
 export const events$ = new Subject<Event>();
 
@@ -32,18 +33,20 @@ export const resetEventsPolling = (newPollIteration = 1) => {
 
 export const requestEvents = () => {
   inProgress = true;
-  return store.dispatch(getEvents() as any).then((events: Event[]) => {
-    const reversed = events.reverse();
+  return (store.dispatch as ThunkDispatch)(getEvents())
+    .then((events: Event[]) => {
+      const reversed = events.reverse();
 
-    /**
-     * This feeds the stream for consumers of events$. We're simply pushing the events from the
-     * request response onto the stream one at a time.
-     */
-    reversed.forEach((linodeEvent: Event) => {
-      events$.next(linodeEvent);
-    });
-    inProgress = false;
-  });
+      /**
+       * This feeds the stream for consumers of events$. We're simply pushing the events from the
+       * request response onto the stream one at a time.
+       */
+      reversed.forEach((linodeEvent: Event) => {
+        events$.next(linodeEvent);
+      });
+      inProgress = false;
+    })
+    .catch(e => e);
 };
 
 export const startEventsInterval = () =>
