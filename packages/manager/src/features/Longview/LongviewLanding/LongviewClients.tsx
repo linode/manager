@@ -79,11 +79,14 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     props.getLongviewClients();
   }, []);
 
-  const openDeleteDialog = (id: number, label: string) => {
-    toggleDeleteDialog(true);
-    setClientID(id);
-    setClientLabel(label);
-  };
+  const openDeleteDialog = React.useCallback(
+    (id: number, label: string) => {
+      toggleDeleteDialog(true);
+      setClientID(id);
+      setClientLabel(label);
+    },
+    [selectedClientID, selectedClientLabel]
+  );
 
   const navigateToPlanDetails = () => {
     props.history.push('/longview/plan-details');
@@ -172,6 +175,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
       />
       <SubscriptionDialog
         isOpen={subscriptionDialogOpen}
+        isManaged={accountSettings ? accountSettings.managed : false}
         onClose={() => setSubscriptionDialogOpen(false)}
         onSubmit={navigateToPlanDetails}
         clientLimit={
