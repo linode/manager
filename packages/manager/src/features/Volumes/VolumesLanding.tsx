@@ -474,7 +474,9 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           icon={VolumesIcon}
           buttonProps={[
             {
-              onClick: this.openCreateVolumeDrawer,
+              onClick: () => {
+                this.props.history.push('/volumes/create');
+              },
               children: 'Add a Volume',
               disabled: readOnly
             }
