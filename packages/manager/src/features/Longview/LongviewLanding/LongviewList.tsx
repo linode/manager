@@ -86,7 +86,7 @@ const LongviewList: React.FC<CombinedProps> = props => {
    * Only show an error if we haven't received data
    */
   if (longviewClientsError.read && longviewClientsLastUpdated === 0) {
-    const errorText = longviewClientsData.read[0].reason;
+    const errorText = longviewClientsError.read[0].reason;
     return (
       <Paper>
         <ErrorState errorText={errorText} />
