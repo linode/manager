@@ -80,6 +80,21 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/csgo_color.svg'
   },
   {
+    name: 'Django',
+    description: `Django is a high-level Python Web framework that encourages rapid development and clean, pragmatic design. Built by experienced developers, it takes care of much of the hassle of Web development, so you can focus on writing your app without needing to reinvent the wheel. It’s free and open source.`,
+    summary: `Django makes it easier to build better Web apps more quickly and with less code.`,
+    related_info: [
+      {
+        title: 'https://www.djangoproject.com/',
+        href: 'https://www.djangoproject.com/'
+      }
+    ],
+    tips: [
+      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:8000</em> in a browser to visit the default web page. You can also visit <em>https://[your-Linode's-IP-address]:8000/admin</em> to view the Djanogo admin panel`
+    ],
+    logo_url: 'assets/django_color.png'
+  },
+  {
     name: 'GitLab',
     description: `GitLab is a complete solution for all aspects of your software development.
       At its core, GitLab serves as your centralized Git repository. GitLab also
