@@ -28,7 +28,7 @@ const styles = (theme: Theme) =>
       opacity: 1,
       transition: theme.transitions.create(['opacity']),
       [theme.breakpoints.up('md')]: {
-        marginRigth: 0
+        marginRight: 0
       },
       [theme.breakpoints.up('lg')]: {
         marginLeft: theme.spacing(1),
