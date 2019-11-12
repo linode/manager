@@ -32,6 +32,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   helpText: {},
+  instruction: {
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: 'auto',
+      '&:not(:first-of-type)': {
+        position: 'relative',
+        marginLeft: theme.spacing(2),
+        paddingLeft: theme.spacing(2)
+      },
+      '&:before': {
+        content: "'|'",
+        position: 'absolute',
+        top: 5,
+        left: -theme.spacing(1) + 2
+      }
+    }
+  },
   footer: {
     '& span:nth-child(n+2)': {
       marginLeft: theme.spacing(2),
@@ -114,7 +131,7 @@ export const LongviewClientInstructions: React.FC<Props> = props => {
                 </Grid>
                 <Grid item>
                   <Grid container>
-                    <Grid item>
+                    <Grid item className={classes.instruction}>
                       <Typography>
                         <a
                           href="https://www.linode.com/docs/platform/longview/longview/"
@@ -125,7 +142,7 @@ export const LongviewClientInstructions: React.FC<Props> = props => {
                         </a>
                       </Typography>
                     </Grid>
-                    <Grid item>
+                    <Grid item className={classes.instruction}>
                       <Typography>
                         <a
                           href="https://www.linode.com/docs/platform/longview/longview/#install-the-longview-client"
@@ -136,7 +153,7 @@ export const LongviewClientInstructions: React.FC<Props> = props => {
                         </a>
                       </Typography>
                     </Grid>
-                    <Grid item>
+                    <Grid item className={classes.instruction}>
                       <Typography>
                         API Key:{' '}
                         <span className={classes.apiKey}>
