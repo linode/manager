@@ -134,7 +134,8 @@ export type LongviewFieldName =
   | 'load'
   | 'sysinfo'
   | 'network'
-  | 'disk';
+  | 'disk'
+  | 'packages';
 
 export const fieldNames: Record<LongviewFieldName, string> = {
   cpu: 'CPU.*',
@@ -143,7 +144,8 @@ export const fieldNames: Record<LongviewFieldName, string> = {
   load: 'Load.*',
   network: 'Network.*',
   disk: 'Disk.*',
-  sysinfo: 'SysInfo.*'
+  sysinfo: 'SysInfo.*',
+  packages: 'Packages'
 };
 
 export const baseRequest = Axios.create({

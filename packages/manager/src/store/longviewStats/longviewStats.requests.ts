@@ -11,7 +11,9 @@ export const getClientStats = createRequestThunk(
       'load',
       'memory',
       'network',
-      'sysinfo'
+      'sysinfo',
+      'uptime',
+      'packages'
     ]).then(response => response);
   }
 );
