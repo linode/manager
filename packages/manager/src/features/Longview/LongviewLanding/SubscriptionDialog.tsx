@@ -25,7 +25,7 @@ export const SubscriptionDialog: React.FC<Props> = props => {
       </Button>
 
       <Button buttonType="primary" onClick={onSubmit} role="link">
-        View upgrade options
+        {isManaged ? 'Contact Support' : 'View upgrade options'}
       </Button>
     </ActionsPanel>
   );

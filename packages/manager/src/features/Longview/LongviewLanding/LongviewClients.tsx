@@ -88,7 +88,21 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     [selectedClientID, selectedClientLabel]
   );
 
-  const navigateToPlanDetails = () => {
+  const handleSubmit = () => {
+    const {
+      history: { push }
+    } = props;
+
+    if (isManaged) {
+      push({
+        pathname: '/support/tickets',
+        state: {
+          open: true,
+          title: 'Request for additional Longview clients'
+        }
+      });
+      return;
+    }
     props.history.push('/longview/plan-details');
   };
 
@@ -123,7 +137,6 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     longviewClientsLastUpdated,
     longviewClientsLoading,
     longviewClientsResults,
-    subscriptionsData,
     accountSettings,
     createLongviewClient,
     deleteLongviewClient
@@ -135,11 +148,19 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     );
   };
 
-  const activeSubscription = subscriptionsData.find(
-    thisSubscription =>
-      thisSubscription.id ===
-      pathOr('', ['longview_subscription'], accountSettings)
-  );
+  /**
+   * Pending review we can't actually use this. See
+   * JIRA XXXX for details; Managed customers can get
+   * an incorrect value here after enrolling or cancelling
+   * Managed.
+   */
+  // const activeSubscription = subscriptionsData.find(
+  //   thisSubscription =>
+  //     thisSubscription.id ===
+  //     pathOr('', ['longview_subscription'], accountSettings)
+  // );
+
+  const isManaged = pathOr(false, ['managed'], accountSettings);
 
   return (
     <React.Fragment>
@@ -175,12 +196,11 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
       />
       <SubscriptionDialog
         isOpen={subscriptionDialogOpen}
-        isManaged={accountSettings ? accountSettings.managed : false}
+        isManaged={isManaged}
         onClose={() => setSubscriptionDialogOpen(false)}
-        onSubmit={navigateToPlanDetails}
-        clientLimit={
-          activeSubscription ? activeSubscription.clients_included : 10
-        }
+        onSubmit={handleSubmit}
+        // @todo remove this hack and replace with activeSubscription.clients_included
+        clientLimit={Object.values(longviewClientsData).length}
       />
     </React.Fragment>
   );

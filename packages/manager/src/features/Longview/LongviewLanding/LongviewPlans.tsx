@@ -136,8 +136,8 @@ export type CombinedProps = Props &
 
 export const managedText = (
   <span>
-    Managed customers receive a complimentary Longview Pro 10 Pack. If you need
-    more than 10 clients, please{' '}
+    Longview Pro is included with Linode Managed. If you need additional
+    clients, please{' '}
     <SupportLink
       title="Request for additional Longview clients"
       description=""
