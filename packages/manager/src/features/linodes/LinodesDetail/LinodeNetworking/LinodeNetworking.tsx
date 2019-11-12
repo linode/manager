@@ -1,3 +1,5 @@
+import * as classnames from 'classnames';
+import { IPv6, parse as parseIP } from 'ipaddr.js';
 import {
   getLinodeIPs,
   Linode,
@@ -5,11 +7,12 @@ import {
   LinodeIPsResponseIPV4,
   LinodeIPsResponseIPV6
 } from 'linode-js-sdk/lib/linodes';
-import { IPAddress, IPRange } from 'linode-js-sdk/lib/networking';
+import { getIPs, IPAddress, IPRange } from 'linode-js-sdk/lib/networking';
 import { compose, head, isEmpty, path, pathOr, uniq, uniqBy } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose as recompose } from 'recompose';
+import ExpandIcon from 'src/assets/icons/expand.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
@@ -29,6 +32,8 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import TableRowError from 'src/components/TableRowError';
+import TableRowLoading from 'src/components/TableRowLoading';
 import { ZONES } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { upsertLinode as _upsertLinode } from 'src/store/linodes/linodes.actions';
@@ -40,8 +45,9 @@ import CreateIPv6Drawer from './CreateIPv6Drawer';
 import DeleteIPConfirm from './DeleteIPConfirm';
 import EditRDNSDrawer from './EditRDNSDrawer';
 import IPSharingPanel from './IPSharingPanel';
-import { IPTypes } from './LinodeNetworkingActionMenu';
-import LinodeNetworkingActionMenu from './LinodeNetworkingActionMenu';
+import LinodeNetworkingActionMenu, {
+  IPTypes
+} from './LinodeNetworkingActionMenu';
 import IPTransferPanel from './LinodeNetworkingIPTransferPanel';
 import LinodeNetworkingSummaryPanel from './LinodeNetworkingSummaryPanel';
 import ViewIPDrawer from './ViewIPDrawer';
@@ -58,7 +64,12 @@ type ClassNames =
   | 'ipv4Container'
   | 'ipv4Title'
   | 'ipv4TitleContainer'
-  | 'netActionsTitle';
+  | 'netActionsTitle'
+  | 'expandedIPSection'
+  | 'RDNS'
+  | 'expandIcon'
+  | 'expandButton'
+  | 'expandedRow';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -106,13 +117,44 @@ const styles = (theme: Theme) =>
     netActionsTitle: {
       marginBottom: theme.spacing(2),
       marginTop: theme.spacing(4)
+    },
+    expandedIPSection: {
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(1)
+    },
+    RDNS: {
+      marginTop: theme.spacing(1)
+    },
+    expandIcon: {
+      marginLeft: theme.spacing(0.75),
+      height: 22
+    },
+    expandButton: {
+      display: 'flex',
+      textDecoration: 'underline',
+      alignItems: 'center',
+      background: 'none',
+      border: 'none',
+      cursor: 'pointer',
+      paddingLeft: 0
+    },
+    expandedRow: {
+      '& td': {
+        verticalAlign: 'top'
+      },
+      '& td:not(:last-child)': {
+        paddingTop: '14px'
+      }
     }
   });
 
 interface State {
   linodeIPs?: LinodeIPsResponse;
+  allIPs?: IPAddress[];
   removeIPDialogOpen: boolean;
   initialLoading: boolean;
+  ipv6Loading: boolean;
+  ipv6Error?: string;
   currentlySelectedIP?: IPAddress;
   currentlySelectedIPRange?: IPRange;
   viewIPDrawerOpen: boolean;
@@ -122,6 +164,7 @@ interface State {
   createIPv4DrawerForPublic: boolean;
   IPRequestError?: string;
   createIPv6DrawerOpen: boolean;
+  expandedRDNSPanels: Record<string, boolean>;
 }
 
 type CombinedProps = ContextProps & WithStyles<ClassNames> & DispatchProps;
@@ -138,11 +181,13 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     editRDNSDrawerOpen: false,
     viewIPDrawerOpen: false,
     viewRangeDrawerOpen: false,
-    initialLoading: true
+    initialLoading: true,
+    ipv6Loading: true,
+    expandedRDNSPanels: {}
   };
 
   componentDidMount() {
-    this.refreshIPs().then(() => this.setState({ initialLoading: false }));
+    this.refreshIPs();
   }
 
   openRemoveIPDialog = (IPToRemove: IPAddress) => {
@@ -161,8 +206,32 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
   refreshIPs = () => {
     this.setState({ IPRequestError: undefined });
+
     return getLinodeIPs(this.props.linode.id)
-      .then(ips => this.setState({ linodeIPs: ips, initialLoading: false }))
+      .then(ips => {
+        this.setState({ linodeIPs: ips, initialLoading: false });
+
+        if (ips.ipv6 && ips.ipv6.global) {
+          getIPs({}, { region: this.props.linode.region })
+            .then(response => {
+              this.setState({
+                linodeIPs: ips,
+                ipv6Loading: false,
+                allIPs: response.data
+              });
+            })
+            .catch(errorResponse => {
+              const errors = getAPIErrorOrDefault(
+                errorResponse,
+                'There was an error retrieving your network information.'
+              );
+              this.setState({
+                ipv6Error: errors[0].reason,
+                ipv6Loading: false
+              });
+            });
+        }
+      })
       .catch(errorResponse => {
         const errors = getAPIErrorOrDefault(
           errorResponse,
@@ -205,8 +274,19 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   renderRangeRow(range: IPRange, type: IPTypes) {
     const { classes } = this.props;
 
+    // The prefix is a prerequisite for finding IPs within the range, so we
+    // check for that here.
+    const ipsWithRDNS = range.prefix
+      ? listIPv6InRange(range.range, range.prefix, this.state.allIPs)
+      : [];
+
     return (
-      <TableRow key={range.range}>
+      <TableRow
+        key={range.range}
+        className={classnames({
+          [classes.expandedRow]: this.state.expandedRDNSPanels[range.range]
+        })}
+      >
         <TableCell parentColumn="Address">
           <React.Fragment>
             {range.range}
@@ -215,7 +295,9 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           </React.Fragment>
         </TableCell>
         <TableCell />
-        <TableCell />
+        <TableCell parentColumn="Reverse DNS">
+          {this.renderRangeRDNSCell(range.range, ipsWithRDNS)}
+        </TableCell>
         <TableCell parentColumn="Type">{type}</TableCell>
         <TableCell className={classes.action}>
           <LinodeNetworkingActionMenu
@@ -226,6 +308,62 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       </TableRow>
     );
   }
+
+  renderRangeRDNSCell = (range: string, ipsWithRDNS: IPAddress[]) => {
+    const { classes } = this.props;
+
+    // We don't show anything if there are no addresses.
+    if (ipsWithRDNS.length === 0) {
+      return null;
+    }
+
+    // If there is only one address, we display it in the table.
+    if (ipsWithRDNS.length === 1) {
+      return (
+        <>
+          <Typography>{ipsWithRDNS[0].address}</Typography>
+          <Typography>{ipsWithRDNS[0].rdns}</Typography>
+        </>
+      );
+    }
+
+    // If there is more than one address, we show "X Addresses", and hide the
+    // rest until the TableRow has been expanded.
+    const isExpanded = this.state.expandedRDNSPanels[range];
+
+    return (
+      <>
+        <button
+          className={classes.expandButton}
+          onClick={() =>
+            this.setState(({ expandedRDNSPanels }) => ({
+              expandedRDNSPanels: {
+                ...expandedRDNSPanels,
+                [range]: !expandedRDNSPanels[range]
+              }
+            }))
+          }
+        >
+          <Typography>{ipsWithRDNS.length} Addresses</Typography>
+          <ExpandIcon className={classes.expandIcon} />
+        </button>
+
+        <div
+          className={classnames({
+            [classes.expandedIPSection]: isExpanded
+          })}
+        >
+          {isExpanded &&
+            ipsWithRDNS.map(ip => (
+              <div key={ip.address} className={classes.RDNS}>
+                <Typography>{ip.address}</Typography>
+                <Typography>{ip.rdns}</Typography>
+              </div>
+            ))}
+        </div>
+      </>
+    );
+  };
 
   renderIPRow(ip: IPAddress, type: IPTypes) {
     const { classes, readOnly } = this.props;
@@ -557,12 +695,20 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
               </TableRow>
             </TableHead>
             <TableBody>
-              {slaac && this.renderIPRow(slaac, 'SLAAC')}
-              {link_local && this.renderIPRow(link_local, 'Link Local')}
-              {globalRange &&
-                globalRange.map((range: IPRange) =>
-                  this.renderRangeRow(range, 'Range')
-                )}
+              {this.state.ipv6Loading ? (
+                <TableRowLoading colSpan={12} />
+              ) : this.state.ipv6Error ? (
+                <TableRowError colSpan={12} message={this.state.ipv6Error} />
+              ) : (
+                <>
+                  {slaac && this.renderIPRow(slaac, 'SLAAC')}
+                  {link_local && this.renderIPRow(link_local, 'Link Local')}
+                  {globalRange &&
+                    globalRange.map((range: IPRange) =>
+                      this.renderRangeRow(range, 'Range')
+                    )}
+                </>
+              )}
             </TableBody>
           </Table>
         </Paper>
@@ -659,3 +805,27 @@ const connected = connect(
 const enhanced = recompose<CombinedProps, {}>(connected, linodeContext, styled);
 
 export default enhanced(LinodeNetworking);
+
+// Given a range, prefix, and a list of IPv6s, filter out the IPs that do not
+// fall within the range.
+export const listIPv6InRange = (
+  range: string,
+  prefix: number,
+  ips: IPAddress[] = []
+) => {
+  return ips.filter(thisIP => {
+    // Only keep addresses that:
+    // 1. are part of a range
+    // 2. don't have RDNS set
+    if (thisIP.type !== 'ipv6/range' || thisIP.rdns === null) {
+      return;
+    }
+
+    // We need to typecast here so that the overloaded `match()` is typed
+    // correctly.
+    const addr = parseIP(thisIP.address) as IPv6;
+    const parsedRange = parseIP(range) as IPv6;
+
+    return addr.match(parsedRange, prefix);
+  });
+};
