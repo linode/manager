@@ -95,7 +95,8 @@ export const VolumeDashboardRow: React.StatelessComponent<
           </Grid>
           <Grid item className={classes.labelGridWrapper}>
             <Typography
-              role="header"
+              role="heading"
+              aria-level={3}
               variant="h3"
               className={classes.wrapHeader}
               data-qa-label

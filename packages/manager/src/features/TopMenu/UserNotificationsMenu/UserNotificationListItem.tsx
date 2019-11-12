@@ -108,7 +108,7 @@ class UserNotificationListItem extends React.Component<CombinedProps> {
         })}
         data-qa-notice
         component="li"
-        tabIndex={1}
+        tabIndex={0}
         onClick={onClick}
       >
         <div

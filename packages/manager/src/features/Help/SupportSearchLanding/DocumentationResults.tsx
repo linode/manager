@@ -88,7 +88,7 @@ const DocumentationResults: React.StatelessComponent<CombinedProps> = props => {
         role="menuitem"
         component="a"
         onClick={() => window.open(result.data.href, '_newtab')}
-        tabIndex={1}
+        tabIndex={0}
       >
         <Typography
           variant="body1"

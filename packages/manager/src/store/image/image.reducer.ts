@@ -45,7 +45,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       data: payload.data.reduce((acc, eachImage) => {
         if (eachImage.label.match(/kube/i)) {
           // NOTE: Temporarily hide public Kubernetes images until ImageSelect redesign.
-          return acc;  
+          return acc;
         }
         acc[eachImage.id] = eachImage;
         return acc;
