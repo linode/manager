@@ -119,7 +119,7 @@ export const ResizeCluster: React.FC<ResizeProps> = props => {
 
   const handleDeleteSuccess = (pool: PoolNodeWithPrice) => {
     const poolIdx = pools.findIndex(thisPool => thisPool.id === pool.id);
-    if (poolIdx) {
+    if (poolIdx > -1) {
       updatePools(prevPools => {
         return remove(poolIdx, 1, prevPools);
       });

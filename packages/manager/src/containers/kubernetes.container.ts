@@ -42,8 +42,8 @@ export interface KubernetesProps {
 }
 
 export interface DispatchProps {
-  requestKubernetesClusters: () => Promise<any>;
-  requestClusterForStore: (clusterID: number) => Promise<any>;
+  requestKubernetesClusters: () => Promise<KubernetesCluster[]>;
+  requestClusterForStore: (clusterID: number) => Promise<KubernetesCluster>;
   requestNodePools: (clusterID: number) => Promise<any>;
   updateCluster: (params: UpdateClusterParams) => Promise<KubernetesCluster>;
   createNodePool: (params: CreateNodePoolParams) => Promise<any>;
