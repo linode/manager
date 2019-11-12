@@ -1,8 +1,8 @@
 export const formatUptime = (uptime: number) => {
-  // const days = Math.floor(uptime / 86400);
-  // const hours = Math.floor(uptime / 3600);
-  // const minutes = Math.floor((uptime / 60) % 60);
-  // return `${days}d ${hours}h ${minutes}m`;
+  /**
+   * We get uptime from the Longview API in
+   * seconds.
+   */
   if (uptime > 86400) {
     // More than 1 day
     const days = Math.floor(uptime / 86400);
