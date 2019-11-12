@@ -158,6 +158,7 @@ const FileUpload: React.FC<Props> = props => {
       })}
       key={props.displayName}
       onClick={handleClickRow}
+      role="button"
     >
       <LinearProgress
         variant="determinate"

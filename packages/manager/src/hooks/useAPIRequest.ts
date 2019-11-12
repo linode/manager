@@ -2,7 +2,7 @@ import produce from 'immer';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { useEffect, useState } from 'react';
 
-interface UseAPIRequest<T> {
+export interface UseAPIRequest<T> {
   data: T;
   loading: boolean;
   lastUpdated: number;
@@ -62,22 +62,35 @@ export const useAPIRequest = <T>(
   const [loading, setLoading] = useState<boolean>(false);
   const [lastUpdated, setLastUpdated] = useState<number>(0);
 
+  let mounted = true;
+
   const _request = () => {
     setLoading(true);
     setError(undefined);
     request()
       .then(responseData => {
+        if (!mounted) {
+          return;
+        }
         setLoading(false);
         setLastUpdated(Date.now());
         setData(responseData);
       })
       .catch(err => {
+        if (!mounted) {
+          return;
+        }
         setLoading(false);
         setError(err);
       });
   };
 
-  useEffect(() => _request(), deps);
+  useEffect(() => {
+    _request();
+    return () => {
+      mounted = false;
+    };
+  }, deps);
 
   const transformData = (fn: (data: T) => void) => {
     setData(produce<T, T>(data, fn));

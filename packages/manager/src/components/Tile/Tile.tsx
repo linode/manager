@@ -167,6 +167,7 @@ class Tile extends React.Component<CombinedProps> {
         )}
         data-qa-tile={title}
         onClick={typeof link === 'function' ? link : undefined}
+        role="link"
       >
         {icon && (
           <span className={classes.icon} data-qa-tile-icon>

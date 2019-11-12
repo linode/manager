@@ -4,11 +4,14 @@ import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { longviewClientFactory } from 'src/factories/longviewClient';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { LongviewClients } from './LongviewClients';
-
-jest.genMockFromModule('../request');
+import {
+  filterLongviewClientsByQuery,
+  LongviewClients
+} from './LongviewClients';
 
 afterEach(cleanup);
+
+jest.mock('../request');
 
 const clients = longviewClientFactory.buildList(5);
 
@@ -34,6 +37,34 @@ const props = {
   ...reactRouterProps
 };
 
+describe('Utility Functions', () => {
+  it('should properly filter longview clients by query', () => {
+    const mockLongviewClients: Record<string, LongviewClient> = clients.reduce(
+      (acc, eachClient) => {
+        acc[eachClient.id] = eachClient;
+        return acc;
+      },
+      {}
+    );
+
+    expect(filterLongviewClientsByQuery('1', mockLongviewClients)).toEqual({
+      1: clients[1]
+    }),
+      expect(
+        filterLongviewClientsByQuery('client', mockLongviewClients)
+      ).toEqual(mockLongviewClients),
+      expect(filterLongviewClientsByQuery('(', mockLongviewClients)).toEqual(
+        {}
+      ),
+      expect(filterLongviewClientsByQuery(')', mockLongviewClients)).toEqual(
+        {}
+      ),
+      expect(
+        filterLongviewClientsByQuery('fdsafdsafsdf', mockLongviewClients)
+      ).toEqual({});
+  });
+});
+
 describe('Longview clients list view', () => {
   it('should request clients on load', () => {
     renderWithTheme(<LongviewClients {...props} />);
@@ -53,7 +84,11 @@ describe('Longview clients list view', () => {
   });
 
   it('should render a row for each client', () => {
-    const { queryAllByText } = renderWithTheme(<LongviewClients {...props} />);
-    expect(queryAllByText(/waiting/i)).toHaveLength(clients.length);
+    const { queryAllByTestId } = renderWithTheme(
+      <LongviewClients {...props} />
+    );
+    expect(queryAllByTestId('longview-client-row')).toHaveLength(
+      clients.length
+    );
   });
 });
