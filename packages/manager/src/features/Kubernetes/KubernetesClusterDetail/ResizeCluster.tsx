@@ -8,7 +8,6 @@ import Grid from 'src/components/core/Grid';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { DispatchProps } from 'src/containers/kubernetes.container';
 import { WithTypesProps } from 'src/containers/types.container';
-import { ExtendedNodePool } from 'src/store/kubernetes/nodePools.actions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollTo from 'src/utilities/scrollTo';
 import { addPriceToNodePool, getMonthlyPrice } from '.././kubeUtils';
@@ -28,7 +27,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   cluster: ExtendedCluster;
   nodePoolsLoading: boolean;
-  nodePoolsData: ExtendedNodePool[];
   clusterDeleteError?: APIError[];
 }
 

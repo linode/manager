@@ -98,7 +98,6 @@ interface KubernetesContainerProps {
   clusterDeleteError?: APIError[];
   lastUpdated: number;
   nodePoolsLoading: boolean;
-  nodePoolsData: ExtendedNodePool[];
 }
 
 type CombinedProps = WithTypesProps &
@@ -268,8 +267,7 @@ const withCluster = KubeContainer<
     lastUpdated,
     clustersError,
     clustersData,
-    nodePoolsLoading,
-    nodePoolsData
+    nodePoolsLoading
   ) => {
     const cluster =
       clustersData.find(c => +c.id === +ownProps.match.params.clusterID) ||
@@ -281,8 +279,7 @@ const withCluster = KubeContainer<
       clustersLoading,
       clustersLoadError: clustersError.read,
       clusterDeleteError: clustersError.delete,
-      nodePoolsLoading,
-      nodePoolsData
+      nodePoolsLoading
     };
   }
 );

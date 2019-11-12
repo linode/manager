@@ -23,7 +23,6 @@ import {
 import {
   CreateNodePoolParams,
   DeleteNodePoolParams,
-  ExtendedNodePool,
   UpdateNodePoolParams
 } from 'src/store/kubernetes/nodePools.actions';
 import {
@@ -82,8 +81,7 @@ type MapProps<ReduxStateProps, OwnProps> = (
   lastUpdated: number,
   clustersError: EntityError,
   clusters: KubernetesCluster[],
-  nodePoolsLoading: boolean,
-  nodePoolsData: ExtendedNodePool[]
+  nodePoolsLoading: boolean
 ) => ReduxStateProps & Partial<KubernetesProps>;
 
 export type Props = DispatchProps & KubernetesProps;
@@ -120,7 +118,6 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
       const nodePoolsLoading =
         state.__resources.nodePools.loading &&
         state.__resources.nodePools.lastUpdated === 0;
-      const nodePoolsData = nodePools;
 
       if (mapKubernetesToProps) {
         return mapKubernetesToProps(
@@ -129,8 +126,7 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
           lastUpdated,
           clustersError,
           clusters,
-          nodePoolsLoading,
-          nodePoolsData
+          nodePoolsLoading
         );
       }
 
@@ -139,8 +135,7 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
         lastUpdated,
         clustersError,
         clusters,
-        nodePoolsLoading,
-        nodePoolsData
+        nodePoolsLoading
       };
     },
     mapDispatchToProps
