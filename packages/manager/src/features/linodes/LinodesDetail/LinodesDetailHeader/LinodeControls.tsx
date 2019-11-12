@@ -12,7 +12,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
-import { lishLaunch } from 'src/features/Lish';
+import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import {

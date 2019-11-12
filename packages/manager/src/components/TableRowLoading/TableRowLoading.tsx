@@ -40,6 +40,7 @@ const tableRowLoading: React.StatelessComponent<CombinedProps> = props => {
       className={classNames({
         [classes.transparent]: transparent
       })}
+      data-testid="table-row-loading"
     >
       <TableCell
         colSpan={colSpan}
