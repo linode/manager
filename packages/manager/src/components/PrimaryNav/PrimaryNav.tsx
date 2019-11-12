@@ -343,7 +343,11 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
       {
         conditionToAdd: () => isKubernetesEnabled(accountCapabilities),
         insertAfter: 'Longview',
-        link: { display: 'Kubernetes', href: '/kubernetes', key: 'kubernetes' }
+        link: {
+          display: 'Kubernetes',
+          href: '/kubernetes/clusters',
+          key: 'kubernetes'
+        }
       },
       {
         conditionToAdd: () => flags.oneClickLocation === 'sidenav',

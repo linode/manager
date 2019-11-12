@@ -21,6 +21,14 @@ export const getTotalClusterPrice = (pools: PoolNodeWithPrice[]) =>
       : accumulator + node.totalMonthlyPrice;
   }, 0);
 
+export const addPriceToNodePool = (
+  pool: ExtendedPoolNode,
+  typesData: LinodeType[]
+) => ({
+  ...pool,
+  totalMonthlyPrice: getMonthlyPrice(pool.type, pool.count, typesData)
+});
+
 /**
  * Usually when displaying or editing clusters, we need access
  * to pricing information as well as statistics, which aren't
@@ -32,20 +40,10 @@ export const extendCluster = (
   types: LinodeType[]
 ): ExtendedCluster => {
   // Identify which pools belong to this cluster and add pricing information.
-  const _pools = pools.reduce((accumulator, thisPool) => {
+  const _pools = pools.reduce((accum, thisPool) => {
     return thisPool.clusterID === cluster.id
-      ? [
-          ...accumulator,
-          {
-            ...thisPool,
-            totalMonthlyPrice: getMonthlyPrice(
-              thisPool.type,
-              thisPool.count,
-              types
-            )
-          }
-        ]
-      : accumulator;
+      ? [...accum, addPriceToNodePool(thisPool, types)]
+      : accum;
   }, []);
   const { CPU, RAM } = getTotalClusterMemoryAndCPU(_pools, types);
   return {
