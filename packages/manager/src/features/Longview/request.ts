@@ -9,6 +9,7 @@ import {
   LongviewLoad,
   LongviewMemory,
   LongviewNetwork,
+  LongviewPackages,
   LongviewSystemInfo
 } from './request.types';
 
@@ -60,6 +61,7 @@ type AllData = LongviewCPU &
   LongviewMemory &
   LongviewNetwork &
   LongviewSystemInfo &
+  LongviewPackages &
   LastUpdated;
 
 /**

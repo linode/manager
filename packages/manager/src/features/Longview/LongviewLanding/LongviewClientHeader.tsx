@@ -5,14 +5,14 @@ import { compose } from 'recompose';
 import Typography from 'src/components/core/Typography';
 import EditableEntityLabel from 'src/components/EditableEntityLabel';
 import Grid from 'src/components/Grid';
-
 import withLongviewClients, {
   DispatchProps
 } from 'src/containers/longview.container';
-
 import withClientStats, {
   Props as LVDataProps
 } from 'src/containers/longview.stats.container';
+import { formatUptime } from 'src/utilities/formatUptime';
+import { LongviewPackage } from '../request.types';
 
 interface Props {
   clientID: number;
@@ -42,7 +42,14 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
   };
 
   const hostname = pathOr('', ['SysInfo', 'hostname'], longviewClientData);
-  const uptime = pathOr(0, ['Uptime'], longviewClientData);
+  const uptime = pathOr<number | null>(0, ['Uptime'], longviewClientData);
+  const formattedUptime = uptime ? formatUptime(uptime) : null;
+  const packages = pathOr<LongviewPackage[] | null>(
+    null,
+    ['Packages'],
+    longviewClientData
+  );
+  const packagesToUpdate = packages ? packages.length : null;
 
   return (
     <Grid
@@ -69,8 +76,10 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
         />
       </Grid>
       <Grid item>
-        <Typography>Up 47d 19h 22m</Typography>
-        <Typography>2 packages have updates</Typography>
+        {formattedUptime && <Typography>{`Up ${formattedUptime}`}</Typography>}
+        {packagesToUpdate && (
+          <Typography>{packagesToUpdate} packages have updates</Typography>
+        )}
       </Grid>
       <Grid item>
         <Link to={`/longview/clients/${clientID}`}>View details</Link>
