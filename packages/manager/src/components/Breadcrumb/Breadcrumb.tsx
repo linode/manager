@@ -10,6 +10,7 @@ export interface Props {
   labelOptions?: LabelProps;
   onEditHandlers?: EditableProps;
   removeCrumbX?: number;
+  firstAndLastOnly?: boolean;
   crumbOverrides?: CrumbOverridesProps[];
   className?: string;
   pathname: string;
@@ -41,6 +42,7 @@ export const Breadcrumb: React.FC<CombinedProps> = props => {
     labelOptions,
     onEditHandlers,
     removeCrumbX,
+    firstAndLastOnly,
     crumbOverrides,
     className,
     pathname
@@ -67,6 +69,7 @@ export const Breadcrumb: React.FC<CombinedProps> = props => {
           crumbOverrides={crumbOverrides}
           labelTitle={labelTitle}
           labelOptions={labelOptions}
+          firstAndLastOnly={firstAndLastOnly}
         />
       </div>
     </div>
