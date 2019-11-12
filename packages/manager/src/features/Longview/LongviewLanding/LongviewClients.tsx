@@ -150,7 +150,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
 
   /**
    * Pending review we can't actually use this. See
-   * JIRA XXXX for details; Managed customers can get
+   * JIRA M3-3589 for details; Managed customers can get
    * an incorrect value here after enrolling or cancelling
    * Managed.
    */
