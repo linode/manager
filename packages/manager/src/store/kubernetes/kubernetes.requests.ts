@@ -44,20 +44,25 @@ export const requestKubernetesClusters: ThunkActionCreator<
     });
 };
 
-type RequestClusterForStoreThunk = ThunkActionCreator<void, number>;
+type RequestClusterForStoreThunk = ThunkActionCreator<
+  Promise<KubernetesCluster>,
+  number
+>;
 export const requestClusterForStore: RequestClusterForStoreThunk = clusterID => dispatch => {
   dispatch(requestClusterActions.started({ clusterID }));
-  getKubernetesCluster(clusterID)
+  return getKubernetesCluster(clusterID)
     .then(cluster => {
       dispatch(requestNodePoolsForCluster({ clusterID }));
-      return dispatch(
+      dispatch(
         requestClusterActions.done({ result: cluster, params: { clusterID } })
       );
+      return cluster;
     })
     .catch(err => {
       dispatch(
         requestClusterActions.failed({ error: err, params: { clusterID } })
       );
+      return Promise.reject(err);
     });
 };
 

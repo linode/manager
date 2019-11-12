@@ -23,6 +23,7 @@ import {
 import {
   CreateNodePoolParams,
   DeleteNodePoolParams,
+  ExtendedNodePool,
   UpdateNodePoolParams
 } from 'src/store/kubernetes/nodePools.actions';
 import {
@@ -43,7 +44,7 @@ export interface KubernetesProps {
 
 export interface DispatchProps {
   requestKubernetesClusters: () => Promise<any>;
-  requestClusterForStore: (clusterID: number) => void;
+  requestClusterForStore: (clusterID: number) => Promise<any>;
   requestNodePools: (clusterID: number) => Promise<any>;
   updateCluster: (params: UpdateClusterParams) => Promise<KubernetesCluster>;
   createNodePool: (params: CreateNodePoolParams) => Promise<any>;
@@ -81,7 +82,8 @@ type MapProps<ReduxStateProps, OwnProps> = (
   lastUpdated: number,
   clustersError: EntityError,
   clusters: KubernetesCluster[],
-  nodePoolsLoading: boolean
+  nodePoolsLoading: boolean,
+  nodePoolsData: ExtendedNodePool[]
 ) => ReduxStateProps & Partial<KubernetesProps>;
 
 export type Props = DispatchProps & KubernetesProps;
@@ -117,7 +119,8 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
       const lastUpdated = state.__resources.kubernetes.lastUpdated;
       const nodePoolsLoading =
         state.__resources.nodePools.loading &&
-        state.__resources.nodePools.entities.length === 0;
+        state.__resources.nodePools.lastUpdated === 0;
+      const nodePoolsData = nodePools;
 
       if (mapKubernetesToProps) {
         return mapKubernetesToProps(
@@ -126,7 +129,8 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
           lastUpdated,
           clustersError,
           clusters,
-          nodePoolsLoading
+          nodePoolsLoading,
+          nodePoolsData
         );
       }
 
@@ -135,7 +139,8 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
         lastUpdated,
         clustersError,
         clusters,
-        nodePoolsLoading
+        nodePoolsLoading,
+        nodePoolsData
       };
     },
     mapDispatchToProps

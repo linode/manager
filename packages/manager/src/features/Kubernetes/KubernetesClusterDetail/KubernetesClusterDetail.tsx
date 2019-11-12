@@ -18,6 +18,8 @@ import ErrorState from 'src/components/ErrorState';
 import KubeContainer, {
   DispatchProps
 } from 'src/containers/kubernetes.container';
+import { ExtendedNodePool } from 'src/store/kubernetes/nodePools.actions';
+
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -96,6 +98,7 @@ interface KubernetesContainerProps {
   clusterDeleteError?: APIError[];
   lastUpdated: number;
   nodePoolsLoading: boolean;
+  nodePoolsData: ExtendedNodePool[];
 }
 
 type CombinedProps = WithTypesProps &
@@ -126,7 +129,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   React.useEffect(() => {
     const clusterID = +props.match.params.clusterID;
     if (clusterID) {
-      props.requestClusterForStore(clusterID);
+      props.requestClusterForStore(clusterID).catch(_ => null); // Handle in Redux
       // The cluster endpoint has its own API...uh, endpoint, so we need
       // to request it separately.
       setEndpointLoading(true);
@@ -265,7 +268,8 @@ const withCluster = KubeContainer<
     lastUpdated,
     clustersError,
     clustersData,
-    nodePoolsLoading
+    nodePoolsLoading,
+    nodePoolsData
   ) => {
     const cluster =
       clustersData.find(c => +c.id === +ownProps.match.params.clusterID) ||
@@ -277,7 +281,8 @@ const withCluster = KubeContainer<
       clustersLoading,
       clustersLoadError: clustersError.read,
       clusterDeleteError: clustersError.delete,
-      nodePoolsLoading
+      nodePoolsLoading,
+      nodePoolsData
     };
   }
 );
