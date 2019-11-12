@@ -111,6 +111,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       draft.loading = false;
       draft.entities = entities;
       draft.results = entities.map(cluster => cluster.id);
+      draft.lastUpdated = Date.now();
     }
 
     if (isType(action, requestClusterActions.failed)) {

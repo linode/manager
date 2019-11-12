@@ -10,7 +10,7 @@ import { DispatchProps } from 'src/containers/kubernetes.container';
 import { WithTypesProps } from 'src/containers/types.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollTo from 'src/utilities/scrollTo';
-import { getMonthlyPrice } from '.././kubeUtils';
+import { addPriceToNodePool, getMonthlyPrice } from '.././kubeUtils';
 import { ExtendedCluster, PoolNodeWithPrice } from '.././types';
 import NodePoolPanel from '../CreateCluster/NodePoolPanel';
 import KubernetesDialog from './KubernetesDialog';
@@ -119,7 +119,7 @@ export const ResizeCluster: React.FC<ResizeProps> = props => {
 
   const handleDeleteSuccess = (pool: PoolNodeWithPrice) => {
     const poolIdx = pools.findIndex(thisPool => thisPool.id === pool.id);
-    if (poolIdx) {
+    if (poolIdx > -1) {
       updatePools(prevPools => {
         return remove(poolIdx, 1, prevPools);
       });
@@ -173,9 +173,24 @@ export const ResizeCluster: React.FC<ResizeProps> = props => {
       }
     })
       .then(() => {
+        /**
+         * We have to update the pools in form state with the updated,
+         * actual state of the cluster. We should probably build extendNodePool
+         * into the Redux pipeline, but for now this is the easiest way to
+         * convert the updated node pools to extended pools for use in the form.
+         */
         setSuccess(true);
         setSubmitting(false);
-        setSubmitDisabled(true);
+        props
+          .requestNodePools(cluster.id)
+          .then(requestedPools => {
+            updatePools(
+              requestedPools.map((thisPool: any) =>
+                addPriceToNodePool(thisPool, typesData || [])
+              )
+            );
+          })
+          .catch(_ => null); // Handle errors in Redux
       })
       .catch(err => {
         setErrors(
