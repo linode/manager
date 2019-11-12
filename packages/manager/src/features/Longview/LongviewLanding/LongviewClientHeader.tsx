@@ -12,6 +12,7 @@ import withClientStats, {
   Props as LVDataProps
 } from 'src/containers/longview.stats.container';
 import { formatUptime } from 'src/utilities/formatUptime';
+import { pluralize } from 'src/utilities/pluralize';
 import { LongviewPackage } from '../request.types';
 
 interface Props {
@@ -27,7 +28,6 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
     clientLabel,
     longviewClientData,
     longviewClientDataLoading,
-    longviewClientDataError,
     updateLongviewClient
   } = props;
   const [updating, setUpdating] = React.useState<boolean>(false);
@@ -41,15 +41,23 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
       .catch(_ => setUpdating(false));
   };
 
-  const hostname = pathOr('', ['SysInfo', 'hostname'], longviewClientData);
+  const hostname = pathOr(
+    'Hostname not available',
+    ['SysInfo', 'hostname'],
+    longviewClientData
+  );
   const uptime = pathOr<number | null>(0, ['Uptime'], longviewClientData);
-  const formattedUptime = uptime ? formatUptime(uptime) : null;
+  const formattedUptime = uptime
+    ? `Up ${formatUptime(uptime)}`
+    : 'Uptime not available';
   const packages = pathOr<LongviewPackage[] | null>(
     null,
     ['Packages'],
     longviewClientData
   );
-  const packagesToUpdate = packages ? packages.length : null;
+  const packagesToUpdate = packages
+    ? `${pluralize('package', 'packages', packages.length)} need updating`
+    : 'Package updates not available';
 
   return (
     <Grid
@@ -76,9 +84,13 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
         />
       </Grid>
       <Grid item>
-        {formattedUptime && <Typography>{`Up ${formattedUptime}`}</Typography>}
-        {packagesToUpdate && (
-          <Typography>{packagesToUpdate} packages have updates</Typography>
+        {longviewClientDataLoading ? (
+          <Typography>Loading...</Typography>
+        ) : (
+          <>
+            <Typography>{formattedUptime}</Typography>
+            <Typography>{packagesToUpdate}</Typography>
+          </>
         )}
       </Grid>
       <Grid item>
