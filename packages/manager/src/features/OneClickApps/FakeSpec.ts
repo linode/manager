@@ -185,6 +185,26 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/plesk_color.svg'
   },
   {
+    name: 'Ruby on Rails',
+    description: `Rails is a web application development framework written in the Ruby programming language. It is designed to make programming web applications easier by making assumptions about what every developer needs to get started. It allows you to write less code while accomplishing more than many other languages and frameworks.`,
+    summary: `Ruby on Rails is a web framework that allows web designers and developers to implement dynamic, fully featured web applications. `,
+    related_info: [
+      {
+        title: 'https://rubyonrails.org/',
+        href: 'https://rubyonrails.org/'
+      },
+      {
+        title: 'Ruby on Rails with NGINX On Debian 9',
+        href:
+          'https://www.linode.com/docs/development/ror/ruby-on-rails-nginx-debian/'
+      }
+    ],
+    tips: [
+      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:3000</em> in a browser.`
+    ],
+    logo_url: 'assets/rubyonrails_color.png'
+  },
+  {
     name: 'Rust',
     description: `In Rust, you must work with or against other players
       to ensure your own survival. Players are able to steal, lie, cheat, or
