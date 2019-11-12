@@ -39,13 +39,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       '&:not(:first-of-type)': {
         position: 'relative',
         marginLeft: theme.spacing(2),
-        paddingLeft: theme.spacing(2)
-      },
-      '&:before': {
-        content: "'|'",
-        position: 'absolute',
-        top: 5,
-        left: -theme.spacing(1) + 2
+        paddingLeft: theme.spacing(2),
+        '&:before': {
+          content: "'|'",
+          position: 'absolute',
+          top: theme.spacing(1) - 3,
+          left: -theme.spacing(1) + 2
+        }
       }
     }
   },
