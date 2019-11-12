@@ -135,7 +135,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
           justify="center"
         >
           <Typography>
-            <Link to={'/longview/plan-details'}>Update to Longview Pro</Link>
+            <Link to={'/longview/plan-details'}>Upgrade to Longview Pro</Link>
             {` `}for more clients, longer data retention, and more frequent data
             updates.
           </Typography>
