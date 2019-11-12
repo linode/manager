@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -11,6 +12,7 @@ interface Props extends PrimaryLink {
   dividerClasses?: string;
   linkClasses: (href?: string) => string;
   listItemClasses: string;
+  isCollapsed?: boolean;
 }
 
 export interface PrimaryLink {
@@ -19,6 +21,7 @@ export interface PrimaryLink {
   QAKey: string;
   display: string;
   logo?: React.ComponentType<any>;
+  icon?: JSX.Element;
   isDisabled?: () => string | undefined;
 }
 
@@ -30,6 +33,8 @@ const NavItem: React.SFC<CombinedProps> = props => {
     onClick,
     QAKey,
     display,
+    isCollapsed,
+    icon,
     isDisabled,
     linkClasses,
     listItemClasses,
@@ -52,12 +57,20 @@ const NavItem: React.SFC<CombinedProps> = props => {
           to={href}
           onClick={closeMenu}
           data-qa-nav-item={QAKey}
-          className={linkClasses(href)}
+          className={classNames({
+            [linkClasses(href)]: true,
+            listItemCollpased: isCollapsed
+          })}
         >
+          {icon && isCollapsed && <div className="icon">{icon}</div>}
           <ListItemText
             primary={display}
             disableTypography={true}
-            className={listItemClasses}
+            className={classNames({
+              [listItemClasses]: true,
+              primaryNavLink: true,
+              hiddenWhenCollapsed: isCollapsed
+            })}
           />
         </Link>
       ) : (

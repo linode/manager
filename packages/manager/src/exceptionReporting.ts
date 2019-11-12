@@ -8,7 +8,31 @@ import { initSentry } from 'src/initSentry';
 
 initSentry();
 
+const promiseRejectionsToIgnore: string[] = [
+  'Invalid OAuth Token',
+  'Not Found'
+];
+
 window.addEventListener('unhandledrejection', err => {
+  const firstReason = pathOr('', [0, 'reason'], err.reason);
+
+  /* 
+    if our error is an error we want to ignore, don't report to Sentry 
+    
+    Ideally we shouldn't be doing this because the goal app-wide should be to
+    catch every and all promise, but because of time and resources that just isn't a
+    possibility. For now, just ignore OAuth and "Not Found" errors and don't report them
+    to Sentry
+   */
+  if (
+    promiseRejectionsToIgnore.some(
+      eachString => !!firstReason.match(new RegExp(eachString, 'gmi'))
+    )
+  ) {
+    return;
+  }
+
+  /* otherwise report to sentry as normal */
   reportException(err.reason);
 });
 

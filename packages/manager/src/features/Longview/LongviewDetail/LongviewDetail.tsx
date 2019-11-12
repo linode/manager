@@ -11,10 +11,13 @@ import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import AppBar from 'src/components/core/AppBar';
 import Box from 'src/components/core/Box';
+import Paper from 'src/components/core/Paper';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import DefaultLoader from 'src/components/DefaultLoader';
 import DocumentationButton from 'src/components/DocumentationButton';
+import ErrorState from 'src/components/ErrorState';
+import NotFound from 'src/components/NotFound';
 import TabLink from 'src/components/TabLink';
 
 import withLongviewClients, {
@@ -25,6 +28,8 @@ import withLongviewClients, {
 interface Props {
   clients: LVProps['longviewClientsData'];
   longviewClientsLastUpdated: number;
+  longviewClientsLoading: LVProps['longviewClientsLoading'];
+  longviewClientsError: LVProps['longviewClientsError'];
 }
 
 const Overview = DefaultLoader({
@@ -41,15 +46,10 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
       params: { id }
     },
     clients,
-    longviewClientsLastUpdated
+    longviewClientsLastUpdated,
+    longviewClientsLoading,
+    longviewClientsError
   } = props;
-
-  React.useEffect(() => {
-    /** request clients if they haven't already been requested */
-    if (longviewClientsLastUpdated === 0) {
-      props.getLongviewClients();
-    }
-  }, []);
 
   const client = clients[id];
 
@@ -112,8 +112,31 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
 
-  if (!client) {
-    return <CircleProgress />;
+  React.useEffect(() => {
+    /** request clients if they haven't already been requested */
+    if (longviewClientsLastUpdated === 0) {
+      props.getLongviewClients();
+    }
+  }, []);
+
+  if (longviewClientsLoading && longviewClientsLastUpdated === 0) {
+    return (
+      <Paper>
+        <CircleProgress />
+      </Paper>
+    );
+  }
+
+  if (longviewClientsError.read && longviewClientsLastUpdated === 0) {
+    return (
+      <Paper>
+        <ErrorState errorText={longviewClientsError.read[0].reason} />
+      </Paper>
+    );
+  }
+
+  if (!client && !longviewClientsLoading) {
+    return <NotFound />;
   }
 
   return (
@@ -121,14 +144,14 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Breadcrumb
           pathname={props.location.pathname}
-          removeCrumbX={2}
-          labelTitle={(client && client.label) || 'Client Label'}
+          firstAndLastOnly
+          labelTitle={client && client.label}
         />
         <DocumentationButton href={'https://google.com'} />
       </Box>
       <AppBar position="static" color="default">
         <Tabs
-          value={tabs.findIndex(tab => matches(tab.routeName))}
+          value={tabs.findIndex(tab => matches(tab.routeName)) || 0}
           onChange={handleTabChange}
           indicatorColor="primary"
           textColor="primary"
@@ -203,9 +226,19 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
 export default compose<CombinedProps, {}>(
   React.memo,
   withLongviewClients<Props, {}>(
-    (own, { longviewClientsData, longviewClientsLastUpdated }) => ({
+    (
+      own,
+      {
+        longviewClientsData,
+        longviewClientsLastUpdated,
+        longviewClientsLoading,
+        longviewClientsError
+      }
+    ) => ({
       clients: longviewClientsData,
-      longviewClientsLastUpdated
+      longviewClientsLastUpdated,
+      longviewClientsLoading,
+      longviewClientsError
     })
   )
 )(LongviewDetail);

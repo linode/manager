@@ -7,35 +7,42 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import Logo from 'src/assets/logo/logo-text.svg';
+import Logo from 'src/assets/logo/new-logo.svg';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
 import Hidden from 'src/components/core/Hidden';
 import IconButton from 'src/components/core/IconButton';
 import ListItemText from 'src/components/core/ListItemText';
 import Menu from 'src/components/core/Menu';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-  WithTheme
-} from 'src/components/core/styles';
 import withFeatureFlagConsumer, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container';
 import { MapState } from 'src/store/types';
-import { NORMAL_SPACING_UNIT } from 'src/themeFactory';
 import {
   isKubernetesEnabled,
   isObjectStorageEnabled
 } from 'src/utilities/accountCapabilities';
+import { sendOneClickNavigationEvent } from 'src/utilities/ga';
 import AdditionalMenuItems from './AdditionalMenuItems';
+import styled, { StyleProps } from './PrimaryNav.styles';
 import SpacingToggle from './SpacingToggle';
 import ThemeToggle from './ThemeToggle';
 import { linkIsActive } from './utils';
 
-import { sendOneClickNavigationEvent } from 'src/utilities/ga';
+import Kubernetes from 'src/assets/addnewmenu/kubernetes.svg';
+import OCA from 'src/assets/addnewmenu/oneclick.svg';
+import Account from 'src/assets/icons/account.svg';
+import Dashboard from 'src/assets/icons/dashboard.svg';
+import Storage from 'src/assets/icons/entityIcons/bucket.svg';
+import Domain from 'src/assets/icons/entityIcons/domain.svg';
+import Image from 'src/assets/icons/entityIcons/image.svg';
+import Linode from 'src/assets/icons/entityIcons/linode.svg';
+import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
+import StackScript from 'src/assets/icons/entityIcons/stackscript.svg';
+import Volume from 'src/assets/icons/entityIcons/volume.svg';
+import Firewall from 'src/assets/icons/firewall.svg';
+import Longview from 'src/assets/icons/longview.svg';
+import Managed from 'src/assets/icons/managednav.svg';
 
 type Entity =
   | 'Linodes'
@@ -58,202 +65,15 @@ interface PrimaryLink {
   href: string;
   key: string;
   attr?: { [key: string]: any };
+  icon?: JSX.Element;
   onClick?: (e: React.ChangeEvent<any>) => void;
 }
-
-export type ClassNames =
-  | 'menuGrid'
-  | 'fadeContainer'
-  | 'logoItem'
-  | 'logoItemCompact'
-  | 'listItem'
-  | 'collapsible'
-  | 'linkItem'
-  | 'active'
-  | 'activeLink'
-  | 'sublink'
-  | 'sublinkActive'
-  | 'arrow'
-  | 'sublinkPanel'
-  | 'spacer'
-  | 'listItemAccount'
-  | 'divider'
-  | 'menu'
-  | 'paper'
-  | 'settings'
-  | 'activeSettings'
-  | 'settingsBackdrop';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    menuGrid: {
-      minHeight: 64,
-      width: '100%',
-      height: '100%',
-      margin: 0,
-      padding: 0,
-      [theme.breakpoints.up('sm')]: {
-        minHeight: 72
-      },
-      [theme.breakpoints.up('md')]: {
-        minHeight: 80
-      }
-    },
-
-    fadeContainer: {
-      width: '100%',
-      height: 'calc(100% - 90px)',
-      display: 'flex',
-      flexDirection: 'column'
-    },
-    logoItem: {
-      padding: `${theme.spacing(1) + 2}px 0 ${theme.spacing(
-        1
-      )}px ${theme.spacing(1) + theme.spacing(1) / 2}px`
-    },
-    logoItemCompact: {
-      padding: `${theme.spacing(1) + 2}px 0 ${theme.spacing(1)}px`
-    },
-    listItem: {
-      position: 'relative',
-      cursor: 'pointer',
-      transition: theme.transitions.create(['background-color']),
-      padding: `${theme.spacing(2)}px ${theme.spacing(4) - 2}px ${theme.spacing(
-        2
-      ) - 1}px ${theme.spacing(4) + 1}px`,
-      '&:hover': {
-        backgroundColor: theme.bg.primaryNavActiveBG,
-        '& $linkItem': {
-          color: 'white'
-        }
-      }
-    },
-    collapsible: {
-      fontSize: '0.9rem'
-    },
-    linkItem: {
-      transition: theme.transitions.create(['color']),
-      color: theme.color.primaryNavText,
-      fontFamily: 'LatoWebBold' // we keep this bold at all times
-    },
-    active: {
-      backgroundColor: theme.bg.primaryNavActiveBG,
-      '&:before': {
-        content: "''",
-        borderStyle: 'solid',
-        borderWidth: `${theme.spacing(2) + 5}px ${theme.spacing(
-          2
-        )}px ${theme.spacing(2) + 5}px 0`,
-        borderColor: `transparent ${
-          theme.bg.primaryNavActive
-        } transparent transparent`,
-        position: 'absolute',
-        right: 0,
-        top: '8%'
-      },
-      '&:hover': {
-        '&:before': {
-          content: "''",
-          borderStyle: 'solid',
-          borderWidth: `${theme.spacing(2) + 5}px ${theme.spacing(
-            2
-          )}px ${theme.spacing(2) + 5}px 0`,
-          borderColor: `transparent ${
-            theme.bg.primaryNavActive
-          } transparent transparent`,
-          position: 'absolute',
-          right: 0,
-          top: '8%'
-        }
-      },
-      [theme.breakpoints.down('sm')]: {
-        '&:before': {
-          display: 'none'
-        }
-      }
-    },
-    sublinkPanel: {
-      paddingLeft: theme.spacing(6),
-      paddingRight: theme.spacing(2),
-      fontSize: '.9rem',
-      flexShrink: 0,
-      listStyleType: 'none'
-    },
-    sublink: {
-      padding: `${theme.spacing(1) / 2}px 0 ${theme.spacing(1) /
-        2}px ${theme.spacing(1)}px`,
-      color: 'white',
-      display: 'block',
-      fontSize: '.8rem',
-      '&:hover, &:focus': {
-        textDecoration: 'underline',
-        outline: 0
-      }
-    },
-    activeLink: {
-      color: 'white',
-      '& $arrow': {
-        transform: 'rotate(90deg)'
-      }
-    },
-    sublinkActive: {
-      textDecoration: 'underline'
-    },
-    arrow: {
-      position: 'relative',
-      top: 4,
-      fontSize: '1.2rem',
-      margin: '0 4px 0 -7px',
-      transition: theme.transitions.create(['transform'])
-    },
-    spacer: {
-      padding: 25
-    },
-    divider: {
-      backgroundColor: 'rgba(0, 0, 0, 0.12)'
-    },
-    settings: {
-      width: 30,
-      margin: '24px auto 16px',
-      alignItems: 'center',
-      marginTop: 'auto',
-      justifyContent: 'center',
-      display: 'flex',
-      color: '#e7e7e7',
-      transition: theme.transitions.create(['color']),
-      '& svg': {
-        transition: theme.transitions.create(['transform'])
-      },
-      '&:hover': {
-        color: theme.color.green
-      }
-    },
-    activeSettings: {
-      color: theme.color.green,
-      '& svg': {
-        transform: 'rotate(90deg)'
-      }
-    },
-    menu: {},
-    paper: {
-      maxWidth: 350,
-      padding: 8,
-      position: 'absolute',
-      backgroundColor: theme.bg.navy,
-      border: '1px solid #999',
-      outline: 0,
-      boxShadow: 'none',
-      minWidth: 185
-    },
-    settingsBackdrop: {
-      backgroundColor: 'rgba(0,0,0,.3)'
-    }
-  });
 
 interface Props {
   closeMenu: () => void;
   toggleTheme: () => void;
   toggleSpacing: () => void;
+  isCollapsed: boolean;
 }
 
 interface State {
@@ -270,10 +90,9 @@ interface MenuItemReducer {
 }
 
 export type CombinedProps = Props &
+  StyleProps &
   StateProps &
   FeatureFlagConsumerProps &
-  WithTheme &
-  WithStyles<ClassNames> &
   FeatureFlagConsumerProps &
   RouteComponentProps<{}>;
 
@@ -332,27 +151,39 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
         link: {
           display: 'Object Storage',
           href: '/object-storage/buckets',
-          key: 'object-storage'
+          key: 'object-storage',
+          icon: <Storage />
         }
       },
       {
         conditionToAdd: () => isManagedAccount,
         insertAfter: 'Longview',
-        link: { display: 'Managed', href: '/managed', key: 'managed' }
+        link: {
+          display: 'Managed',
+          href: '/managed',
+          key: 'managed',
+          icon: <Managed />
+        }
       },
       {
         conditionToAdd: () => isKubernetesEnabled(accountCapabilities),
         insertAfter: 'Longview',
-        link: { display: 'Kubernetes', href: '/kubernetes', key: 'kubernetes' }
+        link: {
+          display: 'Kubernetes',
+          href: '/kubernetes/clusters',
+          key: 'kubernetes',
+          icon: <Kubernetes />
+        }
       },
       {
-        conditionToAdd: () => flags.oneClickLocation === 'sidenav',
+        conditionToAdd: () => flags.oneClickLocation !== 'sidenav',
         insertAfter: 'Longview',
         link: {
           display: 'One-Click Apps',
           href: '/linodes/create?type=One-Click',
           key: 'one-click',
           attr: { 'data-qa-one-click-nav-btn': true },
+          icon: <OCA />,
           onClick: () => {
             sendOneClickNavigationEvent('Primary Nav');
           }
@@ -361,30 +192,76 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
       {
         conditionToAdd: () => hasAccountAccess,
         insertAfter: 'Images',
-        link: { display: 'Account', href: '/account/billing', key: 'account' }
+        link: {
+          display: 'Account',
+          href: '/account/billing',
+          key: 'account',
+          icon: <Account className="small" />
+        }
       },
       {
         conditionToAdd: () => !!flags.firewalls,
         insertAfter: 'Domains',
-        link: { display: 'Firewalls', href: '/firewalls', key: 'firewalls' }
+        link: {
+          display: 'Firewalls',
+          href: '/firewalls',
+          key: 'firewalls',
+          icon: <Firewall />
+        }
       }
     ];
   };
 
   createMenuItems = () => {
     const primaryLinks: PrimaryLink[] = [
-      { display: 'Dashboard', href: '/dashboard', key: 'dashboard' },
-      { display: 'Linodes', href: '/linodes', key: 'linodes' },
-      { display: 'Volumes', href: '/volumes', key: 'volumes' },
+      {
+        display: 'Dashboard',
+        href: '/dashboard',
+        key: 'dashboard',
+        icon: <Dashboard className="small" />
+      },
+      {
+        display: 'Linodes',
+        href: '/linodes',
+        key: 'linodes',
+        icon: <Linode />
+      },
+      {
+        display: 'Volumes',
+        href: '/volumes',
+        key: 'volumes',
+        icon: <Volume />
+      },
       {
         display: 'NodeBalancers',
         href: '/nodebalancers',
-        key: 'nodebalancers'
+        key: 'nodebalancers',
+        icon: <NodeBalancer />
       },
-      { display: 'Domains', href: '/domains', key: 'domains' },
-      { display: 'Longview', href: '/longview', key: 'longview' },
-      { display: 'StackScripts', href: '/stackscripts', key: 'stackscripts' },
-      { display: 'Images', href: '/images', key: 'images' }
+      {
+        display: 'Domains',
+        href: '/domains',
+        key: 'domains',
+        icon: <Domain style={{ transform: 'scale(1.5)' }} />
+      },
+      {
+        display: 'Longview',
+        href: '/longview',
+        key: 'longview',
+        icon: <Longview className="small" />
+      },
+      {
+        display: 'StackScripts',
+        href: '/stackscripts',
+        key: 'stackscripts',
+        icon: <StackScript />
+      },
+      {
+        display: 'Images',
+        href: '/images',
+        key: 'images',
+        icon: <Image className="small" />
+      }
     ];
 
     const potentialMenuItemsToAdd = this.primaryNavManipulator();
@@ -438,7 +315,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
   };
 
   renderPrimaryLink = (primaryLink: PrimaryLink, isLast: boolean) => {
-    const { classes } = this.props;
+    const { classes, isCollapsed } = this.props;
 
     return (
       <React.Fragment key={primaryLink.key}>
@@ -455,14 +332,20 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
           {...primaryLink.attr}
           className={classNames({
             [classes.listItem]: true,
-            [classes.active]: linkIsActive(primaryLink.href)
+            [classes.active]: linkIsActive(primaryLink.href),
+            listItemCollpased: isCollapsed
           })}
         >
+          {primaryLink.icon && isCollapsed && (
+            <div className="icon">{primaryLink.icon}</div>
+          )}
           <ListItemText
             primary={primaryLink.display}
             disableTypography={true}
             className={classNames({
-              [classes.linkItem]: true
+              [classes.linkItem]: true,
+              primaryNavLink: true,
+              hiddenWhenCollapsed: isCollapsed
             })}
           />
         </Link>
@@ -472,7 +355,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, isCollapsed } = this.props;
     const { expandedMenus, anchorEl } = this.state;
 
     return (
@@ -489,19 +372,16 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
           role="menu"
         >
           <Grid item>
-            {NORMAL_SPACING_UNIT ? (
-              <div className={classes.logoItem}>
-                <Link to={`/dashboard`}>
-                  <Logo width={115} height={43} />
-                </Link>
-              </div>
-            ) : (
-              <div className={classes.logoItemCompact}>
-                <Link to={`/dashboard`}>
-                  <Logo width={100} height={37} />
-                </Link>
-              </div>
-            )}
+            <div
+              className={classNames({
+                [classes.logoItem]: true,
+                [classes.logoCollapsed]: isCollapsed
+              })}
+            >
+              <Link to={`/dashboard`} onClick={() => this.props.closeMenu()}>
+                <Logo width={115} height={43} />
+              </Link>
+            </div>
           </Grid>
           <div
             className={classNames({
@@ -526,6 +406,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
               })}
               closeMenu={this.props.closeMenu}
               dividerClasses={classes.divider}
+              isCollapsed={isCollapsed}
             />
 
             <Hidden mdUp>
@@ -573,6 +454,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
               onClick={this.handleClick}
               className={classNames({
                 [classes.settings]: true,
+                [classes.settingsCollapsed]: isCollapsed,
                 [classes.activeSettings]: anchorEl
               })}
             >
@@ -658,8 +540,6 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
 };
 
 const connected = connect(mapStateToProps);
-
-const styled = withStyles(styles, { withTheme: true });
 
 export default compose<CombinedProps, Props>(
   withRouter,
