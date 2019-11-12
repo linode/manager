@@ -42,6 +42,7 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
   };
 
   const hostname = pathOr('', ['SysInfo', 'hostname'], longviewClientData);
+  const uptime = pathOr(0, ['Uptime'], longviewClientData);
 
   return (
     <Grid
