@@ -47,7 +47,7 @@ export const DetailNavigation: React.FC<ResizeProps> = props => {
     <>
       <AppBar position="static" color="default">
         <Tabs
-          value={tabs.findIndex(tab => matches(tab.routeName))}
+          value={tabs.findIndex(tab => matches(tab.routeName)) || 0}
           onChange={handleTabChange}
           indicatorColor="primary"
           textColor="primary"
