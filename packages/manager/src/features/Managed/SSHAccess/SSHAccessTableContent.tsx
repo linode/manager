@@ -29,18 +29,18 @@ export const SSHAccessTableContent: React.FC<CombinedProps> = props => {
   } = props;
 
   if (loading && lastUpdated === 0) {
-    return <TableRowLoading colSpan={12} />;
+    return <TableRowLoading colSpan={6} firstColWidth={30} />;
   }
 
   if (error) {
     const errorMessage = getErrorStringOrDefault(error);
-    return <TableRowError colSpan={12} message={errorMessage} />;
+    return <TableRowError colSpan={6} message={errorMessage} />;
   }
 
   if (linodeSettings.length === 0 && lastUpdated !== 0) {
     return (
       <TableRowEmpty
-        colSpan={12}
+        colSpan={5}
         message={"You don't have any Linodes on your account."}
       />
     );

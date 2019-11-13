@@ -11,7 +11,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const VolumesActionsPanel: React.StatelessComponent<CombinedProps> = ({
+const VolumesActionsPanel: React.FC<CombinedProps> = ({
   onSubmit,
   isSubmitting,
   onCancel,

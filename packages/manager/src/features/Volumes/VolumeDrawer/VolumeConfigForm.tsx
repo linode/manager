@@ -33,7 +33,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const VolumeConfigDrawer: React.StatelessComponent<CombinedProps> = props => {
+const VolumeConfigDrawer: React.FC<CombinedProps> = props => {
   const { classes, message, onClose } = props;
 
   return (

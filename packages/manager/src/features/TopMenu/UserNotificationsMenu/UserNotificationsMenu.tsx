@@ -166,7 +166,7 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
             key="placeholder"
             aria-hidden
             className={classes.hidden}
-            tabIndex={1}
+            tabIndex={0}
           />
           <UserNotificationsList
             notifications={notifications}

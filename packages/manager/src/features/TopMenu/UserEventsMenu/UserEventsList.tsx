@@ -4,7 +4,7 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import eventMessageGenerator from 'src/eventMessageGenerator';
-import { ExtendedEvent } from 'src/store/events/event.helpers';
+import { ExtendedEvent } from 'src/store/events/event.types';
 import createLinkHandlerForNotification from 'src/utilities/getEventsActionLinkStrings';
 import UserEventsListItem, {
   Props as UserEventsListItemProps

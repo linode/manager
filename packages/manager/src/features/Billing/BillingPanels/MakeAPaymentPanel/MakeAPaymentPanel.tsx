@@ -49,7 +49,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
-import { isProduction } from 'src/constants';
+import { PAYPAL_CLIENT_ENV } from 'src/constants';
 import AccountContainer, {
   DispatchProps as AccountDispatchProps
 } from 'src/containers/account.container';
@@ -156,16 +156,10 @@ const client = {
 const paypalSrcQueryParams = `&disable-funding=card,credit&currency=USD&commit=false&intent=capture`;
 
 const paypalScriptSrc = () => {
-  return isProduction
-    ? `https://www.paypal.com/sdk/js?client-id=${
-        client.production
-      }${paypalSrcQueryParams}`
-    : `https://www.paypal.com/sdk/js?client-id=${
-        client.sandbox
-      }${paypalSrcQueryParams}`;
+  return `https://www.paypal.com/sdk/js?client-id=${
+    client[PAYPAL_CLIENT_ENV]
+  }${paypalSrcQueryParams}`;
 };
-
-const env = process.env.NODE_ENV === 'development' ? 'sandbox' : 'production';
 
 export const getDefaultPayment = (balance: number | false): string => {
   if (!balance) {
@@ -566,7 +560,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
               })}
             >
               <PaypalButton
-                env={env}
+                env={PAYPAL_CLIENT_ENV as 'sandbox' | 'production'}
                 client={client}
                 createOrder={this.createOrder}
                 onApprove={this.onApprove}

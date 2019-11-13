@@ -16,7 +16,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const SizeField: React.StatelessComponent<CombinedProps> = ({
+const SizeField: React.FC<CombinedProps> = ({
   error,
   onBlur,
   onChange,

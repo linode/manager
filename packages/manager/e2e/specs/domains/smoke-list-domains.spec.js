@@ -62,7 +62,7 @@ describe('Domains - List Suite', () => {
       expect(expectedMenuItems).toContain(i.getText())
     );
 
-    browser.click('body');
+    $('body').click();
     ListDomains.actionMenuItem.waitForDisplayed(constants.wait.short, true);
   });
 

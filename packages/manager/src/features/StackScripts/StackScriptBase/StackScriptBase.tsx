@@ -22,11 +22,9 @@ import {
   isRestrictedUser
 } from 'src/features/Profile/permissionsHelpers';
 import { MapState } from 'src/store/types';
-import {
-  getAPIErrorOrDefault,
-  handleUnauthorizedErrors
-} from 'src/utilities/errorUtils';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendStackscriptsSearchEvent } from 'src/utilities/ga';
+import { handleUnauthorizedErrors } from 'src/utilities/handleUnauthorizedErrors';
 import StackScriptTableHead from '../Partials/StackScriptTableHead';
 import {
   AcceptedFilters,
@@ -476,11 +474,12 @@ const withStackScriptBase = (isSelecting: boolean) => (
             <React.Fragment>
               <div className={classes.searchWrapper}>
                 <DebouncedSearch
-                  placeholderText="Search by Label, Username, or Description"
+                  placeholder="Search by Label, Username, or Description"
                   onSearch={this.handleSearch}
+                  debounceTime={400}
                   className={classes.searchBar}
                   isSearching={isSearching}
-                  toolTipText={
+                  tooltipText={
                     this.props.category === 'community'
                       ? `Hint: try searching for a specific item by prepending your
                   search term with "username:", "label:", or "description:"`

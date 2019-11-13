@@ -399,16 +399,13 @@ class Networking extends Page {
         `${assertLog.incorrectText} for "${this.domainName.selector}" selector`
       )
       .toBe(true);
-    expect(
-      this.domainName
-        .$('input')
-        .withContext(
-          `${assertLog.incorrectText} for "${
-            this.domainName.selector
-          } input" selector`
-        )
-        .getAttribute('placeholder')
-    ).toBe('Enter a domain name');
+    expect(this.domainName.$('input').getAttribute('placeholder'))
+      .withContext(
+        `${assertLog.incorrectText} for "${
+          this.domainName.selector
+        } input" selector`
+      )
+      .toBe('Enter a domain name');
     expect(this.submit.isDisplayed())
       .withContext(`"${this.submit.selector}" selector ${assertLog.displayed}`)
       .toBe(true);

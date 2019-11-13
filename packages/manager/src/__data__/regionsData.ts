@@ -8,6 +8,11 @@ export const regions: Region[] = [
   },
   {
     capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
+    country: 'au',
+    id: 'ap-southeast'
+  },
+  {
+    capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
     country: 'ca',
     id: 'ca-central'
   },

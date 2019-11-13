@@ -164,6 +164,7 @@ const MutationNotification: React.FC<CombinedProps> = props => {
         <span
           className={classes.pendingMutationLink}
           onClick={openMutationDrawer}
+          role="button"
         >
           click here.
         </span>

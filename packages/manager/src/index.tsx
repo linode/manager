@@ -17,10 +17,9 @@ import { GA_ID, GA_ID_2, GTM_ID, isProduction } from 'src/constants';
 import 'src/exceptionReporting';
 import LoginAsCustomerCallback from 'src/layouts/LoginAsCustomerCallback';
 import Logout from 'src/layouts/Logout';
-import 'src/services/sdk-request-interceptors';
+import 'src/request';
 import store from 'src/store';
 import 'src/utilities/createImageBitmap';
-import 'src/utilities/request';
 import './index.css';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
 

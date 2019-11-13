@@ -1,4 +1,4 @@
-import { Event } from 'linode-js-sdk/lib/account';
+import { Event, EventAction } from 'linode-js-sdk/lib/account';
 import { equals } from 'ramda';
 
 /**
@@ -69,4 +69,26 @@ export const shouldUpdateEvents = (prevProps: Payload, nextProps: Payload) => {
         nextProps.inProgressEvents
       ))
   );
+};
+
+export const maybeRemoveTrailingPeriod = (string: string) => {
+  const lastChar = string[string.length - 1];
+  if (lastChar === '.') {
+    return string.substr(0, string.length - 1);
+  }
+  return string;
+};
+
+export const formatEventWithUsername = (
+  action: EventAction,
+  username: string | null,
+  message: string
+) => {
+  return username && action !== 'lassie_reboot'
+    ? /**
+       * The event message for Lassie events already includes "by the Lassie Watchdog service",
+       * so we don't want to add "by Linode" after that.
+       */
+      `${maybeRemoveTrailingPeriod(message)} by ${username}.`
+    : message;
 };

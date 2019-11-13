@@ -34,12 +34,12 @@ export const ContactsTableContent: React.FC<CombinedProps> = props => {
   } = props;
 
   if (loading && lastUpdated === 0) {
-    return <TableRowLoading colSpan={12} />;
+    return <TableRowLoading colSpan={6} />;
   }
 
   if (error) {
     const errorMessage = getErrorStringOrDefault(error);
-    return <TableRowError colSpan={12} message={errorMessage} />;
+    return <TableRowError colSpan={6} message={errorMessage} />;
   }
 
   if (contacts.length === 0 && lastUpdated !== 0) {

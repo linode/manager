@@ -65,7 +65,7 @@ const MyComponent: React.FC<{}> = () => {
          * Need an example? Check out how we accomplish this in Cloud Manager:
          *
          * https://github.com/linode/manager/blob/develop/packages/manager/src/
-         * services/sdk-request-interceptors.tsx#L32
+         * request.tsx#L32
          */
         setErrors(e.response.data.errors)
       })

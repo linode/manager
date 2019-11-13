@@ -54,10 +54,7 @@ module.exports = {
   appSrc: resolveApp('src'),
   appTsConfig: resolveApp('tsconfig.json'),
   appTsLint: resolveApp('../../tslint.json'),
-  appVersion: getAppVersion(resolveApp('package.json')),
-  dotenv: resolveApp('.env'),
   publicUrl: getPublicUrl(resolveApp('package.json')),
-  servedPath: getServedPath(resolveApp('package.json')),
-  testsSetup: resolveApp('src/setupTests.ts'),
-  yarnLockFile: resolveApp('yarn.lock')
+  appVersion: getAppVersion(resolveApp('package.json')),
+  servedPath: getServedPath(resolveApp('package.json'))
 };

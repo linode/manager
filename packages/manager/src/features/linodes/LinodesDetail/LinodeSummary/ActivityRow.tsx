@@ -10,7 +10,7 @@ import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 import eventMessageGenerator from 'src/eventMessageGenerator';
-import { maybeRemoveTrailingPeriod } from 'src/features/Events/EventRow';
+import { formatEventWithUsername } from 'src/features/Events/Event.helpers';
 
 type ClassNames = 'root';
 
@@ -50,9 +50,7 @@ export const ActivityRow: React.StatelessComponent<CombinedProps> = props => {
     >
       <Grid item>
         <Typography>
-          {event.username
-            ? `${maybeRemoveTrailingPeriod(message)} by ${event.username}.`
-            : message}
+          {formatEventWithUsername(event.action, event.username, message)}
         </Typography>
       </Grid>
       <Grid item>

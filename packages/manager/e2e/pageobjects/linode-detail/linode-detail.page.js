@@ -85,7 +85,7 @@ class LinodeDetail extends Page {
       this.dialogTitle.waitForDisplayed(constants.wait.normal);
       $('[data-qa-buttons] .secondary').click();
       browser.waitUntil(function() {
-        return $('[data-qa-power-control="offline"]').isDisplayed();
+        return $('[data-qa-power-control="Offline"]').isDisplayed();
       }, constants.wait.minute * 2);
       return;
     }

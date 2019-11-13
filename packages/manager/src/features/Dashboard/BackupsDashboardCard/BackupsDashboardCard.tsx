@@ -124,6 +124,7 @@ export const BackupsDashboardCard: React.StatelessComponent<
           onClick={openBackupDrawer}
           data-qa-backup-existing
           className={classes.ctaLink}
+          role="button"
         >
           <Paper
             className={classNames({

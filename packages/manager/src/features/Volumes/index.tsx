@@ -1,2 +1,2 @@
-import VolumesLanding from './VolumesLanding';
-export default VolumesLanding;
+import Volumes from './Volumes';
+export default Volumes;

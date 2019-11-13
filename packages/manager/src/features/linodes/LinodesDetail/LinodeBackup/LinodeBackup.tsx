@@ -776,7 +776,8 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
       <React.Fragment>
         {disabled && <LinodePermissionsError />}
         <Typography
-          role="header"
+          aria-level={2}
+          role="heading"
           variant="h2"
           className={classes.title}
           data-qa-title

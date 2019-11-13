@@ -1,3 +1,4 @@
+import { ObjectStorageKey } from 'linode-js-sdk/lib/object-storage';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
@@ -25,7 +26,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  objectStorageKey: Linode.ObjectStorageKey | null;
+  objectStorageKey: ObjectStorageKey | null;
   isOpen: boolean;
   close: () => void;
 }

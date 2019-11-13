@@ -33,7 +33,7 @@ interface FormState {
   tags: Tag[];
 }
 
-const RenameVolumeForm: React.StatelessComponent<CombinedProps> = props => {
+const RenameVolumeForm: React.FC<CombinedProps> = props => {
   const {
     volumeId,
     volumeLabel,

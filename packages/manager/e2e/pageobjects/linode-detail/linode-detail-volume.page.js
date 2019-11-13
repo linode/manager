@@ -152,7 +152,8 @@ export class VolumeDetail extends Page {
 
   closeVolumeDrawer() {
     this.drawerClose.click();
-    this.drawerTitle.waitForDisplayed(constants.wait.short, true);
+    this.drawerTitle.waitForDisplayed(constants.wait.normal, true);
+    expect(this.drawerTitle.isDisplayed()).toBe(false);
     browser.pause(500);
   }
 
@@ -439,7 +440,7 @@ export class VolumeDetail extends Page {
       );
       browser.jsClick('[data-qa-action-menu-item="Delete"]');
       $('[data-qa-dialog-title]').waitForDisplayed(constants.wait.normal);
-      browser.click('[data-qa-confirm]');
+      $('[data-qa-confirm]').click();
       $('[data-qa-dialog-title]').waitForDisplayed(constants.wait.normal, true);
 
       // Wait for progress bars to not display on volume detail pages

@@ -73,6 +73,13 @@ storiesOf('Breadcrumb', module)
       </div>
     </StaticRouter>
   ))
+  .add('Breadcrumb with only first and last crumbs', () => (
+    <StaticRouter location="/" context={{}}>
+      <div style={{ padding: 24 }}>
+        <Breadcrumb pathname={customCrumbs} firstAndLastOnly />
+      </div>
+    </StaticRouter>
+  ))
   .add('Breadcrumb with a crumb removed', () => (
     <StaticRouter location="/" context={{}}>
       <div style={{ padding: 24 }}>

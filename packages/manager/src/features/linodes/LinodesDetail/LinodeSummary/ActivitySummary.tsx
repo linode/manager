@@ -18,7 +18,7 @@ import {
   filterUniqueEvents,
   shouldUpdateEvents
 } from 'src/features/Events/Event.helpers';
-import { ExtendedEvent } from 'src/store/events/event.helpers';
+import { ExtendedEvent } from 'src/store/events/event.types';
 import { removeBlacklistedEvents } from 'src/utilities/eventUtils';
 
 type ClassNames = 'root' | 'header' | 'viewMore';

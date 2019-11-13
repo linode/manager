@@ -82,6 +82,7 @@ export const TicketAttachmentList: React.StatelessComponent<
             onClick={toggle}
             style={{ display: 'inline-block' }}
             data-qa-attachment-toggle
+            role="button"
           >
             <ShowMoreExpansion
               name={

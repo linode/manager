@@ -109,7 +109,7 @@ class CredStore {
         'Failed to login to the Manager for some reason.'
       );
       console.error(`Current URL is:\n${browser.getUrl()}`);
-      console.error(`Page source: \n ${browser.getSource()}`);
+      console.error(`Page source: \n ${browser.getPageSource()}`);
     }
 
     // Wait for the welcome modal to display, click it once it appears

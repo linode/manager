@@ -6,7 +6,7 @@ import ConfigureLinode from './configure-linode';
 
 class ListStackScripts extends Page {
   get landingHeader() {
-    return this.pageTitle;
+    return $('[data-qa-label-text]');
   }
   get create() {
     return this.addIcon('Create New StackScript');

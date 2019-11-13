@@ -93,6 +93,7 @@ class SearchSuggestion extends React.Component<CombinedProps> {
         ref={innerRef}
         onClick={this.handleClick}
         {...innerProps}
+        role="button"
       >
         <div className={classes.resultContainer}>
           <div

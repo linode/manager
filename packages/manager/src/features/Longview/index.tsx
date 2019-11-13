@@ -28,7 +28,7 @@ const Longview: React.FC<Props> = props => {
         <DocumentTitleSegment segment="Longview" />
         <Placeholder
           title="Longview"
-          copy="Keep your Linux systems running smoothly with insights from your system metrics."
+          copy="Longview performance metrics are coming soon to Cloud Manager! Until then, you can access Longview in Classic Manager."
           buttonProps={[
             {
               onClick: () =>

@@ -14,7 +14,7 @@ The first step in getting UI apps running locally is to create an OAuth Client.
 
 ![Screen Shot 2019-04-10 at 2 47 57 PM](https://user-images.githubusercontent.com/7387001/55906071-69899f80-5ba1-11e9-85cd-bfd1a5e90eb8.png)
 
-Once the drawer opens up, open the values below and click _Submit_
+Once the drawer opens up, enter the values below and click _Submit_
 
 <img width="477" alt="Screen Shot 2019-04-11 at 10 18 01 AM" src="https://user-images.githubusercontent.com/7387001/55964735-3992d880-5c43-11e9-9975-4b22c52b3115.png">
 

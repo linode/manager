@@ -12,7 +12,7 @@ describe('SelectRegionPanel', () => {
         expect(groupedRegions).toHaveLength(3);
         expect(r1.options).toHaveLength(5);
         expect(r2.options).toHaveLength(2);
-        expect(r3.options).toHaveLength(3);
+        expect(r3.options).toHaveLength(4);
       });
 
       it('should group unrecognized regions as Other', () => {

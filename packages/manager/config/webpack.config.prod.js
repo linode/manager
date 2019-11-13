@@ -38,6 +38,8 @@ if (env.stringified['process.env'].NODE_ENV !== '"production"') {
 // This is the production configuration.
 // It compiles slowly and is focused on producing a fast and minimal bundle.
 // The development configuration is different and lives in a separate file.
+
+/* tslint:disable:object-literal-sort-keys */
 module.exports = {
   mode: 'production',
   // Don't attempt to continue if there are any errors.
@@ -185,6 +187,12 @@ module.exports = {
                   plugins: () => [
                     require('postcss-flexbugs-fixes'),
                     autoprefixer({
+                      browsers: [
+                        '>1%',
+                        'last 4 versions',
+                        'Firefox ESR',
+                        'not ie < 9' // React doesn't support IE8 anyway
+                      ],
                       flexbox: 'no-2009'
                     })
                   ]
@@ -296,6 +304,7 @@ module.exports = {
     // Perform type checking and linting in a separate process to speed up compilation
     new ForkTsCheckerWebpackPlugin({
       async: false,
+      memoryLimit: 4096,
       tsconfig: paths.appTsConfig,
       tslint: paths.appTsLint
     }),

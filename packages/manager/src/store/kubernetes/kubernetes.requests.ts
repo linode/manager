@@ -22,7 +22,7 @@ import { requestNodePoolsForCluster } from './nodePools.requests';
 const getAllClusters = getAll<KubernetesCluster>(getKubernetesClusters);
 
 export const requestKubernetesClusters: ThunkActionCreator<
-  Promise<Linode.Cluster[]>
+  Promise<KubernetesCluster[]>
 > = () => dispatch => {
   dispatch(requestClustersActions.started());
 
@@ -44,20 +44,25 @@ export const requestKubernetesClusters: ThunkActionCreator<
     });
 };
 
-type RequestClusterForStoreThunk = ThunkActionCreator<void, number>;
+type RequestClusterForStoreThunk = ThunkActionCreator<
+  Promise<KubernetesCluster>,
+  number
+>;
 export const requestClusterForStore: RequestClusterForStoreThunk = clusterID => dispatch => {
   dispatch(requestClusterActions.started({ clusterID }));
-  getKubernetesCluster(clusterID)
+  return getKubernetesCluster(clusterID)
     .then(cluster => {
       dispatch(requestNodePoolsForCluster({ clusterID }));
-      return dispatch(
+      dispatch(
         requestClusterActions.done({ result: cluster, params: { clusterID } })
       );
+      return cluster;
     })
     .catch(err => {
       dispatch(
         requestClusterActions.failed({ error: err, params: { clusterID } })
       );
+      return Promise.reject(err);
     });
 };
 

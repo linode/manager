@@ -18,7 +18,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const ListVolumes: React.StatelessComponent<CombinedProps> = props => {
+const ListVolumes: React.FC<CombinedProps> = props => {
   const { orderBy, order, handleOrderChange, data, renderProps } = props;
   return (
     <Paginate data={data} pageSize={25}>

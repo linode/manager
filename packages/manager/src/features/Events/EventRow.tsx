@@ -1,4 +1,4 @@
-import { Event } from 'linode-js-sdk/lib/account';
+import { Event, EventAction } from 'linode-js-sdk/lib/account';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -20,6 +20,8 @@ import eventMessageGenerator from 'src/eventMessageGenerator';
 
 import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
 import getEventsActionLink from 'src/utilities/getEventsActionLink';
+
+import { formatEventWithUsername } from './Event.helpers';
 
 type ClassNames = 'root' | 'message';
 
@@ -63,6 +65,7 @@ export const EventRow: React.StatelessComponent<CombinedProps> = props => {
     type,
     entityId,
     username: event.username,
+    action: event.action,
     classes
   };
 
@@ -75,12 +78,14 @@ export interface RowProps extends WithStyles<ClassNames> {
   linkTarget?: (e: React.MouseEvent<HTMLElement>) => void;
   type: 'linode' | 'domain' | 'nodebalancer' | 'stackscript' | 'volume';
   status?: string;
+  action: EventAction;
   created: string;
   username: string | null;
 }
 
 export const Row: React.StatelessComponent<RowProps> = props => {
   const {
+    action,
     classes,
     entityId,
     linkTarget,
@@ -121,9 +126,7 @@ export const Row: React.StatelessComponent<RowProps> = props => {
           data-qa-event-message
           variant="body1"
         >
-          {username
-            ? `${maybeRemoveTrailingPeriod(message)} by ${username}.`
-            : message}
+          {formatEventWithUsername(action, username, message)}
         </Typography>
       </TableCell>
       <TableCell parentColumn={'Time'} data-qa-event-created-cell compact>
@@ -142,11 +145,3 @@ const enhanced = compose<CombinedProps, Props & RenderGuardProps>(
 );
 
 export default enhanced(EventRow);
-
-export const maybeRemoveTrailingPeriod = (string: string) => {
-  const lastChar = string[string.length - 1];
-  if (lastChar === '.') {
-    return string.substr(0, string.length - 1);
-  }
-  return string;
-};

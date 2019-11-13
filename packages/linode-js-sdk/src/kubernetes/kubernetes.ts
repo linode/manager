@@ -12,6 +12,7 @@ import {
   CreateKubeClusterPayload,
   KubeConfigResponse,
   KubernetesCluster,
+  KubernetesEndpointResponse,
   KubernetesVersion
 } from './types';
 
@@ -112,4 +113,16 @@ export const getKubernetesVersion = (versionID: string) =>
   Request<KubernetesVersion>(
     setMethod('GET'),
     setURL(`${BETA_API_ROOT}/lke/versions/${versionID}`)
+  ).then(response => response.data);
+
+/** getKubernetesClusterEndpoint
+ *
+ * Returns the endpoint URL for a single Kubernetes cluster by ID.
+ *
+ */
+
+export const getKubernetesClusterEndpoint = (clusterID: number) =>
+  Request<KubernetesEndpointResponse>(
+    setMethod('GET'),
+    setURL(`${BETA_API_ROOT}/lke/clusters/${clusterID}/api-endpoint`)
   ).then(response => response.data);

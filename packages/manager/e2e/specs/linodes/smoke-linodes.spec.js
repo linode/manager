@@ -83,7 +83,7 @@ describe('List Linodes Suite', () => {
       );
 
       if (activeView !== 'grid') {
-        browser.click('[data-qa-view="grid"]');
+        $('[data-qa-view="grid"]').click();
       }
     });
 

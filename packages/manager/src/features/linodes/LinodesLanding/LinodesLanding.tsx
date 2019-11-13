@@ -304,7 +304,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                       }
                                       onChange={toggleGroupLinodes}
                                       checked={linodesAreGrouped as boolean}
-                                      data-qa-tags-toggle={linodesAreGrouped}
                                     />
                                   }
                                   label="Group by Tag:"

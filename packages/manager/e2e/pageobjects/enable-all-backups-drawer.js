@@ -21,7 +21,7 @@ class EnableAllBackupsDrawer extends Page {
     return $(`${this.drawerBase.selector} ${this.toggleOption.selector}`);
   }
   get backupPricingPage() {
-    return $('[data-qa-backups-price]');
+    return $('[data-qa-backup-price]');
   }
   get countLinodesToBackup() {
     return $('[data-qa-backup-count]');

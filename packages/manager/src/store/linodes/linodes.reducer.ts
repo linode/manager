@@ -1,6 +1,5 @@
 import { Reducer } from 'redux';
 import { EntityError, EntityState, HasNumericID } from 'src/store/types';
-import updateById from 'src/utilities/updateById';
 import updateOrAdd from 'src/utilities/updateOrAdd';
 import { isType } from 'typescript-fsa';
 import {
@@ -8,7 +7,6 @@ import {
   deleteLinode,
   deleteLinodeActions,
   getLinodesActions,
-  updateLinode,
   updateLinodeActions,
   updateMultipleLinodes,
   upsertLinode
@@ -108,17 +106,6 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       ...state,
       entities: entities.filter(linode => linode.id !== payload),
       results: results.filter(id => id !== payload)
-    };
-  }
-
-  if (isType(action, updateLinode)) {
-    const { id, update } = action.payload;
-    const entities = updateById(update, id, state.entities);
-
-    return {
-      ...state,
-      entities,
-      results: entities.map(getId)
     };
   }
 

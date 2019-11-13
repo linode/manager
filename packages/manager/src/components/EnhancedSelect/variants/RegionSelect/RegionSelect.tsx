@@ -1,3 +1,4 @@
+import AU from 'flag-icon-css/flags/4x3/au.svg';
 import CA from 'flag-icon-css/flags/4x3/ca.svg';
 import DE from 'flag-icon-css/flags/4x3/de.svg';
 import UK from 'flag-icon-css/flags/4x3/gb.svg';
@@ -29,6 +30,7 @@ interface Props extends Omit<BaseSelectProps, 'onChange'> {
 }
 
 export const flags = {
+  au: () => <AU width="32" height="24" viewBox="0 0 720 480" />,
   us: () => <US width="32" height="24" viewBox="0 0 720 480" />,
   sg: () => <SG width="32" height="24" viewBox="0 0 640 480" />,
   jp: () => (
@@ -68,12 +70,12 @@ export const getRegionOptions = (regions: ExtendedRegion[]) => {
     if (thisRegion.country.match(/(de|uk|eu)/)) {
       return 'Europe';
     }
-    if (thisRegion.country.match(/(jp|sg|in)/)) {
-      return 'Asia';
+    if (thisRegion.country.match(/(jp|sg|in|au)/)) {
+      return 'Asia Pacific';
     }
     return 'Other';
   }, regions);
-  return ['North America', 'Europe', 'Asia', 'Other'].reduce(
+  return ['North America', 'Europe', 'Asia Pacific', 'Other'].reduce(
     (accum, thisGroup) => {
       if (
         !groupedRegions[thisGroup] ||

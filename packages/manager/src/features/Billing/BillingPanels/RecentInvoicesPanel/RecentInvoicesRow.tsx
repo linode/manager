@@ -1,4 +1,9 @@
-import { Account, getInvoiceItems, Invoice, InvoiceItem } from 'linode-js-sdk/lib/account'
+import {
+  Account,
+  getInvoiceItems,
+  Invoice,
+  InvoiceItem
+} from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
@@ -20,6 +25,17 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: 0,
       position: 'relative',
       left: '20%'
+    }
+  },
+  downloadButton: {
+    background: 'none',
+    color: theme.palette.primary.main,
+    border: 'none',
+    padding: 0,
+    font: 'inherit',
+    cursor: 'pointer',
+    '&:hover': {
+      textDecoration: 'underline'
     }
   }
 }));
@@ -88,18 +104,17 @@ const RecentInvoicesRow: React.FC<CombinedProps> = props => {
         {account && (
           <div className={classes.linkContainer}>
             {!isGeneratingPDF ? (
-              <a
-                href="#"
-                onClick={e =>
-                  _printInvoice(e, account as Account, invoice)
-                }
-                className="secondaryLink"
+              <button
+                role="button"
+                onClick={e => _printInvoice(e, account as Account, invoice)}
+                className={classes.downloadButton}
+                title="Download PDF"
               >
                 Download PDF
-              </a>
+              </button>
             ) : (
-                <CircleProgress mini />
-              )}
+              <CircleProgress mini />
+            )}
           </div>
         )}
         {pdfError && (

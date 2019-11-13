@@ -42,8 +42,8 @@ export interface KubernetesProps {
 }
 
 export interface DispatchProps {
-  requestKubernetesClusters: () => Promise<any>;
-  requestClusterForStore: (clusterID: number) => void;
+  requestKubernetesClusters: () => Promise<KubernetesCluster[]>;
+  requestClusterForStore: (clusterID: number) => Promise<KubernetesCluster>;
   requestNodePools: (clusterID: number) => Promise<any>;
   updateCluster: (params: UpdateClusterParams) => Promise<KubernetesCluster>;
   createNodePool: (params: CreateNodePoolParams) => Promise<any>;
@@ -117,7 +117,7 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
       const lastUpdated = state.__resources.kubernetes.lastUpdated;
       const nodePoolsLoading =
         state.__resources.nodePools.loading &&
-        state.__resources.nodePools.entities.length === 0;
+        state.__resources.nodePools.lastUpdated === 0;
 
       if (mapKubernetesToProps) {
         return mapKubernetesToProps(

@@ -43,9 +43,6 @@ class Rebuild extends Page {
   assertElemsDisplay() {
     this.rebuildDescriptionText.waitForDisplayed(constants.wait.normal);
     this.rebuildSelect.waitForDisplayed(constants.wait.normal);
-    browser.waitUntil(() => {
-      return this.images.length !== 0;
-    });
   }
 
   selectImage(label) {
