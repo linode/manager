@@ -63,7 +63,10 @@ export const LongviewLanding: React.FunctionComponent<
           labelTitle="Longview"
           removeCrumbX={1}
         />
-        <DocumentationButton href={'https://google.com'} />
+        <DocumentationButton
+          /** This URL points to the old guide until the update is live */
+          href={'https://www.linode.com/docs/platform/longview/longview/'}
+        />
       </Box>
       <AppBar position="static" color="default">
         <Tabs
@@ -95,7 +98,12 @@ export const LongviewLanding: React.FunctionComponent<
           exact
           strict
           path={`${url}/clients`}
-          render={() => <LongviewClients {...props} />}
+          render={() => (
+            <LongviewClients
+              subscriptionsData={subscriptionRequestHook.data || []}
+              {...props}
+            />
+          )}
         />
         <Route
           exact

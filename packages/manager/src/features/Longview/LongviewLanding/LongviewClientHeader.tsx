@@ -2,6 +2,12 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
+import {
+  makeStyles,
+  Theme,
+  withTheme,
+  WithTheme
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EditableEntityLabel from 'src/components/EditableEntityLabel';
 import Grid from 'src/components/Grid';
@@ -15,12 +21,40 @@ import { formatUptime } from 'src/utilities/formatUptime';
 import { pluralize } from 'src/utilities/pluralize';
 import { LongviewPackage } from '../request.types';
 
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    [theme.breakpoints.down('md')]: {
+      flexDirection: 'row',
+      alignItems: 'center'
+    }
+  },
+  updates: {
+    [theme.breakpoints.down('md')]: {
+      marginRight: theme.spacing(2)
+    }
+  },
+  link: {
+    ...pathOr<Object>({}, ['overrides', 'MuiButton', 'root'], theme),
+    ...pathOr<Object>(
+      {},
+      ['overrides', 'MuiButton', 'containedSecondary'],
+      theme
+    ),
+    padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
+    display: 'inline-block',
+    position: 'relative',
+    [theme.breakpoints.down('md')]: {
+      top: -4
+    }
+  }
+}));
+
 interface Props {
   clientID: number;
   clientLabel: string;
 }
 
-type CombinedProps = Props & DispatchProps & LVDataProps;
+type CombinedProps = Props & DispatchProps & LVDataProps & WithTheme;
 
 const getPackageNoticeText = (packages: LongviewPackage[]) => {
   if (!packages) {
@@ -40,6 +74,7 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
     longviewClientDataLoading,
     updateLongviewClient
   } = props;
+  const classes = useStyles();
   const [updating, setUpdating] = React.useState<boolean>(false);
 
   const handleUpdateLabel = (newLabel: string) => {
@@ -68,20 +103,8 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
   const packagesToUpdate = getPackageNoticeText(packages);
 
   return (
-    <Grid
-      container
-      item
-      direction="column"
-      spacing={2}
-      style={{ paddingTop: '16px', paddingLeft: '16px' }}
-    >
-      <Grid
-        container
-        item
-        direction="row"
-        justify="flex-start"
-        alignItems="center"
-      >
+    <Grid container direction="column" className={classes.root}>
+      <Grid item>
         <EditableEntityLabel
           text={clientLabel}
           iconVariant="linode"
@@ -91,7 +114,7 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
           loading={updating}
         />
       </Grid>
-      <Grid item>
+      <Grid item className={classes.updates}>
         {longviewClientDataLoading ? (
           <Typography>Loading...</Typography>
         ) : (
@@ -102,7 +125,9 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
         )}
       </Grid>
       <Grid item>
-        <Link to={`/longview/clients/${clientID}`}>View details</Link>
+        <Link to={`/longview/clients/${clientID}`} className={classes.link}>
+          View details
+        </Link>
       </Grid>
     </Grid>
   );
@@ -111,7 +136,8 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
 const enhanced = compose<CombinedProps, Props>(
   withClientStats((ownProps: Props) => ownProps.clientID),
   /** We only need the update action here, easier than prop drilling through 4 components */
-  withLongviewClients(() => ({}))
+  withLongviewClients(() => ({})),
+  withTheme
 );
 
 export default enhanced(LongviewClientHeader);

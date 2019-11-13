@@ -1,6 +1,5 @@
 import Close from '@material-ui/icons/Close';
 import Search from '@material-ui/icons/Search';
-import { Image } from 'linode-js-sdk/lib/images';
 import { LinodeType } from 'linode-js-sdk/lib/linodes';
 import { take } from 'ramda';
 import * as React from 'react';
@@ -11,7 +10,7 @@ import _Option from 'react-select/lib/components/Option';
 import { compose } from 'recompose';
 import IconButton from 'src/components/core/IconButton';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
-import withImages from 'src/containers/withImages.container';
+import withImages, { WithImages } from 'src/containers/withImages.container';
 import withStoreSearch, {
   SearchProps
 } from 'src/features/Search/withStoreSearch';
@@ -27,7 +26,7 @@ interface State {
 }
 
 type CombinedProps = WithTypesProps &
-  WithImagesProps &
+  WithImages &
   SearchProps &
   StyleProps &
   RouteComponentProps<{}>;
@@ -172,7 +171,6 @@ class SearchBar extends React.Component<CombinedProps, State> {
           aria-label="open menu"
           onClick={this.toggleSearch}
           className={classes.navIconHide}
-          style={{ marginRight: 10 }}
         >
           <Search />
         </IconButton>
@@ -231,21 +229,12 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
   typesData: state.__resources.types.entities
 }));
 
-interface WithImagesProps {
-  imagesData: Image[];
-  imagesLoading: boolean;
-}
-
 export default compose<CombinedProps, {}>(
-  styled,
   withTypes,
   withRouter,
-  withImages((ownProps, imagesData, imagesLoading) => ({
-    ...ownProps,
-    imagesData,
-    imagesLoading
-  })),
-  withStoreSearch()
+  withImages(),
+  withStoreSearch(),
+  styled
 )(SearchBar) as React.ComponentType<{}>;
 
 export const createFinalOptions = (

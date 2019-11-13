@@ -1,5 +1,9 @@
-import { LongviewClient } from 'linode-js-sdk/lib/longview';
+import {
+  LongviewClient,
+  LongviewSubscription
+} from 'linode-js-sdk/lib/longview/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -10,6 +14,9 @@ import AddNewLink from 'src/components/AddNewLink';
 import Search from 'src/components/DebouncedSearchTextField';
 import Grid from 'src/components/Grid';
 
+import withSettings, {
+  SettingsProps
+} from 'src/containers/accountSettings.container';
 import withLongviewClients, {
   Props as LongviewProps
 } from 'src/containers/longview.container';
@@ -18,6 +25,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import DeleteDialog from './LongviewDeleteDialog';
 import LongviewList from './LongviewList';
+import SubscriptionDialog from './SubscriptionDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   headingWrapper: {
@@ -37,7 +45,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-type CombinedProps = RouteComponentProps & LongviewProps & WithSnackbarProps;
+interface Props {
+  subscriptionsData: LongviewSubscription[];
+}
+
+type CombinedProps = Props &
+  RouteComponentProps &
+  LongviewProps &
+  WithSnackbarProps &
+  SettingsProps;
 
 export const LongviewClients: React.FC<CombinedProps> = props => {
   const [newClientLoading, setNewClientLoading] = React.useState<boolean>(
@@ -52,6 +68,15 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
   );
   const [selectedClientLabel, setClientLabel] = React.useState<string>('');
 
+  /**
+   * Subscription warning modal (shown when a user has used all of their plan's
+   * available LV clients)
+   */
+
+  const [subscriptionDialogOpen, setSubscriptionDialogOpen] = React.useState<
+    boolean
+  >(false);
+
   const classes = useStyles();
 
   React.useEffect(() => {
@@ -64,8 +89,26 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
       setClientID(id);
       setClientLabel(label);
     },
-    [selectedClientID, setClientLabel]
+    [selectedClientID, selectedClientLabel]
   );
+
+  const handleSubmit = () => {
+    const {
+      history: { push }
+    } = props;
+
+    if (isManaged) {
+      push({
+        pathname: '/support/tickets',
+        state: {
+          open: true,
+          title: 'Request for additional Longview clients'
+        }
+      });
+      return;
+    }
+    props.history.push('/longview/plan-details');
+  };
 
   const handleAddClient = () => {
     setNewClientLoading(true);
@@ -74,14 +117,21 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
         setNewClientLoading(false);
       })
       .catch(errorResponse => {
-        props.enqueueSnackbar(
-          getAPIErrorOrDefault(
-            errorResponse,
-            'Error creating Longview client.'
-          )[0].reason,
-          { variant: 'error' }
-        ),
+        if (errorResponse[0].reason.match(/subscription/)) {
+          // The user has reached their subscription limit.
+          setSubscriptionDialogOpen(true);
           setNewClientLoading(false);
+        } else {
+          // Any network or other errors handled with a toast
+          props.enqueueSnackbar(
+            getAPIErrorOrDefault(
+              errorResponse,
+              'Error creating Longview client.'
+            )[0].reason,
+            { variant: 'error' }
+          ),
+            setNewClientLoading(false);
+        }
       });
   };
 
@@ -91,6 +141,8 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     longviewClientsLastUpdated,
     longviewClientsLoading,
     longviewClientsResults,
+    accountSettings,
+    subscriptionsData,
     createLongviewClient,
     deleteLongviewClient
   } = props;
@@ -100,6 +152,13 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
       filterLongviewClientsByQuery(query, longviewClientsData)
     );
   };
+
+  const _subscription = pathOr('', ['longview_subscription'], accountSettings);
+  const activeSubscription = subscriptionsData.find(
+    thisSubscription => thisSubscription.id === _subscription
+  );
+
+  const isManaged = pathOr(false, ['managed'], accountSettings);
 
   return (
     <React.Fragment>
@@ -148,13 +207,23 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
         open={deleteDialogOpen}
         closeDialog={() => toggleDeleteDialog(false)}
       />
+      <SubscriptionDialog
+        isOpen={subscriptionDialogOpen}
+        isManaged={isManaged}
+        onClose={() => setSubscriptionDialogOpen(false)}
+        onSubmit={handleSubmit}
+        clientLimit={
+          activeSubscription ? activeSubscription.clients_included : 10
+        }
+      />
     </React.Fragment>
   );
 };
 
-export default compose<CombinedProps, RouteComponentProps>(
+export default compose<CombinedProps, Props & RouteComponentProps>(
   React.memo,
   withLongviewClients(),
+  withSettings(),
   withSnackbar
 )(LongviewClients);
 
