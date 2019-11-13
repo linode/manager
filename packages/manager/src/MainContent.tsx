@@ -372,7 +372,7 @@ const MainContent: React.FC<CombinedProps> = props => {
               </div>
             </main>
 
-            <Footer />
+            <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
             <WelcomeBanner
               open={welcomeModalIsOpen}
               onClose={() => {
