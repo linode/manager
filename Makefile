@@ -12,7 +12,8 @@ sdk:
 	docker build --target sdk_build -t acourdavault/linodecloud:sdk .
 
 build: sdk
-	docker run --rm --name build -v ${path}/build:/home/cloud/build acourdavault/linodecloud:sdk npx lerna run build --scope linode-manager
+	docker run --name build -v ${path}/build:/home/cloud/build acourdavault/linodecloud:sdk npx lerna run build --scope linode-manager
+	docker cp build:/home/cloud/packages/manager/build ${path}/packages/manager/build
 
 jest: sdk
 	docker run --name jest acourdavault/linodecloud:sdk yarn test
