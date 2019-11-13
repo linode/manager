@@ -12,9 +12,16 @@ import Grid from 'src/components/Grid';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(4),
-    padding: `0px ${theme.spacing()}px ${theme.spacing(
-      3
-    )}px ${theme.spacing()}px`
+    padding: theme.spacing(3)
+  },
+  copyContainer: {
+    backgroundColor: theme.color.grey5,
+    margin: `${theme.spacing(1)}px 0`,
+    borderRadius: theme.shape.borderRadius,
+    maxWidth: '100%'
+  },
+  copyCode: {
+    overflowX: 'auto'
   },
   apiKey: {
     color: theme.color.grey1
@@ -25,10 +32,23 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: theme.color.red
     }
   },
-  helpText: {
-    fontSize: '1em',
-    lineHeight: '1.2em',
-    paddingTop: theme.spacing()
+  helpText: {},
+  instruction: {
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: 'auto',
+      '&:not(:first-of-type)': {
+        position: 'relative',
+        marginLeft: theme.spacing(2),
+        paddingLeft: theme.spacing(2),
+        '&:before': {
+          content: "'|'",
+          position: 'absolute',
+          top: theme.spacing(1) - 3,
+          left: -theme.spacing(1) + 2
+        }
+      }
+    }
   },
   footer: {
     '& span:nth-child(n+2)': {
@@ -60,71 +80,107 @@ export const LongviewClientInstructions: React.FC<Props> = props => {
       <Grid
         container
         direction="row"
-        wrap="nowrap"
         justify="space-between"
         alignItems="flex-start"
         spacing={2}
         aria-label="Installation instructions for the Longview agent"
       >
-        <Grid item xs={3}>
-          <EditableEntityLabel
-            text={'longview3347837'}
-            iconVariant="linode"
-            subText="Waiting for data..."
-            onEdit={() => Promise.resolve(null)}
-            loading={false}
-          />
+        <Grid item xs={11}>
+          <Grid container>
+            <Grid item xs={12} md={3}>
+              <EditableEntityLabel
+                text={'longview3347837'}
+                iconVariant="linode"
+                subText="Waiting for data..."
+                onEdit={() => Promise.resolve(null)}
+                loading={false}
+              />
+            </Grid>
+            <Grid item xs={12} md={9}>
+              <Grid container>
+                <Grid item>
+                  <Typography className={classes.helpText}>
+                    Before this client can gather data, you need to install the
+                    Longview Agent on your server by running the following
+                    command. After installation, it may be a few minutes before
+                    the client begins receiving data.
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Grid
+                    container
+                    wrap="nowrap"
+                    alignItems="center"
+                    className={classes.copyContainer}
+                  >
+                    <Grid item className="py0">
+                      <CopyTooltip text={command} />
+                    </Grid>
+                    <Grid item className={`${classes.copyCode} py0`}>
+                      <pre>
+                        <code>{command}</code>
+                      </pre>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item>
+                  <Typography className={classes.helpText}>
+                    This should work for most installations, but if you have
+                    issues, please consult our troubleshooting guide and manual
+                    installation instructions (API key required):
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Grid container>
+                    <Grid item className={classes.instruction}>
+                      <Typography>
+                        <a
+                          href="https://www.linode.com/docs/platform/longview/longview/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Troubleshooting guide
+                        </a>
+                      </Typography>
+                    </Grid>
+                    <Grid item className={classes.instruction}>
+                      <Typography>
+                        <a
+                          href="https://www.linode.com/docs/platform/longview/longview/#install-the-longview-client"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Manual installation instructions
+                        </a>
+                      </Typography>
+                    </Grid>
+                    <Grid item className={classes.instruction}>
+                      <Typography>
+                        API Key:{' '}
+                        <span className={classes.apiKey}>
+                          DCDC2FEB-3E84-42E5-A00909870A3E618C
+                        </span>
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
         </Grid>
-        <Grid container item spacing={1}>
-          <Grid item>
-            <Typography className={classes.helpText}>
-              Before this client can gather data, you need to install the
-              Longview Agent on your server by running the following command.
-              After installation, it may be a few minutes before the client
-              begins receiving data.
-            </Typography>
+        <Grid item xs={1}>
+          <Grid container justify="flex-end">
+            <Grid item>
+              <IconButton
+                className={classes.button}
+                onClick={() =>
+                  triggerDeleteLongviewClient(clientID, clientLabel)
+                }
+              >
+                <Close width={30} height={30} />
+              </IconButton>
+            </Grid>
           </Grid>
-          <Grid item>
-            <pre>
-              <CopyTooltip text={command} />
-              <code>{command}</code>
-            </pre>
-          </Grid>
-          <Grid item>
-            <Typography className={classes.helpText}>
-              This should work for most installations, but if you have issues,
-              please consult our troubleshooting guide and manual installation
-              instructions (API key required):
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Typography className={classes.footer}>
-              <span>
-                <a href="https://www.linode.com/docs/platform/longview/longview/">
-                  Troubleshooting guide
-                </a>
-              </span>
-              <span>
-                <a href="https://www.linode.com/docs/platform/longview/longview/#install-the-longview-client">
-                  Manual installation instructions
-                </a>
-              </span>
-              <span>
-                API Key:{' '}
-                <span className={classes.apiKey}>
-                  DCDC2FEB-3E84-42E5-A00909870A3E618C
-                </span>
-              </span>
-            </Typography>
-          </Grid>
-        </Grid>
-        <Grid item>
-          <IconButton
-            className={classes.button}
-            onClick={() => triggerDeleteLongviewClient(clientID, clientLabel)}
-          >
-            <Close width={30} height={30} />
-          </IconButton>
         </Grid>
       </Grid>
     </Paper>
