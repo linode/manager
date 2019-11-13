@@ -8,7 +8,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import { debounce } from 'throttle-debounce';
 import AddNewLink from 'src/components/AddNewLink';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -22,8 +21,8 @@ import withSettings, {
 import withLongviewClients, {
   Props as LongviewProps
 } from 'src/containers/longview.container';
-import { MapState } from 'src/store/types';
 import { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
+import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import DeleteDialog from './LongviewDeleteDialog';
 import LongviewList from './LongviewList';
@@ -70,21 +69,13 @@ type CombinedProps = Props &
  * when the most recently updated Longview client
  * was updated.
  *
- * This function is debounced because these values
- * can be updated in quick succession, leading to
- * visual glitches (as one second is quickly replaced
- * with another).
  */
-export const getLastUpdated = debounce(
-  500,
-  false,
-  (lvClientData: Record<string, StatsState>) => {
-    const updated = Object.values(lvClientData).reduce((accum, thisClient) => {
-      return thisClient.lastUpdated > accum ? thisClient.lastUpdated : accum;
-    }, 0) as number;
-    return new Date(updated).toUTCString();
-  }
-);
+export const getLastUpdated = (lvClientData: Record<string, StatsState>) => {
+  const updated = Object.values(lvClientData).reduce((accum, thisClient) => {
+    return thisClient.lastUpdated > accum ? thisClient.lastUpdated : accum;
+  }, 0) as number;
+  return new Date(updated).toUTCString();
+};
 
 export const LongviewClients: React.FC<CombinedProps> = props => {
   const [newClientLoading, setNewClientLoading] = React.useState<boolean>(
@@ -201,6 +192,10 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     );
   };
 
+  const handleSortKeyChange = (selected: Item) => {
+    setSortKey(selected.value as SortKey);
+  };
+
   const _subscription = pathOr('', ['longview_subscription'], accountSettings);
   const activeSubscription = subscriptionsData.find(
     thisSubscription => thisSubscription.id === _subscription
@@ -208,7 +203,9 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
 
   const isManaged = pathOr(false, ['managed'], accountSettings);
 
-  const lastUpdated = getLastUpdated(lvClientData);
+  const lastUpdated = React.useMemo(() => getLastUpdated(lvClientData), [
+    lvClientData
+  ]);
 
   return (
     <React.Fragment>
@@ -220,8 +217,8 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
           <Select
             isClearable={false}
             options={sortOptions}
-            value={sortOptions[0]}
-            onChange={() => null}
+            value={sortOptions.find(thisOption => thisOption.value === sortKey)}
+            onChange={handleSortKeyChange}
           />
         </Grid>
         <Grid item className={`pt0 ${classes.lastUpdated}`}>

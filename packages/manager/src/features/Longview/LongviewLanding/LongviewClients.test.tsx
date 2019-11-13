@@ -38,6 +38,7 @@ const props = {
   accountSettingsLoading: false,
   accountSettingsError: {},
   accountSettingsLastUpdated: 0,
+  lvClientData: {},
   ...reactRouterProps
 };
 
