@@ -5,24 +5,24 @@ import {
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
+import AddNewLink from 'src/components/AddNewLink';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-
-import AddNewLink from 'src/components/AddNewLink';
+import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Search from 'src/components/DebouncedSearchTextField';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
-
 import withSettings, {
   SettingsProps
 } from 'src/containers/accountSettings.container';
 import withLongviewClients, {
   Props as LongviewProps
 } from 'src/containers/longview.container';
-
+import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-
 import DeleteDialog from './LongviewDeleteDialog';
 import LongviewList from './LongviewList';
 import SubscriptionDialog from './SubscriptionDialog';
@@ -42,6 +42,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   cta: {
     marginTop: theme.spacing(2)
+  },
+  lastUpdated: {
+    marginBottom: theme.spacing(2)
+  },
+  sortSelect: {
+    marginBottom: theme.spacing(2),
+    width: '200px'
   }
 }));
 
@@ -53,6 +60,7 @@ type CombinedProps = Props &
   RouteComponentProps &
   LongviewProps &
   WithSnackbarProps &
+  StateProps &
   SettingsProps;
 
 export const LongviewClients: React.FC<CombinedProps> = props => {
@@ -67,6 +75,22 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     undefined
   );
   const [selectedClientLabel, setClientLabel] = React.useState<string>('');
+
+  /** Handlers/tracking variables for sorting by different client attributes */
+
+  type SortKey = 'name' | 'cpu';
+  const sortOptions: Item<string>[] = [
+    {
+      label: 'Client Name',
+      value: 'name'
+    },
+    {
+      label: 'CPU',
+      value: 'cpu'
+    }
+  ];
+
+  const [sortKey, setSortKey] = React.useState<SortKey>('name');
 
   /**
    * Subscription warning modal (shown when a user has used all of their plan's
@@ -135,12 +159,15 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
       });
   };
 
+  const getLastUpdated = 
+
   const {
     longviewClientsData,
     longviewClientsError,
     longviewClientsLastUpdated,
     longviewClientsLoading,
     longviewClientsResults,
+    lvClientData,
     accountSettings,
     subscriptionsData,
     createLongviewClient,
@@ -162,9 +189,23 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      <Grid container className={classes.headingWrapper}>
+      <Grid container className={classes.headingWrapper} alignItems="center">
         <Grid item className={`pt0 ${classes.searchbar}`}>
           <Search onSearch={handleSearch} debounceTime={250} />
+        </Grid>
+        <Grid item className={`pt0 ${classes.sortSelect}`}>
+          <Select
+            isClearable={false}
+            options={sortOptions}
+            value={sortOptions[0]}
+            onChange={() => null}
+          />
+        </Grid>
+        <Grid item className={`pt0 ${classes.lastUpdated}`}>
+          <Typography>
+            Data last updated at{' '}
+            <DateTimeDisplay value={new Date().toDateString()} />
+          </Typography>
         </Grid>
         <Grid item className={`${classes.addNew} pt0`}>
           <AddNewLink
@@ -219,6 +260,23 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     </React.Fragment>
   );
 };
+
+/**
+ * Calling connect directly here rather than use a
+ * container because this is a unique case; we need
+ * access to data from all clients.
+ */
+interface StateProps {
+  lvClientData: Record<string, any>;
+}
+
+const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
+  return {
+    lvClientData: pathOr({}, ['longviewStats'], state)
+  };
+};
+
+const connected = connect(mapStateToProps);
 
 export default compose<CombinedProps, Props & RouteComponentProps>(
   React.memo,
