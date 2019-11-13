@@ -78,7 +78,8 @@ storiesOf('Typography', module).add('Text', () => (
     </Typography>
     <Divider />
     <Typography variant="button" gutterBottom>
-      Button variant
+      Button. Implemented using the 'button' variant. This is part of MUI.
+      Manager does not presently utilize this variant.
     </Typography>
     <Divider />
   </React.Fragment>
