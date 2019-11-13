@@ -22,7 +22,8 @@ import NotFound from 'src/components/NotFound';
 import TabLink from 'src/components/TabLink';
 
 import withLongviewClients, {
-  DispatchProps, Props as LVProps
+  DispatchProps,
+  Props as LVProps
 } from 'src/containers/longview.container';
 
 interface Props {
@@ -145,7 +146,7 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
     return <NotFound />;
   }
 
-  if(!client) {
+  if (!client) {
     /* 
       this is already handled from the case above, but this is here
       so that we don't have to do undefined checking in the render method
@@ -259,5 +260,6 @@ export default compose<CombinedProps, {}>(
       longviewClientsLastUpdated,
       longviewClientsLoading,
       longviewClientsError
-    }))
+    })
+  )
 )(LongviewDetail);
