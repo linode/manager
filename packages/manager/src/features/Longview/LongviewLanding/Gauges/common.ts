@@ -1,4 +1,4 @@
 export const baseGaugeProps = {
-  height: 125,
-  width: 125
+  height: 110,
+  width: '100%'
 };
