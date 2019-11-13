@@ -95,9 +95,8 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
             Need help getting started?
           </Typography>
           <Typography variant="subtitle1">
-            {/* @todo update link once we have one for LKE */}
             <a
-              href="https://linode.com/docs/getting-started-new-manager/"
+              href="https://www.linode.com/docs/applications/containers/kubernetes/how-to-deploy-a-cluster-with-lke/"
               target="_blank"
               rel="noopener noreferrer"
               className="h-u"
