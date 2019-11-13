@@ -12,13 +12,15 @@ import { baseGaugeProps } from './common';
 
 interface Props {
   clientID: number;
+  lastUpdatedError?: APIError[];
 }
 
 const StorageGauge: React.FC<Props & LVDataProps> = props => {
   const {
     longviewClientDataError: error,
     longviewClientDataLoading: loading,
-    longviewClientData
+    longviewClientData,
+    lastUpdatedError
   } = props;
 
   const storageInBytes = sumStorage(longviewClientData.Disk);
@@ -35,7 +37,7 @@ const StorageGauge: React.FC<Props & LVDataProps> = props => {
       innerText={innerText(
         readableBytes(usedStorage).formatted,
         loading,
-        error
+        error || lastUpdatedError
       )}
       filledInColor="#F4AC3D"
       subTitle={

@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
@@ -9,13 +10,15 @@ import { baseGaugeProps } from './common';
 
 interface Props {
   clientID: number;
+  lastUpdatedError?: APIError[];
 }
 
 const LoadGauge: React.FC<Props & LVDataProps> = props => {
   const {
     longviewClientData,
     longviewClientDataLoading: loading,
-    longviewClientDataError: error
+    longviewClientDataError: error,
+    lastUpdatedError
   } = props;
 
   const load = pathOr<number>(0, ['Load', 0, 'y'], longviewClientData);
@@ -29,7 +32,7 @@ const LoadGauge: React.FC<Props & LVDataProps> = props => {
     innerText: string;
     subTitle: JSX.Element | null;
   } => {
-    if (error) {
+    if (error || lastUpdatedError) {
       return {
         innerText: 'Error',
         subTitle: (

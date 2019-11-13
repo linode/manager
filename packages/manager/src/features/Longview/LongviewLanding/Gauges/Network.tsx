@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -12,6 +13,7 @@ import { baseGaugeProps } from './common';
 
 interface Props {
   clientID: number;
+  lastUpdatedError?: APIError[];
 }
 
 type CombinedProps = Props & LVDataProps;
@@ -20,7 +22,8 @@ const NetworkGauge: React.FC<CombinedProps> = props => {
   const {
     longviewClientDataLoading: loading,
     longviewClientDataError: error,
-    longviewClientData
+    longviewClientData,
+    lastUpdatedError
   } = props;
 
   const networkUsed = generateUsedNetworkAsBytes(
@@ -31,7 +34,7 @@ const NetworkGauge: React.FC<CombinedProps> = props => {
     innerText: string;
     subTitle: JSX.Element | null;
   } => {
-    if (error) {
+    if (error || lastUpdatedError) {
       return {
         innerText: 'Error',
         subTitle: (

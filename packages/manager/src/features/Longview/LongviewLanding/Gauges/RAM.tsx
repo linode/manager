@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
@@ -12,13 +13,15 @@ import withClientData, {
 
 interface Props {
   clientID: number;
+  lastUpdatedError?: APIError[];
 }
 
 const RAMGauge: React.FC<Props & LVDataProps> = props => {
   const {
     longviewClientDataError: error,
     longviewClientDataLoading: loading,
-    longviewClientData
+    longviewClientData,
+    lastUpdatedError
   } = props;
 
   const usedMemory = pathOr(
@@ -49,9 +52,9 @@ const RAMGauge: React.FC<Props & LVDataProps> = props => {
     innerText: string;
     subTitle: string | JSX.Element;
   } => {
-    if (loading) {
+    if (error || lastUpdatedError) {
       return {
-        innerText: 'Loading',
+        innerText: 'Error',
         subTitle: (
           <Typography>
             <strong>RAM</strong>
@@ -60,9 +63,9 @@ const RAMGauge: React.FC<Props & LVDataProps> = props => {
       };
     }
 
-    if (error) {
+    if (loading) {
       return {
-        innerText: 'Error',
+        innerText: 'Loading',
         subTitle: (
           <Typography>
             <strong>RAM</strong>
