@@ -15,6 +15,7 @@ interface Props {
   open: boolean;
   onClose: () => void;
   rdns?: string | null;
+  range?: string;
   address?: string;
 }
 
@@ -24,6 +25,7 @@ interface State {
   loading: boolean;
   errors?: APIError[];
   delayText: string | null;
+  ipv6Address?: string | null;
 }
 
 type CombinedProps = Props;
@@ -33,7 +35,8 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
     rdns: this.props.rdns,
     address: this.props.address,
     loading: false,
-    delayText: null
+    delayText: null,
+    ipv6Address: this.props.range
   };
 
   timer: any = undefined;
@@ -56,6 +59,7 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
     this.setState({
       rdns: nextProps.rdns,
       address: nextProps.address,
+      ipv6Address: nextProps.range,
       errors: undefined
     });
   }
@@ -71,11 +75,19 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
   };
 
   save = () => {
-    const { onClose } = this.props;
-    const { rdns, address } = this.state;
+    const { onClose, range } = this.props;
+    const { rdns, address, ipv6Address } = this.state;
     this.setState({ loading: true, errors: undefined });
     this.timer = setTimeout(this.showDelayText, 5000);
-    updateIP(address!, !rdns || rdns === '' ? null : rdns)
+
+    const ipToUpdate = range ? ipv6Address : address;
+
+    // Something has gone wrong in this case.
+    if (!ipToUpdate) {
+      return;
+    }
+
+    updateIP(ipToUpdate, !rdns || rdns === '' ? null : rdns)
       .then(_ => {
         if (!this.mounted) {
           return;
@@ -106,15 +118,31 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
     this.setState({ rdns: e.target.value });
   };
 
+  handleChangeIPv6Address = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ ipv6Address: e.target.value });
+  };
+
   render() {
-    const { open, onClose } = this.props;
-    const { rdns, delayText, errors, loading } = this.state;
+    const { open, onClose, range } = this.props;
+    const { rdns, ipv6Address, delayText, errors, loading } = this.state;
 
     const hasErrorFor = getAPIErrorsFor(this.errorResources, errors);
 
     return (
       <Drawer open={open} onClose={onClose} title={`Edit Reverse DNS`}>
         <React.Fragment>
+          {range && (
+            <div>
+              <TextField
+                style={{ marginBottom: 16 }}
+                placeholder="Enter an IPv6 address"
+                value={ipv6Address || ''}
+                errorText={hasErrorFor('ipv6Address')}
+                onChange={this.handleChangeIPv6Address}
+                data-qa-address-name
+              />
+            </div>
+          )}
           <TextField
             placeholder="Enter a domain name"
             value={rdns || ''}

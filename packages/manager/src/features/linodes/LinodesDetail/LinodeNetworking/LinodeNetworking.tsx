@@ -276,6 +276,13 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     });
   };
 
+  handleOpenEditRDNSForRange = (range: IPRange) => {
+    this.setState({
+      editRDNSDrawerOpen: true,
+      currentlySelectedIPRange: range
+    });
+  };
+
   renderRangeRow(range: IPRange, type: IPTypes) {
     const { classes } = this.props;
 
@@ -303,6 +310,8 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           <LinodeNetworkingActionMenu
             onView={this.displayRangeDrawer(range)}
             ipType={type}
+            ipAddress={range}
+            onEdit={() => this.handleOpenEditRDNSForRange(range)}
           />
         </TableCell>
       </TableRow>
@@ -398,7 +407,8 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   closeEditRDNSDrawer = () => {
     this.setState({
       editRDNSDrawerOpen: false,
-      currentlySelectedIP: undefined
+      currentlySelectedIP: undefined,
+      currentlySelectedIPRange: undefined
     });
     this.refreshIPs();
   };
@@ -536,6 +546,11 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           rdns={
             this.state.currentlySelectedIP
               ? this.state.currentlySelectedIP.rdns
+              : undefined
+          }
+          range={
+            this.state.currentlySelectedIPRange
+              ? this.state.currentlySelectedIPRange.range
               : undefined
           }
         />
