@@ -171,7 +171,6 @@ class SearchBar extends React.Component<CombinedProps, State> {
           aria-label="open menu"
           onClick={this.toggleSearch}
           className={classes.navIconHide}
-          style={{ marginRight: 10 }}
         >
           <Search />
         </IconButton>
@@ -231,11 +230,11 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
 }));
 
 export default compose<CombinedProps, {}>(
-  styled,
   withTypes,
   withRouter,
   withImages(),
   withStoreSearch()
+  styled
 )(SearchBar) as React.ComponentType<{}>;
 
 export const createFinalOptions = (

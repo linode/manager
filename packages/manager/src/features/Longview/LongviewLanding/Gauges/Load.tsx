@@ -1,58 +1,29 @@
-import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
+import withClientData, {
+  Props as LVDataProps
+} from 'src/containers/longview.stats.container';
 import { baseGaugeProps } from './common';
 
-import requestStats from '../../request';
-
 interface Props {
-  lastUpdated?: number;
-  token: string;
+  clientID: number;
 }
 
-const LoadGauge: React.FC<Props> = props => {
-  const [dataHasResolvedAtLeastOnce, setDataResolved] = React.useState<boolean>(
-    false
+const LoadGauge: React.FC<Props & LVDataProps> = props => {
+  const {
+    longviewClientData,
+    longviewClientDataLoading: loading,
+    longviewClientDataError: error
+  } = props;
+
+  const load = pathOr<number>(0, ['Load', 0, 'y'], longviewClientData);
+  const numberOfCores = pathOr<number>(
+    0,
+    ['SysInfo', 'cpu', 'cores'],
+    longviewClientData
   );
-  const [load, setLoad] = React.useState<number>(0);
-  const [amountOfCores, setCores] = React.useState<number>(0);
-  const [loading, setLoading] = React.useState<boolean>(true);
-  const [error, setError] = React.useState<APIError | undefined>();
-
-  React.useEffect(() => {
-    let mounted = true;
-    requestStats(props.token, 'getLatestValue', ['sysinfo', 'load'])
-      .then(response => {
-        if (mounted) {
-          setLoad(pathOr(0, ['Load', 0, 'y'], response));
-          setCores(pathOr(0, ['cpu', 'cores'], response.SysInfo));
-          setError(undefined);
-
-          if (!!loading) {
-            setLoading(false);
-          }
-          if (!dataHasResolvedAtLeastOnce) {
-            setDataResolved(true);
-          }
-        }
-      })
-      .catch(() => {
-        if (!dataHasResolvedAtLeastOnce && mounted) {
-          setError({
-            reason: 'Error'
-          });
-          if (!!loading) {
-            setLoading(false);
-          }
-        }
-      });
-
-    return () => {
-      mounted = false;
-    };
-  }, [props.lastUpdated]);
 
   const generateCopy = (): {
     innerText: string;
@@ -60,7 +31,7 @@ const LoadGauge: React.FC<Props> = props => {
   } => {
     if (error) {
       return {
-        innerText: error.reason,
+        innerText: 'Error',
         subTitle: (
           <Typography>
             <strong>Load</strong>
@@ -87,12 +58,6 @@ const LoadGauge: React.FC<Props> = props => {
           <Typography>
             <strong>Load</strong>
           </Typography>
-          <Typography>
-            {`${getOverallocationPercent(
-              amountOfCores || 0,
-              load || 0
-            )}% Overallocated`}
-          </Typography>
         </React.Fragment>
       )
     };
@@ -101,7 +66,7 @@ const LoadGauge: React.FC<Props> = props => {
   return (
     <GaugePercent
       {...baseGaugeProps}
-      max={amountOfCores}
+      max={numberOfCores}
       value={load}
       filledInColor="#FADB50"
       {...generateCopy()}
@@ -109,18 +74,4 @@ const LoadGauge: React.FC<Props> = props => {
   );
 };
 
-export const getOverallocationPercent = (
-  amountOfCores: number,
-  load: number
-) => {
-  /** we have a negative number meaning we're overallocated */
-  const allocation = amountOfCores - load;
-  if (allocation < 0) {
-    /** turn into a positive number as a percent */
-    return Math.round(allocation * 100 * -1);
-  }
-
-  return 0;
-};
-
-export default LoadGauge;
+export default withClientData<Props>(ownProps => ownProps.clientID)(LoadGauge);

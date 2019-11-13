@@ -1,5 +1,5 @@
 import { Action, AnyAction, Reducer } from 'redux';
-import { modes } from 'src/features/Volumes/VolumeDrawer';
+import { modes } from 'src/features/Volumes/VolumeDrawer/modes';
 import actionCreatorFactory, { isType } from 'typescript-fsa';
 
 export interface State {

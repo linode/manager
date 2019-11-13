@@ -12,7 +12,6 @@ import { CombinedProps, RebuildFromImage } from './RebuildFromImage';
 
 jest.mock('src/utilities/scrollErrorIntoView');
 jest.mock('src/components/EnhancedSelect/Select');
-
 afterEach(cleanup);
 
 const props: CombinedProps = {
@@ -55,10 +54,14 @@ describe('RebuildFromImage', () => {
     fireEvent.change(getByTestId('select'), {
       target: { value: 'linode/centos7' }
     });
+
+    fireEvent.blur(getByTestId('select'));
+
     fireEvent.change(getByPlaceholderText('Enter a password.'), {
       target: { value: 'AAbbCC1234!!' }
     });
     fireEvent.click(getByTestId('rebuild-button'));
+
     await waitForElement(() => getByText('Confirm Linode Rebuild'));
   });
 });

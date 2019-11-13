@@ -43,6 +43,8 @@ type CSSClasses =
 const styles = (theme: Theme) =>
   createStyles({
     wrapper: {
+      order: 3,
+      marginRight: theme.spacing(1),
       [theme.breakpoints.down('sm')]: {
         flex: 1
       }
@@ -59,7 +61,7 @@ const styles = (theme: Theme) =>
     },
     button: {
       position: 'relative',
-      minHeight: 40,
+      minHeight: `${theme.spacing(2) + 34}px`,
       paddingRight: `calc(${theme.spacing(3)}px + 24px)`,
       [theme.breakpoints.down('sm')]: {
         padding: '6px 34px 7px 11px'
@@ -217,8 +219,8 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
           onClose={this.handleClose}
           getContentAnchorEl={undefined}
           PaperProps={{ square: true, className: classes.paper }}
-          anchorOrigin={{ vertical: 45, horizontal: 'left' }}
-          transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+          anchorOrigin={{ vertical: 45, horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
           className={classes.menu}
         >
           {items.map((i, idx) => (

@@ -67,6 +67,7 @@ const AccountActivationLanding: React.FC<CombinedProps> = props => {
             <span
               onClick={() => toggleSupportDrawer(true)}
               className={classes.cta}
+              role="button"
             >
               please open a Support ticket.
             </span>

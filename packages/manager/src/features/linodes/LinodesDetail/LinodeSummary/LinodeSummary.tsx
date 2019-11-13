@@ -28,7 +28,7 @@ import withImages, { WithImages } from 'src/containers/withImages.container';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { displayType } from 'src/features/linodes/presentation';
 import { ApplicationState } from 'src/store';
-import { ExtendedEvent } from 'src/store/events/event.helpers';
+import { ExtendedEvent } from 'src/store/events/event.types';
 import { formatRegion } from 'src/utilities';
 import { setUpCharts } from 'src/utilities/charts';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';

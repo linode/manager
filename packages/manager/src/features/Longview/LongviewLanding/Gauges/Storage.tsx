@@ -3,43 +3,25 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
+import withClientStats, {
+  Props as LVDataProps
+} from 'src/containers/longview.stats.container';
 import { readableBytes } from 'src/utilities/unitConversions';
-import requestStats from '../../request';
 import { Disk } from '../../request.types';
 import { baseGaugeProps } from './common';
 
 interface Props {
-  clientAPIKey: string;
-  lastUpdated?: number;
+  clientID: number;
 }
 
-const StorageGauge: React.FC<Props> = props => {
-  const { clientAPIKey, lastUpdated } = props;
+const StorageGauge: React.FC<Props & LVDataProps> = props => {
+  const {
+    longviewClientDataError: error,
+    longviewClientDataLoading: loading,
+    longviewClientData
+  } = props;
 
-  const [loading, setLoading] = React.useState<boolean>(true);
-  const [error, setError] = React.useState<APIError | undefined>();
-
-  // The Longview API returns disk usage data in bytes.
-  const [storageInBytes, setStorageInBytes] = React.useState<
-    Storage | undefined
-  >();
-
-  React.useEffect(() => {
-    requestStats(clientAPIKey, 'getLatestValue', ['disk'])
-      .then(data => {
-        setLoading(false);
-        setError(undefined);
-        setStorageInBytes(sumStorage(data.Disk));
-      })
-      .catch(_ => {
-        if (!storageInBytes) {
-          setError({
-            reason: 'Error' // @todo: Error message?
-          });
-          setLoading(false);
-        }
-      });
-  }, [lastUpdated]);
+  const storageInBytes = sumStorage(longviewClientData.Disk);
 
   const usedStorage = storageInBytes
     ? storageInBytes.total - storageInBytes.free
@@ -72,7 +54,7 @@ const StorageGauge: React.FC<Props> = props => {
   );
 };
 
-export default StorageGauge;
+export default withClientStats<Props>(props => props.clientID)(StorageGauge);
 
 // UTILITIES
 interface Storage {
@@ -94,10 +76,10 @@ export const sumStorage = (DiskData: Record<string, Disk> = {}): Storage => {
 export const innerText = (
   value: string,
   loading: boolean,
-  error?: APIError
+  error?: APIError[]
 ) => {
   if (error) {
-    return error.reason;
+    return 'Error';
   }
 
   if (loading) {

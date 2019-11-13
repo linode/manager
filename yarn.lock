@@ -4724,6 +4724,25 @@ tslint-config-prettier@^1.18.0:
   resolved "https://registry.yarnpkg.com/tslint-config-prettier/-/tslint-config-prettier-1.18.0.tgz#75f140bde947d35d8f0d238e0ebf809d64592c37"
   integrity sha512-xPw9PgNPLG3iKRxmK7DWr+Ea/SzrvfHtjFt5LBl61gk2UBG/DB9kCXRjv+xyIU1rUtnayLeMUVJBcMX8Z17nDg==
 
+tslint-microsoft-contrib@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/tslint-microsoft-contrib/-/tslint-microsoft-contrib-6.2.0.tgz#8aa0f40584d066d05e6a5e7988da5163b85f2ad4"
+  integrity sha512-6tfi/2tHqV/3CL77pULBcK+foty11Rr0idRDxKnteTaKm6gWF9qmaCNU17HVssOuwlYNyOmd9Jsmjd+1t3a3qw==
+  dependencies:
+    tsutils "^2.27.2 <2.29.0"
+
+tslint-react-a11y@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/tslint-react-a11y/-/tslint-react-a11y-1.1.0.tgz#7cd5bd5b5cf0e4305d4992e868967a34b8aa46e5"
+  integrity sha512-Ak0qwV2eg93ai8/UChxJR4hc4AQPl1XBtBmQwiSrbDYkFjI95BpGy9hEM5DTwWhEW8huNIUwxfST10dRWUwhOg==
+  dependencies:
+    tslint-microsoft-contrib "^6.2.0"
+
+tslint-react-hooks@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/tslint-react-hooks/-/tslint-react-hooks-2.2.1.tgz#c52c7df65ee1517b2d6c92bc716e9ef72ccdf208"
+  integrity sha512-bqIg2uZe+quJMfSOGc4OOZ4awo6TP1ejGDGS6IKg2WIrS0XnWfhUJ99i3B8rUpnZhuD4vRSvyYIbXPUmEqQxxQ==
+
 tslint-react@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/tslint-react/-/tslint-react-4.1.0.tgz#7153b724a8cfbea52423d0ffa469e8eba3bcc834"
@@ -4749,6 +4768,13 @@ tslint@^5.20.0:
     semver "^5.3.0"
     tslib "^1.8.0"
     tsutils "^2.29.0"
+
+"tsutils@^2.27.2 <2.29.0":
+  version "2.28.0"
+  resolved "https://registry.yarnpkg.com/tsutils/-/tsutils-2.28.0.tgz#6bd71e160828f9d019b6f4e844742228f85169a1"
+  integrity sha512-bh5nAtW0tuhvOJnx1GLRn5ScraRLICGyJV5wJhtRWOLsxW70Kk5tZtpK3O/hW6LDnqKS9mlUMPZj9fEMJ0gxqA==
+  dependencies:
+    tslib "^1.8.1"
 
 tsutils@^2.29.0:
   version "2.29.0"
