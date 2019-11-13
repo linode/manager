@@ -168,7 +168,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
           <NetworkGauge clientID={clientID} />
         </Grid>
         <Grid item>
-          <StorageGauge clientAPIKey={clientAPIKey} lastUpdated={lastUpdated} />
+          <StorageGauge clientID={clientID} />
         </Grid>
         <Grid item style={{ alignSelf: 'flex-start' }}>
           <IconButton
