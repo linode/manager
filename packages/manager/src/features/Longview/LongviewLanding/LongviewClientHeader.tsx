@@ -22,6 +22,16 @@ interface Props {
 
 type CombinedProps = Props & DispatchProps & LVDataProps;
 
+const getPackageNoticeText = (packages: LongviewPackage[]) => {
+  if (!packages) {
+    return 'Package information not available';
+  }
+  if (packages.length === 0) {
+    return 'All packages up to date';
+  }
+  return `${pluralize('package', 'packages', packages.length)} have updates`;
+};
+
 export const LongviewClientHeader: React.FC<CombinedProps> = props => {
   const {
     clientID,
@@ -55,9 +65,7 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
     ['Packages'],
     longviewClientData
   );
-  const packagesToUpdate = packages
-    ? `${pluralize('package', 'packages', packages.length)} need updating`
-    : 'Package updates not available';
+  const packagesToUpdate = getPackageNoticeText(packages);
 
   return (
     <Grid
