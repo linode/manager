@@ -170,11 +170,7 @@ export const oneClickApps: OCA[] = [
     name: 'MongoDB',
     description: `MongoDB seeks to provide an alternative to traditional relational database management systems (RDBMS). In addition to its schema-free design and scalable architecture, MongoDB provides a JSON output and specialized, language-specific bindings that make it particularly attractive for use in custom application development and rapid prototyping.`,
     summary: `MongoDB is a database engine that provides access to non-relational, document-oriented databases.`,
-    related_info: [
-      {
-        title: 'https://www.mongodb.com/',
-        href: 'https://www.mongodb.com/'
-      },
+    related_guides: [
       {
         title: 'Create a MongoDB Replica Set',
         href: 'https://www.linode.com/docs/databases/mongodb/create-a-mongodb-replica-set/'
@@ -188,6 +184,12 @@ export const oneClickApps: OCA[] = [
         href:
           'https://www.linode.com/docs/databases/mongodb/install-mongodb-on-ubuntu-16-04/'
       }
+    ],
+    related_info: [
+      {
+        title: 'https://www.mongodb.com/',
+        href: 'https://www.mongodb.com/'
+      },
     ],
     logo_url: 'assets/mongodb_color.png'
   },
