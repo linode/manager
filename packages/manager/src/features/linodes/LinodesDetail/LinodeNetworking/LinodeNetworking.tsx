@@ -835,11 +835,17 @@ export const listIPv6InRange = (
       return;
     }
 
-    // We need to typecast here so that the overloaded `match()` is typed
-    // correctly.
-    const addr = parseIP(thisIP.address) as IPv6;
-    const parsedRange = parseIP(range) as IPv6;
+    // The ipaddr.js library throws an if it can't parse an IP address.
+    // We'll wrap this in a try/catch block just in case something is malformed.
+    try {
+      // We need to typecast here so that the overloaded `match()` is typed
+      // correctly.
+      const addr = parseIP(thisIP.address) as IPv6;
+      const parsedRange = parseIP(range) as IPv6;
 
-    return addr.match(parsedRange, prefix);
+      return addr.match(parsedRange, prefix);
+    } catch {
+      return false;
+    }
   });
 };
