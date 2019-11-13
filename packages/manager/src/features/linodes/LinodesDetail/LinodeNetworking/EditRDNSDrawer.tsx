@@ -7,6 +7,7 @@ import FormHelperText from 'src/components/core/FormHelperText';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import TextField from 'src/components/TextField';
+import { arePropsEqual } from 'src/utilities/arePropsEqual';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -56,12 +57,23 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
   };
 
   componentWillReceiveProps(nextProps: CombinedProps) {
-    this.setState({
-      rdns: nextProps.rdns,
-      address: nextProps.address,
-      ipv6Address: nextProps.range,
-      errors: undefined
-    });
+    // This is a hack fix. We need to refactor and replace all components with
+    // `componentWillReceiveProps`. @todo: do this.
+    // https://reactjs.org/docs/react-component.html#unsafe_componentwillreceiveprops
+    if (
+      !arePropsEqual<CombinedProps>(
+        ['rdns', 'address', 'range'],
+        this.props,
+        nextProps
+      )
+    ) {
+      this.setState({
+        rdns: nextProps.rdns,
+        address: nextProps.address,
+        ipv6Address: nextProps.range,
+        errors: undefined
+      });
+    }
   }
 
   showDelayText = () => {
