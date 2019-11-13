@@ -83,16 +83,18 @@ export const oneClickApps: OCA[] = [
     name: 'Flask',
     description: `Flask is a lightweight WSGI web application framework. It is designed to make getting started quick and easy, with the ability to scale up to complex applications.`,
     summary: `A quick light-weight web framework for Python that includes several utilities and libraries you can use to create a web application.`,
+    related_guides: [
+      {
+        title: 'Deploy a Flask Application on Ubuntu',
+        href:
+          'https://www.linode.com/docs/development/python/flask-and-gunicorn-on-ubuntu/'
+      },
+    ],
     related_info: [
       {
         title: 'https://www.palletsprojects.com/p/flask/',
         href: 'https://www.palletsprojects.com/p/flask/'
       },
-      {
-        title: 'Deploy a Flask Application on Ubuntu',
-        href:
-          'https://www.linode.com/docs/development/python/flask-and-gunicorn-on-ubuntu/'
-      }
     ],
     tips: [
       `Once the script finishes, go to <em>https://[your-Linode's-IP-address]</em> in a browser.`
