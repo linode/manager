@@ -167,6 +167,31 @@ export const oneClickApps: OCA[] = [
     // href: 'https://www.ibm.com/cloud/learn/lamp-stack-explained' Not sure this is kosher.
   },
   {
+    name: 'MongoDB',
+    description: `MongoDB seeks to provide an alternative to traditional relational database management systems (RDBMS). In addition to its schema-free design and scalable architecture, MongoDB provides a JSON output and specialized, language-specific bindings that make it particularly attractive for use in custom application development and rapid prototyping.`,
+    summary: `MongoDB is a database engine that provides access to non-relational, document-oriented databases.`,
+    related_info: [
+      {
+        title: 'https://www.mongodb.com/',
+        href: 'https://www.mongodb.com/'
+      },
+      {
+        title: 'Create a MongoDB Replica Set',
+        href: 'https://www.linode.com/docs/databases/mongodb/create-a-mongodb-replica-set/'
+      },
+      {
+        title: 'Build Database Clusters with MongoDB',
+        href: 'https://www.linode.com/docs/databases/mongodb/build-database-clusters-with-mongodb/'
+      },
+      {
+        title: 'Install MongoDB on Ubuntu 16.04',
+        href:
+          'https://www.linode.com/docs/databases/mongodb/install-mongodb-on-ubuntu-16-04/'
+      }
+    ],
+    logo_url: 'assets/mongodb_color.png'
+  },
+  {
     name: 'Plesk',
     description: `Plesk is a leading WordPress and website management platform and control panel. Plesk lets you build and manage multiple websites from a single dashboard to configure web services, email, and other applications. Plesk features hundreds of extensions, plus a complete WordPress toolkit. Use the Plesk One-Click App to manage websites hosted on your Linode.`,
     summary:
