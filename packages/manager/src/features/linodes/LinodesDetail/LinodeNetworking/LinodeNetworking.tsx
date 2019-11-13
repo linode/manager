@@ -815,8 +815,8 @@ const enhanced = recompose<CombinedProps, {}>(connected, linodeContext, styled);
 
 export default enhanced(LinodeNetworking);
 
-// Given a range, prefix, and a list of IPv6s, filter out the IPs that do not
-// fall within the range.
+// Given a range, prefix, and a list of IPs, filter out the IPs that do not
+// fall within the IPv6 range.
 export const listIPv6InRange = (
   range: string,
   prefix: number,
@@ -824,8 +824,8 @@ export const listIPv6InRange = (
 ) => {
   return ips.filter(thisIP => {
     // Only keep addresses that:
-    // 1. are part of a range
-    // 2. don't have RDNS set
+    // 1. are part of an IPv6 range
+    // 2. have RDNS set
     if (thisIP.type !== 'ipv6/range' || thisIP.rdns === null) {
       return;
     }
