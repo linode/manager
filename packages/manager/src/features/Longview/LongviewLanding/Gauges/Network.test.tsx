@@ -1,18 +1,42 @@
 import { cleanup, waitForElement } from '@testing-library/react';
-import MockAdapter from 'axios-mock-adapter';
 import * as React from 'react';
 import { network as mockNetworkData } from 'src/__data__/longview';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { baseRequest } from '../../request';
 import Network, { generateUnits, generateUsedNetworkAsBytes } from './Network';
-
-const mockApi = new MockAdapter(baseRequest);
 
 afterEach(cleanup);
 
-afterAll(async done => {
-  done();
-});
+const loadingStore = {
+  longviewStats: {
+    123: {
+      loading: true
+    }
+  }
+};
+
+const dataStore = {
+  longviewStats: {
+    123: {
+      loading: false,
+      data: {
+        ...mockNetworkData
+      }
+    }
+  }
+};
+
+const errorStore = {
+  longviewStats: {
+    123: {
+      loading: false,
+      error: [
+        {
+          reason: 'this is an error'
+        }
+      ]
+    }
+  }
+};
 
 describe('Utility Functions', () => {
   it('should aggregate max inbound and outbound network bandwidth correctly', () => {
@@ -34,41 +58,25 @@ describe('Utility Functions', () => {
 
 describe('Longview Network Gauge UI', () => {
   it('should render a loading state initially', () => {
-    const { getByText } = renderWithTheme(<Network lastUpdated={0} token="" />);
+    const { getByText } = renderWithTheme(<Network clientID={123} />, {
+      customStore: loadingStore
+    });
 
     expect(getByText(/Loading/)).toBeInTheDocument();
   });
 
-  it('should render an error state on 400 responses', async () => {
-    const { getByText } = renderWithTheme(<Network lastUpdated={0} token="" />);
-
-    mockApi.onPost().reply(400, [
-      {
-        /** everything inside is the response from the Longview API */
-        NOTIFICATIONS: [],
-        DATA: {
-          ...mockNetworkData
-        }
-      }
-    ]);
+  it('should render an error state upon Redux Error State', async () => {
+    const { getByText } = renderWithTheme(<Network clientID={123} />, {
+      customStore: errorStore
+    });
 
     await waitForElement(() => getByText(/Error/));
   });
 
-  it('should render a data state on 200 responses', async () => {
-    const { getByTestId } = renderWithTheme(
-      <Network lastUpdated={0} token="" />
-    );
-
-    mockApi.onPost().reply(200, [
-      {
-        /** everything inside is the response from the Longview API */
-        NOTIFICATIONS: [],
-        DATA: {
-          ...mockNetworkData
-        }
-      }
-    ]);
+  it('should render a data state when data is in Redux state', async () => {
+    const { getByTestId } = renderWithTheme(<Network clientID={123} />, {
+      customStore: dataStore
+    });
 
     const innerText = await waitForElement(() =>
       getByTestId('gauge-innertext')

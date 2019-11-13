@@ -17,7 +17,8 @@ afterEach(cleanup);
 const props: CombinedProps = {
   classes: { root: '', error: '' },
   linodeId: 1234,
-  images,
+  imagesData: images,
+  imagesError: {},
   imagesLoading: false,
   userSSHKeys: [],
   closeSnackbar: jest.fn(),
