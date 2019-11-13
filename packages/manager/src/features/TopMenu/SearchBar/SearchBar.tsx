@@ -233,7 +233,7 @@ export default compose<CombinedProps, {}>(
   withTypes,
   withRouter,
   withImages(),
-  withStoreSearch()
+  withStoreSearch(),
   styled
 )(SearchBar) as React.ComponentType<{}>;
 
