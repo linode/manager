@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   clientInstallationKey: string;
+  clientAPIKey: string;
 }
 
 type CombinedProps = RouteComponentProps & Props;

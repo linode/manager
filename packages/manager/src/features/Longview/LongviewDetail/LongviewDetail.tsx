@@ -1,4 +1,5 @@
 import { LongviewClient } from 'linode-js-sdk/lib/longview';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import {
   matchPath,
@@ -234,6 +235,7 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
           render={routerProps => (
             <Installation
               clientInstallationKey={client.install_code}
+              clientAPIKey={client.api_key}
               {...routerProps}
             />
           )}
@@ -256,7 +258,8 @@ export default compose<CombinedProps, {}>(
         longviewClientsError
       }
     ) => ({
-      client: longviewClientsData[own.match.params.id],
+      client:
+        longviewClientsData[pathOr<string>('', ['match', 'params', 'id'], own)],
       longviewClientsLastUpdated,
       longviewClientsLoading,
       longviewClientsError
