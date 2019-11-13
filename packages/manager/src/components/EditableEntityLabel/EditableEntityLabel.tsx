@@ -76,14 +76,8 @@ export const EditableEntityLabel: React.FC<Props> = props => {
           />
         </Grid>
       )}
-      <Grid
-        item
-        direction="column"
-        alignItems="flex-start"
-        justify="center"
-        className="py0"
-      >
-        <Grid container>
+      <Grid item className="py0">
+        <Grid container direction="column">
           <Grid item className="py0 px0">
             <EditableInput
               errorText={error}
