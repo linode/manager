@@ -21,13 +21,18 @@ const styles = (theme: Theme) =>
       }
     },
     root: {
-      marginRight: 6,
+      order: 6,
       marginLeft: theme.spacing(1) / 2,
+      marginRight: theme.spacing(1),
       position: 'relative',
       opacity: 1,
       transition: theme.transitions.create(['opacity']),
+      [theme.breakpoints.up('md')]: {
+        marginRight: 0
+      },
       [theme.breakpoints.up('lg')]: {
-        marginLeft: theme.spacing(2)
+        marginLeft: theme.spacing(1),
+        marginRight: -theme.spacing(2)
       },
       '&:hover': {
         '& $icon': {

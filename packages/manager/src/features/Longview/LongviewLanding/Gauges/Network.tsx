@@ -1,69 +1,31 @@
-import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
+import withClientStats, {
+  Props as LVDataProps
+} from 'src/containers/longview.stats.container';
+import { LongviewNetwork } from '../../request.types';
 import { baseGaugeProps } from './common';
 
-import requestStats from '../../request';
-import { LongviewNetwork } from '../../request.types';
-
 interface Props {
-  lastUpdated?: number;
-  token: string;
+  clientID: number;
 }
 
-const NetworkGauge: React.FC<Props> = props => {
-  const [dataHasResolved, markDataResolved] = React.useState<boolean>(false);
-  const [networkUsed, setNetworkUsed] = React.useState<number>(0);
-  const [loading, setLoading] = React.useState<boolean>(true);
-  const [error, setError] = React.useState<APIError | undefined>();
+type CombinedProps = Props & LVDataProps;
 
-  let mounted = true;
+const NetworkGauge: React.FC<CombinedProps> = props => {
+  const {
+    longviewClientDataLoading: loading,
+    longviewClientDataError: error,
+    longviewClientData
+  } = props;
 
-  React.useEffect(() => {
-    requestStats(props.token, 'getLatestValue', ['network'])
-      .then(response => {
-        const interfaces = pathOr(
-          {},
-          ['Network', 'Interface'],
-          response
-        ) as LongviewNetwork['Network']['Interface'];
-
-        if (mounted) {
-          setNetworkUsed(generateUsedNetworkAsBytes(interfaces));
-
-          setError(undefined);
-
-          if (!!loading) {
-            setLoading(false);
-          }
-
-          if (!dataHasResolved) {
-            markDataResolved(true);
-          }
-        }
-      })
-      .catch(() => {
-        /** only set error if we don't already have data */
-        if (mounted) {
-          if (!dataHasResolved) {
-            setError({
-              reason: 'Error'
-            });
-          }
-
-          if (!!loading) {
-            setLoading(false);
-          }
-        }
-      });
-
-    return () => {
-      mounted = false;
-    };
-  }, [props.lastUpdated]);
+  const networkUsed = generateUsedNetworkAsBytes(
+    pathOr({}, ['Network', 'Interface'], longviewClientData)
+  );
 
   const generateCopy = (): {
     innerText: string;
@@ -71,7 +33,7 @@ const NetworkGauge: React.FC<Props> = props => {
   } => {
     if (error) {
       return {
-        innerText: error.reason,
+        innerText: 'Error',
         subTitle: (
           <Typography>
             <strong>Network</strong>
@@ -127,7 +89,10 @@ const NetworkGauge: React.FC<Props> = props => {
   );
 };
 
-export default React.memo(NetworkGauge);
+export default compose<CombinedProps, Props>(
+  React.memo,
+  withClientStats<Props>(ownProps => ownProps.clientID)
+)(NetworkGauge);
 
 interface Units {
   value: number;

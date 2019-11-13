@@ -63,7 +63,10 @@ export const LongviewLanding: React.FunctionComponent<
           labelTitle="Longview"
           removeCrumbX={1}
         />
-        <DocumentationButton href={'https://google.com'} />
+        <DocumentationButton
+          /** This URL points to the old guide until the update is live */
+          href={'https://www.linode.com/docs/platform/longview/longview/'}
+        />
       </Box>
       <AppBar position="static" color="default">
         <Tabs

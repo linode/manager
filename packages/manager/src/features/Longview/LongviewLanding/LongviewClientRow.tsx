@@ -8,7 +8,6 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import CPUGauge from './Gauges/CPU';
-import { ActionHandlers } from './LongviewActionMenu';
 
 import { getLastUpdated } from '../request';
 import LoadGauge from './Gauges/Load';
@@ -48,10 +47,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface Props extends ActionHandlers {
+interface Props {
   clientID: number;
   clientLabel: string;
   clientAPIKey: string;
+  triggerDeleteLongviewClient: (
+    longviewClientID: number,
+    longviewClientLabel: string
+  ) => void;
 }
 
 type CombinedProps = Props & LVDataProps;
@@ -69,17 +72,19 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
     triggerDeleteLongviewClient
   } = props;
 
-  /* 
+  /*
    lastUpdated _might_ come back from the endpoint as 0, so it's important
    that we differentiate between _0_ and _undefined_
    */
-  const [lastUpdated, setLastUpdated] = React.useState<number | undefined>(0);
+  const [lastUpdated, setLastUpdated] = React.useState<number | undefined>(
+    undefined
+  );
   const [authed, setAuthed] = React.useState<boolean>(true);
 
   const requestAndSetLastUpdated = () => {
     return getLastUpdated(clientAPIKey)
       .then(response => {
-        /* 
+        /*
           only update _lastUpdated_ state if it hasn't already been set
           or the API response is in a time past what's already been set.
         */
@@ -97,7 +102,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
          * return an authentication failed error.
          */
         const reason = pathOr('', [0, 'reason'], e);
-        if (reason.match(/authentication/i)) {
+        if (mounted && reason.match(/authentication/i)) {
           setAuthed(false);
         }
       });
@@ -105,28 +110,17 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
 
   /** request on first mount */
   React.useEffect(() => {
-    if (mounted) {
-      requestAndSetLastUpdated();
-    }
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  /** then request on an interval of 10 seconds */
-  React.useEffect(() => {
-    if (mounted) {
+    requestAndSetLastUpdated().then(() => {
       requestInterval = setInterval(() => {
         requestAndSetLastUpdated();
       }, 10000);
-    }
+    });
 
     return () => {
       mounted = false;
       clearInterval(requestInterval);
     };
-  });
+  }, []);
 
   /**
    * We want to show a "waiting for data" state
@@ -153,25 +147,28 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
         alignItems="center"
         className={classes.container}
         aria-label="List of Your Longview Clients"
+        data-testid="longview-client-row"
       >
         <Grid item xs={2} className={classes.label}>
-          <LongviewClientHeader />
-        </Grid>
-        <CPUGauge clientID={clientID} />
-        <Grid item>
-          <RAMGauge token={clientAPIKey} lastUpdated={lastUpdated} />
+          <LongviewClientHeader clientID={clientID} clientLabel={clientLabel} />
         </Grid>
         <Grid item>
-          <SwapGauge token={clientAPIKey} lastUpdated={lastUpdated} />
+          <CPUGauge clientID={clientID} />
         </Grid>
         <Grid item>
-          <LoadGauge token={clientAPIKey} lastUpdated={lastUpdated} />
+          <RAMGauge clientID={clientID} />
         </Grid>
         <Grid item>
-          <NetworkGauge token={clientAPIKey} lastUpdated={lastUpdated} />
+          <SwapGauge clientID={clientID} />
         </Grid>
         <Grid item>
-          <StorageGauge clientAPIKey={clientAPIKey} lastUpdated={lastUpdated} />
+          <LoadGauge clientID={clientID} />
+        </Grid>
+        <Grid item>
+          <NetworkGauge clientID={clientID} />
+        </Grid>
+        <Grid item>
+          <StorageGauge clientID={clientID} />
         </Grid>
         <Grid item style={{ alignSelf: 'flex-start' }}>
           <IconButton
