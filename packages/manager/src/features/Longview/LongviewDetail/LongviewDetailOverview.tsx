@@ -1,3 +1,4 @@
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -20,6 +21,8 @@ import HelpIcon from 'src/components/HelpIcon';
 import withLongviewClients, {
   Props as LVProps
 } from 'src/containers/longview.container';
+
+import { systemInfo } from 'src/__data__/longview';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paperSection: {
@@ -57,6 +60,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   clients: LVProps['longviewClientsData'];
   longviewClientsLastUpdated: number;
+  // systemInfo: LVDataProps['longviewClientData'];
 }
 
 type CombinedProps = RouteComponentProps<{ id: string }> & Props;
@@ -64,6 +68,7 @@ type CombinedProps = RouteComponentProps<{ id: string }> & Props;
 interface PartialLongviewProps {
   clients: LVProps['longviewClientsData'];
   longviewClientsLastUpdated: LVProps['longviewClientsLastUpdated'];
+  // systemInfo: LVDataProps['longviewClientData'];
 }
 
 const LongviewDetailOverview: React.FC<CombinedProps> = props => {
@@ -75,6 +80,40 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
   } = props;
   const client = props.clients[id];
   const url = props.match.url;
+
+  const hostname = pathOr(
+    'Hostname not available',
+    ['SysInfo', 'hostname'],
+    systemInfo
+  );
+
+  const osDist = pathOr(
+    'Distro not available',
+    ['SysInfo', 'os', 'dist'],
+    systemInfo
+  );
+
+  const osDistVersion = pathOr(
+    'Distro version not available',
+    ['SysInfo', 'os', 'distversion'],
+    systemInfo
+  );
+
+  const kernel = pathOr(
+    'Kernel not available',
+    ['SysInfo', 'kernel'],
+    systemInfo
+  );
+
+  const cpuType = pathOr(
+    'CPU type not available',
+    ['SysInfo', 'cpu', 'type'],
+    systemInfo
+  );
+
+  const cpuCoreCount = systemInfo.SysInfo.cpu.cores;
+
+  const coreCountDisplay = cpuCoreCount > 1 ? `Cores` : `Core`;
 
   return (
     <React.Fragment>
@@ -101,7 +140,7 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
                     <Typography variant="h3" className={classes.wrapHeader}>
                       {client.label}
                     </Typography>
-                    <Typography>dev.hostname.com</Typography>
+                    <Typography>{hostname}</Typography>
                     <Typography>Up 47d 19h 22m</Typography>
                   </Grid>
                 </Grid>
@@ -116,7 +155,10 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
                     <ServerIcon />
                   </Grid>
                   <Grid item>
-                    <Typography>Debian 9.9 (Linux 4.9.0-9-amd64)</Typography>
+                    <Typography>
+                      {`${osDist} ${osDistVersion}`}
+                      {`(${kernel})`}
+                    </Typography>
                   </Grid>
                 </Grid>
                 <Grid
@@ -130,8 +172,12 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
                     <CPUIcon />
                   </Grid>
                   <Grid item>
-                    <Typography>AMD EPYC 7501 32-Core Processor</Typography>
-                    <Typography>1 Core</Typography>
+                    <Typography>{cpuType}</Typography>
+                    {cpuCoreCount && (
+                      <Typography>
+                        {`${cpuCoreCount} ${coreCountDisplay}`}
+                      </Typography>
+                    )}
                   </Grid>
                 </Grid>
                 <Grid
