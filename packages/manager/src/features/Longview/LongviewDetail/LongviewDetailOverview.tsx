@@ -148,7 +148,7 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
                   container
                   item
                   wrap="nowrap"
-                  alignItems="center"
+                  alignItems="flex-start"
                   className={classes.iconSection}
                 >
                   <Grid item>
