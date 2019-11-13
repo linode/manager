@@ -32,6 +32,14 @@ storiesOf('Button', module)
       <ButtonBase href="#" component="a" focusRipple>
         <Typography variant="button">Primary as link</Typography>
       </ButtonBase>
+
+      <Divider />
+
+      <ButtonBase href="#" component="a" focusRipple>
+        <Typography variant="button" color="secondary">
+          Secondary as link
+        </Typography>
+      </ButtonBase>
     </React.Fragment>
   ))
   .add('Disabled', () => (
