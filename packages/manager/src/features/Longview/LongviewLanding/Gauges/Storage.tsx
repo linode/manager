@@ -8,12 +8,7 @@ import withClientStats, {
 } from 'src/containers/longview.stats.container';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { Disk } from '../../request.types';
-import { baseGaugeProps } from './common';
-
-interface Props {
-  clientID: number;
-  lastUpdatedError?: APIError[];
-}
+import { baseGaugeProps, BaseProps as Props } from './common';
 
 const StorageGauge: React.FC<Props & LVDataProps> = props => {
   const {

@@ -1,4 +1,3 @@
-import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
@@ -7,12 +6,7 @@ import withClientData, {
   Props as LVDataProps
 } from 'src/containers/longview.stats.container';
 import { readableBytes } from 'src/utilities/unitConversions';
-import { baseGaugeProps } from './common';
-
-interface Props {
-  clientID: number;
-  lastUpdatedError?: APIError[];
-}
+import { baseGaugeProps, BaseProps as Props } from './common';
 
 const SwapGauge: React.FC<Props & LVDataProps> = props => {
   const {

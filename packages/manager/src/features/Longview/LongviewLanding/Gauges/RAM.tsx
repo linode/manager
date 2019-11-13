@@ -1,20 +1,14 @@
-import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
-import { baseGaugeProps } from './common';
+import { baseGaugeProps, BaseProps as Props } from './common';
 
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import withClientData, {
   Props as LVDataProps
 } from 'src/containers/longview.stats.container';
-
-interface Props {
-  clientID: number;
-  lastUpdatedError?: APIError[];
-}
 
 const RAMGauge: React.FC<Props & LVDataProps> = props => {
   const {

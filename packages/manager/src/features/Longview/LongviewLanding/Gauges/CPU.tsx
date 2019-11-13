@@ -5,16 +5,11 @@ import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
 import { pluralize } from 'src/utilities/pluralize';
 import { CPU } from '../../request.types';
-import { baseGaugeProps } from './common';
+import { baseGaugeProps, BaseProps as Props } from './common';
 
 import withClientStats, {
   Props as LVDataProps
 } from 'src/containers/longview.stats.container';
-
-interface Props {
-  clientID: number;
-  lastUpdatedError?: APIError[];
-}
 
 const CPUGauge: React.FC<Props & LVDataProps> = props => {
   const {

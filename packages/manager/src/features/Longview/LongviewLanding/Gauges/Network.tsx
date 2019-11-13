@@ -1,4 +1,3 @@
-import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -9,12 +8,7 @@ import withClientStats, {
   Props as LVDataProps
 } from 'src/containers/longview.stats.container';
 import { LongviewNetwork } from '../../request.types';
-import { baseGaugeProps } from './common';
-
-interface Props {
-  clientID: number;
-  lastUpdatedError?: APIError[];
-}
+import { baseGaugeProps, BaseProps as Props } from './common';
 
 type CombinedProps = Props & LVDataProps;
 
