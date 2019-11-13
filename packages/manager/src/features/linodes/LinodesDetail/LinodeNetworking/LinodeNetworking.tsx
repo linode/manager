@@ -215,13 +215,18 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       .then(ips => {
         const hasIPv6Range = ips.ipv6 && ips.ipv6.global.length > 0;
 
+        const shouldSetIPv6Loading = this.state.initialLoading;
+
         this.setState({ linodeIPs: ips, initialLoading: false });
 
         // If this user is assigned an IPv6 range in the DC this Linode resides
         // in, we request all IPs on the account, so we can look for matching
         // RDNS addresses.
         if (hasIPv6Range) {
-          this.setState({ ipv6Loading: true });
+          // Only set the IPv6 loading state if this is the initial load.
+          if (shouldSetIPv6Loading) {
+            this.setState({ ipv6Loading: true });
+          }
           getAllIPs({}, { region: this.props.linode.region })
             .then(response => {
               this.setState({
