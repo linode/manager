@@ -10,7 +10,7 @@ import {
 import { Doughnut } from 'react-chartjs-2';
 
 interface Options {
-  width: number;
+  width: number | string;
   height: number;
   fontSize?: number;
 }
@@ -26,8 +26,11 @@ const useStyles = (options: Options) =>
       top: `calc((${options.height}px / 2))`,
       width: options.width,
       textAlign: 'center',
-      fontSize: options.fontSize || `${theme.spacing(2)}px `,
-      color: theme.palette.text.primary
+      fontSize: options.fontSize || `calc(8px + 6 * ((100vw - 320px) / 680))`,
+      color: theme.palette.text.primary,
+      [theme.breakpoints.up('lg')]: {
+        fontSize: options.fontSize || `${theme.spacing(2)}px`
+      }
     },
     subTitle: {
       position: 'absolute',
@@ -40,7 +43,7 @@ const useStyles = (options: Options) =>
   }));
 
 interface Props {
-  width?: number;
+  width?: number | string;
   height?: number;
   filledInColor?: string;
   nonFilledInColor?: string;

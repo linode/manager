@@ -25,15 +25,11 @@ import withClientStats, {
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(4),
-    padding: `0px ${theme.spacing()}px ${theme.spacing(
-      3
-    )}px ${theme.spacing()}px`
+    padding: theme.spacing(3)
   },
-  container: {
-    height: 150,
-    '@media (max-width: 1100px)': {
-      flexDirection: 'column',
-      height: 'inherit'
+  gaugeContainer: {
+    [theme.breakpoints.down('sm')]: {
+      marginBottom: theme.spacing(2)
     }
   },
   button: {
@@ -42,9 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: theme.color.red
     }
   },
-  label: {
-    paddingLeft: theme.spacing(2)
-  }
+  label: {}
 }));
 
 interface Props {
@@ -141,42 +135,57 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
     <Paper className={classes.root}>
       <Grid
         container
-        direction="row"
         wrap="nowrap"
         justify="space-between"
-        alignItems="center"
-        className={classes.container}
+        alignItems="flex-start"
         aria-label="List of Your Longview Clients"
         data-testid="longview-client-row"
       >
-        <Grid item xs={2} className={classes.label}>
-          <LongviewClientHeader clientID={clientID} clientLabel={clientLabel} />
+        <Grid item xs={11}>
+          <Grid container>
+            <Grid item xs={12} md={3}>
+              <LongviewClientHeader
+                clientID={clientID}
+                clientLabel={clientLabel}
+              />
+            </Grid>
+            <Grid item xs={12} md={9}>
+              <Grid container>
+                <Grid item xs={4} sm={2} className={classes.gaugeContainer}>
+                  <CPUGauge clientID={clientID} />
+                </Grid>
+                <Grid item xs={4} sm={2} className={classes.gaugeContainer}>
+                  <RAMGauge clientID={clientID} />
+                </Grid>
+                <Grid item xs={4} sm={2} className={classes.gaugeContainer}>
+                  <SwapGauge clientID={clientID} />
+                </Grid>
+                <Grid item xs={4} sm={2} className={classes.gaugeContainer}>
+                  <LoadGauge clientID={clientID} />
+                </Grid>
+                <Grid item xs={4} sm={2} className={classes.gaugeContainer}>
+                  <NetworkGauge clientID={clientID} />
+                </Grid>
+                <Grid item xs={4} sm={2} className={classes.gaugeContainer}>
+                  <StorageGauge clientID={clientID} />
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
         </Grid>
-        <Grid item>
-          <CPUGauge clientID={clientID} />
-        </Grid>
-        <Grid item>
-          <RAMGauge clientID={clientID} />
-        </Grid>
-        <Grid item>
-          <SwapGauge token={clientAPIKey} lastUpdated={lastUpdated} />
-        </Grid>
-        <Grid item>
-          <LoadGauge token={clientAPIKey} lastUpdated={lastUpdated} />
-        </Grid>
-        <Grid item>
-          <NetworkGauge token={clientAPIKey} lastUpdated={lastUpdated} />
-        </Grid>
-        <Grid item>
-          <StorageGauge clientAPIKey={clientAPIKey} lastUpdated={lastUpdated} />
-        </Grid>
-        <Grid item style={{ alignSelf: 'flex-start' }}>
-          <IconButton
-            onClick={() => triggerDeleteLongviewClient(clientID, clientLabel)}
-            className={classes.button}
-          >
-            <Close width={30} height={30} />
-          </IconButton>
+        <Grid item xs={1}>
+          <Grid container justify="flex-end">
+            <Grid item>
+              <IconButton
+                onClick={() =>
+                  triggerDeleteLongviewClient(clientID, clientLabel)
+                }
+                className={classes.button}
+              >
+                <Close width={30} height={30} />
+              </IconButton>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     </Paper>
