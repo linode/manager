@@ -36,7 +36,9 @@ export const baseApps = {
   '401719': 'OpenVPN - Latest One-Click',
   '401697': 'WordPress - Latest One-Click',
   '595742': 'cPanel One-Click',
-  '593835': 'Plesk One-Click'
+  '593835': 'Plesk One-Click',
+  '609195': 'MongoDB One-Click'
+
 };
 
 const oneClickFilter = [
