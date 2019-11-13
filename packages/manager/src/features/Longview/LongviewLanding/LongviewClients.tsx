@@ -138,6 +138,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     longviewClientsLoading,
     longviewClientsResults,
     accountSettings,
+    subscriptionsData,
     createLongviewClient,
     deleteLongviewClient
   } = props;
@@ -148,17 +149,10 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     );
   };
 
-  /**
-   * Pending review we can't actually use this. See
-   * JIRA M3-3589 for details; Managed customers can get
-   * an incorrect value here after enrolling or cancelling
-   * Managed.
-   */
-  // const activeSubscription = subscriptionsData.find(
-  //   thisSubscription =>
-  //     thisSubscription.id ===
-  //     pathOr('', ['longview_subscription'], accountSettings)
-  // );
+  const _subscription = pathOr('', ['longview_subscription'], accountSettings);
+  const activeSubscription = subscriptionsData.find(
+    thisSubscription => thisSubscription.id === _subscription
+  );
 
   const isManaged = pathOr(false, ['managed'], accountSettings);
 
@@ -199,8 +193,9 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
         isManaged={isManaged}
         onClose={() => setSubscriptionDialogOpen(false)}
         onSubmit={handleSubmit}
-        // @todo remove this hack and replace with activeSubscription.clients_included
-        clientLimit={Object.values(longviewClientsData).length}
+        clientLimit={
+          activeSubscription ? activeSubscription.clients_included : 10
+        }
       />
     </React.Fragment>
   );
