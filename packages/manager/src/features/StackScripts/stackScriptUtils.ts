@@ -37,7 +37,6 @@ export const baseApps = {
   '401697': 'WordPress - Latest One-Click',
   '595742': 'cPanel One-Click',
   '593835': 'Plesk One-Click'
-
 };
 
 const oneClickFilter = [
