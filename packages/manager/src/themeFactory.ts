@@ -324,6 +324,24 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         },
         '&:active': {
           backgroundColor: primaryColors.dark
+        },
+        '&$colorSecondary': {
+          backgroundColor: 'transparent',
+          color: primaryColors.main,
+          border: `1px solid ${primaryColors.main}`,
+          padding: `${spacingUnit * 2 - 1}px ${spacingUnit * 3 +
+            spacingUnit / 2}px ${spacingUnit * 2 - 1}px`,
+          transition: 'border 225ms ease-in-out, color 225ms ease-in-out',
+          '&:hover, &:focus': {
+            backgroundColor: 'transparent !important',
+            color: primaryColors.light,
+            borderColor: primaryColors.light
+          },
+          '&:active': {
+            backgroundColor: 'transparent',
+            color: primaryColors.dark,
+            borderColor: primaryColors.dark
+          }
         }
       }
     },
