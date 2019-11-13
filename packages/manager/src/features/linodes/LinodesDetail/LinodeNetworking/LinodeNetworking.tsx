@@ -38,6 +38,7 @@ import { ZONES } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { upsertLinode as _upsertLinode } from 'src/store/linodes/linodes.actions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { getAll } from 'src/utilities/getAll';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import LinodePermissionsError from '../LinodePermissionsError';
 import CreateIPv4Drawer from './CreateIPv4Drawer';
@@ -66,10 +67,10 @@ type ClassNames =
   | 'ipv4TitleContainer'
   | 'netActionsTitle'
   | 'expandedIPSection'
-  | 'RDNS'
   | 'expandIcon'
   | 'expandButton'
-  | 'expandedRow';
+  | 'expandedRow'
+  | 'rDNSListItem';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -122,9 +123,7 @@ const styles = (theme: Theme) =>
       marginTop: theme.spacing(2),
       marginBottom: theme.spacing(1)
     },
-    RDNS: {
-      marginTop: theme.spacing(1)
-    },
+
     expandIcon: {
       marginLeft: theme.spacing(0.75),
       height: 22
@@ -145,6 +144,9 @@ const styles = (theme: Theme) =>
       '& td:not(:last-child)': {
         paddingTop: '14px'
       }
+    },
+    rDNSListItem: {
+      marginTop: theme.spacing(1)
     }
   });
 
@@ -172,6 +174,8 @@ type CombinedProps = ContextProps & WithStyles<ClassNames> & DispatchProps;
 // Save some typing below
 export const uniqByIP = uniqBy((thisIP: IPAddress) => thisIP.address);
 
+const getAllIPs = getAll<IPAddress>(getIPs);
+
 class LinodeNetworking extends React.Component<CombinedProps, State> {
   state: State = {
     removeIPDialogOpen: false,
@@ -182,7 +186,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     viewIPDrawerOpen: false,
     viewRangeDrawerOpen: false,
     initialLoading: true,
-    ipv6Loading: true,
+    ipv6Loading: false,
     expandedRDNSPanels: {}
   };
 
@@ -209,13 +213,18 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
     return getLinodeIPs(this.props.linode.id)
       .then(ips => {
+        const hasIPv6Range = ips.ipv6 && ips.ipv6.global.length > 0;
+
         this.setState({ linodeIPs: ips, initialLoading: false });
 
-        if (ips.ipv6 && ips.ipv6.global) {
-          getIPs({}, { region: this.props.linode.region })
+        // If this user is assigned an IPv6 range in the DC this Linode resides
+        // in, we request all IPs on the account, so we can look for matching
+        // RDNS addresses.
+        if (hasIPv6Range) {
+          this.setState({ ipv6Loading: true });
+          getAllIPs({}, { region: this.props.linode.region })
             .then(response => {
               this.setState({
-                linodeIPs: ips,
                 ipv6Loading: false,
                 allIPs: response.data
               });
@@ -223,7 +232,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             .catch(errorResponse => {
               const errors = getAPIErrorOrDefault(
                 errorResponse,
-                'There was an error retrieving your network information.'
+                'There was an error retrieving your IPv6 network information.'
               );
               this.setState({
                 ipv6Error: errors[0].reason,
@@ -355,7 +364,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         >
           {isExpanded &&
             ipsWithRDNS.map(ip => (
-              <div key={ip.address} className={classes.RDNS}>
+              <div key={ip.address} className={classes.rDNSListItem}>
                 <Typography>{ip.address}</Typography>
                 <Typography>{ip.rdns}</Typography>
               </div>
