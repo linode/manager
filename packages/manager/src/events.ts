@@ -11,53 +11,55 @@
  * access Redux and control the start of the event loop.
  */
 import { Event } from 'linode-js-sdk/lib/account';
+import { pathOr } from 'ramda';
 import { Subject } from 'rxjs/Subject';
-import { DISABLE_EVENT_THROTTLE } from 'src/constants';
-import store from 'src/store';
+import { DISABLE_EVENT_THROTTLE, INTERVAL } from 'src/constants';
+import store, { ApplicationState } from 'src/store';
+import {
+  setPollingInterval,
+  setRequestDeadline
+} from 'src/store/events/event.actions';
+import { resetEventsPolling as _resetEventsPolling } from 'src/store/events/event.helpers';
 import { getEvents } from 'src/store/events/event.request';
+import { ThunkDispatch } from 'src/store/types';
 
 export const events$ = new Subject<Event>();
-
-export let eventRequestDeadline = Date.now();
-
-/**
- * The current iteration of the poll. 1, 2, 4, 8, 16.
- */
-export let pollIteration = 1;
-
-/**
- * The lowest interval at which to make a request. This is later multiplied by the pollIteration
- * to get the actual interval.
- */
-export const INTERVAL: number = 1000;
 
 let inProgress = false;
 
 export const resetEventsPolling = (newPollIteration = 1) => {
-  eventRequestDeadline = Date.now() + INTERVAL * newPollIteration;
-  pollIteration = newPollIteration;
+  _resetEventsPolling(store.dispatch, newPollIteration);
 };
 
 export const requestEvents = () => {
   inProgress = true;
-  return store.dispatch(getEvents() as any).then((events: Event[]) => {
-    const reversed = events.reverse();
+  return (store.dispatch as ThunkDispatch)(getEvents())
+    .then((events: Event[]) => {
+      const reversed = events.reverse();
 
-    /**
-     * This feeds the stream for consumers of events$. We're simply pushing the events from the
-     * request response onto the stream one at a time.
-     */
-    reversed.forEach((linodeEvent: Event) => {
-      events$.next(linodeEvent);
-    });
-    inProgress = false;
-  });
+      /**
+       * This feeds the stream for consumers of events$. We're simply pushing the events from the
+       * request response onto the stream one at a time.
+       */
+      reversed.forEach((linodeEvent: Event) => {
+        events$.next(linodeEvent);
+      });
+      inProgress = false;
+    })
+    .catch(e => e);
 };
 
 export const startEventsInterval = () =>
   setInterval(
     () => {
+      const state: ApplicationState = pathOr({}, [], store.getState());
       const now = Date.now();
+      const pollIteration = pathOr(1, ['events', 'pollingInterval'], state);
+      const eventRequestDeadline = pathOr(
+        0,
+        ['events', 'requestDeadline'],
+        state
+      );
       if (now > eventRequestDeadline) {
         /**
          * If we're waiting on a request, set reset the pollIteration and return to prevent
@@ -75,13 +77,16 @@ export const startEventsInterval = () =>
           /*
            * If throttling is disabled manually set the timeout so tests wait to query the mock data store.
            */
-          eventRequestDeadline = now + 500;
+          store.dispatch(setRequestDeadline(now + 500));
         } else {
           const timeout = INTERVAL * pollIteration;
           /** Update the dealing */
-          eventRequestDeadline = now + timeout;
+          store.dispatch(setRequestDeadline(now + timeout));
           /* Update the iteration to a maximum of 16. */
-          pollIteration = Math.min(pollIteration * 2, 16);
+          const newIteration = Math.min(pollIteration * 2, 16);
+          if (pollIteration < 16) {
+            store.dispatch(setPollingInterval(newIteration));
+          }
         }
       }
     },

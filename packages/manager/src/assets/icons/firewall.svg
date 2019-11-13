@@ -1,0 +1,21 @@
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="A-01.-Firewalls-Landing-Page" transform="translate(-267.000000, -444.000000)">
+            <g id="list" transform="translate(252.000000, 277.000000)">
+                <g id="row" transform="translate(0.000000, 158.000000)">
+                    <g id="firewall" transform="translate(15.000000, 9.000000)">
+                        <circle id="Oval" stroke="#E3E5E8" stroke-width="1.5" cx="20" cy="20" r="19.25"></circle>
+                        <polygon id="Path" stroke="#939598" stroke-linecap="round" stroke-linejoin="round" points="8.75 20.25 31.25 20.25 31.25 29.25 8.75 29.25"></polygon>
+                        <line x1="8.75" y1="24.75" x2="31.25" y2="24.75" id="Path" stroke="#939598" stroke-linecap="round" stroke-linejoin="round"></line>
+                        <line x1="23.75" y1="20.25" x2="23.75" y2="24.75" id="Path" stroke="#939598" stroke-linecap="round" stroke-linejoin="round"></line>
+                        <line x1="16.25" y1="20.25" x2="16.25" y2="24.75" id="Path" stroke="#939598" stroke-linecap="round" stroke-linejoin="round"></line>
+                        <line x1="13.25" y1="24.75" x2="13.25" y2="29.25" id="Path" stroke="#939598" stroke-linecap="round" stroke-linejoin="round"></line>
+                        <line x1="20.75" y1="24.75" x2="20.75" y2="29.25" id="Path" stroke="#939598" stroke-linecap="round" stroke-linejoin="round"></line>
+                        <line x1="28.25" y1="24.75" x2="28.25" y2="29.25" id="Path" stroke="#939598" stroke-linecap="round" stroke-linejoin="round"></line>
+                        <path d="M19.4,20.25 C16.7,20.25 14,18.235 14,15.75 C14,13.05 15.35,11.25 17.6,11.25 C17.3,12.75 17.15,13.95 18.95,13.95 C21.65,13.95 20.917,10.025 18.05,6.75 C21.778,6.75 25.7,10.5 25.7,13.5 C25.7,17.228 24.8,20.25 19.4,20.25 Z" id="Path" stroke="#939598" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

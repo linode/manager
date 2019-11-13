@@ -3,10 +3,33 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import scrollTo from 'src/utilities/scrollTo';
+
+type ClassNames = 'closeLink';
+
+const styles = (theme: Theme) =>
+  createStyles({
+    closeLink: {
+      background: 'none',
+      color: theme.palette.primary.main,
+      border: 'none',
+      padding: 0,
+      font: 'inherit',
+      cursor: 'pointer',
+      '&:hover': {
+        textDecoration: 'underline'
+      }
+    }
+  });
 
 interface Props {
   ticketId: number;
@@ -19,7 +42,7 @@ interface State {
   ticketCloseError?: string;
 }
 
-type CombinedProps = Props;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 class CloseTicketLink extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
@@ -111,13 +134,20 @@ class CloseTicketLink extends React.Component<CombinedProps, State> {
 
   render() {
     const { ticketCloseError } = this.state;
+    const { classes } = this.props;
     return (
       <React.Fragment>
         <Typography>
           {`If everything is resolved, you can `}
-          <a onClick={this.openConfirmationDialog} data-qa-close-ticket-link>
+          <button
+            onClick={this.openConfirmationDialog}
+            type="button"
+            title="Close this ticket"
+            className={classes.closeLink}
+            data-qa-close-ticket-link
+          >
             close this ticket
-          </a>
+          </button>
           .
         </Typography>
         <ConfirmationDialog
@@ -138,4 +168,6 @@ class CloseTicketLink extends React.Component<CombinedProps, State> {
   }
 }
 
-export default CloseTicketLink;
+const styled = withStyles(styles);
+
+export default styled(CloseTicketLink);

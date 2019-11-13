@@ -24,9 +24,18 @@ export default ({ options, value, onChange, errorText }: any) => {
   const _options = groupsToItems(options);
   return (
     <>
-      <select data-testid="select" value={value || ''} onChange={handleChange}>
+      <select
+        data-testid="select"
+        value={value || ''}
+        onBlur={handleChange}
+        onChange={() => null}
+      >
         {_options.map((thisOption: any) => (
-          <option key={thisOption.value || ''} value={thisOption.value || ''}>
+          <option
+            key={thisOption.value || ''}
+            value={thisOption.value || ''}
+            aria-selected={thisOption.value === value}
+          >
             {thisOption.label}
           </option>
         ))}
