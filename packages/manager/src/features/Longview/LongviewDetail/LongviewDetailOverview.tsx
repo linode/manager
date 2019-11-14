@@ -72,8 +72,12 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
       params: { id }
     }
   } = props;
-  const client = props && props.clients && props.clients[id];
-  const url = props && props.match && props.match.url;
+  const client = pathOr(null, ['clients', id], props);
+  if (client === null) {
+    return null;
+  }
+
+  const url = pathOr('', ['match', 'url'], props);
 
   const hostname = pathOr(
     'Hostname not available',
