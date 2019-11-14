@@ -65,6 +65,7 @@ type ClassNames =
   | 'netActionsTitle'
   | 'rDNSListItem'
   | 'multipleRDNSButton'
+  | 'multipleRDNSText'
   | 'errorText';
 
 const styles = (theme: Theme) =>
@@ -123,12 +124,17 @@ const styles = (theme: Theme) =>
     },
     multipleRDNSButton: {
       display: 'flex',
-      textDecoration: 'underline',
       alignItems: 'center',
       background: 'none',
       border: 'none',
       cursor: 'pointer',
       paddingLeft: 0
+    },
+    multipleRDNSText: {
+      color: theme.palette.primary.main,
+      '&:hover': {
+        color: theme.palette.primary.light
+      }
     },
     errorText: {
       color: theme.color.red
@@ -342,8 +348,11 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             currentlySelectedIPRange: range
           })
         }
+        aria-label={`View the ${ipsWithRDNS.length} RDNS Addresses`}
       >
-        <Typography>{ipsWithRDNS.length} Addresses</Typography>
+        <Typography className={classes.multipleRDNSText}>
+          {ipsWithRDNS.length} Addresses
+        </Typography>
       </button>
     );
   };
