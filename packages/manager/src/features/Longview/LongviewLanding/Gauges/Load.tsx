@@ -5,17 +5,14 @@ import GaugePercent from 'src/components/GaugePercent';
 import withClientData, {
   Props as LVDataProps
 } from 'src/containers/longview.stats.container';
-import { baseGaugeProps } from './common';
-
-interface Props {
-  clientID: number;
-}
+import { baseGaugeProps, BaseProps as Props } from './common';
 
 const LoadGauge: React.FC<Props & LVDataProps> = props => {
   const {
     longviewClientData,
     longviewClientDataLoading: loading,
-    longviewClientDataError: error
+    longviewClientDataError: error,
+    lastUpdatedError
   } = props;
 
   const load = pathOr<number>(0, ['Load', 0, 'y'], longviewClientData);
@@ -29,7 +26,7 @@ const LoadGauge: React.FC<Props & LVDataProps> = props => {
     innerText: string;
     subTitle: JSX.Element | null;
   } => {
-    if (error) {
+    if (error || lastUpdatedError) {
       return {
         innerText: 'Error',
         subTitle: (
