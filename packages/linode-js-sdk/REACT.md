@@ -36,7 +36,7 @@ import './request'
 import { AxiosError } from 'axios'
 import { getLinodes, Linode } from 'linode-js-sdk/lib/linodes'
 import { APIError, ResourcePage } from 'linode-js-sdk/lib/types';
-import React from 'react'
+import * as React from 'react'
 
 const MyComponent: React.FC<{}> = () => {
   const [linodes, setLinodesData] = React.useState<Linode[] | undefined>(undefined);

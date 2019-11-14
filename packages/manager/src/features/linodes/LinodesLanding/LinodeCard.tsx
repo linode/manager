@@ -318,7 +318,7 @@ export const RenderTitle: React.StatelessComponent<{
 
   return (
     <Grid container alignItems="center">
-      <Link to={`/linodes/${linodeId}`} className={classes.linkWrapper}>
+      {null && <Link to={`/linodes/${linodeId}`} className={classes.linkWrapper}>
         <Grid item className={`${classes.StatusIndicatorWrapper} ${'py0'}`}>
           <EntityIcon
             variant="linode"
@@ -334,7 +334,7 @@ export const RenderTitle: React.StatelessComponent<{
             {linodeLabel}
           </Typography>
         </Grid>
-      </Link>
+      </Link>}
       <RenderFlag
         classes={{ flag: classes.flag, flagContainer: classes.flagContainer }}
         linodeNotifications={linodeNotifications}
@@ -359,8 +359,9 @@ export const RenderFlag: React.StatelessComponent<{
   const { mutationAvailable, classes, linodeNotifications } = props;
 
   if (mutationAvailable) {
+    // Here i use role='listitem' because in the case where multiple notifications map it s list
     return (
-      <Grid item className={classes.flagContainer}>
+      <Grid item className={classes.flagContainer} role='listitem'>
         <Tooltip title="There is a free upgrade available for this Linode">
           <IconButton>
             <Flag className={classes.flag} />
@@ -374,9 +375,9 @@ export const RenderFlag: React.StatelessComponent<{
     return (
       <>
         {linodeNotifications.map((notification, idx) => (
-          <Grid key={idx} item className={classes.flagContainer}>
+          <Grid key={idx} item className={classes.flagContainer} role='listitem'>
             <Tooltip title={notification.message}>
-              <Flag className={classes.flag} />
+              <Flag className={classes.flag} />              
             </Tooltip>
           </Grid>
         ))}
