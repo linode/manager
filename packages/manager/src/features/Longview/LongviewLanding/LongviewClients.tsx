@@ -107,6 +107,26 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     {
       label: 'CPU',
       value: 'cpu'
+    },
+    {
+      label: 'RAM',
+      value: 'ram'
+    },
+    {
+      label: 'Swap',
+      value: 'swap'
+    },
+    {
+      label: 'Load',
+      value: 'load'
+    },
+    {
+      label: 'Network',
+      value: 'network'
+    },
+    {
+      label: 'Storage',
+      value: 'storage'
     }
   ];
 
@@ -186,6 +206,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     longviewClientsLoading,
     longviewClientsResults,
     lvClientData,
+    lvClientsLoading,
     accountSettings,
     subscriptionsData,
     createLongviewClient,
@@ -230,7 +251,14 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
         </Grid>
         <Grid item className={`pt0 ${classes.lastUpdated}`}>
           <Typography>
-            Data last updated at <DateTimeDisplay value={lastUpdated} />
+            {lvClientsLoading ? (
+              'Loading...'
+            ) : (
+              <>
+                Data last updated at{` `}
+                <DateTimeDisplay value={lastUpdated} />
+              </>
+            )}
           </Typography>
         </Grid>
         <Grid item className={`${classes.addNew} pt0`}>
@@ -294,11 +322,18 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
  */
 interface StateProps {
   lvClientData: Record<string, StatsState>;
+  lvClientsLoading: boolean;
 }
 
 const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
+  const lvClientData = pathOr({}, ['longviewStats'], state);
   return {
-    lvClientData: pathOr({}, ['longviewStats'], state)
+    lvClientData,
+    // @todo this should be a memoized selector
+    lvClientsLoading: Object.values(lvClientData).some(
+      (thisClient: StatsState) =>
+        thisClient.loading && thisClient.lastUpdated === 0
+    )
   };
 };
 
