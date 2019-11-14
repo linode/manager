@@ -263,8 +263,6 @@ module.exports = {
       watch: paths.appSrc,
       tsconfig: paths.appTsConfig,
       tslint: paths.appTsLint
-<<<<<<< HEAD
-=======
     }),
     new CircularDependencyPlugin({
       // exclude detection of files based on a RegExp
@@ -276,7 +274,6 @@ module.exports = {
       allowAsyncCycles: false,
       // set the current working directory for displaying module paths
       cwd: paths.appSrc
->>>>>>> develop
     })
   ],
   // Some libraries import Node modules but don't use them in the browser.
