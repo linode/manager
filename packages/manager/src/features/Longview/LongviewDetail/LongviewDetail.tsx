@@ -35,7 +35,7 @@ interface Props {
 }
 
 const Overview = DefaultLoader({
-  loader: () => import('./LongviewDetailOverview')
+  loader: () => import('./DetailTabs/LongviewDetailOverview')
 });
 
 const Installation = DefaultLoader({
