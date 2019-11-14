@@ -91,10 +91,9 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
     ['SysInfo', 'hostname'],
     longviewClientData
   );
-  const uptime = pathOr<number | null>(0, ['Uptime'], longviewClientData);
-  const formattedUptime = uptime
-    ? `Up ${formatUptime(uptime)}`
-    : 'Uptime not available';
+  const uptime = pathOr<number | null>(null, ['Uptime'], longviewClientData);
+  const formattedUptime =
+    uptime === null ? `Up ${formatUptime(uptime)}` : 'Uptime not available';
   const packages = pathOr<LongviewPackage[] | null>(
     null,
     ['Packages'],
