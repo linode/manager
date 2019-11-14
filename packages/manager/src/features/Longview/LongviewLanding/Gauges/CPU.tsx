@@ -5,21 +5,18 @@ import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
 import { pluralize } from 'src/utilities/pluralize';
 import { CPU } from '../../request.types';
-import { baseGaugeProps } from './common';
+import { baseGaugeProps, BaseProps as Props } from './common';
 
 import withClientStats, {
   Props as LVDataProps
 } from 'src/containers/longview.stats.container';
 
-interface Props {
-  clientID: number;
-}
-
 const CPUGauge: React.FC<Props & LVDataProps> = props => {
   const {
     longviewClientDataLoading: loading,
     longviewClientDataError: error,
-    longviewClientData
+    longviewClientData,
+    lastUpdatedError
   } = props;
 
   const numberOfCores = pathOr(
@@ -37,7 +34,11 @@ const CPUGauge: React.FC<Props & LVDataProps> = props => {
       // doesn't exist or is 0.
       max={100 * numberOfCores}
       value={usedCPU}
-      innerText={innerText(finalUsedCPU || 0, loading, error)}
+      innerText={innerText(
+        finalUsedCPU || 0,
+        loading,
+        error || lastUpdatedError
+      )}
       subTitle={
         <>
           <Typography>
