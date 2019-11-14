@@ -49,7 +49,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   sortSelect: {
     marginBottom: theme.spacing(2),
-    width: '200px'
+    width: '300px',
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center'
+  },
+  selectLabel: {
+    minWidth: '65px'
   }
 }));
 
@@ -214,6 +220,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
           <Search onSearch={handleSearch} debounceTime={250} />
         </Grid>
         <Grid item className={`pt0 ${classes.sortSelect}`}>
+          <Typography className={classes.selectLabel}>Sort by: </Typography>
           <Select
             isClearable={false}
             options={sortOptions}
