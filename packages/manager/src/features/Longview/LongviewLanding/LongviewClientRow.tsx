@@ -191,6 +191,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
               <LongviewClientHeader
                 clientID={clientID}
                 clientLabel={clientLabel}
+                lastUpdatedError={lastUpdatedError}
               />
             </Grid>
             <Grid item xs={12} md={9}>
