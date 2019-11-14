@@ -318,7 +318,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
     const { ipv6Loading, ipv6Error } = this.state;
 
-    if (!ipv6Loading) {
+    if (ipv6Loading) {
       return <CircleProgress mini noPadding />;
     }
 
