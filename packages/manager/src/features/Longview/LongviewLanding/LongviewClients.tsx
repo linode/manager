@@ -159,6 +159,11 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
   );
 
   const isManaged = pathOr(false, ['managed'], accountSettings);
+  // If this value is defined they're not on the free plan
+  // and don't need to be CTA'd to upgrade.
+  const isLongviewPro = Boolean(
+    pathOr(false, ['longview_subscription'], accountSettings)
+  );
 
   return (
     <React.Fragment>
@@ -185,7 +190,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
         createLongviewClient={handleAddClient}
         loading={newClientLoading}
       />
-      {true && (
+      {!isLongviewPro && (
         <Grid
           className={classes.cta}
           container
