@@ -98,6 +98,17 @@ export interface LastUpdated {
   updated: number;
 }
 
+export interface LongviewPackage {
+  name: string;
+  current: string;
+  new: string;
+  held: number;
+}
+
+export interface LongviewPackages {
+  Packages: LongviewPackage[];
+}
+
 export interface LongviewSystemInfo {
   SysInfo: {
     arch: string;

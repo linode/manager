@@ -5,6 +5,7 @@ import {
   LongviewLoad,
   LongviewMemory,
   LongviewNetwork,
+  LongviewPackage,
   LongviewSystemInfo
 } from 'src/features/Longview/request.types.ts';
 
@@ -18,7 +19,8 @@ export type ReturnType = Partial<
     LongviewLoad &
     LongviewMemory &
     LongviewNetwork &
-    LongviewSystemInfo
+    LongviewSystemInfo &
+    LongviewPackage[]
 >;
 
 export const requestClientStats = actionCreator.async<

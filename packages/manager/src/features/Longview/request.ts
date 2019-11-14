@@ -9,6 +9,7 @@ import {
   LongviewLoad,
   LongviewMemory,
   LongviewNetwork,
+  LongviewPackages,
   LongviewSystemInfo
 } from './request.types';
 
@@ -60,6 +61,7 @@ type AllData = LongviewCPU &
   LongviewMemory &
   LongviewNetwork &
   LongviewSystemInfo &
+  LongviewPackages &
   LastUpdated;
 
 /**
@@ -100,6 +102,9 @@ interface Get {
   (token: string, action: LongviewAction, field?: LongviewFieldName[]): Promise<
     Partial<AllData>
   >;
+  (token: string, action: LongviewAction, field?: 'packages'[]): Promise<
+    Partial<LongviewPackages>
+  >;
 }
 
 export type LongviewAction =
@@ -134,7 +139,8 @@ export type LongviewFieldName =
   | 'load'
   | 'sysinfo'
   | 'network'
-  | 'disk';
+  | 'disk'
+  | 'packages';
 
 export const fieldNames: Record<LongviewFieldName, string> = {
   cpu: 'CPU.*',
@@ -143,7 +149,8 @@ export const fieldNames: Record<LongviewFieldName, string> = {
   load: 'Load.*',
   network: 'Network.*',
   disk: 'Disk.*',
-  sysinfo: 'SysInfo.*'
+  sysinfo: 'SysInfo.*',
+  packages: 'Packages'
 };
 
 export const baseRequest = Axios.create({
