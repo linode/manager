@@ -65,12 +65,6 @@ interface Props {
 
 type CombinedProps = RouteComponentProps<{ id: string }> & Props;
 
-interface PartialLongviewProps {
-  clients: LVProps['longviewClientsData'];
-  longviewClientsLastUpdated: LVProps['longviewClientsLastUpdated'];
-  // systemInfo: LVDataProps['longviewClientData'];
-}
-
 const LongviewDetailOverview: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const {
@@ -78,8 +72,8 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
       params: { id }
     }
   } = props;
-  const client = props.clients[id];
-  const url = props.match.url;
+  const client = props && props.clients && props.clients[id];
+  const url = props && props.match && props.match.url;
 
   const hostname = pathOr(
     'Hostname not available',
@@ -115,13 +109,17 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
 
   const coreCountDisplay = cpuCoreCount > 1 ? `Cores` : `Core`;
 
+  if (!client) {
+    return null;
+  }
+
   return (
     <React.Fragment>
       <Grid container>
         <Grid item xs={12}>
           <Paper className={classes.paperSection}>
             <Grid container justify="space-between" item xs={12} spacing={0}>
-              <Grid item xs={12} md={3}>
+              <Grid item xs={12} md={4} lg={3}>
                 <Grid
                   container
                   item
@@ -233,10 +231,10 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
                 </Grid>
               </Grid>
 
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} md={4} lg={6}>
                 Gauges
               </Grid>
-              <Grid item xs={12} md={3}>
+              <Grid item xs={12} md={4} lg={3}>
                 <Box
                   display="flex"
                   flexDirection="row"
@@ -297,7 +295,7 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
 
 export default compose<CombinedProps, Props>(
   React.memo,
-  withLongviewClients<PartialLongviewProps, {}>(
+  withLongviewClients(
     (own, { longviewClientsData, longviewClientsLastUpdated }) => ({
       clients: longviewClientsData,
       longviewClientsLastUpdated
