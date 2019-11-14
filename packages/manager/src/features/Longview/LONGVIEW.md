@@ -49,7 +49,7 @@ curl --request POST \
   --form 'api_requestArray=[{ "api_action": "getLatestValue", "keys": [ "Disk.*" ]  }]'
 ```
 
-You can also batch datasets with comma-seperated keys like so:
+You can also batch datasets with comma-separated keys like so:
 
 ```
 curl --request POST \
@@ -63,8 +63,9 @@ curl --request POST \
 We recommend to keep `--form api_action=batch \` untouched and instead make changes to the `api_requestArray` field to filter down the data. There are a couple configurable fields here that you can change in the `apiRequestArray`:
 
 #### `api_action`
-| api_action      |  Description                                                 |
-|-----------------|--------------------------------------------------------------|
+
+| api_action      | Description                                                  |
+| --------------- | ------------------------------------------------------------ |
 | getValues       | Gets all data points for the specified key                   |
 | getLatestValue  | Gets the latest data point for the specified key             |
 | getTopProcesses | Gets all the top processes running on the server             |
@@ -72,15 +73,15 @@ We recommend to keep `--form api_action=batch \` untouched and instead make chan
 
 #### `keys`
 
-| key       | Returned Unit  | Description                                                                                                                                      |
-|-----------|----------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| *         |                | Returns everything. This is _extremely_ slow, so run at your own risk.                                                                           |
-| Disk.*    | Bytes          | Returns all storage information for each disk. Run `df -h` on the server to compare data.                                                        |
-| Memory.*  | Kilobytes      | Returns all data for ext4 and swap memory. Run `free` on the server to compare data.                                                             |
-| CPU.*     | Literal Percentage  | Returns usage for all CPUs on the server. Run `top` on the server to compare data                                                                |
-| Load.*    | Literal number | Returns the literal number for how much Load is on the system. 1 load === 100% of CPU utilized                                                   |
-| Network.* | Bytes          | Returns interfaces for inbound and outbound network traffic on the server. Run `apt install -y netload && netload` on the server to compare data |
-
+| key         | Returned Unit      | Description                                                                                                                                      |
+| ----------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| \*          |                    | Returns everything. This is _extremely_ slow, so run at your own risk.                                                                           |
+| Disk.\*     | Bytes              | Returns all storage information for each disk. Run `df -h` on the server to compare data.                                                        |
+| Memory.\*   | Kilobytes          | Returns all data for ext4 and swap memory. Run `free` on the server to compare data.                                                             |
+| CPU.\*      | Literal Percentage | Returns usage for all CPUs on the server. Run `top` on the server to compare data                                                                |
+| Load.\*     | Literal number     | Returns the literal number for how much Load is on the system. 1 load === 100% of CPU utilized                                                   |
+| Network.\*  | Bytes              | Returns interfaces for inbound and outbound network traffic on the server. Run `apt install -y netload && netload` on the server to compare data |
+| Packages.\* | Array              | Returns an array of Packages that have available upgrades. This check is performed every 24 hours by the agent                                   |
 
 ## Populating your Linode with Data
 
@@ -94,7 +95,7 @@ While developing with Longview, you may find it useful to populate yo
 
 1. SSH into your Linode.
 
-2. `$ touch filename.c`
+2. `$ touch filename.c`
 
 3. Open `filename.c` with the editor of your choice, and paste the following:
 
@@ -119,18 +120,18 @@ int main(int argc, char** argv) {
 return 0;
 }
 ```
-4. `$ dd if=/dev/urandom of=/dev/sdb bs=1M count=256`
 
-5. `$ gcc filename.c -o memeater`
+4. `$ dd if=/dev/urandom of=/dev/sdb bs=1M count=256`
 
-6. `$ ./memeater`
+5. `$ gcc filename.c -o memeater`
 
-7. In a separate terminal, SSH into your Linode and run `$ free h` to see your usage increase (this may take a few minutes).
+6. `$ ./memeater`
+
+7. In a separate terminal, SSH into your Linode and run `$ free h` to see your usage increase (this may take a few minutes).
 
 ### Load
 
 ### Networking
-
 
 ## FAQ
 
