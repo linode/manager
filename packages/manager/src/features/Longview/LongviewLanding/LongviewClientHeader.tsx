@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -52,6 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   clientID: number;
   clientLabel: string;
+  lastUpdatedError?: APIError[];
 }
 
 type CombinedProps = Props & DispatchProps & LVDataProps & WithTheme;
@@ -70,8 +72,10 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
   const {
     clientID,
     clientLabel,
+    lastUpdatedError,
     longviewClientData,
     longviewClientDataLoading,
+    longviewClientLastUpdated,
     updateLongviewClient
   } = props;
   const classes = useStyles();
@@ -93,13 +97,24 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
   );
   const uptime = pathOr<number | null>(null, ['Uptime'], longviewClientData);
   const formattedUptime =
-    uptime === null ? `Up ${formatUptime(uptime)}` : 'Uptime not available';
+    uptime !== null ? `Up ${formatUptime(uptime)}` : 'Uptime not available';
   const packages = pathOr<LongviewPackage[] | null>(
     null,
     ['Packages'],
     longviewClientData
   );
   const packagesToUpdate = getPackageNoticeText(packages);
+
+  /**
+   * The pathOrs ahead will default to 'not available' values if
+   * there's an error, so the only case we need to handle is
+   * the loading state, which should be displayed only if
+   * data is loading for the first time and there are no errors.
+   */
+  const loading =
+    longviewClientDataLoading &&
+    !lastUpdatedError &&
+    longviewClientLastUpdated !== 0;
 
   return (
     <Grid container direction="column" className={classes.root}>
@@ -114,7 +129,7 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
         />
       </Grid>
       <Grid item className={classes.updates}>
-        {longviewClientDataLoading ? (
+        {loading ? (
           <Typography>Loading...</Typography>
         ) : (
           <>

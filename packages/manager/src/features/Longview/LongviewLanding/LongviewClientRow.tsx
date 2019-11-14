@@ -188,27 +188,46 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
               <LongviewClientHeader
                 clientID={clientID}
                 clientLabel={clientLabel}
+                lastUpdatedError={lastUpdatedError}
               />
             </Grid>
             <Grid item xs={12} md={9}>
               <Grid container>
                 <Grid item xs={4} sm={2} className={classes.gaugeContainer}>
-                  <CPUGauge clientID={clientID} lastUpdatedError={lastUpdatedError} />
+                  <CPUGauge
+                    clientID={clientID}
+                    lastUpdatedError={lastUpdatedError}
+                  />
                 </Grid>
                 <Grid item xs={4} sm={2} className={classes.gaugeContainer}>
-                  <RAMGauge clientID={clientID} lastUpdatedError={lastUpdatedError} />
+                  <RAMGauge
+                    clientID={clientID}
+                    lastUpdatedError={lastUpdatedError}
+                  />
                 </Grid>
                 <Grid item xs={4} sm={2} className={classes.gaugeContainer}>
-                  <SwapGauge clientID={clientID} lastUpdatedError={lastUpdatedError} />
+                  <SwapGauge
+                    clientID={clientID}
+                    lastUpdatedError={lastUpdatedError}
+                  />
                 </Grid>
                 <Grid item xs={4} sm={2} className={classes.gaugeContainer}>
-                  <LoadGauge clientID={clientID} lastUpdatedError={lastUpdatedError} />
+                  <LoadGauge
+                    clientID={clientID}
+                    lastUpdatedError={lastUpdatedError}
+                  />
                 </Grid>
                 <Grid item xs={4} sm={2} className={classes.gaugeContainer}>
-                  <NetworkGauge clientID={clientID} lastUpdatedError={lastUpdatedError} />
+                  <NetworkGauge
+                    clientID={clientID}
+                    lastUpdatedError={lastUpdatedError}
+                  />
                 </Grid>
                 <Grid item xs={4} sm={2} className={classes.gaugeContainer}>
-                  <StorageGauge clientID={clientID} lastUpdatedError={lastUpdatedError} />
+                  <StorageGauge
+                    clientID={clientID}
+                    lastUpdatedError={lastUpdatedError}
+                  />
                 </Grid>
               </Grid>
             </Grid>
