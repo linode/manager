@@ -1,9 +1,15 @@
-import { updateIP } from 'linode-js-sdk/lib/networking';
+import { IPAddress, updateIP } from 'linode-js-sdk/lib/networking';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormHelperText from 'src/components/core/FormHelperText';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import TextField from 'src/components/TextField';
@@ -12,12 +18,32 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
+type ClassNames = 'section' | 'header' | 'rdnsRecord' | 'ipv6Input';
+
+const styles = (theme: Theme) =>
+  createStyles({
+    section: {
+      marginTop: theme.spacing(2),
+      borderTop: `1px solid ${theme.palette.divider}`
+    },
+    header: {
+      marginTop: theme.spacing(2)
+    },
+    rdnsRecord: {
+      marginTop: theme.spacing(2)
+    },
+    ipv6Input: {
+      marginBottom: theme.spacing(2)
+    }
+  });
+
 interface Props {
   open: boolean;
   onClose: () => void;
   rdns?: string | null;
   range?: string;
   address?: string;
+  ips?: IPAddress[];
 }
 
 interface State {
@@ -29,7 +55,7 @@ interface State {
   ipv6Address?: string | null;
 }
 
-type CombinedProps = Props;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 class ViewRangeDrawer extends React.Component<CombinedProps, State> {
   state: State = {
@@ -89,15 +115,20 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
   save = () => {
     const { onClose, range } = this.props;
     const { rdns, address, ipv6Address } = this.state;
-    this.setState({ loading: true, errors: undefined });
-    this.timer = setTimeout(this.showDelayText, 5000);
 
     const ipToUpdate = range ? ipv6Address : address;
 
-    // Something has gone wrong in this case.
+    // If the field is blank, return an error.
     if (!ipToUpdate) {
-      return;
+      return this.setState({
+        errors: [
+          { field: 'ipv6Address', reason: 'Please enter an IPv6 Address' }
+        ]
+      });
     }
+
+    this.setState({ loading: true, errors: undefined });
+    this.timer = setTimeout(this.showDelayText, 5000);
 
     updateIP(ipToUpdate, !rdns || rdns === '' ? null : rdns)
       .then(_ => {
@@ -135,7 +166,7 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { open, onClose, range } = this.props;
+    const { open, onClose, range, ips, classes } = this.props;
     const { rdns, ipv6Address, delayText, errors, loading } = this.state;
 
     const hasErrorFor = getAPIErrorsFor(this.errorResources, errors);
@@ -144,9 +175,8 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
       <Drawer open={open} onClose={onClose} title={`Edit Reverse DNS`}>
         <React.Fragment>
           {range && (
-            <div>
+            <div className={classes.ipv6Input}>
               <TextField
-                style={{ marginBottom: 16 }}
                 placeholder="Enter an IPv6 address"
                 value={ipv6Address || ''}
                 errorText={hasErrorFor('ipv6Address')}
@@ -165,13 +195,11 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
           <Typography variant="body1">
             Leave this field blank to reset RDNS
           </Typography>
-
           {hasErrorFor('none') && (
             <FormHelperText error style={{ marginTop: 16 }} data-qa-error>
               {hasErrorFor('none')}
             </FormHelperText>
           )}
-
           <ActionsPanel style={{ marginTop: 16 }}>
             <Button
               buttonType="primary"
@@ -191,10 +219,25 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
             </Button>
           </ActionsPanel>
           <Typography variant="body1">{delayText}</Typography>
+          {range && ips && ips.length > 0 && (
+            <div className={classes.section}>
+              <Typography variant="h3" className={classes.header}>
+                Existing Records
+              </Typography>
+              {ips.map(ip => (
+                <div key={ip.address} className={classes.rdnsRecord}>
+                  <Typography>{ip.address}</Typography>
+                  <Typography>{ip.rdns || ''}</Typography>
+                </div>
+              ))}
+            </div>
+          )}
         </React.Fragment>
       </Drawer>
     );
   }
 }
 
-export default ViewRangeDrawer;
+const styled = withStyles(styles);
+
+export default styled(ViewRangeDrawer);

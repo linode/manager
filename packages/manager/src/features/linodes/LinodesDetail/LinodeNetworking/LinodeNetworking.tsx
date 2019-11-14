@@ -553,6 +553,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
               ? this.state.currentlySelectedIPRange.range
               : undefined
           }
+          ips={ipsWithRDNS}
         />
 
         <ViewRDNSDrawer
