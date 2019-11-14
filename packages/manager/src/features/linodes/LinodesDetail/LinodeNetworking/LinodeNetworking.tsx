@@ -8,11 +8,19 @@ import {
   LinodeIPsResponseIPV6
 } from 'linode-js-sdk/lib/linodes';
 import { getIPs, IPAddress, IPRange } from 'linode-js-sdk/lib/networking';
-import { compose, head, isEmpty, path, pathOr, uniq, uniqBy } from 'ramda';
+import {
+  compose,
+  head,
+  isEmpty,
+  path,
+  pathOr,
+  tail,
+  uniq,
+  uniqBy
+} from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose as recompose } from 'recompose';
-import ExpandIcon from 'src/assets/icons/expand.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
@@ -30,6 +38,7 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import ShowMore from 'src/components/ShowMore';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRowError from 'src/components/TableRowError';
@@ -66,11 +75,8 @@ type ClassNames =
   | 'ipv4Title'
   | 'ipv4TitleContainer'
   | 'netActionsTitle'
-  | 'expandedIPSection'
-  | 'expandIcon'
-  | 'expandButton'
-  | 'expandedRow'
-  | 'rDNSListItem';
+  | 'rDNSListItem'
+  | 'multipleRDNS';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -119,34 +125,17 @@ const styles = (theme: Theme) =>
       marginBottom: theme.spacing(2),
       marginTop: theme.spacing(4)
     },
-    expandedIPSection: {
-      marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(1)
-    },
-
-    expandIcon: {
-      marginLeft: theme.spacing(0.75),
-      height: 22
-    },
-    expandButton: {
-      display: 'flex',
-      textDecoration: 'underline',
-      alignItems: 'center',
-      background: 'none',
-      border: 'none',
-      cursor: 'pointer',
-      paddingLeft: 0
-    },
-    expandedRow: {
-      '& td': {
-        verticalAlign: 'top'
-      },
-      '& td:not(:last-child)': {
-        paddingTop: '14px'
+    rDNSListItem: {
+      color: theme.palette.text.primary,
+      fontSize: '.9rem',
+      '&:not(:last-child)': {
+        marginBottom: theme.spacing(2)
       }
     },
-    rDNSListItem: {
-      marginTop: theme.spacing(1)
+    multipleRDNS: {
+      display: 'flex',
+      justifyContent: 'flex-start',
+      alignItems: 'center'
     }
   });
 
@@ -166,7 +155,6 @@ interface State {
   createIPv4DrawerForPublic: boolean;
   IPRequestError?: string;
   createIPv6DrawerOpen: boolean;
-  expandedRDNSPanels: Record<string, boolean>;
 }
 
 type CombinedProps = ContextProps & WithStyles<ClassNames> & DispatchProps;
@@ -186,8 +174,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     viewIPDrawerOpen: false,
     viewRangeDrawerOpen: false,
     initialLoading: true,
-    ipv6Loading: false,
-    expandedRDNSPanels: {}
+    ipv6Loading: false
   };
 
   componentDidMount() {
@@ -295,12 +282,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       : [];
 
     return (
-      <TableRow
-        key={range.range}
-        className={classnames({
-          [classes.expandedRow]: this.state.expandedRDNSPanels[range.range]
-        })}
-      >
+      <TableRow key={range.range}>
         <TableCell parentColumn="Address">
           <React.Fragment>
             {range.range}
@@ -331,51 +313,30 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       return null;
     }
 
-    // If there is only one address, we display it in the table.
-    if (ipsWithRDNS.length === 1) {
-      return (
-        <>
+    return (
+      <div
+        className={classnames({
+          [classes.multipleRDNS]: ipsWithRDNS.length > 1
+        })}
+      >
+        <span>
           <Typography>{ipsWithRDNS[0].address}</Typography>
           <Typography>{ipsWithRDNS[0].rdns}</Typography>
-        </>
-      );
-    }
-
-    // If there is more than one address, we show "X Addresses", and hide the
-    // rest until the TableRow has been expanded.
-    const isExpanded = this.state.expandedRDNSPanels[range];
-
-    return (
-      <>
-        <button
-          className={classes.expandButton}
-          onClick={() =>
-            this.setState(({ expandedRDNSPanels }) => ({
-              expandedRDNSPanels: {
-                ...expandedRDNSPanels,
-                [range]: !expandedRDNSPanels[range]
-              }
-            }))
-          }
-        >
-          <Typography>{ipsWithRDNS.length} Addresses</Typography>
-          <ExpandIcon className={classes.expandIcon} />
-        </button>
-
-        <div
-          className={classnames({
-            [classes.expandedIPSection]: isExpanded
-          })}
-        >
-          {isExpanded &&
-            ipsWithRDNS.map(ip => (
-              <div key={ip.address} className={classes.rDNSListItem}>
-                <Typography>{ip.address}</Typography>
-                <Typography>{ip.rdns}</Typography>
-              </div>
-            ))}
-        </div>
-      </>
+        </span>
+        {ipsWithRDNS.length > 1 && (
+          <ShowMore
+            items={tail(ipsWithRDNS)}
+            render={ips =>
+              ips.map((ip: IPAddress) => (
+                <div key={ip.address} className={classes.rDNSListItem}>
+                  <Typography>{ip.address}</Typography>
+                  <Typography>{ip.rdns}</Typography>
+                </div>
+              ))
+            }
+          />
+        )}
+      </div>
     );
   };
 
