@@ -102,6 +102,9 @@ interface Get {
   (token: string, action: LongviewAction, field?: LongviewFieldName[]): Promise<
     Partial<AllData>
   >;
+  (token: string, action: LongviewAction, field?: 'packages'[]): Promise<
+    Partial<LongviewPackages>
+  >;
 }
 
 export type LongviewAction =

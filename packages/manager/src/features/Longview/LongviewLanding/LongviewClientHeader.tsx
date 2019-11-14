@@ -3,12 +3,7 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
-import {
-  makeStyles,
-  Theme,
-  withTheme,
-  WithTheme
-} from 'src/components/core/styles';
+import { makeStyles, Theme, WithTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EditableEntityLabel from 'src/components/EditableEntityLabel';
 import Grid from 'src/components/Grid';
@@ -150,8 +145,7 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
 const enhanced = compose<CombinedProps, Props>(
   withClientStats((ownProps: Props) => ownProps.clientID),
   /** We only need the update action here, easier than prop drilling through 4 components */
-  withLongviewClients(() => ({})),
-  withTheme
+  withLongviewClients(() => ({}))
 );
 
 export default enhanced(LongviewClientHeader);

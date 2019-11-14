@@ -1,8 +1,5 @@
 import { get } from 'src/features/Longview/request';
-import {
-  LongviewPackage,
-  LongviewPackages
-} from 'src/features/Longview/request.types';
+import { LongviewPackage } from 'src/features/Longview/request.types';
 import { createRequestThunk } from '../store.helpers';
 import { requestClientStats } from './longviewStats.actions';
 
@@ -20,12 +17,10 @@ export const getClientStats = createRequestThunk(
      */
     let packages: LongviewPackage[];
     try {
-      const result = (await get(api_key, 'getValues', [
-        'packages'
-      ])) as LongviewPackages;
+      const result = await get(api_key, 'getValues', ['packages']);
       packages = result.Packages || [];
     } catch {
-      packages = [] as LongviewPackage[];
+      packages = [];
     }
 
     return get(api_key, 'getLatestValue', [
