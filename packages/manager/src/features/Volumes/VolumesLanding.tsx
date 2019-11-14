@@ -427,7 +427,13 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   };
 
   renderEmpty = () => {
-    const { linodeConfigs, linodeRegion, readOnly, regionsData } = this.props;
+    const {
+      linodeConfigs,
+      linodeRegion,
+      readOnly,
+      regionsData,
+      fromLinodes
+    } = this.props;
 
     if (
       linodeRegion &&
@@ -474,7 +480,12 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           icon={VolumesIcon}
           buttonProps={[
             {
-              onClick: this.openCreateVolumeDrawer,
+              onClick: fromLinodes
+                ? this.openCreateVolumeDrawer
+                : () => {
+                    this.props.history.push('/volumes/create');
+                  },
+
               children: 'Add a Volume',
               disabled: readOnly
             }
