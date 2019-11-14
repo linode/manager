@@ -6,17 +6,14 @@ import withClientData, {
   Props as LVDataProps
 } from 'src/containers/longview.stats.container';
 import { readableBytes } from 'src/utilities/unitConversions';
-import { baseGaugeProps } from './common';
-
-interface Props {
-  clientID: number;
-}
+import { baseGaugeProps, BaseProps as Props } from './common';
 
 const SwapGauge: React.FC<Props & LVDataProps> = props => {
   const {
     longviewClientDataError: error,
     longviewClientDataLoading: loading,
-    longviewClientData
+    longviewClientData,
+    lastUpdatedError
   } = props;
 
   const freeMemory = pathOr<number>(
@@ -36,9 +33,9 @@ const SwapGauge: React.FC<Props & LVDataProps> = props => {
     innerText: string;
     subTitle: string | JSX.Element;
   } => {
-    if (loading) {
+    if (error || lastUpdatedError) {
       return {
-        innerText: 'Loading',
+        innerText: 'Error',
         subTitle: (
           <Typography>
             <strong>Swap</strong>
@@ -47,9 +44,9 @@ const SwapGauge: React.FC<Props & LVDataProps> = props => {
       };
     }
 
-    if (error) {
+    if (loading) {
       return {
-        innerText: 'Error',
+        innerText: 'Loading',
         subTitle: (
           <Typography>
             <strong>Swap</strong>

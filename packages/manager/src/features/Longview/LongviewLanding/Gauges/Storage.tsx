@@ -8,17 +8,14 @@ import withClientStats, {
 } from 'src/containers/longview.stats.container';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { Disk } from '../../request.types';
-import { baseGaugeProps } from './common';
-
-interface Props {
-  clientID: number;
-}
+import { baseGaugeProps, BaseProps as Props } from './common';
 
 const StorageGauge: React.FC<Props & LVDataProps> = props => {
   const {
     longviewClientDataError: error,
     longviewClientDataLoading: loading,
-    longviewClientData
+    longviewClientData,
+    lastUpdatedError
   } = props;
 
   const storageInBytes = sumStorage(longviewClientData.Disk);
@@ -35,7 +32,7 @@ const StorageGauge: React.FC<Props & LVDataProps> = props => {
       innerText={innerText(
         readableBytes(usedStorage).formatted,
         loading,
-        error
+        error || lastUpdatedError
       )}
       filledInColor="#F4AC3D"
       subTitle={

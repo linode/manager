@@ -8,11 +8,7 @@ import withClientStats, {
   Props as LVDataProps
 } from 'src/containers/longview.stats.container';
 import { LongviewNetwork } from '../../request.types';
-import { baseGaugeProps } from './common';
-
-interface Props {
-  clientID: number;
-}
+import { baseGaugeProps, BaseProps as Props } from './common';
 
 type CombinedProps = Props & LVDataProps;
 
@@ -20,7 +16,8 @@ const NetworkGauge: React.FC<CombinedProps> = props => {
   const {
     longviewClientDataLoading: loading,
     longviewClientDataError: error,
-    longviewClientData
+    longviewClientData,
+    lastUpdatedError
   } = props;
 
   const networkUsed = generateUsedNetworkAsBytes(
@@ -31,7 +28,7 @@ const NetworkGauge: React.FC<CombinedProps> = props => {
     innerText: string;
     subTitle: JSX.Element | null;
   } => {
-    if (error) {
+    if (error || lastUpdatedError) {
       return {
         innerText: 'Error',
         subTitle: (
