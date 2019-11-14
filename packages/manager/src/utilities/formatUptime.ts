@@ -1,24 +1,17 @@
+import * as moment from 'moment';
+
 export const formatUptime = (uptime: number) => {
   /**
    * We get uptime from the Longview API in
    * seconds.
    */
-  if (uptime > 86400) {
-    // More than 1 day
-    const days = Math.floor(uptime / 86400);
-    const hours = Math.floor(uptime / 3600) % 24;
-    const minutes = Math.floor((uptime / 60) % 60);
-    return `${days}d ${hours}h ${minutes}m`;
-  } else if (uptime > 3600) {
-    // > 1 hour
-    const hours = Math.floor(uptime / 3600);
-    const minutes = Math.floor((uptime / 60) % 60);
-    return `${hours}h ${minutes}m`;
-  } else if (uptime > 60) {
-    // > 1 minute
-    const minutes = Math.floor(uptime / 60);
-    const seconds = Math.floor(uptime % 60);
-    return `${minutes}m ${seconds}s`;
+  const duration = moment.duration(uptime, 'seconds');
+  if (duration.days() > 1) {
+    return `${duration.days()}d ${duration.hours()}h ${duration.minutes()}m`;
+  } else if (duration.hours() > 1) {
+    return `${duration.hours()}h ${duration.minutes()}m`;
+  } else if (duration.minutes() > 1) {
+    return `${duration.minutes()}m ${duration.seconds()}s`;
   } else {
     return `< 1 minute`;
   }
