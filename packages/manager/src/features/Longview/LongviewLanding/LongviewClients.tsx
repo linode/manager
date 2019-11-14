@@ -11,7 +11,6 @@ import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Search from 'src/components/DebouncedSearchTextField';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
@@ -24,6 +23,7 @@ import withLongviewClients, {
 import { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { formatDate } from 'src/utilities/formatDate';
 import DeleteDialog from './LongviewDeleteDialog';
 import LongviewList from './LongviewList';
 import SubscriptionDialog from './SubscriptionDialog';
@@ -80,7 +80,10 @@ export const getLastUpdated = (lvClientData: Record<string, StatsState>) => {
   const updated = Object.values(lvClientData).reduce((accum, thisClient) => {
     return thisClient.lastUpdated > accum ? thisClient.lastUpdated : accum;
   }, 0) as number;
-  return new Date(updated).toUTCString();
+  if (updated === 0) {
+    return 'Loading...';
+  }
+  return `Data last updated at ${formatDate(new Date(updated).toUTCString())}`;
 };
 
 export const LongviewClients: React.FC<CombinedProps> = props => {
@@ -206,7 +209,6 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     longviewClientsLoading,
     longviewClientsResults,
     lvClientData,
-    lvClientsLoading,
     accountSettings,
     subscriptionsData,
     createLongviewClient,
@@ -238,11 +240,12 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     <React.Fragment>
       <Grid container className={classes.headingWrapper} alignItems="center">
         <Grid item className={`pt0 ${classes.searchbar}`}>
-          <Search onSearch={handleSearch} debounceTime={250} />
+          <Search small onSearch={handleSearch} debounceTime={250} />
         </Grid>
         <Grid item className={`pt0 ${classes.sortSelect}`}>
           <Typography className={classes.selectLabel}>Sort by: </Typography>
           <Select
+            small
             isClearable={false}
             options={sortOptions}
             value={sortOptions.find(thisOption => thisOption.value === sortKey)}
@@ -250,16 +253,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
           />
         </Grid>
         <Grid item className={`pt0 ${classes.lastUpdated}`}>
-          <Typography>
-            {lvClientsLoading ? (
-              'Loading...'
-            ) : (
-              <>
-                Data last updated at{` `}
-                <DateTimeDisplay value={lastUpdated} />
-              </>
-            )}
-          </Typography>
+          <Typography>{lastUpdated}</Typography>
         </Grid>
         <Grid item className={`${classes.addNew} pt0`}>
           <AddNewLink
@@ -322,18 +316,12 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
  */
 interface StateProps {
   lvClientData: Record<string, StatsState>;
-  lvClientsLoading: boolean;
 }
 
 const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
   const lvClientData = pathOr({}, ['longviewStats'], state);
   return {
-    lvClientData,
-    // @todo this should be a memoized selector
-    lvClientsLoading: Object.values(lvClientData).some(
-      (thisClient: StatsState) =>
-        thisClient.loading && thisClient.lastUpdated === 0
-    )
+    lvClientData
   };
 };
 
