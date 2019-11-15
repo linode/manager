@@ -32,7 +32,7 @@ const styles = (theme: Theme) =>
       },
       [theme.breakpoints.up('lg')]: {
         marginLeft: theme.spacing(1),
-        marginRight: -theme.spacing(2)
+        marginRight: -theme.spacing(1)
       },
       '&:hover': {
         '& $icon': {
