@@ -169,7 +169,11 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     <React.Fragment>
       <Grid container className={classes.headingWrapper}>
         <Grid item className={`pt0 ${classes.searchbar}`}>
-          <Search onSearch={handleSearch} debounceTime={250} />
+          <Search
+            placeholder="Filter by client label"
+            onSearch={handleSearch}
+            debounceTime={250}
+          />
         </Grid>
         <Grid item className={`${classes.addNew} pt0`}>
           <AddNewLink
