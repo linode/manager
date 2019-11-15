@@ -61,7 +61,7 @@ const styles = (theme: Theme) =>
       position: 'absolute',
       zIndex: 2,
       top: 0,
-      right: 2,
+      right: theme.spacing(1),
       display: 'flex',
       alignItems: 'center'
     },
