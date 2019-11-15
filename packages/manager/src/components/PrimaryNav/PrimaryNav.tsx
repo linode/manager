@@ -176,7 +176,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
         }
       },
       {
-        conditionToAdd: () => flags.oneClickLocation !== 'sidenav',
+        conditionToAdd: () => flags.oneClickLocation === 'sidenav',
         insertAfter: 'Longview',
         link: {
           display: 'One-Click Apps',
