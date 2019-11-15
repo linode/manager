@@ -23,10 +23,7 @@ import Button, { ButtonProps } from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
-import {
-  default as _TextField,
-  Props as TextFieldProps
-} from 'src/components/TextField';
+import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 import {
   DomainActionsProps,
   withDomainActions
@@ -39,10 +36,6 @@ import {
   isValidDomainRecord,
   isValidSOAEmail
 } from './domainUtils';
-
-const TextField: React.StatelessComponent<TextFieldProps> = props => (
-  <_TextField {...props} />
-);
 
 interface Props extends EditableRecordFields, EditableDomainFields {
   open: boolean;
@@ -96,11 +89,8 @@ interface State {
 type CombinedProps = Props & DomainActionsProps;
 
 /* tslint:disable-next-line */
-interface _TextFieldProps {
-  label: string;
+interface _TextFieldProps extends TextFieldProps {
   field: keyof EditableRecordFields | keyof EditableDomainFields;
-  min?: number;
-  max?: number;
 }
 
 interface NumberFieldProps extends _TextFieldProps {
@@ -178,8 +168,9 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     this.updateField('axfr_ips')(transferIPs);
   };
 
-  TextField = ({ label, field }: _TextFieldProps) => (
+  TextField = ({ label, field, ...rest }: _TextFieldProps) => (
     <TextField
+      {...rest}
       label={label}
       errorText={getAPIErrorsFor(
         DomainRecordDrawer.errorFields,
@@ -220,7 +211,11 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   );
 
   TargetField = ({ label }: { label: string }) => (
-    <this.TextField field="target" label={label} />
+    <this.TextField
+      field="target"
+      label={label}
+      helperText="Trailing periods are optional"
+    />
   );
 
   ServiceField = () => <this.TextField field="service" label="Service" />;
