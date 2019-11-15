@@ -1,5 +1,4 @@
-FROM node:10-alpine as base
-
+FROM node:10-alpine
 # Run commands as "node" user. We don't want to run these commands as root
 #
 # See https://github.com/nodejs/docker-node/blob/d094c98a48659ff9f8d59db8dafb7020e181446a/docs/BestPractices.md
@@ -31,5 +30,4 @@ RUN mkdir ./packages/manager/ouput && mkdir ./build
 
 COPY --chown=node:node . ./
 
-FROM base as sdk_build
-RUN npx lerna run build --scope linode-js-sdk
+ENTRYPOINT ["yarn"]
