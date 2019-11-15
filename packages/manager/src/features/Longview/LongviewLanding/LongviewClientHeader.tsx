@@ -7,12 +7,11 @@ import { makeStyles, Theme, WithTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EditableEntityLabel from 'src/components/EditableEntityLabel';
 import Grid from 'src/components/Grid';
-import withLongviewClients, {
-  DispatchProps
-} from 'src/containers/longview.container';
+import { DispatchProps } from 'src/containers/longview.container';
 import withClientStats, {
   Props as LVDataProps
 } from 'src/containers/longview.stats.container';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatUptime } from 'src/utilities/formatUptime';
 import { pluralize } from 'src/utilities/pluralize';
 import { LongviewPackage } from '../request.types';
@@ -49,6 +48,7 @@ interface Props {
   clientID: number;
   clientLabel: string;
   lastUpdatedError?: APIError[];
+  updateLongviewClient: DispatchProps['updateLongviewClient'];
 }
 
 type CombinedProps = Props & DispatchProps & LVDataProps & WithTheme;
@@ -82,7 +82,12 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
       .then(_ => {
         setUpdating(false);
       })
-      .catch(_ => setUpdating(false));
+      .catch(error => {
+        setUpdating(false);
+        return Promise.reject(
+          getAPIErrorOrDefault(error, 'Error updating label')[0].reason
+        );
+      });
   };
 
   const hostname = pathOr(
@@ -143,9 +148,7 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
 };
 
 const enhanced = compose<CombinedProps, Props>(
-  withClientStats((ownProps: Props) => ownProps.clientID),
-  /** We only need the update action here, easier than prop drilling through 4 components */
-  withLongviewClients(() => ({}))
+  withClientStats((ownProps: Props) => ownProps.clientID)
 );
 
 export default enhanced(LongviewClientHeader);

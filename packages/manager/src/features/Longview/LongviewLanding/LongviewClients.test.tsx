@@ -2,6 +2,7 @@ import { cleanup, fireEvent } from '@testing-library/react';
 import { LongviewClient } from 'linode-js-sdk/lib/longview';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
+import { accountSettingsFactory } from 'src/factories/accountSettings';
 import { longviewClientFactory } from 'src/factories/longviewClient';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import {
@@ -96,5 +97,25 @@ describe('Longview clients list view', () => {
     expect(queryAllByTestId('longview-client-row')).toHaveLength(
       clients.length
     );
+  });
+
+  it('should render a CTA for non-Pro subscribers', () => {
+    const settings = accountSettingsFactory.build();
+    const { getByText } = renderWithTheme(
+      <LongviewClients {...props} accountSettings={settings} />
+    );
+
+    getByText(/upgrade to longview pro/i);
+  });
+
+  it('should not render a CTA for LV Pro subscribers', () => {
+    const settings = accountSettingsFactory.build({
+      longview_subscription: 'longview-100'
+    });
+    const { queryAllByText } = renderWithTheme(
+      <LongviewClients {...props} accountSettings={settings} />
+    );
+
+    expect(queryAllByText(/upgrade to longview pro/i)).toHaveLength(0);
   });
 });

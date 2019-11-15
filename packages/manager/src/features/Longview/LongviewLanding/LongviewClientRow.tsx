@@ -19,6 +19,9 @@ import SwapGauge from './Gauges/Swap';
 import LongviewClientHeader from './LongviewClientHeader';
 import LongviewClientInstructions from './LongviewClientInstructions';
 
+import withLongviewClients, {
+  DispatchProps
+} from 'src/containers/longview.container';
 import withClientStats, {
   Props as LVDataProps
 } from 'src/containers/longview.stats.container';
@@ -53,7 +56,7 @@ interface Props {
   ) => void;
 }
 
-type CombinedProps = Props & LVDataProps;
+type CombinedProps = Props & LVDataProps & DispatchProps;
 
 const LongviewClientRow: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -66,7 +69,8 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
     clientLabel,
     clientAPIKey,
     triggerDeleteLongviewClient,
-    clientInstallKey
+    clientInstallKey,
+    updateLongviewClient
   } = props;
 
   /*
@@ -171,6 +175,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
         clientAPIKey={clientAPIKey}
         installCode={clientInstallKey}
         triggerDeleteLongviewClient={triggerDeleteLongviewClient}
+        updateLongviewClient={updateLongviewClient}
       />
     );
   }
@@ -192,6 +197,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
                 clientID={clientID}
                 clientLabel={clientLabel}
                 lastUpdatedError={lastUpdatedError}
+                updateLongviewClient={updateLongviewClient}
               />
             </Grid>
             <Grid item xs={12} md={9}>
@@ -257,5 +263,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
 
 export default compose<CombinedProps, Props>(
   React.memo,
-  withClientStats<Props>(ownProps => ownProps.clientID)
+  withClientStats<Props>(ownProps => ownProps.clientID),
+  /** We only need the update action here, easier than prop drilling through 4 components */
+  withLongviewClients(() => ({}))
 )(LongviewClientRow);

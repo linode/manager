@@ -104,7 +104,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   editIcon: {
     position: 'absolute',
-    right: 0,
+    right: 10,
     [theme.breakpoints.up('sm')]: {
       opacity: 0,
       '&:focus': {
