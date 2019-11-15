@@ -6,7 +6,13 @@ import LongviewLineGraph from './LongviewLineGraph';
 const Example: React.FC<{}> = props => {
   return (
     <React.Fragment>
-      <LongviewLineGraph title="Hello" subtitle="world" />
+      <LongviewLineGraph
+        title="Hello"
+        subtitle="world"
+        showToday
+        data={[]}
+        timezone="America/New_York"
+      />
     </React.Fragment>
   );
 };

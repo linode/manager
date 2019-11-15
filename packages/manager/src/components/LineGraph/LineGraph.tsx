@@ -18,7 +18,7 @@ interface DataSet {
   data: [number, number][];
 }
 
-interface Props {
+export interface Props {
   chartHeight?: number;
   showToday: boolean;
   suggestedMax?: number;
