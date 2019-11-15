@@ -66,7 +66,8 @@ type ClassNames =
   | 'rDNSListItem'
   | 'multipleRDNSButton'
   | 'multipleRDNSText'
-  | 'errorText';
+  | 'errorText'
+  | 'loader';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -123,12 +124,13 @@ const styles = (theme: Theme) =>
       }
     },
     multipleRDNSButton: {
-      display: 'flex',
-      alignItems: 'center',
-      background: 'none',
-      border: 'none',
       cursor: 'pointer',
-      paddingLeft: 0
+      border: 0,
+      padding: 0,
+      [theme.breakpoints.down('sm')]: {
+        minWidth: 120,
+        textAlign: 'right'
+      }
     },
     multipleRDNSText: {
       color: theme.palette.primary.main,
@@ -138,6 +140,9 @@ const styles = (theme: Theme) =>
     },
     errorText: {
       color: theme.color.red
+    },
+    loader: {
+      padding: 0
     }
   });
 
@@ -314,7 +319,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     const { ipv6Loading, ipv6Error } = this.state;
 
     if (ipv6Loading) {
-      return <CircleProgress mini />;
+      return <CircleProgress mini noPadding />;
     }
 
     if (ipv6Error) {
