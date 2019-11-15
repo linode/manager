@@ -5,24 +5,25 @@ import {
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
+import AddNewLink from 'src/components/AddNewLink';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-
-import AddNewLink from 'src/components/AddNewLink';
 import Search from 'src/components/DebouncedSearchTextField';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
-
 import withSettings, {
   SettingsProps
 } from 'src/containers/accountSettings.container';
 import withLongviewClients, {
   Props as LongviewProps
 } from 'src/containers/longview.container';
-
+import { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
+import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-
+import { formatDate } from 'src/utilities/formatDate';
 import DeleteDialog from './LongviewDeleteDialog';
 import LongviewList from './LongviewList';
 import SubscriptionDialog from './SubscriptionDialog';
@@ -42,6 +43,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   cta: {
     marginTop: theme.spacing(2)
+  },
+  lastUpdated: {
+    marginBottom: theme.spacing(2)
+  },
+  sortSelect: {
+    marginBottom: theme.spacing(2),
+    width: '300px',
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center'
+  },
+  selectLabel: {
+    minWidth: '65px'
   }
 }));
 
@@ -53,7 +67,24 @@ type CombinedProps = Props &
   RouteComponentProps &
   LongviewProps &
   WithSnackbarProps &
+  StateProps &
   SettingsProps;
+
+/**
+ * Returns a date string representing the time
+ * when the most recently updated Longview client
+ * was updated.
+ *
+ */
+export const getLastUpdated = (lvClientData: Record<string, StatsState>) => {
+  const updated = Object.values(lvClientData).reduce((accum, thisClient) => {
+    return thisClient.lastUpdated > accum ? thisClient.lastUpdated : accum;
+  }, 0) as number;
+  if (updated === 0) {
+    return 'Loading...';
+  }
+  return `Data last updated at ${formatDate(new Date(updated).toUTCString())}`;
+};
 
 export const LongviewClients: React.FC<CombinedProps> = props => {
   const [newClientLoading, setNewClientLoading] = React.useState<boolean>(
@@ -67,6 +98,42 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     undefined
   );
   const [selectedClientLabel, setClientLabel] = React.useState<string>('');
+
+  /** Handlers/tracking variables for sorting by different client attributes */
+
+  type SortKey = 'name' | 'cpu';
+  const sortOptions: Item<string>[] = [
+    {
+      label: 'Client Name',
+      value: 'name'
+    },
+    {
+      label: 'CPU',
+      value: 'cpu'
+    },
+    {
+      label: 'RAM',
+      value: 'ram'
+    },
+    {
+      label: 'Swap',
+      value: 'swap'
+    },
+    {
+      label: 'Load',
+      value: 'load'
+    },
+    {
+      label: 'Network',
+      value: 'network'
+    },
+    {
+      label: 'Storage',
+      value: 'storage'
+    }
+  ];
+
+  const [sortKey, setSortKey] = React.useState<SortKey>('name');
 
   /**
    * Subscription warning modal (shown when a user has used all of their plan's
@@ -141,6 +208,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     longviewClientsLastUpdated,
     longviewClientsLoading,
     longviewClientsResults,
+    lvClientData,
     accountSettings,
     subscriptionsData,
     createLongviewClient,
@@ -153,6 +221,10 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     );
   };
 
+  const handleSortKeyChange = (selected: Item) => {
+    setSortKey(selected.value as SortKey);
+  };
+
   const _subscription = pathOr('', ['longview_subscription'], accountSettings);
   const activeSubscription = subscriptionsData.find(
     thisSubscription => thisSubscription.id === _subscription
@@ -160,11 +232,28 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
 
   const isManaged = pathOr(false, ['managed'], accountSettings);
 
+  const lastUpdated = React.useMemo(() => getLastUpdated(lvClientData), [
+    lvClientData
+  ]);
+
   return (
     <React.Fragment>
-      <Grid container className={classes.headingWrapper}>
+      <Grid container className={classes.headingWrapper} alignItems="center">
         <Grid item className={`pt0 ${classes.searchbar}`}>
-          <Search onSearch={handleSearch} debounceTime={250} />
+          <Search small onSearch={handleSearch} debounceTime={250} />
+        </Grid>
+        <Grid item className={`pt0 ${classes.sortSelect}`}>
+          <Typography className={classes.selectLabel}>Sort by: </Typography>
+          <Select
+            small
+            isClearable={false}
+            options={sortOptions}
+            value={sortOptions.find(thisOption => thisOption.value === sortKey)}
+            onChange={handleSortKeyChange}
+          />
+        </Grid>
+        <Grid item className={`pt0 ${classes.lastUpdated}`}>
+          <Typography>{lastUpdated}</Typography>
         </Grid>
         <Grid item className={`${classes.addNew} pt0`}>
           <AddNewLink
@@ -220,8 +309,27 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
   );
 };
 
+/**
+ * Calling connect directly here rather than use a
+ * container because this is a unique case; we need
+ * access to data from all clients.
+ */
+interface StateProps {
+  lvClientData: Record<string, StatsState>;
+}
+
+const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
+  const lvClientData = pathOr({}, ['longviewStats'], state);
+  return {
+    lvClientData
+  };
+};
+
+const connected = connect(mapStateToProps);
+
 export default compose<CombinedProps, Props & RouteComponentProps>(
   React.memo,
+  connected,
   withLongviewClients(),
   withSettings(),
   withSnackbar

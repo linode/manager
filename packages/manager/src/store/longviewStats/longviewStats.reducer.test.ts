@@ -75,19 +75,13 @@ describe('Longview Client Stats Reducer', () => {
       })
     );
 
-    expect(newState).toEqual({
-      123: {
-        data: {}
-      },
-      999: {
-        loading: false,
-        error: undefined,
-        data: {
-          ...systemInfo,
-          ...memory,
-          ...longviewLoad
-        }
-      }
+    expect(newState[123]).toEqual({
+      data: {}
     });
+    expect(newState[999]).toHaveProperty('loading', false);
+    expect(newState[999]).toHaveProperty('error', undefined);
+    expect(newState[999].data).toHaveProperty('SysInfo', systemInfo.SysInfo);
+    expect(newState[999].data).toHaveProperty('Memory', memory.Memory);
+    expect(newState[999].data).toHaveProperty('Load', longviewLoad.Load);
   });
 });

@@ -35,7 +35,8 @@ const reducer = reducerWithInitialState(defaultState)
       [params.clientID]: {
         data: result,
         loading: false,
-        error: undefined
+        error: undefined,
+        lastUpdated: Date.now()
       }
     })
   )
