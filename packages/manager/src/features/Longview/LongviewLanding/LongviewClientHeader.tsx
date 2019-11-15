@@ -1,19 +1,21 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import {
-  makeStyles,
-  Theme,
-  withTheme,
-  WithTheme
-} from 'src/components/core/styles';
+import { compose } from 'recompose';
+import { makeStyles, Theme, WithTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EditableEntityLabel from 'src/components/EditableEntityLabel';
 import Grid from 'src/components/Grid';
-
 import withLongviewClients, {
   DispatchProps
 } from 'src/containers/longview.container';
+import withClientStats, {
+  Props as LVDataProps
+} from 'src/containers/longview.stats.container';
+import { formatUptime } from 'src/utilities/formatUptime';
+import { pluralize } from 'src/utilities/pluralize';
+import { LongviewPackage } from '../request.types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -46,13 +48,32 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   clientID: number;
   clientLabel: string;
+  lastUpdatedError?: APIError[];
 }
 
-type CombinedProps = Props & DispatchProps & WithTheme;
+type CombinedProps = Props & DispatchProps & LVDataProps & WithTheme;
+
+const getPackageNoticeText = (packages: LongviewPackage[]) => {
+  if (!packages) {
+    return 'Package information not available';
+  }
+  if (packages.length === 0) {
+    return 'All packages up to date';
+  }
+  return `${pluralize('package', 'packages', packages.length)} have updates`;
+};
 
 export const LongviewClientHeader: React.FC<CombinedProps> = props => {
+  const {
+    clientID,
+    clientLabel,
+    lastUpdatedError,
+    longviewClientData,
+    longviewClientDataLoading,
+    longviewClientLastUpdated,
+    updateLongviewClient
+  } = props;
   const classes = useStyles();
-  const { clientID, clientLabel, updateLongviewClient } = props;
   const [updating, setUpdating] = React.useState<boolean>(false);
 
   const handleUpdateLabel = (newLabel: string) => {
@@ -64,21 +85,53 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
       .catch(_ => setUpdating(false));
   };
 
+  const hostname = pathOr(
+    'Hostname not available',
+    ['SysInfo', 'hostname'],
+    longviewClientData
+  );
+  const uptime = pathOr<number | null>(null, ['Uptime'], longviewClientData);
+  const formattedUptime =
+    uptime !== null ? `Up ${formatUptime(uptime)}` : 'Uptime not available';
+  const packages = pathOr<LongviewPackage[] | null>(
+    null,
+    ['Packages'],
+    longviewClientData
+  );
+  const packagesToUpdate = getPackageNoticeText(packages);
+
+  /**
+   * The pathOrs ahead will default to 'not available' values if
+   * there's an error, so the only case we need to handle is
+   * the loading state, which should be displayed only if
+   * data is loading for the first time and there are no errors.
+   */
+  const loading =
+    longviewClientDataLoading &&
+    !lastUpdatedError &&
+    longviewClientLastUpdated !== 0;
+
   return (
     <Grid container direction="column" className={classes.root}>
       <Grid item>
         <EditableEntityLabel
           text={clientLabel}
           iconVariant="linode"
-          subText="dev.hostname.com"
+          subText={hostname}
           status="running"
           onEdit={handleUpdateLabel}
           loading={updating}
         />
       </Grid>
       <Grid item className={classes.updates}>
-        <Typography>Up 47d 19h 22m</Typography>
-        <Typography>2 packages have updates</Typography>
+        {loading ? (
+          <Typography>Loading...</Typography>
+        ) : (
+          <>
+            <Typography>{formattedUptime}</Typography>
+            <Typography>{packagesToUpdate}</Typography>
+          </>
+        )}
       </Grid>
       <Grid item>
         <Link to={`/longview/clients/${clientID}`} className={classes.link}>
@@ -89,5 +142,10 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
   );
 };
 
-/** We only need the update action here, easier than prop drilling through 4 components */
-export default withLongviewClients(() => ({}))(withTheme(LongviewClientHeader));
+const enhanced = compose<CombinedProps, Props>(
+  withClientStats((ownProps: Props) => ownProps.clientID),
+  /** We only need the update action here, easier than prop drilling through 4 components */
+  withLongviewClients(() => ({}))
+);
+
+export default enhanced(LongviewClientHeader);
