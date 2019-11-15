@@ -33,7 +33,7 @@
     "test": "yarn workspace linode-manager test",
     "selenium": "lerna run selenium --stream --scope linode-manager -- --color",
     "storybook": "lerna run storybook --stream --scope linode-manager",
-    "storybook:e2e": "lerna run storybook:e2e --stream --scope linode-manager -- --color",
+    "storybook:e2e": "yarn workspace linode-manager run storybook:e2e",
     "storybook:debug": "lerna run storybook:e2e --stream --scope linode-manager -- --color --debug",
     "e2e": "lerna run e2e --stream --scope linode-manager -- --color",
     "e2e:all": "lerna run e2e:all --stream --scope linode-manager -- --color",
