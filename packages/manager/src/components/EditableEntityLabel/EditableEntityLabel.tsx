@@ -14,7 +14,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   smallInput: {
     position: 'relative',
-    paddingRight: 20
+    paddingRight: 20,
+    whiteSpace: 'pre-wrap',
+    wordBreak: 'break-all'
   },
   subText: {
     fontSize: '0.8em'
