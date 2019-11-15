@@ -11,6 +11,7 @@ import { DispatchProps } from 'src/containers/longview.container';
 import withClientStats, {
   Props as LVDataProps
 } from 'src/containers/longview.stats.container';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatUptime } from 'src/utilities/formatUptime';
 import { pluralize } from 'src/utilities/pluralize';
 import { LongviewPackage } from '../request.types';
@@ -81,7 +82,12 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
       .then(_ => {
         setUpdating(false);
       })
-      .catch(_ => setUpdating(false));
+      .catch(error => {
+        setUpdating(false);
+        return Promise.reject(
+          getAPIErrorOrDefault(error, 'Error updating label')[0].reason
+        );
+      });
   };
 
   const hostname = pathOr(

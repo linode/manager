@@ -7,6 +7,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import EditableEntityLabel from 'src/components/EditableEntityLabel';
 import Grid from 'src/components/Grid';
 import { DispatchProps } from 'src/containers/longview.container';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import Instructions from '../shared/InstallationInstructions';
 
@@ -51,7 +52,12 @@ export const LongviewClientInstructions: React.FC<Props> = props => {
       .then(_ => {
         setUpdating(false);
       })
-      .catch(_ => setUpdating(false));
+      .catch(error => {
+        setUpdating(false);
+        return Promise.reject(
+          getAPIErrorOrDefault(error, 'Error updating label')[0].reason
+        );
+      });
   };
 
   return (
