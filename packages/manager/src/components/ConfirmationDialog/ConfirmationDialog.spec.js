@@ -6,7 +6,7 @@ describe('Confirmation Dialog Suite', () => {
         'Simple Confirmation',
     ];
     const confirmButtonTextElem = '[data-qa-dialog-button]';
-    const dialogTitleElem = '[data-qa-dialog-title="true"]';
+    const dialogTitleElem = '[data-qa-dialog-title]';
     const confirmButtonElem = '[data-qa-dialog-confirm]';
 
     let dismissButtonElem = '[data-qa-dialog-cancel]';

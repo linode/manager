@@ -45,7 +45,6 @@ describe('Debounced Search Suite', () => {
       $(enhancedSelectInput).setValue(validQuery);
 
       browser.waitUntil(() => {
-        $(optionSelector).isDisplayed() === true;
         return $(optionSelector).isDisplayed();
       }, constants.wait.normal);
 
@@ -55,7 +54,6 @@ describe('Debounced Search Suite', () => {
         .toBe(true);
 
       browser.waitUntil(() => {
-        $(optionSelector).isDisplayed() === true;
         return $(optionSelector).isDisplayed();
       }, constants.wait.normal);
 
