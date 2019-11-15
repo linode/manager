@@ -1,4 +1,5 @@
 import { APIError } from 'linode-js-sdk/lib/types';
+import { DEFAULT_ERROR_MESSAGE } from 'src/constants';
 
 export default (
   errorMap: { [index: string]: string },
@@ -14,7 +15,7 @@ export default (
   // response. This is an old error handling utility, but I wanted to add it
   // as a safeguard so that this particular bug wouldn't happen again.
   if (!Array.isArray(arr)) {
-    return;
+    return field === 'none' ? DEFAULT_ERROR_MESSAGE : undefined;
   }
 
   let err;
