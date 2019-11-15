@@ -18,10 +18,6 @@ import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 
-import withLongviewClients, {
-  Props as LVProps
-} from 'src/containers/longview.container';
-
 import { systemInfo } from 'src/__data__/longview';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -58,8 +54,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  clients: LVProps['longviewClientsData'];
-  longviewClientsLastUpdated: number;
+  client: string;
   // systemInfo: LVDataProps['longviewClientData'];
 }
 
@@ -67,13 +62,8 @@ type CombinedProps = RouteComponentProps<{ id: string }> & Props;
 
 const LongviewDetailOverview: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const {
-    match: {
-      params: { id }
-    }
-  } = props;
-  const client = props && props.clients && props.clients[id];
-  const url = props && props.match && props.match.url;
+
+  const url = pathOr('', ['match', 'url'], props);
 
   const hostname = pathOr(
     'Hostname not available',
@@ -109,10 +99,6 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
 
   const coreCountDisplay = cpuCoreCount > 1 ? `Cores` : `Core`;
 
-  if (!client) {
-    return null;
-  }
-
   return (
     <React.Fragment>
       <Grid container>
@@ -136,7 +122,7 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
                   </Grid>
                   <Grid item>
                     <Typography variant="h3" className={classes.wrapHeader}>
-                      {client.label}
+                      {props.client}
                     </Typography>
                     <Typography>{hostname}</Typography>
                     <Typography>Up 47d 19h 22m</Typography>
@@ -293,12 +279,6 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, Props>(
-  React.memo,
-  withLongviewClients(
-    (own, { longviewClientsData, longviewClientsLastUpdated }) => ({
-      clients: longviewClientsData,
-      longviewClientsLastUpdated
-    })
-  )
-)(LongviewDetailOverview);
+export default compose<CombinedProps, Props>(React.memo)(
+  LongviewDetailOverview
+);
