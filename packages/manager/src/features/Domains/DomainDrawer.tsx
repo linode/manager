@@ -82,8 +82,12 @@ const styles = (theme: Theme) =>
     },
     actionPanel: {
       display: 'flex',
-      flexFlow: 'row wrap',
-      alignItems: 'center'
+      flexFlow: 'row',
+      alignItems: 'center',
+      '& > span': {
+        margin: theme.spacing(),
+        wordBreak: 'break-word'
+      }
     }
   });
 
@@ -190,27 +194,27 @@ const generateDefaultDomainRecords = (
     /** ipv6 can be null so don't try to create domain records in that case */
     !!cleanedIPv6
       ? [
-        ...baseIPv4Requests,
-        createDomainRecord(domainID, {
-          type: 'AAAA',
-          target: cleanedIPv6
-        }),
-        createDomainRecord(domainID, {
-          type: 'AAAA',
-          target: cleanedIPv6,
-          name: 'www'
-        }),
-        createDomainRecord(domainID, {
-          type: 'AAAA',
-          target: cleanedIPv6,
-          name: 'mail'
-        }),
-        createDomainRecord(domainID, {
-          type: 'MX',
-          priority: 10,
-          target: `mail.${domain}`
-        })
-      ]
+          ...baseIPv4Requests,
+          createDomainRecord(domainID, {
+            type: 'AAAA',
+            target: cleanedIPv6
+          }),
+          createDomainRecord(domainID, {
+            type: 'AAAA',
+            target: cleanedIPv6,
+            name: 'www'
+          }),
+          createDomainRecord(domainID, {
+            type: 'AAAA',
+            target: cleanedIPv6,
+            name: 'mail'
+          }),
+          createDomainRecord(domainID, {
+            type: 'MX',
+            priority: 10,
+            target: `mail.${domain}`
+          })
+        ]
       : baseIPv4Requests
   );
 };
@@ -483,7 +487,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               {!errorMap.defaultLinode && (
                 <FormHelperText>
                   {this.state.selectedDefaultLinode &&
-                    !this.state.selectedDefaultLinode.ipv6
+                  !this.state.selectedDefaultLinode.ipv6
                     ? `We'll automatically create domains for the first IPv4 address on this
                     Linode.`
                     : `We'll automatically create domain records for both the first
@@ -507,7 +511,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               {!errorMap.defaultNodeBalancer && (
                 <FormHelperText>
                   {this.state.selectedDefaultNodeBalancer &&
-                    !this.state.selectedDefaultNodeBalancer.ipv6
+                  !this.state.selectedDefaultNodeBalancer.ipv6
                     ? `We'll automatically create domains for the first IPv4 address on this
                   NodeBalancer.`
                     : `We'll automatically create domain records for both the first
@@ -535,19 +539,20 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
           >
             {mode === EDITING ? 'Update' : 'Create'}
           </Button>
-          {!!submitting ? (
+          {submitting ? (
             <span>
+              {/* Creating fdsafdsafdsafdsafdsafdasfdssdafdsaasfdsaf42314324.com */}
               {this.state.loadingText ? this.state.loadingText : null}
             </span>
           ) : (
-              <Button
-                onClick={this.closeDrawer}
-                buttonType="cancel"
-                data-qa-cancel
-              >
-                Cancel
+            <Button
+              onClick={this.closeDrawer}
+              buttonType="cancel"
+              data-qa-cancel
+            >
+              Cancel
             </Button>
-            )}
+          )}
         </ActionsPanel>
       </Drawer>
     );
@@ -773,7 +778,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               .catch((e: APIError[]) => {
                 reportException(
                   `Default DNS Records couldn't be created from Linode: ${
-                  e[0].reason
+                    e[0].reason
                   }`,
                   {
                     selectedLinode: this.state.selectedDefaultLinode!.id,
@@ -813,7 +818,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               .catch((e: APIError[]) => {
                 reportException(
                   `Default DNS Records couldn't be created from NodeBalancer: ${
-                  e[0].reason
+                    e[0].reason
                   }`,
                   {
                     selectedNodeBalancer: this.state
@@ -915,7 +920,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     const data =
       type === 'master'
         ? // not sending type for master. There is a bug on server and it returns an error that `master_ips` is required
-        { domain, tags, soa_email: soaEmail, domainId: id }
+          { domain, tags, soa_email: soaEmail, domainId: id }
         : { domain, type, tags, master_ips: finalMasterIPs, domainId: id };
 
     if (type === 'master' && !isValidSOAEmail(data.soa_email || '', domain)) {
