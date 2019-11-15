@@ -1,18 +1,31 @@
 import * as React from 'react';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import OrderBy from 'src/components/OrderBy';
+import Paginate from 'src/components/Paginate';
+import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
+import TableSortCell from 'src/components/TableSortCell';
+import { longviewServiceFactory } from 'src/factories/longviewService';
 import { LongviewService } from 'src/features/Longview/request.types';
 import LongviewServiceRow from './LongviewServiceRow';
 
+const useStyles = makeStyles((theme: Theme) => ({
+  table: {
+    width: '750px'
+  }
+}));
+
 export interface Props {}
+
+const mockServices = longviewServiceFactory.buildList(10);
 
 export const ListeningServices: React.FC<Props> = props => {
   return (
@@ -20,7 +33,7 @@ export const ListeningServices: React.FC<Props> = props => {
       <Typography variant="h2">Listening Services</Typography>
       <Grid item>
         <ServicesTable
-          services={[]}
+          services={mockServices}
           servicesLoading={false}
           servicesError={undefined}
         />
@@ -37,22 +50,97 @@ export interface TableProps {
 
 export const ServicesTable: React.FC<TableProps> = props => {
   const { services, servicesError, servicesLoading } = props;
+  const classes = useStyles();
+
   return (
-    <Table spacingTop={16}>
-      <TableHead>
-        <TableRow>
-          <TableCell data-qa-table-header="Process">Process</TableCell>
-          <TableCell data-qa-table-header="User">User</TableCell>
-          <TableCell data-qa-table-header="Protocol">Protocol</TableCell>
-          <TableCell data-qa-table-header="Port">Port</TableCell>
-          <TableCell data-qa-table-header="IP">IP</TableCell>
-          <TableCell />
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {renderLoadingErrorData(servicesLoading, services, servicesError)}
-      </TableBody>
-    </Table>
+    <OrderBy data={services} orderBy={'process'} order={'asc'}>
+      {({ data: orderedData, handleOrderChange, order, orderBy }) => (
+        <Paginate data={orderedData} pageSize={25}>
+          {({
+            data: paginatedData,
+            count,
+            handlePageChange,
+            handlePageSizeChange,
+            page,
+            pageSize
+          }) => (
+            <>
+              <Table spacingTop={16} tableClass={classes.table}>
+                <TableHead>
+                  <TableRow>
+                    <TableSortCell
+                      data-qa-table-header="Process"
+                      active={orderBy === 'process'}
+                      label="process"
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      style={{ width: '25%' }}
+                    >
+                      Process
+                    </TableSortCell>
+                    <TableSortCell
+                      data-qa-table-header="User"
+                      active={orderBy === 'user'}
+                      label="user"
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      style={{ width: '25%' }}
+                    >
+                      User
+                    </TableSortCell>
+                    <TableSortCell
+                      data-qa-table-header="Protocol"
+                      active={orderBy === 'protocol'}
+                      label="protocol"
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      style={{ width: '15%' }}
+                    >
+                      Protocol
+                    </TableSortCell>
+                    <TableSortCell
+                      data-qa-table-header="Port"
+                      active={orderBy === 'port'}
+                      label="port"
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      style={{ width: '10%' }}
+                    >
+                      Port
+                    </TableSortCell>
+                    <TableSortCell
+                      data-qa-table-header="IP"
+                      active={orderBy === 'ip'}
+                      label="ip"
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      style={{ width: '25%' }}
+                    >
+                      IP
+                    </TableSortCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {renderLoadingErrorData(
+                    servicesLoading,
+                    paginatedData,
+                    servicesError
+                  )}
+                </TableBody>
+              </Table>
+              <PaginationFooter
+                count={count}
+                page={page}
+                pageSize={pageSize}
+                handlePageChange={handlePageChange}
+                handleSizeChange={handlePageSizeChange}
+                eventCategory="Longview listening services"
+              />
+            </>
+          )}
+        </Paginate>
+      )}
+    </OrderBy>
   );
 };
 

@@ -114,6 +114,7 @@ export interface LongviewService {
   ip: string;
   type: string;
   port: number;
+  name: string;
 }
 
 export interface LongviewPort {
@@ -121,7 +122,7 @@ export interface LongviewPort {
   user: string;
   name: string;
 }
-export interface LongviewPorts {
+export interface LongviewPortsResponse {
   listening: LongviewService[];
   active: LongviewPort[];
 }

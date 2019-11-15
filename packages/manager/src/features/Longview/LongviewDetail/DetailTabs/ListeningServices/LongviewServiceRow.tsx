@@ -12,19 +12,19 @@ export const LongviewServiceRow: React.FC<Props> = props => {
   return (
     <TableRow data-testid="longview-service-row">
       <TableCell parentColumn="Process" data-qa-service-process>
-        dhcclient
+        {service.name}
       </TableCell>
       <TableCell parentColumn="User" data-qa-service-user>
-        root
+        {service.user}
       </TableCell>
       <TableCell parentColumn="Protocol" data-qa-service-protocol>
-        UDP
+        {service.type}
       </TableCell>
       <TableCell parentColumn="Port" data-qa-service-port>
-        68
+        {service.port}
       </TableCell>
       <TableCell parentColumn="IP" data-qa-service-ip>
-        0.0.0.0
+        {service.ip}
       </TableCell>
     </TableRow>
   );
