@@ -18,6 +18,8 @@ import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 
+import ListeningServices from './ListeningServices';
+
 import { systemInfo } from 'src/__data__/longview';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -267,9 +269,7 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
           <Paper className={classes.paperSection}>Graphs here</Paper>
         </Grid>
         <Grid container item xs={12}>
-          <Grid item xs={12} md={8}>
-            <Typography variant="h2">Listening Services</Typography>
-          </Grid>
+          <ListeningServices />
           <Grid item xs={12} md={4}>
             <Typography variant="h2">Active Connections</Typography>
           </Grid>

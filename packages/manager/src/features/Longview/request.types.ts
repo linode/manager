@@ -109,6 +109,23 @@ export interface LongviewPackages {
   Packages: LongviewPackage[];
 }
 
+export interface LongviewService {
+  user: string;
+  ip: string;
+  type: string;
+  port: number;
+}
+
+export interface LongviewPort {
+  count: number;
+  user: string;
+  name: string;
+}
+export interface LongviewPorts {
+  listening: LongviewService[];
+  active: LongviewPort[];
+}
+
 export interface LongviewSystemInfo {
   SysInfo: {
     arch: string;
