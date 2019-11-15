@@ -23,6 +23,7 @@ const LongviewListRows: React.FC<CombinedProps> = props => {
         return (
           <ClientRow
             key={`longview-client-${eachClient.label}`}
+            clientInstallKey={eachClient.install_code}
             clientID={eachClient.id}
             clientLabel={eachClient.label}
             clientAPIKey={eachClient.api_key}

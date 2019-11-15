@@ -10,6 +10,7 @@ export interface LVClientData {
   longviewClientData: ReturnType;
   longviewClientDataLoading: boolean;
   longviewClientDataError?: APIError[];
+  longviewClientLastUpdated?: number;
 }
 
 export interface DispatchProps {
@@ -58,7 +59,8 @@ const connected = <OwnProps extends {}>(
       return {
         longviewClientData: pathOr({}, ['data'], foundClient),
         longviewClientDataLoading: pathOr(true, ['loading'], foundClient),
-        longviewClientDataError: path(['error'], foundClient)
+        longviewClientDataError: path(['error'], foundClient),
+        longviewClientLastUpdated: path(['lastUpdated'], foundClient)
       };
     },
     (dispatch: ThunkDispatch, ownProps: OwnProps) => ({

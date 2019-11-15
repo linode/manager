@@ -81,6 +81,7 @@ export const dark = (options: ThemeOverrides) =>
       grey1: '#abadaf',
       grey2: 'rgba(0, 0, 0, 0.2)',
       grey3: '#999',
+      grey5: 'rgba(0, 0, 0, 0.2)',
       white: '#32363c',
       blue: primaryColors.main,
       black: '#fff',

@@ -28,12 +28,7 @@ const CreateIPv6Drawer: React.StatelessComponent<CombinedProps> = props => {
           for this Linode.
         </Typography>
         <ActionsPanel style={{ marginTop: 16 }}>
-          <Button
-            buttonType="primary"
-            className="cancel"
-            onClick={props.onClose}
-            data-qa-cancel
-          >
+          <Button buttonType="secondary" onClick={props.onClose} data-qa-cancel>
             Close
           </Button>
         </ActionsPanel>

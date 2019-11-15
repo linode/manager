@@ -10,6 +10,7 @@ describe('StackScripts Landing', () => {
     <StackScriptsLanding
       imagesData={normalizedImages}
       imagesLoading={false}
+      imagesError={{}}
       classes={{ root: '', title: '' }}
       {...reactRouterProps}
     />

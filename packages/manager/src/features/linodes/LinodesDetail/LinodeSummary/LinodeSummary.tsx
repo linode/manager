@@ -1,4 +1,3 @@
-import { Image } from 'linode-js-sdk/lib/images';
 import {
   getLinodeStats,
   getLinodeStatsByDate,
@@ -25,7 +24,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
-import withImages from 'src/containers/withImages.container';
+import withImages, { WithImages } from 'src/containers/withImages.container';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { displayType } from 'src/features/linodes/presentation';
 import { ApplicationState } from 'src/store';
@@ -156,10 +155,6 @@ interface LinodeContextProps {
   linodeVolumesError?: APIError[];
 }
 
-interface WithImagesProps {
-  imagesData: Record<string, Image>;
-}
-
 interface State {
   stats?: Stats;
   rangeSelection: string;
@@ -171,7 +166,7 @@ interface State {
 
 type CombinedProps = LinodeContextProps &
   WithTypesProps &
-  WithImagesProps &
+  WithImages &
   WithStyles<ClassNames>;
 
 const chartHeight = 300;
@@ -838,10 +833,7 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
 const enhanced = compose<CombinedProps, {}>(
   withTypes,
   linodeContext,
-  withImages((ownProps, imagesData) => ({
-    ...ownProps,
-    imagesData
-  })),
+  withImages(),
   styled
 );
 

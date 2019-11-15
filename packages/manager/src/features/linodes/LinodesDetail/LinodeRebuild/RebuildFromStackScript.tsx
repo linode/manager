@@ -1,5 +1,4 @@
 import { Formik, FormikProps } from 'formik';
-import { Image } from 'linode-js-sdk/lib/images';
 import {
   rebuildLinode,
   RebuildLinodeFromStackScriptSchema
@@ -25,7 +24,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import Notice from 'src/components/Notice';
-import withImages from 'src/containers/withImages.container';
+import withImages, { WithImages } from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/events';
 import userSSHKeyHoc, {
   UserSSHKeyProps
@@ -75,15 +74,10 @@ interface Props {
 interface ContextProps {
   linodeId: number;
 }
-interface WithImagesProps {
-  imagesData: Record<string, Image>;
-  imagesLoading: boolean;
-  imagesError?: string;
-}
 
 export type CombinedProps = Props &
   WithStyles<ClassNames> &
-  WithImagesProps &
+  WithImages &
   ContextProps &
   UserSSHKeyProps &
   RouteComponentProps &
@@ -370,12 +364,7 @@ const enhanced = compose<CombinedProps, Props>(
   userSSHKeyHoc,
   styled,
   withSnackbar,
-  withImages((ownProps, imagesData, imagesLoading, imagesError) => ({
-    ...ownProps,
-    imagesData,
-    imagesLoading,
-    imagesError
-  })),
+  withImages(),
   withRouter
 );
 

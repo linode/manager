@@ -134,6 +134,19 @@ export type CombinedProps = Props &
   DispatchProps &
   ReduxStateProps;
 
+export const managedText = (
+  <span>
+    Longview Pro is included with Linode Managed. If you need additional
+    clients, please{' '}
+    <SupportLink
+      title="Request for additional Longview clients"
+      description=""
+      text="contact Support"
+    />{' '}
+    for additional Longview plan options.
+  </span>
+);
+
 export const LongviewPlans: React.FC<CombinedProps> = props => {
   const {
     accountSettings,
@@ -221,23 +234,7 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
             text="You don't have permissions to change the Longview plan. Please contact an account administrator for details."
           />
         )}
-        {isManaged && (
-          <Notice
-            success
-            text={
-              <span>
-                Managed customers receive a complimentary Longview Pro 10 Pack.
-                If you need more than 10 clients, please{' '}
-                <SupportLink
-                  title="Request for additional Longview clients"
-                  description=""
-                  text="contact Support"
-                />{' '}
-                for additional Longview plan options.
-              </span>
-            }
-          />
-        )}
+        {isManaged && <Notice success text={managedText} />}
         {!isManaged && (
           <>
             <Table className={styles.table}>

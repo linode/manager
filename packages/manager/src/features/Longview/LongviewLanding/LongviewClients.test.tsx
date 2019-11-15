@@ -34,6 +34,12 @@ const props = {
   updateLongviewClient: jest.fn(),
   enqueueSnackbar: jest.fn(),
   closeSnackbar: jest.fn(),
+  subscriptionsData: [],
+  accountSettingsLoading: false,
+  accountSettingsError: {},
+  accountSettingsLastUpdated: 0,
+  lvClientData: {},
+  lvClientsLoading: false,
   ...reactRouterProps
 };
 

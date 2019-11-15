@@ -21,7 +21,8 @@ type CSSClasses =
   | 'sort'
   | 'hasValueInside'
   | 'green'
-  | 'valueInside';
+  | 'valueInside'
+  | 'noPadding';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -107,6 +108,9 @@ const styles = (theme: Theme) =>
         width: 85,
         height: 85
       }
+    },
+    noPadding: {
+      padding: 0
     }
   });
 
@@ -119,6 +123,7 @@ interface Props extends CircularProgressProps {
   sort?: boolean;
   children?: JSX.Element;
   green?: boolean;
+  noPadding?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<CSSClasses>;
@@ -137,6 +142,7 @@ const circleProgressComponent: React.StatelessComponent<
     tag,
     sort,
     noInner,
+    noPadding,
     ...rest
   } = props;
 
@@ -144,7 +150,8 @@ const circleProgressComponent: React.StatelessComponent<
     [classes.root]: true,
     [classes.noTopMargin]: noTopMargin,
     [classes.hasValueInside]: children !== undefined,
-    [classes.green]: green
+    [classes.green]: green,
+    [classes.noPadding]: noPadding
   };
 
   if (props.className) {
@@ -184,8 +191,10 @@ const circleProgressComponent: React.StatelessComponent<
       className={classNames({
         [classes.mini]: true,
         [classes.tag]: tag,
-        [classes.sort]: sort
+        [classes.sort]: sort,
+        [classes.noPadding]: noPadding
       })}
+      size={noPadding ? 22 : 40}
       data-qa-circle-progress
     />
   );
