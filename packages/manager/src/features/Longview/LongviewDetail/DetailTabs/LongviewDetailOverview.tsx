@@ -279,6 +279,7 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(
-  LongviewDetailOverview
-);
+export default compose<
+  CombinedProps,
+  Props & RouteComponentProps<{ id: string }>
+>(React.memo)(LongviewDetailOverview);
