@@ -162,6 +162,7 @@ interface State {
     window: Window;
     day: Day;
     errors?: APIError[];
+    loading: boolean;
   };
   restoreDrawer: {
     open: boolean;
@@ -215,7 +216,8 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     },
     settingsForm: {
       window: this.props.backupsSchedule.window || 'Scheduling',
-      day: this.props.backupsSchedule.day || 'Scheduling'
+      day: this.props.backupsSchedule.day || 'Scheduling',
+      loading: false
     },
     restoreDrawer: {
       open: false,
@@ -410,6 +412,10 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     } = this.props;
     const { settingsForm } = this.state;
 
+    this.setState(state => ({
+      settingsForm: { ...state.settingsForm, loading: true, errors: undefined }
+    }));
+
     updateLinode({
       linodeId: linodeID,
       backups: {
@@ -421,18 +427,23 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
       }
     })
       .then(() => {
+        this.setState(state => ({
+          settingsForm: { ...state.settingsForm, loading: false }
+        }));
+
         enqueueSnackbar('Backup settings saved', {
           variant: 'success'
         });
       })
       .catch(err => {
         this.setState(
-          {
+          state => ({
             settingsForm: {
-              ...settingsForm,
+              ...state.settingsForm,
+              loading: false,
               errors: getAPIErrorOrDefault(err)
             }
-          },
+          }),
           () => {
             scrollErrorIntoView();
           }
@@ -754,6 +765,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
               buttonType="primary"
               onClick={this.saveSettings}
               disabled={isReadOnly(permissions)}
+              loading={this.state.settingsForm.loading}
               data-qa-schedule
             >
               Save Schedule
