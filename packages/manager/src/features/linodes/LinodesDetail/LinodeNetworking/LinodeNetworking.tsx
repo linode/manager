@@ -66,7 +66,8 @@ type ClassNames =
   | 'rDNSListItem'
   | 'multipleRDNSButton'
   | 'multipleRDNSText'
-  | 'errorText';
+  | 'errorText'
+  | 'loader';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -123,12 +124,13 @@ const styles = (theme: Theme) =>
       }
     },
     multipleRDNSButton: {
-      display: 'flex',
-      alignItems: 'center',
-      background: 'none',
-      border: 'none',
       cursor: 'pointer',
-      paddingLeft: 0
+      border: 0,
+      padding: 0,
+      [theme.breakpoints.down('sm')]: {
+        minWidth: 120,
+        textAlign: 'right'
+      }
     },
     multipleRDNSText: {
       color: theme.palette.primary.main,
@@ -138,6 +140,9 @@ const styles = (theme: Theme) =>
     },
     errorText: {
       color: theme.color.red
+    },
+    loader: {
+      padding: 0
     }
   });
 
@@ -276,6 +281,13 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     });
   };
 
+  handleOpenEditRDNSForRange = (range: IPRange) => {
+    this.setState({
+      editRDNSDrawerOpen: true,
+      currentlySelectedIPRange: range
+    });
+  };
+
   renderRangeRow(range: IPRange, type: IPTypes) {
     const { classes } = this.props;
 
@@ -303,6 +315,8 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           <LinodeNetworkingActionMenu
             onView={this.displayRangeDrawer(range)}
             ipType={type}
+            ipAddress={range}
+            onEdit={() => this.handleOpenEditRDNSForRange(range)}
           />
         </TableCell>
       </TableRow>
@@ -314,7 +328,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     const { ipv6Loading, ipv6Error } = this.state;
 
     if (ipv6Loading) {
-      return <CircleProgress mini />;
+      return <CircleProgress mini noPadding />;
     }
 
     if (ipv6Error) {
@@ -398,7 +412,8 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   closeEditRDNSDrawer = () => {
     this.setState({
       editRDNSDrawerOpen: false,
-      currentlySelectedIP: undefined
+      currentlySelectedIP: undefined,
+      currentlySelectedIPRange: undefined
     });
     this.refreshIPs();
   };
@@ -538,6 +553,12 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
               ? this.state.currentlySelectedIP.rdns
               : undefined
           }
+          range={
+            this.state.currentlySelectedIPRange
+              ? this.state.currentlySelectedIPRange.range
+              : undefined
+          }
+          ips={ipsWithRDNS}
         />
 
         <ViewRDNSDrawer
