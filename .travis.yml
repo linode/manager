@@ -16,8 +16,7 @@ before_script:
 - yarn storybook &
 
 script:
-- yarn workspaces run build
-- yarn up &
+- yarn build
 - yarn test
 - yarn storybook:e2e
 
