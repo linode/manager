@@ -148,14 +148,13 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
   }
 
   if (!client) {
-    /* 
+    /*
       this is already handled from the case above, but this is here
       so that we don't have to do undefined checking in the render method
       below
      */
     return null;
   }
-
   return (
     <React.Fragment>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
@@ -240,7 +239,12 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
             />
           )}
         />
-        <Route strict component={Overview} />
+        <Route
+          strict
+          render={routerProps => (
+            <Overview client={client.label} {...routerProps} />
+          )}
+        />
       </Switch>
     </React.Fragment>
   );

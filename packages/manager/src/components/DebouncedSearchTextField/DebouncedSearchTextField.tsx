@@ -20,6 +20,7 @@ interface Props extends TextFieldProps {
   debounceTime?: number;
   isSearching?: boolean;
   className?: string;
+  placeholder?: string;
 }
 
 type CombinedProps = Props;
@@ -31,6 +32,7 @@ const DebouncedSearch: React.FC<CombinedProps> = props => {
     InputProps,
     debounceTime,
     onSearch,
+    placeholder,
     ...restOfTextFieldProps
   } = props;
   const [query, setQuery] = React.useState<string>('');
@@ -68,7 +70,7 @@ const DebouncedSearch: React.FC<CombinedProps> = props => {
     <TextField
       data-qa-debounced-search
       className={className}
-      placeholder="Filter by query"
+      placeholder={placeholder || 'Filter by query'}
       onChange={_setQuery}
       InputProps={{
         startAdornment: (

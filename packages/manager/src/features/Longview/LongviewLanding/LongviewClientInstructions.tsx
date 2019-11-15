@@ -6,6 +6,8 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import EditableEntityLabel from 'src/components/EditableEntityLabel';
 import Grid from 'src/components/Grid';
+import { DispatchProps } from 'src/containers/longview.container';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import Instructions from '../shared/InstallationInstructions';
 
@@ -28,6 +30,7 @@ interface Props {
   installCode: string;
   clientAPIKey: string;
   triggerDeleteLongviewClient: (id: number, label: string) => void;
+  updateLongviewClient: DispatchProps['updateLongviewClient'];
 }
 
 export const LongviewClientInstructions: React.FC<Props> = props => {
@@ -36,9 +39,27 @@ export const LongviewClientInstructions: React.FC<Props> = props => {
     clientLabel,
     installCode,
     triggerDeleteLongviewClient,
-    clientAPIKey
+    clientAPIKey,
+    updateLongviewClient
   } = props;
   const classes = useStyles();
+
+  const [updating, setUpdating] = React.useState<boolean>(false);
+
+  const handleUpdateLabel = (newLabel: string) => {
+    setUpdating(true);
+    return updateLongviewClient(clientID, newLabel)
+      .then(_ => {
+        setUpdating(false);
+      })
+      .catch(error => {
+        setUpdating(false);
+        return Promise.reject(
+          getAPIErrorOrDefault(error, 'Error updating label')[0].reason
+        );
+      });
+  };
+
   return (
     <Paper className={classes.root}>
       <Grid
@@ -53,11 +74,11 @@ export const LongviewClientInstructions: React.FC<Props> = props => {
           <Grid container>
             <Grid item xs={12} md={3}>
               <EditableEntityLabel
-                text={'longview3347837'}
+                text={clientLabel}
                 iconVariant="linode"
                 subText="Waiting for data..."
-                onEdit={() => Promise.resolve(null)}
-                loading={false}
+                onEdit={handleUpdateLabel}
+                loading={updating}
               />
             </Grid>
             <Grid item xs={12} md={9}>

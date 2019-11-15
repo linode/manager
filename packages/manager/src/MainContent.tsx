@@ -18,7 +18,6 @@ import Footer from 'src/features/Footer';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
-import WelcomeBanner from 'src/WelcomeBanner';
 
 import DefaultLoader from 'src/components/DefaultLoader';
 import ErrorState from 'src/components/ErrorState';
@@ -37,7 +36,6 @@ import withFeatureFlags, {
 
 import Logo from 'src/assets/logo/logo-text.svg';
 
-import { notifications } from 'src/utilities/storage';
 import {
   isKubernetesEnabled as _isKubernetesEnabled,
   isObjectStorageEnabled
@@ -217,9 +215,6 @@ const MainContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const [menuIsOpen, toggleMenu] = React.useState<boolean>(false);
-  const [welcomeModalIsOpen, toggleWelcomeModal] = React.useState<boolean>(
-    notifications.welcome.get() === 'open'
-  );
 
   const isKubernetesEnabled = _isKubernetesEnabled(props.accountCapabilities);
 
@@ -373,14 +368,6 @@ const MainContent: React.FC<CombinedProps> = props => {
             </main>
 
             <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
-            <WelcomeBanner
-              open={welcomeModalIsOpen}
-              onClose={() => {
-                notifications.welcome.set('closed');
-                toggleWelcomeModal(false);
-              }}
-              data-qa-beta-notice
-            />
             <ToastNotifications />
             <DomainDrawer />
             <VolumeDrawer />
