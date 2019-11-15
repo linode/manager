@@ -12,7 +12,7 @@ before_install: sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev 
   build-essential g++ google-chrome-stable curl
 install:
 - yarn install:all
-#before_script:
+before_script:
 - yarn storybook &
 
 script:
@@ -20,6 +20,8 @@ script:
 - yarn up &
 - yarn test
 - yarn storybook:e2e
+
+after_script:
 - 'pkill -f selenium-standalone || :'
 - pkill -f storybook
 env:
