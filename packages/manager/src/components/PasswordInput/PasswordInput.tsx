@@ -118,8 +118,8 @@ class PasswordInput extends React.Component<CombinedProps, State> {
 
 const maybeStrength = (value?: string) => {
 
-  const strongRegex = /^(?=.{2,}[a-z])(?=.{2,}[A-Z])(?=.{2,}[0-9])(?=.{2,}[!@#\$%\^&\*])(?=.{10,})/;
-  const mediumRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
+  const strongRegex = /^(?=.{2,}[a-z])(?=.{2,}[A-Z])(?=.{2,}[0-9])(?=.{2,}[!"#$%&'()*+,-.\/:;<=>?@\[\]^_`{|}~\\])(?=.{10,})/;
+  const mediumRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!"#$%&'()*+,-.\/:;<=>?@\[\]^_`{|}~\\])(?=.{8,})/;
   const weekRegex = /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})/;
 
   if (!value || isEmpty(value)) {
