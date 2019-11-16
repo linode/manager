@@ -9,7 +9,6 @@ import {
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { Props as TextFieldProps } from 'src/components/TextField';
-import * as zxcvbn from 'zxcvbn';
 import StrengthIndicator from '../PasswordInput/StrengthIndicator';
 import HideShowText from './HideShowText';
 
@@ -118,14 +117,23 @@ class PasswordInput extends React.Component<CombinedProps, State> {
 }
 
 const maybeStrength = (value?: string) => {
+
+  const strongRegex = /^(?=.{2,}[a-z])(?=.{2,}[A-Z])(?=.{2,}[0-9])(?=.{2,}[!@#\$%\^&\*])(?=.{10,})/;
+  const mediumRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
+  const weekRegex = /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})/;
+
   if (!value || isEmpty(value)) {
     return null;
   } else {
-    const score = zxcvbn(value).score;
-    if (score === 4) {
+    if(strongRegex.test(value)){
       return 3;
+    }else if(mediumRegex.test(value)){
+      return 2;
+    }else if(weekRegex.test(value)){
+      return 1;
+    }else{
+      return 0;
     }
-    return score;
   }
 };
 
