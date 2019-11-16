@@ -847,9 +847,12 @@ export const listIPv6InRange = (
 ) => {
   return ips.filter(thisIP => {
     // Only keep addresses that:
-    // 1. are part of an IPv6 range
+    // 1. are part of an IPv6 range or pool
     // 2. have RDNS set
-    if (thisIP.type !== 'ipv6/range' || thisIP.rdns === null) {
+    if (
+      !['ipv6/range', 'ipv6/pool'].includes(thisIP.type) ||
+      thisIP.rdns === null
+    ) {
       return;
     }
 
