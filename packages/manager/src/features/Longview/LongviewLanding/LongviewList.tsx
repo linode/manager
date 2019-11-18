@@ -1,3 +1,4 @@
+import { LongviewClient } from 'linode-js-sdk/lib/longview/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
@@ -37,6 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type LongviewProps = Omit<
   LVProps,
+  | 'longviewClientsData'
   | 'getLongviewClients'
   | 'createLongviewClient'
   | 'deleteLongviewClient'
@@ -45,6 +47,7 @@ type LongviewProps = Omit<
 
 interface Props {
   loading: boolean;
+  longviewClientsData: LongviewClient[];
   createLongviewClient: () => void;
   triggerDeleteLongviewClient: (
     longviewClientID: number,
@@ -110,11 +113,7 @@ const LongviewList: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      <OrderBy
-        data={Object.values(longviewClientsData)}
-        orderBy={'label'}
-        order={'asc'}
-      >
+      <OrderBy data={longviewClientsData} orderBy={'label'} order={'asc'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
           <Paginate data={orderedData}>
             {({
