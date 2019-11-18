@@ -1,12 +1,13 @@
 FROM node:10-alpine
+
 # Run commands as "node" user. We don't want to run these commands as root
 #
 # See https://github.com/nodejs/docker-node/blob/d094c98a48659ff9f8d59db8dafb7020e181446a/docs/BestPractices.md
 # and https://github.com/nodejs/docker-node/issues/1
-# https://stackoverflow.com/questions/18136746/npm-install-failed-with-cannot-run-in-wd
-WORKDIR /home/cloud
-RUN chown -R node:node /home/cloud
+WORKDIR /home/node/app
+RUN chown -R node:node /home/node/app
 USER node
+
 RUN yarn global add lerna
 
 # Copy the root level package.json and run yarn if anything changes
@@ -24,10 +25,12 @@ COPY --chown=node:node packages/manager/patches ./packages/manager/patches/
 # Copy JS SDK deps
 COPY --chown=node:node packages/linode-js-sdk/package.json ./packages/linode-js-sdk/
 
-RUN yarn install:all
+# Runs "yarn install" for all child packages
+RUN npx lerna bootstrap
 
-RUN mkdir ./packages/manager/ouput && mkdir ./build
+# Copy the rest of the files that don't require installation
+COPY --chown=node:node packages/linode-js-sdk  ./packages/linode-js-sdk/
 
-COPY --chown=node:node . ./
+COPY --chown=node:node packages/manager ./packages/manager
 
 ENTRYPOINT ["yarn"]
