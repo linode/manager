@@ -1,10 +1,8 @@
-import Close from '@material-ui/icons/Close';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 
-import IconButton from 'src/components/core/IconButton';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
@@ -16,6 +14,7 @@ import NetworkGauge from './Gauges/Network';
 import RAMGauge from './Gauges/RAM';
 import StorageGauge from './Gauges/Storage';
 import SwapGauge from './Gauges/Swap';
+import ActionMenu, { ActionHandlers } from './LongviewActionMenu';
 import LongviewClientHeader from './LongviewClientHeader';
 import LongviewClientInstructions from './LongviewClientInstructions';
 
@@ -45,15 +44,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   label: {}
 }));
 
-interface Props {
+interface Props extends ActionHandlers {
   clientID: number;
   clientLabel: string;
   clientAPIKey: string;
   clientInstallKey: string;
-  triggerDeleteLongviewClient: (
-    longviewClientID: number,
-    longviewClientLabel: string
-  ) => void;
 }
 
 type CombinedProps = Props & LVDataProps & DispatchProps;
@@ -68,9 +63,9 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
     clientID,
     clientLabel,
     clientAPIKey,
-    triggerDeleteLongviewClient,
     clientInstallKey,
-    updateLongviewClient
+    updateLongviewClient,
+    ...actionHandlers
   } = props;
 
   /*
@@ -88,7 +83,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
 
   const requestAndSetLastUpdated = () => {
     /*
-     get the current last updated value 
+     get the current last updated value
 
      This function is called as a closure inside the onMount useEffect
      so we need to use a ref to get the new value
@@ -134,7 +129,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
 
   React.useEffect(() => {
     /*
-     update the ref each time the lastUpdate state changes 
+     update the ref each time the lastUpdate state changes
 
      Why not just add lastUpdated as a dependency to the useEffect below?
      Because we don't want to re-instatiate the setInterval() over and over again
@@ -144,7 +139,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
      but doesn't necessarily need to be re-defined again. useRef lets us accomplish this
 
      See: https://github.com/facebook/react/issues/14010#issuecomment-433788147
-     
+
     */
     currentLastUpdated.current = lastUpdated;
   }, [lastUpdated]);
@@ -174,8 +169,8 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
         clientLabel={clientLabel}
         clientAPIKey={clientAPIKey}
         installCode={clientInstallKey}
-        triggerDeleteLongviewClient={triggerDeleteLongviewClient}
         updateLongviewClient={updateLongviewClient}
+        {...actionHandlers}
       />
     );
   }
@@ -245,14 +240,11 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
         <Grid item xs={1}>
           <Grid container justify="flex-end">
             <Grid item>
-              <IconButton
-                onClick={() =>
-                  triggerDeleteLongviewClient(clientID, clientLabel)
-                }
-                className={classes.button}
-              >
-                <Close width={30} height={30} />
-              </IconButton>
+              <ActionMenu
+                longviewClientID={clientID}
+                longviewClientLabel={clientLabel}
+                {...actionHandlers}
+              />
             </Grid>
           </Grid>
         </Grid>
