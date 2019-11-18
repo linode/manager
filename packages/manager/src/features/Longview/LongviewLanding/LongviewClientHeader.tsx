@@ -53,7 +53,7 @@ interface Props {
 
 type CombinedProps = Props & DispatchProps & LVDataProps & WithTheme;
 
-const getPackageNoticeText = (packages: LongviewPackage[]) => {
+export const getPackageNoticeText = (packages: LongviewPackage[]) => {
   if (!packages) {
     return 'Package information not available';
   }

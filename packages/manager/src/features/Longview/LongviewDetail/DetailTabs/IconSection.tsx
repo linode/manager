@@ -15,9 +15,9 @@ import { formatUptime } from 'src/utilities/formatUptime';
 
 import { Props as LVDataProps } from 'src/containers/longview.stats.container';
 
-import { pluralize } from 'src/utilities/pluralize';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { LongviewPackage } from '../../request.types';
+import { getPackageNoticeText } from '../../LongviewLanding/LongviewClientHeader';
 
 const useStyles = makeStyles((theme: Theme) => ({
   labelStatusWrapper: {
@@ -98,16 +98,6 @@ const IconSection: React.FC<Props> = props => {
     ['Packages'],
     props.longviewClientData
   );
-
-  const getPackageNoticeText = (packages: LongviewPackage[]) => {
-    if (!packages) {
-      return 'Package information not available';
-    }
-    if (packages.length === 0) {
-      return 'All packages up to date';
-    }
-    return `${pluralize('update', 'updates', packages.length)} Available`;
-  };
 
   const packagesToUpdate = getPackageNoticeText(packages);
 

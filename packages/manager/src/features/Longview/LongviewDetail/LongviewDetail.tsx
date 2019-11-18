@@ -170,7 +170,6 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
     return null;
   }
 
-  console.log(props.longviewClientData);
   return (
     <React.Fragment>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
