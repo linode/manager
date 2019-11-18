@@ -28,7 +28,7 @@ import getEntitiesWithGroupsToImport, {
 } from 'src/store/selectors/getEntitiesWithGroupsToImport';
 import { openDrawer as openGroupDrawer } from 'src/store/tagImportDrawer';
 import { MapState } from 'src/store/types';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import shouldDisplayGroupImport from 'src/utilities/shouldDisplayGroupImportCTA';
 import { storage } from 'src/utilities/storage';
 import AutoBackups from './AutoBackups';
@@ -51,7 +51,7 @@ interface StateProps {
 
 interface DispatchProps {
   actions: {
-    updateAccount: (data: Partial<AccountSettings>) => void;
+    updateAccount: (data: Partial<AccountSettings>) => Promise<AccountSettings>;
     updateAccountSettingsInStore: (data: Partial<AccountSettings>) => void;
     openImportDrawer: () => void;
     openBackupsDrawer: () => void;
@@ -71,7 +71,9 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
       actions: { updateAccount },
       backups_enabled
     } = this.props;
-    return updateAccount({ backups_enabled: !backups_enabled });
+    return updateAccount({ backups_enabled: !backups_enabled }).catch(
+      this.displayError
+    );
   };
 
   toggleNetworkHelper = () => {
@@ -79,17 +81,19 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
       actions: { updateAccount },
       networkHelperEnabled
     } = this.props;
-    return updateAccount({ network_helper: !networkHelperEnabled });
+    return updateAccount({ network_helper: !networkHelperEnabled }).catch(
+      this.displayError
+    );
   };
 
   displayError = (errors: APIError[] | undefined) => {
     if (!errors) {
       return;
     }
-    const errorText = getErrorStringOrDefault(
+    const errorText = getAPIErrorOrDefault(
       errors,
       'There was an error updating your account settings.'
-    );
+    )[0].reason;
 
     return this.props.enqueueSnackbar(errorText, {
       variant: 'error'
@@ -110,7 +114,6 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
       flags,
       loading,
       linodesWithoutBackups,
-      updateError,
       entitiesWithGroupsToImport,
       isManaged,
       object_storage
@@ -126,8 +129,6 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
         />
       );
     }
-
-    this.displayError(updateError);
 
     return (
       <React.Fragment>
