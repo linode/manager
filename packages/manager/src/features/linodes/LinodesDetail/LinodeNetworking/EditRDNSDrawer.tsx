@@ -44,6 +44,7 @@ interface Props {
   range?: string;
   address?: string;
   ips?: IPAddress[];
+  updateIPs?: (ip: IPAddress) => void;
 }
 
 interface State {
@@ -131,12 +132,18 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
     this.timer = setTimeout(this.showDelayText, 5000);
 
     updateIP(ipToUpdate, !rdns || rdns === '' ? null : rdns)
-      .then(_ => {
+      .then(ip => {
         if (!this.mounted) {
           return;
         }
         clearTimeout(this.timer);
         this.setState({ loading: false, delayText: null });
+
+        // If we're updating a range, manually update the parent component.
+        if (range && this.props.updateIPs) {
+          this.props.updateIPs(ip);
+        }
+
         onClose();
       })
       .catch(errResponse => {

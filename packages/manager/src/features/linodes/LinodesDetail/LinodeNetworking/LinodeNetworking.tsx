@@ -67,7 +67,8 @@ type ClassNames =
   | 'multipleRDNSButton'
   | 'multipleRDNSText'
   | 'errorText'
-  | 'loader';
+  | 'loader'
+  | 'rangeRDNSCell';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -143,6 +144,13 @@ const styles = (theme: Theme) =>
     },
     loader: {
       padding: 0
+    },
+    rangeRDNSCell: {
+      '& .data': {
+        display: 'flex',
+        alignItems: 'center',
+        minHeight: 32
+      }
     }
   });
 
@@ -307,7 +315,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           </React.Fragment>
         </TableCell>
         <TableCell />
-        <TableCell parentColumn="Reverse DNS">
+        <TableCell className={classes.rangeRDNSCell} parentColumn="Reverse DNS">
           {this.renderRangeRDNSCell(range, ipsWithRDNS)}
         </TableCell>
         <TableCell parentColumn="Type">{type}</TableCell>
@@ -466,6 +474,28 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     return <CircleProgress />;
   };
 
+  updateIPs = (ip: IPAddress) => {
+    // Mostly to avoid null checking.
+    if (!this.state.allIPs) {
+      return;
+    }
+
+    // Look for this IP address in state.
+    const foundIPIndex = this.state.allIPs.findIndex(
+      eachIP => eachIP.address === ip.address
+    );
+
+    // If this address is not yet in state, append it.
+    if (foundIPIndex === -1) {
+      this.setState({ allIPs: [...this.state.allIPs, ip] });
+    } else {
+      // If we already have the address in state, update it.
+      const updatedIPS = this.state.allIPs;
+      updatedIPS[foundIPIndex] = ip;
+      this.setState({ allIPs: updatedIPS });
+    }
+  };
+
   render() {
     const {
       readOnly,
@@ -559,6 +589,9 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
               : undefined
           }
           ips={ipsWithRDNS}
+          updateIPs={
+            this.state.currentlySelectedIPRange ? this.updateIPs : undefined
+          }
         />
 
         <ViewRDNSDrawer
