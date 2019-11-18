@@ -9,13 +9,14 @@ import LineGraph, { Props as LineGraphProps } from 'src/components/LineGraph';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
   divider: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2)
+    marginTop: theme.spacing(2) - 1,
+    marginBottom: theme.spacing(2) - 1,
+    marginRight: theme.spacing(2.5)
   },
   title: {
-    fontSize: theme.spacing(2.5),
+    color: theme.color.headline,
     '& > span': {
-      color: theme.color.grey4
+      color: theme.palette.text.primary
     }
   }
 }));
@@ -34,11 +35,13 @@ const LongviewLineGraph: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      <Typography className={classes.title} variant="h6">
+      <Typography className={classes.title} variant="body1">
         {title}&nbsp;<span>({subtitle})</span>
       </Typography>
       <Divider type="landingHeader" className={classes.divider} />
-      <LineGraph {...rest} />
+      <div>
+        <LineGraph {...rest} />
+      </div>
     </React.Fragment>
   );
 };
