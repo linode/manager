@@ -57,6 +57,10 @@ const Installation = DefaultLoader({
   loader: () => import('./DetailTabs/Installation')
 });
 
+const Disks = DefaultLoader({
+  loader: () => import('./DetailTabs/Disks')
+});
+
 export type CombinedProps = RouteComponentProps<{ id: string }> &
   Props &
   LVDataProps &
@@ -243,7 +247,13 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
             exact
             strict
             path={`${url}/disks`}
-            render={() => <h2>Disks</h2>}
+            render={routerProps => (
+              <Disks
+                clientID={client.id}
+                clientAPIKey={client.api_key}
+                {...routerProps}
+              />
+            )}
           />
         )}
         {showAllTabs && (
