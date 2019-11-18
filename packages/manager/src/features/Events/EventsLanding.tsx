@@ -346,7 +346,7 @@ export const renderTableBody = (
     return (
       <TableRowLoading
         colSpan={3}
-        numberOfRows={2}
+        numberOfRows={10}
         oneLine
         data-qa-events-table-loading
         firstColWidth={70}
