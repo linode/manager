@@ -64,13 +64,6 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
     longviewClientData
   } = props;
 
-  React.useEffect(() => {
-    /** request clients if they haven't already been requested */
-    if (longviewClientsLastUpdated === 0) {
-      props.getLongviewClients();
-    }
-  }, []);
-
   const tabOptions = [
     {
       title: 'Overview',

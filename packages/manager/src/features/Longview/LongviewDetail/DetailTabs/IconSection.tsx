@@ -12,13 +12,13 @@ import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 import { formatUptime } from 'src/utilities/formatUptime';
+import { readableBytes } from 'src/utilities/unitConversions';
 
 import { Props as LVDataProps } from 'src/containers/longview.stats.container';
 
-import { readableBytes } from 'src/utilities/unitConversions';
-import { LongviewPackage } from '../../request.types';
-import { getPackageNoticeText } from '../../LongviewLanding/LongviewClientHeader';
 import { sumStorage } from '../../LongviewLanding/Gauges/Storage';
+import { getPackageNoticeText } from '../../LongviewLanding/LongviewClientHeader';
+import { LongviewPackage } from '../../request.types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   labelStatusWrapper: {
@@ -50,47 +50,51 @@ interface Props {
 
 const IconSection: React.FC<Props> = props => {
   const classes = useStyles();
-  const { longviewClientData } = props;
 
   const hostname = pathOr(
     'Hostname not available',
-    ['hostname'],
-    props.longviewClientData.SysInfo
+    ['SysInfo', 'hostname'],
+    props.longviewClientData
   );
 
   const osDist = pathOr(
     'Distro info not available',
-    ['os', 'dist'],
-    props.longviewClientData.SysInfo
+    ['SysInfo', 'os', 'dist'],
+    props.longviewClientData
   );
 
   const osDistVersion = pathOr(
     '',
-    ['os', 'distversion'],
-    props.longviewClientData.SysInfo
+    ['SysInfo', 'os', 'distversion'],
+    props.longviewClientData
   );
 
   const kernel = pathOr(
     'Kernel not available',
-    ['kernel'],
-    props.longviewClientData.SysInfo
+    ['SysInfo', 'kernel'],
+    props.longviewClientData
   );
 
   const cpuType = pathOr(
     'CPU info not available',
-    ['cpu', 'type'],
-    props.longviewClientData.SysInfo
+    ['SysInfo', 'cpu', 'type'],
+    props.longviewClientData
   );
 
-  const uptime = pathOr(
-    'Uptime not available',
+  const uptime = pathOr<number | null>(
+    null,
     ['Uptime'],
     props.longviewClientData
   );
 
-  const cpuCoreCount =
-    props.longviewClientData.SysInfo &&
-    props.longviewClientData.SysInfo.cpu.cores;
+  const formattedUptime =
+    uptime !== null ? `Up ${formatUptime(uptime)}` : 'Uptime not available';
+
+  const cpuCoreCount = pathOr(
+    '',
+    ['SysInfo', 'cpu', 'cores'],
+    props.longviewClientData
+  );
 
   const coreCountDisplay = cpuCoreCount && cpuCoreCount > 1 ? `Cores` : `Core`;
 
@@ -105,23 +109,23 @@ const IconSection: React.FC<Props> = props => {
   const usedMemory = pathOr(
     0,
     ['Memory', 'real', 'used', 0, 'y'],
-    longviewClientData
+    props.longviewClientData
   );
   const freeMemory = pathOr(
     0,
     ['Memory', 'real', 'free', 0, 'y'],
-    longviewClientData
+    props.longviewClientData
   );
 
   const freeSwap = pathOr<number>(
     0,
     ['Memory', 'swap', 'free', 0, 'y'],
-    longviewClientData
+    props.longviewClientData
   );
   const usedSwap = pathOr<number>(
     0,
     ['Memory', 'swap', 'used', 0, 'y'],
-    longviewClientData
+    props.longviewClientData
   );
 
   const getTotalSomething = (used: number, free: number) => {
@@ -133,6 +137,12 @@ const IconSection: React.FC<Props> = props => {
     });
   };
 
+  const convertedTotalMemory = getTotalSomething(usedMemory, freeMemory);
+  const convertedTotalSwap = getTotalSomething(usedSwap, freeSwap);
+
+  const storageInBytes = sumStorage(props.longviewClientData.Disk);
+
+  // TODO Remove commented once getTotalSomething is verified
   // const totalSwap = usedSwap + freeSwap;
 
   // const totalMemory = usedMemory + freeMemory;
@@ -153,11 +163,6 @@ const IconSection: React.FC<Props> = props => {
   //   }
   // );
 
-  const convertedTotalMemory = getTotalSomething(usedMemory, freeMemory);
-  const convertedTotalSwap = getTotalSomething(usedSwap, freeSwap);
-
-  const storageInBytes = sumStorage(longviewClientData.Disk);
-
   return (
     <Grid item xs={12} md={4} lg={3}>
       <Grid
@@ -168,14 +173,14 @@ const IconSection: React.FC<Props> = props => {
         className={classes.iconSection}
       >
         <Grid item>
-          <EntityIcon variant="linode" status={status} marginTop={1} />
+          <EntityIcon variant="linode" marginTop={1} />
         </Grid>
         <Grid item>
           <Typography variant="h3" className={classes.wrapHeader}>
             {props.client}
           </Typography>
           <Typography>{hostname}</Typography>
-          <Typography>Up {formatUptime(uptime)}</Typography>
+          <Typography>{formattedUptime}</Typography>
         </Grid>
       </Grid>
       <Grid
@@ -221,10 +226,10 @@ const IconSection: React.FC<Props> = props => {
         </Grid>
         <Grid item>
           <Typography>
-            {`${convertedTotalMemory.value} ${convertedTotalMemory.unit}`} RAM
+            {`${convertedTotalMemory.value} ${convertedTotalMemory.unit} RAM`}
           </Typography>
           <Typography>
-            {`${convertedTotalSwap.value} ${convertedTotalSwap.unit}`} Swap
+            {`${convertedTotalSwap.value} ${convertedTotalSwap.unit} Swap`}
           </Typography>
         </Grid>
       </Grid>
@@ -240,12 +245,14 @@ const IconSection: React.FC<Props> = props => {
         </Grid>
         <Grid item>
           <Typography>
-            {readableBytes(storageInBytes.total, { unit: 'GB' }).formatted}{' '}
-            Storage
+            {`${
+              readableBytes(storageInBytes.total, { unit: 'GB' }).formatted
+            } Storage`}
           </Typography>
           <Typography>
-            {readableBytes(storageInBytes.free, { unit: 'GB' }).formatted}{' '}
-            Available
+            {`${
+              readableBytes(storageInBytes.free, { unit: 'GB' }).formatted
+            } Available`}
           </Typography>
         </Grid>
       </Grid>
@@ -262,6 +269,7 @@ const IconSection: React.FC<Props> = props => {
         <Grid item>
           <Typography>
             {packagesToUpdate}
+            {/* TODO usage of a tooltip might be changed */}
             {packages && packages.length > 0 && (
               <HelpIcon
                 className={classes.toolTip}

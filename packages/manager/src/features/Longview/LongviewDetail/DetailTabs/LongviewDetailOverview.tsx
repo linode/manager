@@ -1,7 +1,6 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
 
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
@@ -111,11 +110,4 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
   );
 };
 
-// export default compose<
-//   CombinedProps,
-//   Props & RouteComponentProps<{ id: string }>
-// >(React.memo)(LongviewDetailOverview);
-
-export default compose<CombinedProps, Props>(React.memo)(
-  LongviewDetailOverview
-);
+export default React.memo(LongviewDetailOverview);
