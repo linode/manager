@@ -22,28 +22,28 @@ const Longview: React.FC<Props> = props => {
 
   const flags = useFlags();
 
-  if (!flags.longview) {
-    return (
-      <React.Fragment>
-        <DocumentTitleSegment segment="Longview" />
-        <Placeholder
-          title="Longview"
-          copy="Longview performance metrics are coming soon to Cloud Manager! Until then, you can access Longview in Classic Manager."
-          buttonProps={[
-            {
-              onClick: () =>
-                window.open(
-                  'https://manager.linode.com/longview',
-                  '_blank',
-                  'noopener'
-                ),
-              children: 'Navigate to Classic Manager'
-            }
-          ]}
-        />
-      </React.Fragment>
-    );
-  }
+  // if (!flags.longview) {
+  //   return (
+  //     <React.Fragment>
+  //       <DocumentTitleSegment segment="Longview" />
+  //       <Placeholder
+  //         title="Longview"
+  //         copy="Longview performance metrics are coming soon to Cloud Manager! Until then, you can access Longview in Classic Manager."
+  //         buttonProps={[
+  //           {
+  //             onClick: () =>
+  //               window.open(
+  //                 'https://manager.linode.com/longview',
+  //                 '_blank',
+  //                 'noopener'
+  //               ),
+  //             children: 'Navigate to Classic Manager'
+  //           }
+  //         ]}
+  //       />
+  //     </React.Fragment>
+  //   );
+  // }
 
   return (
     <React.Fragment>

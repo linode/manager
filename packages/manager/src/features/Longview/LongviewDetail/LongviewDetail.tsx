@@ -27,11 +27,19 @@ import withLongviewClients, {
   Props as LVProps
 } from 'src/containers/longview.container';
 
+import withClientStats, {
+  Props as LVDataProps
+} from 'src/containers/longview.stats.container';
+
 interface Props {
   client?: LongviewClient;
   longviewClientsLastUpdated: number;
   longviewClientsLoading: LVProps['longviewClientsLoading'];
   longviewClientsError: LVProps['longviewClientsError'];
+}
+
+interface DataProps {
+  clientID: number;
 }
 
 const Overview = DefaultLoader({
@@ -44,6 +52,7 @@ const Installation = DefaultLoader({
 
 type CombinedProps = RouteComponentProps<{ id: string }> &
   Props &
+  LVDataProps &
   DispatchProps;
 
 const LongviewDetail: React.FC<CombinedProps> = props => {
@@ -242,7 +251,11 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
         <Route
           strict
           render={routerProps => (
-            <Overview client={client.label} {...routerProps} />
+            <Overview
+              client={client.label}
+              clientID={client.id}
+              {...routerProps}
+            />
           )}
         />
       </Switch>
@@ -252,6 +265,7 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
 
 export default compose<CombinedProps, {}>(
   React.memo,
+  withClientStats<DataProps>(props => props.clientID),
   withLongviewClients<Props, RouteComponentProps<{ id: string }>>(
     (
       own,
