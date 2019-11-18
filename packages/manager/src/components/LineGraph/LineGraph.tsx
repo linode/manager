@@ -6,7 +6,7 @@ import { setUpCharts } from 'src/utilities/charts';
 
 setUpCharts();
 
-interface DataSet {
+export interface DataSet {
   label: string;
   borderColor: string;
   // this data property type might not be the perfect fit, but it works for
@@ -18,7 +18,7 @@ interface DataSet {
   data: [number, number][];
 }
 
-interface Props {
+export interface Props {
   chartHeight?: number;
   showToday: boolean;
   suggestedMax?: number;
