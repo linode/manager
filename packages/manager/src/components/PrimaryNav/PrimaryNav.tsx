@@ -144,9 +144,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
 
     return [
       {
-        conditionToAdd: () =>
-          isObjectStorageEnabled(accountCapabilities) ||
-          Boolean(flags.objectStorage),
+        conditionToAdd: () => isObjectStorageEnabled(accountCapabilities),
         insertAfter: 'Volumes',
         link: {
           display: 'Object Storage',

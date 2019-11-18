@@ -26,7 +26,6 @@ import bucketRequestsContainer, {
 } from 'src/containers/bucketRequests.container';
 // @todo: Extract ActionPanel out of Volumes
 import BucketsActionPanel from 'src/features/Volumes/VolumeDrawer/VolumesActionsPanel';
-import useFlags from 'src/hooks/useFlags';
 import { ApplicationState } from 'src/store';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import {
@@ -78,8 +77,6 @@ export const CreateBucketForm: React.StatelessComponent<
     createBucket,
     bucketsData
   } = props;
-
-  const flags = useFlags();
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
 
@@ -165,8 +162,7 @@ export const CreateBucketForm: React.StatelessComponent<
           confirmObjectStorage<FormState>(
             props.object_storage,
             formikProps,
-            () => setDialogOpen(true),
-            flags.objectStorageBilling
+            () => setDialogOpen(true)
           );
         };
 
