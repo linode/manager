@@ -98,6 +98,10 @@ export interface LastUpdated {
   updated: number;
 }
 
+export interface Uptime {
+  uptime: number;
+}
+
 export interface LongviewPackage {
   name: string;
   current: string;
