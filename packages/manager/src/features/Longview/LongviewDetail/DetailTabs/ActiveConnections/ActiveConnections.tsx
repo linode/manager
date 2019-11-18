@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export interface Props {}
 
-const mockServices = longviewPortFactory.buildList(5);
+const mockConnections = longviewPortFactory.buildList(5);
 
 export const ActiveConnections: React.FC<Props> = props => {
   return (
@@ -31,7 +31,7 @@ export const ActiveConnections: React.FC<Props> = props => {
       <Typography variant="h2">Active Connections</Typography>
       <Grid item>
         <ConnectionsTable
-          connections={mockServices}
+          connections={mockConnections}
           connectionsLoading={false}
           connectionsError={undefined}
         />
@@ -109,7 +109,7 @@ export const ConnectionsTable: React.FC<TableProps> = props => {
                 pageSize={pageSize}
                 handlePageChange={handlePageChange}
                 handleSizeChange={handlePageSizeChange}
-                eventCategory="Longview listening services"
+                eventCategory="Longview active connections"
               />
             </>
           )}
@@ -136,7 +136,7 @@ const renderLoadingErrorData = (
 
   return data.map((thisConnection, idx) => (
     <ConnectionRow
-      key={`longview-service-${idx}`}
+      key={`longview-active-connection-${idx}`}
       connection={thisConnection}
     />
   ));

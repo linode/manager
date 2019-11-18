@@ -11,13 +11,13 @@ export const ConnectionRow: React.FC<Props> = props => {
   const { connection } = props;
   return (
     <TableRow data-testid="longview-connection-row">
-      <TableCell parentColumn="Name" data-qa-connection-name>
+      <TableCell parentColumn="Name" data-qa-active-connection-name>
         {connection.name}
       </TableCell>
-      <TableCell parentColumn="User" data-qa-connection-user>
+      <TableCell parentColumn="User" data-qa-active-connection-user>
         {connection.user}
       </TableCell>
-      <TableCell parentColumn="Count" data-qa-connection-count>
+      <TableCell parentColumn="Count" data-qa-active-connection-count>
         {connection.count}
       </TableCell>
     </TableRow>
