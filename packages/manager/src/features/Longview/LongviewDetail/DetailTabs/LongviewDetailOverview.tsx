@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
@@ -19,6 +20,7 @@ import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 
 import { systemInfo } from 'src/__data__/longview';
+import { LongviewTopProcesses } from 'src/features/Longview/request.types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paperSection: {
@@ -55,13 +57,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   client: string;
+  topProcessesData: LongviewTopProcesses;
+  topProcessesLoading: boolean;
+  topProcessesError?: APIError[];
   // systemInfo: LVDataProps['longviewClientData'];
 }
 
-type CombinedProps = RouteComponentProps<{ id: string }> & Props;
+export type CombinedProps = RouteComponentProps<{ id: string }> & Props;
 
-const LongviewDetailOverview: React.FC<CombinedProps> = props => {
+export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const { topProcessesData, topProcessesLoading, topProcessesError } = props;
 
   const url = pathOr('', ['match', 'url'], props);
 
@@ -114,11 +120,7 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
                   className={classes.iconSection}
                 >
                   <Grid item>
-                    <EntityIcon
-                      variant="linode"
-                      status={status}
-                      marginTop={1}
-                    />
+                    <EntityIcon variant="linode" marginTop={1} />
                   </Grid>
                   <Grid item>
                     <Typography variant="h3" className={classes.wrapHeader}>
@@ -231,6 +233,14 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
                     View Details
                   </Link>
                 </Box>
+                {/* @todo: Replace with real component. */}
+                {topProcessesLoading && <div>Loading...</div>}
+                {topProcessesError && <div>Error!</div>}
+                {Object.keys(topProcessesData).length > 0 && (
+                  <pre>
+                    {JSON.stringify(props.topProcessesData.Processes, null, 2)}
+                  </pre>
+                )}
               </Grid>
             </Grid>
           </Paper>

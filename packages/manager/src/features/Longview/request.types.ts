@@ -126,3 +126,32 @@ export interface LongviewSystemInfo {
     kernel: string;
   };
 }
+// Resulting shape of calling `/fetch` with an api_action of `getValues` or
+// `getLatestValues` (and asking for the "Processes.*" key).
+export interface LongviewProcesses {
+  Processes: Record<string, Process>;
+}
+
+export type Process = { longname: string } & Record<string, ProcessStats>;
+
+export interface ProcessStats {
+  count: Stat[];
+  cpu: Stat[];
+  ioreadkbytes: Stat[];
+  iowritekbytes: Stat[];
+  mem: Stat[];
+}
+
+// Resulting shape of calling `/fetch` with an api_action of `getTopProcesses`.
+export interface LongviewTopProcesses {
+  Processes: Record<string, TopProcess>;
+}
+
+export type TopProcess = Record<string, TopProcessStat>;
+
+export interface TopProcessStat {
+  count: number;
+  cpu: number;
+  mem: number;
+  entries: number;
+}

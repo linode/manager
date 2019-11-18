@@ -10,7 +10,8 @@ import {
   LongviewMemory,
   LongviewNetwork,
   LongviewPackages,
-  LongviewSystemInfo
+  LongviewSystemInfo,
+  LongviewTopProcesses
 } from './request.types';
 
 /**
@@ -105,6 +106,7 @@ interface Get {
   (token: string, action: LongviewAction, field?: 'packages'[]): Promise<
     Partial<LongviewPackages>
   >;
+  (token: string, action: 'getTopProcesses'): Promise<LongviewTopProcesses>;
 }
 
 export type LongviewAction =
