@@ -486,6 +486,16 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
   };
 
   handleSnapshotDialogDisplay = () => {
+    // If there's no label, don't open the modal. Show an error in the form.
+    if (!this.state.snapshotForm.label) {
+      this.setState({
+        snapshotForm: {
+          ...this.state.snapshotForm,
+          errors: [{ field: 'label', reason: 'Label is required.' }]
+        }
+      });
+      return;
+    }
     this.setState({
       dialogOpen: true,
       dialogError: undefined
