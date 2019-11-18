@@ -11,9 +11,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import IconSection from './IconSection';
 
-import withClientStats, {
-  Props as LVDataProps
-} from 'src/containers/longview.stats.container';
+import { Props as LVDataProps } from 'src/containers/longview.stats.container';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paperSection: {
@@ -30,10 +28,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   client: string;
-  clientID: number;
+  longviewClientData: LVDataProps['longviewClientData'];
 }
 
-type CombinedProps = RouteComponentProps<{ id: string }> & Props & LVDataProps;
+type CombinedProps = RouteComponentProps<{ id: string }> & Props;
 
 const LongviewDetailOverview: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -46,7 +44,10 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
         <Grid item xs={12}>
           <Paper className={classes.paperSection}>
             <Grid container justify="space-between" item xs={12} spacing={0}>
-              <IconSection client={props.client} clientID={props.clientID} />
+              <IconSection
+                longviewClientData={props.longviewClientData}
+                client={props.client}
+              />
 
               <Grid item xs={12} md={4} lg={6}>
                 Gauges
@@ -115,7 +116,6 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
 //   Props & RouteComponentProps<{ id: string }>
 // >(React.memo)(LongviewDetailOverview);
 
-export default compose<CombinedProps, Props>(
-  React.memo,
-  withClientStats<Props>(ownProps => ownProps.clientID)
-)(LongviewDetailOverview);
+export default compose<CombinedProps, Props>(React.memo)(
+  LongviewDetailOverview
+);

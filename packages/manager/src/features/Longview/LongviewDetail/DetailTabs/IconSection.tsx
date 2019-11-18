@@ -1,6 +1,6 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
-
+import { compose } from 'recompose';
 import CPUIcon from 'src/assets/icons/longview/cpu-icon.svg';
 import DiskIcon from 'src/assets/icons/longview/disk.svg';
 import PackageIcon from 'src/assets/icons/longview/package-icon.svg';
@@ -12,10 +12,9 @@ import Typography from 'src/components/core/Typography';
 import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
+import { formatUptime } from 'src/utilities/formatUptime';
 
-import withClientStats, {
-  Props as LVDataProps
-} from 'src/containers/longview.stats.container';
+import { Props as LVDataProps } from 'src/containers/longview.stats.container';
 
 import { pluralize } from 'src/utilities/pluralize';
 import { LongviewPackage } from '../../request.types';
@@ -45,53 +44,58 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   client: string;
-  clientID: number;
+  longviewClientData: LVDataProps['longviewClientData'];
 }
 
-const IconSection: React.FC<Props & LVDataProps> = props => {
-  const { longviewClientData } = props;
-
+const IconSection: React.FC<Props> = props => {
   const classes = useStyles();
 
   const hostname = pathOr(
     'Hostname not available',
     ['hostname'],
-    longviewClientData.SysInfo
+    props.longviewClientData.SysInfo
   );
 
   const osDist = pathOr(
     'Distro info not available',
     ['os', 'dist'],
-    longviewClientData.SysInfo
+    props.longviewClientData.SysInfo
   );
 
   const osDistVersion = pathOr(
     '',
     ['os', 'distversion'],
-    longviewClientData.SysInfo
+    props.longviewClientData.SysInfo
   );
 
   const kernel = pathOr(
     'Kernel not available',
     ['kernel'],
-    longviewClientData.SysInfo
+    props.longviewClientData.SysInfo
   );
 
   const cpuType = pathOr(
     'CPU info not available',
     ['cpu', 'type'],
-    longviewClientData.SysInfo
+    props.longviewClientData.SysInfo
+  );
+
+  const uptime = pathOr(
+    'Uptime not available',
+    ['Uptime'],
+    props.longviewClientData
   );
 
   const cpuCoreCount =
-    longviewClientData.SysInfo && longviewClientData.SysInfo.cpu.cores;
+    props.longviewClientData.SysInfo &&
+    props.longviewClientData.SysInfo.cpu.cores;
 
   const coreCountDisplay = cpuCoreCount && cpuCoreCount > 1 ? `Cores` : `Core`;
 
   const packages = pathOr<LongviewPackage[] | null>(
     null,
     ['Packages'],
-    longviewClientData
+    props.longviewClientData
   );
 
   const getPackageNoticeText = (packages: LongviewPackage[]) => {
@@ -123,8 +127,7 @@ const IconSection: React.FC<Props & LVDataProps> = props => {
             {props.client}
           </Typography>
           <Typography>{hostname}</Typography>
-          {/* TODO make this real */}
-          <Typography>Up 47d 19h 22m</Typography>
+          <Typography>Up {formatUptime(uptime)}</Typography>
         </Grid>
       </Grid>
       <Grid
@@ -217,6 +220,4 @@ const IconSection: React.FC<Props & LVDataProps> = props => {
   );
 };
 
-export default withClientStats<LVDataProps & Props>(props => props.clientID)(
-  IconSection
-);
+export default compose<Props, Props>(React.memo)(IconSection);

@@ -60,7 +60,8 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
     client,
     longviewClientsLastUpdated,
     longviewClientsLoading,
-    longviewClientsError
+    longviewClientsError,
+    longviewClientData
   } = props;
 
   React.useEffect(() => {
@@ -134,7 +135,11 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
     if (longviewClientsLastUpdated === 0) {
       props.getLongviewClients();
     }
-  }, []);
+
+    if (client) {
+      props.getClientStats(client.api_key);
+    }
+  }, [client]);
 
   if (longviewClientsLoading && longviewClientsLastUpdated === 0) {
     return (
@@ -164,6 +169,8 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
      */
     return null;
   }
+
+  console.log(props.longviewClientData);
   return (
     <React.Fragment>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
@@ -253,7 +260,7 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
           render={routerProps => (
             <Overview
               client={client.label}
-              clientID={client.id}
+              longviewClientData={longviewClientData}
               {...routerProps}
             />
           )}
