@@ -149,11 +149,11 @@ const renderLoadingErrorData = (
   data: LongviewService[],
   error?: string
 ) => {
-  if (loading) {
-    return <TableRowLoading colSpan={12} />;
-  }
   if (error) {
     return <TableRowError colSpan={12} message={error} />;
+  }
+  if (loading) {
+    return <TableRowLoading colSpan={6} />;
   }
   if (data.length === 0) {
     return <TableRowEmptyState colSpan={12} />;
