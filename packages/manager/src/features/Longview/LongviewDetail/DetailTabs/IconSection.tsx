@@ -18,6 +18,7 @@ import { Props as LVDataProps } from 'src/containers/longview.stats.container';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { LongviewPackage } from '../../request.types';
 import { getPackageNoticeText } from '../../LongviewLanding/LongviewClientHeader';
+import { sumStorage } from '../../LongviewLanding/Gauges/Storage';
 
 const useStyles = makeStyles((theme: Theme) => ({
   labelStatusWrapper: {
@@ -155,6 +156,8 @@ const IconSection: React.FC<Props> = props => {
   const convertedTotalMemory = getTotalSomething(usedMemory, freeMemory);
   const convertedTotalSwap = getTotalSomething(usedSwap, freeSwap);
 
+  const storageInBytes = sumStorage(longviewClientData.Disk);
+
   return (
     <Grid item xs={12} md={4} lg={3}>
       <Grid
@@ -217,7 +220,6 @@ const IconSection: React.FC<Props> = props => {
           <RamIcon />
         </Grid>
         <Grid item>
-          {/* TODO make this real */}
           <Typography>
             {`${convertedTotalMemory.value} ${convertedTotalMemory.unit}`} RAM
           </Typography>
@@ -237,9 +239,14 @@ const IconSection: React.FC<Props> = props => {
           <DiskIcon />
         </Grid>
         <Grid item>
-          {/* TODO make this real */}
-          <Typography>2000 GB Storage</Typography>
-          <Typography>500 GB Available</Typography>
+          <Typography>
+            {readableBytes(storageInBytes.total, { unit: 'GB' }).formatted}{' '}
+            Storage
+          </Typography>
+          <Typography>
+            {readableBytes(storageInBytes.free, { unit: 'GB' }).formatted}{' '}
+            Available
+          </Typography>
         </Grid>
       </Grid>
       <Grid
