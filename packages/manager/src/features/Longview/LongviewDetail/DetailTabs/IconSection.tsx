@@ -6,7 +6,6 @@ import DiskIcon from 'src/assets/icons/longview/disk.svg';
 import PackageIcon from 'src/assets/icons/longview/package-icon.svg';
 import RamIcon from 'src/assets/icons/longview/ram-sticks.svg';
 import ServerIcon from 'src/assets/icons/longview/server-icon.svg';
-
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EntityIcon from 'src/components/EntityIcon';
@@ -17,6 +16,7 @@ import { formatUptime } from 'src/utilities/formatUptime';
 import { Props as LVDataProps } from 'src/containers/longview.stats.container';
 
 import { pluralize } from 'src/utilities/pluralize';
+import { readableBytes } from 'src/utilities/unitConversions';
 import { LongviewPackage } from '../../request.types';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -49,6 +49,7 @@ interface Props {
 
 const IconSection: React.FC<Props> = props => {
   const classes = useStyles();
+  const { longviewClientData } = props;
 
   const hostname = pathOr(
     'Hostname not available',
@@ -109,6 +110,60 @@ const IconSection: React.FC<Props> = props => {
   };
 
   const packagesToUpdate = getPackageNoticeText(packages);
+
+  const usedMemory = pathOr(
+    0,
+    ['Memory', 'real', 'used', 0, 'y'],
+    longviewClientData
+  );
+  const freeMemory = pathOr(
+    0,
+    ['Memory', 'real', 'free', 0, 'y'],
+    longviewClientData
+  );
+
+  const freeSwap = pathOr<number>(
+    0,
+    ['Memory', 'swap', 'free', 0, 'y'],
+    longviewClientData
+  );
+  const usedSwap = pathOr<number>(
+    0,
+    ['Memory', 'swap', 'used', 0, 'y'],
+    longviewClientData
+  );
+
+  const getTotalSomething = (used: number, free: number) => {
+    const total = used + free;
+    const howManyBytesInGB = 1073741824;
+    const memoryToBytes = total * 1024;
+    return readableBytes(memoryToBytes, {
+      unit: memoryToBytes > howManyBytesInGB ? 'GB' : 'MB'
+    });
+  };
+
+  // const totalSwap = usedSwap + freeSwap;
+
+  // const totalMemory = usedMemory + freeMemory;
+
+  // const convertedTotalMemory = readableBytes(
+  //   /** convert KB to bytes */
+  //   totalMemory * 1024,
+  //   {
+  //     unit: 'GB'
+  //   }
+  // );
+
+  // const convertedTotalSwap = readableBytes(
+  //   /** convert KB to bytes */
+  //   totalSwap * 1024,
+  //   {
+  //     unit: 'MB'
+  //   }
+  // );
+
+  const convertedTotalMemory = getTotalSomething(usedMemory, freeMemory);
+  const convertedTotalSwap = getTotalSomething(usedSwap, freeSwap);
 
   return (
     <Grid item xs={12} md={4} lg={3}>
@@ -173,8 +228,12 @@ const IconSection: React.FC<Props> = props => {
         </Grid>
         <Grid item>
           {/* TODO make this real */}
-          <Typography>1 GB RAM</Typography>
-          <Typography>512 MB Swap</Typography>
+          <Typography>
+            {`${convertedTotalMemory.value} ${convertedTotalMemory.unit}`} RAM
+          </Typography>
+          <Typography>
+            {`${convertedTotalSwap.value} ${convertedTotalSwap.unit}`} Swap
+          </Typography>
         </Grid>
       </Grid>
       <Grid
