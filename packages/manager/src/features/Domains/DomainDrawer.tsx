@@ -25,6 +25,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
@@ -66,7 +67,8 @@ type ClassNames =
   | 'masterIPErrorNotice'
   | 'addIP'
   | 'actionPanel'
-  | 'gmailCheck';
+  | 'gmailCheck'
+  | 'submitButton';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -84,11 +86,14 @@ const styles = (theme: Theme) =>
       display: 'flex',
       flexFlow: 'row',
       alignItems: 'center',
-      '& > span': {
-        margin: theme.spacing(),
-        wordBreak: 'break-word'
+      '& > p': {
+        wordBreak: 'break-all'
+      },
+      '& $submitButton': {
+        marginBottom: 0
       }
-    }
+    },
+    submitButton: {}
   });
 
 type DefaultRecordsType = 'none' | 'linode' | 'nodebalancer';
@@ -536,19 +541,20 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
             data-qa-submit
             loading={submitting}
             disabled={disabled}
+            className={classes.submitButton}
           >
             {mode === EDITING ? 'Update' : 'Create'}
           </Button>
           {submitting ? (
-            <span>
-              {/* Creating fdsafdsafdsafdsafdsafdasfdssdafdsaasfdsaf42314324.com */}
+            <Typography>
               {this.state.loadingText ? this.state.loadingText : null}
-            </span>
+            </Typography>
           ) : (
             <Button
               onClick={this.closeDrawer}
               buttonType="cancel"
               data-qa-cancel
+              className={classes.submitButton}
             >
               Cancel
             </Button>
@@ -1054,8 +1060,8 @@ const connected = connect(
 
 export default compose<CombinedProps, {}>(
   withDomainActions,
-  styled,
   connected,
   withRouter,
-  withSnackbar
+  withSnackbar,
+  styled
 )(DomainDrawer);
