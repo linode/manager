@@ -11,6 +11,10 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import IconSection from './IconSection';
 
+import withClientStats, {
+  Props as LVDataProps
+} from 'src/containers/longview.stats.container';
+
 const useStyles = makeStyles((theme: Theme) => ({
   paperSection: {
     padding: theme.spacing(3) + 1,
@@ -29,7 +33,7 @@ interface Props {
   clientID: number;
 }
 
-type CombinedProps = RouteComponentProps<{ id: string }> & Props;
+type CombinedProps = RouteComponentProps<{ id: string }> & Props & LVDataProps;
 
 const LongviewDetailOverview: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -106,7 +110,12 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<
-  CombinedProps,
-  Props & RouteComponentProps<{ id: string }>
->(React.memo)(LongviewDetailOverview);
+// export default compose<
+//   CombinedProps,
+//   Props & RouteComponentProps<{ id: string }>
+// >(React.memo)(LongviewDetailOverview);
+
+export default compose<CombinedProps, Props>(
+  React.memo,
+  withClientStats<Props>(ownProps => ownProps.clientID)
+)(LongviewDetailOverview);

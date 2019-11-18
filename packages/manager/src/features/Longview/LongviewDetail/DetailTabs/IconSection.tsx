@@ -17,6 +17,9 @@ import withClientStats, {
   Props as LVDataProps
 } from 'src/containers/longview.stats.container';
 
+import { pluralize } from 'src/utilities/pluralize';
+import { LongviewPackage } from '../../request.types';
+
 const useStyles = makeStyles((theme: Theme) => ({
   labelStatusWrapper: {
     display: 'flex',
@@ -43,45 +46,65 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   client: string;
   clientID: number;
-  clientData: LVDataProps['longviewClientData'];
 }
 
 const IconSection: React.FC<Props & LVDataProps> = props => {
+  const { longviewClientData } = props;
+
   const classes = useStyles();
 
   const hostname = pathOr(
     'Hostname not available',
-    ['SysInfo', 'hostname'],
-    props.clientData
+    ['hostname'],
+    longviewClientData.SysInfo
   );
 
   const osDist = pathOr(
     'Distro info not available',
-    ['SysInfo', 'os', 'dist'],
-    props.clientData
+    ['os', 'dist'],
+    longviewClientData.SysInfo
   );
 
   const osDistVersion = pathOr(
     '',
-    ['SysInfo', 'os', 'distversion'],
-    props.clientData
+    ['os', 'distversion'],
+    longviewClientData.SysInfo
   );
 
   const kernel = pathOr(
     'Kernel not available',
-    ['SysInfo', 'kernel'],
-    props.clientData
+    ['kernel'],
+    longviewClientData.SysInfo
   );
 
   const cpuType = pathOr(
     'CPU info not available',
-    ['SysInfo', 'cpu', 'type'],
-    props.clientData
+    ['cpu', 'type'],
+    longviewClientData.SysInfo
   );
 
-  // const cpuCoreCount = props.clientData.SysInfo.cpu.cores;
+  const cpuCoreCount =
+    longviewClientData.SysInfo && longviewClientData.SysInfo.cpu.cores;
 
-  // const coreCountDisplay = cpuCoreCount > 1 ? `Cores` : `Core`;
+  const coreCountDisplay = cpuCoreCount && cpuCoreCount > 1 ? `Cores` : `Core`;
+
+  const packages = pathOr<LongviewPackage[] | null>(
+    null,
+    ['Packages'],
+    longviewClientData
+  );
+
+  const getPackageNoticeText = (packages: LongviewPackage[]) => {
+    if (!packages) {
+      return 'Package information not available';
+    }
+    if (packages.length === 0) {
+      return 'All packages up to date';
+    }
+    return `${pluralize('update', 'updates', packages.length)} Available`;
+  };
+
+  const packagesToUpdate = getPackageNoticeText(packages);
 
   return (
     <Grid item xs={12} md={4} lg={3}>
@@ -100,6 +123,7 @@ const IconSection: React.FC<Props & LVDataProps> = props => {
             {props.client}
           </Typography>
           <Typography>{hostname}</Typography>
+          {/* TODO make this real */}
           <Typography>Up 47d 19h 22m</Typography>
         </Grid>
       </Grid>
@@ -114,10 +138,7 @@ const IconSection: React.FC<Props & LVDataProps> = props => {
           <ServerIcon />
         </Grid>
         <Grid item>
-          <Typography>
-            {`${osDist} ${osDistVersion}`}
-            {`(${kernel})`}
-          </Typography>
+          <Typography>{`${osDist} ${osDistVersion} (${kernel})`}</Typography>
         </Grid>
       </Grid>
       <Grid
@@ -132,9 +153,9 @@ const IconSection: React.FC<Props & LVDataProps> = props => {
         </Grid>
         <Grid item>
           <Typography>{cpuType}</Typography>
-          {/* {cpuCoreCount && (
+          {cpuCoreCount && (
             <Typography>{`${cpuCoreCount} ${coreCountDisplay}`}</Typography>
-          )} */}
+          )}
         </Grid>
       </Grid>
       <Grid
@@ -148,6 +169,7 @@ const IconSection: React.FC<Props & LVDataProps> = props => {
           <RamIcon />
         </Grid>
         <Grid item>
+          {/* TODO make this real */}
           <Typography>1 GB RAM</Typography>
           <Typography>512 MB Swap</Typography>
         </Grid>
@@ -163,6 +185,7 @@ const IconSection: React.FC<Props & LVDataProps> = props => {
           <DiskIcon />
         </Grid>
         <Grid item>
+          {/* TODO make this real */}
           <Typography>2000 GB Storage</Typography>
           <Typography>500 GB Available</Typography>
         </Grid>
@@ -179,12 +202,14 @@ const IconSection: React.FC<Props & LVDataProps> = props => {
         </Grid>
         <Grid item>
           <Typography>
-            6 Package Updates Available{' '}
-            <HelpIcon
-              className={classes.toolTip}
-              text={`Time to upgrade!`}
-              tooltipPosition="right"
-            />
+            {packagesToUpdate}
+            {packages && packages.length > 0 && (
+              <HelpIcon
+                className={classes.toolTip}
+                text={`Time to upgrade!`}
+                tooltipPosition="right"
+              />
+            )}
           </Typography>
         </Grid>
       </Grid>
