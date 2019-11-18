@@ -13,29 +13,27 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
-import { longviewServiceFactory } from 'src/factories/longviewService';
-import { LongviewService } from 'src/features/Longview/request.types';
-import LongviewServiceRow from './LongviewServiceRow';
+import { longviewPortFactory } from 'src/factories/longviewService';
+import { LongviewPort } from 'src/features/Longview/request.types';
+import ConnectionRow from './ConnectionRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  table: {
-    width: '750px'
-  }
+  table: {}
 }));
 
 export interface Props {}
 
-const mockServices = longviewServiceFactory.buildList(10);
+const mockServices = longviewPortFactory.buildList(5);
 
-export const ListeningServices: React.FC<Props> = props => {
+export const ActiveConnections: React.FC<Props> = props => {
   return (
-    <Grid item xs={8} md={8}>
-      <Typography variant="h2">Listening Services</Typography>
+    <Grid item xs={4} md={4}>
+      <Typography variant="h2">Active Connections</Typography>
       <Grid item>
-        <ServicesTable
-          services={mockServices}
-          servicesLoading={false}
-          servicesError={undefined}
+        <ConnectionsTable
+          connections={mockServices}
+          connectionsLoading={false}
+          connectionsError={undefined}
         />
       </Grid>
     </Grid>
@@ -43,17 +41,17 @@ export const ListeningServices: React.FC<Props> = props => {
 };
 
 export interface TableProps {
-  services: LongviewService[];
-  servicesLoading: boolean;
-  servicesError?: string;
+  connections: LongviewPort[];
+  connectionsLoading: boolean;
+  connectionsError?: string;
 }
 
-export const ServicesTable: React.FC<TableProps> = props => {
-  const { services, servicesError, servicesLoading } = props;
+export const ConnectionsTable: React.FC<TableProps> = props => {
+  const { connections, connectionsLoading, connectionsError } = props;
   const classes = useStyles();
 
   return (
-    <OrderBy data={services} orderBy={'process'} order={'asc'}>
+    <OrderBy data={connections} orderBy={'process'} order={'asc'}>
       {({ data: orderedData, handleOrderChange, order, orderBy }) => (
         <Paginate data={orderedData} pageSize={25}>
           {({
@@ -69,14 +67,13 @@ export const ServicesTable: React.FC<TableProps> = props => {
                 <TableHead>
                   <TableRow>
                     <TableSortCell
-                      data-qa-table-header="Process"
-                      active={orderBy === 'process'}
-                      label="process"
+                      data-qa-table-header="Name"
+                      active={orderBy === 'name'}
+                      label="name"
                       direction={order}
                       handleClick={handleOrderChange}
-                      style={{ width: '25%' }}
                     >
-                      Process
+                      Name
                     </TableSortCell>
                     <TableSortCell
                       data-qa-table-header="User"
@@ -84,47 +81,25 @@ export const ServicesTable: React.FC<TableProps> = props => {
                       label="user"
                       direction={order}
                       handleClick={handleOrderChange}
-                      style={{ width: '25%' }}
                     >
                       User
                     </TableSortCell>
                     <TableSortCell
-                      data-qa-table-header="Protocol"
-                      active={orderBy === 'protocol'}
-                      label="protocol"
+                      data-qa-table-header="Count"
+                      active={orderBy === 'count'}
+                      label="count"
                       direction={order}
                       handleClick={handleOrderChange}
-                      style={{ width: '15%' }}
                     >
-                      Protocol
-                    </TableSortCell>
-                    <TableSortCell
-                      data-qa-table-header="Port"
-                      active={orderBy === 'port'}
-                      label="port"
-                      direction={order}
-                      handleClick={handleOrderChange}
-                      style={{ width: '10%' }}
-                    >
-                      Port
-                    </TableSortCell>
-                    <TableSortCell
-                      data-qa-table-header="IP"
-                      active={orderBy === 'ip'}
-                      label="ip"
-                      direction={order}
-                      handleClick={handleOrderChange}
-                      style={{ width: '25%' }}
-                    >
-                      IP
+                      Count
                     </TableSortCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {renderLoadingErrorData(
-                    servicesLoading,
+                    connectionsLoading,
                     paginatedData,
-                    servicesError
+                    connectionsError
                   )}
                 </TableBody>
               </Table>
@@ -134,7 +109,7 @@ export const ServicesTable: React.FC<TableProps> = props => {
                 pageSize={pageSize}
                 handlePageChange={handlePageChange}
                 handleSizeChange={handlePageSizeChange}
-                eventCategory="Longview active connections"
+                eventCategory="Longview listening services"
               />
             </>
           )}
@@ -146,7 +121,7 @@ export const ServicesTable: React.FC<TableProps> = props => {
 
 const renderLoadingErrorData = (
   loading: boolean,
-  data: LongviewService[],
+  data: LongviewPort[],
   error?: string
 ) => {
   if (loading) {
@@ -159,9 +134,12 @@ const renderLoadingErrorData = (
     return <TableRowEmptyState colSpan={12} />;
   }
 
-  return data.map((thisService, idx) => (
-    <LongviewServiceRow key={`longview-service-${idx}`} service={thisService} />
+  return data.map((thisConnection, idx) => (
+    <ConnectionRow
+      key={`longview-service-${idx}`}
+      connection={thisConnection}
+    />
   ));
 };
 
-export default ListeningServices;
+export default ActiveConnections;

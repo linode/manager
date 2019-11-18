@@ -18,6 +18,7 @@ import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 
+import ActiveConnections from './ActiveConnections';
 import ListeningServices from './ListeningServices';
 
 import { systemInfo } from 'src/__data__/longview';
@@ -270,9 +271,7 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
         </Grid>
         <Grid container item xs={12}>
           <ListeningServices />
-          <Grid item xs={12} md={4}>
-            <Typography variant="h2">Active Connections</Typography>
-          </Grid>
+          <ActiveConnections />
         </Grid>
       </Grid>
     </React.Fragment>
