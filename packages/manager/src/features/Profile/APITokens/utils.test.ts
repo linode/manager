@@ -14,6 +14,7 @@ describe('APIToken utils', () => {
         ['longview', 2],
         ['nodebalancers', 2],
         ['object_storage', 2],
+        ['lke', 2],
         ['stackscripts', 2],
         ['volumes', 2]
       ];
@@ -34,6 +35,7 @@ describe('APIToken utils', () => {
         ['longview', 0],
         ['nodebalancers', 0],
         ['object_storage', 0],
+        ['lke', 0],
         ['stackscripts', 0],
         ['volumes', 0]
       ];
@@ -55,6 +57,7 @@ describe('APIToken utils', () => {
         ['longview', 0],
         ['nodebalancers', 0],
         ['object_storage', 0],
+        ['lke', 0],
         ['stackscripts', 0],
         ['volumes', 0]
       ];
@@ -76,6 +79,7 @@ describe('APIToken utils', () => {
         ['longview', 0],
         ['nodebalancers', 0],
         ['object_storage', 0],
+        ['lke', 0],
         ['stackscripts', 0],
         ['volumes', 0]
       ];
@@ -97,6 +101,7 @@ describe('APIToken utils', () => {
         ['longview', 0],
         ['nodebalancers', 0],
         ['object_storage', 0],
+        ['lke', 0],
         ['stackscripts', 0],
         ['volumes', 0]
       ];
@@ -121,6 +126,7 @@ describe('APIToken utils', () => {
         ['longview', 2],
         ['nodebalancers', 0],
         ['object_storage', 0],
+        ['lke', 0],
         ['stackscripts', 0],
         ['volumes', 0]
       ];
@@ -149,6 +155,7 @@ describe('APIToken utils', () => {
         ['longview', 0],
         ['nodebalancers', 0],
         ['object_storage', 0],
+        ['lke', 0],
         ['stackscripts', 0],
         ['volumes', 0]
       ];
@@ -177,6 +184,7 @@ describe('APIToken utils', () => {
         ['longview', 0],
         ['nodebalancers', 0],
         ['object_storage', 0],
+        ['lke', 0],
         ['stackscripts', 0],
         ['volumes', 0]
       ];
