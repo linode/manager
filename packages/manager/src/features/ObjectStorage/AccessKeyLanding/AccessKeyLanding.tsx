@@ -37,7 +37,6 @@ import {
 } from 'src/utilities/ga';
 import AccessKeyDisplayDialog from './AccessKeyDisplayDialog';
 import AccessKeyDrawer from './AccessKeyDrawer';
-import { MODES } from './AccessKeyLanding';
 import AccessKeyTable from './AccessKeyTable';
 import RevokeAccessKeyDialog from './RevokeAccessKeyDialog';
 
@@ -73,9 +72,7 @@ type CombinedProps = Props &
 
 export type MODES = 'creating' | 'editing';
 
-export const AccessKeyLanding: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const AccessKeyLanding: React.StatelessComponent<CombinedProps> = props => {
   const {
     classes,
     object_storage,
@@ -349,15 +346,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced = compose<CombinedProps, Props>(
-  styled,
-  paginated,
-  connected
-);
+const enhanced = compose<CombinedProps, Props>(styled, paginated, connected);
 
 export default enhanced(AccessKeyLanding);

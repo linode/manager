@@ -68,6 +68,7 @@ const DebouncedSearch: React.FC<CombinedProps> = props => {
 
   return (
     <TextField
+      data-qa-debounced-search
       className={className}
       placeholder={placeholder || 'Filter by query'}
       onChange={_setQuery}
