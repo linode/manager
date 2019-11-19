@@ -1,5 +1,5 @@
 require('dotenv').config();
-
+// console.log(require('dotenv').config())
 const { readFileSync, unlinkSync } = require('fs');
 const { argv } = require('yargs');
 
