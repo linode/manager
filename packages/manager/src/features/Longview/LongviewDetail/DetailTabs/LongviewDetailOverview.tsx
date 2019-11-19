@@ -1,7 +1,7 @@
 import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import CPUIcon from 'src/assets/icons/longview/cpu-icon.svg';
@@ -10,7 +10,6 @@ import PackageIcon from 'src/assets/icons/longview/package-icon.svg';
 import RamIcon from 'src/assets/icons/longview/ram-sticks.svg';
 import ServerIcon from 'src/assets/icons/longview/server-icon.svg';
 
-import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -24,17 +23,12 @@ import ListeningServices from './ListeningServices';
 
 import { systemInfo } from 'src/__data__/longview';
 import { LongviewTopProcesses } from 'src/features/Longview/request.types';
+import TopProcesses from './TopProcesses';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paperSection: {
     padding: theme.spacing(3) + 1,
     marginBottom: theme.spacing(1) + 3
-  },
-  detailsLink: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    position: 'relative',
-    top: 3
   },
   labelStatusWrapper: {
     display: 'flex',
@@ -77,8 +71,6 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
     topProcessesError,
     lastUpdatedError
   } = props;
-
-  const url = pathOr('', ['match', 'url'], props);
 
   const hostname = pathOr(
     'Hostname not available',
@@ -231,26 +223,11 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
               <Grid item xs={12} md={4} lg={6}>
                 Gauges
               </Grid>
-              <Grid item xs={12} md={4} lg={3}>
-                <Box
-                  display="flex"
-                  flexDirection="row"
-                  justifyContent="space-between"
-                >
-                  <Typography variant="h2">Top Processes</Typography>
-                  <Link to={`${url}/processes`} className={classes.detailsLink}>
-                    View Details
-                  </Link>
-                </Box>
-                {/* @todo: Replace with real component. */}
-                {topProcessesLoading && <div>Loading...</div>}
-                {(lastUpdatedError || topProcessesError) && <div>Error!</div>}
-                {Object.keys(topProcessesData.Processes).length > 0 && (
-                  <pre>
-                    {JSON.stringify(props.topProcessesData.Processes, null, 2)}
-                  </pre>
-                )}
-              </Grid>
+              <TopProcesses
+                topProcessesData={topProcessesData}
+                topProcessesLoading={topProcessesLoading}
+                topProcessesError={topProcessesError}
+              />
             </Grid>
           </Paper>
         </Grid>
