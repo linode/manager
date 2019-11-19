@@ -8,9 +8,11 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 // import Select from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
-import IconSection from './IconSection';
-
 import { Props as LVDataProps } from 'src/containers/longview.stats.container';
+
+import ActiveConnections from './ActiveConnections';
+import IconSection from './IconSection';
+import ListeningServices from './ListeningServices';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paperSection: {
@@ -97,13 +99,9 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
         <Grid item xs={12}>
           <Paper className={classes.paperSection}>Graphs here</Paper>
         </Grid>
-        <Grid container item xs={12}>
-          <Grid item xs={12} md={8}>
-            <Typography variant="h2">Listening Services</Typography>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Typography variant="h2">Active Connections</Typography>
-          </Grid>
+        <Grid container justify="space-between" item spacing={0}>
+          <ListeningServices />
+          <ActiveConnections />
         </Grid>
       </Grid>
     </React.Fragment>

@@ -144,9 +144,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
 
     return [
       {
-        conditionToAdd: () =>
-          isObjectStorageEnabled(accountCapabilities) ||
-          Boolean(flags.objectStorage),
+        conditionToAdd: () => isObjectStorageEnabled(accountCapabilities),
         insertAfter: 'Volumes',
         link: {
           display: 'Object Storage',
@@ -176,7 +174,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
         }
       },
       {
-        conditionToAdd: () => flags.oneClickLocation !== 'sidenav',
+        conditionToAdd: () => flags.oneClickLocation === 'sidenav',
         insertAfter: 'Longview',
         link: {
           display: 'One-Click Apps',

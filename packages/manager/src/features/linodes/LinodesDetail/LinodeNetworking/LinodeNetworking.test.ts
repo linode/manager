@@ -40,4 +40,14 @@ describe('listIPv6InRange utility function', () => {
       listIPv6InRange('2600:3c03:e000:3cb::', 64, [...ipv4List, outOfRangeIP])
     ).toHaveLength(0);
   });
+  it('allows pools', () => {
+    const ipv6Pool = ipAddressFactory.build({
+      type: 'ipv6/pool',
+      address: '2600:3c03::e1:5000',
+      rdns: 'my-site.com'
+    });
+    expect(
+      listIPv6InRange('2600:3c03::e1:5000', 64, [...ipv4List, ipv6Pool])
+    ).toHaveLength(1);
+  });
 });
