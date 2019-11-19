@@ -27,6 +27,7 @@ import withLongviewClients, {
 import { get } from 'src/features/Longview/request';
 import { LongviewTopProcesses } from 'src/features/Longview/request.types';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import { useClientLastUpdated } from '../shared/useClientLastUpdated';
 
 const topProcessesEmptyDataSet: LongviewTopProcesses = { Processes: {} };
 
@@ -66,17 +67,18 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     }
   }, []);
 
+  const { lastUpdated } = useClientLastUpdated(clientAPIKey);
+
   const topProcesses = useAPIRequest<LongviewTopProcesses>(
-    () =>
-      // The first time this component mounts, we will not yet have the client
-      // API key. In that case, we'll just resolve an empty data set. Once we
-      // have the API key, this effect will run again (since clientAPIKey is a
-      // dependency), and the real request will be made.
-      clientAPIKey
-        ? get(clientAPIKey, 'getTopProcesses')
-        : Promise.resolve(topProcessesEmptyDataSet),
+    // We can only make this request if we have a clientAPIKey, so we use `null`
+    // if we don't (which will happen the first time this component mounts). We
+    // also check for `lastUpdated`, otherwise we'd make an extraneous request
+    // when it is retrieved.
+    clientAPIKey && lastUpdated
+      ? () => get(clientAPIKey, 'getTopProcesses')
+      : null,
     topProcessesEmptyDataSet,
-    [clientAPIKey]
+    [clientAPIKey, lastUpdated]
   );
 
   const tabOptions = [
