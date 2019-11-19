@@ -36,9 +36,6 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import withFeatureFlagConsumer, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import isPast from 'src/utilities/isPast';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -106,10 +103,7 @@ interface State {
   token?: TokenState;
 }
 
-type CombinedProps = Props &
-  PaginationProps<Token> &
-  WithStyles<ClassNames> &
-  FeatureFlagConsumerProps;
+type CombinedProps = Props & PaginationProps<Token> & WithStyles<ClassNames>;
 
 export const filterOutLinodeApps = (token: Token) =>
   !token.website || !/.linode.com$/.test(token.website);
@@ -491,23 +485,8 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, flags, type, title } = this.props;
+    const { classes, type, title } = this.props;
     const { form, dialog } = this.state;
-
-    // If Object Storage is enabled, add it to the list of perms.
-    // @todo: Once Object Storage is safely in GA, remove this logic and add
-    // it to the hard-coded list of scopes.
-    const perms = flags.objectStorage
-      ? //  Scopes are returned from the API sorted alphabetically. Since we're
-        // manually inserting a scope here, I chose to sort the entire list
-        // instead of inserting 'object_storage' in the correct place according
-        // to the hard-coded basePerms array (that seemed brittle).
-        [...basePerms, 'object_storage'].sort()
-      : basePerms;
-
-    const permNameMap = flags.objectStorage
-      ? { ...basePermNameMap, object_storage: 'Object Storage' }
-      : basePermNameMap;
 
     return (
       <React.Fragment>
@@ -560,8 +539,8 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           label={form.values.label}
           scopes={form.values.scopes}
           expiry={form.values.expiry}
-          perms={perms}
-          permNameMap={permNameMap}
+          perms={basePerms}
+          permNameMap={basePermNameMap}
           closeDrawer={this.closeDrawer}
           onChange={this.handleDrawerChange}
           onCreate={this.createToken}
@@ -673,8 +652,7 @@ const paginated = Pagey(updatedRequest);
 
 const enhanced = compose<CombinedProps, Props>(
   paginated,
-  styled,
-  withFeatureFlagConsumer
+  styled
 );
 
 export default enhanced(APITokenTable);
