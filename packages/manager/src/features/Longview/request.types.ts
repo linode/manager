@@ -98,6 +98,10 @@ export interface LastUpdated {
   updated: number;
 }
 
+export interface Uptime {
+  uptime: number;
+}
+
 export interface LongviewPackage {
   name: string;
   current: string;
@@ -107,6 +111,24 @@ export interface LongviewPackage {
 
 export interface LongviewPackages {
   Packages: LongviewPackage[];
+}
+
+export interface LongviewService {
+  user: string;
+  ip: string;
+  type: string;
+  port: number;
+  name: string;
+}
+
+export interface LongviewPort {
+  count: number;
+  user: string;
+  name: string;
+}
+export interface LongviewPortsResponse {
+  listening: LongviewService[];
+  active: LongviewPort[];
 }
 
 export interface LongviewSystemInfo {

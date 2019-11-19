@@ -36,8 +36,7 @@ import {
   sendRevokeAccessKeyEvent
 } from 'src/utilities/ga';
 import AccessKeyDisplayDialog from './AccessKeyDisplayDialog';
-import AccessKeyDrawer from './AccessKeyDrawer';
-import { MODES } from './AccessKeyLanding';
+import AccessKeyDrawer, { MODES } from './AccessKeyDrawer';
 import AccessKeyTable from './AccessKeyTable';
 import RevokeAccessKeyDialog from './RevokeAccessKeyDialog';
 
@@ -70,8 +69,6 @@ type CombinedProps = Props &
   WithStyles<ClassNames> &
   ReduxStateProps &
   DispatchProps;
-
-export type MODES = 'creating' | 'editing';
 
 export const AccessKeyLanding: React.StatelessComponent<
   CombinedProps

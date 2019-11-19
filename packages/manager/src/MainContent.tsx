@@ -326,8 +326,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                       {getObjectStorageRoute(
                         props.accountLoading,
                         props.accountCapabilities,
-                        props.accountError,
-                        Boolean(props.flags.objectStorage)
+                        props.accountError
                       )}
                       {isKubernetesEnabled && (
                         <Route path="/kubernetes" component={Kubernetes} />
@@ -385,15 +384,10 @@ const MainContent: React.FC<CombinedProps> = props => {
 const getObjectStorageRoute = (
   accountLoading: boolean,
   accountCapabilities: AccountCapability[],
-  accountError?: Error | APIError[],
-  featureFlag?: boolean
+  accountError?: Error | APIError[]
 ) => {
   let component;
-  // If the feature flag is on, we want to see Object Storage regardless of
-  // the state of account.
-  if (featureFlag) {
-    component = ObjectStorage;
-  } else if (accountLoading) {
+  if (accountLoading) {
     component = () => <LandingLoading delayInMS={1000} />;
   } else if (accountError) {
     component = () => (

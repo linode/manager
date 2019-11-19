@@ -14,11 +14,11 @@ import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import useFlags from 'src/hooks/useFlags';
 import { ApplicationState } from 'src/store';
 import EnableObjectStorageModal from '../EnableObjectStorageModal';
 import { confirmObjectStorage } from '../utilities';
-import { MODES } from './AccessKeyLanding';
+
+export type MODES = 'creating' | 'editing';
 
 export interface Props {
   open: boolean;
@@ -51,8 +51,6 @@ export const AccessKeyDrawer: React.StatelessComponent<
     mode,
     objectStorageKey
   } = props;
-
-  const flags = useFlags();
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
 
@@ -89,8 +87,7 @@ export const AccessKeyDrawer: React.StatelessComponent<
             confirmObjectStorage<FormState>(
               props.object_storage,
               formikProps,
-              () => setDialogOpen(true),
-              flags.objectStorageBilling
+              () => setDialogOpen(true)
             );
           };
 

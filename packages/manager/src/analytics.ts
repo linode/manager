@@ -29,21 +29,16 @@ const initGTM = (w: any, d: any, s: any, l: any, i: any) => {
 };
 /* tslint:enable */
 
-interface Tracker {
-  id?: string;
-  name?: string;
-}
-
 /**
  * Initiates Google Analytics Tracking Script.
  * Should be called when the app loads
  *
- * @param gaId Your Google Analytics Tracking ID
  * @param production current environment of the app
+ * @param gaId Your Google Analytics Tracking ID
  */
-export const initAnalytics = (production: boolean, ...gaIDs: Tracker[]) => {
-  /** if no GA IDs exist */
-  if (!gaIDs || gaIDs.every(eachID => !eachID.id)) {
+export const initAnalytics = (production: boolean, gaID?: string) => {
+  /** if no GA ID exists */
+  if (!gaID) {
     return;
   }
 
@@ -53,17 +48,8 @@ export const initAnalytics = (production: boolean, ...gaIDs: Tracker[]) => {
 
   gaInit(window, document, 'script', url, 'ga', {}, {});
 
-  gaIDs.forEach(eachID => {
-    /** if we don't have an ID, don't init GA */
-    if (!eachID.id) {
-      return;
-    }
-
-    const trackerSend = eachID.name ? `${eachID.name}.send` : 'send';
-
-    (window as any).ga('create', eachID.id, 'auto', eachID.name);
-    (window as any).ga(trackerSend, 'pageview');
-  });
+  (window as any).ga('create', gaID, 'auto');
+  (window as any).ga('send', 'pageview');
 };
 
 /**

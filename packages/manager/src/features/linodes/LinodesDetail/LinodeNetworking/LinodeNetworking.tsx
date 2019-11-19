@@ -30,6 +30,8 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import TableRowError from 'src/components/TableRowError';
+import TableRowLoading from 'src/components/TableRowLoading';
 import { ZONES } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { upsertLinode as _upsertLinode } from 'src/store/linodes/linodes.actions';
@@ -313,6 +315,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             <span style={{ margin: '0 5px 0 5px' }}>/</span>
             {range.prefix}
           </React.Fragment>
+          {range.route_target && <span> routed to {range.route_target}</span>}
         </TableCell>
         <TableCell />
         <TableCell className={classes.rangeRDNSCell} parentColumn="Reverse DNS">
@@ -333,19 +336,6 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
   renderRangeRDNSCell = (range: IPRange, ipsWithRDNS: IPAddress[]) => {
     const { classes } = this.props;
-    const { ipv6Loading, ipv6Error } = this.state;
-
-    if (ipv6Loading) {
-      return <CircleProgress mini noPadding />;
-    }
-
-    if (ipv6Error) {
-      return (
-        <Typography className={classes.errorText}>
-          Error loading RDNS
-        </Typography>
-      );
-    }
 
     // We don't show anything if there are no addresses.
     if (ipsWithRDNS.length === 0) {
@@ -768,12 +758,20 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
               </TableRow>
             </TableHead>
             <TableBody>
-              {slaac && this.renderIPRow(slaac, 'SLAAC')}
-              {link_local && this.renderIPRow(link_local, 'Link Local')}
-              {globalRange &&
-                globalRange.map((range: IPRange) =>
-                  this.renderRangeRow(range, 'Range')
-                )}
+              {this.state.ipv6Loading ? (
+                <TableRowLoading colSpan={4} firstColWidth={30} />
+              ) : this.state.ipv6Error ? (
+                <TableRowError colSpan={12} message={this.state.ipv6Error} />
+              ) : (
+                <>
+                  {slaac && this.renderIPRow(slaac, 'SLAAC')}
+                  {link_local && this.renderIPRow(link_local, 'Link Local')}
+                  {globalRange &&
+                    globalRange.map((range: IPRange) =>
+                      this.renderRangeRow(range, 'Range')
+                    )}
+                </>
+              )}
             </TableBody>
           </Table>
         </Paper>

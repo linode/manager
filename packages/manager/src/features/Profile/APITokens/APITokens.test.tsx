@@ -1,7 +1,6 @@
 import { shallow } from 'enzyme';
 import * as moment from 'moment';
 import * as React from 'react';
-import ldClient from 'src/__data__/ldClient';
 import { pageyProps } from 'src/__data__/pageyProps';
 import { APITokenTable } from './APITokenTable';
 
@@ -34,8 +33,6 @@ describe('APITokens', () => {
         title="Personal Access Tokens"
         type="Personal Access Token"
         data={pats}
-        flags={{}}
-        ldClient={ldClient}
       />
     );
 

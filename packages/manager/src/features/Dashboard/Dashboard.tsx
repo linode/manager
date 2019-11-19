@@ -108,7 +108,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
             Dashboard
           </Typography>
         </Grid>
-        {flags.managed && managed && (
+        {managed && (
           <Grid item xs={12}>
             <ManagedDashboardCard />
           </Grid>
