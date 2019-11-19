@@ -8,17 +8,14 @@ import RamIcon from 'src/assets/icons/longview/ram-sticks.svg';
 import ServerIcon from 'src/assets/icons/longview/server-icon.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 import { formatUptime } from 'src/utilities/formatUptime';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import { Props as LVDataProps } from 'src/containers/longview.stats.container';
-
-import { sumStorage } from '../../LongviewLanding/Gauges/Storage';
-import { getPackageNoticeText } from '../../LongviewLanding/LongviewClientHeader';
 import { LongviewPackage } from '../../request.types';
+import { getPackageNoticeText, sumStorage } from '../../shared/utilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
   labelStatusWrapper: {
@@ -172,9 +169,6 @@ const IconSection: React.FC<Props> = props => {
         alignItems="flex-start"
         className={classes.iconSection}
       >
-        <Grid item>
-          <EntityIcon variant="linode" marginTop={1} />
-        </Grid>
         <Grid item>
           <Typography variant="h3" className={classes.wrapHeader}>
             {props.client}
