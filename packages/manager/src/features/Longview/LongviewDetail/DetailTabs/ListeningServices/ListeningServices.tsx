@@ -19,7 +19,19 @@ import LongviewServiceRow from './LongviewServiceRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
   table: {
-    width: '750px'
+    [theme.breakpoints.down('sm')]: {
+      '& tbody > tr > td:first-child .data': {
+        textAlign: 'right'
+      }
+    },
+    [theme.breakpoints.up('md')]: {
+      '& thead > tr > th:last-child': {
+        textAlign: 'right'
+      },
+      '& tbody > tr > td:last-child': {
+        textAlign: 'right'
+      }
+    }
   }
 }));
 
@@ -29,15 +41,13 @@ const mockServices = longviewServiceFactory.buildList(10);
 
 export const ListeningServices: React.FC<Props> = props => {
   return (
-    <Grid item xs={8} md={8}>
+    <Grid item xs={12} md={8}>
       <Typography variant="h2">Listening Services</Typography>
-      <Grid item>
-        <ServicesTable
-          services={mockServices}
-          servicesLoading={false}
-          servicesError={undefined}
-        />
-      </Grid>
+      <ServicesTable
+        services={mockServices}
+        servicesLoading={false}
+        servicesError={undefined}
+      />
     </Grid>
   );
 };

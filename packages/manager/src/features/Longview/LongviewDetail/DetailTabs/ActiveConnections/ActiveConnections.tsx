@@ -18,7 +18,26 @@ import { LongviewPort } from 'src/features/Longview/request.types';
 import ConnectionRow from './ConnectionRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  table: {}
+  container: {
+    [theme.breakpoints.down('sm')]: {
+      marginTop: theme.spacing(3)
+    }
+  },
+  table: {
+    [theme.breakpoints.down('sm')]: {
+      '& tbody > tr > td:first-child .data': {
+        textAlign: 'right'
+      }
+    },
+    [theme.breakpoints.up('md')]: {
+      '& thead > tr > th:last-child': {
+        textAlign: 'right'
+      },
+      '& tbody > tr > td:last-child': {
+        textAlign: 'right'
+      }
+    }
+  }
 }));
 
 export interface Props {}
@@ -26,16 +45,15 @@ export interface Props {}
 const mockConnections = longviewPortFactory.buildList(5);
 
 export const ActiveConnections: React.FC<Props> = props => {
+  const classes = useStyles();
   return (
-    <Grid item xs={4} md={4}>
+    <Grid item xs={12} md={4} className={classes.container}>
       <Typography variant="h2">Active Connections</Typography>
-      <Grid item>
-        <ConnectionsTable
-          connections={mockConnections}
-          connectionsLoading={false}
-          connectionsError={undefined}
-        />
-      </Grid>
+      <ConnectionsTable
+        connections={mockConnections}
+        connectionsLoading={false}
+        connectionsError={undefined}
+      />
     </Grid>
   );
 };

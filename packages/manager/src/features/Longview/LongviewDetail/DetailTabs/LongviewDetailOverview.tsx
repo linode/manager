@@ -269,7 +269,7 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
         <Grid item xs={12}>
           <Paper className={classes.paperSection}>Graphs here</Paper>
         </Grid>
-        <Grid container item xs={12}>
+        <Grid container justify="space-between" item spacing={0}>
           <ListeningServices />
           <ActiveConnections />
         </Grid>
