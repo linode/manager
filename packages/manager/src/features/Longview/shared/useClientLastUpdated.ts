@@ -4,8 +4,9 @@ import { useEffect, useRef, useState } from 'react';
 import { getLastUpdated } from '../request';
 
 export const useClientLastUpdated = (
-  clientAPIKey: string,
-  callback?: () => void
+  clientAPIKey?: string,
+  callback?: () => void,
+  deps: string[] = []
 ) => {
   let mounted = true;
   let requestInterval: NodeJS.Timeout;
@@ -21,7 +22,7 @@ export const useClientLastUpdated = (
   >();
   const [authed, setAuthed] = useState<boolean>(true);
 
-  const requestAndSetLastUpdated = () => {
+  const requestAndSetLastUpdated = (apiKey: string) => {
     /*
      get the current last updated value
 
@@ -32,7 +33,10 @@ export const useClientLastUpdated = (
 
     setLastUpdatedError(undefined);
 
-    return getLastUpdated(clientAPIKey)
+    // Use a function argument for the API key instead `clientAPIKey` from the
+    // lexical scope, since it is a dependency in the effect that will call
+    // this function.
+    return getLastUpdated(apiKey)
       .then(response => {
         /*
           only update _lastUpdated_ state if it hasn't already been set
@@ -86,11 +90,15 @@ export const useClientLastUpdated = (
     currentLastUpdated.current = lastUpdated;
   }, [lastUpdated]);
 
-  /** request on first mount */
+  // Request on first mount, when the clientAPIKey changes, or when any custom
+  // dependencies change.
   useEffect(() => {
-    requestAndSetLastUpdated().then(() => {
+    if (!clientAPIKey) {
+      return;
+    }
+    requestAndSetLastUpdated(clientAPIKey).then(() => {
       requestInterval = setInterval(() => {
-        requestAndSetLastUpdated();
+        requestAndSetLastUpdated(clientAPIKey);
       }, 10000);
     });
 
@@ -98,7 +106,7 @@ export const useClientLastUpdated = (
       mounted = false;
       clearInterval(requestInterval);
     };
-  }, []);
+  }, [clientAPIKey, ...deps]);
 
   return { lastUpdated, lastUpdatedError, authed };
 };
