@@ -5,8 +5,7 @@ import { getLastUpdated } from '../request';
 
 export const useClientLastUpdated = (
   clientAPIKey?: string,
-  callback?: () => void,
-  deps: string[] = []
+  callback?: () => void
 ) => {
   let mounted = true;
   let requestInterval: NodeJS.Timeout;
@@ -78,7 +77,7 @@ export const useClientLastUpdated = (
      update the ref each time the lastUpdate state changes
 
      Why not just add lastUpdated as a dependency to the useEffect below?
-     Because we don't want to re-instatiate the setInterval() over and over again
+     Because we don't want to re-instantiate the setInterval() over and over again
      but instead just do it once.
 
      The closure inside the useEffect below needs to know when lastUpdated changes
@@ -90,8 +89,7 @@ export const useClientLastUpdated = (
     currentLastUpdated.current = lastUpdated;
   }, [lastUpdated]);
 
-  // Request on first mount, when the clientAPIKey changes, or when any custom
-  // dependencies change.
+  // Request on first mount and when the clientAPIKey changes.
   useEffect(() => {
     if (!clientAPIKey) {
       return;
@@ -106,7 +104,7 @@ export const useClientLastUpdated = (
       mounted = false;
       clearInterval(requestInterval);
     };
-  }, [clientAPIKey, ...deps]);
+  }, [clientAPIKey]);
 
   return { lastUpdated, lastUpdatedError, authed };
 };
