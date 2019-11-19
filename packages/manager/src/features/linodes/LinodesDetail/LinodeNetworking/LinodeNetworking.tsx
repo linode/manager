@@ -313,6 +313,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             <span style={{ margin: '0 5px 0 5px' }}>/</span>
             {range.prefix}
           </React.Fragment>
+          {range.route_target && <span> routed to {range.route_target}</span>}
         </TableCell>
         <TableCell />
         <TableCell className={classes.rangeRDNSCell} parentColumn="Reverse DNS">
