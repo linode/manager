@@ -10,6 +10,7 @@ export const basePerms = [
   'longview',
   'nodebalancers',
   'object_storage',
+  'lke',
   'stackscripts',
   'volumes'
 ];
@@ -25,6 +26,7 @@ export const basePermNameMap: Record<string, string> = {
   nodebalancers: 'NodeBalancers',
   object_storage: 'Object Storage',
   stackscripts: 'StackScripts',
+  lke: 'Kubernetes',
   volumes: 'Volumes'
 };
 
