@@ -48,7 +48,7 @@ export type EntityMap<T> = Record<string, T>;
 export interface MappedEntityState<
   T extends Entity,
   E = APIError[] | undefined
-  > {
+> {
   error?: E;
   items: string[];
   itemsById: EntityMap<T>;
@@ -89,13 +89,6 @@ export type EventHandler = (
   dispatch: Dispatch<any>,
   getState: () => ApplicationState
 ) => void;
-
-export type CRUDError = Partial<{
-  read: APIError[];
-  create: APIError[];
-  delete: APIError[];
-  update: APIError[];
-}>;
 
 export interface EntitiesAsObjectState<T> {
   error: Partial<EntityError>;
