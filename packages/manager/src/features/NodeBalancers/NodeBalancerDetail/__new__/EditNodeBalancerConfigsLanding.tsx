@@ -1,4 +1,7 @@
-import { NEWCreateNodeBalancerConfigPayload } from 'linode-js-sdk/lib/nodebalancers';
+import {
+  NEWCreateNodeBalancerConfigPayload,
+  NodeBalancerConfig
+} from 'linode-js-sdk/lib/nodebalancers';
 import * as React from 'react';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -9,7 +12,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 
 import withNodeBalancerConfigs, {
-  Props as ConfigProps,
+  DispatchProps,
   StateProps as ConfigStateProps
 } from 'src/containers/__new__/nodeBalancerConfigs.container';
 
@@ -26,7 +29,7 @@ interface Props {
   nodeBalancerLabel: string;
 }
 
-type CombinedProps = Props & ConfigProps;
+type CombinedProps = Props & DispatchProps & ReduxStateProps;
 
 const EditNodeBalancerConfigs: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -38,10 +41,10 @@ const EditNodeBalancerConfigs: React.FC<CombinedProps> = props => {
   const {
     nodeBalancerLabel,
     // nodeBalancerRegion,
-    nodeBalancerConfigsData
+    configs
   } = props;
 
-  const hasNoConfigs = !Object.keys(nodeBalancerConfigsData).length;
+  const hasNoConfigs = !Object.keys(configs).length;
 
   return (
     <React.Fragment>
@@ -50,9 +53,12 @@ const EditNodeBalancerConfigs: React.FC<CombinedProps> = props => {
         NodeBalancer Configurations
       </Typography>
       {/** create an expansion panel for each existing config */
-      Object.keys(nodeBalancerConfigsData).map(eachKey => {
+      configs.map(eachConfig => {
         return (
-          <ExpansionPanel key={`config-${eachKey}`} heading="hello world" />
+          <ExpansionPanel
+            key={`config-${eachConfig.id}`}
+            heading="hello world"
+          />
         );
       })}
       {/** create an expansion panel for each new config */
@@ -72,23 +78,17 @@ const EditNodeBalancerConfigs: React.FC<CombinedProps> = props => {
   );
 };
 
+interface ReduxStateProps
+  extends Omit<ConfigStateProps, 'nodeBalancerConfigsData'> {
+  configs: NodeBalancerConfig[];
+}
+
 export default compose<CombinedProps, Props>(
   React.memo,
-  withNodeBalancerConfigs<ConfigStateProps, Props>(
+  withNodeBalancerConfigs<ReduxStateProps, Props>(
     (ownProps, { nodeBalancerConfigsData, ...rest }) => ({
-      nodeBalancerConfigsData: Object.keys(nodeBalancerConfigsData).reduce(
-        (acc, eachKey) => {
-          /** return us just the configs that are attached to this nodebalancer */
-          if (
-            nodeBalancerConfigsData[eachKey].nodebalancer_id ===
-            ownProps.nodeBalancerID
-          ) {
-            acc[eachKey] = nodeBalancerConfigsData[eachKey];
-          }
-
-          return acc;
-        },
-        {}
+      configs: Object.values(nodeBalancerConfigsData).filter(
+        config => config.nodebalancer_id === ownProps.nodeBalancerID
       ),
       ...rest
     })
