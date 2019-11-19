@@ -79,7 +79,6 @@ export class App extends React.Component<CombinedProps, State> {
     this.props.history.listen(({ pathname }) => {
       if ((window as any).ga) {
         (window as any).ga('send', 'pageview', pathname);
-        (window as any).ga(`linodecom.send`, 'pageview', pathname);
       }
     });
 
