@@ -9,8 +9,7 @@ export const basePerms = [
   'linodes',
   'longview',
   'nodebalancers',
-  // @todo: Once Object Storage is safely in GA, uncomment:
-  // 'object_storage'
+  'object_storage',
   'stackscripts',
   'volumes'
 ];
@@ -24,8 +23,7 @@ export const basePermNameMap: Record<string, string> = {
   linodes: 'Linodes',
   longview: 'Longview',
   nodebalancers: 'NodeBalancers',
-  // @todo: Once Object Storage is safely in GA, uncomment:
-  // object_storage: 'Object Storage'
+  object_storage: 'Object Storage',
   stackscripts: 'StackScripts',
   volumes: 'Volumes'
 };

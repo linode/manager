@@ -67,7 +67,10 @@ type ClassNames =
   | 'netActionsTitle'
   | 'rDNSListItem'
   | 'multipleRDNSButton'
-  | 'multipleRDNSText';
+  | 'multipleRDNSText'
+  | 'errorText'
+  | 'loader'
+  | 'rangeRDNSCell';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -140,6 +143,16 @@ const styles = (theme: Theme) =>
     },
     errorText: {
       color: theme.color.red
+    },
+    loader: {
+      padding: 0
+    },
+    rangeRDNSCell: {
+      '& .data': {
+        display: 'flex',
+        alignItems: 'center',
+        minHeight: 32
+      }
     }
   });
 
@@ -302,9 +315,10 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             <span style={{ margin: '0 5px 0 5px' }}>/</span>
             {range.prefix}
           </React.Fragment>
+          {range.route_target && <span> routed to {range.route_target}</span>}
         </TableCell>
         <TableCell />
-        <TableCell parentColumn="Reverse DNS">
+        <TableCell className={classes.rangeRDNSCell} parentColumn="Reverse DNS">
           {this.renderRangeRDNSCell(range, ipsWithRDNS)}
         </TableCell>
         <TableCell parentColumn="Type">{type}</TableCell>
@@ -450,6 +464,28 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     return <CircleProgress />;
   };
 
+  updateIPs = (ip: IPAddress) => {
+    // Mostly to avoid null checking.
+    if (!this.state.allIPs) {
+      return;
+    }
+
+    // Look for this IP address in state.
+    const foundIPIndex = this.state.allIPs.findIndex(
+      eachIP => eachIP.address === ip.address
+    );
+
+    // If this address is not yet in state, append it.
+    if (foundIPIndex === -1) {
+      this.setState({ allIPs: [...this.state.allIPs, ip] });
+    } else {
+      // If we already have the address in state, update it.
+      const updatedIPS = this.state.allIPs;
+      updatedIPS[foundIPIndex] = ip;
+      this.setState({ allIPs: updatedIPS });
+    }
+  };
+
   render() {
     const {
       readOnly,
@@ -543,6 +579,9 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
               : undefined
           }
           ips={ipsWithRDNS}
+          updateIPs={
+            this.state.currentlySelectedIPRange ? this.updateIPs : undefined
+          }
         />
 
         <ViewRDNSDrawer
@@ -839,9 +878,12 @@ export const listIPv6InRange = (
 ) => {
   return ips.filter(thisIP => {
     // Only keep addresses that:
-    // 1. are part of an IPv6 range
+    // 1. are part of an IPv6 range or pool
     // 2. have RDNS set
-    if (thisIP.type !== 'ipv6/range' || thisIP.rdns === null) {
+    if (
+      !['ipv6/range', 'ipv6/pool'].includes(thisIP.type) ||
+      thisIP.rdns === null
+    ) {
       return;
     }
 
