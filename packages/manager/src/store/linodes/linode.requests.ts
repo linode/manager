@@ -65,13 +65,13 @@ const getBackupsForLinodes = (data: Linode[]) =>
   Bluebird.map(data, requestMostRecentBackupForLinode);
 
 type RequestLinodeForStoreThunk = ThunkActionCreator<void, number>;
-export const requestLinodeForStore: RequestLinodeForStoreThunk = id => (
-  dispatch,
-  getState
-) => {
+export const requestLinodeForStore: RequestLinodeForStoreThunk = (
+  id,
+  isCreatingOrUpdating
+) => (dispatch, getState) => {
   const state = getState();
   /** Don't request a Linode if it's already been deleted. */
-  if (state.__resources.linodes.results.includes(id)) {
+  if (isCreatingOrUpdating || state.__resources.linodes.results.includes(id)) {
     return _getLinode(id)
       .then(response => response.data)
       .then(requestMostRecentBackupForLinode)
