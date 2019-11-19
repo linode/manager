@@ -1,7 +1,8 @@
 import {
   cloneDomain,
   createDomainRecord,
-  Domain
+  Domain,
+  DomainRecord
 } from 'linode-js-sdk/lib/domains';
 import { Linode } from 'linode-js-sdk/lib/linodes';
 import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
@@ -165,7 +166,8 @@ const generateDefaultDomainRecords = (
   domain: string,
   domainID: number,
   ipv4: string,
-  ipv6: string | null
+  ipv6: string | null,
+  isCreatingThirdPartyMXRecords: boolean
 ) => {
   /**
    * at this point, the IPv6 is including the prefix and we need to strip that
@@ -178,7 +180,7 @@ const generateDefaultDomainRecords = (
   const cleanedIPv6 =
     ipv6 && ipv6.includes('/') ? ipv6.substr(0, ipv6.indexOf('/')) : ipv6;
 
-  const baseIPv4Requests = [
+  const baseIPv4Requests: Promise<DomainRecord>[] = [
     createDomainRecord(domainID, {
       type: 'A',
       target: ipv4
@@ -194,6 +196,16 @@ const generateDefaultDomainRecords = (
       name: 'mail'
     })
   ];
+
+  if (!isCreatingThirdPartyMXRecords) {
+    baseIPv4Requests.push(
+      createDomainRecord(domainID, {
+        type: 'MX',
+        priority: 10,
+        target: `mail.${domain}`
+      })
+    );
+  }
 
   return Promise.all(
     /** ipv6 can be null so don't try to create domain records in that case */
@@ -213,11 +225,6 @@ const generateDefaultDomainRecords = (
             type: 'AAAA',
             target: cleanedIPv6,
             name: 'mail'
-          }),
-          createDomainRecord(domainID, {
-            type: 'MX',
-            priority: 10,
-            target: `mail.${domain}`
           })
         ]
       : baseIPv4Requests
@@ -719,7 +726,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         }
 
         /** attempt to create some default Gmail MX records */
-        if (this.state.shouldCreateGmailRecords) {
+        if (shouldCreateGmailRecords) {
           this.setState({ loadingText: 'Creating your Gmail MX Records...' });
           return (
             Promise.all(gmailMXRecords(domainData.id))
@@ -774,7 +781,8 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
                * most certainly defined
                */
               selectedDefaultLinode!.ipv4[0],
-              selectedDefaultLinode!.ipv6
+              selectedDefaultLinode!.ipv6,
+              shouldCreateGmailRecords
             )
               .then(() => {
                 return this.redirectToLandingOrDetail(type, domainData.id, {
@@ -816,7 +824,8 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
                * most certainly defined
                */
               selectedDefaultNodeBalancer!.ipv4,
-              selectedDefaultNodeBalancer!.ipv6
+              selectedDefaultNodeBalancer!.ipv6,
+              shouldCreateGmailRecords
             )
               .then(() => {
                 return this.redirectToLandingOrDetail(type, domainData.id);
