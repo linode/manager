@@ -1,7 +1,7 @@
 import { Grant } from 'linode-js-sdk/lib/account';
 import { Region } from 'linode-js-sdk/lib/regions';
 import { pathOr } from 'ramda';
-import React from 'react';
+import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import BreadCrumb from 'src/components/Breadcrumb';
@@ -134,9 +134,6 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
   };
 };
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export default connected(VolumeCreate);
