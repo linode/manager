@@ -38,7 +38,7 @@ export const LongviewClientInstructions: React.FC<Props> = props => {
     installCode,
     clientAPIKey,
     updateLongviewClient,
-    ...actionHandlers
+    triggerDeleteLongviewClient
   } = props;
   const classes = useStyles();
 
@@ -93,7 +93,7 @@ export const LongviewClientInstructions: React.FC<Props> = props => {
               <ActionMenu
                 longviewClientID={clientID}
                 longviewClientLabel={clientLabel}
-                {...actionHandlers}
+                triggerDeleteLongviewClient={triggerDeleteLongviewClient}
               />
             </Grid>
           </Grid>
