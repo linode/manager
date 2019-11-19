@@ -18,6 +18,9 @@ import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 
+import ActiveConnections from './ActiveConnections';
+import ListeningServices from './ListeningServices';
+
 import { systemInfo } from 'src/__data__/longview';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -266,13 +269,9 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
         <Grid item xs={12}>
           <Paper className={classes.paperSection}>Graphs here</Paper>
         </Grid>
-        <Grid container item xs={12}>
-          <Grid item xs={12} md={8}>
-            <Typography variant="h2">Listening Services</Typography>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Typography variant="h2">Active Connections</Typography>
-          </Grid>
+        <Grid container justify="space-between" item spacing={0}>
+          <ListeningServices />
+          <ActiveConnections />
         </Grid>
       </Grid>
     </React.Fragment>
