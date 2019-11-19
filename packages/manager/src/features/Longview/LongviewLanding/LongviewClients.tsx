@@ -250,7 +250,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
       <Grid container className={classes.headingWrapper} alignItems="center">
         <Grid item className={`pt0 ${classes.searchbar}`}>
           <Search
-            placeholder="Filter by client label"
+            placeholder="Filter by client label or hostname"
             onSearch={handleSearch}
             debounceTime={250}
             small
@@ -377,7 +377,7 @@ export const filterLongviewClientsByQuery = (
 
     // If the label didn't match, check the hostname
     const hostname = pathOr<string>(
-      'localhost',
+      '',
       ['data', 'SysInfo', 'hostname'],
       clientData[thisClient.id]
     );
