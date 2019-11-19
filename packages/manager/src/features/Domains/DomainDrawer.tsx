@@ -841,7 +841,9 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               });
           }
         }
-        return this.redirectToLandingOrDetail(type, domainData.id);
+        return this.redirectToLandingOrDetail(type, domainData.id, {
+          recordError: domainData.error
+        });
       })
       .catch(err => {
         if (!this.mounted) {
@@ -960,6 +962,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
   };
 
   submit = () => {
+    this.setState({ errors: [] });
     if (this.props.mode === CREATING) {
       this.create();
     } else if (this.props.mode === CLONING) {

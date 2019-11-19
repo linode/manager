@@ -73,10 +73,17 @@ export class App extends React.Component<CombinedProps, State> {
   }
 
   componentDidMount() {
+    const { history, location } = this.props;
+
+    /* 
+     clear state each time the app mounts 
+     so that we're not persisting error messages across refreshes
+    */
+    history.replace(location.pathname, {});
     /**
      * Send pageviews unless blacklisted.
      */
-    this.props.history.listen(({ pathname }) => {
+    history.listen(({ pathname }) => {
       if ((window as any).ga) {
         (window as any).ga('send', 'pageview', pathname);
       }
