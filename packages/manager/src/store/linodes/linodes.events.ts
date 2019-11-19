@@ -133,7 +133,7 @@ const handleLinodeUpdate = (
     case 'notification':
     case 'scheduled':
     case 'started':
-      return dispatch(requestLinodeForStore(id));
+      return dispatch(requestLinodeForStore(id, true));
 
     default:
       return;
@@ -177,7 +177,7 @@ const handleLinodeCreation = (
     case 'notification':
     case 'scheduled':
     case 'started':
-      return dispatch(requestLinodeForStore(id));
+      return dispatch(requestLinodeForStore(id, true));
 
     default:
       return;
