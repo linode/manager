@@ -77,6 +77,39 @@ storiesOf('Button', module)
       <Divider />
     </React.Fragment>
   ))
+  .add('Loading With Text', () => {
+    return (
+      <React.Fragment>
+        <Button
+          loading
+          buttonType="primary"
+          data-qa-button="primary"
+          loadingText="Fetching Linodes..."
+        >
+          Primary
+        </Button>
+        <Divider />
+        <Button
+          loading
+          buttonType="secondary"
+          data-qa-button="secondary"
+          loadingText="Fetching Volumes..."
+        >
+          Secondary
+        </Button>
+        <Divider />
+        <Button
+          loading
+          buttonType="cancel"
+          data-qa-button="cancel"
+          loadingText="Fetching Domains..."
+        >
+          Cancel
+        </Button>
+        <Divider />
+      </React.Fragment>
+    );
+  })
   .add('Destructive', () => (
     <React.Fragment>
       <Button
