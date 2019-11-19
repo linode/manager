@@ -277,7 +277,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
         </Grid>
       </Grid>
       <LongviewList
-        longviewClientsData={
+        filteredData={
           !!filteredClientList
             ? filteredClientList
             : Object.values(longviewClientsData)

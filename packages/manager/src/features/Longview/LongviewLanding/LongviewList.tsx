@@ -47,7 +47,7 @@ type LongviewProps = Omit<
 
 interface Props {
   loading: boolean;
-  longviewClientsData: LongviewClient[];
+  filteredData: LongviewClient[];
   createLongviewClient: () => void;
   triggerDeleteLongviewClient: (
     longviewClientID: number,
@@ -61,7 +61,7 @@ const LongviewList: React.FC<CombinedProps> = props => {
   const {
     createLongviewClient,
     loading,
-    longviewClientsData,
+    filteredData,
     longviewClientsError,
     longviewClientsLastUpdated,
     longviewClientsLoading,
@@ -113,7 +113,7 @@ const LongviewList: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      <OrderBy data={longviewClientsData} orderBy={'label'} order={'asc'}>
+      <OrderBy data={filteredData} orderBy={'label'} order={'asc'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
           <Paginate data={orderedData}>
             {({
