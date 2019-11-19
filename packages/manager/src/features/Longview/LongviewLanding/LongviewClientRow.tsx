@@ -65,7 +65,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
     clientAPIKey,
     clientInstallKey,
     updateLongviewClient,
-    ...actionHandlers
+    triggerDeleteLongviewClient
   } = props;
 
   /*
@@ -170,7 +170,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
         clientAPIKey={clientAPIKey}
         installCode={clientInstallKey}
         updateLongviewClient={updateLongviewClient}
-        {...actionHandlers}
+        triggerDeleteLongviewClient={triggerDeleteLongviewClient}
       />
     );
   }
@@ -243,7 +243,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
               <ActionMenu
                 longviewClientID={clientID}
                 longviewClientLabel={clientLabel}
-                {...actionHandlers}
+                triggerDeleteLongviewClient={triggerDeleteLongviewClient}
               />
             </Grid>
           </Grid>
