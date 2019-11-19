@@ -32,9 +32,11 @@ interface Props {
   nodeBalancerLabel: string;
 }
 
-type CombinedProps = Props & DispatchProps & ReduxStateProps & {
-  getAllNodeBalancerConfigNodes: (configID: number) => Promise<any>;
-};
+type CombinedProps = Props &
+  DispatchProps &
+  ReduxStateProps & {
+    getAllNodeBalancerConfigNodes: (configID: number) => Promise<any>;
+  };
 
 const EditNodeBalancerConfigs: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -57,8 +59,8 @@ const EditNodeBalancerConfigs: React.FC<CombinedProps> = props => {
      *
      * Do it on every mount
      */
-    configs.forEach(eachKey => {
-      getAllNodeBalancerConfigNodes(+eachKey);
+    configs.forEach(eachConfig => {
+      getAllNodeBalancerConfigNodes(+eachConfig.id);
     });
   }, []);
 
