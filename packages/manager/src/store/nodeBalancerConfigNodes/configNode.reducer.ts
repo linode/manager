@@ -13,7 +13,7 @@ import { RelationalDataSet } from '../types';
  * State
  */
 
-export type State = RelationalDataSet<NodeBalancerConfigNode>;
+export type State = RelationalDataSet<NodeBalancerConfigNode[]>;
 
 export const defaultState: State = {};
 
@@ -27,7 +27,7 @@ const reducer = reducerWithInitialState(defaultState)
     (state, { payload: { result, params } }) => ({
       ...state,
       [params.configID]: {
-        ...result,
+        data: result,
         loading: false,
         error: {}
       }
