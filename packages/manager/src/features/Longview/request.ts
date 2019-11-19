@@ -97,6 +97,9 @@ interface Get {
     action: LongviewAction,
     options: { fields: 'packages'[] }
   ): Promise<Partial<LongviewPackages>>;
+  (token: string, action: 'getValue', options: { fields: 'cpu'[] }): Promise<
+    Partial<LongviewCPU>
+  >;
   (
     token: string,
     action: LongviewAction,
