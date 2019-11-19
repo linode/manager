@@ -3,7 +3,9 @@ import { imageFactory } from 'src/factories/images';
 import {
   createImageActions,
   removeImage,
+  requestImageForStoreActions,
   requestImagesActions,
+  updateImageActions,
   upsertImage
 } from './image.actions';
 import reducer, { defaultState } from './image.reducer';
@@ -126,38 +128,71 @@ describe('Images reducer', () => {
     });
   });
 
-  // describe('Update cluster actions', () => {
-  //   it('should initiate an update', () => {
-  //     const newState = reducer(
-  //       { ...defaultState, error: { update: mockError } },
-  //       updateClusterActions.started({ clusterID: 1234 })
-  //     );
-  //     expect(newState.error!.update).toBeUndefined();
-  //   });
+  describe('Update Image actions', () => {
+    it('should initiate an update', () => {
+      const newState = reducer(
+        { ...defaultState, error: { update: mockError } },
+        updateImageActions.started({ imageID: 'private/1234' })
+      );
+      expect(newState.error.update).toBeUndefined();
+    });
 
-  //   it('should handle a successful update', () => {
-  //     const withEntities = addEntities();
-  //     const updatedCluster = { ...extendedClusters[1], label: 'new-label' };
-  //     const newState = reducer(
-  //       withEntities,
-  //       updateClusterActions.done({
-  //         params: { clusterID: extendedClusters[1].id },
-  //         result: updatedCluster
-  //       })
-  //     );
-  //     expect(newState.error!.update).toBeUndefined();
-  //     expect(newState.entities).toContain(updatedCluster);
-  //   });
+    it('should handle a successful update', () => {
+      const withEntities = addEntities();
+      const updatedImage = { ...mockImages[1], label: 'new-label' };
+      const newState = reducer(
+        withEntities,
+        updateImageActions.done({
+          params: { imageID: updatedImage.id },
+          result: updatedImage
+        })
+      );
+      expect(newState.data[updatedImage.id]).toEqual(updatedImage);
+    });
 
-  //   it('should handle a failed update', () => {
-  //     const newState = reducer(
-  //       defaultState,
-  //       updateClusterActions.failed({
-  //         params: { clusterID: 1234 },
-  //         error: mockError
-  //       })
-  //     );
-  //     expect(newState.error!.update).toEqual(mockError);
-  //   });
-  // });
+    it('should handle a failed update', () => {
+      const newState = reducer(
+        defaultState,
+        updateImageActions.failed({
+          params: { imageID: 'private/1234' },
+          error: mockError
+        })
+      );
+      expect(newState.error.update).toEqual(mockError);
+    });
+  });
+
+  describe('Requesting a single Image', () => {
+    it('should initiate the request', () => {
+      const newState = reducer(
+        { ...defaultState, error: { read: mockError } },
+        requestImageForStoreActions.started('private/1234')
+      );
+      expect(newState.error.read).toBeUndefined();
+    });
+
+    it('should handle a successful request', () => {
+      const withEntities = addEntities();
+      const updatedImage = { ...mockImages[3], label: 'my-label-is-updated' };
+      const newState = reducer(
+        withEntities,
+        requestImageForStoreActions.done({
+          result: updatedImage,
+          params: 'private/1234'
+        })
+      );
+      expect(newState.data[mockImages[3].id]).toEqual(updatedImage);
+    });
+
+    it('should handle a failed request', () => {
+      const newState = reducer(
+        defaultState,
+        requestImageForStoreActions.failed({
+          params: 'private/1234',
+          error: mockError
+        })
+      );
+      expect(newState.error.read).toEqual(mockError);
+    });
+  });
 });

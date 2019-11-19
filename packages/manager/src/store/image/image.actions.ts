@@ -19,3 +19,20 @@ export const createImageActions = actionCreator.async<
   Image,
   APIError[]
 >('create');
+
+export interface UpdateImagePayload
+  extends Pick<CreateImagePayload, 'label' | 'description'> {
+  imageID: string;
+}
+
+export const updateImageActions = actionCreator.async<
+  UpdateImagePayload,
+  Image,
+  APIError[]
+>('update');
+
+export const requestImageForStoreActions = actionCreator.async<
+  string,
+  Image,
+  APIError[]
+>('request-image');

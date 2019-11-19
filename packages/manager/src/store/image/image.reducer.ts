@@ -6,7 +6,9 @@ import { isType } from 'typescript-fsa';
 import {
   createImageActions,
   removeImage,
+  requestImageForStoreActions,
   requestImagesActions,
+  updateImageActions,
   upsertImage
 } from './image.actions';
 
@@ -38,15 +40,15 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       draft.loading = false;
       draft.lastUpdated = Date.now();
       draft.listOfIDsInOriginalOrder = result.map(eachImage => eachImage.id);
-      (draft.data = result.reduce((acc, eachImage) => {
+      draft.data = result.reduce((acc, eachImage) => {
         if (eachImage.label.match(/kube/i)) {
           // NOTE: Temporarily hide public Kubernetes images until ImageSelect redesign.
           return acc;
         }
         acc[eachImage.id] = eachImage;
         return acc;
-      }, {})),
-        (draft.results = Object.keys(result).length);
+      }, {});
+      draft.results = Object.keys(result).length;
     }
 
     if (isType(action, requestImagesActions.failed)) {
@@ -54,6 +56,45 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
       draft.loading = false;
       draft.error.read = error;
+    }
+
+    if (isType(action, requestImageForStoreActions.started)) {
+      draft.loading = true;
+      draft.error.read = undefined;
+    }
+
+    if (isType(action, requestImageForStoreActions.done)) {
+      const { result } = action.payload;
+      draft.loading = false;
+      draft.data[result.id] = result;
+      draft.results = Object.keys(draft.data).length;
+      draft.listOfIDsInOriginalOrder = [
+        ...state.listOfIDsInOriginalOrder,
+        result.id
+      ];
+    }
+
+    if (isType(action, requestImageForStoreActions.failed)) {
+      const { error } = action.payload;
+      draft.loading = false;
+      draft.error.read = error;
+    }
+
+    if (isType(action, updateImageActions.started)) {
+      draft.error.update = undefined;
+    }
+
+    if (isType(action, updateImageActions.done)) {
+      const { result } = action.payload;
+
+      draft.data[result.id] = result;
+      draft.results = Object.keys(draft.data).length;
+      draft.lastUpdated = Date.now();
+    }
+
+    if (isType(action, updateImageActions.failed)) {
+      const { error } = action.payload;
+      draft.error.update = error;
     }
 
     if (isType(action, createImageActions.started)) {
