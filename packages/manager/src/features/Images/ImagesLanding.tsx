@@ -1,3 +1,4 @@
+import produce from 'immer';
 import { Event } from 'linode-js-sdk/lib/account';
 import { deleteImage, Image } from 'linode-js-sdk/lib/images';
 import { APIError } from 'linode-js-sdk/lib/types';
@@ -486,21 +487,23 @@ const withPrivateImages = connect(
     const { error, data, loading } = state.__resources.images;
     const events = imageEvents(state.events);
     const privateImagesWithEvents = Object.values(data).reduce(
-      (accum, thisImage) => {
-        if (thisImage.is_public) {
-          return accum;
-        }
-        // The imageEvents selector above will filter out anything without a secondary_entity, so this is safe (I promise!)
-        // NB: the secondary_entity returns only the numeric portion of the image ID so we have to interpolate.
-        const matchingEvent = events.find(
-          thisEvent =>
-            `private/${thisEvent.secondary_entity!.id}` === thisImage.id
-        );
-        return matchingEvent
-          ? [...accum, { ...thisImage, event: matchingEvent }]
-          : [...accum, thisImage];
-      },
-      []
+      (accum, thisImage) =>
+        produce(accum, draft => {
+          if (!thisImage.is_public) {
+            // The imageEvents selector above will filter out anything without a secondary_entity, so this is safe (I promise!)
+            // NB: the secondary_entity returns only the numeric portion of the image ID so we have to interpolate.
+            const matchingEvent = events.find(
+              thisEvent =>
+                `private/${thisEvent.secondary_entity!.id}` === thisImage.id
+            );
+            if (matchingEvent) {
+              draft.push({ ...thisImage, event: matchingEvent });
+            } else {
+              draft.push(thisImage);
+            }
+          }
+        }),
+      [] as ImageWithEvent[]
     );
     return {
       imagesData: privateImagesWithEvents,
