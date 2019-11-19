@@ -107,6 +107,36 @@ storiesOf('Button', module)
           Cancel
         </Button>
         <Divider />
+        <Button
+          loading
+          buttonType="primary"
+          compact
+          data-qa-button="primary"
+          loadingText="Fetching Linodes..."
+        >
+          Primary Compact
+        </Button>
+        <Divider />
+        <Button
+          loading
+          compact
+          buttonType="secondary"
+          data-qa-button="secondary"
+          loadingText="Fetching Volumes..."
+        >
+          Secondary Compact
+        </Button>
+        <Divider />
+        <Button
+          loading
+          compact
+          buttonType="cancel"
+          data-qa-button="cancel"
+          loadingText="Fetching Domains..."
+        >
+          Cancel Compact
+        </Button>
+        <Divider />
       </React.Fragment>
     );
   })
