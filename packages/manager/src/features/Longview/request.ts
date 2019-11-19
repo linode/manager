@@ -11,7 +11,8 @@ import {
   LongviewNetwork,
   LongviewPackages,
   LongviewSystemInfo,
-  LongviewTopProcesses
+  LongviewTopProcesses,
+  Uptime
 } from './request.types';
 
 /**
@@ -63,6 +64,7 @@ type AllData = LongviewCPU &
   LongviewNetwork &
   LongviewSystemInfo &
   LongviewPackages &
+  Uptime &
   LastUpdated;
 
 /**
@@ -79,33 +81,27 @@ interface Get {
   (
     token: string,
     action: 'getLatestValue',
-    field: ('load' | 'sysinfo')[]
-  ): Promise<Partial<LongviewLoad & LongviewSystemInfo>>;
-  (
-    token: string,
-    action: 'getLatestValue',
-    field: ('cpu' | 'sysinfo')[]
-  ): Promise<Partial<LongviewCPU & LongviewSystemInfo>>;
-  (token: string, action: 'getLatestValue', field: ('disk')[]): Promise<
-    Partial<LongviewDisk>
-  >;
-  (token: string, action: 'getLatestValue', field: 'memory'[]): Promise<
-    Partial<LongviewMemory>
-  >;
-  (token: string, action: 'getLatestValue', field: 'network'[]): Promise<
-    Partial<LongviewNetwork>
-  >;
-  (
-    token: string,
-    action: 'getLatestValue',
-    field: ('cpu' | 'disk' | 'load' | 'memory' | 'network' | 'sysinfo')[]
+    options: {
+      fields: (
+        | 'cpu'
+        | 'disk'
+        | 'load'
+        | 'memory'
+        | 'network'
+        | 'sysinfo'
+        | 'uptime')[];
+    }
   ): Promise<Partial<Omit<AllData, 'updated'>>>;
-  (token: string, action: LongviewAction, field?: LongviewFieldName[]): Promise<
-    Partial<AllData>
-  >;
-  (token: string, action: LongviewAction, field?: 'packages'[]): Promise<
-    Partial<LongviewPackages>
-  >;
+  (
+    token: string,
+    action: LongviewAction,
+    options: { fields: 'packages'[] }
+  ): Promise<Partial<LongviewPackages>>;
+  (
+    token: string,
+    action: LongviewAction,
+    options: { fields?: LongviewFieldName[] }
+  ): Promise<Partial<AllData>>;
   (token: string, action: 'getTopProcesses'): Promise<LongviewTopProcesses>;
 }
 
@@ -182,11 +178,19 @@ export const handleLongviewResponse = (
   }
 };
 
+interface Options {
+  fields: LongviewFieldName[];
+  start: number;
+  end: number;
+}
+
 export const get: Get = (
   token: string,
   action: LongviewAction,
-  fields?: LongviewFieldName[]
+  options: Partial<Options> = {}
 ) => {
+  const { fields, start, end } = options;
+
   const request = baseRequest;
   const data = new FormData();
   data.set('api_key', token);
@@ -197,6 +201,12 @@ export const get: Get = (
       JSON.stringify(fields.map(thisField => fieldNames[thisField]))
     );
   }
+  if (start) {
+    data.set('start', `${start}`);
+  }
+  if (end) {
+    data.set('end', `${end}`);
+  }
   return request({
     data
   }).then(handleLongviewResponse);
@@ -206,15 +216,13 @@ export const getLastUpdated = (token: string) => {
   return get(token, 'lastUpdated');
 };
 
-export const getValues = curry((token: string, fields: LongviewFieldName[]) => {
-  return get(token, 'getValues', fields);
+export const getValues = curry((token: string, options: Options) => {
+  return get(token, 'getValues', options);
 });
 
-export const getLatestValue = curry(
-  (token: string, fields: LongviewFieldName[]) => {
-    return get(token, 'getLatestValue', fields);
-  }
-);
+export const getLatestValue = curry((token: string, options: Options) => {
+  return get(token, 'getLatestValue', options);
+});
 
 export default get;
 

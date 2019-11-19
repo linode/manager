@@ -24,7 +24,8 @@ export interface EntityError {
 }
 
 export type ThunkActionCreator<ReturnType, Params = void> = (
-  args: Params
+  args: Params,
+  ...args2: any[]
 ) => ThunkResult<ReturnType>;
 
 export type ThunkDispatch = _ThunkDispatch<ApplicationState, undefined, Action>;
