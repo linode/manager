@@ -16,17 +16,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
     paddingRight: 20,
     whiteSpace: 'pre-wrap',
-    wordBreak: 'break-all'
-  },
-  subText: {
-    fontSize: '0.8em'
+    wordBreak: 'break-all',
+    fontSize: 15
   }
 }));
 
 interface Props {
   text: string;
   onEdit: (s: string) => Promise<any>;
-  iconVariant: Variant;
+  iconVariant?: Variant;
   loading: boolean;
   subText?: string;
   status?: string;
@@ -69,7 +67,7 @@ export const EditableEntityLabel: React.FC<Props> = props => {
       justify="flex-start"
       className={`${classes.root} m0`}
     >
-      {!isEditing && (
+      {!isEditing && iconVariant && (
         <Grid item className="py0 px0">
           <EntityIcon
             variant={iconVariant}
@@ -97,9 +95,7 @@ export const EditableEntityLabel: React.FC<Props> = props => {
           </Grid>
           {subText && !isEditing && (
             <Grid item className="py0 px0">
-              <Typography variant="body2" className={classes.subText}>
-                {subText}
-              </Typography>
+              <Typography variant="body2">{subText}</Typography>
             </Grid>
           )}
         </Grid>
