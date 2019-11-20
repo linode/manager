@@ -30,7 +30,6 @@ type Labels =
 type CombinedProps = Props & ReduxStateProps;
 
 const TimeRangeSelect: React.FC<CombinedProps> = props => {
-  // const classes = useStyles();
   const {
     children,
     isLongviewPro,
@@ -135,7 +134,7 @@ export default (compose<CombinedProps, Props>(
 )(TimeRangeSelect) as unknown) as <S>(props: Props<S>) => React.ReactElement;
 
 /**
- * react-select option generateor that aims to remain a pure function
+ * react-select option generator that aims to remain a pure function
  * and take in the current datetime as an argument and generate select values
  * based on what it's passed.
  *
