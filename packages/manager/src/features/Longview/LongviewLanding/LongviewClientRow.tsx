@@ -47,6 +47,7 @@ interface Props extends ActionHandlers {
   clientLabel: string;
   clientAPIKey: string;
   clientInstallKey: string;
+  longviewClientLastUpdated: number;
 }
 
 type CombinedProps = Props & LVDataProps & DispatchProps;
@@ -60,7 +61,8 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
     clientAPIKey,
     triggerDeleteLongviewClient,
     clientInstallKey,
-    updateLongviewClient
+    updateLongviewClient,
+    longviewClientLastUpdated
   } = props;
 
   const { lastUpdated, lastUpdatedError, authed } = useClientLastUpdated(
@@ -103,6 +105,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
                 clientLabel={clientLabel}
                 lastUpdatedError={lastUpdatedError}
                 updateLongviewClient={updateLongviewClient}
+                longviewClientLastUpdated={longviewClientLastUpdated}
               />
             </Grid>
             <Grid item xs={12} md={9}>
