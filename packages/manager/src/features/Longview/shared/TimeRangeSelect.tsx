@@ -19,7 +19,7 @@ interface ReduxStateProps {
   isLongviewPro: boolean;
 }
 
-type Labels =
+export type Labels =
   | 'Past 30 Minutes'
   | 'Past 12 Hours'
   | 'Past 24 Hours'
@@ -59,7 +59,7 @@ const TimeRangeSelect: React.FC<CombinedProps> = props => {
   const now = Date.now();
   const options = generateSelectOptions(
     isLongviewPro,
-    `${new Date().getFullYear()}` as Labels
+    `${new Date().getFullYear()}`
   );
 
   React.useEffect(() => {
@@ -143,7 +143,7 @@ export default (compose<CombinedProps, Props>(
  */
 export const generateSelectOptions = (
   isLongviewPro: boolean,
-  currentYear: Labels
+  currentYear: string
 ): Item<(now: number) => number, Labels>[] => {
   const baseOptions: Item<(now: number) => number, Labels>[] = [
     {
