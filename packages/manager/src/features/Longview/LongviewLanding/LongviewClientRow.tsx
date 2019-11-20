@@ -1,8 +1,6 @@
-import Close from '@material-ui/icons/Close';
 import * as React from 'react';
 import { compose } from 'recompose';
 
-import IconButton from 'src/components/core/IconButton';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
@@ -14,6 +12,7 @@ import NetworkGauge from './Gauges/Network';
 import RAMGauge from './Gauges/RAM';
 import StorageGauge from './Gauges/Storage';
 import SwapGauge from './Gauges/Swap';
+import ActionMenu, { ActionHandlers } from './LongviewActionMenu';
 import LongviewClientHeader from './LongviewClientHeader';
 import LongviewClientInstructions from './LongviewClientInstructions';
 
@@ -43,15 +42,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   label: {}
 }));
 
-interface Props {
+interface Props extends ActionHandlers {
   clientID: number;
   clientLabel: string;
   clientAPIKey: string;
   clientInstallKey: string;
-  triggerDeleteLongviewClient: (
-    longviewClientID: number,
-    longviewClientLabel: string
-  ) => void;
 }
 
 type CombinedProps = Props & LVDataProps & DispatchProps;
@@ -155,14 +150,11 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
         <Grid item xs={1}>
           <Grid container justify="flex-end">
             <Grid item>
-              <IconButton
-                onClick={() =>
-                  triggerDeleteLongviewClient(clientID, clientLabel)
-                }
-                className={classes.button}
-              >
-                <Close width={30} height={30} />
-              </IconButton>
+              <ActionMenu
+                longviewClientID={clientID}
+                longviewClientLabel={clientLabel}
+                triggerDeleteLongviewClient={triggerDeleteLongviewClient}
+              />
             </Grid>
           </Grid>
         </Grid>
