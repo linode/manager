@@ -63,6 +63,7 @@ interface Props {
   topProcessesData: LongviewTopProcesses;
   topProcessesLoading: boolean;
   topProcessesError?: APIError[];
+  lastUpdatedError?: APIError[];
   // systemInfo: LVDataProps['longviewClientData'];
 }
 
@@ -70,7 +71,12 @@ export type CombinedProps = RouteComponentProps<{ id: string }> & Props;
 
 export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const { topProcessesData, topProcessesLoading, topProcessesError } = props;
+  const {
+    topProcessesData,
+    topProcessesLoading,
+    topProcessesError,
+    lastUpdatedError
+  } = props;
 
   const url = pathOr('', ['match', 'url'], props);
 
@@ -238,8 +244,8 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
                 </Box>
                 {/* @todo: Replace with real component. */}
                 {topProcessesLoading && <div>Loading...</div>}
-                {topProcessesError && <div>Error!</div>}
-                {Object.keys(topProcessesData).length > 0 && (
+                {(lastUpdatedError || topProcessesError) && <div>Error!</div>}
+                {Object.keys(topProcessesData.Processes).length > 0 && (
                   <pre>
                     {JSON.stringify(props.topProcessesData.Processes, null, 2)}
                   </pre>
