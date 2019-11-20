@@ -173,7 +173,7 @@ export const generateSelectOptions = (
         },
         {
           label: 'Past Year',
-          value: _now => _now - 365 * 30 * 60 * 60 * 1000
+          value: _now => _now - 365 * 24 * 60 * 60 * 1000
         },
         {
           label: `${currentYear}` as Labels,
