@@ -14,6 +14,7 @@ import HelpIcon from 'src/components/HelpIcon';
 type ClassNames =
   | 'root'
   | 'loading'
+  | 'loadingText'
   | 'destructive'
   | 'compact'
   | 'superCompact'
@@ -72,6 +73,9 @@ const styles = (theme: Theme) =>
         height: `${theme.spacing(1) + 8}px !important`,
         animation: '$rotate 2s linear infinite'
       }
+    },
+    loadingText: {
+      marginRight: 8
     },
     destructive: {
       borderColor: '#C44742',
@@ -182,14 +186,13 @@ const wrappedButton: React.StatelessComponent<CombinedProps> = props => {
         >
           {loading ? (
             loadingText ? (
+              /* 
+                the recommendation here is to not use loadingText that 
+                will create a large width for the button. Keep
+                your loading text strings short.
+              */
               <React.Fragment>
-                <span
-                  style={{
-                    marginRight: '8px'
-                  }}
-                >
-                  {loadingText}
-                </span>
+                <span className={classes.loadingText}>{loadingText}</span>
                 <Reload />
               </React.Fragment>
             ) : (
