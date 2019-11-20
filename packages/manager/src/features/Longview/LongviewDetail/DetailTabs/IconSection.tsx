@@ -9,7 +9,7 @@ import ServerIcon from 'src/assets/icons/longview/server-icon.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import HelpIcon from 'src/components/HelpIcon';
+import IconTextLink from 'src/components/IconTextLink';
 import { formatUptime } from 'src/utilities/formatUptime';
 import { readableBytes } from 'src/utilities/unitConversions';
 
@@ -27,16 +27,24 @@ const useStyles = makeStyles((theme: Theme) => ({
     wordBreak: 'break-all'
   },
   iconSection: {
-    marginBottom: theme.spacing(2) - 2
-  },
-  toolTip: {
-    padding: theme.spacing(1),
-    '& svg': {
-      width: 18,
-      height: 18,
-      position: 'relative',
-      top: -2
+    marginBottom: theme.spacing(2) - 2,
+    '&:last-of-type': {
+      marginBottom: 0
     }
+  },
+  packageButton: {
+    marginLeft: -theme.spacing(3) / 2,
+    fontSize: '0.875rem',
+    '& g': {
+      stroke: theme.palette.primary.main
+    }
+  },
+  packageStaticOuter: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  packageStaticIcon: {
+    marginRight: theme.spacing(1)
   }
 }));
 
@@ -258,20 +266,22 @@ const IconSection: React.FC<Props> = props => {
         className={classes.iconSection}
       >
         <Grid item>
-          <PackageIcon />
-        </Grid>
-        <Grid item>
-          <Typography>
-            {packagesToUpdate}
-            {/* TODO usage of a tooltip might be changed */}
-            {packages && packages.length > 0 && (
-              <HelpIcon
-                className={classes.toolTip}
-                text={`Time to upgrade!`}
-                tooltipPosition="right"
-              />
-            )}
-          </Typography>
+          {packages && packages.length > 0 ? (
+            <IconTextLink
+              className={classes.packageButton}
+              SideIcon={PackageIcon}
+              text={packagesToUpdate}
+              title={packagesToUpdate}
+              onClick={() => window.open('#')}
+            >
+              {packagesToUpdate}
+            </IconTextLink>
+          ) : (
+            <div className={classes.packageStaticOuter}>
+              <PackageIcon className={classes.packageStaticIcon} />
+              <Typography>{packagesToUpdate}</Typography>
+            </div>
+          )}
         </Grid>
       </Grid>
     </Grid>
