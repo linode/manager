@@ -49,6 +49,7 @@ interface Props {
   loading: boolean;
   filteredData: LongviewClient[];
   createLongviewClient: () => void;
+  openPackageDrawer: (id: number, label: string) => void;
   triggerDeleteLongviewClient: (
     longviewClientID: number,
     longviewClientLabel: string
@@ -66,6 +67,7 @@ const LongviewList: React.FC<CombinedProps> = props => {
     longviewClientsLastUpdated,
     longviewClientsLoading,
     longviewClientsResults,
+    openPackageDrawer,
     triggerDeleteLongviewClient
   } = props;
 
@@ -129,6 +131,7 @@ const LongviewList: React.FC<CombinedProps> = props => {
                   <LongviewRows
                     longviewClientsData={paginatedAndOrderedData}
                     triggerDeleteLongviewClient={triggerDeleteLongviewClient}
+                    openPackageDrawer={openPackageDrawer}
                   />
                 </Box>
                 <PaginationFooter

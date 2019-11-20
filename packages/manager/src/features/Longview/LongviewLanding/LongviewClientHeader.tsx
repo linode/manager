@@ -41,6 +41,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('md')]: {
       top: -4
     }
+  },
+  packageLink: {
+    background: 'none',
+    color: theme.palette.primary.main,
+    border: 'none',
+    padding: 0,
+    font: 'inherit',
+    cursor: 'pointer',
+    '&:hover': {
+      textDecoration: 'underline'
+    }
   }
 }));
 
@@ -48,6 +59,7 @@ interface Props {
   clientID: number;
   clientLabel: string;
   lastUpdatedError?: APIError[];
+  openPackageDrawer: () => void;
   updateLongviewClient: DispatchProps['updateLongviewClient'];
 }
 
@@ -71,6 +83,7 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
     longviewClientData,
     longviewClientDataLoading,
     longviewClientLastUpdated,
+    openPackageDrawer,
     updateLongviewClient
   } = props;
   const classes = useStyles();
@@ -103,6 +116,7 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
     ['Packages'],
     longviewClientData
   );
+  const numPackagesToUpdate = packages ? packages.length : 0;
   const packagesToUpdate = getPackageNoticeText(packages);
 
   /**
@@ -134,7 +148,18 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
         ) : (
           <>
             <Typography>{formattedUptime}</Typography>
-            <Typography>{packagesToUpdate}</Typography>
+            <Typography>
+              {numPackagesToUpdate > 0 ? (
+                <button
+                  className={classes.packageLink}
+                  onClick={openPackageDrawer}
+                >
+                  {packagesToUpdate}
+                </button>
+              ) : (
+                packagesToUpdate
+              )}
+            </Typography>
           </>
         )}
       </Grid>

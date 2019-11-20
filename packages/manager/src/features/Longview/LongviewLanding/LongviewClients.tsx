@@ -24,6 +24,7 @@ import { State as StatsState } from 'src/store/longviewStats/longviewStats.reduc
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
+import LongviewPackageDrawer from '../LongviewPackageDrawer';
 import DeleteDialog from './LongviewDeleteDialog';
 import LongviewList from './LongviewList';
 import SubscriptionDialog from './SubscriptionDialog';
@@ -202,6 +203,18 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
       });
   };
 
+  /**
+   * State and handlers for the Packages drawer
+   * (setClientLabel and setClientID are reused from the delete dialog)
+   */
+  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+
+  const handleDrawerOpen = (id: number, label: string) => {
+    setClientID(id);
+    setClientLabel(label);
+    setDrawerOpen(true);
+  };
+
   const {
     longviewClientsData,
     longviewClientsError,
@@ -287,6 +300,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
         longviewClientsLoading={longviewClientsLoading}
         longviewClientsResults={longviewClientsResults}
         triggerDeleteLongviewClient={openDeleteDialog}
+        openPackageDrawer={handleDrawerOpen}
         createLongviewClient={handleAddClient}
         loading={newClientLoading}
       />
@@ -320,6 +334,12 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
         clientLimit={
           activeSubscription ? activeSubscription.clients_included : 10
         }
+      />
+      <LongviewPackageDrawer
+        clientLabel={selectedClientLabel}
+        clientID={selectedClientID || 0}
+        isOpen={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
       />
     </React.Fragment>
   );
