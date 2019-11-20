@@ -24,49 +24,52 @@ describe('Utility Functions', () => {
     const getOptionValue = (label: Labels) =>
       options.find(o => o.label === label);
 
-    const november_20_2019_255PM = 1574279721660;
+    const GMT_november_20_2019_849PM = 1574282998914;
 
     const createDate = (value: any) =>
       new Date(value).toLocaleString('en-US', {
-        timeZone: 'America/New_York',
-        dateStyle: 'short',
-        timeStyle: 'short'
-      } as any);
+        timeZoneName: 'short',
+        timeZone: 'GMT'
+      });
 
     expect(
       `${createDate(
-        getOptionValue('Past 30 Minutes')!.value(november_20_2019_255PM)
+        getOptionValue('Past 30 Minutes')!.value(GMT_november_20_2019_849PM)
       )}`
-    ).toMatch(/11\/20\/2019, 2:25:21 PM/gim);
+    ).toMatch(/11\/20\/2019, 8:19:58 PM/gim);
 
     expect(
       `${createDate(
-        getOptionValue('Past 12 Hours')!.value(november_20_2019_255PM)
+        getOptionValue('Past 12 Hours')!.value(GMT_november_20_2019_849PM)
       )}`
-    ).toMatch(/11\/20\/2019, 2:55:21 AM/gim);
+    ).toMatch(/11\/20\/2019, 8:49:58 AM/gim);
 
     expect(
       `${createDate(
-        getOptionValue('Past 24 Hours')!.value(november_20_2019_255PM)
+        getOptionValue('Past 24 Hours')!.value(GMT_november_20_2019_849PM)
       )}`
-    ).toMatch(/11\/19\/2019, 2:55:21 PM/gim);
+    ).toMatch(/11\/19\/2019, 8:49:58 PM/gim);
 
     expect(
       `${createDate(
-        getOptionValue('Past 7 Days')!.value(november_20_2019_255PM)
+        getOptionValue('Past 7 Days')!.value(GMT_november_20_2019_849PM)
       )}`
-    ).toMatch(/11\/13\/2019, 2:55:21 PM/gim);
+    ).toMatch(/11\/13\/2019, 8:49:58 PM/gim);
 
     expect(
       `${createDate(
-        getOptionValue('Past 30 Days')!.value(november_20_2019_255PM)
+        getOptionValue('Past 30 Days')!.value(GMT_november_20_2019_849PM)
       )}`
-    ).toMatch(/10\/21\/2019, 3:55:21 PM/gim);
+    ).toMatch(/10\/21\/2019, 8:49:58 PM/gim);
 
     expect(
-      `${createDate(
-        getOptionValue('2019' as any)!.value(november_20_2019_255PM)
-      )}`
+      /* 
+        this isn't using createDate() because we want it to be 
+        Jan 1 2019 12AM regardless of timezone 
+      */
+      `${new Date(
+        getOptionValue('2019' as Labels)!.value(GMT_november_20_2019_849PM)
+      ).toLocaleString()}`
     ).toMatch(/1\/1\/2019, 12:00:00 AM/gim);
   });
 });
