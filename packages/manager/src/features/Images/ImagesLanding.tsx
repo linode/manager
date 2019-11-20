@@ -490,10 +490,10 @@ const withPrivateImages = connect(
       (accum, thisImage) =>
         produce(accum, draft => {
           if (!thisImage.is_public) {
-            // The imageEvents selector above will filter out anything without a secondary_entity, so this is safe (I promise!)
             // NB: the secondary_entity returns only the numeric portion of the image ID so we have to interpolate.
             const matchingEvent = events.find(
               thisEvent =>
+                thisEvent.secondary_entity &&
                 `private/${thisEvent.secondary_entity!.id}` === thisImage.id
             );
             if (matchingEvent) {
