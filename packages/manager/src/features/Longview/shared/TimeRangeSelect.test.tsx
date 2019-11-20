@@ -26,40 +26,47 @@ describe('Utility Functions', () => {
 
     const november_20_2019_255PM = 1574279721660;
 
+    const createDate = (value: any) =>
+      new Date(value).toLocaleString('en-US', {
+        timeZone: 'America/New_York',
+        dateStyle: 'short',
+        timeStyle: 'short'
+      } as any);
+
     expect(
-      `${new Date(
+      `${createDate(
         getOptionValue('Past 30 Minutes')!.value(november_20_2019_255PM)
       )}`
-    ).toMatch(/Nov 20 2019 14:25/gim);
+    ).toMatch(/11\/20\/2019, 2:25:21 PM/gim);
 
     expect(
-      `${new Date(
+      `${createDate(
         getOptionValue('Past 12 Hours')!.value(november_20_2019_255PM)
       )}`
-    ).toMatch(/Nov 20 2019 02:55/gim);
+    ).toMatch(/11\/20\/2019, 2:55:21 AM/gim);
 
     expect(
-      `${new Date(
+      `${createDate(
         getOptionValue('Past 24 Hours')!.value(november_20_2019_255PM)
       )}`
-    ).toMatch(/Nov 19 2019 14:55/gim);
+    ).toMatch(/11\/19\/2019, 2:55:21 PM/gim);
 
     expect(
-      `${new Date(
+      `${createDate(
         getOptionValue('Past 7 Days')!.value(november_20_2019_255PM)
       )}`
-    ).toMatch(/Nov 13 2019 14:55/gim);
+    ).toMatch(/11\/13\/2019, 2:55:21 PM/gim);
 
     expect(
-      `${new Date(
+      `${createDate(
         getOptionValue('Past 30 Days')!.value(november_20_2019_255PM)
       )}`
-    ).toMatch(/Oct 21 2019 15:55/gim);
+    ).toMatch(/10\/21\/2019, 3:55:21 PM/gim);
 
     expect(
-      `${new Date(
+      `${createDate(
         getOptionValue('2019' as any)!.value(november_20_2019_255PM)
       )}`
-    ).toMatch(/Jan 01 2019 00:00/gim);
+    ).toMatch(/1\/1\/2019, 12:00:00 AM/gim);
   });
 });
