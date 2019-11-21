@@ -130,11 +130,9 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
    * event of a network error)
    */
   const _hasError = listeningPortsError || lastUpdatedError;
-  const portsError = pathOr<string>(
-    'Error retrieving data',
-    [0, 'reason'],
-    _hasError
-  );
+  const portsError = _hasError
+    ? pathOr<string>('Error retrieving data', [0, 'reason'], _hasError)
+    : undefined;
 
   return (
     <React.Fragment>
