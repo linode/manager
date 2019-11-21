@@ -48,11 +48,21 @@ export interface Props {
   topProcessesData: LongviewTopProcesses;
   topProcessesLoading: boolean;
   topProcessesError?: APIError[];
+  lastUpdatedError?: APIError[];
 }
 
 export const TopProcesses: React.FC<Props> = props => {
   const classes = useStyles();
-  const { topProcessesData, topProcessesLoading, topProcessesError } = props;
+  const {
+    topProcessesData,
+    topProcessesLoading,
+    topProcessesError,
+    lastUpdatedError
+  } = props;
+
+  const errorMessage = Boolean(topProcessesError || lastUpdatedError)
+    ? 'There was an error getting Top Processes.'
+    : undefined;
 
   return (
     <Grid item xs={12} md={4} lg={3}>
@@ -109,7 +119,7 @@ export const TopProcesses: React.FC<Props> = props => {
                 {renderLoadingErrorData(
                   orderedData,
                   topProcessesLoading,
-                  topProcessesError
+                  errorMessage
                 )}
               </TableBody>
             </Table>
@@ -123,10 +133,10 @@ export const TopProcesses: React.FC<Props> = props => {
 const renderLoadingErrorData = (
   data: ExtendedTopProcessStat[],
   loading: boolean,
-  error?: APIError[]
+  errorMessage?: string
 ) => {
-  if (error) {
-    return <TableRowError colSpan={12} message={error[0].reason} />;
+  if (errorMessage) {
+    return <TableRowError colSpan={12} message={errorMessage} />;
   }
   if (loading) {
     return <TableRowLoading colSpan={6} />;

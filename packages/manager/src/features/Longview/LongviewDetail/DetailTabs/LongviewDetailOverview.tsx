@@ -227,6 +227,7 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
                 topProcessesData={topProcessesData}
                 topProcessesLoading={topProcessesLoading}
                 topProcessesError={topProcessesError}
+                lastUpdatedError={lastUpdatedError}
               />
             </Grid>
           </Paper>
