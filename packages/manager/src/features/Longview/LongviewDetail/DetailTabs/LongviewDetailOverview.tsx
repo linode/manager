@@ -301,13 +301,13 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
         <Grid container justify="space-between" item spacing={0}>
           <ListeningServices
             services={listeningPortsData.Ports.listening}
-            loading={listeningPortsLoading}
-            error={portsError}
+            servicesLoading={listeningPortsLoading}
+            servicesError={portsError}
           />
           <ActiveConnections
             connections={listeningPortsData.Ports.active}
-            loading={listeningPortsLoading}
-            error={portsError}
+            connectionsLoading={listeningPortsLoading}
+            connectionsError={portsError}
           />
         </Grid>
       </Grid>

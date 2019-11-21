@@ -39,33 +39,26 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-export interface Props {
-  loading: boolean;
-  error?: string;
-  connections: LongviewPort[];
-}
-
-export const ActiveConnections: React.FC<Props> = props => {
-  const { error, loading, connections } = props;
-  const classes = useStyles();
-  return (
-    <Grid item xs={12} md={4} className={classes.container}>
-      <Typography variant="h2">Active Connections</Typography>
-      <ConnectionsTable
-        connections={connections}
-        connectionsLoading={loading}
-        connectionsError={error}
-      />
-    </Grid>
-  );
-};
-
 export interface TableProps {
   connections: LongviewPort[];
   connectionsLoading: boolean;
   connectionsError?: string;
 }
 
+export const ActiveConnections: React.FC<TableProps> = props => {
+  const { connections, connectionsError, connectionsLoading } = props;
+  const classes = useStyles();
+  return (
+    <Grid item xs={12} md={4} className={classes.container}>
+      <Typography variant="h2">Active Connections</Typography>
+      <ConnectionsTable
+        connections={connections}
+        connectionsLoading={connectionsLoading}
+        connectionsError={connectionsError}
+      />
+    </Grid>
+  );
+};
 export const ConnectionsTable: React.FC<TableProps> = props => {
   const { connections, connectionsLoading, connectionsError } = props;
   const classes = useStyles();

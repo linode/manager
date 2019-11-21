@@ -34,31 +34,25 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-export interface Props {
-  loading: boolean;
-  error?: string;
-  services: LongviewService[];
-}
-
-export const ListeningServices: React.FC<Props> = props => {
-  const { error, loading, services } = props;
-  return (
-    <Grid item xs={12} md={8}>
-      <Typography variant="h2">Listening Services</Typography>
-      <ServicesTable
-        services={services}
-        servicesLoading={loading}
-        servicesError={error}
-      />
-    </Grid>
-  );
-};
-
 export interface TableProps {
   services: LongviewService[];
   servicesLoading: boolean;
   servicesError?: string;
 }
+
+export const ListeningServices: React.FC<TableProps> = props => {
+  const { services, servicesError, servicesLoading } = props;
+  return (
+    <Grid item xs={12} md={8}>
+      <Typography variant="h2">Listening Services</Typography>
+      <ServicesTable
+        services={services}
+        servicesLoading={servicesLoading}
+        servicesError={servicesError}
+      />
+    </Grid>
+  );
+};
 
 export const ServicesTable: React.FC<TableProps> = props => {
   const { services, servicesError, servicesLoading } = props;
@@ -83,7 +77,7 @@ export const ServicesTable: React.FC<TableProps> = props => {
                     <TableSortCell
                       data-qa-table-header="Process"
                       active={orderBy === 'process'}
-                      label="process"
+                      label="name"
                       direction={order}
                       handleClick={handleOrderChange}
                       style={{ width: '25%' }}
@@ -103,7 +97,7 @@ export const ServicesTable: React.FC<TableProps> = props => {
                     <TableSortCell
                       data-qa-table-header="Protocol"
                       active={orderBy === 'protocol'}
-                      label="protocol"
+                      label="type"
                       direction={order}
                       handleClick={handleOrderChange}
                       style={{ width: '15%' }}
