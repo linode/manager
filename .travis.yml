@@ -1,9 +1,10 @@
 sudo: required
 dist: bionic
 language: node_js
+addons:
+  chrome: stable
 node_js:
   - 10.16.0
-
 cache: yarn
 services:
   - docker
@@ -11,7 +12,6 @@ services:
 before_install: 
 - sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev
   build-essential g++ google-chrome-stable curl default-jre -y
-- wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && apt install ./google-chrome-stable_current_amd64.deb -y
 - yarn global add selenium-standalone
 - npx selenium-standalone install
 install:
