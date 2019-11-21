@@ -144,7 +144,9 @@ const renderLoadingErrorData = (
     return <TableRowLoading colSpan={4} />;
   }
   if (data.length === 0) {
-    return <TableRowEmptyState colSpan={12} />;
+    return (
+      <TableRowEmptyState colSpan={12} message={'No active connections.'} />
+    );
   }
 
   return data.map((thisConnection, idx) => (

@@ -162,7 +162,7 @@ const renderLoadingErrorData = (
     return <TableRowLoading colSpan={6} />;
   }
   if (data.length === 0) {
-    return <TableRowEmptyState colSpan={12} />;
+    return <TableRowEmptyState colSpan={12} message="No listening services." />;
   }
 
   return data.map((thisService, idx) => (

@@ -123,9 +123,18 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
 
   const coreCountDisplay = cpuCoreCount > 1 ? `Cores` : `Core`;
 
-  const portsError = listeningPortsError
-    ? listeningPortsError[0].reason
-    : undefined;
+  /**
+   * Show an error for the services/connections
+   * tables if the request errors, or if there is
+   * a lastUpdated error (which will happen in the
+   * event of a network error)
+   */
+  const _hasError = listeningPortsError || lastUpdatedError;
+  const portsError = pathOr<string>(
+    'Error retrieving data',
+    [0, 'reason'],
+    _hasError
+  );
 
   return (
     <React.Fragment>
