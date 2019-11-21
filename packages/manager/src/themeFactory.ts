@@ -222,14 +222,16 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       primaryNavText: '#c9cacb'
     },
     graphs: {
-      blue: 'rgba(54, 131, 220, .5)',
-      blueBorder: 'rgba(54, 131, 220, 1)',
-      green: 'rgba(1, 177, 89, .5)',
-      greenBorder: 'rgba(1, 177, 89, 1)',
-      red: 'rgba(204, 1, 153, .5)',
-      redBorder: 'rgba(204, 1, 153, 1)',
-      yellow: 'rgba(255, 209, 0, .5)',
-      yellowBorder: 'rgba(255, 209, 0, 1)'
+      blue: '#3C69DA',
+      blueBorder: '#ccc',
+      green: '#73DA6D',
+      greenBorder: '#ccc',
+      purple: '#8E378E',
+      purpleBorder: '#ccc',
+      red: '#EE2C2C',
+      redBorder: '#ccc',
+      yellow: '#FFDC7D',
+      yellowBorder: '#ccc'
     },
     font: {
       normal: primaryFonts.normal,
