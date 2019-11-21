@@ -33,7 +33,6 @@ const topProcessesEmptyDataSet: LongviewTopProcesses = { Processes: {} };
 
 interface Props {
   client?: LongviewClient;
-  clientAPIKey?: string;
   longviewClientsLastUpdated: number;
   longviewClientsLoading: LVProps['longviewClientsLoading'];
   longviewClientsError: LVProps['longviewClientsError'];
@@ -54,7 +53,6 @@ export type CombinedProps = RouteComponentProps<{ id: string }> &
 export const LongviewDetail: React.FC<CombinedProps> = props => {
   const {
     client,
-    clientAPIKey,
     longviewClientsLastUpdated,
     longviewClientsLoading,
     longviewClientsError
@@ -66,6 +64,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
       props.getLongviewClients();
     }
   }, []);
+  const clientAPIKey = client && client.api_key;
 
   const { lastUpdated, lastUpdatedError } = useClientLastUpdated(clientAPIKey);
 
@@ -290,7 +289,6 @@ export default compose<CombinedProps, {}>(
 
       return {
         client,
-        clientAPIKey: client ? client.api_key : undefined,
         longviewClientsLastUpdated,
         longviewClientsLoading,
         longviewClientsError
