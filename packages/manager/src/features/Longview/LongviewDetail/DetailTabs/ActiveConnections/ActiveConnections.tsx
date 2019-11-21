@@ -76,7 +76,10 @@ export const ConnectionsTable: React.FC<TableProps> = props => {
             pageSize
           }) => (
             <>
-              <Table spacingTop={16} tableClass={classes.table}>
+              <Table
+                spacingTop={16}
+                tableClass={`${connections.length > 0 ? classes.table : ''}`}
+              >
                 <TableHead>
                   <TableRow>
                     <TableSortCell
