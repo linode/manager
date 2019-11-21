@@ -103,7 +103,7 @@
     "mock": "./scripts/mb.js",
     "test": "jest --color",
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
-    "storybook": "start-storybook -p 6006 --ci",
+    "storybook": "start-storybook -p 6006 --ci --quiet",
     "storybook-static": "build-storybook -c .storybook -o .out",
     "storybook:e2e": "npx wdio ./e2e/config/wdio.storybook.conf.js",
     "storyshots": "docker-compose -f storyshots.yml up --build --exit-code-from manager-storyshots && docker-compose -f storyshots.yml down -v",

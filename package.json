@@ -39,11 +39,11 @@
     "e2e": "lerna run e2e --stream --scope linode-manager -- --color",
     "e2e:all": "lerna run e2e:all --stream --scope linode-manager -- --color",
     "e2e:modified": "lerna run e2e:modified --stream --scope linode-manager -- --color",
-    "docker:e2e": "docker-compose -f integration-test.yml up --exit-code-from manager-e2e",
     "docker:test": "docker build -f Dockerfile . -t 'manager' && docker run -it cloud --rm -v $(pwd)/packages/manager/src:/home/node/app/packages/manager/src -v $(pwd)/packages/linode-js-sdk/src:/home/node/app/packages/linode-js-sdk/src manager test",
     "docker:local": "docker build -f Dockerfile . -t 'manager' -t 'dev' && docker run -it --rm -p 3000:3000 -v $(pwd)/packages/manager/src:/home/node/app/packages/manager/src -v $(pwd)/packages/linode-js-sdk/src:/home/node/app/packages/linode-js-sdk/src manager start:docker",
-    "docker:storybook": "docker build -f Dockerfile . -t 'storybook' && docker run -it --rm -p 6006:6006 -v $(pwd)/packages/manager/src:/home/node/app/packages/manager/src -v $(pwd)/packages/linode-js-sdk/src:/home/node/app/packages/linode-js-sdk/src storybook storybook",
-    "docker:storybook:test": "docker-compose -f packages/manager/storybook-test.yml up --build --exit-code-from storybook-test"
+    "serve":"docker run --rm --name www -p 3000:80 -v $(pwd)/packages/manager/build:/usr/share/nginx/html -v $(pwd)/nginx.conf:/etc/nginx/conf.d/default.conf:ro -d nginx",
+    "e2e:magic":"yarn serve && yarn e2e --smoke && docker stop www",
+    
   },
   "resolutions": {
     "handlebars": "^4.4.3"
