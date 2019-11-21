@@ -154,7 +154,7 @@ describe('LinodeRow', () => {
         />
       );
       // using testing library fails here because of tooltip..
-      const tooltip = wrapper.find('WithStyles(ForwardRef(Tooltip))');
+      const tooltip = wrapper.find('WithStyles(Tooltip)');
 
       expect(tooltip).toHaveLength(1);
       expect(tooltip.props()).toHaveProperty('title', mockNotification.message);
