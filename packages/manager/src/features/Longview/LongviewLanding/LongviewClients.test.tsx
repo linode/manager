@@ -46,29 +46,17 @@ const props = {
 
 describe('Utility Functions', () => {
   it('should properly filter longview clients by query', () => {
-    const mockLongviewClients: Record<string, LongviewClient> = clients.reduce(
-      (acc, eachClient) => {
-        acc[eachClient.id] = eachClient;
-        return acc;
-      },
-      {}
-    );
-
-    expect(filterLongviewClientsByQuery('1', mockLongviewClients)).toEqual({
-      1: clients[1]
-    }),
-      expect(
-        filterLongviewClientsByQuery('client', mockLongviewClients)
-      ).toEqual(mockLongviewClients),
-      expect(filterLongviewClientsByQuery('(', mockLongviewClients)).toEqual(
-        {}
+    expect(filterLongviewClientsByQuery('client-1', clients, {})).toEqual([
+      clients[1]
+    ]),
+      expect(filterLongviewClientsByQuery('client', clients, {})).toEqual(
+        clients
       ),
-      expect(filterLongviewClientsByQuery(')', mockLongviewClients)).toEqual(
-        {}
-      ),
-      expect(
-        filterLongviewClientsByQuery('fdsafdsafsdf', mockLongviewClients)
-      ).toEqual({});
+      expect(filterLongviewClientsByQuery('(', clients, {})).toEqual([]),
+      expect(filterLongviewClientsByQuery(')', clients, {})).toEqual([]),
+      expect(filterLongviewClientsByQuery('fdsafdsafsdf', clients, {})).toEqual(
+        []
+      );
   });
 });
 

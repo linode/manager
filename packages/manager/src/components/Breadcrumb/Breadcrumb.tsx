@@ -26,7 +26,7 @@ const useStyles = makeStyles({
   preContainer: {
     display: 'flex',
     flexWrap: 'wrap',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     marginTop: -3
   },
   editablePreContainer: {

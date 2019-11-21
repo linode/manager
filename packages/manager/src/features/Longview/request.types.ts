@@ -113,6 +113,24 @@ export interface LongviewPackages {
   Packages: LongviewPackage[];
 }
 
+export interface LongviewService {
+  user: string;
+  ip: string;
+  type: string;
+  port: number;
+  name: string;
+}
+
+export interface LongviewPort {
+  count: number;
+  user: string;
+  name: string;
+}
+export interface LongviewPortsResponse {
+  listening: LongviewService[];
+  active: LongviewPort[];
+}
+
 export interface LongviewSystemInfo {
   SysInfo: {
     arch: string;
@@ -129,4 +147,33 @@ export interface LongviewSystemInfo {
     hostname: string;
     kernel: string;
   };
+}
+// Resulting shape of calling `/fetch` with an api_action of `getValues` or
+// `getLatestValues` (and asking for the "Processes.*" key).
+export interface LongviewProcesses {
+  Processes: Record<string, Process>;
+}
+
+export type Process = { longname: string } & Record<string, ProcessStats>;
+
+export interface ProcessStats {
+  count: Stat[];
+  cpu: Stat[];
+  ioreadkbytes: Stat[];
+  iowritekbytes: Stat[];
+  mem: Stat[];
+}
+
+// Resulting shape of calling `/fetch` with an api_action of `getTopProcesses`.
+export interface LongviewTopProcesses {
+  Processes: Record<string, TopProcess>;
+}
+
+export type TopProcess = Record<string, TopProcessStat>;
+
+export interface TopProcessStat {
+  count: number;
+  cpu: number;
+  mem: number;
+  entries: number;
 }
