@@ -259,8 +259,8 @@ class TablesPanel extends React.Component<CombinedProps, State> {
               data={[
                 {
                   label: 'Connections',
-                  borderColor: theme.graphs.redBorder,
-                  backgroundColor: theme.graphs.red,
+                  borderColor: theme.graphs.purpleBorder,
+                  backgroundColor: theme.graphs.purple,
                   data
                 }
               ]}
@@ -273,7 +273,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
                   rows={[
                     {
                       legendTitle: 'Connections',
-                      legendColor: 'red',
+                      legendColor: 'purple',
                       data: metrics,
                       format: formatNumber
                     }
