@@ -1,7 +1,7 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-
+import { WithTheme, withTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
 import withClientStats, {
@@ -10,7 +10,7 @@ import withClientStats, {
 import { LongviewNetwork } from '../../request.types';
 import { baseGaugeProps, BaseProps as Props } from './common';
 
-type CombinedProps = Props & LVDataProps;
+type CombinedProps = Props & LVDataProps & WithTheme;
 
 const NetworkGauge: React.FC<CombinedProps> = props => {
   const {
@@ -80,7 +80,7 @@ const NetworkGauge: React.FC<CombinedProps> = props => {
       */
       max={howManyBytesInAGigabit}
       value={networkUsed}
-      filledInColor="#4FAD62"
+      filledInColor={props.theme.graphs.green}
       {...generateCopy()}
     />
   );
@@ -88,7 +88,8 @@ const NetworkGauge: React.FC<CombinedProps> = props => {
 
 export default compose<CombinedProps, Props>(
   React.memo,
-  withClientStats<Props>(ownProps => ownProps.clientID)
+  withClientStats<Props>(ownProps => ownProps.clientID),
+  withTheme
 )(NetworkGauge);
 
 interface Units {
