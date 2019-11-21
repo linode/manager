@@ -541,19 +541,22 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                 borderColor: theme.graphs.blueBorder,
                 backgroundColor: theme.graphs.blue,
                 data: data.publicIn,
-                label: 'Public Traffic In'
+                label: 'Public Traffic In',
+                fill: 'origin'
               },
               {
                 borderColor: theme.graphs.greenBorder,
                 backgroundColor: theme.graphs.green,
                 data: data.publicOut,
-                label: 'Public Traffic Out'
+                label: 'Public Traffic Out',
+                fill: '-1'
               },
               {
                 borderColor: theme.graphs.purpleBorder,
                 backgroundColor: theme.graphs.purple,
                 data: data.privateIn,
-                label: 'Private Traffic In'
+                label: 'Private Traffic In',
+                fill: '-2'
               },
               {
                 borderColor: theme.graphs.yellowBorder,
