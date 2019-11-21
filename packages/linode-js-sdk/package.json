@@ -1,6 +1,6 @@
 {
   "name": "linode-js-sdk",
-  "version": "0.12.0-alpha.0",
+  "version": "0.13.0-alpha.0",
   "homepage": "https://github.com/linode/manager/tree/develop/packages/linode-js-sdk",
   "bugs": {
     "url": "https://github.com/linode/manager/issues",
@@ -51,7 +51,7 @@
     "@babel/plugin-transform-modules-commonjs": "^7.5.0",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-typescript": "^7.3.3",
-    "@types/jest": "^24.0.17",
+    "@types/jest": "^24.0.23",
     "@types/node": "^12.7.1",
     "@types/ramda": "^0.26.19",
     "@types/yup": "^0.26.22",

@@ -108,7 +108,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
             Dashboard
           </Typography>
         </Grid>
-        {flags.managed && managed && (
+        {managed && (
           <Grid item xs={12}>
             <ManagedDashboardCard />
           </Grid>
@@ -201,16 +201,10 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const styled = withStyles(styles, { withTheme: true });
 
-const enhanced = compose<CombinedProps, {}>(
-  styled,
-  connected
-)(Dashboard);
+const enhanced = compose<CombinedProps, {}>(styled, connected)(Dashboard);
 
 export default enhanced;

@@ -11,9 +11,6 @@ import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
-import withFeatureFlags, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container';
 import TagImportDrawer from 'src/features/TagImport';
 import { ApplicationState } from 'src/store';
 import { updateSettingsInStore } from 'src/store/accountSettings/accountSettings.actions';
@@ -62,8 +59,7 @@ interface DispatchProps {
 type CombinedProps = StateProps &
   DispatchProps &
   WithSnackbarProps &
-  RouteComponentProps<{}> &
-  FeatureFlagConsumerProps;
+  RouteComponentProps<{}>;
 
 class GlobalSettings extends React.Component<CombinedProps, {}> {
   toggleAutomaticBackups = () => {
@@ -111,7 +107,6 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
       backups_enabled,
       networkHelperEnabled,
       error,
-      flags,
       loading,
       linodesWithoutBackups,
       entitiesWithGroupsToImport,
@@ -143,12 +138,10 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
           onChange={this.toggleNetworkHelper}
           networkHelperEnabled={networkHelperEnabled}
         />
-        {flags.objectStorageCancel && (
-          <EnableObjectStorage
-            object_storage={object_storage}
-            update={this.props.actions.updateAccountSettingsInStore}
-          />
-        )}
+        <EnableObjectStorage
+          object_storage={object_storage}
+          update={this.props.actions.updateAccountSettingsInStore}
+        />
         <EnableManaged
           isManaged={isManaged}
           update={this.props.actions.updateAccountSettingsInStore}
@@ -213,15 +206,11 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const enhanced = compose<CombinedProps, {}>(
   connected,
-  withSnackbar,
-  withFeatureFlags
+  withSnackbar
 )(GlobalSettings);
 
 export default enhanced;

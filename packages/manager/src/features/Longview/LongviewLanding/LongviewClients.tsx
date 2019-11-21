@@ -91,7 +91,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     false
   );
   const [filteredClientList, filterClientList] = React.useState<
-    Record<string, LongviewClient> | undefined
+    LongviewClient[] | undefined
   >();
   const [deleteDialogOpen, toggleDeleteDialog] = React.useState<boolean>(false);
   const [selectedClientID, setClientID] = React.useState<number | undefined>(
@@ -217,7 +217,11 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
 
   const handleSearch = (query: string) => {
     return filterClientList(
-      filterLongviewClientsByQuery(query, longviewClientsData)
+      filterLongviewClientsByQuery(
+        query,
+        Object.values(longviewClientsData),
+        lvClientData
+      )
     );
   };
 
@@ -246,7 +250,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
       <Grid container className={classes.headingWrapper} alignItems="center">
         <Grid item className={`pt0 ${classes.searchbar}`}>
           <Search
-            placeholder="Filter by client label"
+            placeholder="Filter by client label or hostname"
             onSearch={handleSearch}
             debounceTime={250}
             small
@@ -273,8 +277,10 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
         </Grid>
       </Grid>
       <LongviewList
-        longviewClientsData={
-          !!filteredClientList ? filteredClientList : longviewClientsData
+        filteredData={
+          !!filteredClientList
+            ? filteredClientList
+            : Object.values(longviewClientsData)
         }
         longviewClientsError={longviewClientsError}
         longviewClientsLastUpdated={longviewClientsLastUpdated}
@@ -347,7 +353,8 @@ export default compose<CombinedProps, Props & RouteComponentProps>(
 
 export const filterLongviewClientsByQuery = (
   query: string,
-  clientList: Record<string, LongviewClient>
+  clientList: LongviewClient[],
+  clientData: Record<string, StatsState>
 ) => {
   /** just return the original list if there's no query */
   if (!query.trim()) {
@@ -361,12 +368,23 @@ export const filterLongviewClientsByQuery = (
    * Invalid regular expression: Unmatched ')'
    */
   const cleanedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  return Object.keys(clientList).reduce((acc, eachKey) => {
-    const thisClient = clientList[eachKey];
-    if (thisClient.label.match(new RegExp(`${cleanedQuery}`, 'gmi'))) {
-      acc[eachKey] = thisClient;
+  const queryRegex = new RegExp(`${cleanedQuery}`, 'gmi');
+
+  return clientList.filter(thisClient => {
+    if (thisClient.label.match(queryRegex)) {
+      return true;
     }
 
-    return acc;
-  }, {});
+    // If the label didn't match, check the hostname
+    const hostname = pathOr<string>(
+      '',
+      ['data', 'SysInfo', 'hostname'],
+      clientData[thisClient.id]
+    );
+    if (hostname.match(queryRegex)) {
+      return true;
+    }
+
+    return false;
+  });
 };
