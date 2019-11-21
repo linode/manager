@@ -209,11 +209,14 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
    */
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
 
-  const handleDrawerOpen = (id: number, label: string) => {
-    setClientID(id);
-    setClientLabel(label);
-    setDrawerOpen(true);
-  };
+  const handleDrawerOpen = React.useCallback(
+    (id: number, label: string) => {
+      setClientID(id);
+      setClientLabel(label);
+      setDrawerOpen(true);
+    },
+    [selectedClientID, selectedClientLabel]
+  );
 
   const {
     longviewClientsData,

@@ -26,7 +26,7 @@ export const LongviewPackageRow: React.FC<CombinedProps> = props => {
   return (
     <TableRow>
       <TableCell parentColumn={'Package'}>{lvPackage.name}</TableCell>
-      <TableCell parentColumn="Installed Version / New Version">
+      <TableCell parentColumn="Installed Version / Latest Version">
         <div>{lvPackage.current}</div>
         <div className={classes.new}>{lvPackage.new}</div>
       </TableCell>
