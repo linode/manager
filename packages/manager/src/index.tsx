@@ -13,7 +13,7 @@ import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
 import CookieWarning from 'src/components/CookieWarning';
 import DefaultLoader from 'src/components/DefaultLoader';
 import SnackBar from 'src/components/SnackBar';
-import { GA_ID, GA_ID_2, GTM_ID, isProduction } from 'src/constants';
+import { GA_ID, GTM_ID, isProduction } from 'src/constants';
 import 'src/exceptionReporting';
 import LoginAsCustomerCallback from 'src/layouts/LoginAsCustomerCallback';
 import Logout from 'src/layouts/Logout';
@@ -44,16 +44,8 @@ const Cancel = DefaultLoader({
 /*
  * Initialize Analytic and Google Tag Manager
  */
-initAnalytics(
-  isProduction,
-  {
-    id: GA_ID
-  },
-  {
-    id: GA_ID_2,
-    name: 'linodecom'
-  }
-);
+initAnalytics(isProduction, GA_ID);
+
 initTagManager(GTM_ID);
 
 const renderNullAuth = () => <span>null auth route</span>;
@@ -61,7 +53,7 @@ const renderNullAuth = () => <span>null auth route</span>;
 const renderNull = () => <span>null route</span>;
 
 const renderLish = () => (
-  <LinodeThemeWrapper>{toggle => <Lish />}</LinodeThemeWrapper>
+  <LinodeThemeWrapper>{() => <Lish />}</LinodeThemeWrapper>
 );
 
 const renderApp = (props: RouteComponentProps) => (

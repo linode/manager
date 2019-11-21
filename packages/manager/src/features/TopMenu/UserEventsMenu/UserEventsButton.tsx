@@ -28,11 +28,13 @@ const styles = (theme: Theme) =>
       opacity: 1,
       transition: theme.transitions.create(['opacity']),
       [theme.breakpoints.up('md')]: {
-        marginRight: 0
+        marginRight:
+          theme.spacing(1) === 8 ? theme.spacing(1) : theme.spacing(2)
       },
       [theme.breakpoints.up('lg')]: {
         marginLeft: theme.spacing(1),
-        marginRight: -theme.spacing(2)
+        marginRight:
+          theme.spacing(1) === 8 ? -theme.spacing(1) : theme.spacing(1)
       },
       '&:hover': {
         '& $icon': {
