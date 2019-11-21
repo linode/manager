@@ -19,23 +19,10 @@ import {
   LongviewTopProcesses,
   TopProcessStat
 } from 'src/features/Longview/request.types';
+import { readableBytes } from 'src/utilities/unitConversions';
+import { formatCPU } from '../../shared/formatters';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  table: {
-    [theme.breakpoints.down('sm')]: {
-      '& tbody > tr > td:first-child .data': {
-        textAlign: 'right'
-      }
-    },
-    [theme.breakpoints.up('md')]: {
-      '& thead > tr > th:last-child': {
-        textAlign: 'right'
-      },
-      '& tbody > tr > td:last-child': {
-        textAlign: 'right'
-      }
-    }
-  },
   detailsLink: {
     fontSize: 16,
     fontWeight: 'bold',
@@ -68,25 +55,24 @@ export const TopProcesses: React.FC<Props> = props => {
     <Grid item xs={12} md={4} lg={3}>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Typography variant="h2">Top Processes</Typography>
-        {/* @todo: correct URL */}
-        <Link to={`/processes`} className={classes.detailsLink}>
+        <Link to="processes" className={classes.detailsLink}>
           View Details
         </Link>
       </Box>
       <OrderBy
-        data={formatData(topProcessesData)}
-        orderBy={'process'}
-        order={'asc'}
+        data={extendTopProcesses(topProcessesData)}
+        orderBy={'cpu'}
+        order={'desc'}
       >
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
           <>
-            <Table spacingTop={16} tableClass={classes.table}>
+            <Table spacingTop={16}>
               <TableHead>
                 <TableRow>
                   <TableSortCell
                     data-qa-table-header="Process"
-                    active={orderBy === 'process'}
-                    label="process"
+                    active={orderBy === 'name'}
+                    label="name"
                     direction={order}
                     handleClick={handleOrderChange}
                     style={{ width: '25%' }}
@@ -136,19 +122,18 @@ const renderLoadingErrorData = (
   errorMessage?: string
 ) => {
   if (errorMessage) {
-    return <TableRowError colSpan={12} message={errorMessage} />;
+    return <TableRowError colSpan={4} message={errorMessage} />;
   }
-  if (loading) {
-    return <TableRowLoading colSpan={6} />;
+  if (loading && data.length === 0) {
+    return <TableRowLoading colSpan={4} />;
   }
   if (data.length === 0) {
-    return <TableRowEmptyState colSpan={12} />;
+    return <TableRowEmptyState colSpan={4} />;
   }
 
   return (
     data
-      // First 6 elements
-      // @todo: is this what we want UI-wise?
+      // Only display first 6 elements.
       .slice(0, 6)
       .map((thisTopProcessStat, idx) => (
         <TopProcessRow
@@ -171,18 +156,20 @@ interface TopProcessRowProps {
 
 export const TopProcessRow: React.FC<TopProcessRowProps> = props => {
   const { name, cpu, mem } = props;
+
+  // Memory is given from the API in KB.
+  const memInBytes = mem * 1024;
+
   return (
     <TableRow data-testid="longview-top-process-row">
       <TableCell parentColumn="Process" data-qa-top-process-process>
         {name}
       </TableCell>
       <TableCell parentColumn="CPU" data-qa-top-process-cpu>
-        {/* @todo: formatting */}
-        {cpu.toFixed(2)}%
+        {formatCPU(cpu)}
       </TableCell>
       <TableCell parentColumn="Memory" data-qa-top-process-memory>
-        {/* @todo: formatting */}
-        {Math.round(mem / 1024)} MB
+        {readableBytes(memInBytes, { round: 0 }).formatted}
       </TableCell>
     </TableRow>
   );
@@ -192,15 +179,16 @@ interface ExtendedTopProcessStat extends TopProcessStat {
   name: string;
 }
 
-// @todo: consider refactoring
-// @todo: write tests
-const formatData = (
+export const extendTopProcesses = (
   topProcesses: LongviewTopProcesses
 ): ExtendedTopProcessStat[] => {
+  if (!topProcesses || !topProcesses.Processes) {
+    return [];
+  }
   const topProcessDisplay: ExtendedTopProcessStat[] = [];
-  Object.keys(topProcesses.Processes).forEach(key => {
-    Object.values(topProcesses.Processes[key]).forEach(entry => {
-      topProcessDisplay.push({ ...entry, name: key });
+  Object.keys(topProcesses.Processes).forEach(processName => {
+    Object.values(topProcesses.Processes[processName]).forEach(userProcess => {
+      topProcessDisplay.push({ ...userProcess, name: processName });
     });
   });
   return topProcessDisplay;
