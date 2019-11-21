@@ -23,7 +23,10 @@ import ActiveConnections from './ActiveConnections';
 import ListeningServices from './ListeningServices';
 
 import { systemInfo } from 'src/__data__/longview';
-import { LongviewTopProcesses } from 'src/features/Longview/request.types';
+import {
+  LongviewPortsResponse,
+  LongviewTopProcesses
+} from 'src/features/Longview/request.types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paperSection: {
@@ -64,6 +67,9 @@ interface Props {
   topProcessesLoading: boolean;
   topProcessesError?: APIError[];
   lastUpdatedError?: APIError[];
+  listeningPortsLoading: boolean;
+  listeningPortsError?: APIError[];
+  listeningPortsData: LongviewPortsResponse;
   // systemInfo: LVDataProps['longviewClientData'];
 }
 
@@ -72,6 +78,9 @@ export type CombinedProps = RouteComponentProps<{ id: string }> & Props;
 export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const {
+    listeningPortsData,
+    listeningPortsError,
+    listeningPortsLoading,
     topProcessesData,
     topProcessesLoading,
     topProcessesError,
@@ -113,6 +122,10 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
   const cpuCoreCount = systemInfo.SysInfo.cpu.cores;
 
   const coreCountDisplay = cpuCoreCount > 1 ? `Cores` : `Core`;
+
+  const portsError = listeningPortsError
+    ? listeningPortsError[0].reason
+    : undefined;
 
   return (
     <React.Fragment>
@@ -286,8 +299,16 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
           <Paper className={classes.paperSection}>Graphs here</Paper>
         </Grid>
         <Grid container justify="space-between" item spacing={0}>
-          <ListeningServices />
-          <ActiveConnections />
+          <ListeningServices
+            services={listeningPortsData.Ports.listening}
+            loading={listeningPortsLoading}
+            error={portsError}
+          />
+          <ActiveConnections
+            connections={listeningPortsData.Ports.active}
+            loading={listeningPortsLoading}
+            error={portsError}
+          />
         </Grid>
       </Grid>
     </React.Fragment>

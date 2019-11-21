@@ -25,7 +25,10 @@ import withLongviewClients, {
   Props as LVProps
 } from 'src/containers/longview.container';
 import { get } from 'src/features/Longview/request';
-import { LongviewTopProcesses } from 'src/features/Longview/request.types';
+import {
+  LongviewPortsResponse,
+  LongviewTopProcesses
+} from 'src/features/Longview/request.types';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
 
@@ -77,6 +80,17 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
       ? () => get(clientAPIKey, 'getTopProcesses')
       : null,
     topProcessesEmptyDataSet,
+    [clientAPIKey, lastUpdated]
+  );
+
+  const listeningPorts = useAPIRequest<LongviewPortsResponse>(
+    clientAPIKey && lastUpdated
+      ? () =>
+          get(clientAPIKey, 'getValues', {
+            fields: ['listeningServices', 'activeConnections']
+          })
+      : null,
+    { Ports: { listening: [], active: [] } },
     [clientAPIKey, lastUpdated]
   );
 
@@ -261,6 +275,9 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
               topProcessesData={topProcesses.data}
               topProcessesLoading={topProcesses.loading}
               topProcessesError={topProcesses.error}
+              listeningPortsData={listeningPorts.data}
+              listeningPortsError={listeningPorts.error}
+              listeningPortsLoading={listeningPorts.loading}
               lastUpdatedError={lastUpdatedError}
             />
           )}

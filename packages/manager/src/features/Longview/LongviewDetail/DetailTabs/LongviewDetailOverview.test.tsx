@@ -13,6 +13,8 @@ const props: CombinedProps = {
   client: '1234',
   topProcessesData: { Processes: {} },
   topProcessesLoading: false,
+  listeningPortsData: { Ports: { listening: [], active: [] } },
+  listeningPortsLoading: false,
   ...reactRouterProps,
   match: {
     ...reactRouterProps.match,

@@ -13,7 +13,6 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
-import { longviewServiceFactory } from 'src/factories/longviewService';
 import { LongviewService } from 'src/features/Longview/request.types';
 import LongviewServiceRow from './LongviewServiceRow';
 
@@ -35,18 +34,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-export interface Props {}
-
-const mockServices = longviewServiceFactory.buildList(10);
+export interface Props {
+  loading: boolean;
+  error?: string;
+  services: LongviewService[];
+}
 
 export const ListeningServices: React.FC<Props> = props => {
+  const { error, loading, services } = props;
   return (
     <Grid item xs={12} md={8}>
       <Typography variant="h2">Listening Services</Typography>
       <ServicesTable
-        services={mockServices}
-        servicesLoading={false}
-        servicesError={undefined}
+        services={services}
+        servicesLoading={loading}
+        servicesError={error}
       />
     </Grid>
   );

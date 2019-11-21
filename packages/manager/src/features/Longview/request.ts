@@ -10,6 +10,7 @@ import {
   LongviewMemory,
   LongviewNetwork,
   LongviewPackages,
+  LongviewPortsResponse,
   LongviewSystemInfo,
   LongviewTopProcesses,
   Uptime
@@ -65,6 +66,7 @@ type AllData = LongviewCPU &
   LongviewSystemInfo &
   LongviewPackages &
   Uptime &
+  LongviewPortsResponse &
   LastUpdated;
 
 /**
@@ -97,6 +99,11 @@ interface Get {
     action: LongviewAction,
     options: { fields: 'packages'[] }
   ): Promise<Partial<LongviewPackages>>;
+  (
+    token: string,
+    action: LongviewAction,
+    options: { fields: ['listeningServices', 'activeConnections'] }
+  ): Promise<LongviewPortsResponse>;
   (
     token: string,
     action: LongviewAction,
@@ -138,7 +145,9 @@ export type LongviewFieldName =
   | 'sysinfo'
   | 'network'
   | 'disk'
-  | 'packages';
+  | 'packages'
+  | 'listeningServices'
+  | 'activeConnections';
 
 export const fieldNames: Record<LongviewFieldName, string> = {
   cpu: 'CPU.*',
@@ -148,7 +157,9 @@ export const fieldNames: Record<LongviewFieldName, string> = {
   network: 'Network.*',
   disk: 'Disk.*',
   sysinfo: 'SysInfo.*',
-  packages: 'Packages'
+  packages: 'Packages',
+  listeningServices: 'Ports.listening',
+  activeConnections: 'Ports.active'
 };
 
 export const baseRequest = Axios.create({
