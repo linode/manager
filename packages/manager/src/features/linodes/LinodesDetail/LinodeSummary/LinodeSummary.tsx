@@ -17,7 +17,9 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
+  WithTheme,
+  withTheme
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -165,6 +167,7 @@ interface State {
 }
 
 type CombinedProps = LinodeContextProps &
+  WithTheme &
   WithTypesProps &
   WithImages &
   WithStyles<ClassNames>;
@@ -334,7 +337,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
   renderCPUChart = () => {
     const { rangeSelection, stats } = this.state;
-    const { classes, timezone } = this.props;
+    const { classes, timezone, theme } = this.props;
     const data = pathOr([], ['data', 'cpu'], stats);
 
     const metrics = getMetrics(data);
@@ -350,8 +353,8 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             showToday={rangeSelection === '24'}
             data={[
               {
-                borderColor: 'rgba(54, 131, 220, 1)',
-                backgroundColor: 'rgba(54, 131, 220, .5)',
+                borderColor: theme.graphs.blueBorder,
+                backgroundColor: theme.graphs.blue,
                 data,
                 label: 'CPU %'
               }
@@ -379,7 +382,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   };
 
   renderIPv4TrafficChart = () => {
-    const { classes, timezone } = this.props;
+    const { classes, timezone, theme } = this.props;
     const { rangeSelection, stats } = this.state;
 
     const v4Data = {
@@ -427,26 +430,26 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             showToday={rangeSelection === '24'}
             data={[
               {
-                borderColor: 'rgba(54, 131, 220, 1)',
-                backgroundColor: 'rgba(54, 131, 220, .5)',
+                borderColor: theme.graphs.blueBorder,
+                backgroundColor: theme.graphs.blue,
                 data: v4Data.publicIn,
                 label: 'Public Traffic In'
               },
               {
-                borderColor: 'rgba(1, 177, 89, 1)',
-                backgroundColor: 'rgba(1, 177, 89, .5)',
+                borderColor: theme.graphs.greenBorder,
+                backgroundColor: theme.graphs.green,
                 data: v4Data.publicOut,
                 label: 'Public Traffic Out'
               },
               {
-                borderColor: 'rgba(204, 1, 153, 1)',
-                backgroundColor: 'rgba(204, 1, 153, .5)',
+                borderColor: theme.graphs.purpleBorder,
+                backgroundColor: theme.graphs.purple,
                 data: v4Data.privateIn,
                 label: 'Private Traffic In'
               },
               {
-                borderColor: 'rgba(255, 209, 0, 1)',
-                backgroundColor: 'rgba(255, 209, 0, .5)',
+                borderColor: theme.graphs.yellowBorder,
+                backgroundColor: theme.graphs.yellow,
                 data: v4Data.privateOut,
                 label: 'Private Traffic Out'
               }
@@ -834,6 +837,7 @@ const enhanced = compose<CombinedProps, {}>(
   withTypes,
   linodeContext,
   withImages(),
+  withTheme,
   styled
 );
 
