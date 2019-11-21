@@ -9,9 +9,10 @@ const MongoCredStore = require('../utils/mongo-cred-store');
 const { browserCommands } = require('./custom-commands');
 const { browserConf } = require('./browser-config');
 const { keysIn } = require('lodash');
-const selectedBrowser = argv.browser
-  ? browserConf[argv.browser]
-  : browserConf['chrome'];
+// const selectedBrowser = argv.browser
+//   ? browserConf[argv.browser]
+//   : browserConf['chrome'];
+const selectedBrowser = browserConf['headlessChrome'];
 
 const specsToRun = () => {
   if (argv.vscode) {
@@ -47,8 +48,8 @@ const getRunnerCount = () => {
   ).length;
   const specsCount = specs.length;
   const isSuite = specs[0].includes('**');
-  const isParallelRunner = (isSuite || specsCount > 1) && userCount > 1;
-  return isParallelRunner ? userCount : 1;
+  // const isParallelRunner = (isSuite || specsCount > 1) && userCount > 1;
+  return 1;//isParallelRunner ? userCount : 1;
 };
 
 const parallelRunners = getRunnerCount();
@@ -65,13 +66,14 @@ const credStores = {
   mongolocal: new MongoCredStore('localhost')
 };
 
-let CRED_STORE_MODE = process.env.CRED_STORE_MODE
-  ? process.env.CRED_STORE_MODE
-  : 'fs';
+let CRED_STORE_MODE = 'fs';
+// process.env.CRED_STORE_MODE
+//   ? process.env.CRED_STORE_MODE
+//   : 'fs';
 
 if (!(CRED_STORE_MODE in credStores)) {
   let msg = 'CRED_STORE_MODE must be one of: ';
-  for (cs in credStores) {
+  for (var cs in credStores) {
     msg += cs + ' ';
   }
   throw new Error(msg);
@@ -79,14 +81,17 @@ if (!(CRED_STORE_MODE in credStores)) {
 const credStore = credStores[CRED_STORE_MODE];
 
 let creds = null;
+const servicesToStart = ['selenium-standalone']; //process.env.DOCKER || argv.debug ? [] : ['selenium-standalone'];
 
 exports.config = {
+  services: servicesToStart,
+
   // TODO fix this for debugging with VSCode and not affecting Travis builds
   // debug: true,
   // execArgv: ['--inspect=127.0.0.1:5859'],
   // Selenium Host/Port
-  hostname: process.env.DOCKER ? 'selenium' : 'localhost',
-  port: 4444,
+  // hostname: 'selenium',//process.env.DOCKER ? 'selenium' : 'localhost',
+  // port: 4444,
   //
   // ==================
   // Specify Test Files
