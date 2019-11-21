@@ -12,7 +12,9 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
+  WithTheme,
+  withTheme
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
@@ -123,7 +125,7 @@ interface State {
   statsError?: string;
 }
 
-type CombinedProps = Props & StateProps & WithStyles<ClassNames>;
+type CombinedProps = Props & WithTheme & StateProps & WithStyles<ClassNames>;
 
 const statsFetchInterval = 30000;
 
@@ -231,7 +233,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
     statsError: string | undefined,
     loadingStats: boolean
   ) => {
-    const { classes, timezone } = this.props;
+    const { classes, timezone, theme } = this.props;
     const { stats } = this.state;
     const data = pathOr([[]], ['data', 'connections'], stats);
 
@@ -257,8 +259,8 @@ class TablesPanel extends React.Component<CombinedProps, State> {
               data={[
                 {
                   label: 'Connections',
-                  borderColor: 'rgba(204, 1, 153, 1)',
-                  backgroundColor: 'rgba(204, 1, 153, .5)',
+                  borderColor: theme.graphs.redBorder,
+                  backgroundColor: theme.graphs.red,
                   data
                 }
               ]}
@@ -271,7 +273,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
                   rows={[
                     {
                       legendTitle: 'Connections',
-                      legendColor: 'purple',
+                      legendColor: 'red',
                       data: metrics,
                       format: formatNumber
                     }
@@ -289,7 +291,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
     statsError: string | undefined,
     loadingStats: boolean
   ) => {
-    const { classes, timezone } = this.props;
+    const { classes, timezone, theme } = this.props;
     const { stats } = this.state;
     const trafficIn = pathOr([[]], ['data', 'traffic', 'in'], stats);
     const trafficOut = pathOr([[]], ['data', 'traffic', 'out'], stats);
@@ -314,14 +316,14 @@ class TablesPanel extends React.Component<CombinedProps, State> {
               data={[
                 {
                   label: 'Traffic In',
-                  borderColor: 'rgba(54, 131, 220, 1)',
-                  backgroundColor: 'rgba(54, 131, 220, .5)',
+                  borderColor: theme.graphs.blueBorder,
+                  backgroundColor: theme.graphs.blue,
                   data: trafficIn
                 },
                 {
                   label: 'Traffic Out',
-                  borderColor: 'rgba(1, 177, 89, 1)',
-                  backgroundColor: 'rgba(1, 177, 89, .5)',
+                  borderColor: theme.graphs.greenBorder,
+                  backgroundColor: theme.graphs.green,
                   data: trafficOut
                 }
               ]}
@@ -382,6 +384,7 @@ const withTimezone = connect((state: ApplicationState, ownProps) => ({
 const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
+  withTheme,
   withTimezone,
   styled
 );

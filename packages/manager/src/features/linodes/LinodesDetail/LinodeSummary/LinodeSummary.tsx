@@ -442,8 +442,8 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                 label: 'Public Traffic Out'
               },
               {
-                borderColor: theme.graphs.purpleBorder,
-                backgroundColor: theme.graphs.purple,
+                borderColor: theme.graphs.redBorder,
+                backgroundColor: theme.graphs.red,
                 data: v4Data.privateIn,
                 label: 'Private Traffic In'
               },
@@ -469,7 +469,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                   },
                   {
                     legendTitle: 'Private Inbound',
-                    legendColor: 'purple',
+                    legendColor: 'red',
                     data: getMetrics(v4Data.privateIn),
                     format
                   },
@@ -504,7 +504,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   };
 
   renderIPv6TrafficChart = () => {
-    const { classes, timezone } = this.props;
+    const { classes, timezone, theme } = this.props;
     const { rangeSelection, stats } = this.state;
 
     const data = {
@@ -538,26 +538,26 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             showToday={rangeSelection === '24'}
             data={[
               {
-                borderColor: 'rgba(54, 131, 220, 1)',
-                backgroundColor: 'rgba(54, 131, 220, .5)',
+                borderColor: theme.graphs.blueBorder,
+                backgroundColor: theme.graphs.blue,
                 data: data.publicIn,
                 label: 'Public Traffic In'
               },
               {
-                borderColor: 'rgba(1, 177, 89, 1)',
-                backgroundColor: 'rgba(1, 177, 89, .5)',
+                borderColor: theme.graphs.greenBorder,
+                backgroundColor: theme.graphs.green,
                 data: data.publicOut,
                 label: 'Public Traffic Out'
               },
               {
-                borderColor: 'rgba(204, 1, 153, 1)',
-                backgroundColor: 'rgba(204, 1, 153, .5)',
+                borderColor: theme.graphs.redBorder,
+                backgroundColor: theme.graphs.red,
                 data: data.privateIn,
                 label: 'Private Traffic In'
               },
               {
-                borderColor: 'rgba(255, 209, 0, 1)',
-                backgroundColor: 'rgba(255, 209, 0, .5)',
+                borderColor: theme.graphs.yellowBorder,
+                backgroundColor: theme.graphs.yellow,
                 data: data.privateOut,
                 label: 'Private Traffic Out'
               }
@@ -577,7 +577,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                   },
                   {
                     legendTitle: 'Private Inbound',
-                    legendColor: 'purple',
+                    legendColor: 'red',
                     data: getMetrics(data.privateIn),
                     format
                   },
@@ -612,7 +612,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   };
 
   renderDiskIOChart = () => {
-    const { classes, timezone } = this.props;
+    const { classes, timezone, theme } = this.props;
     const { rangeSelection, stats } = this.state;
 
     const data = {
@@ -632,14 +632,14 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             showToday={rangeSelection === '24'}
             data={[
               {
-                borderColor: 'rgba(255, 209, 0, 1)',
-                backgroundColor: 'rgba(255, 209, 0, .5)',
+                borderColor: theme.graphs.yellowBorder,
+                backgroundColor: theme.graphs.yellow,
                 data: data.io,
                 label: 'Disk I/O'
               },
               {
-                borderColor: 'rgba(204, 1, 153, 1)',
-                backgroundColor: 'rgba(204, 1, 153, .5)',
+                borderColor: theme.graphs.redBorder,
+                backgroundColor: theme.graphs.red,
                 data: data.swap,
                 label: 'Swap I/O'
               }
@@ -659,7 +659,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                   },
                   {
                     legendTitle: 'Swap Rate',
-                    legendColor: 'purple',
+                    legendColor: 'red',
                     data: getMetrics(data.swap),
                     format
                   }

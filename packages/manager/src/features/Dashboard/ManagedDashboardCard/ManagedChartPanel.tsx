@@ -1,7 +1,12 @@
 import { DataSeries, ManagedStatsData } from 'linode-js-sdk/lib/managed';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  WithTheme,
+  withTheme
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import LineGraph from 'src/components/LineGraph';
@@ -89,6 +94,8 @@ interface Props {
   error?: string;
 }
 
+type CombinedProps = Props & WithTheme;
+
 const chartHeight = 300;
 
 const formatData = (value: DataSeries[]): [number, number][] =>
@@ -97,7 +104,8 @@ const formatData = (value: DataSeries[]): [number, number][] =>
 const createTabs = (
   data: ManagedStatsData | null,
   timezone: string,
-  classes: Record<string, string>
+  classes: Record<string, string>,
+  theme: Theme
 ) => {
   const summaryCopy = (
     <Typography variant="body1" className={classes.caption}>
@@ -121,8 +129,8 @@ const createTabs = (
                 showToday={true}
                 data={[
                   {
-                    borderColor: 'rgba(54, 131, 220, 1)',
-                    backgroundColor: 'rgba(54, 131, 220, .5)',
+                    borderColor: theme.graphs.blueBorder,
+                    backgroundColor: theme.graphs.blue,
                     data: formatData(data.cpu),
                     label: 'CPU %'
                   }
@@ -147,14 +155,14 @@ const createTabs = (
                 showToday={true}
                 data={[
                   {
-                    borderColor: 'rgba(54, 131, 220, 1)',
-                    backgroundColor: 'rgba(54, 131, 220, .5)',
+                    borderColor: theme.graphs.blueBorder,
+                    backgroundColor: theme.graphs.blue,
                     data: formatData(data.net_in),
                     label: 'Network Traffic In'
                   },
                   {
-                    borderColor: 'rgba(1, 177, 89, 1)',
-                    backgroundColor: 'rgba(1, 177, 89, .5)',
+                    borderColor: theme.graphs.greenBorder,
+                    backgroundColor: theme.graphs.green,
                     data: formatData(data.net_out),
                     label: 'Network Traffic Out'
                   }
@@ -179,8 +187,8 @@ const createTabs = (
                 showToday={true}
                 data={[
                   {
-                    borderColor: 'rgba(255, 209, 0, 1)',
-                    backgroundColor: 'rgba(255, 209, 0, .5)',
+                    borderColor: theme.graphs.yellowBorder,
+                    backgroundColor: theme.graphs.yellow,
                     data: formatData(data.disk),
                     label: 'Disk I/O'
                   }
@@ -195,8 +203,8 @@ const createTabs = (
   ];
 };
 
-export const ManagedChartPanel: React.FC<Props> = props => {
-  const { data, error, loading } = props;
+export const ManagedChartPanel: React.FC<CombinedProps> = props => {
+  const { data, error, loading, theme } = props;
   const classes = useStyles();
   const timezone = useTimezone();
 
@@ -212,7 +220,7 @@ export const ManagedChartPanel: React.FC<Props> = props => {
     return null;
   }
 
-  const tabs = createTabs(data, timezone, classes);
+  const tabs = createTabs(data, timezone, classes, theme);
 
   const initialTab = 0;
 
@@ -233,4 +241,4 @@ export const ManagedChartPanel: React.FC<Props> = props => {
   );
 };
 
-export default React.memo(ManagedChartPanel);
+export default React.memo(withTheme(ManagedChartPanel));

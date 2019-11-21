@@ -18,7 +18,7 @@ describe('CPUMetrics', () => {
       classes={{
         root: '',
         legend: '',
-        purple: '',
+        red: '',
         yellow: '',
         blue: 'blue',
         green: '',

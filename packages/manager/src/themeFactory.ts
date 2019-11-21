@@ -219,19 +219,15 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       label: '#555',
       disabledText: '#c9cacb',
       kubeLabel: '#272b31',
-      primaryNavText: '#c9cacb',
-      graphBlue: 'rgba(54, 131, 220, .5)',
-      graphYellow: 'rgba(255, 209, 0, .5)',
-      graphPurple: 'rgba(204, 1, 153, .5)',
-      graphGreen: 'rgba(1, 177, 89, .5)'
+      primaryNavText: '#c9cacb'
     },
     graphs: {
       blue: 'rgba(54, 131, 220, .5)',
       blueBorder: 'rgba(54, 131, 220, 1)',
       green: 'rgba(1, 177, 89, .5)',
       greenBorder: 'rgba(1, 177, 89, 1)',
-      purple: 'rgba(204, 1, 153, .5)',
-      purpleBorder: 'rgba(204, 1, 153, 1)',
+      red: 'rgba(204, 1, 153, .5)',
+      redBorder: 'rgba(204, 1, 153, 1)',
       yellow: 'rgba(255, 209, 0, .5)',
       yellowBorder: 'rgba(255, 209, 0, 1)'
     },

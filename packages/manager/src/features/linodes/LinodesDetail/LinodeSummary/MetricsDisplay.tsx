@@ -16,7 +16,7 @@ import { Metrics } from 'src/utilities/statMetrics';
 type ClassNames =
   | 'root'
   | 'legend'
-  | 'purple'
+  | 'red'
   | 'yellow'
   | 'blue'
   | 'green'
@@ -74,24 +74,24 @@ const styles = (theme: Theme) =>
     tableHeadInner: {
       paddingBottom: 4
     },
-    purple: {
+    red: {
       '&:before': {
-        backgroundColor: theme.color.graphPurple
+        backgroundColor: theme.graphs.red
       }
     },
     yellow: {
       '&:before': {
-        backgroundColor: theme.color.graphYellow
+        backgroundColor: theme.graphs.yellow
       }
     },
     blue: {
       '&:before': {
-        backgroundColor: theme.color.graphBlue
+        backgroundColor: theme.graphs.blue
       }
     },
     green: {
       '&:before': {
-        backgroundColor: theme.color.graphGreen
+        backgroundColor: theme.graphs.green
       }
     },
     legend: {
@@ -120,7 +120,7 @@ interface MetricsDisplayProps {
 }
 
 interface MetricsDisplayRow {
-  legendColor: 'yellow' | 'purple' | 'blue' | 'green';
+  legendColor: 'yellow' | 'red' | 'blue' | 'green';
   legendTitle: string;
   format: (n: number) => string;
   data: Metrics;
