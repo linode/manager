@@ -42,8 +42,7 @@
     "docker:test": "docker build -f Dockerfile . -t 'manager' && docker run -it cloud --rm -v $(pwd)/packages/manager/src:/home/node/app/packages/manager/src -v $(pwd)/packages/linode-js-sdk/src:/home/node/app/packages/linode-js-sdk/src manager test",
     "docker:local": "docker build -f Dockerfile . -t 'manager' -t 'dev' && docker run -it --rm -p 3000:3000 -v $(pwd)/packages/manager/src:/home/node/app/packages/manager/src -v $(pwd)/packages/linode-js-sdk/src:/home/node/app/packages/linode-js-sdk/src manager start:docker",
     "serve":"docker run --rm --name www -p 3000:80 -v $(pwd)/packages/manager/build:/usr/share/nginx/html -v $(pwd)/nginx.conf:/etc/nginx/conf.d/default.conf:ro -d nginx",
-    "e2e:magic":"yarn serve && yarn e2e --smoke && docker stop www",
-    
+    "e2e:magic":"yarn serve && yarn e2e --smoke && docker stop www"
   },
   "resolutions": {
     "handlebars": "^4.4.3"
