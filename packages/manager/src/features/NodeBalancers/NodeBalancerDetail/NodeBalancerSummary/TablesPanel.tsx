@@ -20,7 +20,7 @@ import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
-import MetricsDisplay from 'src/features/linodes/LinodesDetail/LinodeSummary/MetricsDisplay';
+import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
 import { ExtendedNodeBalancer } from 'src/services/nodebalancers';
 import { ApplicationState } from 'src/store';
 import { initAll } from 'src/utilities/initAll';
