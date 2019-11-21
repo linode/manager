@@ -58,9 +58,7 @@ type ClassNames =
   | 'sidebar'
   | 'headerWrapper'
   | 'chart'
-  | 'ioChart'
   | 'chartSelect'
-  | 'leftLegend'
   | 'bottomLegend'
   | 'graphTitle'
   | 'graphSelectTitle'
@@ -88,17 +86,7 @@ const styles = (theme: Theme) =>
     },
     chart: {
       position: 'relative',
-      paddingLeft: 32
-    },
-    ioChart: {
-      paddingLeft: 54
-    },
-    leftLegend: {
-      position: 'absolute',
-      left: 0,
-      bottom: 23,
-      color: '#777',
-      fontSize: 14
+      paddingLeft: theme.spacing(1)
     },
     bottomLegend: {
       margin: `${theme.spacing(2)}px ${theme.spacing(1)}px ${theme.spacing(
@@ -346,7 +334,6 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <div className={classes.chart}>
-          <div className={classes.leftLegend}>CPU %</div>
           <LineGraph
             timezone={timezone}
             chartHeight={chartHeight}
@@ -423,7 +410,6 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <div className={classes.chart}>
-          <div className={classes.leftLegend}>bits/s</div>
           <LineGraph
             timezone={timezone}
             chartHeight={chartHeight}
@@ -531,7 +517,6 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <div className={classes.chart}>
-          <div className={classes.leftLegend}>bits/s</div>
           <LineGraph
             timezone={timezone}
             chartHeight={chartHeight}
@@ -627,8 +612,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <div className={`${classes.chart} ${classes.ioChart}`}>
-          <div className={classes.leftLegend}>blocks/s</div>
+        <div className={`${classes.chart}`}>
           <LineGraph
             timezone={timezone}
             chartHeight={chartHeight}
@@ -777,25 +761,25 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             </Grid>
 
             <StatsPanel
-              title="CPU Usage"
+              title="CPU Usage (%)"
               renderBody={this.renderCPUChart}
               {...chartProps}
             />
 
             <StatsPanel
-              title="IPv4 Traffic"
+              title="IPv4 Traffic (bits/s)"
               renderBody={this.renderIPv4TrafficChart}
               {...chartProps}
             />
 
             <StatsPanel
-              title="IPv6 Traffic"
+              title="IPv6 Traffic (bits/s)"
               renderBody={this.renderIPv6TrafficChart}
               {...chartProps}
             />
 
             <StatsPanel
-              title="Disk IO"
+              title="Disk IO (blocks/s)"
               renderBody={this.renderDiskIOChart}
               {...chartProps}
             />

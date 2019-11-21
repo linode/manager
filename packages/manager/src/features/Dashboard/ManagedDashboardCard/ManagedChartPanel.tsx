@@ -16,20 +16,7 @@ import useTimezone from 'src/utilities/useTimezone';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    position: 'relative',
-    '& canvas': {
-      paddingLeft: 16
-    }
-  },
-  ioChart: {
-    '& canvas': {
-      paddingLeft: 30
-    }
-  },
-  networkChart: {
-    '& canvas': {
-      paddingLeft: 24
-    }
+    position: 'relative'
   },
   inner: {
     paddingTop: 0
@@ -56,13 +43,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& canvas': {
       height: `300px !important`
     }
-  },
-  leftLegend: {
-    position: 'absolute',
-    left: 0,
-    bottom: 23,
-    color: '#777',
-    fontSize: 14
   },
   canvasContainer: {
     marginTop: theme.spacing(3)
@@ -122,7 +102,6 @@ const createTabs = (
         return (
           <div className={classes.root}>
             <div>{summaryCopy}</div>
-            <div className={classes.leftLegend}>%</div>
             <div className={classes.canvasContainer}>
               <LineGraph
                 timezone={timezone}
@@ -141,12 +120,12 @@ const createTabs = (
           </div>
         );
       },
-      title: 'CPU Usage'
+      title: 'CPU Usage (%)'
     },
     {
       render: () => {
         return (
-          <div className={`${classes.root} ${classes.networkChart}`}>
+          <div className={classes.root}>
             <div>{summaryCopy}</div>
             <SimpleLegend
               rows={[
@@ -154,7 +133,6 @@ const createTabs = (
                 { legendTitle: 'Network Traffic Out', legendColor: 'green' }
               ]}
             />
-            <div className={classes.leftLegend}>bits/s</div>
             <div className={classes.canvasContainer}>
               <LineGraph
                 timezone={timezone}
@@ -179,14 +157,13 @@ const createTabs = (
           </div>
         );
       },
-      title: 'Network Transfer'
+      title: 'Network Transfer (bits/s)'
     },
     {
       render: () => {
         return (
-          <div className={`${classes.root} ${classes.ioChart}`}>
+          <div className={classes.root}>
             <div>{summaryCopy}</div>
-            <div className={classes.leftLegend}>op/s</div>
             <div className={classes.canvasContainer}>
               <LineGraph
                 timezone={timezone}
@@ -205,7 +182,7 @@ const createTabs = (
           </div>
         );
       },
-      title: 'Disk I/O'
+      title: 'Disk I/O (op/s)'
     }
   ];
 };

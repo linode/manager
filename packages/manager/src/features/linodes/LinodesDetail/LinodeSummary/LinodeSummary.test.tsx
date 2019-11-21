@@ -19,8 +19,6 @@ describe('LinodeSummary', () => {
         sidebar: '',
         headerWrapper: '',
         chart: '',
-        ioChart: '',
-        leftLegend: '',
         bottomLegend: '',
         graphControls: '',
         graphTitle: '',
