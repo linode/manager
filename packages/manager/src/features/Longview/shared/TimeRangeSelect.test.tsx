@@ -1,4 +1,8 @@
-import { generateSelectOptions, Labels } from './TimeRangeSelect';
+import {
+  generateSelectOptions,
+  generateStartTime,
+  Labels
+} from './TimeRangeSelect';
 
 describe('Utility Functions', () => {
   it('should return limited options if not longview pro', () => {
@@ -20,10 +24,6 @@ describe('Utility Functions', () => {
   });
 
   it('should create values as functions that return the correct datetime', () => {
-    const options = generateSelectOptions(true, '2019');
-    const getOptionValue = (label: Labels) =>
-      options.find(o => o.label === label);
-
     const GMT_november_20_2019_849PM = 1574282998914;
 
     const createDate = (value: any) =>
@@ -34,31 +34,31 @@ describe('Utility Functions', () => {
 
     expect(
       `${createDate(
-        getOptionValue('Past 30 Minutes')!.value(GMT_november_20_2019_849PM)
+        generateStartTime('Past 30 Minutes', GMT_november_20_2019_849PM, 2019)
       )}`
     ).toMatch(/11\/20\/2019, 8:19:58 PM/gim);
 
     expect(
       `${createDate(
-        getOptionValue('Past 12 Hours')!.value(GMT_november_20_2019_849PM)
+        generateStartTime('Past 12 Hours', GMT_november_20_2019_849PM, 2019)
       )}`
     ).toMatch(/11\/20\/2019, 8:49:58 AM/gim);
 
     expect(
       `${createDate(
-        getOptionValue('Past 24 Hours')!.value(GMT_november_20_2019_849PM)
+        generateStartTime('Past 24 Hours', GMT_november_20_2019_849PM, 2019)
       )}`
     ).toMatch(/11\/19\/2019, 8:49:58 PM/gim);
 
     expect(
       `${createDate(
-        getOptionValue('Past 7 Days')!.value(GMT_november_20_2019_849PM)
+        generateStartTime('Past 7 Days', GMT_november_20_2019_849PM, 2019)
       )}`
     ).toMatch(/11\/13\/2019, 8:49:58 PM/gim);
 
     expect(
       `${createDate(
-        getOptionValue('Past 30 Days')!.value(GMT_november_20_2019_849PM)
+        generateStartTime('Past 30 Days', GMT_november_20_2019_849PM, 2019)
       )}`
     ).toMatch(/10\/21\/2019, 8:49:58 PM/gim);
 
@@ -68,7 +68,7 @@ describe('Utility Functions', () => {
         Jan 1 2019 12AM regardless of timezone 
       */
       `${new Date(
-        getOptionValue('2019' as Labels)!.value(GMT_november_20_2019_849PM)
+        generateStartTime('2019' as Labels, GMT_november_20_2019_849PM, 2019)
       ).toLocaleString()}`
     ).toMatch(/1\/1\/2019, 12:00:00 AM/gim);
   });

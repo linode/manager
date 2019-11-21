@@ -62,8 +62,11 @@ const TimeRangeSelect: React.FC<CombinedProps> = props => {
   );
 
   React.useEffect(() => {
-    const foundOption = options.find(o => o.label === selectedTimeRange);
-    const selectedPastDateTime = foundOption ? foundOption.value(now) : 0;
+    const selectedPastDateTime = generateStartTime(
+      selectedTimeRange,
+      now,
+      new Date().getFullYear()
+    );
 
     if (selectedPastDateTime) {
       /* only make the request if we have a _start_ time */
@@ -100,15 +103,15 @@ const TimeRangeSelect: React.FC<CombinedProps> = props => {
     }
   }, [lastUpdated]);
 
-  const handleChange = (item: Item<(now: number) => number, Labels>) => {
-    setTimeRange(item.label);
+  const handleChange = (item: Item<Labels, Labels>) => {
+    setTimeRange(item.value);
   };
 
   return (
     <React.Fragment>
       <Select
         {...restOfSelectProps}
-        onChange={handleChange as any}
+        onChange={handleChange}
         isClearable={false}
         isSearchable={false}
         value={options.find(o => o.label === selectedTimeRange) || options[0]}
@@ -146,43 +149,66 @@ export default (compose<CombinedProps, Props>(
 export const generateSelectOptions = (
   isLongviewPro: boolean,
   currentYear: string
-): Item<(now: number) => number, Labels>[] => {
-  const baseOptions: Item<(now: number) => number, Labels>[] = [
+): Item<Labels, Labels>[] => {
+  const baseOptions: Item<Labels, Labels>[] = [
     {
       label: 'Past 30 Minutes',
-      value: _now => _now - 30 * 60 * 1000
+      value: 'Past 30 Minutes'
     },
     {
       label: 'Past 12 Hours',
-      value: _now => _now - 12 * 60 * 60 * 1000
+      value: 'Past 12 Hours'
     }
   ];
 
-  const finalOptions: Item<(now: number) => number, Labels>[] = isLongviewPro
+  const finalOptions: Item<Labels, Labels>[] = isLongviewPro
     ? [
         ...baseOptions,
         {
           label: 'Past 24 Hours',
-          value: _now => _now - 24 * 60 * 60 * 1000
+          value: 'Past 24 Hours'
         },
         {
           label: 'Past 7 Days',
-          value: _now => _now - 7 * 24 * 60 * 60 * 1000
+          value: 'Past 7 Days'
         },
         {
           label: 'Past 30 Days',
-          value: _now => _now - 30 * 24 * 60 * 60 * 1000
+          value: 'Past 30 Days'
         },
         {
           label: 'Past Year',
-          value: _now => _now - 365 * 24 * 60 * 60 * 1000
+          value: 'Past Year'
         },
         {
           label: `${currentYear}` as Labels,
-          value: () => new Date(`Jan 1 ${currentYear}`).getTime()
+          value: `${currentYear}` as Labels
         }
       ]
     : baseOptions;
 
   return finalOptions;
+};
+
+export const generateStartTime = (
+  modifier: Labels,
+  now: number,
+  currentYear: number
+) => {
+  switch (modifier) {
+    case 'Past 30 Minutes':
+      return now - 30 * 60 * 1000;
+    case 'Past 12 Hours':
+      return now - 12 * 60 * 60 * 1000;
+    case 'Past 24 Hours':
+      return now - 24 * 60 * 60 * 1000;
+    case 'Past 7 Days':
+      return now - 7 * 24 * 60 * 60 * 1000;
+    case 'Past 30 Days':
+      return now - 30 * 24 * 60 * 60 * 1000;
+    case 'Past Year':
+      return now - 365 * 24 * 60 * 60 * 1000;
+    default:
+      return new Date(`Jan 1 ${currentYear}`).getTime();
+  }
 };
