@@ -43,6 +43,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     '@keyframes dash': any;
     bg: any;
     color: any;
+    graphs: any;
     visually: any;
     font?: any;
     animateCircleIcon?: any;
@@ -56,6 +57,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     '@keyframes dash'?: any;
     bg?: any;
     color?: any;
+    graphs?: any;
     visually?: any;
     font?: any;
     animateCircleIcon?: any;
@@ -222,6 +224,16 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       graphYellow: 'rgba(255, 209, 0, .5)',
       graphPurple: 'rgba(204, 1, 153, .5)',
       graphGreen: 'rgba(1, 177, 89, .5)'
+    },
+    graphs: {
+      blue: 'rgba(54, 131, 220, .5)',
+      blueBorder: 'rgba(54, 131, 220, 1)',
+      green: 'rgba(1, 177, 89, .5)',
+      greenBorder: 'rgba(1, 177, 89, 1)',
+      purple: 'rgba(204, 1, 153, .5)',
+      purpleBorder: 'rgba(204, 1, 153, 1)',
+      yellow: 'rgba(255, 209, 0, .5)',
+      yellowBorder: 'rgba(255, 209, 0, 1)'
     },
     font: {
       normal: primaryFonts.normal,
