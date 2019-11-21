@@ -7,7 +7,6 @@ import Select, {
   Item
 } from 'src/components/EnhancedSelect/Select';
 import withAccountSettings from 'src/containers/accountSettings.container';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface Props<Stats = any> extends Omit<BaseSelectProps, 'onChange'> {
   lastUpdated: number;
@@ -91,9 +90,12 @@ const TimeRangeSelect: React.FC<CombinedProps> = props => {
         })
         .catch(e => {
           /* always set an error - it's up to the consumer if it wants to do anything with this error */
-          setError(
-            getAPIErrorOrDefault(e, 'There was an issue retrieving the stats')
-          );
+          setError([
+            {
+              reason:
+                'There was an error retrieving stats for this Longview Client.'
+            }
+          ]);
         });
     }
   }, [lastUpdated]);
@@ -123,8 +125,8 @@ export default (compose<CombinedProps, Props>(
     (own, loading, lastUpdated, error, data) => {
       const subscription = (data || {}).longview_subscription;
 
-      /* if you're longview-10 or the response is _null_, you're on the free tier */
-      const isLongviewPro = !(subscription === 'longview-10' || !subscription);
+      /* if response is _null_, you're on the free tier */
+      const isLongviewPro = !!subscription;
 
       return {
         isLongviewPro
