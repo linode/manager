@@ -11,6 +11,7 @@ import {
   LongviewNetwork,
   LongviewPackages,
   LongviewSystemInfo,
+  LongviewTopProcesses,
   Uptime
 } from './request.types';
 
@@ -101,6 +102,7 @@ interface Get {
     action: LongviewAction,
     options: { fields?: LongviewFieldName[] }
   ): Promise<Partial<AllData>>;
+  (token: string, action: 'getTopProcesses'): Promise<LongviewTopProcesses>;
 }
 
 export type LongviewAction =
