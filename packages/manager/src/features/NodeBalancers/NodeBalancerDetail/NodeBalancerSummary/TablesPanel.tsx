@@ -32,8 +32,6 @@ import {
 
 type ClassNames =
   | 'chart'
-  | 'cxnChart'
-  | 'leftLegend'
   | 'bottomLegend'
   | 'graphControls'
   | 'blue'
@@ -63,17 +61,7 @@ const styles = (theme: Theme) =>
     chart: {
       position: 'relative',
       width: '100%',
-      paddingLeft: 24
-    },
-    cxnChart: {
-      paddingLeft: 40
-    },
-    leftLegend: {
-      position: 'absolute',
-      left: 0,
-      bottom: 23,
-      color: '#777',
-      fontSize: 14
+      paddingLeft: theme.spacing(1)
     },
     bottomLegend: {
       margin: `${theme.spacing(2)}px ${theme.spacing(1)}px ${theme.spacing(
@@ -248,11 +236,10 @@ class TablesPanel extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Typography variant="h3" className={classes.header}>
-          Connections (5 min avg.)
+          Connections (CXN/s, 5 min avg.)
         </Typography>
         <React.Fragment>
-          <div className={`${classes.chart} ${classes.cxnChart}`}>
-            <div className={classes.leftLegend}>CXN/s</div>
+          <div className={classes.chart}>
             <LineGraph
               timezone={timezone}
               showToday={true}
@@ -305,11 +292,10 @@ class TablesPanel extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Typography variant="h3" className={classes.header}>
-          Traffic (5 min avg.)
+          Traffic (bits/s, 5 min avg.)
         </Typography>
         <React.Fragment>
           <div className={classes.chart}>
-            <div className={classes.leftLegend}>bits/s</div>
             <LineGraph
               timezone={timezone}
               showToday={true}
