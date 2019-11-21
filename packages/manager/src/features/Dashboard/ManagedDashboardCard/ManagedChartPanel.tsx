@@ -10,6 +10,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import LineGraph from 'src/components/LineGraph';
+import SimpleLegend from 'src/components/LineGraph/SimpleLegend';
 import TabbedPanel from 'src/components/TabbedPanel';
 import useTimezone from 'src/utilities/useTimezone';
 
@@ -63,6 +64,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: '#777',
     fontSize: 14
   },
+  canvasContainer: {
+    marginTop: theme.spacing(3)
+  },
   chartSelect: {
     maxWidth: 150,
     [theme.breakpoints.up('lg')]: {
@@ -82,10 +86,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       top: -6
     }
   },
-  caption: {
-    marginBottom: theme.spacing(3),
-    paddingLeft: theme.spacing()
-  }
+  caption: {}
 }));
 
 interface Props {
@@ -122,7 +123,7 @@ const createTabs = (
           <div className={classes.root}>
             <div>{summaryCopy}</div>
             <div className={classes.leftLegend}>%</div>
-            <div>
+            <div className={classes.canvasContainer}>
               <LineGraph
                 timezone={timezone}
                 chartHeight={chartHeight}
@@ -147,8 +148,14 @@ const createTabs = (
         return (
           <div className={`${classes.root} ${classes.networkChart}`}>
             <div>{summaryCopy}</div>
+            <SimpleLegend
+              rows={[
+                { legendTitle: 'Network Traffic In', legendColor: 'blue' },
+                { legendTitle: 'Network Traffic Out', legendColor: 'green' }
+              ]}
+            />
             <div className={classes.leftLegend}>bits/s</div>
-            <div>
+            <div className={classes.canvasContainer}>
               <LineGraph
                 timezone={timezone}
                 chartHeight={chartHeight}
@@ -180,7 +187,7 @@ const createTabs = (
           <div className={`${classes.root} ${classes.ioChart}`}>
             <div>{summaryCopy}</div>
             <div className={classes.leftLegend}>op/s</div>
-            <div>
+            <div className={classes.canvasContainer}>
               <LineGraph
                 timezone={timezone}
                 chartHeight={chartHeight}

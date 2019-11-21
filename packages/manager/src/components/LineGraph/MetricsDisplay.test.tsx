@@ -1,8 +1,12 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
+import {
+  metricsBySection,
+  MetricsDisplay
+} from 'src/components/LineGraph/MetricsDisplay';
+import { light } from 'src/themes';
 import { formatPercentage } from 'src/utilities/statMetrics';
-import { metricsBySection, MetricsDisplay } from './MetricsDisplay';
 
 describe('CPUMetrics', () => {
   const mockMetrics = {
@@ -23,8 +27,13 @@ describe('CPUMetrics', () => {
         blue: 'blue',
         green: '',
         text: '',
-        tableHeadInner: ''
+        tableHeadInner: '',
+        simpleLegendRoot: '',
+        simpleLegend: ''
       }}
+      theme={light({
+        spacingOverride: 4
+      })}
       rows={[
         {
           legendTitle: 'Legend Title',
