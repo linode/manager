@@ -1,6 +1,7 @@
 import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
+import { WithTheme, withTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
 import withClientStats, {
@@ -10,7 +11,9 @@ import { readableBytes } from 'src/utilities/unitConversions';
 import { Disk } from '../../request.types';
 import { baseGaugeProps, BaseProps as Props } from './common';
 
-const StorageGauge: React.FC<Props & LVDataProps> = props => {
+type CombinedProps = Props & LVDataProps & WithTheme;
+
+const StorageGauge: React.FC<CombinedProps> = props => {
   const {
     longviewClientDataError: error,
     longviewClientDataLoading: loading,
@@ -34,7 +37,7 @@ const StorageGauge: React.FC<Props & LVDataProps> = props => {
         loading,
         error || lastUpdatedError
       )}
-      filledInColor="#F4AC3D"
+      filledInColor={props.theme.graphs.orange}
       subTitle={
         <>
           <Typography>
@@ -51,7 +54,9 @@ const StorageGauge: React.FC<Props & LVDataProps> = props => {
   );
 };
 
-export default withClientStats<Props>(props => props.clientID)(StorageGauge);
+export default withClientStats<Props>(props => props.clientID)(
+  withTheme(StorageGauge)
+);
 
 // UTILITIES
 interface Storage {
