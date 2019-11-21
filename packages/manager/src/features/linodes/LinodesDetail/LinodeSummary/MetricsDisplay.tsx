@@ -79,6 +79,11 @@ const styles = (theme: Theme) =>
         backgroundColor: theme.graphs.red
       }
     },
+    purple: {
+      '&:before': {
+        backgroundColor: theme.graphs.purple
+      }
+    },
     yellow: {
       '&:before': {
         backgroundColor: theme.graphs.yellow
@@ -120,7 +125,7 @@ interface MetricsDisplayProps {
 }
 
 interface MetricsDisplayRow {
-  legendColor: 'yellow' | 'red' | 'blue' | 'green';
+  legendColor: 'yellow' | 'red' | 'blue' | 'green' | 'purple';
   legendTitle: string;
   format: (n: number) => string;
   data: Metrics;

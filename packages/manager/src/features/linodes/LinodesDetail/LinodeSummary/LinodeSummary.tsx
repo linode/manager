@@ -442,8 +442,8 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                 label: 'Public Traffic Out'
               },
               {
-                borderColor: theme.graphs.redBorder,
-                backgroundColor: theme.graphs.red,
+                borderColor: theme.graphs.purpleBorder,
+                backgroundColor: theme.graphs.purple,
                 data: v4Data.privateIn,
                 label: 'Private Traffic In'
               },
@@ -469,7 +469,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                   },
                   {
                     legendTitle: 'Private Inbound',
-                    legendColor: 'red',
+                    legendColor: 'purple',
                     data: getMetrics(v4Data.privateIn),
                     format
                   },
@@ -550,8 +550,8 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                 label: 'Public Traffic Out'
               },
               {
-                borderColor: theme.graphs.redBorder,
-                backgroundColor: theme.graphs.red,
+                borderColor: theme.graphs.purpleBorder,
+                backgroundColor: theme.graphs.purple,
                 data: data.privateIn,
                 label: 'Private Traffic In'
               },
@@ -577,7 +577,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                   },
                   {
                     legendTitle: 'Private Inbound',
-                    legendColor: 'red',
+                    legendColor: 'purple',
                     data: getMetrics(data.privateIn),
                     format
                   },
