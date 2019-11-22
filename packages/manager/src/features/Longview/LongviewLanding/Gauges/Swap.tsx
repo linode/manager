@@ -1,5 +1,6 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
+import { WithTheme, withTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
 import withClientData, {
@@ -8,7 +9,9 @@ import withClientData, {
 import { readableBytes } from 'src/utilities/unitConversions';
 import { baseGaugeProps, BaseProps as Props } from './common';
 
-const SwapGauge: React.FC<Props & LVDataProps> = props => {
+type CombinedProps = Props & WithTheme & LVDataProps;
+
+const SwapGauge: React.FC<CombinedProps> = props => {
   const {
     longviewClientDataError: error,
     longviewClientDataLoading: loading,
@@ -92,10 +95,12 @@ const SwapGauge: React.FC<Props & LVDataProps> = props => {
       {...baseGaugeProps}
       max={totalMemory}
       value={usedMemory}
-      filledInColor="#DC4138"
+      filledInColor={props.theme.graphs.red}
       {...generateText()}
     />
   );
 };
 
-export default withClientData<Props>(ownProps => ownProps.clientID)(SwapGauge);
+export default withClientData<Props>(ownProps => ownProps.clientID)(
+  withTheme(SwapGauge)
+);
