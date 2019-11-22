@@ -45,6 +45,7 @@ const chartOptions: any = {
           zeroLineWidth: 1,
           zeroLineBorderDashOffset: 2
         },
+        stacked: true,
         ticks: {
           beginAtZero: true,
           callback(value: number, index: number) {
