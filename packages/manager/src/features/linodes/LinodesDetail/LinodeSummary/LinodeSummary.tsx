@@ -17,13 +17,16 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
+  WithTheme,
+  withTheme
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
+import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { displayType } from 'src/features/linodes/presentation';
@@ -44,7 +47,6 @@ import {
   getTotalTraffic
 } from 'src/utilities/statMetrics';
 import ActivitySummary from './ActivitySummary';
-import MetricsDisplay from './MetricsDisplay';
 import StatsPanel from './StatsPanel';
 import SummaryPanel from './SummaryPanel';
 import TotalTraffic, { TotalTrafficProps } from './TotalTraffic';
@@ -56,9 +58,7 @@ type ClassNames =
   | 'sidebar'
   | 'headerWrapper'
   | 'chart'
-  | 'ioChart'
   | 'chartSelect'
-  | 'leftLegend'
   | 'bottomLegend'
   | 'graphTitle'
   | 'graphSelectTitle'
@@ -86,17 +86,7 @@ const styles = (theme: Theme) =>
     },
     chart: {
       position: 'relative',
-      paddingLeft: 32
-    },
-    ioChart: {
-      paddingLeft: 54
-    },
-    leftLegend: {
-      position: 'absolute',
-      left: 0,
-      bottom: 23,
-      color: '#777',
-      fontSize: 14
+      paddingLeft: theme.spacing(1)
     },
     bottomLegend: {
       margin: `${theme.spacing(2)}px ${theme.spacing(1)}px ${theme.spacing(
@@ -165,6 +155,7 @@ interface State {
 }
 
 type CombinedProps = LinodeContextProps &
+  WithTheme &
   WithTypesProps &
   WithImages &
   WithStyles<ClassNames>;
@@ -334,7 +325,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
   renderCPUChart = () => {
     const { rangeSelection, stats } = this.state;
-    const { classes, timezone } = this.props;
+    const { classes, timezone, theme } = this.props;
     const data = pathOr([], ['data', 'cpu'], stats);
 
     const metrics = getMetrics(data);
@@ -343,15 +334,14 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <div className={classes.chart}>
-          <div className={classes.leftLegend}>CPU %</div>
           <LineGraph
             timezone={timezone}
             chartHeight={chartHeight}
             showToday={rangeSelection === '24'}
             data={[
               {
-                borderColor: 'rgba(54, 131, 220, 1)',
-                backgroundColor: 'rgba(54, 131, 220, .5)',
+                borderColor: theme.graphs.blueBorder,
+                backgroundColor: theme.graphs.blue,
                 data,
                 label: 'CPU %'
               }
@@ -379,7 +369,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   };
 
   renderIPv4TrafficChart = () => {
-    const { classes, timezone } = this.props;
+    const { classes, timezone, theme } = this.props;
     const { rangeSelection, stats } = this.state;
 
     const v4Data = {
@@ -420,33 +410,32 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <div className={classes.chart}>
-          <div className={classes.leftLegend}>bits/s</div>
           <LineGraph
             timezone={timezone}
             chartHeight={chartHeight}
             showToday={rangeSelection === '24'}
             data={[
               {
-                borderColor: 'rgba(54, 131, 220, 1)',
-                backgroundColor: 'rgba(54, 131, 220, .5)',
+                borderColor: theme.graphs.blueBorder,
+                backgroundColor: theme.graphs.blue,
                 data: v4Data.publicIn,
                 label: 'Public Traffic In'
               },
               {
-                borderColor: 'rgba(1, 177, 89, 1)',
-                backgroundColor: 'rgba(1, 177, 89, .5)',
+                borderColor: theme.graphs.greenBorder,
+                backgroundColor: theme.graphs.green,
                 data: v4Data.publicOut,
                 label: 'Public Traffic Out'
               },
               {
-                borderColor: 'rgba(204, 1, 153, 1)',
-                backgroundColor: 'rgba(204, 1, 153, .5)',
+                borderColor: theme.graphs.purpleBorder,
+                backgroundColor: theme.graphs.purple,
                 data: v4Data.privateIn,
                 label: 'Private Traffic In'
               },
               {
-                borderColor: 'rgba(255, 209, 0, 1)',
-                backgroundColor: 'rgba(255, 209, 0, .5)',
+                borderColor: theme.graphs.yellowBorder,
+                backgroundColor: theme.graphs.yellow,
                 data: v4Data.privateOut,
                 label: 'Private Traffic Out'
               }
@@ -501,7 +490,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   };
 
   renderIPv6TrafficChart = () => {
-    const { classes, timezone } = this.props;
+    const { classes, timezone, theme } = this.props;
     const { rangeSelection, stats } = this.state;
 
     const data = {
@@ -528,33 +517,35 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <div className={classes.chart}>
-          <div className={classes.leftLegend}>bits/s</div>
           <LineGraph
             timezone={timezone}
             chartHeight={chartHeight}
             showToday={rangeSelection === '24'}
             data={[
               {
-                borderColor: 'rgba(54, 131, 220, 1)',
-                backgroundColor: 'rgba(54, 131, 220, .5)',
+                borderColor: theme.graphs.blueBorder,
+                backgroundColor: theme.graphs.blue,
                 data: data.publicIn,
-                label: 'Public Traffic In'
+                label: 'Public Traffic In',
+                fill: 'origin'
               },
               {
-                borderColor: 'rgba(1, 177, 89, 1)',
-                backgroundColor: 'rgba(1, 177, 89, .5)',
+                borderColor: theme.graphs.greenBorder,
+                backgroundColor: theme.graphs.green,
                 data: data.publicOut,
-                label: 'Public Traffic Out'
+                label: 'Public Traffic Out',
+                fill: '-1'
               },
               {
-                borderColor: 'rgba(204, 1, 153, 1)',
-                backgroundColor: 'rgba(204, 1, 153, .5)',
+                borderColor: theme.graphs.purpleBorder,
+                backgroundColor: theme.graphs.purple,
                 data: data.privateIn,
-                label: 'Private Traffic In'
+                label: 'Private Traffic In',
+                fill: '-2'
               },
               {
-                borderColor: 'rgba(255, 209, 0, 1)',
-                backgroundColor: 'rgba(255, 209, 0, .5)',
+                borderColor: theme.graphs.yellowBorder,
+                backgroundColor: theme.graphs.yellow,
                 data: data.privateOut,
                 label: 'Private Traffic Out'
               }
@@ -609,7 +600,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   };
 
   renderDiskIOChart = () => {
-    const { classes, timezone } = this.props;
+    const { classes, timezone, theme } = this.props;
     const { rangeSelection, stats } = this.state;
 
     const data = {
@@ -621,22 +612,21 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <div className={`${classes.chart} ${classes.ioChart}`}>
-          <div className={classes.leftLegend}>blocks/s</div>
+        <div className={`${classes.chart}`}>
           <LineGraph
             timezone={timezone}
             chartHeight={chartHeight}
             showToday={rangeSelection === '24'}
             data={[
               {
-                borderColor: 'rgba(255, 209, 0, 1)',
-                backgroundColor: 'rgba(255, 209, 0, .5)',
+                borderColor: theme.graphs.yellowBorder,
+                backgroundColor: theme.graphs.yellow,
                 data: data.io,
                 label: 'Disk I/O'
               },
               {
-                borderColor: 'rgba(204, 1, 153, 1)',
-                backgroundColor: 'rgba(204, 1, 153, .5)',
+                borderColor: theme.graphs.redBorder,
+                backgroundColor: theme.graphs.red,
                 data: data.swap,
                 label: 'Swap I/O'
               }
@@ -656,7 +646,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                   },
                   {
                     legendTitle: 'Swap Rate',
-                    legendColor: 'purple',
+                    legendColor: 'red',
                     data: getMetrics(data.swap),
                     format
                   }
@@ -771,25 +761,25 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             </Grid>
 
             <StatsPanel
-              title="CPU Usage"
+              title="CPU Usage (%)"
               renderBody={this.renderCPUChart}
               {...chartProps}
             />
 
             <StatsPanel
-              title="IPv4 Traffic"
+              title="IPv4 Traffic (bits/s)"
               renderBody={this.renderIPv4TrafficChart}
               {...chartProps}
             />
 
             <StatsPanel
-              title="IPv6 Traffic"
+              title="IPv6 Traffic (bits/s)"
               renderBody={this.renderIPv6TrafficChart}
               {...chartProps}
             />
 
             <StatsPanel
-              title="Disk IO"
+              title="Disk IO (blocks/s)"
               renderBody={this.renderDiskIOChart}
               {...chartProps}
             />
@@ -834,6 +824,7 @@ const enhanced = compose<CombinedProps, {}>(
   withTypes,
   linodeContext,
   withImages(),
+  withTheme,
   styled
 );
 
