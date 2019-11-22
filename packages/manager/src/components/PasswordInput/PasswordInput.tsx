@@ -9,7 +9,6 @@ import {
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { Props as TextFieldProps } from 'src/components/TextField';
-import StrengthIndicator from '../PasswordInput/StrengthIndicator';
 import HideShowText from './HideShowText';
 
 type Props = TextFieldProps & {
@@ -22,29 +21,43 @@ type Props = TextFieldProps & {
 };
 
 interface State {
-  strength: null | 0 | 1 | 2 | 3;
+  strength: boolean;
+  lengthRequirement: boolean;
 }
 
-type ClassNames = 'container' | 'strengthIndicator' | 'infoText';
+type ClassNames =
+  | 'container'
+  | 'passWrapper'
+  | 'infoText'
+  | 'valid'
+  | 'invalid';
 
 const styles = (theme: Theme) =>
   createStyles({
     container: {
       position: 'relative',
-      marginBottom: theme.spacing(1),
       paddingBottom: theme.spacing(1) / 2
     },
-    strengthIndicator: {
-      position: 'relative',
-      top: -5,
-      width: '100%',
-      [theme.breakpoints.down('xs')]: {
-        maxWidth: '100%'
+    passWrapper: {
+      minWidth: '100%',
+      [theme.breakpoints.up('sm')]: {
+        minWidth: `calc(415px + ${theme.spacing(2)}px)`
       }
     },
     infoText: {
-      fontSize: '0.85rem',
-      marginTop: 12
+      width: '100%',
+      padding: theme.spacing(1),
+      backgroundColor: theme.bg.offWhite,
+      border: `1px solid ${theme.palette.divider}`,
+      [theme.breakpoints.up('sm')]: {
+        width: 415
+      }
+    },
+    valid: {
+      color: theme.color.green
+    },
+    invalid: {
+      color: theme.color.red
     }
   });
 
@@ -52,12 +65,16 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class PasswordInput extends React.Component<CombinedProps, State> {
   state: State = {
-    strength: maybeStrength(this.props.value)
+    strength: false,
+    lengthRequirement: false
   };
 
   componentWillReceiveProps(nextProps: CombinedProps) {
     const { value } = nextProps;
-    this.setState({ strength: maybeStrength(value) });
+    this.setState({
+      strength: maybeStrength(value),
+      lengthRequirement: value && value.length >= 6 ? true : false
+    });
   }
 
   onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,11 +83,15 @@ class PasswordInput extends React.Component<CombinedProps, State> {
     if (this.props.onChange) {
       this.props.onChange(e);
     }
-    this.setState({ strength: maybeStrength(value) });
+
+    this.setState({
+      strength: maybeStrength(value),
+      lengthRequirement: value.length >= 6 ? true : false
+    });
   };
 
   render() {
-    const { strength } = this.state;
+    const { strength, lengthRequirement } = this.state;
     const {
       classes,
       value,
@@ -84,8 +105,8 @@ class PasswordInput extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Grid container className={classes.container}>
-          <Grid item xs={12}>
+        <Grid container alignItems="flex-end" className={classes.container}>
+          <Grid item className={classes.passWrapper}>
             <HideShowText
               {...rest}
               tooltipText={disabledReason}
@@ -95,44 +116,42 @@ class PasswordInput extends React.Component<CombinedProps, State> {
               required={required}
             />
           </Grid>
-          {!hideValidation && (
-            <Grid item xs={12} className={`${classes.strengthIndicator} py0`}>
-              <StrengthIndicator
-                strength={strength}
-                hideStrengthLabel={hideStrengthLabel}
-              />
+          {!hideHelperText && (
+            <Grid item>
+              <Typography variant="body1" className={classes.infoText}>
+                Password must be at least{' '}
+                <span
+                  className={
+                    lengthRequirement ? classes.valid : classes.invalid
+                  }
+                >
+                  <strong>6 characters</strong>
+                </span>{' '}
+                and contain at least{' '}
+                <span className={strength ? classes.valid : classes.invalid}>
+                  <strong>two of the following character classes</strong>
+                </span>
+                : uppercase letters, lowercase letters, numbers, and
+                punctuation.
+              </Typography>
             </Grid>
           )}
         </Grid>
-        {!hideHelperText && (
-          <Typography variant="body1" className={classes.infoText}>
-            Password must be at least 6 characters and contain at least two of
-            the following character classes: uppercase letters, lowercase
-            letters, numbers, and punctuation.
-          </Typography>
-        )}
       </React.Fragment>
     );
   }
 }
 
 const maybeStrength = (value?: string) => {
-
-  const strongRegex = /^(?=.{2,}[a-z])(?=.{2,}[A-Z])(?=.{2,}[0-9])(?=.{2,}[!"#$%&'()*+,-.\/:;<=>?@\[\]^_`{|}~\\])(?=.{10,})/;
-  const mediumRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!"#$%&'()*+,-.\/:;<=>?@\[\]^_`{|}~\\])(?=.{8,})/;
-  const weekRegex = /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})/;
+  const weekRegex = /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[!@#$%^&*(),.?":{}|<>]))|((?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]))|((?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>])))/;
 
   if (!value || isEmpty(value)) {
-    return null;
+    return false;
   } else {
-    if(strongRegex.test(value)){
-      return 3;
-    }else if(mediumRegex.test(value)){
-      return 2;
-    }else if(weekRegex.test(value)){
-      return 1;
-    }else{
-      return 0;
+    if (weekRegex.test(value)) {
+      return true;
+    } else {
+      return false;
     }
   }
 };
