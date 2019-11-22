@@ -18,11 +18,13 @@ describe('Top Processes', () => {
       const { getByText } = render(wrapWithTheme(<TopProcesses {...props} />));
       getByText('Top Processes');
     });
+
     it('renders a View Details link', () => {
       const { getByText } = render(wrapWithTheme(<TopProcesses {...props} />));
       getByText('View Details');
     });
-    it('renders rows for each processes', () => {
+
+    it('renders rows for each process', () => {
       const data = longviewTopProcessesFactory.build();
       // The component renders a maximum of 6 rows. Assert our test data has
       // fewer than seven processes so the test is valid.
@@ -35,6 +37,7 @@ describe('Top Processes', () => {
         getByText(processName);
       });
     });
+
     it('renders loading state', () => {
       const { getAllByTestId } = render(
         wrapWithTheme(
@@ -46,6 +49,7 @@ describe('Top Processes', () => {
       );
       getAllByTestId('skeletonCol');
     });
+
     it('renders error state', () => {
       const { getByText } = render(
         wrapWithTheme(
@@ -57,16 +61,20 @@ describe('Top Processes', () => {
   });
 
   describe('extendTopProcesses utility', () => {
-    const data = longviewTopProcessesFactory.build();
-    const normalizedData = extendTopProcesses(data);
+    const extendedData = longviewTopProcessesFactory.build();
+    const normalizedData = extendTopProcesses(extendedData);
     it('returns an element for each process', () => {
-      expect(normalizedData.length).toBe(Object.keys(data.Processes).length);
+      expect(normalizedData.length).toBe(
+        Object.keys(extendedData.Processes).length
+      );
     });
+
     it('returns each process name', () => {
-      Object.keys(data.Processes).forEach(processName => {
+      Object.keys(extendedData.Processes).forEach(processName => {
         expect(normalizedData.find(p => p.name === processName)).toBeDefined();
       });
     });
+
     it('returns an empty array when Processes is undefined', () => {
       expect(extendTopProcesses({} as LongviewTopProcesses)).toEqual([]);
     });

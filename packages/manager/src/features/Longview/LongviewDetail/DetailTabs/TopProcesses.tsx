@@ -146,15 +146,13 @@ const renderLoadingErrorData = (
   );
 };
 
-export default TopProcesses;
-
 interface TopProcessRowProps {
   name: string;
   cpu: number;
   mem: number;
 }
 
-export const TopProcessRow: React.FC<TopProcessRowProps> = props => {
+export const TopProcessRow: React.FC<TopProcessRowProps> = React.memo(props => {
   const { name, cpu, mem } = props;
 
   // Memory is given from the API in KB.
@@ -173,12 +171,17 @@ export const TopProcessRow: React.FC<TopProcessRowProps> = props => {
       </TableCell>
     </TableRow>
   );
-};
+});
+
+export default React.memo(TopProcesses);
 
 interface ExtendedTopProcessStat extends TopProcessStat {
   name: string;
 }
 
+// TopProcesses are key/value pairs, where the key is the name of the processes.
+// This utility function returns an array of processes, with the name of the
+// processes as an attribute called `name` on each element.
 export const extendTopProcesses = (
   topProcesses: LongviewTopProcesses
 ): ExtendedTopProcessStat[] => {
