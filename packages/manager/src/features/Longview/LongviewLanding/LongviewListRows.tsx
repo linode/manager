@@ -28,7 +28,6 @@ const LongviewListRows: React.FC<CombinedProps> = props => {
             clientLabel={eachClient.label}
             clientAPIKey={eachClient.api_key}
             triggerDeleteLongviewClient={triggerDeleteLongviewClient}
-            longviewClientLastUpdated={Number(eachClient.updated)}
           />
         );
       })}
