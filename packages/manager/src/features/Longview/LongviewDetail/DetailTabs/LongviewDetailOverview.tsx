@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
@@ -13,6 +14,8 @@ import { Props as LVDataProps } from 'src/containers/longview.stats.container';
 import ActiveConnections from './ActiveConnections';
 import IconSection from './IconSection';
 import ListeningServices from './ListeningServices';
+
+import { LongviewTopProcesses } from 'src/features/Longview/request.types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paperSection: {
@@ -30,12 +33,22 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   client: string;
   longviewClientData: LVDataProps['longviewClientData'];
+  topProcessesData: LongviewTopProcesses;
+  topProcessesLoading: boolean;
+  topProcessesError?: APIError[];
+  lastUpdatedError?: APIError[];
 }
 
-type CombinedProps = RouteComponentProps<{ id: string }> & Props;
+export type CombinedProps = RouteComponentProps<{ id: string }> & Props;
 
-const LongviewDetailOverview: React.FC<CombinedProps> = props => {
+export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const {
+    topProcessesData,
+    topProcessesLoading,
+    topProcessesError,
+    lastUpdatedError
+  } = props;
 
   const url = pathOr('', ['match', 'url'], props);
 
@@ -64,6 +77,14 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
                     View Details
                   </Link>
                 </Box>
+                {/* @todo: Replace with real component. */}
+                {topProcessesLoading && <div>Loading...</div>}
+                {(lastUpdatedError || topProcessesError) && <div>Error!</div>}
+                {Object.keys(topProcessesData.Processes).length > 0 && (
+                  <pre>
+                    {JSON.stringify(props.topProcessesData.Processes, null, 2)}
+                  </pre>
+                )}
               </Grid>
             </Grid>
           </Paper>

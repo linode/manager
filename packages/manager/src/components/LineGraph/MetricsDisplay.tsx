@@ -1,10 +1,4 @@
 import * as React from 'react';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
@@ -12,121 +6,20 @@ import Typography from 'src/components/core/Typography';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import { Metrics } from 'src/utilities/statMetrics';
-
-type ClassNames =
-  | 'root'
-  | 'legend'
-  | 'purple'
-  | 'yellow'
-  | 'blue'
-  | 'green'
-  | 'text'
-  | 'tableHeadInner';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      maxWidth: 600,
-      '& *': {
-        height: 'auto',
-        border: 'none',
-        backgroundColor: 'transparent'
-      },
-      '& td:first-child': {
-        backgroundColor: 'transparent !important'
-      },
-      '& .data': {
-        minWidth: 100
-      },
-      [theme.breakpoints.down('lg')]: {
-        '& th, & td': {
-          padding: '4px !important'
-        }
-      },
-      [theme.breakpoints.down('sm')]: {
-        maxWidth: '100%',
-        '& td': {
-          justifyContent: 'normal',
-          minHeight: 'auto'
-        }
-      },
-      [theme.breakpoints.only('xs')]: {
-        '& tr:not(:first-child) td': {
-          '&:first-child': {
-            marginTop: theme.spacing(2)
-          }
-        }
-      },
-      [theme.breakpoints.only('sm')]: {
-        '& tr:not(:nth-last-child(n+3)) td:first-child': {
-          marginTop: theme.spacing(2)
-        },
-        '& tbody': {
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'space-between'
-        },
-        '& tr': {
-          flexBasis: '45%'
-        }
-      }
-    },
-    tableHeadInner: {
-      paddingBottom: 4
-    },
-    purple: {
-      '&:before': {
-        backgroundColor: theme.color.graphPurple
-      }
-    },
-    yellow: {
-      '&:before': {
-        backgroundColor: theme.color.graphYellow
-      }
-    },
-    blue: {
-      '&:before': {
-        backgroundColor: theme.color.graphBlue
-      }
-    },
-    green: {
-      '&:before': {
-        backgroundColor: theme.color.graphGreen
-      }
-    },
-    legend: {
-      [theme.breakpoints.up('md')]: {
-        width: '38%'
-      },
-      '& > div': {
-        display: 'flex',
-        alignItems: 'center',
-        '&:before': {
-          content: '""',
-          display: 'inline-block',
-          width: 20,
-          height: 20,
-          marginRight: theme.spacing(1)
-        }
-      }
-    },
-    text: {
-      color: theme.color.black
-    }
-  });
+import styled, { StyleProps } from './MetricDisplay.styles';
 
 interface MetricsDisplayProps {
   rows: MetricsDisplayRow[];
 }
 
 interface MetricsDisplayRow {
-  legendColor: 'yellow' | 'purple' | 'blue' | 'green';
+  legendColor: 'yellow' | 'red' | 'blue' | 'green' | 'purple';
   legendTitle: string;
   format: (n: number) => string;
   data: Metrics;
 }
 
-type CombinedProps = MetricsDisplayProps & WithStyles<ClassNames>;
+type CombinedProps = MetricsDisplayProps & StyleProps;
 
 export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
   const rowHeaders = ['Max', 'Avg', 'Last'];
@@ -157,7 +50,7 @@ export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
               <TableRow key={legendTitle} data-qa-metric-row>
                 <TableCell className={classes.legend}>
                   <div className={classes[legendColor]} data-qa-legend-title>
-                    <span>{legendTitle}</span>
+                    <Typography component="span">{legendTitle}</Typography>
                   </div>
                 </TableCell>
                 {metricsBySection(data).map((section, idx) => {
@@ -189,7 +82,5 @@ export const metricsBySection = (data: Metrics): number[] => [
   data.average,
   data.last
 ];
-
-const styled = withStyles(styles);
 
 export default styled(MetricsDisplay);

@@ -8,7 +8,6 @@ import {
   Switch
 } from 'react-router-dom';
 import { compose } from 'recompose';
-
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import AppBar from 'src/components/core/AppBar';
@@ -21,11 +20,16 @@ import DocumentationButton from 'src/components/DocumentationButton';
 import ErrorState from 'src/components/ErrorState';
 import NotFound from 'src/components/NotFound';
 import TabLink from 'src/components/TabLink';
-
 import withLongviewClients, {
   DispatchProps,
   Props as LVProps
 } from 'src/containers/longview.container';
+import { get } from 'src/features/Longview/request';
+import { LongviewTopProcesses } from 'src/features/Longview/request.types';
+import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import { useClientLastUpdated } from '../shared/useClientLastUpdated';
+
+const topProcessesEmptyDataSet: LongviewTopProcesses = { Processes: {} };
 
 import withClientStats, {
   Props as LVDataProps
@@ -50,12 +54,12 @@ const Installation = DefaultLoader({
   loader: () => import('./DetailTabs/Installation')
 });
 
-type CombinedProps = RouteComponentProps<{ id: string }> &
+export type CombinedProps = RouteComponentProps<{ id: string }> &
   Props &
   LVDataProps &
   DispatchProps;
 
-const LongviewDetail: React.FC<CombinedProps> = props => {
+export const LongviewDetail: React.FC<CombinedProps> = props => {
   const {
     client,
     longviewClientsLastUpdated,
@@ -63,6 +67,32 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
     longviewClientsError,
     longviewClientData
   } = props;
+
+  React.useEffect(() => {
+    /** request clients if they haven't already been requested */
+    if (longviewClientsLastUpdated === 0) {
+      props.getLongviewClients();
+    }
+
+    if (client) {
+      props.getClientStats(client.api_key);
+    }
+  }, [client]);
+  const clientAPIKey = client && client.api_key;
+
+  const { lastUpdated, lastUpdatedError } = useClientLastUpdated(clientAPIKey);
+
+  const topProcesses = useAPIRequest<LongviewTopProcesses>(
+    // We can only make this request if we have a clientAPIKey, so we use `null`
+    // if we don't (which will happen the first time this component mounts). We
+    // also check for `lastUpdated`, otherwise we'd make an extraneous request
+    // when it is retrieved.
+    clientAPIKey && lastUpdated
+      ? () => get(clientAPIKey, 'getTopProcesses')
+      : null,
+    topProcessesEmptyDataSet,
+    [clientAPIKey, lastUpdated]
+  );
 
   const tabOptions = [
     {
@@ -122,17 +152,6 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
-
-  React.useEffect(() => {
-    /** request clients if they haven't already been requested */
-    if (longviewClientsLastUpdated === 0) {
-      props.getLongviewClients();
-    }
-
-    if (client) {
-      props.getClientStats(client.api_key);
-    }
-  }, [client]);
 
   if (longviewClientsLoading && longviewClientsLastUpdated === 0) {
     return (
@@ -254,6 +273,10 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
               client={client.label}
               longviewClientData={longviewClientData}
               {...routerProps}
+              topProcessesData={topProcesses.data}
+              topProcessesLoading={topProcesses.loading}
+              topProcessesError={topProcesses.error}
+              lastUpdatedError={lastUpdatedError}
             />
           )}
         />
@@ -274,12 +297,18 @@ export default compose<CombinedProps, {}>(
         longviewClientsLoading,
         longviewClientsError
       }
-    ) => ({
-      client:
-        longviewClientsData[pathOr<string>('', ['match', 'params', 'id'], own)],
-      longviewClientsLastUpdated,
-      longviewClientsLoading,
-      longviewClientsError
-    })
+    ) => {
+      // This is explicitly typed, otherwise `client` would be typed as
+      // `LongviewClient`, even though there's a chance it could be undefined.
+      const client: LongviewClient | undefined =
+        longviewClientsData[pathOr<string>('', ['match', 'params', 'id'], own)];
+
+      return {
+        client,
+        longviewClientsLastUpdated,
+        longviewClientsLoading,
+        longviewClientsError
+      };
+    }
   )
 )(LongviewDetail);

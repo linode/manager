@@ -53,7 +53,7 @@ export interface UseAPIRequest<T> {
  * (so the request will happen ONCE, after the component first renders).
  */
 export const useAPIRequest = <T>(
-  request: () => Promise<T>,
+  request: (() => Promise<T>) | null,
   initialData: T,
   deps: any[] = []
 ): UseAPIRequest<T> => {
@@ -65,6 +65,10 @@ export const useAPIRequest = <T>(
   let mounted = true;
 
   const _request = () => {
+    if (!request) {
+      return;
+    }
+
     setLoading(true);
     setError(undefined);
     request()
