@@ -1,5 +1,6 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
+import { WithTheme, withTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
 import { baseGaugeProps, BaseProps as Props } from './common';
@@ -10,7 +11,9 @@ import withClientData, {
   Props as LVDataProps
 } from 'src/containers/longview.stats.container';
 
-const RAMGauge: React.FC<Props & LVDataProps> = props => {
+type commbinedProps = Props & WithTheme & LVDataProps;
+
+const RAMGauge: React.FC<commbinedProps> = props => {
   const {
     longviewClientDataError: error,
     longviewClientDataLoading: loading,
@@ -106,7 +109,7 @@ const RAMGauge: React.FC<Props & LVDataProps> = props => {
       {...baseGaugeProps}
       max={totalMemory}
       value={finalUsedMemory}
-      filledInColor="#D38ADB"
+      filledInColor={props.theme.graphs.purple}
       {...generateText()}
     />
   );
@@ -126,4 +129,6 @@ export const generateUsedMemory = (
 
 export const generateTotalMemory = (used: number, free: number) => used + free;
 
-export default withClientData<Props>(ownProps => ownProps.clientID)(RAMGauge);
+export default withClientData<Props>(ownProps => ownProps.clientID)(
+  withTheme(RAMGauge)
+);
