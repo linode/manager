@@ -50,7 +50,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'left'
   },
   lastUpdatedOuter: {
-    marginTop: theme.spacing(1)
+    [theme.breakpoints.up('md')]: {
+      marginTop: theme.spacing(1)
+    }
   },
   lastUpdatedText: {
     fontSize: '0.75rem'
@@ -62,7 +64,7 @@ interface Props {
   clientLabel: string;
   lastUpdatedError?: APIError[];
   updateLongviewClient: DispatchProps['updateLongviewClient'];
-  longviewClientLastUpdated: number;
+  longviewClientLastUpdated?: number;
 }
 
 type CombinedProps = Props & DispatchProps & LVDataProps & WithTheme;
@@ -123,13 +125,13 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
   );
   const packagesToUpdate = getPackageNoticeText(packages);
 
-  const utcLastUpdatedTime = new Date(longviewClientLastUpdated).toUTCString();
+  const utcLastUpdatedTime = new Date(longviewClientLastUpdated!).toUTCString();
   const formattedlastUpdatedTime =
-    longviewClientLastUpdated !== null
+    longviewClientLastUpdated !== undefined
       ? `Last updated ${formatDate(utcLastUpdatedTime, {
           humanizeCutoff: 'never'
         })}`
-      : undefined;
+      : 'Latest update time not available';
 
   /**
    * The pathOrs ahead will default to 'not available' values if
