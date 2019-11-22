@@ -1,5 +1,3 @@
-// === TEMPORARY FACTORY ===
-
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import Box from 'src/components/core/Box';
