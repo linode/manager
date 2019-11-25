@@ -1,9 +1,9 @@
 import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
+import ButtonLink from 'src/components/Button/ButtonLink';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EditableEntityLabel from 'src/components/EditableEntityLabel';
@@ -32,15 +32,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   link: {
-    ...pathOr<Object>({}, ['overrides', 'MuiButton', 'root'], theme),
-    ...pathOr<Object>(
-      {},
-      ['overrides', 'MuiButton', 'containedSecondary'],
-      theme
-    ),
-    padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
-    display: 'inline-block',
-    position: 'relative',
+    '& .buttonSpan': {
+      padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`
+    },
     [theme.breakpoints.down('md')]: {
       top: -4
     }
@@ -171,9 +165,12 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
         )}
       </Grid>
       <Grid item>
-        <Link to={`/longview/clients/${clientID}`} className={classes.link}>
-          View details
-        </Link>
+        <ButtonLink
+          link={`/longview/clients/${clientID}`}
+          linkText="View details"
+          className={classes.link}
+          secondary
+        />
         {!loading && (
           <div className={classes.lastUpdatedOuter}>
             <Typography variant="caption" className={classes.lastUpdatedText}>
