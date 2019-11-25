@@ -121,7 +121,7 @@ const renderLoadingErrorData = (
   loading: boolean,
   errorMessage?: string
 ) => {
-  if (errorMessage) {
+  if (errorMessage && data.length === 0) {
     return <TableRowError colSpan={4} message={errorMessage} />;
   }
   if (loading && data.length === 0) {
