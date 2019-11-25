@@ -63,16 +63,13 @@ const LoadGauge: React.FC<CombinedProps> = props => {
     };
   };
 
-  React.useEffect(() => {
-    generateCopy();
-  }, []);
-
   return (
     <GaugePercent
       {...baseGaugeProps}
       max={numberOfCores}
       value={load}
       filledInColor={props.theme.graphs.yellow}
+      {...generateCopy()}
     />
   );
 };

@@ -27,11 +27,11 @@ storiesOf('Button', module)
       <Divider />
       <Button buttonType="remove" data-qa-button="remove" />
       <Divider />
-      <ButtonLink link="javascript:void(0)" linkText="Link as Primary" />
+      <ButtonLink to="javascript:void(0)" linkText="Link as Primary" />
       <Divider />
       <ButtonLink
         secondary
-        link="javascript:void(0)"
+        to="javascript:void(0)"
         linkText="Link as Secondary"
       />
     </React.Fragment>
