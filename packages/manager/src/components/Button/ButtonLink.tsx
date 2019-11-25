@@ -26,6 +26,7 @@ const ButtonLink: React.StatelessComponent<CombinedProps> = props => {
         <Typography
           variant="button"
           color={secondary ? 'secondary' : 'initial'}
+          className="buttonSpan"
         >
           {linkText}
         </Typography>
