@@ -100,7 +100,7 @@ const ProcessesTable: React.FC<CombinedProps> = props => {
                     handleClick={handleOrderChange}
                     style={{ width: '15%' }}
                   >
-                    Protocol
+                    Max Count
                   </TableSortCell>
                   <TableSortCell
                     data-qa-table-header="Avg IO"
@@ -200,28 +200,28 @@ export const ProcessesTableRow: React.FC<ProcessTableRowProps> = React.memo(
     } = props;
     return (
       <TableRow
-        rowLink={() => setSelectedRow(id)}
+        onClick={() => setSelectedRow(id)}
         selected={isSelected}
         data-testid="longview-service-row"
       >
-        <TableCell parentColumn="Process" data-qa-service-process>
+        <TableCell parentColumn="Process" data-qa-process-process>
           {name}
         </TableCell>
-        <TableCell parentColumn="User" data-qa-service-user>
+        <TableCell parentColumn="User" data-qa-process-user>
           {user}
         </TableCell>
-        <TableCell parentColumn="Max Count" data-qa-service-protocol>
+        <TableCell parentColumn="Max Count" data-qa-process-max-count>
           {maxCount}
         </TableCell>
-        <TableCell parentColumn="Avg IO" data-qa-service-port>
+        <TableCell parentColumn="Avg IO" data-qa-process-avg-io>
           {/* @todo: formatting */}
           {averageIO} B/s
         </TableCell>
-        <TableCell parentColumn="Avg CPU" data-qa-service-ip>
+        <TableCell parentColumn="Avg CPU" data-qa-process-avg-cpu>
           {/* @todo: formatting */}
           {averageCPU}%
         </TableCell>
-        <TableCell parentColumn="Avg Mem" data-qa-service-ip>
+        <TableCell parentColumn="Avg Mem" data-qa-process-avg-mem>
           {/* @todo: formatting */}
           {averageMem} MB
         </TableCell>
