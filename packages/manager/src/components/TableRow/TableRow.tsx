@@ -11,7 +11,7 @@ import _TableRow, {
   TableRowProps as _TableRowProps
 } from 'src/components/core/TableRow';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'selected';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -29,6 +29,10 @@ const styles = (theme: Theme) =>
           paddingLeft: 5
         }
       }
+    },
+    selected: {
+      backgroundColor: '#f0f7ff',
+      border: 'solid 1px #93bcec !important'
     }
   });
 
@@ -39,6 +43,7 @@ interface Props {
   className?: string;
   staticContext?: boolean;
   htmlFor?: string;
+  selected?: boolean;
 }
 
 type CombinedProps = Props &
@@ -81,7 +86,14 @@ class TableRow extends React.Component<CombinedProps> {
   };
 
   render() {
-    const { classes, className, rowLink, staticContext, ...rest } = this.props;
+    const {
+      classes,
+      className,
+      rowLink,
+      staticContext,
+      selected,
+      ...rest
+    } = this.props;
 
     let role;
     switch (typeof rowLink) {
@@ -104,7 +116,8 @@ class TableRow extends React.Component<CombinedProps> {
         hover={rowLink !== undefined}
         role={role}
         className={classNames(className, {
-          [classes.root]: true
+          [classes.root]: true,
+          [classes.selected]: selected
         })}
         {...rest}
         tabIndex={rowLink ? 0 : -1}
