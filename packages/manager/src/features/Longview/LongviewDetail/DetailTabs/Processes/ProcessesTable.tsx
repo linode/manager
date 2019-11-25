@@ -69,7 +69,7 @@ const ProcessesTable: React.FC<CombinedProps> = props => {
       <OrderBy data={processesData} orderBy={'name'} order={'desc'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
           <>
-            <Table spacingTop={16}>
+            <Table spacingTop={16} noOverflow>
               <TableHead>
                 <TableRow>
                   <TableSortCell
@@ -201,6 +201,7 @@ export const ProcessesTableRow: React.FC<ProcessTableRowProps> = React.memo(
     return (
       <TableRow
         onClick={() => setSelectedRow(id)}
+        onKeyUp={(e: any) => e.keyCode === 13 && setSelectedRow(id)}
         selected={isSelected}
         data-testid="longview-service-row"
         forceIndex
