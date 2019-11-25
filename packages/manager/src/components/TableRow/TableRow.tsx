@@ -1,6 +1,7 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import {
   createStyles,
   Theme,
@@ -11,7 +12,7 @@ import _TableRow, {
   TableRowProps as _TableRowProps
 } from 'src/components/core/TableRow';
 
-type ClassNames = 'root' | 'selected';
+type ClassNames = 'root' | 'selected' | 'withForcedIndex';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -24,15 +25,40 @@ const styles = (theme: Theme) =>
           width: '0.01%',
           height: '100%',
           backgroundColor: 'transparent',
-          borderBottom: `2px solid ${theme.palette.divider}`,
+          borderTop: `1px solid ${theme.palette.divider}`,
+          borderBottom: `1px solid ${theme.palette.divider}`,
           transition: theme.transitions.create(['background-color']),
           paddingLeft: 5
         }
       }
     },
+    withForcedIndex: {
+      '&:before': {
+        borderLeft: `1px solid transparent`,
+        paddingLeft: 4
+      },
+      '&:hover': {
+        cursor: 'pointer',
+        '& td': {
+          color: theme.palette.primary.light
+        }
+      },
+      '&:focus': {
+        backgroundColor: theme.bg.lightBlue
+      }
+    },
     selected: {
-      backgroundColor: '#f0f7ff',
-      border: 'solid 1px #93bcec !important'
+      '&:before': {
+        transition: 'none',
+        backgroundColor: theme.bg.lightBlue,
+        borderColor: theme.palette.primary.light,
+        borderRight: 0
+      },
+      '& td': {
+        backgroundColor: theme.bg.lightBlue,
+        borderTopColor: theme.palette.primary.light,
+        borderBottomColor: theme.palette.primary.light
+      }
     }
   });
 
@@ -40,10 +66,12 @@ type onClickFn = (e: React.ChangeEvent<HTMLTableRowElement>) => void;
 
 interface Props {
   rowLink?: string | onClickFn;
+  onClick?: onClickFn;
   className?: string;
   staticContext?: boolean;
   htmlFor?: string;
   selected?: boolean;
+  forceIndex?: boolean;
 }
 
 type CombinedProps = Props &
@@ -92,6 +120,7 @@ class TableRow extends React.Component<CombinedProps> {
       rowLink,
       staticContext,
       selected,
+      forceIndex,
       ...rest
     } = this.props;
 
@@ -117,10 +146,11 @@ class TableRow extends React.Component<CombinedProps> {
         role={role}
         className={classNames(className, {
           [classes.root]: true,
-          [classes.selected]: selected
+          [classes.selected]: selected,
+          [classes.withForcedIndex]: forceIndex
         })}
         {...rest}
-        tabIndex={rowLink ? 0 : -1}
+        tabIndex={rowLink || forceIndex ? 0 : -1}
       >
         {this.props.children}
       </_TableRow>
@@ -130,4 +160,9 @@ class TableRow extends React.Component<CombinedProps> {
 
 const styled = withStyles(styles);
 
-export default styled(withRouter(TableRow));
+const enhanced = compose<CombinedProps, Props>(
+  withRouter,
+  styled
+)(TableRow);
+
+export default enhanced;
