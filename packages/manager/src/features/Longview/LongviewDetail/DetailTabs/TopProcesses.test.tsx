@@ -53,7 +53,11 @@ describe('Top Processes', () => {
     it('renders error state', () => {
       const { getByText } = render(
         wrapWithTheme(
-          <TopProcesses {...props} topProcessesError={[{ reason: 'Error' }]} />
+          <TopProcesses
+            {...props}
+            topProcessesData={{ Processes: {} }}
+            topProcessesError={[{ reason: 'Error' }]}
+          />
         )
       );
       getByText('There was an error getting Top Processes.');
