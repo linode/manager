@@ -37,12 +37,12 @@ describe('LongviewDetail', () => {
     });
 
     it('renders loading state when loading', () => {
-      const { getAllByText } = render(
+      const { getByText } = render(
         wrapWithTheme(
           <LongviewDetailOverview {...props} topProcessesLoading={true} />
         )
       );
-      getAllByText('Loading...');
+      getByText('Loading...');
     });
 
     it("renders error state when there's an error", () => {

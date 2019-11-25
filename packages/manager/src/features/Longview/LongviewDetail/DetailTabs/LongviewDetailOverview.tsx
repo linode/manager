@@ -12,15 +12,9 @@ import Grid from 'src/components/Grid';
 import { Props as LVDataProps } from 'src/containers/longview.stats.container';
 
 import ActiveConnections from './ActiveConnections';
+import GaugesSection from './GaugesSection';
 import IconSection from './IconSection';
 import ListeningServices from './ListeningServices';
-
-import CPUGauge from '../../LongviewLanding/Gauges/CPU';
-import LoadGauge from '../../LongviewLanding/Gauges/Load';
-import NetworkGauge from '../../LongviewLanding/Gauges/Network';
-import RAMGauge from '../../LongviewLanding/Gauges/RAM';
-import StorageGauge from '../../LongviewLanding/Gauges/Storage';
-import SwapGauge from '../../LongviewLanding/Gauges/Swap';
 
 import { LongviewTopProcesses } from 'src/features/Longview/request.types';
 
@@ -34,14 +28,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 'bold',
     position: 'relative',
     top: 3
-  },
-  gaugeContainer: {
-    marginBottom: theme.spacing(4)
-  },
-  gaugesOuter: {
-    [theme.breakpoints.up('lg')]: {
-      maxWidth: 450
-    }
   }
 }));
 
@@ -85,52 +71,10 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
                 longviewClientData={props.longviewClientData}
                 client={props.client}
               />
-
-              <Grid
-                container
-                item
-                xs={12}
-                md={4}
-                lg={6}
-                className={classes.gaugesOuter}
-              >
-                <Grid item xs={4} className={classes.gaugeContainer}>
-                  <CPUGauge
-                    clientID={props.clientID}
-                    lastUpdatedError={lastUpdatedError}
-                  />
-                </Grid>
-                <Grid item xs={4} className={classes.gaugeContainer}>
-                  <RAMGauge
-                    clientID={props.clientID}
-                    lastUpdatedError={lastUpdatedError}
-                  />
-                </Grid>
-                <Grid item xs={4} className={classes.gaugeContainer}>
-                  <SwapGauge
-                    clientID={props.clientID}
-                    lastUpdatedError={lastUpdatedError}
-                  />
-                </Grid>
-                <Grid item xs={4} className={classes.gaugeContainer}>
-                  <LoadGauge
-                    clientID={props.clientID}
-                    lastUpdatedError={lastUpdatedError}
-                  />
-                </Grid>
-                <Grid item xs={4} className={classes.gaugeContainer}>
-                  <NetworkGauge
-                    clientID={props.clientID}
-                    lastUpdatedError={lastUpdatedError}
-                  />
-                </Grid>
-                <Grid item xs={4} className={classes.gaugeContainer}>
-                  <StorageGauge
-                    clientID={props.clientID}
-                    lastUpdatedError={lastUpdatedError}
-                  />
-                </Grid>
-              </Grid>
+              <GaugesSection
+                clientID={props.clientID}
+                lastUpdatedError={props.lastUpdatedError}
+              />
               <Grid item xs={12} md={4} lg={3}>
                 <Box
                   display="flex"
