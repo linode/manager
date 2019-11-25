@@ -24,6 +24,7 @@ import { State as StatsState } from 'src/store/longviewStats/longviewStats.reduc
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getFinalUsedCPU } from './Gauges/CPU';
+import { generateUsedNetworkAsBytes } from './Gauges/Network';
 import { getUsedStorage } from './Gauges/Storage';
 import DeleteDialog from './LongviewDeleteDialog';
 import LongviewList from './LongviewList';
@@ -383,6 +384,16 @@ export const sortClientsBy = (
           clientData[b.id].data
         );
         return sortFunc(aLoad, bLoad);
+      });
+    case 'network':
+      return clients.sort((a, b) => {
+        const aNet = generateUsedNetworkAsBytes(
+          pathOr(0, [a.id, 'data', 'Network', 'Interface'], clientData)
+        );
+        const bNet = generateUsedNetworkAsBytes(
+          pathOr(0, [b.id, 'data', 'Network', 'Interface'], clientData)
+        );
+        return sortFunc(aNet, bNet);
       });
     case 'storage':
       return clients.sort((a, b) => {
