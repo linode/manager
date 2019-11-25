@@ -15,6 +15,13 @@ import ActiveConnections from './ActiveConnections';
 import IconSection from './IconSection';
 import ListeningServices from './ListeningServices';
 
+import CPUGauge from '../../LongviewLanding/Gauges/CPU';
+import LoadGauge from '../../LongviewLanding/Gauges/Load';
+import NetworkGauge from '../../LongviewLanding/Gauges/Network';
+import RAMGauge from '../../LongviewLanding/Gauges/RAM';
+import StorageGauge from '../../LongviewLanding/Gauges/Storage';
+import SwapGauge from '../../LongviewLanding/Gauges/Swap';
+
 import { LongviewTopProcesses } from 'src/features/Longview/request.types';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -27,11 +34,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 'bold',
     position: 'relative',
     top: 3
+  },
+  gaugeContainer: {
+    marginBottom: theme.spacing(4)
+  },
+  gaugesOuter: {
+    [theme.breakpoints.up('lg')]: {
+      maxWidth: 450
+    }
   }
 }));
 
 interface Props {
   client: string;
+  clientID: number;
   longviewClientData: LVDataProps['longviewClientData'];
   topProcessesData: LongviewTopProcesses;
   topProcessesLoading: boolean;
@@ -57,14 +73,63 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
       <Grid container>
         <Grid item xs={12}>
           <Paper className={classes.paperSection}>
-            <Grid container justify="space-between" item xs={12} spacing={0}>
+            <Grid
+              container
+              justify="space-between"
+              alignItems="flex-start"
+              item
+              xs={12}
+              spacing={0}
+            >
               <IconSection
                 longviewClientData={props.longviewClientData}
                 client={props.client}
               />
 
-              <Grid item xs={12} md={4} lg={6}>
-                Gauges
+              <Grid
+                container
+                item
+                xs={12}
+                md={4}
+                lg={6}
+                className={classes.gaugesOuter}
+              >
+                <Grid item xs={4} className={classes.gaugeContainer}>
+                  <CPUGauge
+                    clientID={props.clientID}
+                    lastUpdatedError={lastUpdatedError}
+                  />
+                </Grid>
+                <Grid item xs={4} className={classes.gaugeContainer}>
+                  <RAMGauge
+                    clientID={props.clientID}
+                    lastUpdatedError={lastUpdatedError}
+                  />
+                </Grid>
+                <Grid item xs={4} className={classes.gaugeContainer}>
+                  <SwapGauge
+                    clientID={props.clientID}
+                    lastUpdatedError={lastUpdatedError}
+                  />
+                </Grid>
+                <Grid item xs={4} className={classes.gaugeContainer}>
+                  <LoadGauge
+                    clientID={props.clientID}
+                    lastUpdatedError={lastUpdatedError}
+                  />
+                </Grid>
+                <Grid item xs={4} className={classes.gaugeContainer}>
+                  <NetworkGauge
+                    clientID={props.clientID}
+                    lastUpdatedError={lastUpdatedError}
+                  />
+                </Grid>
+                <Grid item xs={4} className={classes.gaugeContainer}>
+                  <StorageGauge
+                    clientID={props.clientID}
+                    lastUpdatedError={lastUpdatedError}
+                  />
+                </Grid>
               </Grid>
               <Grid item xs={12} md={4} lg={3}>
                 <Box

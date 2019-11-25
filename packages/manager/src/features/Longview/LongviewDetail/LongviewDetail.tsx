@@ -58,11 +58,13 @@ const Installation = DefaultLoader({
 export type CombinedProps = RouteComponentProps<{ id: string }> &
   Props &
   LVDataProps &
-  DispatchProps;
+  DispatchProps &
+  DataProps;
 
 export const LongviewDetail: React.FC<CombinedProps> = props => {
   const {
     client,
+    clientID,
     longviewClientsLastUpdated,
     longviewClientsLoading,
     longviewClientsError,
@@ -272,6 +274,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           render={routerProps => (
             <Overview
               client={client.label}
+              clientID={clientID}
               longviewClientData={longviewClientData}
               {...routerProps}
               topProcessesData={topProcesses.data}
