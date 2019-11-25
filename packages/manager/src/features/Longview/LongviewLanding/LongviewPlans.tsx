@@ -94,19 +94,29 @@ const useStyles = makeStyles((theme: Theme) => {
       marginLeft: theme.spacing(2)
     },
     planCell: {
-      width: '40%'
+      [theme.breakpoints.up('md')]: {
+        width: '40%'
+      }
     },
     clientCell: {
-      width: '10%'
+      [theme.breakpoints.up('md')]: {
+        width: '10%'
+      }
     },
     dataRetentionCell: {
-      width: '15%'
+      [theme.breakpoints.up('md')]: {
+        width: '15%'
+      }
     },
     dataResolutionCell: {
-      width: '15%'
+      [theme.breakpoints.up('md')]: {
+        width: '15%'
+      }
     },
     priceCell: {
-      width: '15%'
+      [theme.breakpoints.up('md')]: {
+        width: '15%'
+      }
     },
     submitButton: {
       alignSelf: 'flex-start',
