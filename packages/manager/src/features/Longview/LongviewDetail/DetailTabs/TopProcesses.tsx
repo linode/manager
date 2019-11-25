@@ -66,7 +66,7 @@ export const TopProcesses: React.FC<Props> = props => {
       >
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
           <>
-            <Table spacingTop={16}>
+            <Table spacingTop={16} aria-label="List of Top Processes">
               <TableHead>
                 <TableRow>
                   <TableSortCell
