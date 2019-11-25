@@ -335,6 +335,22 @@ export default compose<CombinedProps, Props & RouteComponentProps>(
   withSnackbar
 )(LongviewClients);
 
+export const sortFunc = (
+  a: string | number,
+  b: string | number,
+  order: 'asc' | 'desc' = 'desc'
+) => {
+  let result: number;
+  if (a > b) {
+    result = -1;
+  } else if (a < b) {
+    result = 1;
+  } else {
+    result = 0;
+  }
+  return order === 'desc' ? result : -result;
+};
+
 export const sortClientsBy = (
   sortKey: SortKey,
   clients: LongviewClient[],
@@ -343,26 +359,14 @@ export const sortClientsBy = (
   switch (sortKey) {
     case 'name':
       return clients.sort((a, b) => {
-        if (a.label > b.label) {
-          return 1;
-        }
-        if (a.label < b.label) {
-          return -1;
-        }
-        return 0;
+        return sortFunc(a.label, b.label, 'asc');
       });
     case 'cpu':
       return clients.sort((a, b) => {
         const aCPU = getFinalUsedCPU(clientData[a.id].data);
         const bCPU = getFinalUsedCPU(clientData[b.id].data);
 
-        if (aCPU > bCPU) {
-          return -1;
-        }
-        if (aCPU < bCPU) {
-          return 1;
-        }
-        return 0;
+        return sortFunc(aCPU, bCPU);
       });
     case 'ram':
       return clients;
@@ -378,25 +382,13 @@ export const sortClientsBy = (
           ['Load', 0, 'y'],
           clientData[b.id].data
         );
-        if (aLoad > bLoad) {
-          return -1;
-        }
-        if (aLoad < bLoad) {
-          return 1;
-        }
-        return 0;
+        return sortFunc(aLoad, bLoad);
       });
     case 'storage':
       return clients.sort((a, b) => {
         const aStorage = getUsedStorage(clientData[a.id].data);
         const bStorage = getUsedStorage(clientData[b.id].data);
-        if (aStorage > bStorage) {
-          return -1;
-        }
-        if (aStorage < bStorage) {
-          return 1;
-        }
-        return 0;
+        return sortFunc(aStorage, bStorage);
       });
     default:
       return clients;
