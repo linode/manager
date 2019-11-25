@@ -364,8 +364,8 @@ export const sortClientsBy = (
       });
     case 'cpu':
       return clients.sort((a, b) => {
-        const aCPU = getFinalUsedCPU(clientData[a.id].data);
-        const bCPU = getFinalUsedCPU(clientData[b.id].data);
+        const aCPU = getFinalUsedCPU(pathOr(0, [a.id, 'data'], clientData));
+        const bCPU = getFinalUsedCPU(pathOr(0, [b.id, 'data'], clientData));
 
         return sortFunc(aCPU, bCPU);
       });
@@ -375,13 +375,13 @@ export const sortClientsBy = (
       return clients.sort((a, b) => {
         const aLoad = pathOr<number>(
           0,
-          ['Load', 0, 'y'],
-          clientData[a.id].data
+          [a.id, 'data', 'Load', 0, 'y'],
+          clientData
         );
         const bLoad = pathOr<number>(
           0,
-          ['Load', 0, 'y'],
-          clientData[b.id].data
+          [b.id, 'data', 'Load', 0, 'y'],
+          clientData
         );
         return sortFunc(aLoad, bLoad);
       });
@@ -397,8 +397,8 @@ export const sortClientsBy = (
       });
     case 'storage':
       return clients.sort((a, b) => {
-        const aStorage = getUsedStorage(clientData[a.id].data);
-        const bStorage = getUsedStorage(clientData[b.id].data);
+        const aStorage = getUsedStorage(pathOr(0, [a.id, 'data'], clientData));
+        const bStorage = getUsedStorage(pathOr(0, [b.id, 'data'], clientData));
         return sortFunc(aStorage, bStorage);
       });
     default:
