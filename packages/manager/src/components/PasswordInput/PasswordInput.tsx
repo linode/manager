@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import {
@@ -10,6 +11,8 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import HideShowText from './HideShowText';
+
+import Check from 'src/assets/icons/check.svg';
 
 type Props = TextFieldProps & {
   value?: string;
@@ -25,12 +28,7 @@ interface State {
   lengthRequirement: boolean;
 }
 
-type ClassNames =
-  | 'container'
-  | 'passWrapper'
-  | 'infoText'
-  | 'valid'
-  | 'invalid';
+type ClassNames = 'container' | 'listItem' | 'reqList' | 'valid' | 'check';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -38,26 +36,33 @@ const styles = (theme: Theme) =>
       position: 'relative',
       paddingBottom: theme.spacing(1) / 2
     },
-    passWrapper: {
-      minWidth: '100%',
-      [theme.breakpoints.up('sm')]: {
-        minWidth: `calc(415px + ${theme.spacing(2)}px)`
-      }
-    },
-    infoText: {
+    reqList: {
+      listStyleType: 'none',
+      margin: 0,
       width: '100%',
-      padding: theme.spacing(1),
+      padding: `${theme.spacing(1)}px ${theme.spacing(2) - 2}px `,
       backgroundColor: theme.bg.offWhite,
       border: `1px solid ${theme.palette.divider}`,
       [theme.breakpoints.up('sm')]: {
         width: 415
       }
     },
-    valid: {
-      color: theme.color.green
+    check: {
+      color: theme.color.red,
+      marginRight: theme.spacing(1),
+      position: 'relative',
+      top: -1,
+      '&$valid': {
+        color: theme.color.green
+      }
     },
-    invalid: {
-      color: theme.color.red
+    valid: {},
+    listItem: {
+      display: 'flex',
+      margin: `${theme.spacing(1)}px 0`,
+      '& > span': {
+        display: 'block'
+      }
     }
   });
 
@@ -106,7 +111,7 @@ class PasswordInput extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Grid container alignItems="flex-end" className={classes.container}>
-          <Grid item className={classes.passWrapper}>
+          <Grid item xs={12}>
             <HideShowText
               {...rest}
               tooltipText={disabledReason}
@@ -117,23 +122,53 @@ class PasswordInput extends React.Component<CombinedProps, State> {
             />
           </Grid>
           {!hideHelperText && (
-            <Grid item>
-              <Typography variant="body1" className={classes.infoText}>
-                Password must be at least{' '}
-                <span
-                  className={
-                    lengthRequirement ? classes.valid : classes.invalid
+            <Grid item xs={12}>
+              <ul className={classes.reqList}>
+                <Typography component={'span'}>Password must</Typography>
+                <li
+                  className={classes.listItem}
+                  aria-label={
+                    lengthRequirement
+                      ? 'Password contains enough characters'
+                      : 'Password should be at least 6 chars'
                   }
                 >
-                  <strong>6 characters</strong>
-                </span>{' '}
-                and contain at least{' '}
-                <span className={strength ? classes.valid : classes.invalid}>
-                  <strong>two of the following character classes</strong>
-                </span>
-                : uppercase letters, lowercase letters, numbers, and
-                punctuation.
-              </Typography>
+                  <span
+                    className={classNames({
+                      [classes.check]: true,
+                      [classes.valid]: lengthRequirement
+                    })}
+                  >
+                    <Check />
+                  </span>{' '}
+                  <Typography component={'span'}>
+                    Be at least <strong>6 characters</strong>
+                  </Typography>
+                </li>
+                <li
+                  className={classes.listItem}
+                  aria-label={
+                    strength
+                      ? "Password's strength is valid"
+                      : "Increase password's strength by adding uppercase letters, lowercase letters, numbers, or punctuation"
+                  }
+                >
+                  <span
+                    className={classNames({
+                      [classes.check]: true,
+                      [classes.valid]: strength
+                    })}
+                  >
+                    <Check />
+                  </span>{' '}
+                  <Typography component={'span'}>
+                    Contain at least{' '}
+                    <strong>two of the following character classes</strong>:
+                    uppercase letters, lowercase letters, numbers, and
+                    punctuation.
+                  </Typography>
+                </li>
+              </ul>
             </Grid>
           )}
         </Grid>
