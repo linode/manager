@@ -13,6 +13,11 @@ import { baseGaugeProps, BaseProps as Props } from './common';
 
 type CombinedProps = Props & LVDataProps & WithTheme;
 
+export const getUsedStorage = (data: LVDataProps['longviewClientData']) => {
+  const storageInBytes = sumStorage(data.Disk);
+  return storageInBytes ? storageInBytes.total - storageInBytes.free : 0;
+};
+
 const StorageGauge: React.FC<CombinedProps> = props => {
   const {
     longviewClientDataError: error,

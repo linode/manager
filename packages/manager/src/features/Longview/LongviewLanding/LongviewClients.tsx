@@ -24,6 +24,7 @@ import { State as StatsState } from 'src/store/longviewStats/longviewStats.reduc
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getFinalUsedCPU } from './Gauges/CPU';
+import { getUsedStorage } from './Gauges/Storage';
 import DeleteDialog from './LongviewDeleteDialog';
 import LongviewList from './LongviewList';
 import SubscriptionDialog from './SubscriptionDialog';
@@ -381,6 +382,18 @@ export const sortClientsBy = (
           return -1;
         }
         if (aLoad < bLoad) {
+          return 1;
+        }
+        return 0;
+      });
+    case 'storage':
+      return clients.sort((a, b) => {
+        const aStorage = getUsedStorage(clientData[a.id].data);
+        const bStorage = getUsedStorage(clientData[b.id].data);
+        if (aStorage > bStorage) {
+          return -1;
+        }
+        if (aStorage < bStorage) {
           return 1;
         }
         return 0;
