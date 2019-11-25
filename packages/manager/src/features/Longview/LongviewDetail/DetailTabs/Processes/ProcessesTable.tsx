@@ -14,6 +14,7 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
 import TextField from 'src/components/TextField';
+import { readableBytes } from 'src/utilities/unitConversions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   filterInput: {
@@ -215,15 +216,15 @@ export const ProcessesTableRow: React.FC<ProcessTableRowProps> = React.memo(
         </TableCell>
         <TableCell parentColumn="Avg IO" data-qa-process-avg-io>
           {/* @todo: formatting */}
-          {averageIO} B/s
+          {readableBytes(averageIO * 1024, { round: 0 }).formatted}
         </TableCell>
         <TableCell parentColumn="Avg CPU" data-qa-process-avg-cpu>
           {/* @todo: formatting */}
-          {averageCPU}%
+          {Math.round(averageCPU)}%
         </TableCell>
         <TableCell parentColumn="Avg Mem" data-qa-process-avg-mem>
           {/* @todo: formatting */}
-          {averageMem} MB
+          {readableBytes(averageMem, { round: 0 }).formatted}
         </TableCell>
       </TableRow>
     );

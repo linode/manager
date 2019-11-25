@@ -1,4 +1,4 @@
-interface Stat {
+export interface Stat {
   x: number;
   y: number;
 }
@@ -157,11 +157,11 @@ export interface LongviewProcesses {
 export type Process = { longname: string } & Record<string, ProcessStats>;
 
 export interface ProcessStats {
-  count: Stat[];
-  cpu: Stat[];
-  ioreadkbytes: Stat[];
-  iowritekbytes: Stat[];
-  mem: Stat[];
+  count?: Stat[];
+  cpu?: Stat[];
+  ioreadkbytes?: Stat[];
+  iowritekbytes?: Stat[];
+  mem?: Stat[];
 }
 
 // Resulting shape of calling `/fetch` with an api_action of `getTopProcesses`.

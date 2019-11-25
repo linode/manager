@@ -10,6 +10,7 @@ import {
   LongviewMemory,
   LongviewNetwork,
   LongviewPackages,
+  LongviewProcesses,
   LongviewSystemInfo,
   LongviewTopProcesses,
   Uptime
@@ -103,6 +104,11 @@ interface Get {
     options: { fields?: LongviewFieldName[] }
   ): Promise<Partial<AllData>>;
   (token: string, action: 'getTopProcesses'): Promise<LongviewTopProcesses>;
+  (
+    token: string,
+    action: 'getValues',
+    options: { fields: 'processes'[] }
+  ): Promise<LongviewProcesses>;
 }
 
 export type LongviewAction =
@@ -138,7 +144,8 @@ export type LongviewFieldName =
   | 'sysinfo'
   | 'network'
   | 'disk'
-  | 'packages';
+  | 'packages'
+  | 'processes';
 
 export const fieldNames: Record<LongviewFieldName, string> = {
   cpu: 'CPU.*',
@@ -148,7 +155,8 @@ export const fieldNames: Record<LongviewFieldName, string> = {
   network: 'Network.*',
   disk: 'Disk.*',
   sysinfo: 'SysInfo.*',
-  packages: 'Packages'
+  packages: 'Packages',
+  processes: 'Processes.*'
 };
 
 export const baseRequest = Axios.create({
