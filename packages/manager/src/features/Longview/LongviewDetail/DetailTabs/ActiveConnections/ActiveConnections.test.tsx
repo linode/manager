@@ -38,7 +38,7 @@ describe('ActiveConnections (and by extension ListeningServices)', () => {
     getByTestId('table-row-empty');
   });
 
-  it('should render an empty state', () => {
+  it('should render an error state', () => {
     const { getByTestId, getByText } = renderWithTheme(
       <ActiveConnections
         {...props}

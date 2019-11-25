@@ -129,7 +129,7 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
    * a lastUpdated error (which will happen in the
    * event of a network error)
    */
-  const _hasError = listeningPortsError || lastUpdatedError;
+  const _hasError = Boolean(listeningPortsError || lastUpdatedError);
   const portsError = _hasError
     ? pathOr<string>('Error retrieving data', [0, 'reason'], _hasError)
     : undefined;
@@ -307,12 +307,12 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
         </Grid>
         <Grid container justify="space-between" item spacing={0}>
           <ListeningServices
-            services={listeningPortsData.Ports.listening}
+            services={pathOr([], ['Ports', 'listening'], listeningPortsData)}
             servicesLoading={listeningPortsLoading}
             servicesError={portsError}
           />
           <ActiveConnections
-            connections={listeningPortsData.Ports.active}
+            connections={pathOr([], ['Ports', 'active'], listeningPortsData)}
             connectionsLoading={listeningPortsLoading}
             connectionsError={portsError}
           />
