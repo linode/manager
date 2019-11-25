@@ -26,9 +26,16 @@ type Props = TextFieldProps & {
 interface State {
   strength: boolean;
   lengthRequirement: boolean;
+  active: boolean;
 }
 
-type ClassNames = 'container' | 'listItem' | 'reqList' | 'valid' | 'check';
+type ClassNames =
+  | 'container'
+  | 'listItem'
+  | 'reqList'
+  | 'valid'
+  | 'check'
+  | 'active';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -48,10 +55,13 @@ const styles = (theme: Theme) =>
       }
     },
     check: {
-      color: theme.color.red,
+      color: theme.color.grey1,
       marginRight: theme.spacing(1),
       position: 'relative',
-      top: -1,
+      top: -1
+    },
+    active: {
+      color: theme.color.red,
       '&$valid': {
         color: theme.color.green
       }
@@ -71,14 +81,16 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 class PasswordInput extends React.Component<CombinedProps, State> {
   state: State = {
     strength: false,
-    lengthRequirement: false
+    lengthRequirement: false,
+    active: false
   };
 
   componentWillReceiveProps(nextProps: CombinedProps) {
     const { value } = nextProps;
     this.setState({
       strength: maybeStrength(value),
-      lengthRequirement: value && value.length >= 6 ? true : false
+      lengthRequirement: value && value.length >= 6 ? true : false,
+      active: value && value.length !== 0 ? true : false
     });
   }
 
@@ -91,12 +103,21 @@ class PasswordInput extends React.Component<CombinedProps, State> {
 
     this.setState({
       strength: maybeStrength(value),
-      lengthRequirement: value.length >= 6 ? true : false
+      lengthRequirement: value.length >= 6 ? true : false,
+      active: true
+    });
+  };
+
+  onBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const value: string = e.currentTarget.value;
+
+    this.setState({
+      active: value.length !== 0 && true
     });
   };
 
   render() {
-    const { strength, lengthRequirement } = this.state;
+    const { strength, lengthRequirement, active } = this.state;
     const {
       classes,
       value,
@@ -105,6 +126,7 @@ class PasswordInput extends React.Component<CombinedProps, State> {
       hideStrengthLabel,
       hideHelperText,
       hideValidation,
+      onBlur,
       ...rest
     } = this.props;
 
@@ -119,12 +141,13 @@ class PasswordInput extends React.Component<CombinedProps, State> {
               onChange={this.onChange}
               fullWidth
               required={required}
+              onBlur={this.onBlur}
             />
           </Grid>
           {!hideHelperText && (
             <Grid item xs={12}>
               <ul className={classes.reqList}>
-                <Typography component={'span'}>Password must</Typography>
+                <Typography>Password must:</Typography>
                 <li
                   className={classes.listItem}
                   aria-label={
@@ -136,6 +159,7 @@ class PasswordInput extends React.Component<CombinedProps, State> {
                   <span
                     className={classNames({
                       [classes.check]: true,
+                      [classes.active]: active,
                       [classes.valid]: lengthRequirement
                     })}
                   >
@@ -156,6 +180,7 @@ class PasswordInput extends React.Component<CombinedProps, State> {
                   <span
                     className={classNames({
                       [classes.check]: true,
+                      [classes.active]: active,
                       [classes.valid]: strength
                     })}
                   >
