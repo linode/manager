@@ -75,7 +75,7 @@ type CombinedProps = Props &
   StateProps &
   SettingsProps;
 
-type SortKey = 'name' | 'cpu';
+type SortKey = 'name' | 'cpu' | 'ram' | 'swap' | 'load' | 'network' | 'storage';
 
 export const LongviewClients: React.FC<CombinedProps> = props => {
   const [newClientLoading, setNewClientLoading] = React.useState<boolean>(
@@ -359,6 +359,28 @@ export const sortClientsBy = (
           return -1;
         }
         if (aCPU < bCPU) {
+          return 1;
+        }
+        return 0;
+      });
+    case 'ram':
+      return clients;
+    case 'load':
+      return clients.sort((a, b) => {
+        const aLoad = pathOr<number>(
+          0,
+          ['Load', 0, 'y'],
+          clientData[a.id].data
+        );
+        const bLoad = pathOr<number>(
+          0,
+          ['Load', 0, 'y'],
+          clientData[b.id].data
+        );
+        if (aLoad > bLoad) {
+          return -1;
+        }
+        if (aLoad < bLoad) {
           return 1;
         }
         return 0;
