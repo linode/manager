@@ -245,7 +245,7 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
                 {/* @todo: Replace with real component. */}
                 {topProcessesLoading && <div>Loading...</div>}
                 {(lastUpdatedError || topProcessesError) && <div>Error!</div>}
-                {Object.keys(topProcessesData.Processes).length > 0 && (
+                {Object.keys(topProcessesData.Processes || []).length > 0 && (
                   <pre>
                     {JSON.stringify(props.topProcessesData.Processes, null, 2)}
                   </pre>
