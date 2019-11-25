@@ -11,6 +11,7 @@ afterEach(cleanup);
 
 const props: CombinedProps = {
   client: '1234',
+  longviewClientData: {},
   topProcessesData: { Processes: {} },
   topProcessesLoading: false,
   ...reactRouterProps,

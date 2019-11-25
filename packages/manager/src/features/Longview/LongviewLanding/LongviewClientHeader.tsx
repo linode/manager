@@ -15,8 +15,8 @@ import withClientStats, {
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 import { formatUptime } from 'src/utilities/formatUptime';
-import { pluralize } from 'src/utilities/pluralize';
 import { LongviewPackage } from '../request.types';
+import { getPackageNoticeText } from '../shared/utilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -68,20 +68,6 @@ interface Props {
 }
 
 type CombinedProps = Props & DispatchProps & LVDataProps & WithTheme;
-
-const getPackageNoticeText = (packages: LongviewPackage[]) => {
-  if (!packages) {
-    return 'Package information not available';
-  }
-  if (packages.length === 0) {
-    return 'All packages up to date';
-  }
-  return `${pluralize(
-    'package update',
-    'package updates',
-    packages.length
-  )} available`;
-};
 
 export const LongviewClientHeader: React.FC<CombinedProps> = props => {
   const {

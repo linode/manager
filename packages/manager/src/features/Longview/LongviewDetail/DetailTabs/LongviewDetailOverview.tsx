@@ -2,27 +2,19 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
-
-import CPUIcon from 'src/assets/icons/longview/cpu-icon.svg';
-import DiskIcon from 'src/assets/icons/longview/disk.svg';
-import PackageIcon from 'src/assets/icons/longview/package-icon.svg';
-import RamIcon from 'src/assets/icons/longview/ram-sticks.svg';
-import ServerIcon from 'src/assets/icons/longview/server-icon.svg';
 
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 // import Select from 'src/components/EnhancedSelect/Select';
-import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
-import HelpIcon from 'src/components/HelpIcon';
+import { Props as LVDataProps } from 'src/containers/longview.stats.container';
 
 import ActiveConnections from './ActiveConnections';
+import IconSection from './IconSection';
 import ListeningServices from './ListeningServices';
 
-import { systemInfo } from 'src/__data__/longview';
 import { LongviewTopProcesses } from 'src/features/Longview/request.types';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -35,36 +27,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 'bold',
     position: 'relative',
     top: 3
-  },
-  labelStatusWrapper: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center'
-  },
-  wrapHeader: {
-    wordBreak: 'break-all'
-  },
-  iconSection: {
-    marginBottom: theme.spacing(2) - 2
-  },
-  toolTip: {
-    padding: theme.spacing(1),
-    '& svg': {
-      width: 18,
-      height: 18,
-      position: 'relative',
-      top: -2
-    }
   }
 }));
 
 interface Props {
   client: string;
+  longviewClientData: LVDataProps['longviewClientData'];
   topProcessesData: LongviewTopProcesses;
   topProcessesLoading: boolean;
   topProcessesError?: APIError[];
   lastUpdatedError?: APIError[];
-  // systemInfo: LVDataProps['longviewClientData'];
 }
 
 export type CombinedProps = RouteComponentProps<{ id: string }> & Props;
@@ -80,153 +52,16 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
 
   const url = pathOr('', ['match', 'url'], props);
 
-  const hostname = pathOr(
-    'Hostname not available',
-    ['SysInfo', 'hostname'],
-    systemInfo
-  );
-
-  const osDist = pathOr(
-    'Distro not available',
-    ['SysInfo', 'os', 'dist'],
-    systemInfo
-  );
-
-  const osDistVersion = pathOr(
-    'Distro version not available',
-    ['SysInfo', 'os', 'distversion'],
-    systemInfo
-  );
-
-  const kernel = pathOr(
-    'Kernel not available',
-    ['SysInfo', 'kernel'],
-    systemInfo
-  );
-
-  const cpuType = pathOr(
-    'CPU type not available',
-    ['SysInfo', 'cpu', 'type'],
-    systemInfo
-  );
-
-  const cpuCoreCount = systemInfo.SysInfo.cpu.cores;
-
-  const coreCountDisplay = cpuCoreCount > 1 ? `Cores` : `Core`;
-
   return (
     <React.Fragment>
       <Grid container>
         <Grid item xs={12}>
           <Paper className={classes.paperSection}>
             <Grid container justify="space-between" item xs={12} spacing={0}>
-              <Grid item xs={12} md={4} lg={3}>
-                <Grid
-                  container
-                  item
-                  wrap="nowrap"
-                  alignItems="flex-start"
-                  className={classes.iconSection}
-                >
-                  <Grid item>
-                    <EntityIcon variant="linode" marginTop={1} />
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="h3" className={classes.wrapHeader}>
-                      {props.client}
-                    </Typography>
-                    <Typography>{hostname}</Typography>
-                    <Typography>Up 47d 19h 22m</Typography>
-                  </Grid>
-                </Grid>
-                <Grid
-                  container
-                  item
-                  wrap="nowrap"
-                  alignItems="flex-start"
-                  className={classes.iconSection}
-                >
-                  <Grid item>
-                    <ServerIcon />
-                  </Grid>
-                  <Grid item>
-                    <Typography>
-                      {`${osDist} ${osDistVersion}`}
-                      {`(${kernel})`}
-                    </Typography>
-                  </Grid>
-                </Grid>
-                <Grid
-                  container
-                  item
-                  wrap="nowrap"
-                  alignItems="center"
-                  className={classes.iconSection}
-                >
-                  <Grid item>
-                    <CPUIcon />
-                  </Grid>
-                  <Grid item>
-                    <Typography>{cpuType}</Typography>
-                    {cpuCoreCount && (
-                      <Typography>
-                        {`${cpuCoreCount} ${coreCountDisplay}`}
-                      </Typography>
-                    )}
-                  </Grid>
-                </Grid>
-                <Grid
-                  container
-                  item
-                  wrap="nowrap"
-                  alignItems="center"
-                  className={classes.iconSection}
-                >
-                  <Grid item>
-                    <RamIcon />
-                  </Grid>
-                  <Grid item>
-                    <Typography>1 GB RAM</Typography>
-                    <Typography>512 MB Swap</Typography>
-                  </Grid>
-                </Grid>
-                <Grid
-                  container
-                  item
-                  wrap="nowrap"
-                  alignItems="center"
-                  className={classes.iconSection}
-                >
-                  <Grid item>
-                    <DiskIcon />
-                  </Grid>
-                  <Grid item>
-                    <Typography>2000 GB Storage</Typography>
-                    <Typography>500 GB Available</Typography>
-                  </Grid>
-                </Grid>
-                <Grid
-                  container
-                  item
-                  wrap="nowrap"
-                  alignItems="center"
-                  className={classes.iconSection}
-                >
-                  <Grid item>
-                    <PackageIcon />
-                  </Grid>
-                  <Grid item>
-                    <Typography>
-                      6 Package Updates Available{' '}
-                      <HelpIcon
-                        className={classes.toolTip}
-                        text={`Time to upgrade!`}
-                        tooltipPosition="right"
-                      />
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
+              <IconSection
+                longviewClientData={props.longviewClientData}
+                client={props.client}
+              />
 
               <Grid item xs={12} md={4} lg={6}>
                 Gauges
@@ -294,7 +129,4 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<
-  CombinedProps,
-  Props & RouteComponentProps<{ id: string }>
->(React.memo)(LongviewDetailOverview);
+export default React.memo(LongviewDetailOverview);
