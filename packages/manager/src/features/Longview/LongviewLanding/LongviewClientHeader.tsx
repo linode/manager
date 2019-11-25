@@ -166,7 +166,7 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
       </Grid>
       <Grid item>
         <ButtonLink
-          link={`/longview/clients/${clientID}`}
+          to={`/longview/clients/${clientID}`}
           linkText="View details"
           className={classes.link}
           secondary

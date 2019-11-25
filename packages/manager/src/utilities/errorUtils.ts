@@ -88,20 +88,23 @@ export const getErrorMap = <T extends string = string>(
   if (!errors) {
     return {} as Partial<Record<any, any>>;
   }
-  return errors.reduce(
-    (accum, thisError) => {
-      if (thisError.field && fields.includes(thisError.field as T)) {
-        return {
-          ...accum,
-          [thisError.field]: thisError.reason
-        };
-      } else {
-        return {
-          ...accum,
-          none: thisError.reason
-        };
-      }
-    },
-    { none: undefined }
-  ) as Record<T | 'none', string | undefined>;
+  return (
+    errors &&
+    (errors.reduce(
+      (accum, thisError) => {
+        if (thisError.field && fields.includes(thisError.field as T)) {
+          return {
+            ...accum,
+            [thisError.field]: thisError.reason
+          };
+        } else {
+          return {
+            ...accum,
+            none: thisError.reason
+          };
+        }
+      },
+      { none: undefined }
+    ) as Record<T | 'none', string | undefined>)
+  );
 };
