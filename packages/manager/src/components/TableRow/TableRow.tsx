@@ -12,7 +12,9 @@ import _TableRow, {
   TableRowProps as _TableRowProps
 } from 'src/components/core/TableRow';
 
-type ClassNames = 'root' | 'selected' | 'withForcedIndex';
+import ActiveCaret from 'src/assets/icons/activeRowCaret.svg';
+
+type ClassNames = 'root' | 'selected' | 'withForcedIndex' | 'activeCaret';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -48,6 +50,8 @@ const styles = (theme: Theme) =>
       }
     },
     selected: {
+      backgroundColor: theme.bg.lightBlue,
+      transform: 'scale(1)',
       '&:before': {
         transition: 'none',
         backgroundColor: theme.bg.lightBlue,
@@ -55,10 +59,14 @@ const styles = (theme: Theme) =>
         borderRight: 0
       },
       '& td': {
-        backgroundColor: theme.bg.lightBlue,
         borderTopColor: theme.palette.primary.light,
         borderBottomColor: theme.palette.primary.light
       }
+    },
+    activeCaret: {
+      position: 'absolute',
+      top: -1,
+      right: -15
     }
   });
 
@@ -67,6 +75,7 @@ type onClickFn = (e: React.ChangeEvent<HTMLTableRowElement>) => void;
 interface Props {
   rowLink?: string | onClickFn;
   onClick?: onClickFn;
+  onKeyUp?: any;
   className?: string;
   staticContext?: boolean;
   htmlFor?: string;
@@ -153,6 +162,7 @@ class TableRow extends React.Component<CombinedProps> {
         tabIndex={rowLink || forceIndex ? 0 : -1}
       >
         {this.props.children}
+        {selected && <ActiveCaret className={classes.activeCaret} />}
       </_TableRow>
     );
   }
