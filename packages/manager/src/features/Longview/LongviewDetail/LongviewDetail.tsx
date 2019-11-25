@@ -28,6 +28,7 @@ import { get } from 'src/features/Longview/request';
 import { LongviewTopProcesses } from 'src/features/Longview/request.types';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
+import ProcessesLanding from './DetailTabs/Processes/ProcessesLanding';
 
 const topProcessesEmptyDataSet: LongviewTopProcesses = { Processes: {} };
 
@@ -222,7 +223,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           exact
           strict
           path={`${url}/processes`}
-          render={() => <h2>Processes</h2>}
+          render={() => <ProcessesLanding />}
         />
         <Route
           exact

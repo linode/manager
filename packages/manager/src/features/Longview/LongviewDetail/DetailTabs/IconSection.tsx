@@ -15,7 +15,11 @@ import { readableBytes } from 'src/utilities/unitConversions';
 
 import { Props as LVDataProps } from 'src/containers/longview.stats.container';
 import { LongviewPackage } from '../../request.types';
-import { getPackageNoticeText, sumStorage } from '../../shared/utilities';
+import {
+  getPackageNoticeText,
+  getTotalSomething,
+  sumStorage
+} from '../../shared/utilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
   labelStatusWrapper: {
@@ -63,7 +67,7 @@ const IconSection: React.FC<Props> = props => {
   );
 
   const osDist = pathOr(
-    'Distro info not available',
+    'Distro information not available',
     ['SysInfo', 'os', 'dist'],
     props.longviewClientData
   );
@@ -74,14 +78,10 @@ const IconSection: React.FC<Props> = props => {
     props.longviewClientData
   );
 
-  const kernel = pathOr(
-    'Kernel not available',
-    ['SysInfo', 'kernel'],
-    props.longviewClientData
-  );
+  const kernel = pathOr('', ['SysInfo', 'kernel'], props.longviewClientData);
 
   const cpuType = pathOr(
-    'CPU info not available',
+    'CPU information not available',
     ['SysInfo', 'cpu', 'type'],
     props.longviewClientData
   );
@@ -133,40 +133,10 @@ const IconSection: React.FC<Props> = props => {
     props.longviewClientData
   );
 
-  const getTotalSomething = (used: number, free: number) => {
-    const total = used + free;
-    const howManyBytesInGB = 1073741824;
-    const memoryToBytes = total * 1024;
-    return readableBytes(memoryToBytes, {
-      unit: memoryToBytes > howManyBytesInGB ? 'GB' : 'MB'
-    });
-  };
-
   const convertedTotalMemory = getTotalSomething(usedMemory, freeMemory);
   const convertedTotalSwap = getTotalSomething(usedSwap, freeSwap);
 
   const storageInBytes = sumStorage(props.longviewClientData.Disk);
-
-  // TODO Remove commented once getTotalSomething is verified
-  // const totalSwap = usedSwap + freeSwap;
-
-  // const totalMemory = usedMemory + freeMemory;
-
-  // const convertedTotalMemory = readableBytes(
-  //   /** convert KB to bytes */
-  //   totalMemory * 1024,
-  //   {
-  //     unit: 'GB'
-  //   }
-  // );
-
-  // const convertedTotalSwap = readableBytes(
-  //   /** convert KB to bytes */
-  //   totalSwap * 1024,
-  //   {
-  //     unit: 'MB'
-  //   }
-  // );
 
   return (
     <Grid item xs={12} md={4} lg={3}>
@@ -196,7 +166,9 @@ const IconSection: React.FC<Props> = props => {
           <ServerIcon />
         </Grid>
         <Grid item>
-          <Typography>{`${osDist} ${osDistVersion} (${kernel})`}</Typography>
+          <Typography>
+            {osDist} {osDistVersion} {kernel && `(${kernel})`}
+          </Typography>
         </Grid>
       </Grid>
       <Grid
@@ -226,14 +198,20 @@ const IconSection: React.FC<Props> = props => {
         <Grid item>
           <RamIcon />
         </Grid>
-        <Grid item>
-          <Typography>
-            {`${convertedTotalMemory.value} ${convertedTotalMemory.unit} RAM`}
-          </Typography>
-          <Typography>
-            {`${convertedTotalSwap.value} ${convertedTotalSwap.unit} Swap`}
-          </Typography>
-        </Grid>
+        {convertedTotalMemory.value !== 0 && convertedTotalSwap.value !== 0 ? (
+          <Grid item>
+            <Typography>
+              {`${convertedTotalMemory.value} ${convertedTotalMemory.unit} RAM`}
+            </Typography>
+            <Typography>
+              {`${convertedTotalSwap.value} ${convertedTotalSwap.unit} Swap`}
+            </Typography>
+          </Grid>
+        ) : (
+          <Grid item>
+            <Typography>RAM information not available</Typography>
+          </Grid>
+        )}
       </Grid>
       <Grid
         container
@@ -245,18 +223,25 @@ const IconSection: React.FC<Props> = props => {
         <Grid item>
           <DiskIcon />
         </Grid>
-        <Grid item>
-          <Typography>
-            {`${
-              readableBytes(storageInBytes.total, { unit: 'GB' }).formatted
-            } Storage`}
-          </Typography>
-          <Typography>
-            {`${
-              readableBytes(storageInBytes.free, { unit: 'GB' }).formatted
-            } Available`}
-          </Typography>
-        </Grid>
+
+        {storageInBytes.total !== 0 ? (
+          <Grid item>
+            <Typography>
+              {`${
+                readableBytes(storageInBytes.total, { unit: 'GB' }).formatted
+              } Storage`}
+            </Typography>
+            <Typography>
+              {`${
+                readableBytes(storageInBytes.free, { unit: 'GB' }).formatted
+              } Available`}
+            </Typography>
+          </Grid>
+        ) : (
+          <Grid item>
+            <Typography>Storage information not available</Typography>
+          </Grid>
+        )}
       </Grid>
       <Grid
         container

@@ -3,6 +3,7 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
+import Button from 'src/components/Button';
 import { makeStyles, Theme, WithTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EditableEntityLabel from 'src/components/EditableEntityLabel';
@@ -12,6 +13,7 @@ import withClientStats, {
   Props as LVDataProps
 } from 'src/containers/longview.stats.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { formatDate } from 'src/utilities/formatDate';
 import { formatUptime } from 'src/utilities/formatUptime';
 import { LongviewPackage } from '../request.types';
 import { getPackageNoticeText } from '../shared/utilities';
@@ -41,6 +43,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('md')]: {
       top: -4
     }
+  },
+  packageButton: {
+    fontSize: '0.875rem',
+    padding: 0,
+    textAlign: 'left'
+  },
+  lastUpdatedOuter: {
+    [theme.breakpoints.up('md')]: {
+      marginTop: theme.spacing(1)
+    }
+  },
+  lastUpdatedText: {
+    fontSize: '0.75rem'
   }
 }));
 
@@ -49,6 +64,7 @@ interface Props {
   clientLabel: string;
   lastUpdatedError?: APIError[];
   updateLongviewClient: DispatchProps['updateLongviewClient'];
+  longviewClientLastUpdated?: number;
 }
 
 type CombinedProps = Props & DispatchProps & LVDataProps & WithTheme;
@@ -95,6 +111,14 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
   );
   const packagesToUpdate = getPackageNoticeText(packages);
 
+  const utcLastUpdatedTime = new Date(longviewClientLastUpdated!).toUTCString();
+  const formattedlastUpdatedTime =
+    longviewClientLastUpdated !== undefined
+      ? `Last updated ${formatDate(utcLastUpdatedTime, {
+          humanizeCutoff: 'never'
+        })}`
+      : 'Latest update time not available';
+
   /**
    * The pathOrs ahead will default to 'not available' values if
    * there's an error, so the only case we need to handle is
@@ -111,9 +135,7 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
       <Grid item>
         <EditableEntityLabel
           text={clientLabel}
-          iconVariant="linode"
           subText={hostname}
-          status="running"
           onEdit={handleUpdateLabel}
           loading={updating}
         />
@@ -124,7 +146,17 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
         ) : (
           <>
             <Typography>{formattedUptime}</Typography>
-            <Typography>{packagesToUpdate}</Typography>
+            {packages && packages.length > 0 ? (
+              <Button
+                className={classes.packageButton}
+                title={packagesToUpdate}
+                onClick={() => window.open('#')}
+              >
+                {packagesToUpdate}
+              </Button>
+            ) : (
+              <Typography>{packagesToUpdate}</Typography>
+            )}
           </>
         )}
       </Grid>
@@ -132,6 +164,13 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
         <Link to={`/longview/clients/${clientID}`} className={classes.link}>
           View details
         </Link>
+        {!loading && (
+          <div className={classes.lastUpdatedOuter}>
+            <Typography variant="caption" className={classes.lastUpdatedText}>
+              {formattedlastUpdatedTime}
+            </Typography>
+          </div>
+        )}
       </Grid>
     </Grid>
   );

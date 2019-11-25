@@ -23,22 +23,24 @@ import withLongviewClients, {
 import { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { formatDate } from 'src/utilities/formatDate';
 import DeleteDialog from './LongviewDeleteDialog';
 import LongviewList from './LongviewList';
 import SubscriptionDialog from './SubscriptionDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   headingWrapper: {
-    marginTop: theme.spacing()
+    marginBottom: theme.spacing(1)
   },
   addNew: {
     marginLeft: 'auto'
   },
   searchbar: {
-    marginBottom: theme.spacing(2),
-    '& >div': {
-      width: '300px'
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+      width: 'auto',
+      '& >div': {
+        width: '300px'
+      }
     }
   },
   cta: {
@@ -48,11 +50,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(2)
   },
   sortSelect: {
-    marginBottom: theme.spacing(2),
-    width: '300px',
+    width: 210,
     display: 'flex',
     flexFlow: 'row nowrap',
-    alignItems: 'center'
+    alignItems: 'center',
+    [theme.breakpoints.up('md')]: {
+      width: 221
+    }
   },
   selectLabel: {
     minWidth: '65px'
@@ -76,15 +80,6 @@ type CombinedProps = Props &
  * was updated.
  *
  */
-export const getLastUpdated = (lvClientData: Record<string, StatsState>) => {
-  const updated = Object.values(lvClientData).reduce((accum, thisClient) => {
-    return thisClient.lastUpdated > accum ? thisClient.lastUpdated : accum;
-  }, 0) as number;
-  if (updated === 0) {
-    return 'Loading...';
-  }
-  return `Data last updated at ${formatDate(new Date(updated).toUTCString())}`;
-};
 
 export const LongviewClients: React.FC<CombinedProps> = props => {
   const [newClientLoading, setNewClientLoading] = React.useState<boolean>(
@@ -241,14 +236,10 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     pathOr(false, ['longview_subscription'], accountSettings)
   );
 
-  const lastUpdated = React.useMemo(() => getLastUpdated(lvClientData), [
-    lvClientData
-  ]);
-
   return (
     <React.Fragment>
       <Grid container className={classes.headingWrapper} alignItems="center">
-        <Grid item className={`pt0 ${classes.searchbar}`}>
+        <Grid item className={`py0 ${classes.searchbar}`}>
           <Search
             placeholder="Filter by client label or hostname"
             onSearch={handleSearch}
@@ -256,7 +247,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
             small
           />
         </Grid>
-        <Grid item className={`pt0 ${classes.sortSelect}`}>
+        <Grid item className={`py0 ${classes.sortSelect}`}>
           <Typography className={classes.selectLabel}>Sort by: </Typography>
           <Select
             small
@@ -266,10 +257,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
             onChange={handleSortKeyChange}
           />
         </Grid>
-        <Grid item className={`pt0 ${classes.lastUpdated}`}>
-          <Typography>{lastUpdated}</Typography>
-        </Grid>
-        <Grid item className={`${classes.addNew} pt0`}>
+        <Grid item className={`${classes.addNew} py0`}>
           <AddNewLink
             onClick={handleAddClient}
             label={newClientLoading ? 'Loading...' : 'Add a Client'}
