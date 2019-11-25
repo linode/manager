@@ -79,7 +79,7 @@ export const ServicesTable: React.FC<TableProps> = props => {
                   <TableRow>
                     <TableSortCell
                       data-qa-table-header="Process"
-                      active={orderBy === 'process'}
+                      active={orderBy === 'name'}
                       label="name"
                       direction={order}
                       handleClick={handleOrderChange}
@@ -99,7 +99,7 @@ export const ServicesTable: React.FC<TableProps> = props => {
                     </TableSortCell>
                     <TableSortCell
                       data-qa-table-header="Protocol"
-                      active={orderBy === 'protocol'}
+                      active={orderBy === 'type'}
                       label="type"
                       direction={order}
                       handleClick={handleOrderChange}
