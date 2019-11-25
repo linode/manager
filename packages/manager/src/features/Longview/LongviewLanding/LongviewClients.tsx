@@ -337,6 +337,10 @@ export default compose<CombinedProps, Props & RouteComponentProps>(
   withSnackbar
 )(LongviewClients);
 
+/**
+ * Helper function for sortClientsBy,
+ * to reduce (a>b) {return -1 } boilerplate
+ */
 export const sortFunc = (
   a: string | number,
   b: string | number,
@@ -353,6 +357,14 @@ export const sortFunc = (
   return order === 'desc' ? result : -result;
 };
 
+/**
+ * Handle sorting by various metrics,
+ * since the calculations for each are
+ * specific to that metric.
+ *
+ * This could be extracted to ./utilities,
+ * but it's unlikely to be used anywhere else.
+ */
 export const sortClientsBy = (
   sortKey: SortKey,
   clients: LongviewClient[],
