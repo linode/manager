@@ -23,6 +23,7 @@ import withLongviewClients, {
 import { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { sumUsedMemory } from '../shared/utilities';
 import { getFinalUsedCPU } from './Gauges/CPU';
 import { generateUsedNetworkAsBytes } from './Gauges/Network';
 import { getUsedStorage } from './Gauges/Storage';
@@ -370,7 +371,25 @@ export const sortClientsBy = (
         return sortFunc(aCPU, bCPU);
       });
     case 'ram':
-      return clients;
+      return clients.sort((a, b) => {
+        const aRam = sumUsedMemory(pathOr({}, [a.id, 'data'], clientData));
+        const bRam = sumUsedMemory(pathOr({}, [b.id, 'data'], clientData));
+        return sortFunc(aRam, bRam);
+      });
+    case 'swap':
+      return clients.sort((a, b) => {
+        const aSwap = pathOr<number>(
+          0,
+          [a.id, 'data', 'Memory', 'swap', 'used', 0, 'y'],
+          clientData
+        );
+        const bSwap = pathOr<number>(
+          0,
+          [b.id, 'data', 'Memory', 'swap', 'used', 0, 'y'],
+          clientData
+        );
+        return sortFunc(aSwap, bSwap);
+      });
     case 'load':
       return clients.sort((a, b) => {
         const aLoad = pathOr<number>(
