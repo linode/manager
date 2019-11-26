@@ -89,6 +89,7 @@ class Profile extends React.Component<Props> {
           pathname={this.props.location.pathname}
           labelTitle="My Profile"
           removeCrumbX={1}
+          data-qa-profile-header
         />
         <AppBar position="static" color="default">
           <Tabs
