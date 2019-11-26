@@ -1,3 +1,4 @@
+import { AccountCapability } from 'linode-js-sdk/lib/account';
 import {
   createPersonalAccessToken,
   deleteAppToken,
@@ -9,6 +10,7 @@ import {
 } from 'linode-js-sdk/lib/profile';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as moment from 'moment';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -42,6 +44,8 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import APITokenDrawer, { DrawerMode, genExpiryTups } from './APITokenDrawer';
 import APITokenMenu from './APITokenMenu';
 import { basePermNameMap, basePerms } from './utils';
+
+import withAccount from 'src/containers/account.container';
 
 type ClassNames = 'headline' | 'paper' | 'labelCell' | 'createdCell';
 
@@ -103,7 +107,10 @@ interface State {
   token?: TokenState;
 }
 
-type CombinedProps = Props & PaginationProps<Token> & WithStyles<ClassNames>;
+type CombinedProps = Props &
+  PaginationProps<Token> &
+  WithStyles<ClassNames> &
+  AccountStateProps;
 
 export const filterOutLinodeApps = (token: Token) =>
   !token.website || !/.linode.com$/.test(token.website);
@@ -539,8 +546,19 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           label={form.values.label}
           scopes={form.values.scopes}
           expiry={form.values.expiry}
-          perms={basePerms}
-          permNameMap={basePermNameMap}
+          perms={
+            !this.props.accountCapabilities.includes('Kubernetes')
+              ? basePerms
+              : [...basePerms, 'lke']
+          }
+          permNameMap={
+            !this.props.accountCapabilities.includes('Kubernetes')
+              ? basePermNameMap
+              : {
+                  ...basePermNameMap,
+                  lke: 'Kubernetes'
+                }
+          }
           closeDrawer={this.closeDrawer}
           onChange={this.handleDrawerChange}
           onCreate={this.createToken}
@@ -650,7 +668,14 @@ const updatedRequest = (ownProps: Props, params: any, filters: any) => {
 
 const paginated = Pagey(updatedRequest);
 
+interface AccountStateProps {
+  accountCapabilities: AccountCapability[];
+}
+
 const enhanced = compose<CombinedProps, Props>(
+  withAccount<AccountStateProps, {}>((_, { accountData }) => ({
+    accountCapabilities: pathOr([], ['capabilities'], accountData)
+  })),
   paginated,
   styled
 );
