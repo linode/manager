@@ -43,10 +43,6 @@ interface Props {
   longviewClientsError: LVProps['longviewClientsError'];
 }
 
-interface DataProps {
-  clientID: number;
-}
-
 const Overview = DefaultLoader({
   loader: () => import('./DetailTabs/LongviewDetailOverview')
 });
@@ -58,13 +54,11 @@ const Installation = DefaultLoader({
 export type CombinedProps = RouteComponentProps<{ id: string }> &
   Props &
   LVDataProps &
-  DispatchProps &
-  DataProps;
+  DispatchProps;
 
 export const LongviewDetail: React.FC<CombinedProps> = props => {
   const {
     client,
-    clientID,
     longviewClientsLastUpdated,
     longviewClientsLoading,
     longviewClientsError,
@@ -274,7 +268,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           render={routerProps => (
             <Overview
               client={client.label}
-              clientID={clientID}
+              clientID={client.id}
               longviewClientData={longviewClientData}
               {...routerProps}
               topProcessesData={topProcesses.data}
@@ -291,7 +285,11 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
 
 export default compose<CombinedProps, {}>(
   React.memo,
-  withClientStats<DataProps>(props => props.clientID),
+  withClientStats((ownProps: Props) => {
+    const lvClient: LongviewClient = pathOr<number>(0, ['id'], ownProps.client);
+
+    return lvClient.id;
+  }),
   withLongviewClients<Props, RouteComponentProps<{ id: string }>>(
     (
       own,
