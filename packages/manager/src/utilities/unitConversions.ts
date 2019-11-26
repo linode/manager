@@ -100,6 +100,15 @@ export const readableBytes = (
 
   const value = parseFloat(result.toFixed(decimalPlaces));
 
+  // Special case to account for pluralization.
+  if ((value === 1 || value === -1) && unit === 'bytes') {
+    return {
+      value: isNegative ? -value : value,
+      unit: 'byte',
+      formatted: (isNegative ? '-' : '') + value + ' byte'
+    };
+  }
+
   return {
     value: isNegative ? -value : value,
     unit,

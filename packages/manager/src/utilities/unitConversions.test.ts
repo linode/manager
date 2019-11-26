@@ -100,7 +100,7 @@ describe('readableBytes', () => {
   });
 
   it('handles inputs that are <= 1', () => {
-    expect(readableBytes(1).formatted).toBe('1 bytes');
+    expect(readableBytes(1).formatted).toBe('1 byte');
     expect(readableBytes(0.5).formatted).toBe('0.5 bytes');
     expect(readableBytes(-0.5).formatted).toBe('-0.5 bytes');
     expect(readableBytes(0.01, { maxUnit: 'bytes' }).formatted).toBe(
@@ -108,7 +108,7 @@ describe('readableBytes', () => {
     );
     expect(readableBytes(0.5, { unit: 'MB' }).formatted).toBe('0 MB');
     expect(readableBytes(0.3, { round: 0 }).formatted).toBe('0 bytes');
-    expect(readableBytes(0.5, { round: 0 }).formatted).toBe('1 bytes');
+    expect(readableBytes(0.5, { round: 0 }).formatted).toBe('1 byte');
     expect(readableBytes(0.5, { round: 1 }).formatted).toBe('0.5 bytes');
     expect(readableBytes(0.05, { round: 1 }).formatted).toBe('0.1 bytes');
     expect(readableBytes(0.05, { round: 2 }).formatted).toBe('0.05 bytes');
@@ -139,5 +139,14 @@ describe('readableBytes', () => {
     expect(readableBytes(1, { unitLabels }).unit).toBe('B');
     // Default unit label (not affected):
     expect(readableBytes(1024, { unitLabels }).unit).toBe('KB');
+  });
+
+  it('correctly pluralizes "bytes"', () => {
+    expect(readableBytes(1).unit).toBe('byte');
+    expect(readableBytes(1).formatted).toBe('1 byte');
+    expect(readableBytes(-1).unit).toBe('byte');
+    expect(readableBytes(-1).formatted).toBe('-1 byte');
+    expect(readableBytes(2).unit).toBe('bytes');
+    expect(readableBytes(2).formatted).toBe('2 bytes');
   });
 });
