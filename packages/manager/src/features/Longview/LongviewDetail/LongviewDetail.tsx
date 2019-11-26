@@ -222,42 +222,54 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
         </Tabs>
       </AppBar>
       <Switch>
-        <Route
-          exact
-          strict
-          path={`${url}/processes`}
-          render={() => <ProcessesLanding />}
-        />
-        <Route
-          exact
-          strict
-          path={`${url}/network`}
-          render={() => <h2>Network</h2>}
-        />
-        <Route
-          exact
-          strict
-          path={`${url}/disks`}
-          render={() => <h2>Disks</h2>}
-        />
-        <Route
-          exact
-          strict
-          path={`${url}/apache`}
-          render={() => <h2>Apache</h2>}
-        />
-        <Route
-          exact
-          strict
-          path={`${url}/nginx`}
-          render={() => <h2>Nginx</h2>}
-        />
-        <Route
-          exact
-          strict
-          path={`${url}/mysql`}
-          render={() => <h2>MySQL</h2>}
-        />
+        {showAllTabs && (
+          <Route
+            exact
+            strict
+            path={`${url}/processes`}
+            render={() => <ProcessesLanding />}
+          />
+        )}
+        {showAllTabs && (
+          <Route
+            exact
+            strict
+            path={`${url}/network`}
+            render={() => <h2>Network</h2>}
+          />
+        )}
+        {showAllTabs && (
+          <Route
+            exact
+            strict
+            path={`${url}/disks`}
+            render={() => <h2>Disks</h2>}
+          />
+        )}
+        {showAllTabs && (
+          <Route
+            exact
+            strict
+            path={`${url}/apache`}
+            render={() => <h2>Apache</h2>}
+          />
+        )}
+        {showAllTabs && (
+          <Route
+            exact
+            strict
+            path={`${url}/nginx`}
+            render={() => <h2>Nginx</h2>}
+          />
+        )}
+
+        {showAllTabs && (
+          <Route
+            exact
+            strict
+            path={`${url}/mysql`}
+            render={() => <h2>MySQL</h2>}
+          />
         )}
         <Route
           exact
