@@ -60,6 +60,7 @@ interface Props {
   absoluteIcon?: boolean;
   black?: boolean;
   fixedIcon?: boolean;
+  hideIcon?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -73,7 +74,8 @@ class ExternalLink extends React.Component<CombinedProps> {
       className,
       absoluteIcon,
       black,
-      fixedIcon
+      fixedIcon,
+      hideIcon
     } = this.props;
 
     return (
@@ -92,7 +94,7 @@ class ExternalLink extends React.Component<CombinedProps> {
         data-qa-external-link
       >
         {text}
-        {fixedIcon ? (
+        {!hideIcon && fixedIcon ? (
           <OpenInNew className={classes.fixedIcon} />
         ) : (
           <Arrow className={classes.icon} />

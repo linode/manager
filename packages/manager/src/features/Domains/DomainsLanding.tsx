@@ -43,6 +43,7 @@ import {
 } from 'src/store/domainDrawer';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
+import CheckDomainDrawer from './CheckDomainDrawer';
 import DisableDomainDialog from './DisableDomainDialog';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
@@ -130,8 +131,8 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     removeDialogOpen: false,
     selectedDomainLabel: '',
     disableDialogOpen: false,
-    checkZoneDrawerOpen: false,
-    checkZoneLabel: ''
+    checkZoneDrawerOpen: true,
+    checkZoneLabel: 'my-zone'
   };
 
   static docs: Linode.Doc[] = [Domains];
@@ -153,6 +154,12 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     this.setState({
       checkZoneDrawerOpen: true,
       checkZoneLabel: domainLabel
+    });
+  };
+
+  closeCheckZoneDrawer = () => {
+    this.setState({
+      checkZoneDrawerOpen: false
     });
   };
 
@@ -441,6 +448,11 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
         >
           <Typography>Are you sure you want to remove this domain?</Typography>
         </ConfirmationDialog>
+        <CheckDomainDrawer
+          domainLabel={this.state.checkZoneLabel}
+          isOpen={this.state.checkZoneDrawerOpen}
+          onClose={this.closeCheckZoneDrawer}
+        />
       </React.Fragment>
     );
   }
