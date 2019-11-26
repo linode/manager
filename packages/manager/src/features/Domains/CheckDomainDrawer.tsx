@@ -47,8 +47,7 @@ export const CheckDomainDrawer: React.FC<Props> = props => {
     <Drawer title={`Check Domain Status`} open={isOpen} onClose={onClose}>
       <Typography>
         To view the most up-to-date information about your Domain and its
-        status, you will need to ssh into your Linode and run the following
-        command:
+        status, you will need to run the following command from a terminal:
       </Typography>
       <Grid
         container
@@ -56,7 +55,10 @@ export const CheckDomainDrawer: React.FC<Props> = props => {
         wrap="nowrap"
         className={classes.copyContainer}
       >
-        <CopyTooltip text={command} />
+        <CopyTooltip
+          text={command}
+          aria-label="Copy dig command for viewing Domain information"
+        />
         <pre className={classes.copyCode}>
           <code>{command}</code>
         </pre>
@@ -64,7 +66,13 @@ export const CheckDomainDrawer: React.FC<Props> = props => {
       <Typography className={classes.documentation}>
         For more information about zone status and the <code>dig</code> command,
         please{' '}
-        <ExternalLink text="click here" link="https://www.linode.com/docs/" />.
+        <ExternalLink
+          fixedIcon
+          text="click here"
+          link="https://www.linode.com/docs/"
+          aria-label="Documentation for dig command and Domain status"
+        />
+        .
       </Typography>
     </Drawer>
   );

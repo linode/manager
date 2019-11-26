@@ -94,11 +94,12 @@ class ExternalLink extends React.Component<CombinedProps> {
         data-qa-external-link
       >
         {text}
-        {!hideIcon && fixedIcon ? (
-          <OpenInNew className={classes.fixedIcon} />
-        ) : (
-          <Arrow className={classes.icon} />
-        )}
+        {!hideIcon &&
+          (fixedIcon ? (
+            <OpenInNew className={classes.fixedIcon} />
+          ) : (
+            <Arrow className={classes.icon} />
+          ))}
       </a>
     );
   }

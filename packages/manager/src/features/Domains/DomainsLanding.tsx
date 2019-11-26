@@ -131,8 +131,8 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     removeDialogOpen: false,
     selectedDomainLabel: '',
     disableDialogOpen: false,
-    checkZoneDrawerOpen: true,
-    checkZoneLabel: 'my-zone'
+    checkZoneDrawerOpen: false,
+    checkZoneLabel: ''
   };
 
   static docs: Linode.Doc[] = [Domains];
