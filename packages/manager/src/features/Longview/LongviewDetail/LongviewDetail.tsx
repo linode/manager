@@ -28,14 +28,23 @@ import { get } from 'src/features/Longview/request';
 import { LongviewTopProcesses } from 'src/features/Longview/request.types';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
+import ProcessesLanding from './DetailTabs/Processes/ProcessesLanding';
 
 const topProcessesEmptyDataSet: LongviewTopProcesses = { Processes: {} };
+
+import withClientStats, {
+  Props as LVDataProps
+} from 'src/containers/longview.stats.container';
 
 interface Props {
   client?: LongviewClient;
   longviewClientsLastUpdated: number;
   longviewClientsLoading: LVProps['longviewClientsLoading'];
   longviewClientsError: LVProps['longviewClientsError'];
+}
+
+interface DataProps {
+  clientID: number;
 }
 
 const Overview = DefaultLoader({
@@ -48,6 +57,7 @@ const Installation = DefaultLoader({
 
 export type CombinedProps = RouteComponentProps<{ id: string }> &
   Props &
+  LVDataProps &
   DispatchProps;
 
 export const LongviewDetail: React.FC<CombinedProps> = props => {
@@ -55,7 +65,8 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     client,
     longviewClientsLastUpdated,
     longviewClientsLoading,
-    longviewClientsError
+    longviewClientsError,
+    longviewClientData
   } = props;
 
   React.useEffect(() => {
@@ -63,7 +74,11 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     if (longviewClientsLastUpdated === 0) {
       props.getLongviewClients();
     }
-  }, []);
+
+    if (client) {
+      props.getClientStats(client.api_key);
+    }
+  }, [client]);
   const clientAPIKey = client && client.api_key;
 
   const { lastUpdated, lastUpdatedError } = useClientLastUpdated(clientAPIKey);
@@ -208,7 +223,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           exact
           strict
           path={`${url}/processes`}
-          render={() => <h2>Processes</h2>}
+          render={() => <ProcessesLanding />}
         />
         <Route
           exact
@@ -257,6 +272,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           render={routerProps => (
             <Overview
               client={client.label}
+              longviewClientData={longviewClientData}
               {...routerProps}
               topProcessesData={topProcesses.data}
               topProcessesLoading={topProcesses.loading}
@@ -272,6 +288,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
 
 export default compose<CombinedProps, {}>(
   React.memo,
+  withClientStats<DataProps>(props => props.clientID),
   withLongviewClients<Props, RouteComponentProps<{ id: string }>>(
     (
       own,

@@ -103,6 +103,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
                 clientLabel={clientLabel}
                 lastUpdatedError={lastUpdatedError}
                 updateLongviewClient={updateLongviewClient}
+                longviewClientLastUpdated={lastUpdated}
               />
             </Grid>
             <Grid item xs={12} md={9}>
