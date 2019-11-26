@@ -1,4 +1,3 @@
-import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -8,10 +7,8 @@ import Select, {
 } from 'src/components/EnhancedSelect/Select';
 import withAccountSettings from 'src/containers/accountSettings.container';
 
-interface Props<Stats = any> extends Omit<BaseSelectProps, 'onChange'> {
-  lastUpdated: number;
-  request: (start: number, end: number) => Promise<Partial<Stats>>;
-  children: (stats: Stats, error?: APIError[]) => JSX.Element;
+interface Props extends Omit<BaseSelectProps, 'onChange'> {
+  handleStatsChange?: (start: number, end: number) => void;
 }
 
 interface ReduxStateProps {
@@ -29,20 +26,7 @@ export type Labels =
 type CombinedProps = Props & ReduxStateProps;
 
 const TimeRangeSelect: React.FC<CombinedProps> = props => {
-  const {
-    children,
-    isLongviewPro,
-    lastUpdated,
-    request,
-    ...restOfSelectProps
-  } = props;
-
-  /* children has to be a function - enforce this */
-  if (!children || typeof children !== 'function') {
-    throw new Error(
-      'TimeRangeSelect must have a children prop that is a function.'
-    );
-  }
+  const { isLongviewPro, handleStatsChange, ...restOfSelectProps } = props;
 
   /* 
     the time range is the label instead of the value because it's a lot harder
@@ -52,77 +36,46 @@ const TimeRangeSelect: React.FC<CombinedProps> = props => {
   const [selectedTimeRange, setTimeRange] = React.useState<Labels>(
     'Past 30 Minutes'
   );
-  const [stats, setStats] = React.useState<any>({});
-  const [fetchError, setError] = React.useState<APIError[] | undefined>();
+  /*
+    Why division by 1000?
+    
+    Because the Longview API doesn't expect the start and date time
+    to the nearest millisecond - if you send anything more than 10 digits
+    you won't get any data back
+  */
+  const nowInSeconds = Date.now() / 1000;
 
-  const now = Date.now();
   const options = generateSelectOptions(
     isLongviewPro,
     `${new Date().getFullYear()}`
   );
 
-  React.useEffect(() => {
-    const selectedPastDateTime = generateStartTime(
-      selectedTimeRange,
-      now,
-      new Date().getFullYear()
-    );
-
-    if (selectedPastDateTime) {
-      /* only make the request if we have a _start_ time */
-      props
-        /*
-        Why division by 1000?
-        
-        Because the Longview API doesn't expect the start and date time
-        to the nearest millisecond - if you send anything more than 10 digits
-        you won't get any data back
-        */
-        .request(
-          Math.round(selectedPastDateTime / 1000),
-          Math.round(now / 1000)
-        )
-        .then(response => {
-          if (
-            !!response &&
-            typeof response === 'object' &&
-            !!Object.keys(response).length
-          ) {
-            setStats(response);
-          }
-        })
-        .catch(e => {
-          /* always set an error - it's up to the consumer if it wants to do anything with this error */
-          setError([
-            {
-              reason:
-                'There was an error retrieving stats for this Longview Client.'
-            }
-          ]);
-        });
-    }
-  }, [lastUpdated]);
-
   const handleChange = (item: Item<Labels, Labels>) => {
     setTimeRange(item.value);
+
+    if (!!handleStatsChange) {
+      handleStatsChange(
+        Math.round(
+          generateStartTime(item.value, nowInSeconds, new Date().getFullYear())
+        ),
+        Math.round(nowInSeconds)
+      );
+    }
   };
 
   return (
-    <React.Fragment>
-      <Select
-        {...restOfSelectProps}
-        onChange={handleChange}
-        isClearable={false}
-        isSearchable={false}
-        value={options.find(o => o.label === selectedTimeRange) || options[0]}
-        options={options}
-      />
-      {children(stats, fetchError)}
-    </React.Fragment>
+    <Select
+      {...restOfSelectProps}
+      onChange={handleChange}
+      isClearable={false}
+      isSearchable={false}
+      value={options.find(o => o.label === selectedTimeRange) || options[0]}
+      options={options}
+    />
   );
 };
 
-export default (compose<CombinedProps, Props>(
+export default compose<CombinedProps, Props>(
   React.memo,
   withAccountSettings<ReduxStateProps, Props>(
     (own, loading, lastUpdated, error, data) => {
@@ -136,7 +89,7 @@ export default (compose<CombinedProps, Props>(
       };
     }
   )
-)(TimeRangeSelect) as unknown) as <S>(props: Props<S>) => React.ReactElement;
+)(TimeRangeSelect);
 
 /**
  * react-select option generator that aims to remain a pure function
@@ -190,25 +143,29 @@ export const generateSelectOptions = (
   return finalOptions;
 };
 
+/**
+ *
+ * @returns start time in seconds (NOT milliseconds)
+ */
 export const generateStartTime = (
   modifier: Labels,
-  now: number,
+  nowInSeconds: number,
   currentYear: number
 ) => {
   switch (modifier) {
     case 'Past 30 Minutes':
-      return now - 30 * 60 * 1000;
+      return nowInSeconds - 30 * 60;
     case 'Past 12 Hours':
-      return now - 12 * 60 * 60 * 1000;
+      return nowInSeconds - 12 * 60 * 60;
     case 'Past 24 Hours':
-      return now - 24 * 60 * 60 * 1000;
+      return nowInSeconds - 24 * 60 * 60;
     case 'Past 7 Days':
-      return now - 7 * 24 * 60 * 60 * 1000;
+      return nowInSeconds - 7 * 24 * 60 * 60;
     case 'Past 30 Days':
-      return now - 30 * 24 * 60 * 60 * 1000;
+      return nowInSeconds - 30 * 24 * 60 * 60;
     case 'Past Year':
-      return now - 365 * 24 * 60 * 60 * 1000;
+      return nowInSeconds - 365 * 24 * 60 * 60;
     default:
-      return new Date(`Jan 1 ${currentYear}`).getTime();
+      return new Date(`Jan 1 ${currentYear}`).getTime() / 1000;
   }
 };

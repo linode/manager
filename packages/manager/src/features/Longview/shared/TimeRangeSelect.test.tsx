@@ -24,10 +24,11 @@ describe('Utility Functions', () => {
   });
 
   it('should create values as functions that return the correct datetime', () => {
-    const GMT_november_20_2019_849PM = 1574282998914;
+    const GMT_november_20_2019_849PM = 1574282998;
 
     const createDate = (value: any) =>
-      new Date(value).toLocaleString('en-US', {
+      /* 3 0s to turn into milliseconds */
+      new Date(value * 1000).toLocaleString('en-US', {
         timeZoneName: 'short',
         timeZone: 'GMT'
       });
@@ -68,7 +69,8 @@ describe('Utility Functions', () => {
         Jan 1 2019 12AM regardless of timezone 
       */
       `${new Date(
-        generateStartTime('2019' as Labels, GMT_november_20_2019_849PM, 2019)
+        generateStartTime('2019' as Labels, GMT_november_20_2019_849PM, 2019) *
+          1000
       ).toLocaleString()}`
     ).toMatch(/1\/1\/2019, 12:00:00 AM/gim);
   });

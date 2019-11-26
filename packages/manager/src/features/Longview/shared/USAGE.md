@@ -2,7 +2,7 @@
 
 ## TimeRangeSelect
 
-The `<TimeRangeSelect />` component is meant to act as a wrapper around
+The `<TimeRangeSelect />` component is meant to act as a compliment to
 each line graph for the Longview feature. All Longview graphs will allow
 the user to specify between what 2 timestamps they want to receive data for - the default being the past 30 minutes.
 
@@ -12,11 +12,9 @@ The `<TimeRangeSelect />` aims to simplify the developer experience here.
 
 ### Props
 
-| Prop Name   | Type                                                       | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-|-------------|------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| lastUpdated | number                                                     | The datetime that is returned from the  `fetchLongviewClientLastUpdated()`  request. The parent of this component should be polling for `lastUpdated` time on an interval so that the Select component keeps updating the stats |
-| request     | (start: number, end: number) => Promise<Partial\<SomeStat\>> | The actual async request to be triggered each time the `lastUpdated` key is updated. This should return some partial data from the Longview API                                                                                                                                                                                                                                                                                                                                           |
-| children    | (stats: SomeStat, error: APIError[]) => JSX.Element        | What JSX you want to render. This component exposes both the resolved data and any caught errors. It's the consumers responsibility to decide when it wants to display errors, if any.  The resolved data will default to an empty object ({})                                                                                                                                                                                                                                            |
+| Prop Name         | Type                                  | Description                                                                                                                                                      |
+|-------------------|---------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| handleStatsChange | (start: number, end: number) => void; | Function that returns the start and end times in seconds - these values should be used when requesting values from the Longview API with the `getValues` action. |
 
 ### Usage
 
@@ -39,41 +37,18 @@ interface Props {
 type CombinedProps = Props;
 
 const Installation: React.FC<CombinedProps> = props => {
-  const [lastUpdated, setLastUpdated] = React.useState<number>(0);
-
-  let timeout: NodeJS.Timeout;
-
-  React.useEffect(() => {
-    /*
-      request lastUpdated every 2 seconds
-    */
-    timeout = setInterval(() => {
-      getLastUpdated()
-        .then(setLastUpdated)
-        .catch(e => e)
-    }, 2000)
-
-    return () => {
-      clearInterval(timeout)
-    }
-  }, [])
-
   return (
-    <TimeRangeSelect<LongviewCPU>
-      lastUpdated={lastUpdated}
-      request={(start, end) =>
+    <TimeRangeSelect
+      handleStatsChange={(start, end) => {
         get(props.clientAPIKey, 'getValues', {
           fields: ['cpu'],
           start,
           end
         })
-      }
-    >
-      {stats => {
-        console.log(stats)
-        return <div>hello world</div>;
+          .then(r => r)
+          .catch(e => e)
       }}
-    </TimeRangeSelect>
+    />
   );
 };
 
