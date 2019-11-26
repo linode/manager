@@ -6,13 +6,13 @@ const mockData = longviewProcessFactory.build();
 describe('extendData utility function', () => {
   const extendedData = extendData(mockData);
 
-  it('includes the process name on each entry', () => {
+  it('includes process name on each entry', () => {
     Object.keys(mockData.Processes!).forEach(processName => {
       expect(extendedData.find(p => p.name === processName)).toBeDefined();
     });
   });
 
-  it('includes the username on each entry', () => {
+  it('includes username on each entry', () => {
     Object.values(mockData.Processes!).forEach(process => {
       const { longname, ...users } = process;
       Object.keys(users).forEach(user => {
@@ -21,7 +21,7 @@ describe('extendData utility function', () => {
     });
   });
 
-  it('includes the max count', () => {
+  it('includes max count', () => {
     expect(extendedData[0].maxCount).toBe(3);
   });
 
@@ -33,7 +33,7 @@ describe('extendData utility function', () => {
     expect(extendedData[0].averageCPU).toBe(2);
   });
 
-  it('includes the average memory', () => {
+  it('includes average memory', () => {
     expect(extendedData[0].averageMem).toBe(2);
   });
 

@@ -48,7 +48,6 @@ export const ProcessesTable: React.FC<CombinedProps> = props => {
               <TableHead>
                 <TableRow>
                   <TableSortCell
-                    data-testid-table-header="Process"
                     active={orderBy === 'name'}
                     label="name"
                     direction={order}
@@ -58,7 +57,6 @@ export const ProcessesTable: React.FC<CombinedProps> = props => {
                     Process
                   </TableSortCell>
                   <TableSortCell
-                    data-testid-table-header="User"
                     active={orderBy === 'user'}
                     label="user"
                     direction={order}
@@ -68,7 +66,6 @@ export const ProcessesTable: React.FC<CombinedProps> = props => {
                     User
                   </TableSortCell>
                   <TableSortCell
-                    data-testid-table-header="Max Count"
                     active={orderBy === 'maxCount'}
                     label="maxCount"
                     direction={order}
@@ -78,7 +75,6 @@ export const ProcessesTable: React.FC<CombinedProps> = props => {
                     Max Count
                   </TableSortCell>
                   <TableSortCell
-                    data-testid-table-header="Avg IO"
                     active={orderBy === 'averageIO'}
                     label="averageIO"
                     direction={order}
@@ -88,7 +84,6 @@ export const ProcessesTable: React.FC<CombinedProps> = props => {
                     Avg IO
                   </TableSortCell>
                   <TableSortCell
-                    data-testid-table-header="Avg CPU"
                     active={orderBy === 'averageCPU'}
                     label="averageCPU"
                     direction={order}
@@ -98,7 +93,6 @@ export const ProcessesTable: React.FC<CombinedProps> = props => {
                     Avg CPU
                   </TableSortCell>
                   <TableSortCell
-                    data-testid-table-header="Avg Mem"
                     active={orderBy === 'averageMem'}
                     label="averageMem"
                     direction={order}

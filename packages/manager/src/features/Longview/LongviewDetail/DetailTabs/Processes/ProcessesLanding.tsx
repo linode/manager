@@ -35,10 +35,6 @@ const ProcessesLanding: React.FC<Props> = props => {
   const { clientAPIKey, lastUpdated, lastUpdatedError } = props;
 
   const processes = useAPIRequest<LongviewProcesses>(
-    // We can only make this request if we have a clientAPIKey, so we use `null`
-    // if we don't (which will happen the first time this component mounts). We
-    // also check for `lastUpdated`, otherwise we'd make an extraneous request
-    // when it is retrieved.
     clientAPIKey && lastUpdated
       ? () => get(clientAPIKey, 'getValues', { fields: ['processes'] })
       : null,
@@ -67,7 +63,7 @@ const ProcessesLanding: React.FC<Props> = props => {
           </Box>
           <ProcessesTable
             processesData={extendData(processes.data)}
-            processesLoading={processes.loading}
+            processesLoading={processes.loading && !lastUpdated}
             processesError={processes.error}
             selectedRow={selectedRow}
             setSelectedRow={setSelectedRow}
@@ -77,7 +73,7 @@ const ProcessesLanding: React.FC<Props> = props => {
         <Grid item xs={3}>
           <ProcessesGraphs
             processesData={extendData(processes.data)}
-            processesLoading={processes.loading}
+            processesLoading={processes.loading && !lastUpdated}
             processesError={processes.error}
             selectedRow={selectedRow}
           />
@@ -107,9 +103,8 @@ export const extendData = (
       const userProcess = processesData.Processes![processName][user];
 
       extendedData.push({
-        // This ID is used as a React `key`. Realistically the processName +
-        // username should be enough for it to be unique, but I decided to
-        // append a random number just in case.
+        // Realistically the processName + username should be enough for this to
+        // be unique, but I decided to append a random number just in case.
         id: `${processName}-${user}-${Math.floor(Math.random() * 10000)}`,
         name: processName,
         user,

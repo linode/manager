@@ -16,7 +16,7 @@ const props: Props = {
   setSelectedRow: mockSetSelectedRow
 };
 
-describe('Top Processes', () => {
+describe('ProcessTable', () => {
   const extendedData = extendData(longviewProcessFactory.build());
 
   it('renders all columns for each row', () => {
