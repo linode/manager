@@ -1,10 +1,7 @@
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
-import Box from 'src/components/core/Box';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import Select from 'src/components/EnhancedSelect/Select';
 import OrderBy from 'src/components/OrderBy';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
@@ -13,19 +10,10 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
-import TextField from 'src/components/TextField';
+import { formatCPU } from 'src/features/Longview/shared/formatters';
 import { readableBytes } from 'src/utilities/unitConversions';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  filterInput: {
-    width: 300
-  },
-  timeSelect: {
-    width: 200
-  }
-}));
-
-interface Props {
+export interface Props {
   processesData: ExtendedProcess[];
   processesLoading: boolean;
   processesError?: APIError[];
@@ -35,9 +23,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const ProcessesTable: React.FC<CombinedProps> = props => {
-  const classes = useStyles();
-
+export const ProcessesTable: React.FC<CombinedProps> = props => {
   const {
     processesData,
     processesLoading,
@@ -47,26 +33,11 @@ const ProcessesTable: React.FC<CombinedProps> = props => {
   } = props;
 
   const errorMessage = processesError
-    ? 'There was an error getting Processes'
+    ? 'There was an error getting Processes data.'
     : undefined;
 
   return (
     <>
-      <Box display="flex" justifyContent="space-between">
-        {/* Doesn't work yet. */}
-        <TextField
-          className={classes.filterInput}
-          small
-          placeholder="Filter by process or user..."
-        />
-        {/* Doesn't work yet. */}
-        <Select
-          className={classes.timeSelect}
-          small
-          placeholder="Last 12 Hours"
-          onChange={() => null}
-        />
-      </Box>
       <OrderBy data={processesData} orderBy={'name'} order={'desc'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
           <>
@@ -74,7 +45,7 @@ const ProcessesTable: React.FC<CombinedProps> = props => {
               <TableHead>
                 <TableRow>
                   <TableSortCell
-                    data-qa-table-header="Process"
+                    data-testid-table-header="Process"
                     active={orderBy === 'name'}
                     label="name"
                     direction={order}
@@ -84,7 +55,7 @@ const ProcessesTable: React.FC<CombinedProps> = props => {
                     Process
                   </TableSortCell>
                   <TableSortCell
-                    data-qa-table-header="User"
+                    data-testid-table-header="User"
                     active={orderBy === 'user'}
                     label="user"
                     direction={order}
@@ -94,7 +65,7 @@ const ProcessesTable: React.FC<CombinedProps> = props => {
                     User
                   </TableSortCell>
                   <TableSortCell
-                    data-qa-table-header="Max Count"
+                    data-testid-table-header="Max Count"
                     active={orderBy === 'maxCount'}
                     label="maxCount"
                     direction={order}
@@ -104,7 +75,7 @@ const ProcessesTable: React.FC<CombinedProps> = props => {
                     Max Count
                   </TableSortCell>
                   <TableSortCell
-                    data-qa-table-header="Avg IO"
+                    data-testid-table-header="Avg IO"
                     active={orderBy === 'averageIO'}
                     label="averageIO"
                     direction={order}
@@ -114,7 +85,7 @@ const ProcessesTable: React.FC<CombinedProps> = props => {
                     Avg IO
                   </TableSortCell>
                   <TableSortCell
-                    data-qa-table-header="Avg CPU"
+                    data-testid-table-header="Avg CPU"
                     active={orderBy === 'averageCPU'}
                     label="averageCPU"
                     direction={order}
@@ -124,7 +95,7 @@ const ProcessesTable: React.FC<CombinedProps> = props => {
                     Avg CPU
                   </TableSortCell>
                   <TableSortCell
-                    data-qa-table-header="Avg Mem"
+                    data-testid-table-header="Avg Mem"
                     active={orderBy === 'averageMem'}
                     label="averageMem"
                     direction={order}
@@ -163,7 +134,7 @@ const renderLoadingErrorData = (
     return <TableRowError colSpan={12} message={error} />;
   }
   if (loading && data.length === 0) {
-    return <TableRowLoading colSpan={6} />;
+    return <TableRowLoading colSpan={7} />;
   }
   if (data.length === 0) {
     return <TableRowEmptyState colSpan={12} />;
@@ -205,25 +176,35 @@ export const ProcessesTableRow: React.FC<ProcessTableRowProps> = React.memo(
         selected={isSelected}
         data-testid="longview-service-row"
       >
-        <TableCell parentColumn="Process" data-qa-process-process>
+        <TableCell parentColumn="Process" data-testid={`name-${name}`}>
           {name}
         </TableCell>
-        <TableCell parentColumn="User" data-qa-process-user>
+        <TableCell parentColumn="User" data-testid={`user-${user}`}>
           {user}
         </TableCell>
-        <TableCell parentColumn="Max Count" data-qa-process-max-count>
+        <TableCell
+          parentColumn="Max Count"
+          data-testid={`max-count-${maxCount}`}
+        >
           {maxCount}
         </TableCell>
-        <TableCell parentColumn="Avg IO" data-qa-process-avg-io>
-          {/* @todo: formatting */}
-          {readableBytes(averageIO * 1024, { round: 0 }).formatted}
+        <TableCell
+          parentColumn="Avg IO"
+          data-testid={`average-io-${averageIO}`}
+        >
+          {/* @todo: formatting once https://github.com/linode/manager/pull/5825 is merged */}
+          {readableBytes(averageIO, { round: 0 }).formatted}/s
         </TableCell>
-        <TableCell parentColumn="Avg CPU" data-qa-process-avg-cpu>
-          {/* @todo: formatting */}
-          {Math.round(averageCPU)}%
+        <TableCell
+          parentColumn="Avg CPU"
+          data-testid={`average-cpu-${averageCPU}`}
+        >
+          {formatCPU(averageCPU)}
         </TableCell>
-        <TableCell parentColumn="Avg Mem" data-qa-process-avg-mem>
-          {/* @todo: formatting */}
+        <TableCell
+          parentColumn="Avg Mem"
+          data-testid={`average-mem-${averageMem}`}
+        >
           {readableBytes(averageMem, { round: 0 }).formatted}
         </TableCell>
       </TableRow>

@@ -1,10 +1,24 @@
 import * as React from 'react';
+import Box from 'src/components/core/Box';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Select from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
+import TextField from 'src/components/TextField';
 import get from 'src/features/Longview/request';
-import { LongviewProcesses, Stat } from 'src/features/Longview/request.types';
+import { LongviewProcesses } from 'src/features/Longview/request.types';
+import { statAverage, statMax } from 'src/features/Longview/shared/utilities';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import ProcessesGraphs from './ProcessesGraphs';
 import ProcessesTable, { ExtendedProcess } from './ProcessesTable';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  filterInput: {
+    width: 300
+  },
+  timeSelect: {
+    width: 200
+  }
+}));
 
 interface Props {
   clientAPIKey?: string;
@@ -12,6 +26,8 @@ interface Props {
 }
 
 const ProcessesLanding: React.FC<Props> = props => {
+  const classes = useStyles();
+
   const [selectedRow, setSelectedRow] = React.useState<string | null>(null);
 
   const { clientAPIKey, lastUpdated } = props;
@@ -32,8 +48,23 @@ const ProcessesLanding: React.FC<Props> = props => {
     <>
       <Grid container>
         <Grid item xs={9}>
+          <Box display="flex" justifyContent="space-between">
+            {/* Doesn't work yet. */}
+            <TextField
+              className={classes.filterInput}
+              small
+              placeholder="Filter by process or user..."
+            />
+            {/* Doesn't work yet. */}
+            <Select
+              className={classes.timeSelect}
+              small
+              placeholder="Last 12 Hours"
+              onChange={() => null}
+            />
+          </Box>
           <ProcessesTable
-            processesData={mungeData(processes.data)}
+            processesData={extendData(processes.data)}
             processesLoading={processes.loading}
             processesError={processes.error}
             selectedRow={selectedRow}
@@ -42,7 +73,7 @@ const ProcessesLanding: React.FC<Props> = props => {
         </Grid>
         <Grid item xs={3}>
           <ProcessesGraphs
-            processesData={mungeData(processes.data)}
+            processesData={extendData(processes.data)}
             processesLoading={processes.loading}
             processesError={processes.error}
             selectedRow={selectedRow}
@@ -55,48 +86,39 @@ const ProcessesLanding: React.FC<Props> = props => {
 
 export default React.memo(ProcessesLanding);
 
-export const mungeData = (processes: LongviewProcesses): ExtendedProcess[] => {
-  if (!processes || !processes.Processes) {
+export const extendData = (
+  processesData: LongviewProcesses
+): ExtendedProcess[] => {
+  if (!processesData || !processesData.Processes) {
     return [];
   }
 
   const extendedData: ExtendedProcess[] = [];
-  Object.keys(processes.Processes).forEach(processName => {
-    const { longname, ...users } = processes.Processes[processName];
-    Object.keys(users).forEach(user => {
-      if (user === 'longname') {
-        return;
-      }
+  Object.keys(processesData.Processes).forEach(processName => {
+    // Each process is an object where the keys are usernames and the values are
+    // stats for that process/user. Additionally there's a key called "longname"
+    // with a string as the value. Here, we separate these keys.
+    const { longname, ...users } = processesData.Processes![processName];
 
-      const userProcess = processes.Processes[processName][user];
+    Object.keys(users).forEach(user => {
+      const userProcess = processesData.Processes![processName][user];
 
       extendedData.push({
+        // This ID is used as a React `key`. Realistically the processName +
+        // username should be enough for it to be unique, but I decided to
+        // append a random number just in case.
+        id: `${processName}-${user}-${Math.floor(Math.random() * 10000)}`,
         name: processName,
         user,
-        averageCPU: getAverage(userProcess.cpu || []),
+        maxCount: statMax(userProcess.count),
         averageIO:
-          getAverage(userProcess.ioreadkbytes || []) +
-          getAverage(userProcess.iowritekbytes || []),
-        averageMem: getAverage(userProcess.mem || []),
-        id: processName + user,
-        maxCount: getMax(userProcess.count || [])
+          statAverage(userProcess.ioreadkbytes) +
+          statAverage(userProcess.iowritekbytes),
+        averageCPU: statAverage(userProcess.cpu),
+        averageMem: statAverage(userProcess.mem)
       });
     });
   });
 
   return extendedData;
-};
-
-export const getAverage = (stats: Stat[]): number => {
-  const sum = stats.reduce((acc, { y }) => acc + y, 0);
-  return sum / stats.length;
-};
-
-export const getMax = (stats: Stat[]): number => {
-  return stats.reduce((acc, { y }) => {
-    if (y > acc) {
-      return y;
-    }
-    return acc;
-  }, 0);
 };
