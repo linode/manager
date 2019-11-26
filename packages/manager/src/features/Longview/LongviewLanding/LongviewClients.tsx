@@ -370,7 +370,7 @@ export default compose<CombinedProps, Props & RouteComponentProps>(
   connected,
   withProfile<GrantsProps, {}>((ownProps, { profileData }) => ({
     userCanCreateClient: pathOr<boolean>(
-      true,
+      false,
       ['grants', 'global', 'add_longview'],
       profileData
     )
