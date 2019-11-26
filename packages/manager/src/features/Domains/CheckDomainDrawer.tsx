@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface Props {
+export interface Props {
   domainLabel: string;
   isOpen: boolean;
   onClose: () => void;
@@ -60,7 +60,7 @@ export const CheckDomainDrawer: React.FC<Props> = props => {
           aria-label="Copy dig command for viewing Domain information"
         />
         <pre className={classes.copyCode}>
-          <code>{command}</code>
+          <code data-testid="dig command">{command}</code>
         </pre>
       </Grid>
       {/** No guide is available or in progress. @todo uncomment when we've got one */}
