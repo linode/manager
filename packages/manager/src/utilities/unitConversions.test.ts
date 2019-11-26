@@ -1,4 +1,4 @@
-import { readableBytes } from './unitConversions';
+import { readableBytes, ReadableBytesOptions } from './unitConversions';
 
 describe('readableBytes', () => {
   it('should return "0 bytes" if bytes === 0', () => {
@@ -12,6 +12,9 @@ describe('readableBytes', () => {
     expect(readableBytes(-1048576).value).toBe(-1);
 
     expect(readableBytes(-1048576, { handleNegatives: false }).formatted).toBe(
+      '0 bytes'
+    );
+    expect(readableBytes(-0.5, { handleNegatives: false }).formatted).toBe(
       '0 bytes'
     );
   });
@@ -94,5 +97,44 @@ describe('readableBytes', () => {
     expect(
       readableBytes(1024 * 1024 * 1024 * 50, { unit: 'TB' }).formatted
     ).toBe('0.05 TB');
+  });
+
+  it('handles inputs that are <= 1', () => {
+    expect(readableBytes(1).formatted).toBe('1 bytes');
+    expect(readableBytes(0.5).formatted).toBe('0.5 bytes');
+    expect(readableBytes(-0.5).formatted).toBe('-0.5 bytes');
+    expect(readableBytes(0.01, { maxUnit: 'bytes' }).formatted).toBe(
+      '0.01 bytes'
+    );
+    expect(readableBytes(0.5, { unit: 'MB' }).formatted).toBe('0 MB');
+    expect(readableBytes(0.3, { round: 0 }).formatted).toBe('0 bytes');
+    expect(readableBytes(0.5, { round: 0 }).formatted).toBe('1 bytes');
+  });
+
+  it('allows custom unit labels', () => {
+    const unitLabels: ReadableBytesOptions['unitLabels'] = {
+      bytes: 'B',
+      KB: 'Kilobytes',
+      MB: 'Megabytes',
+      GB: 'Gigabytes',
+      TB: 'Terabytes'
+    };
+    expect(readableBytes(1, { unitLabels }).unit).toBe('B');
+    expect(readableBytes(1024, { unitLabels }).unit).toBe('Kilobytes');
+    expect(readableBytes(1048576, { unitLabels }).unit).toBe('Megabytes');
+    expect(readableBytes(1073741824, { unitLabels }).unit).toBe('Gigabytes');
+    expect(readableBytes(1073741824 * 10000, { unitLabels }).unit).toBe(
+      'Terabytes'
+    );
+  });
+
+  it('only affects values with custom labels that have been specified', () => {
+    const unitLabels: ReadableBytesOptions['unitLabels'] = {
+      bytes: 'B'
+    };
+    // Custom unit label:
+    expect(readableBytes(1, { unitLabels }).unit).toBe('B');
+    // Default unit label (not affected):
+    expect(readableBytes(1024, { unitLabels }).unit).toBe('KB');
   });
 });

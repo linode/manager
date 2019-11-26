@@ -40,12 +40,14 @@ export const convertMegabytesTo = (data: number, removeDecimals?: boolean) => {
  * { round: { MB: 1, GB: 2 } } // if the return value is in MB, round to 1 place, otherwise round to 2 places.
  * { unit: 'MB' } // give the return value in GB
  * { maxUnit: 'GB' } // return values up to GB, i.e. never return TB or higher
+ * { unitLabels: { bytes: 'B' } } // use "B" instead of the default "bytes" unit label
  */
-interface ReadableBytesOptions {
+export interface ReadableBytesOptions {
   round?: number | Partial<Record<StorageSymbol, number>>;
   unit?: StorageSymbol;
   maxUnit?: StorageSymbol;
   handleNegatives?: boolean;
+  unitLabels?: Partial<Record<StorageSymbol, string>>;
 }
 
 type StorageSymbol = 'bytes' | 'KB' | 'MB' | 'GB' | 'TB';
@@ -55,10 +57,30 @@ export const readableBytes = (
   num: number,
   options: ReadableBytesOptions = {}
 ) => {
+  // These are the units Classic uses. This can easily be extended –
+  // just keep adding to this array and the corresponding interface.
+  const storageUnits: StorageSymbol[] = ['bytes', 'KB', 'MB', 'GB', 'TB'];
+
+  // If we've been given custom unit labels, make the substitution here.
+  if (options.unitLabels) {
+    Object.keys(options.unitLabels).forEach(originalLabel => {
+      const idx = storageUnits.indexOf(originalLabel as StorageSymbol);
+      if (idx > -1) {
+        // The TS compiler wasn't aware of the null check above, so I added
+        // the non-null assertion operator on options.unitLabels
+        storageUnits[idx] = options.unitLabels![originalLabel];
+      }
+    });
+  }
+
   // If the value is 0, go ahead and return, because the
   // subsequent math won't work out
   if (num === 0 || (options.handleNegatives === false && num < 0)) {
-    return { value: 0, unit: 'bytes', formatted: '0 bytes' };
+    return {
+      value: 0,
+      unit: storageUnits[0],
+      formatted: `0 ${storageUnits[0]}`
+    };
   }
 
   // If the value is a negative number, we're going to need flip
@@ -68,15 +90,11 @@ export const readableBytes = (
     num = -num;
   }
 
-  // These are the units Classic uses. This can easily be extended –
-  // just keep adding to this array and the corresponding interface.
-  const storageUnits: StorageSymbol[] = ['bytes', 'KB', 'MB', 'GB', 'TB'];
-
   const power = determinePower(num, storageUnits, options);
 
   // Some other magic to get the human-readable version
-  const result = num / Math.pow(1024, power);
-  const unit = storageUnits[power];
+  const result = num / Math.max(Math.pow(1024, power), 1);
+  const unit = storageUnits[power] || storageUnits[0];
 
   const decimalPlaces = determineDecimalPlaces(result, unit, options);
 
