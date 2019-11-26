@@ -21,8 +21,7 @@ import TableRow from 'src/components/TableRow';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import accountSettingsContainer, {
-  DispatchProps,
-  SettingsProps
+  Props as AccountSettingsProps
 } from 'src/containers/accountSettings.container';
 import {
   hasGrant,
@@ -139,10 +138,7 @@ interface Props {
   subscriptionRequestHook: UseAPIRequest<LongviewSubscription[]>;
 }
 
-export type CombinedProps = Props &
-  SettingsProps &
-  DispatchProps &
-  ReduxStateProps;
+export type CombinedProps = Props & AccountSettingsProps & ReduxStateProps;
 
 export const managedText = (
   <span>

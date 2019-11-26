@@ -15,7 +15,7 @@ import Search from 'src/components/DebouncedSearchTextField';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import withSettings, {
-  SettingsProps
+  Props as SettingsProps
 } from 'src/containers/accountSettings.container';
 import withLongviewClients, {
   Props as LongviewProps
@@ -67,7 +67,7 @@ interface Props {
   subscriptionsData: LongviewSubscription[];
 }
 
-type CombinedProps = Props &
+export type CombinedProps = Props &
   RouteComponentProps &
   LongviewProps &
   WithSnackbarProps &

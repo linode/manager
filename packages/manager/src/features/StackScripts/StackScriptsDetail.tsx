@@ -148,9 +148,8 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
 
 export default compose<CombinedProps, {}>(
   setDocs([StackScriptsDocs]),
-  withProfile((ownProps, profile) => {
+  withProfile<ProfileProps, {}>((ownProps, profile) => {
     return {
-      ...ownProps,
       username: path(['data', 'username'], profile)
     };
   }),

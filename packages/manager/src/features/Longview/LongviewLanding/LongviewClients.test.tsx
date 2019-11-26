@@ -6,6 +6,7 @@ import { accountSettingsFactory } from 'src/factories/accountSettings';
 import { longviewClientFactory } from 'src/factories/longviewClient';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import {
+  CombinedProps,
   filterLongviewClientsByQuery,
   LongviewClients
 } from './LongviewClients';
@@ -23,7 +24,7 @@ const arrayToData = (data: any[]): Record<string, LongviewClient> => {
   }, {});
 };
 
-const props = {
+const props: CombinedProps = {
   longviewClientsData: arrayToData(clients),
   longviewClientsError: {},
   longviewClientsLastUpdated: 0,
@@ -40,7 +41,9 @@ const props = {
   accountSettingsError: {},
   accountSettingsLastUpdated: 0,
   lvClientData: {},
-  lvClientsLoading: false,
+  updateAccountSettings: jest.fn(),
+  updateAccountSettingsInStore: jest.fn(),
+  requestAccountSettings: jest.fn(),
   ...reactRouterProps
 };
 
