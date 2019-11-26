@@ -21,7 +21,6 @@ export interface DispatchProps {
   updateLongviewClient: (id: number, label: string) => Promise<LongviewClient>;
 }
 
-/* tslint:disable-next-line */
 export interface StateProps {
   longviewClientsError: State['error'];
   longviewClientsLoading: State['loading'];
