@@ -20,6 +20,7 @@ import withSettings, {
 import withLongviewClients, {
   Props as LongviewProps
 } from 'src/containers/longview.container';
+import withProfile from 'src/containers/profile.container';
 import { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -77,7 +78,8 @@ export type CombinedProps = Props &
   LongviewProps &
   WithSnackbarProps &
   StateProps &
-  SettingsProps;
+  SettingsProps &
+  GrantsProps;
 
 type SortKey = 'name' | 'cpu' | 'ram' | 'swap' | 'load' | 'network' | 'storage';
 
@@ -219,7 +221,8 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     accountSettings,
     subscriptionsData,
     createLongviewClient,
-    deleteLongviewClient
+    deleteLongviewClient,
+    userCanCreateClient
   } = props;
 
   const handleSearch = (newQuery: string) => {
@@ -279,6 +282,12 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
           <AddNewLink
             onClick={handleAddClient}
             label={newClientLoading ? 'Loading...' : 'Add a Client'}
+            disabled={!userCanCreateClient}
+            disabledReason={
+              userCanCreateClient
+                ? ''
+                : 'You do not have access to create Longview Clients. Please contact an account administrator.'
+            }
           />
         </Grid>
       </Grid>
@@ -352,9 +361,20 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
 
 const connected = connect(mapStateToProps);
 
+interface GrantsProps {
+  userCanCreateClient: boolean;
+}
+
 export default compose<CombinedProps, Props & RouteComponentProps>(
   React.memo,
   connected,
+  withProfile<GrantsProps, {}>((ownProps, { profileData }) => ({
+    userCanCreateClient: pathOr<boolean>(
+      true,
+      ['grants', 'global', 'add_longview'],
+      profileData
+    )
+  })),
   withLongviewClients(),
   withSettings(),
   withSnackbar
