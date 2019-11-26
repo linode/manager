@@ -1,3 +1,5 @@
+import { Grant } from 'linode-js-sdk/lib/account';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -22,6 +24,7 @@ import withLongviewClients, {
 import withClientStats, {
   Props as LVDataProps
 } from 'src/containers/longview.stats.container';
+import withProfile from 'src/containers/profile.container';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -50,7 +53,7 @@ interface Props extends ActionHandlers {
   openPackageDrawer: () => void;
 }
 
-type CombinedProps = Props & LVDataProps & DispatchProps;
+type CombinedProps = Props & LVDataProps & DispatchProps & GrantProps;
 
 const LongviewClientRow: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -62,7 +65,8 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
     triggerDeleteLongviewClient,
     clientInstallKey,
     openPackageDrawer,
-    updateLongviewClient
+    updateLongviewClient,
+    userCanModifyClient
   } = props;
 
   const { lastUpdated, lastUpdatedError, authed } = useClientLastUpdated(
@@ -83,6 +87,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
         installCode={clientInstallKey}
         triggerDeleteLongviewClient={triggerDeleteLongviewClient}
         updateLongviewClient={updateLongviewClient}
+        userCanModifyClient={userCanModifyClient}
       />
     );
   }
@@ -107,6 +112,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
                 openPackageDrawer={openPackageDrawer}
                 updateLongviewClient={updateLongviewClient}
                 longviewClientLastUpdated={lastUpdated}
+                userCanModifyClient={userCanModifyClient}
               />
             </Grid>
             <Grid item xs={12} md={9}>
@@ -158,6 +164,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
                 longviewClientID={clientID}
                 longviewClientLabel={clientLabel}
                 triggerDeleteLongviewClient={triggerDeleteLongviewClient}
+                userCanModifyClient={userCanModifyClient}
               />
             </Grid>
           </Grid>
@@ -167,9 +174,30 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
   );
 };
 
+interface GrantProps {
+  userCanModifyClient: boolean;
+}
+
 export default compose<CombinedProps, Props>(
   React.memo,
   withClientStats<Props>(ownProps => ownProps.clientID),
   /** We only need the update action here, easier than prop drilling through 4 components */
-  withLongviewClients(() => ({}))
+  withLongviewClients(() => ({})),
+  withProfile<GrantProps, Props>((ownProps, { profileData }) => {
+    const longviewPermissions = pathOr<Grant[]>(
+      [],
+      ['grants', 'longview'],
+      profileData
+    );
+
+    const thisPermission = (longviewPermissions as Grant[]).find(
+      r => r.id === ownProps.clientID
+    );
+
+    return {
+      userCanModifyClient: thisPermission
+        ? thisPermission.permissions === 'read_write'
+        : true
+    };
+  })
 )(LongviewClientRow);

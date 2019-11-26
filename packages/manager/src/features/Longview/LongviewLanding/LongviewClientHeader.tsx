@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
-import { makeStyles, Theme, WithTheme } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EditableEntityLabel from 'src/components/EditableEntityLabel';
 import Grid from 'src/components/Grid';
@@ -17,6 +17,7 @@ import { formatDate } from 'src/utilities/formatDate';
 import { formatUptime } from 'src/utilities/formatUptime';
 import { LongviewPackage } from '../request.types';
 import { getPackageNoticeText } from '../shared/utilities';
+import RestrictedUserLabel from './RestrictedUserLabel';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -66,9 +67,10 @@ interface Props {
   openPackageDrawer: () => void;
   updateLongviewClient: DispatchProps['updateLongviewClient'];
   longviewClientLastUpdated?: number;
+  userCanModifyClient: boolean;
 }
 
-type CombinedProps = Props & DispatchProps & LVDataProps & WithTheme;
+type CombinedProps = Props & DispatchProps & LVDataProps;
 
 export const LongviewClientHeader: React.FC<CombinedProps> = props => {
   const {
@@ -79,7 +81,8 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
     longviewClientDataLoading,
     longviewClientLastUpdated,
     openPackageDrawer,
-    updateLongviewClient
+    updateLongviewClient,
+    userCanModifyClient
   } = props;
   const classes = useStyles();
   const [updating, setUpdating] = React.useState<boolean>(false);
@@ -136,12 +139,16 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
   return (
     <Grid container direction="column" className={classes.root}>
       <Grid item>
-        <EditableEntityLabel
-          text={clientLabel}
-          subText={hostname}
-          onEdit={handleUpdateLabel}
-          loading={updating}
-        />
+        {userCanModifyClient ? (
+          <EditableEntityLabel
+            text={clientLabel}
+            subText={hostname}
+            onEdit={handleUpdateLabel}
+            loading={updating}
+          />
+        ) : (
+          <RestrictedUserLabel label={clientLabel} subtext={hostname} />
+        )}
       </Grid>
       <Grid item className={classes.updates}>
         {loading ? (
