@@ -135,6 +135,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
             labelTitle="Kubernetes Clusters"
             removeCrumbX={1}
             className={classes.title}
+            data-qa-title
           />
         </Grid>
         <Grid item>
