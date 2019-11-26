@@ -109,6 +109,9 @@ describe('readableBytes', () => {
     expect(readableBytes(0.5, { unit: 'MB' }).formatted).toBe('0 MB');
     expect(readableBytes(0.3, { round: 0 }).formatted).toBe('0 bytes');
     expect(readableBytes(0.5, { round: 0 }).formatted).toBe('1 bytes');
+    expect(readableBytes(0.5, { round: 1 }).formatted).toBe('0.5 bytes');
+    expect(readableBytes(0.05, { round: 1 }).formatted).toBe('0.1 bytes');
+    expect(readableBytes(0.05, { round: 2 }).formatted).toBe('0.05 bytes');
   });
 
   it('allows custom unit labels', () => {
