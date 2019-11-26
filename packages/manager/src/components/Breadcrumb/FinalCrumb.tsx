@@ -61,7 +61,7 @@ const FinalCrumb: React.FC<CombinedProps> = props => {
     if (h1Header.current !== null) {
       h1Header.current.focus();
     }
-  });
+  }, []);
 
   if (onEditHandlers) {
     return (

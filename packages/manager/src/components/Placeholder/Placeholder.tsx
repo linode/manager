@@ -1,5 +1,6 @@
 import * as React from 'react';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
+import Breadcrumb from 'src/components/Breadcrumb';
 import Button, { ButtonProps } from 'src/components/Button';
 import {
   createStyles,
@@ -116,13 +117,12 @@ const Placeholder: React.StatelessComponent<CombinedProps> = props => {
         {Icon && <Icon className={`${classes.icon} ${animate && 'animate'}`} />}
       </Grid>
       <Grid item xs={12}>
-        <Typography
+        <Breadcrumb
+          pathname=""
+          labelTitle={title}
           className={classes.title}
           data-qa-placeholder-title
-          variant="h1"
-        >
-          {title}
-        </Typography>
+        />
       </Grid>
       <Grid item xs={12} lg={10} className={classes.copy}>
         {typeof copy === 'string' ? (
