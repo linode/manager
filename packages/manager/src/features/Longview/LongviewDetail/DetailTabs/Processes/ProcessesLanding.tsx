@@ -26,13 +26,15 @@ const mockData = TEMPORARY_longviewProcessFactory.buildList(25);
 // =================
 
 const ProcessesLanding: React.FC<{}> = () => {
-  const [selectedRow, setSelectedRow] = React.useState<string | null>(null);
-
   // === MOCK DAtA ===
   const processesData = mockData;
   const processesLoading = false;
   const processesError = undefined;
   // =================
+
+  const [selectedRow, setSelectedRow] = React.useState<string | null>(
+    `${processesData[0].id}`
+  );
 
   return (
     <>
