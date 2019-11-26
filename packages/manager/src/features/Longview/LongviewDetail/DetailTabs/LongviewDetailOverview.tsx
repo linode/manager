@@ -145,12 +145,12 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
         <Grid container justify="space-between" item spacing={0}>
           <ListeningServices
             services={pathOr([], ['Ports', 'listening'], listeningPortsData)}
-            servicesLoading={listeningPortsLoading && !!lastUpdated}
+            servicesLoading={listeningPortsLoading && !lastUpdated}
             servicesError={portsError}
           />
           <ActiveConnections
             connections={pathOr([], ['Ports', 'active'], listeningPortsData)}
-            connectionsLoading={listeningPortsLoading && !!lastUpdated}
+            connectionsLoading={listeningPortsLoading && !lastUpdated}
             connectionsError={portsError}
           />
         </Grid>
