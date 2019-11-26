@@ -295,6 +295,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
               listeningPortsError={listeningPorts.error}
               listeningPortsLoading={listeningPorts.loading}
               lastUpdatedError={lastUpdatedError}
+              lastUpdated={lastUpdated}
             />
           )}
         />

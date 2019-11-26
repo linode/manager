@@ -39,6 +39,7 @@ interface Props {
   topProcessesData: LongviewTopProcesses;
   topProcessesLoading: boolean;
   topProcessesError?: APIError[];
+  lastUpdated?: number;
   lastUpdatedError?: APIError[];
   listeningPortsLoading: boolean;
   listeningPortsError?: APIError[];
@@ -50,6 +51,7 @@ export type CombinedProps = RouteComponentProps<{ id: string }> & Props;
 export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const {
+    lastUpdated,
     listeningPortsData,
     listeningPortsError,
     listeningPortsLoading,
@@ -143,12 +145,12 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
         <Grid container justify="space-between" item spacing={0}>
           <ListeningServices
             services={pathOr([], ['Ports', 'listening'], listeningPortsData)}
-            servicesLoading={listeningPortsLoading}
+            servicesLoading={listeningPortsLoading && !!lastUpdated}
             servicesError={portsError}
           />
           <ActiveConnections
             connections={pathOr([], ['Ports', 'active'], listeningPortsData)}
-            connectionsLoading={listeningPortsLoading}
+            connectionsLoading={listeningPortsLoading && !!lastUpdated}
             connectionsError={portsError}
           />
         </Grid>
