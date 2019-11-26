@@ -205,6 +205,7 @@ export const ProcessesTableRow: React.FC<ProcessTableRowProps> = React.memo(
         selected={isSelected}
         data-testid="longview-service-row"
         forceIndex
+        aria-label={`${name} for ${user}`}
       >
         <TableCell parentColumn="Process" data-qa-process-process>
           {name}
