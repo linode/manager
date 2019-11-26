@@ -103,6 +103,8 @@ interface State {
   selectedDomainID?: number;
   removeDialogOpen: boolean;
   disableDialogOpen: boolean;
+  checkZoneDrawerOpen: boolean;
+  checkZoneLabel: string;
 }
 
 interface Props {
@@ -127,7 +129,9 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     createDrawerOpen: false,
     removeDialogOpen: false,
     selectedDomainLabel: '',
-    disableDialogOpen: false
+    disableDialogOpen: false,
+    checkZoneDrawerOpen: false,
+    checkZoneLabel: ''
   };
 
   static docs: Linode.Doc[] = [Domains];
@@ -144,6 +148,13 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       selectedDomainLabel: '',
       importDrawerErrors: undefined
     });
+
+  openCheckZoneDrawer = (domainLabel: string) => {
+    this.setState({
+      checkZoneDrawerOpen: true,
+      checkZoneLabel: domainLabel
+    });
+  };
 
   handleSuccess = (domain: Domain) => {
     if (domain.id) {
@@ -393,7 +404,9 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                         onClone: this.props.openForCloning,
                         onEdit: this.props.openForEditing,
                         onRemove: this.openRemoveDialog,
-                        onDisableOrEnable: this.handleClickEnableOrDisableDomain
+                        onDisableOrEnable: this
+                          .handleClickEnableOrDisableDomain,
+                        onCheck: this.openCheckZoneDrawer
                       };
 
                       return domainsAreGrouped ? (
