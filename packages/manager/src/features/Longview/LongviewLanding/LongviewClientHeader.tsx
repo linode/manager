@@ -44,17 +44,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       top: -4
     }
   },
-  packageLink: {
-    background: 'none',
-    color: theme.palette.primary.main,
-    border: 'none',
-    padding: 0,
-    font: 'inherit',
-    cursor: 'pointer',
-    '&:hover': {
-      textDecoration: 'underline'
-    }
-  },
   packageButton: {
     fontSize: '0.875rem',
     padding: 0,
