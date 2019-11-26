@@ -35,6 +35,10 @@ const styles = (theme: Theme) =>
       }
     },
     withForcedIndex: {
+      '& td': {
+        transition: theme.transitions.create(['color'])
+      },
+      transition: theme.transitions.create(['border-color']),
       '&:before': {
         borderLeft: `1px solid transparent`,
         paddingLeft: 4
