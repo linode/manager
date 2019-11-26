@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -23,6 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   clientAPIKey?: string;
   lastUpdated?: number;
+  lastUpdatedError?: APIError[];
 }
 
 const ProcessesLanding: React.FC<Props> = props => {
@@ -30,7 +32,7 @@ const ProcessesLanding: React.FC<Props> = props => {
 
   const [selectedRow, setSelectedRow] = React.useState<string | null>(null);
 
-  const { clientAPIKey, lastUpdated } = props;
+  const { clientAPIKey, lastUpdated, lastUpdatedError } = props;
 
   const processes = useAPIRequest<LongviewProcesses>(
     // We can only make this request if we have a clientAPIKey, so we use `null`
@@ -69,6 +71,7 @@ const ProcessesLanding: React.FC<Props> = props => {
             processesError={processes.error}
             selectedRow={selectedRow}
             setSelectedRow={setSelectedRow}
+            lastUpdatedError={lastUpdatedError}
           />
         </Grid>
         <Grid item xs={3}>

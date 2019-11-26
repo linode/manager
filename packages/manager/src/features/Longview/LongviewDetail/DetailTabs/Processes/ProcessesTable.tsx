@@ -19,6 +19,7 @@ export interface Props {
   processesError?: APIError[];
   selectedRow: string | null;
   setSelectedRow: (id: string) => void;
+  lastUpdatedError?: APIError[];
 }
 
 type CombinedProps = Props;
@@ -29,12 +30,14 @@ export const ProcessesTable: React.FC<CombinedProps> = props => {
     processesLoading,
     processesError,
     selectedRow,
-    setSelectedRow
+    setSelectedRow,
+    lastUpdatedError
   } = props;
 
-  const errorMessage = processesError
-    ? 'There was an error getting Processes data.'
-    : undefined;
+  const errorMessage =
+    processesError || lastUpdatedError
+      ? 'There was an error getting Processes data.'
+      : undefined;
 
   return (
     <>

@@ -227,6 +227,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
             <ProcessesLanding
               clientAPIKey={client.api_key}
               lastUpdated={lastUpdated}
+              lastUpdatedError={lastUpdatedError}
             />
           )}
         />
