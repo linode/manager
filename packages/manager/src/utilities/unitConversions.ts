@@ -67,7 +67,7 @@ export const readableBytes = (
       const idx = storageUnits.indexOf(originalLabel as StorageSymbol);
       if (idx > -1) {
         // The TS compiler wasn't aware of the null check above, so I added
-        // the non-null assertion operator on options.unitLabels
+        // the non-null assertion operator on options.unitLabels.
         storageUnits[idx] = options.unitLabels![originalLabel];
       }
     });
