@@ -190,7 +190,9 @@ export const extendTopProcesses = (
   }
   const topProcessDisplay: ExtendedTopProcessStat[] = [];
   Object.keys(topProcesses.Processes).forEach(processName => {
-    Object.values(topProcesses.Processes[processName]).forEach(userProcess => {
+    // For some reason the TS compiler doesn't recognize the early return above,
+    // hence the non-null assertion operator on topProcesses.Processes.
+    Object.values(topProcesses.Processes![processName]).forEach(userProcess => {
       topProcessDisplay.push({ ...userProcess, name: processName });
     });
   });

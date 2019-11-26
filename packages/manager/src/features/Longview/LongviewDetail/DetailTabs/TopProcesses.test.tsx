@@ -28,12 +28,12 @@ describe('Top Processes', () => {
       const data = longviewTopProcessesFactory.build();
       // The component renders a maximum of 6 rows. Assert our test data has
       // fewer than seven processes so the test is valid.
-      expect(Object.keys(data.Processes).length).toBeLessThan(7);
+      expect(Object.keys(data.Processes || {}).length).toBeLessThan(7);
 
       const { getByText } = render(
         wrapWithTheme(<TopProcesses {...props} topProcessesData={data} />)
       );
-      Object.keys(data.Processes).forEach(processName => {
+      Object.keys(data.Processes || {}).forEach(processName => {
         getByText(processName);
       });
     });
@@ -69,12 +69,12 @@ describe('Top Processes', () => {
     const normalizedData = extendTopProcesses(extendedData);
     it('returns an element for each process', () => {
       expect(normalizedData.length).toBe(
-        Object.keys(extendedData.Processes).length
+        Object.keys(extendedData.Processes || {}).length
       );
     });
 
     it('returns each process name', () => {
-      Object.keys(extendedData.Processes).forEach(processName => {
+      Object.keys(extendedData.Processes || {}).forEach(processName => {
         expect(normalizedData.find(p => p.name === processName)).toBeDefined();
       });
     });
