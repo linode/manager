@@ -285,6 +285,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
         />
         <Route
           strict
+          exact
           path={`${url}/overview`}
           render={routerProps => (
             <Overview
