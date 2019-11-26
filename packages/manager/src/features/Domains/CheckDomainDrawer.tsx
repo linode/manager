@@ -4,7 +4,7 @@ import CopyTooltip from 'src/components/CopyTooltip';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
-import ExternalLink from 'src/components/ExternalLink';
+// import ExternalLink from 'src/components/ExternalLink'; @todo uncomment when we have a doc
 import Grid from 'src/components/Grid';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -63,7 +63,8 @@ export const CheckDomainDrawer: React.FC<Props> = props => {
           <code>{command}</code>
         </pre>
       </Grid>
-      <Typography className={classes.documentation}>
+      {/** No guide is available or in progress. @todo uncomment when we've got one */}
+      {/* <Typography className={classes.documentation}>
         For more information about zone status and the <code>dig</code> command,
         please{' '}
         <ExternalLink
@@ -73,7 +74,7 @@ export const CheckDomainDrawer: React.FC<Props> = props => {
           aria-label="Documentation for dig command and Domain status"
         />
         .
-      </Typography>
+      </Typography> */}
     </Drawer>
   );
 };
