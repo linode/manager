@@ -22,7 +22,7 @@ describe('extendData utility function', () => {
   });
 
   it('includes the max count', () => {
-    expect(extendedData[0].maxCount).toBe(2);
+    expect(extendedData[0].maxCount).toBe(3);
   });
 
   it('includes average CPU', () => {
