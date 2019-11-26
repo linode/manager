@@ -202,7 +202,7 @@ export const ProcessesTableRow: React.FC<ProcessTableRowProps> = React.memo(
           parentColumn="Avg Mem"
           data-testid={`average-mem-${averageMem}`}
         >
-          {readableBytes(averageMem, { round: 0 }).formatted}
+          {readableBytes(averageMem * 1024, { round: 0 }).formatted}
         </TableCell>
       </TableRow>
     );
