@@ -106,6 +106,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
                 lastUpdatedError={lastUpdatedError}
                 openPackageDrawer={openPackageDrawer}
                 updateLongviewClient={updateLongviewClient}
+                longviewClientLastUpdated={lastUpdated}
               />
             </Grid>
             <Grid item xs={12} md={9}>
