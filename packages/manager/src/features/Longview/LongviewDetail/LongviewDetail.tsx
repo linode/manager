@@ -70,14 +70,13 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     if (longviewClientsLastUpdated === 0) {
       props.getLongviewClients();
     }
-
-    if (client) {
-      props.getClientStats(client.api_key);
-    }
-  }, [client]);
+  }, []);
   const clientAPIKey = client && client.api_key;
 
-  const { lastUpdated, lastUpdatedError } = useClientLastUpdated(clientAPIKey);
+  const { lastUpdated, lastUpdatedError } = useClientLastUpdated(
+    clientAPIKey,
+    clientAPIKey ? () => props.getClientStats(clientAPIKey) : undefined
+  );
 
   const topProcesses = useAPIRequest<LongviewTopProcesses>(
     // We can only make this request if we have a clientAPIKey, so we use `null`
@@ -285,10 +284,8 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
 
 export default compose<CombinedProps, {}>(
   React.memo,
-  withClientStats((ownProps: Props) => {
-    const lvClient: LongviewClient = pathOr<number>(0, ['id'], ownProps.client);
-
-    return lvClient.id;
+  withClientStats<RouteComponentProps<{ id: string }>>(ownProps => {
+    return +pathOr<string>('', ['match', 'params', 'id'], ownProps);
   }),
   withLongviewClients<Props, RouteComponentProps<{ id: string }>>(
     (

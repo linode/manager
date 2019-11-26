@@ -52,7 +52,7 @@ export const TopProcesses: React.FC<Props> = props => {
     : undefined;
 
   return (
-    <Grid item xs={12} md={4} lg={3}>
+    <Grid item xs={12} lg={3}>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Typography variant="h2">Top Processes</Typography>
         <Link to="processes" className={classes.detailsLink}>
