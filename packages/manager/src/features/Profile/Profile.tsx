@@ -6,10 +6,10 @@ import {
   Switch,
   withRouter
 } from 'react-router-dom';
+import Breadcrumb from 'src/components/Breadcrumb';
 import AppBar from 'src/components/core/AppBar';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
-import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import TabLink from 'src/components/TabLink';
 
@@ -85,9 +85,11 @@ class Profile extends React.Component<Props> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="My Profile" />
-        <Typography variant="h1" data-qa-profile-header>
-          My Profile
-        </Typography>
+        <Breadcrumb
+          pathname={this.props.location.pathname}
+          labelTitle="My Profile"
+          removeCrumbX={1}
+        />
         <AppBar position="static" color="default">
           <Tabs
             value={this.tabs.findIndex(tab => matches(tab.routeName))}

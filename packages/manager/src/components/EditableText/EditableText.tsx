@@ -173,7 +173,7 @@ const EditableText: React.FC<FinalProps> = props => {
     if (h1Header.current !== null) {
       h1Header.current.focus();
     }
-  });
+  }, []);
 
   React.useEffect(() => {
     setText(props.text);

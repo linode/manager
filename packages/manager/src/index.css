@@ -342,5 +342,5 @@ button::-moz-focus-inner {
 }
 
 *:focus {
-  border: 2px red solid !important;
+  outline: 2px red solid !important;
 }
