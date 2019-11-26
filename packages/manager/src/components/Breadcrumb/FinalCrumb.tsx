@@ -54,8 +54,14 @@ type CombinedProps = Props;
 
 const FinalCrumb: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-
+  const h1Header = React.useRef<HTMLDivElement>(null);
   const { crumb, labelOptions, onEditHandlers } = props;
+
+  React.useEffect(() => {
+    if (h1Header.current !== null) {
+      h1Header.current.focus();
+    }
+  });
 
   if (onEditHandlers) {
     return (
@@ -82,6 +88,8 @@ const FinalCrumb: React.FC<CombinedProps> = props => {
             [classes.noCap]: labelOptions && labelOptions.noCap
           })}
           data-qa-label-text
+          tabIndex={-1}
+          ref={h1Header}
         >
           {crumb}
         </Typography>

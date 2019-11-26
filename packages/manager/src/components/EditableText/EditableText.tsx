@@ -149,168 +149,156 @@ interface Props {
   className?: string;
 }
 
-interface State {
-  text: string;
-  isEditing: Boolean;
-}
-
 type PassThroughProps = Props & TextFieldProps;
 
 type FinalProps = PassThroughProps & WithStyles<ClassNames>;
 
-export class EditableText extends React.Component<FinalProps, State> {
-  state: State = {
-    isEditing: Boolean(this.props.errorText),
-    text: this.props.text
-  };
+const EditableText: React.FC<FinalProps> = props => {
+  const [isEditing, setisEditing] = React.useState(Boolean(props.errorText));
+  const [text, setText] = React.useState(props.text);
+  const h1Header = React.useRef<HTMLDivElement>(null);
+  const {
+    classes,
+    labelLink,
+    errorText,
+    onEdit,
+    onCancel,
+    text: propText,
+    typeVariant,
+    className,
+    ...rest
+  } = props;
 
-  componentDidUpdate(prevProps: FinalProps, prevState: State) {
-    const { text } = this.props;
-    const { text: prevText } = prevProps;
-    if (text !== prevText) {
-      this.setState({
-        isEditing: false,
-        text
-      });
+  React.useEffect(() => {
+    if (h1Header.current !== null) {
+      h1Header.current.focus();
     }
-  }
+  });
 
-  onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ text: e.target.value });
+  React.useEffect(() => {
+    setText(props.text);
+  }, [props.text]);
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setText(e.target.value);
   };
 
-  openEdit = () => {
-    this.setState({ isEditing: true });
+  const openEdit = () => {
+    setisEditing(true);
   };
 
-  finishEditing = () => {
-    const { text } = this.state;
+  const finishEditing = () => {
     /**
      * if the entered text is different from the original text
      * provided, run the update callback
      *
      * only exit editing mode if promise resolved
      */
-    if (text !== this.props.text) {
-      this.props
+    if (text !== props.text) {
+      props
         .onEdit(text)
         .then(() => {
-          this.setState({ isEditing: false });
+          setisEditing(false);
         })
         .catch(e => e);
     } else {
       /** otherwise, we've just submitted the form with no value change */
-      this.setState({ isEditing: false });
+      setisEditing(false);
     }
   };
 
-  cancelEditing = () => {
-    /** cancel editing and invoke callback function and revert text to original */
-    this.setState({ isEditing: false, text: this.props.text }, () => {
-      this.props.onCancel();
-    });
+  const cancelEditing = () => {
+    setisEditing(false);
+    setText(props.text);
   };
 
   /** confirm or cancel edits if the enter or escape keys are pressed, respectively */
-  handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      this.finishEditing();
+      finishEditing();
     }
     if (e.key === 'Escape' || e.key === 'Esc') {
-      this.cancelEditing();
+      cancelEditing();
     }
   };
+  const labelText = (
+    <Typography
+      className={classes.root}
+      ref={h1Header}
+      tabIndex={-1}
+      variant="h1"
+      data-qa-editable-text
+    >
+      {text}
+    </Typography>
+  );
 
-  render() {
-    const {
-      classes,
-      labelLink,
-      errorText,
-      onEdit,
-      onCancel,
-      text: propText,
-      typeVariant,
-      className,
-      ...rest
-    } = this.props;
-    const { isEditing, text } = this.state;
-
-    const labelText = (
-      <Typography className={classes.root} variant="h1" data-qa-editable-text>
-        {this.state.text}
-      </Typography>
-    );
-
-    return !isEditing && !errorText ? (
-      <div
-        className={`${classes.container} ${classes.initial} ${className}`}
-        data-testid={'editable-text'}
-      >
-        <React.Fragment>
-          {!!labelLink ? (
-            <Link to={labelLink!} className={classes.underlineOnHover}>
-              {labelText}
-            </Link>
-          ) : (
-            labelText
-          )}
-          {/** pencil icon */}
-          <Button
-            className={`${classes.button} ${classes.editIcon}`}
-            onClick={this.openEdit}
-            data-qa-edit-button
-            aria-label={`Edit ${labelText}`}
-          >
-            <Edit className={`${classes.icon} ${classes.edit}`} />
-          </Button>
-        </React.Fragment>
-      </div>
-    ) : (
-      <ClickAwayListener
-        onClickAway={this.cancelEditing}
-        mouseEvent="onMouseDown"
-      >
-        <div
-          className={`${classes.container} ${classes.edit} ${className}`}
-          data-qa-edit-field
+  return !isEditing && !errorText ? (
+    <div
+      className={`${classes.container} ${classes.initial} ${className}`}
+      data-testid={'editable-text'}
+    >
+      <React.Fragment>
+        {!!labelLink ? (
+          <Link to={labelLink!} className={classes.underlineOnHover}>
+            {labelText}
+          </Link>
+        ) : (
+          labelText
+        )}
+        {/** pencil icon */}
+        <Button
+          className={`${classes.button} ${classes.editIcon}`}
+          onClick={openEdit}
+          data-qa-edit-button
+          aria-label={`Edit ${labelText}`}
         >
-          <TextField
-            {...rest}
-            className={classes.textField}
-            type="text"
-            onChange={this.onChange}
-            onKeyDown={this.handleKeyPress}
-            value={text}
-            errorText={this.props.errorText}
-            InputProps={{ className: classes.inputRoot }}
-            inputProps={{
-              className: classnames({
-                [classes.headline]: typeVariant === 'h1',
-                [classes.title]: typeVariant === 'h2',
-                [classes.input]: true
-              })
-            }}
-            autoFocus={true}
-          />
-          <Button
-            className={classes.button}
-            onClick={this.finishEditing}
-            data-qa-save-edit
-          >
-            <Check className={`${classes.icon} ${classes.save}`} />
-          </Button>
-          <Button
-            className={classes.button}
-            onClick={this.cancelEditing}
-            data-qa-cancel-edit
-          >
-            <Close className={`${classes.icon} ${classes.close}`} />
-          </Button>
-        </div>
-      </ClickAwayListener>
-    );
-  }
-}
+          <Edit className={`${classes.icon} ${classes.edit}`} />
+        </Button>
+      </React.Fragment>
+    </div>
+  ) : (
+    <ClickAwayListener onClickAway={cancelEditing} mouseEvent="onMouseDown">
+      <div
+        className={`${classes.container} ${classes.edit} ${className}`}
+        data-qa-edit-field
+      >
+        <TextField
+          {...rest}
+          className={classes.textField}
+          type="text"
+          onChange={onChange}
+          onKeyDown={handleKeyPress}
+          value={text}
+          errorText={props.errorText}
+          InputProps={{ className: classes.inputRoot }}
+          inputProps={{
+            className: classnames({
+              [classes.headline]: typeVariant === 'h1',
+              [classes.title]: typeVariant === 'h2',
+              [classes.input]: true
+            })
+          }}
+          autoFocus={true}
+        />
+        <Button
+          className={classes.button}
+          onClick={finishEditing}
+          data-qa-save-edit
+        >
+          <Check className={`${classes.icon} ${classes.save}`} />
+        </Button>
+        <Button
+          className={classes.button}
+          onClick={cancelEditing}
+          data-qa-cancel-edit
+        >
+          <Close className={`${classes.icon} ${classes.close}`} />
+        </Button>
+      </div>
+    </ClickAwayListener>
+  );
+};
 
 const styled = withStyles(styles);
 
