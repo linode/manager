@@ -1,29 +1,22 @@
 import { DataSeries, ManagedStatsData } from 'linode-js-sdk/lib/managed';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  WithTheme,
+  withTheme
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import LineGraph from 'src/components/LineGraph';
+import SimpleLegend from 'src/components/LineGraph/SimpleLegend';
 import TabbedPanel from 'src/components/TabbedPanel';
 import useTimezone from 'src/utilities/useTimezone';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    position: 'relative',
-    '& canvas': {
-      paddingLeft: 16
-    }
-  },
-  ioChart: {
-    '& canvas': {
-      paddingLeft: 30
-    }
-  },
-  networkChart: {
-    '& canvas': {
-      paddingLeft: 24
-    }
+    position: 'relative'
   },
   inner: {
     paddingTop: 0
@@ -51,12 +44,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       height: `300px !important`
     }
   },
-  leftLegend: {
-    position: 'absolute',
-    left: 0,
-    bottom: 23,
-    color: '#777',
-    fontSize: 14
+  canvasContainer: {
+    marginTop: theme.spacing(3)
   },
   chartSelect: {
     maxWidth: 150,
@@ -77,10 +66,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       top: -6
     }
   },
-  caption: {
-    marginBottom: theme.spacing(3),
-    paddingLeft: theme.spacing()
-  }
+  caption: {}
 }));
 
 interface Props {
@@ -88,6 +74,8 @@ interface Props {
   loading: boolean;
   error?: string;
 }
+
+type CombinedProps = Props & WithTheme;
 
 const chartHeight = 300;
 
@@ -97,7 +85,8 @@ const formatData = (value: DataSeries[]): [number, number][] =>
 const createTabs = (
   data: ManagedStatsData | null,
   timezone: string,
-  classes: Record<string, string>
+  classes: Record<string, string>,
+  theme: Theme
 ) => {
   const summaryCopy = (
     <Typography variant="body1" className={classes.caption}>
@@ -113,16 +102,15 @@ const createTabs = (
         return (
           <div className={classes.root}>
             <div>{summaryCopy}</div>
-            <div className={classes.leftLegend}>%</div>
-            <div>
+            <div className={classes.canvasContainer}>
               <LineGraph
                 timezone={timezone}
                 chartHeight={chartHeight}
                 showToday={true}
                 data={[
                   {
-                    borderColor: 'rgba(54, 131, 220, 1)',
-                    backgroundColor: 'rgba(54, 131, 220, .5)',
+                    borderColor: theme.graphs.blueBorder,
+                    backgroundColor: theme.graphs.blue,
                     data: formatData(data.cpu),
                     label: 'CPU %'
                   }
@@ -132,29 +120,34 @@ const createTabs = (
           </div>
         );
       },
-      title: 'CPU Usage'
+      title: 'CPU Usage (%)'
     },
     {
       render: () => {
         return (
-          <div className={`${classes.root} ${classes.networkChart}`}>
+          <div className={classes.root}>
             <div>{summaryCopy}</div>
-            <div className={classes.leftLegend}>bits/s</div>
-            <div>
+            <SimpleLegend
+              rows={[
+                { legendTitle: 'Network Traffic In', legendColor: 'blue' },
+                { legendTitle: 'Network Traffic Out', legendColor: 'green' }
+              ]}
+            />
+            <div className={classes.canvasContainer}>
               <LineGraph
                 timezone={timezone}
                 chartHeight={chartHeight}
                 showToday={true}
                 data={[
                   {
-                    borderColor: 'rgba(54, 131, 220, 1)',
-                    backgroundColor: 'rgba(54, 131, 220, .5)',
+                    borderColor: theme.graphs.blueBorder,
+                    backgroundColor: theme.graphs.blue,
                     data: formatData(data.net_in),
                     label: 'Network Traffic In'
                   },
                   {
-                    borderColor: 'rgba(1, 177, 89, 1)',
-                    backgroundColor: 'rgba(1, 177, 89, .5)',
+                    borderColor: theme.graphs.greenBorder,
+                    backgroundColor: theme.graphs.green,
                     data: formatData(data.net_out),
                     label: 'Network Traffic Out'
                   }
@@ -164,23 +157,22 @@ const createTabs = (
           </div>
         );
       },
-      title: 'Network Transfer'
+      title: 'Network Transfer (bits/s)'
     },
     {
       render: () => {
         return (
-          <div className={`${classes.root} ${classes.ioChart}`}>
+          <div className={classes.root}>
             <div>{summaryCopy}</div>
-            <div className={classes.leftLegend}>op/s</div>
-            <div>
+            <div className={classes.canvasContainer}>
               <LineGraph
                 timezone={timezone}
                 chartHeight={chartHeight}
                 showToday={true}
                 data={[
                   {
-                    borderColor: 'rgba(255, 209, 0, 1)',
-                    backgroundColor: 'rgba(255, 209, 0, .5)',
+                    borderColor: theme.graphs.yellowBorder,
+                    backgroundColor: theme.graphs.yellow,
                     data: formatData(data.disk),
                     label: 'Disk I/O'
                   }
@@ -190,13 +182,13 @@ const createTabs = (
           </div>
         );
       },
-      title: 'Disk I/O'
+      title: 'Disk I/O (op/s)'
     }
   ];
 };
 
-export const ManagedChartPanel: React.FC<Props> = props => {
-  const { data, error, loading } = props;
+export const ManagedChartPanel: React.FC<CombinedProps> = props => {
+  const { data, error, loading, theme } = props;
   const classes = useStyles();
   const timezone = useTimezone();
 
@@ -212,7 +204,7 @@ export const ManagedChartPanel: React.FC<Props> = props => {
     return null;
   }
 
-  const tabs = createTabs(data, timezone, classes);
+  const tabs = createTabs(data, timezone, classes, theme);
 
   const initialTab = 0;
 
@@ -233,4 +225,4 @@ export const ManagedChartPanel: React.FC<Props> = props => {
   );
 };
 
-export default React.memo(ManagedChartPanel);
+export default React.memo(withTheme(ManagedChartPanel));

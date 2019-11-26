@@ -73,7 +73,6 @@ export const LongviewClientInstructions: React.FC<Props> = props => {
             <Grid item xs={12} md={3}>
               <EditableEntityLabel
                 text={clientLabel}
-                iconVariant="linode"
                 subText="Waiting for data..."
                 onEdit={handleUpdateLabel}
                 loading={updating}
