@@ -340,3 +340,7 @@ button::-moz-focus-inner {
 .terminal {
   padding: 24px;
 }
+
+*:focus {
+  border: 2px red solid !important;
+}

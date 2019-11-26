@@ -5,6 +5,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import 'rxjs/add/operator/filter';
 import AddNewLink from 'src/components/AddNewLink';
+import Breadcrumb from 'src/components/Breadcrumb';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -15,7 +16,6 @@ import {
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
-import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
@@ -130,9 +130,12 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
         style={{ paddingBottom: 0 }}
       >
         <Grid item>
-          <Typography variant="h1" data-qa-title className={classes.title}>
-            Kubernetes Clusters
-          </Typography>
+          <Breadcrumb
+            pathname={props.location.pathname}
+            labelTitle="Kubernetes Clusters"
+            removeCrumbX={1}
+            className={classes.title}
+          />
         </Grid>
         <Grid item>
           <Grid container alignItems="flex-end">
