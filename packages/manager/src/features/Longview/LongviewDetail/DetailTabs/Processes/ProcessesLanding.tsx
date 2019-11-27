@@ -63,7 +63,13 @@ const ProcessesLanding: React.FC<Props> = props => {
           </Box>
           <ProcessesTable
             processesData={extendData(processes.data)}
-            processesLoading={processes.loading && !lastUpdated}
+            // It's correct to set loading to `true` when
+            // processes.lastUpdated === 0. The reason we do this is to avoid
+            // a state where we haven't made the request to get processes yet
+            // (since we're waiting on lastUpdated) and thus processes.loading
+            // is `false` but we don't have any data to show. Instead of showing
+            // an empty state, we want to show a loader.
+            processesLoading={processes.loading || processes.lastUpdated === 0}
             processesError={processes.error}
             selectedRow={selectedRow}
             setSelectedRow={setSelectedRow}
@@ -73,7 +79,7 @@ const ProcessesLanding: React.FC<Props> = props => {
         <Grid item xs={3}>
           <ProcessesGraphs
             processesData={extendData(processes.data)}
-            processesLoading={processes.loading && !lastUpdated}
+            processesLoading={processes.loading || processes.lastUpdated === 0}
             processesError={processes.error}
             selectedRow={selectedRow}
           />
@@ -103,9 +109,7 @@ export const extendData = (
       const userProcess = processesData.Processes![processName][user];
 
       extendedData.push({
-        // Realistically the processName + username should be enough for this to
-        // be unique, but I decided to append a random number just in case.
-        id: `${processName}-${user}-${Math.floor(Math.random() * 10000)}`,
+        id: `${processName}-${user}`,
         name: processName,
         user,
         maxCount: statMax(userProcess.count),
