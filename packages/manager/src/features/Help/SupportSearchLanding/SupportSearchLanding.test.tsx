@@ -1,9 +1,8 @@
 import { shallow } from 'enzyme';
 import { assocPath } from 'ramda';
 import * as React from 'react';
-
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import Typography from 'src/components/core/Typography';
+import Breadcrumb from 'src/components/Breadcrumb';
 import { CombinedProps, SupportSearchLanding } from './SupportSearchLanding';
 
 const classes = {
@@ -50,7 +49,12 @@ describe('Component', () => {
   it('should display the query text in the header', () => {
     expect(
       component.containsMatchingElement(
-        <Typography variant="h1">Search results for "search"</Typography>
+        <Breadcrumb
+          pathname="/"
+          labelTitle='Search results for "search"'
+          removeCrumbX={2}
+          data-qa-support-search-landing-title={true}
+        />
       )
     ).toBeTruthy();
   });
@@ -58,12 +62,22 @@ describe('Component', () => {
     component.setState({ query: '' });
     expect(
       component.containsMatchingElement(
-        <Typography variant="h1">Search</Typography>
+        <Breadcrumb
+          pathname="/"
+          labelTitle="Search"
+          removeCrumbX={2}
+          data-qa-support-search-landing-title={true}
+        />
       )
     ).toBeTruthy();
     expect(
       component.containsMatchingElement(
-        <Typography variant="h1">Search results for</Typography>
+        <Breadcrumb
+          pathname="/"
+          labelTitle="Search results for"
+          removeCrumbX={2}
+          data-qa-support-search-landing-title={true}
+        />
       )
     ).toBeFalsy();
   });

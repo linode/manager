@@ -85,7 +85,7 @@ export const BackupsDashboardCard: React.StatelessComponent<
   }
 
   return (
-    <DashboardCard>
+    <DashboardCard data-qa-backups-dashboard-card>
       <Paper
         className={classNames({
           [classes.section]: true,
