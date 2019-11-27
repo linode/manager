@@ -181,9 +181,9 @@ export const ProcessesTableRow: React.FC<ProcessTableRowProps> = React.memo(
         </TableCell>
         <TableCell
           parentColumn="Max Count"
-          data-testid={`max-count-${maxCount}`}
+          data-testid={`max-count-${Math.round(maxCount)}`}
         >
-          {maxCount}
+          {Math.round(maxCount)}
         </TableCell>
         <TableCell
           parentColumn="Avg IO"
