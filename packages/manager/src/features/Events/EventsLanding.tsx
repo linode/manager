@@ -6,6 +6,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Waypoint from 'react-waypoint';
 import { compose } from 'recompose';
+import Breadcrumb from 'src/components/Breadcrumb';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -278,9 +279,11 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
     <>
       {/* Only display this title on the main Events landing page */}
       {!entityId && (
-        <Typography variant="h1" className={classes.header}>
-          Events
-        </Typography>
+        <Breadcrumb
+          pathname={''}
+          className={classes.header}
+          labelTitle="Events"
+        />
       )}
       <Paper>
         <Table aria-label="List of Events">

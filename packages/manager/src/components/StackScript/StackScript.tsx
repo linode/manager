@@ -2,6 +2,7 @@ import { Image } from 'linode-js-sdk/lib/images';
 import { StackScript } from 'linode-js-sdk/lib/stackscripts';
 import * as React from 'react';
 import { compose } from 'recompose';
+import Breadcrumb from 'src/components/Breadcrumb';
 import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
 import {
@@ -121,9 +122,11 @@ export class _StackScript extends React.Component<CombinedProps> {
 
     return (
       <div className={classes.root}>
-        <Typography variant="h1" component="h2" data-qa-stack-title={label}>
-          {label}
-        </Typography>
+        <Breadcrumb
+          pathname={''}
+          labelTitle={label}
+          data-qa-stack-title={label}
+        />
         <Typography
           variant="h3"
           className={classes.author}

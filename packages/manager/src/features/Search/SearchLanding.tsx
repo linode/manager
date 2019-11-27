@@ -2,6 +2,7 @@ import { equals } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
+import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import {
   createStyles,
@@ -142,9 +143,12 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
       <Grid container direction="column">
         <Grid item>
           {!resultsEmpty && !entitiesLoading && (
-            <Typography variant="h1" className={classes.headline}>
-              Search Results {query && `for "${query}"`}
-            </Typography>
+            <Breadcrumb
+              pathname={this.props.location.pathname}
+              labelTitle={`Search Results ${query && `for "${query}"`}`}
+              className={classes.headline}
+              removeCrumbX={1}
+            />
           )}
         </Grid>
         {errors.hasErrors && (

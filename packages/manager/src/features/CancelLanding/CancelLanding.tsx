@@ -2,6 +2,7 @@ import { path } from 'ramda';
 import * as React from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
 import { compose } from 'recompose';
+import Breadcrumb from 'src/components/Breadcrumb';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
 import Logo from 'src/assets/logo/logo-footer.svg';
@@ -53,7 +54,10 @@ export const CancelLanding: React.FC<{}> = () => {
   return (
     <div className={classes.root} data-testid="body">
       <Logo className={classes.logo} />
-      <Typography variant="h1">It's been our pleasure to serve you.</Typography>
+      <Breadcrumb
+        pathname={''}
+        labelTitle="It's been our pleasure to serve you."
+      />
       <Typography>
         Your account is closed. We hope you'll consider Linode for your future
         cloud hosting needs.

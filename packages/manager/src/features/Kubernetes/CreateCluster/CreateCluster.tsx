@@ -10,6 +10,7 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { StickyContainer } from 'react-sticky';
 import { compose } from 'recompose';
+import Breadcrumb from 'src/components/Breadcrumb';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import {
@@ -18,7 +19,6 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
@@ -44,7 +44,8 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     title: {
-      marginBottom: theme.spacing(1) + theme.spacing(1) / 2
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(1)
     },
     sidebar: {
       [theme.breakpoints.up('md')]: {
@@ -248,9 +249,12 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
         <Grid container spacing={2}>
           <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
           <Grid item className={`mlMain py0`}>
-            <Typography variant="h1" data-qa-title className={classes.title}>
-              Create a Kubernetes Cluster
-            </Typography>
+            <Breadcrumb
+              pathname={this.props.location.pathname}
+              data-qa-title
+              className={classes.title}
+              labelTitle="Create a Kubernetes Cluster"
+            />
             {errorMap.none && <Notice text={errorMap.none} error />}
             <SelectRegionPanel
               error={errorMap.region}
