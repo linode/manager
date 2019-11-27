@@ -44,8 +44,8 @@ const styles = (theme: Theme) =>
     },
     icon: {
       animation: '$scaleIn .5s ease-in-out',
-      width: 225,
-      height: 225,
+      width: 150,
+      height: 150,
       '& use': {
         fill: theme.bg.main
       },

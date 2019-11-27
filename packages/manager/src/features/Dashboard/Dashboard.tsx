@@ -7,6 +7,7 @@ import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import AbuseTicketBanner from 'src/components/AbuseTicketBanner';
+import Breadcrumb from 'src/components/Breadcrumb';
 import {
   createStyles,
   Theme,
@@ -14,7 +15,6 @@ import {
   WithStyles,
   WithTheme
 } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
@@ -104,9 +104,10 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
         <TaxBanner location={location} marginBottom={8} />
         <DocumentTitleSegment segment="Dashboard" />
         <Grid item xs={12}>
-          <Typography variant="h1" data-qa-dashboard-header>
-            Dashboard
-          </Typography>
+          <Breadcrumb
+            pathname={props.location.pathname}
+            data-qa-dashboard-header
+          />
         </Grid>
         {managed && (
           <Grid item xs={12}>
