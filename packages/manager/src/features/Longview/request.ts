@@ -77,6 +77,12 @@ type AllData = LongviewCPU &
  * For example if the action is getLatestValue and the field is ['CPU.*'],
  * the return type will be Promise<LongviewCPU>
  */
+
+interface WithStartAndEnd {
+  start: number;
+  end: number;
+}
+
 interface Get {
   (token: string, action: 'lastUpdated'): Promise<Partial<LastUpdated>>;
   (
@@ -109,6 +115,16 @@ interface Get {
     action: 'getValues',
     options: { fields: 'processes'[] }
   ): Promise<LongviewProcesses>;
+  (
+    token: string,
+    action: 'getValues',
+    options: {
+      fields: 'cpu'[];
+    } & Partial<WithStartAndEnd>
+  ): Promise<Partial<LongviewCPU>>;
+  (token: string, action: LongviewAction, options: Partial<Options>): Promise<
+    Partial<AllData>
+  >;
 }
 
 export type LongviewAction =
