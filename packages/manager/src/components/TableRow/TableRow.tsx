@@ -68,9 +68,12 @@ const styles = (theme: Theme) =>
       }
     },
     activeCaret: {
+      color: theme.bg.lightBlue,
       position: 'absolute',
-      top: -1,
-      right: -15
+      top: 0,
+      right: theme.spacing(1) === 4 ? -12 : 14,
+      transform: 'translate(-.5px, -.5px)',
+      height: theme.spacing(1) === 4 ? 34 : 42
     }
   });
 
@@ -166,7 +169,11 @@ class TableRow extends React.Component<CombinedProps> {
         tabIndex={rowLink || forceIndex ? 0 : -1}
       >
         {this.props.children}
-        {selected && <ActiveCaret className={classes.activeCaret} />}
+        {selected && (
+          <td colSpan={0}>
+            <ActiveCaret className={classes.activeCaret} />
+          </td>
+        )}
       </_TableRow>
     );
   }
