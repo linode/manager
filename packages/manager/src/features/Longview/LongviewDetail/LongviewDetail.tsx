@@ -251,6 +251,8 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
               <Disks
                 clientID={client.id}
                 clientAPIKey={client.api_key}
+                clientLastUpdated={lastUpdated}
+                lastUpdatedError={lastUpdatedError}
                 {...routerProps}
               />
             )}

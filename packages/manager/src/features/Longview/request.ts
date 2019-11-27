@@ -116,6 +116,13 @@ interface Get {
       fields: 'cpu'[];
     } & Partial<WithStartAndEnd>
   ): Promise<Partial<LongviewCPU>>;
+  (
+    token: string,
+    action: 'getValues',
+    options: {
+      fields: 'disk'[];
+    } & Partial<WithStartAndEnd>
+  ): Promise<Partial<LongviewDisk>>;
   (token: string, action: LongviewAction, options: Partial<Options>): Promise<
     Partial<AllData>
   >;
