@@ -43,7 +43,8 @@
     "docker:test": "docker build -f Dockerfile . -t 'manager' && docker run -it cloud --rm -v $(pwd)/packages/manager/src:/home/node/app/packages/manager/src -v $(pwd)/packages/linode-js-sdk/src:/home/node/app/packages/linode-js-sdk/src manager test",
     "docker:local": "docker build -f Dockerfile . -t 'manager' -t 'dev' && docker run -it --rm -p 3000:3000 -v $(pwd)/packages/manager/src:/home/node/app/packages/manager/src -v $(pwd)/packages/linode-js-sdk/src:/home/node/app/packages/linode-js-sdk/src manager start:docker",
     "docker:storybook": "docker build -f Dockerfile . -t 'storybook' && docker run -it --rm -p 6006:6006 -v $(pwd)/packages/manager/src:/home/node/app/packages/manager/src -v $(pwd)/packages/linode-js-sdk/src:/home/node/app/packages/linode-js-sdk/src storybook storybook",
-    "docker:storybook:test": "docker-compose -f packages/manager/storybook-test.yml up --build --exit-code-from storybook-test"
+    "docker:storybook:test": "docker-compose -f packages/manager/storybook-test.yml up --build --exit-code-from storybook-test",
+    "start:nginx":"docker run --rm --name www -p 3000:80 -v $(pwd)/packages/manager/build:/usr/share/nginx/html -v $(pwd)/nginx-e2e.conf:/etc/nginx/conf.d/default.conf:ro -d nginx"
   },
   "resolutions": {
     "handlebars": "^4.4.3"
