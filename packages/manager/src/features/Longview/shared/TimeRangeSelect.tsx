@@ -17,6 +17,7 @@ interface ReduxStateProps {
 }
 
 export type Labels =
+  | 'Select a time range'
   | 'Past 30 Minutes'
   | 'Past 12 Hours'
   | 'Past 24 Hours'
@@ -130,6 +131,10 @@ export const generateSelectOptions = (
 ): Item<Labels, Labels>[] => {
   const baseOptions: Item<Labels, Labels>[] = [
     {
+      label: 'Select a time range',
+      value: 'Select a time range'
+    },
+    {
       label: 'Past 30 Minutes',
       value: 'Past 30 Minutes'
     },
@@ -178,6 +183,8 @@ export const generateStartTime = (
   currentYear: number
 ) => {
   switch (modifier) {
+    case 'Select a time range':
+      return 0;
     case 'Past 30 Minutes':
       return nowInSeconds - 30 * 60;
     case 'Past 12 Hours':
