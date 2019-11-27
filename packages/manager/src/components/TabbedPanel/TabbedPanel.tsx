@@ -26,6 +26,10 @@ const styles = (theme: Theme) =>
       padding: theme.spacing(2),
       [theme.breakpoints.up('sm')]: {
         padding: theme.spacing(3)
+      },
+      '[role="tabpanel"]:focus': {
+        borderColor: 'orange',
+        outline: '1px solid orange'
       }
     },
     copy: {
@@ -70,6 +74,37 @@ class TabbedPanel extends React.Component<CombinedProps> {
     this.setState({ value });
   };
 
+  handleKeyPress = (e: React.ChangeEvent<HTMLDivElement>, value: number) => {
+    const tabPanel = document.getElementById(`tabpanel-${value}`);
+
+    if (e && tabPanel) {
+      tabPanel.focus();
+    }
+  };
+
+  tabToPanel = (value: number) => {
+    const tabPanel = document.getElementById(`tabpanel-${value}`);
+
+    return tabPanel;
+  };
+
+  tabA11yProps(index: number) {
+    return {
+      id: `tab-${index}`,
+      role: 'tab',
+      'aria-controls': `tabpanel-${index}`
+    };
+  }
+
+  tabPanelA11yProps(index: number) {
+    return {
+      id: `tabpanel-${index}`,
+      role: 'tabpanel',
+      'aria-labelledby': `tab-${index}`,
+      tabIndex: 0
+    };
+  }
+
   render() {
     const {
       classes,
@@ -103,10 +138,14 @@ class TabbedPanel extends React.Component<CombinedProps> {
               {copy}
             </Typography>
           )}
-          <AppBar position="static" color="default">
+          <AppBar position="static" color="default" role="tablist">
             <Tabs
               value={value}
               onChange={this.handleChange}
+              onKeyDown={(e: any) =>
+                e.keyCode === 13 ||
+                (e.keyCode === 9 && this.handleKeyPress(e, value))
+              }
               indicatorColor="primary"
               textColor="primary"
               className={`${classes.tabs}`}
@@ -114,7 +153,12 @@ class TabbedPanel extends React.Component<CombinedProps> {
               scrollButtons="on"
             >
               {tabs.map((tab, idx) => (
-                <Tab key={idx} label={tab.title} data-qa-tab={tab.title} />
+                <Tab
+                  key={idx}
+                  label={tab.title}
+                  data-qa-tab={tab.title}
+                  {...this.tabA11yProps(idx)}
+                />
               ))}
             </Tabs>
           </AppBar>
@@ -126,6 +170,7 @@ class TabbedPanel extends React.Component<CombinedProps> {
               shrinkTabContent
             )}
             data-qa-tab-body
+            {...this.tabPanelA11yProps(value)}
           >
             {render(rest)}
           </div>
