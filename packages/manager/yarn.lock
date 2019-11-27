@@ -3039,11 +3039,6 @@
   resolved "https://registry.yarnpkg.com/@types/yup/-/yup-0.24.9.tgz#da98f4b38eec7ca72146e7042679c8c8628896fa"
   integrity sha512-PxWHuxuJgCuVenEJk8cW6z7F+JFMHAJMSbih3gyjUOU23tjSjz2/jDBmb17yp1CBbozozQKn3InIXtYH3RzJGg==
 
-"@types/zxcvbn@^4.4.0":
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/@types/zxcvbn/-/zxcvbn-4.4.0.tgz#fbc1d941cc6d9d37d18405c513ba6b294f89b609"
-  integrity sha512-GQLOT+SN20a+AI51y3fAimhyTF4Y0RG+YP3gf91OibIZ7CJmPFgoZi+ZR5a+vRbS01LbQosITWum4ATmJ1Z6Pg==
-
 "@wdio/cli@^5.10.10":
   version "5.11.11"
   resolved "https://registry.yarnpkg.com/@wdio/cli/-/cli-5.11.11.tgz#3ab56bc753c9af1ca381c6c4a75ca1ec791eccdf"
@@ -16877,8 +16872,3 @@ zip-stream@^2.1.0:
     archiver-utils "^2.1.0"
     compress-commons "^2.0.0"
     readable-stream "^3.4.0"
-
-zxcvbn@^4.4.2:
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/zxcvbn/-/zxcvbn-4.4.2.tgz#28ec17cf09743edcab056ddd8b1b06262cc73c30"
-  integrity sha1-KOwXzwl0PtyrBW3dixsGJizHPDA=
