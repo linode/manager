@@ -1,9 +1,8 @@
 import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 
-import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -19,17 +18,12 @@ import {
   LongviewPortsResponse,
   LongviewTopProcesses
 } from 'src/features/Longview/request.types';
+import TopProcesses from './TopProcesses';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paperSection: {
     padding: theme.spacing(3) + 1,
     marginBottom: theme.spacing(1) + 3
-  },
-  detailsLink: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    position: 'relative',
-    top: 3
   }
 }));
 
@@ -61,8 +55,6 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
     lastUpdatedError
   } = props;
 
-  const url = pathOr('', ['match', 'url'], props);
-
   /**
    * Show an error for the services/connections
    * tables if the request errors, or if there is
@@ -88,26 +80,12 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
               <Grid item xs={12} md={4} lg={6}>
                 Gauges
               </Grid>
-              <Grid item xs={12} md={4} lg={3}>
-                <Box
-                  display="flex"
-                  flexDirection="row"
-                  justifyContent="space-between"
-                >
-                  <Typography variant="h2">Top Processes</Typography>
-                  <Link to={`${url}/processes`} className={classes.detailsLink}>
-                    View Details
-                  </Link>
-                </Box>
-                {/* @todo: Replace with real component. */}
-                {topProcessesLoading && <div>Loading...</div>}
-                {(lastUpdatedError || topProcessesError) && <div>Error!</div>}
-                {Object.keys(topProcessesData.Processes || []).length > 0 && (
-                  <pre>
-                    {JSON.stringify(props.topProcessesData.Processes, null, 2)}
-                  </pre>
-                )}
-              </Grid>
+              <TopProcesses
+                topProcessesData={topProcessesData}
+                topProcessesLoading={topProcessesLoading}
+                topProcessesError={topProcessesError}
+                lastUpdatedError={lastUpdatedError}
+              />
             </Grid>
           </Paper>
         </Grid>
