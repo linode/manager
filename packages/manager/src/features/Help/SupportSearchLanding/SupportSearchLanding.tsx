@@ -123,6 +123,7 @@ export class SupportSearchLanding extends React.Component<
                   query.length > 1 ? `Search results for "${query}"` : 'Search'
                 }
                 removeCrumbX={2}
+                data-qa-support-search-landing-title
               />
             </Grid>
           </Grid>
