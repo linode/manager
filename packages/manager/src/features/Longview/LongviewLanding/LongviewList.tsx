@@ -7,7 +7,6 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
-import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import { Props as LVProps } from 'src/containers/longview.container';
@@ -113,37 +112,33 @@ const LongviewList: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      <OrderBy data={filteredData} orderBy={'label'} order={'asc'}>
-        {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-          <Paginate data={orderedData}>
-            {({
-              data: paginatedAndOrderedData,
-              count,
-              handlePageChange,
-              handlePageSizeChange,
-              page,
-              pageSize
-            }) => (
-              <>
-                <Box flexDirection="column">
-                  <LongviewRows
-                    longviewClientsData={paginatedAndOrderedData}
-                    triggerDeleteLongviewClient={triggerDeleteLongviewClient}
-                  />
-                </Box>
-                <PaginationFooter
-                  count={count}
-                  handlePageChange={handlePageChange}
-                  handleSizeChange={handlePageSizeChange}
-                  page={page}
-                  pageSize={pageSize}
-                  eventCategory="Longview Table"
-                />
-              </>
-            )}
-          </Paginate>
+      <Paginate data={filteredData}>
+        {({
+          data: paginatedAndOrderedData,
+          count,
+          handlePageChange,
+          handlePageSizeChange,
+          page,
+          pageSize
+        }) => (
+          <>
+            <Box flexDirection="column">
+              <LongviewRows
+                longviewClientsData={paginatedAndOrderedData}
+                triggerDeleteLongviewClient={triggerDeleteLongviewClient}
+              />
+            </Box>
+            <PaginationFooter
+              count={count}
+              handlePageChange={handlePageChange}
+              handleSizeChange={handlePageSizeChange}
+              page={page}
+              pageSize={pageSize}
+              eventCategory="Longview Table"
+            />
+          </>
         )}
-      </OrderBy>
+      </Paginate>
     </React.Fragment>
   );
 };
