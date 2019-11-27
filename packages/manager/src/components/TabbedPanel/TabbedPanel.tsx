@@ -74,7 +74,7 @@ class TabbedPanel extends React.Component<CombinedProps> {
     this.setState({ value });
   };
 
-  handleKeyPress = (e: React.ChangeEvent<HTMLDivElement>, value: number) => {
+  handleTabToPanel = (e: React.ChangeEvent<HTMLDivElement>, value: number) => {
     const tabPanel = document.getElementById(`tabpanel-${value}`);
 
     if (e && tabPanel) {
@@ -82,10 +82,45 @@ class TabbedPanel extends React.Component<CombinedProps> {
     }
   };
 
-  tabToPanel = (value: number) => {
-    const tabPanel = document.getElementById(`tabpanel-${value}`);
+  // Need to find a way to only scope this to each tabbed panel component instead of capturing all tab interfaces on a page (ahem resize)
+  onKeyDown = (e: any, value: number) => {
+    // Enable arrow navigation between tabs in the tab list
+    let tabFocus = 0;
+    const tabs: any = document.querySelectorAll('[role="tab"]');
 
-    return tabPanel;
+    // If tab or enter, goes to associated tabpanel
+    if (e.keyCode === 13 || e.keyCode === 9) {
+      this.handleTabToPanel(e, value);
+    }
+
+    // TODO get this to work per component
+    if (e.keyCode === 39 || e.keyCode === 37) {
+      tabs[tabFocus].setAttribute('tabindex', '-1');
+      if (e.keyCode === 39) {
+        tabFocus++;
+        // If we're at the end, go to the start
+        if (tabFocus >= tabs.length) {
+          tabFocus = 0;
+        }
+        // Move left
+      } else if (e.keyCode === 37) {
+        tabFocus--;
+        // If we're at the start, move to the end
+        if (tabFocus < 0) {
+          tabFocus = tabs.length - 1;
+        }
+      }
+
+      tabs[tabFocus].setAttribute('tabindex', '0');
+      tabs[tabFocus].focus();
+    }
+
+    // TODO
+    // If shift + tab, traverses back to tabs
+    // if (e.shiftKey && e.keyCode === 9 && tab) {
+    //   tab.setAttribute('tabindex', '0');
+    //   tab.focus();
+    // }
   };
 
   tabA11yProps(index: number) {
@@ -138,14 +173,16 @@ class TabbedPanel extends React.Component<CombinedProps> {
               {copy}
             </Typography>
           )}
-          <AppBar position="static" color="default" role="tablist">
+          <AppBar
+            position="static"
+            color="default"
+            onKeyDown={(e: any) => this.onKeyDown(e, value)}
+            role="tablist"
+            className="tablist-kayla"
+          >
             <Tabs
               value={value}
               onChange={this.handleChange}
-              onKeyDown={(e: any) =>
-                e.keyCode === 13 ||
-                (e.keyCode === 9 && this.handleKeyPress(e, value))
-              }
               indicatorColor="primary"
               textColor="primary"
               className={`${classes.tabs}`}
