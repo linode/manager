@@ -286,7 +286,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
             disabledReason={
               userCanCreateClient
                 ? ''
-                : 'You do not have access to create Longview Clients. Please contact an account administrator.'
+                : 'You are not authorized to create Longview Clients. Please contact an account administrator.'
             }
           />
         </Grid>
@@ -301,6 +301,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
         openPackageDrawer={handleDrawerOpen}
         createLongviewClient={handleAddClient}
         loading={newClientLoading}
+        userCanCreateLongviewClient={userCanCreateClient}
       />
       {!isLongviewPro && (
         <Grid
