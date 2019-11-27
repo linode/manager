@@ -7,7 +7,9 @@ import { longviewClientFactory } from 'src/factories/longviewClient';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import {
   filterLongviewClientsByQuery,
-  LongviewClients
+  LongviewClients,
+  sortClientsBy,
+  sortFunc
 } from './LongviewClients';
 
 afterEach(cleanup);
@@ -57,6 +59,40 @@ describe('Utility Functions', () => {
       expect(filterLongviewClientsByQuery('fdsafdsafsdf', clients, {})).toEqual(
         []
       );
+  });
+
+  describe('Sorting helpers', () => {
+    describe('sortFunc helper', () => {
+      it('should handle basic sorting logic', () => {
+        expect([4, 5, 3, 1, 2].sort(sortFunc)).toEqual([5, 4, 3, 2, 1]);
+        expect(['d', 'c', 'a', 'e', 'b'].sort(sortFunc)).toEqual([
+          'e',
+          'd',
+          'c',
+          'b',
+          'a'
+        ]);
+      });
+
+      it('should respect the optional order argument', () => {
+        expect([4, 3, 5, 1, 2].sort((a, b) => sortFunc(a, b, 'asc'))).toEqual([
+          1,
+          2,
+          3,
+          4,
+          5
+        ]);
+
+        expect(
+          ['d', 'c', 'a', 'e', 'b'].sort((a, b) => sortFunc(a, b, 'desc'))
+        ).toEqual(['e', 'd', 'c', 'b', 'a']);
+      });
+    });
+    describe('sortClientsBy', () => {
+      it('should sort correctly by CPU percentage', () => {
+        expect(sortClientsBy('CPU' as any, [], {})).toEqual([]);
+      });
+    });
   });
 });
 
