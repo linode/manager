@@ -29,11 +29,11 @@ export const OverviewGraphs: React.FC<Props> = props => {
     end: 0
   });
   const [data, setData] = React.useState<Partial<AllData>>({});
-  const request = () =>
+  const request = (start: number = time.start, end: number = time.end) =>
     getValues(clientAPIKey, {
       fields: ['cpu', 'memory', 'network', 'disk'],
-      start: time.start,
-      end: time.end
+      start,
+      end
     }).then(response => setData(response));
 
   const { lastUpdated } = useClientLastUpdated(
@@ -43,7 +43,7 @@ export const OverviewGraphs: React.FC<Props> = props => {
 
   const handleStatsChange = (start: number, end: number) => {
     setTimeBox({ start, end });
-    request();
+    request(start, end);
   };
 
   console.log(data);
