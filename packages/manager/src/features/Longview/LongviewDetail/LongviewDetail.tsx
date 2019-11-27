@@ -290,6 +290,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           render={routerProps => (
             <Overview
               client={client.label}
+              clientAPIKey={client.api_key}
               longviewClientData={longviewClientData}
               {...routerProps}
               topProcessesData={topProcesses.data}

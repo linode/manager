@@ -4,7 +4,6 @@ import { RouteComponentProps } from 'react-router-dom';
 
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
-// import Select from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import { Props as LVDataProps } from 'src/containers/longview.stats.container';
 
@@ -25,6 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   client: string;
+  clientAPIKey: string;
   longviewClientData: LVDataProps['longviewClientData'];
   topProcessesData: LongviewTopProcesses;
   topProcessesLoading: boolean;
@@ -37,6 +37,7 @@ export type CombinedProps = RouteComponentProps<{ id: string }> & Props;
 export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const {
+    clientAPIKey,
     topProcessesData,
     topProcessesLoading,
     topProcessesError,
@@ -66,7 +67,7 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
             </Grid>
           </Paper>
         </Grid>
-        <OverviewGraphs />
+        <OverviewGraphs clientAPIKey={clientAPIKey} />
         <Grid container justify="space-between" item spacing={0}>
           <ListeningServices />
           <ActiveConnections />

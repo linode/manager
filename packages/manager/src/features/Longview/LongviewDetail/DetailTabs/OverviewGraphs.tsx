@@ -5,8 +5,9 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-
+import { AllData, getValues, WithStartAndEnd } from '../../request';
 import TimeRangeSelect from '../../shared/TimeRangeSelect';
+import { useClientLastUpdated } from '../../shared/useClientLastUpdated';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paperSection: {
@@ -15,12 +16,37 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface Props {}
-
+interface Props {
+  clientAPIKey: string;
+}
 export type CombinedProps = Props;
 
 export const OverviewGraphs: React.FC<Props> = props => {
+  const { clientAPIKey } = props;
   const classes = useStyles();
+  const [time, setTimeBox] = React.useState<WithStartAndEnd>({
+    start: 0,
+    end: 0
+  });
+  const [data, setData] = React.useState<Partial<AllData>>({});
+  const { lastUpdated } = useClientLastUpdated(
+    clientAPIKey,
+    clientAPIKey
+      ? () =>
+          getValues(clientAPIKey, {
+            fields: ['cpu', 'memory', 'network', 'disk'],
+            start: time.start,
+            end: time.end
+          }).then(response => setData(response))
+      : undefined
+  );
+
+  const handleStatsChange = (start: number, end: number) => {
+    setTimeBox({ start, end });
+  };
+
+  console.log(data);
+
   return (
     <Grid container alignItems="flex-end" item xs={12} spacing={0}>
       <Grid
@@ -36,7 +62,7 @@ export const OverviewGraphs: React.FC<Props> = props => {
           <Typography variant="h2">Resource Allocation History</Typography>
         </Grid>
         <Grid item>
-          <TimeRangeSelect handleStatsChange={(a, b) => null} />
+          <TimeRangeSelect handleStatsChange={handleStatsChange} />
         </Grid>
       </Grid>
       <Grid item />
