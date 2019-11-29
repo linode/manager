@@ -292,7 +292,7 @@ const MainContent: React.FC<CombinedProps> = props => {
               toggleTheme={props.toggleTheme}
               toggleSpacing={props.toggleSpacing}
             />
-            <main
+            <div
               className={`
                 ${classes.content}
                 ${
@@ -309,7 +309,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                 isLoggedInAsCustomer={props.isLoggedInAsCustomer}
                 username={props.username}
               />
-              <div className={classes.wrapper} id="main-content">
+              <main className={classes.wrapper} id="main-content" role="main">
                 <Grid container spacing={0} className={classes.grid}>
                   <Grid item className={classes.switchWrapper}>
                     <Switch>
@@ -363,8 +363,8 @@ const MainContent: React.FC<CombinedProps> = props => {
                     </Switch>
                   </Grid>
                 </Grid>
-              </div>
-            </main>
+              </main>
+            </div>
 
             <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
             <ToastNotifications />

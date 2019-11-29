@@ -100,52 +100,54 @@ export class Footer extends React.PureComponent<CombinedProps> {
     const { classes, desktopMenuIsOpen } = this.props;
 
     return (
-      <Grid
-        container
-        spacing={4}
-        alignItems="center"
-        className={classNames({
-          [classes.container]: true,
-          [classes.desktopMenuIsOpen]: desktopMenuIsOpen
-        })}
-      >
-        <Grid item className={classes.version}>
-          {this.renderVersion(classes.link)}
-        </Grid>
+      <footer role="contentinfo">
         <Grid
-          item
+          container
+          spacing={4}
+          alignItems="center"
           className={classNames({
-            [classes.linkContainer]: true
+            [classes.container]: true,
+            [classes.desktopMenuIsOpen]: desktopMenuIsOpen
           })}
         >
-          <a
-            className={classes.link}
-            href="https://developers.linode.com"
-            target="_blank"
-            aria-describedby="external-site"
-            rel="noopener noreferrer"
+          <Grid item className={classes.version}>
+            {this.renderVersion(classes.link)}
+          </Grid>
+          <Grid
+            item
+            className={classNames({
+              [classes.linkContainer]: true
+            })}
           >
-            API Reference
-          </a>
-        </Grid>
-        <Grid
-          item
-          className={classNames({
-            [classes.linkContainer]: true,
-            [classes.feedbackLink]: true
-          })}
-        >
-          <a
-            className={classes.link}
-            href={createMailto(window.navigator.userAgent || '')}
+            <a
+              className={classes.link}
+              href="https://developers.linode.com"
+              target="_blank"
+              aria-describedby="external-site"
+              rel="noopener noreferrer"
+            >
+              API Reference
+            </a>
+          </Grid>
+          <Grid
+            item
+            className={classNames({
+              [classes.linkContainer]: true,
+              [classes.feedbackLink]: true
+            })}
           >
-            Provide Feedback
-          </a>
+            <a
+              className={classes.link}
+              href={createMailto(window.navigator.userAgent || '')}
+            >
+              Provide Feedback
+            </a>
+          </Grid>
+          <Grid item className={classes.adaLink}>
+            <AdaLink />
+          </Grid>
         </Grid>
-        <Grid item className={classes.adaLink}>
-          <AdaLink />
-        </Grid>
-      </Grid>
+      </footer>
     );
   }
 
