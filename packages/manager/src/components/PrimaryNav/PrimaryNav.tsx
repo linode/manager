@@ -318,7 +318,6 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment key={primaryLink.key}>
         <Link
-          role="menuitem"
           to={primaryLink.href}
           onClick={(e: React.ChangeEvent<any>) => {
             this.props.closeMenu();
@@ -367,7 +366,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
           wrap="nowrap"
           spacing={0}
           component="nav"
-          role="menu"
+          role="navigation"
         >
           <Grid item>
             <div
@@ -376,7 +375,11 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
                 [classes.logoCollapsed]: isCollapsed
               })}
             >
-              <Link to={`/dashboard`} onClick={() => this.props.closeMenu()}>
+              <Link
+                to={`/dashboard`}
+                onClick={() => this.props.closeMenu()}
+                title="Dashboard"
+              >
                 <Logo width={115} height={43} />
               </Link>
             </div>
@@ -410,7 +413,6 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
             <Hidden mdUp>
               <Divider className={classes.divider} />
               <Link
-                role="menuitem"
                 to="/profile/display"
                 onClick={this.props.closeMenu}
                 data-qa-nav-item="/profile/display"
@@ -430,7 +432,6 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
                 />
               </Link>
               <Link
-                role="menuitem"
                 to="/logout"
                 onClick={this.props.closeMenu}
                 data-qa-nav-item="/logout"
@@ -455,6 +456,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
                 [classes.settingsCollapsed]: isCollapsed,
                 [classes.activeSettings]: anchorEl
               })}
+              aria-label="User settings"
             >
               <Settings />
             </IconButton>

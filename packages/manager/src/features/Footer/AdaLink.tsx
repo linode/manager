@@ -10,6 +10,7 @@ import {
 import Tooltip from 'src/components/core/Tooltip';
 import IconButton from 'src/components/IconButton';
 import { sendAdaEvent } from 'src/utilities/ga';
+
 type ClassNames = 'root' | 'disabled';
 
 const styles = (theme: Theme) =>
@@ -62,11 +63,15 @@ const AdaLink: React.FC<CombinedProps> = props => {
   const { classes } = props;
 
   return adaError === '' ? (
-    <IconButton onClick={handleAdaInit} className={classes.root}>
+    <IconButton
+      onClick={handleAdaInit}
+      className={classes.root}
+      aria-label="Get help with ADA bot"
+    >
       <AdaIcon />
     </IconButton>
   ) : (
-    <Tooltip title={adaError} placement="top-end">
+    <Tooltip title={adaError} placement="top-end" aria-label={adaError}>
       <AdaIcon className={classes.disabled} />
     </Tooltip>
   );
