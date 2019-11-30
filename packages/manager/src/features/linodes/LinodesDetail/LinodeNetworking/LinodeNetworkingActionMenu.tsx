@@ -9,7 +9,7 @@ interface Props {
   onEdit?: (ip: IPAddress | IPRange) => void;
   onRemove?: (ip: IPAddress | IPRange) => void;
   ipType: IPTypes;
-  ipAddress?: IPAddress | IPRange;
+  ipAddress?: any;
   readOnly?: boolean;
 }
 
@@ -93,7 +93,15 @@ class LinodeNetworkingActionMenu extends React.Component<CombinedProps> {
   };
 
   render() {
-    return <ActionMenu createActions={this.createActions()} />;
+    return (
+      <ActionMenu
+        createActions={this.createActions()}
+        ariaLabel={`Action menu for Address ${this.props.ipAddress &&
+          (this.props.ipAddress.range
+            ? this.props.ipAddress.range
+            : this.props.ipAddress.gateway)}`}
+      />
+    );
   }
 }
 
