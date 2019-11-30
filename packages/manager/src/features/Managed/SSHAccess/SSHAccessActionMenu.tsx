@@ -11,6 +11,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface Props {
   linodeId: number;
+  linodeLabel: string;
   isEnabled: boolean;
   updateOne: (linodeSetting: ManagedLinodeSetting) => void;
   openDrawer: (linodeId: number) => void;
@@ -82,7 +83,14 @@ export const SSHAccessActionMenu: React.FC<CombinedProps> = props => {
     return actions;
   };
 
-  return <ActionMenu createActions={createActions} />;
+  return (
+    <ActionMenu
+      createActions={createActions}
+      ariaLabel={`Action menu for SSH Access key for Linode ${
+        props.linodeLabel
+      }`}
+    />
+  );
 };
 
 const enhanced = compose<CombinedProps, Props>(withSnackbar);

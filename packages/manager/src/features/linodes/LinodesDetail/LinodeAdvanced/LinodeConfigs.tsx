@@ -316,6 +316,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
             onEdit={this.openForEditing}
             onDelete={this.confirmDelete}
             readOnly={this.props.readOnly}
+            label={config.label}
           />
         </TableCell>
       </TableRow>

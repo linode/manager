@@ -11,6 +11,7 @@ interface Props {
   // ObjectStorageKeys --> ObjectStorageKeyTable --> HERE
   openRevokeDialog: (key: ObjectStorageKey) => void;
   openDrawerForEditing: (key: ObjectStorageKey) => void;
+  label: string;
 }
 
 type CombinedProps = Props;
@@ -38,7 +39,12 @@ const AccessKeyMenu: React.StatelessComponent<CombinedProps> = props => {
       ];
     };
   };
-  return <ActionMenu createActions={createActions()} />;
+  return (
+    <ActionMenu
+      createActions={createActions()}
+      ariaLabel={`Action menu for Object Storage Key ${props.label}`}
+    />
+  );
 };
 
 export default AccessKeyMenu;

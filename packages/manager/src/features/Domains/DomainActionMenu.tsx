@@ -125,7 +125,12 @@ export class DomainActionMenu extends React.Component<CombinedProps> {
   };
 
   render() {
-    return <ActionMenu createActions={this.createActions()} />;
+    return (
+      <ActionMenu
+        createActions={this.createActions()}
+        ariaLabel={`Action menu for Domain ${this.props.domain}`}
+      />
+    );
   }
 }
 

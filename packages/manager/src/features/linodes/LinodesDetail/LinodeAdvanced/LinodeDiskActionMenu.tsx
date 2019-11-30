@@ -7,6 +7,7 @@ interface Props {
   linodeStatus: string;
   linodeId?: number;
   diskId?: number;
+  label?: string;
   readOnly?: boolean;
   onRename: () => void;
   onResize: () => void;
@@ -87,7 +88,12 @@ class DiskActionMenu extends React.Component<CombinedProps> {
   };
 
   render() {
-    return <ActionMenu createActions={this.createActions()} />;
+    return (
+      <ActionMenu
+        createActions={this.createActions()}
+        ariaLabel={`Action menu for Disk ${this.props.label}`}
+      />
+    );
   }
 }
 
