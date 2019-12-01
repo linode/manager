@@ -4,6 +4,7 @@ import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Chip from 'src/components/core/Chip';
+import FormControlLabel from 'src/components/core/FormControlLabel';
 import Hidden from 'src/components/core/Hidden';
 import {
   createStyles,
@@ -131,11 +132,17 @@ export class SelectPlanPanel extends React.Component<
           >
             <TableCell className={classes.radioCell}>
               {!isSamePlan && (
-                <Radio
-                  checked={!planTooSmall && type.id === String(selectedID)}
-                  onChange={this.onSelect(type.id)}
-                  disabled={planTooSmall || disabled}
-                  id={type.id}
+                <FormControlLabel
+                  label={type.heading}
+                  className={'label-visually-hidden'}
+                  control={
+                    <Radio
+                      checked={!planTooSmall && type.id === String(selectedID)}
+                      onChange={this.onSelect(type.id)}
+                      disabled={planTooSmall || disabled}
+                      id={type.id}
+                    />
+                  }
                 />
               )}
             </TableCell>

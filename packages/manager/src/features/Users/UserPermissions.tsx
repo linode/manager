@@ -104,9 +104,19 @@ const styles = (theme: Theme) =>
     setAll: {
       width: 300,
       marginTop: theme.spacing(1) / 2,
-      '& .react-select__menu': {
-        maxWidth: 153,
-        right: 0
+      '& > div': {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-end'
+      },
+      '& .react-select__menu, & .input': {
+        width: 125,
+        right: 0,
+        marginLeft: theme.spacing(1),
+        textAlign: 'left'
+      },
+      '& .react-select__menu-list': {
+        width: '100%'
       }
     }
   });
@@ -747,6 +757,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
               inline
               className={classes.setAll}
               noMarginTop
+              small
             />
           </Grid>
         </Grid>
