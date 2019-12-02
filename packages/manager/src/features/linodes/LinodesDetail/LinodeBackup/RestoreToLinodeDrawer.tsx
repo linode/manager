@@ -231,9 +231,9 @@ export class RestoreToLinodeDrawer extends React.Component<
 }
 
 const enhanced = compose<CombinedProps, Props>(
-  withProfile<ProfileProps, Props>((ownProps, profile) => {
+  withProfile<ProfileProps, Props>((ownProps, { profileData: profile }) => {
     return {
-      profile: profile.data
+      profile
     };
   })
 );

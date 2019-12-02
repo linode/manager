@@ -1,4 +1,5 @@
 import { APIError } from 'linode-js-sdk/lib/types';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 
@@ -14,7 +15,10 @@ import GaugesSection from './GaugesSection';
 import IconSection from './IconSection';
 import ListeningServices from './ListeningServices';
 
-import { LongviewTopProcesses } from 'src/features/Longview/request.types';
+import {
+  LongviewPortsResponse,
+  LongviewTopProcesses
+} from 'src/features/Longview/request.types';
 import TopProcesses from './TopProcesses';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -31,7 +35,11 @@ interface Props {
   topProcessesData: LongviewTopProcesses;
   topProcessesLoading: boolean;
   topProcessesError?: APIError[];
+  lastUpdated?: number;
   lastUpdatedError?: APIError[];
+  listeningPortsLoading: boolean;
+  listeningPortsError?: APIError[];
+  listeningPortsData: LongviewPortsResponse;
 }
 
 export type CombinedProps = RouteComponentProps<{ id: string }> & Props;
@@ -42,11 +50,26 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
     client,
     clientID,
     longviewClientData,
+    lastUpdated,
+    listeningPortsData,
+    listeningPortsError,
+    listeningPortsLoading,
     topProcessesData,
     topProcessesLoading,
     topProcessesError,
     lastUpdatedError
   } = props;
+
+  /**
+   * Show an error for the services/connections
+   * tables if the request errors, or if there is
+   * a lastUpdated error (which will happen in the
+   * event of a network error)
+   */
+  const _hasError = listeningPortsError || lastUpdatedError;
+  const portsError = Boolean(_hasError)
+    ? pathOr<string>('Error retrieving data', [0, 'reason'], _hasError)
+    : undefined;
 
   return (
     <React.Fragment>
@@ -110,8 +133,16 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
           <Paper className={classes.paperSection}>Graphs here</Paper>
         </Grid>
         <Grid container justify="space-between" item spacing={0}>
-          <ListeningServices />
-          <ActiveConnections />
+          <ListeningServices
+            services={pathOr([], ['Ports', 'listening'], listeningPortsData)}
+            servicesLoading={listeningPortsLoading && !lastUpdated}
+            servicesError={portsError}
+          />
+          <ActiveConnections
+            connections={pathOr([], ['Ports', 'active'], listeningPortsData)}
+            connectionsLoading={listeningPortsLoading && !lastUpdated}
+            connectionsError={portsError}
+          />
         </Grid>
       </Grid>
     </React.Fragment>

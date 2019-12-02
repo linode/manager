@@ -37,10 +37,8 @@ export const account: Account = {
   city: 'philadelphia',
   phone: '2151231234',
   company: 'mmckenna',
-  active_promotions: activePromotions
-  // [BETA]
-  // @todo: Uncomment this when it becomes generally available
-  // capabilities: ['Linodes', 'NodeBalancers', 'Block Storage']
+  active_promotions: activePromotions,
+  capabilities: ['Linodes', 'NodeBalancers', 'Block Storage']
 };
 
 export const accountSettings: AccountSettings = {
