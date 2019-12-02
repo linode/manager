@@ -369,13 +369,18 @@ interface GrantsProps {
 export default compose<CombinedProps, Props & RouteComponentProps>(
   React.memo,
   connected,
-  withProfile<GrantsProps, {}>((ownProps, { profileData }) => ({
-    userCanCreateClient: pathOr<boolean>(
+  withProfile<GrantsProps, {}>((ownProps, { profileData }) => {
+    const isRestrictedUser = (profileData || {}).restricted;
+    const hasAddLongviewGrant = pathOr<boolean>(
       false,
       ['grants', 'global', 'add_longview'],
       profileData
-    )
-  })),
+    );
+    return {
+      userCanCreateClient:
+        !isRestrictedUser || (hasAddLongviewGrant && isRestrictedUser)
+    };
+  }),
   withLongviewClients(),
   withSettings(),
   withSnackbar
