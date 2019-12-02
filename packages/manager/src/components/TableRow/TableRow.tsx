@@ -12,6 +12,8 @@ import _TableRow, {
   TableRowProps as _TableRowProps
 } from 'src/components/core/TableRow';
 
+import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
+
 import ActiveCaret from 'src/assets/icons/activeRowCaret.svg';
 
 type ClassNames = 'root' | 'selected' | 'withForcedIndex' | 'activeCaret';
@@ -71,9 +73,9 @@ const styles = (theme: Theme) =>
       color: theme.bg.lightBlue,
       position: 'absolute',
       top: 0,
-      right: theme.spacing(1) === 4 ? -12 : 14,
+      right: theme.spacing() === COMPACT_SPACING_UNIT ? -12 : -14,
       transform: 'translate(-.5px, -.5px)',
-      height: theme.spacing(1) === 4 ? 34 : 42
+      height: theme.spacing() === COMPACT_SPACING_UNIT ? 34 : 42
     }
   });
 
