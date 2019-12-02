@@ -8,6 +8,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { Props as LVDataProps } from 'src/containers/longview.stats.container';
 
+import LongviewPackageDrawer from '../../LongviewPackageDrawer';
 import ActiveConnections from './ActiveConnections';
 import GaugesSection from './GaugesSection';
 import IconSection from './IconSection';
@@ -62,6 +63,12 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
   } = props;
 
   /**
+   * Package drawer open/close logic
+   */
+
+  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+
+  /**
    * Show an error for the services/connections
    * tables if the request errors, or if there is
    * a lastUpdated error (which will happen in the
@@ -88,6 +95,7 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
               <IconSection
                 longviewClientData={longviewClientData}
                 client={client}
+                openPackageDrawer={() => setDrawerOpen(true)}
               />
               <GaugesSection
                 clientID={clientID}
@@ -116,6 +124,12 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
           />
         </Grid>
       </Grid>
+      <LongviewPackageDrawer
+        clientLabel={client}
+        clientID={clientID}
+        isOpen={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      />
     </React.Fragment>
   );
 };
