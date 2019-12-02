@@ -98,6 +98,7 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
             <a
               href="https://www.linode.com/docs/applications/containers/kubernetes/how-to-deploy-a-cluster-with-lke/"
               target="_blank"
+              aria-describedby="external-site"
               rel="noopener noreferrer"
               className="h-u"
             >

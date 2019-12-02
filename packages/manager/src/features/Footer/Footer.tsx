@@ -122,6 +122,7 @@ export class Footer extends React.PureComponent<CombinedProps> {
             className={classes.link}
             href="https://developers.linode.com"
             target="_blank"
+            aria-describedby="external-site"
             rel="noopener noreferrer"
           >
             API Reference
@@ -159,6 +160,7 @@ export class Footer extends React.PureComponent<CombinedProps> {
         className={className}
         href={`https://github.com/linode/manager/releases/tag/v${VERSION}`}
         target="_blank"
+        aria-describedby="external-site"
         rel="noopener noreferrer"
       >
         v{VERSION}

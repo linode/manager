@@ -99,6 +99,7 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
             <a
               href="https://linode.com/docs/getting-started-new-manager/"
               target="_blank"
+              aria-describedby="external-site"
               rel="noopener noreferrer"
               className="h-u"
             >
@@ -108,6 +109,7 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
             <a
               href="https://www.linode.com/docs/"
               target="_blank"
+              aria-describedby="external-site"
               rel="noopener noreferrer"
               className="h-u"
             >

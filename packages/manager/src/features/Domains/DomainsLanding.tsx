@@ -477,6 +477,7 @@ const EmptyCopy = () => (
       <a
         href="https://www.linode.com/docs/platform/manager/dns-manager-new-manager/"
         target="_blank"
+        aria-describedby="external-site"
         rel="noopener noreferrer"
         className="h-u"
       >
@@ -486,6 +487,7 @@ const EmptyCopy = () => (
       <a
         href="https://www.linode.com/docs/"
         target="_blank"
+        aria-describedby="external-site"
         rel="noopener noreferrer"
         className="h-u"
       >
