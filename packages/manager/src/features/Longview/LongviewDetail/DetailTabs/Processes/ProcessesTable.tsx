@@ -192,8 +192,11 @@ export const ProcessesTableRow: React.FC<ProcessTableRowProps> = React.memo(
           parentColumn="Avg IO"
           data-testid={`average-io-${averageIO}`}
         >
-          {/* @todo: formatting once https://github.com/linode/manager/pull/5825 is merged */}
-          {readableBytes(averageIO, { round: 0 }).formatted}/s
+          {
+            readableBytes(averageIO, { round: 0, unitLabels: { bytes: 'B' } })
+              .formatted
+          }
+          /s
         </TableCell>
         <TableCell
           parentColumn="Avg CPU"
