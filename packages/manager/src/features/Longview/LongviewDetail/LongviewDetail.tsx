@@ -104,7 +104,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
   const listeningPorts = useAPIRequest<LongviewPortsResponse>(
     clientAPIKey && lastUpdated
       ? () =>
-          get(clientAPIKey, 'getValues', {
+          get('clientAPIKey', 'getValues', {
             fields: ['listeningServices', 'activeConnections']
           })
       : null,

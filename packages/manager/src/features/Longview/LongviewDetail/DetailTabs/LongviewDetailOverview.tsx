@@ -61,8 +61,8 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
    * a lastUpdated error (which will happen in the
    * event of a network error)
    */
-  const _hasError = Boolean(listeningPortsError || lastUpdatedError);
-  const portsError = _hasError
+  const _hasError = listeningPortsError || lastUpdatedError;
+  const portsError = Boolean(_hasError)
     ? pathOr<string>('Error retrieving data', [0, 'reason'], _hasError)
     : undefined;
 
