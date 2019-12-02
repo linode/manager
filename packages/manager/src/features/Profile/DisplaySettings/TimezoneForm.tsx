@@ -181,6 +181,8 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
               data-qa-tz-select
               defaultValue={defaultTimeZone}
               isClearable={false}
+              label="Choose a timezone"
+              hideLabel
             />
             <ActionsPanel>
               <Button

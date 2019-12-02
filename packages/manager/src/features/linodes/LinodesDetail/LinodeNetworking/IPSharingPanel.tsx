@@ -254,6 +254,8 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
             disabled={readOnly}
             isClearable={false}
             placeholder="Select an IP"
+            label="Select an IP"
+            hideLabel
           />
         </Grid>
         <Grid item className={classes.removeCont}>

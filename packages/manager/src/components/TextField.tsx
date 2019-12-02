@@ -133,6 +133,7 @@ interface BaseProps {
   dataAttrs?: Record<string, any>;
   noMarginTop?: boolean;
   loading?: boolean;
+  hideLabel?: boolean;
 }
 
 export type Props = BaseProps & TextFieldProps;
@@ -252,6 +253,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
       value,
       dataAttrs,
       error,
+      hideLabel,
       noMarginTop,
       label,
       loading,
@@ -282,8 +284,14 @@ class LinodeTextField extends React.Component<CombinedProps> {
             data-qa-textfield-label={label}
             className={classNames({
               [classes.wrapper]: noMarginTop ? false : true,
-              [classes.noTransform]: true
+              [classes.noTransform]: true,
+              'visually-hidden': hideLabel
             })}
+            htmlFor={
+              this.props.label
+                ? convertToKebabCase(`${this.props.label}`)
+                : undefined
+            }
           >
             {maybeRequiredLabel || ''}
           </InputLabel>
@@ -326,6 +334,9 @@ class LinodeTextField extends React.Component<CombinedProps> {
             }}
             inputProps={{
               'data-testid': 'textfield-input',
+              id: this.props.label
+                ? convertToKebabCase(`${this.props.label}`)
+                : undefined,
               ...inputProps
             }}
             InputProps={{
@@ -372,11 +383,6 @@ class LinodeTextField extends React.Component<CombinedProps> {
               },
               className
             )}
-            id={
-              this.props.label
-                ? convertToKebabCase(`${this.props.label}`)
-                : undefined
-            }
           >
             {this.props.children}
           </TextField>

@@ -39,6 +39,7 @@ type ClassNames =
   | 'copy'
   | 'disabledRow'
   | 'chip'
+  | 'headingCellContainer'
   | 'currentPlanChipCell'
   | 'radioCell';
 
@@ -55,6 +56,10 @@ const styles = (theme: Theme) =>
     disabledRow: {
       backgroundColor: theme.bg.tableHeader,
       cursor: 'not-allowed'
+    },
+    headingCellContainer: {
+      display: 'flex',
+      alignItems: 'center'
     },
     chip: {
       backgroundColor: theme.color.green,
@@ -147,17 +152,23 @@ export class SelectPlanPanel extends React.Component<
               )}
             </TableCell>
             <TableCell data-qa-plan-name>
-              {type.heading}{' '}
-              {isSamePlan && (
-                <Chip
-                  data-qa-current-plan
-                  label="Current Plan"
-                  className={classes.chip}
-                />
-              )}
-              {tooltip && (
-                <HelpIcon text={tooltip} tooltipPosition="right-end" />
-              )}
+              <div className={classes.headingCellContainer}>
+                {type.heading}{' '}
+                {isSamePlan && (
+                  <Chip
+                    data-qa-current-plan
+                    label="Current Plan"
+                    className={classes.chip}
+                  />
+                )}
+                {tooltip && (
+                  <HelpIcon
+                    text={tooltip}
+                    tooltipPosition="right-end"
+                    className="py0"
+                  />
+                )}
+              </div>
             </TableCell>
             <TableCell data-qa-monthly> ${type.price.monthly}</TableCell>
             <TableCell data-qa-hourly>

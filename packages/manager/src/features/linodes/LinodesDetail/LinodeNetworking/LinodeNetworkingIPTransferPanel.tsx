@@ -296,6 +296,8 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
             placeholder="Select Action"
             isClearable={false}
             noMarginTop
+            label="Select Action"
+            hideLabel
           />
         </Grid>
         {renderLinodeSelect && renderLinodeSelect(state as Move)}
@@ -329,6 +331,8 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
           onChange={this.onSelectedLinodeChange(sourceIP)}
           isClearable={false}
           noMarginTop
+          label="Select Linode"
+          hideLabel
         />
       </Grid>
     );
@@ -359,6 +363,8 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
           }}
           isClearable={false}
           noMarginTop
+          label="Select IP Address"
+          hideLabel
         />
       </Grid>
     );
