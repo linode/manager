@@ -1,4 +1,4 @@
-interface Stat {
+export interface Stat {
   x: number;
   y: number;
 }

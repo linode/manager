@@ -1,11 +1,17 @@
 import * as React from 'react';
 
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  WithTheme,
+  withTheme
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { AllData, getValues, WithStartAndEnd } from '../../request';
+import { Stat } from '../../request.types';
 import TimeRangeSelect from '../../shared/TimeRangeSelect';
 import { useClientLastUpdated } from '../../shared/useClientLastUpdated';
 
@@ -19,10 +25,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   clientAPIKey: string;
 }
-export type CombinedProps = Props;
+export type CombinedProps = Props & WithTheme;
 
-export const OverviewGraphs: React.FC<Props> = props => {
-  const { clientAPIKey } = props;
+export const OverviewGraphs: React.FC<CombinedProps> = props => {
+  const { clientAPIKey, theme } = props;
   const classes = useStyles();
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
     start: 0,
@@ -31,23 +37,17 @@ export const OverviewGraphs: React.FC<Props> = props => {
   const [data, setData] = React.useState<Partial<AllData>>({});
   const request = (start: number = time.start, end: number = time.end) =>
     getValues(clientAPIKey, {
-      fields: ['cpu', 'memory', 'network', 'disk'],
+      fields: ['cpu', 'memory', 'network', 'disk', 'load'],
       start,
       end
     }).then(response => setData(response));
 
-  const { lastUpdated } = useClientLastUpdated(
-    clientAPIKey,
-    clientAPIKey ? request : undefined
-  );
+  useClientLastUpdated(clientAPIKey, clientAPIKey ? request : undefined);
 
   const handleStatsChange = (start: number, end: number) => {
     setTimeBox({ start, end });
     request(start, end);
   };
-
-  console.log(data);
-  console.table({ start: time.start, end: time.end });
 
   return (
     <Grid container alignItems="flex-end" item xs={12} spacing={0}>
@@ -122,7 +122,14 @@ export const OverviewGraphs: React.FC<Props> = props => {
                 subtitle="Target < 1.00"
                 showToday={false}
                 timezone="GMT"
-                data={[]}
+                data={[
+                  {
+                    label: 'Load',
+                    borderColor: theme.graphs.blueBorder,
+                    backgroundColor: theme.graphs.blue,
+                    data: convertData(data.Load || [])
+                  }
+                ]}
               />
             </Grid>
           </Grid>
@@ -132,4 +139,8 @@ export const OverviewGraphs: React.FC<Props> = props => {
   );
 };
 
-export default OverviewGraphs;
+export const convertData = (d: Stat[]) => {
+  return d.map(thisPoint => [thisPoint.x, thisPoint.y] as [number, number]);
+};
+
+export default withTheme(OverviewGraphs);
