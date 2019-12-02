@@ -21,6 +21,8 @@ type ClassNames = 'root' | 'selected' | 'withForcedIndex' | 'activeCaret';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
+      // Matching height of caret if selected for firefox
+      height: theme.spacing() === COMPACT_SPACING_UNIT ? 34 : 42,
       transition: theme.transitions.create(['background-color']),
       [theme.breakpoints.up('md')]: {
         '&:before': {
@@ -66,7 +68,8 @@ const styles = (theme: Theme) =>
       },
       '& td': {
         borderTopColor: theme.palette.primary.light,
-        borderBottomColor: theme.palette.primary.light
+        borderBottomColor: theme.palette.primary.light,
+        position: 'relative'
       }
     },
     activeCaret: {
