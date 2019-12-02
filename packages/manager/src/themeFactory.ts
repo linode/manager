@@ -177,7 +177,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       offWhite: '#fbfbfb',
       offWhiteDT: '#fbfbfb', // better handing for dark theme
       navy: '#32363c',
-      lightBlue: '#d7e3ef',
+      lightBlue: '#f0f7ff',
       white: '#fff',
       pureWhite: '#fff',
       tableHeader: '#fbfbfb',
@@ -1176,7 +1176,8 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       MuiTableCell: {
         root: {
           padding: spacingUnit + 2,
-          borderBottom: `2px solid ${primaryColors.divider}`,
+          borderTop: `1px solid ${primaryColors.divider}`,
+          borderBottom: `1px solid ${primaryColors.divider}`,
           '&:last-child': {
             paddingRight: spacingUnit + 2
           },

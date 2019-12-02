@@ -1,7 +1,6 @@
 import Axios, { AxiosResponse } from 'axios';
 import { curry, pathOr } from 'ramda';
 import { LONGVIEW_ROOT } from 'src/constants';
-
 import {
   LastUpdated,
   LongviewCPU,
@@ -10,6 +9,7 @@ import {
   LongviewMemory,
   LongviewNetwork,
   LongviewPackages,
+  LongviewPortsResponse,
   LongviewProcesses,
   LongviewSystemInfo,
   LongviewTopProcesses,
@@ -66,6 +66,7 @@ type AllData = LongviewCPU &
   LongviewSystemInfo &
   LongviewPackages &
   Uptime &
+  LongviewPortsResponse &
   LastUpdated;
 
 /**
@@ -107,6 +108,11 @@ interface Get {
   (
     token: string,
     action: LongviewAction,
+    options: { fields: ['listeningServices', 'activeConnections'] }
+  ): Promise<LongviewPortsResponse>;
+  (
+    token: string,
+    action: LongviewAction,
     options: { fields?: LongviewFieldName[] }
   ): Promise<Partial<AllData>>;
   (token: string, action: 'getTopProcesses'): Promise<LongviewTopProcesses>;
@@ -122,6 +128,13 @@ interface Get {
       fields: 'cpu'[];
     } & Partial<WithStartAndEnd>
   ): Promise<Partial<LongviewCPU>>;
+  (
+    token: string,
+    action: 'getValues',
+    options: {
+      fields: 'disk'[];
+    } & Partial<WithStartAndEnd>
+  ): Promise<Partial<LongviewDisk>>;
   (token: string, action: LongviewAction, options: Partial<Options>): Promise<
     Partial<AllData>
   >;
@@ -161,7 +174,9 @@ export type LongviewFieldName =
   | 'network'
   | 'disk'
   | 'packages'
-  | 'processes';
+  | 'processes'
+  | 'listeningServices'
+  | 'activeConnections';
 
 export const fieldNames: Record<LongviewFieldName, string> = {
   cpu: 'CPU.*',
@@ -172,7 +187,9 @@ export const fieldNames: Record<LongviewFieldName, string> = {
   disk: 'Disk.*',
   sysinfo: 'SysInfo.*',
   packages: 'Packages',
-  processes: 'Processes.*'
+  processes: 'Processes.*',
+  listeningServices: 'Ports.listening',
+  activeConnections: 'Ports.active'
 };
 
 export const baseRequest = Axios.create({

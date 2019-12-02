@@ -26,7 +26,10 @@ import withLongviewClients, {
   Props as LVProps
 } from 'src/containers/longview.container';
 import { get } from 'src/features/Longview/request';
-import { LongviewTopProcesses } from 'src/features/Longview/request.types';
+import {
+  LongviewPortsResponse,
+  LongviewTopProcesses
+} from 'src/features/Longview/request.types';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import useFlags from 'src/hooks/useFlags';
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
@@ -55,6 +58,10 @@ const Overview = DefaultLoader({
 
 const Installation = DefaultLoader({
   loader: () => import('./DetailTabs/Installation')
+});
+
+const Disks = DefaultLoader({
+  loader: () => import('./DetailTabs/Disks')
 });
 
 export type CombinedProps = RouteComponentProps<{ id: string }> &
@@ -95,6 +102,17 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
       ? () => get(clientAPIKey, 'getTopProcesses')
       : null,
     topProcessesEmptyDataSet,
+    [clientAPIKey, lastUpdated]
+  );
+
+  const listeningPorts = useAPIRequest<LongviewPortsResponse>(
+    clientAPIKey && lastUpdated
+      ? () =>
+          get(clientAPIKey, 'getValues', {
+            fields: ['listeningServices', 'activeConnections']
+          })
+      : null,
+    { Ports: { listening: [], active: [] } },
     [clientAPIKey, lastUpdated]
   );
 
@@ -249,7 +267,15 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
             exact
             strict
             path={`${url}/disks`}
-            render={() => <h2>Disks</h2>}
+            render={routerProps => (
+              <Disks
+                clientID={client.id}
+                clientAPIKey={client.api_key}
+                clientLastUpdated={lastUpdated}
+                lastUpdatedError={lastUpdatedError}
+                {...routerProps}
+              />
+            )}
           />
         )}
         {showAllTabs && (
@@ -301,7 +327,11 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
               topProcessesData={topProcesses.data}
               topProcessesLoading={topProcesses.loading}
               topProcessesError={topProcesses.error}
+              listeningPortsData={listeningPorts.data}
+              listeningPortsError={listeningPorts.error}
+              listeningPortsLoading={listeningPorts.loading}
               lastUpdatedError={lastUpdatedError}
+              lastUpdated={lastUpdated}
             />
           )}
         />
