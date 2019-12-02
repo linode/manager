@@ -48,24 +48,17 @@ const Disks: React.FC<CombinedProps> = props => {
   };
 
   React.useEffect(() => {
-    if (clientLastUpdated) {
+    if (clientLastUpdated && start && end) {
       if (!diskStats) {
         setLoading(true);
       }
 
       setError('');
 
-      const startAndEnd =
-        start && end
-          ? {
-              start,
-              end
-            }
-          : {};
-
       getStats(clientAPIKey, 'getValues', {
         fields: ['disk'],
-        ...startAndEnd
+        start,
+        end
       })
         .then(r => {
           setLoading(false);
@@ -102,6 +95,7 @@ const Disks: React.FC<CombinedProps> = props => {
         <TimeRangeSelect
           className={classes.root}
           handleStatsChange={setStartAndEnd}
+          defaultValue="Past 24 Hours"
         />
       </Box>
       {sortedKeys.map(eachKey => (
