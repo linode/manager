@@ -53,6 +53,7 @@ interface Props {
     longviewClientID: number,
     longviewClientLabel: string
   ) => void;
+  userCanCreateLongviewClient: boolean;
 }
 
 type CombinedProps = Props & LongviewProps;
@@ -67,7 +68,8 @@ const LongviewList: React.FC<CombinedProps> = props => {
     longviewClientsLoading,
     longviewClientsResults,
     openPackageDrawer,
-    triggerDeleteLongviewClient
+    triggerDeleteLongviewClient,
+    userCanCreateLongviewClient
   } = props;
 
   const classes = useStyles();
@@ -103,10 +105,16 @@ const LongviewList: React.FC<CombinedProps> = props => {
     return (
       <Paper className={classes.empty}>
         <Typography variant="body1" className={classes.emptyText}>
-          You have no Longview clients configured.{' '}
-          <button className={classes.button} onClick={createLongviewClient}>
-            Click here to add one.
-          </button>
+          {userCanCreateLongviewClient ? (
+            <React.Fragment>
+              You have no Longview clients configured.{' '}
+              <button className={classes.button} onClick={createLongviewClient}>
+                Click here to add one.
+              </button>
+            </React.Fragment>
+          ) : (
+            'You have no Longview clients configured.'
+          )}
         </Typography>
       </Paper>
     );

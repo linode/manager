@@ -22,7 +22,7 @@ export interface StateProps {
 
 type MapProps<ReduxStateProps, OwnProps> = (
   ownProps: OwnProps,
-  data: State
+  data: StateProps
 ) => ReduxStateProps & Partial<StateProps>;
 
 export type Props = DispatchProps & StateProps;
@@ -57,17 +57,14 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
         data: profileData
       } = state.__resources.profile;
 
-      /** @todo name the arguments profileLoading, profileError, etc */
-      if (mapStateToProps) {
-        return mapStateToProps(ownProps, state.__resources.profile);
-      }
-
-      return {
-        profileData,
+      const result = {
+        profileLoading,
         profileError,
-        profileLastUpdated,
-        profileLoading
+        profileData,
+        profileLastUpdated
       };
+
+      return !!mapStateToProps ? mapStateToProps(ownProps, result) : result;
     },
     (dispatch: ThunkDispatch) => ({
       getProfile: () => dispatch(requestProfile()),
