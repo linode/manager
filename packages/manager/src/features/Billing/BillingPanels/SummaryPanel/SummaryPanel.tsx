@@ -107,12 +107,14 @@ const enhanced = compose<CombinedProps, Props>(
       accountData
     })
   ),
-  withProfile<Profile, {}>((ownProps, profile) => ({
-    username: path(['username'], profile.data),
-    profileError: path(['read'], profile.error),
-    profileLoading: profile.loading,
-    isRestricted: pathOr(false, ['restricted'], profile.data)
-  }))
+  withProfile<Profile, {}>(
+    (ownProps, { profileLoading, profileData, profileError }) => ({
+      username: path(['username'], profileData),
+      profileError: path(['read'], profileError),
+      profileLoading,
+      isRestricted: pathOr(false, ['restricted'], profileData)
+    })
+  )
 );
 
 export default enhanced(SummaryPanel) as React.ComponentType<Props>;

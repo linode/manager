@@ -130,7 +130,7 @@ interface StateProps {
 }
 
 export default compose<Props, {}>(
-  withProfile<StateProps, {}>((ownProps, { data }) => ({
+  withProfile<StateProps, {}>((ownProps, { profileData: data }) => ({
     isRestrictedUser: pathOr(false, ['restricted'], data)
   }))
 )(AccountLanding);
