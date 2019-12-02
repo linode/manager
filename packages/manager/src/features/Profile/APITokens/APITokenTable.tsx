@@ -495,6 +495,9 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     const { classes, type, title } = this.props;
     const { form, dialog } = this.state;
 
+    const basePermsWithLKE = [...basePerms];
+    basePermsWithLKE.splice(5, 0, 'lke');
+
     return (
       <React.Fragment>
         <Grid container justify="space-between" alignItems="flex-end">
@@ -549,7 +552,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           perms={
             !this.props.accountCapabilities.includes('Kubernetes')
               ? basePerms
-              : [...basePerms, 'lke'].sort()
+              : basePermsWithLKE
           }
           permNameMap={
             !this.props.accountCapabilities.includes('Kubernetes')
