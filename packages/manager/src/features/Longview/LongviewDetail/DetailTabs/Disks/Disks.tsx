@@ -26,6 +26,7 @@ interface Props extends RouteComponentProps<{}> {
   clientID: number;
   clientLastUpdated?: number;
   lastUpdatedError?: APIError[];
+  timezone: string;
 }
 
 type CombinedProps = Props;
@@ -90,6 +91,7 @@ const Disks: React.FC<CombinedProps> = props => {
         diskLabel={eachKey}
         key={eachKey}
         stats={pathOr({}, ['Disk'], diskStats)[eachKey]}
+        timezone={props.timezone}
       />
     ));
   };
@@ -106,7 +108,7 @@ const Disks: React.FC<CombinedProps> = props => {
         <TimeRangeSelect
           className={classes.root}
           handleStatsChange={setStartAndEnd}
-          defaultValue="Past 24 Hours"
+          defaultValue="Past 30 Minutes"
         />
       </Box>
       {renderContent()}

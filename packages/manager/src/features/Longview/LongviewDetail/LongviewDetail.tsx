@@ -25,6 +25,7 @@ import withLongviewClients, {
   DispatchProps,
   Props as LVProps
 } from 'src/containers/longview.container';
+import withProfile from 'src/containers/profile.container';
 import { get } from 'src/features/Longview/request';
 import {
   LongviewPortsResponse,
@@ -63,6 +64,7 @@ const Disks = DefaultLoader({
 export type CombinedProps = RouteComponentProps<{ id: string }> &
   Props &
   LVDataProps &
+  ProfileProps &
   DispatchProps;
 
 export const LongviewDetail: React.FC<CombinedProps> = props => {
@@ -263,6 +265,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
                 clientAPIKey={client.api_key}
                 clientLastUpdated={lastUpdated}
                 lastUpdatedError={lastUpdatedError}
+                timezone={props.timezone}
                 {...routerProps}
               />
             )}
@@ -333,11 +336,18 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
   );
 };
 
+interface ProfileProps {
+  timezone: string;
+}
+
 export default compose<CombinedProps, {}>(
   React.memo,
   withClientStats<RouteComponentProps<{ id: string }>>(ownProps => {
     return +pathOr<string>('', ['match', 'params', 'id'], ownProps);
   }),
+  withProfile<ProfileProps, {}>((own, { profileData }) => ({
+    timezone: (profileData || {}).timezone || 'GMT'
+  })),
   withLongviewClients<Props, RouteComponentProps<{ id: string }>>(
     (
       own,
