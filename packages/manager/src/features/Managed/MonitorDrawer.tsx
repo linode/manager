@@ -178,7 +178,8 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                 }
                 onBlur={handleBlur}
                 textFieldProps={{
-                  tooltipText: helperText.consultation_group
+                  tooltipText: helperText.consultation_group,
+                  label: 'Contact Group'
                 }}
               />
 
@@ -197,7 +198,8 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                     }
                     onBlur={handleBlur}
                     textFieldProps={{
-                      required: mode === modes.CREATING
+                      required: mode === modes.CREATING,
+                      label: 'Monitor Type'
                     }}
                   />
                 </Grid>
@@ -270,7 +272,8 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                 )}
                 errorText={errors.credentials}
                 textFieldProps={{
-                  tooltipText: helperText.credentials
+                  tooltipText: helperText.credentials,
+                  label: 'Credentials'
                 }}
                 onChange={(items: Item<number>[]) => {
                   setFieldValue(

@@ -49,6 +49,8 @@ const VolumeConfigDrawer: React.FC<CombinedProps> = props => {
           className={classes.copyField}
           value={`mkfs.ext4 "${props.volumePath}"`}
           data-qa-make-filesystem
+          label="Create a Filesystem"
+          hideLabel
         />
       </div>
 
@@ -60,6 +62,8 @@ const VolumeConfigDrawer: React.FC<CombinedProps> = props => {
           className={classes.copyField}
           value={`mkdir "/mnt/${props.volumeLabel}"`}
           data-qa-mountpoint
+          label="Create a mountpoint"
+          hideLabel
         />
       </div>
 
@@ -71,6 +75,8 @@ const VolumeConfigDrawer: React.FC<CombinedProps> = props => {
           className={classes.copyField}
           value={`mount "${props.volumePath}" "/mnt/${props.volumeLabel}"`}
           data-qa-mount
+          label="Mount Volume"
+          hideLabel
         />
       </div>
 
@@ -86,6 +92,8 @@ const VolumeConfigDrawer: React.FC<CombinedProps> = props => {
             props.volumeLabel
           } ext4 defaults,noatime,nofail 0 2`}
           data-qa-boot-mount
+          label="Mount every time your Linode boots"
+          hideLabel
         />
       </div>
       <ActionsPanel>

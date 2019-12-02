@@ -739,7 +739,8 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
               textFieldProps={{
                 dataAttrs: {
                   'data-qa-time-select': true
-                }
+                },
+                label: 'Time of Day'
               }}
               options={timeSelection}
               onChange={this.handleSelectBackupWindow}
@@ -760,7 +761,8 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
               textFieldProps={{
                 dataAttrs: {
                   'data-qa-weekday-select': true
-                }
+                },
+                label: 'Day of Week'
               }}
               options={daySelection}
               defaultValue={defaultDaySelection}

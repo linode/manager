@@ -408,7 +408,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 textFieldProps={{
                   dataAttrs: {
                     'data-qa-active-check-select': true
-                  }
+                  },
+                  label: 'Type'
                 }}
                 small
                 disabled={disabled}
@@ -741,7 +742,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   textFieldProps={{
                     dataAttrs: {
                       'data-qa-protocol-select': true
-                    }
+                    },
+                    label: 'Protocol'
                   }}
                   disabled={disabled}
                   noMarginTop
@@ -809,7 +811,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   textFieldProps={{
                     dataAttrs: {
                       'data-qa-algorithm-select': true
-                    }
+                    },
+                    label: 'Algorithm'
                   }}
                   small
                   disabled={disabled}
@@ -834,7 +837,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   textFieldProps={{
                     dataAttrs: {
                       'data-qa-session-stickiness-select': true
-                    }
+                    },
+                    label: 'Session Stickiness'
                   }}
                   small
                   disabled={disabled}
@@ -990,7 +994,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                   textfieldProps={{
                                     dataAttrs: {
                                       'data-qa-backend-ip-address': true
-                                    }
+                                    },
+                                    label: 'Select IP'
                                   }}
                                   handleChange={this.props.onNodeAddressChange}
                                   selectedRegion={this.props.nodeBalancerRegion}

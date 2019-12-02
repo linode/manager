@@ -203,6 +203,7 @@ export const EditableInput: React.FC<FinalProps> = props => {
           loading={loading}
           className={classes.textField}
           type="text"
+          label="Edit Label"
           onChange={(e: any) => onInputChange(e.target.value)}
           onKeyDown={handleKeyPress}
           value={inputText}

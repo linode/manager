@@ -162,14 +162,15 @@ class LishSettings extends React.Component<CombinedProps, State> {
                   textFieldProps={{
                     dataAttrs: {
                       'data-qa-mode-select': true
-                    }
+                    },
+                    label: 'Authentication Mode'
                   }}
                   options={modeOptions}
                   name="mode-select"
                   id="mode-select"
+                  label="Authentication Mode"
                   defaultValue={defaultMode}
                   onChange={this.onListAuthMethodChange as any}
-                  label="Authentication Mode"
                   isClearable={false}
                   errorText={authMethodError}
                 />
