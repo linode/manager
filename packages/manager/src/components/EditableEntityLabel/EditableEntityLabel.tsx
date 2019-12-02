@@ -77,7 +77,7 @@ export const EditableEntityLabel: React.FC<Props> = props => {
         </Grid>
       )}
       <Grid item className="py0">
-        <Grid container direction="column">
+        <Grid container>
           <Grid item className="py0 px0">
             <EditableInput
               errorText={error}
@@ -94,7 +94,7 @@ export const EditableEntityLabel: React.FC<Props> = props => {
             />
           </Grid>
           {subText && !isEditing && (
-            <Grid item className="py0 px0">
+            <Grid item xs={12} className="py0 px0">
               <Typography variant="body2">{subText}</Typography>
             </Grid>
           )}
