@@ -47,6 +47,7 @@ export const OverviewGraphs: React.FC<Props> = props => {
   };
 
   console.log(data);
+  console.table({ start: time.start, end: time.end });
 
   return (
     <Grid container alignItems="flex-end" item xs={12} spacing={0}>
@@ -63,7 +64,10 @@ export const OverviewGraphs: React.FC<Props> = props => {
           <Typography variant="h2">Resource Allocation History</Typography>
         </Grid>
         <Grid item>
-          <TimeRangeSelect handleStatsChange={handleStatsChange} />
+          <TimeRangeSelect
+            handleStatsChange={handleStatsChange}
+            defaultValue={'Past 30 Minutes'}
+          />
         </Grid>
       </Grid>
       <Grid item />

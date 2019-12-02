@@ -9,6 +9,7 @@ import withAccountSettings from 'src/containers/accountSettings.container';
 
 interface Props extends Omit<BaseSelectProps, 'onChange'> {
   handleStatsChange?: (start: number, end: number) => void;
+  defaultValue: Labels;
 }
 
 interface ReduxStateProps {
@@ -26,7 +27,12 @@ export type Labels =
 type CombinedProps = Props & ReduxStateProps;
 
 const TimeRangeSelect: React.FC<CombinedProps> = props => {
-  const { isLongviewPro, handleStatsChange, ...restOfSelectProps } = props;
+  const {
+    defaultValue,
+    isLongviewPro,
+    handleStatsChange,
+    ...restOfSelectProps
+  } = props;
 
   /* 
     the time range is the label instead of the value because it's a lot harder
@@ -34,7 +40,7 @@ const TimeRangeSelect: React.FC<CombinedProps> = props => {
     values when it comes time to make the request
   */
   const [selectedTimeRange, setTimeRange] = React.useState<Labels>(
-    'Past 30 Minutes'
+    defaultValue || 'Past 30 Minutes'
   );
   /*
     Why division by 1000?
