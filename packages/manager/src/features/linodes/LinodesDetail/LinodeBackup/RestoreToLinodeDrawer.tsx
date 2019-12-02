@@ -184,6 +184,8 @@ export class RestoreToLinodeDrawer extends React.Component<
             errorText={linodeError}
             placeholder="Select a Linode"
             isClearable={false}
+            label="Select a Linode"
+            hideLabel
           />
           {selectError && (
             <FormHelperText error>

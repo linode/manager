@@ -276,6 +276,8 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
             options={sortOptions}
             value={sortOptions.find(thisOption => thisOption.value === sortKey)}
             onChange={handleSortKeyChange}
+            label="Sort by"
+            hideLabel
           />
         </Grid>
         <Grid item className={`${classes.addNew} py0`}>

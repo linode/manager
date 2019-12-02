@@ -7,6 +7,7 @@ import CreatableSelect, {
 import { Props as SelectProps } from 'react-select/lib/Select';
 import { withStyles, WithStyles } from 'src/components/core/styles';
 import { Props as TextFieldProps } from 'src/components/TextField';
+import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 /* TODO will be refactoring enhanced select to be an abstraction.
 Styles added in this file and the below imports will be utilized for the abstraction. */
 import DropdownIndicator from './components/DropdownIndicator';
@@ -76,7 +77,7 @@ export interface BaseSelectProps
    * @todo consider just putting this under textFieldProps
    */
   errorText?: string;
-  label?: string;
+  label: string;
   /** alias for isDisabled */
   disabled?: boolean;
   variant?: 'creatable';
@@ -179,10 +180,11 @@ class Select extends React.PureComponent<CombinedProps, {}> {
           but we're using the MUI select element so any props that
           can be passed to the MUI TextField element can be passed here
          */
-        inputId={inputId}
+        inputId={inputId ? inputId : convertToKebabCase(label)}
         textFieldProps={{
           ...textFieldProps,
           label,
+          hideLabel,
           errorText,
           errorGroup,
           disabled,
@@ -193,8 +195,7 @@ class Select extends React.PureComponent<CombinedProps, {}> {
           className: classNames({
             [classes.medium]: medium,
             [classes.small]: small,
-            [classes.inline]: inline,
-            [classes.hideLabel]: hideLabel
+            [classes.inline]: inline
           })
         }}
         /**
