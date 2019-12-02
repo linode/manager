@@ -195,7 +195,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.plesk.com/',
       }
     ],
-    logo_url: 'assets/plesk_color.svgg',
+    logo_url: 'assets/plesk_color.svg',
   },
   {
     name: 'Rust',
