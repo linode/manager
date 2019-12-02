@@ -7,9 +7,9 @@ import Select, {
 } from 'src/components/EnhancedSelect/Select';
 import withAccountSettings from 'src/containers/accountSettings.container';
 
-interface Props extends Omit<BaseSelectProps, 'onChange'> {
+interface Props extends Omit<BaseSelectProps, 'onChange' | 'defaultValue'> {
   handleStatsChange?: (start: number, end: number) => void;
-  defaultValue: Labels;
+  defaultValue?: Labels;
 }
 
 interface ReduxStateProps {
