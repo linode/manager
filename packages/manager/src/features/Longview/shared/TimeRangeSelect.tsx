@@ -42,6 +42,7 @@ const TimeRangeSelect: React.FC<CombinedProps> = props => {
   const [selectedTimeRange, setTimeRange] = React.useState<Labels>(
     defaultValue || 'Past 30 Minutes'
   );
+
   /*
     Why division by 1000?
     
@@ -50,6 +51,24 @@ const TimeRangeSelect: React.FC<CombinedProps> = props => {
     you won't get any data back
   */
   const nowInSeconds = Date.now() / 1000;
+
+  React.useEffect(() => {
+    // Do the math and send start/end values to the consumer
+    // (in most cases the consumer has passed defaultValue={'last 30 minutes'}
+    // but the calcs to turn that into start/end numbers live here)
+    if (!!handleStatsChange) {
+      handleStatsChange(
+        Math.round(
+          generateStartTime(
+            selectedTimeRange,
+            nowInSeconds,
+            new Date().getFullYear()
+          )
+        ),
+        Math.round(nowInSeconds)
+      );
+    }
+  }, []);
 
   const options = generateSelectOptions(
     isLongviewPro,
