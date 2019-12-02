@@ -263,6 +263,8 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
         <Grid item className={`py0 ${classes.searchbar}`}>
           <Search
             placeholder="Filter by client label or hostname"
+            label="Filter by client label or hostname"
+            hideLabel
             onSearch={handleSearch}
             debounceTime={250}
             small
