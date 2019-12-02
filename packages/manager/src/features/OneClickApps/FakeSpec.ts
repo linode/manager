@@ -185,7 +185,7 @@ export const oneClickApps: OCA[] = [
   {
     name: 'Prometheus',
     description: `Prometheus is a an open-source monitoring system with a dimensional data model, flexible query language, efficient time series database and modern alerting approach.`,
-    summary: 'Power your metrics and alerting with a leading open-source monitoring solution.',
+    summary: 'Power your metrics with a leading open-source monitoring solution.',
     related_info: [
       {
         title: 'https://prometheus.io/',
