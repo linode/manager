@@ -168,7 +168,7 @@ export const oneClickApps: OCA[] = [
   {
     name: 'MySQL',
     description: ``,
-    summary: `MySQL is a popular database management system used for web and server applications.`,
+    summary: `MySQL is a popular open source database management system used for web and server applications.`,
     related_info: [
       {
         title: 'https://www.mysql.com/',
@@ -179,7 +179,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://dev.mysql.com/downloads/workbench/'
       },
       {
-        title: 'macOS database management client',
+        title: 'Sequel Pro - macOS database management client',
         href: 'https://www.sequelpro.com/'
       }
     ],
@@ -190,7 +190,8 @@ export const oneClickApps: OCA[] = [
       },
     ],
     tips: [
-      `Enables UFW firewall to allow access to, SSH <em>port 22</em>, HTTP <em>port 80</em>, HTTPS <em>port 443</em>, MySQL <em>port 3306</em>.`
+      `<b>In addition to installing MySQL, this One-Click app also enables the following UFW firewall rules:</b>`,
+      ` - SSH <em>port 22</em>, HTTP <em>port 80</em>, HTTPS <em>port 443</em>, MySQL <em>port 3306</em>`
     ],
     logo_url: 'assets/mysql_color.svg'
   },
