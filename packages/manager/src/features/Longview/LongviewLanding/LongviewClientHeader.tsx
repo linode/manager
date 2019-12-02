@@ -63,6 +63,7 @@ interface Props {
   clientID: number;
   clientLabel: string;
   lastUpdatedError?: APIError[];
+  openPackageDrawer: () => void;
   updateLongviewClient: DispatchProps['updateLongviewClient'];
   longviewClientLastUpdated?: number;
 }
@@ -77,6 +78,7 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
     longviewClientData,
     longviewClientDataLoading,
     longviewClientLastUpdated,
+    openPackageDrawer,
     updateLongviewClient
   } = props;
   const classes = useStyles();
@@ -109,6 +111,7 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
     ['Packages'],
     longviewClientData
   );
+  const numPackagesToUpdate = packages ? packages.length : 0;
   const packagesToUpdate = getPackageNoticeText(packages);
 
   const utcLastUpdatedTime = new Date(longviewClientLastUpdated!).toUTCString();
@@ -146,11 +149,11 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
         ) : (
           <>
             <Typography>{formattedUptime}</Typography>
-            {packages && packages.length > 0 ? (
+            {numPackagesToUpdate > 0 ? (
               <Button
                 className={classes.packageButton}
                 title={packagesToUpdate}
-                onClick={() => window.open('#')}
+                onClick={() => openPackageDrawer()}
               >
                 {packagesToUpdate}
               </Button>

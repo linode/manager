@@ -127,8 +127,10 @@ export interface LongviewPort {
   name: string;
 }
 export interface LongviewPortsResponse {
-  listening: LongviewService[];
-  active: LongviewPort[];
+  Ports?: {
+    listening: LongviewService[];
+    active: LongviewPort[];
+  };
 }
 
 export interface LongviewSystemInfo {

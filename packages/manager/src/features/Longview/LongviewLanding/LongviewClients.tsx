@@ -20,9 +20,11 @@ import withSettings, {
 import withLongviewClients, {
   Props as LongviewProps
 } from 'src/containers/longview.container';
+import withProfile from 'src/containers/profile.container';
 import { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import LongviewPackageDrawer from '../LongviewPackageDrawer';
 import { sumUsedMemory } from '../shared/utilities';
 import { getFinalUsedCPU } from './Gauges/CPU';
 import { generateUsedNetworkAsBytes } from './Gauges/Network';
@@ -76,7 +78,8 @@ export type CombinedProps = Props &
   LongviewProps &
   WithSnackbarProps &
   StateProps &
-  SettingsProps;
+  SettingsProps &
+  GrantsProps;
 
 type SortKey = 'name' | 'cpu' | 'ram' | 'swap' | 'load' | 'network' | 'storage';
 
@@ -193,6 +196,21 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
       });
   };
 
+  /**
+   * State and handlers for the Packages drawer
+   * (setClientLabel and setClientID are reused from the delete dialog)
+   */
+  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+
+  const handleDrawerOpen = React.useCallback(
+    (id: number, label: string) => {
+      setClientID(id);
+      setClientLabel(label);
+      setDrawerOpen(true);
+    },
+    [selectedClientID, selectedClientLabel]
+  );
+
   const {
     longviewClientsData,
     longviewClientsError,
@@ -203,7 +221,8 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     accountSettings,
     subscriptionsData,
     createLongviewClient,
-    deleteLongviewClient
+    deleteLongviewClient,
+    userCanCreateClient
   } = props;
 
   const handleSearch = (newQuery: string) => {
@@ -263,6 +282,12 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
           <AddNewLink
             onClick={handleAddClient}
             label={newClientLoading ? 'Loading...' : 'Add a Client'}
+            disabled={!userCanCreateClient}
+            disabledReason={
+              userCanCreateClient
+                ? ''
+                : 'You are not authorized to create Longview Clients. Please contact an account administrator.'
+            }
           />
         </Grid>
       </Grid>
@@ -273,8 +298,10 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
         longviewClientsLoading={longviewClientsLoading}
         longviewClientsResults={longviewClientsResults}
         triggerDeleteLongviewClient={openDeleteDialog}
+        openPackageDrawer={handleDrawerOpen}
         createLongviewClient={handleAddClient}
         loading={newClientLoading}
+        userCanCreateLongviewClient={userCanCreateClient}
       />
       {!isLongviewPro && (
         <Grid
@@ -307,6 +334,12 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
           activeSubscription ? activeSubscription.clients_included : 10
         }
       />
+      <LongviewPackageDrawer
+        clientLabel={selectedClientLabel}
+        clientID={selectedClientID || 0}
+        isOpen={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      />
     </React.Fragment>
   );
 };
@@ -329,9 +362,25 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
 
 const connected = connect(mapStateToProps);
 
+interface GrantsProps {
+  userCanCreateClient: boolean;
+}
+
 export default compose<CombinedProps, Props & RouteComponentProps>(
   React.memo,
   connected,
+  withProfile<GrantsProps, {}>((ownProps, { profileData }) => {
+    const isRestrictedUser = (profileData || {}).restricted;
+    const hasAddLongviewGrant = pathOr<boolean>(
+      false,
+      ['grants', 'global', 'add_longview'],
+      profileData
+    );
+    return {
+      userCanCreateClient:
+        !isRestrictedUser || (hasAddLongviewGrant && isRestrictedUser)
+    };
+  }),
   withLongviewClients(),
   withSettings(),
   withSnackbar

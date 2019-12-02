@@ -104,11 +104,13 @@ const enhanced = compose<CombinedProps, {}>(
   withNotifications(undefined, ({ requestNotifications }) => ({
     requestNotifications
   })),
-  withProfile<ProfileProps, {}>((undefined, profile) => ({
-    userTimezone: path(['data', 'timezone'], profile),
-    userTimezoneError: path(['read'], profile.error),
-    userTimezoneLoading: profile.loading
-  }))
+  withProfile<ProfileProps, {}>(
+    (undefined, { profileData: profile, profileLoading, profileError }) => ({
+      userTimezone: path(['data', 'timezone'], profile),
+      userTimezoneError: path(['read'], profileError),
+      userTimezoneLoading: profileLoading
+    })
+  )
 );
 
 export default enhanced(Notifications);

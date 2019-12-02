@@ -117,7 +117,7 @@ const StackScriptActionMenu: React.StatelessComponent<
 
 const enhanced = compose<CombinedProps, Props>(
   withRouter,
-  withProfile<ProfileProps, Props>((ownProps, profile) => {
+  withProfile<ProfileProps, Props>((ownProps, { profileData: profile }) => {
     return {
       username: path(['data', 'username'], profile)
     };
