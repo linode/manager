@@ -36,6 +36,7 @@ const EmptyCopy = () => (
       <a
         href="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/"
         target="_blank"
+        aria-describedby="external-site"
         rel="noopener noreferrer"
         className="h-u"
       >
@@ -45,6 +46,7 @@ const EmptyCopy = () => (
       <a
         href="https://www.linode.com/docs/"
         target="_blank"
+        aria-describedby="external-site"
         rel="noopener noreferrer"
         className="h-u"
       >

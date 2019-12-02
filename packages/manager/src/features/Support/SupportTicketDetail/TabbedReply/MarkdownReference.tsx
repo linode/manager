@@ -40,6 +40,7 @@ const MarkdownReference: React.FC<CombinedProps> = props => {
         {props.isReply ? 'reply' : 'question'}. For more examples see this
         <a
           target="_blank"
+          aria-describedby="external-site"
           rel="noopener noreferrer"
           href="http://demo.showdownjs.com/"
         >

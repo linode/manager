@@ -15,6 +15,7 @@ export interface Action {
   disabled?: boolean;
   tooltip?: string;
   isLoading?: boolean;
+  ariaDescribedBy?: string;
   onClick: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
@@ -154,6 +155,7 @@ export class ActionMenu extends React.Component<CombinedProps, State> {
               disabled={a.disabled}
               tooltip={a.tooltip}
               isLoading={a.isLoading}
+              aria-describedby={a.ariaDescribedBy}
             >
               {a.title}
             </MenuItem>

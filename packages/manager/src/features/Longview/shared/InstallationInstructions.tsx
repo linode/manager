@@ -92,6 +92,7 @@ const InstallationInstructions: React.FC<CombinedProps> = props => {
               <a
                 href="https://www.linode.com/docs/platform/longview/longview/"
                 target="_blank"
+                aria-describedby="external-site"
                 rel="noopener noreferrer"
               >
                 Troubleshooting guide
@@ -103,6 +104,7 @@ const InstallationInstructions: React.FC<CombinedProps> = props => {
               <a
                 href="https://www.linode.com/docs/platform/longview/longview/#install-the-longview-client"
                 target="_blank"
+                aria-describedby="external-site"
                 rel="noopener noreferrer"
               >
                 Manual installation instructions

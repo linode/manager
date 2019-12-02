@@ -73,6 +73,7 @@ export const Hively: React.FC<Props> = props => {
           className={classes.hivelyLink}
           href={href + '3'}
           target="_blank"
+          aria-describedby="external-site"
           rel="noopener noreferrer"
         >
           How did I do?
@@ -82,6 +83,7 @@ export const Hively: React.FC<Props> = props => {
         <a
           href={href + '3'}
           target="_blank"
+          aria-describedby="external-site"
           rel="noopener noreferrer"
           className={classes.hivelyLinkIcon}
         >
@@ -96,6 +98,7 @@ export const Hively: React.FC<Props> = props => {
         <a
           href={href + '2'}
           target="_blank"
+          aria-describedby="external-site"
           rel="noopener noreferrer"
           className={classes.hivelyLinkIcon}
         >
@@ -110,6 +113,7 @@ export const Hively: React.FC<Props> = props => {
         <a
           href={href + '1'}
           target="_blank"
+          aria-describedby="external-site"
           rel="noopener noreferrer"
           className={classes.hivelyLinkIcon}
         >

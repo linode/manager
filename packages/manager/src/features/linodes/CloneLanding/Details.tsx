@@ -272,6 +272,7 @@ export const Configs: React.FC<Props> = props => {
           <a
             href={errorMessageLinks.shrink}
             target="_blank"
+            aria-describedby="external-site"
             rel="noopener noreferrer"
           >
             Shrink your existing disks
@@ -280,6 +281,7 @@ export const Configs: React.FC<Props> = props => {
           <a
             href={errorMessageLinks.resize}
             target="_blank"
+            aria-describedby="external-site"
             rel="noopener noreferrer"
           >
             resize your Linode to a larger plan.
