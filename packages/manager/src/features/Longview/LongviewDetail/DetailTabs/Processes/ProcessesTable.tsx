@@ -69,7 +69,7 @@ const ProcessesTable: React.FC<CombinedProps> = props => {
       <OrderBy data={processesData} orderBy={'name'} order={'desc'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
           <>
-            <Table spacingTop={16}>
+            <Table spacingTop={16} noOverflow>
               <TableHead>
                 <TableRow>
                   <TableSortCell
@@ -78,7 +78,7 @@ const ProcessesTable: React.FC<CombinedProps> = props => {
                     label="name"
                     direction={order}
                     handleClick={handleOrderChange}
-                    style={{ width: '25%' }}
+                    style={{ width: '20%' }}
                   >
                     Process
                   </TableSortCell>
@@ -88,7 +88,7 @@ const ProcessesTable: React.FC<CombinedProps> = props => {
                     label="user"
                     direction={order}
                     handleClick={handleOrderChange}
-                    style={{ width: '25%' }}
+                    style={{ width: '20%' }}
                   >
                     User
                   </TableSortCell>
@@ -108,7 +108,7 @@ const ProcessesTable: React.FC<CombinedProps> = props => {
                     label="averageIO"
                     direction={order}
                     handleClick={handleOrderChange}
-                    style={{ width: '10%' }}
+                    style={{ width: '15%' }}
                   >
                     Avg IO
                   </TableSortCell>
@@ -118,7 +118,7 @@ const ProcessesTable: React.FC<CombinedProps> = props => {
                     label="averageCPU"
                     direction={order}
                     handleClick={handleOrderChange}
-                    style={{ width: '10%' }}
+                    style={{ width: '15%' }}
                   >
                     Avg CPU
                   </TableSortCell>
@@ -128,7 +128,7 @@ const ProcessesTable: React.FC<CombinedProps> = props => {
                     label="averageMem"
                     direction={order}
                     handleClick={handleOrderChange}
-                    style={{ width: '25%' }}
+                    style={{ width: '15%' }}
                   >
                     Avg Mem
                   </TableSortCell>
@@ -201,8 +201,11 @@ export const ProcessesTableRow: React.FC<ProcessTableRowProps> = React.memo(
     return (
       <TableRow
         onClick={() => setSelectedRow(id)}
+        onKeyUp={(e: any) => e.keyCode === 13 && setSelectedRow(id)}
         selected={isSelected}
         data-testid="longview-service-row"
+        forceIndex
+        aria-label={`${name} for ${user}`}
       >
         <TableCell parentColumn="Process" data-qa-process-process>
           {name}
