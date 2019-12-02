@@ -255,7 +255,8 @@ export const Configs: React.FC<Props> = props => {
             : undefined
         }
         textFieldProps={{
-          error: !!linodeError
+          error: !!linodeError,
+          label: 'Destination'
         }}
         groupByRegion
         updateFor={[

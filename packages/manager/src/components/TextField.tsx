@@ -136,7 +136,11 @@ interface BaseProps {
   hideLabel?: boolean;
 }
 
-export type Props = BaseProps & TextFieldProps;
+interface TextFieldPropsOverrides extends TextFieldProps {
+  label: string;
+}
+
+export type Props = BaseProps & TextFieldProps & TextFieldPropsOverrides;
 
 type CombinedProps = Props & WithTheme & WithStyles<ClassNames>;
 
@@ -166,6 +170,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
       nextProps.helperText !== this.props.helperText ||
       nextProps.classes !== this.props.classes ||
       nextProps.loading !== this.props.loading ||
+      nextProps.label !== this.props.label ||
       Boolean(
         this.props.select && nextProps.children !== this.props.children
       ) ||

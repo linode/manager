@@ -112,7 +112,8 @@ export class ImageSelect extends React.Component<CombinedProps, State> {
               options={renderedImages as any}
               placeholder="Select an Image"
               textFieldProps={{
-                required
+                required,
+                label: this.props.label || 'Image'
               }}
               label={this.props.label || 'Image'}
             />

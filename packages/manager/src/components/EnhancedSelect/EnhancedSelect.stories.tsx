@@ -128,7 +128,8 @@ class Example extends React.Component<{}, State> {
           textFieldProps={{
             dataAttrs: {
               'data-qa-basic-select': true
-            }
+            },
+            label: 'Basic Select'
           }}
           value={valueSingle}
           placeholder="Choose one fruit"

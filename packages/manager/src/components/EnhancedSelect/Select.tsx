@@ -77,6 +77,9 @@ export interface BaseSelectProps
    * @todo consider just putting this under textFieldProps
    */
   errorText?: string;
+  /**
+   * We require label for accessibility purpose
+   */
   label: string;
   /** alias for isDisabled */
   disabled?: boolean;

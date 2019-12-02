@@ -92,14 +92,15 @@ const KubernetesDialog: React.FC<CombinedProps> = props => {
         permanent and can't be undone.
       </Typography>
       <Typography style={{ marginTop: '10px' }}>
-        To confirm deletion, type the name of the cluster ({clusterLabel}) in
-        the field below:
+        To confirm deletion, type the name of the cluster (<b>{clusterLabel}</b>
+        ) in the field below:
       </Typography>
       <TextField
         data-testid={'dialog-confirm-text-input'}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           setConfirmText(e.target.value)
         }
+        label="Cluster Name"
         expand
       />
     </ConfirmationDialog>
