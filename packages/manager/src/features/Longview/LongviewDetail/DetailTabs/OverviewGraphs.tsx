@@ -35,14 +35,19 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
     end: 0
   });
   const [data, setData] = React.useState<Partial<AllData>>({});
-  const request = (start: number = time.start, end: number = time.end) =>
+  const request = (start: number = time.start, end: number = time.end) => {
+    // Don't start requesting until we have a time range.
+    if (start === 0 || end === 0) {
+      return;
+    }
     getValues(clientAPIKey, {
       fields: ['cpu', 'memory', 'network', 'disk', 'load'],
       start,
       end
     }).then(response => setData(response));
+  };
 
-  useClientLastUpdated(clientAPIKey, clientAPIKey ? request : undefined);
+  useClientLastUpdated(clientAPIKey, request);
 
   const handleStatsChange = (start: number, end: number) => {
     setTimeBox({ start, end });
@@ -120,14 +125,14 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
               <LongviewLineGraph
                 title="Load"
                 subtitle="Target < 1.00"
-                showToday={false}
+                showToday={true}
                 timezone="GMT"
                 data={[
                   {
                     label: 'Load',
                     borderColor: theme.graphs.blueBorder,
                     backgroundColor: theme.graphs.blue,
-                    data: convertData(data.Load || [])
+                    data: convertData(time.start, data.Load || [])
                   }
                 ]}
               />
@@ -139,8 +144,29 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
   );
 };
 
-export const convertData = (d: Stat[]) => {
-  return d.map(thisPoint => [thisPoint.x, thisPoint.y] as [number, number]);
+export const convertData = (start: number, d: Stat[]) => {
+  const points = d.map(
+    thisPoint => [thisPoint.x * 1000, thisPoint.y] as [number, number]
+  );
+
+  if (points.length < 1) {
+    // Empty array
+    return points;
+  }
+
+  /**
+   * The LV API does not provide proper time series data;
+   * only times for which the agent was collecting data
+   * have entries in the response (so if your Linode is 3 days
+   * old and you ask for graphs for the past year, the response
+   * will only have 3 days of data). We therefore need to pad the
+   * front of the response with an extra data point to force the x
+   * axis of each graph to show the requested time span.
+   */
+  if (points[0][0] > start * 1000) {
+    points.unshift([start * 1000, 0]);
+  }
+  return points;
 };
 
 export default withTheme(OverviewGraphs);
