@@ -15,6 +15,7 @@ interface Flags {
   firewalls: boolean;
   oneClickApps: OneClickApp;
   longview: boolean;
+  longviewTabs: boolean;
 }
 
 /**

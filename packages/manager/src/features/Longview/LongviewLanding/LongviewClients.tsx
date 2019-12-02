@@ -15,7 +15,7 @@ import Search from 'src/components/DebouncedSearchTextField';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import withSettings, {
-  SettingsProps
+  Props as SettingsProps
 } from 'src/containers/accountSettings.container';
 import withLongviewClients, {
   Props as LongviewProps
@@ -24,6 +24,10 @@ import { State as StatsState } from 'src/store/longviewStats/longviewStats.reduc
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import LongviewPackageDrawer from '../LongviewPackageDrawer';
+import { sumUsedMemory } from '../shared/utilities';
+import { getFinalUsedCPU } from './Gauges/CPU';
+import { generateUsedNetworkAsBytes } from './Gauges/Network';
+import { getUsedStorage } from './Gauges/Storage';
 import DeleteDialog from './LongviewDeleteDialog';
 import LongviewList from './LongviewList';
 import SubscriptionDialog from './SubscriptionDialog';
@@ -68,27 +72,19 @@ interface Props {
   subscriptionsData: LongviewSubscription[];
 }
 
-type CombinedProps = Props &
+export type CombinedProps = Props &
   RouteComponentProps &
   LongviewProps &
   WithSnackbarProps &
   StateProps &
   SettingsProps;
 
-/**
- * Returns a date string representing the time
- * when the most recently updated Longview client
- * was updated.
- *
- */
+type SortKey = 'name' | 'cpu' | 'ram' | 'swap' | 'load' | 'network' | 'storage';
 
 export const LongviewClients: React.FC<CombinedProps> = props => {
   const [newClientLoading, setNewClientLoading] = React.useState<boolean>(
     false
   );
-  const [filteredClientList, filterClientList] = React.useState<
-    LongviewClient[] | undefined
-  >();
   const [deleteDialogOpen, toggleDeleteDialog] = React.useState<boolean>(false);
   const [selectedClientID, setClientID] = React.useState<number | undefined>(
     undefined
@@ -97,7 +93,6 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
 
   /** Handlers/tracking variables for sorting by different client attributes */
 
-  type SortKey = 'name' | 'cpu';
   const sortOptions: Item<string>[] = [
     {
       label: 'Client Name',
@@ -130,6 +125,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
   ];
 
   const [sortKey, setSortKey] = React.useState<SortKey>('name');
+  const [query, setQuery] = React.useState<string>('');
 
   /**
    * Subscription warning modal (shown when a user has used all of their plan's
@@ -226,17 +222,11 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     deleteLongviewClient
   } = props;
 
-  const handleSearch = (query: string) => {
-    return filterClientList(
-      filterLongviewClientsByQuery(
-        query,
-        Object.values(longviewClientsData),
-        lvClientData
-      )
-    );
+  const handleSearch = (newQuery: string) => {
+    setQuery(newQuery);
   };
 
-  const handleSortKeyChange = (selected: Item) => {
+  const handleSortKeyChange = (selected: Item<string>) => {
     setSortKey(selected.value as SortKey);
   };
 
@@ -251,6 +241,18 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
   const isLongviewPro = Boolean(
     pathOr(false, ['longview_subscription'], accountSettings)
   );
+
+  /**
+   * Do the actual sorting & filtering
+   */
+
+  const clients = Object.values(longviewClientsData);
+  const filteredList = filterLongviewClientsByQuery(
+    query,
+    clients,
+    lvClientData
+  );
+  const sortedList = sortClientsBy(sortKey, filteredList, lvClientData);
 
   return (
     <React.Fragment>
@@ -281,11 +283,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
         </Grid>
       </Grid>
       <LongviewList
-        filteredData={
-          !!filteredClientList
-            ? filteredClientList
-            : Object.values(longviewClientsData)
-        }
+        filteredData={sortedList}
         longviewClientsError={longviewClientsError}
         longviewClientsLastUpdated={longviewClientsLastUpdated}
         longviewClientsLoading={longviewClientsLoading}
@@ -361,6 +359,106 @@ export default compose<CombinedProps, Props & RouteComponentProps>(
   withSettings(),
   withSnackbar
 )(LongviewClients);
+
+/**
+ * Helper function for sortClientsBy,
+ * to reduce (a>b) {return -1 } boilerplate
+ */
+export const sortFunc = (
+  a: string | number,
+  b: string | number,
+  order: 'asc' | 'desc' = 'desc'
+) => {
+  let result: number;
+  if (a > b) {
+    result = -1;
+  } else if (a < b) {
+    result = 1;
+  } else {
+    result = 0;
+  }
+  return order === 'desc' ? result : -result;
+};
+
+/**
+ * Handle sorting by various metrics,
+ * since the calculations for each are
+ * specific to that metric.
+ *
+ * This could be extracted to ./utilities,
+ * but it's unlikely to be used anywhere else.
+ */
+export const sortClientsBy = (
+  sortKey: SortKey,
+  clients: LongviewClient[],
+  clientData: Record<string, StatsState>
+) => {
+  switch (sortKey) {
+    case 'name':
+      return clients.sort((a, b) => {
+        return sortFunc(a.label, b.label, 'asc');
+      });
+    case 'cpu':
+      return clients.sort((a, b) => {
+        const aCPU = getFinalUsedCPU(pathOr(0, [a.id, 'data'], clientData));
+        const bCPU = getFinalUsedCPU(pathOr(0, [b.id, 'data'], clientData));
+
+        return sortFunc(aCPU, bCPU);
+      });
+    case 'ram':
+      return clients.sort((a, b) => {
+        const aRam = sumUsedMemory(pathOr({}, [a.id, 'data'], clientData));
+        const bRam = sumUsedMemory(pathOr({}, [b.id, 'data'], clientData));
+        return sortFunc(aRam, bRam);
+      });
+    case 'swap':
+      return clients.sort((a, b) => {
+        const aSwap = pathOr<number>(
+          0,
+          [a.id, 'data', 'Memory', 'swap', 'used', 0, 'y'],
+          clientData
+        );
+        const bSwap = pathOr<number>(
+          0,
+          [b.id, 'data', 'Memory', 'swap', 'used', 0, 'y'],
+          clientData
+        );
+        return sortFunc(aSwap, bSwap);
+      });
+    case 'load':
+      return clients.sort((a, b) => {
+        const aLoad = pathOr<number>(
+          0,
+          [a.id, 'data', 'Load', 0, 'y'],
+          clientData
+        );
+        const bLoad = pathOr<number>(
+          0,
+          [b.id, 'data', 'Load', 0, 'y'],
+          clientData
+        );
+        return sortFunc(aLoad, bLoad);
+      });
+    case 'network':
+      return clients.sort((a, b) => {
+        const aNet = generateUsedNetworkAsBytes(
+          pathOr(0, [a.id, 'data', 'Network', 'Interface'], clientData)
+        );
+        const bNet = generateUsedNetworkAsBytes(
+          pathOr(0, [b.id, 'data', 'Network', 'Interface'], clientData)
+        );
+        return sortFunc(aNet, bNet);
+      });
+    case 'storage':
+      return clients.sort((a, b) => {
+        const aStorage = getUsedStorage(pathOr(0, [a.id, 'data'], clientData));
+        const bStorage = getUsedStorage(pathOr(0, [b.id, 'data'], clientData));
+        return sortFunc(aStorage, bStorage);
+      });
+    default:
+      return clients;
+  }
+};
 
 export const filterLongviewClientsByQuery = (
   query: string,

@@ -3,6 +3,7 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import {
   matchPath,
+  Redirect,
   Route,
   RouteComponentProps,
   Switch
@@ -27,6 +28,7 @@ import withLongviewClients, {
 import { get } from 'src/features/Longview/request';
 import { LongviewTopProcesses } from 'src/features/Longview/request.types';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import useFlags from 'src/hooks/useFlags';
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
 import ProcessesLanding from './DetailTabs/Processes/ProcessesLanding';
 
@@ -80,7 +82,8 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     }
   }, [client]);
   const clientAPIKey = client && client.api_key;
-
+  const flags = useFlags();
+  const showAllTabs = Boolean(flags.longviewTabs);
   const { lastUpdated, lastUpdatedError } = useClientLastUpdated(clientAPIKey);
 
   const topProcesses = useAPIRequest<LongviewTopProcesses>(
@@ -103,32 +106,32 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     },
     {
       title: 'Processes',
-      display: true,
+      display: showAllTabs,
       routeName: `${props.match.url}/processes`
     },
     {
       title: 'Network',
-      display: true,
+      display: showAllTabs,
       routeName: `${props.match.url}/network`
     },
     {
       title: 'Disks',
-      display: true,
+      display: showAllTabs,
       routeName: `${props.match.url}/disks`
     },
     {
       title: 'Apache',
-      display: (client && client.apps.apache) || false,
+      display: (client && client.apps.apache && showAllTabs) || false,
       routeName: `${props.match.url}/apache`
     },
     {
       title: 'Nginx',
-      display: (client && client.apps.nginx) || false,
+      display: (client && client.apps.nginx && showAllTabs) || false,
       routeName: `${props.match.url}/nginx`
     },
     {
       title: 'MySQL',
-      display: (client && client.apps.mysql) || false,
+      display: (client && client.apps.mysql && showAllTabs) || false,
       routeName: `${props.match.url}/mysql`
     },
     {
@@ -219,42 +222,55 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
         </Tabs>
       </AppBar>
       <Switch>
-        <Route
-          exact
-          strict
-          path={`${url}/processes`}
-          render={() => <ProcessesLanding />}
-        />
-        <Route
-          exact
-          strict
-          path={`${url}/network`}
-          render={() => <h2>Network</h2>}
-        />
-        <Route
-          exact
-          strict
-          path={`${url}/disks`}
-          render={() => <h2>Disks</h2>}
-        />
-        <Route
-          exact
-          strict
-          path={`${url}/apache`}
-          render={() => <h2>Apache</h2>}
-        />
-        <Route
-          exact
-          strict
-          path={`${url}/nginx`}
-          render={() => <h2>Nginx</h2>}
-        />
-        <Route
-          exact
-          strict
-          path={`${url}/mysql`}
-          render={() => <h2>MySQL</h2>}
-        />
+        {showAllTabs && (
+          <Route
+            exact
+            strict
+            path={`${url}/processes`}
+            render={() => <ProcessesLanding />}
+          />
+        )}
+        {showAllTabs && (
+          <Route
+            exact
+            strict
+            path={`${url}/network`}
+            render={() => <h2>Network</h2>}
+          />
+        )}
+        {showAllTabs && (
+          <Route
+            exact
+            strict
+            path={`${url}/disks`}
+            render={() => <h2>Disks</h2>}
+          />
+        )}
+        {showAllTabs && (
+          <Route
+            exact
+            strict
+            path={`${url}/apache`}
+            render={() => <h2>Apache</h2>}
+          />
+        )}
+        {showAllTabs && (
+          <Route
+            exact
+            strict
+            path={`${url}/nginx`}
+            render={() => <h2>Nginx</h2>}
+          />
+        )}
+
+        {showAllTabs && (
+          <Route
+            exact
+            strict
+            path={`${url}/mysql`}
+            render={() => <h2>MySQL</h2>}
+          />
+        )}
         <Route
           exact
           strict
@@ -269,6 +285,8 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
         />
         <Route
           strict
+          exact
+          path={`${url}/overview`}
           render={routerProps => (
             <Overview
               client={client.label}
@@ -281,6 +299,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
             />
           )}
         />
+        <Redirect to={`${url}/overview`} />
       </Switch>
     </React.Fragment>
   );
