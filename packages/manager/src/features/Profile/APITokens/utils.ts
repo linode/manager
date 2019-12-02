@@ -7,10 +7,10 @@ export const basePerms = [
   'images',
   'ips',
   'linodes',
+  // 'lke',
   'longview',
   'nodebalancers',
   'object_storage',
-  // 'lke',
   'stackscripts',
   'volumes'
 ];
@@ -22,11 +22,11 @@ export const basePermNameMap: Record<string, string> = {
   images: 'Images',
   ips: 'IPs',
   linodes: 'Linodes',
+  // lke: 'Kubernetes',
   longview: 'Longview',
   nodebalancers: 'NodeBalancers',
   object_storage: 'Object Storage',
   stackscripts: 'StackScripts',
-  // lke: 'Kubernetes',
   volumes: 'Volumes'
 };
 

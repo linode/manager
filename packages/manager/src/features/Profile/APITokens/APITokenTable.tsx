@@ -549,7 +549,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           perms={
             !this.props.accountCapabilities.includes('Kubernetes')
               ? basePerms
-              : [...basePerms, 'lke']
+              : [...basePerms, 'lke'].sort()
           }
           permNameMap={
             !this.props.accountCapabilities.includes('Kubernetes')
