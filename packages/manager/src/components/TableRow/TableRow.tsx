@@ -1,6 +1,7 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import {
   createStyles,
   Theme,
@@ -11,7 +12,11 @@ import _TableRow, {
   TableRowProps as _TableRowProps
 } from 'src/components/core/TableRow';
 
-type ClassNames = 'root' | 'selected';
+import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
+
+import ActiveCaret from 'src/assets/icons/activeRowCaret.svg';
+
+type ClassNames = 'root' | 'selected' | 'withForcedIndex' | 'activeCaret';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -24,15 +29,53 @@ const styles = (theme: Theme) =>
           width: '0.01%',
           height: '100%',
           backgroundColor: 'transparent',
-          borderBottom: `2px solid ${theme.palette.divider}`,
+          borderTop: `1px solid ${theme.palette.divider}`,
+          borderBottom: `1px solid ${theme.palette.divider}`,
           transition: theme.transitions.create(['background-color']),
           paddingLeft: 5
         }
       }
     },
+    withForcedIndex: {
+      '& td': {
+        transition: theme.transitions.create(['color'])
+      },
+      transition: theme.transitions.create(['border-color']),
+      '&:before': {
+        borderLeft: `1px solid transparent`,
+        paddingLeft: 4
+      },
+      '&:hover': {
+        cursor: 'pointer',
+        '& td': {
+          color: theme.palette.primary.light
+        }
+      },
+      '&:focus': {
+        backgroundColor: theme.bg.lightBlue
+      }
+    },
     selected: {
-      backgroundColor: '#f0f7ff',
-      border: 'solid 1px #93bcec !important'
+      backgroundColor: theme.bg.lightBlue,
+      transform: 'scale(1)',
+      '&:before': {
+        transition: 'none',
+        backgroundColor: theme.bg.lightBlue,
+        borderColor: theme.palette.primary.light,
+        borderRight: 0
+      },
+      '& td': {
+        borderTopColor: theme.palette.primary.light,
+        borderBottomColor: theme.palette.primary.light
+      }
+    },
+    activeCaret: {
+      color: theme.bg.lightBlue,
+      position: 'absolute',
+      top: 0,
+      right: theme.spacing() === COMPACT_SPACING_UNIT ? -12 : -14,
+      transform: 'translate(-.5px, -.5px)',
+      height: theme.spacing() === COMPACT_SPACING_UNIT ? 34 : 42
     }
   });
 
@@ -40,10 +83,13 @@ type onClickFn = (e: React.ChangeEvent<HTMLTableRowElement>) => void;
 
 interface Props {
   rowLink?: string | onClickFn;
+  onClick?: onClickFn;
+  onKeyUp?: any;
   className?: string;
   staticContext?: boolean;
   htmlFor?: string;
   selected?: boolean;
+  forceIndex?: boolean;
 }
 
 type CombinedProps = Props &
@@ -92,6 +138,7 @@ class TableRow extends React.Component<CombinedProps> {
       rowLink,
       staticContext,
       selected,
+      forceIndex,
       ...rest
     } = this.props;
 
@@ -117,12 +164,18 @@ class TableRow extends React.Component<CombinedProps> {
         role={role}
         className={classNames(className, {
           [classes.root]: true,
-          [classes.selected]: selected
+          [classes.selected]: selected,
+          [classes.withForcedIndex]: forceIndex
         })}
         {...rest}
-        tabIndex={rowLink ? 0 : -1}
+        tabIndex={rowLink || forceIndex ? 0 : -1}
       >
         {this.props.children}
+        {selected && (
+          <td colSpan={0}>
+            <ActiveCaret className={classes.activeCaret} />
+          </td>
+        )}
       </_TableRow>
     );
   }
@@ -130,4 +183,9 @@ class TableRow extends React.Component<CombinedProps> {
 
 const styled = withStyles(styles);
 
-export default styled(withRouter(TableRow));
+const enhanced = compose<CombinedProps, Props>(
+  withRouter,
+  styled
+)(TableRow);
+
+export default enhanced;
