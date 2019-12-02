@@ -220,7 +220,7 @@ describe('ImageSelect', () => {
           <Select
             onChange={props.onSelect}
             errorText={'An error'}
-            label="Label"
+            label="Image"
           />
         )
       ).toBeTruthy();
