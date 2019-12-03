@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface Props extends LineGraphProps {
+export interface Props extends LineGraphProps {
   title: string;
   subtitle: string;
 }

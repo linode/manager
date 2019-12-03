@@ -38,13 +38,11 @@ describe('EventRow component', () => {
 
   it("should only include a link if it's not an events page for a specific entity", () => {
     row.setProps({ entityId: 1 });
-    let tableRowProps: any = row
-      .find('WithStyles(withRouter(TableRow))')
-      .props();
+    let tableRowProps: any = row.find('[data-qa-event-row]').props();
     expect(tableRowProps.rowLink).toBe(undefined);
 
     row.setProps({ entityId: 0 });
-    tableRowProps = row.find('WithStyles(withRouter(TableRow))').props();
+    tableRowProps = row.find('[data-qa-event-row]').props();
     expect(tableRowProps.rowLink).toBeDefined();
   });
 

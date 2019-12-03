@@ -1,4 +1,4 @@
-interface Stat {
+export interface Stat {
   x: number;
   y: number;
 }
@@ -127,8 +127,10 @@ export interface LongviewPort {
   name: string;
 }
 export interface LongviewPortsResponse {
-  listening: LongviewService[];
-  active: LongviewPort[];
+  Ports?: {
+    listening: LongviewService[];
+    active: LongviewPort[];
+  };
 }
 
 export interface LongviewSystemInfo {
@@ -151,7 +153,7 @@ export interface LongviewSystemInfo {
 // Resulting shape of calling `/fetch` with an api_action of `getValues` or
 // `getLatestValues` (and asking for the "Processes.*" key).
 export interface LongviewProcesses {
-  Processes: Record<string, Process>;
+  Processes?: Record<string, Process>;
 }
 
 export type Process = { longname: string } & Record<string, ProcessStats>;
@@ -166,7 +168,7 @@ export interface ProcessStats {
 
 // Resulting shape of calling `/fetch` with an api_action of `getTopProcesses`.
 export interface LongviewTopProcesses {
-  Processes: Record<string, TopProcess>;
+  Processes?: Record<string, TopProcess>;
 }
 
 export type TopProcess = Record<string, TopProcessStat>;

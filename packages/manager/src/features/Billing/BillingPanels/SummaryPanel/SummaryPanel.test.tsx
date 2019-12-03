@@ -10,12 +10,12 @@ describe('SummaryPanel', () => {
   const baseProps: CombinedProps = {
     accountLoading: false,
     history,
-    lastUpdated: 10,
+    accountLastUpdated: 10,
     username: 'helloworld',
     profileError: undefined,
     profileLoading: false,
     isRestricted: false,
-    account: {
+    accountData: {
       company: '',
       first_name: '',
       last_name: '',
@@ -32,10 +32,8 @@ describe('SummaryPanel', () => {
       balance: 0,
       balance_uninvoiced: 0,
       active_since: '2018-05-17T18:22:50',
-      active_promotions: activePromotions
-      // [BETA]
-      // @todo: Uncomment this when it becomes generally available
-      // capabilities: ['Linodes', 'NodeBalancers', 'Block Storage']
+      active_promotions: activePromotions,
+      capabilities: ['Linodes', 'NodeBalancers', 'Block Storage']
     }
   };
 
@@ -51,10 +49,10 @@ describe('SummaryPanel', () => {
       wrapWithTheme(
         <SummaryPanel
           {...baseProps}
-          account={{
-            ...baseProps.account!,
+          accountData={{
+            ...baseProps.accountData!,
             credit_card: {
-              ...baseProps.account!.credit_card,
+              ...baseProps.accountData!.credit_card,
               expiry: '02/4000'
             }
           }}
