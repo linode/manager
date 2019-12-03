@@ -3,6 +3,7 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import {
   matchPath,
+  Redirect,
   Route,
   RouteComponentProps,
   Switch
@@ -25,11 +26,20 @@ import withLongviewClients, {
   Props as LVProps
 } from 'src/containers/longview.container';
 import { get } from 'src/features/Longview/request';
-import { LongviewTopProcesses } from 'src/features/Longview/request.types';
+import {
+  LongviewPortsResponse,
+  LongviewTopProcesses
+} from 'src/features/Longview/request.types';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import useFlags from 'src/hooks/useFlags';
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
+import ProcessesLanding from './DetailTabs/Processes/ProcessesLanding';
 
 const topProcessesEmptyDataSet: LongviewTopProcesses = { Processes: {} };
+
+import withClientStats, {
+  Props as LVDataProps
+} from 'src/containers/longview.stats.container';
 
 interface Props {
   client?: LongviewClient;
@@ -46,8 +56,13 @@ const Installation = DefaultLoader({
   loader: () => import('./DetailTabs/Installation')
 });
 
+const Disks = DefaultLoader({
+  loader: () => import('./DetailTabs/Disks')
+});
+
 export type CombinedProps = RouteComponentProps<{ id: string }> &
   Props &
+  LVDataProps &
   DispatchProps;
 
 export const LongviewDetail: React.FC<CombinedProps> = props => {
@@ -55,7 +70,8 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     client,
     longviewClientsLastUpdated,
     longviewClientsLoading,
-    longviewClientsError
+    longviewClientsError,
+    longviewClientData
   } = props;
 
   React.useEffect(() => {
@@ -65,8 +81,13 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     }
   }, []);
   const clientAPIKey = client && client.api_key;
+  const flags = useFlags();
+  const showAllTabs = Boolean(flags.longviewTabs);
 
-  const { lastUpdated, lastUpdatedError } = useClientLastUpdated(clientAPIKey);
+  const { lastUpdated, lastUpdatedError } = useClientLastUpdated(
+    clientAPIKey,
+    clientAPIKey ? () => props.getClientStats(clientAPIKey) : undefined
+  );
 
   const topProcesses = useAPIRequest<LongviewTopProcesses>(
     // We can only make this request if we have a clientAPIKey, so we use `null`
@@ -80,6 +101,17 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     [clientAPIKey, lastUpdated]
   );
 
+  const listeningPorts = useAPIRequest<LongviewPortsResponse>(
+    clientAPIKey && lastUpdated
+      ? () =>
+          get(clientAPIKey, 'getValues', {
+            fields: ['listeningServices', 'activeConnections']
+          })
+      : null,
+    { Ports: { listening: [], active: [] } },
+    [clientAPIKey, lastUpdated]
+  );
+
   const tabOptions = [
     {
       title: 'Overview',
@@ -88,32 +120,32 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     },
     {
       title: 'Processes',
-      display: true,
+      display: showAllTabs,
       routeName: `${props.match.url}/processes`
     },
     {
       title: 'Network',
-      display: true,
+      display: showAllTabs,
       routeName: `${props.match.url}/network`
     },
     {
       title: 'Disks',
-      display: true,
+      display: showAllTabs,
       routeName: `${props.match.url}/disks`
     },
     {
       title: 'Apache',
-      display: (client && client.apps.apache) || false,
+      display: (client && client.apps.apache && showAllTabs) || false,
       routeName: `${props.match.url}/apache`
     },
     {
       title: 'Nginx',
-      display: (client && client.apps.nginx) || false,
+      display: (client && client.apps.nginx && showAllTabs) || false,
       routeName: `${props.match.url}/nginx`
     },
     {
       title: 'MySQL',
-      display: (client && client.apps.mysql) || false,
+      display: (client && client.apps.mysql && showAllTabs) || false,
       routeName: `${props.match.url}/mysql`
     },
     {
@@ -204,42 +236,63 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
         </Tabs>
       </AppBar>
       <Switch>
-        <Route
-          exact
-          strict
-          path={`${url}/processes`}
-          render={() => <h2>Processes</h2>}
-        />
-        <Route
-          exact
-          strict
-          path={`${url}/network`}
-          render={() => <h2>Network</h2>}
-        />
-        <Route
-          exact
-          strict
-          path={`${url}/disks`}
-          render={() => <h2>Disks</h2>}
-        />
-        <Route
-          exact
-          strict
-          path={`${url}/apache`}
-          render={() => <h2>Apache</h2>}
-        />
-        <Route
-          exact
-          strict
-          path={`${url}/nginx`}
-          render={() => <h2>Nginx</h2>}
-        />
-        <Route
-          exact
-          strict
-          path={`${url}/mysql`}
-          render={() => <h2>MySQL</h2>}
-        />
+        {showAllTabs && (
+          <Route
+            exact
+            strict
+            path={`${url}/processes`}
+            render={() => <ProcessesLanding />}
+          />
+        )}
+        {showAllTabs && (
+          <Route
+            exact
+            strict
+            path={`${url}/network`}
+            render={() => <h2>Network</h2>}
+          />
+        )}
+        {showAllTabs && (
+          <Route
+            exact
+            strict
+            path={`${url}/disks`}
+            render={routerProps => (
+              <Disks
+                clientID={client.id}
+                clientAPIKey={client.api_key}
+                clientLastUpdated={lastUpdated}
+                lastUpdatedError={lastUpdatedError}
+                {...routerProps}
+              />
+            )}
+          />
+        )}
+        {showAllTabs && (
+          <Route
+            exact
+            strict
+            path={`${url}/apache`}
+            render={() => <h2>Apache</h2>}
+          />
+        )}
+        {showAllTabs && (
+          <Route
+            exact
+            strict
+            path={`${url}/nginx`}
+            render={() => <h2>Nginx</h2>}
+          />
+        )}
+
+        {showAllTabs && (
+          <Route
+            exact
+            strict
+            path={`${url}/mysql`}
+            render={() => <h2>MySQL</h2>}
+          />
+        )}
         <Route
           exact
           strict
@@ -254,17 +307,27 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
         />
         <Route
           strict
+          exact
+          path={`${url}/overview`}
           render={routerProps => (
             <Overview
               client={client.label}
+              clientID={client.id}
+              clientAPIKey={client.api_key}
+              longviewClientData={longviewClientData}
               {...routerProps}
               topProcessesData={topProcesses.data}
               topProcessesLoading={topProcesses.loading}
               topProcessesError={topProcesses.error}
+              listeningPortsData={listeningPorts.data}
+              listeningPortsError={listeningPorts.error}
+              listeningPortsLoading={listeningPorts.loading}
               lastUpdatedError={lastUpdatedError}
+              lastUpdated={lastUpdated}
             />
           )}
         />
+        <Redirect to={`${url}/overview`} />
       </Switch>
     </React.Fragment>
   );
@@ -272,6 +335,9 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
 
 export default compose<CombinedProps, {}>(
   React.memo,
+  withClientStats<RouteComponentProps<{ id: string }>>(ownProps => {
+    return +pathOr<string>('', ['match', 'params', 'id'], ownProps);
+  }),
   withLongviewClients<Props, RouteComponentProps<{ id: string }>>(
     (
       own,
