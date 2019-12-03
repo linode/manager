@@ -19,6 +19,7 @@ import {
   LongviewTopProcesses,
   TopProcessStat
 } from 'src/features/Longview/request.types';
+import useFlags from 'src/hooks/useFlags';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { formatCPU } from '../../shared/formatters';
 
@@ -47,6 +48,8 @@ export const TopProcesses: React.FC<Props> = props => {
     lastUpdatedError
   } = props;
 
+  const flags = useFlags();
+
   const errorMessage = Boolean(topProcessesError || lastUpdatedError)
     ? 'There was an error getting Top Processes.'
     : undefined;
@@ -55,9 +58,12 @@ export const TopProcesses: React.FC<Props> = props => {
     <Grid item xs={12} lg={3}>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Typography variant="h2">Top Processes</Typography>
-        <Link to="processes" className={classes.detailsLink}>
-          View Details
-        </Link>
+        {/* Hide the link to the Processes Tab if the feature isn't enabled. */}
+        {flags.longviewTabs && (
+          <Link to="processes" className={classes.detailsLink}>
+            View Details
+          </Link>
+        )}
       </Box>
       <OrderBy
         data={extendTopProcesses(topProcessesData)}
