@@ -3,7 +3,7 @@ import * as React from 'react';
 import scrollTo from 'src/utilities/scrollTo';
 import { storage } from 'src/utilities/storage';
 
-const createDiplayPage = <T extends any>(page: number, pageSize: number) => (
+const createDisplayPage = <T extends any>(page: number, pageSize: number) => (
   list: T[]
 ): T[] => {
   const count = list.length;
@@ -67,7 +67,7 @@ export default class Paginate extends React.Component<Props, State> {
   };
 
   render() {
-    const view = createDiplayPage(this.state.page, this.state.pageSize);
+    const view = createDisplayPage(this.state.page, this.state.pageSize);
 
     const props = {
       ...this.props,
