@@ -5,7 +5,8 @@
   "devDependencies": {
     "factory.ts": "^0.5.0",
     "husky": "^3.0.1",
-    "lerna": "^3.16.4",
+    "lerna": "^3.18.4",
+    "postinstall": "^0.6.0",
     "tslint": "^5.20.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-react": "^4.1.0",
@@ -20,17 +21,20 @@
     }
   },
   "scripts": {
-    "install:all": "yarn && lerna bootstrap",
-    "up": "yarn && lerna bootstrap && lerna run start --parallel -- --color",
+    "cost-of-modules": "yarn global add cost-of-modules && cost-of-modules --less --no-install --include-dev",
+    "install:all": "yarn install --frozen-lockfile && lerna link",
+    "up": "yarn install:all && lerna run start --parallel -- --color",
+    "postinstall": "yarn workspaces run postinstall",
+    "build": "yarn workspaces run build",
     "up:manager": "yarn install:all && yarn start:manager",
     "start:manager": "lerna run build --stream --scope linode-js-sdk && lerna run start --stream --scope linode-manager -- --color",
     "start:docker": "lerna run build --stream --scope linode-js-sdk && yarn start:all",
     "start:all": "lerna run start --parallel -- --color",
     "clean": "rm -rf node_modules && lerna clean --yes",
-    "test": "lerna run test --stream --scope linode-manager -- --color --detectOpenHandles",
+    "test": "yarn workspace linode-manager test",
     "selenium": "lerna run selenium --stream --scope linode-manager -- --color",
     "storybook": "lerna run storybook --stream --scope linode-manager",
-    "storybook:e2e": "lerna run storybook:e2e --stream --scope linode-manager -- --color",
+    "storybook:e2e": "yarn workspace linode-manager run storybook:e2e",
     "storybook:debug": "lerna run storybook:e2e --stream --scope linode-manager -- --color --debug",
     "e2e": "lerna run e2e --stream --scope linode-manager -- --color",
     "e2e:all": "lerna run e2e:all --stream --scope linode-manager -- --color",
@@ -43,5 +47,10 @@
   },
   "resolutions": {
     "handlebars": "^4.4.3"
+  },
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
   }
 }

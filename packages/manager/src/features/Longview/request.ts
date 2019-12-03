@@ -97,7 +97,8 @@ interface Get {
         | 'memory'
         | 'network'
         | 'sysinfo'
-        | 'uptime')[];
+        | 'uptime'
+      )[];
     }
   ): Promise<Partial<Omit<AllData, 'updated'>>>;
   (

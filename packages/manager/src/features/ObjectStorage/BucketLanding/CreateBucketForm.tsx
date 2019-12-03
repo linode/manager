@@ -67,9 +67,7 @@ type CombinedProps = Props &
   ReduxStateProps &
   DispatchProps;
 
-export const CreateBucketForm: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const CreateBucketForm: React.StatelessComponent<CombinedProps> = props => {
   const {
     isRestrictedUser,
     onClose,
@@ -251,10 +249,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const styled = withStyles(styles);
 
