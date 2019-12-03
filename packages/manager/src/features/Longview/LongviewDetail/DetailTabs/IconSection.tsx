@@ -139,7 +139,7 @@ const IconSection: React.FC<Props> = props => {
   const storageInBytes = sumStorage(props.longviewClientData.Disk);
 
   return (
-    <Grid item xs={12} md={4} lg={3}>
+    <Grid item xs={12} md={6} lg={3}>
       <Grid
         container
         item
