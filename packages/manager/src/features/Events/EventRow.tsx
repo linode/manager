@@ -104,7 +104,10 @@ export const Row: React.StatelessComponent<RowProps> = props => {
   }
 
   return (
-    <TableRow rowLink={entityId ? undefined : (linkTarget as any)}>
+    <TableRow
+      rowLink={entityId ? undefined : (linkTarget as any)}
+      data-qa-event-row
+    >
       {/** We don't use the event argument, so typing isn't critical here. */}
       {/* Only display entity icon on the Global EventsLanding page */}
       {!entityId && (

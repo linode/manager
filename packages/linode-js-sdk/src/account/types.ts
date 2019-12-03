@@ -24,12 +24,9 @@ export interface Account {
   phone: string;
   company: string;
   active_promotions: ActivePromotion[];
-  // [BETA]
-  // @todo: Uncomment this when it becomes generally available
-  // capabilities: AccountCapability[];
+  capabilities: AccountCapability[];
 }
 
-// [BETA]
 export type AccountCapability =
   | 'Linodes'
   | 'NodeBalancers'

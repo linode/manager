@@ -56,8 +56,6 @@ import NodeBalancerSelect from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { sendCreateDomainEvent } from 'src/utilities/ga';
 
-import { isValidSOAEmail } from './domainUtils';
-
 type ClassNames = 'root' | 'masterIPErrorNotice' | 'addIP';
 
 const styles = (theme: Theme) =>
@@ -500,25 +498,6 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     this.closeDrawer();
   };
 
-  handleEmailValidationErrors = () => {
-    const err = [
-      {
-        field: 'soa_email',
-        reason:
-          'Please choose an SOA email address that does not belong to the target Domain.'
-      }
-    ];
-    this.setState(
-      {
-        submitting: false,
-        errors: getAPIErrorOrDefault(err)
-      },
-      () => {
-        scrollErrorIntoView();
-      }
-    );
-  };
-
   create = () => {
     const {
       domain,
@@ -582,11 +561,6 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
       type === 'master'
         ? { domain, type, tags, soa_email: soaEmail }
         : { domain, type, tags, master_ips: finalMasterIPs };
-
-    if (type === 'master' && !isValidSOAEmail(data.soa_email || '', domain)) {
-      this.handleEmailValidationErrors();
-      return;
-    }
 
     this.setState({ submitting: true });
     domainActions
@@ -750,11 +724,6 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         ? // not sending type for master. There is a bug on server and it returns an error that `master_ips` is required
           { domain, tags, soa_email: soaEmail, domainId: id }
         : { domain, type, tags, master_ips: finalMasterIPs, domainId: id };
-
-    if (type === 'master' && !isValidSOAEmail(data.soa_email || '', domain)) {
-      this.handleEmailValidationErrors();
-      return;
-    }
 
     this.setState({ submitting: true });
     domainActions

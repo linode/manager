@@ -13,7 +13,6 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
-import { longviewPortFactory } from 'src/factories/longviewService';
 import { LongviewPort } from 'src/features/Longview/request.types';
 import ConnectionRow from './ConnectionRow';
 
@@ -40,30 +39,26 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-export interface Props {}
-
-const mockConnections = longviewPortFactory.buildList(5);
-
-export const ActiveConnections: React.FC<Props> = props => {
-  const classes = useStyles();
-  return (
-    <Grid item xs={12} md={4} className={classes.container}>
-      <Typography variant="h2">Active Connections</Typography>
-      <ConnectionsTable
-        connections={mockConnections}
-        connectionsLoading={false}
-        connectionsError={undefined}
-      />
-    </Grid>
-  );
-};
-
 export interface TableProps {
   connections: LongviewPort[];
   connectionsLoading: boolean;
   connectionsError?: string;
 }
 
+export const ActiveConnections: React.FC<TableProps> = props => {
+  const { connections, connectionsError, connectionsLoading } = props;
+  const classes = useStyles();
+  return (
+    <Grid item xs={12} md={4} className={classes.container}>
+      <Typography variant="h2">Active Connections</Typography>
+      <ConnectionsTable
+        connections={connections}
+        connectionsLoading={connectionsLoading}
+        connectionsError={connectionsError}
+      />
+    </Grid>
+  );
+};
 export const ConnectionsTable: React.FC<TableProps> = props => {
   const { connections, connectionsLoading, connectionsError } = props;
   const classes = useStyles();
@@ -81,7 +76,10 @@ export const ConnectionsTable: React.FC<TableProps> = props => {
             pageSize
           }) => (
             <>
-              <Table spacingTop={16} tableClass={classes.table}>
+              <Table
+                spacingTop={16}
+                tableClass={`${connections.length > 0 ? classes.table : ''}`}
+              >
                 <TableHead>
                   <TableRow>
                     <TableSortCell
@@ -149,7 +147,9 @@ const renderLoadingErrorData = (
     return <TableRowLoading colSpan={4} />;
   }
   if (data.length === 0) {
-    return <TableRowEmptyState colSpan={12} />;
+    return (
+      <TableRowEmptyState colSpan={12} message={'No active connections.'} />
+    );
   }
 
   return data.map((thisConnection, idx) => (

@@ -6,11 +6,11 @@ export const formatUptime = (uptime: number) => {
    * seconds.
    */
   const duration = moment.duration(uptime, 'seconds');
-  if (duration.days() > 1) {
+  if (duration.days() > 0) {
     return `${duration.days()}d ${duration.hours()}h ${duration.minutes()}m`;
-  } else if (duration.hours() > 1) {
+  } else if (duration.hours() > 0) {
     return `${duration.hours()}h ${duration.minutes()}m`;
-  } else if (duration.minutes() > 1) {
+  } else if (duration.minutes() > 0) {
     return `${duration.minutes()}m ${duration.seconds()}s`;
   } else {
     return `< 1 minute`;
