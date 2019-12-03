@@ -27,6 +27,7 @@ export interface PaginationProps {
   page: number;
   pageSize: number;
   eventCategory: string;
+  showAll?: boolean;
 }
 
 interface Props extends PaginationProps {
@@ -37,7 +38,7 @@ interface Props extends PaginationProps {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const options = [
+const baseOptions = [
   { label: 'Show 25', value: 25 },
   { label: 'Show 50', value: 50 },
   { label: 'Show 75', value: 75 },
@@ -55,14 +56,29 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
       pageSize,
       handlePageChange,
       padded,
-      eventCategory
+      eventCategory,
+      showAll
     } = this.props;
 
     if (count <= 25) {
       return null;
     }
 
-    const defaultPagination = options.find(eachOption => {
+    const finalOptions = [...baseOptions];
+    // Add "Show All" to the list of options if the consumer has so specified.
+    if (showAll) {
+      finalOptions.push({ label: 'Show All', value: Infinity });
+    }
+
+    // If the user has selected "Show All", the page size should be set to the
+    // total number of elements.
+    const finalPageSize = pageSize === Infinity ? count : pageSize;
+
+    // If the user has selected "Show All", the selected page should be `1`
+    // since there is only one page.
+    const finalPage = pageSize === Infinity ? 1 : page;
+
+    const defaultPagination = finalOptions.find(eachOption => {
       return eachOption.value === pageSize;
     });
 
@@ -79,15 +95,15 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
         <Grid item>
           <PaginationControls
             onClickHandler={handlePageChange}
-            page={page}
+            page={finalPage}
             count={count}
-            pageSize={pageSize}
+            pageSize={finalPageSize}
             eventCategory={eventCategory}
           />
         </Grid>
         <Grid item>
           <Select
-            options={options}
+            options={finalOptions}
             defaultValue={defaultPagination}
             onChange={this.handleSizeChange}
             isClearable={false}

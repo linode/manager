@@ -11,6 +11,10 @@ const createDiplayPage = <T extends any>(page: number, pageSize: number) => (
     return list;
   }
 
+  if (pageSize === Infinity) {
+    return list;
+  }
+
   const pages = Math.ceil(count / pageSize);
   const currentPage = clamp(1, pages, page);
   const startIndex = (currentPage - 1) * pageSize;
@@ -37,12 +41,13 @@ interface Props {
   page?: number;
   pageSize?: number;
   scrollToRef?: React.RefObject<any>;
+  pageSizeSetter?: (v: number) => void;
 }
 
 export default class Paginate extends React.Component<Props, State> {
   state: State = {
     page: this.props.page || 1,
-    pageSize: storage.pageSize.get() || 25
+    pageSize: this.props.pageSize || storage.pageSize.get()
   };
 
   handlePageChange = (page: number) => {
@@ -53,7 +58,12 @@ export default class Paginate extends React.Component<Props, State> {
 
   handlePageSizeChange = (pageSize: number) => {
     this.setState({ pageSize });
-    storage.pageSize.set(pageSize);
+    // Use the custom setter if one has been supplied.
+    if (this.props.pageSizeSetter) {
+      this.props.pageSizeSetter(pageSize);
+    } else {
+      storage.pageSize.set(pageSize);
+    }
   };
 
   render() {
