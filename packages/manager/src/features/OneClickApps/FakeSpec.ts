@@ -227,6 +227,10 @@ export const oneClickApps: OCA[] = [
         title: 'shadowsocks-android - Android Client',
         href: 'https://github.com/shadowsocks/shadowsocks-android',
       },
+      {
+        title: 'Help with installing clients - macOS and Windows',
+        href: 'https://www.linode.com/docs/networking/vpn/create-a-socks5-proxy-server-with-shadowsocks-on-ubuntu-and-centos7/#install-a-shadowsocks-client',
+      },
     ],
     tips: [
       `<b>Server Preferences</b> on your Shadowsocks Client:`,
