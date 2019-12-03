@@ -1245,7 +1245,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           backfaceVisibility: 'hidden',
           position: 'relative',
           zIndex: 1,
-          height: spacingUnit * 6,
+          height: spacingUnit * 5 + 1,
           '&:before': {
             borderLeftColor: 'white'
           },
