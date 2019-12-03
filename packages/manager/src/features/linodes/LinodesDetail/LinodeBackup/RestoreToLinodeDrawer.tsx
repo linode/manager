@@ -36,9 +36,11 @@ interface State {
   errors?: APIError[];
 }
 
-type CombinedProps = Props & {
+interface ProfileProps {
   profile?: Profile;
-};
+}
+
+type CombinedProps = Props & ProfileProps;
 
 const canEditLinode = (profile: Profile | null, linodeId: number): boolean => {
   return getPermissionsForLinode(profile, linodeId) === 'read_only';
@@ -229,10 +231,9 @@ export class RestoreToLinodeDrawer extends React.Component<
 }
 
 const enhanced = compose<CombinedProps, Props>(
-  withProfile((ownProps, profile) => {
+  withProfile<ProfileProps, Props>((ownProps, { profileData: profile }) => {
     return {
-      ...ownProps,
-      profile: profile.data
+      profile
     };
   })
 );

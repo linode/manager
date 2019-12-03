@@ -34,11 +34,7 @@ import {
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import {
-  isValidCNAME,
-  isValidDomainRecord,
-  isValidSOAEmail
-} from './domainUtils';
+import { isValidCNAME, isValidDomainRecord } from './domainUtils';
 
 const TextField: React.StatelessComponent<TextFieldProps> = props => (
   <_TextField {...props} />
@@ -439,28 +435,12 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   };
 
   onDomainEdit = () => {
-    const { domain, domainId, type, domainActions } = this.props;
+    const { domainId, type, domainActions } = this.props;
     this.setState({ submitting: true, errors: undefined });
 
     const data = {
       ...this.filterDataByType(this.state.fields, type)
     } as Partial<EditableDomainFields>;
-
-    /**
-     * Prevent changing the soa_email to an
-     * email within this Domain. This isn't breaking,
-     * but is bad practice.
-     */
-
-    if (!isValidSOAEmail(data.soa_email || '', domain || '')) {
-      const error = {
-        field: 'soa_email',
-        reason:
-          'Please choose an SOA email address that does not belong to this Domain.'
-      };
-      this.handleSubmissionErrors([error]);
-      return;
-    }
 
     if (data.axfr_ips) {
       /**

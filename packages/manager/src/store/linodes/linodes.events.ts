@@ -116,6 +116,18 @@ const handleLinodeMigrate = (
       // Once the migration/resize is done, we request notifications in order
       // to clear the Migration Imminent notification
       dispatch(requestNotifications());
+      /**
+       * After resizing, a Linode is booted (if it was booted before);
+       * however, no boot event is sent. Additionally, the 'finished'
+       * resize event is sent before this is complete. As a result,
+       * the requestLinodeForStore below will often return a
+       * status of 'offline', which will then not be updated.
+       *
+       * We send a follow-on request here to make sure the status is accurate.
+       * 20 seconds is ridiculous but shorter timeouts still end up telling
+       * us the Linode is offline.
+       */
+      setTimeout(() => dispatch(requestLinodeForStore(id, true)), 20000);
       return dispatch(requestLinodeForStore(id));
     default:
       return;
