@@ -19,10 +19,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(2),
     [theme.breakpoints.up('sm')]: {
       padding: theme.spacing(3)
-    },
-    '[role="tabpanel"]:focus': {
-      borderColor: 'orange',
-      outline: '1px solid orange'
     }
   },
   copy: {
@@ -36,8 +32,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: `${theme.spacing(2)}px 0 0`
   }
 }));
-
-const tabInterface: any = React.useRef<HTMLDivElement>(null);
 
 export interface Tab {
   title: string;
@@ -61,6 +55,8 @@ type CombinedProps = Props;
 
 const TabbedPanel: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const [value, setValue] = useState<number>(props.initTab || 0);
+  const tabInterface = React.useRef<Element>(null);
 
   const {
     header,
@@ -74,8 +70,6 @@ const TabbedPanel: React.FC<CombinedProps> = props => {
     ...rest
   } = props;
 
-  const [value, setValue] = React.useState<number>(props.initTab || 0);
-
   // if this bombs the app shouldn't crash
   const render = safeGetTabRender(tabs, value);
 
@@ -86,7 +80,7 @@ const TabbedPanel: React.FC<CombinedProps> = props => {
     if (props.handleTabChange) {
       props.handleTabChange(value);
     }
-    setValue({ value });
+    setValue(value);
   };
 
   const tabA11yProps = (index: number) => {
@@ -120,33 +114,42 @@ const TabbedPanel: React.FC<CombinedProps> = props => {
   // Need to find a way to only scope this to each tabbed panel component instead of capturing all tab interfaces on a page (ahem resize)
   const onKeyDown = (e: any, value: number) => {
     // Enable arrow navigation between tabs in the tab list
-    let tabFocus = 0;
-    const tabs = tabInterface.querySelectorAll('[role="tab"]');
+    // let tabFocus = 0;
+    // const tabs = document.querySelectorAll('[role="tab"]');
+    const currentElement = document.activeElement;
 
-    const tabSelector: HTMLElement = tabs[tabFocus];
+    console.log(document.activeElement);
 
-    // If tab or enter, goes to associated tabpanel
-    if (e.keyCode === 13 || e.keyCode === 9) {
-      handleTabToPanel(e, value);
-    } // Move right
-
-    if (e.keyCode === 39 || e.keyCode === 37) {
-      tabSelector.setAttribute('tabindex', '-1');
-      if (e.keyCode === 39) {
-        tabFocus++; // If we're at the end, go to the start
-        // console.log('keyboard 39 ' + tabSelector);
-        if (tabFocus >= tabs.length) {
-          tabFocus = 0;
-        } // Move left
-      } else if (e.keyCode === 37) {
-        tabFocus--; // If we're at the start, move to the end
-        // console.log('keyboard 37 ' + tabSelector);
-        if (tabFocus < 0) {
-          tabFocus = tabs.length - 1;
-        }
+    // Checks if current active element is a tab
+    if (currentElement && currentElement.id === `tab-${value}`) {
+      // If tab or enter is pressed, focus the panel, set activeElement to -1
+      if (e.keyCode === 13 || e.keyCode === 9) {
+        handleTabToPanel(e, value);
       }
-      tabSelector.setAttribute('tabindex', '0');
-      tabSelector.focus();
+
+      // if (e.keyCode === 39 || e.keyCode === 37) {
+      //   // Move right
+      //   if (e.keyCode === 39) {
+      //     tabFocus++;
+      //     // console.log('keyboard 39 ' + tabSelector);
+
+      //     // If we're at the end, go to the start
+      //     if (tabFocus >= tabs.length) {
+      //       tabFocus = 0;
+      //     }
+
+      //     // Move left
+      //   } else if (e.keyCode === 37) {
+      //     tabFocus--;
+      //     // console.log('keyboard 37 ' + tabSelector);
+
+      //     // If we're at the start, move to the end
+      //     if (tabFocus < 0) {
+      //       tabFocus = tabs.length - 1;
+      //     }
+      //   }
+      //   currentElement.focus();
+      // }
     }
   };
 
