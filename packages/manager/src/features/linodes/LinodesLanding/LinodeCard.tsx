@@ -360,7 +360,7 @@ export const RenderFlag: React.StatelessComponent<{
 
   if (mutationAvailable) {
     return (
-      <Grid item className={classes.flagContainer}>
+      <Grid item className={classes.flagContainer} role="listitem">
         <Tooltip title="There is a free upgrade available for this Linode">
           <IconButton>
             <Flag className={classes.flag} />
@@ -374,7 +374,12 @@ export const RenderFlag: React.StatelessComponent<{
     return (
       <>
         {linodeNotifications.map((notification, idx) => (
-          <Grid key={idx} item className={classes.flagContainer}>
+          <Grid
+            key={idx}
+            item
+            className={classes.flagContainer}
+            role="listitem"
+          >
             <Tooltip title={notification.message}>
               <Flag className={classes.flag} />
             </Tooltip>

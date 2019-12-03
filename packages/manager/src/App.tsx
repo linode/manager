@@ -325,10 +325,7 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
   appIsLoading: state.initialLoad.appIsLoading
 });
 
-export const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+export const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(
   connected,

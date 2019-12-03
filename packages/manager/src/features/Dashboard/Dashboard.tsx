@@ -201,16 +201,10 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const styled = withStyles(styles, { withTheme: true });
 
-const enhanced = compose<CombinedProps, {}>(
-  styled,
-  connected
-)(Dashboard);
+const enhanced = compose<CombinedProps, {}>(styled, connected)(Dashboard);
 
 export default enhanced;

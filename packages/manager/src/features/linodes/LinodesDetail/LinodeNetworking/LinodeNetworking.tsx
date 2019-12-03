@@ -860,10 +860,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   upsertLinode: linode => dispatch(_upsertLinode(linode))
 });
 
-const connected = connect(
-  undefined,
-  mapDispatchToProps
-);
+const connected = connect(undefined, mapDispatchToProps);
 
 const enhanced = recompose<CombinedProps, {}>(connected, linodeContext, styled);
 

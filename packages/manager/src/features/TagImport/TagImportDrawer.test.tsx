@@ -12,13 +12,19 @@ jest.mock('src/utilities/ga', () => ({
   sendImportDisplayGroupSubmitEvent: jest.fn()
 }));
 
+const errors = [
+  { reason: 'hello', entityId: 123, entityLabel: 'entity1' },
+  { reason: 'one', entityId: 234, entityLabel: 'entity2' },
+  { reason: 'two', entityId: 345, entityLabel: 'entity3' }
+];
+
 const props = {
   actions: {
     update: jest.fn(),
     close: jest.fn()
   },
   open: true,
-  errors: [],
+  errors,
   loading: false,
   success: false,
   entitiesWithGroupsToImport: { domains, linodes },
@@ -30,12 +36,6 @@ const props = {
 const EnhancedComponent = withUpdates(TagImportDrawer);
 const wrapper = shallow(<EnhancedComponent {...props} />);
 const component = wrapper.dive();
-
-const errors = [
-  { reason: 'hello', entityId: 123, entityLabel: 'entity1' },
-  { reason: 'one', entityId: 234, entityLabel: 'entity2' },
-  { reason: 'two', entityId: 345, entityLabel: 'entity3' }
-];
 
 jest.mock('src/store');
 
@@ -53,7 +53,6 @@ describe('TagImportDrawer', () => {
       expect(component).toBeDefined();
     });
     it('should display a Notice for each error', () => {
-      component.setProps({ errors });
       expect(component.find('[data-qa-import-error]')).toHaveLength(
         errors.length
       );

@@ -13,14 +13,14 @@ const envPublicUrl = process.env.PUBLIC_URL;
 
 const envAppVersion = process.env.VERSION;
 
-function ensureSlash(path, needsSlash) {
-  const hasSlash = path.endsWith('/');
+function ensureSlash(pathVar, needsSlash) {
+  const hasSlash = pathVar.endsWith('/');
   if (hasSlash && !needsSlash) {
-    return path.substr(path, path.length - 1);
+    return pathVar.substr(pathVar, pathVar.length - 1);
   } else if (!hasSlash && needsSlash) {
-    return `${path}/`;
+    return `${pathVar}/`;
   } else {
-    return path;
+    return pathVar;
   }
 }
 
