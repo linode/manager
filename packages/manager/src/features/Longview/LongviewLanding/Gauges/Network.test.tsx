@@ -78,8 +78,9 @@ describe('Longview Network Gauge UI', () => {
       customStore: dataStore
     });
 
-    const innerText = await waitForElement(() =>
-      getByTestId('gauge-innertext')
+    const innerText = await waitForElement(
+      () => getByTestId('gauge-innertext'),
+      {}
     );
     const subtext = await waitForElement(
       () => getByTestId('gauge-subtext'),

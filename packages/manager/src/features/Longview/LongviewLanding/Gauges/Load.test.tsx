@@ -61,8 +61,9 @@ describe('Longview Load Gauge UI', () => {
       customStore: dataStore
     });
 
-    const innerText = await waitForElement(() =>
-      getByTestId('gauge-innertext')
+    const innerText = await waitForElement(
+      () => getByTestId('gauge-innertext'),
+      {}
     );
 
     expect(innerText).toHaveTextContent('2');
