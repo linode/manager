@@ -5,8 +5,6 @@ import { RouteComponentProps } from 'react-router-dom';
 
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
-// import Select from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import { Props as LVDataProps } from 'src/containers/longview.stats.container';
 
@@ -18,6 +16,7 @@ import {
   LongviewPortsResponse,
   LongviewTopProcesses
 } from 'src/features/Longview/request.types';
+import OverviewGraphs from './OverviewGraphs';
 import TopProcesses from './TopProcesses';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -29,6 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   client: string;
+  clientAPIKey: string;
   longviewClientData: LVDataProps['longviewClientData'];
   topProcessesData: LongviewTopProcesses;
   topProcessesLoading: boolean;
@@ -45,6 +45,7 @@ export type CombinedProps = RouteComponentProps<{ id: string }> & Props;
 export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const {
+    clientAPIKey,
     lastUpdated,
     listeningPortsData,
     listeningPortsError,
@@ -89,37 +90,7 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
             </Grid>
           </Paper>
         </Grid>
-        <Grid
-          container
-          alignItems="flex-end"
-          justify="space-between"
-          item
-          xs={12}
-          spacing={0}
-        >
-          <Grid item>
-            <Typography variant="h2">Resource Allocation History</Typography>
-          </Grid>
-          <Grid item>
-            {/* TODO make this functional
-              <Select
-                options={rangeSelectOptions}
-                defaultValue={rangeSelectOptions[0]}
-                onChange={handleChartRangeChange}
-                name="chartRange"
-                id="chartRange"
-                small
-                label="Select Time Range"
-                hideLabel
-                isClearable={false}
-                data-qa-item="chartRange"
-              />
-              */}
-          </Grid>
-        </Grid>
-        <Grid item xs={12}>
-          <Paper className={classes.paperSection}>Graphs here</Paper>
-        </Grid>
+        <OverviewGraphs clientAPIKey={clientAPIKey} />
         <Grid container justify="space-between" item spacing={0}>
           <ListeningServices
             services={pathOr([], ['Ports', 'listening'], listeningPortsData)}

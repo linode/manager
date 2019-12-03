@@ -58,7 +58,7 @@ import {
  * So the errors will be available at response.data[0].NOTIFICATIONS.
  */
 
-type AllData = LongviewCPU &
+export type AllData = LongviewCPU &
   LongviewDisk &
   LongviewLoad &
   LongviewMemory &
@@ -79,7 +79,7 @@ type AllData = LongviewCPU &
  * the return type will be Promise<LongviewCPU>
  */
 
-interface WithStartAndEnd {
+export interface WithStartAndEnd {
   start: number;
   end: number;
 }
