@@ -18,7 +18,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
-import { resetEventsPolling } from 'src/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import { ApplicationState } from 'src/store';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
 import {

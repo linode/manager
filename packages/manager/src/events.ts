@@ -11,25 +11,21 @@
  * access Redux and control the start of the event loop.
  */
 import { Event } from 'linode-js-sdk/lib/account';
-import { pathOr } from 'ramda';
 import { Subject } from 'rxjs/Subject';
 import { DISABLE_EVENT_THROTTLE, INTERVAL } from 'src/constants';
-import store, { ApplicationState } from 'src/store';
 import {
+  getPollingInterval,
+  getRequestDeadline,
   setPollingInterval,
   setRequestDeadline
-} from 'src/store/events/event.actions';
-import { resetEventsPolling as _resetEventsPolling } from 'src/store/events/event.helpers';
+} from 'src/eventsPolling';
+import store from 'src/store';
 import { getEvents } from 'src/store/events/event.request';
 import { ThunkDispatch } from 'src/store/types';
 
 export const events$ = new Subject<Event>();
 
 let inProgress = false;
-
-export const resetEventsPolling = (newPollIteration = 1) => {
-  _resetEventsPolling(store.dispatch, newPollIteration);
-};
 
 export const requestEvents = () => {
   inProgress = true;
@@ -52,14 +48,13 @@ export const requestEvents = () => {
 export const startEventsInterval = () =>
   setInterval(
     () => {
-      const state: ApplicationState = pathOr({}, [], store.getState());
       const now = Date.now();
-      const pollIteration = pathOr(1, ['events', 'pollingInterval'], state);
-      const eventRequestDeadline = pathOr(
-        0,
-        ['events', 'requestDeadline'],
-        state
-      );
+      const pollIteration = getPollingInterval();
+      const eventRequestDeadline = getRequestDeadline();
+      // For PR review purposes; delete before merge
+      // console.count('iteration');
+      // console.table({ pollIteration, eventRequestDeadline });
+
       if (now > eventRequestDeadline) {
         /**
          * If we're waiting on a request, set reset the pollIteration and return to prevent
@@ -77,15 +72,15 @@ export const startEventsInterval = () =>
           /*
            * If throttling is disabled manually set the timeout so tests wait to query the mock data store.
            */
-          store.dispatch(setRequestDeadline(now + 500));
+          setRequestDeadline(now + 500);
         } else {
           const timeout = INTERVAL * pollIteration;
           /** Update the dealing */
-          store.dispatch(setRequestDeadline(now + timeout));
+          setRequestDeadline(now + timeout);
           /* Update the iteration to a maximum of 16. */
           const newIteration = Math.min(pollIteration * 2, 16);
           if (pollIteration < 16) {
-            store.dispatch(setPollingInterval(newIteration));
+            setPollingInterval(newIteration);
           }
         }
       }
