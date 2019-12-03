@@ -70,7 +70,7 @@ describe('Longview Network Gauge UI', () => {
       customStore: errorStore
     });
 
-    await waitForElement(() => getByText(/Error/));
+    await waitForElement(() => getByText(/Error/), {});
   });
 
   it('should render a data state when data is in Redux state', async () => {
@@ -81,7 +81,10 @@ describe('Longview Network Gauge UI', () => {
     const innerText = await waitForElement(() =>
       getByTestId('gauge-innertext')
     );
-    const subtext = await waitForElement(() => getByTestId('gauge-subtext'));
+    const subtext = await waitForElement(
+      () => getByTestId('gauge-subtext'),
+      {}
+    );
 
     expect(innerText).toHaveTextContent('4 Mb/s');
     expect(subtext).toHaveTextContent('Network');
