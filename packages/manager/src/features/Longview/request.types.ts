@@ -1,6 +1,12 @@
 export interface Stat {
+  /**
+   * Technically both can be null,
+   * but in all of our graphs the x
+   * axis is time, which should never
+   * be null.
+   */
   x: number;
-  y: number;
+  y: number | null;
 }
 
 interface FS {

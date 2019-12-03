@@ -79,7 +79,7 @@ type CombinedProps = Props & WithTheme;
 
 const chartHeight = 300;
 
-const formatData = (value: DataSeries[]): [number, number][] =>
+const formatData = (value: DataSeries[]): [number, number | null][] =>
   value.map(thisPoint => [thisPoint.x, thisPoint.y]);
 
 const createTabs = (

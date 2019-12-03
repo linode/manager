@@ -1,3 +1,4 @@
+import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import Paper from 'src/components/core/Paper';
@@ -29,6 +30,7 @@ export type CombinedProps = Props & WithTheme;
 
 export const OverviewGraphs: React.FC<CombinedProps> = props => {
   const { clientAPIKey, theme } = props;
+
   const classes = useStyles();
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
     start: 0,
@@ -48,6 +50,49 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
   };
 
   useClientLastUpdated(clientAPIKey, request);
+
+  const convertData = React.useCallback(
+    (start: number, d: Stat[]) => {
+      const points = d.map(
+        thisPoint =>
+          [thisPoint.x * 1000, thisPoint.y] as [number, number | null]
+      );
+
+      if (points.length < 1) {
+        // Empty array
+        return points;
+      }
+
+      /**
+       * The LV API does not provide proper time series data;
+       * only times for which the agent was collecting data
+       * have entries in the response (so if your Linode is 3 days
+       * old and you ask for graphs for the past year, the response
+       * will only have 3 days of data). We therefore need to pad the
+       * front of the response with an extra data point to force the x
+       * axis of each graph to show the requested time span.
+       * Using null as the y value makes the intervening section of the
+       * graph blank, which is the behavior we need.
+       *
+       * NOTE: The calculation below is using 5 minutes as the increment,
+       * since this seems to be the normal behavior, even when using
+       * an account with a Longview Pro subscription. If this
+       * check isn't done, we can end up with a gap at the
+       * front of the graph.
+       *
+       * This interval may not work in
+       * all cases, since data resolution is supposed to be 1/minute for Pro.
+       * We may have to adjust for this here, though on my test account this
+       * causes a break in the graph.
+       */
+      if (points[0][0] - start * 1000 > 60 * 5000) {
+        points.unshift([start * 1000, null]);
+      }
+
+      return points;
+    },
+    [data, time.start]
+  );
 
   const handleStatsChange = (start: number, end: number) => {
     setTimeBox({ start, end });
@@ -96,11 +141,48 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
             </Grid>
             <Grid item xs={6}>
               <LongviewLineGraph
-                title="RAM"
+                title="Memory"
                 subtitle="GB"
-                showToday={false}
+                showToday={true}
                 timezone="GMT"
-                data={[]}
+                data={[
+                  {
+                    label: 'Used',
+                    borderColor: theme.graphs.greenBorder,
+                    backgroundColor: theme.graphs.green,
+                    data: convertData(
+                      time.start,
+                      pathOr([], ['Memory', 'real', 'used'], data)
+                    )
+                  },
+                  {
+                    label: 'Cache',
+                    borderColor: theme.graphs.orangeBorder,
+                    backgroundColor: theme.graphs.orange,
+                    data: convertData(
+                      time.start,
+                      pathOr([], ['Memory', 'real', 'cache'], data)
+                    )
+                  },
+                  {
+                    label: 'Buffers',
+                    borderColor: theme.graphs.purpleBorder,
+                    backgroundColor: theme.graphs.purple,
+                    data: convertData(
+                      time.start,
+                      pathOr([], ['Memory', 'real', 'buffers'], data)
+                    )
+                  },
+                  {
+                    label: 'Swap',
+                    borderColor: theme.graphs.blueBorder,
+                    backgroundColor: theme.graphs.blue,
+                    data: convertData(
+                      time.start,
+                      pathOr([], ['Memory', 'swap', 'used'], data)
+                    )
+                  }
+                ]}
               />
             </Grid>
             <Grid item xs={6}>
@@ -142,31 +224,6 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
       </Grid>
     </Grid>
   );
-};
-
-export const convertData = (start: number, d: Stat[]) => {
-  const points = d.map(
-    thisPoint => [thisPoint.x * 1000, thisPoint.y] as [number, number]
-  );
-
-  if (points.length < 1) {
-    // Empty array
-    return points;
-  }
-
-  /**
-   * The LV API does not provide proper time series data;
-   * only times for which the agent was collecting data
-   * have entries in the response (so if your Linode is 3 days
-   * old and you ask for graphs for the past year, the response
-   * will only have 3 days of data). We therefore need to pad the
-   * front of the response with an extra data point to force the x
-   * axis of each graph to show the requested time span.
-   */
-  if (points[0][0] > start * 1000) {
-    points.unshift([start * 1000, 0]);
-  }
-  return points;
 };
 
 export default withTheme(OverviewGraphs);

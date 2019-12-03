@@ -106,7 +106,7 @@ export interface IssueEntity {
 
 export interface DataSeries {
   x: number;
-  y: number;
+  y: number | null;
 }
 
 export interface ManagedStatsData {
