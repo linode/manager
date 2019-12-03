@@ -9,6 +9,7 @@ import Grid from 'src/components/Grid';
 import { Props as LVDataProps } from 'src/containers/longview.stats.container';
 
 import ActiveConnections from './ActiveConnections';
+import GaugesSection from './GaugesSection';
 import IconSection from './IconSection';
 import ListeningServices from './ListeningServices';
 
@@ -28,6 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   client: string;
+  clientID: number;
   clientAPIKey: string;
   longviewClientData: LVDataProps['longviewClientData'];
   topProcessesData: LongviewTopProcesses;
@@ -45,6 +47,9 @@ export type CombinedProps = RouteComponentProps<{ id: string }> & Props;
 export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const {
+    client,
+    clientID,
+    longviewClientData,
     clientAPIKey,
     lastUpdated,
     listeningPortsData,
@@ -72,15 +77,22 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
       <Grid container>
         <Grid item xs={12}>
           <Paper className={classes.paperSection}>
-            <Grid container justify="space-between" item xs={12} spacing={0}>
+            <Grid
+              container
+              justify="space-between"
+              alignItems="flex-start"
+              item
+              xs={12}
+              spacing={0}
+            >
               <IconSection
-                longviewClientData={props.longviewClientData}
-                client={props.client}
+                longviewClientData={longviewClientData}
+                client={client}
               />
-
-              <Grid item xs={12} md={4} lg={6}>
-                Gauges
-              </Grid>
+              <GaugesSection
+                clientID={clientID}
+                lastUpdatedError={lastUpdatedError}
+              />
               <TopProcesses
                 topProcessesData={topProcessesData}
                 topProcessesLoading={topProcessesLoading}

@@ -48,10 +48,6 @@ interface Props {
   longviewClientsError: LVProps['longviewClientsError'];
 }
 
-interface DataProps {
-  clientID: number;
-}
-
 const Overview = DefaultLoader({
   loader: () => import('./DetailTabs/LongviewDetailOverview')
 });
@@ -83,15 +79,15 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     if (longviewClientsLastUpdated === 0) {
       props.getLongviewClients();
     }
-
-    if (client) {
-      props.getClientStats(client.api_key);
-    }
-  }, [client]);
+  }, []);
   const clientAPIKey = client && client.api_key;
   const flags = useFlags();
   const showAllTabs = Boolean(flags.longviewTabs);
-  const { lastUpdated, lastUpdatedError } = useClientLastUpdated(clientAPIKey);
+
+  const { lastUpdated, lastUpdatedError } = useClientLastUpdated(
+    clientAPIKey,
+    clientAPIKey ? () => props.getClientStats(clientAPIKey) : undefined
+  );
 
   const topProcesses = useAPIRequest<LongviewTopProcesses>(
     // We can only make this request if we have a clientAPIKey, so we use `null`
@@ -316,6 +312,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           render={routerProps => (
             <Overview
               client={client.label}
+              clientID={client.id}
               clientAPIKey={client.api_key}
               longviewClientData={longviewClientData}
               {...routerProps}
@@ -338,7 +335,9 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
 
 export default compose<CombinedProps, {}>(
   React.memo,
-  withClientStats<DataProps>(props => props.clientID),
+  withClientStats<RouteComponentProps<{ id: string }>>(ownProps => {
+    return +pathOr<string>('', ['match', 'params', 'id'], ownProps);
+  }),
   withLongviewClients<Props, RouteComponentProps<{ id: string }>>(
     (
       own,
