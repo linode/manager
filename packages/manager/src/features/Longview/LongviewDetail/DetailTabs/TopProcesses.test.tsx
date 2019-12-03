@@ -14,14 +14,33 @@ const props: Props = {
 
 describe('Top Processes', () => {
   describe('TopProcesses Component', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
+
     it('renders the title', () => {
       const { getByText } = render(wrapWithTheme(<TopProcesses {...props} />));
       getByText('Top Processes');
     });
 
-    it('renders a View Details link', () => {
-      const { getByText } = render(wrapWithTheme(<TopProcesses {...props} />));
-      getByText('View Details');
+    it('renders the View Details link when the feature flag is enabled', () => {
+      jest.mock('src/hooks/useFlags', () => ({
+        default: () => ({ longviewTabs: true })
+      }));
+      const { queryByText } = render(
+        wrapWithTheme(<TopProcesses {...props} />)
+      );
+      expect(queryByText('View Details')).toBeDefined();
+    });
+
+    it('does not render the View Details link when the feature flag is disabled', () => {
+      jest.mock('src/hooks/useFlags', () => ({
+        default: () => ({ longviewTabs: false })
+      }));
+      const { queryByText } = render(
+        wrapWithTheme(<TopProcesses {...props} />)
+      );
+      expect(queryByText('View Details')).toBeNull();
     });
 
     it('renders rows for each process', () => {
