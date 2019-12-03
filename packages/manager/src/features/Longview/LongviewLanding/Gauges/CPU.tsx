@@ -14,6 +14,12 @@ import withClientStats, {
 
 type CombinedProps = Props & WithTheme & LVDataProps;
 
+export const getFinalUsedCPU = (data: LVDataProps['longviewClientData']) => {
+  const numberOfCores = pathOr(0, ['SysInfo', 'cpu', 'cores'], data);
+  const usedCPU = sumCPUUsage(data.CPU);
+  return normalizeValue(usedCPU, numberOfCores);
+};
+
 const CPUGauge: React.FC<CombinedProps> = props => {
   const {
     longviewClientDataLoading: loading,

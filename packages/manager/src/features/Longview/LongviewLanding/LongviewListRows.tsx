@@ -6,6 +6,7 @@ import ClientRow from './LongviewClientRow';
 
 interface Props {
   longviewClientsData: LongviewClient[];
+  openPackageDrawer: (id: number, label: string) => void;
   triggerDeleteLongviewClient: (
     longviewClientID: number,
     longviewClientLabel: string
@@ -15,7 +16,11 @@ interface Props {
 type CombinedProps = Props;
 
 const LongviewListRows: React.FC<CombinedProps> = props => {
-  const { longviewClientsData, triggerDeleteLongviewClient } = props;
+  const {
+    longviewClientsData,
+    openPackageDrawer,
+    triggerDeleteLongviewClient
+  } = props;
 
   return (
     <React.Fragment>
@@ -27,6 +32,9 @@ const LongviewListRows: React.FC<CombinedProps> = props => {
             clientID={eachClient.id}
             clientLabel={eachClient.label}
             clientAPIKey={eachClient.api_key}
+            openPackageDrawer={() =>
+              openPackageDrawer(eachClient.id, eachClient.label)
+            }
             triggerDeleteLongviewClient={triggerDeleteLongviewClient}
           />
         );

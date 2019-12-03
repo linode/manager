@@ -12,6 +12,7 @@ const props = {
   onClone: jest.fn(),
   onRemove: jest.fn(),
   onEdit: jest.fn(),
+  onCheck: jest.fn(),
   type: 'master' as 'master' | 'slave',
   domain: '',
   id: 1234456,
@@ -25,10 +26,7 @@ afterEach(cleanup);
 describe('Domain action menu', () => {
   it('should include standard Domain actions', () => {
     const { queryByText } = renderWithTheme(<DomainActionMenu {...props} />);
-    includesActions(
-      ['Edit', 'Check Zone', 'Zone File', 'Clone', 'Delete'],
-      queryByText
-    );
+    includesActions(['Edit', 'Check Zone', 'Clone', 'Delete'], queryByText);
   });
 
   it('master Domains should include Edit DNS records action', () => {

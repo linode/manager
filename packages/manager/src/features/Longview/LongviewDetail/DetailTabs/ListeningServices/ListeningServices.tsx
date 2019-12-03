@@ -13,7 +13,6 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
-import { longviewServiceFactory } from 'src/factories/longviewService';
 import { LongviewService } from 'src/features/Longview/request.types';
 import LongviewServiceRow from './LongviewServiceRow';
 
@@ -35,28 +34,25 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-export interface Props {}
-
-const mockServices = longviewServiceFactory.buildList(10);
-
-export const ListeningServices: React.FC<Props> = props => {
-  return (
-    <Grid item xs={12} md={8}>
-      <Typography variant="h2">Listening Services</Typography>
-      <ServicesTable
-        services={mockServices}
-        servicesLoading={false}
-        servicesError={undefined}
-      />
-    </Grid>
-  );
-};
-
 export interface TableProps {
   services: LongviewService[];
   servicesLoading: boolean;
   servicesError?: string;
 }
+
+export const ListeningServices: React.FC<TableProps> = props => {
+  const { services, servicesError, servicesLoading } = props;
+  return (
+    <Grid item xs={12} md={8}>
+      <Typography variant="h2">Listening Services</Typography>
+      <ServicesTable
+        services={services}
+        servicesLoading={servicesLoading}
+        servicesError={servicesError}
+      />
+    </Grid>
+  );
+};
 
 export const ServicesTable: React.FC<TableProps> = props => {
   const { services, servicesError, servicesLoading } = props;
@@ -75,13 +71,16 @@ export const ServicesTable: React.FC<TableProps> = props => {
             pageSize
           }) => (
             <>
-              <Table spacingTop={16} tableClass={classes.table}>
+              <Table
+                spacingTop={16}
+                tableClass={`${services.length > 0 ? classes.table : ''}`}
+              >
                 <TableHead>
                   <TableRow>
                     <TableSortCell
                       data-qa-table-header="Process"
-                      active={orderBy === 'process'}
-                      label="process"
+                      active={orderBy === 'name'}
+                      label="name"
                       direction={order}
                       handleClick={handleOrderChange}
                       style={{ width: '25%' }}
@@ -100,8 +99,8 @@ export const ServicesTable: React.FC<TableProps> = props => {
                     </TableSortCell>
                     <TableSortCell
                       data-qa-table-header="Protocol"
-                      active={orderBy === 'protocol'}
-                      label="protocol"
+                      active={orderBy === 'type'}
+                      label="type"
                       direction={order}
                       handleClick={handleOrderChange}
                       style={{ width: '15%' }}
@@ -166,7 +165,7 @@ const renderLoadingErrorData = (
     return <TableRowLoading colSpan={6} />;
   }
   if (data.length === 0) {
-    return <TableRowEmptyState colSpan={12} />;
+    return <TableRowEmptyState colSpan={12} message="No listening services." />;
   }
 
   return data.map((thisService, idx) => (

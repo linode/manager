@@ -17,7 +17,7 @@ import TabLink from 'src/components/TabLink';
 
 import DefaultLoader from 'src/components/DefaultLoader';
 import withProfile, {
-  ProfileActionsProps
+  Props as ProfileActionsProps
 } from 'src/containers/profile.container';
 
 import TaxBanner from 'src/components/TaxBanner';
@@ -130,7 +130,7 @@ interface StateProps {
 }
 
 export default compose<Props, {}>(
-  withProfile<StateProps, {}>((ownProps, { data }) => ({
+  withProfile<StateProps, {}>((ownProps, { profileData: data }) => ({
     isRestrictedUser: pathOr(false, ['restricted'], data)
   }))
 )(AccountLanding);

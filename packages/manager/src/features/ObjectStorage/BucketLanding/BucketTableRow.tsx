@@ -12,7 +12,7 @@ import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import { formatRegion } from 'src/utilities/formatRegion';
+import { formatObjectStorageCluster } from 'src/utilities/formatRegion';
 import BucketActionMenu from './BucketActionMenu';
 
 type ClassNames = 'bucketNameWrapper' | 'bucketRow' | 'link';
@@ -78,7 +78,7 @@ export const BucketTableRow: React.StatelessComponent<
       </TableCell>
       <TableCell parentColumn="Region">
         <Typography variant="body2" data-qa-region>
-          {formatRegion(cluster)}
+          {formatObjectStorageCluster(cluster)}
         </Typography>
       </TableCell>
       <TableCell parentColumn="Created">
