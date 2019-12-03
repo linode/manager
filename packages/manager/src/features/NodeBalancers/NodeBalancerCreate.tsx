@@ -746,29 +746,32 @@ export const fieldErrorsToNodePathErrors = (errors: APIError[]) => {
         }
       }
   */
-  return errors.reduce((acc: any, error: APIError) => {
-    const errorFields = pathOr('', ['field'], error).split('|');
-    const pathErrors: FieldAndPath[] = errorFields.map((field: string) =>
-      getPathAndFieldFromFieldString(field)
-    );
+  return (
+    errors &&
+    errors.reduce((acc: any, error: APIError) => {
+      const errorFields = pathOr('', ['field'], error).split('|');
+      const pathErrors: FieldAndPath[] = errorFields.map((field: string) =>
+        getPathAndFieldFromFieldString(field)
+      );
 
-    if (!pathErrors.length) {
-      return acc;
-    }
+      if (!pathErrors.length) {
+        return acc;
+      }
 
-    return [
-      ...acc,
-      ...pathErrors.map((err: FieldAndPath) => {
-        return {
-          error: {
-            field: err.field,
-            reason: error.reason
-          },
-          path: [...err.path, 'errors']
-        };
-      })
-    ];
-  }, []);
+      return [
+        ...acc,
+        ...pathErrors.map((err: FieldAndPath) => {
+          return {
+            error: {
+              field: err.field,
+              reason: error.reason
+            },
+            path: [...err.path, 'errors']
+          };
+        })
+      ];
+    }, [])
+  );
 };
 
 interface WithRegions {
