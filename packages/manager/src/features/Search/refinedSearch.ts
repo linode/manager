@@ -146,13 +146,18 @@ export const searchDefaultFields = (item: SearchableItem, query: string) => {
 export const doesSearchTermMatchItemField = (
   query: string,
   item: SearchableItem,
-  field: string
+  field: string,
+  caseSensitive = false
 ): boolean => {
   const flattenedItem = flattenSearchableItem(item);
 
   const fieldValue = ensureValueIsString(flattenedItem[field]);
 
-  return fieldValue.includes(query);
+  if (caseSensitive) {
+    return fieldValue.includes(query);
+  } else {
+    return fieldValue.toLowerCase().includes(query.toLowerCase());
+  }
 };
 
 // Flattens the "data" prop so we can access all fields on the item root
