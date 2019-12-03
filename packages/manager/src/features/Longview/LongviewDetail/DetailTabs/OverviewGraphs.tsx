@@ -58,6 +58,8 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
     request(start, end);
   };
 
+  const isToday = time.end - time.start < 60 * 60 * 25;
+
   return (
     <Grid container alignItems="flex-end" item xs={12} spacing={0}>
       <Grid
@@ -102,7 +104,7 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
               <LongviewLineGraph
                 title="Memory"
                 subtitle="GB"
-                showToday={true}
+                showToday={isToday}
                 timezone="GMT"
                 data={[
                   {
@@ -166,7 +168,7 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
               <LongviewLineGraph
                 title="Load"
                 subtitle="Target < 1.00"
-                showToday={true}
+                showToday={isToday}
                 timezone="GMT"
                 data={[
                   {
