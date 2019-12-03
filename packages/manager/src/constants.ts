@@ -172,11 +172,12 @@ export const dcDisplayCountry = {
 };
 
 export const objectStorageClusterDisplay: Record<
-  ObjectStorageClusterID,
+  ObjectStorageClusterID | 'philadelphia',
   string
 > = {
   'us-east-1': 'Newark, NJ',
-  'us-east': 'Newark, NJ'
+  'us-east': 'Newark, NJ',
+  philadelphia: 'Philadelphia, PA'
 };
 
 export type ContinentKey = 'NA' | 'EU' | 'AS';
