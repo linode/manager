@@ -1,6 +1,7 @@
 import { APIError } from 'linode-js-sdk/lib/types';
 import { clamp, pathOr } from 'ramda';
 import * as React from 'react';
+import { WithTheme, withTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
 import { pluralize } from 'src/utilities/pluralize';
@@ -11,7 +12,15 @@ import withClientStats, {
   Props as LVDataProps
 } from 'src/containers/longview.stats.container';
 
-const CPUGauge: React.FC<Props & LVDataProps> = props => {
+type CombinedProps = Props & WithTheme & LVDataProps;
+
+export const getFinalUsedCPU = (data: LVDataProps['longviewClientData']) => {
+  const numberOfCores = pathOr(0, ['SysInfo', 'cpu', 'cores'], data);
+  const usedCPU = sumCPUUsage(data.CPU);
+  return normalizeValue(usedCPU, numberOfCores);
+};
+
+const CPUGauge: React.FC<CombinedProps> = props => {
   const {
     longviewClientDataLoading: loading,
     longviewClientDataError: error,
@@ -39,6 +48,7 @@ const CPUGauge: React.FC<Props & LVDataProps> = props => {
         loading,
         error || lastUpdatedError
       )}
+      filledInColor={props.theme.graphs.blue}
       subTitle={
         <>
           <Typography>
@@ -55,7 +65,9 @@ const CPUGauge: React.FC<Props & LVDataProps> = props => {
   );
 };
 
-export default withClientStats<Props>(ownProps => ownProps.clientID)(CPUGauge);
+export default withClientStats<Props>(ownProps => ownProps.clientID)(
+  withTheme(CPUGauge)
+);
 
 // UTILITIES
 export const sumCPUUsage = (CPUData: Record<string, CPU> = {}) => {

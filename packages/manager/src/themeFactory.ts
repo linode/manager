@@ -43,6 +43,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     '@keyframes dash': any;
     bg: any;
     color: any;
+    graphs: any;
     visually: any;
     font?: any;
     animateCircleIcon?: any;
@@ -56,6 +57,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     '@keyframes dash'?: any;
     bg?: any;
     color?: any;
+    graphs?: any;
     visually?: any;
     font?: any;
     animateCircleIcon?: any;
@@ -175,7 +177,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       offWhite: '#fbfbfb',
       offWhiteDT: '#fbfbfb', // better handing for dark theme
       navy: '#32363c',
-      lightBlue: '#d7e3ef',
+      lightBlue: '#f0f7ff',
       white: '#fff',
       pureWhite: '#fff',
       tableHeader: '#fbfbfb',
@@ -217,11 +219,21 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       label: '#555',
       disabledText: '#c9cacb',
       kubeLabel: '#272b31',
-      primaryNavText: '#c9cacb',
-      graphBlue: 'rgba(54, 131, 220, .5)',
-      graphYellow: 'rgba(255, 209, 0, .5)',
-      graphPurple: 'rgba(204, 1, 153, .5)',
-      graphGreen: 'rgba(1, 177, 89, .5)'
+      primaryNavText: '#c9cacb'
+    },
+    graphs: {
+      blue: '#64ADF6',
+      blueBorder: '#3F99F0',
+      green: '#5BD765',
+      greenBorder: '#18B523',
+      orange: '#FFB24C',
+      orangeBorder: '#BC710B',
+      purple: '#E6A5E6',
+      purpleBorder: '#CC75CC',
+      red: '#FF633C',
+      redBorder: '#F13A0A',
+      yellow: '#FFDC7D',
+      yellowBorder: '#DCB64E'
     },
     font: {
       normal: primaryFonts.normal,
@@ -1164,7 +1176,8 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       MuiTableCell: {
         root: {
           padding: spacingUnit + 2,
-          borderBottom: `2px solid ${primaryColors.divider}`,
+          borderTop: `1px solid ${primaryColors.divider}`,
+          borderBottom: `1px solid ${primaryColors.divider}`,
           '&:last-child': {
             paddingRight: spacingUnit + 2
           },

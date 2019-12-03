@@ -8,8 +8,6 @@ interface TaxBanner {
 type OneClickApp = Record<string, string>;
 
 interface Flags {
-  managed: boolean;
-  objectStorage: boolean;
   promos: boolean;
   vatBanner: TaxBanner;
   oneClickLocation: 'sidenav' | 'createmenu';
@@ -17,8 +15,7 @@ interface Flags {
   firewalls: boolean;
   oneClickApps: OneClickApp;
   longview: boolean;
-  objectStorageBilling: boolean;
-  objectStorageCancel: boolean;
+  longviewTabs: boolean;
 }
 
 /**

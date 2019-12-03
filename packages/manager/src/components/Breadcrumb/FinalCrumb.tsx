@@ -10,7 +10,6 @@ import { EditableProps, LabelProps } from './types';
 const useStyles = makeStyles((theme: Theme) => ({
   crumb: {
     ...theme.typography.h1,
-    lineHeight: 1.2,
     textTransform: 'capitalize'
   },
   noCap: {

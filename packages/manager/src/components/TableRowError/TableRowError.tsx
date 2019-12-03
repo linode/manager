@@ -12,7 +12,7 @@ type CombinedProps = Props;
 
 const TableRowError: React.StatelessComponent<CombinedProps> = props => {
   return (
-    <TableRow>
+    <TableRow data-testid="table-row-error">
       <TableCell colSpan={props.colSpan}>
         <ErrorState errorText={props.message} compact />
       </TableCell>

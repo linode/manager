@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "0.78.0",
+  "version": "0.79.0",
   "private": true,
   "engines": {
     "node": ">= 10.16.0"
@@ -40,7 +40,7 @@
     "jspdf": "^1.5.3",
     "jspdf-autotable": "^3.2.4",
     "launchdarkly-react-client-sdk": "^2.11.0",
-    "linode-js-sdk": "^0.12.0-alpha.0",
+    "linode-js-sdk": "^0.13.0-alpha.0",
     "logic-query-parser": "^0.0.5",
     "md5": "^2.2.1",
     "memoizee": "^0.4.14",
@@ -88,8 +88,7 @@
     "typescript-fsa-reducers": "^1.2.0",
     "xml2js": "^0.4.19",
     "xterm": "^4.2.0",
-    "yup": "^0.26.3",
-    "zxcvbn": "^4.4.2"
+    "yup": "^0.26.3"
   },
   "scripts": {
     "postinstall": "patch-package",
@@ -185,7 +184,6 @@
     "@types/uuid": "^3.4.3",
     "@types/xml2js": "^0.4.3",
     "@types/yup": "^0.24.9",
-    "@types/zxcvbn": "^4.4.0",
     "@wdio/cli": "^5.10.10",
     "@wdio/dot-reporter": "^5.9.3",
     "@wdio/jasmine-framework": "^5.10.8",

@@ -43,7 +43,6 @@ export const LOGIN_SESSION_LIFETIME_MS = 45 * 60 * 1000;
 export const OAUTH_TOKEN_REFRESH_TIMEOUT = LOGIN_SESSION_LIFETIME_MS / 2;
 /** Google Analytics and Tag Manager */
 export const GA_ID = process.env.REACT_APP_GA_ID;
-export const GA_ID_2 = process.env.REACT_APP_GA_ID_2;
 export const GTM_ID = process.env.REACT_APP_GTM_ID;
 /** for hard-coding token used for API Requests. Example: "Bearer 1234" */
 export const ACCESS_TOKEN = process.env.REACT_APP_ACCESS_TOKEN;
@@ -173,11 +172,12 @@ export const dcDisplayCountry = {
 };
 
 export const objectStorageClusterDisplay: Record<
-  ObjectStorageClusterID,
+  ObjectStorageClusterID | 'philadelphia',
   string
 > = {
   'us-east-1': 'Newark, NJ',
-  'us-east': 'Newark, NJ'
+  'us-east': 'Newark, NJ',
+  philadelphia: 'Philadelphia, PA'
 };
 
 export type ContinentKey = 'NA' | 'EU' | 'AS';

@@ -1,3 +1,4 @@
+import { LongviewClient } from 'linode-js-sdk/lib/longview/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
@@ -6,7 +7,6 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
-import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import { Props as LVProps } from 'src/containers/longview.container';
@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type LongviewProps = Omit<
   LVProps,
+  | 'longviewClientsData'
   | 'getLongviewClients'
   | 'createLongviewClient'
   | 'deleteLongviewClient'
@@ -45,11 +46,14 @@ type LongviewProps = Omit<
 
 interface Props {
   loading: boolean;
+  filteredData: LongviewClient[];
   createLongviewClient: () => void;
+  openPackageDrawer: (id: number, label: string) => void;
   triggerDeleteLongviewClient: (
     longviewClientID: number,
     longviewClientLabel: string
   ) => void;
+  userCanCreateLongviewClient: boolean;
 }
 
 type CombinedProps = Props & LongviewProps;
@@ -58,12 +62,14 @@ const LongviewList: React.FC<CombinedProps> = props => {
   const {
     createLongviewClient,
     loading,
-    longviewClientsData,
+    filteredData,
     longviewClientsError,
     longviewClientsLastUpdated,
     longviewClientsLoading,
     longviewClientsResults,
-    triggerDeleteLongviewClient
+    openPackageDrawer,
+    triggerDeleteLongviewClient,
+    userCanCreateLongviewClient
   } = props;
 
   const classes = useStyles();
@@ -99,10 +105,16 @@ const LongviewList: React.FC<CombinedProps> = props => {
     return (
       <Paper className={classes.empty}>
         <Typography variant="body1" className={classes.emptyText}>
-          You have no Longview clients configured.{' '}
-          <button className={classes.button} onClick={createLongviewClient}>
-            Click here to add one.
-          </button>
+          {userCanCreateLongviewClient ? (
+            <React.Fragment>
+              You have no Longview clients configured.{' '}
+              <button className={classes.button} onClick={createLongviewClient}>
+                Click here to add one.
+              </button>
+            </React.Fragment>
+          ) : (
+            'You have no Longview clients configured.'
+          )}
         </Typography>
       </Paper>
     );
@@ -110,41 +122,34 @@ const LongviewList: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      <OrderBy
-        data={Object.values(longviewClientsData)}
-        orderBy={'label'}
-        order={'asc'}
-      >
-        {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-          <Paginate data={orderedData}>
-            {({
-              data: paginatedAndOrderedData,
-              count,
-              handlePageChange,
-              handlePageSizeChange,
-              page,
-              pageSize
-            }) => (
-              <>
-                <Box flexDirection="column">
-                  <LongviewRows
-                    longviewClientsData={paginatedAndOrderedData}
-                    triggerDeleteLongviewClient={triggerDeleteLongviewClient}
-                  />
-                </Box>
-                <PaginationFooter
-                  count={count}
-                  handlePageChange={handlePageChange}
-                  handleSizeChange={handlePageSizeChange}
-                  page={page}
-                  pageSize={pageSize}
-                  eventCategory="Longview Table"
-                />
-              </>
-            )}
-          </Paginate>
+      <Paginate data={filteredData}>
+        {({
+          data: paginatedAndOrderedData,
+          count,
+          handlePageChange,
+          handlePageSizeChange,
+          page,
+          pageSize
+        }) => (
+          <>
+            <Box flexDirection="column">
+              <LongviewRows
+                longviewClientsData={paginatedAndOrderedData}
+                triggerDeleteLongviewClient={triggerDeleteLongviewClient}
+                openPackageDrawer={openPackageDrawer}
+              />
+            </Box>
+            <PaginationFooter
+              count={count}
+              handlePageChange={handlePageChange}
+              handleSizeChange={handlePageSizeChange}
+              page={page}
+              pageSize={pageSize}
+              eventCategory="Longview Table"
+            />
+          </>
         )}
-      </OrderBy>
+      </Paginate>
     </React.Fragment>
   );
 };
