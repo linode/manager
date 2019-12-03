@@ -168,7 +168,7 @@ export const oneClickApps: OCA[] = [
   {
     name: 'LEMP',
     description: `LEMP provides a platform for applications that is compatible with the LAMP stack for nearly all applications; however, because NGINX is able to serve more pages at once with a more predictable memory usage profile, it may be more suited to high demand situations.`,
-    summary: `The LEMP stack replaces the Apache web server component with NGINX, providing the E in the acronym: Linux, NGINX, MySQL/MariaDB, PHP.`,
+    summary: `The LEMP stack replaces the Apache web server component with NGINX (“Engine-X”), providing the E in the acronym: Linux, NGINX, MySQL/MariaDB, PHP.    `,
     related_guides: [
       {
         title: 'LEMP Guides',
