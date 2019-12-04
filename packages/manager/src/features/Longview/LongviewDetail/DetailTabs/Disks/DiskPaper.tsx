@@ -49,6 +49,8 @@ const DiskPaper: React.FC<CombinedProps> = props => {
   const iTotal = pathOr([], ['fs', 'itotal'], stats);
   const free = pathOr([], ['fs', 'free'], stats);
   const total = pathOr([], ['fs', 'total'], stats);
+  const reads = pathOr([], ['reads'], stats);
+  const writes = pathOr([], ['writes'], stats);
 
   return (
     <Paper className={classes.root}>
@@ -65,6 +67,8 @@ const DiskPaper: React.FC<CombinedProps> = props => {
         diskLabel={diskLabel}
         startTime={startTime}
         endTime={endTime}
+        reads={reads}
+        writes={writes}
       />
     </Paper>
   );

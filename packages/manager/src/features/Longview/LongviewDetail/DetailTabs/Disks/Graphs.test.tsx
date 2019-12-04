@@ -22,6 +22,8 @@ const baseProps: Props = {
   diskLabel: 'helloworld',
   startTime: 0,
   endTime: 0
+  reads: [],
+  writes: [],
 };
 
 describe('Utility Functions', () => {

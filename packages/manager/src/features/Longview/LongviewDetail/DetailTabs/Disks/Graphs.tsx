@@ -40,6 +40,8 @@ export interface Props {
   iTotal: Stat[];
   free: Stat[];
   total: Stat[];
+  reads: Stat[];
+  writes: Stat[];
   diskLabel: string;
   startTime: number;
   endTime: number;
@@ -63,7 +65,9 @@ const Graphs: React.FC<CombinedProps> = props => {
     isMounted,
     iTotal,
     startTime,
-    endTime
+    endTime,
+    reads,
+    writes
   } = props;
 
   if (childOf) {
@@ -102,9 +106,14 @@ const Graphs: React.FC<CombinedProps> = props => {
             <LongviewLineGraph
               data={[
                 {
-                  /** idk yet lol */
-                  data: [],
-                  label: 'Disk I/O',
+                  data: formatDiskIO(reads),
+                  label: 'Read',
+                  borderColor: theme.graphs.yellowBorder,
+                  backgroundColor: theme.graphs.yellow
+                },
+                {
+                  data: formatDiskIO(writes),
+                  label: 'Write',
                   borderColor: theme.graphs.orangeBorder,
                   backgroundColor: theme.graphs.orange
                 }
@@ -121,42 +130,42 @@ const Graphs: React.FC<CombinedProps> = props => {
             disk is mounted and is not a swap partition
             because longview doesn't track those stats
           */
-        !isSwap && isMounted && (
-          <React.Fragment>
-            <div data-testid="space-graph">
-              <LongviewLineGraph
-                data={[
-                  {
-                    data: formatSpace(free, total),
-                    label: 'Space',
-                    borderColor: theme.graphs.salmonBorder,
-                    backgroundColor: theme.graphs.salmon
-                  }
-                ]}
-                showToday={isToday}
-                title="Space"
-                subtitle="GB"
-                timezone={timezone}
-              />
-            </div>
-            <div data-testid="inodes-graph">
-              <LongviewLineGraph
-                data={[
-                  {
-                    data: formatINodes(iFree, iTotal),
-                    label: 'Inodes',
-                    borderColor: theme.graphs.pinkBorder,
-                    backgroundColor: theme.graphs.pink
-                  }
-                ]}
-                showToday={isToday}
-                suggestedMax={1000000}
-                title="Inodes"
-                timezone={timezone}
-              />
-            </div>
-          </React.Fragment>
-        )}
+          !isSwap && isMounted && (
+            <React.Fragment>
+              <div data-testid="space-graph">
+                <LongviewLineGraph
+                  data={[
+                    {
+                      data: formatSpace(free, total),
+                      label: 'Space',
+                      borderColor: theme.graphs.salmonBorder,
+                      backgroundColor: theme.graphs.salmon
+                    }
+                  ]}
+                  showToday={isToday}
+                  title="Space"
+                  subtitle="GB"
+                  timezone={timezone}
+                />
+              </div>
+              <div data-testid="inodes-graph">
+                <LongviewLineGraph
+                  data={[
+                    {
+                      data: formatINodes(iFree, iTotal),
+                      label: 'Inodes',
+                      borderColor: theme.graphs.pinkBorder,
+                      backgroundColor: theme.graphs.pink
+                    }
+                  ]}
+                  showToday={isToday}
+                  suggestedMax={1000000}
+                  title="Inodes"
+                  timezone={timezone}
+                />
+              </div>
+            </React.Fragment>
+          )}
       </div>
     </React.Fragment>
   );
@@ -179,8 +188,12 @@ export const formatSpace = (
   return total.map((eachTotalStat, index) => [
     eachTotalStat.x * 1000,
     /* convert bytes to GB */
-    (eachTotalStat.y - pathOr(0, [index, 'y'], free)) / 1024 / 1024 / 1024
+    +((eachTotalStat.y - free[index].y) / 1024 / 1024 / 1024).toFixed(2)
   ]);
+};
+
+export const formatDiskIO = (stat: Stat[]): [number, number][] => {
+  return stat.map(eachStat => [eachStat.x * 1000, +eachStat.y.toFixed(2)]);
 };
 
 export const generateHelperText = (
@@ -203,7 +216,7 @@ export const generateHelperText = (
   }
 
   return '';
-};
+}
 
 export default compose<CombinedProps, Props>(
   React.memo,
