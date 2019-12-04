@@ -7,6 +7,7 @@ import Grid from 'src/components/Grid';
 import { DispatchProps } from 'src/containers/longview.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import ActionMenu, { ActionHandlers } from './LongviewActionMenu';
+import RestrictedUserLabel from './RestrictedUserLabel';
 
 import Instructions from '../shared/InstallationInstructions';
 
@@ -29,6 +30,7 @@ interface Props extends ActionHandlers {
   installCode: string;
   clientAPIKey: string;
   updateLongviewClient: DispatchProps['updateLongviewClient'];
+  userCanModifyClient: boolean;
 }
 
 export const LongviewClientInstructions: React.FC<Props> = props => {
@@ -38,7 +40,8 @@ export const LongviewClientInstructions: React.FC<Props> = props => {
     installCode,
     clientAPIKey,
     updateLongviewClient,
-    triggerDeleteLongviewClient
+    triggerDeleteLongviewClient,
+    userCanModifyClient
   } = props;
   const classes = useStyles();
 
@@ -71,12 +74,19 @@ export const LongviewClientInstructions: React.FC<Props> = props => {
         <Grid item xs={11}>
           <Grid container>
             <Grid item xs={12} md={3}>
-              <EditableEntityLabel
-                text={clientLabel}
-                subText="Waiting for data..."
-                onEdit={handleUpdateLabel}
-                loading={updating}
-              />
+              {userCanModifyClient ? (
+                <EditableEntityLabel
+                  text={clientLabel}
+                  subText="Waiting for data..."
+                  onEdit={handleUpdateLabel}
+                  loading={updating}
+                />
+              ) : (
+                <RestrictedUserLabel
+                  label={clientLabel}
+                  subtext={'Waiting for data...'}
+                />
+              )}
             </Grid>
             <Grid item xs={12} md={9}>
               <Instructions
@@ -93,6 +103,7 @@ export const LongviewClientInstructions: React.FC<Props> = props => {
                 longviewClientID={clientID}
                 longviewClientLabel={clientLabel}
                 triggerDeleteLongviewClient={triggerDeleteLongviewClient}
+                userCanModifyClient={userCanModifyClient}
               />
             </Grid>
           </Grid>
