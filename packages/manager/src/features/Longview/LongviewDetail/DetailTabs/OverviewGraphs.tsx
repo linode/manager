@@ -47,7 +47,7 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
       start,
       end
     }).then(response => {
-      const _data = maybeAddDataPointInThePast(response, time.start, [
+      const _data = maybeAddDataPointInThePast(response, start, [
         ['Memory', 'real', 'used'],
         ['Memory', 'real', 'cache'],
         ['Memory', 'real', 'buffers'],
