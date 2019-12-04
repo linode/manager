@@ -2,7 +2,6 @@ import { equals } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import {
   createStyles,
@@ -12,6 +11,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import H1Header from 'src/components/H1Header';
 import Notice from 'src/components/Notice';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { ErrorObject } from 'src/store/selectors/entitiesErrors';
@@ -143,11 +143,9 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
       <Grid container direction="column">
         <Grid item>
           {!resultsEmpty && !entitiesLoading && (
-            <Breadcrumb
-              pathname={this.props.location.pathname}
-              labelTitle={`Search Results ${query && `for "${query}"`}`}
+            <H1Header
+              title={`Search Results ${query && `for "${query}"`}`}
               className={classes.headline}
-              removeCrumbX={1}
             />
           )}
         </Grid>

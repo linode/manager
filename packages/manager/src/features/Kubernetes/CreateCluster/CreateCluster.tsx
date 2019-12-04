@@ -10,7 +10,6 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { StickyContainer } from 'react-sticky';
 import { compose } from 'recompose';
-import Breadcrumb from 'src/components/Breadcrumb';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import {
@@ -22,6 +21,7 @@ import {
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
+import H1Header from 'src/components/H1Header';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import TextField from 'src/components/TextField';
@@ -249,11 +249,10 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
         <Grid container spacing={2}>
           <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
           <Grid item className={`mlMain py0`}>
-            <Breadcrumb
-              pathname={this.props.location.pathname}
+            <H1Header
+              title="Create a Kubernetes Cluster"
               data-qa-title
               className={classes.title}
-              labelTitle="Create a Kubernetes Cluster"
             />
             {errorMap.none && <Notice text={errorMap.none} error />}
             <SelectRegionPanel

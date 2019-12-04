@@ -1,7 +1,6 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
-import Breadcrumb from 'src/components/Breadcrumb';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -10,6 +9,7 @@ import {
   WithStyles,
   WithTheme
 } from 'src/components/core/styles';
+import H1Header from 'src/components/H1Header';
 import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
 import AlgoliaSearchBar from './AlgoliaSearchBar';
 
@@ -82,9 +82,8 @@ class SearchPanel extends React.Component<CombinedProps, {}> {
               [classes.bgIconCompact]: spacingMode === 'compact'
             })}
           />
-          <Breadcrumb
-            pathname={''}
-            labelTitle="What can we help you with?"
+          <H1Header
+            title="What can we help you with?"
             className={classes.searchHeading}
             data-qa-search-heading
           />

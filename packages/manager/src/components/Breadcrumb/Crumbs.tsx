@@ -52,7 +52,6 @@ interface Props {
   labelTitle?: string;
   labelOptions?: LabelProps;
   onEditHandlers?: EditableProps;
-  staticText?: string;
 }
 
 type CombinedProps = Props;

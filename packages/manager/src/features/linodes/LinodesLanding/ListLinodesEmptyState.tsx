@@ -2,7 +2,6 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 import LinodeSvg from 'src/assets/addnewmenu/linode.svg';
-import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import {
   createStyles,
@@ -12,6 +11,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import H1Header from 'src/components/H1Header';
 
 type CSSClasses = 'root' | 'copy' | 'icon' | 'title';
 
@@ -84,9 +84,8 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
         <Grid item xs={12}>
           <LinodeSvg className={classes.icon} />
         </Grid>
-        <Breadcrumb
-          pathname={''}
-          labelTitle="Add your first Linode!"
+        <H1Header
+          title="Add your first Linode!"
           className={classes.title}
           data-qa-placeholder-title
         />

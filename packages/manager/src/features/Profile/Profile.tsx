@@ -6,11 +6,11 @@ import {
   Switch,
   withRouter
 } from 'react-router-dom';
-import Breadcrumb from 'src/components/Breadcrumb';
 import AppBar from 'src/components/core/AppBar';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import H1Header from 'src/components/H1Header';
 import TabLink from 'src/components/TabLink';
 
 import DefaultLoader from 'src/components/DefaultLoader';
@@ -85,12 +85,7 @@ class Profile extends React.Component<Props> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="My Profile" />
-        <Breadcrumb
-          pathname={this.props.location.pathname}
-          labelTitle="My Profile"
-          removeCrumbX={1}
-          data-qa-profile-header
-        />
+        <H1Header title="My Profile" data-qa-profile-header />
         <AppBar position="static" color="default">
           <Tabs
             value={this.tabs.findIndex(tab => matches(tab.routeName))}

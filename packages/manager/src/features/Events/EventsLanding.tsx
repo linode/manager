@@ -6,7 +6,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Waypoint from 'react-waypoint';
 import { compose } from 'recompose';
-import Breadcrumb from 'src/components/Breadcrumb';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -17,6 +16,7 @@ import {
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
+import H1Header from 'src/components/H1Header';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -278,13 +278,7 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
   return (
     <>
       {/* Only display this title on the main Events landing page */}
-      {!entityId && (
-        <Breadcrumb
-          pathname={''}
-          className={classes.header}
-          labelTitle="Events"
-        />
-      )}
+      {!entityId && <H1Header title="Events" className={classes.header} />}
       <Paper>
         <Table aria-label="List of Events">
           <TableHead>

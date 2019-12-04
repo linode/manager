@@ -2,7 +2,6 @@ import { Image } from 'linode-js-sdk/lib/images';
 import { StackScript } from 'linode-js-sdk/lib/stackscripts';
 import * as React from 'react';
 import { compose } from 'recompose';
-import Breadcrumb from 'src/components/Breadcrumb';
 import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
 import {
@@ -14,6 +13,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import ExternalLink from 'src/components/ExternalLink';
+import H1Header from 'src/components/H1Header';
 import ScriptCode from 'src/components/ScriptCode';
 import withImages from 'src/containers/withImages.container';
 
@@ -122,13 +122,9 @@ export class _StackScript extends React.Component<CombinedProps> {
 
     return (
       <div className={classes.root}>
-        <Breadcrumb
-          pathname={''}
-          labelTitle={label}
-          data-qa-stack-title={label}
-        />
+        <H1Header title={label} data-qa-stack-title={label} />
         <Typography
-          variant="h3"
+          variant="h2"
           className={classes.author}
           data-qa-stack-author={username}
         >
