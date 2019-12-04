@@ -12,7 +12,7 @@ import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import DiskPaper from './DiskPaper';
 
 import getStats from '../../../request';
-import { LongviewDisk } from '../../../request.types';
+import { Disk } from '../../../request.types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -33,8 +33,9 @@ type CombinedProps = Props;
 
 const Disks: React.FC<CombinedProps> = props => {
   const [diskStats, updateDiskStats] = React.useState<
-    Partial<LongviewDisk> | undefined
+    Partial<Disk> | undefined
   >();
+  const [sysInfoType, updateSysInfoType] = React.useState<string>('');
   const [fetchError, setError] = React.useState<string>('');
   const [statsLoading, setLoading] = React.useState<boolean>(false);
   const [start, setStart] = React.useState<number>(0);
@@ -58,13 +59,14 @@ const Disks: React.FC<CombinedProps> = props => {
       setError('');
 
       getStats(clientAPIKey, 'getValues', {
-        fields: ['disk'],
+        fields: ['disk', 'sysinfo'],
         start,
         end
       })
         .then(r => {
           setLoading(false);
-          updateDiskStats(r);
+          updateDiskStats((r || {}).Disk);
+          updateSysInfoType(pathOr('', ['SysInfo', 'type'], r));
         })
         .catch(e => {
           setLoading(false);
@@ -85,6 +87,11 @@ const Disks: React.FC<CombinedProps> = props => {
     if (statsLoading) {
       return <LandingLoading shouldDelay />;
     }
+    /*
+      Longview doesn't return the Disk stats in any particular order, so sort them
+      alphabetically now
+    */
+    const sortedKeys = Object.keys(diskStats || {}).sort();
 
     /*
       Longview doesn't return the Disk stats in any particular order, so sort them
@@ -96,8 +103,9 @@ const Disks: React.FC<CombinedProps> = props => {
       <DiskPaper
         diskLabel={eachKey}
         key={eachKey}
-        stats={pathOr({}, ['Disk'], diskStats)[eachKey]}
+        stats={(diskStats || {})[eachKey]}
         timezone={props.timezone}
+        sysInfoType={sysInfoType}
       />
     ));
   };
