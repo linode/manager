@@ -47,6 +47,7 @@ class TableRowLoading extends React.Component<CombinedProps> {
           [classes.transparent]: transparent
         })}
         data-testid="table-row-loading"
+        aria-label="Table content is loading"
       >
         <TableCell
           colSpan={colSpan}
