@@ -58,7 +58,7 @@ describe('SSHKeys', () => {
       />
     );
 
-    expect(wrapper.find(`WithStyles(tableRowLoading)`).exists()).toBeTruthy();
+    expect(wrapper.find(`WithStyles(TableRowLoading)`).exists()).toBeTruthy();
   });
 
   it('should display TableRowError if error if state.error is set.', () => {
