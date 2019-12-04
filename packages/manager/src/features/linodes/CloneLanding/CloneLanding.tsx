@@ -119,9 +119,14 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
     // These must correspond to the routes inside the Switch
     {
       title: 'Configuration Profiles',
-      routeName: `${props.match.url}/configs`
+      routeName: `${props.match.url}/configs`,
+      name: 'clone-config'
     },
-    { title: 'Disks', routeName: `${props.match.url}/disks` }
+    {
+      title: 'Disks',
+      routeName: `${props.match.url}/disks`,
+      name: 'clone-disks'
+    }
   ];
 
   // Update browser URL with tab change
@@ -362,7 +367,11 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
                     key={tab.title}
                     data-qa-tab={tab.title}
                     component={React.forwardRef((forwardedProps, ref) => (
-                      <TabLink to={tab.routeName} title={tab.title} />
+                      <TabLink
+                        to={tab.routeName}
+                        title={tab.title}
+                        idName={tab.name}
+                      />
                     ))}
                   />
                 ))}

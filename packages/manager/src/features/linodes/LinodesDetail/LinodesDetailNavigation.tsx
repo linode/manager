@@ -73,16 +73,56 @@ const LinodesDetailNavigation: React.StatelessComponent<
 
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
-    { routeName: `${url}/summary`, title: 'Summary' },
-    { routeName: `${url}/volumes`, title: 'Volumes' },
-    { routeName: `${url}/networking`, title: 'Networking' },
-    { routeName: `${url}/resize`, title: 'Resize' },
-    { routeName: `${url}/rescue`, title: 'Rescue' },
-    { routeName: `${url}/rebuild`, title: 'Rebuild' },
-    { routeName: `${url}/backup`, title: 'Backups' },
-    { routeName: `${url}/activity`, title: 'Activity' },
-    { routeName: `${url}/settings`, title: 'Settings' },
-    { routeName: `${url}/advanced`, title: 'Advanced' }
+    {
+      routeName: `${url}/summary`,
+      title: 'Summary',
+      name: 'linode-detail-summary'
+    },
+    {
+      routeName: `${url}/volumes`,
+      title: 'Volumes',
+      name: 'linode-detail-volumes'
+    },
+    {
+      routeName: `${url}/networking`,
+      title: 'Networking',
+      name: 'linode-detail-networking'
+    },
+    {
+      routeName: `${url}/resize`,
+      title: 'Resize',
+      name: 'linode-detail-resize'
+    },
+    {
+      routeName: `${url}/rescue`,
+      title: 'Rescue',
+      name: 'linode-detail-rescue'
+    },
+    {
+      routeName: `${url}/rebuild`,
+      title: 'Rebuild',
+      name: 'linode-detail-rebuild'
+    },
+    {
+      routeName: `${url}/backup`,
+      title: 'Backups',
+      name: 'linode-detail-backups'
+    },
+    {
+      routeName: `${url}/activity`,
+      title: 'Activity',
+      name: 'linode-detail-activity'
+    },
+    {
+      routeName: `${url}/settings`,
+      title: 'Settings',
+      name: 'linode-detail-settings'
+    },
+    {
+      routeName: `${url}/advanced`,
+      title: 'Advanced',
+      name: 'linode-detail-advanced'
+    }
   ];
 
   const handleTabChange = (
@@ -114,6 +154,7 @@ const LinodesDetailNavigation: React.StatelessComponent<
                 <TabLink
                   to={tab.routeName}
                   title={tab.title}
+                  idName={tab.name}
                   {...tabProps}
                   ref={ref}
                 />

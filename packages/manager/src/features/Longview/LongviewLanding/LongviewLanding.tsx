@@ -38,8 +38,16 @@ export const LongviewLanding: React.FunctionComponent<
 
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
-    { title: 'Clients', routeName: `${props.match.url}/clients` },
-    { title: 'Plan Details', routeName: `${props.match.url}/plan-details` }
+    {
+      title: 'Clients',
+      routeName: `${props.match.url}/clients`,
+      name: 'longview-clients'
+    },
+    {
+      title: 'Plan Details',
+      routeName: `${props.match.url}/plan-details`,
+      name: 'longview-plan-details'
+    }
   ];
 
   const handleTabChange = (
@@ -85,6 +93,7 @@ export const LongviewLanding: React.FunctionComponent<
                 <TabLink
                   to={tab.routeName}
                   title={tab.title}
+                  idName={tab.name}
                   {...forwardedProps}
                   ref={ref}
                 />

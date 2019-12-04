@@ -30,8 +30,8 @@ export const DetailNavigation: React.FC<ResizeProps> = props => {
 
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
-    { routeName: `${url}/details`, title: 'Details' },
-    { routeName: `${url}/resize`, title: 'Resize' }
+    { routeName: `${url}/details`, title: 'Details', name: 'lke-details' },
+    { routeName: `${url}/resize`, title: 'Resize', name: 'lke-resize' }
   ];
 
   const handleTabChange = (
@@ -63,6 +63,7 @@ export const DetailNavigation: React.FC<ResizeProps> = props => {
               component={React.forwardRef((tabProps, ref) => (
                 <TabLink
                   to={tab.routeName}
+                  idName={tab.name}
                   title={tab.title}
                   {...tabProps}
                   ref={ref}

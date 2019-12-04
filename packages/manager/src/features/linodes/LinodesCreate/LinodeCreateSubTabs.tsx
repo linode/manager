@@ -138,7 +138,7 @@ class LinodeCreateSubTabs extends React.Component<CombinedProps, State> {
           <Paper className={`${classes.root}`}>
             <div className={`${classes.inner}`}>
               <Typography variant="h2">Create From:</Typography>
-              <AppBar position="static" color="default">
+              <AppBar position="static" color="default" role="tablist">
                 <Tabs
                   value={selectedTab}
                   onChange={this.handleTabChange}
@@ -151,6 +151,9 @@ class LinodeCreateSubTabs extends React.Component<CombinedProps, State> {
                     <MUITab
                       key={idx}
                       label={tab.title}
+                      role="tab"
+                      id={`tab-${tab.title}-${idx}`}
+                      aria-controls={`tabpanel-${tab.title}-${idx}`}
                       data-qa-create-from={
                         typeof tab.title === 'string' ? tab.title : tab.type
                       }

@@ -56,7 +56,6 @@ type CombinedProps = Props;
 const TabbedPanel: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const [value, setValue] = useState<number>(props.initTab || 0);
-  const tabInterface = React.useRef<Element>(null);
 
   const {
     header,
@@ -83,6 +82,7 @@ const TabbedPanel: React.FC<CombinedProps> = props => {
     setValue(value);
   };
 
+  // TODO should make the id references more custom
   const tabA11yProps = (index: number) => {
     return {
       id: `tab-${index}`,
@@ -95,62 +95,8 @@ const TabbedPanel: React.FC<CombinedProps> = props => {
     return {
       id: `tabpanel-${index}`,
       role: 'tabpanel',
-      'aria-labelledby': `tab-${index}`,
-      tabIndex: 0
+      'aria-labelledby': `tab-${index}`
     };
-  };
-
-  const handleTabToPanel = (
-    e: React.ChangeEvent<HTMLDivElement>,
-    value: number
-  ) => {
-    const tabPanel = document.getElementById(`tabpanel-${value}`);
-
-    if (e && tabPanel) {
-      tabPanel.focus();
-    }
-  };
-
-  // Need to find a way to only scope this to each tabbed panel component instead of capturing all tab interfaces on a page (ahem resize)
-  const onKeyDown = (e: any, value: number) => {
-    // Enable arrow navigation between tabs in the tab list
-    // let tabFocus = 0;
-    // const tabs = document.querySelectorAll('[role="tab"]');
-    const currentElement = document.activeElement;
-
-    console.log(document.activeElement);
-
-    // Checks if current active element is a tab
-    if (currentElement && currentElement.id === `tab-${value}`) {
-      // If tab or enter is pressed, focus the panel, set activeElement to -1
-      if (e.keyCode === 13 || e.keyCode === 9) {
-        handleTabToPanel(e, value);
-      }
-
-      // if (e.keyCode === 39 || e.keyCode === 37) {
-      //   // Move right
-      //   if (e.keyCode === 39) {
-      //     tabFocus++;
-      //     // console.log('keyboard 39 ' + tabSelector);
-
-      //     // If we're at the end, go to the start
-      //     if (tabFocus >= tabs.length) {
-      //       tabFocus = 0;
-      //     }
-
-      //     // Move left
-      //   } else if (e.keyCode === 37) {
-      //     tabFocus--;
-      //     // console.log('keyboard 37 ' + tabSelector);
-
-      //     // If we're at the start, move to the end
-      //     if (tabFocus < 0) {
-      //       tabFocus = tabs.length - 1;
-      //     }
-      //   }
-      //   currentElement.focus();
-      // }
-    }
   };
 
   return (
@@ -165,13 +111,7 @@ const TabbedPanel: React.FC<CombinedProps> = props => {
             {copy}
           </Typography>
         )}
-        <AppBar
-          position="static"
-          color="default"
-          role="tablist"
-          className="tablist-kayla"
-          ref={tabInterface}
-        >
+        <AppBar position="static" color="default" role="tablist">
           <Tabs
             value={value}
             onChange={handleChange}
@@ -184,7 +124,6 @@ const TabbedPanel: React.FC<CombinedProps> = props => {
             {tabs.map((tab, idx) => (
               <Tab
                 key={idx}
-                onKeyDown={(e: any) => onKeyDown(e, value)}
                 label={tab.title}
                 data-qa-tab={tab.title}
                 {...tabA11yProps(idx)}
