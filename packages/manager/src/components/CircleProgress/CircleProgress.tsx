@@ -172,6 +172,7 @@ class CircleProgressComponent extends React.Component<CombinedProps> {
           },
           outerClasses
         )}
+        aria-label="Content is loading"
       >
         {children !== undefined && (
           <div className={classes.valueInside}>{children}</div>
