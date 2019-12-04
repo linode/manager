@@ -36,7 +36,7 @@ import withLinodes, {
   Props as WithLinodesProps
 } from 'src/containers/withLinodes.container';
 import { BlockStorage } from 'src/documentation';
-import { resetEventsPolling } from 'src/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import LinodePermissionsError from 'src/features/linodes/LinodesDetail/LinodePermissionsError';
 import {
   LinodeOptions,
@@ -62,6 +62,7 @@ import withRegions, {
   DefaultProps as RegionProps
 } from 'src/containers/regions.container';
 import { doesRegionSupportBlockStorage } from 'src/utilities/doesRegionSupportBlockStorage';
+import { ExtendedVolume } from './types';
 
 type ClassNames =
   | 'root'
@@ -139,11 +140,6 @@ const styles = (theme: Theme) =>
       minWidth: 250
     }
   });
-
-export interface ExtendedVolume extends Volume {
-  linodeLabel?: string;
-  linodeStatus?: string;
-}
 
 interface Props {
   linodeId?: number;
