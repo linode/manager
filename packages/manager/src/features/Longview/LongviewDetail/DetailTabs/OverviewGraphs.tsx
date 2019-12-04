@@ -1,3 +1,4 @@
+import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import Paper from 'src/components/core/Paper';
@@ -12,6 +13,7 @@ import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { AllData, getValues, WithStartAndEnd } from '../../request';
 import { Stat } from '../../request.types';
+import { maybeAddDataPointInThePast } from '../../shared/formatters';
 import TimeRangeSelect from '../../shared/TimeRangeSelect';
 import { useClientLastUpdated } from '../../shared/useClientLastUpdated';
 
@@ -44,7 +46,15 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
       fields: ['cpu', 'memory', 'network', 'disk', 'load'],
       start,
       end
-    }).then(response => setData(response));
+    }).then(response => {
+      const _data = maybeAddDataPointInThePast(response, time.start, [
+        ['Memory', 'real', 'used'],
+        ['Memory', 'real', 'cache'],
+        ['Memory', 'real', 'buffers'],
+        ['Memory', 'swap', 'used']
+      ]);
+      setData(_data);
+    });
   };
 
   useClientLastUpdated(clientAPIKey, request);
@@ -53,6 +63,14 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
     setTimeBox({ start, end });
     request(start, end);
   };
+
+  const _convertData = React.useCallback(convertData, [
+    data,
+    time.start,
+    time.end
+  ]);
+
+  const isToday = time.end - time.start < 60 * 60 * 25;
 
   return (
     <Grid container alignItems="flex-end" item xs={12} spacing={0}>
@@ -89,25 +107,58 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
               <LongviewLineGraph
                 title="CPU"
                 subtitle="%"
-                showToday={false}
+                showToday={isToday}
                 timezone="GMT"
                 data={[]}
               />
             </Grid>
             <Grid item xs={6}>
               <LongviewLineGraph
-                title="RAM"
+                title="Memory"
                 subtitle="GB"
-                showToday={false}
+                showToday={isToday}
                 timezone="GMT"
-                data={[]}
+                data={[
+                  {
+                    label: 'Used',
+                    borderColor: theme.graphs.greenBorder,
+                    backgroundColor: theme.graphs.green,
+                    data: _convertData(
+                      pathOr([], ['Memory', 'real', 'used'], data)
+                    )
+                  },
+                  {
+                    label: 'Cache',
+                    borderColor: theme.graphs.orangeBorder,
+                    backgroundColor: theme.graphs.orange,
+                    data: _convertData(
+                      pathOr([], ['Memory', 'real', 'cache'], data)
+                    )
+                  },
+                  {
+                    label: 'Buffers',
+                    borderColor: theme.graphs.purpleBorder,
+                    backgroundColor: theme.graphs.purple,
+                    data: _convertData(
+                      pathOr([], ['Memory', 'real', 'buffers'], data)
+                    )
+                  },
+                  {
+                    label: 'Swap',
+                    borderColor: theme.graphs.blueBorder,
+                    backgroundColor: theme.graphs.blue,
+                    data: _convertData(
+                      pathOr([], ['Memory', 'swap', 'used'], data)
+                    )
+                  }
+                ]}
               />
             </Grid>
             <Grid item xs={6}>
               <LongviewLineGraph
                 title="Network"
                 subtitle="KB/s"
-                showToday={false}
+                showToday={isToday}
                 timezone="GMT"
                 data={[]}
               />
@@ -116,7 +167,7 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
               <LongviewLineGraph
                 title="Disk I/O"
                 subtitle="ops/s"
-                showToday={false}
+                showToday={isToday}
                 timezone="GMT"
                 data={[]}
               />
@@ -125,14 +176,14 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
               <LongviewLineGraph
                 title="Load"
                 subtitle="Target < 1.00"
-                showToday={true}
+                showToday={isToday}
                 timezone="GMT"
                 data={[
                   {
                     label: 'Load',
                     borderColor: theme.graphs.blueBorder,
                     backgroundColor: theme.graphs.blue,
-                    data: convertData(time.start, data.Load || [])
+                    data: _convertData(data.Load || [])
                   }
                 ]}
               />
@@ -144,29 +195,7 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
   );
 };
 
-export const convertData = (start: number, d: Stat[]) => {
-  const points = d.map(
-    thisPoint => [thisPoint.x * 1000, thisPoint.y] as [number, number]
-  );
-
-  if (points.length < 1) {
-    // Empty array
-    return points;
-  }
-
-  /**
-   * The LV API does not provide proper time series data;
-   * only times for which the agent was collecting data
-   * have entries in the response (so if your Linode is 3 days
-   * old and you ask for graphs for the past year, the response
-   * will only have 3 days of data). We therefore need to pad the
-   * front of the response with an extra data point to force the x
-   * axis of each graph to show the requested time span.
-   */
-  if (points[0][0] > start * 1000) {
-    points.unshift([start * 1000, 0]);
-  }
-  return points;
-};
+export const convertData = (d: Stat[]) =>
+  d.map(thisPoint => [thisPoint.x * 1000, thisPoint.y] as [number, number]);
 
 export default withTheme(OverviewGraphs);
