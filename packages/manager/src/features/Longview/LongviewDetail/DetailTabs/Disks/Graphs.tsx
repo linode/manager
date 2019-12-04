@@ -178,12 +178,7 @@ export const formatINodes = (
   return itotal.map((eachTotalStat, index) => {
     const cleanedY =
       typeof eachTotalStat.y === 'number' && typeof ifree[index].y === 'number'
-        ? +(
-            (eachTotalStat.y - (ifree[index].y as number)) /
-            1024 /
-            1024 /
-            1024
-          ).toFixed(2)
+        ? +(eachTotalStat.y - (ifree[index].y as number)).toFixed(2)
         : null;
     return [eachTotalStat.x * 1000, cleanedY];
   });
