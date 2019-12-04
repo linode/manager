@@ -33,6 +33,7 @@ import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent
 } from 'src/utilities/ga';
+import CancelNotice from '../CancelNotice';
 import BucketTable from './BucketTable';
 
 type ClassNames = 'copy';
@@ -158,6 +159,10 @@ export const BucketLanding: React.StatelessComponent<CombinedProps> = props => {
         </a>{' '}
         to force deletion.
       </Typography>
+      {/* If the user is attempting to delete their last Bucket, remind them
+      that they will still be billed unless they cancel Object Storage in
+      Account Settings. */}
+      {bucketsData.length === 1 && <CancelNotice className={classes.copy} />}
       <Typography className={classes.copy}>
         To confirm deletion, type the name of the bucket ({bucketToRemove.label}
         ) in the field below:
