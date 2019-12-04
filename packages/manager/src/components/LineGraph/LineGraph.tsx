@@ -15,7 +15,7 @@ export interface DataSet {
   // the first number will be a UTC data and the second will be the amount per second
   fill?: boolean | string;
   backgroundColor?: string;
-  data: [number, number][];
+  data: [number, number | null][];
 }
 
 export interface Props {
