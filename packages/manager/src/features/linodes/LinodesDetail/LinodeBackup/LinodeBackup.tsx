@@ -52,7 +52,8 @@ import PromiseLoader, {
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TextField from 'src/components/TextField';
-import { events$, resetEventsPolling } from 'src/events';
+import { events$ } from 'src/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import { linodeInTransition as isLinodeInTransition } from 'src/features/linodes/transitions';
 import {
   LinodeActionsProps,

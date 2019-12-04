@@ -6,7 +6,7 @@ import Typography from 'src/components/core/Typography';
 import withVolumesRequests, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
-import { resetEventsPolling } from 'src/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import {
   handleFieldErrors,
   handleGeneralErrors

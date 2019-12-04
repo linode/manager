@@ -58,7 +58,7 @@ import {
   WithTypesProps
 } from './types';
 
-import { resetEventsPolling } from 'src/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import {
   baseApps,
   getOneClickApps
