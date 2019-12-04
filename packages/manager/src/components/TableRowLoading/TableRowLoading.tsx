@@ -9,6 +9,7 @@ import {
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
 import Skeleton from 'src/components/Skeleton';
+import { srSpeak } from 'src/utilities/accessibility';
 
 type ClassNames = 'root' | 'tableCell' | 'transparent';
 
@@ -33,32 +34,38 @@ export interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const tableRowLoading: React.StatelessComponent<CombinedProps> = props => {
-  const { classes, transparent, colSpan, firstColWidth } = props;
-  return (
-    <TableRow
-      className={classNames({
-        [classes.transparent]: transparent
-      })}
-      data-testid="table-row-loading"
-    >
-      <TableCell
-        colSpan={colSpan}
+class TableRowLoading extends React.Component<CombinedProps> {
+  componentWillUnmount() {
+    srSpeak('Table content has loaded', 'polite');
+  }
+
+  render() {
+    const { classes, transparent, colSpan, firstColWidth } = this.props;
+    return (
+      <TableRow
         className={classNames({
-          [classes.tableCell]: true,
           [classes.transparent]: transparent
         })}
+        data-testid="table-row-loading"
       >
-        <Skeleton
-          table
-          columns={colSpan ? colSpan : 8}
-          firstColWidth={firstColWidth ? firstColWidth : undefined}
-        />
-      </TableCell>
-    </TableRow>
-  );
-};
+        <TableCell
+          colSpan={colSpan}
+          className={classNames({
+            [classes.tableCell]: true,
+            [classes.transparent]: transparent
+          })}
+        >
+          <Skeleton
+            table
+            columns={colSpan ? colSpan : 8}
+            firstColWidth={firstColWidth ? firstColWidth : undefined}
+          />
+        </TableCell>
+      </TableRow>
+    );
+  }
+}
 
 const styled = withStyles(styles);
 
-export default styled(tableRowLoading);
+export default styled(TableRowLoading);
