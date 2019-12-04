@@ -566,7 +566,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         <Grid container spacing={0}>
           <Grid item xs={12}>
             <Breadcrumb
-              pathname={this.props.location.pathname}
+              pathname={'/linodes/create'}
               labelTitle="Create"
               data-qa-create-linode-header
             />
