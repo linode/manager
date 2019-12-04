@@ -47,6 +47,7 @@ const SplashScreen: React.FC<CombinedProps> = props => {
         className={classNames({
           [classes.root]: true
         })}
+        aria-label="Loading Cloud Manager"
       >
         <div className={classes.logo}>
           <Logo />
