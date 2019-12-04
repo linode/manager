@@ -13,6 +13,7 @@ import DiskPaper from './DiskPaper';
 
 import getStats from '../../../request';
 import { Disk } from '../../../request.types';
+import { maybeAddDataPointInThePast } from '../../../shared/formatters';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -69,7 +70,33 @@ const Disks: React.FC<CombinedProps> = props => {
         .then(r => {
           if (mounted) {
             setLoading(false);
-            updateDiskStats((r || {}).Disk);
+            const _disk = pathOr({}, ['Disk'], r);
+
+            const pathsToAlter = Object.keys(_disk).reduce(
+              (acc, eachKey) => {
+                acc.push(
+                  ...[
+                    [eachKey, 'reads'],
+                    [eachKey, 'writes'],
+                    [eachKey, 'fs', 'free'],
+                    [eachKey, 'fs', 'total'],
+                    [eachKey, 'fs', 'itotal'],
+                    [eachKey, 'fs', 'ifree']
+                  ]
+                );
+
+                return acc;
+              },
+              [] as (string | number)[][]
+            );
+
+            const enhancedDisk = maybeAddDataPointInThePast<Disk>(
+              _disk,
+              start,
+              pathsToAlter
+            );
+
+            updateDiskStats(enhancedDisk);
             updateSysInfoType(pathOr('', ['SysInfo', 'type'], r));
           }
         })

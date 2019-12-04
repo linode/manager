@@ -174,26 +174,50 @@ const Graphs: React.FC<CombinedProps> = props => {
 export const formatINodes = (
   ifree: Stat[],
   itotal: Stat[]
-): [number, number][] => {
-  return itotal.map((eachTotalStat, index) => [
-    eachTotalStat.x * 1000,
-    eachTotalStat.y - pathOr(0, [index, 'y'], ifree)
-  ]);
+): [number, number | null][] => {
+  return itotal.map((eachTotalStat, index) => {
+    const cleanedY =
+      typeof eachTotalStat.y === 'number' && typeof ifree[index].y === 'number'
+        ? +(
+            (eachTotalStat.y - (ifree[index].y as number)) /
+            1024 /
+            1024 /
+            1024
+          ).toFixed(2)
+        : null;
+    return [eachTotalStat.x * 1000, cleanedY];
+  });
 };
 
 export const formatSpace = (
   free: Stat[],
   total: Stat[]
-): [number, number][] => {
-  return total.map((eachTotalStat, index) => [
-    eachTotalStat.x * 1000,
-    /* convert bytes to GB */
-    +((eachTotalStat.y - free[index].y) / 1024 / 1024 / 1024).toFixed(2)
-  ]);
+): [number, number | null][] => {
+  return total.map((eachTotalStat, index) => {
+    const cleanedY =
+      typeof eachTotalStat.y === 'number' && typeof free[index].y === 'number'
+        ? +(
+            (eachTotalStat.y - (free[index].y as number)) /
+            1024 /
+            1024 /
+            1024
+          ).toFixed(2)
+        : null;
+
+    return [
+      eachTotalStat.x * 1000,
+      /* convert bytes to GB */
+      cleanedY
+    ];
+  });
 };
 
-export const formatDiskIO = (stat: Stat[]): [number, number][] => {
-  return stat.map(eachStat => [eachStat.x * 1000, +eachStat.y.toFixed(2)]);
+export const formatDiskIO = (stat: Stat[]): [number, number | null][] => {
+  return stat.map(eachStat => {
+    const cleanedY =
+      typeof eachStat.y === 'number' ? +eachStat.y.toFixed(2) : null;
+    return [eachStat.x * 1000, cleanedY];
+  });
 };
 
 export const generateHelperText = (
