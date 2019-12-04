@@ -2,7 +2,6 @@ import Search from '@material-ui/icons/Search';
 import { compose } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import Breadcrumb from 'src/components/Breadcrumb';
 import InputAdornment from 'src/components/core/InputAdornment';
 import {
   createStyles,
@@ -11,6 +10,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
+import H1Header from 'src/components/H1Header';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { COMMUNITY_SEARCH_URL, DOCS_SEARCH_URL } from 'src/constants';
@@ -117,12 +117,10 @@ export class SupportSearchLanding extends React.Component<
         <Grid item>
           <Grid container alignItems="center">
             <Grid item>
-              <Breadcrumb
-                pathname={this.props.location.pathname}
-                labelTitle={
+              <H1Header
+                title={
                   query.length > 1 ? `Search results for "${query}"` : 'Search'
                 }
-                removeCrumbX={2}
                 data-qa-support-search-landing-title
               />
             </Grid>
