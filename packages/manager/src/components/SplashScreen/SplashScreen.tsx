@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import { makeStyles } from 'src/components/core/styles';
 import { MapState } from 'src/store/types';
+import { srSpeak } from 'src/utilities/accessibility';
 
 import Logo from 'src/assets/logo/logo-animated.svg';
 import './keyframes.css';
@@ -35,6 +36,10 @@ type CombinedProps = StateProps;
 
 const SplashScreen: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+
+  React.useEffect(() => {
+    srSpeak('Loading Linode Cloud Manager', 'polite');
+  }, []);
 
   return props.appIsLoading ? (
     <>

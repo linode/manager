@@ -9,6 +9,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import { srSpeak } from 'src/utilities/accessibility';
 
 type CSSClasses =
   | 'root'
@@ -128,78 +129,82 @@ interface Props extends CircularProgressProps {
 
 type CombinedProps = Props & WithStyles<CSSClasses>;
 
-const circleProgressComponent: React.StatelessComponent<
-  CombinedProps
-> = props => {
-  const variant = typeof props.value === 'number' ? 'static' : 'indeterminate';
-  const value = typeof props.value === 'number' ? props.value : 0;
-  const {
-    children,
-    classes,
-    noTopMargin,
-    green,
-    mini,
-    tag,
-    sort,
-    noInner,
-    noPadding,
-    ...rest
-  } = props;
-
-  const outerClasses = {
-    [classes.root]: true,
-    [classes.noTopMargin]: noTopMargin,
-    [classes.hasValueInside]: children !== undefined,
-    [classes.green]: green,
-    [classes.noPadding]: noPadding
-  };
-
-  if (props.className) {
-    outerClasses[props.className] = true;
+class CircleProgressComponent extends React.Component<CombinedProps> {
+  componentWillUnmount() {
+    srSpeak('Content has loaded', 'polite');
   }
 
-  return !mini ? (
-    <div
-      className={classNames(
-        {
-          [classes.root]: true,
-          [classes.noTopMargin]: noTopMargin
-        },
-        outerClasses
-      )}
-    >
-      {children !== undefined && (
-        <div className={classes.valueInside}>{children}</div>
-      )}
-      {noInner !== true && (
-        <div className={classes.topWrapper}>
-          <div className={classes.top} />
-        </div>
-      )}
-      <CircularProgress
-        {...rest}
-        className={classes.progress}
-        size={green ? 128 : 124}
-        value={value}
-        variant={variant}
-        thickness={green ? 4 : 2}
-        data-qa-circle-progress={value}
-      />
-    </div>
-  ) : (
-    <CircularProgress
-      className={classNames({
-        [classes.mini]: true,
-        [classes.tag]: tag,
-        [classes.sort]: sort,
-        [classes.noPadding]: noPadding
-      })}
-      size={noPadding ? 22 : 40}
-      data-qa-circle-progress
-    />
-  );
-};
+  render() {
+    const variant =
+      typeof this.props.value === 'number' ? 'static' : 'indeterminate';
+    const value = typeof this.props.value === 'number' ? this.props.value : 0;
+    const {
+      children,
+      classes,
+      noTopMargin,
+      green,
+      mini,
+      tag,
+      sort,
+      noInner,
+      noPadding,
+      ...rest
+    } = this.props;
 
+    const outerClasses = {
+      [classes.root]: true,
+      [classes.noTopMargin]: noTopMargin,
+      [classes.hasValueInside]: children !== undefined,
+      [classes.green]: green,
+      [classes.noPadding]: noPadding
+    };
+
+    if (this.props.className) {
+      outerClasses[this.props.className] = true;
+    }
+
+    return !mini ? (
+      <div
+        className={classNames(
+          {
+            [classes.root]: true,
+            [classes.noTopMargin]: noTopMargin
+          },
+          outerClasses
+        )}
+      >
+        {children !== undefined && (
+          <div className={classes.valueInside}>{children}</div>
+        )}
+        {noInner !== true && (
+          <div className={classes.topWrapper}>
+            <div className={classes.top} />
+          </div>
+        )}
+        <CircularProgress
+          {...rest}
+          className={classes.progress}
+          size={green ? 128 : 124}
+          value={value}
+          variant={variant}
+          thickness={green ? 4 : 2}
+          data-qa-circle-progress={value}
+        />
+      </div>
+    ) : (
+      <CircularProgress
+        className={classNames({
+          [classes.mini]: true,
+          [classes.tag]: tag,
+          [classes.sort]: sort,
+          [classes.noPadding]: noPadding
+        })}
+        size={noPadding ? 22 : 40}
+        data-qa-circle-progress
+      />
+    );
+  }
+}
 const styled = withStyles(styles);
 
-export default styled(circleProgressComponent);
+export default styled(CircleProgressComponent);
