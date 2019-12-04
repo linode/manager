@@ -68,6 +68,7 @@ export const BucketTableRow: React.StatelessComponent<
               className={classes.link}
               href={`https://${hostname}`}
               target="_blank"
+              aria-describedby="external-site"
               rel="noopener noreferrer"
               data-qa-hostname
             >
