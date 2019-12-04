@@ -1,4 +1,5 @@
 import { APIError } from 'linode-js-sdk/lib/types';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -73,21 +74,31 @@ const Disks: React.FC<CombinedProps> = props => {
     }
   }, [clientLastUpdated, start, end]);
 
-  if (fetchError || lastUpdatedError) {
-    return (
-      <ErrorState errorText="There was an error fetching statistics for your Disks." />
-    );
-  }
+  const renderContent = () => {
+    if (fetchError || lastUpdatedError) {
+      return (
+        <ErrorState errorText="There was an error fetching statistics for your Disks." />
+      );
+    }
 
-  if (statsLoading) {
-    return <LandingLoading shouldDelay />;
-  }
+    if (statsLoading) {
+      return <LandingLoading shouldDelay />;
+    }
+
+    return sortedKeys.map(eachKey => (
+      <DiskPaper
+        diskLabel={eachKey}
+        key={eachKey}
+        stats={pathOr({}, ['Disk'], diskStats)[eachKey]}
+      />
+    ));
+  };
 
   /*
     Longview doesn't return the Disk stats in any particular order, so sort them
     alphabetically now
   */
-  const sortedKeys = Object.keys((diskStats || {}).Disk || {}).sort();
+  const sortedKeys = Object.keys(pathOr({}, ['Disk'], diskStats)).sort();
 
   return (
     <React.Fragment>
@@ -98,13 +109,7 @@ const Disks: React.FC<CombinedProps> = props => {
           defaultValue="Past 24 Hours"
         />
       </Box>
-      {sortedKeys.map(eachKey => (
-        <DiskPaper
-          diskLabel={eachKey}
-          key={eachKey}
-          stats={((diskStats || {}).Disk || {})[eachKey]}
-        />
-      ))}
+      {renderContent()}
     </React.Fragment>
   );
 };
