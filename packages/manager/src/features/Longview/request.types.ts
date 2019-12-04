@@ -3,25 +3,30 @@ export interface Stat {
   y: number;
 }
 
-interface FS {
-  itotal: Stat[];
-  ifree: Stat[];
-  total: Stat[];
-  free: Stat[];
+export interface StatWithDummyPoint {
+  x: number;
+  y: number | null;
+}
+
+interface FS<WithDummy = false> {
+  itotal: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
+  ifree: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
+  total: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
+  free: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
   path: string;
 }
 
-export interface Disk {
+export interface Disk<WithDummy = false> {
   dm: number;
   children: number;
   mounted: number;
   childof: number;
   isswap: number;
-  write_bytes?: Stat[];
-  writes?: Stat[];
-  reads?: Stat[];
-  read_bytes?: Stat[];
-  fs: FS;
+  write_bytes?: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
+  writes?: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
+  reads?: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
+  read_bytes?: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
+  fs: FS<WithDummy>;
 }
 /*
   each key will be the name of the disk
@@ -34,33 +39,33 @@ export interface Disk {
   }
 
 */
-export interface LongviewDisk {
-  Disk: Record<string, Disk>;
+export interface LongviewDisk<WithDummy = false> {
+  Disk: Record<string, Disk<WithDummy>>;
 }
 
-interface RealMemory {
-  free: Stat[];
-  buffers: Stat[];
-  used: Stat[];
-  cache: Stat[];
+interface RealMemory<WithDummy = false> {
+  free: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
+  buffers: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
+  used: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
+  cache: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
 }
 
-interface SwapMemory {
-  free: Stat[];
-  used: Stat[];
+interface SwapMemory<WithDummy = false> {
+  free: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
+  used: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
 }
 
-export interface LongviewMemory {
+export interface LongviewMemory<WithDummy = false> {
   Memory: {
-    real: RealMemory;
-    swap: SwapMemory;
+    real: RealMemory<WithDummy>;
+    swap: SwapMemory<WithDummy>;
   };
 }
 
-export interface CPU {
-  user: Stat[];
-  wait: Stat[];
-  system: Stat[];
+export interface CPU<WithDummy = false> {
+  user: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
+  wait: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
+  system: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
 }
 
 /*
@@ -74,23 +79,23 @@ export interface CPU {
   }
 
 */
-export interface LongviewCPU {
-  CPU: Record<string, CPU>;
+export interface LongviewCPU<WithDummy = false> {
+  CPU: Record<string, CPU<WithDummy>>;
 }
 
-export interface LongviewLoad {
-  Load: Stat[];
+export interface LongviewLoad<WithDummy = false> {
+  Load: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
 }
 
-export interface InboundOutboundNetwork {
-  rx_bytes: Stat[];
-  tx_bytes: Stat[];
+export interface InboundOutboundNetwork<WithDummy = false> {
+  rx_bytes: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
+  tx_bytes: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
 }
 
-export interface LongviewNetwork {
+export interface LongviewNetwork<WithDummy = false> {
   Network: {
     mac_addr: string;
-    Interface: Record<string, InboundOutboundNetwork>;
+    Interface: Record<string, InboundOutboundNetwork<WithDummy>>;
   };
 }
 
@@ -152,18 +157,21 @@ export interface LongviewSystemInfo {
 }
 // Resulting shape of calling `/fetch` with an api_action of `getValues` or
 // `getLatestValues` (and asking for the "Processes.*" key).
-export interface LongviewProcesses {
-  Processes?: Record<string, Process>;
+export interface LongviewProcesses<S = Stat> {
+  Processes?: Record<string, Process<S>>;
 }
 
-export type Process = { longname: string } & Record<string, ProcessStats>;
+export type Process<WithDummy = false> = { longname: string } & Record<
+  string,
+  ProcessStats<WithDummy>
+>;
 
-export interface ProcessStats {
-  count?: Stat[];
-  cpu?: Stat[];
-  ioreadkbytes?: Stat[];
-  iowritekbytes?: Stat[];
-  mem?: Stat[];
+export interface ProcessStats<WithDummy = false> {
+  count?: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
+  cpu?: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
+  ioreadkbytes?: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
+  iowritekbytes?: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
+  mem?: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
 }
 
 // Resulting shape of calling `/fetch` with an api_action of `getTopProcesses`.
