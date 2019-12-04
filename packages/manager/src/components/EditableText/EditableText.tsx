@@ -154,7 +154,7 @@ type PassThroughProps = Props & TextFieldProps;
 type FinalProps = PassThroughProps & WithStyles<ClassNames>;
 
 const EditableText: React.FC<FinalProps> = props => {
-  const [isEditing, setisEditing] = React.useState(Boolean(props.errorText));
+  const [isEditing, setIsEditing] = React.useState(Boolean(props.errorText));
   const [text, setText] = React.useState(props.text);
   const h1Header = React.useRef<HTMLDivElement>(null);
   const {
@@ -184,7 +184,7 @@ const EditableText: React.FC<FinalProps> = props => {
   };
 
   const openEdit = () => {
-    setisEditing(true);
+    setIsEditing(true);
   };
 
   const finishEditing = () => {
@@ -198,17 +198,17 @@ const EditableText: React.FC<FinalProps> = props => {
       props
         .onEdit(text)
         .then(() => {
-          setisEditing(false);
+          setIsEditing(false);
         })
         .catch(e => e);
     } else {
       /** otherwise, we've just submitted the form with no value change */
-      setisEditing(false);
+      setIsEditing(false);
     }
   };
 
   const cancelEditing = () => {
-    setisEditing(false);
+    setIsEditing(false);
     setText(props.text);
   };
 
