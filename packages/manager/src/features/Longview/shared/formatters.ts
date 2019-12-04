@@ -85,7 +85,7 @@ export const maybeAddDataPointInThePast = <T extends {}>(
 
     if (
       pathOr(0, [0, 'x'], arrayOfStats) - selectedStartTimeInSeconds >
-      60 * 5000
+      60 * 5
     ) {
       arrayOfStats.unshift({ x: selectedStartTimeInSeconds, y: null });
     }
