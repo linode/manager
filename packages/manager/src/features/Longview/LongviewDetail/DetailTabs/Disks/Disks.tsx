@@ -86,6 +86,12 @@ const Disks: React.FC<CombinedProps> = props => {
       return <LandingLoading shouldDelay />;
     }
 
+    /*
+      Longview doesn't return the Disk stats in any particular order, so sort them
+      alphabetically now
+    */
+    const sortedKeys = Object.keys(pathOr({}, ['Disk'], diskStats)).sort();
+
     return sortedKeys.map(eachKey => (
       <DiskPaper
         diskLabel={eachKey}
@@ -95,12 +101,6 @@ const Disks: React.FC<CombinedProps> = props => {
       />
     ));
   };
-
-  /*
-    Longview doesn't return the Disk stats in any particular order, so sort them
-    alphabetically now
-  */
-  const sortedKeys = Object.keys(pathOr({}, ['Disk'], diskStats)).sort();
 
   return (
     <React.Fragment>
