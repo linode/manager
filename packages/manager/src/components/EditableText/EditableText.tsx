@@ -156,7 +156,6 @@ type FinalProps = PassThroughProps & WithStyles<ClassNames>;
 const EditableText: React.FC<FinalProps> = props => {
   const [isEditing, setIsEditing] = React.useState(Boolean(props.errorText));
   const [text, setText] = React.useState(props.text);
-  const h1Header = React.useRef<HTMLDivElement>(null);
   const {
     classes,
     labelLink,
@@ -168,12 +167,6 @@ const EditableText: React.FC<FinalProps> = props => {
     className,
     ...rest
   } = props;
-
-  React.useEffect(() => {
-    if (h1Header.current !== null) {
-      h1Header.current.focus();
-    }
-  }, []);
 
   React.useEffect(() => {
     setText(props.text);
