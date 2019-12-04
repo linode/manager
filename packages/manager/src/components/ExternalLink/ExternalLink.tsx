@@ -81,6 +81,7 @@ class ExternalLink extends React.Component<CombinedProps> {
     return (
       <a
         target="_blank"
+        aria-describedby="external-site"
         rel="noopener noreferrer"
         href={link}
         className={classNames(

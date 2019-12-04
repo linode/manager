@@ -110,6 +110,7 @@ export const AccessKeyDrawer: React.StatelessComponent<CombinedProps> = props =>
                   <a
                     href="https://linode.com/docs/platform/object-storage/how-to-use-object-storage/#object-storage-tools"
                     target="_blank"
+                    aria-describedby="external-site"
                     rel="noopener noreferrer"
                     className="h-u"
                   >

@@ -582,6 +582,7 @@ const withStackScriptBase = (isSelecting: boolean) => (
         <a
           href="https://linode.com/docs/platform/stackscripts-new-manager/"
           target="_blank"
+          aria-describedby="external-site"
           rel="noopener noreferrer"
           className="h-u"
         >
@@ -591,6 +592,7 @@ const withStackScriptBase = (isSelecting: boolean) => (
         <a
           href="https://www.linode.com/docs/"
           target="_blank"
+          aria-describedby="external-site"
           rel="noopener noreferrer"
           className="h-u"
         >

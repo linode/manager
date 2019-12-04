@@ -624,6 +624,7 @@ const EmptyCopy = () => (
       <a
         href="https://linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode-new-manager/"
         target="_blank"
+        aria-describedby="external-site"
         rel="noopener noreferrer"
         className="h-u"
       >
@@ -633,6 +634,7 @@ const EmptyCopy = () => (
       <a
         href="https://www.linode.com/docs/"
         target="_blank"
+        aria-describedby="external-site"
         rel="noopener noreferrer"
         className="h-u"
       >

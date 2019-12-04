@@ -144,6 +144,7 @@ export const BucketLanding: React.StatelessComponent<CombinedProps> = props => {
         <a
           href="https://www.linode.com/docs/platform/object-storage/lifecycle-policies/"
           target="_blank"
+          aria-describedby="external-site"
           rel="noopener noreferrer"
         >
           delete all objects
@@ -152,6 +153,7 @@ export const BucketLanding: React.StatelessComponent<CombinedProps> = props => {
         <a
           href="https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/#object-storage-tools"
           target="_blank"
+          aria-describedby="external-site"
           rel="noopener noreferrer"
         >
           another tool
@@ -264,6 +266,7 @@ const EmptyCopy = () => (
       <a
         href="https://linode.com/docs/platform/object-storage"
         target="_blank"
+        aria-describedby="external-site"
         rel="noopener noreferrer"
         className="h-u"
       >
