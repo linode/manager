@@ -59,7 +59,7 @@ export const formatCPU = (n: number) => {
  *
  * @example
  *
- * maybeAddDataPointInThePast(
+ * maybeAddDataPointInThePast<LongviewCPU>(
  *    { CPU: { cpu1: { user: [{x: 123, y: 123}], wait: [], system: [] } } },
  *    1572357700,
  *    [
