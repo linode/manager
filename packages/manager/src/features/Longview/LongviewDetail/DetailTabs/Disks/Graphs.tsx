@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface Props {
+export interface Props {
   isSwap: boolean;
   childOf: boolean;
   sysInfoType: string;
@@ -145,14 +145,20 @@ const Grahps: React.FC<CombinedProps> = props => {
   );
 };
 
-const formatINodes = (ifree: Stat[], itotal: Stat[]): [number, number][] => {
+export const formatINodes = (
+  ifree: Stat[],
+  itotal: Stat[]
+): [number, number][] => {
   return itotal.map((eachTotalStat, index) => [
     eachTotalStat.x * 1000,
     eachTotalStat.y - ifree[index].y
   ]);
 };
 
-const formatSpace = (free: Stat[], total: Stat[]): [number, number][] => {
+export const formatSpace = (
+  free: Stat[],
+  total: Stat[]
+): [number, number][] => {
   return total.map((eachTotalStat, index) => [
     eachTotalStat.x * 1000,
     /* convert bytes to GB */

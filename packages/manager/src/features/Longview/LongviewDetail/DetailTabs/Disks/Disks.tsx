@@ -43,6 +43,8 @@ const Disks: React.FC<CombinedProps> = props => {
 
   const classes = useStyles();
 
+  let mounted = false;
+
   const { lastUpdatedError, clientLastUpdated, clientAPIKey } = props;
 
   const setStartAndEnd = (_start: number, _end: number) => {
@@ -51,6 +53,7 @@ const Disks: React.FC<CombinedProps> = props => {
   };
 
   React.useEffect(() => {
+    mounted = true;
     if (clientLastUpdated && start && end) {
       if (!diskStats) {
         setLoading(true);
@@ -64,17 +67,27 @@ const Disks: React.FC<CombinedProps> = props => {
         end
       })
         .then(r => {
-          setLoading(false);
-          updateDiskStats((r || {}).Disk);
-          updateSysInfoType(pathOr('', ['SysInfo', 'type'], r));
+          if (mounted) {
+            setLoading(false);
+            updateDiskStats((r || {}).Disk);
+            updateSysInfoType(pathOr('', ['SysInfo', 'type'], r));
+          }
         })
         .catch(e => {
-          setLoading(false);
-          if (!diskStats) {
-            setError('There was an error fetching statistics for your Disks.');
+          if (mounted) {
+            setLoading(false);
+            if (!diskStats) {
+              setError(
+                'There was an error fetching statistics for your Disks.'
+              );
+            }
           }
         });
     }
+
+    return () => {
+      mounted = false;
+    };
   }, [clientLastUpdated, start, end]);
 
   const renderContent = () => {
@@ -92,12 +105,6 @@ const Disks: React.FC<CombinedProps> = props => {
       alphabetically now
     */
     const sortedKeys = Object.keys(diskStats || {}).sort();
-
-    /*
-      Longview doesn't return the Disk stats in any particular order, so sort them
-      alphabetically now
-    */
-    const sortedKeys = Object.keys(pathOr({}, ['Disk'], diskStats)).sort();
 
     return sortedKeys.map(eachKey => (
       <DiskPaper
