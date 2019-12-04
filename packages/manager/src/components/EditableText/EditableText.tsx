@@ -14,7 +14,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import { TextFieldProps } from 'src/components/core/TextField';
-import Typography from 'src/components/core/Typography';
+import H1Header from 'src/components/H1Header';
 import TextField from '../TextField';
 
 type ClassNames =
@@ -222,15 +222,7 @@ const EditableText: React.FC<FinalProps> = props => {
     }
   };
   const labelText = (
-    <Typography
-      className={classes.root}
-      ref={h1Header}
-      tabIndex={-1}
-      variant="h1"
-      data-qa-editable-text
-    >
-      {text}
-    </Typography>
+    <H1Header title={text} className={classes.root} data-qa-editable-text />
   );
 
   return !isEditing && !errorText ? (

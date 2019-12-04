@@ -2,9 +2,9 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
-
 import Typography from 'src/components/core/Typography';
 import EditableText from 'src/components/EditableText';
+import H1Header from 'src/components/H1Header';
 import { EditableProps, LabelProps } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -54,14 +54,7 @@ type CombinedProps = Props;
 
 const FinalCrumb: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const h1Header = React.useRef<HTMLDivElement>(null);
   const { crumb, labelOptions, onEditHandlers } = props;
-
-  React.useEffect(() => {
-    if (h1Header.current !== null) {
-      h1Header.current.focus();
-    }
-  }, []);
 
   if (onEditHandlers) {
     return (
@@ -81,18 +74,14 @@ const FinalCrumb: React.FC<CombinedProps> = props => {
   return (
     <React.Fragment>
       <div className={classes.labelWrapper}>
-        <Typography
-          variant="h1"
+        <H1Header
+          title={crumb}
           className={classNames({
             [classes.crumb]: true,
             [classes.noCap]: labelOptions && labelOptions.noCap
           })}
           data-qa-label-text
-          tabIndex={-1}
-          ref={h1Header}
-        >
-          {crumb}
-        </Typography>
+        />
         {labelOptions && labelOptions.subtitle && (
           <Typography variant="body1" data-qa-label-subtitle>
             {labelOptions.subtitle}
