@@ -52,3 +52,18 @@ See [this document](./TESTING.md)
 Please see our [contributing](./CONTRIBUTING.md) and [code conventions](./CODE_CONVENTIONS.md) guides for instructions on how to get started with contributing to this project.
 
 
+## Just serving the built app
+### legacy solution
+You can use the command `yarn docker:local` which will build a container based on the `Dockerfile` and starts the manager server. *this operation is slow*
+
+### Better solution
+Although, you can also do it with a small nginx container.
+You probably already have done this.
+```bash
+yarn install:all
+yarn build
+```
+Just start a small nginx container
+```bash
+yarn start:nginx
+```
