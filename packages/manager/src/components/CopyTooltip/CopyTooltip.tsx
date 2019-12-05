@@ -13,6 +13,7 @@ interface Props {
   text: string;
   className?: string;
   standAlone?: boolean;
+  ariaLabel?: string;
 }
 
 interface State {
@@ -91,12 +92,12 @@ class CopyTooltip extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, text, className, standAlone } = this.props;
+    const { classes, text, className, standAlone, ariaLabel } = this.props;
     const { copied } = this.state;
 
     return (
       <button
-        aria-label={text}
+        aria-label={ariaLabel ? ariaLabel : text}
         name={text}
         type="button"
         onClick={this.clickIcon}
