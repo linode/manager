@@ -64,6 +64,7 @@ export const EventRow: React.StatelessComponent<CombinedProps> = props => {
     status: pathOr(undefined, ['status'], entity),
     type,
     entityId,
+    duration: event.duration,
     username: event.username,
     action: event.action,
     classes
@@ -81,6 +82,7 @@ export interface RowProps extends WithStyles<ClassNames> {
   action: EventAction;
   created: string;
   username: string | null;
+  duration: Event['duration'];
 }
 
 export const Row: React.StatelessComponent<RowProps> = props => {
@@ -93,7 +95,8 @@ export const Row: React.StatelessComponent<RowProps> = props => {
     status,
     type,
     created,
-    username
+    username,
+    duration
   } = props;
 
   /** Some event types may not be handled by our system (or new types
@@ -102,6 +105,21 @@ export const Row: React.StatelessComponent<RowProps> = props => {
   if (!message) {
     return null;
   }
+
+  const displayedMessage = formatEventWithUsername(
+    action,
+    username,
+    message,
+    duration
+  );
+
+  /*
+    gets the capturing groups for duration and the rest of the event message
+  */
+  const durationText = /^(\(took.*\))(.*)$/gim.exec(displayedMessage);
+
+  // @ts-ignore
+  const [_, timeTaken, restOfMessage] = durationText || [];
 
   return (
     <TableRow
@@ -129,7 +147,14 @@ export const Row: React.StatelessComponent<RowProps> = props => {
           data-qa-event-message
           variant="body1"
         >
-          {formatEventWithUsername(action, username, message)}
+          {durationText ? (
+            <React.Fragment>
+              <strong>{timeTaken}</strong>
+              {` ${restOfMessage}`}
+            </React.Fragment>
+          ) : (
+            displayedMessage
+          )}
         </Typography>
       </TableCell>
       <TableCell parentColumn={'Time'} data-qa-event-created-cell compact>

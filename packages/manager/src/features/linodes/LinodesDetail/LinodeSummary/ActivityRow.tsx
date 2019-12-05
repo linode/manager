@@ -39,6 +39,21 @@ export const ActivityRow: React.StatelessComponent<CombinedProps> = props => {
     return null;
   }
 
+  const displayedMessage = formatEventWithUsername(
+    event.action,
+    event.username,
+    message,
+    event.duration
+  );
+
+  /*
+    gets the capturing groups for duration and the rest of the message
+  */
+  const durationText = /^(\(took.*\))(.*)$/gim.exec(displayedMessage);
+
+  // @ts-ignore
+  const [_, timeTaken, restOfMessage] = durationText || [];
+
   return (
     <Grid
       className={classes.root}
@@ -50,7 +65,14 @@ export const ActivityRow: React.StatelessComponent<CombinedProps> = props => {
     >
       <Grid item>
         <Typography>
-          {formatEventWithUsername(event.action, event.username, message)}
+          {durationText ? (
+            <React.Fragment>
+              <strong>{timeTaken}</strong>
+              {` ${restOfMessage}`}
+            </React.Fragment>
+          ) : (
+            displayedMessage
+          )}
         </Typography>
       </Grid>
       <Grid item>

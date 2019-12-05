@@ -112,7 +112,8 @@ describe('event.helpers', () => {
             type: 'linode',
             url: '/v4/linode/instances/11440645'
           },
-          status: 'finished'
+          status: 'finished',
+          duration: 0
         },
         {
           id: 17957108,
@@ -131,7 +132,8 @@ describe('event.helpers', () => {
             type: 'linode',
             url: '/v4/linode/instances/11440645'
           },
-          status: 'finished'
+          status: 'finished',
+          duration: 0
         }
       ];
 
@@ -154,7 +156,8 @@ describe('event.helpers', () => {
             url: '/v4/linode/instances/11440645'
           },
           status: 'finished',
-          _deleted: '2018-12-02T23:15:45'
+          _deleted: '2018-12-02T23:15:45',
+          duration: 0
         },
         {
           id: 17957108,
@@ -174,7 +177,8 @@ describe('event.helpers', () => {
             url: '/v4/linode/instances/11440645'
           },
           status: 'finished',
-          _deleted: '2018-12-02T23:15:45'
+          _deleted: '2018-12-02T23:15:45',
+          duration: 0
         }
       ];
 
@@ -198,7 +202,8 @@ describe('event.helpers', () => {
           username: 'test',
           rate: null,
           entity: null,
-          status: 'finished'
+          status: 'finished',
+          duration: 0
         },
         {
           id: 17957718,
@@ -212,7 +217,8 @@ describe('event.helpers', () => {
           username: 'test',
           rate: null,
           entity: null,
-          status: 'started'
+          status: 'started',
+          duration: 0
         },
         {
           id: 17957108,
@@ -226,7 +232,8 @@ describe('event.helpers', () => {
           username: 'test',
           rate: null,
           entity: null,
-          status: 'finished'
+          status: 'finished',
+          duration: 0
         }
       ];
       const events: Event[] = [
@@ -242,7 +249,8 @@ describe('event.helpers', () => {
           username: 'test',
           rate: null,
           entity: null,
-          status: 'started'
+          status: 'started',
+          duration: 0
         }
       ];
       const result = addToEvents(prevEvents, events);

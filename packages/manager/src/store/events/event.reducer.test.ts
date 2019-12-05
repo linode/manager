@@ -33,7 +33,8 @@ describe('events.reducer', () => {
               type: 'linode',
               url: '/v4/linode/instances/11241778'
             },
-            status: 'finished'
+            status: 'finished',
+            duration: 0
           },
           {
             id: 18022171,
@@ -52,7 +53,8 @@ describe('events.reducer', () => {
               type: 'linode',
               url: '/v4/linode/instances/11642886'
             },
-            status: 'started'
+            status: 'started',
+            duration: 0
           }
         ];
         const action = addEvents(events);
