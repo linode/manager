@@ -1,9 +1,10 @@
-import { Stat } from '../request.types';
+import { CPU, Stat } from '../request.types';
 import {
   generateTotalMemory,
   generateUsedMemory,
   statAverage,
-  statMax
+  statMax,
+  sumCPU
 } from './utilities';
 
 const generateStats = (yValues: number[]): Stat[] => {
@@ -58,6 +59,77 @@ describe('Utility Functions', () => {
 
     it('handles empty input', () => {
       expect(statMax()).toBe(0);
+    });
+  });
+
+  describe('sumCPU', () => {
+    const mockCPU: CPU = {
+      system: generateStats([1]),
+      user: generateStats([2]),
+      wait: generateStats([3])
+    };
+
+    it('sums `system`, `user`, and `wait` stats (Y values) for each CPU', () => {
+      const mockData: Record<string, CPU> = {
+        cpu0: mockCPU,
+        cpu1: mockCPU,
+        cpu2: mockCPU
+      };
+      const result = sumCPU(mockData);
+
+      expect(result.system[0].y).toBe(3);
+      expect(result.user[0].y).toBe(6);
+      expect(result.wait[0].y).toBe(9);
+    });
+
+    it('returns stats untouched if there is only one CPU', () => {
+      const mockData: Record<string, CPU> = { cpu0: mockCPU };
+      const result = sumCPU(mockData);
+
+      expect(result.system[0].y).toBe(1);
+      expect(result.user[0].y).toBe(2);
+      expect(result.wait[0].y).toBe(3);
+    });
+
+    it('leaves X values untouched', () => {
+      const mockStats = [{ x: 100, y: 1 }];
+      const mockData: Record<string, CPU> = {
+        cpu0: {
+          system: mockStats,
+          user: mockStats,
+          wait: mockStats
+        }
+      };
+      const result = sumCPU(mockData);
+
+      expect(result.system[0].x).toBe(100);
+      expect(result.user[0].x).toBe(100);
+      expect(result.wait[0].x).toBe(100);
+    });
+
+    it('works if stat arrays are of different lengths', () => {
+      const mockData: Record<string, CPU> = {
+        cpu0: {
+          system: [{ x: 0, y: 1 }, { x: 0, y: 1 }],
+          user: [],
+          wait: []
+        },
+        cpu1: mockCPU
+      };
+      const result = sumCPU(mockData);
+      expect(result.system).toHaveLength(2);
+      expect(result.system[0].y).toBe(2);
+      expect(result.user).toHaveLength(1);
+      expect(result.wait).toHaveLength(1);
+    });
+
+    it('gracefully fails when given malformed data', () => {
+      const emptyCPU = { system: [], user: [], wait: [] };
+
+      expect(sumCPU({} as any)).toEqual(emptyCPU);
+      expect(sumCPU([] as any)).toEqual(emptyCPU);
+      expect(sumCPU(null as any)).toEqual(emptyCPU);
+      expect(sumCPU(undefined as any)).toEqual(emptyCPU);
     });
   });
 });

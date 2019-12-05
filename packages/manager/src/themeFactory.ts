@@ -239,7 +239,13 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       salmon: 'rgba(255, 99, 61, 0.7)',
       salmonBorder: '#ff3a0a',
       pinkBorder: '#d5626d',
-      pink: 'rgba(224, 138, 146, 0.7)'
+      pink: 'rgba(224, 138, 146, 0.7)',
+      deepBlue: '#9CC6F4',
+      deepBlueBorder: '#3595f3',
+      skyBlue: '#8CBDF3',
+      skyBlueBorder: '#72AEF',
+      lightBlue: '#B5D5EF',
+      lightBlueBorder: '#A2C2EA'
     },
     font: {
       normal: primaryFonts.normal,

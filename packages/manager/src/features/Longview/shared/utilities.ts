@@ -3,6 +3,7 @@ import { LVClientData } from 'src/containers/longview.stats.container';
 import { pluralize } from 'src/utilities/pluralize';
 import { readableBytes } from 'src/utilities/unitConversions';
 import {
+  CPU,
   Disk,
   LongviewPackage,
   Stat,
@@ -46,6 +47,57 @@ export const sumStorage = (DiskData: Record<string, Disk> = {}): Storage => {
     total += pathOr(0, ['fs', 'total', 0, 'y'], disk);
   });
   return { free, total };
+};
+
+export const sumCPU = (CPUData: Record<string, CPU> = {}): CPU<'yAsNull'> => {
+  const result: CPU<'yAsNull'> = {
+    system: [],
+    user: [],
+    wait: []
+  };
+
+  // Protect against malformed data.
+  if (!CPUData || typeof CPUData !== 'object') {
+    return result;
+  }
+
+  // Iterate through each CPU and compile stats.
+  Object.values(CPUData).forEach(thisCPU => {
+    result.system = appendStats(result.system, thisCPU.system);
+    result.user = appendStats(result.user, thisCPU.user);
+    result.wait = appendStats(result.wait, thisCPU.wait);
+  });
+
+  return result;
+};
+
+/**
+ * Takes in two Stat arrays and adds the Y values.
+ *
+ * @param prevStats
+ * @param newStats
+ */
+const appendStats = (
+  prevStats: StatWithDummyPoint[],
+  newStats: StatWithDummyPoint[]
+) => {
+  return newStats.reduce(
+    (acc, { x, y }, idx) => {
+      const existing = acc[idx];
+
+      // If the point doesn't exist yet, create it.
+      if (!existing) {
+        acc[idx] = { x, y };
+      }
+
+      // A bit of null checking here is necessary here.
+      else if (existing.y && y) {
+        existing.y! += y;
+      }
+      return acc;
+    },
+    [...prevStats]
+  );
 };
 
 export const generateUsedMemory = (

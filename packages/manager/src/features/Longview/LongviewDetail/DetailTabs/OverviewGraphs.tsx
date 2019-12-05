@@ -1,6 +1,5 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
-
 import Paper from 'src/components/core/Paper';
 import {
   makeStyles,
@@ -17,7 +16,7 @@ import { StatWithDummyPoint } from '../../request.types';
 import { maybeAddDataPointInThePast } from '../../shared/formatters';
 import TimeRangeSelect from '../../shared/TimeRangeSelect';
 import { useClientLastUpdated } from '../../shared/useClientLastUpdated';
-import { generateUsedMemory, statMax } from '../../shared/utilities';
+import { generateUsedMemory, statMax, sumCPU } from '../../shared/utilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paperSection: {
@@ -67,6 +66,15 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
     setTimeBox({ start, end });
     request(start, end);
   };
+
+  const cpuData = React.useMemo(() => {
+    const summedCPUData = sumCPU(data.CPU);
+    return maybeAddDataPointInThePast(summedCPUData, time.start, [
+      ['system'],
+      ['user'],
+      ['wait']
+    ]);
+  }, [data.CPU]);
 
   const _convertData = React.useCallback(convertData, [
     data,
@@ -148,7 +156,26 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
                 subtitle="%"
                 showToday={isToday}
                 timezone={timezone}
-                data={[]}
+                data={[
+                  {
+                    label: 'User',
+                    borderColor: theme.graphs.skyBlueBorder,
+                    backgroundColor: theme.graphs.skyBlue,
+                    data: _convertData(cpuData.user, formatCPU)
+                  },
+                  {
+                    label: 'Wait',
+                    borderColor: theme.graphs.lightBlueBorder,
+                    backgroundColor: theme.graphs.lightBlue,
+                    data: _convertData(cpuData.wait, formatCPU)
+                  },
+                  {
+                    label: 'System',
+                    borderColor: theme.graphs.deepBlueBorder,
+                    backgroundColor: theme.graphs.deepBlue,
+                    data: _convertData(cpuData.system, formatCPU)
+                  }
+                ]}
               />
             </Grid>
             <Grid item xs={6}>
@@ -275,6 +302,14 @@ export const formatMemory = (value: number | null) => {
   }
   // x1024 bc the API returns data in KB
   return readableBytes(value * 1024).value;
+};
+
+const formatCPU = (value: number | null) => {
+  if (value === null) {
+    return value;
+  }
+
+  return Math.round(value * 100) / 100;
 };
 
 export const convertData = (
