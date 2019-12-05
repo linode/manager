@@ -258,7 +258,7 @@ const IconSection: React.FC<Props> = props => {
               SideIcon={PackageIcon}
               text={packagesToUpdate}
               title={packagesToUpdate}
-              onClick={() => props.openPackageDrawer()}
+              onClick={props.openPackageDrawer}
             >
               {packagesToUpdate}
             </IconTextLink>
