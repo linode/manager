@@ -152,6 +152,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
         ? this.props.value
         : ''
   };
+
   shouldComponentUpdate(nextProps: CombinedProps, nextState: State) {
     return (
       nextProps.value !== this.props.value ||
@@ -387,6 +388,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
                 editable ? classes.editable : ''
               }`}
               data-qa-textfield-error-text={this.props.label}
+              role="alert"
             >
               {errorText}
             </FormHelperText>
