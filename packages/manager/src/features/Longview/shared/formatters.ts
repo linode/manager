@@ -1,6 +1,6 @@
 import { clone, pathOr } from 'ramda';
 
-import { Stat } from '../request.types';
+import { Stat, StatWithDummyPoint } from '../request.types';
 
 // This formatting is from Classic
 export const formatCPU = (n: number) => {
@@ -59,7 +59,7 @@ export const formatCPU = (n: number) => {
  *
  * @example
  *
- * maybeAddDataPointInThePast<LongviewCPU>(
+ * pathMaybeAddDataInThePast<LongviewCPU>(
  *    { CPU: { cpu1: { user: [{x: 123, y: 123}], wait: [], system: [] } } },
  *    1572357700,
  *    [
@@ -69,7 +69,7 @@ export const formatCPU = (n: number) => {
  *    ]
  * )
  */
-export const maybeAddDataPointInThePast = <T extends {}>(
+export const pathMaybeAddDataInThePast = <T extends {}>(
   data: T,
   selectedStartTimeInSeconds: number,
   pathsToAddDataPointTo: (string | number)[][]
@@ -82,13 +82,31 @@ export const maybeAddDataPointInThePast = <T extends {}>(
   */
   pathsToAddDataPointTo.forEach(eachPath => {
     const arrayOfStats = pathOr<Stat[]>([], eachPath, _data);
-
-    if (
-      pathOr(0, [0, 'x'], arrayOfStats) - selectedStartTimeInSeconds >
-      60 * 5
-    ) {
-      arrayOfStats.unshift({ x: selectedStartTimeInSeconds, y: null });
-    }
+    maybeAddPastData(arrayOfStats, selectedStartTimeInSeconds);
   });
   return _data;
 };
+
+export const maybeAddPastData = (
+  arrayOfStats: Stat[],
+  startTime: number
+): StatWithDummyPoint[] => {
+  const _data = clone(arrayOfStats) as StatWithDummyPoint[];
+  if (pathOr(0, [0, 'x'], arrayOfStats) - startTime > 60 * 5) {
+    _data.unshift({ x: startTime, y: null });
+  }
+  return _data;
+};
+
+export const convertData = (
+  d: Stat[],
+  startTime: number,
+  formatter?: (pt: number | null) => number | null
+) =>
+  maybeAddPastData(d, startTime).map(
+    thisPoint =>
+      [
+        thisPoint.x * 1000,
+        formatter ? formatter(thisPoint.y) : thisPoint.y
+      ] as [number, number | null]
+  );
