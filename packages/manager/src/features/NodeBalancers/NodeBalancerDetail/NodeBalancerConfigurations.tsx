@@ -221,32 +221,30 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           }
         }
     */
-    const nodePathErrors =
-      errors &&
-      errors.reduce((acc: any, error: APIError) => {
-        /**
-         * Regex conditions are as follows:
-         *
-         * must match "nodes["
-         * must have a digit 0-9
-         * then have "]"
-         * must end with ".anywordhere"
-         */
-        const match = /^nodes\[(\d+)\].(\w+)$/.exec(error.field!);
-        if (match && match[1] && match[2]) {
-          return [
-            ...acc,
-            {
-              path: [+match[1], 'errors'],
-              error: {
-                field: match[2],
-                reason: error.reason
-              }
+    const nodePathErrors = errors.reduce((acc: any, error: APIError) => {
+      /**
+       * Regex conditions are as follows:
+       *
+       * must match "nodes["
+       * must have a digit 0-9
+       * then have "]"
+       * must end with ".anywordhere"
+       */
+      const match = /^nodes\[(\d+)\].(\w+)$/.exec(error.field!);
+      if (match && match[1] && match[2]) {
+        return [
+          ...acc,
+          {
+            path: [+match[1], 'errors'],
+            error: {
+              field: match[2],
+              reason: error.reason
             }
-          ];
-        }
-        return acc;
-      }, []);
+          }
+        ];
+      }
+      return acc;
+    }, []);
     return nodePathErrors;
   };
 
@@ -1131,9 +1129,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           title={
             typeof this.state.deleteConfigConfirmDialog.portToDelete !==
             'undefined'
-              ? `Delete this configuration on port ${
-                  this.state.deleteConfigConfirmDialog.portToDelete
-                }?`
+              ? `Delete this configuration on port ${this.state.deleteConfigConfirmDialog.portToDelete}?`
               : 'Delete this configuration?'
           }
           error={this.confirmationConfigError()}
