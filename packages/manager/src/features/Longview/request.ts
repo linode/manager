@@ -1,7 +1,6 @@
 import Axios, { AxiosResponse } from 'axios';
 import { curry, pathOr } from 'ramda';
 import { LONGVIEW_ROOT } from 'src/constants';
-
 import {
   LastUpdated,
   LongviewCPU,
@@ -11,6 +10,7 @@ import {
   LongviewNetwork,
   LongviewPackages,
   LongviewPortsResponse,
+  LongviewProcesses,
   LongviewSystemInfo,
   LongviewTopProcesses,
   Uptime
@@ -120,6 +120,11 @@ interface Get {
   (
     token: string,
     action: 'getValues',
+    options: { fields: 'processes'[] }
+  ): Promise<LongviewProcesses>;
+  (
+    token: string,
+    action: 'getValues',
     options: {
       fields: 'cpu'[];
     } & Partial<WithStartAndEnd>
@@ -170,6 +175,7 @@ export type LongviewFieldName =
   | 'network'
   | 'disk'
   | 'packages'
+  | 'processes'
   | 'listeningServices'
   | 'activeConnections';
 
@@ -182,6 +188,7 @@ export const fieldNames: Record<LongviewFieldName, string> = {
   disk: 'Disk.*',
   sysinfo: 'SysInfo.*',
   packages: 'Packages',
+  processes: 'Processes.*',
   listeningServices: 'Ports.listening',
   activeConnections: 'Ports.active'
 };
