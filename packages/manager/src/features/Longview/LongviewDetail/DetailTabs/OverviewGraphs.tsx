@@ -26,11 +26,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   clientAPIKey: string;
+  timezone: string;
 }
 export type CombinedProps = Props & WithTheme;
 
 export const OverviewGraphs: React.FC<CombinedProps> = props => {
-  const { clientAPIKey, theme } = props;
+  const { clientAPIKey, theme, timezone } = props;
   const classes = useStyles();
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
     start: 0,
@@ -108,7 +109,7 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
                 title="CPU"
                 subtitle="%"
                 showToday={isToday}
-                timezone="GMT"
+                timezone={timezone}
                 data={[]}
               />
             </Grid>
@@ -117,7 +118,7 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
                 title="Memory"
                 subtitle="GB"
                 showToday={isToday}
-                timezone="GMT"
+                timezone={timezone}
                 data={[
                   {
                     label: 'Used',
@@ -159,7 +160,7 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
                 title="Network"
                 subtitle="KB/s"
                 showToday={isToday}
-                timezone="GMT"
+                timezone={timezone}
                 data={[]}
               />
             </Grid>
@@ -168,7 +169,7 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
                 title="Disk I/O"
                 subtitle="ops/s"
                 showToday={isToday}
-                timezone="GMT"
+                timezone={timezone}
                 data={[]}
               />
             </Grid>
@@ -177,7 +178,7 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
                 title="Load"
                 subtitle="Target < 1.00"
                 showToday={isToday}
-                timezone="GMT"
+                timezone={timezone}
                 data={[
                   {
                     label: 'Load',

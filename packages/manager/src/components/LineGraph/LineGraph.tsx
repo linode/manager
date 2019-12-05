@@ -119,7 +119,7 @@ class LineGraph extends React.Component<CombinedProps, {}> {
     if (showToday) {
       finalChartOptions.scales.xAxes[0].time.displayFormats = {
         hour: 'HH:00',
-        minute: 'HH:00'
+        minute: 'hh:mm'
       };
     } else {
       finalChartOptions.scales.xAxes[0].time.displayFormats = {
