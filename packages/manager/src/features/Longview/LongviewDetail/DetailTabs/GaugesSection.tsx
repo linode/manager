@@ -14,7 +14,7 @@ import SwapGauge from '../../LongviewLanding/Gauges/Swap';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gaugeContainer: {
-    marginBottom: theme.spacing(5)
+    marginBottom: theme.spacing(5) + 8
   },
   gaugesOuter: {
     [theme.breakpoints.down('md')]: {

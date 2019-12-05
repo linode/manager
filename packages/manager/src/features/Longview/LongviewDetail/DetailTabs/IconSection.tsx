@@ -10,6 +10,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import IconTextLink from 'src/components/IconTextLink';
+import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
 import { formatUptime } from 'src/utilities/formatUptime';
 import { readableBytes } from 'src/utilities/unitConversions';
 
@@ -40,9 +41,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   packageButton: {
-    marginLeft: -theme.spacing(3) / 2,
     fontSize: '0.875rem',
-    padding: `0 ${theme.spacing(1) + 8}px`,
+    padding: 0,
+    '& svg': {
+      marginRight: 15
+    },
     '& g': {
       stroke: theme.palette.primary.main
     }
@@ -56,15 +59,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   iconItem: {
     alignSelf: 'center',
-    marginLeft: -8,
+    marginLeft: theme.spacing() === COMPACT_SPACING_UNIT ? -theme.spacing() : 0,
     '& svg': {
       display: 'block',
       margin: '0 auto'
     }
   },
   iconItemLast: {
-    alignSelf: 'center',
-    marginLeft: -8
+    alignSelf: 'center'
   }
 }));
 
@@ -225,7 +227,7 @@ const IconSection: React.FC<Props> = props => {
             </Typography>
           </Grid>
         ) : (
-          <Grid item>
+          <Grid item xs={10}>
             <Typography>RAM information not available</Typography>
           </Grid>
         )}
@@ -267,8 +269,8 @@ const IconSection: React.FC<Props> = props => {
         alignItems="center"
         className={classes.iconSection}
       >
-        <Grid item xs={2} sm={1} md={2} className={classes.iconItemLast}>
-          {packages && packages.length > 0 ? (
+        {packages && packages.length > 0 ? (
+          <Grid item xs={2} sm={1} md={2} className={classes.iconItemLast}>
             <IconTextLink
               className={classes.packageButton}
               SideIcon={PackageIcon}
@@ -278,13 +280,23 @@ const IconSection: React.FC<Props> = props => {
             >
               {packagesToUpdate}
             </IconTextLink>
-          ) : (
-            <div className={classes.packageStaticOuter}>
+          </Grid>
+        ) : (
+          <Grid
+            container
+            item
+            wrap="nowrap"
+            alignItems="center"
+            className={classes.packageStaticOuter}
+          >
+            <Grid item xs={2} sm={1} md={2} className={classes.iconItem}>
               <PackageIcon className={classes.packageStaticIcon} />
+            </Grid>
+            <Grid item xs={10}>
               <Typography>{packagesToUpdate}</Typography>
-            </div>
-          )}
-        </Grid>
+            </Grid>
+          </Grid>
+        )}
       </Grid>
     </Grid>
   );
