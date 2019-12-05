@@ -20,7 +20,7 @@ export interface DataSet {
 
 export interface Props {
   chartHeight?: number;
-  showToday: boolean;
+  showToday?: boolean;
   suggestedMax?: number;
   data: DataSet[];
   timezone: string;

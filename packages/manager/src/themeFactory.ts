@@ -226,14 +226,18 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       blueBorder: '#3F99F0',
       green: '#5BD765',
       greenBorder: '#18B523',
-      orange: '#FFB24C',
-      orangeBorder: '#BC710B',
+      orange: 'rgba(255, 179, 77, 0.7)',
+      orangeBorder: '#ff9d1a',
       purple: '#E6A5E6',
       purpleBorder: '#CC75CC',
       red: '#FF633C',
       redBorder: '#F13A0A',
       yellow: '#FFDC7D',
-      yellowBorder: '#DCB64E'
+      yellowBorder: '#DCB64E',
+      salmon: 'rgba(255, 99, 61, 0.7)',
+      salmonBorder: '#ff3a0a',
+      pinkBorder: '#d5626d',
+      pink: 'rgba(224, 138, 146, 0.7)'
     },
     font: {
       normal: primaryFonts.normal,
