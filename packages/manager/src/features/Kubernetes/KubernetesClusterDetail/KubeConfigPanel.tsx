@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import { getKubeConfig } from 'linode-js-sdk/lib/kubernetes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
@@ -11,26 +12,42 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
+  WithTheme
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { reportException } from 'src/exceptionReporting';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
 import KubeConfigDrawer from './KubeConfigDrawer';
 
-type ClassNames = 'root' | 'item' | 'button' | 'icon' | 'buttonSecondary';
+type ClassNames =
+  | 'root'
+  | 'item'
+  | 'button'
+  | 'icon'
+  | 'buttonSecondary'
+  | 'rootCompact';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
       padding: `${theme.spacing(3) + 5}px ${theme.spacing(3) +
-        1}px ${theme.spacing(2) - 3}px`
+        1}px ${theme.spacing(2) - 3}px`,
+      [theme.breakpoints.up('md')]: {
+        marginTop: 66
+      }
+    },
+    rootCompact: {
+      [theme.breakpoints.up('md')]: {
+        marginTop: 42
+      }
     },
     item: {
       paddingBottom: theme.spacing(2),
-      [theme.breakpoints.up('lg')]: {
+      [theme.breakpoints.up('xl')]: {
         display: 'flex',
         flexFlow: 'row nowrap'
       }
@@ -41,14 +58,14 @@ const styles = (theme: Theme) =>
       fontSize: '0.9rem',
       marginRight: 12,
       minWidth: 124,
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('lg')]: {
         marginBottom: theme.spacing(2),
         marginRight: 0
       }
     },
     buttonSecondary: {
       minWidth: 88,
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('lg')]: {
         marginBottom: 0,
         marginRight: 0
       }
@@ -63,14 +80,19 @@ interface Props {
   clusterLabel: string;
 }
 
-export type CombinedProps = Props & WithStyles<ClassNames> & WithSnackbarProps;
+export type CombinedProps = Props &
+  WithStyles<ClassNames> &
+  WithSnackbarProps &
+  WithTheme;
 
 export const KubeConfigPanel: React.FC<CombinedProps> = props => {
-  const { classes, clusterID, clusterLabel, enqueueSnackbar } = props;
+  const { classes, clusterID, clusterLabel, enqueueSnackbar, theme } = props;
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
   const [drawerError, setDrawerError] = React.useState<boolean>(false);
   const [drawerLoading, setDrawerLoading] = React.useState<boolean>(false);
   const [kubeConfig, setKubeConfig] = React.useState<string>('');
+  const spacingMode =
+    theme.spacing() === COMPACT_SPACING_UNIT ? 'compact' : 'normal';
 
   const fetchKubeConfig = () => {
     return getKubeConfig(clusterID).then(response => {
@@ -130,7 +152,12 @@ export const KubeConfigPanel: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      <Paper className={classes.root}>
+      <Paper
+        className={classNames({
+          [classes.root]: true,
+          [classes.rootCompact]: spacingMode === 'compact'
+        })}
+      >
         <Paper className={classes.item}>
           <Typography variant="h2">Kubeconfig</Typography>
         </Paper>
@@ -165,7 +192,7 @@ export const KubeConfigPanel: React.FC<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
+const styled = withStyles(styles, { withTheme: true });
 const enhanced = compose<CombinedProps, Props>(
   styled,
   withSnackbar

@@ -9,6 +9,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import ExternalLink from 'src/components/ExternalLink';
 
 type ClassNames =
   | 'root'
@@ -33,8 +34,6 @@ const styles = (theme: Theme) =>
       padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`
     },
     moreResults: {
-      fontSize: '1rem',
-      fontWeight: 'bold',
       marginTop: theme.spacing(2)
     },
     icon: {
@@ -50,7 +49,8 @@ const styles = (theme: Theme) =>
       color: '#3683DC'
     },
     link: {
-      display: 'inline-block'
+      marginTop: theme.spacing(2),
+      fontFamily: theme.font.bold
     },
     searchItem: {
       position: 'initial',
@@ -88,7 +88,7 @@ const DocumentationResults: React.StatelessComponent<CombinedProps> = props => {
         role="menuitem"
         component="a"
         onClick={() => window.open(result.data.href, '_newtab')}
-        tabIndex={1}
+        tabIndex={0}
       >
         <Typography
           variant="body1"
@@ -113,7 +113,7 @@ const DocumentationResults: React.StatelessComponent<CombinedProps> = props => {
   return (
     <div className={classes.root}>
       <Typography
-        variant="h1"
+        variant="h2"
         className={classes.header}
         data-qa-results={sectionTitle}
       >
@@ -124,15 +124,12 @@ const DocumentationResults: React.StatelessComponent<CombinedProps> = props => {
           {results.length > 0 ? renderResults() : renderEmptyState()}
         </nav>
       </Paper>
-      <Typography variant="body2" className={classes.moreResults}>
-        <a
-          href={target}
-          className={classes.link}
-          data-qa-view-more={sectionTitle}
-        >
-          View more {sectionTitle}
-        </a>
-      </Typography>
+      <ExternalLink
+        link={target}
+        text={`View more ${sectionTitle}`}
+        data-qa-view-more={sectionTitle}
+        className={classes.link}
+      />
     </div>
   );
 };

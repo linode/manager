@@ -19,7 +19,7 @@ import withTypes from 'src/containers/types.container';
 import withFlags, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container';
-import withImages from 'src/containers/withImages.container';
+import withImages, { WithImages } from 'src/containers/withImages.container';
 import withLinodes from 'src/containers/withLinodes.container';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import {
@@ -27,7 +27,7 @@ import {
   withLinodeActions
 } from 'src/store/linodes/linode.containers';
 
-import Typography from 'src/components/core/Typography';
+import Breadcrumb from 'src/components/Breadcrumb';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { Tag } from 'src/components/TagsInput';
@@ -53,13 +53,12 @@ import {
   ReduxStateProps,
   ReduxStatePropsAndSSHKeys,
   TypeInfo,
-  WithImagesProps,
   WithLinodesProps,
   WithRegionsProps,
   WithTypesProps
 } from './types';
 
-import { resetEventsPolling } from 'src/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import {
   baseApps,
   getOneClickApps
@@ -101,7 +100,7 @@ interface State {
 type CombinedProps = WithSnackbarProps &
   CreateType &
   LinodeActionsProps &
-  WithImagesProps &
+  WithImages &
   WithTypesProps &
   WithLinodesProps &
   WithRegionsProps &
@@ -566,9 +565,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         <DocumentTitleSegment segment="Create a Linode" />
         <Grid container spacing={0}>
           <Grid item xs={12}>
-            <Typography variant="h1" data-qa-create-linode-header>
-              Create New Linode
-            </Typography>
+            <Breadcrumb
+              pathname={'/linodes/create'}
+              labelTitle="Create"
+              data-qa-create-linode-header
+            />
           </Grid>
           <LinodeCreate
             regionDisplayInfo={this.getRegionInfo()}
@@ -644,12 +645,7 @@ export default recompose<CombinedProps, {}>(
       oldProps.location.search !== newProps.location.search,
     true
   ),
-  withImages((ownProps, imagesData, imagesLoading, imagesError) => ({
-    ...ownProps,
-    imagesData,
-    imagesLoading,
-    imagesError
-  })),
+  withImages(),
   withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
     linodesData,
     linodesLoading,

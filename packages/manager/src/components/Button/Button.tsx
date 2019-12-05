@@ -14,10 +14,10 @@ import HelpIcon from 'src/components/HelpIcon';
 type ClassNames =
   | 'root'
   | 'loading'
+  | 'loadingText'
   | 'destructive'
   | 'compact'
   | 'superCompact'
-  | 'hidden'
   | 'reg';
 
 export interface Props extends ButtonProps {
@@ -29,6 +29,7 @@ export interface Props extends ButtonProps {
   compact?: boolean;
   deleteText?: string;
   superCompact?: boolean;
+  loadingText?: string;
 }
 
 const styles = (theme: Theme) =>
@@ -42,6 +43,9 @@ const styles = (theme: Theme) =>
       }
     },
     root: {
+      minWidth: '105px',
+      paddingLeft: theme.spacing(3) + 4,
+      paddingRight: theme.spacing(3) + 4,
       '&.cancel': {
         border: `1px solid transparent`,
         transition: theme.transitions.create(['color', 'border-color']),
@@ -64,16 +68,14 @@ const styles = (theme: Theme) =>
     },
     loading: {
       '& svg': {
-        position: 'absolute',
-        left: 0,
-        top: -3,
-        right: 0,
-        bottom: 0,
         margin: '0 auto',
-        width: theme.spacing(1) + 14,
-        height: theme.spacing(1) + 14,
+        width: `${theme.spacing(1) + 8}px !important`,
+        height: `${theme.spacing(1) + 8}px !important`,
         animation: '$rotate 2s linear infinite'
       }
+    },
+    loadingText: {
+      marginRight: 8
     },
     destructive: {
       borderColor: '#C44742',
@@ -105,16 +107,14 @@ const styles = (theme: Theme) =>
     },
     compact: {
       paddingLeft: theme.spacing(2) - 2,
-      paddingRight: theme.spacing(2) - 2
+      paddingRight: theme.spacing(2) - 2,
+      minWidth: '75px'
     },
     superCompact: {
       paddingLeft: 0,
       paddingRight: 0,
       paddingTop: theme.spacing(1),
       paddingBottom: theme.spacing(1)
-    },
-    hidden: {
-      visibility: 'hidden'
     },
     reg: {
       display: 'flex',
@@ -150,6 +150,7 @@ const wrappedButton: React.StatelessComponent<CombinedProps> = props => {
     destructive,
     deleteText,
     tooltipText,
+    loadingText,
     buttonType,
     compact,
     superCompact,
@@ -178,14 +179,28 @@ const wrappedButton: React.StatelessComponent<CombinedProps> = props => {
           className
         )}
       >
-        {loading && <Reload />}
         <span
           className={classNames({
-            [classes.hidden]: loading,
-            [classes.reg]: !loading
+            [classes.reg]: true
           })}
         >
-          {props.children}
+          {loading ? (
+            loadingText ? (
+              /* 
+                the recommendation here is to not use loadingText that 
+                will create a large width for the button. Keep
+                your loading text strings short.
+              */
+              <React.Fragment>
+                <span className={classes.loadingText}>{loadingText}</span>
+                <Reload />
+              </React.Fragment>
+            ) : (
+              <Reload />
+            )
+          ) : (
+            props.children
+          )}
         </span>
         {buttonType === 'remove' && (deleteText ? deleteText : 'Remove')}
       </Button>

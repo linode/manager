@@ -46,6 +46,9 @@ class Backups extends Page {
   get cancelDescription() {
     return $('[data-qa-cancel-desc]');
   }
+  get snapshotDialog() {
+    return $('[data-qa-dialog-title="Take a snapshot?"]');
+  }
   get cancelDialogTitle() {
     return $('[data-qa-dialog-title]');
   }
@@ -189,6 +192,8 @@ class Backups extends Page {
     const toastMsg = 'A snapshot is being taken';
     this.manualSnapshotName.$('input').setValue(label);
     this.snapshotButton.click();
+    this.snapshotDialog.waitForDisplayed();
+    $('[data-qa-confirm]').click();
     this.toastDisplays(toastMsg, constants.wait.long);
   }
 
@@ -196,6 +201,7 @@ class Backups extends Page {
     this.takeSnapshot(label);
     this.linearProgress.waitForDisplayed(constants.wait.normal);
     this.linearProgress.waitForDisplayed(constants.wait.minute * 5, true);
+
     browser.waitUntil(() => {
       return $$(this.label.selector).find(backup => backup.getText() === label);
     }, constants.wait.normal);

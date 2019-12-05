@@ -1,4 +1,5 @@
 import { ZoneName } from 'linode-js-sdk/lib/networking';
+import { ObjectStorageClusterID } from 'linode-js-sdk/lib/object-storage';
 
 const PRODUCTION = 'production';
 
@@ -42,7 +43,6 @@ export const LOGIN_SESSION_LIFETIME_MS = 45 * 60 * 1000;
 export const OAUTH_TOKEN_REFRESH_TIMEOUT = LOGIN_SESSION_LIFETIME_MS / 2;
 /** Google Analytics and Tag Manager */
 export const GA_ID = process.env.REACT_APP_GA_ID;
-export const GA_ID_2 = process.env.REACT_APP_GA_ID_2;
 export const GTM_ID = process.env.REACT_APP_GTM_ID;
 /** for hard-coding token used for API Requests. Example: "Bearer 1234" */
 export const ACCESS_TOKEN = process.env.REACT_APP_ACCESS_TOKEN;
@@ -63,6 +63,12 @@ export const DISABLE_EVENT_THROTTLE =
 export const ISO_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
 export const MAX_VOLUME_SIZE = 10240;
+
+/**
+ * The lowest interval at which to make an Events request. This is later multiplied by the pollIteration
+ * to get the actual interval.
+ */
+export const INTERVAL = 1000;
 
 /**
  * Used by e.g. LISH to determine the websocket connection address.
@@ -89,7 +95,8 @@ export const ZONES: Record<string, ZoneName> = {
   'ap-south-1a': 'singapore',
   'ca-central': 'toronto1',
   'ca-east': 'toronto1', // @todo Fallback for old Toronto ID; remove once DB has been updated.
-  'ap-west': 'mumbai1'
+  'ap-west': 'mumbai1',
+  'ap-southeast': 'sydney1'
 };
 
 export const dcDisplayNames = {
@@ -113,7 +120,8 @@ export const dcDisplayNames = {
   'ap-northeast': 'Tokyo 2, JP',
   'ca-central': 'Toronto, ON',
   'ca-east': 'Toronto, ON', // @todo Fallback for old Toronto ID; remove once DB has been updated.
-  'ap-west': 'Mumbai, IN'
+  'ap-west': 'Mumbai, IN',
+  'ap-southeast': 'Sydney, AU'
 };
 
 // @todo no longer in use; remove if current design is approved.
@@ -136,7 +144,8 @@ export const extendedDCDisplayNames = {
   'ap-northeast': 'Asia-Pacific Northeast: Tokyo 2, JP',
   'ca-central': 'Canada: Toronto, ON',
   'ca-east': 'Canada: Toronto, ON',
-  'ap-west': 'Asia-Pacific West: Mumbai, IN'
+  'ap-west': 'Asia-Pacific West: Mumbai, IN',
+  'ap-southeast': 'Asia-Pacific Southeast: Sydney, AU'
 };
 
 export const dcDisplayCountry = {
@@ -158,12 +167,17 @@ export const dcDisplayCountry = {
   'ap-northeast': 'JP',
   'ca-central': 'CA',
   'ca-east': 'CA',
-  'ap-west': 'IN'
+  'ap-west': 'IN',
+  'ap-southeast': 'AU'
 };
 
-export const objectStorageClusterDisplay: Record<Linode.ClusterID, string> = {
+export const objectStorageClusterDisplay: Record<
+  ObjectStorageClusterID | 'philadelphia',
+  string
+> = {
   'us-east-1': 'Newark, NJ',
-  'us-east': 'Newark, NJ'
+  'us-east': 'Newark, NJ',
+  philadelphia: 'Philadelphia, PA'
 };
 
 export type ContinentKey = 'NA' | 'EU' | 'AS';

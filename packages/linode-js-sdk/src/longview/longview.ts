@@ -8,9 +8,9 @@ import Request, {
 } from 'src/request';
 import { ResourcePage } from '../types';
 import { longviewClientCreate } from './longview.schema';
-import { LongviewClient } from './types';
+import { LongviewClient, LongviewSubscription } from './types';
 
-export const createLongviewClient = (label: string) => {
+export const createLongviewClient = (label?: string) => {
   return Request<LongviewClient>(
     setURL(`${API_ROOT}/longview/clients`),
     setData(
@@ -49,3 +49,9 @@ export const updateLongviewClient = (id: number, label: string) => {
     setMethod('PUT')
   ).then(response => response.data);
 };
+
+export const getLongviewSubscriptions = () =>
+  Request<ResourcePage<LongviewSubscription>>(
+    setURL(`${API_ROOT}/longview/subscriptions`),
+    setMethod('GET')
+  ).then(response => response.data);

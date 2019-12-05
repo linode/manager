@@ -132,6 +132,7 @@ const ListGroupedDomains: React.StatelessComponent<CombinedProps> = props => {
                           type={domain.type}
                           status={domain.status}
                           onDisableOrEnable={props.onDisableOrEnable}
+                          onCheck={props.onCheck}
                         />
                       ))}
                       {count > DEFAULT_PAGE_SIZE && (

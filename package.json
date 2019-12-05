@@ -1,39 +1,56 @@
 {
   "name": "root",
   "private": true,
+  "license": "Apache-2.0",
   "devDependencies": {
+    "factory.ts": "^0.5.0",
     "husky": "^3.0.1",
-    "lerna": "^3.16.4"
+    "lerna": "^3.18.4",
+    "postinstall": "^0.6.0",
+    "tslint": "^5.20.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-react": "^4.1.0",
+    "tslint-react-a11y": "^1.1.0",
+    "tslint-react-hooks": "^2.2.1",
+    "typescript": "^3.6.4"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lerna run precommit --stream && git add .",
+      "pre-commit": "lerna run precommit --stream",
       "pre-push": "lerna run prepush --stream --scope linode-manager"
     }
   },
   "scripts": {
-    "install:all": "yarn && lerna bootstrap",
-    "up": "yarn && lerna bootstrap && lerna run start --parallel -- --color",
+    "cost-of-modules": "yarn global add cost-of-modules && cost-of-modules --less --no-install --include-dev",
+    "install:all": "yarn install --frozen-lockfile && lerna link",
+    "up": "yarn install:all && yarn start:all",
+    "postinstall": "yarn workspaces run postinstall",
+    "build": "yarn workspaces run build",
     "up:manager": "yarn install:all && yarn start:manager",
-    "start:manager": "lerna run build --stream --scope linode-js-sdk && lerna run start --stream --scope linode-manager -- --color",
-    "start:docker": "lerna run build --stream --scope linode-js-sdk && yarn start:all",
+    "start:manager": "yarn workspace linode-js-sdk build && lerna run start --stream --scope linode-manager -- --color",
+    "start:docker": "yarn workspace linode-js-sdk build && yarn start:all",
     "start:all": "lerna run start --parallel -- --color",
-    "clean": "rm -rf node_modules && lerna clean --yes",
-    "test": "lerna run test --stream --scope linode-manager -- --color --detectOpenHandles",
-    "selenium": "lerna run selenium --stream --scope linode-manager -- --color",
-    "storybook": "lerna run storybook --stream --scope linode-manager",
-    "storybook:e2e": "lerna run storybook:e2e --stream --scope linode-manager -- --color",
+    "clean": "rm -rf node_modules && rm -rf packages/linode-js-sdk/node_modules && rm -rf packages/manager/node_modules && lerna clean --yes",
+    "test": "yarn workspace linode-manager test",
+    "selenium": "yarn workspace linode-manager selenium",
+    "storybook": "yarn workspace linode-manager storybook",
+    "storybook:e2e": "yarn workspace linode-manager run storybook:e2e",
     "storybook:debug": "lerna run storybook:e2e --stream --scope linode-manager -- --color --debug",
-    "e2e": "lerna run e2e --stream --scope linode-manager -- --color",
-    "e2e:all": "lerna run e2e:all --stream --scope linode-manager -- --color",
-    "e2e:modified": "lerna run e2e:modified --stream --scope linode-manager -- --color",
+    "e2e": "yarn workspace linode-manager e2e --color",
+    "e2e:all": "yarn workspace linode-manager e2e:all --color",
+    "e2e:modified": "yarn workspace linode-manager e2e:modified --color",
     "docker:e2e": "docker-compose -f integration-test.yml up --exit-code-from manager-e2e",
-    "docker:test": "docker build -f Dockerfile . -t 'manager' && docker run -it --rm -v $(pwd)/packages/manager/src:/home/node/app/packages/manager/src -v $(pwd)/packages/linode-js-sdk/src:/home/node/app/packages/linode-js-sdk/src manager test",
-    "docker:local": "docker build -f Dockerfile . -t 'manager' && docker run -it --rm -p 3000:3000 -v $(pwd)/packages/manager/src:/home/node/app/packages/manager/src -v $(pwd)/packages/linode-js-sdk/src:/home/node/app/packages/linode-js-sdk/src manager start:docker",
+    "docker:test": "docker build -f Dockerfile . -t 'manager' && docker run -it cloud --rm -v $(pwd)/packages/manager/src:/home/node/app/packages/manager/src -v $(pwd)/packages/linode-js-sdk/src:/home/node/app/packages/linode-js-sdk/src manager test",
+    "docker:local": "docker build -f Dockerfile . -t 'manager' -t 'dev' && docker run -it --rm -p 3000:3000 -v $(pwd)/packages/manager/src:/home/node/app/packages/manager/src -v $(pwd)/packages/linode-js-sdk/src:/home/node/app/packages/linode-js-sdk/src manager start:docker",
     "docker:storybook": "docker build -f Dockerfile . -t 'storybook' && docker run -it --rm -p 6006:6006 -v $(pwd)/packages/manager/src:/home/node/app/packages/manager/src -v $(pwd)/packages/linode-js-sdk/src:/home/node/app/packages/linode-js-sdk/src storybook storybook",
     "docker:storybook:test": "docker-compose -f packages/manager/storybook-test.yml up --build --exit-code-from storybook-test"
   },
-  "resolutions":{
-    "handlebars":"^4.4.3"
+  "resolutions": {
+    "handlebars": "^4.4.3"
+  },
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
   }
 }

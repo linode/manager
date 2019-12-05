@@ -9,8 +9,8 @@ import {
 import AppBar from 'src/components/core/AppBar';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
-import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import H1Header from 'src/components/H1Header';
 import TabLink from 'src/components/TabLink';
 
 import DefaultLoader from 'src/components/DefaultLoader';
@@ -85,9 +85,7 @@ class Profile extends React.Component<Props> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="My Profile" />
-        <Typography variant="h1" data-qa-profile-header>
-          My Profile
-        </Typography>
+        <H1Header title="My Profile" data-qa-profile-header />
         <AppBar position="static" color="default">
           <Tabs
             value={this.tabs.findIndex(tab => matches(tab.routeName))}

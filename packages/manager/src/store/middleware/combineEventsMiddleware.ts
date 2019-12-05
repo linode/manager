@@ -1,6 +1,6 @@
 import { compose, equals, uniqWith } from 'ramda';
 import { Middleware } from 'redux';
-import { resetEventsPolling } from 'src/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import {
   isEntityEvent,
   isInProgressEvent
@@ -8,7 +8,7 @@ import {
 import { EventHandler } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import { addEvents } from '../events/event.actions';
-import { ExtendedEvent } from '../events/event.helpers';
+import { ExtendedEvent } from '../events/event.types';
 
 const eventsMiddlewareFactory = (
   ...eventHandlers: EventHandler[]
@@ -16,7 +16,7 @@ const eventsMiddlewareFactory = (
   if (isType(action, addEvents)) {
     const { payload } = action;
     /**
-     * We never want to dispatch actions for intial events, so filter them out.
+     * We never want to dispatch actions for initial events, so filter them out.
      * We also need to only deal with one event per entity at a time, so uniqueEntityEvents
      * handles filtering for unique events. Notably linode_create/linode_boot and others.
      */
@@ -73,7 +73,7 @@ export default eventsMiddlewareFactory;
  * We reverse because events come back in reverse order and want the first (boot and delete).
  *
  * The better user exp during deletion would be to see the shutdown, then the delete, but we
- * cant poll for the deleted Linode's status because it's no longer availalbe from the API.
+ * can't poll for the deleted Linode's status because it's no longer available from the API.
  */
 const uniqueEntityEvents = compose(
   (e: ExtendedEvent[]) => e.reverse(),

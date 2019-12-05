@@ -1,60 +1,37 @@
-import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
+import { WithTheme, withTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
-import { baseGaugeProps } from './common';
+import withClientData, {
+  Props as LVDataProps
+} from 'src/containers/longview.stats.container';
+import { baseGaugeProps, BaseProps as Props } from './common';
 
-import requestStats from '../../request';
+type CombinedProps = Props & WithTheme & LVDataProps;
 
-interface Props {
-  lastUpdated?: number;
-  token: string;
-}
+const LoadGauge: React.FC<CombinedProps> = props => {
+  const {
+    longviewClientData,
+    longviewClientDataLoading: loading,
+    longviewClientDataError: error,
+    lastUpdatedError
+  } = props;
 
-const LoadGauge: React.FC<Props> = props => {
-  const [load, setLoad] = React.useState<number>(0);
-  const [amountOfCores, setCores] = React.useState<number>(0);
-  const [loading, setLoading] = React.useState<boolean>(true);
-  const [error, setError] = React.useState<APIError | undefined>();
-
-  React.useEffect(() => {
-    let mounted = true;
-    requestStats(props.token, 'getLatestValue', ['sysinfo', 'load'])
-      .then(response => {
-        if (mounted) {
-          setLoad(pathOr(0, ['Load', 0, 'y'], response));
-          setCores(pathOr(0, ['cpu', 'cores'], response.SysInfo));
-          setError(undefined);
-
-          if (!!loading) {
-            setLoading(false);
-          }
-        }
-      })
-      .catch(() => {
-        if (!load && mounted) {
-          setError({
-            reason: 'Error'
-          });
-          if (!!loading) {
-            setLoading(false);
-          }
-        }
-      });
-
-    return () => {
-      mounted = false;
-    };
-  }, [props.lastUpdated]);
+  const load = pathOr<number>(0, ['Load', 0, 'y'], longviewClientData);
+  const numberOfCores = pathOr<number>(
+    0,
+    ['SysInfo', 'cpu', 'cores'],
+    longviewClientData
+  );
 
   const generateCopy = (): {
     innerText: string;
     subTitle: JSX.Element | null;
   } => {
-    if (error) {
+    if (error || lastUpdatedError) {
       return {
-        innerText: error.reason,
+        innerText: 'Error',
         subTitle: (
           <Typography>
             <strong>Load</strong>
@@ -81,12 +58,6 @@ const LoadGauge: React.FC<Props> = props => {
           <Typography>
             <strong>Load</strong>
           </Typography>
-          <Typography>
-            {`${getOverallocationPercent(
-              amountOfCores || 0,
-              load || 0
-            )}% Overallocated`}
-          </Typography>
         </React.Fragment>
       )
     };
@@ -95,26 +66,14 @@ const LoadGauge: React.FC<Props> = props => {
   return (
     <GaugePercent
       {...baseGaugeProps}
-      max={amountOfCores}
+      max={numberOfCores}
       value={load}
-      filledInColor="#FADB50"
+      filledInColor={props.theme.graphs.yellow}
       {...generateCopy()}
     />
   );
 };
 
-export const getOverallocationPercent = (
-  amountOfCores: number,
-  load: number
-) => {
-  /** we have a negative number meaning we're overallocated */
-  const allocation = amountOfCores - load;
-  if (allocation < 0) {
-    /** turn into a positive number as a percent */
-    return Math.round(allocation * 100 * -1);
-  }
-
-  return 0;
-};
-
-export default LoadGauge;
+export default withClientData<Props>(ownProps => ownProps.clientID)(
+  withTheme(LoadGauge)
+);

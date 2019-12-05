@@ -43,6 +43,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     '@keyframes dash': any;
     bg: any;
     color: any;
+    graphs: any;
     visually: any;
     font?: any;
     animateCircleIcon?: any;
@@ -56,6 +57,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     '@keyframes dash'?: any;
     bg?: any;
     color?: any;
+    graphs?: any;
     visually?: any;
     font?: any;
     animateCircleIcon?: any;
@@ -175,7 +177,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       offWhite: '#fbfbfb',
       offWhiteDT: '#fbfbfb', // better handing for dark theme
       navy: '#32363c',
-      lightBlue: '#d7e3ef',
+      lightBlue: '#f0f7ff',
       white: '#fff',
       pureWhite: '#fff',
       tableHeader: '#fbfbfb',
@@ -198,6 +200,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       grey2: '#e7e7e7',
       grey3: '#ccc',
       grey4: '#8C929D',
+      grey5: '#f5f5f5',
       white: '#fff',
       black: '#222',
       blue: primaryColors.main,
@@ -216,11 +219,25 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       label: '#555',
       disabledText: '#c9cacb',
       kubeLabel: '#272b31',
-      primaryNavText: '#c9cacb',
-      graphBlue: 'rgba(54, 131, 220, .5)',
-      graphYellow: 'rgba(255, 209, 0, .5)',
-      graphPurple: 'rgba(204, 1, 153, .5)',
-      graphGreen: 'rgba(1, 177, 89, .5)'
+      primaryNavText: '#c9cacb'
+    },
+    graphs: {
+      blue: '#64ADF6',
+      blueBorder: '#3F99F0',
+      green: '#5BD765',
+      greenBorder: '#18B523',
+      orange: 'rgba(255, 179, 77, 0.7)',
+      orangeBorder: '#ff9d1a',
+      purple: '#E6A5E6',
+      purpleBorder: '#CC75CC',
+      red: '#FF633C',
+      redBorder: '#F13A0A',
+      yellow: '#FFDC7D',
+      yellowBorder: '#DCB64E',
+      salmon: 'rgba(255, 99, 61, 0.7)',
+      salmonBorder: '#ff3a0a',
+      pinkBorder: '#d5626d',
+      pink: 'rgba(224, 138, 146, 0.7)'
     },
     font: {
       normal: primaryFonts.normal,
@@ -993,6 +1010,11 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         },
         disabled: {}
       },
+      MuiSkeleton: {
+        text: {
+          borderRadius: 0
+        }
+      },
       MuiSnackbar: {
         root: {}
       },
@@ -1158,7 +1180,8 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       MuiTableCell: {
         root: {
           padding: spacingUnit + 2,
-          borderBottom: `2px solid ${primaryColors.divider}`,
+          borderTop: `1px solid ${primaryColors.divider}`,
+          borderBottom: `1px solid ${primaryColors.divider}`,
           '&:last-child': {
             paddingRight: spacingUnit + 2
           },
@@ -1302,6 +1325,46 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           [breakpoints.up('sm')]: {
             padding: '8px 10px',
             fontSize: '.9rem'
+          }
+        }
+      },
+      MuiTypography: {
+        button: {
+          textTransform: 'inherit',
+          borderRadius: 0,
+          fontSize: '1rem',
+          lineHeight: 1,
+          fontFamily:
+            spacingUnit === 4 ? primaryFonts.normal : primaryFonts.bold,
+          color: '#fff',
+          backgroundColor: primaryColors.main,
+          padding: `${spacingUnit * 2}px ${spacingUnit * 3 +
+            spacingUnit / 2}px ${spacingUnit * 2}px`,
+          maxHeight: 48,
+          cursor: 'pointer',
+          '&:hover, &:focus': {
+            backgroundColor: primaryColors.light
+          },
+          '&:active': {
+            backgroundColor: primaryColors.dark
+          },
+          '&$colorSecondary': {
+            backgroundColor: 'transparent',
+            color: primaryColors.main,
+            border: `1px solid ${primaryColors.main}`,
+            padding: `${spacingUnit * 2 - 1}px ${spacingUnit * 3 +
+              spacingUnit / 2}px ${spacingUnit * 2 - 1}px`,
+            transition: 'border 225ms ease-in-out, color 225ms ease-in-out',
+            '&:hover, &:focus': {
+              backgroundColor: 'transparent !important',
+              color: primaryColors.light,
+              borderColor: primaryColors.light
+            },
+            '&:active': {
+              backgroundColor: 'transparent',
+              color: primaryColors.dark,
+              borderColor: primaryColors.dark
+            }
           }
         }
       }

@@ -24,12 +24,9 @@ export interface Account {
   phone: string;
   company: string;
   active_promotions: ActivePromotion[];
-  // [BETA]
-  // @todo: Uncomment this when it becomes generally available
-  // capabilities: AccountCapability[];
+  capabilities: AccountCapability[];
 }
 
-// [BETA]
 export type AccountCapability =
   | 'Linodes'
   | 'NodeBalancers'
@@ -58,7 +55,7 @@ export interface ActivePromotion {
 interface CreditCard {
   expiry: string;
   last_four: string;
-  cvv?: string;
+  cvv: string;
 }
 
 export interface Invoice {
@@ -191,6 +188,7 @@ export type EventAction =
   | 'domain_record_delete'
   | 'image_update'
   | 'image_delete'
+  | 'lassie_reboot'
   | 'linode_addip'
   | 'linode_boot'
   | 'linode_clone'
@@ -257,6 +255,7 @@ export interface Event {
   status: EventStatus;
   time_remaining: null | number;
   username: string;
+  secondary_entity: Entity | null;
   _initial?: boolean;
 }
 /**

@@ -6,7 +6,7 @@ import { setUpCharts } from 'src/utilities/charts';
 
 setUpCharts();
 
-interface DataSet {
+export interface DataSet {
   label: string;
   borderColor: string;
   // this data property type might not be the perfect fit, but it works for
@@ -15,12 +15,12 @@ interface DataSet {
   // the first number will be a UTC data and the second will be the amount per second
   fill?: boolean | string;
   backgroundColor?: string;
-  data: [number, number][];
+  data: [number, number | null][];
 }
 
-interface Props {
+export interface Props {
   chartHeight?: number;
-  showToday: boolean;
+  showToday?: boolean;
   suggestedMax?: number;
   data: DataSet[];
   timezone: string;
@@ -45,6 +45,7 @@ const chartOptions: any = {
           zeroLineWidth: 1,
           zeroLineBorderDashOffset: 2
         },
+        stacked: true,
         ticks: {
           beginAtZero: true,
           callback(value: number, index: number) {

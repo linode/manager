@@ -20,9 +20,9 @@ import Control from './components/SelectControl';
 import Placeholder from './components/SelectPlaceholder';
 import { ClassNames, styles } from './Select.styles';
 
-export interface Item<T = string | number> {
+export interface Item<T = string | number, L = string> {
   value: T;
-  label: string;
+  label: L;
   data?: any;
 }
 

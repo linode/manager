@@ -32,9 +32,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ResizeVolumeInstructions: React.StatelessComponent<
-  CombinedProps
-> = props => {
+const ResizeVolumeInstructions: React.FC<CombinedProps> = props => {
   const { classes, message, onClose, volumeLabel } = props;
 
   return (

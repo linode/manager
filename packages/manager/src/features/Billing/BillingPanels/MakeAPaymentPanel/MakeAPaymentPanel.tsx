@@ -588,8 +588,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles);
 
 const withAccount = AccountContainer(
-  (ownProps, accountLoading, accountData) => ({
-    ...ownProps,
+  (ownProps, { accountLoading, accountData }) => ({
     accountLoading,
     balance: pathOr(false, ['balance'], accountData),
     lastFour: pathOr('', ['credit_card', 'last_four'], accountData)

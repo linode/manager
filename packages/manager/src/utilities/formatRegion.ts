@@ -47,5 +47,5 @@ export const getHumanReadableCountry = (regionSlug: string) => {
   return 'Other';
 };
 
-export const formatObjectStorageCluster = (clusterId: Linode.ClusterID) =>
-  objectStorageClusterDisplay[clusterId];
+export const formatObjectStorageCluster = (clusterId: string) =>
+  objectStorageClusterDisplay[clusterId] || '';

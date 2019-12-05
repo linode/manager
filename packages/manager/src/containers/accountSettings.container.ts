@@ -1,65 +1,92 @@
 import { AccountSettings } from 'linode-js-sdk/lib/account';
-import { connect, MapDispatchToProps } from 'react-redux';
-import { AnyAction } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
+import { connect, InferableComponentEnhancerWithProps } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { updateSettingsInStore } from 'src/store/accountSettings/accountSettings.actions';
-import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
-import { EntityError } from 'src/store/types';
-
-export interface SettingsProps {
-  accountSettings?: AccountSettings;
-  accountSettingsLoading: boolean;
-  accountSettingsError: EntityError;
-  accountSettingsLastUpdated: number;
-}
+import { State } from 'src/store/accountSettings/accountSettings.reducer';
+import {
+  requestAccountSettings,
+  updateAccountSettings
+} from 'src/store/accountSettings/accountSettings.requests';
+import { ThunkDispatch } from 'src/store/types';
 
 export interface DispatchProps {
   requestAccountSettings: () => Promise<any>;
   updateAccountSettingsInStore: (data: Partial<AccountSettings>) => void;
+  updateAccountSettings: (
+    data: Partial<AccountSettings>
+  ) => Promise<AccountSettings>;
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
-  dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
-) => ({
-  requestAccountSettings: () => dispatch(requestAccountSettings()),
-  updateAccountSettingsInStore: (data: Partial<AccountSettings>) =>
-    dispatch(updateSettingsInStore(data))
-});
+export interface StateProps {
+  accountSettings?: State['data'];
+  accountSettingsLoading: State['loading'];
+  accountSettingsError?: State['error'];
+  accountSettingsLastUpdated: State['lastUpdated'];
+}
 
-export default <TInner extends {}, TOuter extends {}>(
-  mapAccountToProps?: (
-    ownProps: TOuter,
-    loading: boolean,
-    lastUpdated: number,
-    accountError?: EntityError,
-    accountSettings?: AccountSettings
-  ) => TInner
+type MapProps<ReduxStateProps, OwnProps> = (
+  ownProps: OwnProps,
+  loading: State['loading'],
+  lastUpdated: State['lastUpdated'],
+  error: State['error'],
+  data: State['data']
+) => ReduxStateProps & Partial<StateProps>;
+
+export type Props = DispatchProps & StateProps;
+
+interface Connected {
+  <ReduxStateProps, OwnProps>(
+    mapStateToProps: MapProps<ReduxStateProps, OwnProps>
+  ): InferableComponentEnhancerWithProps<
+    ReduxStateProps & Partial<StateProps> & DispatchProps & OwnProps,
+    OwnProps
+  >;
+  <ReduxStateProps, OwnProps>(): InferableComponentEnhancerWithProps<
+    ReduxStateProps & DispatchProps & OwnProps,
+    OwnProps
+  >;
+}
+
+const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
+  mapStateToProps?: MapProps<ReduxState, OwnProps>
 ) =>
-  connect(
-    (state: ApplicationState, ownProps: TOuter) => {
-      const accountSettings = state.__resources.accountSettings.data;
-      const accountSettingsLoading = state.__resources.accountSettings.loading;
-      const accountSettingsError = state.__resources.accountSettings.error;
-      const accountSettingsLastUpdated =
-        state.__resources.accountSettings.lastUpdated;
+  connect<
+    (ReduxState & Partial<StateProps>) | StateProps,
+    DispatchProps,
+    OwnProps,
+    ApplicationState
+  >(
+    (state, ownProps) => {
+      const {
+        loading: accountSettingsLoading,
+        error: accountSettingsError,
+        data: accountSettings,
+        lastUpdated: accountSettingsLastUpdated
+      } = state.__resources.accountSettings;
 
-      if (!mapAccountToProps) {
-        return {
-          ...ownProps,
+      if (mapStateToProps) {
+        return mapStateToProps(
+          ownProps,
           accountSettingsLoading,
           accountSettingsLastUpdated,
           accountSettingsError,
           accountSettings
-        };
+        );
       }
-      return mapAccountToProps(
-        ownProps,
-        accountSettingsLoading,
-        accountSettingsLastUpdated,
+
+      return {
+        accountSettings,
         accountSettingsError,
-        accountSettings
-      );
+        accountSettingsLastUpdated,
+        accountSettingsLoading
+      };
     },
-    mapDispatchToProps
+    (dispatch: ThunkDispatch) => ({
+      requestAccountSettings: () => dispatch(requestAccountSettings()),
+      updateAccountSettings: data => dispatch(updateAccountSettings(data)),
+      updateAccountSettingsInStore: data =>
+        dispatch(updateSettingsInStore(data))
+    })
   );
+
+export default connected;

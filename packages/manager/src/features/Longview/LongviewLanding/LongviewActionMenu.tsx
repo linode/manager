@@ -3,10 +3,6 @@ import * as React from 'react';
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 export interface ActionHandlers {
-  triggerEditLongviewClient: (
-    longviewClientID: number,
-    longviewClientLabel: string
-  ) => void;
   triggerDeleteLongviewClient: (
     longviewClientID: number,
     longviewClientLabel: string
@@ -16,6 +12,7 @@ export interface ActionHandlers {
 interface Props extends ActionHandlers {
   longviewClientID: number;
   longviewClientLabel: string;
+  userCanModifyClient: boolean;
 }
 
 type CombinedProps = Props;
@@ -25,20 +22,17 @@ const LongviewActionMenu: React.FC<CombinedProps> = props => {
     longviewClientID,
     longviewClientLabel,
     triggerDeleteLongviewClient,
-    triggerEditLongviewClient
+    userCanModifyClient
   } = props;
 
   const createActions = () => {
     return (closeMenu: Function): Action[] => [
       {
-        title: 'Rename',
-        onClick: () => {
-          closeMenu();
-          triggerEditLongviewClient(longviewClientID, longviewClientLabel);
-        }
-      },
-      {
         title: 'Delete',
+        disabled: !userCanModifyClient,
+        tooltip: userCanModifyClient
+          ? ''
+          : 'Contact an account administrator for permission.',
         onClick: () => {
           closeMenu();
           triggerDeleteLongviewClient(longviewClientID, longviewClientLabel);

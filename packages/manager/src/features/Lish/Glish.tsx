@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import { Linode } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -9,10 +10,10 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
-import { getLishSchemeAndHostname, resizeViewPort } from '.';
+import { getLishSchemeAndHostname, resizeViewPort } from './lishUtils';
 import VncDisplay from './VncDisplay';
 
-type ClassNames = 'container' | 'errorState' | 'message';
+type ClassNames = 'container' | 'errorState' | 'message' | 'link';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -27,6 +28,17 @@ const styles = (theme: Theme) =>
       textAlign: 'center',
       minHeight: '30px',
       margin: theme.spacing(2)
+    },
+    link: {
+      background: 'none',
+      color: theme.palette.primary.main,
+      border: 'none',
+      padding: 0,
+      font: 'inherit',
+      cursor: 'pointer',
+      '&:hover': {
+        textDecoration: 'underline'
+      }
     },
     errorState: {
       '& *': {
@@ -169,13 +181,18 @@ class Glish extends React.Component<CombinedProps, State> {
   };
 
   linodeAnchor = (linodeID: number, linodeLabel: string) => {
+    const { classes } = this.props;
     return (
-      <a
-        className="force-link text-muted"
+      <button
+        className={classNames('force-link', 'text-muted', {
+          [classes.link]: true
+        })}
         onClick={this.linodeOnClick(linodeID)}
+        role="button"
+        title={linodeLabel}
       >
         {linodeLabel}
-      </a>
+      </button>
     );
   };
 

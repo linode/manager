@@ -1,4 +1,5 @@
 import * as classNames from 'classnames';
+import { getObjectURL } from 'linode-js-sdk/lib/object-storage';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { useDropzone } from 'react-dropzone';
@@ -9,7 +10,6 @@ import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
-import { getObjectURL } from 'src/services/objectStorage/objects';
 import { sendObjectsQueuedForUploadEvent } from 'src/utilities/ga';
 import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
@@ -335,7 +335,12 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
       })}
     >
       <div {...getRootProps({ className: `${classes.dropzone} ${className}` })}>
-        <input {...getInputProps()} />
+        <input
+          {...getInputProps()}
+          placeholder={
+            'You can browse your device to upload files or drop them here.'
+          }
+        />
 
         <div className={classes.fileUploads}>
           {state.files.map((upload, idx) => {

@@ -321,7 +321,7 @@ export class ListLinodes extends Page {
   }
 
   switchView(view) {
-    browser.click(`[data-qa-view="${view}"]`);
+    $(`[data-qa-view="${view}"]`).click();
     browser.waitUntil(function() {
       return $(`[data-qa-active-view="${view}"]`).isDisplayed();
     }, constants.wait.short);

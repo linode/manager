@@ -18,13 +18,13 @@ import Footer from 'src/features/Footer';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
-import WelcomeBanner from 'src/WelcomeBanner';
 
 import DefaultLoader from 'src/components/DefaultLoader';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LandingLoading from 'src/components/LandingLoading';
 import NotFound from 'src/components/NotFound';
+import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import SideMenu from 'src/components/SideMenu';
 
 import withGlobalErrors, {
@@ -36,7 +36,6 @@ import withFeatureFlags, {
 
 import Logo from 'src/assets/logo/logo-text.svg';
 
-import { notifications } from 'src/utilities/storage';
 import {
   isKubernetesEnabled as _isKubernetesEnabled,
   isObjectStorageEnabled
@@ -62,11 +61,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   content: {
     flex: 1,
-    [theme.breakpoints.up('lg')]: {
+    transition: 'margin-left .1s linear',
+    [theme.breakpoints.up('md')]: {
       marginLeft: theme.spacing(14) + 103 // 215
     },
     [theme.breakpoints.up('xl')]: {
       marginLeft: theme.spacing(22) + 99 // 275
+    }
+  },
+  fullWidthContent: {
+    marginLeft: 0,
+    [theme.breakpoints.up('md')]: {
+      marginLeft: theme.spacing(7) + 36
     }
   },
   hidden: {
@@ -209,9 +215,6 @@ const MainContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const [menuIsOpen, toggleMenu] = React.useState<boolean>(false);
-  const [welcomeModalIsOpen, toggleWelcomeModal] = React.useState<boolean>(
-    notifications.welcome.get() === 'open'
-  );
 
   const isKubernetesEnabled = _isKubernetesEnabled(props.accountCapabilities);
 
@@ -264,98 +267,114 @@ const MainContent: React.FC<CombinedProps> = props => {
    * otherwise just show the rest of the app.
    */
   return (
-    <div
-      className={classnames({
-        [classes.appFrame]: true,
-        /**
-         * hidden to prevent some jankiness with the app loading before the splash screen
-         */
-        [classes.hidden]: props.appIsLoading
-      })}
+    <PreferenceToggle<boolean>
+      preferenceKey="desktop_sidebar_open"
+      preferenceOptions={[true, false]}
     >
-      <SideMenu
-        open={menuIsOpen}
-        closeMenu={() => toggleMenu(false)}
-        toggleTheme={props.toggleTheme}
-        toggleSpacing={props.toggleSpacing}
-      />
-      <main className={classes.content}>
-        <TopMenu
-          openSideMenu={() => toggleMenu(true)}
-          isLoggedInAsCustomer={props.isLoggedInAsCustomer}
-          username={props.username}
-        />
-        <div className={classes.wrapper} id="main-content">
-          <Grid container spacing={0} className={classes.grid}>
-            <Grid item className={classes.switchWrapper}>
-              <Switch>
-                <Route path="/linodes" component={LinodesRoutes} />
-                <Route path="/volumes" component={Volumes} exact strict />
-                <Redirect path="/volumes*" to="/volumes" />
-                <Route path="/nodebalancers" component={NodeBalancers} />
-                <Route path="/domains" component={Domains} />
-                <Route path="/managed" component={Managed} />
-                <Route path="/longview" component={Longview} />
-                <Route exact strict path="/images" component={Images} />
-                <Redirect path="/images*" to="/images" />
-                <Route path="/stackscripts" component={StackScripts} />
-                {getObjectStorageRoute(
-                  props.accountLoading,
-                  props.accountCapabilities,
-                  props.accountError,
-                  Boolean(props.flags.objectStorage)
-                )}
-                {isKubernetesEnabled && (
-                  <Route path="/kubernetes" component={Kubernetes} />
-                )}
-                <Route path="/account" component={Account} />
-                <Route
-                  exact
-                  strict
-                  path="/support/tickets"
-                  component={SupportTickets}
-                />
-                <Route
-                  path="/support/tickets/:ticketId"
-                  component={SupportTicketDetail}
-                  exact
-                  strict
-                />
-                <Route path="/profile" component={Profile} />
-                <Route exact path="/support" component={Help} />
-                <Route path="/dashboard" component={Dashboard} />
-                <Route path="/search" component={SearchLanding} />
-                <Route
-                  exact
-                  strict
-                  path="/support/search/"
-                  component={SupportSearchLanding}
-                />
-                <Route path="/events" component={EventsLanding} />
-                {props.flags.firewalls && (
-                  <Route path="/firewalls" component={Firewalls} />
-                )}
-                <Redirect exact from="/" to="/dashboard" />
-                <Route component={NotFound} />
-              </Switch>
-            </Grid>
-          </Grid>
-        </div>
-      </main>
-      <Footer />
-      <WelcomeBanner
-        open={welcomeModalIsOpen}
-        onClose={() => {
-          notifications.welcome.set('closed');
-          toggleWelcomeModal(false);
-        }}
-        data-qa-beta-notice
-      />
-      <ToastNotifications />
-      <DomainDrawer />
-      <VolumeDrawer />
-      <BackupDrawer />
-    </div>
+      {({
+        preference: desktopMenuIsOpen,
+        togglePreference: desktopMenuToggle
+      }: ToggleProps<boolean>) => {
+        return (
+          <div
+            className={classnames({
+              [classes.appFrame]: true,
+              /**
+               * hidden to prevent some jankiness with the app loading before the splash screen
+               */
+              [classes.hidden]: props.appIsLoading
+            })}
+          >
+            <SideMenu
+              open={menuIsOpen}
+              desktopOpen={desktopMenuIsOpen || false}
+              closeMenu={() => toggleMenu(false)}
+              toggleTheme={props.toggleTheme}
+              toggleSpacing={props.toggleSpacing}
+            />
+            <main
+              className={`
+                ${classes.content}
+                ${
+                  desktopMenuIsOpen ||
+                  (desktopMenuIsOpen && desktopMenuIsOpen === true)
+                    ? classes.fullWidthContent
+                    : ''
+                }
+              `}
+            >
+              <TopMenu
+                openSideMenu={() => toggleMenu(true)}
+                desktopMenuToggle={desktopMenuToggle}
+                isLoggedInAsCustomer={props.isLoggedInAsCustomer}
+                username={props.username}
+              />
+              <div className={classes.wrapper} id="main-content">
+                <Grid container spacing={0} className={classes.grid}>
+                  <Grid item className={classes.switchWrapper}>
+                    <Switch>
+                      <Route path="/linodes" component={LinodesRoutes} />
+                      <Route path="/volumes" component={Volumes} />
+                      <Redirect path="/volumes*" to="/volumes" />
+                      <Route path="/nodebalancers" component={NodeBalancers} />
+                      <Route path="/domains" component={Domains} />
+                      <Route path="/managed" component={Managed} />
+                      <Route path="/longview" component={Longview} />
+                      <Route exact strict path="/images" component={Images} />
+                      <Redirect path="/images*" to="/images" />
+                      <Route path="/stackscripts" component={StackScripts} />
+                      {getObjectStorageRoute(
+                        props.accountLoading,
+                        props.accountCapabilities,
+                        props.accountError
+                      )}
+                      {isKubernetesEnabled && (
+                        <Route path="/kubernetes" component={Kubernetes} />
+                      )}
+                      <Route path="/account" component={Account} />
+                      <Route
+                        exact
+                        strict
+                        path="/support/tickets"
+                        component={SupportTickets}
+                      />
+                      <Route
+                        path="/support/tickets/:ticketId"
+                        component={SupportTicketDetail}
+                        exact
+                        strict
+                      />
+                      <Route path="/profile" component={Profile} />
+                      <Route exact path="/support" component={Help} />
+                      <Route path="/dashboard" component={Dashboard} />
+                      <Route path="/search" component={SearchLanding} />
+                      <Route
+                        exact
+                        strict
+                        path="/support/search/"
+                        component={SupportSearchLanding}
+                      />
+                      <Route path="/events" component={EventsLanding} />
+                      {props.flags.firewalls && (
+                        <Route path="/firewalls" component={Firewalls} />
+                      )}
+                      <Redirect exact from="/" to="/dashboard" />
+                      <Route component={NotFound} />
+                    </Switch>
+                  </Grid>
+                </Grid>
+              </div>
+            </main>
+
+            <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
+            <ToastNotifications />
+            <DomainDrawer />
+            <VolumeDrawer />
+            <BackupDrawer />
+          </div>
+        );
+      }}
+    </PreferenceToggle>
   );
 };
 
@@ -365,15 +384,10 @@ const MainContent: React.FC<CombinedProps> = props => {
 const getObjectStorageRoute = (
   accountLoading: boolean,
   accountCapabilities: AccountCapability[],
-  accountError?: Error | APIError[],
-  featureFlag?: boolean
+  accountError?: Error | APIError[]
 ) => {
   let component;
-  // If the feature flag is on, we want to see Object Storage regardless of
-  // the state of account.
-  if (featureFlag) {
-    component = ObjectStorage;
-  } else if (accountLoading) {
+  if (accountLoading) {
     component = () => <LandingLoading delayInMS={1000} />;
   } else if (accountError) {
     component = () => (

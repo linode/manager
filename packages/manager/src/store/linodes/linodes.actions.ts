@@ -13,10 +13,6 @@ that comes down the stream
 export const updateMultipleLinodes = actionCreator<Linode[]>('update_multiple');
 export const upsertLinode = actionCreator<Linode>(`upsert`);
 export const deleteLinode = actionCreator<number>('delete');
-export const updateLinode = actionCreator<{
-  id: number;
-  update: (v: Linode) => Linode;
-}>('update');
 
 /*
   Thunk Actions for the purposes of updating the UI based on some user
