@@ -1,3 +1,4 @@
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import {
@@ -163,7 +164,7 @@ export const formatINodes = (
 ): [number, number][] => {
   return itotal.map((eachTotalStat, index) => [
     eachTotalStat.x * 1000,
-    eachTotalStat.y - ifree[index].y
+    eachTotalStat.y - pathOr(0, [index, 'y'], ifree)
   ]);
 };
 
@@ -174,7 +175,7 @@ export const formatSpace = (
   return total.map((eachTotalStat, index) => [
     eachTotalStat.x * 1000,
     /* convert bytes to GB */
-    (eachTotalStat.y - free[index].y) / 1024 / 1024 / 1024
+    (eachTotalStat.y - pathOr(0, [index, 'y'], free)) / 1024 / 1024 / 1024
   ]);
 };
 
