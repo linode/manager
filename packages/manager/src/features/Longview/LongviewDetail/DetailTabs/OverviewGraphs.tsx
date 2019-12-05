@@ -102,7 +102,12 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
   );
 
   // Determine the unit based on the largest value
-  const max = Math.max(statMax(buffers), statMax(cache), statMax(used));
+  const max = Math.max(
+    statMax(buffers),
+    statMax(cache),
+    statMax(used),
+    statMax(swap)
+  );
   // LV returns stuff in KB so have to convert to bytes using base-2
   const unit = readableBytes(max * 1024).unit;
 
@@ -175,7 +180,7 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
                     label: 'Used',
                     borderColor: theme.graphs.darkPurpleBorder,
                     backgroundColor: theme.graphs.darkPurple,
-                    data: _convertData(used)
+                    data: _convertData(used, formatMemory)
                   }
                 ]}
               />
@@ -245,20 +250,25 @@ export const getUsedMemory = (
     const _buffers = pathOr(0, [i, 'y'], buffers);
     if (_used.y === null) {
       // This is one of our padding data points
-      result.push({ x: _used.x * 1000, y: null });
+      result.push({ x: _used.x, y: null });
     } else {
       const calculatedUsed = generateUsedMemory(_used.y, _buffers, _cache);
       result.push({
         // Time will be converted to ms in convertData
         x: _used.x,
-        // x1024 bc the API returns data in KB
-        y: readableBytes(calculatedUsed * 1024).value
+        y: calculatedUsed
       });
     }
   }
   return result;
 };
 
+/**
+ * Scale of memory data will vary, so we use this function
+ * to run the data through readableBytes to determine
+ * whether to show MB, KB, or GB.
+ * @param value
+ */
 export const formatMemory = (value: number | null) => {
   if (value === null) {
     return value;
