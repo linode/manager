@@ -230,6 +230,8 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       orangeBorder: '#ff9d1a',
       purple: '#E6A5E6',
       purpleBorder: '#CC75CC',
+      darkPurple: '#822694',
+      darkPurpleBorder: '#822694',
       red: '#FF633C',
       redBorder: '#F13A0A',
       yellow: '#FFDC7D',

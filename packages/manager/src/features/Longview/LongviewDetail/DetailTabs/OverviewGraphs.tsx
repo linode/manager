@@ -122,34 +122,38 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
                 data={[
                   {
                     label: 'Used',
-                    borderColor: theme.graphs.greenBorder,
-                    backgroundColor: theme.graphs.green,
+                    borderColor: theme.graphs.darkPurpleBorder,
+                    backgroundColor: theme.graphs.darkPurple,
                     data: _convertData(
-                      pathOr([], ['Memory', 'real', 'used'], data)
+                      pathOr([], ['Memory', 'real', 'used'], data),
+                      formatMemory
                     )
                   },
                   {
                     label: 'Cache',
-                    borderColor: theme.graphs.orangeBorder,
-                    backgroundColor: theme.graphs.orange,
+                    borderColor: theme.graphs.purpleBorder,
+                    backgroundColor: theme.graphs.purple,
                     data: _convertData(
-                      pathOr([], ['Memory', 'real', 'cache'], data)
+                      pathOr([], ['Memory', 'real', 'cache'], data),
+                      formatMemory
                     )
                   },
                   {
                     label: 'Buffers',
-                    borderColor: theme.graphs.purpleBorder,
-                    backgroundColor: theme.graphs.purple,
+                    borderColor: theme.graphs.pinkBorder,
+                    backgroundColor: theme.graphs.pink,
                     data: _convertData(
-                      pathOr([], ['Memory', 'real', 'buffers'], data)
+                      pathOr([], ['Memory', 'real', 'buffers'], data),
+                      formatMemory
                     )
                   },
                   {
                     label: 'Swap',
-                    borderColor: theme.graphs.blueBorder,
-                    backgroundColor: theme.graphs.blue,
+                    borderColor: theme.graphs.redBorder,
+                    backgroundColor: theme.graphs.red,
                     data: _convertData(
-                      pathOr([], ['Memory', 'swap', 'used'], data)
+                      pathOr([], ['Memory', 'swap', 'used'], data),
+                      formatMemory
                     )
                   }
                 ]}
@@ -196,7 +200,23 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
   );
 };
 
-export const convertData = (d: Stat[]) =>
-  d.map(thisPoint => [thisPoint.x * 1000, thisPoint.y] as [number, number]);
+export const formatMemory = (value: number | null) => {
+  if (value === null) {
+    return value;
+  }
+  return value / 1024;
+};
+
+export const convertData = (
+  d: Stat[],
+  formatter?: (x: number | null) => number | null
+) =>
+  d.map(
+    thisPoint =>
+      [
+        thisPoint.x * 1000,
+        formatter ? formatter(thisPoint.y) : thisPoint.y
+      ] as [number, number]
+  );
 
 export default withTheme(OverviewGraphs);
