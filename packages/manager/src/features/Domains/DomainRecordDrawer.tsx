@@ -277,8 +277,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         textFieldProps={{
           dataAttrs: {
             'data-qa-domain-select': 'Expire Rate'
-          },
-          label: 'Expire Rate'
+          }
         }}
       />
     );
@@ -329,8 +328,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         textFieldProps={{
           dataAttrs: {
             'data-qa-domain-select': label
-          },
-          label
+          }
         }}
       />
     );
@@ -365,8 +363,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         textFieldProps={{
           dataAttrs: {
             'data-qa-domain-select': 'Protocol'
-          },
-          label: 'Protocol'
+          }
         }}
       />
     );
@@ -398,8 +395,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         textFieldProps={{
           dataAttrs: {
             'data-qa-domain-select': 'caa tag'
-          },
-          label: 'Tag'
+          }
         }}
       />
     );

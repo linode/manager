@@ -190,8 +190,7 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
           textFieldProps={{
             dataAttrs: {
               'data-qa-select-linode': true
-            },
-            label: 'Select a Linode'
+            }
           }}
           hideLabel
           {...rest}

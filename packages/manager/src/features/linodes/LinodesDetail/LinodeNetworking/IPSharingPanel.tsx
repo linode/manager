@@ -255,8 +255,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
             textFieldProps={{
               dataAttrs: {
                 'data-qa-share-ip': true
-              },
-              label: 'Select an IP'
+              }
             }}
             disabled={readOnly}
             isClearable={false}
