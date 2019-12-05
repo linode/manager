@@ -1,4 +1,5 @@
 import { APIError } from 'linode-js-sdk/lib/types';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -34,10 +35,10 @@ export const ProcessesTable: React.FC<CombinedProps> = props => {
     lastUpdatedError
   } = props;
 
-  const errorMessage =
-    processesError || lastUpdatedError
-      ? 'There was an error getting Processes data.'
-      : undefined;
+  const _hasError = processesError || lastUpdatedError;
+  const errorMessage = Boolean(_hasError)
+    ? pathOr<string>('Error retrieving data', [0, 'reason'], _hasError)
+    : undefined;
 
   return (
     <>
