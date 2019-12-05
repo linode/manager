@@ -44,6 +44,6 @@ describe('ProcessTable', () => {
     const { getByText } = renderWithTheme(
       <ProcessesTable {...props} processesError={[{ reason: 'Error!' }]} />
     );
-    getByText('There was an error getting Processes data.');
+    getByText('Error!');
   });
 });
