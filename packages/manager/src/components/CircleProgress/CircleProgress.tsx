@@ -9,7 +9,6 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import { srSpeak } from 'src/utilities/accessibility';
 
 type CSSClasses =
   | 'root'
@@ -130,10 +129,6 @@ interface Props extends CircularProgressProps {
 type CombinedProps = Props & WithStyles<CSSClasses>;
 
 class CircleProgressComponent extends React.Component<CombinedProps> {
-  componentWillUnmount() {
-    srSpeak('Content has loaded', 'polite');
-  }
-
   render() {
     const variant =
       typeof this.props.value === 'number' ? 'static' : 'indeterminate';
@@ -172,6 +167,7 @@ class CircleProgressComponent extends React.Component<CombinedProps> {
           },
           outerClasses
         )}
+        tabIndex={0}
         aria-label="Content is loading"
       >
         {children !== undefined && (
@@ -202,6 +198,8 @@ class CircleProgressComponent extends React.Component<CombinedProps> {
         })}
         size={noPadding ? 22 : 40}
         data-qa-circle-progress
+        aria-label="Content is loading"
+        tabIndex={0}
       />
     );
   }
