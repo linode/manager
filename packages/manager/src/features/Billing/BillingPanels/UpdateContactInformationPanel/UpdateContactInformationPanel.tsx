@@ -467,8 +467,7 @@ class UpdateContactInformationPanel extends React.Component<
             textFieldProps={{
               dataAttrs: {
                 'data-qa-contact-country': true
-              },
-              label: 'Country'
+              }
             }}
           />
         </Grid>

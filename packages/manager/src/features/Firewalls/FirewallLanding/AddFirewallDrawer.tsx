@@ -70,8 +70,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
           required: true,
           helperText: `Add one or more predefined rules to this firewall. You can edit the
           default parameters for these rules after you create the firewall.`,
-          helperTextPosition: 'top',
-          label: 'Rules'
+          helperTextPosition: 'top'
         }}
         onChange={() => null}
       />
@@ -107,8 +106,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
         textFieldProps={{
           helperTextPosition: 'top',
           helperText: `Assign one or more Linodes to this firewall. You can
-          add Linodes later if you want to customize your rules first.`,
-          label: 'Linodes'
+          add Linodes later if you want to customize your rules first.`
         }}
         hideSelectedOptions={true}
       />

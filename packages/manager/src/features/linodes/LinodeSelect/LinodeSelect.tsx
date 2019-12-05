@@ -29,7 +29,7 @@ interface Props {
   disabled?: boolean;
   region?: string;
   handleChange: (linode: Linode) => void;
-  textFieldProps?: TextFieldProps;
+  textFieldProps?: Omit<TextFieldProps, 'label'>;
   groupByRegion?: boolean;
   placeholder?: string;
   valueOverride?: Override;

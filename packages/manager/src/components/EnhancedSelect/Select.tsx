@@ -71,7 +71,7 @@ export interface BaseSelectProps
    but we're using the MUI select element so any props that
    can be passed to the MUI TextField element can be passed here
   */
-  textFieldProps?: TextFieldProps;
+  textFieldProps?: Omit<TextFieldProps, 'label'>;
   /**
    * errorText and label both passed to textFieldProps
    * @todo consider just putting this under textFieldProps
@@ -186,7 +186,6 @@ class Select extends React.PureComponent<CombinedProps, {}> {
         inputId={inputId ? inputId : convertToKebabCase(label)}
         textFieldProps={{
           ...textFieldProps,
-          label,
           hideLabel,
           errorText,
           errorGroup,

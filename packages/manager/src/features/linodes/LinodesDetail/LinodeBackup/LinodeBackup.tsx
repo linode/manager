@@ -515,9 +515,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     const { history, linodeID } = this.props;
     history.push(
       '/linodes/create' +
-        `?type=My%20Images&subtype=Backups&backupID=${
-          backup.id
-        }&linodeID=${linodeID}`
+        `?type=My%20Images&subtype=Backups&backupID=${backup.id}&linodeID=${linodeID}`
     );
   };
 
@@ -739,8 +737,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
               textFieldProps={{
                 dataAttrs: {
                   'data-qa-time-select': true
-                },
-                label: 'Time of Day'
+                }
               }}
               options={timeSelection}
               onChange={this.handleSelectBackupWindow}
@@ -761,8 +758,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
               textFieldProps={{
                 dataAttrs: {
                   'data-qa-weekday-select': true
-                },
-                label: 'Day of Week'
+                }
               }}
               options={daySelection}
               defaultValue={defaultDaySelection}
