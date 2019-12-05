@@ -150,6 +150,7 @@ const Disks: React.FC<CombinedProps> = props => {
     <React.Fragment>
       <Box display="flex" flexDirection="row" justifyContent="flex-end">
         <TimeRangeSelect
+          small
           className={classes.root}
           handleStatsChange={setStartAndEnd}
           defaultValue="Past 30 Minutes"
