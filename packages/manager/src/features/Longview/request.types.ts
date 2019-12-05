@@ -3,6 +3,17 @@ export interface Stat {
   y: number;
 }
 
+/*
+  interfaced used solely for the purpose
+  of interacting with the Longview API _start_ and _end_
+  query params. Because the API doesn't return a dataset for
+  the requested start time if no data existed at that time,
+  the client will be responsible for prepending the dataset
+  with a dummy data point at the start time requested
+
+  As an added bounus, each interface below will have a 'yAsNull'
+  type argument so the developer can choose to override the Stat types
+ */
 export interface StatWithDummyPoint {
   x: number;
   y: number | null;
