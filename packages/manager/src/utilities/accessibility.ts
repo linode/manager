@@ -1,6 +1,6 @@
 // Function to send aria-live messages
 // Fo instance, when page is loading
-export const srSpeak = (text: string, priority: string) => {
+export const srSpeak = (text: string, priority: 'polite' | 'assertive') => {
   const el = document.createElement('div');
   const id = 'speak-' + Date.now();
   el.setAttribute('id', id);
@@ -11,7 +11,7 @@ export const srSpeak = (text: string, priority: string) => {
 
   window.setTimeout(() => {
     if (elementById) {
-      elementById.innerHTML = text;
+      elementById.innerText = text;
     }
   }, 100);
 
