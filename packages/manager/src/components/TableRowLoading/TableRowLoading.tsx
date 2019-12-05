@@ -9,7 +9,6 @@ import {
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
 import Skeleton from 'src/components/Skeleton';
-import { srSpeak } from 'src/utilities/accessibility';
 
 type ClassNames = 'root' | 'tableCell' | 'transparent';
 
@@ -35,10 +34,6 @@ export interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class TableRowLoading extends React.Component<CombinedProps> {
-  componentWillUnmount() {
-    srSpeak('Table content has loaded', 'polite');
-  }
-
   render() {
     const { classes, transparent, colSpan, firstColWidth } = this.props;
     return (
