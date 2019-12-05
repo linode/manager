@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   diskLabel: string;
-  stats: Partial<Disk>;
+  stats: Partial<Disk<'yAsNull'>>;
   timezone: string;
   sysInfoType: string;
   startTime: number;

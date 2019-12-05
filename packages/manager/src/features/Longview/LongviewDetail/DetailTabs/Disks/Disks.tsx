@@ -34,7 +34,7 @@ type CombinedProps = Props;
 
 const Disks: React.FC<CombinedProps> = props => {
   const [diskStats, updateDiskStats] = React.useState<
-    Partial<Disk> | undefined
+    Partial<Disk<'yAsNull'>> | undefined
   >();
   const [sysInfoType, updateSysInfoType] = React.useState<string>('');
   const [fetchError, setError] = React.useState<string>('');
@@ -90,7 +90,7 @@ const Disks: React.FC<CombinedProps> = props => {
               [] as (string | number)[][]
             );
 
-            const enhancedDisk = maybeAddDataPointInThePast<Disk>(
+            const enhancedDisk = maybeAddDataPointInThePast<Disk<'yAsNull'>>(
               _disk,
               start,
               pathsToAlter

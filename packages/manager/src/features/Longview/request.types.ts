@@ -1,6 +1,6 @@
 export interface Stat {
   x: number;
-  y: number | null;
+  y: number;
 }
 
 /*
