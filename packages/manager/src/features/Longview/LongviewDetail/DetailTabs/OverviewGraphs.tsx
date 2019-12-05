@@ -11,11 +11,13 @@ import {
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
+import { readableBytes } from 'src/utilities/unitConversions';
 import { AllData, getValues, WithStartAndEnd } from '../../request';
-import { Stat } from '../../request.types';
+import { StatWithDummyPoint } from '../../request.types';
 import { maybeAddDataPointInThePast } from '../../shared/formatters';
 import TimeRangeSelect from '../../shared/TimeRangeSelect';
 import { useClientLastUpdated } from '../../shared/useClientLastUpdated';
+import { generateUsedMemory, statMax } from '../../shared/utilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paperSection: {
@@ -74,6 +76,36 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
 
   const isToday = time.end - time.start < 60 * 60 * 25;
 
+  /**
+   * Memory calculations are funny, need to calculate them
+   * here and determine what the graph's subtitle will be.
+   */
+  const buffers = pathOr<StatWithDummyPoint[]>(
+    [],
+    ['Memory', 'real', 'buffers'],
+    data
+  );
+  const cache = pathOr<StatWithDummyPoint[]>(
+    [],
+    ['Memory', 'real', 'cache'],
+    data
+  );
+  const used = getUsedMemory(
+    pathOr([], ['Memory', 'real', 'used'], data),
+    cache,
+    buffers
+  );
+  const swap = pathOr<StatWithDummyPoint[]>(
+    [],
+    ['Memory', 'swap', 'used'],
+    data
+  );
+
+  // Determine the unit based on the largest value
+  const max = Math.max(statMax(buffers), statMax(cache), statMax(used));
+  // LV returns stuff in KB so have to convert to bytes using base-2
+  const unit = readableBytes(max * 1024).unit;
+
   return (
     <Grid container alignItems="flex-end" item xs={12} spacing={0}>
       <Grid
@@ -117,45 +149,33 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
             <Grid item xs={6}>
               <LongviewLineGraph
                 title="Memory"
-                subtitle="GB"
+                subtitle={unit}
                 showToday={isToday}
                 timezone={timezone}
                 data={[
                   {
-                    label: 'Used',
-                    borderColor: theme.graphs.darkPurpleBorder,
-                    backgroundColor: theme.graphs.darkPurple,
-                    data: _convertData(
-                      pathOr([], ['Memory', 'real', 'used'], data),
-                      formatMemory
-                    )
-                  },
-                  {
-                    label: 'Cache',
-                    borderColor: theme.graphs.purpleBorder,
-                    backgroundColor: theme.graphs.purple,
-                    data: _convertData(
-                      pathOr([], ['Memory', 'real', 'cache'], data),
-                      formatMemory
-                    )
+                    label: 'Swap',
+                    borderColor: theme.graphs.redBorder,
+                    backgroundColor: theme.graphs.red,
+                    data: _convertData(swap, formatMemory)
                   },
                   {
                     label: 'Buffers',
                     borderColor: theme.graphs.pinkBorder,
                     backgroundColor: theme.graphs.pink,
-                    data: _convertData(
-                      pathOr([], ['Memory', 'real', 'buffers'], data),
-                      formatMemory
-                    )
+                    data: _convertData(buffers, formatMemory)
                   },
                   {
-                    label: 'Swap',
-                    borderColor: theme.graphs.redBorder,
-                    backgroundColor: theme.graphs.red,
-                    data: _convertData(
-                      pathOr([], ['Memory', 'swap', 'used'], data),
-                      formatMemory
-                    )
+                    label: 'Cache',
+                    borderColor: theme.graphs.purpleBorder,
+                    backgroundColor: theme.graphs.purple,
+                    data: _convertData(cache, formatMemory)
+                  },
+                  {
+                    label: 'Used',
+                    borderColor: theme.graphs.darkPurpleBorder,
+                    backgroundColor: theme.graphs.darkPurple,
+                    data: _convertData(used)
                   }
                 ]}
               />
@@ -201,23 +221,62 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
   );
 };
 
+/**
+ * This uses the generateUsedMemory utility,
+ * but unlike in the graphs, here we're dealing
+ * with three arrays of stats that have to be
+ * mapped through.
+ *
+ * @param used
+ * @param cache
+ * @param buffers
+ */
+export const getUsedMemory = (
+  used: StatWithDummyPoint[],
+  cache: StatWithDummyPoint[],
+  buffers: StatWithDummyPoint[]
+) => {
+  const result: StatWithDummyPoint[] = [];
+  const totalLength = used.length;
+  let i = 0;
+  for (i; i < totalLength; i++) {
+    const _used = pathOr({}, [i], used);
+    const _cache = pathOr(0, [i, 'y'], cache);
+    const _buffers = pathOr(0, [i, 'y'], buffers);
+    if (_used.y === null) {
+      // This is one of our padding data points
+      result.push({ x: _used.x * 1000, y: null });
+    } else {
+      const calculatedUsed = generateUsedMemory(_used.y, _buffers, _cache);
+      result.push({
+        // Time will be converted to ms in convertData
+        x: _used.x,
+        // x1024 bc the API returns data in KB
+        y: readableBytes(calculatedUsed * 1024).value
+      });
+    }
+  }
+  return result;
+};
+
 export const formatMemory = (value: number | null) => {
   if (value === null) {
     return value;
   }
-  return value / 1024;
+  // x1024 bc the API returns data in KB
+  return readableBytes(value * 1024).value;
 };
 
 export const convertData = (
-  d: Stat[],
-  formatter?: (x: number | null) => number | null
+  d: StatWithDummyPoint[],
+  formatter?: (pt: number | null) => number | null
 ) =>
   d.map(
     thisPoint =>
       [
         thisPoint.x * 1000,
         formatter ? formatter(thisPoint.y) : thisPoint.y
-      ] as [number, number]
+      ] as [number, number | null]
   );
 
 export default withTheme(OverviewGraphs);
