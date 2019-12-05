@@ -66,7 +66,8 @@ const styles = (theme: Theme) =>
       },
       '& td': {
         borderTopColor: theme.palette.primary.light,
-        borderBottomColor: theme.palette.primary.light
+        borderBottomColor: theme.palette.primary.light,
+        position: 'relative'
       }
     },
     activeCaret: {
