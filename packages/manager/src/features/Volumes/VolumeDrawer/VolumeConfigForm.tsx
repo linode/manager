@@ -62,7 +62,7 @@ const VolumeConfigDrawer: React.FC<CombinedProps> = props => {
           className={classes.copyField}
           value={`mkdir "/mnt/${props.volumeLabel}"`}
           data-qa-mountpoint
-          label="Create a mountpoint"
+          label="Create a Mountpoint"
           hideLabel
         />
       </div>
@@ -88,9 +88,7 @@ const VolumeConfigDrawer: React.FC<CombinedProps> = props => {
         </Typography>
         <CopyableTextField
           className={classes.copyField}
-          value={`${props.volumePath} /mnt/${
-            props.volumeLabel
-          } ext4 defaults,noatime,nofail 0 2`}
+          value={`${props.volumePath} /mnt/${props.volumeLabel} ext4 defaults,noatime,nofail 0 2`}
           data-qa-boot-mount
           label="Mount every time your Linode boots"
           hideLabel

@@ -102,7 +102,7 @@ export const AttachFileListItem: React.StatelessComponent<
                 </InputAdornment>
               )
             }}
-            label="File attached"
+            label="File Attached"
             aria-label="Disabled Text Field"
             hideLabel
           />
