@@ -1,4 +1,4 @@
-import { assocPath, clone, pathOr } from 'ramda';
+import { clone, lensPath, pathOr, set } from 'ramda';
 
 import { Stat, StatWithDummyPoint } from '../request.types';
 
@@ -78,14 +78,14 @@ export const pathMaybeAddDataInThePast = <T extends {}>(
     iterate over all the paths and maybe add a dummy data point to the
     data set specified
   */
-  let _data: T = data;
+  let _data = data;
   pathsToAddDataPointTo.forEach(eachPath => {
     const arrayOfStats = pathOr<Stat[]>([], eachPath, data);
     const updatedData = maybeAddPastData(
       arrayOfStats,
       selectedStartTimeInSeconds
     );
-    _data = assocPath(eachPath, updatedData, _data);
+    _data = set(lensPath(eachPath), updatedData, _data);
   });
   return _data;
 };
