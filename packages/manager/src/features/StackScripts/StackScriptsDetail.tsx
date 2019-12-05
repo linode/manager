@@ -50,8 +50,10 @@ const styles = (theme: Theme) =>
       ...theme.typography.h1
     },
     userNameSlash: {
-      color: theme.palette.text.primary,
-      fontFamily: theme.font.normal
+      color: theme.color.grey1,
+      fontFamily: theme.font.normal,
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1)
     }
   });
 
@@ -121,7 +123,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
           <Grid item>
             <Breadcrumb
               pathname={this.props.location.pathname}
-              labelOptions={{ prefixComponent: userNameSlash }}
+              labelOptions={{ prefixComponent: userNameSlash, noCap: true }}
               labelTitle={stackScript.label}
             />
           </Grid>
@@ -146,9 +148,8 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
 
 export default compose<CombinedProps, {}>(
   setDocs([StackScriptsDocs]),
-  withProfile((ownProps, profile) => {
+  withProfile((ownProps, { profileData: profile }) => {
     return {
-      ...ownProps,
       username: path(['data', 'username'], profile)
     };
   }),

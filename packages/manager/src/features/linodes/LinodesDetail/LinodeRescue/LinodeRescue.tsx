@@ -21,7 +21,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import withVolumes from 'src/containers/volumes.container';
-import { resetEventsPolling } from 'src/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { MapState } from 'src/store/types';
 import createDevicesFromStrings, {
@@ -88,9 +88,52 @@ type CombinedProps = VolumesProps &
   WithStyles<ClassNames> &
   WithSnackbarProps;
 
+interface DeviceMap {
+  sda?: string;
+  sdb?: string;
+  sdc?: string;
+  sdd?: string;
+  sde?: string;
+  sdf?: string;
+  sdg?: string;
+}
+
+export const getDefaultDeviceMapAndCounter = (
+  disks: ExtendedDisk[]
+): [DeviceMap, number] => {
+  const defaultDisks = disks.map(thisDisk => thisDisk._id);
+  const counter = defaultDisks.reduce(
+    (c, thisDisk) => (!!thisDisk ? c + 1 : c),
+    0
+  );
+  /**
+   * This mimics the behavior of Classic:
+   * when you load the Rebuild tab, each
+   * device slot is filled with one of your
+   * disks, until you run out of either disks
+   * or slots. Note that defaultDisks[10000]
+   * will be `undefined`, which is the correct
+   * value for an empty slot, so this is a safe
+   * assignment.
+   */
+  const deviceMap = {
+    sda: defaultDisks[0],
+    sdb: defaultDisks[1],
+    sdc: defaultDisks[2],
+    sdd: defaultDisks[3],
+    sde: defaultDisks[4],
+    sdf: defaultDisks[5],
+    sdg: defaultDisks[6]
+  };
+  return [deviceMap, counter];
+};
+
 export class LinodeRescue extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
     super(props);
+    const [deviceMap, initialCounter] = getDefaultDeviceMapAndCounter(
+      props.linodeDisks || []
+    );
     const filteredVolumes = props.volumesData
       ? props.volumesData.filter(volume => {
           // whether volume is not attached to any Linode
@@ -112,17 +155,8 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
         disks: props.linodeDisks || [],
         volumes: filteredVolumes || []
       },
-      counter: 1,
-      rescueDevices: {
-        sda: undefined,
-        sdb: undefined,
-        sdc: undefined,
-        sdd: undefined,
-        sde: undefined,
-        sdf: undefined,
-        sdg: undefined,
-        sdh: undefined
-      }
+      counter: initialCounter,
+      rescueDevices: deviceMap
     };
   }
 
@@ -131,19 +165,13 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
     const { rescueDevices } = this.state;
 
     rescueLinode(linodeId, createDevicesFromStrings(rescueDevices))
-      .then(response => {
+      .then(_ => {
+        const [diskMap, counter] = getDefaultDeviceMapAndCounter(
+          this.props.linodeDisks || []
+        );
         this.setState({
-          counter: 1,
-          rescueDevices: {
-            sda: undefined,
-            sdb: undefined,
-            sdc: undefined,
-            sdd: undefined,
-            sde: undefined,
-            sdf: undefined,
-            sdg: undefined,
-            sdh: undefined
-          }
+          counter,
+          rescueDevices: diskMap
         });
         enqueueSnackbar('Linode rescue started.', {
           variant: 'info'
@@ -210,7 +238,8 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
         <Paper className={classes.root}>
           {disabled && <LinodePermissionsError />}
           <Typography
-            role="header"
+            role="heading"
+            aria-level={2}
             variant="h2"
             className={classes.title}
             data-qa-title

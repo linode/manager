@@ -1,5 +1,5 @@
 import { Disk } from '../../request.types';
-import { sumStorage } from './Storage';
+import { sumStorage } from '../../shared/utilities';
 
 describe('Storage Gauge', () => {
   describe('sumStorage', () => {

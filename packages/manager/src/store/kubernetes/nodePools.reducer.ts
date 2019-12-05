@@ -70,6 +70,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       draft.entities.push(result);
       draft.results.push(result.id);
       draft.error!.create = undefined;
+      draft.lastUpdated = Date.now();
     }
 
     if (isType(action, createNodePoolActions.failed)) {

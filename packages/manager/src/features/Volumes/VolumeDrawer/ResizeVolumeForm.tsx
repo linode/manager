@@ -6,7 +6,7 @@ import Notice from 'src/components/Notice';
 import withVolumesRequests, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
-import { resetEventsPolling } from 'src/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import {
   handleFieldErrors,
   handleGeneralErrors
@@ -27,7 +27,7 @@ interface Props {
 
 type CombinedProps = Props & VolumesRequests;
 
-const ResizeVolumeForm: React.StatelessComponent<CombinedProps> = props => {
+const ResizeVolumeForm: React.FC<CombinedProps> = props => {
   const {
     volumeId,
     volumeSize,

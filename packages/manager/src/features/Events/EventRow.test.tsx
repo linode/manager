@@ -1,9 +1,10 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-import { maybeRemoveTrailingPeriod, Row, RowProps } from './EventRow';
+import { Row, RowProps } from './EventRow';
 
 const message = 'this is a message.';
 const props: RowProps = {
+  action: 'linode_boot',
   message,
   type: 'linode',
   created: '2018-01-01',
@@ -37,13 +38,11 @@ describe('EventRow component', () => {
 
   it("should only include a link if it's not an events page for a specific entity", () => {
     row.setProps({ entityId: 1 });
-    let tableRowProps: any = row
-      .find('WithStyles(withRouter(TableRow))')
-      .props();
+    let tableRowProps: any = row.find('[data-qa-event-row]').props();
     expect(tableRowProps.rowLink).toBe(undefined);
 
     row.setProps({ entityId: 0 });
-    tableRowProps = row.find('WithStyles(withRouter(TableRow))').props();
+    tableRowProps = row.find('[data-qa-event-row]').props();
     expect(tableRowProps.rowLink).toBeDefined();
   });
 
@@ -55,14 +54,5 @@ describe('EventRow component', () => {
     expect(row.find(`[data-qa-event-message]`).text()).toBe(
       'this is a message by marty.'
     );
-  });
-});
-
-describe('utilities', () => {
-  it('should remove trailing periods', () => {
-    expect(maybeRemoveTrailingPeriod('hello world.')).toBe('hello world');
-    expect(maybeRemoveTrailingPeriod('hello wor..ld')).toBe('hello wor..ld');
-    expect(maybeRemoveTrailingPeriod('hello world')).toBe('hello world');
-    expect(maybeRemoveTrailingPeriod('hello. world')).toBe('hello. world');
   });
 });

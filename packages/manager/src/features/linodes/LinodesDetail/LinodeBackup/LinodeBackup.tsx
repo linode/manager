@@ -52,7 +52,8 @@ import PromiseLoader, {
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TextField from 'src/components/TextField';
-import { events$, resetEventsPolling } from 'src/events';
+import { events$ } from 'src/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import { linodeInTransition as isLinodeInTransition } from 'src/features/linodes/transitions';
 import {
   LinodeActionsProps,
@@ -162,6 +163,7 @@ interface State {
     window: Window;
     day: Day;
     errors?: APIError[];
+    loading: boolean;
   };
   restoreDrawer: {
     open: boolean;
@@ -215,7 +217,8 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     },
     settingsForm: {
       window: this.props.backupsSchedule.window || 'Scheduling',
-      day: this.props.backupsSchedule.day || 'Scheduling'
+      day: this.props.backupsSchedule.day || 'Scheduling',
+      loading: false
     },
     restoreDrawer: {
       open: false,
@@ -410,6 +413,10 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     } = this.props;
     const { settingsForm } = this.state;
 
+    this.setState(state => ({
+      settingsForm: { ...state.settingsForm, loading: true, errors: undefined }
+    }));
+
     updateLinode({
       linodeId: linodeID,
       backups: {
@@ -421,18 +428,23 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
       }
     })
       .then(() => {
+        this.setState(state => ({
+          settingsForm: { ...state.settingsForm, loading: false }
+        }));
+
         enqueueSnackbar('Backup settings saved', {
           variant: 'success'
         });
       })
       .catch(err => {
         this.setState(
-          {
+          state => ({
             settingsForm: {
-              ...settingsForm,
+              ...state.settingsForm,
+              loading: false,
               errors: getAPIErrorOrDefault(err)
             }
-          },
+          }),
           () => {
             scrollErrorIntoView();
           }
@@ -475,6 +487,16 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
   };
 
   handleSnapshotDialogDisplay = () => {
+    // If there's no label, don't open the modal. Show an error in the form.
+    if (!this.state.snapshotForm.label) {
+      this.setState({
+        snapshotForm: {
+          ...this.state.snapshotForm,
+          errors: [{ field: 'label', reason: 'Label is required.' }]
+        }
+      });
+      return;
+    }
     this.setState({
       dialogOpen: true,
       dialogError: undefined
@@ -754,6 +776,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
               buttonType="primary"
               onClick={this.saveSettings}
               disabled={isReadOnly(permissions)}
+              loading={this.state.settingsForm.loading}
               data-qa-schedule
             >
               Save Schedule
@@ -776,7 +799,8 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
       <React.Fragment>
         {disabled && <LinodePermissionsError />}
         <Typography
-          role="header"
+          aria-level={2}
+          role="heading"
           variant="h2"
           className={classes.title}
           data-qa-title

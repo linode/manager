@@ -82,7 +82,7 @@ const CancelAccountDialog: React.FC<CombinedProps> = props => {
       .then(response => {
         setCancelling(false);
         /** shoot the user off to survey monkey to answer some questions */
-        props.history.push(`/cancel?link=${response.survey_link}`);
+        props.history.push('/cancel', { survey_link: response.survey_link });
       })
       .catch((e: APIError[]) => {
         setCancelling(false);

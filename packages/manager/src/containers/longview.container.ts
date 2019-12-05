@@ -16,12 +16,11 @@ export interface DispatchProps {
     params?: any,
     filters?: any
   ) => Promise<GetAllData<LongviewClient[]>>;
-  createLongviewClient: (label: string) => Promise<LongviewClient>;
+  createLongviewClient: (label?: string) => Promise<LongviewClient>;
   deleteLongviewClient: (id: number) => Promise<{}>;
   updateLongviewClient: (id: number, label: string) => Promise<LongviewClient>;
 }
 
-/* tslint:disable-next-line */
 export interface StateProps {
   longviewClientsError: State['error'];
   longviewClientsLoading: State['loading'];

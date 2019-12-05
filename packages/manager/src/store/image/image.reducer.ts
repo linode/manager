@@ -43,6 +43,10 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       lastUpdated: Date.now(),
       listOfIDsInOriginalOrder: payload.data.map(eachImage => eachImage.id),
       data: payload.data.reduce((acc, eachImage) => {
+        if (eachImage.label.match(/kube/i)) {
+          // NOTE: Temporarily hide public Kubernetes images until ImageSelect redesign.
+          return acc;
+        }
         acc[eachImage.id] = eachImage;
         return acc;
       }, {}),

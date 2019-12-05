@@ -25,6 +25,7 @@ export interface Props {
   value: Item[];
   onChange: (selected: Item[]) => void;
   disabled?: boolean;
+  menuPlacement?: 'bottom' | 'top' | 'auto' | undefined;
 }
 
 class TagsInput extends React.Component<Props, State> {
@@ -80,7 +81,15 @@ class TagsInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { tagError, onChange, value, name, label, disabled } = this.props;
+    const {
+      tagError,
+      onChange,
+      value,
+      name,
+      label,
+      disabled,
+      menuPlacement
+    } = this.props;
     const { accountTags, errors } = this.state;
 
     const hasErrorFor = getAPIErrorFor({ label: 'label' }, errors);
@@ -103,6 +112,7 @@ class TagsInput extends React.Component<Props, State> {
         createNew={this.createTag}
         noOptionsMessage={this.getEmptyMessage}
         disabled={disabled}
+        menuPlacement={menuPlacement}
       />
     );
   }

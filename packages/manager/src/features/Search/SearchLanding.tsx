@@ -11,6 +11,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import H1Header from 'src/components/H1Header';
 import Notice from 'src/components/Notice';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { ErrorObject } from 'src/store/selectors/entitiesErrors';
@@ -142,9 +143,10 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
       <Grid container direction="column">
         <Grid item>
           {!resultsEmpty && !entitiesLoading && (
-            <Typography variant="h1" className={classes.headline}>
-              Search Results {query && `for "${query}"`}
-            </Typography>
+            <H1Header
+              title={`Search Results ${query && `for "${query}"`}`}
+              className={classes.headline}
+            />
           )}
         </Grid>
         {errors.hasErrors && (

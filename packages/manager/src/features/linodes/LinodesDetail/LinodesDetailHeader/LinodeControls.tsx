@@ -12,7 +12,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
-import { lishLaunch } from 'src/features/Lish';
+import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import {
@@ -140,6 +140,7 @@ const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
           disableFocusRipple={true}
           disableRipple={true}
           disabled={disabled}
+          aria-describedby="new-window"
         >
           Launch Console
         </Button>

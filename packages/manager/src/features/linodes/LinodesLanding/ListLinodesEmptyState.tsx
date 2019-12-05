@@ -11,6 +11,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import H1Header from 'src/components/H1Header';
 
 type CSSClasses = 'root' | 'copy' | 'icon' | 'title';
 
@@ -44,8 +45,8 @@ const styles = (theme: Theme) =>
     },
     icon: {
       animation: '$scaleIn .5s ease-in-out',
-      width: 225,
-      height: 225,
+      width: 150,
+      height: 150,
       '& use': {
         fill: theme.bg.main
       },
@@ -83,13 +84,11 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
         <Grid item xs={12}>
           <LinodeSvg className={classes.icon} />
         </Grid>
-        <Typography
-          variant="h4"
+        <H1Header
+          title="Add your first Linode!"
           className={classes.title}
           data-qa-placeholder-title
-        >
-          Add your first Linode!
-        </Typography>
+        />
         <Grid item xs={12} lg={10} className={classes.copy}>
           <Typography variant="subtitle1">
             Choose a plan, select an image, and deploy within minutes. Need help
@@ -99,6 +98,7 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
             <a
               href="https://linode.com/docs/getting-started-new-manager/"
               target="_blank"
+              aria-describedby="external-site"
               rel="noopener noreferrer"
               className="h-u"
             >
@@ -108,6 +108,7 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
             <a
               href="https://www.linode.com/docs/"
               target="_blank"
+              aria-describedby="external-site"
               rel="noopener noreferrer"
               className="h-u"
             >

@@ -3,10 +3,11 @@ import { AccountSettings } from 'linode-js-sdk/lib/account';
 import {
   createObjectStorageKeys,
   getObjectStorageKeys,
+  ObjectStorageKey,
   ObjectStorageKeyRequest,
   revokeObjectStorageKey,
   updateObjectStorageKey
-} from 'linode-js-sdk/lib/profile';
+} from 'linode-js-sdk/lib/object-storage';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -35,8 +36,7 @@ import {
   sendRevokeAccessKeyEvent
 } from 'src/utilities/ga';
 import AccessKeyDisplayDialog from './AccessKeyDisplayDialog';
-import AccessKeyDrawer from './AccessKeyDrawer';
-import { MODES } from './AccessKeyLanding';
+import AccessKeyDrawer, { MODES } from './AccessKeyDrawer';
 import AccessKeyTable from './AccessKeyTable';
 import RevokeAccessKeyDialog from './RevokeAccessKeyDialog';
 
@@ -65,16 +65,12 @@ interface DispatchProps {
 }
 
 type CombinedProps = Props &
-  PaginationProps<Linode.ObjectStorageKey> &
+  PaginationProps<ObjectStorageKey> &
   WithStyles<ClassNames> &
   ReduxStateProps &
   DispatchProps;
 
-export type MODES = 'creating' | 'editing';
-
-export const AccessKeyLanding: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const AccessKeyLanding: React.StatelessComponent<CombinedProps> = props => {
   const {
     classes,
     object_storage,
@@ -88,19 +84,17 @@ export const AccessKeyLanding: React.StatelessComponent<
   const [
     keyToDisplay,
     setKeyToDisplay
-  ] = React.useState<Linode.ObjectStorageKey | null>(null);
+  ] = React.useState<ObjectStorageKey | null>(null);
 
   // Key to rename (by clicking on a key's kebab menu )
-  const [
-    keyToEdit,
-    setKeyToEdit
-  ] = React.useState<Linode.ObjectStorageKey | null>(null);
+  const [keyToEdit, setKeyToEdit] = React.useState<ObjectStorageKey | null>(
+    null
+  );
 
   // Key to revoke (by clicking on a key's kebab menu )
-  const [
-    keyToRevoke,
-    setKeyToRevoke
-  ] = React.useState<Linode.ObjectStorageKey | null>(null);
+  const [keyToRevoke, setKeyToRevoke] = React.useState<ObjectStorageKey | null>(
+    null
+  );
   const [isRevoking, setIsRevoking] = React.useState<boolean>(false);
   const [revokeErrors, setRevokeErrors] = useErrors();
 
@@ -256,13 +250,13 @@ export const AccessKeyLanding: React.StatelessComponent<
     createOrEditDrawer.open();
   };
 
-  const openDrawerForEditing = (objectStorageKey: Linode.ObjectStorageKey) => {
+  const openDrawerForEditing = (objectStorageKey: ObjectStorageKey) => {
     setMode('editing');
     setKeyToEdit(objectStorageKey);
     createOrEditDrawer.open();
   };
 
-  const openRevokeDialog = (objectStorageKey: Linode.ObjectStorageKey) => {
+  const openRevokeDialog = (objectStorageKey: ObjectStorageKey) => {
     setKeyToRevoke(objectStorageKey);
     revokeKeysDialog.open();
   };
@@ -350,15 +344,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced = compose<CombinedProps, Props>(
-  styled,
-  paginated,
-  connected
-);
+const enhanced = compose<CombinedProps, Props>(styled, paginated, connected);
 
 export default enhanced(AccessKeyLanding);

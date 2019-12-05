@@ -1,15 +1,16 @@
+import { ObjectStorageKey } from 'linode-js-sdk/lib/object-storage';
 import * as React from 'react';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   // prop-drilled from parent
-  objectStorageKey: Linode.ObjectStorageKey;
+  objectStorageKey: ObjectStorageKey;
 
   // prop-drilled from grandparent:
   // ObjectStorageKeys --> ObjectStorageKeyTable --> HERE
-  openRevokeDialog: (key: Linode.ObjectStorageKey) => void;
-  openDrawerForEditing: (key: Linode.ObjectStorageKey) => void;
+  openRevokeDialog: (key: ObjectStorageKey) => void;
+  openDrawerForEditing: (key: ObjectStorageKey) => void;
 }
 
 type CombinedProps = Props;
