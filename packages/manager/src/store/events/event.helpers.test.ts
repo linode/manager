@@ -268,7 +268,8 @@ describe('event.helpers', () => {
           username: 'test',
           rate: null,
           entity: null,
-          status: 'finished'
+          status: 'finished',
+          duration: 0
         },
         {
           id: 17957718,
@@ -282,7 +283,8 @@ describe('event.helpers', () => {
           username: 'test',
           rate: null,
           entity: null,
-          status: 'started'
+          status: 'started',
+          duration: 0
         },
         {
           id: 17957108,
@@ -296,7 +298,8 @@ describe('event.helpers', () => {
           username: 'test',
           rate: null,
           entity: null,
-          status: 'finished'
+          status: 'finished',
+          duration: 0
         }
       ]);
     });
