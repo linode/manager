@@ -8,24 +8,24 @@ export interface StatWithDummyPoint {
   y: number | null;
 }
 
-interface FS<WithDummy = false> {
-  itotal: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
-  ifree: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
-  total: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
-  free: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
+interface FS<WithDummy extends '' | 'yAsNull' = ''> {
+  itotal: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  ifree: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  total: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  free: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
   path: string;
 }
 
-export interface Disk<WithDummy = false> {
+export interface Disk<WithDummy extends '' | 'yAsNull' = ''> {
   dm: number;
   children: number;
   mounted: number;
   childof: number;
   isswap: number;
-  write_bytes?: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
-  writes?: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
-  reads?: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
-  read_bytes?: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
+  write_bytes?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  writes?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  reads?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  read_bytes?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
   fs: FS<WithDummy>;
 }
 /*
@@ -39,33 +39,33 @@ export interface Disk<WithDummy = false> {
   }
 
 */
-export interface LongviewDisk<WithDummy = false> {
+export interface LongviewDisk<WithDummy extends '' | 'yAsNull' = ''> {
   Disk: Record<string, Disk<WithDummy>>;
 }
 
-interface RealMemory<WithDummy = false> {
-  free: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
-  buffers: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
-  used: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
-  cache: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
+interface RealMemory<WithDummy extends '' | 'yAsNull' = ''> {
+  free: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  buffers: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  used: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  cache: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
 }
 
-interface SwapMemory<WithDummy = false> {
-  free: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
-  used: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
+interface SwapMemory<WithDummy extends '' | 'yAsNull' = ''> {
+  free: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  used: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
 }
 
-export interface LongviewMemory<WithDummy = false> {
+export interface LongviewMemory<WithDummy extends '' | 'yAsNull' = ''> {
   Memory: {
     real: RealMemory<WithDummy>;
     swap: SwapMemory<WithDummy>;
   };
 }
 
-export interface CPU<WithDummy = false> {
-  user: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
-  wait: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
-  system: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
+export interface CPU<WithDummy extends '' | 'yAsNull' = ''> {
+  user: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  wait: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  system: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
 }
 
 /*
@@ -79,20 +79,20 @@ export interface CPU<WithDummy = false> {
   }
 
 */
-export interface LongviewCPU<WithDummy = false> {
+export interface LongviewCPU<WithDummy extends '' | 'yAsNull' = ''> {
   CPU: Record<string, CPU<WithDummy>>;
 }
 
-export interface LongviewLoad<WithDummy = false> {
-  Load: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
+export interface LongviewLoad<WithDummy extends '' | 'yAsNull' = ''> {
+  Load: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
 }
 
-export interface InboundOutboundNetwork<WithDummy = false> {
-  rx_bytes: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
-  tx_bytes: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
+export interface InboundOutboundNetwork<WithDummy extends '' | 'yAsNull' = ''> {
+  rx_bytes: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  tx_bytes: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
 }
 
-export interface LongviewNetwork<WithDummy = false> {
+export interface LongviewNetwork<WithDummy extends '' | 'yAsNull' = ''> {
   Network: {
     mac_addr: string;
     Interface: Record<string, InboundOutboundNetwork<WithDummy>>;
@@ -157,21 +157,20 @@ export interface LongviewSystemInfo {
 }
 // Resulting shape of calling `/fetch` with an api_action of `getValues` or
 // `getLatestValues` (and asking for the "Processes.*" key).
-export interface LongviewProcesses<S = Stat> {
-  Processes?: Record<string, Process<S>>;
+export interface LongviewProcesses<WithDummy extends '' | 'yAsNull' = ''> {
+  Processes?: Record<string, Process<WithDummy>>;
 }
 
-export type Process<WithDummy = false> = { longname: string } & Record<
-  string,
-  ProcessStats<WithDummy>
->;
+export type Process<WithDummy extends '' | 'yAsNull' = ''> = {
+  longname: string;
+} & Record<string, ProcessStats<WithDummy>>;
 
-export interface ProcessStats<WithDummy = false> {
-  count?: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
-  cpu?: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
-  ioreadkbytes?: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
-  iowritekbytes?: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
-  mem?: WithDummy extends true ? StatWithDummyPoint[] : Stat[];
+export interface ProcessStats<WithDummy extends '' | 'yAsNull' = ''> {
+  count?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  cpu?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  ioreadkbytes?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  iowritekbytes?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  mem?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
 }
 
 // Resulting shape of calling `/fetch` with an api_action of `getTopProcesses`.
