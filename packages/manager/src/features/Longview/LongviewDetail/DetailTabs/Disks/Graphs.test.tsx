@@ -18,7 +18,9 @@ const baseProps: Props = {
   iTotal: [],
   total: [],
   free: [],
-  diskLabel: 'helloworld'
+  diskLabel: 'helloworld',
+  startTime: 0,
+  endTime: 0
 };
 
 describe('Utility Functions', () => {

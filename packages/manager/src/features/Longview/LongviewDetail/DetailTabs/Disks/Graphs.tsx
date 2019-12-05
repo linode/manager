@@ -19,9 +19,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center'
-    // '& > div': {
-    //   flexGrow: 1,
-    // }
   }
 }));
 
@@ -35,6 +32,8 @@ export interface Props {
   free: Stat[];
   total: Stat[];
   diskLabel: string;
+  startTime: number;
+  endTime: number;
 }
 
 type CombinedProps = Props & WithTheme;
@@ -52,7 +51,9 @@ const Grahps: React.FC<CombinedProps> = props => {
     free,
     total,
     iFree,
-    iTotal
+    iTotal,
+    startTime,
+    endTime
   } = props;
 
   if (isSwap) {
@@ -93,55 +94,66 @@ const Grahps: React.FC<CombinedProps> = props => {
     );
   }
 
+  const isToday = endTime - startTime < 60 * 60 * 25;
+
   return (
-    <Grid container className={classes.graphContainer}>
-      <Grid item xs={4}>
-        <LongviewLineGraph
-          data={[
-            {
-              /** idk yet lol */
-              data: [],
-              label: 'Disk I/O',
-              borderColor: theme.graphs.orangeBorder,
-              backgroundColor: theme.graphs.orange
-            }
-          ]}
-          title="Disk I/O"
-          subtitle="ops/s"
-          timezone={timezone}
-        />
+    <React.Fragment>
+      <Typography variant="subtitle1">
+        <strong>{diskLabel}</strong>
+      </Typography>
+      <Grid container className={classes.graphContainer}>
+        <Grid item xs={4}>
+          <LongviewLineGraph
+            data={[
+              {
+                /** idk yet lol */
+                data: [],
+                label: 'Disk I/O',
+                borderColor: theme.graphs.orangeBorder,
+                backgroundColor: theme.graphs.orange
+              }
+            ]}
+            title="Disk I/O"
+            showToday={isToday}
+            subtitle="ops/s"
+            timezone={timezone}
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <LongviewLineGraph
+            data={[
+              {
+                data: formatSpace(free, total),
+                label: 'Space',
+                borderColor: theme.graphs.salmonBorder,
+                backgroundColor: theme.graphs.salmon
+              }
+            ]}
+            showToday={isToday}
+            title="Space"
+            subtitle="GB"
+            timezone={timezone}
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <LongviewLineGraph
+            data={[
+              {
+                data: formatINodes(iFree, iTotal),
+                label: 'Inodes',
+                borderColor: theme.graphs.pinkBorder,
+                backgroundColor: theme.graphs.pink
+              }
+            ]}
+            showToday={isToday}
+            suggestedMax={1000000}
+            title="Inodes"
+            subtitle="millions"
+            timezone={timezone}
+          />
+        </Grid>
       </Grid>
-      <Grid item xs={4}>
-        <LongviewLineGraph
-          data={[
-            {
-              data: formatSpace(free, total),
-              label: 'Space',
-              borderColor: theme.graphs.salmonBorder,
-              backgroundColor: theme.graphs.salmon
-            }
-          ]}
-          title="Space"
-          subtitle="GB"
-          timezone={timezone}
-        />
-      </Grid>
-      <Grid item xs={4}>
-        <LongviewLineGraph
-          data={[
-            {
-              data: formatINodes(iFree, iTotal),
-              label: 'Inodes',
-              borderColor: theme.graphs.pinkBorder,
-              backgroundColor: theme.graphs.pink
-            }
-          ]}
-          title="Inodes"
-          subtitle="millions"
-          timezone={timezone}
-        />
-      </Grid>
-    </Grid>
+    </React.Fragment>
   );
 };
 

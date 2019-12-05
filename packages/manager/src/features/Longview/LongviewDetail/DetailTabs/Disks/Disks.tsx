@@ -113,6 +113,8 @@ const Disks: React.FC<CombinedProps> = props => {
         stats={(diskStats || {})[eachKey]}
         timezone={props.timezone}
         sysInfoType={sysInfoType}
+        startTime={start}
+        endTime={end}
       />
     ));
   };

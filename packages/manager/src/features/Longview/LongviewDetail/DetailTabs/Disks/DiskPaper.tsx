@@ -30,6 +30,8 @@ interface Props {
   stats: Partial<Disk>;
   timezone: string;
   sysInfoType: string;
+  startTime: number;
+  endTime: number;
 }
 
 type CombinedProps = Props & WithTheme;
@@ -37,7 +39,7 @@ type CombinedProps = Props & WithTheme;
 const DiskPaper: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const { diskLabel, stats, timezone, sysInfoType } = props;
+  const { diskLabel, stats, timezone, sysInfoType, startTime, endTime } = props;
 
   const isSwap = pathOr(0, ['isswap'], stats);
   const childOf = pathOr(0, ['childOf'], stats);
@@ -59,6 +61,8 @@ const DiskPaper: React.FC<CombinedProps> = props => {
         total={total}
         timezone={timezone}
         diskLabel={diskLabel}
+        startTime={startTime}
+        endTime={endTime}
       />
     </Paper>
   );
