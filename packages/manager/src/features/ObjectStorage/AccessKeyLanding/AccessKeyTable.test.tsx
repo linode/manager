@@ -44,7 +44,7 @@ describe('ObjectStorageKeyTable', () => {
 
   it('returns a loading state when loading', () => {
     wrapper.setProps({ loading: true });
-    expect(wrapper.find('WithStyles(tableRowLoading)')).toHaveLength(1);
+    expect(wrapper.find('WithStyles(TableRowLoading)')).toHaveLength(1);
   });
 
   it('returns an error state when there is an error', () => {
