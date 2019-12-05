@@ -13,7 +13,6 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -143,9 +142,6 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={`${nodeBalancerLabel} - Settings`} />
-        <Typography variant="h1" className={classes.title}>
-          Settings
-        </Typography>
         <Paper className={classes.root}>
           <Grid item xs={12}>
             {generalError && <Notice error text={generalError} />}

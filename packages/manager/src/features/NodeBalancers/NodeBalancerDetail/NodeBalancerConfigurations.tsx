@@ -1087,7 +1087,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   );
 
   render() {
-    const { classes, nodeBalancerLabel } = this.props;
+    const { nodeBalancerLabel } = this.props;
     const {
       configs,
       configErrors,
@@ -1101,10 +1101,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         <DocumentTitleSegment
           segment={`${nodeBalancerLabel} - Configurations`}
         />
-        <Typography variant="h1" data-qa-title className={classes.title}>
-          NodeBalancer Configurations
-        </Typography>
-
         {Array.isArray(configs) &&
           configs.map(
             this.renderConfig(panelMessages, configErrors, configSubmitting)

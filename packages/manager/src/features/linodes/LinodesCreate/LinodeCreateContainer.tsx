@@ -27,7 +27,7 @@ import {
   withLinodeActions
 } from 'src/store/linodes/linode.containers';
 
-import Typography from 'src/components/core/Typography';
+import Breadcrumb from 'src/components/Breadcrumb';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { Tag } from 'src/components/TagsInput';
@@ -565,9 +565,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         <DocumentTitleSegment segment="Create a Linode" />
         <Grid container spacing={0}>
           <Grid item xs={12}>
-            <Typography variant="h1" data-qa-create-linode-header>
-              Create New Linode
-            </Typography>
+            <Breadcrumb
+              pathname={'/linodes/create'}
+              labelTitle="Create"
+              data-qa-create-linode-header
+            />
           </Grid>
           <LinodeCreate
             regionDisplayInfo={this.getRegionInfo()}

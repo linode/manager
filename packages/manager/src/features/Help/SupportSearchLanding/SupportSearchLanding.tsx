@@ -1,9 +1,7 @@
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import Search from '@material-ui/icons/Search';
 import { compose } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import IconButton from 'src/components/core/IconButton';
 import InputAdornment from 'src/components/core/InputAdornment';
 import {
   createStyles,
@@ -11,8 +9,8 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import H1Header from 'src/components/H1Header';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { COMMUNITY_SEARCH_URL, DOCS_SEARCH_URL } from 'src/constants';
@@ -23,7 +21,6 @@ import HelpResources from './HelpResources';
 
 type ClassNames =
   | 'root'
-  | 'backButton'
   | 'searchBar'
   | 'searchBoxInner'
   | 'searchHeading'
@@ -38,13 +35,6 @@ const styles = (theme: Theme) =>
       alignItems: 'center',
       justifyContent: 'flex-start',
       position: 'relative'
-    },
-    backButton: {
-      margin: '2px 0 0 -16px',
-      '& svg': {
-        width: 34,
-        height: 34
-      }
     },
     searchBar: {
       maxWidth: '100%'
@@ -127,17 +117,12 @@ export class SupportSearchLanding extends React.Component<
         <Grid item>
           <Grid container alignItems="center">
             <Grid item>
-              <IconButton
-                onClick={this.onBackButtonClick}
-                className={classes.backButton}
-              >
-                <KeyboardArrowLeft />
-              </IconButton>
-            </Grid>
-            <Grid item>
-              <Typography variant="h1">
-                {query.length > 1 ? `Search results for "${query}"` : 'Search'}
-              </Typography>
+              <H1Header
+                title={
+                  query.length > 1 ? `Search results for "${query}"` : 'Search'
+                }
+                data-qa-support-search-landing-title
+              />
             </Grid>
           </Grid>
         </Grid>

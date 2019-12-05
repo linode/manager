@@ -15,9 +15,9 @@ import {
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
-import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
+import H1Header from 'src/components/H1Header';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -130,9 +130,11 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
         style={{ paddingBottom: 0 }}
       >
         <Grid item>
-          <Typography variant="h1" data-qa-title className={classes.title}>
-            Kubernetes Clusters
-          </Typography>
+          <H1Header
+            title="Kubernetes Clusters"
+            className={classes.title}
+            data-qa-title
+          />
         </Grid>
         <Grid item>
           <Grid container alignItems="flex-end">
