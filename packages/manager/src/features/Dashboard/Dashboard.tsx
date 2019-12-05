@@ -14,9 +14,9 @@ import {
   WithStyles,
   WithTheme
 } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
+import H1Header from 'src/components/H1Header';
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import TaxBanner from 'src/components/TaxBanner';
 import TagImportDrawer from 'src/features/TagImport';
@@ -104,9 +104,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
         <TaxBanner location={location} marginBottom={8} />
         <DocumentTitleSegment segment="Dashboard" />
         <Grid item xs={12}>
-          <Typography variant="h1" data-qa-dashboard-header>
-            Dashboard
-          </Typography>
+          <H1Header title="Dashboard" data-qa-dashboard-header />
         </Grid>
         {managed && (
           <Grid item xs={12}>
@@ -201,10 +199,16 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-const connected = connect(mapStateToProps, mapDispatchToProps);
+const connected = connect(
+  mapStateToProps,
+  mapDispatchToProps
+);
 
 const styled = withStyles(styles, { withTheme: true });
 
-const enhanced = compose<CombinedProps, {}>(styled, connected)(Dashboard);
+const enhanced = compose<CombinedProps, {}>(
+  styled,
+  connected
+)(Dashboard);
 
 export default enhanced;

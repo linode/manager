@@ -13,6 +13,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import ExternalLink from 'src/components/ExternalLink';
+import H1Header from 'src/components/H1Header';
 import ScriptCode from 'src/components/ScriptCode';
 import withImages from 'src/containers/withImages.container';
 
@@ -121,11 +122,9 @@ export class _StackScript extends React.Component<CombinedProps> {
 
     return (
       <div className={classes.root}>
-        <Typography variant="h1" component="h2" data-qa-stack-title={label}>
-          {label}
-        </Typography>
+        <H1Header title={label} data-qa-stack-title={label} />
         <Typography
-          variant="h3"
+          variant="h2"
           className={classes.author}
           data-qa-stack-author={username}
         >

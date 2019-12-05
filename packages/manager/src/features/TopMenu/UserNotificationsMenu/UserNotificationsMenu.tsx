@@ -77,6 +77,7 @@ const userAgentDetection = () => {
           <a
             href="https://www.microsoft.com/en-us/windows/microsoft-edge"
             target="_blank"
+            aria-describedby="external-site"
             rel="noopener noreferrer"
           >
             Microsoft Edge

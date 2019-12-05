@@ -146,6 +146,7 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
             e.preventDefault();
             e.stopPropagation();
           },
+          ariaDescribedBy: 'new-window',
           ...readOnlyProps
         },
         {

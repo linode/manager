@@ -232,6 +232,7 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
             <Button
               className={`${classes.button} ${classes.consoleButton}`}
               onClick={this.handleConsoleButtonClick}
+              aria-describedby="new-window"
               data-qa-console
             >
               Launch Console

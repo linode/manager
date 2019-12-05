@@ -164,10 +164,6 @@ describe('Refined Search', () => {
       query = 'label:test-linode ORR';
       results = refinedSearch(query, data).map(entity => entity.value);
       expect(results).toEqual([]);
-
-      query = 'label:test-linode O';
-      results = refinedSearch(query, data).map(entity => entity.value);
-      expect(results).toEqual([]);
     });
   });
 });
@@ -343,6 +339,16 @@ describe('doesSearchTermMatchItemField', () => {
       false
     );
     expect(doesSearchTermMatchItemField('12', mockLinode, 'ips')).toBe(true);
+  });
+  it('is case-insensitive by default', () => {
+    expect(doesSearchTermMatchItemField('MY-APP', mockLinode, 'tags')).toBe(
+      true
+    );
+  });
+  it('is case-sensitive if specified', () => {
+    expect(
+      doesSearchTermMatchItemField('MY-APP', mockLinode, 'tags', true)
+    ).toBe(false);
   });
 });
 

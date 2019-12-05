@@ -16,6 +16,7 @@ import {
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
+import H1Header from 'src/components/H1Header';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -277,11 +278,7 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
   return (
     <>
       {/* Only display this title on the main Events landing page */}
-      {!entityId && (
-        <Typography variant="h1" className={classes.header}>
-          Events
-        </Typography>
-      )}
+      {!entityId && <H1Header title="Events" className={classes.header} />}
       <Paper>
         <Table aria-label="List of Events">
           <TableHead>
