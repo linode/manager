@@ -109,6 +109,8 @@ const Disks: React.FC<CombinedProps> = props => {
           className={classes.root}
           handleStatsChange={setStartAndEnd}
           defaultValue="Past 30 Minutes"
+          label="Select Time Range"
+          hideLabel
         />
       </Box>
       {renderContent()}

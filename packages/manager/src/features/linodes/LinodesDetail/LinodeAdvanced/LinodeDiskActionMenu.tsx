@@ -7,7 +7,7 @@ interface Props {
   linodeStatus: string;
   linodeId?: number;
   diskId?: number;
-  label?: string;
+  label: string;
   readOnly?: boolean;
   onRename: () => void;
   onResize: () => void;
