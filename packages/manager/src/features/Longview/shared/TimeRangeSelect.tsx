@@ -34,7 +34,7 @@ const TimeRangeSelect: React.FC<CombinedProps> = props => {
     ...restOfSelectProps
   } = props;
 
-  /* 
+  /*
     the time range is the label instead of the value because it's a lot harder
     to keep Date.now() consistent with this state. We can get the actual
     values when it comes time to make the request
@@ -45,7 +45,7 @@ const TimeRangeSelect: React.FC<CombinedProps> = props => {
 
   /*
     Why division by 1000?
-    
+
     Because the Longview API doesn't expect the start and date time
     to the nearest millisecond - if you send anything more than 10 digits
     you won't get any data back
@@ -92,8 +92,10 @@ const TimeRangeSelect: React.FC<CombinedProps> = props => {
     <Select
       {...restOfSelectProps}
       onChange={handleChange}
+      className={'time-range-select'}
       isClearable={false}
       isSearchable={false}
+      small
       value={options.find(o => o.label === selectedTimeRange) || options[0]}
       options={options}
     />
