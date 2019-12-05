@@ -146,6 +146,33 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/drupal_color.svg'
   },
   {
+    name: 'Jenkins',
+    description: `Jenkins is a self-contained, open source automation server which can be used to automate all sorts of tasks related to building, testing, and delivering or deploying software.`,
+    summary: `Jenkins provides hundreds of plugins to support building, deploying and automating any project.`,
+    related_guides: [
+      {
+        title: 'Using LISH to SSH into your Linode',
+        href: 'https://www.linode.com/docs/platform/manager/using-the-linode-shell-lish/#use-a-web-browser'
+      },
+      {
+        title: 'Scripted vs. Declarative Pipeline Syntax',
+        href: 'https://www.linode.com/docs/development/ci/automate-builds-with-jenkins-on-ubuntu/#scripted-vs-declarative-pipeline-syntax'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://jenkins.io/',
+        href: 'https://jenkins.io/',
+      }
+    ],
+    tips: [
+      `Once the script finishes, go to <em>http://[your-Linode's-IP-address]:8080</em> in a browser to finish the configuration.`,
+      `You will need to SSH into your Linode to retrieve the Jenkins one time password:`,
+      `<code>sudo cat /var/lib/jenkins/secrets/initialAdminPassword</code>`
+    ],
+    logo_url: 'assets/jenkins_color.svg'
+  },
+  {
     name: 'LAMP',
     description: `The LAMP stack consists of the Linux operating system,
       the Apache HTTP Server, the MySQL relational database management system,
