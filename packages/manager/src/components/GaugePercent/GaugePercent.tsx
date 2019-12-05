@@ -36,7 +36,7 @@ const useStyles = (options: Options) =>
       position: 'absolute',
       width: options.width,
       textAlign: 'center',
-      top: `calc(${options.height}px - 10%)`,
+      top: `calc(${options.height}px)`,
       fontSize: options.fontSize || `${theme.spacing(2.5)}px `,
       color: theme.color.headline
     }

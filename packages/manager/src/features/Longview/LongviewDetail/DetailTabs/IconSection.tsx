@@ -30,6 +30,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   wrapHeader: {
     wordBreak: 'break-all'
   },
+  headerSection: {
+    marginBottom: theme.spacing(3) - 2
+  },
   iconSection: {
     marginBottom: theme.spacing(2) - 2,
     '&:last-of-type': {
@@ -39,6 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   packageButton: {
     marginLeft: -theme.spacing(3) / 2,
     fontSize: '0.875rem',
+    padding: `0 ${theme.spacing(1) + 8}px`,
     '& g': {
       stroke: theme.palette.primary.main
     }
@@ -49,6 +53,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   packageStaticIcon: {
     marginRight: theme.spacing(1)
+  },
+  iconItem: {
+    alignSelf: 'center',
+    marginLeft: -8,
+    '& svg': {
+      display: 'block',
+      margin: '0 auto'
+    }
+  },
+  iconItemLast: {
+    alignSelf: 'center',
+    marginLeft: -8
   }
 }));
 
@@ -145,7 +161,7 @@ const IconSection: React.FC<Props> = props => {
         item
         wrap="nowrap"
         alignItems="flex-start"
-        className={classes.iconSection}
+        className={classes.headerSection}
       >
         <Grid item>
           <Typography variant="h3" className={classes.wrapHeader}>
@@ -162,10 +178,10 @@ const IconSection: React.FC<Props> = props => {
         alignItems="flex-start"
         className={classes.iconSection}
       >
-        <Grid item>
+        <Grid item xs={2} sm={1} md={2} className={classes.iconItem}>
           <ServerIcon />
         </Grid>
-        <Grid item>
+        <Grid item xs={10}>
           <Typography>
             {osDist} {osDistVersion} {kernel && `(${kernel})`}
           </Typography>
@@ -178,10 +194,10 @@ const IconSection: React.FC<Props> = props => {
         alignItems="center"
         className={classes.iconSection}
       >
-        <Grid item>
+        <Grid item xs={2} sm={1} md={2} className={classes.iconItem}>
           <CPUIcon />
         </Grid>
-        <Grid item>
+        <Grid item xs={10}>
           <Typography>{cpuType}</Typography>
           {cpuCoreCount && (
             <Typography>{`${cpuCoreCount} ${coreCountDisplay}`}</Typography>
@@ -195,11 +211,11 @@ const IconSection: React.FC<Props> = props => {
         alignItems="center"
         className={classes.iconSection}
       >
-        <Grid item>
+        <Grid item xs={2} sm={1} md={2} className={classes.iconItem}>
           <RamIcon />
         </Grid>
         {convertedTotalMemory.value !== 0 && convertedTotalSwap.value !== 0 ? (
-          <Grid item>
+          <Grid item xs={10}>
             <Typography>
               {`${convertedTotalMemory.value} ${convertedTotalMemory.unit} RAM`}
             </Typography>
@@ -220,12 +236,12 @@ const IconSection: React.FC<Props> = props => {
         alignItems="center"
         className={classes.iconSection}
       >
-        <Grid item>
+        <Grid item xs={2} sm={1} md={2} className={classes.iconItem}>
           <DiskIcon />
         </Grid>
 
         {storageInBytes.total !== 0 ? (
-          <Grid item>
+          <Grid item xs={10}>
             <Typography>
               {`${
                 readableBytes(storageInBytes.total, { unit: 'GB' }).formatted
@@ -238,7 +254,7 @@ const IconSection: React.FC<Props> = props => {
             </Typography>
           </Grid>
         ) : (
-          <Grid item>
+          <Grid item xs={10}>
             <Typography>Storage information not available</Typography>
           </Grid>
         )}
@@ -250,7 +266,7 @@ const IconSection: React.FC<Props> = props => {
         alignItems="center"
         className={classes.iconSection}
       >
-        <Grid item>
+        <Grid item xs={2} sm={1} md={2} className={classes.iconItemLast}>
           {packages && packages.length > 0 ? (
             <IconTextLink
               className={classes.packageButton}
