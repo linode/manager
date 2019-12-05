@@ -80,7 +80,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Docker',
-    description: `Docker is a tool that enables you to create, deploy, and manage lightweight, stand-alone packages that contain everything needed to run an application (code, libraries, runtime, system settings, and dependencies). These packages are called containers.`,
+    description: `Docker is a tool that enables you to create, deploy, and manage lightweight, stand-alone packages that contain everything needed to run an application (code, libraries, runtime, system settings, and dependencies).`,
     summary: `Securely build, share and run modern applications anywhere.`,
     related_guides: [
       {
