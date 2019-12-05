@@ -241,7 +241,13 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
             exact
             strict
             path={`${url}/processes`}
-            render={() => <ProcessesLanding />}
+            render={() => (
+              <ProcessesLanding
+                clientAPIKey={client.api_key}
+                lastUpdated={lastUpdated}
+                lastUpdatedError={lastUpdatedError}
+              />
+            )}
           />
         )}
         {showAllTabs && (

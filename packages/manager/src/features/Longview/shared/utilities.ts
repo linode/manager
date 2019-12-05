@@ -2,7 +2,7 @@ import { pathOr } from 'ramda';
 import { LVClientData } from 'src/containers/longview.stats.container';
 import { pluralize } from 'src/utilities/pluralize';
 import { readableBytes } from 'src/utilities/unitConversions';
-import { Disk, LongviewPackage } from '../request.types';
+import { Disk, LongviewPackage, Stat } from '../request.types';
 
 interface Storage {
   free: number;
@@ -66,4 +66,26 @@ export const sumUsedMemory = (data: LVClientData) => {
   const cache = pathOr(0, ['Memory', 'real', 'cache', 0, 'y'], data);
 
   return generateUsedMemory(usedMemory, buffers, cache);
+};
+
+export const statAverage = (stats: Stat[] = []): number => {
+  if (stats.length === 0) {
+    return 0;
+  }
+
+  const sum = stats.reduce((acc, { y }) => acc + y, 0);
+  return sum / stats.length;
+};
+
+export const statMax = (stats: Stat[] = []): number => {
+  if (stats.length === 0) {
+    return 0;
+  }
+
+  return stats.reduce((acc, { y }) => {
+    if (y > acc) {
+      return y;
+    }
+    return acc;
+  }, 0);
 };
