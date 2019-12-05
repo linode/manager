@@ -52,7 +52,8 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
         ['Memory', 'real', 'used'],
         ['Memory', 'real', 'cache'],
         ['Memory', 'real', 'buffers'],
-        ['Memory', 'swap', 'used']
+        ['Memory', 'swap', 'used'],
+        ['Load']
       ]);
       setData(_data);
     });
