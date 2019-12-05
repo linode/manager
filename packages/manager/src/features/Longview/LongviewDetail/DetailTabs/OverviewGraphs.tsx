@@ -1,3 +1,4 @@
+import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import Paper from 'src/components/core/Paper';
@@ -10,10 +11,13 @@ import {
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
+import { readableBytes } from 'src/utilities/unitConversions';
 import { AllData, getValues, WithStartAndEnd } from '../../request';
-import { Stat } from '../../request.types';
+import { StatWithDummyPoint } from '../../request.types';
+import { maybeAddDataPointInThePast } from '../../shared/formatters';
 import TimeRangeSelect from '../../shared/TimeRangeSelect';
 import { useClientLastUpdated } from '../../shared/useClientLastUpdated';
+import { generateUsedMemory, statMax } from '../../shared/utilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paperSection: {
@@ -24,11 +28,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   clientAPIKey: string;
+  timezone: string;
 }
 export type CombinedProps = Props & WithTheme;
 
 export const OverviewGraphs: React.FC<CombinedProps> = props => {
-  const { clientAPIKey, theme } = props;
+  const { clientAPIKey, theme, timezone } = props;
   const classes = useStyles();
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
     start: 0,
@@ -44,7 +49,16 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
       fields: ['cpu', 'memory', 'network', 'disk', 'load'],
       start,
       end
-    }).then(response => setData(response));
+    }).then(response => {
+      const _data = maybeAddDataPointInThePast(response, start, [
+        ['Memory', 'real', 'used'],
+        ['Memory', 'real', 'cache'],
+        ['Memory', 'real', 'buffers'],
+        ['Memory', 'swap', 'used'],
+        ['Load']
+      ]);
+      setData(_data);
+    });
   };
 
   useClientLastUpdated(clientAPIKey, request);
@@ -53,6 +67,49 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
     setTimeBox({ start, end });
     request(start, end);
   };
+
+  const _convertData = React.useCallback(convertData, [
+    data,
+    time.start,
+    time.end
+  ]);
+
+  const isToday = time.end - time.start < 60 * 60 * 25;
+
+  /**
+   * Memory calculations are funny, need to calculate them
+   * here and determine what the graph's subtitle will be.
+   */
+  const buffers = pathOr<StatWithDummyPoint[]>(
+    [],
+    ['Memory', 'real', 'buffers'],
+    data
+  );
+  const cache = pathOr<StatWithDummyPoint[]>(
+    [],
+    ['Memory', 'real', 'cache'],
+    data
+  );
+  const used = getUsedMemory(
+    pathOr([], ['Memory', 'real', 'used'], data),
+    cache,
+    buffers
+  );
+  const swap = pathOr<StatWithDummyPoint[]>(
+    [],
+    ['Memory', 'swap', 'used'],
+    data
+  );
+
+  // Determine the unit based on the largest value
+  const max = Math.max(
+    statMax(buffers),
+    statMax(cache),
+    statMax(used),
+    statMax(swap)
+  );
+  // LV returns stuff in KB so have to convert to bytes using base-2
+  const unit = readableBytes(max * 1024).unit;
 
   return (
     <Grid container alignItems="flex-end" item xs={12} spacing={0}>
@@ -89,26 +146,51 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
               <LongviewLineGraph
                 title="CPU"
                 subtitle="%"
-                showToday={false}
-                timezone="GMT"
+                showToday={isToday}
+                timezone={timezone}
                 data={[]}
               />
             </Grid>
             <Grid item xs={6}>
               <LongviewLineGraph
-                title="RAM"
-                subtitle="GB"
-                showToday={false}
-                timezone="GMT"
-                data={[]}
+                title="Memory"
+                subtitle={unit}
+                showToday={isToday}
+                timezone={timezone}
+                data={[
+                  {
+                    label: 'Swap',
+                    borderColor: theme.graphs.redBorder,
+                    backgroundColor: theme.graphs.red,
+                    data: _convertData(swap, formatMemory)
+                  },
+                  {
+                    label: 'Buffers',
+                    borderColor: theme.graphs.pinkBorder,
+                    backgroundColor: theme.graphs.pink,
+                    data: _convertData(buffers, formatMemory)
+                  },
+                  {
+                    label: 'Cache',
+                    borderColor: theme.graphs.purpleBorder,
+                    backgroundColor: theme.graphs.purple,
+                    data: _convertData(cache, formatMemory)
+                  },
+                  {
+                    label: 'Used',
+                    borderColor: theme.graphs.darkPurpleBorder,
+                    backgroundColor: theme.graphs.darkPurple,
+                    data: _convertData(used, formatMemory)
+                  }
+                ]}
               />
             </Grid>
             <Grid item xs={6}>
               <LongviewLineGraph
                 title="Network"
                 subtitle="KB/s"
-                showToday={false}
-                timezone="GMT"
+                showToday={isToday}
+                timezone={timezone}
                 data={[]}
               />
             </Grid>
@@ -116,8 +198,8 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
               <LongviewLineGraph
                 title="Disk I/O"
                 subtitle="ops/s"
-                showToday={false}
-                timezone="GMT"
+                showToday={isToday}
+                timezone={timezone}
                 data={[]}
               />
             </Grid>
@@ -125,14 +207,14 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
               <LongviewLineGraph
                 title="Load"
                 subtitle="Target < 1.00"
-                showToday={true}
-                timezone="GMT"
+                showToday={isToday}
+                timezone={timezone}
                 data={[
                   {
                     label: 'Load',
                     borderColor: theme.graphs.blueBorder,
                     backgroundColor: theme.graphs.blue,
-                    data: convertData(time.start, data.Load || [])
+                    data: _convertData(data.Load || [])
                   }
                 ]}
               />
@@ -144,29 +226,67 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
   );
 };
 
-export const convertData = (start: number, d: Stat[]) => {
-  const points = d.map(
-    thisPoint => [thisPoint.x * 1000, thisPoint.y] as [number, number]
-  );
-
-  if (points.length < 1) {
-    // Empty array
-    return points;
+/**
+ * This uses the generateUsedMemory utility,
+ * but unlike in the graphs, here we're dealing
+ * with three arrays of stats that have to be
+ * mapped through.
+ *
+ * @param used
+ * @param cache
+ * @param buffers
+ */
+export const getUsedMemory = (
+  used: StatWithDummyPoint[],
+  cache: StatWithDummyPoint[],
+  buffers: StatWithDummyPoint[]
+) => {
+  const result: StatWithDummyPoint[] = [];
+  const totalLength = used.length;
+  let i = 0;
+  for (i; i < totalLength; i++) {
+    const _used = pathOr({}, [i], used);
+    const _cache = pathOr(0, [i, 'y'], cache);
+    const _buffers = pathOr(0, [i, 'y'], buffers);
+    if (_used.y === null) {
+      // This is one of our padding data points
+      result.push({ x: _used.x, y: null });
+    } else {
+      const calculatedUsed = generateUsedMemory(_used.y, _buffers, _cache);
+      result.push({
+        // Time will be converted to ms in convertData
+        x: _used.x,
+        y: calculatedUsed
+      });
+    }
   }
-
-  /**
-   * The LV API does not provide proper time series data;
-   * only times for which the agent was collecting data
-   * have entries in the response (so if your Linode is 3 days
-   * old and you ask for graphs for the past year, the response
-   * will only have 3 days of data). We therefore need to pad the
-   * front of the response with an extra data point to force the x
-   * axis of each graph to show the requested time span.
-   */
-  if (points[0][0] > start * 1000) {
-    points.unshift([start * 1000, 0]);
-  }
-  return points;
+  return result;
 };
+
+/**
+ * Scale of memory data will vary, so we use this function
+ * to run the data through readableBytes to determine
+ * whether to show MB, KB, or GB.
+ * @param value
+ */
+export const formatMemory = (value: number | null) => {
+  if (value === null) {
+    return value;
+  }
+  // x1024 bc the API returns data in KB
+  return readableBytes(value * 1024).value;
+};
+
+export const convertData = (
+  d: StatWithDummyPoint[],
+  formatter?: (pt: number | null) => number | null
+) =>
+  d.map(
+    thisPoint =>
+      [
+        thisPoint.x * 1000,
+        formatter ? formatter(thisPoint.y) : thisPoint.y
+      ] as [number, number | null]
+  );
 
 export default withTheme(OverviewGraphs);

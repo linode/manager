@@ -73,7 +73,8 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     longviewClientsLastUpdated,
     longviewClientsLoading,
     longviewClientsError,
-    longviewClientData
+    longviewClientData,
+    timezone
   } = props;
 
   React.useEffect(() => {
@@ -324,6 +325,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
               clientID={client.id}
               clientAPIKey={client.api_key}
               longviewClientData={longviewClientData}
+              timezone={timezone}
               {...routerProps}
               topProcessesData={topProcesses.data}
               topProcessesLoading={topProcesses.loading}
