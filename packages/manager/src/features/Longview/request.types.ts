@@ -3,25 +3,41 @@ export interface Stat {
   y: number | null;
 }
 
-interface FS {
-  itotal: Stat[];
-  ifree: Stat[];
-  total: Stat[];
-  free: Stat[];
+/*
+  interfaced used solely for the purpose
+  of interacting with the Longview API _start_ and _end_
+  query params. Because the API doesn't return a dataset for
+  the requested start time if no data existed at that time,
+  the client will be responsible for prepending the dataset
+  with a dummy data point at the start time requested
+
+  As an added bounus, each interface below will have a 'yAsNull'
+  type argument so the developer can choose to override the Stat types
+ */
+export interface StatWithDummyPoint {
+  x: number;
+  y: number | null;
+}
+
+interface FS<WithDummy extends '' | 'yAsNull' = ''> {
+  itotal: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  ifree: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  total: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  free: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
   path: string;
 }
 
-export interface Disk {
+export interface Disk<WithDummy extends '' | 'yAsNull' = ''> {
   dm: number;
   children: number;
   mounted: number;
   childof: number;
   isswap: number;
-  write_bytes?: Stat[];
-  writes?: Stat[];
-  reads?: Stat[];
-  read_bytes?: Stat[];
-  fs: FS;
+  write_bytes?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  writes?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  reads?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  read_bytes?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  fs: FS<WithDummy>;
 }
 /*
   each key will be the name of the disk
@@ -34,33 +50,33 @@ export interface Disk {
   }
 
 */
-export interface LongviewDisk {
-  Disk: Record<string, Disk>;
+export interface LongviewDisk<WithDummy extends '' | 'yAsNull' = ''> {
+  Disk: Record<string, Disk<WithDummy>>;
 }
 
-interface RealMemory {
-  free: Stat[];
-  buffers: Stat[];
-  used: Stat[];
-  cache: Stat[];
+interface RealMemory<WithDummy extends '' | 'yAsNull' = ''> {
+  free: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  buffers: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  used: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  cache: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
 }
 
-interface SwapMemory {
-  free: Stat[];
-  used: Stat[];
+interface SwapMemory<WithDummy extends '' | 'yAsNull' = ''> {
+  free: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  used: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
 }
 
-export interface LongviewMemory {
+export interface LongviewMemory<WithDummy extends '' | 'yAsNull' = ''> {
   Memory: {
-    real: RealMemory;
-    swap: SwapMemory;
+    real: RealMemory<WithDummy>;
+    swap: SwapMemory<WithDummy>;
   };
 }
 
-export interface CPU {
-  user: Stat[];
-  wait: Stat[];
-  system: Stat[];
+export interface CPU<WithDummy extends '' | 'yAsNull' = ''> {
+  user: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  wait: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  system: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
 }
 
 /*
@@ -74,23 +90,23 @@ export interface CPU {
   }
 
 */
-export interface LongviewCPU {
-  CPU: Record<string, CPU>;
+export interface LongviewCPU<WithDummy extends '' | 'yAsNull' = ''> {
+  CPU: Record<string, CPU<WithDummy>>;
 }
 
-export interface LongviewLoad {
-  Load: Stat[];
+export interface LongviewLoad<WithDummy extends '' | 'yAsNull' = ''> {
+  Load: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
 }
 
-export interface InboundOutboundNetwork {
-  rx_bytes: Stat[];
-  tx_bytes: Stat[];
+export interface InboundOutboundNetwork<WithDummy extends '' | 'yAsNull' = ''> {
+  rx_bytes: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  tx_bytes: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
 }
 
-export interface LongviewNetwork {
+export interface LongviewNetwork<WithDummy extends '' | 'yAsNull' = ''> {
   Network: {
     mac_addr: string;
-    Interface: Record<string, InboundOutboundNetwork>;
+    Interface: Record<string, InboundOutboundNetwork<WithDummy>>;
   };
 }
 
@@ -152,18 +168,20 @@ export interface LongviewSystemInfo {
 }
 // Resulting shape of calling `/fetch` with an api_action of `getValues` or
 // `getLatestValues` (and asking for the "Processes.*" key).
-export interface LongviewProcesses {
-  Processes?: Record<string, Process>;
+export interface LongviewProcesses<WithDummy extends '' | 'yAsNull' = ''> {
+  Processes?: Record<string, Process<WithDummy>>;
 }
 
-export type Process = { longname: string } & Record<string, ProcessStats>;
+export type Process<WithDummy extends '' | 'yAsNull' = ''> = {
+  longname: string;
+} & Record<string, ProcessStats<WithDummy>>;
 
-export interface ProcessStats {
-  count?: Stat[];
-  cpu?: Stat[];
-  ioreadkbytes?: Stat[];
-  iowritekbytes?: Stat[];
-  mem?: Stat[];
+export interface ProcessStats<WithDummy extends '' | 'yAsNull' = ''> {
+  count?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  cpu?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  ioreadkbytes?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  iowritekbytes?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
+  mem?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
 }
 
 // Resulting shape of calling `/fetch` with an api_action of `getTopProcesses`.
