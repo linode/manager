@@ -33,6 +33,7 @@ interface Props {
   clientID: number;
   clientAPIKey: string;
   longviewClientData: LVDataProps['longviewClientData'];
+  timezone: string;
   topProcessesData: LongviewTopProcesses;
   topProcessesLoading: boolean;
   topProcessesError?: APIError[];
@@ -59,7 +60,8 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
     topProcessesData,
     topProcessesLoading,
     topProcessesError,
-    lastUpdatedError
+    lastUpdatedError,
+    timezone
   } = props;
 
   /**
@@ -110,7 +112,7 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
             </Grid>
           </Paper>
         </Grid>
-        <OverviewGraphs clientAPIKey={clientAPIKey} />
+        <OverviewGraphs clientAPIKey={clientAPIKey} timezone={timezone} />
         <Grid container justify="space-between" item spacing={0}>
           <ListeningServices
             services={pathOr([], ['Ports', 'listening'], listeningPortsData)}

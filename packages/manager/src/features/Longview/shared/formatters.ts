@@ -90,6 +90,5 @@ export const maybeAddDataPointInThePast = <T extends {}>(
       arrayOfStats.unshift({ x: selectedStartTimeInSeconds, y: null });
     }
   });
-
   return _data;
 };
