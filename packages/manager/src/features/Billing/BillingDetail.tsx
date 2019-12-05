@@ -134,25 +134,31 @@ export class BillingDetail extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <DocumentTitleSegment segment={`Account & Billing`} />
         <AccountProvider value={this.state.account}>
-          <Typography variant="h2" className={classes.heading}>
-            Billing
-          </Typography>
-          <Grid container>
-            <Grid item xs={12} md={4} lg={3} className={classes.sidebar}>
-              <SummaryPanel
-                data-qa-summary-panel
-                history={this.props.history}
-              />
+          <div
+            id="tabpanel-account-billing"
+            role="tabpanel"
+            aria-labelledby="tab-account-billing"
+          >
+            <Typography variant="h2" className={classes.heading}>
+              Billing
+            </Typography>
+            <Grid container>
+              <Grid item xs={12} md={4} lg={3} className={classes.sidebar}>
+                <SummaryPanel
+                  data-qa-summary-panel
+                  history={this.props.history}
+                />
+              </Grid>
+              <Grid item xs={12} md={8} lg={9} className={classes.main}>
+                <UpdateContactInformationPanel />
+                <UpdateCreditCardPanel />
+                <MakeAPaymentPanel />
+                <PromotionsPanel />
+                <RecentInvoicesPanel />
+                <RecentPaymentsPanel />
+              </Grid>
             </Grid>
-            <Grid item xs={12} md={8} lg={9} className={classes.main}>
-              <UpdateContactInformationPanel />
-              <UpdateCreditCardPanel />
-              <MakeAPaymentPanel />
-              <PromotionsPanel />
-              <RecentInvoicesPanel />
-              <RecentPaymentsPanel />
-            </Grid>
-          </Grid>
+          </div>
         </AccountProvider>
       </React.Fragment>
     );

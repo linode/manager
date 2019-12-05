@@ -410,18 +410,24 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     };
     return (
       <React.Fragment key={perm}>
-        <FormControlLabel
-          className={classes.globalRow}
-          label={permDescriptionMap[perm]}
-          control={
-            <Toggle
-              checked={checked}
-              onChange={this.globalPermOnChange(perm)}
-              data-qa-global-permission={perm}
-            />
-          }
-        />
-        <Divider />
+        <div
+          id="tabpanel-user-permissions"
+          role="tabpanel"
+          aria-labelledby="tab-user-permissions"
+        >
+          <FormControlLabel
+            className={classes.globalRow}
+            label={permDescriptionMap[perm]}
+            control={
+              <Toggle
+                checked={checked}
+                onChange={this.globalPermOnChange(perm)}
+                data-qa-global-permission={perm}
+              />
+            }
+          />
+          <Divider />
+        </div>
       </React.Fragment>
     );
   };

@@ -127,30 +127,36 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
 
     return (
       <React.Fragment>
-        <AutoBackups
-          isManagedCustomer={isManaged}
-          backups_enabled={backups_enabled}
-          onChange={this.toggleAutomaticBackups}
-          openBackupsDrawer={openBackupsDrawer}
-          hasLinodesWithoutBackups={!isEmpty(linodesWithoutBackups)}
-        />
-        <NetworkHelper
-          onChange={this.toggleNetworkHelper}
-          networkHelperEnabled={networkHelperEnabled}
-        />
-        <EnableObjectStorage
-          object_storage={object_storage}
-          update={this.props.actions.updateAccountSettingsInStore}
-        />
-        <EnableManaged
-          isManaged={isManaged}
-          update={this.props.actions.updateAccountSettingsInStore}
-          push={this.props.history.push}
-        />
-        {shouldDisplayGroupImport(entitiesWithGroupsToImport) && (
-          <ImportGroupsAsTags openDrawer={openImportDrawer} />
-        )}
-        <TagImportDrawer />
+        <div
+          id="tabpanel-account-settings"
+          role="tabpanel"
+          aria-labelledby="tab-account-settings"
+        >
+          <AutoBackups
+            isManagedCustomer={isManaged}
+            backups_enabled={backups_enabled}
+            onChange={this.toggleAutomaticBackups}
+            openBackupsDrawer={openBackupsDrawer}
+            hasLinodesWithoutBackups={!isEmpty(linodesWithoutBackups)}
+          />
+          <NetworkHelper
+            onChange={this.toggleNetworkHelper}
+            networkHelperEnabled={networkHelperEnabled}
+          />
+          <EnableObjectStorage
+            object_storage={object_storage}
+            update={this.props.actions.updateAccountSettingsInStore}
+          />
+          <EnableManaged
+            isManaged={isManaged}
+            update={this.props.actions.updateAccountSettingsInStore}
+            push={this.props.history.push}
+          />
+          {shouldDisplayGroupImport(entitiesWithGroupsToImport) && (
+            <ImportGroupsAsTags openDrawer={openImportDrawer} />
+          )}
+          <TagImportDrawer />
+        </div>
       </React.Fragment>
     );
   }
@@ -206,7 +212,10 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-const connected = connect(mapStateToProps, mapDispatchToProps);
+const connected = connect(
+  mapStateToProps,
+  mapDispatchToProps
+);
 
 const enhanced = compose<CombinedProps, {}>(
   connected,

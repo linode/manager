@@ -22,13 +22,14 @@ interface Props {
   title: string;
   selected?: boolean;
   ref?: any;
+  idName: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class TabLink extends React.Component<CombinedProps> {
   render() {
-    const { classes, title, to } = this.props;
+    const { classes, title, to, idName } = this.props;
     const pathName = document.location.pathname;
 
     return (
@@ -39,6 +40,8 @@ class TabLink extends React.Component<CombinedProps> {
           [classes.selected]: pathName === to
         })}
         role="tab"
+        id={`tab-${idName}`}
+        aria-controls={`tabpanel-${idName}`}
         tabIndex={0}
         aria-selected={pathName === to}
         data-qa-tab={title}

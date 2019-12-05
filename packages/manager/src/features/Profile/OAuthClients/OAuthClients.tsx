@@ -330,7 +330,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
             isPublic={isPublic}
             redirectUri={redirect_uri}
             /*
-             we can assume this is defined because we're doing null checking in renderContent() 
+             we can assume this is defined because we're doing null checking in renderContent()
             */
             clientID={id}
           />
@@ -355,80 +355,88 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
     // Currently in the context of profile, the term 'Oauth Client(s)' is referred to as 'app' or 'OAuth Apps' for user-facing displays.
     return (
       <React.Fragment>
-        <DocumentTitleSegment segment="OAuth Apps" />
-        <Grid container justify="space-between" alignItems="flex-end">
-          <Grid item>
-            <Typography
-              className={classes.title}
-              variant="h2"
-              data-qa-table={classes.title}
-            >
-              OAuth Apps
-            </Typography>
+        <div
+          id="tabpanel-profile-clients"
+          role="tabpanel"
+          aria-labelledby="tab-profile-clients"
+        >
+          <DocumentTitleSegment segment="OAuth Apps" />
+          <Grid container justify="space-between" alignItems="flex-end">
+            <Grid item>
+              <Typography
+                className={classes.title}
+                variant="h2"
+                data-qa-table={classes.title}
+              >
+                OAuth Apps
+              </Typography>
+            </Grid>
+            <Grid item>
+              <AddNewLink
+                onClick={() => this.openDrawer()(false)}
+                label="Create OAuth App"
+                data-qa-oauth-create
+              />
+            </Grid>
           </Grid>
-          <Grid item>
-            <AddNewLink
-              onClick={() => this.openDrawer()(false)}
-              label="Create OAuth App"
-              data-qa-oauth-create
-            />
-          </Grid>
-        </Grid>
-        <Paper>
-          <Table aria-label="List of OAuth Apps">
-            <TableHead data-qa-table-head>
-              <TableRow>
-                <TableCell style={{ width: '20%' }}>Label</TableCell>
-                <TableCell style={{ width: '20%' }}>Access</TableCell>
-                <TableCell style={{ width: '20%' }}>ID</TableCell>
-                <TableCell style={{ width: '20%' }}>Callback URL</TableCell>
-                <TableCell style={{ width: '20%' }} />
-              </TableRow>
-            </TableHead>
-            <TableBody>{this.renderContent()}</TableBody>
-          </Table>
-        </Paper>
+          <Paper>
+            <Table aria-label="List of OAuth Apps">
+              <TableHead data-qa-table-head>
+                <TableRow>
+                  <TableCell style={{ width: '20%' }}>Label</TableCell>
+                  <TableCell style={{ width: '20%' }}>Access</TableCell>
+                  <TableCell style={{ width: '20%' }}>ID</TableCell>
+                  <TableCell style={{ width: '20%' }}>Callback URL</TableCell>
+                  <TableCell style={{ width: '20%' }} />
+                </TableRow>
+              </TableHead>
+              <TableBody>{this.renderContent()}</TableBody>
+            </Table>
+          </Paper>
 
-        <Modals
-          deleteModalOpen={this.state.deleteModalOpen}
-          secretModalOpen={this.state.secretModalOpen}
-          secretSuccessOpen={this.state.secretModalSuccessOpen}
-          resetClient={this.resetSecret}
-          closeDialogs={this.closeModals}
-          secret={this.state.secret}
-          secretID={this.state.clientID}
-          label={this.state.clientLabel}
-          isDeleting={this.state.isDeleting}
-          isResetting={this.state.isResetting}
-          deleteClient={this.deleteClient}
-          modalErrors={this.state.modalErrors}
-        />
+          <Modals
+            deleteModalOpen={this.state.deleteModalOpen}
+            secretModalOpen={this.state.secretModalOpen}
+            secretSuccessOpen={this.state.secretModalSuccessOpen}
+            resetClient={this.resetSecret}
+            closeDialogs={this.closeModals}
+            secret={this.state.secret}
+            secretID={this.state.clientID}
+            label={this.state.clientLabel}
+            isDeleting={this.state.isDeleting}
+            isResetting={this.state.isResetting}
+            deleteClient={this.deleteClient}
+            modalErrors={this.state.modalErrors}
+          />
 
-        <OAuthFormDrawer
-          edit={this.state.drawerIsInEditMode}
-          open={this.state.drawerOpen}
-          errors={this.state.drawerErrors}
-          public={this.state.isPublic}
-          label={this.state.clientLabel}
-          redirect_uri={this.state.redirectUri}
-          onClose={this.closeDrawer}
-          loading={this.state.drawerLoading}
-          onChangeLabel={this.handleChangeLabel}
-          onChangeRedirectURI={this.handleChangeRedirectURI}
-          onChangePublic={this.handleChangePublic}
-          onSubmit={
-            this.state.drawerIsInEditMode ? this.editClient : this.createClient
-          }
-        />
+          <OAuthFormDrawer
+            edit={this.state.drawerIsInEditMode}
+            open={this.state.drawerOpen}
+            errors={this.state.drawerErrors}
+            public={this.state.isPublic}
+            label={this.state.clientLabel}
+            redirect_uri={this.state.redirectUri}
+            onClose={this.closeDrawer}
+            loading={this.state.drawerLoading}
+            onChangeLabel={this.handleChangeLabel}
+            onChangeRedirectURI={this.handleChangeRedirectURI}
+            onChangePublic={this.handleChangePublic}
+            onSubmit={
+              this.state.drawerIsInEditMode
+                ? this.editClient
+                : this.createClient
+            }
+          />
 
-        <PaginationFooter
-          page={this.props.page}
-          pageSize={this.props.pageSize}
-          count={this.props.count}
-          handlePageChange={this.props.handlePageChange}
-          handleSizeChange={this.props.handlePageSizeChange}
-          eventCategory="oauth clients"
-        />
+          <PaginationFooter
+            page={this.props.page}
+            pageSize={this.props.pageSize}
+            count={this.props.count}
+            handlePageChange={this.props.handlePageChange}
+            handleSizeChange={this.props.handlePageSizeChange}
+            eventCategory="oauth clients"
+          />
+        </div>
       </React.Fragment>
     );
   }

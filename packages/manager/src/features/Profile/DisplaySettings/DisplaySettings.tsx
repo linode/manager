@@ -1,4 +1,4 @@
-import { Profile } from "linode-js-sdk/lib/profile";
+import { Profile } from 'linode-js-sdk/lib/profile';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -63,22 +63,28 @@ export class DisplaySettings extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <DocumentTitleSegment segment="Display" />
-        {!loading && (
-          <React.Fragment>
-            <EmailChangeForm
-              email={email}
-              username={username}
-              updateProfile={updateProfile}
-              data-qa-email-change
-            />
-            <TimezoneForm
-              timezone={timezone}
-              updateProfile={updateProfile}
-              loggedInAsCustomer={loggedInAsCustomer}
-            />
-          </React.Fragment>
-        )}
+        <div
+          id="tabpanel-profile-display"
+          role="tabpanel"
+          aria-labelledby="tab-profile-display"
+        >
+          <DocumentTitleSegment segment="Display" />
+          {!loading && (
+            <React.Fragment>
+              <EmailChangeForm
+                email={email}
+                username={username}
+                updateProfile={updateProfile}
+                data-qa-email-change
+              />
+              <TimezoneForm
+                timezone={timezone}
+                updateProfile={updateProfile}
+                loggedInAsCustomer={loggedInAsCustomer}
+              />
+            </React.Fragment>
+          )}
+        </div>
       </React.Fragment>
     );
   }

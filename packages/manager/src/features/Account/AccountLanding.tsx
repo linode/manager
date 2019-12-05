@@ -48,9 +48,21 @@ class AccountLanding extends React.Component<Props> {
 
   tabs = [
     /* NB: These must correspond to the routes inside the Switch */
-    { title: 'Billing Info', routeName: `${this.props.match.url}/billing` },
-    { title: 'Users', routeName: `${this.props.match.url}/users` },
-    { title: 'Settings', routeName: `${this.props.match.url}/settings` }
+    {
+      title: 'Billing Info',
+      routeName: `${this.props.match.url}/billing`,
+      name: 'account-billing'
+    },
+    {
+      title: 'Users',
+      routeName: `${this.props.match.url}/users`,
+      name: 'account-users'
+    },
+    {
+      title: 'Settings',
+      routeName: `${this.props.match.url}/settings`,
+      name: 'account-settings'
+    }
   ];
 
   render() {
@@ -73,7 +85,7 @@ class AccountLanding extends React.Component<Props> {
           removeCrumbX={1}
           data-qa-profile-header
         />
-        <AppBar position="static" color="default">
+        <AppBar position="static" color="default" role="tablist">
           <Tabs
             value={this.tabs.findIndex(tab => matches(tab.routeName))}
             onChange={this.handleTabChange}
@@ -89,6 +101,7 @@ class AccountLanding extends React.Component<Props> {
                 component={React.forwardRef((props, ref) => (
                   <TabLink
                     to={tab.routeName}
+                    idName={tab.name}
                     title={tab.title}
                     {...props}
                     ref={ref}

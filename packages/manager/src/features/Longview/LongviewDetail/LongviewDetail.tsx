@@ -119,42 +119,50 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     {
       title: 'Overview',
       display: true,
-      routeName: `${props.match.url}/overview`
+      routeName: `${props.match.url}/overview`,
+      name: 'longview-overview'
     },
     {
       title: 'Processes',
       display: showAllTabs,
-      routeName: `${props.match.url}/processes`
+      routeName: `${props.match.url}/processes`,
+      name: 'longview-processes'
     },
     {
       title: 'Network',
       display: showAllTabs,
-      routeName: `${props.match.url}/network`
+      routeName: `${props.match.url}/network`,
+      name: 'longview-network'
     },
     {
       title: 'Disks',
       display: showAllTabs,
-      routeName: `${props.match.url}/disks`
+      routeName: `${props.match.url}/disks`,
+      name: 'longview-disks'
     },
     {
       title: 'Apache',
       display: (client && client.apps.apache && showAllTabs) || false,
-      routeName: `${props.match.url}/apache`
+      routeName: `${props.match.url}/apache`,
+      name: 'longview-apache'
     },
     {
       title: 'Nginx',
       display: (client && client.apps.nginx && showAllTabs) || false,
-      routeName: `${props.match.url}/nginx`
+      routeName: `${props.match.url}/nginx`,
+      name: 'longview-nginx'
     },
     {
       title: 'MySQL',
       display: (client && client.apps.mysql && showAllTabs) || false,
-      routeName: `${props.match.url}/mysql`
+      routeName: `${props.match.url}/mysql`,
+      name: 'longview-mysql'
     },
     {
       title: 'Installation',
       display: true,
-      routeName: `${props.match.url}/installation`
+      routeName: `${props.match.url}/installation`,
+      name: 'longview-installation'
     }
   ];
 
@@ -213,7 +221,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
         />
         <DocumentationButton href={'https://google.com'} />
       </Box>
-      <AppBar position="static" color="default">
+      <AppBar position="static" color="default" role="tablist">
         <Tabs
           value={tabs.findIndex(tab => matches(tab.routeName)) || 0}
           onChange={handleTabChange}
@@ -230,6 +238,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
                 <TabLink
                   to={tab.routeName}
                   title={tab.title}
+                  idName={tab.name}
                   {...forwardedProps}
                   ref={ref}
                 />
@@ -258,7 +267,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
             exact
             strict
             path={`${url}/network`}
-            render={() => <h2>Network</h2>}
+            render={() => <h2>Apache</h2>}
           />
         )}
         {showAllTabs && (

@@ -74,40 +74,46 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
   render() {
     return (
       <React.Fragment>
-        <TableHeader title="SSH Keys" action={this.headerAction} />
-        <Paper>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell data-qa-label-column>Label</TableCell>
-                <TableCell data-qa-key-column>Key</TableCell>
-                <TableCell data-qa-created-column>Created</TableCell>
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>{this.renderContent()}</TableBody>
-          </Table>
-        </Paper>
-        <PaginationFooter
-          page={this.props.page}
-          pageSize={this.props.pageSize}
-          count={this.props.count}
-          handlePageChange={this.props.handlePageChange}
-          handleSizeChange={this.props.handlePageSizeChange}
-          eventCategory="ssh keys"
-        />
-        <DeleteSSHKeyDialog
-          id={this.state.confirmDelete.id}
-          label={this.state.confirmDelete.label}
-          open={this.state.confirmDelete.open}
-          onSuccess={this.handleSuccessfulDeletion}
-          closeDialog={this.handleCancelDeletion}
-        />
-        <SSHKeyCreationDrawer
-          open={this.state.creationDrawer.open}
-          onSuccess={this.handleSuccessfulCreation}
-          onCancel={this.closeCreationDrawer}
-        />
+        <div
+          id="tabpanel-profile-ssh-keys"
+          role="tabpanel"
+          aria-labelledby="tab-profile-ssh-keys"
+        >
+          <TableHeader title="SSH Keys" action={this.headerAction} />
+          <Paper>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell data-qa-label-column>Label</TableCell>
+                  <TableCell data-qa-key-column>Key</TableCell>
+                  <TableCell data-qa-created-column>Created</TableCell>
+                  <TableCell />
+                </TableRow>
+              </TableHead>
+              <TableBody>{this.renderContent()}</TableBody>
+            </Table>
+          </Paper>
+          <PaginationFooter
+            page={this.props.page}
+            pageSize={this.props.pageSize}
+            count={this.props.count}
+            handlePageChange={this.props.handlePageChange}
+            handleSizeChange={this.props.handlePageSizeChange}
+            eventCategory="ssh keys"
+          />
+          <DeleteSSHKeyDialog
+            id={this.state.confirmDelete.id}
+            label={this.state.confirmDelete.label}
+            open={this.state.confirmDelete.open}
+            onSuccess={this.handleSuccessfulDeletion}
+            closeDialog={this.handleCancelDeletion}
+          />
+          <SSHKeyCreationDrawer
+            open={this.state.creationDrawer.open}
+            onSuccess={this.handleSuccessfulCreation}
+            onCancel={this.closeCreationDrawer}
+          />
+        </div>
       </React.Fragment>
     );
   }

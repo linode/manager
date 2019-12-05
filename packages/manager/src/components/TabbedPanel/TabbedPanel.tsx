@@ -87,6 +87,23 @@ class TabbedPanel extends React.Component<CombinedProps> {
     // if this bombs the app shouldn't crash
     const render = safeGetTabRender(tabs, value);
 
+    // TODO make this more customized for ID
+    const tabA11yProps = (index: number) => {
+      return {
+        id: `tab-${index}`,
+        role: 'tab',
+        'aria-controls': `tabpanel-${index}`
+      };
+    };
+
+    const tabPanelA11yProps = (index: number) => {
+      return {
+        id: `tabpanel-${index}`,
+        role: 'tabpanel',
+        'aria-labelledby': `tab-${index}`
+      };
+    };
+
     return (
       <Paper className={`${classes.root} ${rootClass}`} data-qa-tp={header}>
         <div className={`${classes.inner} ${innerClass}`}>
@@ -103,7 +120,7 @@ class TabbedPanel extends React.Component<CombinedProps> {
               {copy}
             </Typography>
           )}
-          <AppBar position="static" color="default">
+          <AppBar position="static" color="default" role="tablist">
             <Tabs
               value={value}
               onChange={this.handleChange}
@@ -114,7 +131,12 @@ class TabbedPanel extends React.Component<CombinedProps> {
               scrollButtons="on"
             >
               {tabs.map((tab, idx) => (
-                <Tab key={idx} label={tab.title} data-qa-tab={tab.title} />
+                <Tab
+                  key={idx}
+                  label={tab.title}
+                  data-qa-tab={tab.title}
+                  {...tabA11yProps(idx)}
+                />
               ))}
             </Tabs>
           </AppBar>
@@ -125,6 +147,7 @@ class TabbedPanel extends React.Component<CombinedProps> {
               },
               shrinkTabContent
             )}
+            {...tabPanelA11yProps(value)}
             data-qa-tab-body
           >
             {render(rest)}

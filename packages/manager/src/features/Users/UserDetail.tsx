@@ -102,10 +102,15 @@ class UserDetail extends React.Component<CombinedProps> {
 
   tabs = [
     /* NB: These must correspond to the routes inside the Switch */
-    { title: 'User Profile', routeName: `${this.props.match.url}/profile` },
+    {
+      title: 'User Profile',
+      routeName: `${this.props.match.url}/profile`,
+      name: 'user-profile'
+    },
     {
       title: 'User Permissions',
-      routeName: `${this.props.match.url}/permissions`
+      routeName: `${this.props.match.url}/permissions`,
+      name: 'user-permissions'
     }
   ];
 
@@ -395,7 +400,7 @@ class UserDetail extends React.Component<CombinedProps> {
             />
           </Grid>
         </Grid>
-        <AppBar position="static" color="default">
+        <AppBar position="static" color="default" role="tablist">
           <Tabs
             value={this.clampTabChoice()}
             onChange={this.handleTabChange}
@@ -411,6 +416,7 @@ class UserDetail extends React.Component<CombinedProps> {
                 component={React.forwardRef((props, ref) => (
                   <TabLink
                     to={tab.routeName}
+                    idName={tab.name}
                     title={tab.title}
                     {...props}
                     ref={ref}

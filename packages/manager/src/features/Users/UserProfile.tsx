@@ -129,76 +129,82 @@ class UserProfile extends React.Component<CombinedProps> {
 
     return (
       <React.Fragment>
-        <Typography variant="h2" data-qa-profile-header>
-          User Profile
-        </Typography>
-        <Paper className={classes.root}>
-          <div className={classes.inner}>
-            {accountSuccess && (
-              <Notice success spacingBottom={0}>
-                Username updated successfully
-              </Notice>
-            )}
-            {generalAccountError && (
-              <Notice error text={generalAccountError} spacingBottom={0} />
-            )}
-            <TextField
-              label="Username"
-              value={username}
-              onChange={changeUsername}
-              errorText={hasAccountErrorFor('username')}
-              data-qa-username
-            />
-            <ActionsPanel>
-              <Button
-                buttonType="primary"
-                loading={accountSaving}
-                onClick={saveAccount}
-                data-qa-submit
-              >
-                Save
-              </Button>
-            </ActionsPanel>
-          </div>
-        </Paper>
-        <Paper className={classes.root}>
-          <div className={classes.inner}>
-            {profileSuccess && (
-              <Notice success spacingBottom={0}>
-                Email updated successfully
-              </Notice>
-            )}
-            {generalProfileError && (
-              <Notice error text={generalProfileError} spacingBottom={0} />
-            )}
-            <TextField
-              // This should be disabled if this is NOT the current user.
-              disabled={profileUsername !== originalUsername}
-              label="Email"
-              value={email}
-              onChange={changeEmail}
-              tooltipText={
-                profileUsername !== originalUsername
-                  ? "You can't change another user's email address"
-                  : ''
-              }
-              errorText={hasProfileErrorFor('email')}
-              data-qa-email
-            />
-            <ActionsPanel>
-              <Button
+        <div
+          id="tabpanel-user-profile"
+          role="tabpanel"
+          aria-labelledby="tab-user-profile"
+        >
+          <Typography variant="h2" data-qa-profile-header>
+            User Profile
+          </Typography>
+          <Paper className={classes.root}>
+            <div className={classes.inner}>
+              {accountSuccess && (
+                <Notice success spacingBottom={0}>
+                  Username updated successfully
+                </Notice>
+              )}
+              {generalAccountError && (
+                <Notice error text={generalAccountError} spacingBottom={0} />
+              )}
+              <TextField
+                label="Username"
+                value={username}
+                onChange={changeUsername}
+                errorText={hasAccountErrorFor('username')}
+                data-qa-username
+              />
+              <ActionsPanel>
+                <Button
+                  buttonType="primary"
+                  loading={accountSaving}
+                  onClick={saveAccount}
+                  data-qa-submit
+                >
+                  Save
+                </Button>
+              </ActionsPanel>
+            </div>
+          </Paper>
+          <Paper className={classes.root}>
+            <div className={classes.inner}>
+              {profileSuccess && (
+                <Notice success spacingBottom={0}>
+                  Email updated successfully
+                </Notice>
+              )}
+              {generalProfileError && (
+                <Notice error text={generalProfileError} spacingBottom={0} />
+              )}
+              <TextField
                 // This should be disabled if this is NOT the current user.
                 disabled={profileUsername !== originalUsername}
-                buttonType="primary"
-                loading={profileSaving}
-                onClick={saveProfile}
-                data-qa-submit
-              >
-                Save
-              </Button>
-            </ActionsPanel>
-          </div>
-        </Paper>
+                label="Email"
+                value={email}
+                onChange={changeEmail}
+                tooltipText={
+                  profileUsername !== originalUsername
+                    ? "You can't change another user's email address"
+                    : ''
+                }
+                errorText={hasProfileErrorFor('email')}
+                data-qa-email
+              />
+              <ActionsPanel>
+                <Button
+                  // This should be disabled if this is NOT the current user.
+                  disabled={profileUsername !== originalUsername}
+                  buttonType="primary"
+                  loading={profileSaving}
+                  onClick={saveProfile}
+                  data-qa-submit
+                >
+                  Save
+                </Button>
+              </ActionsPanel>
+            </div>
+          </Paper>
+        </div>
       </React.Fragment>
     );
   };

@@ -515,9 +515,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     const { history, linodeID } = this.props;
     history.push(
       '/linodes/create' +
-        `?type=My%20Images&subtype=Backups&backupID=${
-          backup.id
-        }&linodeID=${linodeID}`
+        `?type=My%20Images&subtype=Backups&backupID=${backup.id}&linodeID=${linodeID}`
     );
   };
 
@@ -890,8 +888,14 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <DocumentTitleSegment segment={`${linodeLabel} - Backups`} />
-        {backupsEnabled ? <this.Management /> : <this.Placeholder />}
+        <div
+          id="tabpanel-linode-detail-backup"
+          role="tabpanel"
+          aria-labelledby="tab-linode-detail-backup"
+        >
+          <DocumentTitleSegment segment={`${linodeLabel} - Backups`} />
+          {backupsEnabled ? <this.Management /> : <this.Placeholder />}
+        </div>
       </React.Fragment>
     );
   }

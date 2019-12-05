@@ -44,34 +44,40 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = props => {
 
         return (
           <React.Fragment>
-            <DocumentTitleSegment segment={`${linode.label} - Settings`} />
-            {permissionsError}
-            <Typography
-              variant="h2"
-              className={classes.title}
-              data-qa-settings-header
+            <div
+              id="tabpanel-linode-detail-settings"
+              role="tabpanel"
+              aria-labelledby="tab-linode-detail-settings"
             >
-              Settings
-            </Typography>
-            <LinodeSettingsLabelPanel />
-            <LinodeSettingsPasswordPanel
-              linodeLabel={linode.label}
-              linodeId={linode.id}
-              linodeStatus={linode.status}
-            />
-            <LinodeSettingsAlertsPanel
-              linodeId={linode.id}
-              linodeLabel={linode.label}
-              linodeAlerts={linode.alerts}
-            />
-            <LinodeWatchdogPanel
-              linodeId={linode.id}
-              currentStatus={linode.watchdog_enabled}
-            />
-            <LinodeSettingsDeletePanel
-              linodeId={linode.id}
-              linodeLabel={linode.label}
-            />
+              <DocumentTitleSegment segment={`${linode.label} - Settings`} />
+              {permissionsError}
+              <Typography
+                variant="h2"
+                className={classes.title}
+                data-qa-settings-header
+              >
+                Settings
+              </Typography>
+              <LinodeSettingsLabelPanel />
+              <LinodeSettingsPasswordPanel
+                linodeLabel={linode.label}
+                linodeId={linode.id}
+                linodeStatus={linode.status}
+              />
+              <LinodeSettingsAlertsPanel
+                linodeId={linode.id}
+                linodeLabel={linode.label}
+                linodeAlerts={linode.alerts}
+              />
+              <LinodeWatchdogPanel
+                linodeId={linode.id}
+                currentStatus={linode.watchdog_enabled}
+              />
+              <LinodeSettingsDeletePanel
+                linodeId={linode.id}
+                linodeLabel={linode.label}
+              />
+            </div>
           </React.Fragment>
         );
       }}

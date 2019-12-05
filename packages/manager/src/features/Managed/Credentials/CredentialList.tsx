@@ -196,113 +196,120 @@ export const CredentialList: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      <DocumentTitleSegment segment="Credentials" />
-      <Grid
-        container
-        justify="flex-end"
-        alignItems="flex-end"
-        updateFor={[credentials, error, loading]}
+      <div
+        id="tabpanel-managed-credentials"
+        role="tabpanel"
+        aria-labelledby="tab-managed-credentials"
       >
-        <Grid item xs={12}>
-          <Typography variant="subtitle1" className={classes.subHeader}>
-            Please share any credentials our support team may need when
-            responding to a service issue.
-            <br /> Credentials are stored encrypted and all decryption attempts
-            are logged. You can revoke credentials at any time by deleting them.
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Grid container alignItems="flex-end">
-            <Grid item className="pt0">
-              <AddNewLink
-                onClick={() => setDrawerOpen(true)}
-                label="Add Credentials"
-              />
+        <DocumentTitleSegment segment="Credentials" />
+        <Grid
+          container
+          justify="flex-end"
+          alignItems="flex-end"
+          updateFor={[credentials, error, loading]}
+        >
+          <Grid item xs={12}>
+            <Typography variant="subtitle1" className={classes.subHeader}>
+              Please share any credentials our support team may need when
+              responding to a service issue.
+              <br /> Credentials are stored encrypted and all decryption
+              attempts are logged. You can revoke credentials at any time by
+              deleting them.
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Grid container alignItems="flex-end">
+              <Grid item className="pt0">
+                <AddNewLink
+                  onClick={() => setDrawerOpen(true)}
+                  label="Add Credentials"
+                />
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
-      </Grid>
-      <OrderBy data={credentials} orderBy={'label'} order={'asc'}>
-        {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-          <Paginate data={orderedData}>
-            {({
-              data,
-              count,
-              handlePageChange,
-              handlePageSizeChange,
-              page,
-              pageSize
-            }) => (
-              <>
-                <Paper>
-                  <Table aria-label="List of Your Managed Credentials">
-                    <TableHead>
-                      <TableRow>
-                        <TableSortCell
-                          active={orderBy === 'label'}
-                          label={'label'}
-                          direction={order}
-                          handleClick={handleOrderChange}
-                          data-qa-credential-label-header
-                        >
-                          Credential
-                        </TableSortCell>
-                        <TableSortCell
-                          active={orderBy === 'last_decrypted'}
-                          label={'last_decrypted'}
-                          direction={order}
-                          handleClick={handleOrderChange}
-                          data-qa-credential-decrypted-header
-                        >
-                          Last Decrypted
-                        </TableSortCell>
-                        <TableCell />
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <CredentialTableContent
-                        credentials={data}
-                        loading={loading}
-                        error={error}
-                        openDialog={openDialog}
-                        openForEdit={openForEdit}
-                      />
-                    </TableBody>
-                  </Table>
-                </Paper>
-                <PaginationFooter
-                  count={count}
-                  handlePageChange={handlePageChange}
-                  handleSizeChange={handlePageSizeChange}
-                  page={page}
-                  pageSize={pageSize}
-                  eventCategory="managed credential table"
-                />
-              </>
-            )}
-          </Paginate>
-        )}
-      </OrderBy>
-      <DeletionDialog
-        open={dialog.isOpen}
-        label={dialog.entityLabel || ''}
-        loading={dialog.isLoading}
-        error={dialog.error}
-        onClose={closeDialog}
-        onDelete={handleDelete}
-      />
-      <AddCredentialDrawer
-        open={isCreateDrawerOpen}
-        onClose={() => setDrawerOpen(false)}
-        onSubmit={handleCreate}
-      />
-      <UpdateCredentialDrawer
-        open={isEditDrawerOpen}
-        label={selectedCredential ? selectedCredential.label : ''}
-        onClose={handleDrawerClose}
-        onSubmitLabel={handleUpdateLabel}
-        onSubmitPassword={handleUpdatePassword}
-      />
+        <OrderBy data={credentials} orderBy={'label'} order={'asc'}>
+          {({ data: orderedData, handleOrderChange, order, orderBy }) => (
+            <Paginate data={orderedData}>
+              {({
+                data,
+                count,
+                handlePageChange,
+                handlePageSizeChange,
+                page,
+                pageSize
+              }) => (
+                <>
+                  <Paper>
+                    <Table aria-label="List of Your Managed Credentials">
+                      <TableHead>
+                        <TableRow>
+                          <TableSortCell
+                            active={orderBy === 'label'}
+                            label={'label'}
+                            direction={order}
+                            handleClick={handleOrderChange}
+                            data-qa-credential-label-header
+                          >
+                            Credential
+                          </TableSortCell>
+                          <TableSortCell
+                            active={orderBy === 'last_decrypted'}
+                            label={'last_decrypted'}
+                            direction={order}
+                            handleClick={handleOrderChange}
+                            data-qa-credential-decrypted-header
+                          >
+                            Last Decrypted
+                          </TableSortCell>
+                          <TableCell />
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <CredentialTableContent
+                          credentials={data}
+                          loading={loading}
+                          error={error}
+                          openDialog={openDialog}
+                          openForEdit={openForEdit}
+                        />
+                      </TableBody>
+                    </Table>
+                  </Paper>
+                  <PaginationFooter
+                    count={count}
+                    handlePageChange={handlePageChange}
+                    handleSizeChange={handlePageSizeChange}
+                    page={page}
+                    pageSize={pageSize}
+                    eventCategory="managed credential table"
+                  />
+                </>
+              )}
+            </Paginate>
+          )}
+        </OrderBy>
+        <DeletionDialog
+          open={dialog.isOpen}
+          label={dialog.entityLabel || ''}
+          loading={dialog.isLoading}
+          error={dialog.error}
+          onClose={closeDialog}
+          onDelete={handleDelete}
+        />
+        <AddCredentialDrawer
+          open={isCreateDrawerOpen}
+          onClose={() => setDrawerOpen(false)}
+          onSubmit={handleCreate}
+        />
+        <UpdateCredentialDrawer
+          open={isEditDrawerOpen}
+          label={selectedCredential ? selectedCredential.label : ''}
+          onClose={handleDrawerClose}
+          onSubmitLabel={handleUpdateLabel}
+          onSubmitPassword={handleUpdatePassword}
+        />
+      </div>
     </>
   );
 };

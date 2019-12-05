@@ -235,73 +235,81 @@ class UsersLanding extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Users" />
-        <Grid container justify="space-between" alignItems="flex-end">
-          <Grid item>
-            <Typography variant="h2" data-qa-title className={classes.title}>
-              Users
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Grid container alignItems="flex-end">
-              <Grid item>
-                <AddNewLink
-                  disabled={this.props.isRestrictedUser}
-                  disabledReason={
-                    this.props.isRestrictedUser
-                      ? 'You cannot create other users as a restricted user.'
-                      : undefined
-                  }
-                  onClick={this.openForCreate}
-                  label="Add a User"
-                />
+        <div
+          id="tabpanel-account-users"
+          role="tabpanel"
+          aria-labelledby="tab-account-users"
+        >
+          <Grid container justify="space-between" alignItems="flex-end">
+            <Grid item>
+              <Typography variant="h2" data-qa-title className={classes.title}>
+                Users
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Grid container alignItems="flex-end">
+                <Grid item>
+                  <AddNewLink
+                    disabled={this.props.isRestrictedUser}
+                    disabledReason={
+                      this.props.isRestrictedUser
+                        ? 'You cannot create other users as a restricted user.'
+                        : undefined
+                    }
+                    onClick={this.openForCreate}
+                    label="Add a User"
+                  />
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
-        {newUsername && (
-          <Notice success text={`User ${newUsername} created successfully`} />
-        )}
-        {userDeleteError && (
-          <Notice
-            style={{ marginTop: newUsername ? 16 : 0 }}
-            error
-            text={`Error when deleting user, please try again later`}
+          {newUsername && (
+            <Notice success text={`User ${newUsername} created successfully`} />
+          )}
+          {userDeleteError && (
+            <Notice
+              style={{ marginTop: newUsername ? 16 : 0 }}
+              error
+              text={`Error when deleting user, please try again later`}
+            />
+          )}
+          <Paper>
+            <Table aria-label="List of Users">
+              <TableHead>
+                <TableRow>
+                  <TableCell data-qa-username-column>Username</TableCell>
+                  <TableCell data-qa-email-column>Email Address</TableCell>
+                  <TableCell data-qa-restriction-column>
+                    Account Access
+                  </TableCell>
+                  <TableCell />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {this.renderTableContent(loading, error, users)}
+              </TableBody>
+            </Table>
+          </Paper>
+          <PaginationFooter
+            count={this.props.count}
+            page={this.props.page}
+            pageSize={this.props.pageSize}
+            handlePageChange={this.props.handlePageChange}
+            handleSizeChange={this.props.handlePageSizeChange}
+            eventCategory="users landing"
           />
-        )}
-        <Paper>
-          <Table aria-label="List of Users">
-            <TableHead>
-              <TableRow>
-                <TableCell data-qa-username-column>Username</TableCell>
-                <TableCell data-qa-email-column>Email Address</TableCell>
-                <TableCell data-qa-restriction-column>Account Access</TableCell>
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {this.renderTableContent(loading, error, users)}
-            </TableBody>
-          </Table>
-        </Paper>
-        <PaginationFooter
-          count={this.props.count}
-          page={this.props.page}
-          pageSize={this.props.pageSize}
-          handlePageChange={this.props.handlePageChange}
-          handleSizeChange={this.props.handlePageSizeChange}
-          eventCategory="users landing"
-        />
-        <CreateUserDrawer
-          open={createDrawerOpen}
-          onClose={this.userCreateOnClose}
-          addUser={this.addUser}
-        />
-        <UserDeleteConfirmationDialog
-          username={toDeleteUsername || ''}
-          open={deleteConfirmDialogOpen}
-          onDelete={this.onDeleteConfirm}
-          onCancel={this.onDeleteCancel}
-        />
+          <CreateUserDrawer
+            open={createDrawerOpen}
+            onClose={this.userCreateOnClose}
+            addUser={this.addUser}
+          />
+          <UserDeleteConfirmationDialog
+            username={toDeleteUsername || ''}
+            open={deleteConfirmDialogOpen}
+            onDelete={this.onDeleteConfirm}
+            onCancel={this.onDeleteCancel}
+          />
+        </div>
       </React.Fragment>
     );
   }

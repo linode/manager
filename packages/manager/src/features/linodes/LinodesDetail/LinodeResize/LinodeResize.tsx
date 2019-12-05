@@ -240,85 +240,91 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <DocumentTitleSegment segment={`${linodeLabel} - Resize`} />
-        <Paper className={classes.root}>
-          {disabled && <LinodePermissionsError />}
-          <Typography
-            role="heading"
-            aria-level={2}
-            variant="h2"
-            className={classes.title}
-            data-qa-title
-          >
-            Resize
-          </Typography>
-          <Typography data-qa-description>
-            If you're expecting a temporary burst of traffic to your website, or
-            if you're not using your Linode as much as you thought, you can
-            temporarily or permanently resize your Linode to a different plan.
-          </Typography>
+        <div
+          id="tabpanel-linode-detail-resize"
+          role="tabpanel"
+          aria-labelledby="tab-linode-detail-resize"
+        >
+          <DocumentTitleSegment segment={`${linodeLabel} - Resize`} />
+          <Paper className={classes.root}>
+            {disabled && <LinodePermissionsError />}
+            <Typography
+              role="heading"
+              aria-level={2}
+              variant="h2"
+              className={classes.title}
+              data-qa-title
+            >
+              Resize
+            </Typography>
+            <Typography data-qa-description>
+              If you're expecting a temporary burst of traffic to your website,
+              or if you're not using your Linode as much as you thought, you can
+              temporarily or permanently resize your Linode to a different plan.
+            </Typography>
 
-          <SelectPlanPanel
-            currentPlanHeading={currentPlanHeading}
-            types={this.props.currentTypesData}
-            onSelect={this.handleSelectPlan}
-            selectedID={this.state.selectedId}
-            disabled={disabled}
-          />
-        </Paper>
-        <Paper className={`${classes.checkbox} ${classes.root}`}>
-          <Typography variant="h2" className={classes.resizeTitle}>
-            Auto Resize Disk
-            {isSmaller ? (
-              <HelpIcon
-                className={classes.toolTip}
-                text={`Your disks cannot be automatically resized when moving to a smaller plan.`}
-              />
-            ) : !_shouldEnableAutoResizeDiskOption ? (
-              <HelpIcon
-                className={classes.toolTip}
-                text={`Your ext disk can only be automatically resized if you have one ext
+            <SelectPlanPanel
+              currentPlanHeading={currentPlanHeading}
+              types={this.props.currentTypesData}
+              onSelect={this.handleSelectPlan}
+              selectedID={this.state.selectedId}
+              disabled={disabled}
+            />
+          </Paper>
+          <Paper className={`${classes.checkbox} ${classes.root}`}>
+            <Typography variant="h2" className={classes.resizeTitle}>
+              Auto Resize Disk
+              {isSmaller ? (
+                <HelpIcon
+                  className={classes.toolTip}
+                  text={`Your disks cannot be automatically resized when moving to a smaller plan.`}
+                />
+              ) : !_shouldEnableAutoResizeDiskOption ? (
+                <HelpIcon
+                  className={classes.toolTip}
+                  text={`Your ext disk can only be automatically resized if you have one ext
                       disk or one ext disk and one swap disk on this Linode.`}
-              />
-            ) : null}
-          </Typography>
-          <Checkbox
-            disabled={!_shouldEnableAutoResizeDiskOption || isSmaller}
-            checked={
-              !_shouldEnableAutoResizeDiskOption || isSmaller
-                ? false
-                : this.state.autoDiskResize
-            }
-            onChange={this.handleToggleAutoDisksResize}
-            text={
-              !_shouldEnableAutoResizeDiskOption ? (
-                `Would you like your disk on this Linode automatically resized to
+                />
+              ) : null}
+            </Typography>
+            <Checkbox
+              disabled={!_shouldEnableAutoResizeDiskOption || isSmaller}
+              checked={
+                !_shouldEnableAutoResizeDiskOption || isSmaller
+                  ? false
+                  : this.state.autoDiskResize
+              }
+              onChange={this.handleToggleAutoDisksResize}
+              text={
+                !_shouldEnableAutoResizeDiskOption ? (
+                  `Would you like your disk on this Linode automatically resized to
             scale with this Linode's new size? We recommend you keep this option enabled.`
-              ) : (
-                <Typography>
-                  Would you like the disk <strong>{diskToResize}</strong> to be
-                  automatically scaled with this Linode's new size? We recommend
-                  you keep this option enabled.
-                </Typography>
-              )
-            }
-          />
-        </Paper>
-        <ActionsPanel>
-          <Button
-            disabled={
-              !this.state.selectedId ||
-              linodeInTransition(this.props.linodeStatus || '') ||
-              disabled
-            }
-            loading={this.state.isLoading}
-            buttonType="primary"
-            onClick={this.onSubmit}
-            data-qa-submit
-          >
-            Submit
-          </Button>
-        </ActionsPanel>
+                ) : (
+                  <Typography>
+                    Would you like the disk <strong>{diskToResize}</strong> to
+                    be automatically scaled with this Linode's new size? We
+                    recommend you keep this option enabled.
+                  </Typography>
+                )
+              }
+            />
+          </Paper>
+          <ActionsPanel>
+            <Button
+              disabled={
+                !this.state.selectedId ||
+                linodeInTransition(this.props.linodeStatus || '') ||
+                disabled
+              }
+              loading={this.state.isLoading}
+              buttonType="primary"
+              onClick={this.onSubmit}
+              data-qa-submit
+            >
+              Submit
+            </Button>
+          </ActionsPanel>
+        </div>
       </React.Fragment>
     );
   }

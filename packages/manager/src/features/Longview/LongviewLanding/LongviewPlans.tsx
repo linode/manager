@@ -231,6 +231,9 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
           [styles.root]: true,
           [styles.collapsedTable]: isManaged
         })}
+        id="tabpanel-longview-plan-details"
+        role="tabpanel"
+        aria-labelledby="tab-longview-plan-details"
       >
         {updateErrorMsg && <Notice error text={updateErrorMsg} />}
         {!mayUserModifyLVSubscription && !isManaged && (

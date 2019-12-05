@@ -1,4 +1,4 @@
-import { Profile } from "linode-js-sdk/lib/profile";
+import { Profile } from 'linode-js-sdk/lib/profile';
 import { path } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -49,7 +49,12 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
     const { classes, status } = this.props;
 
     return (
-      <Paper className={classes.root}>
+      <Paper
+        className={classes.root}
+        id="tabpanel-profile-settings"
+        role="tabpanel"
+        aria-labelledby="tab-profile-settings"
+      >
         <DocumentTitleSegment segment="Settings" />
         <Typography variant="h2" className={classes.title}>
           Notifications

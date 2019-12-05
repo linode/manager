@@ -61,17 +61,46 @@ class Profile extends React.Component<Props> {
 
   tabs = [
     /* NB: These must correspond to the routes inside the Switch */
-    { title: 'Display', routeName: `${this.props.match.url}/display` },
+    {
+      title: 'Display',
+      routeName: `${this.props.match.url}/display`,
+      name: 'profile-display'
+    },
     {
       title: 'Password & Authentication',
-      routeName: `${this.props.match.url}/auth`
+      routeName: `${this.props.match.url}/auth`,
+      name: 'profile-auth'
     },
-    { title: 'SSH Keys', routeName: `${this.props.match.url}/keys` },
-    { title: 'LISH', routeName: `${this.props.match.url}/lish` },
-    { title: 'API Tokens', routeName: `${this.props.match.url}/tokens` },
-    { title: 'OAuth Apps', routeName: `${this.props.match.url}/clients` },
-    { title: 'Referrals', routeName: `${this.props.match.url}/referrals` },
-    { title: 'Settings', routeName: `${this.props.match.url}/settings` }
+    {
+      title: 'SSH Keys',
+      routeName: `${this.props.match.url}/keys`,
+      name: 'profile-ssh-keys'
+    },
+    {
+      title: 'LISH',
+      routeName: `${this.props.match.url}/lish`,
+      name: 'profile-lish'
+    },
+    {
+      title: 'API Tokens',
+      routeName: `${this.props.match.url}/tokens`,
+      name: 'profile-tokens'
+    },
+    {
+      title: 'OAuth Apps',
+      routeName: `${this.props.match.url}/clients`,
+      name: 'profile-clients'
+    },
+    {
+      title: 'Referrals',
+      routeName: `${this.props.match.url}/referrals`,
+      name: 'profile-referrals'
+    },
+    {
+      title: 'Settings',
+      routeName: `${this.props.match.url}/settings`,
+      name: 'profile-settings'
+    }
   ];
 
   render() {
@@ -86,7 +115,7 @@ class Profile extends React.Component<Props> {
       <React.Fragment>
         <DocumentTitleSegment segment="My Profile" />
         <H1Header title="My Profile" data-qa-profile-header />
-        <AppBar position="static" color="default">
+        <AppBar position="static" color="default" role="tablist">
           <Tabs
             value={this.tabs.findIndex(tab => matches(tab.routeName))}
             onChange={this.handleTabChange}
@@ -103,6 +132,7 @@ class Profile extends React.Component<Props> {
                 component={React.forwardRef((props, ref) => (
                   <TabLink
                     to={tab.routeName}
+                    idName={tab.name}
                     title={tab.title}
                     {...props}
                     ref={ref}

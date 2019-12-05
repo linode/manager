@@ -533,83 +533,89 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <DocumentTitleSegment segment={`${linodeLabel} - Networking`} />
-        {readOnly && <LinodePermissionsError />}
-        <LinodeNetworkingSummaryPanel
-          linkLocal={path(['ipv6', 'link_local', 'address'], linodeIPs)}
-          sshIPAddress={firstPublicIPAddress}
-          linodeLabel={linodeLabel}
-          linodeRegion={zoneName}
-        />
-
-        {this.renderIPv4()}
-
-        {this.renderIPv6()}
-
-        {this.renderNetworkActions()}
-
-        <ViewIPDrawer
-          open={this.state.viewIPDrawerOpen}
-          onClose={this.closeViewIPDrawer}
-          ip={this.state.currentlySelectedIP}
-        />
-
-        <ViewRangeDrawer
-          open={this.state.viewRangeDrawerOpen}
-          onClose={this.closeViewRangeDrawer}
-          range={this.state.currentlySelectedIPRange}
-        />
-
-        <EditRDNSDrawer
-          open={this.state.editRDNSDrawerOpen}
-          onClose={this.closeEditRDNSDrawer}
-          address={
-            this.state.currentlySelectedIP
-              ? this.state.currentlySelectedIP.address
-              : undefined
-          }
-          rdns={
-            this.state.currentlySelectedIP
-              ? this.state.currentlySelectedIP.rdns
-              : undefined
-          }
-          range={
-            this.state.currentlySelectedIPRange
-              ? this.state.currentlySelectedIPRange.range
-              : undefined
-          }
-          ips={ipsWithRDNS}
-          updateIPs={
-            this.state.currentlySelectedIPRange ? this.updateIPs : undefined
-          }
-        />
-
-        <ViewRDNSDrawer
-          open={this.state.viewRDNSDrawerOpen}
-          onClose={this.closeViewRDNSDrawer}
-          ips={ipsWithRDNS}
-        />
-
-        <CreateIPv6Drawer
-          open={this.state.createIPv6DrawerOpen}
-          onClose={this.closeCreateIPv6Drawer}
-        />
-
-        <CreateIPv4Drawer
-          forPublic={this.state.createIPv4DrawerForPublic}
-          open={this.state.createIPv4DrawerOpen}
-          onClose={this.closeCreateIPv4Drawer}
-          linodeID={linodeID}
-        />
-        {this.state.currentlySelectedIP && linodeID && (
-          <DeleteIPConfirm
-            handleClose={this.closeRemoveIPDialog}
-            IPAddress={this.state.currentlySelectedIP.address}
-            open={this.state.removeIPDialogOpen}
-            linode={this.props.linode}
-            ipRemoveSuccess={this.handleRemoveIPSuccess}
+        <div
+          id="tabpanel-linode-detail-networking"
+          role="tabpanel"
+          aria-labelledby="tab-linode-detail-networking"
+        >
+          <DocumentTitleSegment segment={`${linodeLabel} - Networking`} />
+          {readOnly && <LinodePermissionsError />}
+          <LinodeNetworkingSummaryPanel
+            linkLocal={path(['ipv6', 'link_local', 'address'], linodeIPs)}
+            sshIPAddress={firstPublicIPAddress}
+            linodeLabel={linodeLabel}
+            linodeRegion={zoneName}
           />
-        )}
+
+          {this.renderIPv4()}
+
+          {this.renderIPv6()}
+
+          {this.renderNetworkActions()}
+
+          <ViewIPDrawer
+            open={this.state.viewIPDrawerOpen}
+            onClose={this.closeViewIPDrawer}
+            ip={this.state.currentlySelectedIP}
+          />
+
+          <ViewRangeDrawer
+            open={this.state.viewRangeDrawerOpen}
+            onClose={this.closeViewRangeDrawer}
+            range={this.state.currentlySelectedIPRange}
+          />
+
+          <EditRDNSDrawer
+            open={this.state.editRDNSDrawerOpen}
+            onClose={this.closeEditRDNSDrawer}
+            address={
+              this.state.currentlySelectedIP
+                ? this.state.currentlySelectedIP.address
+                : undefined
+            }
+            rdns={
+              this.state.currentlySelectedIP
+                ? this.state.currentlySelectedIP.rdns
+                : undefined
+            }
+            range={
+              this.state.currentlySelectedIPRange
+                ? this.state.currentlySelectedIPRange.range
+                : undefined
+            }
+            ips={ipsWithRDNS}
+            updateIPs={
+              this.state.currentlySelectedIPRange ? this.updateIPs : undefined
+            }
+          />
+
+          <ViewRDNSDrawer
+            open={this.state.viewRDNSDrawerOpen}
+            onClose={this.closeViewRDNSDrawer}
+            ips={ipsWithRDNS}
+          />
+
+          <CreateIPv6Drawer
+            open={this.state.createIPv6DrawerOpen}
+            onClose={this.closeCreateIPv6Drawer}
+          />
+
+          <CreateIPv4Drawer
+            forPublic={this.state.createIPv4DrawerForPublic}
+            open={this.state.createIPv4DrawerOpen}
+            onClose={this.closeCreateIPv4Drawer}
+            linodeID={linodeID}
+          />
+          {this.state.currentlySelectedIP && linodeID && (
+            <DeleteIPConfirm
+              handleClose={this.closeRemoveIPDialog}
+              IPAddress={this.state.currentlySelectedIP.address}
+              open={this.state.removeIPDialogOpen}
+              linode={this.props.linode}
+              ipRemoveSuccess={this.handleRemoveIPSuccess}
+            />
+          )}
+        </div>
       </React.Fragment>
     );
   }
@@ -860,7 +866,10 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   upsertLinode: linode => dispatch(_upsertLinode(linode))
 });
 
-const connected = connect(undefined, mapDispatchToProps);
+const connected = connect(
+  undefined,
+  mapDispatchToProps
+);
 
 const enhanced = recompose<CombinedProps, {}>(connected, linodeContext, styled);
 

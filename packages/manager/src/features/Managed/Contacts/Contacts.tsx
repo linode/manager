@@ -121,150 +121,156 @@ const Contacts: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      <DocumentTitleSegment segment="Contacts" />
-      <Typography variant="subtitle1" className={classes.copy}>
-        You can assign contact groups to monitors so we know who to talk to in
-        the event of a support issue. Create contacts and assign them to a
-        group, then assign the group to the appropriate monitor(s).
-      </Typography>
-      <div className={classes.contactsTable}>
-        <RootRef rootRef={contactsTableRef}>
-          <Box
-            display="flex"
-            flexDirection="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typography variant="h2">Contacts</Typography>
-            <AddNewLink
-              onClick={() => {
-                setContactDrawerMode('create');
-                contactDrawer.open();
-              }}
-              label="Add a Contact"
-            />
-          </Box>
-        </RootRef>
-        <OrderBy data={contacts} orderBy="name" order="asc">
-          {({ data: orderedData, handleOrderChange, order, orderBy }) => {
-            return (
-              <Paginate data={orderedData} scrollToRef={contactsTableRef}>
-                {({
-                  count,
-                  data: paginatedData,
-                  handlePageChange,
-                  handlePageSizeChange,
-                  page,
-                  pageSize
-                }) => {
-                  return (
-                    <>
-                      <Paper className={classes.root}>
-                        <Table aria-label="List of Your Managed Contacts">
-                          <TableHead>
-                            <TableRow>
-                              <TableSortCell
-                                active={orderBy === 'name'}
-                                label={'name'}
-                                direction={order}
-                                handleClick={handleOrderChange}
-                                className={classes.name}
-                              >
-                                Name
-                              </TableSortCell>
-                              <TableSortCell
-                                active={orderBy === 'group'}
-                                label={'group'}
-                                direction={order}
-                                handleClick={handleOrderChange}
-                              >
-                                Group
-                              </TableSortCell>
-                              <TableSortCell
-                                active={orderBy === 'email'}
-                                label={'email'}
-                                direction={order}
-                                handleClick={handleOrderChange}
-                              >
-                                E-mail
-                              </TableSortCell>
-                              <TableSortCell
-                                active={orderBy === 'phone:primary'}
-                                label={'phone:primary'}
-                                direction={order}
-                                handleClick={handleOrderChange}
-                              >
-                                Primary Phone
-                              </TableSortCell>
-                              <TableSortCell
-                                active={orderBy === 'phone:secondary'}
-                                label={'phone:secondary'}
-                                direction={order}
-                                handleClick={handleOrderChange}
-                              >
-                                Secondary Phone
-                              </TableSortCell>
-                              {/* Empty TableCell for action menu */}
-                              <TableCell />
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            <ContactTableContact
-                              contacts={paginatedData}
-                              loading={loading}
-                              lastUpdated={lastUpdated}
-                              updateOrAdd={updateOrAdd}
-                              openDrawer={(contactId: number) => {
-                                setSelectedContactId(contactId);
-                                setContactDrawerMode('edit');
-                                contactDrawer.open();
-                              }}
-                              openDialog={(contactId: number) => {
-                                const selectedContact = contacts.find(
-                                  thisContact => thisContact.id === contactId
-                                );
-                                const label = selectedContact
-                                  ? selectedContact.name
-                                  : '';
-                                openDialog(contactId, label);
-                              }}
-                              error={error}
-                            />
-                          </TableBody>
-                        </Table>
-                      </Paper>
-                      <PaginationFooter
-                        count={count}
-                        handlePageChange={handlePageChange}
-                        handleSizeChange={handlePageSizeChange}
-                        page={page}
-                        pageSize={pageSize}
-                        eventCategory="managed contacts"
-                      />
-                    </>
-                  );
+      <div
+        id="tabpanel-managed-contacts"
+        role="tabpanel"
+        aria-labelledby="tab-managed-contacts"
+      >
+        <DocumentTitleSegment segment="Contacts" />
+        <Typography variant="subtitle1" className={classes.copy}>
+          You can assign contact groups to monitors so we know who to talk to in
+          the event of a support issue. Create contacts and assign them to a
+          group, then assign the group to the appropriate monitor(s).
+        </Typography>
+        <div className={classes.contactsTable}>
+          <RootRef rootRef={contactsTableRef}>
+            <Box
+              display="flex"
+              flexDirection="row"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Typography variant="h2">Contacts</Typography>
+              <AddNewLink
+                onClick={() => {
+                  setContactDrawerMode('create');
+                  contactDrawer.open();
                 }}
-              </Paginate>
-            );
-          }}
-        </OrderBy>
-        <DeletionDialog
-          open={dialog.isOpen}
-          label={dialog.entityLabel || ''}
-          loading={dialog.isLoading}
-          error={dialog.error}
-          onClose={closeDialog}
-          onDelete={handleDelete}
+                label="Add a Contact"
+              />
+            </Box>
+          </RootRef>
+          <OrderBy data={contacts} orderBy="name" order="asc">
+            {({ data: orderedData, handleOrderChange, order, orderBy }) => {
+              return (
+                <Paginate data={orderedData} scrollToRef={contactsTableRef}>
+                  {({
+                    count,
+                    data: paginatedData,
+                    handlePageChange,
+                    handlePageSizeChange,
+                    page,
+                    pageSize
+                  }) => {
+                    return (
+                      <>
+                        <Paper className={classes.root}>
+                          <Table aria-label="List of Your Managed Contacts">
+                            <TableHead>
+                              <TableRow>
+                                <TableSortCell
+                                  active={orderBy === 'name'}
+                                  label={'name'}
+                                  direction={order}
+                                  handleClick={handleOrderChange}
+                                  className={classes.name}
+                                >
+                                  Name
+                                </TableSortCell>
+                                <TableSortCell
+                                  active={orderBy === 'group'}
+                                  label={'group'}
+                                  direction={order}
+                                  handleClick={handleOrderChange}
+                                >
+                                  Group
+                                </TableSortCell>
+                                <TableSortCell
+                                  active={orderBy === 'email'}
+                                  label={'email'}
+                                  direction={order}
+                                  handleClick={handleOrderChange}
+                                >
+                                  E-mail
+                                </TableSortCell>
+                                <TableSortCell
+                                  active={orderBy === 'phone:primary'}
+                                  label={'phone:primary'}
+                                  direction={order}
+                                  handleClick={handleOrderChange}
+                                >
+                                  Primary Phone
+                                </TableSortCell>
+                                <TableSortCell
+                                  active={orderBy === 'phone:secondary'}
+                                  label={'phone:secondary'}
+                                  direction={order}
+                                  handleClick={handleOrderChange}
+                                >
+                                  Secondary Phone
+                                </TableSortCell>
+                                {/* Empty TableCell for action menu */}
+                                <TableCell />
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              <ContactTableContact
+                                contacts={paginatedData}
+                                loading={loading}
+                                lastUpdated={lastUpdated}
+                                updateOrAdd={updateOrAdd}
+                                openDrawer={(contactId: number) => {
+                                  setSelectedContactId(contactId);
+                                  setContactDrawerMode('edit');
+                                  contactDrawer.open();
+                                }}
+                                openDialog={(contactId: number) => {
+                                  const selectedContact = contacts.find(
+                                    thisContact => thisContact.id === contactId
+                                  );
+                                  const label = selectedContact
+                                    ? selectedContact.name
+                                    : '';
+                                  openDialog(contactId, label);
+                                }}
+                                error={error}
+                              />
+                            </TableBody>
+                          </Table>
+                        </Paper>
+                        <PaginationFooter
+                          count={count}
+                          handlePageChange={handlePageChange}
+                          handleSizeChange={handlePageSizeChange}
+                          page={page}
+                          pageSize={pageSize}
+                          eventCategory="managed contacts"
+                        />
+                      </>
+                    );
+                  }}
+                </Paginate>
+              );
+            }}
+          </OrderBy>
+          <DeletionDialog
+            open={dialog.isOpen}
+            label={dialog.entityLabel || ''}
+            loading={dialog.isLoading}
+            error={dialog.error}
+            onClose={closeDialog}
+            onDelete={handleDelete}
+          />
+        </div>
+        <ContactDrawer
+          mode={contactDrawerMode}
+          isOpen={contactDrawer.isOpen}
+          closeDrawer={contactDrawer.close}
+          updateOrAdd={updateOrAdd}
+          contact={contacts.find(contact => contact.id === selectedContactId)}
+          groups={groups}
         />
       </div>
-      <ContactDrawer
-        mode={contactDrawerMode}
-        isOpen={contactDrawer.isOpen}
-        closeDrawer={contactDrawer.close}
-        updateOrAdd={updateOrAdd}
-        contact={contacts.find(contact => contact.id === selectedContactId)}
-        groups={groups}
-      />
     </>
   );
 };

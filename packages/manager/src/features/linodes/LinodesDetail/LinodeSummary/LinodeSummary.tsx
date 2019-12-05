@@ -696,7 +696,12 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <DocumentTitleSegment segment={`${linode.label} - Summary`} />
 
-        <Grid container>
+        <Grid
+          container
+          id="tabpanel-linode-detail-summary"
+          role="tabpanel"
+          aria-labelledby="tab-linode-detail-summary"
+        >
           <Grid item xs={12} md={4} lg={3} className={classes.sidebar}>
             <SummaryPanel />
           </Grid>

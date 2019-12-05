@@ -70,42 +70,49 @@ export const Details: React.FC<Props> = props => {
 
   return (
     <>
-      <Grid item xs={12}>
-        <NodePoolsDisplay
-          editing={false}
-          pools={cluster.node_pools}
-          poolsForEdit={[]}
-          types={typesData || []}
-          loading={nodePoolsLoading}
-        />
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <Paper className={classes.docsWrapper}>
-          <Grid
-            container
-            item
-            direction="row"
-            justify="flex-start"
-            alignItems="center"
-            className={classes.docsHeaderWrapper}
-          >
-            <Grid item>
-              <LibraryBook className={classes.docsIcon} />
+      <Grid
+        container
+        id="tabpanel-lke-cluster-details"
+        role="tabpanel"
+        aria-labelledby="tab-lke-cluster-details"
+      >
+        <Grid item xs={12}>
+          <NodePoolsDisplay
+            editing={false}
+            pools={cluster.node_pools}
+            poolsForEdit={[]}
+            types={typesData || []}
+            loading={nodePoolsLoading}
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Paper className={classes.docsWrapper}>
+            <Grid
+              container
+              item
+              direction="row"
+              justify="flex-start"
+              alignItems="center"
+              className={classes.docsHeaderWrapper}
+            >
+              <Grid item>
+                <LibraryBook className={classes.docsIcon} />
+              </Grid>
+              <Grid item>
+                <Typography variant="h3">Guides</Typography>
+              </Grid>
             </Grid>
             <Grid item>
-              <Typography variant="h3">Guides</Typography>
+              {links.map(link => (
+                <div key={link.idx}>
+                  <Typography variant="body1" className={classes.post}>
+                    <ExternalLink link={link.href} text={link.title} />
+                  </Typography>
+                </div>
+              ))}
             </Grid>
-          </Grid>
-          <Grid item>
-            {links.map(link => (
-              <div key={link.idx}>
-                <Typography variant="body1" className={classes.post}>
-                  <ExternalLink link={link.href} text={link.title} />
-                </Typography>
-              </div>
-            ))}
-          </Grid>
-        </Paper>
+          </Paper>
+        </Grid>
       </Grid>
     </>
   );

@@ -45,8 +45,16 @@ export const ObjectStorageLanding: React.FunctionComponent<
 > = props => {
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
-    { title: 'Buckets', routeName: `${props.match.url}/buckets` },
-    { title: 'Access Keys', routeName: `${props.match.url}/access-keys` }
+    {
+      title: 'Buckets',
+      routeName: `${props.match.url}/buckets`,
+      name: 'obj-buckets'
+    },
+    {
+      title: 'Access Keys',
+      routeName: `${props.match.url}/access-keys`,
+      name: 'obj-access-keys'
+    }
   ];
 
   const handleTabChange = (
@@ -107,7 +115,7 @@ export const ObjectStorageLanding: React.FunctionComponent<
         />
         <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/" />
       </Box>
-      <AppBar position="static" color="default">
+      <AppBar position="static" color="default" role="tablist">
         <Tabs
           value={tabs.findIndex(tab => matches(tab.routeName))}
           onChange={handleTabChange}
@@ -123,6 +131,7 @@ export const ObjectStorageLanding: React.FunctionComponent<
               component={React.forwardRef((forwardedProps, ref) => (
                 <TabLink
                   to={tab.routeName}
+                  idName={tab.name}
                   title={tab.title}
                   {...forwardedProps}
                   ref={ref}

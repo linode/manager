@@ -263,62 +263,68 @@ export const ResizeCluster: React.FC<ResizeProps> = props => {
 
   return (
     <>
-      <Grid item xs={12}>
-        <NodePoolsDisplay
-          submittingForm={submitting}
-          submitForm={submitForm}
-          submissionSuccess={success}
-          submissionError={generalError}
-          submitDisabled={submitDisabled}
-          editing={true}
-          updatePool={updatePool}
-          deletePool={handleDeletePool}
-          resetForm={resetFormState}
-          pools={cluster.node_pools}
-          poolsForEdit={pools}
-          types={typesData || []}
-          loading={nodePoolsLoading}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <NodePoolPanel
-          hideTable
-          selectedType={selectedType}
-          types={typesData || []}
-          nodeCount={count}
-          addNodePool={handleAddNodePool}
-          handleTypeSelect={newType => setSelectedType(newType)}
-          updateNodeCount={newCount => setCount(newCount)}
-          typesLoading={typesLoading}
-          typesError={
-            typesError
-              ? getAPIErrorOrDefault(
-                  typesError,
-                  'Error loading Linode type information.'
-                )[0].reason
-              : undefined
-          }
-        />
-        <Grid item xs={12} className={classes.deleteSection}>
-          <Button
-            destructive
-            buttonType="secondary"
-            onClick={openDeleteConfirmation}
-          >
-            Delete Cluster
-          </Button>
+      <Grid
+        container
+        id="tabpanel-lke-cluster-resize"
+        role="tabpanel"
+        aria-labelledby="tab-lke-cluster-resize"
+      >
+        <Grid item xs={12}>
+          <NodePoolsDisplay
+            submittingForm={submitting}
+            submitForm={submitForm}
+            submissionSuccess={success}
+            submissionError={generalError}
+            submitDisabled={submitDisabled}
+            editing={true}
+            updatePool={updatePool}
+            deletePool={handleDeletePool}
+            resetForm={resetFormState}
+            pools={cluster.node_pools}
+            poolsForEdit={pools}
+            types={typesData || []}
+            loading={nodePoolsLoading}
+          />
         </Grid>
+        <Grid item xs={12}>
+          <NodePoolPanel
+            hideTable
+            selectedType={selectedType}
+            types={typesData || []}
+            nodeCount={count}
+            addNodePool={handleAddNodePool}
+            handleTypeSelect={newType => setSelectedType(newType)}
+            updateNodeCount={newCount => setCount(newCount)}
+            typesLoading={typesLoading}
+            typesError={
+              typesError
+                ? getAPIErrorOrDefault(
+                    typesError,
+                    'Error loading Linode type information.'
+                  )[0].reason
+                : undefined
+            }
+          />
+          <Grid item xs={12} className={classes.deleteSection}>
+            <Button
+              destructive
+              buttonType="secondary"
+              onClick={openDeleteConfirmation}
+            >
+              Delete Cluster
+            </Button>
+          </Grid>
+        </Grid>
+        <KubernetesDialog
+          open={confirmationOpen}
+          loading={deleting}
+          error={path([0, 'reason'], props.clusterDeleteError)}
+          clusterLabel={cluster.label}
+          clusterPools={cluster.node_pools}
+          onClose={() => setConfirmation(false)}
+          onDelete={handleDeleteCluster}
+        />
       </Grid>
-
-      <KubernetesDialog
-        open={confirmationOpen}
-        loading={deleting}
-        error={path([0, 'reason'], props.clusterDeleteError)}
-        clusterLabel={cluster.label}
-        clusterPools={cluster.node_pools}
-        onClose={() => setConfirmation(false)}
-        onDelete={handleDeleteCluster}
-      />
     </>
   );
 };

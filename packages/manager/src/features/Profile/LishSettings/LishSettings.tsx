@@ -143,77 +143,83 @@ class LishSettings extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <DocumentTitleSegment segment="Lish" />
-        <Paper className={classes.root}>
-          <Typography variant="h2" className={classes.title} data-qa-title>
-            LISH
-          </Typography>
-          {success && <Notice success text={success} />}
-          {authorizedKeysError && <Notice error text={authorizedKeysError} />}
-          {generalError && <Notice error text={generalError} />}
-          <Typography className={classes.intro}>
-            This controls what authentication methods are allowed to connect to
-            the Lish console servers.
-          </Typography>
-          {loading ? null : (
-            <React.Fragment>
-              <FormControl className={classes.modeControl}>
-                <Select
-                  textFieldProps={{
-                    dataAttrs: {
-                      'data-qa-mode-select': true
-                    }
-                  }}
-                  options={modeOptions}
-                  name="mode-select"
-                  id="mode-select"
-                  defaultValue={defaultMode}
-                  onChange={this.onListAuthMethodChange as any}
-                  label="Authentication Mode"
-                  isClearable={false}
-                  errorText={authMethodError}
+        <div
+          id="tabpanel-profile-lish"
+          role="tabpanel"
+          aria-labelledby="tab-profile-lish"
+        >
+          <DocumentTitleSegment segment="Lish" />
+          <Paper className={classes.root}>
+            <Typography variant="h2" className={classes.title} data-qa-title>
+              LISH
+            </Typography>
+            {success && <Notice success text={success} />}
+            {authorizedKeysError && <Notice error text={authorizedKeysError} />}
+            {generalError && <Notice error text={generalError} />}
+            <Typography className={classes.intro}>
+              This controls what authentication methods are allowed to connect
+              to the Lish console servers.
+            </Typography>
+            {loading ? null : (
+              <React.Fragment>
+                <FormControl className={classes.modeControl}>
+                  <Select
+                    textFieldProps={{
+                      dataAttrs: {
+                        'data-qa-mode-select': true
+                      }
+                    }}
+                    options={modeOptions}
+                    name="mode-select"
+                    id="mode-select"
+                    defaultValue={defaultMode}
+                    onChange={this.onListAuthMethodChange as any}
+                    label="Authentication Mode"
+                    isClearable={false}
+                    errorText={authMethodError}
+                  />
+                </FormControl>
+                {Array.from(Array(authorizedKeysCount)).map((value, idx) => (
+                  <div className={classes.sshWrap} key={idx}>
+                    <TextField
+                      key={idx}
+                      label="SSH Public Key"
+                      onChange={this.onPublicKeyChange(idx)}
+                      value={authorizedKeys[idx] || ''}
+                      helperText="Place your SSH public keys here for use with Lish console access."
+                      multiline
+                      rows="4"
+                      className={classes.keyTextarea}
+                      data-qa-public-key
+                    />
+                    <Button
+                      buttonType="remove"
+                      onClick={this.onPublicKeyRemove(idx)}
+                      className={classes.remove}
+                      data-qa-remove
+                    />
+                  </div>
+                ))}
+                <AddNewLink
+                  onClick={this.addSSHPublicKeyField}
+                  label="Add SSH Public Key"
+                  left
+                  className={classes.addNew}
                 />
-              </FormControl>
-              {Array.from(Array(authorizedKeysCount)).map((value, idx) => (
-                <div className={classes.sshWrap} key={idx}>
-                  <TextField
-                    key={idx}
-                    label="SSH Public Key"
-                    onChange={this.onPublicKeyChange(idx)}
-                    value={authorizedKeys[idx] || ''}
-                    helperText="Place your SSH public keys here for use with Lish console access."
-                    multiline
-                    rows="4"
-                    className={classes.keyTextarea}
-                    data-qa-public-key
-                  />
-                  <Button
-                    buttonType="remove"
-                    onClick={this.onPublicKeyRemove(idx)}
-                    className={classes.remove}
-                    data-qa-remove
-                  />
-                </div>
-              ))}
-              <AddNewLink
-                onClick={this.addSSHPublicKeyField}
-                label="Add SSH Public Key"
-                left
-                className={classes.addNew}
-              />
-            </React.Fragment>
-          )}
-          <ActionsPanel>
-            <Button
-              buttonType="primary"
-              onClick={this.onSubmit}
-              loading={this.state.submitting}
-              data-qa-save
-            >
-              Save
-            </Button>
-          </ActionsPanel>
-        </Paper>
+              </React.Fragment>
+            )}
+            <ActionsPanel>
+              <Button
+                buttonType="primary"
+                onClick={this.onSubmit}
+                loading={this.state.submitting}
+                data-qa-save
+              >
+                Save
+              </Button>
+            </ActionsPanel>
+          </Paper>
+        </div>
       </React.Fragment>
     );
   }

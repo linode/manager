@@ -48,7 +48,12 @@ const ProcessesLanding: React.FC<Props> = props => {
 
   return (
     <>
-      <Grid container>
+      <Grid
+        container
+        id="tabpanel-longview-processes"
+        role="tabpanel"
+        aria-labelledby="tab-longview-processes"
+      >
         <Grid item xs={9}>
           <Box display="flex" justifyContent="space-between">
             {/* Doesn't work yet. */}

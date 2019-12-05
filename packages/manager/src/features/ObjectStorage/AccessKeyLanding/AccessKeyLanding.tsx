@@ -70,7 +70,9 @@ type CombinedProps = Props &
   ReduxStateProps &
   DispatchProps;
 
-export const AccessKeyLanding: React.StatelessComponent<CombinedProps> = props => {
+export const AccessKeyLanding: React.StatelessComponent<
+  CombinedProps
+> = props => {
   const {
     classes,
     object_storage,
@@ -268,53 +270,59 @@ export const AccessKeyLanding: React.StatelessComponent<CombinedProps> = props =
 
   return (
     <React.Fragment>
-      <DocumentTitleSegment segment="Access Keys" />
-      <Grid container justify="flex-end">
-        <Grid item>
-          <AddNewLink
-            onClick={openDrawerForCreating}
-            label="Create an Access Key"
-          />
+      <div
+        id="tabpanel-obj-access-keys"
+        role="tabpanel"
+        aria-labelledby="tab-obj-access-keys"
+      >
+        <DocumentTitleSegment segment="Access Keys" />
+        <Grid container justify="flex-end">
+          <Grid item>
+            <AddNewLink
+              onClick={openDrawerForCreating}
+              label="Create an Access Key"
+            />
+          </Grid>
         </Grid>
-      </Grid>
 
-      <AccessKeyTable
-        {...paginationProps}
-        openDrawerForEditing={openDrawerForEditing}
-        openRevokeDialog={openRevokeDialog}
-      />
+        <AccessKeyTable
+          {...paginationProps}
+          openDrawerForEditing={openDrawerForEditing}
+          openRevokeDialog={openRevokeDialog}
+        />
 
-      <PaginationFooter
-        page={props.page}
-        pageSize={props.pageSize}
-        count={props.count}
-        handlePageChange={props.handlePageChange}
-        handleSizeChange={props.handlePageSizeChange}
-        eventCategory="object storage keys table"
-      />
+        <PaginationFooter
+          page={props.page}
+          pageSize={props.pageSize}
+          count={props.count}
+          handlePageChange={props.handlePageChange}
+          handleSizeChange={props.handlePageSizeChange}
+          eventCategory="object storage keys table"
+        />
 
-      <AccessKeyDrawer
-        open={createOrEditDrawer.isOpen}
-        onClose={createOrEditDrawer.close}
-        onSubmit={mode === 'creating' ? handleCreateKey : handleEditKey}
-        mode={mode}
-        objectStorageKey={keyToEdit ? keyToEdit : undefined}
-        isRestrictedUser={props.isRestrictedUser}
-      />
+        <AccessKeyDrawer
+          open={createOrEditDrawer.isOpen}
+          onClose={createOrEditDrawer.close}
+          onSubmit={mode === 'creating' ? handleCreateKey : handleEditKey}
+          mode={mode}
+          objectStorageKey={keyToEdit ? keyToEdit : undefined}
+          isRestrictedUser={props.isRestrictedUser}
+        />
 
-      <AccessKeyDisplayDialog
-        objectStorageKey={keyToDisplay}
-        isOpen={displayKeysDialog.isOpen}
-        close={displayKeysDialog.close}
-      />
-      <RevokeAccessKeyDialog
-        isOpen={revokeKeysDialog.isOpen}
-        label={(keyToRevoke && keyToRevoke.label) || ''}
-        handleClose={closeRevokeDialog}
-        handleSubmit={handleRevokeKeys}
-        isLoading={isRevoking}
-        errors={revokeErrors}
-      />
+        <AccessKeyDisplayDialog
+          objectStorageKey={keyToDisplay}
+          isOpen={displayKeysDialog.isOpen}
+          close={displayKeysDialog.close}
+        />
+        <RevokeAccessKeyDialog
+          isOpen={revokeKeysDialog.isOpen}
+          label={(keyToRevoke && keyToRevoke.label) || ''}
+          handleClose={closeRevokeDialog}
+          handleSubmit={handleRevokeKeys}
+          isLoading={isRevoking}
+          errors={revokeErrors}
+        />
+      </div>
     </React.Fragment>
   );
 };
@@ -344,8 +352,15 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-const connected = connect(mapStateToProps, mapDispatchToProps);
+const connected = connect(
+  mapStateToProps,
+  mapDispatchToProps
+);
 
-const enhanced = compose<CombinedProps, Props>(styled, paginated, connected);
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  paginated,
+  connected
+);
 
 export default enhanced(AccessKeyLanding);

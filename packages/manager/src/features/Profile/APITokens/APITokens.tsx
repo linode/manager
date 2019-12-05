@@ -5,16 +5,22 @@ import APITokenTable from './APITokenTable';
 export const APITokens: React.StatelessComponent = () => {
   return (
     <React.Fragment>
-      <DocumentTitleSegment segment="APITokens" />
+      <div
+        id="tabpanel-profile-tokens"
+        role="tabpanel"
+        aria-labelledby="tab-profile-tokens"
+      >
+        <DocumentTitleSegment segment="APITokens" />
 
-      <APITokenTable
-        title="Personal Access Tokens"
-        type="Personal Access Token"
-      />
-      <APITokenTable
-        title="Third Party Access Tokens"
-        type="OAuth Client Token"
-      />
+        <APITokenTable
+          title="Personal Access Tokens"
+          type="Personal Access Token"
+        />
+        <APITokenTable
+          title="Third Party Access Tokens"
+          type="OAuth Client Token"
+        />
+      </div>
     </React.Fragment>
   );
 };
