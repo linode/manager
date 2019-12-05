@@ -42,6 +42,10 @@ const ProcessesLanding: React.FC<Props> = props => {
     [clientAPIKey, lastUpdated]
   );
 
+  const memoizedExtendedData = React.useMemo(() => extendData(processes.data), [
+    processes.data
+  ]);
+
   return (
     <>
       <Grid container>
@@ -62,7 +66,7 @@ const ProcessesLanding: React.FC<Props> = props => {
             />
           </Box>
           <ProcessesTable
-            processesData={extendData(processes.data)}
+            processesData={memoizedExtendedData}
             // It's correct to set loading to `true` when
             // processes.lastUpdated === 0. The reason we do this is to avoid
             // a state where we haven't made the request to get processes yet
@@ -78,7 +82,7 @@ const ProcessesLanding: React.FC<Props> = props => {
         </Grid>
         <Grid item xs={3}>
           <ProcessesGraphs
-            processesData={extendData(processes.data)}
+            processesData={memoizedExtendedData}
             processesLoading={processes.loading || processes.lastUpdated === 0}
             processesError={processes.error}
             selectedRow={selectedRow}
