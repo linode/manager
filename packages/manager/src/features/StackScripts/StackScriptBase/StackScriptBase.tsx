@@ -485,6 +485,8 @@ const withStackScriptBase = (isSelecting: boolean) => (
                   search term with "username:", "label:", or "description:"`
                       : ''
                   }
+                  label="Search by Label, Username, or Description"
+                  hideLabel
                 />
               </div>
               <Table

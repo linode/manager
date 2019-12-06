@@ -104,9 +104,19 @@ const styles = (theme: Theme) =>
     setAll: {
       width: 300,
       marginTop: theme.spacing(1) / 2,
-      '& .react-select__menu': {
-        maxWidth: 153,
-        right: 0
+      '& > div': {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-end'
+      },
+      '& .react-select__menu, & .input': {
+        width: 125,
+        right: 0,
+        marginLeft: theme.spacing(1),
+        textAlign: 'left'
+      },
+      '& .react-select__menu-list': {
+        width: '100%'
       }
     }
   });
@@ -409,7 +419,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       cancel_account: 'Can cancel the entire account'
     };
     return (
-      <React.Fragment key={perm}>
+      <Grid item key={perm} xs={12} sm={6} className="py0">
         <FormControlLabel
           className={classes.globalRow}
           label={permDescriptionMap[perm]}
@@ -422,7 +432,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           }
         />
         <Divider />
-      </React.Fragment>
+      </Grid>
     );
   };
 
@@ -522,7 +532,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             spacingTop={8}
           />
         )}
-        <div className={classes.section}>
+        <Grid container className={classes.section}>
           {grants &&
             grants.global &&
             this.globalBooleanPerms
@@ -535,7 +545,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
               .map(perm =>
                 this.renderGlobalPerm(perm, grants.global[perm] as boolean)
               )}
-        </div>
+        </Grid>
         {this.renderBillingPerm()}
         {this.renderActions(
           this.savePermsType('global'),
@@ -747,6 +757,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
               inline
               className={classes.setAll}
               noMarginTop
+              small
             />
           </Grid>
         </Grid>

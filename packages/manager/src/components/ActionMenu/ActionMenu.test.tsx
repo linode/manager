@@ -20,7 +20,11 @@ describe('ActionMenu', () => {
 
   it.skip('should render a menu when provided many or one action(s).', () => {
     const result = mount(
-      <ActionMenu classes={classes} createActions={createActionsMany} />
+      <ActionMenu
+        classes={classes}
+        createActions={createActionsMany}
+        ariaLabel="label"
+      />
     );
     expect(result.find('WithStyles(ActionMenu)')).toHaveLength(1);
 

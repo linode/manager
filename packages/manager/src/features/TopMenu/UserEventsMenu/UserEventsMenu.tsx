@@ -91,6 +91,7 @@ export class UserEventsMenu extends React.Component<CombinedProps, State> {
           count={unseenCount}
           disabled={events.length === 0}
           className={anchorEl ? 'active' : ''}
+          aria-owns={anchorEl ? 'user-events-menu' : undefined}
         />
         <Popper open={Boolean(anchorEl)} anchorEl={anchorEl} disablePortal>
           {({ TransitionProps, placement }) => (
@@ -109,7 +110,7 @@ export class UserEventsMenu extends React.Component<CombinedProps, State> {
                     placement === 'bottom' ? 'center top' : 'center bottom'
                 }}
               >
-                <MenuList className={classes.dropDown}>
+                <MenuList className={classes.dropDown} id="user-events-menu">
                   <UserEventsList
                     events={filteredEvents}
                     closeMenu={(e: any) => this.closeMenu(e)}

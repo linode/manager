@@ -27,6 +27,7 @@ interface Props extends Omit<BaseSelectProps, 'onChange'> {
   regions: ExtendedRegion[];
   handleSelection: (id: string) => void;
   selectedID: string | null;
+  label: string;
 }
 
 export const flags = {
@@ -137,6 +138,7 @@ const sortRegions = (region1: RegionItem, region2: RegionItem) => {
 
 const SelectRegionPanel: React.FC<Props> = props => {
   const {
+    label,
     disabled,
     handleSelection,
     regions,
@@ -154,7 +156,7 @@ const SelectRegionPanel: React.FC<Props> = props => {
       <Select
         isClearable={false}
         value={getSelectedRegionById(selectedID || '', options)}
-        label="Select a region"
+        label={label}
         disabled={disabled}
         placeholder="Regions"
         options={options}

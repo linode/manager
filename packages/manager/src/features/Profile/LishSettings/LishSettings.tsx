@@ -167,9 +167,9 @@ class LishSettings extends React.Component<CombinedProps, State> {
                   options={modeOptions}
                   name="mode-select"
                   id="mode-select"
+                  label="Authentication Mode"
                   defaultValue={defaultMode}
                   onChange={this.onListAuthMethodChange as any}
-                  label="Authentication Mode"
                   isClearable={false}
                   errorText={authMethodError}
                 />

@@ -178,7 +178,13 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
           <Divider className={classes.containerDivider} />
         </Grid>
         <Grid item xs={12}>
-          <TextField disabled value={ip} className={classes.ipField} />
+          <TextField
+            disabled
+            value={ip}
+            className={classes.ipField}
+            label="IP Address"
+            hideLabel
+          />
         </Grid>
       </Grid>
     );
@@ -254,6 +260,8 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
             disabled={readOnly}
             isClearable={false}
             placeholder="Select an IP"
+            label="Select an IP"
+            hideLabel
           />
         </Grid>
         <Grid item className={classes.removeCont}>

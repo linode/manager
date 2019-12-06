@@ -211,6 +211,8 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
             onChange={this.handleSelect}
             onInputChange={this.onInputValueChange}
             placeholder="Search for answers..."
+            label="Search for answers"
+            hideLabel
             className={classNames({
               [classes.enhancedSelectWrapper]: true,
               [classes.enhancedSelectWrapperCompact]: spacingMode === 'compact'

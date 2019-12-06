@@ -90,7 +90,11 @@ export const BucketTableRow: React.StatelessComponent<
         />
       </TableCell>
       <TableCell>
-        <BucketActionMenu onRemove={onRemove} data-qa-action-menu />
+        <BucketActionMenu
+          onRemove={onRemove}
+          label={label}
+          data-qa-action-menu
+        />
       </TableCell>
     </TableRow>
   );
