@@ -141,53 +141,59 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <DocumentTitleSegment segment={`${nodeBalancerLabel} - Settings`} />
-        <Paper className={classes.root}>
-          <Grid item xs={12}>
-            {generalError && <Notice error text={generalError} />}
-            {success && <Notice success text={success} />}
-          </Grid>
-          <div className={classes.inner}>
-            <TextField
-              data-qa-label-panel
-              errorText={hasErrorFor('label')}
-              label="Label"
-              placeholder="Enter a label between 3 and 32 characters"
-              onChange={this.handleLabelInputChange}
-              value={fields.label}
-            />
-            <FormHelperText>Rename your NodeBalancer</FormHelperText>
-          </div>
-          <div className={classes.inner}>
-            <TextField
-              data-qa-connection-throttle
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">/ second</InputAdornment>
-                )
-              }}
-              errorText={hasErrorFor('client_conn_throttle')}
-              label="Client Connection Throttle"
-              onChange={this.handleThrottleInputChange}
-              placeholder="0"
-              value={defaultTo(0, fields.client_conn_throttle)}
-            />
-            <FormHelperText>
-              To help mitigate abuse, throttle connections from a single client
-              IP to this number per second. 0 to disable.
-            </FormHelperText>
-          </div>
-          <ActionsPanel className={classes.expPanelButton}>
-            <Button
-              onClick={this.onSubmitUpdateNodeBalancer}
-              buttonType="primary"
-              disabled={isSubmitting}
-              data-qa-label-save
-            >
-              Save
-            </Button>
-          </ActionsPanel>
-        </Paper>
+        <div
+          role="tabpanel"
+          id="tabpanel-nb-settings"
+          aria-labelledby="tab-nb-settings"
+        >
+          <DocumentTitleSegment segment={`${nodeBalancerLabel} - Settings`} />
+          <Paper className={classes.root}>
+            <Grid item xs={12}>
+              {generalError && <Notice error text={generalError} />}
+              {success && <Notice success text={success} />}
+            </Grid>
+            <div className={classes.inner}>
+              <TextField
+                data-qa-label-panel
+                errorText={hasErrorFor('label')}
+                label="Label"
+                placeholder="Enter a label between 3 and 32 characters"
+                onChange={this.handleLabelInputChange}
+                value={fields.label}
+              />
+              <FormHelperText>Rename your NodeBalancer</FormHelperText>
+            </div>
+            <div className={classes.inner}>
+              <TextField
+                data-qa-connection-throttle
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">/ second</InputAdornment>
+                  )
+                }}
+                errorText={hasErrorFor('client_conn_throttle')}
+                label="Client Connection Throttle"
+                onChange={this.handleThrottleInputChange}
+                placeholder="0"
+                value={defaultTo(0, fields.client_conn_throttle)}
+              />
+              <FormHelperText>
+                To help mitigate abuse, throttle connections from a single
+                client IP to this number per second. 0 to disable.
+              </FormHelperText>
+            </div>
+            <ActionsPanel className={classes.expPanelButton}>
+              <Button
+                onClick={this.onSubmitUpdateNodeBalancer}
+                buttonType="primary"
+                disabled={isSubmitting}
+                data-qa-label-save
+              >
+                Save
+              </Button>
+            </ActionsPanel>
+          </Paper>
+        </div>
       </React.Fragment>
     );
   }

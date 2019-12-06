@@ -243,18 +243,21 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   tabs = [
     {
       routeNames: [`${this.props.match.url}/summary`],
-      title: 'Summary'
+      title: 'Summary',
+      name: 'nb-summary'
     },
     {
       routeNames: [
         `${this.props.match.url}/configurations`,
         `${this.props.match.url}/configurations/:configId`
       ],
-      title: 'Configurations'
+      title: 'Configurations',
+      name: 'nb-configs'
     },
     {
       routeNames: [`${this.props.match.url}/settings`],
-      title: 'Settings'
+      title: 'Settings',
+      name: 'nb-settings'
     }
   ];
 
@@ -341,6 +344,9 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
               {this.tabs.map(tab => (
                 <Tab
                   key={tab.title}
+                  role="tab"
+                  id={`tab-${tab.name}`}
+                  aria-controls={`tabpanel-${tab.name}`}
                   label={tab.title}
                   data-qa-tab={tab.title}
                 />

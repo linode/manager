@@ -1098,46 +1098,50 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <DocumentTitleSegment
-          segment={`${nodeBalancerLabel} - Configurations`}
-        />
-        {Array.isArray(configs) &&
-          configs.map(
-            this.renderConfig(panelMessages, configErrors, configSubmitting)
+        <div
+          role="tabpanel"
+          id="tabpanel-nb-configs"
+          aria-labelledby="tab-nb-configs"
+        >
+          <DocumentTitleSegment
+            segment={`${nodeBalancerLabel} - Configurations`}
+          />
+          {Array.isArray(configs) &&
+            configs.map(
+              this.renderConfig(panelMessages, configErrors, configSubmitting)
+            )}
+
+          {!hasUnsavedConfig && (
+            <Grid item style={{ marginTop: 16 }}>
+              <Button
+                buttonType="secondary"
+                onClick={() => this.addNodeBalancerConfig()}
+                data-qa-add-config
+              >
+                {configs.length === 0
+                  ? 'Add a Configuration'
+                  : 'Add another Configuration'}
+              </Button>
+            </Grid>
           )}
 
-        {!hasUnsavedConfig && (
-          <Grid item style={{ marginTop: 16 }}>
-            <Button
-              buttonType="secondary"
-              onClick={() => this.addNodeBalancerConfig()}
-              data-qa-add-config
-            >
-              {configs.length === 0
-                ? 'Add a Configuration'
-                : 'Add another Configuration'}
-            </Button>
-          </Grid>
-        )}
-
-        <ConfirmationDialog
-          onClose={this.onCloseConfirmation}
-          title={
-            typeof this.state.deleteConfigConfirmDialog.portToDelete !==
-            'undefined'
-              ? `Delete this configuration on port ${
-                  this.state.deleteConfigConfirmDialog.portToDelete
-                }?`
-              : 'Delete this configuration?'
-          }
-          error={this.confirmationConfigError()}
-          actions={this.renderConfigConfirmationActions}
-          open={this.state.deleteConfigConfirmDialog.open}
-        >
-          <Typography>
-            Are you sure you want to delete this NodeBalancer Configuration?
-          </Typography>
-        </ConfirmationDialog>
+          <ConfirmationDialog
+            onClose={this.onCloseConfirmation}
+            title={
+              typeof this.state.deleteConfigConfirmDialog.portToDelete !==
+              'undefined'
+                ? `Delete this configuration on port ${this.state.deleteConfigConfirmDialog.portToDelete}?`
+                : 'Delete this configuration?'
+            }
+            error={this.confirmationConfigError()}
+            actions={this.renderConfigConfirmationActions}
+            open={this.state.deleteConfigConfirmDialog.open}
+          >
+            <Typography>
+              Are you sure you want to delete this NodeBalancer Configuration?
+            </Typography>
+          </ConfirmationDialog>
+        </div>
       </React.Fragment>
     );
   }
