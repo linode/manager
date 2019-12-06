@@ -312,7 +312,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         <TableCell parentColumn="Address">
           <React.Fragment>
             {range.range}
-            <span style={{ margin: '0 5px 0 5px' }}>/</span>
+            <span style={{ margin: '0 5px' }}>/</span>
             {range.prefix}
           </React.Fragment>
           {range.route_target && <span> routed to {range.route_target}</span>}
@@ -860,7 +860,10 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   upsertLinode: linode => dispatch(_upsertLinode(linode))
 });
 
-const connected = connect(undefined, mapDispatchToProps);
+const connected = connect(
+  undefined,
+  mapDispatchToProps
+);
 
 const enhanced = recompose<CombinedProps, {}>(connected, linodeContext, styled);
 

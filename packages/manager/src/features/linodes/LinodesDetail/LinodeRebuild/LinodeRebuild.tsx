@@ -64,7 +64,7 @@ const LinodeRebuild: React.StatelessComponent<CombinedProps> = props => {
         >
           Rebuild
         </Typography>
-        <Typography data-qa-rebuild-desc>
+        <Typography data-qa-rebuild-desc style={{ marginBottom: 16 }}>
           If you can't rescue an existing disk, it's time to rebuild your
           Linode. There are a couple of different ways you can do this: either
           restore from a backup or start over with a fresh Linux distribution.
@@ -76,6 +76,8 @@ const LinodeRebuild: React.StatelessComponent<CombinedProps> = props => {
           onChange={(selected: Item<MODES>) => setMode(selected.value)}
           isClearable={false}
           disabled={disabled}
+          label="From Image"
+          hideLabel
         />
       </Paper>
       {mode === 'fromImage' && <RebuildFromImage />}

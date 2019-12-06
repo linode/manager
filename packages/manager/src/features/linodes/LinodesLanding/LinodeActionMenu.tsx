@@ -303,6 +303,7 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
       <ActionMenu
         toggleOpenCallback={this.toggleOpenActionMenu}
         createActions={this.createLinodeActions()}
+        ariaLabel={`Action menu for Linode ${this.props.linodeLabel}`}
       />
     );
   }

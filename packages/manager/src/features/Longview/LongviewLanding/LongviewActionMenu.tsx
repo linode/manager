@@ -41,7 +41,12 @@ const LongviewActionMenu: React.FC<CombinedProps> = props => {
     ];
   };
 
-  return <ActionMenu createActions={createActions()} />;
+  return (
+    <ActionMenu
+      createActions={createActions()}
+      ariaLabel={`Action menu for Longview Client ${props.longviewClientLabel}`}
+    />
+  );
 };
 
 export default React.memo(LongviewActionMenu);
