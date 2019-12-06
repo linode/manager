@@ -91,6 +91,8 @@ const _Skeleton: React.FC<combinedProps> = props => {
             container
             className={classes.root}
             data-testid={'tableSkeleton'}
+            aria-label="Table Content Loading"
+            tabIndex={0}
           >
             {cols}
           </Grid>
@@ -100,6 +102,8 @@ const _Skeleton: React.FC<combinedProps> = props => {
           {...props}
           className={classes.root}
           data-testid={'basicSkeleton'}
+          aria-label="Table Content Loading"
+          tabIndex={0}
         />
       )}
     </>

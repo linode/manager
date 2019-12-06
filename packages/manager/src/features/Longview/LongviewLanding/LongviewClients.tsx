@@ -259,95 +259,98 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      <div
+      <Grid
+        container
+        className={classes.headingWrapper}
+        alignItems="center"
         id="tabpanel-longview-clients"
         role="tabpanel"
         aria-labelledby="tab-longview-clients"
       >
-        <Grid container className={classes.headingWrapper} alignItems="center">
-          <Grid item className={`py0 ${classes.searchbar}`}>
-            <Search
-              placeholder="Filter by client label or hostname"
-              onSearch={handleSearch}
-              debounceTime={250}
-              small
-            />
-          </Grid>
-          <Grid item className={`py0 ${classes.sortSelect}`}>
-            <Typography className={classes.selectLabel}>Sort by: </Typography>
-            <Select
-              small
-              isClearable={false}
-              options={sortOptions}
-              value={sortOptions.find(
-                thisOption => thisOption.value === sortKey
-              )}
-              onChange={handleSortKeyChange}
-            />
-          </Grid>
-          <Grid item className={`${classes.addNew} py0`}>
-            <AddNewLink
-              onClick={handleAddClient}
-              label={newClientLoading ? 'Loading...' : 'Add a Client'}
-              disabled={!userCanCreateClient}
-              disabledReason={
-                userCanCreateClient
-                  ? ''
-                  : 'You are not authorized to create Longview Clients. Please contact an account administrator.'
-              }
-            />
-          </Grid>
+        <Grid item className={`py0 ${classes.searchbar}`}>
+          <Search
+            placeholder="Filter by client label or hostname"
+            label="Filter by client label or hostname"
+            hideLabel
+            onSearch={handleSearch}
+            debounceTime={250}
+            small
+          />
         </Grid>
-        <LongviewList
-          filteredData={sortedList}
-          longviewClientsError={longviewClientsError}
-          longviewClientsLastUpdated={longviewClientsLastUpdated}
-          longviewClientsLoading={longviewClientsLoading}
-          longviewClientsResults={longviewClientsResults}
-          triggerDeleteLongviewClient={openDeleteDialog}
-          openPackageDrawer={handleDrawerOpen}
-          createLongviewClient={handleAddClient}
-          loading={newClientLoading}
-          userCanCreateLongviewClient={userCanCreateClient}
-        />
-        {!isLongviewPro && (
-          <Grid
-            className={classes.cta}
-            container
-            direction="column"
-            alignItems="center"
-            justify="center"
-          >
-            <Typography>
-              <Link to={'/longview/plan-details'}>Upgrade to Longview Pro</Link>
-              {` `}for more clients, longer data retention, and more frequent
-              data updates.
-            </Typography>
-          </Grid>
-        )}
-        <DeleteDialog
-          selectedLongviewClientID={selectedClientID}
-          selectedLongviewClientLabel={selectedClientLabel}
-          deleteClient={deleteLongviewClient}
-          open={deleteDialogOpen}
-          closeDialog={() => toggleDeleteDialog(false)}
-        />
-        <SubscriptionDialog
-          isOpen={subscriptionDialogOpen}
-          isManaged={isManaged}
-          onClose={() => setSubscriptionDialogOpen(false)}
-          onSubmit={handleSubmit}
-          clientLimit={
-            activeSubscription ? activeSubscription.clients_included : 10
-          }
-        />
-        <LongviewPackageDrawer
-          clientLabel={selectedClientLabel}
-          clientID={selectedClientID || 0}
-          isOpen={drawerOpen}
-          onClose={() => setDrawerOpen(false)}
-        />
-      </div>
+        <Grid item className={`py0 ${classes.sortSelect}`}>
+          <Typography className={classes.selectLabel}>Sort by: </Typography>
+          <Select
+            small
+            isClearable={false}
+            options={sortOptions}
+            value={sortOptions.find(thisOption => thisOption.value === sortKey)}
+            onChange={handleSortKeyChange}
+            label="Sort by"
+            hideLabel
+          />
+        </Grid>
+        <Grid item className={`${classes.addNew} py0`}>
+          <AddNewLink
+            onClick={handleAddClient}
+            label={newClientLoading ? 'Loading...' : 'Add a Client'}
+            disabled={!userCanCreateClient}
+            disabledReason={
+              userCanCreateClient
+                ? ''
+                : 'You are not authorized to create Longview Clients. Please contact an account administrator.'
+            }
+          />
+        </Grid>
+      </Grid>
+      <LongviewList
+        filteredData={sortedList}
+        longviewClientsError={longviewClientsError}
+        longviewClientsLastUpdated={longviewClientsLastUpdated}
+        longviewClientsLoading={longviewClientsLoading}
+        longviewClientsResults={longviewClientsResults}
+        triggerDeleteLongviewClient={openDeleteDialog}
+        openPackageDrawer={handleDrawerOpen}
+        createLongviewClient={handleAddClient}
+        loading={newClientLoading}
+        userCanCreateLongviewClient={userCanCreateClient}
+      />
+      {!isLongviewPro && (
+        <Grid
+          className={classes.cta}
+          container
+          direction="column"
+          alignItems="center"
+          justify="center"
+        >
+          <Typography>
+            <Link to={'/longview/plan-details'}>Upgrade to Longview Pro</Link>
+            {` `}for more clients, longer data retention, and more frequent data
+            updates.
+          </Typography>
+        </Grid>
+      )}
+      <DeleteDialog
+        selectedLongviewClientID={selectedClientID}
+        selectedLongviewClientLabel={selectedClientLabel}
+        deleteClient={deleteLongviewClient}
+        open={deleteDialogOpen}
+        closeDialog={() => toggleDeleteDialog(false)}
+      />
+      <SubscriptionDialog
+        isOpen={subscriptionDialogOpen}
+        isManaged={isManaged}
+        onClose={() => setSubscriptionDialogOpen(false)}
+        onSubmit={handleSubmit}
+        clientLimit={
+          activeSubscription ? activeSubscription.clients_included : 10
+        }
+      />
+      <LongviewPackageDrawer
+        clientLabel={selectedClientLabel}
+        clientID={selectedClientID || 0}
+        isOpen={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      />
     </React.Fragment>
   );
 };

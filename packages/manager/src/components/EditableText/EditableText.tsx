@@ -172,6 +172,10 @@ const EditableText: React.FC<FinalProps> = props => {
     setText(props.text);
   }, [props.text]);
 
+  React.useEffect(() => {
+    onCancel();
+  }, [isEditing]);
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
   };
@@ -252,6 +256,8 @@ const EditableText: React.FC<FinalProps> = props => {
           {...rest}
           className={classes.textField}
           type="text"
+          label={`Edit ${text} Label`}
+          hideLabel
           onChange={onChange}
           onKeyDown={handleKeyPress}
           value={text}

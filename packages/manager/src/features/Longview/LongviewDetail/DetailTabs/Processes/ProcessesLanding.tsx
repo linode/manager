@@ -61,6 +61,8 @@ const ProcessesLanding: React.FC<Props> = props => {
               className={classes.filterInput}
               small
               placeholder="Filter by process or user..."
+              label="Filter by process or user"
+              hideLabel
             />
             {/* Doesn't work yet. */}
             <Select
@@ -68,6 +70,8 @@ const ProcessesLanding: React.FC<Props> = props => {
               small
               placeholder="Last 12 Hours"
               onChange={() => null}
+              label="Select Time Range"
+              hideLabel
             />
           </Box>
           <ProcessesTable

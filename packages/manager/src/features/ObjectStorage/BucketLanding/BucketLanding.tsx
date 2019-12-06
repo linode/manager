@@ -161,8 +161,8 @@ export const BucketLanding: React.StatelessComponent<CombinedProps> = props => {
         to force deletion.
       </Typography>
       <Typography className={classes.copy}>
-        To confirm deletion, type the name of the bucket ({bucketToRemove.label}
-        ) in the field below:
+        To confirm deletion, type the name of the bucket (
+        <b>{bucketToRemove.label}</b>) in the field below:
       </Typography>
     </React.Fragment>
   ) : null;
@@ -185,12 +185,12 @@ export const BucketLanding: React.StatelessComponent<CombinedProps> = props => {
 
   return (
     <React.Fragment>
+      <DocumentTitleSegment segment="Buckets" />
       <div
         id="tabpanel-obj-buckets"
         role="tabpanel"
         aria-labelledby="tab-obj-buckets"
       >
-        <DocumentTitleSegment segment="Buckets" />
         <Grid container justify="flex-end">
           <Grid item>
             <AddNewLink onClick={openBucketDrawer} label="Add a Bucket" />
@@ -227,6 +227,7 @@ export const BucketLanding: React.StatelessComponent<CombinedProps> = props => {
               setConfirmBucketName(e.target.value)
             }
             expand
+            label="Bucket Name"
           />
         </ConfirmationDialog>
       </div>

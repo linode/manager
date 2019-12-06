@@ -68,7 +68,8 @@ type ClassNames =
   | 'actionPanel'
   | 'paypalMask'
   | 'paypalButtonWrapper'
-  | 'PaypalHidden';
+  | 'PaypalHidden'
+  | 'cvvField';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -100,6 +101,9 @@ const styles = (theme: Theme) =>
     },
     PaypalHidden: {
       opacity: 0.3
+    },
+    cvvField: {
+      width: 100
     }
   });
 
@@ -156,9 +160,7 @@ const client = {
 const paypalSrcQueryParams = `&disable-funding=card,credit&currency=USD&commit=false&intent=capture`;
 
 const paypalScriptSrc = () => {
-  return `https://www.paypal.com/sdk/js?client-id=${
-    client[PAYPAL_CLIENT_ENV]
-  }${paypalSrcQueryParams}`;
+  return `https://www.paypal.com/sdk/js?client-id=${client[PAYPAL_CLIENT_ENV]}${paypalSrcQueryParams}`;
 };
 
 export const getDefaultPayment = (balance: number | false): string => {
@@ -324,9 +326,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
         this.setState({
           isExecutingPaypalPayment: false,
           paypalDialogOpen: false,
-          successMessage: `Payment for $${
-            this.state.usd
-          } successfully submitted`
+          successMessage: `Payment for $${this.state.usd} successfully submitted`
         });
       })
       .catch(errorResponse => {
@@ -436,7 +436,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
   };
 
   renderForm = () => {
-    const { lastFour } = this.props;
+    const { lastFour, classes } = this.props;
     const { errors, successMessage } = this.state;
 
     const hasErrorFor = getAPIErrorFor(
@@ -502,6 +502,8 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
                   value={this.state.cvv}
                   type="text"
                   placeholder={`000`}
+                  inputProps={{ id: 'paymentCVV' }}
+                  className={classes.cvvField}
                 />
               )}
             </Grid>

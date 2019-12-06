@@ -395,6 +395,8 @@ class TagsPanel extends React.Component<CombinedProps, State> {
             variant="creatable"
             onBlur={this.toggleTagInput}
             placeholder="Create or Select a Tag"
+            label="Create or Select a Tag"
+            hideLabel
             value={tagInputValue}
             createOptionPosition="first"
             autoFocus

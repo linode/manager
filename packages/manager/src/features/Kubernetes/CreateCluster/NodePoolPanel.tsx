@@ -173,6 +173,8 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
           type="number"
           min={0}
           max={100}
+          label="Number of Linodes"
+          hideLabel
           value={nodeCount}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             updateNodeCount(Math.max(+e.target.value, 0))

@@ -261,6 +261,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
             linodeStatus={status || 'offline'}
             linodeId={linodeId}
             diskId={disk.id}
+            label={disk.label}
             onRename={this.openDrawerForRename(disk)}
             onResize={this.openDrawerForResize(disk)}
             onImagize={this.openImagizeDrawer(disk)}

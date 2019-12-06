@@ -112,7 +112,12 @@ const StackScriptActionMenu: React.StatelessComponent<
       return actions;
     };
   };
-  return <ActionMenu createActions={createActions()} />;
+  return (
+    <ActionMenu
+      createActions={createActions()}
+      ariaLabel={`Action menu for StackScript ${props.stackScriptLabel}`}
+    />
+  );
 };
 
 const enhanced = compose<CombinedProps, Props>(

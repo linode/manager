@@ -90,6 +90,8 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
             options={options}
             defaultValue={defaultPagination}
             onChange={this.handleSizeChange}
+            label="Number of items to show"
+            hideLabel
             isClearable={false}
             noMarginTop
             menuPlacement="top"

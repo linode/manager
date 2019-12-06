@@ -175,12 +175,14 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
           <React.Fragment>
             <Select
               options={timezoneList}
-              placeholder={'Choose a timezone'}
+              placeholder={'Choose a Timezone'}
               errorText={timezoneError}
               onChange={this.handleTimezoneChange}
               data-qa-tz-select
               defaultValue={defaultTimeZone}
               isClearable={false}
+              label="Choose a Timezone"
+              hideLabel
             />
             <ActionsPanel>
               <Button

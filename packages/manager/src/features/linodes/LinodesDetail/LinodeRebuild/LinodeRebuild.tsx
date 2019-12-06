@@ -81,6 +81,8 @@ const LinodeRebuild: React.StatelessComponent<CombinedProps> = props => {
             onChange={(selected: Item<MODES>) => setMode(selected.value)}
             isClearable={false}
             disabled={disabled}
+            label="From Image"
+            hideLabel
           />
         </Paper>
         {mode === 'fromImage' && <RebuildFromImage />}
