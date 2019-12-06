@@ -70,21 +70,12 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
       finalOptions.push({ label: 'Show All', value: Infinity });
     }
 
-    // If the user has selected "Show All", the page size should be set to the
-    // total number of elements.
-    const finalPageSize = pageSize === Infinity ? count : pageSize;
-
-    // If the user has selected "Show All", the selected page should be `1`
-    // since there is only one page.
-    const finalPage = pageSize === Infinity ? 1 : page;
-
     const defaultPagination = finalOptions.find(eachOption => {
       return eachOption.value === pageSize;
     });
 
-    const isShowingAll = defaultPagination
-      ? defaultPagination.label === 'Show All'
-      : false;
+    // If "Show All" is currently selected, pageSize is `Infinity`.
+    const isShowingAll = pageSize === Infinity;
 
     return (
       <Grid
@@ -100,9 +91,9 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
           {!isShowingAll && (
             <PaginationControls
               onClickHandler={handlePageChange}
-              page={finalPage}
+              page={page}
               count={count}
-              pageSize={finalPageSize}
+              pageSize={pageSize}
               eventCategory={eventCategory}
             />
           )}
