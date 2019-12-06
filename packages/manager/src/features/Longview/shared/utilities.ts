@@ -49,6 +49,17 @@ export const sumStorage = (DiskData: Record<string, Disk> = {}): Storage => {
   return { free, total };
 };
 
+// The LV API returns CPU usage statics as a map, with each key-value pair
+// representing 1 CPU core. Data from a Linode with 2 CPU cores looks like this:
+// {
+//   cpu0: { system: Stat[], user: Stat[], wait: Stat[] },
+//   cpu1: { system: Stat[], user: Stat[], wait: Stat[] }
+// }
+// When we display this data on the LV Overview Graphs, we want to see combined
+// usage of each metric (i.e. `system` stats of all CPUs combined).
+//
+// Given a CPU usage statistics map, this function returns another CPU usage
+// statistics map with combined Y values for each section (system, user, wait).
 export const sumCPU = (CPUData: Record<string, CPU> = {}): CPU<'yAsNull'> => {
   const result: CPU<'yAsNull'> = {
     system: [],
@@ -61,7 +72,7 @@ export const sumCPU = (CPUData: Record<string, CPU> = {}): CPU<'yAsNull'> => {
     return result;
   }
 
-  // Iterate through each CPU and compile stats.
+  // Iterate through each CPU and combine stats.
   Object.values(CPUData).forEach(thisCPU => {
     result.system = appendStats(result.system, thisCPU.system);
     result.user = appendStats(result.user, thisCPU.user);
@@ -72,7 +83,8 @@ export const sumCPU = (CPUData: Record<string, CPU> = {}): CPU<'yAsNull'> => {
 };
 
 /**
- * Takes in two Stat arrays and adds the Y values.
+ * Given two Stat arrays, returns a Stat array with summed Y values if their
+ * X values are equal. X values remain untouched.
  *
  * @param prevStats
  * @param newStats
@@ -90,9 +102,10 @@ const appendStats = (
         acc[idx] = { x, y };
       }
 
-      // A bit of null checking here is necessary here.
-      else if (existing.y && y) {
-        existing.y! += y;
+      // A bit of null checking here is necessary here since Y can be null.
+      // We also check that the X values match.
+      else if (existing.y && y && existing.x === x) {
+        existing.y += y;
       }
       return acc;
     },
