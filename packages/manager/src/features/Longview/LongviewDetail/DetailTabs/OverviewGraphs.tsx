@@ -158,6 +158,12 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
                 timezone={timezone}
                 data={[
                   {
+                    label: 'System',
+                    borderColor: theme.graphs.deepBlueBorder,
+                    backgroundColor: theme.graphs.deepBlue,
+                    data: _convertData(cpuData.system, formatCPU)
+                  },
+                  {
                     label: 'User',
                     borderColor: theme.graphs.skyBlueBorder,
                     backgroundColor: theme.graphs.skyBlue,
@@ -168,12 +174,6 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
                     borderColor: theme.graphs.lightBlueBorder,
                     backgroundColor: theme.graphs.lightBlue,
                     data: _convertData(cpuData.wait, formatCPU)
-                  },
-                  {
-                    label: 'System',
-                    borderColor: theme.graphs.deepBlueBorder,
-                    backgroundColor: theme.graphs.deepBlue,
-                    data: _convertData(cpuData.system, formatCPU)
                   }
                 ]}
               />
@@ -309,6 +309,7 @@ const formatCPU = (value: number | null) => {
     return value;
   }
 
+  // Round to 2 decimal places.
   return Math.round(value * 100) / 100;
 };
 
