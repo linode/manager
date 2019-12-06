@@ -199,7 +199,7 @@ export class SupportTicketsLanding extends React.PureComponent<
           )}
         </Grid>
         {notice && <Notice success text={notice} />}
-        <AppBar position="static" color="default">
+        <AppBar position="static" color="default" role="tablist">
           <Tabs
             value={value}
             onChange={this.handleChange}
@@ -208,8 +208,22 @@ export class SupportTicketsLanding extends React.PureComponent<
             variant="scrollable"
             scrollButtons="on"
           >
-            <Tab data-qa-tab="Open Tickets" key={0} label="Open Tickets" />
-            <Tab data-qa-tab="Closed Tickets" key={1} label="Closed Tickets" />
+            <Tab
+              data-qa-tab="Open Tickets"
+              key={0}
+              label="Open Tickets"
+              id="tab-open-tickets"
+              role="tab"
+              aria-controls="tabpanel-open-tickets"
+            />
+            <Tab
+              data-qa-tab="Closed Tickets"
+              key={1}
+              label="Closed Tickets"
+              id="tab-closed-tickets"
+              role="tab"
+              aria-controls="tabpanel-closed-tickets"
+            />
           </Tabs>
         </AppBar>
         {/* NB: 0 is the index of the open tickets tab, which evaluates to false */}

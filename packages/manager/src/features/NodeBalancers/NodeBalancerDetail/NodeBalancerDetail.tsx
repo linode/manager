@@ -332,7 +332,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
               />
             </Grid>
           </Grid>
-          <AppBar position="static" color="default">
+          <AppBar position="static" color="default" role="tablist">
             <Tabs
               value={findTabIndex === -1 ? 0 : findTabIndex}
               onChange={this.handleTabChange}
