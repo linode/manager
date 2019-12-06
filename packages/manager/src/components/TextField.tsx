@@ -137,6 +137,7 @@ interface BaseProps {
 }
 
 interface TextFieldPropsOverrides extends TextFieldProps {
+  // We override this prop to make it required
   label: string;
 }
 
