@@ -211,7 +211,6 @@
     "file-loader": "^3.0.1",
     "fork-ts-checker-webpack-plugin": "^0.5.2",
     "fs-extra": "^8.0.1",
-    "handlebars": "^4.2.0",
     "html-webpack-plugin": "^4.0.0-beta.5",
     "inert": "^5.1.0",
     "inquirer": "^6.2.0",
