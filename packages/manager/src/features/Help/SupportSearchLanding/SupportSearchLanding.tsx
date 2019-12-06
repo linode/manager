@@ -132,6 +132,8 @@ export class SupportSearchLanding extends React.Component<
             data-qa-search-landing-input
             className={classes.searchBoxInner}
             placeholder="Search Linode documentation and community questions"
+            label="Search Linode documentation and community questions"
+            hideLabel
             value={query}
             onChange={this.onInputChange}
             disabled={!Boolean(searchEnabled)}

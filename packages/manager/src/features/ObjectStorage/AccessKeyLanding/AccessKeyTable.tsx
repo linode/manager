@@ -116,6 +116,7 @@ export const AccessKeyTable: React.StatelessComponent<
             objectStorageKey={eachKey}
             openRevokeDialog={openRevokeDialog}
             openDrawerForEditing={openDrawerForEditing}
+            label={eachKey.label}
           />
         </TableCell>
       </TableRow>

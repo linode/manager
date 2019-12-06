@@ -63,6 +63,8 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
           <TimeRangeSelect
             handleStatsChange={handleStatsChange}
             defaultValue={'Past 30 Minutes'}
+            label="Select Time Range"
+            hideLabel
           />
         </Grid>
       </Grid>

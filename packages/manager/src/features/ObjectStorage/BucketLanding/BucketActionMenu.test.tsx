@@ -16,14 +16,14 @@ afterAll(cleanup);
 describe('BucketActionMenu', () => {
   it('Includes a "Delete" option', () => {
     const { queryByText } = render(
-      wrapWithTheme(<BucketActionMenu {...props} />)
+      wrapWithTheme(<BucketActionMenu {...props} label="label" />)
     );
     expect(queryByText('Delete')).toBeInTheDocument();
   });
 
   it('executes the onRemove function when the "Delete" option is clicked', () => {
     const { getAllByText } = render(
-      wrapWithTheme(<BucketActionMenu {...props} />)
+      wrapWithTheme(<BucketActionMenu {...props} label="label" />)
     );
 
     fireEvent.click(getAllByText('Delete')[0]);
