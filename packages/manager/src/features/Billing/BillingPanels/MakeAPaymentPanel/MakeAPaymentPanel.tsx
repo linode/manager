@@ -160,9 +160,7 @@ const client = {
 const paypalSrcQueryParams = `&disable-funding=card,credit&currency=USD&commit=false&intent=capture`;
 
 const paypalScriptSrc = () => {
-  return `https://www.paypal.com/sdk/js?client-id=${
-    client[PAYPAL_CLIENT_ENV]
-  }${paypalSrcQueryParams}`;
+  return `https://www.paypal.com/sdk/js?client-id=${client[PAYPAL_CLIENT_ENV]}${paypalSrcQueryParams}`;
 };
 
 export const getDefaultPayment = (balance: number | false): string => {
@@ -328,9 +326,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
         this.setState({
           isExecutingPaypalPayment: false,
           paypalDialogOpen: false,
-          successMessage: `Payment for $${
-            this.state.usd
-          } successfully submitted`
+          successMessage: `Payment for $${this.state.usd} successfully submitted`
         });
       })
       .catch(errorResponse => {
