@@ -51,7 +51,12 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
   };
 
   render() {
-    return <ActionMenu createActions={this.createActions()} />;
+    return (
+      <ActionMenu
+        createActions={this.createActions()}
+        ariaLabel={`Action menu for OAuth Client ${this.props.label}`}
+      />
+    );
   }
 }
 

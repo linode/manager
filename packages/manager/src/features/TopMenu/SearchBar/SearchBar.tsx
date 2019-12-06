@@ -181,8 +181,12 @@ class SearchBar extends React.Component<CombinedProps, State> {
         `}
         >
           <Search className={classes.icon} data-qa-search-icon />
+          <label htmlFor="main-search" className="visually-hidden">
+            Main search
+          </label>
           <EnhancedSelect
-            inputId="search-bar"
+            label="Main search"
+            hideLabel
             blurInputOnSelect
             options={finalOptions}
             onChange={this.onSelect}

@@ -68,7 +68,8 @@ type ClassNames =
   | 'actionPanel'
   | 'paypalMask'
   | 'paypalButtonWrapper'
-  | 'PaypalHidden';
+  | 'PaypalHidden'
+  | 'cvvField';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -100,6 +101,9 @@ const styles = (theme: Theme) =>
     },
     PaypalHidden: {
       opacity: 0.3
+    },
+    cvvField: {
+      width: 100
     }
   });
 
@@ -436,7 +440,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
   };
 
   renderForm = () => {
-    const { lastFour } = this.props;
+    const { lastFour, classes } = this.props;
     const { errors, successMessage } = this.state;
 
     const hasErrorFor = getAPIErrorFor(
@@ -502,6 +506,8 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
                   value={this.state.cvv}
                   type="text"
                   placeholder={`000`}
+                  inputProps={{ id: 'paymentCVV' }}
+                  className={classes.cvvField}
                 />
               )}
             </Grid>

@@ -252,6 +252,8 @@ const EditableText: React.FC<FinalProps> = props => {
           {...rest}
           className={classes.textField}
           type="text"
+          label={`Edit ${text} Label`}
+          hideLabel
           onChange={onChange}
           onKeyDown={handleKeyPress}
           value={text}

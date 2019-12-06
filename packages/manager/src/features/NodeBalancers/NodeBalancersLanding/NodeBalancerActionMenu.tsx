@@ -55,7 +55,12 @@ class NodeBalancerActionMenu extends React.Component<CombinedProps> {
   };
 
   render() {
-    return <ActionMenu createActions={this.createLinodeActions()} />;
+    return (
+      <ActionMenu
+        createActions={this.createLinodeActions()}
+        ariaLabel={`Action menu for NodeBalancer ${this.props.label}`}
+      />
+    );
   }
 }
 

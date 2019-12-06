@@ -53,7 +53,6 @@ const NavItem: React.SFC<CombinedProps> = props => {
     <React.Fragment>
       {href ? (
         <Link
-          role="menuitem"
           to={href}
           onClick={closeMenu}
           data-qa-nav-item={QAKey}
@@ -77,7 +76,6 @@ const NavItem: React.SFC<CombinedProps> = props => {
         <React.Fragment>
           <Tooltip title={isDisabled ? isDisabled() : ''} placement="left-end">
             <ListItem
-              role="menuitem"
               onClick={e => {
                 props.closeMenu();
                 /* disregarding undefined is fine here because of the error handling thrown above */
