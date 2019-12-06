@@ -149,9 +149,18 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
      */
     const hasErrorFor = getErrorMap(errorMap, errors);
 
+    const determineIDName =
+      variant === 'private' ? 'image-private-create' : 'distro-create';
+
     return (
       <React.Fragment>
-        <Grid item className={`${classes.main} mlMain py0`}>
+        <Grid
+          item
+          className={`${classes.main} mlMain py0`}
+          role="tabpanel"
+          id={`tabpanel-${determineIDName}`}
+          aria-labelledby={`tab-${determineIDName}`}
+        >
           {hasErrorFor.none && !!showGeneralError && (
             <Notice error spacingTop={8} text={hasErrorFor.none} />
           )}

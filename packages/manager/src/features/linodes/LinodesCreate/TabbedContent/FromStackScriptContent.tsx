@@ -224,12 +224,20 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
 
     const hasBackups = Boolean(backupsEnabled || accountBackupsEnabled);
 
+    const determineIDName =
+      this.props.category === 'community'
+        ? 'community-stackscript-create'
+        : 'account-stackscript-create';
+
     return (
       <React.Fragment>
         <Grid
           data-qa-panel={header}
           item
           className={`${classes.main} mlMain py0`}
+          role="tabpanel"
+          id={`tabpanel-${determineIDName}`}
+          aria-labelledby={`tab-${determineIDName}`}
         >
           <CreateLinodeDisabled isDisabled={disabled} />
           <SelectStackScriptPanel

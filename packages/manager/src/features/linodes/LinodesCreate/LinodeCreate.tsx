@@ -106,6 +106,7 @@ export class LinodeCreate extends React.PureComponent<
   tabs: Tab[] = [
     {
       title: 'Distributions',
+      name: 'distro-create',
       type: 'fromImage',
       render: () => {
         /** ...rest being all the form state props and display data */
@@ -154,10 +155,12 @@ export class LinodeCreate extends React.PureComponent<
     {
       title: 'One-Click',
       type: 'fromApp',
+      name: 'parent-one-click',
       render: () => {
         return (
           <SubTabs
             history={this.props.history}
+            name="parent-one-click"
             reset={this.props.resetCreationState}
             tabs={this.oneClickTabs()}
             handleClick={this.props.setTab}
@@ -169,10 +172,12 @@ export class LinodeCreate extends React.PureComponent<
     {
       title: 'My Images',
       type: 'fromImage',
+      name: 'images-create',
       render: () => {
         return (
           <SubTabs
             reset={this.props.resetCreationState}
+            name="images-create"
             history={this.props.history}
             tabs={this.myImagesTabs()}
             handleClick={this.props.setTab}
@@ -187,6 +192,7 @@ export class LinodeCreate extends React.PureComponent<
     {
       title: 'Images',
       type: 'fromImage',
+      name: 'image-private-create',
       render: () => {
         const {
           history,
@@ -233,6 +239,7 @@ export class LinodeCreate extends React.PureComponent<
     {
       title: 'Backups',
       type: 'fromBackup',
+      name: 'backup-create',
       render: () => {
         const {
           history,
@@ -272,6 +279,7 @@ export class LinodeCreate extends React.PureComponent<
     {
       title: 'Clone Linode',
       type: 'fromLinode',
+      name: 'clone-create',
       render: () => {
         /**
          * rest being just the props that FromLinodeContent needs
@@ -314,6 +322,7 @@ export class LinodeCreate extends React.PureComponent<
     {
       title: 'Account StackScripts',
       type: 'fromStackScript',
+      name: 'account-stackscript-create',
       render: () => {
         const {
           accountBackupsEnabled,
@@ -369,6 +378,7 @@ export class LinodeCreate extends React.PureComponent<
         </div>
       ),
       type: 'fromApp',
+      name: 'one-click-apps-create',
       render: () => {
         const {
           setTab,
@@ -399,6 +409,7 @@ export class LinodeCreate extends React.PureComponent<
     {
       title: 'Community StackScripts',
       type: 'fromStackScript',
+      name: 'community-stackscript-create',
       render: () => {
         const {
           accountBackupsEnabled,
@@ -480,7 +491,7 @@ export class LinodeCreate extends React.PureComponent<
     return (
       <React.Fragment>
         <Grid item className={`mlMain py0`}>
-          <AppBar position="static" color="default">
+          <AppBar position="static" color="default" role="tablist">
             <Tabs
               value={selectedTab}
               onChange={this.handleTabChange}
@@ -494,6 +505,9 @@ export class LinodeCreate extends React.PureComponent<
                   key={idx}
                   label={tab.title}
                   data-qa-create-from={tab.title}
+                  role="tab"
+                  aria-controls={`tabpanel-${tab.name}`}
+                  id={`tab-${tab.name}`}
                 />
               ))}
             </Tabs>
