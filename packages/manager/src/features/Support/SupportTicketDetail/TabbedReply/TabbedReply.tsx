@@ -38,13 +38,15 @@ const TabbedReply: React.FC<CombinedProps> = props => {
       title: props.required ? `${title} (required)` : title,
       render: () => {
         return <Reply {...rest} value={value} error={error} />;
-      }
+      },
+      name: title
     },
     {
       title: 'Preview',
       render: () => {
         return <Preview value={value} error={error} />;
-      }
+      },
+      name: 'preview'
     }
   ];
 

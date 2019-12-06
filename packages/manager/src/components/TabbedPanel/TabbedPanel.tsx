@@ -43,6 +43,7 @@ const styles = (theme: Theme) =>
 export interface Tab {
   title: string;
   render: (props: any) => JSX.Element | null;
+  name: string;
 }
 interface Props {
   header: string;
@@ -87,20 +88,19 @@ class TabbedPanel extends React.Component<CombinedProps> {
     // if this bombs the app shouldn't crash
     const render = safeGetTabRender(tabs, value);
 
-    // TODO make this more customized for ID
-    const tabA11yProps = (index: number) => {
+    const tabA11yProps = (idName: string) => {
       return {
-        id: `tab-${index}`,
+        id: `tab-${idName}`,
         role: 'tab',
-        'aria-controls': `tabpanel-${index}`
+        'aria-controls': `tabpanel-${idName}`
       };
     };
 
-    const tabPanelA11yProps = (index: number) => {
+    const tabPanelA11yProps = (idName: string) => {
       return {
-        id: `tabpanel-${index}`,
+        id: `tabpanel-${idName}`,
         role: 'tabpanel',
-        'aria-labelledby': `tab-${index}`
+        'aria-labelledby': `tab-${idName}`
       };
     };
 
@@ -137,23 +137,26 @@ class TabbedPanel extends React.Component<CombinedProps> {
                   key={idx}
                   label={tab.title}
                   data-qa-tab={tab.title}
-                  {...tabA11yProps(idx)}
+                  {...tabA11yProps(tab.name)}
                 />
               ))}
             </Tabs>
           </AppBar>
-          <div
-            className={classNames(
-              {
-                [classes.panelBody]: !noPadding
-              },
-              shrinkTabContent
-            )}
-            {...tabPanelA11yProps(value)}
-            data-qa-tab-body
-          >
-            {render(rest)}
-          </div>
+          {tabs.map((tab, idx) => (
+            <div
+              key={idx}
+              className={classNames(
+                {
+                  [classes.panelBody]: !noPadding
+                },
+                shrinkTabContent
+              )}
+              {...tabPanelA11yProps(tab.name)}
+              data-qa-tab-body
+            >
+              {render(rest)}
+            </div>
+          ))}
         </div>
       </Paper>
     );

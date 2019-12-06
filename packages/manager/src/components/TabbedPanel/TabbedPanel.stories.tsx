@@ -20,23 +20,28 @@ storiesOf('TabbedPanel', module).add('default', () => {
               title: 'Tab One',
               render: (renderProps: { someOtherProp: number }) => (
                 <div>Panel 1 {renderProps.someOtherProp}</div>
-              )
+              ),
+              name: 'tab1'
             },
             {
               title: 'Tab Two',
-              render: (renderProps: any) => <div>Panel 2</div>
+              render: (renderProps: any) => <div>Panel 2</div>,
+              name: 'tab2'
             },
             {
               title: 'Tab Three',
-              render: (renderProps: any) => <div>Panel 3</div>
+              render: (renderProps: any) => <div>Panel 3</div>,
+              name: 'tab3'
             },
             {
               title: 'Tab Four',
-              render: (renderProps: any) => <div>Panel 4</div>
+              render: (renderProps: any) => <div>Panel 4</div>,
+              name: 'tab4'
             },
             {
               title: 'Tab Five',
-              render: (renderProps: any) => <div>Panel 5</div>
+              render: (renderProps: any) => <div>Panel 5</div>,
+              name: 'tab5'
             }
           ]}
         />
