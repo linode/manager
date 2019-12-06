@@ -82,6 +82,10 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
       return eachOption.value === pageSize;
     });
 
+    const isShowingAll = defaultPagination
+      ? defaultPagination.label === 'Show All'
+      : false;
+
     return (
       <Grid
         container
@@ -93,13 +97,15 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
         })}
       >
         <Grid item>
-          <PaginationControls
-            onClickHandler={handlePageChange}
-            page={finalPage}
-            count={count}
-            pageSize={finalPageSize}
-            eventCategory={eventCategory}
-          />
+          {!isShowingAll && (
+            <PaginationControls
+              onClickHandler={handlePageChange}
+              page={finalPage}
+              count={count}
+              pageSize={finalPageSize}
+              eventCategory={eventCategory}
+            />
+          )}
         </Grid>
         <Grid item>
           <Select
