@@ -1,5 +1,5 @@
 import { LongviewCPU } from '../request.types';
-import { formatCPU, maybeAddDataPointInThePast } from './formatters';
+import { formatCPU, pathMaybeAddDataInThePast } from './formatters';
 
 describe('formatCPU', () => {
   it('should round values >= 1 to the nearest whole number', () => {
@@ -21,7 +21,7 @@ describe('formatCPU', () => {
   });
 });
 
-describe('maybeAddDataPointInThePast', () => {
+describe('pathMaybeAddDataInThePast', () => {
   it('should add a datapoint in the past correctly', () => {
     const oct18GMTInSeconds = 1571356800;
     const oct29GMTInSeconds = 1572357800;
@@ -52,7 +52,7 @@ describe('maybeAddDataPointInThePast', () => {
       }
     };
 
-    const result = maybeAddDataPointInThePast<LongviewCPU>(
+    const result = pathMaybeAddDataInThePast<LongviewCPU>(
       dummyCPU,
       oct18GMTInSeconds,
       [
@@ -99,7 +99,7 @@ describe('maybeAddDataPointInThePast', () => {
       }
     });
 
-    const result2 = maybeAddDataPointInThePast<LongviewCPU>(
+    const result2 = pathMaybeAddDataInThePast<LongviewCPU>(
       dummyCPU,
       oct29GMTInSecondsMinus2Mins,
       [
@@ -134,7 +134,7 @@ describe('maybeAddDataPointInThePast', () => {
       }
     });
 
-    const result3 = maybeAddDataPointInThePast<LongviewCPU>(
+    const result3 = pathMaybeAddDataInThePast<LongviewCPU>(
       {
         CPU: {
           cpu1: {

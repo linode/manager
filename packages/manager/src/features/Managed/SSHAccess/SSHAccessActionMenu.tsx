@@ -86,9 +86,7 @@ export const SSHAccessActionMenu: React.FC<CombinedProps> = props => {
   return (
     <ActionMenu
       createActions={createActions}
-      ariaLabel={`Action menu for SSH Access key for Linode ${
-        props.linodeLabel
-      }`}
+      ariaLabel={`Action menu for SSH Access key for Linode ${props.linodeLabel}`}
     />
   );
 };

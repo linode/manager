@@ -140,9 +140,7 @@ export const getStatusString = (
 
   // All systems normal.
   return (
-    <Typography>{`${count} (${status.ready} up, ${
-      status.not_ready
-    } down)`}</Typography>
+    <Typography>{`${count} (${status.ready} up, ${status.not_ready} down)`}</Typography>
   );
 };
 
