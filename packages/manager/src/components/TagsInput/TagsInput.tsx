@@ -20,6 +20,7 @@ export interface State {
 
 export interface Props {
   label?: string;
+  hideLabel?: boolean;
   name?: string;
   tagError?: string;
   value: Item[];
@@ -87,6 +88,7 @@ class TagsInput extends React.Component<Props, State> {
       value,
       name,
       label,
+      hideLabel,
       disabled,
       menuPlacement
     } = this.props;
@@ -103,7 +105,8 @@ class TagsInput extends React.Component<Props, State> {
         name={name}
         variant="creatable"
         isMulti={true}
-        label={label}
+        label={label || 'Add Tags'}
+        hideLabel={hideLabel}
         options={accountTags}
         placeholder={'Type to choose or create a tag.'}
         errorText={error}

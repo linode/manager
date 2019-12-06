@@ -20,7 +20,7 @@ export interface DataSet {
 
 export interface Props {
   chartHeight?: number;
-  showToday: boolean;
+  showToday?: boolean;
   suggestedMax?: number;
   data: DataSet[];
   timezone: string;
@@ -119,7 +119,7 @@ class LineGraph extends React.Component<CombinedProps, {}> {
     if (showToday) {
       finalChartOptions.scales.xAxes[0].time.displayFormats = {
         hour: 'HH:00',
-        minute: 'HH:00'
+        minute: 'HH:mm'
       };
     } else {
       finalChartOptions.scales.xAxes[0].time.displayFormats = {

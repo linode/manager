@@ -73,6 +73,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   client: string;
   longviewClientData: LVDataProps['longviewClientData'];
+  openPackageDrawer: () => void;
 }
 
 const IconSection: React.FC<Props> = props => {
@@ -275,7 +276,7 @@ const IconSection: React.FC<Props> = props => {
               SideIcon={PackageIcon}
               text={packagesToUpdate}
               title={packagesToUpdate}
-              onClick={() => window.open('#')}
+              onClick={props.openPackageDrawer}
             >
               {packagesToUpdate}
             </IconTextLink>

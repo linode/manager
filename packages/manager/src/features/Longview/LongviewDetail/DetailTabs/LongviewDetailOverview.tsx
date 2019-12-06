@@ -8,6 +8,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { Props as LVDataProps } from 'src/containers/longview.stats.container';
 
+import LongviewPackageDrawer from '../../LongviewPackageDrawer';
 import ActiveConnections from './ActiveConnections';
 import GaugesSection from './GaugesSection';
 import IconSection from './IconSection';
@@ -35,6 +36,7 @@ interface Props {
   clientID: number;
   clientAPIKey: string;
   longviewClientData: LVDataProps['longviewClientData'];
+  timezone: string;
   topProcessesData: LongviewTopProcesses;
   topProcessesLoading: boolean;
   topProcessesError?: APIError[];
@@ -61,8 +63,15 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
     topProcessesData,
     topProcessesLoading,
     topProcessesError,
-    lastUpdatedError
+    lastUpdatedError,
+    timezone
   } = props;
+
+  /**
+   * Package drawer open/close logic
+   */
+
+  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
 
   /**
    * Show an error for the services/connections
@@ -92,6 +101,7 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
               <IconSection
                 longviewClientData={longviewClientData}
                 client={client}
+                openPackageDrawer={() => setDrawerOpen(true)}
               />
               <GaugesSection
                 clientID={clientID}
@@ -106,7 +116,7 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
             </Grid>
           </Paper>
         </Grid>
-        <OverviewGraphs clientAPIKey={clientAPIKey} />
+        <OverviewGraphs clientAPIKey={clientAPIKey} timezone={timezone} />
         <Grid container justify="space-between" item spacing={0}>
           <ListeningServices
             services={pathOr([], ['Ports', 'listening'], listeningPortsData)}
@@ -120,6 +130,12 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
           />
         </Grid>
       </Grid>
+      <LongviewPackageDrawer
+        clientLabel={client}
+        clientID={clientID}
+        isOpen={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      />
     </React.Fragment>
   );
 };

@@ -21,6 +21,8 @@ interface Props extends TextFieldProps {
   isSearching?: boolean;
   className?: string;
   placeholder?: string;
+  label: string;
+  hideLabel?: boolean;
 }
 
 type CombinedProps = Props;
@@ -33,6 +35,8 @@ const DebouncedSearch: React.FC<CombinedProps> = props => {
     debounceTime,
     onSearch,
     placeholder,
+    label,
+    hideLabel,
     ...restOfTextFieldProps
   } = props;
   const [query, setQuery] = React.useState<string>('');
@@ -72,6 +76,8 @@ const DebouncedSearch: React.FC<CombinedProps> = props => {
       className={className}
       placeholder={placeholder || 'Filter by query'}
       onChange={_setQuery}
+      label={label}
+      hideLabel={hideLabel}
       InputProps={{
         startAdornment: (
           <InputAdornment position="end">

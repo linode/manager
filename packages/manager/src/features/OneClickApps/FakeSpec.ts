@@ -80,6 +80,39 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/csgo_color.svg'
   },
   {
+    name: 'Docker',
+    description: `Docker is a tool that enables you to create, deploy, and manage lightweight, stand-alone packages that contain everything needed to run an application (code, libraries, runtime, system settings, and dependencies).`,
+    summary: `Securely build, share and run modern applications anywhere.`,
+    related_guides: [
+      {
+        title: 'An Introduction to Docker',
+        href:
+          'https://www.linode.com/docs/applications/containers/introduction-to-docker/'
+      },
+      {
+        title: 'Docker Commands Quick Reference Cheat Sheet',
+        href:
+          'https://www.linode.com/docs/applications/containers/docker-commands-quick-reference-cheat-sheet/'
+      },
+      {
+        title: 'How to Use Docker Compose',
+        href:
+          'https://www.linode.com/docs/applications/containers/how-to-use-docker-compose/'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://www.docker.com/',
+        href: 'https://www.docker.com/'
+      },
+      {
+        title: 'https://docs.docker.com/compose/',
+        href: 'https://docs.docker.com/compose/'
+      }
+    ],
+    logo_url: 'assets/docker_color.svg'
+  },
+  {
     name: 'GitLab',
     description: `GitLab is a complete solution for all aspects of your software development.
       At its core, GitLab serves as your centralized Git repository. GitLab also
@@ -146,6 +179,35 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/drupal_color.svg'
   },
   {
+    name: 'Jenkins',
+    description: `Jenkins is a self-contained, open source automation server which can be used to automate all sorts of tasks related to building, testing, and delivering or deploying software.`,
+    summary: `Jenkins provides hundreds of plugins to support building, deploying and automating any project.`,
+    related_guides: [
+      {
+        title: 'Using LISH to SSH into your Linode',
+        href:
+          'https://www.linode.com/docs/platform/manager/using-the-linode-shell-lish/#use-a-web-browser'
+      },
+      {
+        title: 'Scripted vs. Declarative Pipeline Syntax',
+        href:
+          'https://www.linode.com/docs/development/ci/automate-builds-with-jenkins-on-ubuntu/#scripted-vs-declarative-pipeline-syntax'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://jenkins.io/',
+        href: 'https://jenkins.io/'
+      }
+    ],
+    tips: [
+      `Once the script finishes, go to <em>http://[your-Linode's-IP-address]:8080</em> in a browser to finish the configuration.`,
+      `You will need to SSH into your Linode to retrieve the Jenkins one time password:`,
+      `<code>sudo cat /var/lib/jenkins/secrets/initialAdminPassword</code>`
+    ],
+    logo_url: 'assets/jenkins_color.svg'
+  },
+  {
     name: 'LAMP',
     description: `The LAMP stack consists of the Linux operating system,
       the Apache HTTP Server, the MySQL relational database management system,
@@ -185,6 +247,19 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/plesk_color.svg'
   },
   {
+    name: 'Prometheus',
+    description: `Prometheus is a an open-source monitoring system with a dimensional data model, flexible query language, efficient time series database and modern alerting approach.`,
+    summary:
+      'Power your metrics with a leading open-source monitoring solution.',
+    related_info: [
+      {
+        title: 'https://prometheus.io/',
+        href: 'https://prometheus.io/'
+      }
+    ],
+    logo_url: 'assets/prometheus_color.svg'
+  },
+  {
     name: 'Rust',
     description: `In Rust, you must work with or against other players
       to ensure your own survival. Players are able to steal, lie, cheat, or
@@ -207,6 +282,43 @@ export const oneClickApps: OCA[] = [
       }
     ],
     logo_url: 'assets/rust_color.svg'
+  },
+  {
+    name: 'Shadowsocks',
+    description:
+      'Shadowsocks is a lightweight SOCKS5 web proxy tool primarily utilized to bypass network censorship and blocking on certain websites and web protocols. A full setup requires a Linode server to host the Shadowsocks daemon, and a client installed on PC, Mac, Linux, or a mobile device. Unlike other proxy software, Shadowsocks traffic is designed to be both indiscernible from other traffic to third-party monitoring tools, and also able to disguise itself as a normal direct connection. Data passing through Shadowsocks is encrypted for additional security and privacy.',
+    summary:
+      'A secure socks5 proxy, designed to protect your Internet traffic.',
+    related_info: [
+      {
+        title: 'https://shadowsocks.org/',
+        href: 'https://shadowsocks.org/'
+      },
+      {
+        title: 'ShadowsocksX-NG - macOS Client',
+        href: 'https://github.com/shadowsocks/ShadowsocksX-NG'
+      },
+      {
+        title: 'shadowsocks-windows - Windows Client',
+        href: 'https://github.com/shadowsocks/shadowsocks-windows'
+      },
+      {
+        title: 'shadowsocks-android - Android Client',
+        href: 'https://github.com/shadowsocks/shadowsocks-android'
+      },
+      {
+        title: 'Help with installing clients - macOS and Windows',
+        href:
+          'https://www.linode.com/docs/networking/vpn/create-a-socks5-proxy-server-with-shadowsocks-on-ubuntu-and-centos7/#install-a-shadowsocks-client'
+      }
+    ],
+    tips: [
+      `<b>Server Preferences</b> on your Shadowsocks Client:`,
+      `- set <b>Address</b> to <em>[your-linodes-IP]:8000</em>`,
+      `- set <b>Encryption</b> to <em>aes-256-cfb</em>`,
+      `- set <b>Password</b> that was specified on configuration`
+    ],
+    logo_url: 'assets/shadowsocks_color.svg'
   },
   {
     name: 'Terraria',

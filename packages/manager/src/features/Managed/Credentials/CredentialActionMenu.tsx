@@ -21,9 +21,9 @@ export class CredentialActionMenu extends React.Component<CombinedProps, {}> {
       const actions = [
         {
           title: 'Edit',
-          onClick: () => { 
+          onClick: () => {
             openForEdit(credentialID);
-            closeMenu()
+            closeMenu();
           }
         },
         {
@@ -39,7 +39,12 @@ export class CredentialActionMenu extends React.Component<CombinedProps, {}> {
   };
 
   render() {
-    return <ActionMenu createActions={this.createActions()} />;
+    return (
+      <ActionMenu
+        createActions={this.createActions()}
+        ariaLabel={`Action menu for Credential ${this.props.label}`}
+      />
+    );
   }
 }
 

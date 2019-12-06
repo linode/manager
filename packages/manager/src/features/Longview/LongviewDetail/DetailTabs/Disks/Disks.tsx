@@ -26,6 +26,7 @@ interface Props extends RouteComponentProps<{}> {
   clientID: number;
   clientLastUpdated?: number;
   lastUpdatedError?: APIError[];
+  timezone: string;
 }
 
 type CombinedProps = Props;
@@ -85,20 +86,21 @@ const Disks: React.FC<CombinedProps> = props => {
       return <LandingLoading shouldDelay />;
     }
 
+    /*
+      Longview doesn't return the Disk stats in any particular order, so sort them
+      alphabetically now
+    */
+    const sortedKeys = Object.keys(pathOr({}, ['Disk'], diskStats)).sort();
+
     return sortedKeys.map(eachKey => (
       <DiskPaper
         diskLabel={eachKey}
         key={eachKey}
         stats={pathOr({}, ['Disk'], diskStats)[eachKey]}
+        timezone={props.timezone}
       />
     ));
   };
-
-  /*
-    Longview doesn't return the Disk stats in any particular order, so sort them
-    alphabetically now
-  */
-  const sortedKeys = Object.keys(pathOr({}, ['Disk'], diskStats)).sort();
 
   return (
     <React.Fragment>
@@ -106,7 +108,9 @@ const Disks: React.FC<CombinedProps> = props => {
         <TimeRangeSelect
           className={classes.root}
           handleStatsChange={setStartAndEnd}
-          defaultValue="Past 24 Hours"
+          defaultValue="Past 30 Minutes"
+          label="Select Time Range"
+          hideLabel
         />
       </Box>
       {renderContent()}

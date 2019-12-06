@@ -66,7 +66,8 @@ const styles = (theme: Theme) =>
       },
       '& td': {
         borderTopColor: theme.palette.primary.light,
-        borderBottomColor: theme.palette.primary.light
+        borderBottomColor: theme.palette.primary.light,
+        position: 'relative'
       }
     },
     activeCaret: {
@@ -162,6 +163,7 @@ class TableRow extends React.Component<CombinedProps> {
         }
         hover={rowLink !== undefined}
         role={role}
+        aria-label={rowLink ? `View Details` : undefined}
         className={classNames(className, {
           [classes.root]: true,
           [classes.selected]: selected,

@@ -47,9 +47,7 @@ type CombinedProps = Props;
 const InstallationInstructions: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const command = `curl -s https://lv.linode.com/${
-    props.installationKey
-  } | sudo bash`;
+  const command = `curl -s https://lv.linode.com/${props.installationKey} | sudo bash`;
 
   return (
     <Grid container>
@@ -78,14 +76,14 @@ const InstallationInstructions: React.FC<CombinedProps> = props => {
           </Grid>
         </Grid>
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <Typography>
           This should work for most installations, but if you have issues,
           please consult our troubleshooting guide and manual installation
           instructions (API key required):
         </Typography>
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <Grid container>
           <Grid item className={classes.instruction}>
             <Typography>

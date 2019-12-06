@@ -50,6 +50,8 @@ class Example extends React.Component<Props, State> {
           debounceTime={400}
           onSearch={this.handleSearch}
           isSearching={this.state.isSearching}
+          label="Search for something"
+          hideLabel
         />
         <ul data-qa-listOfItems>
           {this.state.list.map((eachThing: string) => {
