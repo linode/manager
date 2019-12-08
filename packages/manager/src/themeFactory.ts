@@ -576,8 +576,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           marginBottom: spacingUnit * 2 + spacingUnit / 2,
           padding: `${spacingUnit * 2}px ${spacingUnit * 3}px`,
           '& h2': {
-            color: primaryColors.headline,
-            lineHeight: 1.2
+            color: primaryColors.headline
           }
         }
       },
