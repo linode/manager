@@ -15,6 +15,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   title: {
     color: theme.color.headline,
+    fontWeight: 'bold',
+    fontSize: '1rem',
     '& > span': {
       color: theme.palette.text.primary
     }
