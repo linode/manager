@@ -4,14 +4,15 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
+import { Link } from 'src/components/Link';
 
-interface Props {
+export interface Props {
   open: boolean;
   onClose: () => void;
   handleSubmit: () => void;
 }
 
-const EnableObjectStorageModal: React.FC<Props> = ({
+export const EnableObjectStorageModal: React.FC<Props> = ({
   open,
   onClose,
   handleSubmit
@@ -47,6 +48,10 @@ const EnableObjectStorageModal: React.FC<Props> = ({
           text="Learn more."
           link="https://www.linode.com/docs/platform/object-storage/pricing-and-limitations/"
         />
+      </Typography>
+      <Typography variant="subtitle1" style={{ marginTop: 8 }}>
+        To discontinue billing, you'll need to cancel Object Storage in your{' '}
+        <Link to="/account/settings">Account Settings</Link>.
       </Typography>
     </ConfirmationDialog>
   );
