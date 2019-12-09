@@ -70,7 +70,9 @@ type CombinedProps = Props &
   ReduxStateProps &
   DispatchProps;
 
-export const AccessKeyLanding: React.StatelessComponent<CombinedProps> = props => {
+export const AccessKeyLanding: React.StatelessComponent<
+  CombinedProps
+> = props => {
   const {
     classes,
     object_storage,
@@ -313,6 +315,7 @@ export const AccessKeyLanding: React.StatelessComponent<CombinedProps> = props =
         handleClose={closeRevokeDialog}
         handleSubmit={handleRevokeKeys}
         isLoading={isRevoking}
+        numAccessKeys={pathOr<number>(0, ['data', 'length'], paginationProps)}
         errors={revokeErrors}
       />
     </React.Fragment>
@@ -344,8 +347,15 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-const connected = connect(mapStateToProps, mapDispatchToProps);
+const connected = connect(
+  mapStateToProps,
+  mapDispatchToProps
+);
 
-const enhanced = compose<CombinedProps, Props>(styled, paginated, connected);
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  paginated,
+  connected
+);
 
 export default enhanced(AccessKeyLanding);

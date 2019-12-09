@@ -3,7 +3,15 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import CancelNotice from '../CancelNotice';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  cancelNotice: {
+    marginTop: theme.spacing(1)
+  }
+}));
 
 interface RevokeKeysDialogProps {
   label: string;
@@ -11,13 +19,24 @@ interface RevokeKeysDialogProps {
   isLoading: boolean;
   handleClose: () => void;
   handleSubmit: () => void;
+  numAccessKeys: number;
   errors?: APIError[];
 }
 
 export const RevokeAccessKeyDialog: React.StatelessComponent<
   RevokeKeysDialogProps
 > = props => {
-  const { label, isOpen, isLoading, handleClose, handleSubmit, errors } = props;
+  const {
+    label,
+    isOpen,
+    isLoading,
+    handleClose,
+    handleSubmit,
+    numAccessKeys,
+    errors
+  } = props;
+
+  const classes = useStyles();
 
   const actions = () => (
     <ActionsPanel>
@@ -44,6 +63,10 @@ export const RevokeAccessKeyDialog: React.StatelessComponent<
       error={(errors || []).map(e => e.reason).join(',')}
     >
       <Typography>Are you sure you want to revoke this Access Key?</Typography>
+      {/* If the user is attempting to revoke their last Access Key, remind them
+      that they will still be billed unless they cancel Object Storage in
+      Account Settings. */}
+      {numAccessKeys === 1 && <CancelNotice className={classes.cancelNotice} />}
     </ConfirmationDialog>
   );
 };
