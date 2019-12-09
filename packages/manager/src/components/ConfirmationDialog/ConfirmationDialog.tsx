@@ -37,14 +37,18 @@ const ConfirmationDialog: React.FC<CombinedProps> = props => {
   const { title, classes, children, actions, error, ...dialogProps } = props;
 
   return (
-    <Dialog {...dialogProps} disableBackdropClick={true} role="dialog">
+    <Dialog
+      {...dialogProps}
+      disableBackdropClick={true}
+      PaperProps={{ role: undefined }}
+      role="dialog"
+    >
       <DialogTitle
         id="alert-dialog-title"
         data-qa-dialog-title={title}
         className="dialog-title"
         title={title}
       />
-
       <DialogContent data-qa-dialog-content className="dialog-content">
         {children}
         {error && (
