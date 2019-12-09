@@ -8,6 +8,7 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import TableWrapper from './TableWrapper';
 
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import { storage } from 'src/utilities/storage';
 
 interface Props {
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
@@ -36,8 +37,14 @@ const DisplayLinodes: React.StatelessComponent<CombinedProps> = props => {
     ...rest
   } = props;
 
+  const storedPageSize = React.useMemo(storage.linodePageSize.get, []);
+
   return (
-    <Paginate data={data}>
+    <Paginate
+      data={data}
+      pageSize={storedPageSize}
+      pageSizeSetter={storage.linodePageSize.set}
+    >
       {({
         data: paginatedData,
         handlePageChange,
@@ -78,6 +85,7 @@ const DisplayLinodes: React.StatelessComponent<CombinedProps> = props => {
                   pageSize={pageSize}
                   page={page}
                   eventCategory={'linodes landing'}
+                  showAll
                 />
               }
             </Grid>
