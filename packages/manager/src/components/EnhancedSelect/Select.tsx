@@ -63,6 +63,12 @@ const _components = {
 
 type CombinedProps = WithStyles<ClassNames> & BaseSelectProps & CreatableProps;
 
+// We extend TexFieldProps to still be able to pass
+// the required label to Select and not duplicated it to TextFieldProps
+interface ModifiedTextFieldProps extends Omit<TextFieldProps, 'label'> {
+  label?: string;
+}
+
 export interface BaseSelectProps
   extends Omit<SelectProps<any>, 'onChange' | 'value' | 'onFocus'> {
   classes?: any;
@@ -71,7 +77,7 @@ export interface BaseSelectProps
    but we're using the MUI select element so any props that
    can be passed to the MUI TextField element can be passed here
   */
-  textFieldProps?: Omit<TextFieldProps, 'label'>;
+  textFieldProps?: ModifiedTextFieldProps;
   /**
    * errorText and label both passed to textFieldProps
    * @todo consider just putting this under textFieldProps
@@ -186,6 +192,7 @@ class Select extends React.PureComponent<CombinedProps, {}> {
         inputId={inputId ? inputId : convertToKebabCase(label)}
         textFieldProps={{
           ...textFieldProps,
+          label,
           hideLabel,
           errorText,
           errorGroup,
