@@ -21,10 +21,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const TheApplicationIsOnFire: React.StatelessComponent<{}> = props => {
   return (
-    <Dialog open>
+    <Dialog
+      open
+      disableBackdropClick={true}
+      PaperProps={{ role: undefined }}
+      role="dialog"
+    >
       <DialogTitle title="Oh snap!" />
       <DialogContent>
-        <Typography>
+        <Typography variant="subtitle1" style={{ marginBottom: 16 }}>
           Something went terribly wrong. Did you try {<ReloadLink />}?
         </Typography>
       </DialogContent>
@@ -40,10 +45,9 @@ const ReloadLink = () => {
       onClick={() => {
         location.reload();
       }}
-      role="button"
       className={classes.restartButton}
     >
-      restarting it
+      restarting the application
     </button>
   );
 };
