@@ -1,13 +1,15 @@
+import produce from 'immer';
 import { Image } from 'linode-js-sdk/lib/images';
 import { clone } from 'ramda';
 import { Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
 import {
-  addOrUpdateImage,
-  getImagesFailure,
-  getImagesRequest,
-  getImagesSuccess,
-  removeImage
+  createImageActions,
+  removeImage,
+  requestImageForStoreActions,
+  requestImagesActions,
+  updateImageActions,
+  upsertImage
 } from './image.actions';
 
 import { EntitiesAsObjectState } from '../types';
@@ -27,90 +29,137 @@ export const defaultState: State = {
  * Reducer
  */
 const reducer: Reducer<State> = (state = defaultState, action) => {
-  if (isType(action, getImagesRequest)) {
-    return {
-      ...state,
-      loading: true
-    };
-  }
+  return produce(state, draft => {
+    if (isType(action, requestImagesActions.started)) {
+      draft.loading = true;
+    }
 
-  if (isType(action, getImagesSuccess)) {
-    const { payload } = action;
+    if (isType(action, requestImagesActions.done)) {
+      const { result } = action.payload;
 
-    return {
-      ...state,
-      loading: false,
-      lastUpdated: Date.now(),
-      listOfIDsInOriginalOrder: payload.data.map(eachImage => eachImage.id),
-      data: payload.data.reduce((acc, eachImage) => {
+      draft.loading = false;
+      draft.lastUpdated = Date.now();
+      draft.listOfIDsInOriginalOrder = result.map(eachImage => eachImage.id);
+      draft.data = result.reduce((acc, eachImage) => {
         if (eachImage.label.match(/kube/i)) {
           // NOTE: Temporarily hide public Kubernetes images until ImageSelect redesign.
           return acc;
         }
         acc[eachImage.id] = eachImage;
         return acc;
-      }, {}),
-      results: payload.results
-    };
-  }
+      }, {});
+      draft.results = Object.keys(result).length;
+    }
 
-  if (isType(action, getImagesFailure)) {
-    const { payload } = action;
+    if (isType(action, requestImagesActions.failed)) {
+      const { error } = action.payload;
 
-    return {
-      ...state,
-      loading: false,
-      error: {
-        read: payload
-      }
-    };
-  }
+      draft.loading = false;
+      draft.error.read = error;
+    }
 
-  if (isType(action, removeImage)) {
-    const { payload } = action;
-    /**
-     * Events provide a numeric ID, but the actual ID is a string. So we have to respond
-     * to both potentials.
-     * ![Hard to work](https://media.giphy.com/media/juSraIEmIN5eg/giphy.gif)
-     */
-    const id = typeof payload === 'string' ? payload : `private/${payload}`;
+    if (isType(action, requestImageForStoreActions.started)) {
+      draft.loading = true;
+      draft.error.read = undefined;
+    }
 
-    const dataClone = clone(state.data!);
-    delete dataClone[id];
+    if (isType(action, requestImageForStoreActions.done)) {
+      const { result } = action.payload;
+      draft.loading = false;
+      draft.data[result.id] = result;
+      draft.results = Object.keys(draft.data).length;
+      draft.listOfIDsInOriginalOrder = [
+        ...state.listOfIDsInOriginalOrder,
+        result.id
+      ];
+    }
 
-    return {
-      ...state,
-      data: dataClone,
-      listOfIDsInOriginalOrder: state.listOfIDsInOriginalOrder.filter(
+    if (isType(action, requestImageForStoreActions.failed)) {
+      const { error } = action.payload;
+      draft.loading = false;
+      draft.error.read = error;
+    }
+
+    if (isType(action, updateImageActions.started)) {
+      draft.error.update = undefined;
+    }
+
+    if (isType(action, updateImageActions.done)) {
+      const { result } = action.payload;
+
+      draft.data[result.id] = result;
+      draft.results = Object.keys(draft.data).length;
+      draft.lastUpdated = Date.now();
+    }
+
+    if (isType(action, updateImageActions.failed)) {
+      const { error } = action.payload;
+      draft.error.update = error;
+    }
+
+    if (isType(action, createImageActions.started)) {
+      draft.error.create = undefined;
+    }
+
+    if (isType(action, createImageActions.done)) {
+      const { result } = action.payload;
+
+      draft.lastUpdated = Date.now();
+      draft.data[result.id] = result;
+      draft.results = Object.keys(draft.data).length;
+      draft.listOfIDsInOriginalOrder = [
+        ...state.listOfIDsInOriginalOrder,
+        result.id
+      ];
+    }
+
+    if (isType(action, createImageActions.failed)) {
+      const { error } = action.payload;
+
+      draft.error.create = error;
+    }
+
+    if (isType(action, removeImage)) {
+      const { payload } = action;
+      /**
+       * Events provide a numeric ID, but the actual ID is a string. So we have to respond
+       * to both potentials.
+       * ![Hard to work](https://media.giphy.com/media/juSraIEmIN5eg/giphy.gif)
+       */
+      const id = typeof payload === 'string' ? payload : `private/${payload}`;
+
+      const dataClone = clone(state.data!);
+      delete dataClone[id];
+
+      draft.data = dataClone;
+      draft.listOfIDsInOriginalOrder = state.listOfIDsInOriginalOrder.filter(
         eachID => eachID !== id
-      ),
-      results: Object.keys(dataClone).length,
-      lastUpdated: Date.now()
-    };
-  }
+      );
+      draft.results = Object.keys(dataClone).length;
+      if (draft.results !== state.results) {
+        // something was actually updated
+        draft.lastUpdated = Date.now();
+      }
+    }
 
-  if (isType(action, addOrUpdateImage)) {
-    const { payload } = action;
+    if (isType(action, upsertImage)) {
+      const image = action.payload;
 
-    const dataClone = clone(state.data!);
-    dataClone[payload.id] = payload;
+      const dataClone = clone(state.data!);
+      dataClone[image.id] = image;
 
-    return {
-      ...state,
-      data: dataClone,
+      draft.data = dataClone;
       /**
        * in the case of updating and adding, we're just going to add the new ID to the
        * end of the list. Set() will make sure to get rid of the dupes in the list
        */
-      listOfIDsInOriginalOrder: [
-        ...new Set([...state.listOfIDsInOriginalOrder, payload.id])
-      ],
-      results: Object.keys(dataClone).length,
-      lastUpdated: Date.now()
-    };
-  }
-
-  return state;
+      draft.listOfIDsInOriginalOrder = [
+        ...new Set([...state.listOfIDsInOriginalOrder, image.id])
+      ];
+      draft.results = Object.keys(dataClone).length;
+      draft.lastUpdated = Date.now();
+    }
+  });
 };
 
 export default reducer;

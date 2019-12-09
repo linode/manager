@@ -1,31 +1,38 @@
-import { getImages, Image } from 'linode-js-sdk/lib/images';
-import { ResourcePage } from 'linode-js-sdk/lib/types';
-import { ThunkActionCreator } from 'src/store/types';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import {
+  createImage as _create,
+  getImage,
+  getImages,
+  Image,
+  updateImage as _update
+} from 'linode-js-sdk/lib/images';
 import { getAll } from 'src/utilities/getAll';
-import { getImagesFailure, getImagesSuccess } from './image.actions';
+import { createRequestThunk } from '../store.helpers';
+import {
+  createImageActions,
+  requestImageForStoreActions,
+  requestImagesActions,
+  updateImageActions
+} from './image.actions';
 
-export const requestImages: ThunkActionCreator<
-  Promise<Image[]>
-> = () => dispatch => {
-  const getAllImages = getAll<Image>(getImages);
+const getAllImages = getAll<Image>(getImages);
 
-  return getAllImages()
-    .then(({ data, results }) => {
-      dispatch(
-        getImagesSuccess({
-          data,
-          results
-        } as ResourcePage<Image>)
-      );
-      return data;
-    })
-    .catch(err => {
-      const ApiError = getAPIErrorOrDefault(
-        err,
-        'There was an error retrieving your Images.'
-      );
-      dispatch(getImagesFailure(ApiError));
-      return err;
-    });
-};
+export const requestImages = createRequestThunk(requestImagesActions, () =>
+  getAllImages().then(response => response.data)
+);
+
+export const createImage = createRequestThunk(
+  createImageActions,
+  ({ diskID, label, description }) =>
+    _create(diskID, label, description).then(response => response.data)
+);
+
+export const requestImageForStore = createRequestThunk(
+  requestImageForStoreActions,
+  imageID => getImage(imageID)
+);
+
+export const updateImage = createRequestThunk(
+  updateImageActions,
+  ({ label, description, imageID }) =>
+    _update(imageID, label, description).then(response => response.data)
+);
