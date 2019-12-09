@@ -122,16 +122,24 @@ export class SelectPlanPanel extends React.Component<
       tooltip = `This plan is too small for the selected image.`;
     }
 
+    const rowAriaLabel =
+      type && type.label && isSamePlan
+        ? `${type.label} this is your current plan`
+        : planTooSmall
+        ? `${type.label} this plan is too small for resize`
+        : type.label;
+
     return (
       <React.Fragment key={`tabbed-panel-${idx}`}>
         {/* Displays Table Row for larger screens */}
         <Hidden smDown>
           <TableRow
             data-qa-plan-row={type.label}
-            aria-label={type.label}
+            aria-label={rowAriaLabel}
             key={type.id}
             onClick={!isSamePlan ? this.onSelect(type.id) : undefined}
             rowLink={this.onSelect ? this.onSelect(type.id) : undefined}
+            aria-disabled={isSamePlan || planTooSmall}
             className={classnames({
               [classes.disabledRow]: isSamePlan || planTooSmall
             })}
