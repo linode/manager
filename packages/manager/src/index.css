@@ -345,7 +345,3 @@ button::-moz-focus-inner {
 .terminal {
   padding: 24px;
 }
-
-*:focus {
-  outline: 2px solid red !important;
-}
