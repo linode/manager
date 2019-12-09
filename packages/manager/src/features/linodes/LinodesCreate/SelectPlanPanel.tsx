@@ -128,6 +128,7 @@ export class SelectPlanPanel extends React.Component<
         <Hidden smDown>
           <TableRow
             data-qa-plan-row={type.label}
+            aria-label={type.label}
             key={type.id}
             onClick={!isSamePlan ? this.onSelect(type.id) : undefined}
             rowLink={this.onSelect ? this.onSelect(type.id) : undefined}
@@ -139,6 +140,7 @@ export class SelectPlanPanel extends React.Component<
               {!isSamePlan && (
                 <FormControlLabel
                   label={type.heading}
+                  aria-label={type.heading}
                   className={'label-visually-hidden'}
                   control={
                     <Radio
@@ -158,6 +160,7 @@ export class SelectPlanPanel extends React.Component<
                   <Chip
                     data-qa-current-plan
                     label="Current Plan"
+                    aria-label="This is your current plan"
                     className={classes.chip}
                   />
                 )}
@@ -224,9 +227,16 @@ export class SelectPlanPanel extends React.Component<
         <Hidden mdUp>{plans.map(this.renderSelection)}</Hidden>
         <Hidden smDown>
           <Grid item xs={12} lg={10}>
-            <Table isResponsive={false} border spacingBottom={16}>
+            <Table
+              isResponsive={false}
+              border
+              spacingBottom={16}
+              aria-label="List of Linode Plans"
+            >
               {tableHeader}
-              <TableBody>{plans.map(this.renderSelection)}</TableBody>
+              <TableBody role="radiogroup">
+                {plans.map(this.renderSelection)}
+              </TableBody>
             </Table>
           </Grid>
         </Hidden>
