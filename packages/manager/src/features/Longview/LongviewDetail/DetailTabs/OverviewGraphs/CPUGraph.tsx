@@ -23,6 +23,10 @@ export const CPUGraph: React.FC<CombinedProps> = props => {
 
   const [data, setData] = React.useState<Partial<AllData>>({});
   const request = () => {
+    if (!start || !end) {
+      return;
+    }
+
     return getValues(clientAPIKey, {
       fields: ['cpu'],
       start,
