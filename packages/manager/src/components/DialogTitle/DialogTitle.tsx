@@ -1,7 +1,5 @@
-import { compose } from 'ramda';
 import * as React from 'react';
 import DialogTitle from 'src/components/core/DialogTitle';
-import RenderGuard from 'src/components/RenderGuard';
 
 interface Props {
   title: string;
@@ -12,12 +10,12 @@ interface Props {
 // Focus on modal title on component mount
 
 const _DialogTitle: React.FC<Props> = props => {
-  const dialogTitile = React.useRef<HTMLDivElement>(null);
+  const dialogTitle = React.useRef<HTMLDivElement>(null);
   const { className, title } = props;
 
   React.useEffect(() => {
-    if (dialogTitile.current !== null) {
-      dialogTitile.current.focus();
+    if (dialogTitle.current !== null) {
+      dialogTitle.current.focus();
     }
   }, []);
 
@@ -26,11 +24,11 @@ const _DialogTitle: React.FC<Props> = props => {
       title={title}
       tabIndex={-1}
       className={className}
-      ref={dialogTitile}
+      ref={dialogTitle}
     >
       {title}
     </DialogTitle>
   );
 };
 
-export default compose<any, any>(RenderGuard)(_DialogTitle);
+export default _DialogTitle;

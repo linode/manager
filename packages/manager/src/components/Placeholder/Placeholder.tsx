@@ -95,7 +95,7 @@ export interface Props {
   icon?: React.ComponentType<any>;
   animate?: boolean;
   copy?: string | React.ReactNode;
-  title?: string;
+  title: string;
   buttonProps?: ExtendedButtonProps[];
   className?: string;
 }

@@ -29,6 +29,7 @@ interface Props extends DialogProps {
   actions?: ((props: any) => JSX.Element) | JSX.Element;
   error?: string;
   onClose: () => void;
+  title: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -44,7 +45,6 @@ const ConfirmationDialog: React.FC<CombinedProps> = props => {
       role="dialog"
     >
       <DialogTitle
-        id="alert-dialog-title"
         data-qa-dialog-title={title}
         className="dialog-title"
         title={title}
