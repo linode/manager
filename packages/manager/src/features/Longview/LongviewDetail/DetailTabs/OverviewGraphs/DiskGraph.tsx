@@ -22,6 +22,9 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
 
   const [data, setData] = React.useState<Partial<AllData>>({});
   const request = () => {
+    if (!start || !end) {
+      return;
+    }
     return getValues(clientAPIKey, {
       fields: ['disk'],
       start,
@@ -37,11 +40,10 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
 
-  const { read, write, swap } = processCPUData(
-    pathOr({ Disk: {} }, ['Disk'], data)
+  const { read, write, swap } = React.useMemo(
+    () => processDiskData(pathOr({ Disk: {} }, ['Disk'], data)),
+    [data.Disk]
   );
-
-  // console.log({ read, write, swap });
 
   return (
     <LongviewLineGraph
@@ -79,7 +81,7 @@ const emptyState = {
   swap: []
 };
 
-const processCPUData = (d: LongviewDisk) => {
+const processDiskData = (d: LongviewDisk) => {
   if (!d) {
     return emptyState;
   }
