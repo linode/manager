@@ -16,6 +16,7 @@ import {
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
+import H1Header from 'src/components/H1Header';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -27,10 +28,10 @@ import withPerfMetrics, {
 } from 'src/components/withPerfMetrics';
 import { ApplicationState } from 'src/store';
 import { setDeletedEvents } from 'src/store/events/event.helpers';
+import { ExtendedEvent } from 'src/store/events/event.types';
 import areEntitiesLoading from 'src/store/selectors/entitiesLoading';
 import { removeBlacklistedEvents } from 'src/utilities/eventUtils';
 
-import { ExtendedEvent } from 'src/store/events/event.helpers';
 import { filterUniqueEvents, shouldUpdateEvents } from './Event.helpers';
 import EventRow from './EventRow';
 
@@ -277,11 +278,7 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
   return (
     <>
       {/* Only display this title on the main Events landing page */}
-      {!entityId && (
-        <Typography variant="h1" className={classes.header}>
-          Events
-        </Typography>
-      )}
+      {!entityId && <H1Header title="Events" className={classes.header} />}
       <Paper>
         <Table aria-label="List of Events">
           <TableHead>

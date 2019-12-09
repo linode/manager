@@ -21,26 +21,37 @@ class Example extends React.Component<Props, State> {
 
   handleSearch = (value: string) => {
     this.setState({ isSearching: true });
+    const { list } = this.state;
     action('searching')(value);
-    setTimeout(() => {
-      const filteredList = this.props.list.filter(eachVal =>
-        eachVal.includes(value.toLowerCase())
-      );
-      action('result')(filteredList);
+    return new Promise(resolve => {
+      setTimeout(() => {
+        if (!value.trim()) {
+          return resolve(this.props.list);
+        }
+        const filteredList = list.filter(eachVal =>
+          eachVal.includes(value.toLowerCase())
+        );
+        return resolve(filteredList);
+      }, 800);
+    }).then((res: string[]) => {
+      action('result')(res);
       this.setState({
-        list: filteredList,
+        list: res,
         isSearching: false
       });
-    }, 800);
+    });
   };
 
   render() {
     return (
       <React.Fragment>
         <DebouncedSearchTextField
-          placeholderText="Search for something"
+          placeholder="Search for something"
+          debounceTime={400}
           onSearch={this.handleSearch}
           isSearching={this.state.isSearching}
+          label="Search for something"
+          hideLabel
         />
         <ul data-qa-listOfItems>
           {this.state.list.map((eachThing: string) => {

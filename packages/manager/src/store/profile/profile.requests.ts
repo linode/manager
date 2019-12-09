@@ -46,8 +46,8 @@ export const requestProfile: ThunkActionCreator<Promise<Profile>> = () => (
 
   return getProfile()
     .then(profile => ({
-      ...profile.data,
-      timezone: getTimezone(getState(), profile.data.timezone)
+      ...profile,
+      timezone: getTimezone(getState(), profile.timezone)
     }))
     .then(maybeRequestGrants)
     .then(response => {
@@ -64,7 +64,7 @@ export const requestProfile: ThunkActionCreator<Promise<Profile>> = () => (
  * @todo this doesn't let you update grants
  */
 export const updateProfile: ThunkActionCreator<
-  Promise<Partial<Profile>>,
+  Promise<Profile>,
   Partial<Profile>
 > = payload => dispatch => {
   const { done, failed } = handleUpdateProfile;
@@ -81,7 +81,7 @@ export const updateProfile: ThunkActionCreator<
 
 const handleUpdateSuccess = (
   payload: Partial<Profile>,
-  result: Partial<Profile>,
+  result: Profile,
   done: ActionCreator<Success<Partial<Profile>, Partial<Profile>>>,
   dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
 ) => {

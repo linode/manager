@@ -61,7 +61,12 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
     ];
   };
 
-  return <ActionMenu createActions={createActions()} />;
+  return (
+    <ActionMenu
+      createActions={createActions()}
+      ariaLabel={`Action menu for Firewall ${props.firewallLabel}`}
+    />
+  );
 };
 
 export default React.memo(FirewallActionMenu);

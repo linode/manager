@@ -312,7 +312,11 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           title: '',
           render: (d: Domain) => {
             return d.type === 'master' ? (
-              <ActionMenu editPayload={d} onEdit={this.handleOpenSOADrawer} />
+              <ActionMenu
+                editPayload={d}
+                onEdit={this.handleOpenSOADrawer}
+                label={this.props.domain.domain}
+              />
             ) : null;
           }
         }
@@ -359,6 +363,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                   target,
                   ttl_sec
                 }}
+                label={name}
                 onEdit={this.openForEditNSRecord}
                 deleteData={{
                   recordID: id,
@@ -406,6 +411,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 target,
                 ttl_sec
               }}
+              label={name}
               deleteData={{
                 recordID: id,
                 onDelete: this.confirmDeletion
@@ -440,6 +446,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 ttl_sec
               }}
               onEdit={this.openForEditARecord}
+              label={name}
               deleteData={{
                 recordID: id,
                 onDelete: this.confirmDeletion
@@ -471,6 +478,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 target,
                 ttl_sec
               }}
+              label={name}
               onEdit={this.openForEditCNAMERecord}
               deleteData={{
                 recordID: id,
@@ -504,6 +512,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 target,
                 ttl_sec
               }}
+              label={name}
               onEdit={this.openForEditTXTRecord}
               deleteData={{
                 recordID: id,
@@ -559,6 +568,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 target,
                 weight
               }}
+              label={this.props.domain.domain}
               onEdit={this.openForEditSRVRecord}
               deleteData={{
                 recordID: id,
@@ -593,6 +603,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 target,
                 ttl_sec
               }}
+              label={name}
               onEdit={this.openForEditCAARecord}
               deleteData={{
                 recordID: id,
@@ -670,9 +681,10 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 alignItems="flex-end"
                 className={classes.root}
               >
-                <Grid item>
-                  <a ref={ref} />
+                <Grid item ref={ref}>
                   <Typography
+                    role="heading"
+                    aria-level={2}
                     variant="h2"
                     className={classes.titles}
                     data-qa-domain-record={type.title}

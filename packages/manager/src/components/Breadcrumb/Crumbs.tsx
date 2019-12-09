@@ -48,6 +48,7 @@ export interface CrumbOverridesProps {
 interface Props {
   pathMap: string[];
   crumbOverrides?: CrumbOverridesProps[];
+  firstAndLastOnly?: boolean;
   labelTitle?: string;
   labelOptions?: LabelProps;
   onEditHandlers?: EditableProps;
@@ -61,17 +62,21 @@ const Crumbs: React.FC<CombinedProps> = props => {
   const {
     pathMap,
     crumbOverrides,
+    firstAndLastOnly,
     labelOptions,
     labelTitle,
     onEditHandlers
   } = props;
 
   const allCrumbsButLast = pathMap.slice(0, -1);
+  const firstCrumb = [pathMap[0]];
   const lastCrumb = pathMap.slice(-1)[0];
+  const finalCrumbs =
+    firstAndLastOnly && pathMap.length > 1 ? firstCrumb : allCrumbsButLast;
 
   return (
     <>
-      {allCrumbsButLast.map((crumb: string, key: number) => {
+      {finalCrumbs.map((crumb: string, key: number) => {
         const link =
           '/' + pathMap.slice(0, -(pathMap.length - (key + 1))).join('/');
         const override =
@@ -112,7 +117,7 @@ const Crumbs: React.FC<CombinedProps> = props => {
         );
       })}
 
-      {/* 
+      {/*
         for prepending some SVG or other element before the final crumb.
         See users detail page for example
       */}
@@ -123,7 +128,7 @@ const Crumbs: React.FC<CombinedProps> = props => {
         />
       )}
 
-      {/* 
+      {/*
         the final crumb has the possibility of being a link, editable text
         or just static text
       */}
@@ -133,7 +138,7 @@ const Crumbs: React.FC<CombinedProps> = props => {
         onEditHandlers={onEditHandlers}
       />
 
-      {/* 
+      {/*
         for appending some SVG or other element after the final crumb.
         See support ticket detail as an example
       */}

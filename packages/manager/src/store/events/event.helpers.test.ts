@@ -10,7 +10,7 @@ import {
   setDeletedEvents,
   updateInProgressEvents
 } from './event.helpers';
-import { ExtendedEvent } from './event.helpers';
+import { ExtendedEvent } from './event.types';
 
 describe('event.helpers', () => {
   describe('findInEvents', () => {
@@ -98,6 +98,7 @@ describe('event.helpers', () => {
         {
           id: 17957944,
           time_remaining: 0,
+          secondary_entity: null,
           seen: true,
           created: '2018-12-02T23:15:45',
           action: 'linode_delete',
@@ -116,6 +117,7 @@ describe('event.helpers', () => {
         {
           id: 17957108,
           time_remaining: 0,
+          secondary_entity: null,
           seen: true,
           created: '2018-12-02T22:55:43',
           action: 'linode_boot',
@@ -137,6 +139,7 @@ describe('event.helpers', () => {
         {
           id: 17957944,
           time_remaining: 0,
+          secondary_entity: null,
           seen: true,
           created: '2018-12-02T23:15:45',
           action: 'linode_delete',
@@ -156,6 +159,7 @@ describe('event.helpers', () => {
         {
           id: 17957108,
           time_remaining: 0,
+          secondary_entity: null,
           seen: true,
           created: '2018-12-02T22:55:43',
           action: 'linode_boot',
@@ -185,6 +189,7 @@ describe('event.helpers', () => {
         {
           id: 17957944,
           time_remaining: 0,
+          secondary_entity: null,
           seen: true,
           created: '2018-12-02T23:15:45',
           action: 'linode_delete',
@@ -198,6 +203,7 @@ describe('event.helpers', () => {
         {
           id: 17957718,
           time_remaining: 0,
+          secondary_entity: null,
           seen: true,
           created: '2018-12-02T23:08:38',
           action: 'linode_shutdown',
@@ -211,6 +217,7 @@ describe('event.helpers', () => {
         {
           id: 17957108,
           time_remaining: 0,
+          secondary_entity: null,
           seen: true,
           created: '2018-12-02T22:55:43',
           action: 'linode_boot',
@@ -226,6 +233,7 @@ describe('event.helpers', () => {
         {
           id: 17957718,
           time_remaining: 0,
+          secondary_entity: null,
           seen: true,
           created: '2018-12-02T23:08:38',
           action: 'linode_shutdown',
@@ -246,6 +254,7 @@ describe('event.helpers', () => {
           seen: true,
           created: '2018-12-02T23:15:45',
           action: 'linode_delete',
+          secondary_entity: null,
           read: false,
           percent_complete: 100,
           username: 'test',
@@ -259,6 +268,7 @@ describe('event.helpers', () => {
           seen: true,
           created: '2018-12-02T23:08:38',
           action: 'linode_shutdown',
+          secondary_entity: null,
           read: false,
           percent_complete: 70,
           username: 'test',
@@ -269,6 +279,7 @@ describe('event.helpers', () => {
         {
           id: 17957108,
           time_remaining: 0,
+          secondary_entity: null,
           seen: true,
           created: '2018-12-02T22:55:43',
           action: 'linode_boot',

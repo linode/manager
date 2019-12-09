@@ -62,7 +62,13 @@ export const wrapStringInLink = (
   const arrayWithLink = sentenceAsArray.map(eachWord => {
     if (eachWord.match(new RegExp(textToReplace, 'gmi'))) {
       return type === 'external' ? (
-        <a key={eachWord} href={link} target="_blank" rel="noopener noreferrer">
+        <a
+          key={eachWord}
+          href={link}
+          target="_blank"
+          aria-describedby="external-site"
+          rel="noopener noreferrer"
+        >
           {eachWord}
         </a>
       ) : (

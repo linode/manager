@@ -2,125 +2,44 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 import KubernetesSvg from 'src/assets/addnewmenu/kubernetes.svg';
-import Button from 'src/components/Button';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
+import Placeholder from 'src/components/Placeholder';
 
-type CSSClasses = 'root' | 'copy' | 'icon' | 'title';
+type Props = RouteComponentProps<{}>;
 
-const styles = (theme: Theme) =>
-  createStyles({
-    '@keyframes scaleIn': {
-      from: {
-        transform: 'translateX( -10px ) rotateY( -180deg )'
-      },
-      to: {
-        transformOrigin: 'center center'
-      }
-    },
-    '@keyframes fadeIn': {
-      from: {
-        opacity: 0
-      },
-      to: {
-        opacity: 1
-      }
-    },
-    root: {
-      padding: `${theme.spacing(2)}px 0`,
-      [theme.breakpoints.up('md')]: {
-        padding: `${theme.spacing(10)}px 0`
-      }
-    },
-    copy: {
-      textAlign: 'center',
-      maxWidth: 800
-    },
-    icon: {
-      animation: '$scaleIn .5s ease-in-out',
-      width: 225,
-      height: 225,
-      '& use': {
-        fill: theme.bg.main
-      },
-      '& .outerCircle': {
-        fill: theme.color.absWhite,
-        stroke: theme.bg.offWhite
-      },
-      '& .insidePath path': {
-        opacity: 0,
-        animation: '$fadeIn .2s ease-in-out forwards .3s',
-        stroke: theme.palette.primary.main
-      }
-    },
-    title: {
-      fontFamily: theme.font.bold,
-      textAlign: 'center'
-    }
-  });
-
-type PropsWithStyles = WithStyles<CSSClasses> & RouteComponentProps<{}>;
-
-class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
+class KubernetesEmptyState extends React.Component<Props> {
   render() {
-    const { classes } = this.props;
+    const SubtitleCopy = () => (
+      <>
+        <Typography variant="subtitle1">Need help getting started?</Typography>
+        <Typography variant="subtitle1">
+          <a
+            href="https://www.linode.com/docs/applications/containers/kubernetes/how-to-deploy-a-cluster-with-lke/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="h-u"
+          >
+            Learn more about getting started with LKE.
+          </a>
+        </Typography>
+      </>
+    );
 
     return (
-      <Grid
-        container
-        spacing={3}
-        alignItems="center"
-        direction="column"
-        justify="center"
-        className={classes.root}
-      >
-        <Grid item xs={12}>
-          <KubernetesSvg className={classes.icon} />
-        </Grid>
-        <Typography
-          variant="h4"
-          className={classes.title}
-          data-qa-placeholder-title
-        >
-          Add your first Kubernetes cluster!
-        </Typography>
-        <Grid item xs={12} lg={10} className={classes.copy}>
-          <Typography variant="subtitle1">
-            Need help getting started?
-          </Typography>
-          <Typography variant="subtitle1">
-            {/* @todo update link once we have one for LKE */}
-            <a
-              href="https://linode.com/docs/getting-started-new-manager/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="h-u"
-            >
-              Learn more about getting started with LKE.
-            </a>
-          </Typography>
-        </Grid>
-        <Grid item xs={12} lg={10} className={classes.copy}>
-          <Button
-            buttonType="primary"
-            onClick={() => this.props.history.push('/kubernetes/create')}
-          >
-            Create a Cluster
-          </Button>
-        </Grid>
-      </Grid>
+      <Placeholder
+        title="Add your first Kubernetes cluster!"
+        copy={<SubtitleCopy />}
+        icon={KubernetesSvg}
+        buttonProps={[
+          {
+            onClick: () => this.props.history.push('/kubernetes/create'),
+            children: 'Create a Cluster'
+          }
+        ]}
+      />
     );
   }
 }
-const enhanced = compose(
-  withRouter,
-  withStyles(styles)
-);
+const enhanced = compose(withRouter);
 
-export default enhanced(ListLinodesEmptyState);
+export default enhanced(KubernetesEmptyState);

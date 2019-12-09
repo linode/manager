@@ -187,13 +187,14 @@ export const Configs: React.FC<Props> = props => {
             >
               <div className={classes.labelOuter}>
                 <Typography variant="h3">{eachConfig.label}</Typography>
-                <a
+                <button
                   onClick={() => handleToggleConfig(eachConfig.id)}
                   className={classes.closeIcon}
                   data-qa-inline-delete
+                  role="button"
                 >
                   <Close />
-                </a>
+                </button>
               </div>
               <List className={classes.nestedList}>
                 {eachConfig.associatedDisks.map(eachDisk => {
@@ -218,13 +219,14 @@ export const Configs: React.FC<Props> = props => {
               dense
             >
               <Typography variant="h3">{eachDisk.label}</Typography>
-              <a
+              <button
                 onClick={() => handleToggleDisk(eachDisk.id)}
                 className={classes.closeIcon}
                 data-qa-inline-delete
+                role="button"
               >
                 <Close />
-              </a>
+              </button>
             </ListItem>
           );
         })}
@@ -270,6 +272,7 @@ export const Configs: React.FC<Props> = props => {
           <a
             href={errorMessageLinks.shrink}
             target="_blank"
+            aria-describedby="external-site"
             rel="noopener noreferrer"
           >
             Shrink your existing disks
@@ -278,6 +281,7 @@ export const Configs: React.FC<Props> = props => {
           <a
             href={errorMessageLinks.resize}
             target="_blank"
+            aria-describedby="external-site"
             rel="noopener noreferrer"
           >
             resize your Linode to a larger plan.

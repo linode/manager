@@ -24,7 +24,15 @@ const styles = (theme: Theme) =>
       cursor: 'pointer'
     },
     link: {
-      textDecoration: 'underline'
+      background: 'none',
+      color: theme.palette.primary.main,
+      border: 'none',
+      padding: 0,
+      font: 'inherit',
+      cursor: 'pointer',
+      '&:hover': {
+        textDecoration: 'underline'
+      }
     },
     icon: {
       display: 'inline-block',
@@ -82,6 +90,7 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = props => {
                 data-qa-backups-price
                 href="https://linode.com/backups"
                 target="_blank"
+                aria-describedby="external-site"
                 rel="noopener noreferrer"
               >
                 {` Backups pricing page`}
@@ -114,13 +123,15 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = props => {
             <Grid item>
               <Typography variant="body1" className={classes.footnote}>
                 {`For existing Linodes without backups, `}
-                <a
+                <button
                   data-qa-backup-existing
                   className={classes.link}
                   onClick={openBackupsDrawer}
+                  role="button"
+                  title="enable now"
                 >
                   enable now
-                </a>
+                </button>
                 .
               </Typography>
             </Grid>

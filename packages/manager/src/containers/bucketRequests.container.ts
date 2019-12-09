@@ -1,5 +1,5 @@
+import { ObjectStorageBucket } from 'linode-js-sdk/lib/object-storage';
 import { connect } from 'react-redux';
-import {} from 'src/store/bucket/bucket.actions';
 import {
   createBucket,
   CreateBucketRequest,
@@ -8,7 +8,7 @@ import {
 } from 'src/store/bucket/bucket.requests';
 
 export interface BucketsRequests {
-  createBucket: (request: CreateBucketRequest) => Promise<Linode.Bucket>;
+  createBucket: (request: CreateBucketRequest) => Promise<ObjectStorageBucket>;
   deleteBucket: (request: DeleteBucketRequest) => Promise<{}>;
 }
 

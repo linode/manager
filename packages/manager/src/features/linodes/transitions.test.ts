@@ -6,6 +6,7 @@ describe('transitionText helper', () => {
       transitionText('loading', {
         id: 123,
         action: 'linode_snapshot',
+        secondary_entity: null,
         created: '2012-12-12',
         entity: null,
         percent_complete: null,
@@ -28,6 +29,7 @@ describe('transitionText helper', () => {
       transitionText('optimus', {
         id: 123,
         action: 'linode_addip',
+        secondary_entity: null,
         created: '2012-12-12',
         entity: null,
         percent_complete: null,

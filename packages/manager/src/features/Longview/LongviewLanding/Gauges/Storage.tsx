@@ -1,45 +1,31 @@
 import { APIError } from 'linode-js-sdk/lib/types';
-import { pathOr } from 'ramda';
 import * as React from 'react';
+import { WithTheme, withTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
+import withClientStats, {
+  Props as LVDataProps
+} from 'src/containers/longview.stats.container';
 import { readableBytes } from 'src/utilities/unitConversions';
-import requestStats from '../../request';
-import { Disk } from '../../request.types';
-import { baseGaugeProps } from './common';
+import { sumStorage } from '../../shared/utilities';
+import { baseGaugeProps, BaseProps as Props } from './common';
 
-interface Props {
-  clientAPIKey: string;
-  lastUpdated?: number;
-}
+type CombinedProps = Props & LVDataProps & WithTheme;
 
-const StorageGauge: React.FC<Props> = props => {
-  const { clientAPIKey, lastUpdated } = props;
+export const getUsedStorage = (data: LVDataProps['longviewClientData']) => {
+  const storageInBytes = sumStorage(data.Disk);
+  return storageInBytes ? storageInBytes.total - storageInBytes.free : 0;
+};
 
-  const [loading, setLoading] = React.useState<boolean>(true);
-  const [error, setError] = React.useState<APIError | undefined>();
+const StorageGauge: React.FC<CombinedProps> = props => {
+  const {
+    longviewClientDataError: error,
+    longviewClientDataLoading: loading,
+    longviewClientData,
+    lastUpdatedError
+  } = props;
 
-  // The Longview API returns disk usage data in bytes.
-  const [storageInBytes, setStorageInBytes] = React.useState<
-    Storage | undefined
-  >();
-
-  React.useEffect(() => {
-    requestStats(clientAPIKey, 'getLatestValue', ['disk'])
-      .then(data => {
-        setLoading(false);
-        setError(undefined);
-        setStorageInBytes(sumStorage(data.Disk));
-      })
-      .catch(_ => {
-        if (!storageInBytes) {
-          setError({
-            reason: 'Error' // @todo: Error message?
-          });
-          setLoading(false);
-        }
-      });
-  }, [lastUpdated]);
+  const storageInBytes = sumStorage(longviewClientData.Disk);
 
   const usedStorage = storageInBytes
     ? storageInBytes.total - storageInBytes.free
@@ -53,9 +39,9 @@ const StorageGauge: React.FC<Props> = props => {
       innerText={innerText(
         readableBytes(usedStorage).formatted,
         loading,
-        error
+        error || lastUpdatedError
       )}
-      filledInColor="#F4AC3D"
+      filledInColor={props.theme.graphs.orange}
       subTitle={
         <>
           <Typography>
@@ -72,32 +58,17 @@ const StorageGauge: React.FC<Props> = props => {
   );
 };
 
-export default StorageGauge;
-
-// UTILITIES
-interface Storage {
-  free: number;
-  total: number;
-}
-
-export const sumStorage = (DiskData: Record<string, Disk> = {}): Storage => {
-  let free = 0;
-  let total = 0;
-  Object.keys(DiskData).forEach(key => {
-    const disk = DiskData[key];
-    free += pathOr(0, ['fs', 'free', 0, 'y'], disk);
-    total += pathOr(0, ['fs', 'total', 0, 'y'], disk);
-  });
-  return { free, total };
-};
+export default withClientStats<Props>(props => props.clientID)(
+  withTheme(StorageGauge)
+);
 
 export const innerText = (
   value: string,
   loading: boolean,
-  error?: APIError
+  error?: APIError[]
 ) => {
   if (error) {
-    return error.reason;
+    return 'Error';
   }
 
   if (loading) {

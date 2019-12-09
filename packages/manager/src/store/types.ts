@@ -24,7 +24,8 @@ export interface EntityError {
 }
 
 export type ThunkActionCreator<ReturnType, Params = void> = (
-  args: Params
+  args: Params,
+  ...args2: any[]
 ) => ThunkResult<ReturnType>;
 
 export type ThunkDispatch = _ThunkDispatch<ApplicationState, undefined, Action>;
@@ -91,15 +92,30 @@ export type EventHandler = (
 ) => void;
 
 export interface EntitiesAsObjectState<T> {
-  error: Partial<{
-    read: APIError[];
-    create: APIError[];
-    delete: APIError[];
-    update: APIError[];
-  }>;
+  error: Partial<EntityError>;
   data: Record<string, T>;
   results: number;
   lastUpdated: number;
   loading: boolean;
   listOfIDsInOriginalOrder: (string | number)[];
 }
+
+/**
+ * This is meant to be specifically for data sets that relate to some parent
+ * data set.
+ *
+ * Think NodeBalancer configs - the key here will be the NodeBalancer ID
+ * and the data contains the meta data for the NodeBalancer Config
+ *
+ * Or for Longview Client Stats - the key is the Longview Client
+ * and the data is the actual stats for the Client
+ */
+export type RelationalDataSet<T extends {}, E = EntityError> = Record<
+  string,
+  Partial<{
+    data: T;
+    loading: boolean;
+    error: E;
+    lastUpdated: number;
+  }>
+>;

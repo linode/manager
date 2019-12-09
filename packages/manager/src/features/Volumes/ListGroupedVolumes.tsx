@@ -15,7 +15,7 @@ import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 import RenderVolumeData, { RenderVolumeDataProps } from './RenderVolumeData';
-import { ExtendedVolume } from './VolumesLanding';
+import { ExtendedVolume } from './types';
 import TableWrapper from './VolumeTableWrapper';
 
 const DEFAULT_PAGE_SIZE = 25;
@@ -72,7 +72,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ListGroupedDomains: React.StatelessComponent<CombinedProps> = props => {
+const ListGroupedVolumes: React.FC<CombinedProps> = props => {
   const {
     data,
     order,
@@ -156,4 +156,4 @@ const ListGroupedDomains: React.StatelessComponent<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-export default styled(ListGroupedDomains);
+export default styled(ListGroupedVolumes);

@@ -13,6 +13,7 @@ export interface Handlers {
   ) => void;
   onClone: (domain: string, id: number) => void;
   onEdit: (domain: string, id: number) => void;
+  onCheck: (domain: string) => void;
 }
 
 interface Props extends Handlers {
@@ -44,6 +45,11 @@ export class DomainActionMenu extends React.Component<CombinedProps> {
     onClone(domain, id);
   };
 
+  handleCheck = () => {
+    const { domain, onCheck } = this.props;
+    onCheck(domain);
+  };
+
   createActions = () => (closeMenu: Function): Action[] => {
     const baseActions = [
       {
@@ -56,20 +62,8 @@ export class DomainActionMenu extends React.Component<CombinedProps> {
       },
       {
         title: 'Check Zone',
-        tooltip:
-          "Currently we don't support this action but will in the future.",
-        disabled: true,
         onClick: (e: React.MouseEvent<HTMLElement>) => {
-          closeMenu();
-          e.preventDefault();
-        }
-      },
-      {
-        title: 'Zone File',
-        tooltip:
-          "Currently we don't support this action but will in the future.",
-        disabled: true,
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          this.handleCheck();
           closeMenu();
           e.preventDefault();
         }
@@ -131,7 +125,12 @@ export class DomainActionMenu extends React.Component<CombinedProps> {
   };
 
   render() {
-    return <ActionMenu createActions={this.createActions()} />;
+    return (
+      <ActionMenu
+        createActions={this.createActions()}
+        ariaLabel={`Action menu for Domain ${this.props.domain}`}
+      />
+    );
   }
 }
 

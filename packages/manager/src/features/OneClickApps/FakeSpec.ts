@@ -34,7 +34,7 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://survivetheark.com/',
-        href: 'https://survivetheark.com/',
+        href: 'https://survivetheark.com/'
       }
     ],
     logo_url: 'assets/ark_color.svg'
@@ -42,7 +42,8 @@ export const oneClickApps: OCA[] = [
   {
     name: 'cPanel',
     description: `The cPanel &amp; WHM&reg; One-Click App streamlines publishing and managing a website on your Linode. cPanel 	&amp; WHM is a Linux&reg; based web hosting control panel and platform that helps you create and manage websites, servers, databases and more with a suite of hosting automation and optimization tools.`,
-    summary: 'The leading hosting automation platform that has simplified site and server management for 20 years.',
+    summary:
+      'The leading hosting automation platform that has simplified site and server management for 20 years.',
     tips: [
       `Please note that it will take approximately 15 minutes for cPanel to boot after you launch.`,
       `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:2087</em> in a browser, where you'll be prompted to log in and begin your trial.`,
@@ -51,7 +52,7 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://www.cpanel.net/',
-        href: 'https://www.cpanel.net/',
+        href: 'https://www.cpanel.net/'
       }
     ],
     logo_url: 'assets/cpanel_color.svg'
@@ -73,10 +74,40 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://blog.counter-strike.net/index.php/about/',
-        href: 'https://blog.counter-strike.net/index.php/about/',
+        href: 'https://blog.counter-strike.net/index.php/about/'
       }
     ],
     logo_url: 'assets/csgo_color.svg'
+  },
+  {
+    name: 'Docker',
+    description: `Docker is a tool that enables you to create, deploy, and manage lightweight, stand-alone packages that contain everything needed to run an application (code, libraries, runtime, system settings, and dependencies).`,
+    summary: `Securely build, share and run modern applications anywhere.`,
+    related_guides: [
+      {
+        title: 'An Introduction to Docker',
+        href: 'https://www.linode.com/docs/applications/containers/introduction-to-docker/'
+      },
+      {
+        title: 'Docker Commands Quick Reference Cheat Sheet',
+        href: 'https://www.linode.com/docs/applications/containers/docker-commands-quick-reference-cheat-sheet/'
+      },
+      {
+        title: 'How to Use Docker Compose',
+        href: 'https://www.linode.com/docs/applications/containers/how-to-use-docker-compose/'
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://www.docker.com/',
+        href: 'https://www.docker.com/',
+      },
+      {
+        title: 'https://docs.docker.com/compose/',
+        href: 'https://docs.docker.com/compose/',
+      }
+    ],
+    logo_url: 'assets/docker_color.svg'
   },
   {
     name: 'GitLab',
@@ -109,7 +140,7 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://about.gitlab.com/',
-        href: 'https://about.gitlab.com/',
+        href: 'https://about.gitlab.com/'
       }
     ],
     logo_url: 'assets/gitlab_color.svg'
@@ -139,10 +170,52 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://www.drupal.org/',
-        href: 'https://www.drupal.org/',
+        href: 'https://www.drupal.org/'
       }
     ],
     logo_url: 'assets/drupal_color.svg'
+  },
+  {
+    name: 'Grafana',
+    description: `Grafana allows you to query, visualize, alert on and understand your metrics no matter where they are stored. Create, explore, and share dashboards with your team and foster a data driven culture.`,
+    summary: `Grafana is the open source analytics & monitoring solution for every database.`,
+    related_info: [
+      {
+        title: 'https://grafana.com/',
+        href:'https://grafana.com/'
+      }
+    ],
+    tips: [
+      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:3000</em> in a browser.`
+    ],
+    logo_url: 'assets/grafana_color.svg'
+  },
+  {
+    name: 'Jenkins',
+    description: `Jenkins is a self-contained, open source automation server which can be used to automate all sorts of tasks related to building, testing, and delivering or deploying software.`,
+    summary: `Jenkins provides hundreds of plugins to support building, deploying and automating any project.`,
+    related_guides: [
+      {
+        title: 'Using LISH to SSH into your Linode',
+        href: 'https://www.linode.com/docs/platform/manager/using-the-linode-shell-lish/#use-a-web-browser'
+      },
+      {
+        title: 'Scripted vs. Declarative Pipeline Syntax',
+        href: 'https://www.linode.com/docs/development/ci/automate-builds-with-jenkins-on-ubuntu/#scripted-vs-declarative-pipeline-syntax'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://jenkins.io/',
+        href: 'https://jenkins.io/',
+      }
+    ],
+    tips: [
+      `Once the script finishes, go to <em>http://[your-Linode's-IP-address]:8080</em> in a browser to finish the configuration.`,
+      `You will need to SSH into your Linode to retrieve the Jenkins one time password:`,
+      `<code>sudo cat /var/lib/jenkins/secrets/initialAdminPassword</code>`
+    ],
+    logo_url: 'assets/jenkins_color.svg'
   },
   {
     name: 'LAMP',
@@ -179,9 +252,40 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/lemp_color.svg'
   },
   {
+    name: 'MySQL',
+    description: ``,
+    summary: `MySQL is a popular open source database management system used for web and server applications.`,
+    related_info: [
+      {
+        title: 'https://www.mysql.com/',
+        href: 'https://www.mysql.com/'
+      },
+      {
+        title: 'https://dev.mysql.com/downloads/workbench/',
+        href: 'https://dev.mysql.com/downloads/workbench/'
+      },
+      {
+        title: 'Sequel Pro - macOS database management client',
+        href: 'https://www.sequelpro.com/'
+      }
+    ],
+    related_guides: [
+      {
+        title: 'MySQL Guides',
+        href: 'https://www.linode.com/docs/databases/mysql/'
+      },
+    ],
+    tips: [
+      `<b>In addition to installing MySQL, this One-Click app also enables the following UFW firewall rules:</b>`,
+      ` - SSH <em>port 22</em>, HTTP <em>port 80</em>, HTTPS <em>port 443</em>, MySQL <em>port 3306</em>`
+    ],
+    logo_url: 'assets/mysql_color.svg'
+  },
+  {
     name: 'Plesk',
     description: `Plesk is a leading WordPress and website management platform and control panel. Plesk lets you build and manage multiple websites from a single dashboard to configure web services, email, and other applications. Plesk features hundreds of extensions, plus a complete WordPress toolkit. Use the Plesk One-Click App to manage websites hosted on your Linode.`,
-    summary: 'A secure, scalable, and versatile website and WordPress management platform.',
+    summary:
+      'A secure, scalable, and versatile website and WordPress management platform.',
     tips: [
       `Please allow the script around 15 minutes to finish.`,
       `Once the script finishes, go to <em>https://[your-Linode's-IP-address]</em> in a browser, where you'll be prompted to log in and begin your trial.`,
@@ -190,10 +294,22 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://www.plesk.com/',
-        href: 'https://www.plesk.com/',
+        href: 'https://www.plesk.com/'
       }
     ],
-    logo_url: 'assets/plesk_color.svg',
+    logo_url: 'assets/plesk_color.svg'
+  },
+  {
+    name: 'Prometheus',
+    description: `Prometheus is a an open-source monitoring system with a dimensional data model, flexible query language, efficient time series database and modern alerting approach.`,
+    summary: 'Power your metrics with a leading open-source monitoring solution.',
+    related_info: [
+      {
+        title: 'https://prometheus.io/',
+        href: 'https://prometheus.io/',
+      }
+    ],
+    logo_url: 'assets/prometheus_color.svg',
   },
   {
     name: 'Rust',
@@ -214,10 +330,44 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://rust.facepunch.com/',
-        href: 'https://rust.facepunch.com/',
+        href: 'https://rust.facepunch.com/'
       }
     ],
     logo_url: 'assets/rust_color.svg'
+  },
+  {
+    name: 'Shadowsocks',
+    description: 'Shadowsocks is a lightweight SOCKS5 web proxy tool primarily utilized to bypass network censorship and blocking on certain websites and web protocols. A full setup requires a Linode server to host the Shadowsocks daemon, and a client installed on PC, Mac, Linux, or a mobile device. Unlike other proxy software, Shadowsocks traffic is designed to be both indiscernible from other traffic to third-party monitoring tools, and also able to disguise itself as a normal direct connection. Data passing through Shadowsocks is encrypted for additional security and privacy.',
+    summary: 'A secure socks5 proxy, designed to protect your Internet traffic.',
+    related_info: [
+      {
+        title: 'https://shadowsocks.org/',
+        href: 'https://shadowsocks.org/',
+      },
+      {
+        title: 'ShadowsocksX-NG - macOS Client',
+        href: 'https://github.com/shadowsocks/ShadowsocksX-NG',
+      },
+      {
+        title: 'shadowsocks-windows - Windows Client',
+        href: 'https://github.com/shadowsocks/shadowsocks-windows',
+      },
+      {
+        title: 'shadowsocks-android - Android Client',
+        href: 'https://github.com/shadowsocks/shadowsocks-android',
+      },
+      {
+        title: 'Help with installing clients - macOS and Windows',
+        href: 'https://www.linode.com/docs/networking/vpn/create-a-socks5-proxy-server-with-shadowsocks-on-ubuntu-and-centos7/#install-a-shadowsocks-client',
+      },
+    ],
+    tips: [
+      `<b>Server Preferences</b> on your Shadowsocks Client:`,
+      `- set <b>Address</b> to <em>[your-linodes-IP]:8000</em>`,
+      `- set <b>Encryption</b> to <em>aes-256-cfb</em>`,
+      `- set <b>Password</b> that was specified on configuration`,
+    ],
+    logo_url: 'assets/shadowsocks_color.svg',
   },
   {
     name: 'Terraria',
@@ -238,7 +388,7 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://terraria.org/',
-        href: 'https://terraria.org/',
+        href: 'https://terraria.org/'
       }
     ],
     logo_url: 'assets/terraria_color.svg'
@@ -264,7 +414,7 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'http://www.teamfortress.com/',
-        href: 'http://www.teamfortress.com/',
+        href: 'http://www.teamfortress.com/'
       }
     ],
     logo_url: 'assets/teamfortress_color.svg'
@@ -286,7 +436,7 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://woocommerce.com/features/',
-        href: 'https://woocommerce.com/features/',
+        href: 'https://woocommerce.com/features/'
       }
     ],
     logo_url: 'assets/woocommerce_color.svg'
@@ -366,7 +516,7 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://www.minecraft.net/',
-        href: 'https://www.minecraft.net/',
+        href: 'https://www.minecraft.net/'
       }
     ],
     logo_url: 'assets/minecraft_color.svg'
@@ -391,7 +541,7 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://www.wireguard.com/',
-        href: 'https://www.wireguard.com/',
+        href: 'https://www.wireguard.com/'
       }
     ],
     logo_url: 'assets/wireguard_color.svg'
@@ -414,7 +564,7 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://woocommerce.com/features/',
-        href: 'https://woocommerce.com/features/',
+        href: 'https://woocommerce.com/features/'
       }
     ],
     logo_url: 'assets/woocommerce_color.svg'
@@ -447,7 +597,7 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://wordpress.org/',
-        href: 'https://wordpress.org/',
+        href: 'https://wordpress.org/'
       }
     ],
     logo_url: 'assets/wordpress_color.svg'

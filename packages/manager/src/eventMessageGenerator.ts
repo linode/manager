@@ -13,6 +13,15 @@ interface CreatorsForStatus {
   notification?: EventMessageCreator;
 }
 
+export const safeSecondaryEntityLabel = (
+  e: Event,
+  text: string,
+  fallback: string = ''
+) => {
+  const label = path<string>(['secondary_entity', 'label'], e);
+  return label ? `${text} ${label}` : fallback;
+};
+
 /** @see https://leo.stcloudstate.edu/grammar/tenses.html */
 export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   account_update: {
@@ -135,10 +144,30 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: e => `An IP has been added to ${e.entity!.label}.`
   },
   linode_boot: {
-    scheduled: e => `Linode ${e.entity!.label} is scheduled to boot.`,
-    started: e => `Linode ${e.entity!.label} is booting.`,
-    failed: e => `Linode ${e.entity!.label} could not be booted.`,
-    finished: e => `Linode ${e.entity!.label} has been booted.`
+    scheduled: e =>
+      `Linode ${e.entity!.label} is scheduled to ${safeSecondaryEntityLabel(
+        e,
+        'boot with config',
+        'boot'
+      )}.`,
+    started: e =>
+      `Linode ${e.entity!.label} is being ${safeSecondaryEntityLabel(
+        e,
+        'booted with config',
+        'booted'
+      )}.`,
+    failed: e =>
+      `Linode ${e.entity!.label} could not be ${safeSecondaryEntityLabel(
+        e,
+        'booted with config',
+        'booted'
+      )}.`,
+    finished: e =>
+      `Linode ${e.entity!.label} has been ${safeSecondaryEntityLabel(
+        e,
+        'booted with config',
+        'booted'
+      )}.`
   },
   lassie_reboot: {
     scheduled: e =>
@@ -164,11 +193,11 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
         e.entity!.label
       } is scheduled to reboot (Host initiated restart).`,
     started: e =>
-      `Linode ${e.entity!.label} is booting (Host initiated restart).`,
+      `Linode ${e.entity!.label} is being booted (Host initiated restart).`,
     failed: e =>
       `Linode ${e.entity!.label} could not be booted (Host initiated restart).`,
     finished: e =>
-      `Linode ${e.entity!.label} has booted (Host initiated restart).`
+      `Linode ${e.entity!.label} has been booted (Host initiated restart).`
   },
   ipaddress_update: {
     notification: e => `An IP address has been updated on your account.`
@@ -176,10 +205,12 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   lish_boot: {
     scheduled: e =>
       `Linode ${e.entity!.label} is scheduled to boot (Lish initiated boot).`,
-    started: e => `Linode ${e.entity!.label} is booting (Lish initiated boot).`,
+    started: e =>
+      `Linode ${e.entity!.label} is being booted (Lish initiated boot).`,
     failed: e =>
       `Linode ${e.entity!.label} could not be booted (Lish initiated boot).`,
-    finished: e => `Linode ${e.entity!.label} has booted (Lish initiated boot).`
+    finished: e =>
+      `Linode ${e.entity!.label} has been booted (Lish initiated boot).`
   },
   linode_clone: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled to be cloned.`,
@@ -237,10 +268,30 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: e => `Linode ${e.entity!.label} is being upgraded.`
   },
   linode_reboot: {
-    scheduled: e => `Linode ${e.entity!.label} is scheduled for a reboot.`,
-    started: e => `Linode ${e.entity!.label} is rebooting.`,
-    failed: e => `Linode ${e.entity!.label} could not be rebooted.`,
-    finished: e => `Linode ${e.entity!.label} has been rebooted.`
+    scheduled: e =>
+      `Linode ${e.entity!.label} is scheduled ${safeSecondaryEntityLabel(
+        e,
+        'for a reboot with config',
+        'for a reboot'
+      )}.`,
+    started: e =>
+      `Linode ${e.entity!.label} is being ${safeSecondaryEntityLabel(
+        e,
+        'rebooted with config',
+        'rebooted'
+      )}.`,
+    failed: e =>
+      `Linode ${e.entity!.label} could not be ${safeSecondaryEntityLabel(
+        e,
+        'rebooted with config',
+        'rebooted'
+      )}.`,
+    finished: e =>
+      `Linode ${e.entity!.label} has been ${safeSecondaryEntityLabel(
+        e,
+        'rebooted with config',
+        'rebooted'
+      )}.`
   },
   linode_rebuild: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled for rebuild.`,

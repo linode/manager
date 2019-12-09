@@ -57,7 +57,7 @@ const EditSSHAccessDrawer: React.FC<CombinedProps> = props => {
     : 'Edit SSH Access';
 
   const onSubmit = (
-    values: ManagedLinodeSetting,
+    values: Omit<ManagedLinodeSetting, 'id' | 'label' | 'group'>,
     { setErrors, setSubmitting, setStatus }: FormikActions<ManagedLinodeSetting>
   ) => {
     // It probably isn't possible to end up here without linodeSetting,

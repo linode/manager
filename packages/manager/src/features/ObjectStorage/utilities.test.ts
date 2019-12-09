@@ -1,3 +1,4 @@
+import { ObjectStorageObject } from 'linode-js-sdk/lib/object-storage';
 import {
   basename,
   confirmObjectStorage,
@@ -10,28 +11,28 @@ import {
   tableUpdateAction
 } from './utilities';
 
-const folder: Linode.Object = {
+const folder: ObjectStorageObject = {
   name: 'my-folder',
   etag: null,
   last_modified: null,
   owner: null,
   size: null
 };
-const object1: Linode.Object = {
+const object1: ObjectStorageObject = {
   name: 'file1.txt',
   etag: '4agr3fbzvf4haf86bGFdac325c6bfga27',
   last_modified: '2019-09-05T12:00:00.000Z',
   owner: '912b4786-d307-11e9-bb65-2a2ae2dbcce4',
   size: 0
 };
-const object2: Linode.Object = {
+const object2: ObjectStorageObject = {
   name: 'my-folder/file2.txt',
   etag: '4agr3fbzvf4haf86bGFdac325c6bfga27',
   last_modified: '2019-09-05T12:00:00.000Z',
   owner: '912b4786-d307-11e9-bb65-2a2ae2dbcce4',
   size: 0
 };
-const object3: Linode.Object = {
+const object3: ObjectStorageObject = {
   name: 'my-folder/',
   etag: '4agr3fbzvf4haf86bGFdac325c6bfga27',
   last_modified: '2019-09-05T12:00:00.000Z',
@@ -210,23 +211,11 @@ describe('Object Storage utilities', () => {
       handleSubmit
     } as any;
 
-    it("doesn't call the confirmation handler if the feature flag is off", async () => {
-      await confirmObjectStorage(
-        'disabled',
-        mockFormikProps,
-        openConfirmationDialog,
-        false
-      );
-      expect(openConfirmationDialog).toHaveBeenCalledTimes(0);
-      expect(handleSubmit).toHaveBeenCalledTimes(1);
-    });
-
     it("doesn't call the confirmation handler if OBJ is active", async () => {
       await confirmObjectStorage(
         'active',
         mockFormikProps,
-        openConfirmationDialog,
-        true
+        openConfirmationDialog
       );
       expect(openConfirmationDialog).toHaveBeenCalledTimes(0);
       expect(handleSubmit).toHaveBeenCalledTimes(1);
@@ -235,8 +224,7 @@ describe('Object Storage utilities', () => {
       await confirmObjectStorage(
         'disabled',
         mockFormikProps,
-        openConfirmationDialog,
-        true
+        openConfirmationDialog
       );
       expect(openConfirmationDialog).toHaveBeenCalledTimes(1);
       expect(handleSubmit).toHaveBeenCalledTimes(0);

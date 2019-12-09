@@ -18,8 +18,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import AccountContainer, {
-  AccountProps,
-  DispatchProps
+  Props as AccountProps
 } from 'src/containers/account.container';
 import composeState from 'src/utilities/composeState';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -61,7 +60,7 @@ interface State {
   };
 }
 
-type CombinedProps = AccountProps & DispatchProps & WithStyles<ClassNames>;
+type CombinedProps = AccountProps & WithStyles<ClassNames>;
 
 const field = (path: string[]) => lensPath(['fields', ...path]);
 
@@ -94,17 +93,17 @@ class UpdateContactInformationPanel extends React.Component<
   composeState = composeState;
 
   componentDidMount() {
-    const { account } = this.props;
+    const { accountData: account } = this.props;
     if (account) {
       this.setState({ fields: { state: account.state } });
     }
   }
 
   componentDidUpdate(prevProps: CombinedProps) {
-    if (!prevProps.account && !!this.props.account) {
+    if (!prevProps.accountData && !!this.props.accountData) {
       this.setState({
         fields: {
-          state: this.props.account.state
+          state: this.props.accountData.state
         }
       });
     }
@@ -122,9 +121,14 @@ class UpdateContactInformationPanel extends React.Component<
   }
 
   renderContent = () => {
-    const { account, accountLoading, accountError, lastUpdated } = this.props;
+    const {
+      accountData: account,
+      accountLoading,
+      accountError,
+      accountLastUpdated
+    } = this.props;
 
-    if (accountLoading && lastUpdated === 0) {
+    if (accountLoading && accountLastUpdated === 0) {
       return this.renderLoading();
     }
 
@@ -487,9 +491,9 @@ class UpdateContactInformationPanel extends React.Component<
   };
 
   renderFormActions = () => {
-    const { accountLoading, lastUpdated, accountError } = this.props;
+    const { accountLoading, accountLastUpdated, accountError } = this.props;
 
-    if ((accountLoading && lastUpdated === 0) || accountError.read) {
+    if ((accountLoading && accountLastUpdated === 0) || accountError.read) {
       return null;
     }
 
@@ -594,7 +598,7 @@ class UpdateContactInformationPanel extends React.Component<
   };
 
   resetForm = () => {
-    const { account } = this.props;
+    const { accountData: account } = this.props;
     this.setState({
       fields: {
         state: account ? account.state : undefined
@@ -607,15 +611,7 @@ class UpdateContactInformationPanel extends React.Component<
 
 const styled = withStyles(styles);
 
-const withAccount = AccountContainer(
-  (ownProps, accountLoading, lastUpdated, accountError, accountData) => ({
-    ...ownProps,
-    accountLoading,
-    accountError,
-    account: accountData,
-    lastUpdated
-  })
-);
+const withAccount = AccountContainer();
 
 const enhanced = compose(
   styled,

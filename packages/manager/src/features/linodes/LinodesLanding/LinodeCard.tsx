@@ -23,7 +23,7 @@ import {
   linodeInTransition,
   transitionText
 } from 'src/features/linodes/transitions';
-import { lishLaunch } from 'src/features/Lish';
+import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { typeLabelDetails } from '../presentation';
 import hasMutationAvailable, {
@@ -232,6 +232,7 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
             <Button
               className={`${classes.button} ${classes.consoleButton}`}
               onClick={this.handleConsoleButtonClick}
+              aria-describedby="new-window"
               data-qa-console
             >
               Launch Console
@@ -360,7 +361,7 @@ export const RenderFlag: React.StatelessComponent<{
 
   if (mutationAvailable) {
     return (
-      <Grid item className={classes.flagContainer}>
+      <Grid item className={classes.flagContainer} role="listitem">
         <Tooltip title="There is a free upgrade available for this Linode">
           <IconButton>
             <Flag className={classes.flag} />
@@ -374,7 +375,12 @@ export const RenderFlag: React.StatelessComponent<{
     return (
       <>
         {linodeNotifications.map((notification, idx) => (
-          <Grid key={idx} item className={classes.flagContainer}>
+          <Grid
+            key={idx}
+            item
+            className={classes.flagContainer}
+            role="listitem"
+          >
             <Tooltip title={notification.message}>
               <Flag className={classes.flag} />
             </Tooltip>

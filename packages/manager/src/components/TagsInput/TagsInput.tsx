@@ -20,11 +20,13 @@ export interface State {
 
 export interface Props {
   label?: string;
+  hideLabel?: boolean;
   name?: string;
   tagError?: string;
   value: Item[];
   onChange: (selected: Item[]) => void;
   disabled?: boolean;
+  menuPlacement?: 'bottom' | 'top' | 'auto' | undefined;
 }
 
 class TagsInput extends React.Component<Props, State> {
@@ -80,7 +82,16 @@ class TagsInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { tagError, onChange, value, name, label, disabled } = this.props;
+    const {
+      tagError,
+      onChange,
+      value,
+      name,
+      label,
+      hideLabel,
+      disabled,
+      menuPlacement
+    } = this.props;
     const { accountTags, errors } = this.state;
 
     const hasErrorFor = getAPIErrorFor({ label: 'label' }, errors);
@@ -94,7 +105,8 @@ class TagsInput extends React.Component<Props, State> {
         name={name}
         variant="creatable"
         isMulti={true}
-        label={label}
+        label={label || 'Add Tags'}
+        hideLabel={hideLabel}
         options={accountTags}
         placeholder={'Type to choose or create a tag.'}
         errorText={error}
@@ -103,6 +115,7 @@ class TagsInput extends React.Component<Props, State> {
         createNew={this.createTag}
         noOptionsMessage={this.getEmptyMessage}
         disabled={disabled}
+        menuPlacement={menuPlacement}
       />
     );
   }
