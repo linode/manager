@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -7,6 +6,7 @@ import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { WithStartAndEnd } from '../../../request';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
+import CPUGraph from './CPUGraph';
 import LoadGraph from './LoadGraph';
 import MemoryGraph from './MemoryGraph';
 
@@ -79,13 +79,7 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
             spacing={4}
           >
             <Grid item xs={6}>
-              <LongviewLineGraph
-                title="CPU"
-                subtitle="%"
-                showToday={isToday}
-                timezone={timezone}
-                data={[]}
-              />
+              <CPUGraph {...graphProps} />
             </Grid>
             <Grid item xs={6}>
               <MemoryGraph {...graphProps} />
