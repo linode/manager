@@ -89,7 +89,7 @@ export const sumCPU = (CPUData: Record<string, CPU> = {}): CPU<'yAsNull'> => {
  * @param prevStats
  * @param newStats
  */
-const appendStats = (
+export const appendStats = (
   prevStats: StatWithDummyPoint[],
   newStats: StatWithDummyPoint[]
 ) => {
