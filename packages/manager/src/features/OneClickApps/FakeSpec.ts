@@ -86,25 +86,28 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'An Introduction to Docker',
-        href: 'https://www.linode.com/docs/applications/containers/introduction-to-docker/'
+        href:
+          'https://www.linode.com/docs/applications/containers/introduction-to-docker/'
       },
       {
         title: 'Docker Commands Quick Reference Cheat Sheet',
-        href: 'https://www.linode.com/docs/applications/containers/docker-commands-quick-reference-cheat-sheet/'
+        href:
+          'https://www.linode.com/docs/applications/containers/docker-commands-quick-reference-cheat-sheet/'
       },
       {
         title: 'How to Use Docker Compose',
-        href: 'https://www.linode.com/docs/applications/containers/how-to-use-docker-compose/'
-      },
+        href:
+          'https://www.linode.com/docs/applications/containers/how-to-use-docker-compose/'
+      }
     ],
     related_info: [
       {
         title: 'https://www.docker.com/',
-        href: 'https://www.docker.com/',
+        href: 'https://www.docker.com/'
       },
       {
         title: 'https://docs.docker.com/compose/',
-        href: 'https://docs.docker.com/compose/',
+        href: 'https://docs.docker.com/compose/'
       }
     ],
     logo_url: 'assets/docker_color.svg'
@@ -197,17 +200,19 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Using LISH to SSH into your Linode',
-        href: 'https://www.linode.com/docs/platform/manager/using-the-linode-shell-lish/#use-a-web-browser'
+        href:
+          'https://www.linode.com/docs/platform/manager/using-the-linode-shell-lish/#use-a-web-browser'
       },
       {
         title: 'Scripted vs. Declarative Pipeline Syntax',
-        href: 'https://www.linode.com/docs/development/ci/automate-builds-with-jenkins-on-ubuntu/#scripted-vs-declarative-pipeline-syntax'
+        href:
+          'https://www.linode.com/docs/development/ci/automate-builds-with-jenkins-on-ubuntu/#scripted-vs-declarative-pipeline-syntax'
       }
     ],
     related_info: [
       {
         title: 'https://jenkins.io/',
-        href: 'https://jenkins.io/',
+        href: 'https://jenkins.io/'
       }
     ],
     tips: [
@@ -302,14 +307,15 @@ export const oneClickApps: OCA[] = [
   {
     name: 'Prometheus',
     description: `Prometheus is a an open-source monitoring system with a dimensional data model, flexible query language, efficient time series database and modern alerting approach.`,
-    summary: 'Power your metrics with a leading open-source monitoring solution.',
+    summary:
+      'Power your metrics with a leading open-source monitoring solution.',
     related_info: [
       {
         title: 'https://prometheus.io/',
-        href: 'https://prometheus.io/',
+        href: 'https://prometheus.io/'
       }
     ],
-    logo_url: 'assets/prometheus_color.svg',
+    logo_url: 'assets/prometheus_color.svg'
   },
   {
     name: 'Rust',
@@ -337,37 +343,40 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Shadowsocks',
-    description: 'Shadowsocks is a lightweight SOCKS5 web proxy tool primarily utilized to bypass network censorship and blocking on certain websites and web protocols. A full setup requires a Linode server to host the Shadowsocks daemon, and a client installed on PC, Mac, Linux, or a mobile device. Unlike other proxy software, Shadowsocks traffic is designed to be both indiscernible from other traffic to third-party monitoring tools, and also able to disguise itself as a normal direct connection. Data passing through Shadowsocks is encrypted for additional security and privacy.',
-    summary: 'A secure socks5 proxy, designed to protect your Internet traffic.',
+    description:
+      'Shadowsocks is a lightweight SOCKS5 web proxy tool primarily utilized to bypass network censorship and blocking on certain websites and web protocols. A full setup requires a Linode server to host the Shadowsocks daemon, and a client installed on PC, Mac, Linux, or a mobile device. Unlike other proxy software, Shadowsocks traffic is designed to be both indiscernible from other traffic to third-party monitoring tools, and also able to disguise itself as a normal direct connection. Data passing through Shadowsocks is encrypted for additional security and privacy.',
+    summary:
+      'A secure socks5 proxy, designed to protect your Internet traffic.',
     related_info: [
       {
         title: 'https://shadowsocks.org/',
-        href: 'https://shadowsocks.org/',
+        href: 'https://shadowsocks.org/'
       },
       {
         title: 'ShadowsocksX-NG - macOS Client',
-        href: 'https://github.com/shadowsocks/ShadowsocksX-NG',
+        href: 'https://github.com/shadowsocks/ShadowsocksX-NG'
       },
       {
         title: 'shadowsocks-windows - Windows Client',
-        href: 'https://github.com/shadowsocks/shadowsocks-windows',
+        href: 'https://github.com/shadowsocks/shadowsocks-windows'
       },
       {
         title: 'shadowsocks-android - Android Client',
-        href: 'https://github.com/shadowsocks/shadowsocks-android',
+        href: 'https://github.com/shadowsocks/shadowsocks-android'
       },
       {
         title: 'Help with installing clients - macOS and Windows',
-        href: 'https://www.linode.com/docs/networking/vpn/create-a-socks5-proxy-server-with-shadowsocks-on-ubuntu-and-centos7/#install-a-shadowsocks-client',
-      },
+        href:
+          'https://www.linode.com/docs/networking/vpn/create-a-socks5-proxy-server-with-shadowsocks-on-ubuntu-and-centos7/#install-a-shadowsocks-client'
+      }
     ],
     tips: [
       `<b>Server Preferences</b> on your Shadowsocks Client:`,
       `- set <b>Address</b> to <em>[your-linodes-IP]:8000</em>`,
       `- set <b>Encryption</b> to <em>aes-256-cfb</em>`,
-      `- set <b>Password</b> that was specified on configuration`,
+      `- set <b>Password</b> that was specified on configuration`
     ],
-    logo_url: 'assets/shadowsocks_color.svg',
+    logo_url: 'assets/shadowsocks_color.svg'
   },
   {
     name: 'Terraria',
