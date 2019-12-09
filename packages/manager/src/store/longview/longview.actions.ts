@@ -17,7 +17,7 @@ export const getLongviewClients = actionCreator.async<
 
 export const createLongviewClient = actionCreator.async<
   {
-    label: string;
+    label?: string;
   },
   LongviewClient,
   APIError[]

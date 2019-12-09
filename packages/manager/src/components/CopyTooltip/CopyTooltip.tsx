@@ -1,7 +1,7 @@
-import FileCopy from '@material-ui/icons/FileCopy';
 import * as classNames from 'classnames';
 import * as copy from 'copy-to-clipboard';
 import * as React from 'react';
+import FileCopy from 'src/assets/icons/copy.svg';
 import {
   createStyles,
   Theme,
@@ -13,6 +13,7 @@ interface Props {
   text: string;
   className?: string;
   standAlone?: boolean;
+  ariaLabel?: string;
 }
 
 interface State {
@@ -38,6 +39,7 @@ const styles = (theme: Theme) =>
     root: {
       position: 'relative',
       padding: 4,
+      backgroundColor: 'transparent',
       transition: theme.transitions.create(['background-color']),
       borderRadius: 4,
       border: 'none',
@@ -48,14 +50,11 @@ const styles = (theme: Theme) =>
         color: theme.color.grey1,
         margin: 0,
         position: 'relative',
-        width: 16,
-        height: 16
+        width: 20,
+        height: 20
       },
       '&:hover': {
-        backgroundColor: theme.color.grey1,
-        '& svg': {
-          color: theme.color.white
-        }
+        backgroundColor: theme.color.white
       }
     },
     copied: {
@@ -93,12 +92,12 @@ class CopyTooltip extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, text, className, standAlone } = this.props;
+    const { classes, text, className, standAlone, ariaLabel } = this.props;
     const { copied } = this.state;
 
     return (
       <button
-        aria-label={text}
+        aria-label={ariaLabel ? ariaLabel : text}
         name={text}
         type="button"
         onClick={this.clickIcon}

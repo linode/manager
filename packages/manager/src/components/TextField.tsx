@@ -3,6 +3,8 @@ import * as classNames from 'classnames';
 import { clamp, equals } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
+import CircleProgress from 'src/components/CircleProgress';
+import InputAdornment from 'src/components/core/InputAdornment';
 import {
   createStyles,
   Theme,
@@ -24,6 +26,7 @@ type ClassNames =
   | 'helpWrapperTextField'
   | 'expand'
   | 'errorText'
+  | 'editable'
   | 'helperTextTop'
   | 'small'
   | 'noTransform'
@@ -84,6 +87,16 @@ const styles = (theme: Theme) =>
     errorText: {
       color: theme.color.red
     },
+    editable: {
+      fontSize: '.75rem',
+      marginTop: theme.spacing(1) / 2,
+      position: 'absolute',
+      bottom: -5,
+      left: 6,
+      backgroundColor: theme.bg.white,
+      paddingLeft: 4,
+      paddingRight: 4
+    },
     helperTextTop: {
       marginBottom: theme.spacing(),
       marginTop: theme.spacing(2)
@@ -93,6 +106,12 @@ const styles = (theme: Theme) =>
     }
   });
 
+/**
+ * WARNING: If you add anything to this list
+ * that could possibly be dynamic,
+ * you will need to add it to
+ * shouldComponentUpdate below.
+ */
 interface BaseProps {
   errorText?: string;
   errorGroup?: string;
@@ -102,6 +121,7 @@ interface BaseProps {
   className?: any;
   expand?: boolean;
   small?: boolean;
+  editable?: boolean;
   // Currently only used for LKE node pool inputs
   tiny?: boolean;
   /**
@@ -112,9 +132,15 @@ interface BaseProps {
   max?: number;
   dataAttrs?: Record<string, any>;
   noMarginTop?: boolean;
+  loading?: boolean;
+  hideLabel?: boolean;
 }
 
-export type Props = BaseProps & TextFieldProps;
+interface TextFieldPropsOverrides extends TextFieldProps {
+  label: string;
+}
+
+export type Props = BaseProps & TextFieldProps & TextFieldPropsOverrides;
 
 type CombinedProps = Props & WithTheme & WithStyles<ClassNames>;
 
@@ -131,6 +157,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
         ? this.props.value
         : ''
   };
+
   shouldComponentUpdate(nextProps: CombinedProps, nextState: State) {
     return (
       nextProps.value !== this.props.value ||
@@ -143,6 +170,8 @@ class LinodeTextField extends React.Component<CombinedProps> {
       nextProps.disabled !== this.props.disabled ||
       nextProps.helperText !== this.props.helperText ||
       nextProps.classes !== this.props.classes ||
+      nextProps.loading !== this.props.loading ||
+      nextProps.label !== this.props.label ||
       Boolean(
         this.props.select && nextProps.children !== this.props.children
       ) ||
@@ -208,6 +237,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
   render() {
     const {
       errorText,
+      editable,
       errorGroup,
       affirmative,
       classes,
@@ -229,8 +259,10 @@ class LinodeTextField extends React.Component<CombinedProps> {
       value,
       dataAttrs,
       error,
+      hideLabel,
       noMarginTop,
       label,
+      loading,
       ...textFieldProps
     } = this.props;
 
@@ -258,8 +290,14 @@ class LinodeTextField extends React.Component<CombinedProps> {
             data-qa-textfield-label={label}
             className={classNames({
               [classes.wrapper]: noMarginTop ? false : true,
-              [classes.noTransform]: true
+              [classes.noTransform]: true,
+              'visually-hidden': hideLabel
             })}
+            htmlFor={
+              this.props.label
+                ? convertToKebabCase(`${this.props.label}`)
+                : undefined
+            }
           >
             {maybeRequiredLabel || ''}
           </InputLabel>
@@ -302,10 +340,18 @@ class LinodeTextField extends React.Component<CombinedProps> {
             }}
             inputProps={{
               'data-testid': 'textfield-input',
+              id: this.props.label
+                ? convertToKebabCase(`${this.props.label}`)
+                : undefined,
               ...inputProps
             }}
             InputProps={{
               disableUnderline: true,
+              endAdornment: loading && (
+                <InputAdornment position="end">
+                  <CircleProgress mini />
+                </InputAdornment>
+              ),
               className: classNames(
                 'input',
                 {
@@ -343,19 +389,17 @@ class LinodeTextField extends React.Component<CombinedProps> {
               },
               className
             )}
-            id={
-              this.props.label
-                ? convertToKebabCase(`${this.props.label}`)
-                : undefined
-            }
           >
             {this.props.children}
           </TextField>
           {tooltipText && <HelpIcon text={tooltipText} />}
           {errorText && (
             <FormHelperText
-              className={classes.errorText}
+              className={`${classes.errorText} ${
+                editable ? classes.editable : ''
+              }`}
               data-qa-textfield-error-text={this.props.label}
+              role="alert"
             >
               {errorText}
             </FormHelperText>

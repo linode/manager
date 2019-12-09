@@ -23,7 +23,6 @@ import {
 } from 'src/components/core/styles';
 import { openForCreating as openDomainDrawerForCreating } from 'src/store/domainDrawer';
 import { MapState } from 'src/store/types';
-import { openForCreating as openVolumeDrawerForCreating } from 'src/store/volumeDrawer';
 import { isKubernetesEnabled } from 'src/utilities/accountCapabilities';
 import AddNewMenuItem, { MenuItems } from './AddNewMenuItem';
 
@@ -44,6 +43,8 @@ type CSSClasses =
 const styles = (theme: Theme) =>
   createStyles({
     wrapper: {
+      order: 3,
+      marginRight: theme.spacing(1),
       [theme.breakpoints.down('sm')]: {
         flex: 1
       }
@@ -60,7 +61,7 @@ const styles = (theme: Theme) =>
     },
     button: {
       position: 'relative',
-      minHeight: 40,
+      minHeight: `${theme.spacing(2) + 34}px`,
       paddingRight: `calc(${theme.spacing(3)}px + 24px)`,
       [theme.breakpoints.down('sm')]: {
         padding: '6px 34px 7px 11px'
@@ -82,7 +83,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  openVolumeDrawerForCreating: typeof openVolumeDrawerForCreating;
+  // openVolumeDrawerForCreating: typeof openVolumeDrawerForCreating;
   openDomainDrawerForCreating: typeof openDomainDrawerForCreating;
 }
 
@@ -119,10 +120,11 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
       {
         title: 'Volume',
         onClick: e => {
-          this.props.openVolumeDrawerForCreating('Created from Add New Menu');
+          // this.props.openVolumeDrawerForCreating('Created from Add New Menu');
           this.handleClose();
           e.preventDefault();
         },
+        linkTo: '/volumes/create',
         body: `Block Storage service allows you to attach additional storage to your Linode`,
         ItemIcon: VolumeIcon
       },
@@ -217,8 +219,8 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
           onClose={this.handleClose}
           getContentAnchorEl={undefined}
           PaperProps={{ square: true, className: classes.paper }}
-          anchorOrigin={{ vertical: 45, horizontal: 'left' }}
-          transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+          anchorOrigin={{ vertical: 45, horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
           className={classes.menu}
         >
           {items.map((i, idx) => (
@@ -255,10 +257,7 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) =>
-  bindActionCreators(
-    { openDomainDrawerForCreating, openVolumeDrawerForCreating },
-    dispatch
-  );
+  bindActionCreators({ openDomainDrawerForCreating }, dispatch);
 
 const connected = connect(
   mapStateToProps,

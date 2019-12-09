@@ -1,4 +1,4 @@
-FROM node:10
+FROM node:10-alpine
 
 # Run commands as "node" user. We don't want to run these commands as root
 #
@@ -11,7 +11,7 @@ USER node
 RUN yarn global add lerna
 
 # Copy the root level package.json and run yarn if anything changes
-COPY --chown=node:node package.json .
+COPY --chown=node:node package.json yarn.lock tslint.json ./
 RUN yarn
 
 # Copy lerna.json
@@ -20,12 +20,10 @@ COPY --chown=node:node scripts ./scripts/
 
 # Copy Cloud Manager deps
 COPY --chown=node:node packages/manager/package.json ./packages/manager/
-COPY --chown=node:node packages/manager/yarn.lock ./packages/manager/
 COPY --chown=node:node packages/manager/patches ./packages/manager/patches/
 
 # Copy JS SDK deps
 COPY --chown=node:node packages/linode-js-sdk/package.json ./packages/linode-js-sdk/
-COPY --chown=node:node packages/linode-js-sdk/yarn.lock ./packages/linode-js-sdk/
 
 # Runs "yarn install" for all child packages
 RUN npx lerna bootstrap

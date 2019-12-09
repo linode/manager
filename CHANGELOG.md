@@ -4,6 +4,96 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+
+## [v0.79.0] - 2019-11-19
+
+### Added:
+- Longview: Static tables for listening services/active connections
+- Longview: Line Graph abstraction
+- Longview: Sort clients by values
+- Longview: Client count warning modal
+- Longview: Installation tab
+- Longview: Overview section scaffolding
+- Longview: Footer text for non-Pro users
+- Longview: Uptime, Packages, and Hostname data added to client rows
+- Longview: Display circle loader if client doesn’t exist or is still being loaded
+- Longview: Overview icon section with some static data
+- Ability to edit rDNS for IPv6 ranges and pools
+- Display of route target for IPv6 ranges
+- Abstraction of buttonLink
+- Ability to collapse main navigation on larger screen sizes
+
+### Changed:
+- Longview: Change landing view from table to cards
+- LKE Landing documentation link target
+- Loading state and clear errors on Linode Backups form submission
+- Longview documentation link target
+- Remove welcome banner
+- Updated logo asset
+- Updated header and footer styles
+
+### Fixed:
+- Linode list not being updated when creating Linodes externally
+- Type checking in getAPIErrorFor
+- Duplicate error display in account/settings
+- Empty volumes create button
+
+
+## [v0.78.0] - 2019-11-12
+
+### Added:
+- Support for new Sydney datacenter
+- Longview: Handle restricted users
+- Longview: Plan Details page
+- React a11y Linters
+- Ability to Search For Longview Clients
+
+### Changed:
+- Longview: Use live SysInfo data on landing page
+- Longview: Landing page uses card layout rather than table
+- Longview: Use cached data to populate Gauges
+- LKE: split details page into Details and Resize tabs
+- Enhanced BreadCrumb Component
+- A/AAAA record drawer title
+
+### Fixed:
+- LKE Node pool deletion
+- LKE Routing
+
+
+## [v0.77.1] - 2019-11-11
+
+### Fixed:
+- Hotfix: Safe access event.secondary_entity
+
+## [v0.77.0] - 2019-11-06
+
+### Added:
+- Supply the LKE Cluster options from APIv4
+- Longview Client Gauges for Swap and Storage
+- Ability to paste clipboard content into the Glish interface from your local machine
+- Longview landing tabs
+- Skeleton loader to table rows
+
+### Changed:
+- [SDK] - Implement Object Storage endpoints
+- Longview Client creation workflow
+- Display the booted configuration in Linode Boot and Reboot event messages
+- Pre-fill Disk select fields rescue tab with available Disks
+- Refactor Create Volume Workflow
+- Update Object Storage confirmation modal copy
+- Client-side validation for CVV field on the Billing page
+- Making CVV code a required field within Billing page
+- Update favicon
+- Updated syntax for Linode details specs
+- Filter out GPU from plan selection for LKE
+- Filter out regions that don’t have LKE capabilities
+
+### Fixed:
+- Blog feed on Dashboard
+- StackScript detail breadcrumbs
+- Adjustments to Kubeconfig buttons on smaller breakpoints
+
 ## [v0.76.0] - 2019-10-30
 
 ### Added:

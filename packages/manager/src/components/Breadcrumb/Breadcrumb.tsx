@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
 import { makeStyles } from 'src/components/core/styles';
 import Crumbs, { CrumbOverridesProps } from './Crumbs';
@@ -9,6 +10,7 @@ export interface Props {
   labelOptions?: LabelProps;
   onEditHandlers?: EditableProps;
   removeCrumbX?: number;
+  firstAndLastOnly?: boolean;
   crumbOverrides?: CrumbOverridesProps[];
   className?: string;
   pathname: string;
@@ -26,6 +28,9 @@ const useStyles = makeStyles({
     flexWrap: 'wrap',
     alignItems: 'flex-start',
     marginTop: -3
+  },
+  editablePreContainer: {
+    alignItems: 'flex-start'
   }
 });
 
@@ -37,6 +42,7 @@ export const Breadcrumb: React.FC<CombinedProps> = props => {
     labelOptions,
     onEditHandlers,
     removeCrumbX,
+    firstAndLastOnly,
     crumbOverrides,
     className,
     pathname
@@ -51,13 +57,19 @@ export const Breadcrumb: React.FC<CombinedProps> = props => {
 
   return (
     <div className={`${classes.root} ${className}`}>
-      <div className={classes.preContainer}>
+      <div
+        className={classNames({
+          [classes.preContainer]: true,
+          [classes.editablePreContainer]: onEditHandlers !== undefined
+        })}
+      >
         <Crumbs
           pathMap={pathMap}
           onEditHandlers={onEditHandlers}
           crumbOverrides={crumbOverrides}
           labelTitle={labelTitle}
           labelOptions={labelOptions}
+          firstAndLastOnly={firstAndLastOnly}
         />
       </div>
     </div>

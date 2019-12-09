@@ -1,6 +1,5 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import CircleProgress from 'src/components/CircleProgress';
 import {
   createStyles,
   Theme,
@@ -9,6 +8,7 @@ import {
 } from 'src/components/core/styles';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
+import Skeleton from 'src/components/Skeleton';
 
 type ClassNames = 'root' | 'tableCell' | 'transparent';
 
@@ -16,7 +16,8 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     tableCell: {
-      padding: 0,
+      paddingTop: 0,
+      paddingBottom: 0,
       textAlign: 'center'
     },
     transparent: {
@@ -25,33 +26,42 @@ const styles = (theme: Theme) =>
   });
 
 export interface Props {
-  colSpan: number;
+  colSpan: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+  firstColWidth?: number;
   transparent?: any;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const tableRowLoading: React.StatelessComponent<CombinedProps> = props => {
-  const { classes, transparent } = props;
-  return (
-    <TableRow
-      className={classNames({
-        [classes.transparent]: transparent
-      })}
-    >
-      <TableCell
-        colSpan={props.colSpan}
+class TableRowLoading extends React.Component<CombinedProps> {
+  render() {
+    const { classes, transparent, colSpan, firstColWidth } = this.props;
+    return (
+      <TableRow
         className={classNames({
-          [classes.tableCell]: true,
           [classes.transparent]: transparent
         })}
+        data-testid="table-row-loading"
+        aria-label="Table content is loading"
       >
-        <CircleProgress mini />
-      </TableCell>
-    </TableRow>
-  );
-};
+        <TableCell
+          colSpan={colSpan}
+          className={classNames({
+            [classes.tableCell]: true,
+            [classes.transparent]: transparent
+          })}
+        >
+          <Skeleton
+            table
+            columns={colSpan ? colSpan : 8}
+            firstColWidth={firstColWidth ? firstColWidth : undefined}
+          />
+        </TableCell>
+      </TableRow>
+    );
+  }
+}
 
 const styled = withStyles(styles);
 
-export default styled(tableRowLoading);
+export default styled(TableRowLoading);

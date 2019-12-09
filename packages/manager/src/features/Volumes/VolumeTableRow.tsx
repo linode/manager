@@ -15,8 +15,8 @@ import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import TableCell from 'src/components/TableCell';
 import { formatRegion } from 'src/utilities';
+import { ExtendedVolume } from './types';
 import VolumesActionMenu from './VolumesActionMenu';
-import { ExtendedVolume } from './VolumesLanding';
 
 type ClassNames =
   | 'root'
@@ -125,9 +125,7 @@ const progressFromEvent = (e?: Event) => {
   return undefined;
 };
 
-export const VolumeTableRow: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const VolumeTableRow: React.FC<CombinedProps> = props => {
   const {
     classes,
     isUpdating,

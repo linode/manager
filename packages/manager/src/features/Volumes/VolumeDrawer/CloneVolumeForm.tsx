@@ -6,7 +6,7 @@ import Typography from 'src/components/core/Typography';
 import withVolumesRequests, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
-import { resetEventsPolling } from 'src/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import {
   handleFieldErrors,
   handleGeneralErrors
@@ -30,7 +30,7 @@ const validationScheme = CloneVolumeSchema;
 
 const initialValues = { label: '' };
 
-const CloneVolumeForm: React.StatelessComponent<CombinedProps> = props => {
+const CloneVolumeForm: React.FC<CombinedProps> = props => {
   const {
     onClose,
     volumeId,

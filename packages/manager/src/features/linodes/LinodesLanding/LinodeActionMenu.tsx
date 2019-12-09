@@ -12,7 +12,7 @@ import { compose } from 'recompose';
 
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-import { lishLaunch } from 'src/features/Lish';
+import { lishLaunch } from 'src/features/Lish/lishUtils';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
@@ -146,6 +146,7 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
             e.preventDefault();
             e.stopPropagation();
           },
+          ariaDescribedBy: 'new-window',
           ...readOnlyProps
         },
         {
@@ -302,6 +303,7 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
       <ActionMenu
         toggleOpenCallback={this.toggleOpenActionMenu}
         createActions={this.createLinodeActions()}
+        ariaLabel={`Action menu for Linode ${this.props.linodeLabel}`}
       />
     );
   }

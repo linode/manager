@@ -12,7 +12,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const LabelField: React.StatelessComponent<CombinedProps> = ({
+const LabelField: React.FC<CombinedProps> = ({
   error,
   onBlur,
   onChange,

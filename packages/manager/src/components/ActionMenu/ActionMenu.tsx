@@ -15,6 +15,7 @@ export interface Action {
   disabled?: boolean;
   tooltip?: string;
   isLoading?: boolean;
+  ariaDescribedBy?: string;
   onClick: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
@@ -68,6 +69,9 @@ const styles = (theme: Theme) =>
 interface Props {
   createActions: (closeMenu: Function) => Action[];
   toggleOpenCallback?: () => void;
+  // we want to require using aria label for these buttons
+  // as they don't have text (just an icon)
+  ariaLabel: string;
 }
 
 interface State {
@@ -111,7 +115,7 @@ export class ActionMenu extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, ariaLabel } = this.props;
     const { actions, anchorEl } = this.state;
 
     if (typeof actions === 'undefined') {
@@ -127,6 +131,7 @@ export class ActionMenu extends React.Component<CombinedProps, State> {
           onClick={this.handleClick}
           className={classes.button}
           data-qa-action-menu
+          aria-label={ariaLabel}
         >
           <MoreHoriz type="primary" className="kebob" />
         </IconButton>
@@ -154,6 +159,7 @@ export class ActionMenu extends React.Component<CombinedProps, State> {
               disabled={a.disabled}
               tooltip={a.tooltip}
               isLoading={a.isLoading}
+              aria-describedby={a.ariaDescribedBy}
             >
               {a.title}
             </MenuItem>

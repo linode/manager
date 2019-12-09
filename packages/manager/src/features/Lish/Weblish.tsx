@@ -10,7 +10,7 @@ import {
 } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
 import { Terminal } from 'xterm';
-import { getLishSchemeAndHostname, resizeViewPort } from '.';
+import { getLishSchemeAndHostname, resizeViewPort } from './lishUtils';
 
 type ClassNames = 'progress' | 'message' | 'errorState';
 

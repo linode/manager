@@ -36,7 +36,7 @@ import withLinodes, {
   Props as WithLinodesProps
 } from 'src/containers/withLinodes.container';
 import { BlockStorage } from 'src/documentation';
-import { resetEventsPolling } from 'src/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import LinodePermissionsError from 'src/features/linodes/LinodesDetail/LinodePermissionsError';
 import {
   LinodeOptions,
@@ -46,7 +46,7 @@ import {
   openForEdit,
   openForResize,
   Origin as VolumeDrawerOrigin
-} from 'src/store/volumeDrawer';
+} from 'src/store/volumeForm';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
@@ -62,6 +62,7 @@ import withRegions, {
   DefaultProps as RegionProps
 } from 'src/containers/regions.container';
 import { doesRegionSupportBlockStorage } from 'src/utilities/doesRegionSupportBlockStorage';
+import { ExtendedVolume } from './types';
 
 type ClassNames =
   | 'root'
@@ -78,10 +79,13 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
+    root: {
+      paddingBottom: 0
+    },
     tagGroup: {
       flexDirection: 'row-reverse',
-      marginBottom: theme.spacing(1)
+      position: 'relative',
+      top: -(theme.spacing(1) + 1)
     },
     titleWrapper: {
       flex: 1
@@ -137,11 +141,6 @@ const styles = (theme: Theme) =>
     }
   });
 
-export interface ExtendedVolume extends Volume {
-  linodeLabel?: string;
-  linodeStatus?: string;
-}
-
 interface Props {
   linodeId?: number;
   linodeLabel?: string;
@@ -150,6 +149,7 @@ interface Props {
   recentEvent?: Event;
   readOnly?: boolean;
   removeBreadCrumb?: boolean;
+  fromLinodes?: boolean;
 }
 
 //
@@ -300,7 +300,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       volumesLoading,
       mappedVolumesDataWithLinodes,
       readOnly,
-      removeBreadCrumb
+      removeBreadCrumb,
+      fromLinodes
     } = this.props;
 
     if (volumesLoading) {
@@ -343,7 +344,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                   container
                   justify="space-between"
                   alignItems={removeBreadCrumb ? 'center' : 'flex-end'}
-                  style={{ paddingBottom: 0 }}
+                  className={classes.root}
                 >
                   <Grid item className={classes.titleWrapper}>
                     {removeBreadCrumb ? (
@@ -375,8 +376,14 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                     <Grid container alignItems="flex-end">
                       <Grid item className="pt0">
                         <AddNewLink
-                          onClick={this.openCreateVolumeDrawer}
-                          label="Add a Volume"
+                          onClick={
+                            fromLinodes
+                              ? this.openCreateVolumeDrawer
+                              : () => {
+                                  this.props.history.push('/volumes/create');
+                                }
+                          }
+                          label="Create a Volume"
                         />
                       </Grid>
                     </Grid>
@@ -416,7 +423,13 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   };
 
   renderEmpty = () => {
-    const { linodeConfigs, linodeRegion, readOnly, regionsData } = this.props;
+    const {
+      linodeConfigs,
+      linodeRegion,
+      readOnly,
+      regionsData,
+      fromLinodes
+    } = this.props;
 
     if (
       linodeRegion &&
@@ -463,7 +476,12 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           icon={VolumesIcon}
           buttonProps={[
             {
-              onClick: this.openCreateVolumeDrawer,
+              onClick: fromLinodes
+                ? this.openCreateVolumeDrawer
+                : () => {
+                    this.props.history.push('/volumes/create');
+                  },
+
               children: 'Add a Volume',
               disabled: readOnly
             }
@@ -606,6 +624,7 @@ const EmptyCopy = () => (
       <a
         href="https://linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode-new-manager/"
         target="_blank"
+        aria-describedby="external-site"
         rel="noopener noreferrer"
         className="h-u"
       >
@@ -615,6 +634,7 @@ const EmptyCopy = () => (
       <a
         href="https://www.linode.com/docs/"
         target="_blank"
+        aria-describedby="external-site"
         rel="noopener noreferrer"
         className="h-u"
       >
@@ -684,7 +704,6 @@ const filterVolumeEvents = (event: Event): boolean => {
 export default compose<CombinedProps, Props>(
   connected,
   documented,
-  styled,
   withVolumesRequests,
   _withEvents((ownProps: CombinedProps, eventsData) => ({
     ...ownProps,
@@ -714,7 +733,8 @@ export default compose<CombinedProps, Props>(
     }
   ),
   withRegions(),
-  withSnackbar
+  withSnackbar,
+  styled
 )(VolumesLanding);
 
 const RenderError = () => {

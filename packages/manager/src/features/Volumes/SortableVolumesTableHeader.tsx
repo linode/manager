@@ -42,7 +42,7 @@ const styles = (theme: Theme) =>
       }
     },
     regionCol: {
-      width: '20%',
+      width: '10%',
       minWidth: 75
     },
     labelCol: {
@@ -59,7 +59,7 @@ const styles = (theme: Theme) =>
       minWidth: 75
     },
     pathCol: {
-      width: '25%',
+      width: '30%',
       minWidth: 100
     }
   });
@@ -72,7 +72,7 @@ type CombinedProps = WithStyles<ClassNames> &
   SortableVolumesTableHeaderProps &
   Omit<OrderByProps, 'data'>;
 
-const SortableTableHeader: React.StatelessComponent<CombinedProps> = props => {
+const SortableTableHeader: React.FC<CombinedProps> = props => {
   const {
     classes,
     order,

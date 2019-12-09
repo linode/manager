@@ -1,3 +1,5 @@
+import produce from 'immer';
+import { Event } from 'linode-js-sdk/lib/account';
 import { deleteImage, Image } from 'linode-js-sdk/lib/images';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
@@ -36,11 +38,10 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
 import { ApplicationState } from 'src/store';
+import imageEvents from 'src/store/selectors/imageEvents';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ImageRow from './ImageRow';
 import ImagesDrawer from './ImagesDrawer';
-
-import { filterImagesByType } from 'src/store/image/image.helpers';
 
 type ClassNames = 'root' | 'title';
 
@@ -298,7 +299,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     }
 
     /** Empty State */
-    if (!imagesData || Object.keys(imagesData).length === 0) {
+    if (!imagesData || imagesData.length === 0) {
       return this.renderEmpty();
     }
 
@@ -327,11 +328,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
             </Grid>
           </Grid>
         </Grid>
-        <OrderBy
-          data={Object.keys(imagesData).map(eachKey => imagesData[eachKey])}
-          orderBy={'label'}
-          order={'asc'}
-        >
+        <OrderBy data={imagesData} orderBy={'label'} order={'asc'}>
           {({ data: orderedData, handleOrderChange, order, orderBy }) => (
             <Paginate data={orderedData}>
               {({
@@ -458,6 +455,7 @@ const EmptyCopy = () => (
       <a
         href="https://linode.com/docs/platform/disk-images/linode-images-new-manager/"
         target="_blank"
+        aria-describedby="external-site"
         rel="noopener noreferrer"
         className="h-u"
       >
@@ -467,6 +465,7 @@ const EmptyCopy = () => (
       <a
         href="https://linode.com/docs/quick-answers/linode-platform/deploy-an-image-to-a-linode"
         target="_blank"
+        aria-describedby="external-site"
         rel="noopener noreferrer"
         className="h-u"
       >
@@ -476,18 +475,41 @@ const EmptyCopy = () => (
   </>
 );
 
+interface ImageWithEvent extends Image {
+  event?: Event;
+}
 interface WithPrivateImages {
-  imagesData: Record<string, Image>;
+  imagesData: ImageWithEvent[];
   imagesLoading: boolean;
   imagesError?: APIError[];
 }
 
 const withPrivateImages = connect(
   (state: ApplicationState): WithPrivateImages => {
-    const { error, data } = state.__resources.images;
+    const { error, data, loading } = state.__resources.images;
+    const events = imageEvents(state.events);
+    const privateImagesWithEvents = Object.values(data).reduce(
+      (accum, thisImage) =>
+        produce(accum, draft => {
+          if (!thisImage.is_public) {
+            // NB: the secondary_entity returns only the numeric portion of the image ID so we have to interpolate.
+            const matchingEvent = events.find(
+              thisEvent =>
+                thisEvent.secondary_entity &&
+                `private/${thisEvent.secondary_entity!.id}` === thisImage.id
+            );
+            if (matchingEvent) {
+              draft.push({ ...thisImage, event: matchingEvent });
+            } else {
+              draft.push(thisImage);
+            }
+          }
+        }),
+      [] as ImageWithEvent[]
+    );
     return {
-      imagesData: filterImagesByType(data, 'private'),
-      imagesLoading: state.__resources.images.loading,
+      imagesData: privateImagesWithEvents,
+      imagesLoading: loading,
       imagesError: error ? error.read : undefined
     };
   }

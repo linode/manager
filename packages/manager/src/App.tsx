@@ -79,7 +79,6 @@ export class App extends React.Component<CombinedProps, State> {
     this.props.history.listen(({ pathname }) => {
       if ((window as any).ga) {
         (window as any).ga('send', 'pageview', pathname);
-        (window as any).ga(`linodecom.send`, 'pageview', pathname);
       }
     });
 
@@ -175,9 +174,17 @@ export class App extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <a href="#main-content" className="visually-hidden">
+        {/** Accessibility helpers */}
+        <a href="#main-content" hidden>
           Skip to main content
         </a>
+        <div hidden>
+          <span id="new-window">Opens in a new window</span>
+          <span id="external-site">Opens an external site</span>
+          <span id="external-site-new-window">
+            Opens an external site in a new window
+          </span>
+        </div>
         {/** Update the LD client with the user's id as soon as we know it */}
         <IdentifyUser
           userID={userId}
@@ -326,10 +333,7 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
   appIsLoading: state.initialLoad.appIsLoading
 });
 
-export const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+export const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(
   connected,

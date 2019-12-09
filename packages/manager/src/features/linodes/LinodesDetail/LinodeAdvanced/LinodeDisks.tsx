@@ -24,7 +24,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
-import { resetEventsPolling } from 'src/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import ImagesDrawer, { modes } from 'src/features/Images/ImagesDrawer';
 import {
   CreateLinodeDisk,
@@ -261,6 +261,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
             linodeStatus={status || 'offline'}
             linodeId={linodeId}
             diskId={disk.id}
+            label={disk.label}
             onRename={this.openDrawerForRename(disk)}
             onResize={this.openDrawerForResize(disk)}
             onImagize={this.openImagizeDrawer(disk)}

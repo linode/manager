@@ -29,7 +29,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const DrawerModeSelection: React.StatelessComponent<CombinedProps> = ({
+const DrawerModeSelection: React.FC<CombinedProps> = ({
   mode,
   onChange,
   classes

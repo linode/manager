@@ -2,8 +2,9 @@ import { Formik } from 'formik';
 import { AccountSettings } from 'linode-js-sdk/lib/account';
 import {
   createObjectStorageKeysSchema,
+  ObjectStorageKey,
   ObjectStorageKeyRequest
-} from 'linode-js-sdk/lib/profile';
+} from 'linode-js-sdk/lib/object-storage';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -13,11 +14,11 @@ import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import useFlags from 'src/hooks/useFlags';
 import { ApplicationState } from 'src/store';
 import EnableObjectStorageModal from '../EnableObjectStorageModal';
 import { confirmObjectStorage } from '../utilities';
-import { MODES } from './AccessKeyLanding';
+
+export type MODES = 'creating' | 'editing';
 
 export interface Props {
   open: boolean;
@@ -25,7 +26,7 @@ export interface Props {
   onSubmit: (values: ObjectStorageKeyRequest, formikProps: any) => void;
   mode: MODES;
   // If the mode is 'editing', we should have an ObjectStorageKey to edit
-  objectStorageKey?: Linode.ObjectStorageKey;
+  objectStorageKey?: ObjectStorageKey;
   isRestrictedUser: boolean;
 }
 
@@ -39,9 +40,7 @@ interface FormState {
   label: string;
 }
 
-export const AccessKeyDrawer: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const AccessKeyDrawer: React.StatelessComponent<CombinedProps> = props => {
   const {
     isRestrictedUser,
     open,
@@ -50,8 +49,6 @@ export const AccessKeyDrawer: React.StatelessComponent<
     mode,
     objectStorageKey
   } = props;
-
-  const flags = useFlags();
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
 
@@ -88,8 +85,7 @@ export const AccessKeyDrawer: React.StatelessComponent<
             confirmObjectStorage<FormState>(
               props.object_storage,
               formikProps,
-              () => setDialogOpen(true),
-              flags.objectStorageBilling
+              () => setDialogOpen(true)
             );
           };
 
@@ -114,6 +110,7 @@ export const AccessKeyDrawer: React.StatelessComponent<
                   <a
                     href="https://linode.com/docs/platform/object-storage/how-to-use-object-storage/#object-storage-tools"
                     target="_blank"
+                    aria-describedby="external-site"
                     rel="noopener noreferrer"
                     className="h-u"
                   >
