@@ -47,6 +47,13 @@ const DomainRecordsWrapper: React.FC<CombinedProps> = props => {
 
   return (
     <Grid container className={hookClasses.root}>
+      <Grid item xs={12} md={9} className={hookClasses.main}>
+        <DomainRecords
+          domain={domain}
+          domainRecords={records}
+          updateRecords={updateRecords}
+        />
+      </Grid>
       <Grid
         item
         xs={12}
@@ -59,13 +66,6 @@ const DomainRecordsWrapper: React.FC<CombinedProps> = props => {
           </Typography>
           <TagsPanel tags={domain.tags} updateTags={handleUpdateTags} />
         </Paper>
-      </Grid>
-      <Grid item xs={12} md={9} className={hookClasses.main}>
-        <DomainRecords
-          domain={domain}
-          domainRecords={records}
-          updateRecords={updateRecords}
-        />
       </Grid>
     </Grid>
   );
