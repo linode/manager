@@ -15,6 +15,7 @@ const baseProps: Props = {
   timezone: 'GMT',
   sysInfoType: 'helloworld',
   iFree: [],
+  isMounted: true,
   iTotal: [],
   total: [],
   free: [],
@@ -49,23 +50,21 @@ describe('UI', () => {
       <Graphs {...baseProps} isSwap />
     );
 
-    expect(queryByText('Inodes')).not.toBeInTheDocument();
-    expect(queryByText('Space')).not.toBeInTheDocument();
-    expect(queryByText('Disk I/O')).not.toBeInTheDocument();
+    expect(queryByText('Inodes')).toBeNull();
+    expect(queryByText('Space')).toBeNull();
+    expect(queryByText('Disk I/O')).toBeNull();
 
     expect(getByText(/doesn't gather data on swap/)).toBeInTheDocument();
   });
 
-  it('should render warning text for OpenVZ Linodes', () => {
+  it('should not render Disk I/O graph for OpenVZ Configs', () => {
     const { getByText, queryByText } = renderWithTheme(
       <Graphs {...baseProps} sysInfoType="openvz" />
     );
 
-    expect(queryByText('Inodes')).not.toBeInTheDocument();
-    expect(queryByText('Space')).not.toBeInTheDocument();
-    expect(queryByText('Disk I/O')).not.toBeInTheDocument();
-
-    expect(getByText(/not available for OpenVZ systems/)).toBeInTheDocument();
+    expect(getByText('Inodes')).toBeInTheDocument();
+    expect(getByText('Space')).toBeInTheDocument();
+    expect(queryByText('Disk I/O')).toBeNull();
   });
 
   it('should render warning text for ChildOf Disks', () => {
@@ -73,12 +72,24 @@ describe('UI', () => {
       <Graphs {...baseProps} childOf />
     );
 
-    expect(queryByText('Inodes')).not.toBeInTheDocument();
-    expect(queryByText('Space')).not.toBeInTheDocument();
-    expect(queryByText('Disk I/O')).not.toBeInTheDocument();
+    expect(queryByText('Inodes')).toBeNull();
+    expect(queryByText('Space')).toBeNull();
+    expect(queryByText('Disk I/O')).toBeNull();
 
     expect(
-      getByText(/not applicable for this type of device/)
+      getByText(/doesn't gather data on this type of device/)
     ).toBeInTheDocument();
+  });
+
+  it('should render warning text for unmounted disks', () => {
+    const { getByText, queryByText } = renderWithTheme(
+      <Graphs {...baseProps} isMounted={false} />
+    );
+
+    expect(queryByText('Inodes')).toBeNull();
+    expect(queryByText('Space')).toBeNull();
+    expect(queryByText('Disk I/O')).toBeNull();
+
+    expect(getByText(/data on Disks that are not mounted/)).toBeInTheDocument();
   });
 });

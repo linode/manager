@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(),
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: 'space-around'
   }
 }));
 
@@ -27,6 +27,7 @@ export interface Props {
   isSwap: boolean;
   childOf: boolean;
   sysInfoType: string;
+  isMounted: boolean;
   timezone: string;
   iFree: Stat[];
   iTotal: Stat[];
@@ -52,6 +53,7 @@ const Grahps: React.FC<CombinedProps> = props => {
     free,
     total,
     iFree,
+    isMounted,
     iTotal,
     startTime,
     endTime
@@ -69,6 +71,18 @@ const Grahps: React.FC<CombinedProps> = props => {
     );
   }
 
+  if (!isMounted) {
+    return (
+      <Typography variant="subtitle1">
+        <strong>{diskLabel}</strong>
+        <React.Fragment>
+          {' '}
+          Longview doesn't gather data on Disks that are not mounted.
+        </React.Fragment>
+      </Typography>
+    );
+  }
+
   if (childOf) {
     /** @todo document the why here. This comes from old Longview.JS */
     return (
@@ -76,20 +90,7 @@ const Grahps: React.FC<CombinedProps> = props => {
         <strong>{diskLabel}</strong>
         <React.Fragment>
           {' '}
-          Disk I/O is not applicable for this type of device.
-        </React.Fragment>
-      </Typography>
-    );
-  }
-
-  if (sysInfoType.toLowerCase() === 'openvz') {
-    /** @todo document the why here. This comes from old Longview.JS */
-    return (
-      <Typography variant="subtitle1">
-        <strong>{diskLabel}</strong>
-        <React.Fragment>
-          {' '}
-          Disk I/O not available for OpenVZ systems.
+          Longview doesn't gather data on this type of device.
         </React.Fragment>
       </Typography>
     );
@@ -97,30 +98,42 @@ const Grahps: React.FC<CombinedProps> = props => {
 
   const isToday = endTime - startTime < 60 * 60 * 25;
 
+  const diskIsOpenVZType = sysInfoType.toLowerCase() === 'openvz';
+
+  /* if the disk is openVZ, there's only gonna be 2 graphs instead of 3 */
+  const md = diskIsOpenVZType ? 6 : 4;
+
   return (
     <React.Fragment>
       <Typography variant="subtitle1">
         <strong>{diskLabel}</strong>
       </Typography>
       <Grid container className={classes.graphContainer}>
-        <Grid item xs={4}>
-          <LongviewLineGraph
-            data={[
-              {
-                /** idk yet lol */
-                data: [],
-                label: 'Disk I/O',
-                borderColor: theme.graphs.orangeBorder,
-                backgroundColor: theme.graphs.orange
-              }
-            ]}
-            title="Disk I/O"
-            showToday={isToday}
-            subtitle="ops/s"
-            timezone={timezone}
-          />
-        </Grid>
-        <Grid item xs={4}>
+        {/* 
+            openVZ disks don't have I/O stats. This logic comes straight from 
+            old Longview.JS, so a big @todo here is to document why this
+            is the way it is.
+          */}
+        {!diskIsOpenVZType && (
+          <Grid item sm={12} md={md}>
+            <LongviewLineGraph
+              data={[
+                {
+                  /** idk yet lol */
+                  data: [],
+                  label: 'Disk I/O',
+                  borderColor: theme.graphs.orangeBorder,
+                  backgroundColor: theme.graphs.orange
+                }
+              ]}
+              title="Disk I/O"
+              showToday={isToday}
+              subtitle="ops/s"
+              timezone={timezone}
+            />
+          </Grid>
+        )}
+        <Grid item sm={12} md={md}>
           <LongviewLineGraph
             data={[
               {
@@ -136,7 +149,7 @@ const Grahps: React.FC<CombinedProps> = props => {
             timezone={timezone}
           />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item sm={12} md={md}>
           <LongviewLineGraph
             data={[
               {

@@ -43,6 +43,7 @@ const DiskPaper: React.FC<CombinedProps> = props => {
 
   const isSwap = pathOr(0, ['isswap'], stats);
   const childOf = pathOr(0, ['childOf'], stats);
+  const mounted = pathOr(0, ['mounted'], stats);
 
   const iFree = pathOr([], ['fs', 'ifree'], stats);
   const iTotal = pathOr([], ['fs', 'itotal'], stats);
@@ -57,6 +58,7 @@ const DiskPaper: React.FC<CombinedProps> = props => {
         sysInfoType={sysInfoType}
         iFree={iFree}
         iTotal={iTotal}
+        isMounted={mounted === 0 ? false : true}
         free={free}
         total={total}
         timezone={timezone}
