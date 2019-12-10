@@ -42,7 +42,7 @@ const DiskPaper: React.FC<CombinedProps> = props => {
   const { diskLabel, stats, timezone, sysInfoType, startTime, endTime } = props;
 
   const isSwap = pathOr(0, ['isswap'], stats);
-  const childOf = pathOr(0, ['childOf'], stats);
+  const childOf = pathOr(0, ['childof'], stats);
   const mounted = pathOr(0, ['mounted'], stats);
 
   const iFree = pathOr([], ['fs', 'ifree'], stats);

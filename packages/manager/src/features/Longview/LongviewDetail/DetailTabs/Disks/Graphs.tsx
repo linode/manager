@@ -148,7 +148,6 @@ const Graphs: React.FC<CombinedProps> = props => {
                 showToday={isToday}
                 suggestedMax={1000000}
                 title="Inodes"
-                subtitle="millions"
                 timezone={timezone}
               />
             </div>
