@@ -54,14 +54,12 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
     [data.Disk]
   );
 
-  if (error) {
-    return <div>{error}</div>;
-  }
-
   return (
     <LongviewLineGraph
       title="Disk I/O"
-      error={requestError || error}
+      // Only show an error state if we don't have any data,
+      // or in the case of special errors returned by processDiskData
+      error={(!data.Disk && requestError) || error}
       subtitle={'ops/second'}
       showToday={isToday}
       timezone={timezone}
