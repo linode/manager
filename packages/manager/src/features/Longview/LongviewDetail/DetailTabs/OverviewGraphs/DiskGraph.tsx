@@ -121,7 +121,7 @@ export const processDiskData = (
     return emptyState;
   }
   // Self-explanatory special (&extremely rare) error case
-  if (type === 'openvz') {
+  if (type.toLowerCase() === 'openvz') {
     return {
       ...emptyState,
       error: 'Disk I/O not available for OpenVZ systems.'
