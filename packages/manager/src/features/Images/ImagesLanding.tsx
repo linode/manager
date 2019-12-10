@@ -496,7 +496,7 @@ const withPrivateImages = connect(
             const matchingEvent = events.find(
               thisEvent =>
                 thisEvent.secondary_entity &&
-                `private/${thisEvent.secondary_entity!.id}` === thisImage.id
+                `private/${thisEvent.secondary_entity.id}` === thisImage.id
             );
             if (matchingEvent) {
               draft.push({ ...thisImage, event: matchingEvent });

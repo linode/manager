@@ -15,6 +15,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   paperSection: {
     padding: theme.spacing(3) + 1,
     marginBottom: theme.spacing(1) + 3
+  },
+  selectOuter: {
+    '& .time-range-select': {
+      width: 150
+    }
   }
 }));
 
@@ -47,7 +52,7 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <Grid container alignItems="flex-end" item xs={12} spacing={0}>
+    <Grid container item spacing={0}>
       <Grid
         container
         item
@@ -60,7 +65,7 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
         <Grid item>
           <Typography variant="h2">Resource Allocation History</Typography>
         </Grid>
-        <Grid item>
+        <Grid item className={classes.selectOuter}>
           <TimeRangeSelect
             handleStatsChange={handleStatsChange}
             defaultValue={'Past 30 Minutes'}
@@ -81,13 +86,13 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
             alignItems="center"
             spacing={4}
           >
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <CPUGraph {...graphProps} />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <MemoryGraph {...graphProps} />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <LongviewLineGraph
                 title="Network"
                 subtitle="KB/s"
@@ -96,10 +101,10 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
                 data={[]}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <DiskGraph {...graphProps} />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <LoadGraph {...graphProps} />
             </Grid>
           </Grid>
