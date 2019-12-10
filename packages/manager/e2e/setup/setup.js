@@ -52,7 +52,7 @@ exports.deleteAll = (token, user) => {
           return res.data;
         })
         .catch(error => {
-          console.log('Error', error);
+          console.error('Error', error);
           return error;
         });
     };
@@ -270,7 +270,7 @@ exports.createNodeBalancer = (token, label, region, tags) => {
       .post(endpoint, data)
       .then(response => resolve(response.data))
       .catch(error => {
-        console.log(error.data);
+        console.error(error.data);
         reject(error);
       });
   });
@@ -305,7 +305,7 @@ exports.removeAllVolumes = token => {
             resolve(res);
           })
           .catch(error => {
-            console.log(error.data);
+            console.error(error.data);
             return error;
           });
       });
@@ -374,9 +374,7 @@ exports.getMyStackScripts = token => {
       .get(endpoint, {
         headers: {
           Authorization: `Bearer ${token}`,
-          'X-Filter': `{"username":"${
-            browser.options.testUser
-          }","+order_by":"deployments_total","+order":"desc"}`,
+          'X-Filter': `{"username":"${browser.options.testUser}","+order_by":"deployments_total","+order":"desc"}`,
           'User-Agent': 'WebdriverIO'
         }
       })
@@ -492,6 +490,48 @@ exports.deleteUser = (token, username) => {
     return getAxiosInstance(token)
       .delete(endpoint)
       .then(response => resolve(response.data))
+      .catch(error => {
+        console.error('Error', error);
+        reject(error);
+      });
+  });
+};
+
+exports.createLongviewClient = token => {
+  return new Promise((resolve, reject) => {
+    const endpoint = '/longview/clients';
+
+    return getAxiosInstance(token)
+      .post(endpoint)
+      .then(response => resolve(response.data))
+      .catch(error => {
+        console.error('Error', error);
+        reject(error);
+      });
+  });
+};
+
+exports.deleteLongviewClient = (token, lvClientId) => {
+  return new Promise((resolve, reject) => {
+    const endpoint = `/longview/clients/${lvClientId}`;
+
+    return getAxiosInstance(token)
+      .delete(endpoint)
+      .then(response => resolve(response.data))
+      .catch(error => {
+        console.error('Error', error);
+        reject(error);
+      });
+  });
+};
+
+exports.getLVClients = token => {
+  return new Promise((resolve, reject) => {
+    const endpoint = '/longview/clients';
+
+    return getAxiosInstance(token)
+      .get(endpoint)
+      .then(response => resolve(response.data.data))
       .catch(error => {
         console.error('Error', error);
         reject(error);

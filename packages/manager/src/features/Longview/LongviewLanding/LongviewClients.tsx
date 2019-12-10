@@ -322,7 +322,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
           alignItems="center"
           justify="center"
         >
-          <Typography>
+          <Typography data-testid="longview-upgrade">
             <Link to={'/longview/plan-details'}>Upgrade to Longview Pro</Link>
             {` `}for more clients, longer data retention, and more frequent data
             updates.

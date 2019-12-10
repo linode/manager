@@ -93,7 +93,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
   }
 
   return (
-    <Paper className={classes.root}>
+    <Paper data-testid={clientID} className={classes.root}>
       <Grid
         container
         wrap="nowrap"
