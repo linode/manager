@@ -248,8 +248,8 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       lightBlueBorder: '#A2C2EA',
       lightYellow: '#ffd391',
       lightYellowBorder: '#ffd391',
-      lightOrange: '#ffbe66',
-      lightOrangeBorder: '#ffbe66'
+      lightOrange: '#FFBE67',
+      lightOrangeBorder: '#FFA823'
     },
     font: {
       normal: primaryFonts.normal,
