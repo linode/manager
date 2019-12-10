@@ -5,13 +5,15 @@ import { Row, RowProps } from './EventRow';
 const message = 'this is a message.';
 const props: RowProps = {
   action: 'linode_boot',
+  duration: 0,
   message,
   type: 'linode',
   created: '2018-01-01',
   username: null,
   classes: {
     root: '',
-    message: ''
+    message: '',
+    occurredCell: ''
   },
   linkTarget: jest.fn()
 };
