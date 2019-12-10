@@ -79,38 +79,36 @@ export class AuthenticationSettings extends React.Component<
     const { success } = this.state;
 
     return (
-      <React.Fragment>
-        <div
-          id="tabpanel-profile-auth"
-          role="tabpanel"
-          aria-labelledby="tab-profile-auth"
-        >
-          <DocumentTitleSegment segment={`Password & Authentication`} />
-          {/* Remove when logic above is cleared */}
-          {success && <Notice success text={success} />}
-          {!loading && (
-            <React.Fragment>
-              <ResetPassword />
-              <TwoFactor
-                twoFactor={twoFactor}
-                username={username}
-                clearState={this.clearState}
+      <div
+        id="tabpanel-profile-auth"
+        role="tabpanel"
+        aria-labelledby="tab-profile-auth"
+      >
+        <DocumentTitleSegment segment={`Password & Authentication`} />
+        {/* Remove when logic above is cleared */}
+        {success && <Notice success text={success} />}
+        {!loading && (
+          <React.Fragment>
+            <ResetPassword />
+            <TwoFactor
+              twoFactor={twoFactor}
+              username={username}
+              clearState={this.clearState}
+              updateProfile={updateProfile}
+            />
+            <TrustedDevices />
+            {ipWhitelisting && (
+              <SecuritySettings
                 updateProfile={updateProfile}
+                onSuccess={this.onWhitelistingDisable}
+                data-qa-whitelisting-form
+                updateProfileError={this.props.profileUpdateError}
+                ipWhitelistingEnabled={ipWhitelisting}
               />
-              <TrustedDevices />
-              {ipWhitelisting && (
-                <SecuritySettings
-                  updateProfile={updateProfile}
-                  onSuccess={this.onWhitelistingDisable}
-                  data-qa-whitelisting-form
-                  updateProfileError={this.props.profileUpdateError}
-                  ipWhitelistingEnabled={ipWhitelisting}
-                />
-              )}
-            </React.Fragment>
-          )}
-        </div>
-      </React.Fragment>
+            )}
+          </React.Fragment>
+        )}
+      </div>
     );
   }
 

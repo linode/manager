@@ -41,24 +41,22 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const NodeBalancerSummary: React.StatelessComponent<CombinedProps> = props => {
   const { nodeBalancer, errorResponses, classes } = props;
   return (
-    <React.Fragment>
-      <div
-        role="tabpanel"
-        id="tabpanel-nb-summary"
-        aria-labelledby="tab-nb-summary"
-      >
-        <DocumentTitleSegment segment={`${nodeBalancer.label} - Summary`} />
-        <NodeBalancerCreationErrors errors={errorResponses} />
-        <Grid container>
-          <Grid item xs={12} md={4} lg={3} className={classes.sidebar}>
-            <SummaryPanel nodeBalancer={nodeBalancer} />
-          </Grid>
-          <Grid item xs={12} md={8} lg={9} className={classes.main}>
-            <TablesPanel nodeBalancer={nodeBalancer} />
-          </Grid>
+    <div
+      role="tabpanel"
+      id="tabpanel-nb-summary"
+      aria-labelledby="tab-nb-summary"
+    >
+      <DocumentTitleSegment segment={`${nodeBalancer.label} - Summary`} />
+      <NodeBalancerCreationErrors errors={errorResponses} />
+      <Grid container>
+        <Grid item xs={12} md={4} lg={3} className={classes.sidebar}>
+          <SummaryPanel nodeBalancer={nodeBalancer} />
         </Grid>
-      </div>
-    </React.Fragment>
+        <Grid item xs={12} md={8} lg={9} className={classes.main}>
+          <TablesPanel nodeBalancer={nodeBalancer} />
+        </Grid>
+      </Grid>
+    </div>
   );
 };
 

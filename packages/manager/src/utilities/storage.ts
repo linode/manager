@@ -38,6 +38,7 @@ export const setStorage = (key: string, value: string) => {
 };
 
 const PAGE_SIZE = 'PAGE_SIZE';
+const LINODE_PAGE_SIZE = 'LINODE_PAGE_SIZE';
 const HIDE_DISPLAY_GROUPS_CTA = 'importDisplayGroupsCTA';
 const HAS_IMPORTED_GROUPS = 'hasImportedGroups';
 const BACKUPSCTA_DISMISSED = 'BackupsCtaDismissed';
@@ -61,6 +62,10 @@ export interface Storage {
     expire: AuthGetAndSet;
   };
   pageSize: {
+    get: () => PageSize;
+    set: (perPage: PageSize) => void;
+  };
+  linodePageSize: {
     get: () => PageSize;
     set: (perPage: PageSize) => void;
   };
@@ -102,6 +107,19 @@ export const storage: Storage = {
       return parseInt(getStorage(PAGE_SIZE, '25'), 10);
     },
     set: v => setStorage(PAGE_SIZE, `${v}`)
+  },
+  // Page Size of Linodes Landing page.
+  linodePageSize: {
+    get: () => {
+      // For backwards compatibility, we'll fall back to the value of PAGE_SIZE.
+      // If that doesn't exist, we use '25' as a second fallback.
+      const fallback = parseInt(getStorage(PAGE_SIZE, '25'), 10);
+
+      // I used Number() instead of parseInt() here because parseInt() does not
+      // parse the string "Infinity" as a Number.
+      return Number(getStorage(LINODE_PAGE_SIZE, fallback));
+    },
+    set: v => setStorage(LINODE_PAGE_SIZE, `${v}`)
   },
   hideGroupImportCTA: {
     get: () => getStorage(HIDE_DISPLAY_GROUPS_CTA),

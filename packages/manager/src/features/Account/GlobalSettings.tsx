@@ -126,38 +126,36 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
     }
 
     return (
-      <React.Fragment>
-        <div
-          id="tabpanel-account-settings"
-          role="tabpanel"
-          aria-labelledby="tab-account-settings"
-        >
-          <AutoBackups
-            isManagedCustomer={isManaged}
-            backups_enabled={backups_enabled}
-            onChange={this.toggleAutomaticBackups}
-            openBackupsDrawer={openBackupsDrawer}
-            hasLinodesWithoutBackups={!isEmpty(linodesWithoutBackups)}
-          />
-          <NetworkHelper
-            onChange={this.toggleNetworkHelper}
-            networkHelperEnabled={networkHelperEnabled}
-          />
-          <EnableObjectStorage
-            object_storage={object_storage}
-            update={this.props.actions.updateAccountSettingsInStore}
-          />
-          <EnableManaged
-            isManaged={isManaged}
-            update={this.props.actions.updateAccountSettingsInStore}
-            push={this.props.history.push}
-          />
-          {shouldDisplayGroupImport(entitiesWithGroupsToImport) && (
-            <ImportGroupsAsTags openDrawer={openImportDrawer} />
-          )}
-          <TagImportDrawer />
-        </div>
-      </React.Fragment>
+      <div
+        id="tabpanel-account-settings"
+        role="tabpanel"
+        aria-labelledby="tab-account-settings"
+      >
+        <AutoBackups
+          isManagedCustomer={isManaged}
+          backups_enabled={backups_enabled}
+          onChange={this.toggleAutomaticBackups}
+          openBackupsDrawer={openBackupsDrawer}
+          hasLinodesWithoutBackups={!isEmpty(linodesWithoutBackups)}
+        />
+        <NetworkHelper
+          onChange={this.toggleNetworkHelper}
+          networkHelperEnabled={networkHelperEnabled}
+        />
+        <EnableObjectStorage
+          object_storage={object_storage}
+          update={this.props.actions.updateAccountSettingsInStore}
+        />
+        <EnableManaged
+          isManaged={isManaged}
+          update={this.props.actions.updateAccountSettingsInStore}
+          push={this.props.history.push}
+        />
+        {shouldDisplayGroupImport(entitiesWithGroupsToImport) && (
+          <ImportGroupsAsTags openDrawer={openImportDrawer} />
+        )}
+        <TagImportDrawer />
+      </div>
     );
   }
 }

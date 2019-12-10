@@ -25,6 +25,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   paperSection: {
     padding: theme.spacing(3) + 1,
     marginBottom: theme.spacing(1) + 3
+  },
+  overviewGrid: {
+    margin: 0
   }
 }));
 
@@ -98,6 +101,7 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
               item
               xs={12}
               spacing={0}
+              className={classes.overviewGrid}
             >
               <IconSection
                 longviewClientData={longviewClientData}

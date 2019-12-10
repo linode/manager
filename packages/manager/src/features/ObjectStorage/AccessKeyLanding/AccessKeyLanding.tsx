@@ -269,61 +269,60 @@ export const AccessKeyLanding: React.StatelessComponent<
   };
 
   return (
-    <React.Fragment>
-      <div
-        id="tabpanel-obj-access-keys"
-        role="tabpanel"
-        aria-labelledby="tab-obj-access-keys"
-      >
-        <DocumentTitleSegment segment="Access Keys" />
-        <Grid container justify="flex-end">
-          <Grid item>
-            <AddNewLink
-              onClick={openDrawerForCreating}
-              label="Create an Access Key"
-            />
-          </Grid>
+    <div
+      id="tabpanel-obj-access-keys"
+      role="tabpanel"
+      aria-labelledby="tab-obj-access-keys"
+    >
+      <DocumentTitleSegment segment="Access Keys" />
+      <Grid container justify="flex-end">
+        <Grid item>
+          <AddNewLink
+            onClick={openDrawerForCreating}
+            label="Create an Access Key"
+          />
         </Grid>
+      </Grid>
 
-        <AccessKeyTable
-          {...paginationProps}
-          openDrawerForEditing={openDrawerForEditing}
-          openRevokeDialog={openRevokeDialog}
-        />
+      <AccessKeyTable
+        {...paginationProps}
+        openDrawerForEditing={openDrawerForEditing}
+        openRevokeDialog={openRevokeDialog}
+      />
 
-        <PaginationFooter
-          page={props.page}
-          pageSize={props.pageSize}
-          count={props.count}
-          handlePageChange={props.handlePageChange}
-          handleSizeChange={props.handlePageSizeChange}
-          eventCategory="object storage keys table"
-        />
+      <PaginationFooter
+        page={props.page}
+        pageSize={props.pageSize}
+        count={props.count}
+        handlePageChange={props.handlePageChange}
+        handleSizeChange={props.handlePageSizeChange}
+        eventCategory="object storage keys table"
+      />
 
-        <AccessKeyDrawer
-          open={createOrEditDrawer.isOpen}
-          onClose={createOrEditDrawer.close}
-          onSubmit={mode === 'creating' ? handleCreateKey : handleEditKey}
-          mode={mode}
-          objectStorageKey={keyToEdit ? keyToEdit : undefined}
-          isRestrictedUser={props.isRestrictedUser}
-        />
+      <AccessKeyDrawer
+        open={createOrEditDrawer.isOpen}
+        onClose={createOrEditDrawer.close}
+        onSubmit={mode === 'creating' ? handleCreateKey : handleEditKey}
+        mode={mode}
+        objectStorageKey={keyToEdit ? keyToEdit : undefined}
+        isRestrictedUser={props.isRestrictedUser}
+      />
 
-        <AccessKeyDisplayDialog
-          objectStorageKey={keyToDisplay}
-          isOpen={displayKeysDialog.isOpen}
-          close={displayKeysDialog.close}
-        />
-        <RevokeAccessKeyDialog
-          isOpen={revokeKeysDialog.isOpen}
-          label={(keyToRevoke && keyToRevoke.label) || ''}
-          handleClose={closeRevokeDialog}
-          handleSubmit={handleRevokeKeys}
-          isLoading={isRevoking}
-          errors={revokeErrors}
-        />
-      </div>
-    </React.Fragment>
+      <AccessKeyDisplayDialog
+        objectStorageKey={keyToDisplay}
+        isOpen={displayKeysDialog.isOpen}
+        close={displayKeysDialog.close}
+      />
+      <RevokeAccessKeyDialog
+        isOpen={revokeKeysDialog.isOpen}
+        label={(keyToRevoke && keyToRevoke.label) || ''}
+        handleClose={closeRevokeDialog}
+        handleSubmit={handleRevokeKeys}
+        isLoading={isRevoking}
+        numAccessKeys={pathOr<number>(0, ['data', 'length'], paginationProps)}
+        errors={revokeErrors}
+      />
+    </div>
   );
 };
 

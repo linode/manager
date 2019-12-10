@@ -86,25 +86,28 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'An Introduction to Docker',
-        href: 'https://www.linode.com/docs/applications/containers/introduction-to-docker/'
+        href:
+          'https://www.linode.com/docs/applications/containers/introduction-to-docker/'
       },
       {
         title: 'Docker Commands Quick Reference Cheat Sheet',
-        href: 'https://www.linode.com/docs/applications/containers/docker-commands-quick-reference-cheat-sheet/'
+        href:
+          'https://www.linode.com/docs/applications/containers/docker-commands-quick-reference-cheat-sheet/'
       },
       {
         title: 'How to Use Docker Compose',
-        href: 'https://www.linode.com/docs/applications/containers/how-to-use-docker-compose/'
-      },
+        href:
+          'https://www.linode.com/docs/applications/containers/how-to-use-docker-compose/'
+      }
     ],
     related_info: [
       {
         title: 'https://www.docker.com/',
-        href: 'https://www.docker.com/',
+        href: 'https://www.docker.com/'
       },
       {
         title: 'https://docs.docker.com/compose/',
-        href: 'https://docs.docker.com/compose/',
+        href: 'https://docs.docker.com/compose/'
       }
     ],
     logo_url: 'assets/docker_color.svg'
@@ -176,23 +179,40 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/drupal_color.svg'
   },
   {
+    name: 'Grafana',
+    description: `Grafana allows you to query, visualize, alert on and understand your metrics no matter where they are stored. Create, explore, and share dashboards with your team and foster a data driven culture.`,
+    summary: `Grafana is the open source analytics & monitoring solution for every database.`,
+    related_info: [
+      {
+        title: 'https://grafana.com/',
+        href: 'https://grafana.com/'
+      }
+    ],
+    tips: [
+      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:3000</em> in a browser.`
+    ],
+    logo_url: 'assets/grafana_color.svg'
+  },
+  {
     name: 'Jenkins',
     description: `Jenkins is a self-contained, open source automation server which can be used to automate all sorts of tasks related to building, testing, and delivering or deploying software.`,
     summary: `Jenkins provides hundreds of plugins to support building, deploying and automating any project.`,
     related_guides: [
       {
         title: 'Using LISH to SSH into your Linode',
-        href: 'https://www.linode.com/docs/platform/manager/using-the-linode-shell-lish/#use-a-web-browser'
+        href:
+          'https://www.linode.com/docs/platform/manager/using-the-linode-shell-lish/#use-a-web-browser'
       },
       {
         title: 'Scripted vs. Declarative Pipeline Syntax',
-        href: 'https://www.linode.com/docs/development/ci/automate-builds-with-jenkins-on-ubuntu/#scripted-vs-declarative-pipeline-syntax'
+        href:
+          'https://www.linode.com/docs/development/ci/automate-builds-with-jenkins-on-ubuntu/#scripted-vs-declarative-pipeline-syntax'
       }
     ],
     related_info: [
       {
         title: 'https://jenkins.io/',
-        href: 'https://jenkins.io/',
+        href: 'https://jenkins.io/'
       }
     ],
     tips: [
@@ -224,6 +244,48 @@ export const oneClickApps: OCA[] = [
     // href: 'https://www.ibm.com/cloud/learn/lamp-stack-explained' Not sure this is kosher.
   },
   {
+    name: 'LEMP',
+    description: `LEMP provides a platform for applications that is compatible with the LAMP stack for nearly all applications; however, because NGINX is able to serve more pages at once with a more predictable memory usage profile, it may be more suited to high demand situations.`,
+    summary: `The LEMP stack replaces the Apache web server component with NGINX (“Engine-X”), providing the E in the acronym: Linux, NGINX, MySQL/MariaDB, PHP.    `,
+    related_guides: [
+      {
+        title: 'LEMP Guides',
+        href: 'https://www.linode.com/docs/web-servers/lemp/'
+      }
+    ],
+    logo_url: 'assets/lemp_color.svg'
+  },
+  {
+    name: 'MySQL',
+    description: ``,
+    summary: `MySQL is a popular open source database management system used for web and server applications.`,
+    related_info: [
+      {
+        title: 'https://www.mysql.com/',
+        href: 'https://www.mysql.com/'
+      },
+      {
+        title: 'https://dev.mysql.com/downloads/workbench/',
+        href: 'https://dev.mysql.com/downloads/workbench/'
+      },
+      {
+        title: 'Sequel Pro - macOS database management client',
+        href: 'https://www.sequelpro.com/'
+      }
+    ],
+    related_guides: [
+      {
+        title: 'MySQL Guides',
+        href: 'https://www.linode.com/docs/databases/mysql/'
+      }
+    ],
+    tips: [
+      `<b>In addition to installing MySQL, this One-Click app also enables the following UFW firewall rules:</b>`,
+      ` - SSH <em>port 22</em>, HTTP <em>port 80</em>, HTTPS <em>port 443</em>, MySQL <em>port 3306</em>`
+    ],
+    logo_url: 'assets/mysql_color.svg'
+  },
+  {
     name: 'Plesk',
     description: `Plesk is a leading WordPress and website management platform and control panel. Plesk lets you build and manage multiple websites from a single dashboard to configure web services, email, and other applications. Plesk features hundreds of extensions, plus a complete WordPress toolkit. Use the Plesk One-Click App to manage websites hosted on your Linode.`,
     summary:
@@ -244,14 +306,15 @@ export const oneClickApps: OCA[] = [
   {
     name: 'Prometheus',
     description: `Prometheus is a an open-source monitoring system with a dimensional data model, flexible query language, efficient time series database and modern alerting approach.`,
-    summary: 'Power your metrics with a leading open-source monitoring solution.',
+    summary:
+      'Power your metrics with a leading open-source monitoring solution.',
     related_info: [
       {
         title: 'https://prometheus.io/',
-        href: 'https://prometheus.io/',
+        href: 'https://prometheus.io/'
       }
     ],
-    logo_url: 'assets/prometheus_color.svg',
+    logo_url: 'assets/prometheus_color.svg'
   },
   {
     name: 'Rust',
@@ -279,37 +342,40 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Shadowsocks',
-    description: 'Shadowsocks is a lightweight SOCKS5 web proxy tool primarily utilized to bypass network censorship and blocking on certain websites and web protocols. A full setup requires a Linode server to host the Shadowsocks daemon, and a client installed on PC, Mac, Linux, or a mobile device. Unlike other proxy software, Shadowsocks traffic is designed to be both indiscernible from other traffic to third-party monitoring tools, and also able to disguise itself as a normal direct connection. Data passing through Shadowsocks is encrypted for additional security and privacy.',
-    summary: 'A secure socks5 proxy, designed to protect your Internet traffic.',
+    description:
+      'Shadowsocks is a lightweight SOCKS5 web proxy tool primarily utilized to bypass network censorship and blocking on certain websites and web protocols. A full setup requires a Linode server to host the Shadowsocks daemon, and a client installed on PC, Mac, Linux, or a mobile device. Unlike other proxy software, Shadowsocks traffic is designed to be both indiscernible from other traffic to third-party monitoring tools, and also able to disguise itself as a normal direct connection. Data passing through Shadowsocks is encrypted for additional security and privacy.',
+    summary:
+      'A secure socks5 proxy, designed to protect your Internet traffic.',
     related_info: [
       {
         title: 'https://shadowsocks.org/',
-        href: 'https://shadowsocks.org/',
+        href: 'https://shadowsocks.org/'
       },
       {
         title: 'ShadowsocksX-NG - macOS Client',
-        href: 'https://github.com/shadowsocks/ShadowsocksX-NG',
+        href: 'https://github.com/shadowsocks/ShadowsocksX-NG'
       },
       {
         title: 'shadowsocks-windows - Windows Client',
-        href: 'https://github.com/shadowsocks/shadowsocks-windows',
+        href: 'https://github.com/shadowsocks/shadowsocks-windows'
       },
       {
         title: 'shadowsocks-android - Android Client',
-        href: 'https://github.com/shadowsocks/shadowsocks-android',
+        href: 'https://github.com/shadowsocks/shadowsocks-android'
       },
       {
         title: 'Help with installing clients - macOS and Windows',
-        href: 'https://www.linode.com/docs/networking/vpn/create-a-socks5-proxy-server-with-shadowsocks-on-ubuntu-and-centos7/#install-a-shadowsocks-client',
-      },
+        href:
+          'https://www.linode.com/docs/networking/vpn/create-a-socks5-proxy-server-with-shadowsocks-on-ubuntu-and-centos7/#install-a-shadowsocks-client'
+      }
     ],
     tips: [
       `<b>Server Preferences</b> on your Shadowsocks Client:`,
       `- set <b>Address</b> to <em>[your-linodes-IP]:8000</em>`,
       `- set <b>Encryption</b> to <em>aes-256-cfb</em>`,
-      `- set <b>Password</b> that was specified on configuration`,
+      `- set <b>Password</b> that was specified on configuration`
     ],
-    logo_url: 'assets/shadowsocks_color.svg',
+    logo_url: 'assets/shadowsocks_color.svg'
   },
   {
     name: 'Terraria',

@@ -62,30 +62,28 @@ export class DisplaySettings extends React.Component<CombinedProps, State> {
     }
 
     return (
-      <React.Fragment>
-        <div
-          id="tabpanel-profile-display"
-          role="tabpanel"
-          aria-labelledby="tab-profile-display"
-        >
-          <DocumentTitleSegment segment="Display" />
-          {!loading && (
-            <React.Fragment>
-              <EmailChangeForm
-                email={email}
-                username={username}
-                updateProfile={updateProfile}
-                data-qa-email-change
-              />
-              <TimezoneForm
-                timezone={timezone}
-                updateProfile={updateProfile}
-                loggedInAsCustomer={loggedInAsCustomer}
-              />
-            </React.Fragment>
-          )}
-        </div>
-      </React.Fragment>
+      <div
+        id="tabpanel-profile-display"
+        role="tabpanel"
+        aria-labelledby="tab-profile-display"
+      >
+        <DocumentTitleSegment segment="Display" />
+        {!loading && (
+          <React.Fragment>
+            <EmailChangeForm
+              email={email}
+              username={username}
+              updateProfile={updateProfile}
+              data-qa-email-change
+            />
+            <TimezoneForm
+              timezone={timezone}
+              updateProfile={updateProfile}
+              loggedInAsCustomer={loggedInAsCustomer}
+            />
+          </React.Fragment>
+        )}
+      </div>
     );
   }
 

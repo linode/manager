@@ -19,6 +19,7 @@ import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 import TableWrapper from './TableWrapper';
 
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import { storage } from 'src/utilities/storage';
 
 const DEFAULT_PAGE_SIZE = 25;
 
@@ -106,6 +107,8 @@ const DisplayGroupedLinodes: React.StatelessComponent<
     someLinodesHaveMaintenance: props.someLinodesHaveMaintenance
   };
 
+  const storedPageSize = React.useMemo(storage.linodePageSize.get, []);
+
   if (display === 'grid') {
     return (
       <>
@@ -129,7 +132,11 @@ const DisplayGroupedLinodes: React.StatelessComponent<
                   </div>
                 </Grid>
               </Grid>
-              <Paginate data={linodes} pageSize={DEFAULT_PAGE_SIZE}>
+              <Paginate
+                data={linodes}
+                pageSize={storedPageSize}
+                pageSizeSetter={storage.linodePageSize.set}
+              >
                 {({
                   data: paginatedData,
                   handlePageChange,
@@ -160,6 +167,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<
                           pageSize={pageSize}
                           page={page}
                           eventCategory={'linodes landing'}
+                          showAll
                         />
                       </Grid>
                     </React.Fragment>
@@ -179,7 +187,11 @@ const DisplayGroupedLinodes: React.StatelessComponent<
         {orderedGroupedLinodes.map(([tag, linodes]) => {
           return (
             <React.Fragment key={tag}>
-              <Paginate data={linodes} pageSize={DEFAULT_PAGE_SIZE}>
+              <Paginate
+                data={linodes}
+                pageSize={storedPageSize}
+                pageSizeSetter={storage.linodePageSize.set}
+              >
                 {({
                   data: paginatedData,
                   handlePageChange,
@@ -230,6 +242,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<
                                 pageSize={pageSize}
                                 page={page}
                                 eventCategory={'linodes landing'}
+                                showAll
                               />
                             </TableCell>
                           </TableRow>

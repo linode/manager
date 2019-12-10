@@ -42,50 +42,48 @@ export const Configs: React.FC<Props> = props => {
         count
       }) => {
         return (
-          <React.Fragment>
-            <div
-              id="tabpanel-linode-clone-configs"
-              role="tabpanel"
-              aria-labelledby="tab-linode-clone-configs"
+          <div
+            id="tabpanel-linode-clone-configs"
+            role="tabpanel"
+            aria-labelledby="tab-linode-clone-configs"
+          >
+            <Table
+              isResponsive={false}
+              aria-label="List of Configurations"
+              border={false}
+              className={classes.root}
             >
-              <Table
-                isResponsive={false}
-                aria-label="List of Configurations"
-                border={false}
-                className={classes.root}
-              >
-                <TableBody>
-                  {paginatedData.length === 0 ? (
-                    <TableRowEmptyState colSpan={1} />
-                  ) : (
-                    paginatedData.map((config: Config) => (
-                      <TableRow key={config.id} data-qa-config={config.label}>
-                        <TableCell>
-                          <CheckBox
-                            checked={
-                              configSelection[config.id] &&
-                              configSelection[config.id].isSelected
-                            }
-                            onChange={() => handleSelect(config.id)}
-                            text={config.label}
-                            data-testid={`checkbox-${config.id}`}
-                          />
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-              <PaginationFooter
-                count={count}
-                page={page}
-                pageSize={pageSize}
-                handlePageChange={handlePageChange}
-                handleSizeChange={handlePageSizeChange}
-                eventCategory="linode configs"
-              />
-            </div>
-          </React.Fragment>
+              <TableBody>
+                {paginatedData.length === 0 ? (
+                  <TableRowEmptyState colSpan={1} />
+                ) : (
+                  paginatedData.map((config: Config) => (
+                    <TableRow key={config.id} data-qa-config={config.label}>
+                      <TableCell>
+                        <CheckBox
+                          checked={
+                            configSelection[config.id] &&
+                            configSelection[config.id].isSelected
+                          }
+                          onChange={() => handleSelect(config.id)}
+                          text={config.label}
+                          data-testid={`checkbox-${config.id}`}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+            <PaginationFooter
+              count={count}
+              page={page}
+              pageSize={pageSize}
+              handlePageChange={handlePageChange}
+              handleSizeChange={handlePageSizeChange}
+              eventCategory="linode configs"
+            />
+          </div>
         );
       }}
     </Paginate>

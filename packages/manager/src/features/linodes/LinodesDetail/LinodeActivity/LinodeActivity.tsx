@@ -29,29 +29,27 @@ export const LinodeActivity: React.StatelessComponent<
   const { classes, linodeID } = props;
 
   return (
-    <React.Fragment>
-      <div
-        id="tabpanel-linode-detail-activity"
-        role="tabpanel"
-        aria-labelledby="tab-linode-detail-activity"
+    <div
+      id="tabpanel-linode-detail-activity"
+      role="tabpanel"
+      aria-labelledby="tab-linode-detail-activity"
+    >
+      <Typography
+        variant="h2"
+        className={classes.title}
+        data-qa-settings-header
       >
-        <Typography
-          variant="h2"
-          className={classes.title}
-          data-qa-settings-header
-        >
-          Activity Feed
-        </Typography>
-        <EventsLanding
-          entityId={linodeID}
-          getEventsRequest={(params: any = {}) =>
-            getEventsForEntity(params, 'linode', props.linodeID)
-          }
-          errorMessage="There was an error retrieving activity for this Linode."
-          data-qa-events-landing-for-linode
-        />
-      </div>
-    </React.Fragment>
+        Activity Feed
+      </Typography>
+      <EventsLanding
+        entityId={linodeID}
+        getEventsRequest={(params: any = {}) =>
+          getEventsForEntity(params, 'linode', props.linodeID)
+        }
+        errorMessage="There was an error retrieving activity for this Linode."
+        data-qa-events-landing-for-linode
+      />
+    </div>
   );
 };
 
