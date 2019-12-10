@@ -9,6 +9,7 @@ import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import CPUGraph from './CPUGraph';
 import LoadGraph from './LoadGraph';
 import MemoryGraph from './MemoryGraph';
+import NetworkGraph from './NetworkGraph';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paperSection: {
@@ -90,13 +91,7 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
               <MemoryGraph {...graphProps} />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <LongviewLineGraph
-                title="Network"
-                subtitle="KB/s"
-                showToday={isToday}
-                timezone={timezone}
-                data={[]}
-              />
+              <NetworkGraph {...graphProps} />
             </Grid>
             <Grid item xs={12} sm={6}>
               <LongviewLineGraph

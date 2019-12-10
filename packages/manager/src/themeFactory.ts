@@ -247,7 +247,11 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       skyBlue: '#8CBDF3',
       skyBlueBorder: '#72AEF',
       lightBlue: '#B5D5EF',
-      lightBlueBorder: '#A2C2EA'
+      lightBlueBorder: '#A2C2EA',
+      emeraldGreen: '#74D97E',
+      emeraldGreenBorder: '#31CC4D',
+      forestGreen: '#6FC37C',
+      forestGreenBorder: '#32AE4E'
     },
     font: {
       normal: primaryFonts.normal,

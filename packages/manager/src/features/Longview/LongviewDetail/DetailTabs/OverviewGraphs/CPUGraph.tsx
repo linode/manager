@@ -18,11 +18,15 @@ interface Props {
 
 export type CombinedProps = Props & WithTheme;
 
-export const LoadGraph: React.FC<CombinedProps> = props => {
+export const CPUGraph: React.FC<CombinedProps> = props => {
   const { clientAPIKey, end, isToday, start, theme, timezone } = props;
 
   const [data, setData] = React.useState<Partial<AllData>>({});
   const request = () => {
+    if (!start || !end) {
+      return;
+    }
+
     return getValues(clientAPIKey, {
       fields: ['cpu'],
       start,
@@ -77,7 +81,7 @@ export const LoadGraph: React.FC<CombinedProps> = props => {
   );
 };
 
-export default withTheme(LoadGraph);
+export default withTheme(CPUGraph);
 
 const formatCPU = (value: number | null) => {
   if (value === null) {
