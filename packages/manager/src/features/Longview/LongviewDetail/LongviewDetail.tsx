@@ -210,6 +210,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           pathname={props.location.pathname}
           firstAndLastOnly
           labelTitle={client.label}
+          labelOptions={{ noCap: true }}
         />
         <DocumentationButton href={'https://google.com'} />
       </Box>
