@@ -16,7 +16,7 @@ import { LongviewDisk } from '../../../request.types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: '250px',
+    width: 250,
     marginBottom: theme.spacing()
   }
 }));

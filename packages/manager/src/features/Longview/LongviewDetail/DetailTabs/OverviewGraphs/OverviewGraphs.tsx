@@ -16,10 +16,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(3) + 1,
     marginBottom: theme.spacing(1) + 3
   },
-  selectOuter: {
-    '& .time-range-select': {
-      width: 150
-    }
+  selectTimeRange: {
+    width: 150
   }
 }));
 
@@ -65,11 +63,12 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
         <Grid item>
           <Typography variant="h2">Resource Allocation History</Typography>
         </Grid>
-        <Grid item className={classes.selectOuter}>
+        <Grid item>
           <TimeRangeSelect
             handleStatsChange={handleStatsChange}
             defaultValue={'Past 30 Minutes'}
             label="Select Time Range"
+            className={classes.selectTimeRange}
             hideLabel
           />
         </Grid>
