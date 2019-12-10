@@ -10,8 +10,6 @@ import withAccountSettings from 'src/containers/accountSettings.container';
 interface Props extends Omit<BaseSelectProps, 'onChange' | 'defaultValue'> {
   handleStatsChange?: (start: number, end: number) => void;
   defaultValue?: Labels;
-  start?: number;
-  end?: number;
 }
 
 interface ReduxStateProps {

@@ -1,4 +1,3 @@
-import produce from 'immer';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { withTheme, WithTheme } from 'src/components/core/styles';
@@ -67,11 +66,12 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
           backgroundColor: theme.graphs.lightOrange,
           data: _convertData(write, start, formatDisk)
         },
+        // These values are also not rounded in Classic
         {
           label: 'Read',
           borderColor: theme.graphs.lightYellowBorder,
           backgroundColor: theme.graphs.lightYellow,
-          data: _convertData(read, start, formatDisk)
+          data: _convertData(read, start)
         }
       ]}
     />
@@ -119,23 +119,19 @@ export const processDiskData = (d: Record<string, Disk>): DiskData => {
   // We have real data now; sum up however many disks there are,
   // separating out swap.
   return disks.reduce((acc: DiskData, thisDisk: Disk) => {
-    return produce(acc, draft => {
-      if (thisDisk.isswap === 1) {
-        // For swap, Classic combines reads and writes into a single metric
-        // Note: we are assuming only one disk will have isswap === 1
-        draft.swap = appendStats(
-          pathOr([], ['reads'], thisDisk),
-          pathOr([], ['writes'], thisDisk)
-        );
-      } else {
-        // Not a swap, add reads and writes to running total
-        draft.read = appendStats(draft.read, pathOr([], ['reads'], thisDisk));
-        draft.write = appendStats(
-          draft.write,
-          pathOr([], ['writes'], thisDisk)
-        );
-      }
-    });
+    if (thisDisk.isswap === 1) {
+      // For swap, Classic combines reads and writes into a single metric
+      // Note: we are assuming only one disk will have isswap === 1
+      acc.swap = appendStats(
+        pathOr([], ['reads'], thisDisk),
+        pathOr([], ['writes'], thisDisk)
+      );
+    } else {
+      // Not a swap, add reads and writes to running total
+      acc.read = appendStats(acc.read, pathOr([], ['reads'], thisDisk));
+      acc.write = appendStats(acc.write, pathOr([], ['writes'], thisDisk));
+    }
+    return acc;
   }, emptyState);
 };
 
