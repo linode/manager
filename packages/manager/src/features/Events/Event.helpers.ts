@@ -1,5 +1,4 @@
 import { Event, EventAction } from 'linode-js-sdk/lib/account';
-import * as moment from 'moment';
 import { equals } from 'ramda';
 
 /**
@@ -83,19 +82,13 @@ export const maybeRemoveTrailingPeriod = (string: string) => {
 export const formatEventWithUsername = (
   action: EventAction,
   username: string | null,
-  message: string,
-  eventDuration: Event['duration']
+  message: string
 ) => {
-  const baseMessage =
-    username && action !== 'lassie_reboot'
-      ? /**
-         * The event message for Lassie events already includes "by the Lassie Watchdog service",
-         * so we don't want to add "by Linode" after that.
-         */
-        `${maybeRemoveTrailingPeriod(message)} by ${username}.`
-      : message;
-
-  return !!eventDuration && eventDuration > 0
-    ? `(took ${moment.duration(eventDuration).humanize()}) ${baseMessage}`
-    : baseMessage;
+  return username && action !== 'lassie_reboot'
+    ? /*
+        The event message for Lassie events already includes "by the Lassie Watchdog service",
+        so we don't want to add "by Linode" after that.
+      */
+      `${maybeRemoveTrailingPeriod(message)} by ${username}.`
+    : message;
 };

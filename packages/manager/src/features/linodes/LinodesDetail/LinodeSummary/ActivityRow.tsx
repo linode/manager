@@ -12,6 +12,8 @@ import Grid from 'src/components/Grid';
 import eventMessageGenerator from 'src/eventMessageGenerator';
 import { formatEventWithUsername } from 'src/features/Events/Event.helpers';
 
+import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
+
 type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
@@ -42,17 +44,8 @@ export const ActivityRow: React.StatelessComponent<CombinedProps> = props => {
   const displayedMessage = formatEventWithUsername(
     event.action,
     event.username,
-    message,
-    event.duration
+    message
   );
-
-  /*
-    gets the capturing groups for duration and the rest of the message
-  */
-  const durationText = /^(\(took.*\))(.*)$/gim.exec(displayedMessage);
-
-  // @ts-ignore
-  const [_, timeTaken, restOfMessage] = durationText || [];
 
   return (
     <Grid
@@ -65,18 +58,11 @@ export const ActivityRow: React.StatelessComponent<CombinedProps> = props => {
     >
       <Grid item>
         <Typography>
-          {durationText ? (
-            <React.Fragment>
-              <strong>{timeTaken}</strong>
-              {` ${restOfMessage}`}
-            </React.Fragment>
-          ) : (
-            displayedMessage
-          )}
+          {displayedMessage} ({formatEventSeconds(event.duration)})
         </Typography>
       </Grid>
       <Grid item>
-        <DateTimeDisplay value={event.created} humanizeCutoff={'month'} />
+        <DateTimeDisplay value={event.created} />
       </Grid>
     </Grid>
   );

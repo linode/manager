@@ -48,12 +48,11 @@ const styles = (theme: Theme) =>
       textAlign: 'center'
     },
     labelCell: {
-      width: '69%',
+      width: '60%',
       minWidth: 200,
       paddingLeft: 10
     },
     timeCell: {
-      width: '30%',
       paddingLeft: theme.spacing(1) / 2
     }
   });
@@ -292,10 +291,16 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
                 Event
               </TableCell>
               <TableCell
+                data-qa-events-time-taken-header
+                className={classes.timeCell}
+              >
+                Time Taken
+              </TableCell>
+              <TableCell
                 data-qa-events-time-header
                 className={classes.timeCell}
               >
-                Time
+                Occurred
               </TableCell>
             </TableRow>
           </TableHead>

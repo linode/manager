@@ -97,7 +97,7 @@ describe('Utility Functions', () => {
     it('it should return a message for an event without a username unchanged', () => {
       const message = 'a message';
       expect(
-        formatEventWithUsername('linode_boot' as EventAction, null, message, 0)
+        formatEventWithUsername('linode_boot' as EventAction, null, message)
       ).toEqual(message);
     });
 
@@ -107,8 +107,7 @@ describe('Utility Functions', () => {
         formatEventWithUsername(
           'linode_boot' as EventAction,
           'test-user-001',
-          message,
-          0
+          message
         )
       ).toEqual('a message by test-user-001.');
     });
@@ -119,8 +118,7 @@ describe('Utility Functions', () => {
         formatEventWithUsername(
           'lassie_reboot' as EventAction,
           'test-user-001',
-          message,
-          0
+          message
         )
       ).toEqual(message);
     });

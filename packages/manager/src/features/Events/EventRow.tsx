@@ -23,7 +23,9 @@ import getEventsActionLink from 'src/utilities/getEventsActionLink';
 
 import { formatEventWithUsername } from './Event.helpers';
 
-type ClassNames = 'root' | 'message';
+import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
+
+type ClassNames = 'root' | 'message' | 'occurredCell';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -106,20 +108,7 @@ export const Row: React.StatelessComponent<RowProps> = props => {
     return null;
   }
 
-  const displayedMessage = formatEventWithUsername(
-    action,
-    username,
-    message,
-    duration
-  );
-
-  /*
-    gets the capturing groups for duration and the rest of the event message
-  */
-  const durationText = /^(\(took.*\))(.*)$/gim.exec(displayedMessage);
-
-  // @ts-ignore
-  const [_, timeTaken, restOfMessage] = durationText || [];
+  const displayedMessage = formatEventWithUsername(action, username, message);
 
   return (
     <TableRow
@@ -147,18 +136,16 @@ export const Row: React.StatelessComponent<RowProps> = props => {
           data-qa-event-message
           variant="body1"
         >
-          {durationText ? (
-            <React.Fragment>
-              <strong>{timeTaken}</strong>
-              {` ${restOfMessage}`}
-            </React.Fragment>
-          ) : (
-            displayedMessage
-          )}
+          {displayedMessage}
         </Typography>
       </TableCell>
-      <TableCell parentColumn={'Time'} data-qa-event-created-cell compact>
-        <DateTimeDisplay value={created} humanizeCutoff={'month'} />
+      <TableCell parentColumn="Time Taken">
+        <Typography variant="body1">{`${formatEventSeconds(
+          duration
+        )}`}</Typography>
+      </TableCell>
+      <TableCell parentColumn={'Occurred'} data-qa-event-created-cell compact>
+        <DateTimeDisplay value={created} />
       </TableCell>
     </TableRow>
   );

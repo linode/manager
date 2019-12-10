@@ -12,7 +12,8 @@ const props: RowProps = {
   username: null,
   classes: {
     root: '',
-    message: ''
+    message: '',
+    occurredCell: ''
   },
   linkTarget: jest.fn()
 };

@@ -1,5 +1,6 @@
 import {
   convertMinutesTo,
+  formatEventSeconds,
   generateMigrationTimeString
 } from './minute-conversion';
 
@@ -35,5 +36,22 @@ describe('Human-Readable Minute Conversion', () => {
       `1 day, 23 hours, and 0 minutes`
     );
     expect(generateMigrationTimeString(2880)).toBe(`2 days and 0 minutes`);
+  });
+});
+
+describe('Event seconds conversion', () => {
+  it('should format event seconds correctly', () => {
+    expect(formatEventSeconds(null)).toBe('Unknown');
+    expect(formatEventSeconds(undefined as any)).toBe('Unknown');
+    expect(formatEventSeconds(0)).toBe('Unknown');
+
+    expect(formatEventSeconds(3600)).toBe('1 hour, 0 minutes');
+    expect(formatEventSeconds(3660)).toBe('1 hour, 1 minute');
+    expect(formatEventSeconds(7300)).toBe('2 hours, 1 minute');
+    expect(formatEventSeconds(7500)).toBe('2 hours, 5 minutes');
+
+    expect(formatEventSeconds(60)).toBe('1 minute, 0 seconds');
+    expect(formatEventSeconds(80)).toBe('1 minute, 20 seconds');
+    expect(formatEventSeconds(120)).toBe('2 minutes, 0 seconds');
   });
 });
