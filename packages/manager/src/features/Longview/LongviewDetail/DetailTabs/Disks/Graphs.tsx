@@ -80,12 +80,16 @@ const Graphs: React.FC<CombinedProps> = props => {
   }
 
   const isToday = endTime - startTime < 60 * 60 * 25;
+  const labelHelperText = generateHelperText(sysInfoType, isSwap, isMounted);
 
   return (
     <React.Fragment>
       <Typography variant="subtitle1">
-        <strong>{diskLabel}</strong> &ndash;{' '}
-        {generateHelperText(sysInfoType, isSwap, isMounted)}
+        <React.Fragment>
+          <strong>{diskLabel}</strong>
+          {!!labelHelperText && <React.Fragment> &ndash; </React.Fragment>}
+          {labelHelperText}
+        </React.Fragment>
       </Typography>
       <div className={classes.graphContainer}>
         {/* 
