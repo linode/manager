@@ -16,9 +16,11 @@ import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
+import Typography from 'src/components/core/Typography';
 import DefaultLoader from 'src/components/DefaultLoader';
 import DocumentationButton from 'src/components/DocumentationButton';
 import ErrorState from 'src/components/ErrorState';
+import ExternalLink from 'src/components/ExternalLink';
 import NotFound from 'src/components/NotFound';
 import TabLink from 'src/components/TabLink';
 import withLongviewClients, {
@@ -236,6 +238,25 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
               ))}
             />
           ))}
+          {!showAllTabs && (
+            <Tab
+              component={() => (
+                <Typography
+                  variant="body1"
+                  style={{ alignSelf: 'center', color: '#abadaf' }}
+                >
+                  ...more coming soon!{' '}
+                  {
+                    <ExternalLink
+                      link="https://manager.linode.com/longview"
+                      text="Go to Classic Manager."
+                      hideIcon
+                    />
+                  }
+                </Typography>
+              )}
+            />
+          )}
         </Tabs>
       </AppBar>
       <Switch>
