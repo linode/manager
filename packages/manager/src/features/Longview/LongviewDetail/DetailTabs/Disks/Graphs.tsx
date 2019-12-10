@@ -40,7 +40,7 @@ export interface Props {
 
 type CombinedProps = Props & WithTheme;
 
-const Grahps: React.FC<CombinedProps> = props => {
+const Graphs: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const {
@@ -195,4 +195,4 @@ export const formatSpace = (
 export default compose<CombinedProps, Props>(
   React.memo,
   withTheme
-)(Grahps);
+)(Graphs);
