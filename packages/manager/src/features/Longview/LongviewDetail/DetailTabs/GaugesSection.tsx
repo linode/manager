@@ -14,9 +14,12 @@ import SwapGauge from '../../LongviewLanding/Gauges/Swap';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gaugeContainer: {
-    marginBottom: theme.spacing(4)
+    marginBottom: theme.spacing(5) + 8
   },
   gaugesOuter: {
+    [theme.breakpoints.down('md')]: {
+      marginBottom: theme.spacing(2)
+    },
     [theme.breakpoints.up('lg')]: {
       maxWidth: 450
     }
@@ -32,7 +35,7 @@ const GaugesSection: React.FC<Props> = props => {
   const classes = useStyles();
 
   return (
-    <Grid container item xs={12} md={6} className={classes.gaugesOuter}>
+    <Grid container item xs={12} md={5} className={classes.gaugesOuter}>
       <Grid item xs={4} className={classes.gaugeContainer}>
         <CPUGauge
           clientID={props.clientID}

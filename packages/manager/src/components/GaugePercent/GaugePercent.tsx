@@ -26,17 +26,14 @@ const useStyles = (options: Options) =>
       top: `calc((${options.height}px / 2))`,
       width: options.width,
       textAlign: 'center',
-      fontSize: options.fontSize || `calc(8px + 6 * ((100vw - 320px) / 680))`,
-      color: theme.palette.text.primary,
-      [theme.breakpoints.up('lg')]: {
-        fontSize: options.fontSize || `${theme.spacing(2)}px`
-      }
+      fontSize: '1rem',
+      color: theme.palette.text.primary
     },
     subTitle: {
       position: 'absolute',
       width: options.width,
       textAlign: 'center',
-      top: `calc(${options.height}px - 10%)`,
+      top: `calc(${options.height}px)`,
       fontSize: options.fontSize || `${theme.spacing(2.5)}px `,
       color: theme.color.headline
     }

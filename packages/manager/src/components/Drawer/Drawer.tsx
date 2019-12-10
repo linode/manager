@@ -82,6 +82,8 @@ const DDrawer: React.StatelessComponent<CombinedProps> = props => {
         disableBackdropClick: true
       }}
       data-qa-drawer
+      role="dialog"
+      aria-labelledby={title}
     >
       <Grid
         container
