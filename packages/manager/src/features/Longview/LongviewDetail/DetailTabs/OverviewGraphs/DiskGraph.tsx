@@ -4,7 +4,7 @@ import { withTheme, WithTheme } from 'src/components/core/styles';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { appendStats } from 'src/features/Longview/shared/utilities';
 import { AllData, getValues } from '../../../request';
-import { LongviewDisk, StatWithDummyPoint } from '../../../request.types';
+import { Disk, StatWithDummyPoint } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 
 interface Props {
@@ -41,7 +41,7 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
   const _convertData = React.useCallback(convertData, [data, start, end]);
 
   const { read, write, swap } = React.useMemo(
-    () => processDiskData(pathOr({ Disk: {} }, ['Disk'], data)),
+    () => processDiskData(pathOr({}, ['Disk'], data)),
     [data.Disk]
   );
 
@@ -75,13 +75,29 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
   );
 };
 
-const emptyState = {
+export const emptyState = {
   read: [],
   write: [],
   swap: []
 };
 
-const processDiskData = (d: LongviewDisk) => {
+/**
+ * Disk responses from LV look like:
+ *
+ * {
+ *   Disk:
+ *      {
+ *         'dev/sda': {}: Disk,
+ *         'dev/sdb': {}: Disk
+ *      }
+ * }
+ *
+ * One of these disks will usually be a swap disk.
+ * This method checks for this, and then combines the
+ * data for all remaining disks in to a single set of metrics
+ * (`read` and `write`)
+ */
+export const processDiskData = (d: Record<string, Disk>) => {
   if (!d) {
     return emptyState;
   }
@@ -94,6 +110,7 @@ const processDiskData = (d: LongviewDisk) => {
   let swap: StatWithDummyPoint[] = [];
   disks.forEach(thisDisk => {
     if (thisDisk.isswap === 1) {
+      // For swap, Classic combines reads and writes into a single metric
       swap = appendStats(
         pathOr([], ['reads'], thisDisk),
         pathOr([], ['writes'], thisDisk)
