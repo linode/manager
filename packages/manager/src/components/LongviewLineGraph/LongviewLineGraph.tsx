@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export interface Props extends LineGraphProps {
   title: string;
-  subtitle: string;
+  subtitle?: string;
 }
 
 type CombinedProps = Props;
@@ -38,7 +38,12 @@ const LongviewLineGraph: React.FC<CombinedProps> = props => {
   return (
     <React.Fragment>
       <Typography className={classes.title} variant="body1">
-        {title}&nbsp;<span>({subtitle})</span>
+        {title}
+        {subtitle && (
+          <React.Fragment>
+            &nbsp;<span>({subtitle})</span>
+          </React.Fragment>
+        )}
       </Typography>
       <Divider type="landingHeader" className={classes.divider} />
       <div>
