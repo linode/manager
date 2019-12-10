@@ -13,7 +13,7 @@ import DiskPaper from './DiskPaper';
 
 import getStats from '../../../request';
 import { Disk } from '../../../request.types';
-import { maybeAddDataPointInThePast } from '../../../shared/formatters';
+import { pathMaybeAddDataInThePast } from '../../../shared/formatters';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -90,7 +90,7 @@ const Disks: React.FC<CombinedProps> = props => {
               [] as (string | number)[][]
             );
 
-            const enhancedDisk = maybeAddDataPointInThePast<Disk<'yAsNull'>>(
+            const enhancedDisk = pathMaybeAddDataInThePast<Disk<'yAsNull'>>(
               _disk,
               start,
               pathsToAlter
