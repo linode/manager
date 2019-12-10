@@ -14,7 +14,8 @@ export type ClassNames =
   | 'text'
   | 'tableHeadInner'
   | 'simpleLegend'
-  | 'simpleLegendRoot';
+  | 'simpleLegendRoot'
+  | 'crossedOut';
 
 export type StyleProps = WithStyles<ClassNames>;
 
@@ -103,9 +104,11 @@ const newMetricDisplayStyles = (theme: Theme) =>
       }
     },
     legendIcon: {
-      width: 20,
-      height: 20,
-      marginRight: theme.spacing(1)
+      width: 18,
+      height: 18,
+      marginRight: theme.spacing(1),
+      borderWidth: 1,
+      borderStyle: 'solid'
     },
     text: {
       color: theme.color.black
@@ -117,6 +120,10 @@ const newMetricDisplayStyles = (theme: Theme) =>
     simpleLegend: {
       width: 'auto',
       marginTop: theme.spacing(2)
+    },
+    crossedOut: {
+      textDecoration: 'line-through',
+      backgroundColor: 'transparent !important'
     }
   });
 
