@@ -139,12 +139,12 @@ export const Row: React.StatelessComponent<RowProps> = props => {
           {displayedMessage}
         </Typography>
       </TableCell>
-      <TableCell parentColumn="Time Taken">
+      <TableCell parentColumn="Duration">
         <Typography variant="body1">{`${formatEventSeconds(
           duration
         )}`}</Typography>
       </TableCell>
-      <TableCell parentColumn={'Occurred'} data-qa-event-created-cell compact>
+      <TableCell parentColumn={'When'} data-qa-event-created-cell compact>
         <DateTimeDisplay value={created} />
       </TableCell>
     </TableRow>

@@ -291,16 +291,16 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
                 Event
               </TableCell>
               <TableCell
-                data-qa-events-time-taken-header
+                data-qa-events-duration-header
                 className={classes.timeCell}
               >
-                Time Taken
+                Duration
               </TableCell>
               <TableCell
                 data-qa-events-time-header
                 className={classes.timeCell}
               >
-                Occurred
+                When
               </TableCell>
             </TableRow>
           </TableHead>

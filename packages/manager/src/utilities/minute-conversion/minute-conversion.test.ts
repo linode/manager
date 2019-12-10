@@ -45,13 +45,13 @@ describe('Event seconds conversion', () => {
     expect(formatEventSeconds(undefined as any)).toBe('Unknown');
     expect(formatEventSeconds(0)).toBe('Unknown');
 
-    expect(formatEventSeconds(3600)).toBe('1 hour, 0 minutes');
+    expect(formatEventSeconds(3600)).toBe('1 hour');
     expect(formatEventSeconds(3660)).toBe('1 hour, 1 minute');
     expect(formatEventSeconds(7300)).toBe('2 hours, 1 minute');
     expect(formatEventSeconds(7500)).toBe('2 hours, 5 minutes');
 
-    expect(formatEventSeconds(60)).toBe('1 minute, 0 seconds');
+    expect(formatEventSeconds(60)).toBe('1 minute');
     expect(formatEventSeconds(80)).toBe('1 minute, 20 seconds');
-    expect(formatEventSeconds(120)).toBe('2 minutes, 0 seconds');
+    expect(formatEventSeconds(120)).toBe('2 minutes');
   });
 });
