@@ -55,7 +55,7 @@ export const TopProcesses: React.FC<Props> = props => {
     : undefined;
 
   return (
-    <Grid item xs={12} lg={3}>
+    <Grid item xs={12} lg={4}>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Typography variant="h2">Top Processes</Typography>
         {/* Hide the link to the Processes Tab if the feature isn't enabled. */}
@@ -81,7 +81,7 @@ export const TopProcesses: React.FC<Props> = props => {
                     label="name"
                     direction={order}
                     handleClick={handleOrderChange}
-                    style={{ width: '25%' }}
+                    style={{ width: '40%' }}
                   >
                     Process
                   </TableSortCell>

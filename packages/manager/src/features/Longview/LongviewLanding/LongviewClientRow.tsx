@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   gaugeContainer: {
     [theme.breakpoints.down('sm')]: {
-      marginBottom: theme.spacing(2)
+      marginBottom: 30
     }
   },
   button: {
@@ -69,12 +69,9 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
     userCanModifyClient
   } = props;
 
-  const {
-    lastUpdated,
-    lastUpdatedError,
-    authed
-  } = useClientLastUpdated(clientAPIKey, () =>
-    props.getClientStats(clientAPIKey)
+  const { lastUpdated, lastUpdatedError, authed } = useClientLastUpdated(
+    clientAPIKey,
+    () => props.getClientStats(clientAPIKey)
   );
 
   /**
