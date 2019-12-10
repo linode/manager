@@ -1,3 +1,4 @@
+import produce from 'immer';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { withTheme, WithTheme } from 'src/components/core/styles';
@@ -75,7 +76,13 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
   );
 };
 
-export const emptyState = {
+interface DiskData {
+  read: StatWithDummyPoint[];
+  write: StatWithDummyPoint[];
+  swap: StatWithDummyPoint[];
+}
+
+export const emptyState: DiskData = {
   read: [],
   write: [],
   swap: []
@@ -97,38 +104,37 @@ export const emptyState = {
  * data for all remaining disks in to a single set of metrics
  * (`read` and `write`)
  */
-export const processDiskData = (d: Record<string, Disk>) => {
+export const processDiskData = (d: Record<string, Disk>): DiskData => {
+  // God alone knows what LV will return, so better check to be safe.
   if (!d) {
     return emptyState;
   }
   const disks = Object.values(d);
+  // Before the initial request returns, the value of d will be {}
   if (disks.length === 0) {
     return emptyState;
   }
-  let combinedReads: StatWithDummyPoint[] = [];
-  let combinedWrites: StatWithDummyPoint[] = [];
-  let swap: StatWithDummyPoint[] = [];
-  disks.forEach(thisDisk => {
-    if (thisDisk.isswap === 1) {
-      // For swap, Classic combines reads and writes into a single metric
-      swap = appendStats(
-        pathOr([], ['reads'], thisDisk),
-        pathOr([], ['writes'], thisDisk)
-      );
-    } else {
-      // Not a swap, add reads and writes to running total
-      combinedReads = appendStats(
-        combinedReads,
-        pathOr([], ['reads'], thisDisk)
-      );
-      combinedWrites = appendStats(
-        combinedWrites,
-        pathOr([], ['writes'], thisDisk)
-      );
-    }
-  });
-
-  return { read: combinedReads, write: combinedWrites, swap };
+  // We have real data now; sum up however many disks there are,
+  // separating out swap.
+  return disks.reduce((acc: DiskData, thisDisk: Disk) => {
+    return produce(acc, draft => {
+      if (thisDisk.isswap === 1) {
+        // For swap, Classic combines reads and writes into a single metric
+        // Note: we are assuming only one disk will have isswap === 1
+        draft.swap = appendStats(
+          pathOr([], ['reads'], thisDisk),
+          pathOr([], ['writes'], thisDisk)
+        );
+      } else {
+        // Not a swap, add reads and writes to running total
+        draft.read = appendStats(draft.read, pathOr([], ['reads'], thisDisk));
+        draft.write = appendStats(
+          draft.write,
+          pathOr([], ['writes'], thisDisk)
+        );
+      }
+    });
+  }, emptyState);
 };
 
 const formatDisk = (value: number | null) => {
