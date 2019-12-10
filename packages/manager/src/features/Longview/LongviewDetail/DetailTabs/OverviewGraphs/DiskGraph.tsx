@@ -53,11 +53,13 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
       showToday={isToday}
       timezone={timezone}
       data={[
+        // Swap in Classic does not round, so don't use formatDisk
+        // (values are often 0.02 ops/s etc.)
         {
           label: 'Swap',
           borderColor: theme.graphs.redBorder,
           backgroundColor: theme.graphs.red,
-          data: _convertData(swap, start, formatDisk)
+          data: _convertData(swap, start)
         },
         {
           label: 'Write',
