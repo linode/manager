@@ -30,6 +30,7 @@ const Installation: React.FC<CombinedProps> = props => {
       aria-labelledby="tab-installation"
     >
       <Instructions
+        data-qa-instructions
         APIKey={props.clientAPIKey}
         installationKey={props.clientInstallationKey}
       />
