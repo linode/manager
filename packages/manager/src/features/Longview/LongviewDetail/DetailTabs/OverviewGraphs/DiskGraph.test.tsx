@@ -7,11 +7,11 @@ const mockStats2 = [{ x: 0, y: 10 }, { x: 1, y: 10 }, { x: 2, y: 10 }];
 describe('DiskGraph helper methods', () => {
   describe('processDiskData', () => {
     it('should handle empty data', () => {
-      expect(processDiskData(undefined as any)).toEqual(emptyState);
+      expect(processDiskData(undefined as any, 'kvm')).toEqual(emptyState);
     });
 
     it('should handle an empty Disks response', () => {
-      expect(processDiskData({})).toEqual(emptyState);
+      expect(processDiskData({}, 'kvm')).toEqual(emptyState);
     });
 
     it('should separate out swap disk data', () => {
@@ -23,7 +23,7 @@ describe('DiskGraph helper methods', () => {
         })
       };
       const expected = mockStats.map(i => ({ x: i.x, y: i.y * 2 }));
-      const { swap, read, write } = processDiskData(mockDisk);
+      const { swap, read, write } = processDiskData(mockDisk, 'kvm');
       expect(swap).toHaveLength(mockStats.length);
       // Since we're passing mockStats twice (for read and write),
       // the returned value should be the two combined, so y*2 for all values
@@ -53,10 +53,27 @@ describe('DiskGraph helper methods', () => {
       // Using mockStats2 for reads, so mockStats[x] + 10 for each value
       const expectedReads = mockStats.map(i => ({ x: i.x, y: i.y + 10 }));
       const expectedWrites = mockStats.map(i => ({ x: i.x, y: i.y * 2 }));
-      const { swap, read, write } = processDiskData(mockDisk);
+      const { swap, read, write } = processDiskData(mockDisk, 'kvm');
       expect(read).toEqual(expectedReads);
       expect(write).toEqual(expectedWrites);
       expect(swap).toEqual(mockStats);
+    });
+
+    it('should return an error if a system reports its info as openvz', () => {
+      expect(processDiskData({}, 'openvz')).toHaveProperty('error');
+      expect(processDiskData({}, 'openvz').error).toMatch(/disk/i);
+    });
+
+    it('should return an error if any disk has children (whatever that means)', () => {
+      const mockDisk = {
+        '/dev/sda': diskFactory.build(),
+        '/dev/sdb': diskFactory.build({ isswap: 1 }),
+        '/dev/sdc': diskFactory.build({
+          childof: 1
+        })
+      };
+      expect(processDiskData(mockDisk, 'kvm')).toHaveProperty('error');
+      expect(processDiskData({}, 'openvz').error).toMatch(/disk/i);
     });
   });
 });

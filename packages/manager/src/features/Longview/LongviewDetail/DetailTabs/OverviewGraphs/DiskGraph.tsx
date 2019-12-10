@@ -26,7 +26,7 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
       return;
     }
     return getValues(clientAPIKey, {
-      fields: ['disk'],
+      fields: ['disk', 'sysinfo'],
       start,
       end
     }).then(response => {
@@ -40,10 +40,18 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
 
-  const { read, write, swap } = React.useMemo(
-    () => processDiskData(pathOr({}, ['Disk'], data)),
+  const { swap, read, write, error } = React.useMemo(
+    () =>
+      processDiskData(
+        pathOr({}, ['Disk'], data),
+        pathOr('kvm', ['SysInfo', 'type'], data)
+      ),
     [data.Disk]
   );
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <LongviewLineGraph
@@ -79,6 +87,7 @@ interface DiskData {
   read: StatWithDummyPoint[];
   write: StatWithDummyPoint[];
   swap: StatWithDummyPoint[];
+  error?: string;
 }
 
 export const emptyState: DiskData = {
@@ -103,15 +112,32 @@ export const emptyState: DiskData = {
  * data for all remaining disks in to a single set of metrics
  * (`read` and `write`)
  */
-export const processDiskData = (d: Record<string, Disk>): DiskData => {
+export const processDiskData = (
+  d: Record<string, Disk>,
+  type: string
+): DiskData => {
   // God alone knows what LV will return, so better check to be safe.
   if (!d) {
     return emptyState;
+  }
+  // Self-explanatory special (&extremely rare) error case
+  if (type === 'openvz') {
+    return {
+      ...emptyState,
+      error: 'Disk I/O not available for OpenVZ systems.'
+    };
   }
   const disks = Object.values(d);
   // Before the initial request returns, the value of d will be {}
   if (disks.length === 0) {
     return emptyState;
+  }
+  // For some special cases, disk data is not available and we want to show an error.
+  if (disks.some(thisDisk => thisDisk.childof !== 0)) {
+    return {
+      ...emptyState,
+      error: 'Disk I/O is not applicable for this type of device.'
+    };
   }
   // We have real data now; sum up however many disks there are,
   // separating out swap.
