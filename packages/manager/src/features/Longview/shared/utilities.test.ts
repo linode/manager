@@ -1,10 +1,16 @@
-import { CPU, Stat } from '../request.types';
+import {
+  CPU,
+  InboundOutboundNetwork,
+  LongviewNetwork,
+  Stat
+} from '../request.types';
 import {
   generateTotalMemory,
   generateUsedMemory,
   statAverage,
   statMax,
-  sumCPU
+  sumCPU,
+  sumNetwork
 } from './utilities';
 
 const generateStats = (yValues: number[]): Stat[] => {
@@ -130,6 +136,71 @@ describe('Utility Functions', () => {
       expect(sumCPU([] as any)).toEqual(emptyCPU);
       expect(sumCPU(null as any)).toEqual(emptyCPU);
       expect(sumCPU(undefined as any)).toEqual(emptyCPU);
+    });
+  });
+
+  describe('sumNetwork', () => {
+    const mockNetworkInterface: InboundOutboundNetwork = {
+      rx_bytes: generateStats([1]),
+      tx_bytes: generateStats([2])
+    };
+
+    it('sums `rx_bytes` and `tx_bytes` for each Network Interface', () => {
+      const mockData: LongviewNetwork['Network']['Interface'] = {
+        eth0: mockNetworkInterface,
+        eth1: mockNetworkInterface,
+        eth2: mockNetworkInterface
+      };
+      const result = sumNetwork(mockData);
+
+      expect(result.rx_bytes[0].y).toBe(3);
+      expect(result.tx_bytes[0].y).toBe(6);
+    });
+
+    it('returns stats untouched if there is only one Network Interface', () => {
+      const mockData: Record<string, InboundOutboundNetwork> = {
+        eth0: mockNetworkInterface
+      };
+      const result = sumNetwork(mockData);
+
+      expect(result.rx_bytes[0].y).toBe(1);
+      expect(result.tx_bytes[0].y).toBe(2);
+    });
+
+    it('leaves X values untouched', () => {
+      const mockStats = [{ x: 100, y: 1 }];
+      const mockData: Record<string, InboundOutboundNetwork> = {
+        cpu0: {
+          rx_bytes: mockStats,
+          tx_bytes: mockStats
+        }
+      };
+      const result = sumNetwork(mockData);
+
+      expect(result.rx_bytes[0].x).toBe(100);
+      expect(result.tx_bytes[0].x).toBe(100);
+    });
+
+    it('works if stat arrays are of different lengths', () => {
+      const mockData: Record<string, InboundOutboundNetwork> = {
+        eth0: {
+          rx_bytes: [{ x: 0, y: 1 }, { x: 0, y: 1 }],
+          tx_bytes: []
+        },
+        eth1: mockNetworkInterface
+      };
+      const result = sumNetwork(mockData);
+      expect(result.rx_bytes).toHaveLength(2);
+      expect(result.tx_bytes[0].y).toBe(2);
+    });
+
+    it('gracefully fails when given malformed data', () => {
+      const emptyNetworkInterface = { rx_bytes: [], tx_bytes: [] };
+
+      expect(sumNetwork({} as any)).toEqual(emptyNetworkInterface);
+      expect(sumNetwork([] as any)).toEqual(emptyNetworkInterface);
+      expect(sumNetwork(null as any)).toEqual(emptyNetworkInterface);
+      expect(sumNetwork(undefined as any)).toEqual(emptyNetworkInterface);
     });
   });
 });
