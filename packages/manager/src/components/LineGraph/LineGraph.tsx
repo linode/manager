@@ -163,9 +163,19 @@ class LineGraph extends React.Component<CombinedProps, {}> {
   };
 
   render() {
-    const { chartHeight, unit, suggestedMax } = this.props;
+    const {
+      chartHeight,
+      unit,
+      suggestedMax,
+      showToday,
+      timezone,
+      data,
+      ...rest
+    } = this.props;
+
     return (
       <Line
+        {...rest}
         height={chartHeight || 300}
         options={this.getChartOptions(suggestedMax, unit)}
         data={{
