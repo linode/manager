@@ -228,9 +228,11 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       greenBorder: '#18B523',
       orange: 'rgba(255, 179, 77, 0.7)',
       orangeBorder: '#ff9d1a',
-      purple: '#E6A5E6',
-      purpleBorder: '#CC75CC',
-      darkPurple: 'rgb(130, 38, 148)',
+      purple: '#d9b0d9',
+      purpleBorder: '#d9b0d9',
+      lightPurple: '#f1d6f0',
+      lightPurpleBorder: '#f1d6f0',
+      darkPurple: '#ac6baa',
       darkPurpleBorder: 'rgba(130, 38, 148, 0.8)',
       red: '#FF633C',
       redBorder: '#F13A0A',
@@ -249,7 +251,11 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       lightYellow: '#ffd391',
       lightYellowBorder: '#ffd391',
       lightOrange: '#FFBE67',
-      lightOrangeBorder: '#FFA823'
+      lightOrangeBorder: '#FFA823',
+      emeraldGreen: '#74D97E',
+      emeraldGreenBorder: '#31CC4D',
+      forestGreen: '#6FC37C',
+      forestGreenBorder: '#32AE4E'
     },
     font: {
       normal: primaryFonts.normal,
