@@ -135,7 +135,7 @@ export const sumNetwork = (
  * @param prevStats
  * @param newStats
  */
-const appendStats = (
+export const appendStats = (
   prevStats: StatWithDummyPoint[],
   newStats: StatWithDummyPoint[]
 ) => {

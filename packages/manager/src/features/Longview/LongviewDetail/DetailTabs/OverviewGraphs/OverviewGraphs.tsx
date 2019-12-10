@@ -3,10 +3,10 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { WithStartAndEnd } from '../../../request';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import CPUGraph from './CPUGraph';
+import DiskGraph from './DiskGraph';
 import LoadGraph from './LoadGraph';
 import MemoryGraph from './MemoryGraph';
 import NetworkGraph from './NetworkGraph';
@@ -94,13 +94,7 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
               <NetworkGraph {...graphProps} />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <LongviewLineGraph
-                title="Disk I/O"
-                subtitle="ops/s"
-                showToday={isToday}
-                timezone={timezone}
-                data={[]}
-              />
+              <DiskGraph {...graphProps} />
             </Grid>
             <Grid item xs={12} sm={6}>
               <LoadGraph {...graphProps} />

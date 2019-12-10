@@ -37,7 +37,7 @@ export interface Disk<WithDummy extends '' | 'yAsNull' = ''> {
   writes?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
   reads?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
   read_bytes?: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
-  fs: FS<WithDummy>;
+  fs?: FS<WithDummy>;
 }
 /*
   each key will be the name of the disk

@@ -19,6 +19,9 @@ export const LoadGraph: React.FC<CombinedProps> = props => {
 
   const [data, setData] = React.useState<Partial<AllData>>({});
   const request = () => {
+    if (!start || !end) {
+      return;
+    }
     return getValues(clientAPIKey, {
       fields: ['load'],
       start,
