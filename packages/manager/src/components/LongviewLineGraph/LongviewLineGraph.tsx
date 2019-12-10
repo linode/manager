@@ -44,7 +44,13 @@ const LongviewLineGraph: React.FC<CombinedProps> = props => {
       </Typography>
       <Divider type="landingHeader" className={classes.divider} />
       <div>
-        {error ? <ErrorState errorText={error} /> : <LineGraph {...rest} />}
+        {error ? (
+          <div style={{ height: props.chartHeight || '300px' }}>
+            <ErrorState errorText={error} />
+          </div>
+        ) : (
+          <LineGraph {...rest} />
+        )}
       </div>
     </React.Fragment>
   );
