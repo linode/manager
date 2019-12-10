@@ -56,6 +56,7 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
   return (
     <LongviewLineGraph
       title="Disk I/O"
+      error={'An error!'}
       subtitle={'ops/second'}
       showToday={isToday}
       timezone={timezone}

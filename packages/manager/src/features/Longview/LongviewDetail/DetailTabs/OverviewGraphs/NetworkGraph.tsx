@@ -74,6 +74,7 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
   return (
     <LongviewLineGraph
       title="Network"
+      error={'Some error'}
       subtitle={maxUnit + '/s'}
       showToday={isToday}
       timezone={timezone}
