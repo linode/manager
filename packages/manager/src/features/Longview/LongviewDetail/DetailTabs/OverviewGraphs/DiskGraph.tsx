@@ -116,7 +116,7 @@ export const processDiskData = (d: Record<string, Disk>) => {
         pathOr([], ['writes'], thisDisk)
       );
     } else {
-      // Not a swap
+      // Not a swap, add reads and writes to running total
       combinedReads = appendStats(
         combinedReads,
         pathOr([], ['reads'], thisDisk)
