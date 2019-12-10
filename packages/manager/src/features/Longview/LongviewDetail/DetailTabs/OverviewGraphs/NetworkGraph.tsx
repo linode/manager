@@ -7,19 +7,20 @@ import { generateUnits } from 'src/features/Longview/LongviewLanding/Gauges/Netw
 import { statMax, sumNetwork } from 'src/features/Longview/shared/utilities';
 import { AllData, getValues } from '../../../request';
 import { convertData } from '../../../shared/formatters';
+import { GraphProps } from './types';
 
-interface Props {
-  clientAPIKey: string;
-  isToday: boolean;
-  timezone: string;
-  start: number;
-  end: number;
-}
-
-export type CombinedProps = Props & WithTheme;
+export type CombinedProps = GraphProps & WithTheme;
 
 export const NetworkGraph: React.FC<CombinedProps> = props => {
-  const { clientAPIKey, end, isToday, start, theme, timezone } = props;
+  const {
+    clientAPIKey,
+    end,
+    isToday,
+    lastUpdatedError,
+    start,
+    theme,
+    timezone
+  } = props;
 
   const [data, setData] = React.useState<Partial<AllData>>({});
   const request = () => {
@@ -43,7 +44,7 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
 
   React.useEffect(() => {
     request();
-  }, [start, end, clientAPIKey]);
+  }, [start, end, clientAPIKey, lastUpdatedError]);
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
 
@@ -74,7 +75,6 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
   return (
     <LongviewLineGraph
       title="Network"
-      error={'Some error'}
       subtitle={maxUnit + '/s'}
       showToday={isToday}
       timezone={timezone}
@@ -97,7 +97,7 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(
+const enhanced = compose<CombinedProps, GraphProps>(
   React.memo,
   withTheme
 );

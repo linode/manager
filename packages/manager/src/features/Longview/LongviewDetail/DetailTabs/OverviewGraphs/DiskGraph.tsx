@@ -6,21 +6,23 @@ import { appendStats } from 'src/features/Longview/shared/utilities';
 import { AllData, getValues } from '../../../request';
 import { Disk, StatWithDummyPoint } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
+import { GraphProps } from './types';
 
-interface Props {
-  clientAPIKey: string;
-  isToday: boolean;
-  timezone: string;
-  start: number;
-  end: number;
-}
-
-export type CombinedProps = Props & WithTheme;
+export type CombinedProps = GraphProps & WithTheme;
 
 export const MemoryGraph: React.FC<CombinedProps> = props => {
-  const { clientAPIKey, end, isToday, start, theme, timezone } = props;
+  const {
+    clientAPIKey,
+    end,
+    isToday,
+    lastUpdatedError,
+    start,
+    theme,
+    timezone
+  } = props;
 
   const [data, setData] = React.useState<Partial<AllData>>({});
+  const [requestError, setError] = React.useState<string | undefined>();
   const request = () => {
     if (!start || !end) {
       return;
@@ -29,14 +31,17 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
       fields: ['disk', 'sysinfo'],
       start,
       end
-    }).then(response => {
-      setData(response);
-    });
+    })
+      .then(response => {
+        setError(undefined);
+        setData(response);
+      })
+      .catch(_ => setError('Unable to load your Disk I/O data'));
   };
 
   React.useEffect(() => {
     request();
-  }, [start, end, clientAPIKey]);
+  }, [start, end, clientAPIKey, lastUpdatedError]);
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
 
@@ -56,7 +61,7 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
   return (
     <LongviewLineGraph
       title="Disk I/O"
-      error={'An error!'}
+      error={requestError || error}
       subtitle={'ops/second'}
       showToday={isToday}
       timezone={timezone}
