@@ -52,13 +52,11 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
       showToday={isToday}
       timezone={timezone}
       data={[
-        // Swap in Classic does not round, so don't use formatDisk
-        // (values are often 0.02 ops/s etc.)
         {
           label: 'Swap',
           borderColor: theme.graphs.redBorder,
           backgroundColor: theme.graphs.red,
-          data: _convertData(swap, start)
+          data: _convertData(swap, start, formatDisk)
         },
         {
           label: 'Write',
@@ -66,12 +64,11 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
           backgroundColor: theme.graphs.lightOrange,
           data: _convertData(write, start, formatDisk)
         },
-        // These values are also not rounded in Classic
         {
           label: 'Read',
           borderColor: theme.graphs.lightYellowBorder,
           backgroundColor: theme.graphs.lightYellow,
-          data: _convertData(read, start)
+          data: _convertData(read, start, formatDisk)
         }
       ]}
     />
@@ -139,7 +136,11 @@ const formatDisk = (value: number | null) => {
   if (value === null) {
     return value;
   }
-
+  // Don't round  to an integer if value is small, otherwise
+  // it might not be displayed
+  if (value < 1) {
+    return Math.round(value * 100) / 100;
+  }
   // Round to nearest op/s.
   return Math.round(value);
 };
