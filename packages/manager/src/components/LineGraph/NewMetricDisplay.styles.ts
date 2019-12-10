@@ -1,7 +1,10 @@
 import { createStyles, Theme, WithStyles } from 'src/components/core/styles';
 
 export type ClassNames =
+  | 'wrapper'
+  | 'container'
   | 'root'
+  | 'toggleButton'
   | 'legend'
   | 'legendIcon'
   | 'red'
@@ -17,8 +20,15 @@ export type StyleProps = WithStyles<ClassNames>;
 
 const newMetricDisplayStyles = (theme: Theme) =>
   createStyles({
-    root: {
-      maxWidth: 600,
+    wrapper: {
+      display: 'flex',
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      '& > div': {
+        flexBasis: '100%'
+      }
+    },
+    container: {
       margin: `${theme.spacing(2)}px ${theme.spacing(1)}px ${theme.spacing(
         1
       )}px`,
@@ -26,7 +36,10 @@ const newMetricDisplayStyles = (theme: Theme) =>
       color: '#777',
       backgroundColor: theme.bg.offWhiteDT,
       border: `1px solid ${theme.color.border3}`,
-      fontSize: 14,
+      fontSize: 14
+    },
+    root: {
+      maxWidth: 600,
       '& *': {
         height: 'auto',
         border: 'none',
@@ -73,6 +86,16 @@ const newMetricDisplayStyles = (theme: Theme) =>
     },
     tableHeadInner: {
       paddingBottom: 4
+    },
+    toggleButton: {
+      padding: 0,
+      margin: 0,
+      justifyContent: 'flex-start',
+      fontFamily: theme.font.normal,
+      fontSize: 14,
+      '&:focus': {
+        outline: `1px dotted #ccc`
+      }
     },
     legend: {
       [theme.breakpoints.up('md')]: {
