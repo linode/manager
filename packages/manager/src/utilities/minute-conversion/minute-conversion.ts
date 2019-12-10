@@ -105,7 +105,7 @@ export const formatEventSeconds = (seconds: number | null) => {
 
   if (seconds >= 60) {
     const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
+    const secs = Math.floor(seconds % 60);
 
     return `${pluralize('minute', 'minutes', minutes)}, ${pluralize(
       'second',
