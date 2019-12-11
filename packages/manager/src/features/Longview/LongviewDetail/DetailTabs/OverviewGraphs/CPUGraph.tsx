@@ -7,19 +7,20 @@ import {
   convertData,
   pathMaybeAddDataInThePast
 } from '../../../shared/formatters';
+import { GraphProps } from './types';
 
-interface Props {
-  clientAPIKey: string;
-  isToday: boolean;
-  timezone: string;
-  start: number;
-  end: number;
-}
-
-export type CombinedProps = Props & WithTheme;
+export type CombinedProps = GraphProps & WithTheme;
 
 export const CPUGraph: React.FC<CombinedProps> = props => {
-  const { clientAPIKey, end, isToday, start, theme, timezone } = props;
+  const {
+    clientAPIKey,
+    end,
+    isToday,
+    lastUpdatedError,
+    start,
+    theme,
+    timezone
+  } = props;
 
   const [data, setData] = React.useState<Partial<AllData>>({});
   const request = () => {
@@ -47,7 +48,7 @@ export const CPUGraph: React.FC<CombinedProps> = props => {
 
   React.useEffect(() => {
     request();
-  }, [start, end, clientAPIKey]);
+  }, [start, end, clientAPIKey, lastUpdatedError]);
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
 
