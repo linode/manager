@@ -410,25 +410,25 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                 borderColor: theme.graphs.blueBorder,
                 backgroundColor: theme.graphs.blue,
                 data: v4Data.publicIn,
-                label: 'Public Traffic In'
+                label: 'Public Inbound'
               },
               {
                 borderColor: theme.graphs.greenBorder,
                 backgroundColor: theme.graphs.green,
                 data: v4Data.publicOut,
-                label: 'Public Traffic Out'
+                label: 'Public Outbound'
               },
               {
                 borderColor: theme.graphs.purpleBorder,
                 backgroundColor: theme.graphs.purple,
                 data: v4Data.privateIn,
-                label: 'Private Traffic In'
+                label: 'Private Inbound'
               },
               {
                 borderColor: theme.graphs.yellowBorder,
                 backgroundColor: theme.graphs.yellow,
                 data: v4Data.privateOut,
-                label: 'Private Traffic Out'
+                label: 'Private Outbound'
               }
             ]}
             legendRows={[
@@ -501,28 +501,28 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                 borderColor: theme.graphs.blueBorder,
                 backgroundColor: theme.graphs.blue,
                 data: data.publicIn,
-                label: 'Public Traffic In',
+                label: 'Public Inbound',
                 fill: 'origin'
               },
               {
                 borderColor: theme.graphs.greenBorder,
                 backgroundColor: theme.graphs.green,
                 data: data.publicOut,
-                label: 'Public Traffic Out',
+                label: 'Public Outbound',
                 fill: '-1'
               },
               {
                 borderColor: theme.graphs.purpleBorder,
                 backgroundColor: theme.graphs.purple,
                 data: data.privateIn,
-                label: 'Private Traffic In',
+                label: 'Private Inbound',
                 fill: '-2'
               },
               {
                 borderColor: theme.graphs.yellowBorder,
                 backgroundColor: theme.graphs.yellow,
                 data: data.privateOut,
-                label: 'Private Traffic Out'
+                label: 'Private Outbound'
               }
             ]}
             legendRows={[
@@ -581,13 +581,13 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                 borderColor: theme.graphs.yellowBorder,
                 backgroundColor: theme.graphs.yellow,
                 data: data.io,
-                label: 'Disk I/O'
+                label: 'I/O Rate'
               },
               {
                 borderColor: theme.graphs.redBorder,
                 backgroundColor: theme.graphs.red,
                 data: data.swap,
-                label: 'Swap I/O'
+                label: 'Swap Rate'
               }
             ]}
             legendRows={[
