@@ -138,12 +138,6 @@ export class BillingDetail extends React.Component<CombinedProps, State> {
             Billing
           </Typography>
           <Grid container>
-            <Grid item xs={12} md={4} lg={3} className={classes.sidebar}>
-              <SummaryPanel
-                data-qa-summary-panel
-                history={this.props.history}
-              />
-            </Grid>
             <Grid item xs={12} md={8} lg={9} className={classes.main}>
               <UpdateContactInformationPanel />
               <UpdateCreditCardPanel />
@@ -151,6 +145,12 @@ export class BillingDetail extends React.Component<CombinedProps, State> {
               <PromotionsPanel />
               <RecentInvoicesPanel />
               <RecentPaymentsPanel />
+            </Grid>
+            <Grid item xs={12} md={4} lg={3} className={classes.sidebar}>
+              <SummaryPanel
+                data-qa-summary-panel
+                history={this.props.history}
+              />
             </Grid>
           </Grid>
         </AccountProvider>

@@ -45,11 +45,11 @@ const NodeBalancerSummary: React.StatelessComponent<CombinedProps> = props => {
       <DocumentTitleSegment segment={`${nodeBalancer.label} - Summary`} />
       <NodeBalancerCreationErrors errors={errorResponses} />
       <Grid container>
-        <Grid item xs={12} md={4} lg={3} className={classes.sidebar}>
-          <SummaryPanel nodeBalancer={nodeBalancer} />
-        </Grid>
         <Grid item xs={12} md={8} lg={9} className={classes.main}>
           <TablesPanel nodeBalancer={nodeBalancer} />
+        </Grid>
+        <Grid item xs={12} md={4} lg={3} className={classes.sidebar}>
+          <SummaryPanel nodeBalancer={nodeBalancer} />
         </Grid>
       </Grid>
     </React.Fragment>
