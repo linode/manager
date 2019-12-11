@@ -99,7 +99,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
     this.props.onClose();
   };
 
-  componentWillReceiveProps(nextProps: CombinedProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: CombinedProps) {
     this.setState({ configs: [] });
   }
 

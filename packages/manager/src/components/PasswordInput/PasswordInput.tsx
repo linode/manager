@@ -86,7 +86,7 @@ class PasswordInput extends React.Component<CombinedProps, State> {
     active: false
   };
 
-  componentWillReceiveProps(nextProps: CombinedProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: CombinedProps) {
     const { value } = nextProps;
     this.setState({
       isValidPassword: passwordValidity(value),
