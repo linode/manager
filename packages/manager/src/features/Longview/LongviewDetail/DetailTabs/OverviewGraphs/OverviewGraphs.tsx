@@ -10,6 +10,7 @@ import DiskGraph from './DiskGraph';
 import LoadGraph from './LoadGraph';
 import MemoryGraph from './MemoryGraph';
 import NetworkGraph from './NetworkGraph';
+import { GraphProps } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paperSection: {
@@ -24,11 +25,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   clientAPIKey: string;
   timezone: string;
+  lastUpdatedError: boolean;
 }
 export type CombinedProps = Props;
 
 export const OverviewGraphs: React.FC<CombinedProps> = props => {
-  const { clientAPIKey, timezone } = props;
+  const { clientAPIKey, lastUpdatedError, timezone } = props;
   const classes = useStyles();
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
     start: 0,
@@ -41,12 +43,13 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
 
   const isToday = time.end - time.start < 60 * 60 * 25;
 
-  const graphProps = {
+  const graphProps: GraphProps = {
     clientAPIKey,
     timezone,
     isToday,
     start: time.start,
-    end: time.end
+    end: time.end,
+    lastUpdatedError
   };
 
   return (

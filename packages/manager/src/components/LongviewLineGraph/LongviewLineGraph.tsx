@@ -4,6 +4,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 
 import Divider from 'src/components/core/Divider';
 import Typography from 'src/components/core/Typography';
+import ErrorState from 'src/components/ErrorState';
 import LineGraph, { Props as LineGraphProps } from 'src/components/LineGraph';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -26,6 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface Props extends LineGraphProps {
   title: string;
   subtitle?: string;
+  error?: string;
 }
 
 type CombinedProps = Props;
@@ -33,7 +35,7 @@ type CombinedProps = Props;
 const LongviewLineGraph: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const { title, subtitle, ...rest } = props;
+  const { error, title, subtitle, ...rest } = props;
 
   return (
     <React.Fragment>
@@ -47,7 +49,13 @@ const LongviewLineGraph: React.FC<CombinedProps> = props => {
       </Typography>
       <Divider type="landingHeader" className={classes.divider} />
       <div>
-        <LineGraph {...rest} />
+        {error ? (
+          <div style={{ height: props.chartHeight || '300px' }}>
+            <ErrorState errorText={error} />
+          </div>
+        ) : (
+          <LineGraph {...rest} />
+        )}
       </div>
     </React.Fragment>
   );
