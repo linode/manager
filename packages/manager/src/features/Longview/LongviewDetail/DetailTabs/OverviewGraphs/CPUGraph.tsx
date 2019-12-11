@@ -23,6 +23,7 @@ export const CPUGraph: React.FC<CombinedProps> = props => {
   } = props;
 
   const [data, setData] = React.useState<Partial<AllData>>({});
+  const [error, setError] = React.useState<string | undefined>();
   const request = () => {
     if (!start || !end) {
       return;
@@ -32,9 +33,12 @@ export const CPUGraph: React.FC<CombinedProps> = props => {
       fields: ['cpu'],
       start,
       end
-    }).then(response => {
-      setData(response);
-    });
+    })
+      .then(response => {
+        setError(undefined);
+        setData(response);
+      })
+      .catch(_ => setError('Unable to retrieve CPU data'));
   };
 
   const cpuData = React.useMemo(() => {
@@ -56,6 +60,7 @@ export const CPUGraph: React.FC<CombinedProps> = props => {
     <LongviewLineGraph
       title="CPU"
       subtitle="%"
+      error={error}
       showToday={isToday}
       timezone={timezone}
       data={[
