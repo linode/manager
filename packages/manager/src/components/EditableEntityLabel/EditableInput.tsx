@@ -33,6 +33,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     position: 'relative'
   },
+  containerEditing: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    position: 'relative'
+  },
   initial: {
     '&:hover, &:focus': {
       '& $editIcon': {
@@ -72,7 +78,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 24,
     minWidth: 'auto',
     minHeight: 'auto',
-    marginTop: 0,
+    marginTop: 5,
     background: 'transparent !important'
   },
   icon: {
@@ -104,6 +110,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   editIcon: {
     position: 'absolute',
+    marginTop: '0 !important',
     right: 10,
     [theme.breakpoints.up('sm')]: {
       opacity: 0,
@@ -142,11 +149,11 @@ export const EditableInput: React.FC<FinalProps> = props => {
     onEdit,
     openForEdit,
     cancelEdit,
+    isEditing,
     onInputChange,
     text,
     typeVariant,
     className,
-    isEditing,
     inputText,
     loading,
     ...rest
@@ -177,7 +184,7 @@ export const EditableInput: React.FC<FinalProps> = props => {
 
   return !isEditing && !errorText ? (
     <div
-      className={`${classes.container} ${classes.initial} ${className}`}
+      className={`${classes.initial} ${className} ${classes.container}`}
       data-testid={'editable-text'}
     >
       <React.Fragment>
@@ -196,7 +203,7 @@ export const EditableInput: React.FC<FinalProps> = props => {
   ) : (
     <ClickAwayListener onClickAway={cancelEdit} mouseEvent="onMouseDown">
       <div
-        className={`${classes.container} ${classes.edit} ${className}`}
+        className={`${classes.containerEditing} ${classes.edit} ${className}`}
         data-qa-edit-field
       >
         <TextField

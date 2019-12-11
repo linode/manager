@@ -88,14 +88,8 @@ const styles = (theme: Theme) =>
       color: theme.color.red
     },
     editable: {
-      fontSize: '.75rem',
-      marginTop: theme.spacing(1) / 2,
-      position: 'absolute',
-      bottom: -5,
-      left: 6,
-      backgroundColor: theme.bg.white,
-      paddingLeft: 4,
-      paddingRight: 4
+      wordBreak: 'keep-all',
+      paddingLeft: 1
     },
     helperTextTop: {
       marginBottom: theme.spacing(),
