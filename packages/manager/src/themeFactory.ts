@@ -255,7 +255,9 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       emeraldGreen: '#74D97E',
       emeraldGreenBorder: '#31CC4D',
       forestGreen: '#6FC37C',
-      forestGreenBorder: '#32AE4E'
+      forestGreenBorder: '#32AE4E',
+      lightGold: 'rgba(255, 220, 77, 0.7)',
+      lightGoldBorder: 'rgba(255,210,26,1)'
     },
     font: {
       normal: primaryFonts.normal,
