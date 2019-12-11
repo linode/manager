@@ -168,6 +168,7 @@ export const EditableInput: React.FC<FinalProps> = props => {
     <Typography
       className={className ? className : classes.root}
       variant={typeVariant === 'table-cell' ? 'body1' : 'h1'}
+      aria-label={text}
       data-qa-editable-text
     >
       <strong>{text}</strong>
@@ -186,7 +187,7 @@ export const EditableInput: React.FC<FinalProps> = props => {
           className={`${classes.button} ${classes.editIcon}`}
           onClick={openForEdit}
           data-qa-edit-button
-          aria-label={`Edit ${labelText}`}
+          aria-label={`Edit ${text}`}
         >
           <Edit className={`${classes.icon} ${classes.edit}`} />
         </Button>
@@ -226,6 +227,7 @@ export const EditableInput: React.FC<FinalProps> = props => {
               className={`${classes.button} ${classes.saveButton}`}
               onClick={() => onEdit()}
               data-qa-save-edit
+              aria-label="Save new label"
             >
               <Check className={`${classes.icon} ${classes.save}`} />
             </Button>
@@ -233,6 +235,7 @@ export const EditableInput: React.FC<FinalProps> = props => {
               className={classes.button}
               onClick={cancelEdit}
               data-qa-cancel-edit
+              aria-label="Cancel label edit"
             >
               <Close className={`${classes.icon} ${classes.close}`} />
             </Button>
