@@ -19,6 +19,9 @@ export const LoadGraph: React.FC<CombinedProps> = props => {
 
   const [data, setData] = React.useState<Partial<AllData>>({});
   const request = () => {
+    if (!start || !end) {
+      return;
+    }
     return getValues(clientAPIKey, {
       fields: ['load'],
       start,
@@ -45,11 +48,20 @@ export const LoadGraph: React.FC<CombinedProps> = props => {
           label: 'Load',
           borderColor: theme.graphs.blueBorder,
           backgroundColor: theme.graphs.blue,
-          data: _convertData(data.Load || [], start)
+          data: _convertData(data.Load || [], start, formatLoad)
         }
       ]}
     />
   );
+};
+
+const formatLoad = (value: number | null) => {
+  if (value === null) {
+    return value;
+  }
+
+  // Round to 2 decimal places.
+  return Math.round(value * 100) / 100;
 };
 
 export default withTheme(LoadGraph);

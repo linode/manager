@@ -5,6 +5,8 @@ import { readableBytes } from 'src/utilities/unitConversions';
 import {
   CPU,
   Disk,
+  InboundOutboundNetwork,
+  LongviewNetwork,
   LongviewPackage,
   Stat,
   StatWithDummyPoint
@@ -82,6 +84,50 @@ export const sumCPU = (CPUData: Record<string, CPU> = {}): CPU<'yAsNull'> => {
   return result;
 };
 
+// The LV API returns Network usage statics as a map, with each key-value pair
+// representing 1 Network Interface. Data from a Linode with 2 Network
+// Interfaces looks like this:
+// {
+//   eth0: { rx_bytes: Stat[], tx_bytes: Stat[] },
+//   eth1: { rx_bytes: Stat[], tx_bytes: Stat[] }
+// }
+// When we display this data on the LV Overview Graphs, we want to see combined
+// usage of each metric (i.e. `rx_bytes` stats of all Network Interfaces
+// combined).
+//
+// Given a Network usage statistics map, this function returns another Network
+// usage statistics map with combined Y values for each section (rx_bytes,
+// tx_bytes).
+type LongviewNetworkInterface = LongviewNetwork['Network']['Interface'];
+
+export const sumNetwork = (
+  networkData: LongviewNetworkInterface = {}
+): InboundOutboundNetwork<'yAsNull'> => {
+  const result: InboundOutboundNetwork<'yAsNull'> = {
+    tx_bytes: [],
+    rx_bytes: []
+  };
+
+  // Protect against malformed data.
+  if (!networkData || typeof networkData !== 'object') {
+    return result;
+  }
+
+  // Iterate through each CPU and combine stats.
+  Object.values(networkData).forEach(thisNetworkInterface => {
+    result.rx_bytes = appendStats(
+      result.rx_bytes,
+      thisNetworkInterface.rx_bytes
+    );
+    result.tx_bytes = appendStats(
+      result.tx_bytes,
+      thisNetworkInterface.tx_bytes
+    );
+  });
+
+  return result;
+};
+
 /**
  * Given two Stat arrays, returns a Stat array with summed Y values if their
  * X values are equal. X values remain untouched.
@@ -89,7 +135,7 @@ export const sumCPU = (CPUData: Record<string, CPU> = {}): CPU<'yAsNull'> => {
  * @param prevStats
  * @param newStats
  */
-const appendStats = (
+export const appendStats = (
   prevStats: StatWithDummyPoint[],
   newStats: StatWithDummyPoint[]
 ) => {

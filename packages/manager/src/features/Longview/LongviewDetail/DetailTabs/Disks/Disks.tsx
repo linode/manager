@@ -12,11 +12,11 @@ import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import DiskPaper from './DiskPaper';
 
 import getStats from '../../../request';
-import { LongviewDisk } from '../../../request.types';
+import { Disk } from '../../../request.types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: '250px',
+    width: 250,
     marginBottom: theme.spacing()
   }
 }));
@@ -33,14 +33,17 @@ type CombinedProps = Props;
 
 const Disks: React.FC<CombinedProps> = props => {
   const [diskStats, updateDiskStats] = React.useState<
-    Partial<LongviewDisk> | undefined
+    Partial<Disk> | undefined
   >();
+  const [sysInfoType, updateSysInfoType] = React.useState<string>('');
   const [fetchError, setError] = React.useState<string>('');
   const [statsLoading, setLoading] = React.useState<boolean>(false);
   const [start, setStart] = React.useState<number>(0);
   const [end, setEnd] = React.useState<number>(0);
 
   const classes = useStyles();
+
+  let mounted = false;
 
   const { lastUpdatedError, clientLastUpdated, clientAPIKey } = props;
 
@@ -50,6 +53,7 @@ const Disks: React.FC<CombinedProps> = props => {
   };
 
   React.useEffect(() => {
+    mounted = true;
     if (clientLastUpdated && start && end) {
       if (!diskStats) {
         setLoading(true);
@@ -58,21 +62,32 @@ const Disks: React.FC<CombinedProps> = props => {
       setError('');
 
       getStats(clientAPIKey, 'getValues', {
-        fields: ['disk'],
+        fields: ['disk', 'sysinfo'],
         start,
         end
       })
         .then(r => {
-          setLoading(false);
-          updateDiskStats(r);
+          if (mounted) {
+            setLoading(false);
+            updateDiskStats((r || {}).Disk);
+            updateSysInfoType(pathOr('', ['SysInfo', 'type'], r));
+          }
         })
         .catch(e => {
-          setLoading(false);
-          if (!diskStats) {
-            setError('There was an error fetching statistics for your Disks.');
+          if (mounted) {
+            setLoading(false);
+            if (!diskStats) {
+              setError(
+                'There was an error fetching statistics for your Disks.'
+              );
+            }
           }
         });
     }
+
+    return () => {
+      mounted = false;
+    };
   }, [clientLastUpdated, start, end]);
 
   const renderContent = () => {
@@ -85,19 +100,21 @@ const Disks: React.FC<CombinedProps> = props => {
     if (statsLoading) {
       return <LandingLoading shouldDelay />;
     }
-
     /*
       Longview doesn't return the Disk stats in any particular order, so sort them
       alphabetically now
     */
-    const sortedKeys = Object.keys(pathOr({}, ['Disk'], diskStats)).sort();
+    const sortedKeys = Object.keys(diskStats || {}).sort();
 
     return sortedKeys.map(eachKey => (
       <DiskPaper
         diskLabel={eachKey}
         key={eachKey}
-        stats={pathOr({}, ['Disk'], diskStats)[eachKey]}
+        stats={(diskStats || {})[eachKey]}
         timezone={props.timezone}
+        sysInfoType={sysInfoType}
+        startTime={start}
+        endTime={end}
       />
     ));
   };

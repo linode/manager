@@ -3,22 +3,21 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { WithStartAndEnd } from '../../../request';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import CPUGraph from './CPUGraph';
+import DiskGraph from './DiskGraph';
 import LoadGraph from './LoadGraph';
 import MemoryGraph from './MemoryGraph';
+import NetworkGraph from './NetworkGraph';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paperSection: {
     padding: theme.spacing(3) + 1,
     marginBottom: theme.spacing(1) + 3
   },
-  selectOuter: {
-    '& .time-range-select': {
-      width: 150
-    }
+  selectTimeRange: {
+    width: 150
   }
 }));
 
@@ -64,11 +63,12 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
         <Grid item>
           <Typography variant="h2">Resource Allocation History</Typography>
         </Grid>
-        <Grid item className={classes.selectOuter}>
+        <Grid item>
           <TimeRangeSelect
             handleStatsChange={handleStatsChange}
             defaultValue={'Past 30 Minutes'}
             label="Select Time Range"
+            className={classes.selectTimeRange}
             hideLabel
           />
         </Grid>
@@ -90,22 +90,10 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
               <MemoryGraph {...graphProps} />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <LongviewLineGraph
-                title="Network"
-                subtitle="KB/s"
-                showToday={isToday}
-                timezone={timezone}
-                data={[]}
-              />
+              <NetworkGraph {...graphProps} />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <LongviewLineGraph
-                title="Disk I/O"
-                subtitle="ops/s"
-                showToday={isToday}
-                timezone={timezone}
-                data={[]}
-              />
+              <DiskGraph {...graphProps} />
             </Grid>
             <Grid item xs={12} sm={6}>
               <LoadGraph {...graphProps} />

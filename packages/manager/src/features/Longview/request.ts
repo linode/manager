@@ -97,8 +97,7 @@ interface Get {
         | 'memory'
         | 'network'
         | 'sysinfo'
-        | 'uptime'
-      )[];
+        | 'uptime')[];
     }
   ): Promise<Partial<Omit<AllData, 'updated'>>>;
   (
@@ -133,9 +132,9 @@ interface Get {
     token: string,
     action: 'getValues',
     options: {
-      fields: 'disk'[];
+      fields: ('disk' | 'sysinfo')[];
     } & Partial<WithStartAndEnd>
-  ): Promise<Partial<LongviewDisk>>;
+  ): Promise<Partial<LongviewDisk & LongviewSystemInfo>>;
   (token: string, action: LongviewAction, options: Partial<Options>): Promise<
     Partial<AllData>
   >;

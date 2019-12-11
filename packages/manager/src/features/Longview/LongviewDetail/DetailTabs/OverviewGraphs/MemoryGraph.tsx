@@ -23,6 +23,9 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
 
   const [data, setData] = React.useState<Partial<AllData>>({});
   const request = () => {
+    if (!start || !end) {
+      return;
+    }
     return getValues(clientAPIKey, {
       fields: ['memory'],
       start,
@@ -72,8 +75,8 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
         },
         {
           label: 'Buffers',
-          borderColor: theme.graphs.pinkBorder,
-          backgroundColor: theme.graphs.pink,
+          borderColor: theme.graphs.darkPurpleBorder,
+          backgroundColor: theme.graphs.darkPurple,
           data: _convertData(buffers, start, formatMemory)
         },
         {
@@ -84,8 +87,8 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
         },
         {
           label: 'Used',
-          borderColor: theme.graphs.darkPurpleBorder,
-          backgroundColor: theme.graphs.darkPurple,
+          borderColor: theme.graphs.lightPurpleBorder,
+          backgroundColor: theme.graphs.lightPurple,
           data: _convertData(used, start, formatMemory)
         }
       ]}

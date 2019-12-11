@@ -91,7 +91,6 @@ const TimeRangeSelect: React.FC<CombinedProps> = props => {
   return (
     <Select
       {...restOfSelectProps}
-      className={'time-range-select'}
       small
       onChange={handleChange}
       isClearable={false}

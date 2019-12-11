@@ -210,6 +210,9 @@ export type EventAction =
   | 'linode_config_create'
   | 'linode_config_update'
   | 'linode_config_delete'
+  | 'longviewclient_create'
+  | 'longviewclient_delete'
+  | 'longviewclient_update'
   | 'nodebalancer_config_create'
   | 'nodebalancer_config_update'
   | 'nodebalancer_config_delete'
@@ -248,6 +251,10 @@ export interface Event {
   action: EventAction;
   created: string;
   entity: Entity | null;
+  /* 
+    NOTE: events before the duration key was added will have a duration of 0 
+  */
+  duration: number | null;
   percent_complete: number | null;
   rate: string | null;
   read: boolean;
