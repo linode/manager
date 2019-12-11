@@ -142,21 +142,19 @@ class TabbedPanel extends React.Component<CombinedProps> {
               ))}
             </Tabs>
           </AppBar>
-          {tabs.map((tab, idx) => (
-            <div
-              key={idx}
-              className={classNames(
-                {
-                  [classes.panelBody]: !noPadding
-                },
-                shrinkTabContent
-              )}
-              {...tabPanelA11yProps(tab.name)}
-              data-qa-tab-body
-            >
-              {render(rest)}
-            </div>
-          ))}
+
+          <div
+            className={classNames(
+              {
+                [classes.panelBody]: !noPadding
+              },
+              shrinkTabContent
+            )}
+            {...tabPanelA11yProps(tabs[value].name)}
+            data-qa-tab-body
+          >
+            {render(rest)}
+          </div>
         </div>
       </Paper>
     );
