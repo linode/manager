@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   container: {
     display: 'flex',
     justifyContent: 'flex-start',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     position: 'relative'
   },
   initial: {
@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 24,
     minWidth: 'auto',
     minHeight: 'auto',
-    marginTop: 0,
+    marginTop: 5,
     background: 'transparent !important'
   },
   icon: {
@@ -142,11 +142,11 @@ export const EditableInput: React.FC<FinalProps> = props => {
     onEdit,
     openForEdit,
     cancelEdit,
+    isEditing,
     onInputChange,
     text,
     typeVariant,
     className,
-    isEditing,
     inputText,
     loading,
     ...rest
