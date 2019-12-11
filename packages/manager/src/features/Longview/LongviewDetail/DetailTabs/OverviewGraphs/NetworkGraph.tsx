@@ -23,6 +23,7 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
   } = props;
 
   const [data, setData] = React.useState<Partial<AllData>>({});
+  const [error, setError] = React.useState<string | undefined>();
   const request = () => {
     if (!start || !end) {
       return;
@@ -32,9 +33,12 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
       fields: ['network'],
       start,
       end
-    }).then(response => {
-      setData(response);
-    });
+    })
+      .then(response => {
+        setError(undefined);
+        setData(response);
+      })
+      .catch(_ => setError('Unable to retrieve network data.'));
   };
 
   const networkData = React.useMemo(
@@ -76,6 +80,7 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
     <LongviewLineGraph
       title="Network"
       subtitle={maxUnit + '/s'}
+      error={error}
       showToday={isToday}
       timezone={timezone}
       data={[
