@@ -631,7 +631,6 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                 label: 'Swap I/O'
               }
             ]}
-            rowHeaders={['Max', 'Avg', 'Last']}
             legendRows={[
               {
                 data: getMetrics(data.io),
@@ -644,28 +643,6 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             ]}
           />
         </div>
-        {/* <div className={classes.bottomLegend}>
-          <Grid container>
-            <Grid item xs={12}>
-              <MetricsDisplay
-                rows={[
-                  {
-                    legendTitle: 'I/O Rate',
-                    legendColor: 'yellow',
-                    data: getMetrics(data.io),
-                    format
-                  },
-                  {
-                    legendTitle: 'Swap Rate',
-                    legendColor: 'red',
-                    data: getMetrics(data.swap),
-                    format
-                  }
-                ]}
-              />
-            </Grid>
-          </Grid>
-        </div> */}
       </React.Fragment>
     );
   };

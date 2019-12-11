@@ -15,7 +15,8 @@ export type ClassNames =
   | 'tableHeadInner'
   | 'simpleLegend'
   | 'simpleLegendRoot'
-  | 'crossedOut';
+  | 'crossedOut'
+  | 'chartIcon';
 
 export type StyleProps = WithStyles<ClassNames>;
 
@@ -124,6 +125,12 @@ const newMetricDisplayStyles = (theme: Theme) =>
     crossedOut: {
       textDecoration: 'line-through',
       backgroundColor: 'transparent !important'
+    },
+    chartIcon: {
+      display: 'inline-block',
+      position: 'relative',
+      left: 4,
+      top: 4
     }
   });
 
