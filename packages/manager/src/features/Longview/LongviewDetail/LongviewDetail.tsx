@@ -211,7 +211,9 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           firstAndLastOnly
           labelTitle={client.label}
         />
-        <DocumentationButton href={'https://google.com'} />
+        <DocumentationButton
+          href={'https://www.linode.com/docs/platform/longview/longview/'}
+        />
       </Box>
       <AppBar position="static" color="default">
         <Tabs
