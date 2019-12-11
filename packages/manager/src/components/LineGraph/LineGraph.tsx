@@ -264,7 +264,7 @@ const LineGraph: React.FC<CombinedProps> = props => {
                         typeof tick.fillStyle === 'string'
                           ? tick.fillStyle
                           : 'transparent';
-                      const { rowData, format } = legendRows[idx];
+                      const { data: metricsData, format } = legendRows[idx];
                       return (
                         <TableRow key={idx}>
                           <TableCell className={classes.legend}>
@@ -294,8 +294,8 @@ const LineGraph: React.FC<CombinedProps> = props => {
                               </span>
                             </Button>
                           </TableCell>
-                          {rowData &&
-                            metricsBySection(rowData).map((section, i) => {
+                          {metricsData &&
+                            metricsBySection(metricsData).map((section, i) => {
                               return (
                                 <TableCell
                                   key={i}
