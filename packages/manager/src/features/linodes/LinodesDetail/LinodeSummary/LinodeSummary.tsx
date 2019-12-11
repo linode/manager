@@ -26,7 +26,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
-import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { displayType } from 'src/features/linodes/presentation';
@@ -346,23 +345,15 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                 label: 'CPU %'
               }
             ]}
+            legendRows={[
+              {
+                legendTitle: 'CPU %',
+                legendColor: 'blue',
+                data: metrics,
+                format
+              }
+            ]}
           />
-        </div>
-        <div className={classes.bottomLegend}>
-          <Grid container>
-            <Grid item xs={12}>
-              <MetricsDisplay
-                rows={[
-                  {
-                    legendTitle: 'CPU %',
-                    legendColor: 'blue',
-                    data: metrics,
-                    format
-                  }
-                ]}
-              />
-            </Grid>
-          </Grid>
         </div>
       </React.Fragment>
     );
@@ -440,41 +431,25 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                 label: 'Private Traffic Out'
               }
             ]}
+            legendRows={[
+              {
+                data: netv4InMetrics,
+                format
+              },
+              {
+                data: netv4OutMetrics,
+                format
+              },
+              {
+                data: getMetrics(v4Data.privateIn),
+                format
+              },
+              {
+                data: getMetrics(v4Data.privateOut),
+                format
+              }
+            ]}
           />
-        </div>
-        <div className={classes.bottomLegend}>
-          <Grid container>
-            <Grid item xs={12}>
-              <MetricsDisplay
-                rows={[
-                  {
-                    legendTitle: 'Private Outbound',
-                    legendColor: 'yellow',
-                    data: getMetrics(v4Data.privateOut),
-                    format
-                  },
-                  {
-                    legendTitle: 'Private Inbound',
-                    legendColor: 'purple',
-                    data: getMetrics(v4Data.privateIn),
-                    format
-                  },
-                  {
-                    legendTitle: 'Public Outbound',
-                    legendColor: 'green',
-                    data: netv4OutMetrics,
-                    format
-                  },
-                  {
-                    legendTitle: 'Public Inbound',
-                    legendColor: 'blue',
-                    data: netv4InMetrics,
-                    format
-                  }
-                ]}
-              />
-            </Grid>
-          </Grid>
         </div>
         {rangeSelection === '24' && (
           <Grid item xs={12} lg={6} className={classes.totalTraffic}>
@@ -550,41 +525,25 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                 label: 'Private Traffic Out'
               }
             ]}
+            legendRows={[
+              {
+                data: publicInMetrics,
+                format
+              },
+              {
+                data: publicOutMetrics,
+                format
+              },
+              {
+                data: getMetrics(data.privateIn),
+                format
+              },
+              {
+                data: getMetrics(data.privateOut),
+                format
+              }
+            ]}
           />
-        </div>
-        <div className={classes.bottomLegend}>
-          <Grid container>
-            <Grid item xs={12}>
-              <MetricsDisplay
-                rows={[
-                  {
-                    legendTitle: 'Private Outbound',
-                    legendColor: 'yellow',
-                    data: getMetrics(data.privateOut),
-                    format
-                  },
-                  {
-                    legendTitle: 'Private Inbound',
-                    legendColor: 'purple',
-                    data: getMetrics(data.privateIn),
-                    format
-                  },
-                  {
-                    legendTitle: 'Public Outbound',
-                    legendColor: 'green',
-                    data: publicOutMetrics,
-                    format
-                  },
-                  {
-                    legendTitle: 'Public Inbound',
-                    legendColor: 'blue',
-                    data: publicInMetrics,
-                    format
-                  }
-                ]}
-              />
-            </Grid>
-          </Grid>
         </div>
         {rangeSelection === '24' && (
           <Grid item xs={12} lg={6} className={classes.totalTraffic}>
