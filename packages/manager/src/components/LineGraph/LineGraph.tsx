@@ -163,7 +163,6 @@ const LineGraph: React.FC<CombinedProps> = props => {
 
   const getChartOptions = (_suggestedMax?: number, _unit?: string) => {
     const finalChartOptions = clone(chartOptions);
-    const { showToday, timezone } = props;
     const parser = parseInTimeZone(timezone || '');
     finalChartOptions.scales.xAxes[0].time.parser = parser;
     finalChartOptions.scales.xAxes[0].time.offset = moment
@@ -197,8 +196,6 @@ const LineGraph: React.FC<CombinedProps> = props => {
   };
 
   const formatData = () => {
-    const { data } = props;
-
     return data.map(dataSet => {
       const timeData = dataSet.data.reduce((acc: any, point: any) => {
         acc.push({ t: point[0], y: point[1] });
@@ -267,7 +264,7 @@ const LineGraph: React.FC<CombinedProps> = props => {
                         typeof tick.fillStyle === 'string'
                           ? tick.fillStyle
                           : 'transparent';
-                      const { data, format } = legendRows[idx];
+                      const { rowData, format } = legendRows[idx];
                       return (
                         <TableRow key={idx}>
                           <TableCell className={classes.legend}>
@@ -297,8 +294,8 @@ const LineGraph: React.FC<CombinedProps> = props => {
                               </span>
                             </Button>
                           </TableCell>
-                          {data &&
-                            metricsBySection(data).map((section, i) => {
+                          {rowData &&
+                            metricsBySection(rowData).map((section, i) => {
                               return (
                                 <TableCell
                                   key={i}
