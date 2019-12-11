@@ -77,17 +77,6 @@ const styles = (theme: Theme) =>
     },
     tagHeading: {
       marginBottom: theme.spacing(1) + 4
-    },
-    sectionMain: {
-      [theme.breakpoints.up('md')]: {
-        order: 1
-      }
-    },
-    sectionSideBar: {
-      [theme.breakpoints.up('md')]: {
-        order: 2,
-        display: 'inline-block'
-      }
     }
   });
 interface KubernetesContainerProps {
@@ -214,6 +203,22 @@ export const KubernetesClusterDetail: React.FunctionComponent<
           container
           item
           direction="row"
+          xs={12}
+          md={9}
+          className={classes.sectionMain}
+        >
+          <Navigation
+            location={location}
+            cluster={cluster}
+            updateCluster={props.updateCluster}
+            updateNodePool={props.updateNodePool}
+            {...rest}
+          />
+        </Grid>
+        <Grid
+          container
+          item
+          direction="row"
           className={classes.sectionSideBar}
           xs={12}
           md={3}
@@ -232,22 +237,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<
               endpointLoading={endpointLoading}
             />
           </Grid>
-        </Grid>
-        <Grid
-          container
-          item
-          direction="row"
-          xs={12}
-          md={9}
-          className={classes.sectionMain}
-        >
-          <Navigation
-            location={location}
-            cluster={cluster}
-            updateCluster={props.updateCluster}
-            updateNodePool={props.updateNodePool}
-            {...rest}
-          />
         </Grid>
       </Grid>
     </React.Fragment>

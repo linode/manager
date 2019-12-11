@@ -697,9 +697,6 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         <DocumentTitleSegment segment={`${linode.label} - Summary`} />
 
         <Grid container>
-          <Grid item xs={12} md={4} lg={3} className={classes.sidebar}>
-            <SummaryPanel />
-          </Grid>
           <Grid item xs={12} md={8} lg={9} className={classes.main}>
             <Grid
               container
@@ -783,6 +780,9 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
               renderBody={this.renderDiskIOChart}
               {...chartProps}
             />
+          </Grid>
+          <Grid item xs={12} md={4} lg={3} className={classes.sidebar}>
+            <SummaryPanel />
           </Grid>
         </Grid>
       </React.Fragment>
