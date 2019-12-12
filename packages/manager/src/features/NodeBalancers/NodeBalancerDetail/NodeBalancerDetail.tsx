@@ -28,6 +28,7 @@ import Tabs from 'src/components/core/Tabs';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import { convertForAria } from 'src/components/TabLink/TabLink';
 import withLoadingAndError, {
   LoadingAndErrorHandlers,
   LoadingAndErrorState
@@ -243,21 +244,18 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   tabs = [
     {
       routeNames: [`${this.props.match.url}/summary`],
-      title: 'Summary',
-      name: 'nb-summary'
+      title: 'Summary'
     },
     {
       routeNames: [
         `${this.props.match.url}/configurations`,
         `${this.props.match.url}/configurations/:configId`
       ],
-      title: 'Configurations',
-      name: 'nb-configs'
+      title: 'Configurations'
     },
     {
       routeNames: [`${this.props.match.url}/settings`],
-      title: 'Settings',
-      name: 'nb-settings'
+      title: 'Settings'
     }
   ];
 
@@ -345,8 +343,8 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
                 <Tab
                   key={tab.title}
                   role="tab"
-                  id={`tab-${tab.name}`}
-                  aria-controls={`tabpanel-${tab.name}`}
+                  id={`tab-${convertForAria(tab.title)}`}
+                  aria-controls={`tabpanel-${convertForAria(tab.title)}`}
                   label={tab.title}
                   data-qa-tab={tab.title}
                 />

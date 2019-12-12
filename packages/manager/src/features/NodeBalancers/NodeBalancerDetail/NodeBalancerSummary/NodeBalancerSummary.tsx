@@ -41,11 +41,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const NodeBalancerSummary: React.StatelessComponent<CombinedProps> = props => {
   const { nodeBalancer, errorResponses, classes } = props;
   return (
-    <div
-      role="tabpanel"
-      id="tabpanel-nb-summary"
-      aria-labelledby="tab-nb-summary"
-    >
+    <div role="tabpanel" id="tabpanel-summary" aria-labelledby="tab-summary">
       <DocumentTitleSegment segment={`${nodeBalancer.label} - Summary`} />
       <NodeBalancerCreationErrors errors={errorResponses} />
       <Grid container>

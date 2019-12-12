@@ -142,8 +142,8 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
     return (
       <div
         role="tabpanel"
-        id="tabpanel-nb-settings"
-        aria-labelledby="tab-nb-settings"
+        id="tabpanel-settings"
+        aria-labelledby="tab-settings"
       >
         <DocumentTitleSegment segment={`${nodeBalancerLabel} - Settings`} />
         <Paper className={classes.root}>
