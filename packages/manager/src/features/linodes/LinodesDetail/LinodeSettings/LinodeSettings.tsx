@@ -44,9 +44,9 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = props => {
 
         return (
           <div
-            id="tabpanel-linode-detail-settings"
+            id="tabpanel-settings"
             role="tabpanel"
-            aria-labelledby="tab-linode-detail-settings"
+            aria-labelledby="tab-settings"
           >
             <DocumentTitleSegment segment={`${linode.label} - Settings`} />
             {permissionsError}

@@ -355,9 +355,9 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
     // Currently in the context of profile, the term 'Oauth Client(s)' is referred to as 'app' or 'OAuth Apps' for user-facing displays.
     return (
       <div
-        id="tabpanel-profile-clients"
+        id="tabpanel-oauthApps"
         role="tabpanel"
-        aria-labelledby="tab-profile-clients"
+        aria-labelledby="tab-oauthApps"
       >
         <DocumentTitleSegment segment="OAuth Apps" />
         <Grid container justify="space-between" alignItems="flex-end">

@@ -129,9 +129,9 @@ class UserProfile extends React.Component<CombinedProps> {
 
     return (
       <div
-        id="tabpanel-user-profile"
+        id="tabpanel-userProfile"
         role="tabpanel"
-        aria-labelledby="tab-user-profile"
+        aria-labelledby="tab-userProfile"
       >
         <Typography variant="h2" data-qa-profile-header>
           User Profile

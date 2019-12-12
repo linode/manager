@@ -49,9 +49,9 @@ class Referrals extends React.Component<CombinedProps, {}> {
     return (
       <Paper
         className={classes.root}
-        id="tabpanel-profile-referrals"
+        id="tabpanel-referrals"
         role="tabpanel"
-        aria-labelledby="tab-profile-referrals"
+        aria-labelledby="tab-referrals"
       >
         <DocumentTitleSegment segment="Referrals" />
         <Grid container>

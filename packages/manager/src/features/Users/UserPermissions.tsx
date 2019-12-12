@@ -425,9 +425,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         xs={12}
         sm={6}
         className="py0"
-        id="tabpanel-user-permissions"
+        id="tabpanel-userPermissions"
         role="tabpanel"
-        aria-labelledby="tab-user-permissions"
+        aria-labelledby="tab-userPermissions"
       >
         <FormControlLabel
           className={classes.globalRow}

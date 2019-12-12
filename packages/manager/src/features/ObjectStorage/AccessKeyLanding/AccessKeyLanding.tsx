@@ -270,9 +270,9 @@ export const AccessKeyLanding: React.StatelessComponent<
 
   return (
     <div
-      id="tabpanel-obj-access-keys"
+      id="tabpanel-accessKeys"
       role="tabpanel"
-      aria-labelledby="tab-obj-access-keys"
+      aria-labelledby="tab-accessKeys"
     >
       <DocumentTitleSegment segment="Access Keys" />
       <Grid container justify="flex-end">

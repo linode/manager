@@ -104,13 +104,11 @@ class UserDetail extends React.Component<CombinedProps> {
     /* NB: These must correspond to the routes inside the Switch */
     {
       title: 'User Profile',
-      routeName: `${this.props.match.url}/profile`,
-      name: 'user-profile'
+      routeName: `${this.props.match.url}/profile`
     },
     {
       title: 'User Permissions',
-      routeName: `${this.props.match.url}/permissions`,
-      name: 'user-permissions'
+      routeName: `${this.props.match.url}/permissions`
     }
   ];
 
@@ -416,7 +414,6 @@ class UserDetail extends React.Component<CombinedProps> {
                 component={React.forwardRef((props, ref) => (
                   <TabLink
                     to={tab.routeName}
-                    idName={tab.name}
                     title={tab.title}
                     {...props}
                     ref={ref}

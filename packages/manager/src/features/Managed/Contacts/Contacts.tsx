@@ -122,9 +122,9 @@ const Contacts: React.FC<CombinedProps> = props => {
   return (
     <>
       <div
-        id="tabpanel-managed-contacts"
+        id="tabpanel-contacts"
         role="tabpanel"
-        aria-labelledby="tab-managed-contacts"
+        aria-labelledby="tab-contacts"
       >
         <DocumentTitleSegment segment="Contacts" />
         <Typography variant="subtitle1" className={classes.copy}>

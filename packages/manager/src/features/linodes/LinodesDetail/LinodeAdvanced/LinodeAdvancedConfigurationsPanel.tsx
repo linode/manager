@@ -61,9 +61,9 @@ class LinodeAdvancedConfigurationsPanel extends React.PureComponent<
     return (
       <Grid
         container
-        id="tabpanel-linode-detail-advanced"
+        id="tabpanel-advanced"
         role="tabpanel"
-        aria-labelledby="tab-linode-detail-advanced"
+        aria-labelledby="tab-advanced"
       >
         <Grid item xs={12} md={7} lg={9}>
           <Typography variant="h2" className={classes.title}>

@@ -47,13 +47,11 @@ export const ObjectStorageLanding: React.FunctionComponent<
     /* NB: These must correspond to the routes inside the Switch */
     {
       title: 'Buckets',
-      routeName: `${props.match.url}/buckets`,
-      name: 'obj-buckets'
+      routeName: `${props.match.url}/buckets`
     },
     {
       title: 'Access Keys',
-      routeName: `${props.match.url}/access-keys`,
-      name: 'obj-access-keys'
+      routeName: `${props.match.url}/access-keys`
     }
   ];
 
@@ -131,7 +129,6 @@ export const ObjectStorageLanding: React.FunctionComponent<
               component={React.forwardRef((forwardedProps, ref) => (
                 <TabLink
                   to={tab.routeName}
-                  idName={tab.name}
                   title={tab.title}
                   {...forwardedProps}
                   ref={ref}

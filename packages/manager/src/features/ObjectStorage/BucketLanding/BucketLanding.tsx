@@ -191,11 +191,7 @@ export const BucketLanding: React.StatelessComponent<CombinedProps> = props => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Buckets" />
-      <div
-        id="tabpanel-obj-buckets"
-        role="tabpanel"
-        aria-labelledby="tab-obj-buckets"
-      >
+      <div id="tabpanel-buckets" role="tabpanel" aria-labelledby="tab-buckets">
         <Grid container justify="flex-end">
           <Grid item>
             <AddNewLink onClick={openBucketDrawer} label="Add a Bucket" />

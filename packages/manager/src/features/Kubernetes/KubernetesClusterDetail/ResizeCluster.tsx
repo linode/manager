@@ -265,9 +265,9 @@ export const ResizeCluster: React.FC<ResizeProps> = props => {
     <>
       <Grid
         container
-        id="tabpanel-lke-cluster-resize"
+        id="tabpanel-resize"
         role="tabpanel"
-        aria-labelledby="tab-lke-cluster-resize"
+        aria-labelledby="tab-resize"
       >
         <Grid item xs={12}>
           <NodePoolsDisplay

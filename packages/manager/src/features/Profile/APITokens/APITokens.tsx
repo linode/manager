@@ -5,9 +5,9 @@ import APITokenTable from './APITokenTable';
 export const APITokens: React.StatelessComponent = () => {
   return (
     <div
-      id="tabpanel-profile-tokens"
+      id="tabpanel-apiTokens"
       role="tabpanel"
-      aria-labelledby="tab-profile-tokens"
+      aria-labelledby="tab-apiTokens"
     >
       <DocumentTitleSegment segment="APITokens" />
 

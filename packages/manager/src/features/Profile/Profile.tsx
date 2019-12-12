@@ -63,43 +63,35 @@ class Profile extends React.Component<Props> {
     /* NB: These must correspond to the routes inside the Switch */
     {
       title: 'Display',
-      routeName: `${this.props.match.url}/display`,
-      name: 'profile-display'
+      routeName: `${this.props.match.url}/display`
     },
     {
       title: 'Password & Authentication',
-      routeName: `${this.props.match.url}/auth`,
-      name: 'profile-auth'
+      routeName: `${this.props.match.url}/auth`
     },
     {
       title: 'SSH Keys',
-      routeName: `${this.props.match.url}/keys`,
-      name: 'profile-ssh-keys'
+      routeName: `${this.props.match.url}/keys`
     },
     {
       title: 'LISH',
-      routeName: `${this.props.match.url}/lish`,
-      name: 'profile-lish'
+      routeName: `${this.props.match.url}/lish`
     },
     {
       title: 'API Tokens',
-      routeName: `${this.props.match.url}/tokens`,
-      name: 'profile-tokens'
+      routeName: `${this.props.match.url}/tokens`
     },
     {
       title: 'OAuth Apps',
-      routeName: `${this.props.match.url}/clients`,
-      name: 'profile-clients'
+      routeName: `${this.props.match.url}/clients`
     },
     {
       title: 'Referrals',
-      routeName: `${this.props.match.url}/referrals`,
-      name: 'profile-referrals'
+      routeName: `${this.props.match.url}/referrals`
     },
     {
       title: 'Settings',
-      routeName: `${this.props.match.url}/settings`,
-      name: 'profile-settings'
+      routeName: `${this.props.match.url}/settings`
     }
   ];
 
@@ -132,7 +124,6 @@ class Profile extends React.Component<Props> {
                 component={React.forwardRef((props, ref) => (
                   <TabLink
                     to={tab.routeName}
-                    idName={tab.name}
                     title={tab.title}
                     {...props}
                     ref={ref}

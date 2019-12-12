@@ -43,9 +43,9 @@ export const Configs: React.FC<Props> = props => {
       }) => {
         return (
           <div
-            id="tabpanel-linode-clone-configs"
+            id="tabpanel-configurationProfiles"
             role="tabpanel"
-            aria-labelledby="tab-linode-clone-configs"
+            aria-labelledby="tab-configurationProfiles"
           >
             <Table
               isResponsive={false}

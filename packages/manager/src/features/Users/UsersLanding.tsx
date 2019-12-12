@@ -235,11 +235,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Users" />
-        <div
-          id="tabpanel-account-users"
-          role="tabpanel"
-          aria-labelledby="tab-account-users"
-        >
+        <div id="tabpanel-users" role="tabpanel" aria-labelledby="tab-users">
           <Grid container justify="space-between" alignItems="flex-end">
             <Grid item>
               <Typography variant="h2" data-qa-title className={classes.title}>

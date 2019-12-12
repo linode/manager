@@ -75,23 +75,19 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
     /* NB: These must correspond to the routes inside the Switch */
     {
       title: 'Monitors',
-      routeName: `${props.match.url}/monitors`,
-      name: 'managed-monitors'
+      routeName: `${props.match.url}/monitors`
     },
     {
       title: 'SSH Access',
-      routeName: `${props.match.url}/ssh-access`,
-      name: 'managed-ssh-access'
+      routeName: `${props.match.url}/ssh-access`
     },
     {
       title: 'Credentials',
-      routeName: `${props.match.url}/credentials`,
-      name: 'managed-credentials'
+      routeName: `${props.match.url}/credentials`
     },
     {
       title: 'Contacts',
-      routeName: `${props.match.url}/contacts`,
-      name: 'managed-contacts'
+      routeName: `${props.match.url}/contacts`
     }
   ];
 
@@ -156,7 +152,6 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
                 <TabLink
                   to={tab.routeName}
                   title={tab.title}
-                  idName={tab.name}
                   {...forwardedProps}
                   ref={ref}
                 />

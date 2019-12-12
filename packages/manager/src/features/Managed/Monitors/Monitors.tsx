@@ -41,11 +41,7 @@ export const Monitors: React.FC<CombinedProps> = props => {
   }, [requestManagedServices]);
 
   return (
-    <div
-      id="tabpanel-managed-monitors"
-      role="tabpanel"
-      aria-labelledby="tab-managed-monitors"
-    >
+    <div id="tabpanel-monitors" role="tabpanel" aria-labelledby="tab-monitors">
       <MonitorTable
         monitors={monitors || []}
         credentials={credentials}

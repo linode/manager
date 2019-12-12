@@ -75,53 +75,43 @@ const LinodesDetailNavigation: React.StatelessComponent<
     /* NB: These must correspond to the routes inside the Switch */
     {
       routeName: `${url}/summary`,
-      title: 'Summary',
-      name: 'linode-detail-summary'
+      title: 'Summary'
     },
     {
       routeName: `${url}/volumes`,
-      title: 'Volumes',
-      name: 'linode-detail-volumes'
+      title: 'Volumes'
     },
     {
       routeName: `${url}/networking`,
-      title: 'Networking',
-      name: 'linode-detail-networking'
+      title: 'Networking'
     },
     {
       routeName: `${url}/resize`,
-      title: 'Resize',
-      name: 'linode-detail-resize'
+      title: 'Resize'
     },
     {
       routeName: `${url}/rescue`,
-      title: 'Rescue',
-      name: 'linode-detail-rescue'
+      title: 'Rescue'
     },
     {
       routeName: `${url}/rebuild`,
-      title: 'Rebuild',
-      name: 'linode-detail-rebuild'
+      title: 'Rebuild'
     },
     {
       routeName: `${url}/backup`,
-      title: 'Backups',
-      name: 'linode-detail-backups'
+      title: 'Backups'
     },
     {
       routeName: `${url}/activity`,
-      title: 'Activity',
-      name: 'linode-detail-activity'
+      title: 'Activity'
     },
     {
       routeName: `${url}/settings`,
-      title: 'Settings',
-      name: 'linode-detail-settings'
+      title: 'Settings'
     },
     {
       routeName: `${url}/advanced`,
-      title: 'Advanced',
-      name: 'linode-detail-advanced'
+      title: 'Advanced'
     }
   ];
 
@@ -153,7 +143,6 @@ const LinodesDetailNavigation: React.StatelessComponent<
               component={React.forwardRef((tabProps, ref) => (
                 <TabLink
                   to={tab.routeName}
-                  idName={tab.name}
                   title={tab.title}
                   {...tabProps}
                   ref={ref}
@@ -174,9 +163,9 @@ const LinodesDetailNavigation: React.StatelessComponent<
           path={`/linodes/:linodeId/volumes`}
           render={routeProps => (
             <div
-              id="tabpanel-linode-detail-volumes"
+              id="tabpanel-volumes"
               role="tabpanel"
-              aria-labelledby="tab-linode-detail-volumes"
+              aria-labelledby="tab-volumes"
             >
               <VolumesLanding
                 linodeId={linodeId}

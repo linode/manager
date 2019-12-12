@@ -51,9 +51,9 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
     return (
       <Paper
         className={classes.root}
-        id="tabpanel-profile-settings"
+        id="tabpanel-settings"
         role="tabpanel"
-        aria-labelledby="tab-profile-settings"
+        aria-labelledby="tab-settings"
       >
         <DocumentTitleSegment segment="Settings" />
         <Typography variant="h2" className={classes.title}>

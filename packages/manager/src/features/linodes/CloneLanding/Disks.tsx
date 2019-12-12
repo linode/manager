@@ -54,9 +54,9 @@ export const Disks: React.FC<Props> = props => {
           <React.Fragment>
             <Grid
               container
-              id="tabpanel-linode-clone-disks"
+              id="tabpanel-disks"
               role="tabpanel"
-              aria-labelledby="tab-linode-clone-disks"
+              aria-labelledby="tab-disks"
             >
               <Grid item xs={12} md={9}>
                 <Table isResponsive={false} aria-label="List of Disks" border>

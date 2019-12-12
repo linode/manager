@@ -22,15 +22,22 @@ interface Props {
   title: string;
   selected?: boolean;
   ref?: any;
-  idName: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class TabLink extends React.Component<CombinedProps> {
   render() {
-    const { classes, title, to, idName } = this.props;
+    const { classes, title, to } = this.props;
     const pathName = document.location.pathname;
+
+    // Removes whitespace, special chars, and camelCases a string.
+    const ariaName = title
+      .trim()
+      .toLowerCase()
+      .replace(/([^A-Z0-9]+)(.)/gi, function(match) {
+        return arguments[2].toUpperCase();
+      });
 
     return (
       <Link
@@ -40,8 +47,8 @@ class TabLink extends React.Component<CombinedProps> {
           [classes.selected]: pathName === to
         })}
         role="tab"
-        id={`tab-${idName}`}
-        aria-controls={`tabpanel-${idName}`}
+        id={`tab-${ariaName}`}
+        aria-controls={`tabpanel-${ariaName}`}
         tabIndex={0}
         aria-selected={pathName === to}
         data-qa-tab={title}

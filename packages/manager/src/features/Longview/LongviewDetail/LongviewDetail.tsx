@@ -119,50 +119,42 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     {
       title: 'Overview',
       display: true,
-      routeName: `${props.match.url}/overview`,
-      name: 'longview-overview'
+      routeName: `${props.match.url}/overview`
     },
     {
       title: 'Processes',
       display: showAllTabs,
-      routeName: `${props.match.url}/processes`,
-      name: 'longview-processes'
+      routeName: `${props.match.url}/processes`
     },
     {
       title: 'Network',
       display: showAllTabs,
-      routeName: `${props.match.url}/network`,
-      name: 'longview-network'
+      routeName: `${props.match.url}/network`
     },
     {
       title: 'Disks',
       display: showAllTabs,
-      routeName: `${props.match.url}/disks`,
-      name: 'longview-disks'
+      routeName: `${props.match.url}/disks`
     },
     {
       title: 'Apache',
       display: (client && client.apps.apache && showAllTabs) || false,
-      routeName: `${props.match.url}/apache`,
-      name: 'longview-apache'
+      routeName: `${props.match.url}/apache`
     },
     {
       title: 'Nginx',
       display: (client && client.apps.nginx && showAllTabs) || false,
-      routeName: `${props.match.url}/nginx`,
-      name: 'longview-nginx'
+      routeName: `${props.match.url}/nginx`
     },
     {
       title: 'MySQL',
       display: (client && client.apps.mysql && showAllTabs) || false,
-      routeName: `${props.match.url}/mysql`,
-      name: 'longview-mysql'
+      routeName: `${props.match.url}/mysql`
     },
     {
       title: 'Installation',
       display: true,
-      routeName: `${props.match.url}/installation`,
-      name: 'longview-installation'
+      routeName: `${props.match.url}/installation`
     }
   ];
 
@@ -238,7 +230,6 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
                 <TabLink
                   to={tab.routeName}
                   title={tab.title}
-                  idName={tab.name}
                   {...forwardedProps}
                   ref={ref}
                 />

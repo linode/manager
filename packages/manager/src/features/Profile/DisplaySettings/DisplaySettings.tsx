@@ -62,11 +62,7 @@ export class DisplaySettings extends React.Component<CombinedProps, State> {
     }
 
     return (
-      <div
-        id="tabpanel-profile-display"
-        role="tabpanel"
-        aria-labelledby="tab-profile-display"
-      >
+      <div id="tabpanel-display" role="tabpanel" aria-labelledby="tab-display">
         <DocumentTitleSegment segment="Display" />
         {!loading && (
           <React.Fragment>

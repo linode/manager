@@ -127,9 +127,9 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
 
     return (
       <div
-        id="tabpanel-account-settings"
+        id="tabpanel-settings"
         role="tabpanel"
-        aria-labelledby="tab-account-settings"
+        aria-labelledby="tab-settings"
       >
         <AutoBackups
           isManagedCustomer={isManaged}

@@ -29,11 +29,7 @@ export const LinodeActivity: React.StatelessComponent<
   const { classes, linodeID } = props;
 
   return (
-    <div
-      id="tabpanel-linode-detail-activity"
-      role="tabpanel"
-      aria-labelledby="tab-linode-detail-activity"
-    >
+    <div id="tabpanel-activity" role="tabpanel" aria-labelledby="tab-activity">
       <Typography
         variant="h2"
         className={classes.title}

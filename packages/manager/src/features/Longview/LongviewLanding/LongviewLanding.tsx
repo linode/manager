@@ -40,13 +40,11 @@ export const LongviewLanding: React.FunctionComponent<
     /* NB: These must correspond to the routes inside the Switch */
     {
       title: 'Clients',
-      routeName: `${props.match.url}/clients`,
-      name: 'longview-clients'
+      routeName: `${props.match.url}/clients`
     },
     {
       title: 'Plan Details',
-      routeName: `${props.match.url}/plan-details`,
-      name: 'longview-plan-details'
+      routeName: `${props.match.url}/plan-details`
     }
   ];
 
@@ -92,7 +90,6 @@ export const LongviewLanding: React.FunctionComponent<
               component={React.forwardRef((forwardedProps, ref) => (
                 <TabLink
                   to={tab.routeName}
-                  idName={tab.name}
                   title={tab.title}
                   {...forwardedProps}
                   ref={ref}

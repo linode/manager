@@ -889,9 +889,9 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <div
-          id="tabpanel-linode-detail-backup"
+          id="tabpanel-backups"
           role="tabpanel"
-          aria-labelledby="tab-linode-detail-backup"
+          aria-labelledby="tab-backups"
         >
           <DocumentTitleSegment segment={`${linodeLabel} - Backups`} />
           {backupsEnabled ? <this.Management /> : <this.Placeholder />}

@@ -72,9 +72,9 @@ export const Details: React.FC<Props> = props => {
     <>
       <Grid
         container
-        id="tabpanel-lke-cluster-details"
+        id="tabpanel-details"
         role="tabpanel"
-        aria-labelledby="tab-lke-cluster-details"
+        aria-labelledby="tab-details"
       >
         <Grid item xs={12}>
           <NodePoolsDisplay

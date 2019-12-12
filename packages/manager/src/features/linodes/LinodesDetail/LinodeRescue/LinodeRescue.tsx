@@ -246,11 +246,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <div
-          id="tabpanel-linode-detail-rescue"
-          role="tabpanel"
-          aria-labelledby="tab-linode-detail-rescue"
-        >
+        <div id="tabpanel-rescue" role="tabpanel" aria-labelledby="tab-rescue">
           <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
           <Paper className={classes.root}>
             {disabled && <LinodePermissionsError />}

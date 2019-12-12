@@ -73,11 +73,7 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
 
   render() {
     return (
-      <div
-        id="tabpanel-profile-ssh-keys"
-        role="tabpanel"
-        aria-labelledby="tab-profile-ssh-keys"
-      >
+      <div id="tabpanel-sshKeys" role="tabpanel" aria-labelledby="tab-sshKeys">
         <TableHeader title="SSH Keys" action={this.headerAction} />
         <Paper>
           <Table>

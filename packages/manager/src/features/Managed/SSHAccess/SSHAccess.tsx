@@ -7,9 +7,9 @@ const SSHAcess: React.FC<{}> = props => {
   return (
     <>
       <div
-        id="tabpanel-managed-ssh-access"
+        id="tabpanel-sshAccess"
         role="tabpanel"
-        aria-labelledby="tab-managed-ssh-access"
+        aria-labelledby="tab-sshAccess"
       >
         <DocumentTitleSegment segment="SSH Access" />
         <LinodePubKey />

@@ -25,9 +25,9 @@ const Installation: React.FC<CombinedProps> = props => {
   return (
     <Paper
       className={classes.root}
-      id="tabpanel-longview-installation"
+      id="tabpanel-installation"
       role="tabpanel"
-      aria-labelledby="tab-longview-installation"
+      aria-labelledby="tab-installation"
     >
       <Instructions
         APIKey={props.clientAPIKey}

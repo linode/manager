@@ -80,9 +80,9 @@ export class AuthenticationSettings extends React.Component<
 
     return (
       <div
-        id="tabpanel-profile-auth"
+        id="tabpanel-passwordAuthentication"
         role="tabpanel"
-        aria-labelledby="tab-profile-auth"
+        aria-labelledby="tab-passwordAuthentication"
       >
         <DocumentTitleSegment segment={`Password & Authentication`} />
         {/* Remove when logic above is cleared */}

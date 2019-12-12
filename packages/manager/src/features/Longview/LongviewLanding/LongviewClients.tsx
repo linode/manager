@@ -263,9 +263,9 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
         container
         className={classes.headingWrapper}
         alignItems="center"
-        id="tabpanel-longview-clients"
+        id="tabpanel-clients"
         role="tabpanel"
-        aria-labelledby="tab-longview-clients"
+        aria-labelledby="tab-clients"
       >
         <Grid item className={`py0 ${classes.searchbar}`}>
           <Search

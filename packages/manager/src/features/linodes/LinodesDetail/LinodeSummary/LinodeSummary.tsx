@@ -698,9 +698,9 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
         <Grid
           container
-          id="tabpanel-linode-detail-summary"
+          id="tabpanel-summary"
           role="tabpanel"
-          aria-labelledby="tab-linode-detail-summary"
+          aria-labelledby="tab-summary"
         >
           <Grid item xs={12} md={8} lg={9} className={classes.main}>
             <Grid

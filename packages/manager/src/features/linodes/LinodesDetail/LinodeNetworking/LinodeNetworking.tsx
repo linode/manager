@@ -533,9 +533,9 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
     return (
       <div
-        id="tabpanel-linode-detail-networking"
+        id="tabpanel-networking"
         role="tabpanel"
-        aria-labelledby="tab-linode-detail-networking"
+        aria-labelledby="tab-networking"
       >
         <DocumentTitleSegment segment={`${linodeLabel} - Networking`} />
         {readOnly && <LinodePermissionsError />}

@@ -32,10 +32,9 @@ export const DetailNavigation: React.FC<ResizeProps> = props => {
     /* NB: These must correspond to the routes inside the Switch */
     {
       routeName: `${url}/details`,
-      title: 'Details',
-      name: 'lke-cluster-details'
+      title: 'Details'
     },
-    { routeName: `${url}/resize`, title: 'Resize', name: 'lke-cluster-resize' }
+    { routeName: `${url}/resize`, title: 'Resize' }
   ];
 
   const handleTabChange = (
@@ -68,7 +67,6 @@ export const DetailNavigation: React.FC<ResizeProps> = props => {
                 <TabLink
                   to={tab.routeName}
                   title={tab.title}
-                  idName={tab.name}
                   {...tabProps}
                   ref={ref}
                 />

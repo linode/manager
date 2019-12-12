@@ -135,9 +135,9 @@ export class BillingDetail extends React.Component<CombinedProps, State> {
         <DocumentTitleSegment segment={`Account & Billing`} />
         <AccountProvider value={this.state.account}>
           <div
-            id="tabpanel-account-billing"
+            id="tabpanel-billingInfo"
             role="tabpanel"
-            aria-labelledby="tab-account-billing"
+            aria-labelledby="tab-billingInfo"
           >
             <Typography variant="h2" className={classes.heading}>
               Billing

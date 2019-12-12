@@ -119,13 +119,11 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
     // These must correspond to the routes inside the Switch
     {
       title: 'Configuration Profiles',
-      routeName: `${props.match.url}/configs`,
-      name: 'linode-clone-configs'
+      routeName: `${props.match.url}/configs`
     },
     {
       title: 'Disks',
-      routeName: `${props.match.url}/disks`,
-      name: 'linode-clone-disks'
+      routeName: `${props.match.url}/disks`
     }
   ];
 
@@ -368,11 +366,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
                     key={tab.title}
                     data-qa-tab={tab.title}
                     component={React.forwardRef((forwardedProps, ref) => (
-                      <TabLink
-                        to={tab.routeName}
-                        title={tab.title}
-                        idName={tab.name}
-                      />
+                      <TabLink to={tab.routeName} title={tab.title} />
                     ))}
                   />
                 ))}
