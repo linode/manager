@@ -1,26 +1,28 @@
+// import { APIError } from 'linode-js-sdk/lib/types'
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
-// import Paper from 'src/components/core/Paper';
-// import { makeStyles, Theme } from 'src/components/core/styles';
-// import Typography from 'src/components/core/Typography';
+import Paper from 'src/components/core/Paper';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-// import { WithStartAndEnd } from '../../../request';
-// import TimeRangeSelect from '../../../shared/TimeRangeSelect';
-// import CPUGraph from './CPUGraph';
-// import DiskGraph from './DiskGraph';
-// import LoadGraph from './LoadGraph';
-// import MemoryGraph from './MemoryGraph';
-// import NetworkGraph from './NetworkGraph';
-// import { GraphProps } from './types';
+import { AllData, getValues, WithStartAndEnd } from '../../../request';
+import TimeRangeSelect from '../../../shared/TimeRangeSelect';
+import CPUGraph from './CPUGraph';
+import DiskGraph from './DiskGraph';
+import LoadGraph from './LoadGraph';
+import MemoryGraph from './MemoryGraph';
+import NetworkGraph from './NetworkGraph';
+import { GraphProps } from './types';
 
-// const useStyles = makeStyles((theme: Theme) => ({
-//   paperSection: {
-//     padding: theme.spacing(3) + 1,
-//     marginBottom: theme.spacing(1) + 3
-//   },
-//   selectTimeRange: {
-//     width: 150
-//   }
-// }));
+const useStyles = makeStyles((theme: Theme) => ({
+  paperSection: {
+    padding: theme.spacing(3) + 1,
+    marginBottom: theme.spacing(1) + 3
+  },
+  selectTimeRange: {
+    width: 150
+  }
+}));
 
 interface Props {
   clientAPIKey: string;
@@ -28,35 +30,76 @@ interface Props {
   lastUpdated?: number;
   lastUpdatedError: boolean;
 }
-export type CombinedProps = Props;
+
+export type CombinedProps = Props & WithSnackbarProps;
 
 export const OverviewGraphs: React.FC<CombinedProps> = props => {
-  // const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
-  // const classes = useStyles();
-  // const [time, setTimeBox] = React.useState<WithStartAndEnd>({
-  //   start: 0,
-  //   end: 0
-  // });
+  const { clientAPIKey, lastUpdatedError, timezone, lastUpdated } = props;
+  const classes = useStyles();
+  const [time, setTimeBox] = React.useState<WithStartAndEnd>({
+    start: 0,
+    end: 0
+  });
+  const [data, setData] = React.useState<Partial<AllData> | undefined>();
+  const [fetchError, setError] = React.useState<string>('');
 
-  // const handleStatsChange = (start: number, end: number) => {
-  //   setTimeBox({ start, end });
-  // };
+  const request = (_start: number, _end: number, cb?: Function) => {
+    if (_start && _end) {
+      return getValues(clientAPIKey, {
+        fields: ['cpu', 'disk', 'load', 'memory', 'network', 'sysinfo'],
+        start: _start,
+        end: _end
+      })
+        .then(response => {
+          setData(response);
+          if (cb) {
+            cb();
+          }
+        })
+        .catch(e => {
+          if (!data) {
+            setError('There was an error retrieving stats.');
+          }
+          return Promise.reject(e);
+        });
+    }
 
-  // const isToday = time.end - time.start < 60 * 60 * 25;
+    return Promise.resolve({});
+  };
 
-  // const graphProps: GraphProps = {
-  //   clientAPIKey,
-  //   timezone,
-  //   isToday,
-  //   start: time.start,
-  //   end: time.end,
-  //   lastUpdatedError,
-  //   lastUpdated
-  // };
+  const handleStatsChange = (start: number, end: number) => {
+    return request(start, end, () => {
+      setTimeBox({ start, end });
+    });
+  };
+
+  const handleError = () => {
+    props.enqueueSnackbar('There was an error retrieving stats.', {
+      variant: 'error'
+    });
+  };
+
+  React.useEffect(() => {
+    request(time.start, time.end);
+  }, [lastUpdated]);
+
+  const isToday = time.end - time.start < 60 * 60 * 25;
+
+  const graphProps: GraphProps = {
+    clientAPIKey,
+    timezone,
+    isToday,
+    start: time.start,
+    end: time.end,
+    lastUpdatedError,
+    lastUpdated,
+    data: data || {},
+    error: fetchError
+  };
 
   return (
     <Grid container item spacing={0}>
-      {/* <Grid
+      <Grid
         container
         item
         direction="row"
@@ -71,6 +114,7 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
         <Grid item>
           <TimeRangeSelect
             handleStatsChange={handleStatsChange}
+            handleFetchError={handleError}
             defaultValue={'Past 30 Minutes'}
             label="Select Time Range"
             className={classes.selectTimeRange}
@@ -105,9 +149,9 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
             </Grid>
           </Grid>
         </Paper>
-      </Grid> */}
+      </Grid>
     </Grid>
   );
 };
 
-export default OverviewGraphs;
+export default withSnackbar(OverviewGraphs);

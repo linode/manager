@@ -2,7 +2,7 @@ import * as React from 'react';
 import { withTheme, WithTheme } from 'src/components/core/styles';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { sumCPU } from 'src/features/Longview/shared/utilities';
-import { AllData, getValues } from '../../../request';
+// import { AllData, getValues } from '../../../request';
 import {
   convertData,
   pathMaybeAddDataInThePast
@@ -13,34 +13,36 @@ export type CombinedProps = GraphProps & WithTheme;
 
 export const CPUGraph: React.FC<CombinedProps> = props => {
   const {
-    clientAPIKey,
+    // clientAPIKey,
     end,
     isToday,
-    lastUpdated,
-    lastUpdatedError,
+    // lastUpdated,
+    // lastUpdatedError,
     start,
+    error,
+    data,
     theme,
     timezone
   } = props;
 
-  const [data, setData] = React.useState<Partial<AllData>>({});
-  const [error, setError] = React.useState<string | undefined>();
-  const request = () => {
-    if (!start || !end) {
-      return;
-    }
+  // const [data, setData] = React.useState<Partial<AllData>>({});
+  // const [error, setError] = React.useState<string | undefined>();
+  // const request = () => {
+  //   if (!start || !end) {
+  //     return;
+  //   }
 
-    return getValues(clientAPIKey, {
-      fields: ['cpu'],
-      start,
-      end
-    })
-      .then(response => {
-        setError(undefined);
-        setData(response);
-      })
-      .catch(_ => setError('Unable to retrieve CPU data'));
-  };
+  //   return getValues(clientAPIKey, {
+  //     fields: ['cpu'],
+  //     start,
+  //     end
+  //   })
+  //     .then(response => {
+  //       setError(undefined);
+  //       setData(response);
+  //     })
+  //     .catch(_ => setError('Unable to retrieve CPU data'));
+  // };
 
   const cpuData = React.useMemo(() => {
     const summedCPUData = sumCPU(data.CPU);
@@ -51,9 +53,9 @@ export const CPUGraph: React.FC<CombinedProps> = props => {
     ]);
   }, [data.CPU]);
 
-  React.useEffect(() => {
-    request();
-  }, [start, end, clientAPIKey, lastUpdated, lastUpdatedError]);
+  // React.useEffect(() => {
+  //   request();
+  // }, [start, end, clientAPIKey, lastUpdated, lastUpdatedError]);
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
 

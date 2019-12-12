@@ -58,10 +58,12 @@ const Disks: React.FC<CombinedProps> = props => {
     );
   };
 
-  const request = (): Promise<
-    Partial<LongviewDisk<''> & LongviewSystemInfo>
-  > => {
-    if (start && end && clientLastUpdated) {
+  const request = (
+    _start: number,
+    _end: number,
+    cb?: Function
+  ): Promise<Partial<LongviewDisk<''> & LongviewSystemInfo>> => {
+    if (_start && _end && clientLastUpdated) {
       if (!diskStats) {
         setLoading(true);
       }
@@ -70,8 +72,8 @@ const Disks: React.FC<CombinedProps> = props => {
 
       return getStats(clientAPIKey, 'getValues', {
         fields: ['disk', 'sysinfo'],
-        start,
-        end
+        start: _start,
+        end: _end
       })
         .then(r => {
           if (mounted) {
@@ -105,6 +107,9 @@ const Disks: React.FC<CombinedProps> = props => {
             updateDiskStats(enhancedDisk);
             updateSysInfoType(pathOr('', ['SysInfo', 'type'], r));
           }
+          if (cb) {
+            cb();
+          }
           return r;
         })
         .catch(() => {
@@ -122,19 +127,20 @@ const Disks: React.FC<CombinedProps> = props => {
   };
 
   const setStartAndEnd = (_start: number, _end: number) => {
-    setStart(_start);
-    setEnd(_end);
-    return request();
+    return request(_start, _end, () => {
+      setStart(_start);
+      setEnd(_end);
+    });
   };
 
   React.useEffect(() => {
     mounted = true;
-    request();
+    request(start, end);
 
     return () => {
       mounted = false;
     };
-  }, [clientLastUpdated, start, end]);
+  }, [clientLastUpdated]);
 
   const renderContent = () => {
     if (fetchError || lastUpdatedError) {
