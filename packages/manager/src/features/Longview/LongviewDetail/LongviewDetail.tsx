@@ -25,6 +25,9 @@ import withLongviewClients, {
   DispatchProps,
   Props as LVProps
 } from 'src/containers/longview.container';
+import withClientStats, {
+  Props as LVDataProps
+} from 'src/containers/longview.stats.container';
 import withProfile from 'src/containers/profile.container';
 import { get } from 'src/features/Longview/request';
 import {
@@ -34,13 +37,10 @@ import {
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import useFlags from 'src/hooks/useFlags';
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
+import FeatureComingSoon from './DetailTabs/FeatureComingSoon';
 import ProcessesLanding from './DetailTabs/Processes/ProcessesLanding';
 
 const topProcessesEmptyDataSet: LongviewTopProcesses = { Processes: {} };
-
-import withClientStats, {
-  Props as LVDataProps
-} from 'src/containers/longview.stats.container';
 
 interface Props {
   client?: LongviewClient;
@@ -123,32 +123,32 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     },
     {
       title: 'Processes',
-      display: showAllTabs,
+      display: true,
       routeName: `${props.match.url}/processes`
     },
     {
       title: 'Network',
-      display: showAllTabs,
+      display: true,
       routeName: `${props.match.url}/network`
     },
     {
       title: 'Disks',
-      display: showAllTabs,
+      display: true,
       routeName: `${props.match.url}/disks`
     },
     {
       title: 'Apache',
-      display: (client && client.apps.apache && showAllTabs) || false,
+      display: client && client.apps.apache,
       routeName: `${props.match.url}/apache`
     },
     {
       title: 'Nginx',
-      display: (client && client.apps.nginx && showAllTabs) || false,
+      display: client && client.apps.nginx,
       routeName: `${props.match.url}/nginx`
     },
     {
       title: 'MySQL',
-      display: (client && client.apps.mysql && showAllTabs) || false,
+      display: client && client.apps.mysql,
       routeName: `${props.match.url}/mysql`
     },
     {
@@ -242,34 +242,49 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
         </Tabs>
       </AppBar>
       <Switch>
-        {showAllTabs && (
-          <Route
-            exact
-            strict
-            path={`${url}/processes`}
-            render={() => (
+        <Route
+          exact
+          strict
+          path={`${url}/processes`}
+          render={() => {
+            if (!showAllTabs) {
+              return (
+                <FeatureComingSoon
+                  title="Processes"
+                  clientLabel={client.label}
+                />
+              );
+            }
+
+            return (
               <ProcessesLanding
                 clientAPIKey={client.api_key}
                 lastUpdated={lastUpdated}
                 lastUpdatedError={lastUpdatedError}
               />
-            )}
-          />
-        )}
-        {showAllTabs && (
-          <Route
-            exact
-            strict
-            path={`${url}/network`}
-            render={() => <h2>Network</h2>}
-          />
-        )}
-        {showAllTabs && (
-          <Route
-            exact
-            strict
-            path={`${url}/disks`}
-            render={routerProps => (
+            );
+          }}
+        />
+        <Route
+          exact
+          strict
+          path={`${url}/network`}
+          render={() => (
+            <FeatureComingSoon title="Network" clientLabel={client.label} />
+          )}
+        />
+        <Route
+          exact
+          strict
+          path={`${url}/disks`}
+          render={routerProps => {
+            if (!showAllTabs) {
+              return (
+                <FeatureComingSoon title="Disks" clientLabel={client.label} />
+              );
+            }
+
+            return (
               <Disks
                 clientID={client.id}
                 clientAPIKey={client.api_key}
@@ -278,33 +293,36 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
                 timezone={props.timezone}
                 {...routerProps}
               />
-            )}
-          />
+            );
+          }}
+        />
         )}
-        {showAllTabs && (
-          <Route
-            exact
-            strict
-            path={`${url}/apache`}
-            render={() => <h2>Apache</h2>}
-          />
+        <Route
+          exact
+          strict
+          path={`${url}/apache`}
+          render={() => (
+            <FeatureComingSoon title="Apache" clientLabel={client.label} />
+          )}
+        />
         )}
-        {showAllTabs && (
-          <Route
-            exact
-            strict
-            path={`${url}/nginx`}
-            render={() => <h2>Nginx</h2>}
-          />
+        <Route
+          exact
+          strict
+          path={`${url}/nginx`}
+          render={() => (
+            <FeatureComingSoon title="Nginx" clientLabel={client.label} />
+          )}
+        />
         )}
-
-        {showAllTabs && (
-          <Route
-            exact
-            strict
-            path={`${url}/mysql`}
-            render={() => <h2>MySQL</h2>}
-          />
+        <Route
+          exact
+          strict
+          path={`${url}/mysql`}
+          render={() => (
+            <FeatureComingSoon title="MySQL" clientLabel={client.label} />
+          )}
+        />
         )}
         <Route
           exact
