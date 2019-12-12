@@ -43,7 +43,6 @@ const styles = (theme: Theme) =>
 export interface Tab {
   title: string;
   render: (props: any) => JSX.Element | null;
-  name: string;
 }
 interface Props {
   header: string;
@@ -89,18 +88,32 @@ class TabbedPanel extends React.Component<CombinedProps> {
     const render = safeGetTabRender(tabs, value);
 
     const tabA11yProps = (idName: string) => {
+      const ariaVal = idName
+        .trim()
+        .toLowerCase()
+        .replace(/([^A-Z0-9]+)(.)/gi, function(match) {
+          return arguments[2].toUpperCase();
+        });
+
       return {
-        id: `tab-${idName}`,
+        id: `tab-${ariaVal}`,
         role: 'tab',
-        'aria-controls': `tabpanel-${idName}`
+        'aria-controls': `tabpanel-${ariaVal}`
       };
     };
 
     const tabPanelA11yProps = (idName: string) => {
+      const ariaVal = idName
+        .trim()
+        .toLowerCase()
+        .replace(/([^A-Z0-9]+)(.)/gi, function(match) {
+          return arguments[2].toUpperCase();
+        });
+
       return {
-        id: `tabpanel-${idName}`,
+        id: `tabpanel-${ariaVal}`,
         role: 'tabpanel',
-        'aria-labelledby': `tab-${idName}`
+        'aria-labelledby': `tab-${ariaVal}`
       };
     };
 
@@ -137,7 +150,7 @@ class TabbedPanel extends React.Component<CombinedProps> {
                   key={idx}
                   label={tab.title}
                   data-qa-tab={tab.title}
-                  {...tabA11yProps(tab.name)}
+                  {...tabA11yProps(tab.title)}
                 />
               ))}
             </Tabs>
@@ -150,7 +163,7 @@ class TabbedPanel extends React.Component<CombinedProps> {
               },
               shrinkTabContent
             )}
-            {...tabPanelA11yProps(tabs[value].name)}
+            {...tabPanelA11yProps(tabs[value].title)}
             data-qa-tab-body
           >
             {render(rest)}

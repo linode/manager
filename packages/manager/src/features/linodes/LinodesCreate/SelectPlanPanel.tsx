@@ -258,8 +258,7 @@ export class SelectPlanPanel extends React.Component<
             </>
           );
         },
-        title: 'Nanode',
-        name: 'nanode-plan'
+        title: 'Nanode'
       });
       tabOrder.push('nanode');
     }
@@ -277,8 +276,7 @@ export class SelectPlanPanel extends React.Component<
             </>
           );
         },
-        title: 'Standard',
-        name: 'standard-plan'
+        title: 'Standard'
       });
       tabOrder.push('standard');
     }
@@ -296,8 +294,7 @@ export class SelectPlanPanel extends React.Component<
             </>
           );
         },
-        title: 'Dedicated CPU',
-        name: 'dedicated-plan'
+        title: 'Dedicated CPU'
       });
       tabOrder.push('dedicated');
     }
@@ -316,8 +313,7 @@ export class SelectPlanPanel extends React.Component<
             </>
           );
         },
-        title: 'High Memory',
-        name: 'highmem-plan'
+        title: 'High Memory'
       });
       tabOrder.push('highmem');
     }
@@ -353,8 +349,7 @@ export class SelectPlanPanel extends React.Component<
             </>
           );
         },
-        title: 'GPU',
-        name: 'gpu-plan'
+        title: 'GPU'
       });
       tabOrder.push('gpu');
     }

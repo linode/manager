@@ -67,7 +67,6 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, {}> {
 
   createTabs = StackScriptTabs.map(tab => ({
     title: tab.title,
-    name: tab.name,
     render: () => (
       <StackScriptPanelContent
         publicImages={this.props.publicImages}
@@ -101,14 +100,12 @@ export const StackScriptTabs = [
   {
     title: 'Account StackScripts',
     request: getMineAndAccountStackScripts,
-    category: 'account',
-    name: 'account-stackscripts'
+    category: 'account'
   },
   {
     title: 'Community StackScripts',
     request: getCommunityStackscripts,
-    category: 'community',
-    name: 'community-stackscripts'
+    category: 'community'
   }
 ];
 

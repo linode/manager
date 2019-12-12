@@ -120,8 +120,7 @@ const createTabs = (
           </div>
         );
       },
-      title: 'CPU Usage (%)',
-      name: 'cpu-usage'
+      title: 'CPU Usage (%)'
     },
     {
       render: () => {
@@ -158,8 +157,7 @@ const createTabs = (
           </div>
         );
       },
-      title: 'Network Transfer (bits/s)',
-      name: 'network-transfer'
+      title: 'Network Transfer (bits/s)'
     },
     {
       render: () => {
@@ -184,8 +182,7 @@ const createTabs = (
           </div>
         );
       },
-      title: 'Disk I/O (op/s)',
-      name: 'disk-io'
+      title: 'Disk I/O (op/s)'
     }
   ];
 };
