@@ -216,7 +216,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           href={'https://www.linode.com/docs/platform/longview/longview/'}
         />
       </Box>
-      <AppBar position="static" color="default">
+      <AppBar position="static" color="default" role="tablist">
         <Tabs
           value={tabs.findIndex(tab => matches(tab.routeName)) || 0}
           onChange={handleTabChange}

@@ -1,4 +1,4 @@
-import { Profile } from "linode-js-sdk/lib/profile";
+import { Profile } from 'linode-js-sdk/lib/profile';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -62,7 +62,7 @@ export class DisplaySettings extends React.Component<CombinedProps, State> {
     }
 
     return (
-      <React.Fragment>
+      <div id="tabpanel-display" role="tabpanel" aria-labelledby="tab-display">
         <DocumentTitleSegment segment="Display" />
         {!loading && (
           <React.Fragment>
@@ -79,7 +79,7 @@ export class DisplaySettings extends React.Component<CombinedProps, State> {
             />
           </React.Fragment>
         )}
-      </React.Fragment>
+      </div>
     );
   }
 

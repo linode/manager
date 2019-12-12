@@ -239,7 +239,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     );
 
     return (
-      <React.Fragment>
+      <div id="tabpanel-resize" role="tabpanel" aria-labelledby="tab-resize">
         <DocumentTitleSegment segment={`${linodeLabel} - Resize`} />
         <Paper className={classes.root}>
           {disabled && <LinodePermissionsError />}
@@ -319,7 +319,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             Submit
           </Button>
         </ActionsPanel>
-      </React.Fragment>
+      </div>
     );
   }
 }

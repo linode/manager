@@ -79,7 +79,11 @@ export class AuthenticationSettings extends React.Component<
     const { success } = this.state;
 
     return (
-      <React.Fragment>
+      <div
+        id="tabpanel-passwordAuthentication"
+        role="tabpanel"
+        aria-labelledby="tab-passwordAuthentication"
+      >
         <DocumentTitleSegment segment={`Password & Authentication`} />
         {/* Remove when logic above is cleared */}
         {success && <Notice success text={success} />}
@@ -104,7 +108,7 @@ export class AuthenticationSettings extends React.Component<
             )}
           </React.Fragment>
         )}
-      </React.Fragment>
+      </div>
     );
   }
 

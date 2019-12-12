@@ -144,7 +144,12 @@ class LishSettings extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Lish" />
-        <Paper className={classes.root}>
+        <Paper
+          className={classes.root}
+          id="tabpanel-lish"
+          role="tabpanel"
+          aria-labelledby="tab-lish"
+        >
           <Typography variant="h2" className={classes.title} data-qa-title>
             LISH
           </Typography>

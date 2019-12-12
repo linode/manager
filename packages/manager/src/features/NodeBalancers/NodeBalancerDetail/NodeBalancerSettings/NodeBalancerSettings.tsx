@@ -140,7 +140,11 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
     const generalError = hasErrorFor('none');
 
     return (
-      <React.Fragment>
+      <div
+        role="tabpanel"
+        id="tabpanel-settings"
+        aria-labelledby="tab-settings"
+      >
         <DocumentTitleSegment segment={`${nodeBalancerLabel} - Settings`} />
         <Paper className={classes.root}>
           <Grid item xs={12}>
@@ -188,7 +192,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
             </Button>
           </ActionsPanel>
         </Paper>
-      </React.Fragment>
+      </div>
     );
   }
 }

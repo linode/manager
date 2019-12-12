@@ -4,7 +4,11 @@ import APITokenTable from './APITokenTable';
 
 export const APITokens: React.StatelessComponent = () => {
   return (
-    <React.Fragment>
+    <div
+      id="tabpanel-apiTokens"
+      role="tabpanel"
+      aria-labelledby="tab-apiTokens"
+    >
       <DocumentTitleSegment segment="APITokens" />
 
       <APITokenTable
@@ -15,7 +19,7 @@ export const APITokens: React.StatelessComponent = () => {
         title="Third Party Access Tokens"
         type="OAuth Client Token"
       />
-    </React.Fragment>
+    </div>
   );
 };
 
