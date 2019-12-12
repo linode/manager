@@ -106,16 +106,16 @@ const Graphs: React.FC<CombinedProps> = props => {
             <LongviewLineGraph
               data={[
                 {
-                  data: formatDiskIO(reads),
-                  label: 'Read',
-                  borderColor: theme.graphs.yellowBorder,
-                  backgroundColor: theme.graphs.yellow
-                },
-                {
                   data: formatDiskIO(writes),
                   label: 'Write',
                   borderColor: theme.graphs.orangeBorder,
                   backgroundColor: theme.graphs.orange
+                },
+                {
+                  data: formatDiskIO(reads),
+                  label: 'Read',
+                  borderColor: theme.graphs.yellowBorder,
+                  backgroundColor: theme.graphs.yellow
                 }
               ]}
               title="Disk I/O"
@@ -130,42 +130,42 @@ const Graphs: React.FC<CombinedProps> = props => {
             disk is mounted and is not a swap partition
             because longview doesn't track those stats
           */
-          !isSwap && isMounted && (
-            <React.Fragment>
-              <div data-testid="space-graph">
-                <LongviewLineGraph
-                  data={[
-                    {
-                      data: formatSpace(free, total),
-                      label: 'Space',
-                      borderColor: theme.graphs.salmonBorder,
-                      backgroundColor: theme.graphs.salmon
-                    }
-                  ]}
-                  showToday={isToday}
-                  title="Space"
-                  subtitle="GB"
-                  timezone={timezone}
-                />
-              </div>
-              <div data-testid="inodes-graph">
-                <LongviewLineGraph
-                  data={[
-                    {
-                      data: formatINodes(iFree, iTotal),
-                      label: 'Inodes',
-                      borderColor: theme.graphs.pinkBorder,
-                      backgroundColor: theme.graphs.pink
-                    }
-                  ]}
-                  showToday={isToday}
-                  suggestedMax={1000000}
-                  title="Inodes"
-                  timezone={timezone}
-                />
-              </div>
-            </React.Fragment>
-          )}
+        !isSwap && isMounted && (
+          <React.Fragment>
+            <div data-testid="space-graph">
+              <LongviewLineGraph
+                data={[
+                  {
+                    data: formatSpace(free, total),
+                    label: 'Space',
+                    borderColor: theme.graphs.salmonBorder,
+                    backgroundColor: theme.graphs.salmon
+                  }
+                ]}
+                showToday={isToday}
+                title="Space"
+                subtitle="GB"
+                timezone={timezone}
+              />
+            </div>
+            <div data-testid="inodes-graph">
+              <LongviewLineGraph
+                data={[
+                  {
+                    data: formatINodes(iFree, iTotal),
+                    label: 'Inodes',
+                    borderColor: theme.graphs.pinkBorder,
+                    backgroundColor: theme.graphs.pink
+                  }
+                ]}
+                showToday={isToday}
+                suggestedMax={1000000}
+                title="Inodes"
+                timezone={timezone}
+              />
+            </div>
+          </React.Fragment>
+        )}
       </div>
     </React.Fragment>
   );
@@ -249,7 +249,7 @@ export const generateHelperText = (
   }
 
   return '';
-}
+};
 
 export default compose<CombinedProps, Props>(
   React.memo,
