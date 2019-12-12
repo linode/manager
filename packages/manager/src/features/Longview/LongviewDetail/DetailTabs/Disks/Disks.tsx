@@ -1,4 +1,5 @@
 import { APIError } from 'linode-js-sdk/lib/types';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
@@ -12,7 +13,7 @@ import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import DiskPaper from './DiskPaper';
 
 import getStats from '../../../request';
-import { Disk } from '../../../request.types';
+import { Disk, LongviewDisk, LongviewSystemInfo } from '../../../request.types';
 import { pathMaybeAddDataInThePast } from '../../../shared/formatters';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -30,7 +31,7 @@ interface Props extends RouteComponentProps<{}> {
   timezone: string;
 }
 
-type CombinedProps = Props;
+type CombinedProps = Props & WithSnackbarProps;
 
 const Disks: React.FC<CombinedProps> = props => {
   const [diskStats, updateDiskStats] = React.useState<
@@ -48,21 +49,26 @@ const Disks: React.FC<CombinedProps> = props => {
 
   const { lastUpdatedError, clientLastUpdated, clientAPIKey } = props;
 
-  const setStartAndEnd = (_start: number, _end: number) => {
-    setStart(_start);
-    setEnd(_end);
+  const handleError = () => {
+    props.enqueueSnackbar(
+      'There was an error retriving stats for the selected time.',
+      {
+        variant: 'error'
+      }
+    );
   };
 
-  React.useEffect(() => {
-    mounted = true;
-    if (clientLastUpdated && start && end) {
+  const request = (): Promise<
+    Partial<LongviewDisk<''> & LongviewSystemInfo>
+  > => {
+    if (start && end && clientLastUpdated) {
       if (!diskStats) {
         setLoading(true);
       }
 
       setError('');
 
-      getStats(clientAPIKey, 'getValues', {
+      return getStats(clientAPIKey, 'getValues', {
         fields: ['disk', 'sysinfo'],
         start,
         end
@@ -99,18 +105,31 @@ const Disks: React.FC<CombinedProps> = props => {
             updateDiskStats(enhancedDisk);
             updateSysInfoType(pathOr('', ['SysInfo', 'type'], r));
           }
+          return r;
         })
-        .catch(e => {
+        .catch(() => {
+          const e = 'There was an error fetching statistics for your Disks.';
           if (mounted) {
             setLoading(false);
             if (!diskStats) {
-              setError(
-                'There was an error fetching statistics for your Disks.'
-              );
+              setError(e);
             }
           }
+          return Promise.reject([{ reason: e }]);
         });
     }
+    return Promise.resolve({});
+  };
+
+  const setStartAndEnd = (_start: number, _end: number) => {
+    setStart(_start);
+    setEnd(_end);
+    return request();
+  };
+
+  React.useEffect(() => {
+    mounted = true;
+    request();
 
     return () => {
       mounted = false;
@@ -152,6 +171,7 @@ const Disks: React.FC<CombinedProps> = props => {
         <TimeRangeSelect
           small
           className={classes.root}
+          handleFetchError={handleError}
           handleStatsChange={setStartAndEnd}
           defaultValue="Past 30 Minutes"
           label="Select Time Range"
@@ -163,4 +183,7 @@ const Disks: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(Disks);
+export default compose<CombinedProps, Props>(
+  React.memo,
+  withSnackbar
+)(Disks);

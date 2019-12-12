@@ -8,7 +8,8 @@ import Select, {
 import withAccountSettings from 'src/containers/accountSettings.container';
 
 interface Props extends Omit<BaseSelectProps, 'onChange' | 'defaultValue'> {
-  handleStatsChange?: (start: number, end: number) => void;
+  handleStatsChange?: (start: number, end: number) => Promise<any>;
+  handleFetchError?: <T>(e: T) => void;
   defaultValue?: Labels;
 }
 
@@ -42,6 +43,7 @@ const TimeRangeSelect: React.FC<CombinedProps> = props => {
   const [selectedTimeRange, setTimeRange] = React.useState<Labels>(
     defaultValue || 'Past 30 Minutes'
   );
+  const [isLoading, setLoading] = React.useState<boolean>(false);
 
   /*
     Why division by 1000?
@@ -76,17 +78,39 @@ const TimeRangeSelect: React.FC<CombinedProps> = props => {
   );
 
   const handleChange = (item: Item<Labels, Labels>) => {
-    setTimeRange(item.value);
-
     if (!!handleStatsChange) {
+      setLoading(true);
+
       handleStatsChange(
         Math.round(
           generateStartTime(item.value, nowInSeconds, new Date().getFullYear())
         ),
         Math.round(nowInSeconds)
-      );
+      )
+        .then(r => {
+          setTimeRange(item.value);
+          setLoading(false);
+        })
+        .catch(e => {
+          setLoading(false);
+          if (props.handleFetchError) {
+            props.handleFetchError(e);
+          }
+        });
+    } else {
+      setTimeRange(item.value);
     }
   };
+
+  const loadingProps = isLoading
+    ? {
+        disabled: true,
+        value: {
+          value: 'Loading...',
+          label: 'Loading...'
+        }
+      }
+    : {};
 
   return (
     <Select
@@ -97,6 +121,7 @@ const TimeRangeSelect: React.FC<CombinedProps> = props => {
       isSearchable={false}
       value={options.find(o => o.label === selectedTimeRange) || options[0]}
       options={options}
+      {...loadingProps}
     />
   );
 };

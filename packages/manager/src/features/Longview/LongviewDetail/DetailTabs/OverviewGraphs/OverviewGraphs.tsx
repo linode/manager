@@ -1,26 +1,26 @@
 import * as React from 'react';
-import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
+// import Paper from 'src/components/core/Paper';
+// import { makeStyles, Theme } from 'src/components/core/styles';
+// import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import { WithStartAndEnd } from '../../../request';
-import TimeRangeSelect from '../../../shared/TimeRangeSelect';
-import CPUGraph from './CPUGraph';
-import DiskGraph from './DiskGraph';
-import LoadGraph from './LoadGraph';
-import MemoryGraph from './MemoryGraph';
-import NetworkGraph from './NetworkGraph';
-import { GraphProps } from './types';
+// import { WithStartAndEnd } from '../../../request';
+// import TimeRangeSelect from '../../../shared/TimeRangeSelect';
+// import CPUGraph from './CPUGraph';
+// import DiskGraph from './DiskGraph';
+// import LoadGraph from './LoadGraph';
+// import MemoryGraph from './MemoryGraph';
+// import NetworkGraph from './NetworkGraph';
+// import { GraphProps } from './types';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  paperSection: {
-    padding: theme.spacing(3) + 1,
-    marginBottom: theme.spacing(1) + 3
-  },
-  selectTimeRange: {
-    width: 150
-  }
-}));
+// const useStyles = makeStyles((theme: Theme) => ({
+//   paperSection: {
+//     padding: theme.spacing(3) + 1,
+//     marginBottom: theme.spacing(1) + 3
+//   },
+//   selectTimeRange: {
+//     width: 150
+//   }
+// }));
 
 interface Props {
   clientAPIKey: string;
@@ -31,32 +31,32 @@ interface Props {
 export type CombinedProps = Props;
 
 export const OverviewGraphs: React.FC<CombinedProps> = props => {
-  const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
-  const classes = useStyles();
-  const [time, setTimeBox] = React.useState<WithStartAndEnd>({
-    start: 0,
-    end: 0
-  });
+  // const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
+  // const classes = useStyles();
+  // const [time, setTimeBox] = React.useState<WithStartAndEnd>({
+  //   start: 0,
+  //   end: 0
+  // });
 
-  const handleStatsChange = (start: number, end: number) => {
-    setTimeBox({ start, end });
-  };
+  // const handleStatsChange = (start: number, end: number) => {
+  //   setTimeBox({ start, end });
+  // };
 
-  const isToday = time.end - time.start < 60 * 60 * 25;
+  // const isToday = time.end - time.start < 60 * 60 * 25;
 
-  const graphProps: GraphProps = {
-    clientAPIKey,
-    timezone,
-    isToday,
-    start: time.start,
-    end: time.end,
-    lastUpdatedError,
-    lastUpdated
-  };
+  // const graphProps: GraphProps = {
+  //   clientAPIKey,
+  //   timezone,
+  //   isToday,
+  //   start: time.start,
+  //   end: time.end,
+  //   lastUpdatedError,
+  //   lastUpdated
+  // };
 
   return (
     <Grid container item spacing={0}>
-      <Grid
+      {/* <Grid
         container
         item
         direction="row"
@@ -105,7 +105,7 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
             </Grid>
           </Grid>
         </Paper>
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 };
