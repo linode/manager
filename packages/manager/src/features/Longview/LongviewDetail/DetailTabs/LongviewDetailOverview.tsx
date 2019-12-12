@@ -121,7 +121,11 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
             </Grid>
           </Paper>
         </Grid>
-        <OverviewGraphs clientAPIKey={clientAPIKey} timezone={timezone} />
+        <OverviewGraphs
+          clientAPIKey={clientAPIKey}
+          timezone={timezone}
+          lastUpdatedError={!!lastUpdatedError}
+        />
         <Grid container justify="space-between" item spacing={0}>
           <ListeningServices
             services={pathOr([], ['Ports', 'listening'], listeningPortsData)}

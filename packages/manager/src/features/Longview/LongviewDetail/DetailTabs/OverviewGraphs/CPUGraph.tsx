@@ -7,21 +7,23 @@ import {
   convertData,
   pathMaybeAddDataInThePast
 } from '../../../shared/formatters';
+import { GraphProps } from './types';
 
-interface Props {
-  clientAPIKey: string;
-  isToday: boolean;
-  timezone: string;
-  start: number;
-  end: number;
-}
-
-export type CombinedProps = Props & WithTheme;
+export type CombinedProps = GraphProps & WithTheme;
 
 export const CPUGraph: React.FC<CombinedProps> = props => {
-  const { clientAPIKey, end, isToday, start, theme, timezone } = props;
+  const {
+    clientAPIKey,
+    end,
+    isToday,
+    lastUpdatedError,
+    start,
+    theme,
+    timezone
+  } = props;
 
   const [data, setData] = React.useState<Partial<AllData>>({});
+  const [error, setError] = React.useState<string | undefined>();
   const request = () => {
     if (!start || !end) {
       return;
@@ -31,9 +33,12 @@ export const CPUGraph: React.FC<CombinedProps> = props => {
       fields: ['cpu'],
       start,
       end
-    }).then(response => {
-      setData(response);
-    });
+    })
+      .then(response => {
+        setError(undefined);
+        setData(response);
+      })
+      .catch(_ => setError('Unable to retrieve CPU data'));
   };
 
   const cpuData = React.useMemo(() => {
@@ -47,7 +52,7 @@ export const CPUGraph: React.FC<CombinedProps> = props => {
 
   React.useEffect(() => {
     request();
-  }, [start, end, clientAPIKey]);
+  }, [start, end, clientAPIKey, lastUpdatedError]);
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
 
@@ -55,6 +60,7 @@ export const CPUGraph: React.FC<CombinedProps> = props => {
     <LongviewLineGraph
       title="CPU"
       subtitle="%"
+      error={error}
       showToday={isToday}
       timezone={timezone}
       data={[
