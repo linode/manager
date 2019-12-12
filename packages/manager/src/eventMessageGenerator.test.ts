@@ -5,6 +5,11 @@ import getEventMessage, {
   safeSecondaryEntityLabel
 } from './eventMessageGenerator';
 
+beforeEach(() => {
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+  jest.spyOn(console, 'log').mockImplementation(() => {});
+});
+
 describe('Event message generation', () => {
   describe('getEventMessage', () => {
     it('should filter unknown events', () => {
