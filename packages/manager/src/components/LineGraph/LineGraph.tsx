@@ -215,7 +215,7 @@ const LineGraph: React.FC<CombinedProps> = props => {
 
   return (
     <div className={classes.wrapper}>
-      <div>
+      <div style={{ width: '100%' }}>
         <Line
           {...rest}
           height={chartHeight || 300}
