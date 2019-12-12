@@ -26,18 +26,19 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
+export const convertForAria = (str: string) => {
+  return str
+    .trim()
+    .toLowerCase()
+    .replace(/([^A-Z0-9]+)(.)/gi, function(match) {
+      return arguments[2].toUpperCase();
+    });
+};
+
 class TabLink extends React.Component<CombinedProps> {
   render() {
     const { classes, title, to } = this.props;
     const pathName = document.location.pathname;
-
-    // Removes whitespace, special chars, and camelCases a string.
-    const ariaName = title
-      .trim()
-      .toLowerCase()
-      .replace(/([^A-Z0-9]+)(.)/gi, function(match) {
-        return arguments[2].toUpperCase();
-      });
 
     return (
       <Link
@@ -47,8 +48,8 @@ class TabLink extends React.Component<CombinedProps> {
           [classes.selected]: pathName === to
         })}
         role="tab"
-        id={`tab-${ariaName}`}
-        aria-controls={`tabpanel-${ariaName}`}
+        id={`tab-${convertForAria(title)}`}
+        aria-controls={`tabpanel-${convertForAria(title)}`}
         tabIndex={0}
         aria-selected={pathName === to}
         data-qa-tab={title}

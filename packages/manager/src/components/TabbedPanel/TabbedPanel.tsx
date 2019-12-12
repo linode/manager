@@ -11,6 +11,7 @@ import {
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import Typography from 'src/components/core/Typography';
+import { convertForAria } from 'src/components/TabLink/TabLink';
 import { safeGetTabRender } from 'src/utilities/safeGetTabRender';
 import Notice from '../Notice';
 
@@ -88,12 +89,7 @@ class TabbedPanel extends React.Component<CombinedProps> {
     const render = safeGetTabRender(tabs, value);
 
     const tabA11yProps = (idName: string) => {
-      const ariaVal = idName
-        .trim()
-        .toLowerCase()
-        .replace(/([^A-Z0-9]+)(.)/gi, function(match) {
-          return arguments[2].toUpperCase();
-        });
+      const ariaVal = convertForAria(idName);
 
       return {
         id: `tab-${ariaVal}`,
@@ -103,12 +99,7 @@ class TabbedPanel extends React.Component<CombinedProps> {
     };
 
     const tabPanelA11yProps = (idName: string) => {
-      const ariaVal = idName
-        .trim()
-        .toLowerCase()
-        .replace(/([^A-Z0-9]+)(.)/gi, function(match) {
-          return arguments[2].toUpperCase();
-        });
+      const ariaVal = convertForAria(idName);
 
       return {
         id: `tabpanel-${ariaVal}`,
