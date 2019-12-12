@@ -16,6 +16,7 @@ export const CPUGraph: React.FC<CombinedProps> = props => {
     clientAPIKey,
     end,
     isToday,
+    lastUpdated,
     lastUpdatedError,
     start,
     theme,
@@ -52,7 +53,7 @@ export const CPUGraph: React.FC<CombinedProps> = props => {
 
   React.useEffect(() => {
     request();
-  }, [start, end, clientAPIKey, lastUpdatedError]);
+  }, [start, end, clientAPIKey, lastUpdated, lastUpdatedError]);
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
 

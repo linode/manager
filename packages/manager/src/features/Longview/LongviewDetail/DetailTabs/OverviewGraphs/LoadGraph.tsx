@@ -10,6 +10,7 @@ export type CombinedProps = GraphProps & WithTheme;
 export const LoadGraph: React.FC<CombinedProps> = props => {
   const {
     clientAPIKey,
+    lastUpdated,
     lastUpdatedError,
     end,
     isToday,
@@ -38,7 +39,7 @@ export const LoadGraph: React.FC<CombinedProps> = props => {
 
   React.useEffect(() => {
     request();
-  }, [start, end, clientAPIKey, lastUpdatedError]);
+  }, [start, end, clientAPIKey, lastUpdated, lastUpdatedError]);
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
 
