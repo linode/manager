@@ -35,7 +35,7 @@ export interface Props {
   data: DataSet[];
   timezone: string;
   rowHeaders?: Array<string>;
-  legendRows?: Array<any>;
+  legendRows?: Array<ChartData<any>>;
   unit?: string; // Display unit on Y axis ticks
 }
 
@@ -259,7 +259,7 @@ const LineGraph: React.FC<CombinedProps> = props => {
               <React.Fragment>
                 {legendRows &&
                   inputEl.current.chartInstance.legend.legendItems.map(
-                    (tick: any, idx: number) => {
+                    (tick: ChartData<any>, idx: number) => {
                       const bgColor: string =
                         typeof tick.fillStyle === 'string'
                           ? tick.fillStyle
