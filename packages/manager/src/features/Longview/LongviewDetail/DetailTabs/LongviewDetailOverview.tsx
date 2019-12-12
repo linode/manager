@@ -119,6 +119,7 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
         <OverviewGraphs
           clientAPIKey={clientAPIKey}
           timezone={timezone}
+          lastUpdated={lastUpdated}
           lastUpdatedError={!!lastUpdatedError}
         />
         <Grid container justify="space-between" item spacing={0}>

@@ -25,12 +25,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   clientAPIKey: string;
   timezone: string;
+  lastUpdated?: number;
   lastUpdatedError: boolean;
 }
 export type CombinedProps = Props;
 
 export const OverviewGraphs: React.FC<CombinedProps> = props => {
-  const { clientAPIKey, lastUpdatedError, timezone } = props;
+  const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
   const classes = useStyles();
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
     start: 0,
@@ -49,7 +50,8 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
     isToday,
     start: time.start,
     end: time.end,
-    lastUpdatedError
+    lastUpdatedError,
+    lastUpdated
   };
 
   return (
