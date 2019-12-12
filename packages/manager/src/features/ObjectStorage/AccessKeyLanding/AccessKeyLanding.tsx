@@ -269,7 +269,11 @@ export const AccessKeyLanding: React.StatelessComponent<
   };
 
   return (
-    <React.Fragment>
+    <div
+      id="tabpanel-accessKeys"
+      role="tabpanel"
+      aria-labelledby="tab-accessKeys"
+    >
       <DocumentTitleSegment segment="Access Keys" />
       <Grid container justify="flex-end">
         <Grid item>
@@ -318,7 +322,7 @@ export const AccessKeyLanding: React.StatelessComponent<
         numAccessKeys={pathOr<number>(0, ['data', 'length'], paginationProps)}
         errors={revokeErrors}
       />
-    </React.Fragment>
+    </div>
   );
 };
 

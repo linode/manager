@@ -11,6 +11,7 @@ import {
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import Typography from 'src/components/core/Typography';
+import { convertForAria } from 'src/components/TabLink/TabLink';
 import { safeGetTabRender } from 'src/utilities/safeGetTabRender';
 import Notice from '../Notice';
 
@@ -87,6 +88,26 @@ class TabbedPanel extends React.Component<CombinedProps> {
     // if this bombs the app shouldn't crash
     const render = safeGetTabRender(tabs, value);
 
+    const tabA11yProps = (idName: string) => {
+      const ariaVal = convertForAria(idName);
+
+      return {
+        id: `tab-${ariaVal}`,
+        role: 'tab',
+        'aria-controls': `tabpanel-${ariaVal}`
+      };
+    };
+
+    const tabPanelA11yProps = (idName: string) => {
+      const ariaVal = convertForAria(idName);
+
+      return {
+        id: `tabpanel-${ariaVal}`,
+        role: 'tabpanel',
+        'aria-labelledby': `tab-${ariaVal}`
+      };
+    };
+
     return (
       <Paper className={`${classes.root} ${rootClass}`} data-qa-tp={header}>
         <div className={`${classes.inner} ${innerClass}`}>
@@ -105,7 +126,7 @@ class TabbedPanel extends React.Component<CombinedProps> {
               {copy}
             </Typography>
           )}
-          <AppBar position="static" color="default">
+          <AppBar position="static" color="default" role="tablist">
             <Tabs
               value={value}
               onChange={this.handleChange}
@@ -116,10 +137,16 @@ class TabbedPanel extends React.Component<CombinedProps> {
               scrollButtons="on"
             >
               {tabs.map((tab, idx) => (
-                <Tab key={idx} label={tab.title} data-qa-tab={tab.title} />
+                <Tab
+                  key={idx}
+                  label={tab.title}
+                  data-qa-tab={tab.title}
+                  {...tabA11yProps(tab.title)}
+                />
               ))}
             </Tabs>
           </AppBar>
+
           <div
             className={classNames(
               {
@@ -127,6 +154,7 @@ class TabbedPanel extends React.Component<CombinedProps> {
               },
               shrinkTabContent
             )}
+            {...tabPanelA11yProps(tabs[value].title)}
             data-qa-tab-body
           >
             {render(rest)}

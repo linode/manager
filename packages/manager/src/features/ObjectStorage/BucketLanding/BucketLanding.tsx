@@ -191,45 +191,47 @@ export const BucketLanding: React.StatelessComponent<CombinedProps> = props => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Buckets" />
-      <Grid container justify="flex-end">
-        <Grid item>
-          <AddNewLink onClick={openBucketDrawer} label="Add a Bucket" />
+      <div id="tabpanel-buckets" role="tabpanel" aria-labelledby="tab-buckets">
+        <Grid container justify="flex-end">
+          <Grid item>
+            <AddNewLink onClick={openBucketDrawer} label="Add a Bucket" />
+          </Grid>
         </Grid>
-      </Grid>
-      <Grid item xs={12}>
-        <OrderBy data={bucketsData} order={'asc'} orderBy={'label'}>
-          {({ data: orderedData, handleOrderChange, order, orderBy }) => {
-            const bucketTableProps = {
-              orderBy,
-              order,
-              handleOrderChange,
-              handleClickRemove,
-              data: orderedData
-            };
-            return <BucketTable {...bucketTableProps} />;
+        <Grid item xs={12}>
+          <OrderBy data={bucketsData} order={'asc'} orderBy={'label'}>
+            {({ data: orderedData, handleOrderChange, order, orderBy }) => {
+              const bucketTableProps = {
+                orderBy,
+                order,
+                handleOrderChange,
+                handleClickRemove,
+                data: orderedData
+              };
+              return <BucketTable {...bucketTableProps} />;
+            }}
+          </OrderBy>
+        </Grid>
+        <ConfirmationDialog
+          open={removeBucketConfirmationDialog.isOpen}
+          onClose={() => {
+            removeBucketConfirmationDialog.close();
           }}
-        </OrderBy>
-      </Grid>
-      <ConfirmationDialog
-        open={removeBucketConfirmationDialog.isOpen}
-        onClose={() => {
-          removeBucketConfirmationDialog.close();
-        }}
-        title={
-          bucketToRemove ? `Delete ${bucketToRemove.label}` : 'Delete bucket'
-        }
-        actions={actions}
-        error={error}
-      >
-        {deleteBucketConfirmationMessage}
-        <TextField
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setConfirmBucketName(e.target.value)
+          title={
+            bucketToRemove ? `Delete ${bucketToRemove.label}` : 'Delete bucket'
           }
-          expand
-          label="Bucket Name"
-        />
-      </ConfirmationDialog>
+          actions={actions}
+          error={error}
+        >
+          {deleteBucketConfirmationMessage}
+          <TextField
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setConfirmBucketName(e.target.value)
+            }
+            expand
+            label="Bucket Name"
+          />
+        </ConfirmationDialog>
+      </div>
     </React.Fragment>
   );
 };

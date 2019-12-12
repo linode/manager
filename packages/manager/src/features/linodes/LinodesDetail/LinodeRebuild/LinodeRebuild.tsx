@@ -51,7 +51,7 @@ const LinodeRebuild: React.StatelessComponent<CombinedProps> = props => {
   const [mode, setMode] = React.useState<MODES>('fromImage');
 
   return (
-    <React.Fragment>
+    <div id="tabpanel-rebuild" role="tabpanel" aria-labelledby="tab-rebuild">
       <DocumentTitleSegment segment={`${linodeLabel} - Rebuild`} />
       <Paper className={classes.root}>
         {disabled && <LinodePermissionsError />}
@@ -64,7 +64,7 @@ const LinodeRebuild: React.StatelessComponent<CombinedProps> = props => {
         >
           Rebuild
         </Typography>
-        <Typography data-qa-rebuild-desc style={{ marginBottom: 16 }}>
+        <Typography data-qa-rebuild-desc>
           If you can't rescue an existing disk, it's time to rebuild your
           Linode. There are a couple of different ways you can do this: either
           restore from a backup or start over with a fresh Linux distribution.
@@ -87,7 +87,7 @@ const LinodeRebuild: React.StatelessComponent<CombinedProps> = props => {
       {mode === 'fromAccountStackScript' && (
         <RebuildFromStackScript type="account" />
       )}
-    </React.Fragment>
+    </div>
   );
 };
 

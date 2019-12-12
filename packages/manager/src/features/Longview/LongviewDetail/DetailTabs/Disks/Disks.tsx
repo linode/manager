@@ -120,7 +120,7 @@ const Disks: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <React.Fragment>
+    <div id="tabpanel-disks" role="tabpanel" aria-labelledby="tab-disks">
       <Box display="flex" flexDirection="row" justifyContent="flex-end">
         <TimeRangeSelect
           className={classes.root}
@@ -131,7 +131,7 @@ const Disks: React.FC<CombinedProps> = props => {
         />
       </Box>
       {renderContent()}
-    </React.Fragment>
+    </div>
   );
 };
 

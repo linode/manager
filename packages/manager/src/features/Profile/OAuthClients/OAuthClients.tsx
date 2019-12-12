@@ -330,7 +330,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
             isPublic={isPublic}
             redirectUri={redirect_uri}
             /*
-             we can assume this is defined because we're doing null checking in renderContent() 
+             we can assume this is defined because we're doing null checking in renderContent()
             */
             clientID={id}
           />
@@ -354,7 +354,11 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
     // TODO Need to unify internal & external usage of 'OAuth Clients'/'OAuth Apps'.
     // Currently in the context of profile, the term 'Oauth Client(s)' is referred to as 'app' or 'OAuth Apps' for user-facing displays.
     return (
-      <React.Fragment>
+      <div
+        id="tabpanel-oauthApps"
+        role="tabpanel"
+        aria-labelledby="tab-oauthApps"
+      >
         <DocumentTitleSegment segment="OAuth Apps" />
         <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
@@ -429,7 +433,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
           handleSizeChange={this.props.handlePageSizeChange}
           eventCategory="oauth clients"
         />
-      </React.Fragment>
+      </div>
     );
   }
 

@@ -1097,7 +1097,11 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     } = this.state;
 
     return (
-      <React.Fragment>
+      <div
+        role="tabpanel"
+        id="tabpanel--configurations"
+        aria-labelledby="tab-configurations"
+      >
         <DocumentTitleSegment
           segment={`${nodeBalancerLabel} - Configurations`}
         />
@@ -1136,7 +1140,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
             Are you sure you want to delete this NodeBalancer Configuration?
           </Typography>
         </ConfirmationDialog>
-      </React.Fragment>
+      </div>
     );
   }
 }
