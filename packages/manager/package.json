@@ -58,7 +58,7 @@
     "react": "~16.12.0",
     "react-async-script-loader": "^0.3.0",
     "react-chartjs-2": "^2.7.0",
-    "react-csv": "^1.1.1",
+    "react-csv": "^1.1.2",
     "react-currency-formatter": "^1.1.0",
     "react-dom": "~16.12.0",
     "react-dropzone": "^10.1.8",
