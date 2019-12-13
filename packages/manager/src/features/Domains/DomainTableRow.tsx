@@ -72,7 +72,6 @@ class DomainTableRow extends React.Component<CombinedProps> {
       id,
       type,
       status,
-      onCheck,
       onClone,
       onRemove,
       onEdit
@@ -132,7 +131,6 @@ class DomainTableRow extends React.Component<CombinedProps> {
             onClone={onClone}
             status={status}
             onEdit={onEdit}
-            onCheck={onCheck}
           />
         </TableCell>
       </TableRow>

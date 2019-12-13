@@ -88,7 +88,6 @@ const ListDomains: React.StatelessComponent<CombinedProps> = props => {
               <TableBody>
                 <RenderData
                   data={paginatedData}
-                  onCheck={props.onCheck}
                   onClone={props.onClone}
                   onEdit={props.onEdit}
                   onRemove={props.onRemove}
@@ -116,7 +115,7 @@ interface RenderDataProps extends Handlers {
 }
 
 const RenderData: React.StatelessComponent<RenderDataProps> = props => {
-  const { data, onCheck, onClone, onEdit, onRemove, onDisableOrEnable } = props;
+  const { data, onClone, onEdit, onRemove, onDisableOrEnable } = props;
 
   return (
     <>
@@ -131,7 +130,6 @@ const RenderData: React.StatelessComponent<RenderDataProps> = props => {
           type={domain.type}
           status={domain.status}
           onDisableOrEnable={onDisableOrEnable}
-          onCheck={onCheck}
         />
       ))}
     </>

@@ -13,7 +13,6 @@ export interface Handlers {
   ) => void;
   onClone: (domain: string, id: number) => void;
   onEdit: (domain: string, id: number) => void;
-  onCheck: (domain: string) => void;
 }
 
 interface Props extends Handlers {
@@ -45,25 +44,12 @@ export class DomainActionMenu extends React.Component<CombinedProps> {
     onClone(domain, id);
   };
 
-  handleCheck = () => {
-    const { domain, onCheck } = this.props;
-    onCheck(domain);
-  };
-
   createActions = () => (closeMenu: Function): Action[] => {
     const baseActions = [
       {
         title: 'Edit',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           this.handleEdit();
-          closeMenu();
-          e.preventDefault();
-        }
-      },
-      {
-        title: 'Check Zone',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          this.handleCheck();
           closeMenu();
           e.preventDefault();
         }

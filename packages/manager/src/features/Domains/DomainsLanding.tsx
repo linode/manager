@@ -43,7 +43,6 @@ import {
 } from 'src/store/domainDrawer';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
-import CheckDomainDrawer from './CheckDomainDrawer';
 import DisableDomainDialog from './DisableDomainDialog';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
@@ -104,8 +103,6 @@ interface State {
   selectedDomainID?: number;
   removeDialogOpen: boolean;
   disableDialogOpen: boolean;
-  checkZoneDrawerOpen: boolean;
-  checkZoneLabel: string;
 }
 
 interface Props {
@@ -130,9 +127,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     createDrawerOpen: false,
     removeDialogOpen: false,
     selectedDomainLabel: '',
-    disableDialogOpen: false,
-    checkZoneDrawerOpen: false,
-    checkZoneLabel: ''
+    disableDialogOpen: false
   };
 
   static docs: Linode.Doc[] = [Domains];
@@ -149,19 +144,6 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       selectedDomainLabel: '',
       importDrawerErrors: undefined
     });
-
-  openCheckZoneDrawer = (domainLabel: string) => {
-    this.setState({
-      checkZoneDrawerOpen: true,
-      checkZoneLabel: domainLabel
-    });
-  };
-
-  closeCheckZoneDrawer = () => {
-    this.setState({
-      checkZoneDrawerOpen: false
-    });
-  };
 
   handleSuccess = (domain: Domain) => {
     if (domain.id) {
@@ -411,9 +393,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                         onClone: this.props.openForCloning,
                         onEdit: this.props.openForEditing,
                         onRemove: this.openRemoveDialog,
-                        onDisableOrEnable: this
-                          .handleClickEnableOrDisableDomain,
-                        onCheck: this.openCheckZoneDrawer
+                        onDisableOrEnable: this.handleClickEnableOrDisableDomain
                       };
 
                       return domainsAreGrouped ? (
@@ -448,11 +428,6 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
         >
           <Typography>Are you sure you want to remove this domain?</Typography>
         </ConfirmationDialog>
-        <CheckDomainDrawer
-          domainLabel={this.state.checkZoneLabel}
-          isOpen={this.state.checkZoneDrawerOpen}
-          onClose={this.closeCheckZoneDrawer}
-        />
       </React.Fragment>
     );
   }
