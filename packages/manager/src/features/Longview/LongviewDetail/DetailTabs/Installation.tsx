@@ -24,6 +24,7 @@ const Installation: React.FC<CombinedProps> = props => {
 
   return (
     <Paper
+      data-testid="longview-clients"
       className={classes.root}
       id="tabpanel-installation"
       role="tabpanel"
