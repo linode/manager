@@ -78,7 +78,8 @@ export const pathMaybeAddDataInThePast = <T extends {}>(
     iterate over all the paths and maybe add a dummy data point to the
     data set specified
   */
-  let _data = data;
+  let _data = clone(data);
+
   pathsToAddDataPointTo.forEach(eachPath => {
     const arrayOfStats = pathOr<Stat[]>([], eachPath, data);
     const updatedData = maybeAddPastData(
@@ -87,6 +88,7 @@ export const pathMaybeAddDataInThePast = <T extends {}>(
     );
     _data = set(lensPath(eachPath), updatedData, _data);
   });
+
   return _data;
 };
 
