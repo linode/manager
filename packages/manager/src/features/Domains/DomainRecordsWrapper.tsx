@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   domainSidebar: {
     [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing(1) + 24
+      marginTop: theme.spacing(1)
     }
   }
 }));
@@ -47,7 +47,7 @@ const DomainRecordsWrapper: React.FC<CombinedProps> = props => {
 
   return (
     <Grid container className={hookClasses.root}>
-      <Grid item xs={12} md={9} className={hookClasses.main}>
+      <Grid item xs={12} className={hookClasses.main}>
         <DomainRecords
           domain={domain}
           domainRecords={records}
@@ -57,8 +57,8 @@ const DomainRecordsWrapper: React.FC<CombinedProps> = props => {
       <Grid
         item
         xs={12}
-        md={3}
         className={`${hookClasses.sidebar} ${hookClasses.domainSidebar}`}
+        id="domains-tag-section"
       >
         <Paper className={classes.summarySection}>
           <Typography variant="h3" className={classes.title} data-qa-title>
