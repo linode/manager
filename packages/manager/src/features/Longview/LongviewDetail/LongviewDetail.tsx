@@ -89,7 +89,9 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
 
   const { lastUpdated, lastUpdatedError } = useClientLastUpdated(
     clientAPIKey,
-    clientAPIKey ? () => props.getClientStats(clientAPIKey) : undefined
+    clientAPIKey
+      ? _lastUpdated => props.getClientStats(clientAPIKey, _lastUpdated)
+      : undefined
   );
 
   const topProcesses = useAPIRequest<LongviewTopProcesses>(

@@ -27,6 +27,7 @@ export const requestClientStats = actionCreator.async<
   {
     api_key: string;
     clientID: number;
+    lastUpdated?: number;
   },
   /**
    * This is a partial because we can't make any assumptions on pieces
