@@ -49,7 +49,7 @@ const styles = (theme: Theme) =>
       margin: 0,
       width: '100%',
       padding: `${theme.spacing(1)}px ${theme.spacing(2) - 2}px `,
-      backgroundColor: theme.bg.offWhite,
+      backgroundColor: theme.bg.offWhiteDT,
       border: `1px solid ${theme.palette.divider}`,
       [theme.breakpoints.up('sm')]: {
         width: 415
