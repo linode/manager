@@ -75,8 +75,6 @@ const chartOptions: any = {
           display: false
         },
         time: {
-          unit: 'hour',
-          unitStepSize: 3,
           displayFormats: {
             hour: 'HH:00',
             minute: 'HH:00'
