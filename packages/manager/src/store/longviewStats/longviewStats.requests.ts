@@ -1,11 +1,11 @@
-import { get, getLastUpdated } from 'src/features/Longview/request';
+import { get } from 'src/features/Longview/request';
 import { LongviewPackage } from 'src/features/Longview/request.types';
 import { createRequestThunk } from '../store.helpers';
 import { requestClientStats } from './longviewStats.actions';
 
 export const getClientStats = createRequestThunk(
   requestClientStats,
-  async ({ api_key }) => {
+  async ({ api_key, lastUpdated }) => {
     /**
      * To calculate the number of packages in need
      * of updating, we need the full list of available
@@ -29,19 +29,10 @@ export const getClientStats = createRequestThunk(
      * returned data.
      *
      * Since we use this request to populate "live" data, we don't actually
-     * want to make this request if lastUpdated is more than ~30 minutes.
+     * want to make this request if lastUpdated is more than ~30 minutes ago.
      */
-    let lastUpdated = 0;
-    try {
-      lastUpdated = await getLastUpdated(api_key).then(
-        response => response.updated || 0
-      );
-    } catch {
-      return Promise.resolve({});
-    }
-
-    if (Date.now() / 1000 - lastUpdated > 60 * 30) {
-      return Promise.resolve({});
+    if (lastUpdated && Date.now() / 1000 - lastUpdated > 60 * 30) {
+      return Promise.resolve({ Packages: [...packages] });
     }
 
     return get(api_key, 'getLatestValue', {

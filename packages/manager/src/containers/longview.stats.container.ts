@@ -14,7 +14,10 @@ export interface LVClientData {
 }
 
 export interface DispatchProps {
-  getClientStats: (api_key: string) => Promise<ReturnType>;
+  getClientStats: (
+    api_key: string,
+    lastUpdated?: number
+  ) => Promise<ReturnType>;
 }
 
 export type Props = DispatchProps & LVClientData;
@@ -64,9 +67,13 @@ const connected = <OwnProps extends {}>(
       };
     },
     (dispatch: ThunkDispatch, ownProps: OwnProps) => ({
-      getClientStats: api_key =>
+      getClientStats: (api_key, lastUpdated) =>
         dispatch(
-          getClientStats({ clientID: supplyClientID(ownProps), api_key })
+          getClientStats({
+            clientID: supplyClientID(ownProps),
+            api_key,
+            lastUpdated
+          })
         )
     })
   );
