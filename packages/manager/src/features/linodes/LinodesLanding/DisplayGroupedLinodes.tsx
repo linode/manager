@@ -20,8 +20,6 @@ import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 import TableWrapper from './TableWrapper';
 
-const DEFAULT_PAGE_SIZE = 25;
-
 type ClassNames =
   | 'root'
   | 'tagGridRow'
@@ -227,7 +225,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<
                           </TableCell>
                         </TableRow>
                         <Component {...finalProps} />
-                        {count > DEFAULT_PAGE_SIZE && (
+                        {count > infinitePageSize && (
                           <TableRow>
                             <TableCell
                               colSpan={7}

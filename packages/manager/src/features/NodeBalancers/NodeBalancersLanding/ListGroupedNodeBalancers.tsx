@@ -18,8 +18,6 @@ import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 import NodeBalancersLandingTableRows from './NodeBalancersLandingTableRows';
 import TableWrapper from './NodeBalancersTableWrapper';
 
-const DEFAULT_PAGE_SIZE = 25;
-
 type ClassNames =
   | 'ip'
   | 'nameCell'
@@ -142,10 +140,10 @@ const ListGroupedNodeBalancers: React.StatelessComponent<
                         data={paginatedData}
                       />
                     </TableBody>
-                    {count > DEFAULT_PAGE_SIZE && (
+                    {count > infinitePageSize && (
                       <TableRow>
                         <TableCell
-                          colSpan={7}
+                          colSpan={8}
                           className={classes.paginationCell}
                         >
                           <PaginationFooter
