@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up('md')]: {
       marginTop: theme.spacing(1)
     }
+  },
+  tagPanel: {
+    maxWidth: 500
   }
 }));
 
@@ -64,7 +67,9 @@ const DomainRecordsWrapper: React.FC<CombinedProps> = props => {
           <Typography variant="h3" className={classes.title} data-qa-title>
             Tags
           </Typography>
-          <TagsPanel tags={domain.tags} updateTags={handleUpdateTags} />
+          <div className={hookClasses.tagPanel}>
+            <TagsPanel tags={domain.tags} updateTags={handleUpdateTags} />
+          </div>
         </Paper>
       </Grid>
     </Grid>
