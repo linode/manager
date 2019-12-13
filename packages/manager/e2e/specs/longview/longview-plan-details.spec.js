@@ -6,17 +6,26 @@ import { assertLog } from '../../utils/assertionLog';
 import { longviewText } from './longviewText';
 
 describe('longview suite', () => {
+  let token;
+  const managedAccount =
+    'cannot use a managed account for basic longview plan changes';
+  afterAll(() => {
+    LongviewLanding.removeAllLVClients(token);
+  });
+
   describe('Longview client tests', () => {
-    let token;
     beforeEach(() => {
       token = readToken(browser.options.testUser);
-      // removing all longview clients
       LongviewLanding.removeAllLVClients(token);
       browser.url(constants.routes.longview.clients);
       LongviewLanding.baseLongviewPage();
     });
 
     it('checks default page with no longview clients', () => {
+      // checks for managed account. test will not work with managed accounts
+      expect(LongviewLanding.checkForManaged(token))
+        .withContext(`${managedAccount}`)
+        .toBe(false);
       expect(LongviewLanding.noLVClients.isDisplayed())
         .withContext(`should not have longview clients`)
         .toBe(true);
@@ -71,15 +80,22 @@ describe('longview suite', () => {
   });
 
   describe('longview plan detail tests', () => {
-    const lvSetting = { longview_subscription: '' };
+    const lvSetting = { longview_subscription: null };
 
     beforeEach(() => {
-      const token = readToken(browser.options.testUser);
-      LongviewPlan.setPlanLVFree(token, lvSetting);
-      browser.url(constants.routes.longview.planDetails);
-      LongviewPlan.planDetailsDisplay();
+      token = readToken(browser.options.testUser);
+      if (!LongviewLanding.checkForManaged(token)) {
+        LongviewLanding.removeAllLVClients(token);
+        LongviewPlan.setPlanLVFree(token, lvSetting);
+        browser.url(constants.routes.longview.planDetails);
+        LongviewPlan.planDetailsDisplay();
+      }
     });
-    it('checks that longview plan can changed', () => {
+    it('checks that longview plan can be changed', () => {
+      // checks for managed account
+      expect(LongviewLanding.checkForManaged(token))
+        .withContext(`${managedAccount}`)
+        .toBe(false);
       // Changes a plan
       expect(LongviewPlan.isCurrentPlan('free'))
         .withContext(`free plan should be set`)
@@ -91,8 +107,11 @@ describe('longview suite', () => {
     });
 
     it('cannot set a plan that is lower than current longview clients ', () => {
+      // checks for managed account
+      expect(LongviewLanding.checkForManaged(token))
+        .withContext(`${managedAccount}`)
+        .toBe(false);
       // Create 4 longview clients
-      const token = readToken(browser.options.testUser);
       const clients = LongviewLanding.addLVClientsAPI(token, 4);
       const clientCount = LongviewLanding.getLVClientsAPI();
       const lvError = `Too many active Longview clients (${clientCount.length}) for the subscription selected (3). Select a larger subscription or reduce the number of Longview clients.`;

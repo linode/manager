@@ -80,7 +80,7 @@ const FinalCrumb: React.FC<CombinedProps> = props => {
             [classes.crumb]: true,
             [classes.noCap]: labelOptions && labelOptions.noCap
           })}
-          data-qa-label-text={crumb}
+          dataQaEl={crumb}
         />
         {labelOptions && labelOptions.subtitle && (
           <Typography variant="body1" data-qa-label-subtitle>

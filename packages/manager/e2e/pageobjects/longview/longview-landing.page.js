@@ -1,12 +1,9 @@
-/*eslint no-console: ["error", { allow: ["warn", "error"] }] */
-const { constants } = require('../../constants');
 const { assertLog } = require('../../utils/assertionLog');
-
 import Page from '../page';
 
 class LongviewLanding extends Page {
   get title() {
-    return $('h1');
+    return $('[data-qa-header]');
   }
 
   get clientsTab() {
@@ -131,6 +128,11 @@ class LongviewLanding extends Page {
   removeAllLVClients(token) {
     const clientCount = this.getLVClientsAPI(token);
     this.deleteLVClientsAPI(token, clientCount);
+  }
+
+  checkForManaged(token) {
+    const userSettings = browser.getGlobalSettings(token);
+    return userSettings.managed;
   }
 }
 export default new LongviewLanding();
