@@ -1,4 +1,3 @@
-// import { APIError } from 'linode-js-sdk/lib/types'
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
@@ -34,7 +33,7 @@ interface Props {
 export type CombinedProps = Props & WithSnackbarProps;
 
 export const OverviewGraphs: React.FC<CombinedProps> = props => {
-  const { clientAPIKey, lastUpdatedError, timezone, lastUpdated } = props;
+  const { clientAPIKey, timezone, lastUpdated } = props;
   const classes = useStyles();
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
     start: 0,
@@ -86,13 +85,10 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
   const isToday = time.end - time.start < 60 * 60 * 25;
 
   const graphProps: GraphProps = {
-    clientAPIKey,
     timezone,
     isToday,
     start: time.start,
     end: time.end,
-    lastUpdatedError,
-    lastUpdated,
     data: data || {},
     error: fetchError
   };

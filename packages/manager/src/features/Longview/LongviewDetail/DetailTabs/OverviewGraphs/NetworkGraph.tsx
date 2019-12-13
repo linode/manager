@@ -5,53 +5,18 @@ import { withTheme, WithTheme } from 'src/components/core/styles';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { generateUnits } from 'src/features/Longview/LongviewLanding/Gauges/Network';
 import { statMax, sumNetwork } from 'src/features/Longview/shared/utilities';
-// import { AllData, getValues } from '../../../request';
 import { convertData } from '../../../shared/formatters';
 import { GraphProps } from './types';
 
 export type CombinedProps = GraphProps & WithTheme;
 
 export const NetworkGraph: React.FC<CombinedProps> = props => {
-  const {
-    // clientAPIKey,
-    end,
-    isToday,
-    // lastUpdated,
-    // lastUpdatedError,
-    start,
-    theme,
-    data,
-    error,
-    timezone
-  } = props;
-
-  // const [data, setData] = React.useState<Partial<AllData>>({});
-  // const [error, setError] = React.useState<string | undefined>();
-  // const request = () => {
-  //   if (!start || !end) {
-  //     return;
-  //   }
-
-  //   return getValues(clientAPIKey, {
-  //     fields: ['network'],
-  //     start,
-  //     end
-  //   })
-  //     .then(response => {
-  //       setError(undefined);
-  //       setData(response);
-  //     })
-  //     .catch(_ => setError('Unable to retrieve network data.'));
-  // };
+  const { end, isToday, start, theme, data, error, timezone } = props;
 
   const networkData = React.useMemo(
     () => sumNetwork(pathOr({}, ['Interface'], data.Network)),
     [data.Network]
   );
-
-  // React.useEffect(() => {
-  //   request();
-  // }, [start, end, clientAPIKey, lastUpdated, lastUpdatedError]);
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
 

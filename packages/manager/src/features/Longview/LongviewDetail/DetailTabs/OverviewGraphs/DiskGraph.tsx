@@ -3,7 +3,6 @@ import * as React from 'react';
 import { withTheme, WithTheme } from 'src/components/core/styles';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { appendStats } from 'src/features/Longview/shared/utilities';
-// import { AllData, getValues } from '../../../request';
 import { Disk, StatWithDummyPoint } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import { GraphProps } from './types';
@@ -12,39 +11,14 @@ export type CombinedProps = GraphProps & WithTheme;
 
 export const DiskGraph: React.FC<CombinedProps> = props => {
   const {
-    // clientAPIKey,
     end,
     isToday,
-    // lastUpdated,
-    // lastUpdatedError,
     start,
     data,
     error: requestError,
     theme,
     timezone
   } = props;
-
-  // const [data, setData] = React.useState<Partial<AllData>>({});
-  // const [requestError, setError] = React.useState<string | undefined>();
-  // const request = () => {
-  //   if (!start || !end) {
-  //     return;
-  //   }
-  //   return getValues(clientAPIKey, {
-  //     fields: ['disk', 'sysinfo'],
-  //     start,
-  //     end
-  //   })
-  //     .then(response => {
-  //       setError(undefined);
-  //       setData(response);
-  //     })
-  //     .catch(_ => setError('Unable to load your Disk I/O data'));
-  // };
-
-  // React.useEffect(() => {
-  //   request();
-  // }, [start, end, clientAPIKey, lastUpdated, lastUpdatedError]);
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
 

@@ -3,7 +3,6 @@ import * as React from 'react';
 import { withTheme, WithTheme } from 'src/components/core/styles';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { readableBytes } from 'src/utilities/unitConversions';
-// import { AllData, getValues } from '../../../request';
 import { Stat } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import { generateUsedMemory, statMax } from '../../../shared/utilities';
@@ -12,40 +11,7 @@ import { GraphProps } from './types';
 export type CombinedProps = GraphProps & WithTheme;
 
 export const MemoryGraph: React.FC<CombinedProps> = props => {
-  const {
-    // clientAPIKey,
-    end,
-    isToday,
-    // lastUpdated,
-    // lastUpdatedError,
-    start,
-    theme,
-    data,
-    error,
-    timezone
-  } = props;
-
-  // const [data, setData] = React.useState<Partial<AllData>>({});
-  // const [error, setError] = React.useState<string | undefined>();
-  // const request = () => {
-  //   if (!start || !end) {
-  //     return;
-  //   }
-  //   return getValues(clientAPIKey, {
-  //     fields: ['memory'],
-  //     start,
-  //     end
-  //   })
-  //     .then(response => {
-  //       setError(undefined);
-  //       setData(response);
-  //     })
-  //     .catch(_ => setError('Unable to retrieve memory usage data.'));
-  // };
-
-  // React.useEffect(() => {
-  //   request();
-  // }, [start, end, clientAPIKey, lastUpdated, lastUpdatedError]);
+  const { end, isToday, start, theme, data, error, timezone } = props;
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
 
