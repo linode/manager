@@ -10,7 +10,7 @@ import { GraphProps } from './types';
 
 export type CombinedProps = GraphProps & WithTheme;
 
-export const MemoryGraph: React.FC<CombinedProps> = props => {
+export const DiskGraph: React.FC<CombinedProps> = props => {
   const {
     clientAPIKey,
     end,
@@ -37,7 +37,7 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
         setError(undefined);
         setData(response);
       })
-      .catch(_ => setError('Unable to load your Disk I/O data'));
+      .catch(_ => setError('Unable to load Disk I/O data.'));
   };
 
   React.useEffect(() => {
@@ -52,7 +52,7 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
         pathOr({}, ['Disk'], data),
         pathOr('kvm', ['SysInfo', 'type'], data)
       ),
-    [data.Disk]
+    [data.Disk, data.SysInfo]
   );
 
   return (
@@ -146,21 +146,24 @@ export const processDiskData = (
   }
   // We have real data now; sum up however many disks there are,
   // separating out swap.
-  return disks.reduce((acc: DiskData, thisDisk: Disk) => {
-    if (thisDisk.isswap === 1) {
-      // For swap, Classic combines reads and writes into a single metric
-      // Note: we are assuming only one disk will have isswap === 1
-      acc.swap = appendStats(
-        pathOr([], ['reads'], thisDisk),
-        pathOr([], ['writes'], thisDisk)
-      );
-    } else {
-      // Not a swap, add reads and writes to running total
-      acc.read = appendStats(acc.read, pathOr([], ['reads'], thisDisk));
-      acc.write = appendStats(acc.write, pathOr([], ['writes'], thisDisk));
-    }
-    return acc;
-  }, emptyState);
+  return disks.reduce(
+    (acc: DiskData, thisDisk: Disk) => {
+      if (thisDisk.isswap === 1) {
+        // For swap, Classic combines reads and writes into a single metric
+        // Note: we are assuming only one disk will have isswap === 1
+        acc.swap = appendStats(
+          pathOr([], ['reads'], thisDisk),
+          pathOr([], ['writes'], thisDisk)
+        );
+      } else {
+        // Not a swap, add reads and writes to running total
+        acc.read = appendStats(acc.read, pathOr([], ['reads'], thisDisk));
+        acc.write = appendStats(acc.write, pathOr([], ['writes'], thisDisk));
+      }
+      return acc;
+    },
+    { ...emptyState }
+  );
 };
 
 const formatDisk = (value: number | null) => {
@@ -176,4 +179,4 @@ const formatDisk = (value: number | null) => {
   return Math.round(value);
 };
 
-export default withTheme(MemoryGraph);
+export default withTheme(DiskGraph);
