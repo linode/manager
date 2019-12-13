@@ -5,7 +5,7 @@ import { getLastUpdated } from '../request';
 
 export const useClientLastUpdated = (
   clientAPIKey?: string,
-  callback?: () => void
+  callback?: (lastUpdated?: number) => void
 ) => {
   let mounted = true;
   let requestInterval: NodeJS.Timeout;
@@ -46,9 +46,10 @@ export const useClientLastUpdated = (
           (typeof newLastUpdated === 'undefined' ||
             pathOr(0, ['updated'], response) > newLastUpdated)
         ) {
+          const _lastUpdated = pathOr(0, ['updated'], response);
           setLastUpdated(response.updated);
           if (callback) {
-            callback();
+            callback(_lastUpdated);
           }
         }
       })

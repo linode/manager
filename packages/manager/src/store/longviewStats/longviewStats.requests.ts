@@ -5,7 +5,7 @@ import { requestClientStats } from './longviewStats.actions';
 
 export const getClientStats = createRequestThunk(
   requestClientStats,
-  async ({ api_key }) => {
+  async ({ api_key, lastUpdated }) => {
     /**
      * To calculate the number of packages in need
      * of updating, we need the full list of available
@@ -21,6 +21,18 @@ export const getClientStats = createRequestThunk(
       packages = result.Packages || [];
     } catch {
       packages = [];
+    }
+
+    /**
+     * The getLatestValue request we're about to make will always return a
+     * value, no matter how old it is, as long as the server has ever
+     * returned data.
+     *
+     * Since we use this request to populate "live" data, we don't actually
+     * want to make this request if lastUpdated is more than ~30 minutes ago.
+     */
+    if (lastUpdated && Date.now() / 1000 - lastUpdated > 60 * 30) {
+      return Promise.resolve({ Packages: [...packages] });
     }
 
     return get(api_key, 'getLatestValue', {
