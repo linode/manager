@@ -1,5 +1,6 @@
 const { constants } = require('../../constants');
 const { assertLog } = require('../../utils/assertionLog');
+import longviewLanding from '../longview/longview-landing.page';
 import Logger from '../../utils/Logger';
 const log = new Logger('plan-details');
 
@@ -7,7 +8,7 @@ import Page from '../page';
 
 class LongviewPlanDetails extends Page {
   get title() {
-    return $('h1');
+    return $('[data-qa-header]');
   }
 
   get clientsTab() {
@@ -53,7 +54,9 @@ class LongviewPlanDetails extends Page {
   }
 
   resetToFree() {
-    if (this.isCurrentPlan('free')) return;
+    if (this.isCurrentPlan('free')) {
+      return;
+    }
     this.changeLongviewPlan('free');
   }
 
@@ -67,7 +70,7 @@ class LongviewPlanDetails extends Page {
       this.lv100Plan
     ];
 
-    this.currentPlan.waitForDisplayed(constants.wait.normal);
+    this.currentPlan.waitForDisplayed(constants.wait.short);
     expect(browser.getUrl())
       .withContext(`wrong url path`)
       .toContain('/longview/plan-details');
@@ -129,12 +132,19 @@ class LongviewPlanDetails extends Page {
     browser.pause(1500);
     // below call is looking for the button to be disabled. Unfortunately, it is
     // disabled as soon as the loading animation occurs
-    this.changePlanButton.waitForEnabled(constants.wait.normal, true);
+    this.changePlanButton.waitForEnabled(constants.wait.short, true);
   }
+  //
+
   // simplified API call to reset the user account
   setPlanLVFree(token) {
-    const free = { longview_subscription: null };
-    return browser.updateGlobalSettings(token, free);
+    if (longviewLanding.checkForManaged(token)) {
+      log.error('cannot use a managed user account for longview plan changes');
+      return;
+    } else {
+      const free = { longview_subscription: null };
+      return browser.updateGlobalSettings(token, free);
+    }
   }
 }
 
