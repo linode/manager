@@ -12,6 +12,7 @@ import Grid from 'src/components/Grid';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import HideShowText from './HideShowText';
 
+import Alert from 'src/assets/icons/alert.svg';
 import Check from 'src/assets/icons/check.svg';
 
 type Props = TextFieldProps & {
@@ -24,7 +25,7 @@ type Props = TextFieldProps & {
 };
 
 interface State {
-  strength: boolean;
+  isValidPassword: boolean;
   lengthRequirement: boolean;
   active: boolean;
 }
@@ -48,7 +49,7 @@ const styles = (theme: Theme) =>
       margin: 0,
       width: '100%',
       padding: `${theme.spacing(1)}px ${theme.spacing(2) - 2}px `,
-      backgroundColor: theme.bg.offWhite,
+      backgroundColor: theme.bg.offWhiteDT,
       border: `1px solid ${theme.palette.divider}`,
       [theme.breakpoints.up('sm')]: {
         width: 415
@@ -80,7 +81,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class PasswordInput extends React.Component<CombinedProps, State> {
   state: State = {
-    strength: false,
+    isValidPassword: false,
     lengthRequirement: false,
     active: false
   };
@@ -88,7 +89,7 @@ class PasswordInput extends React.Component<CombinedProps, State> {
   componentWillReceiveProps(nextProps: CombinedProps) {
     const { value } = nextProps;
     this.setState({
-      strength: maybeStrength(value),
+      isValidPassword: passwordValidity(value),
       lengthRequirement: value && value.length >= 6 ? true : false,
       active: value && value.length !== 0 ? true : false
     });
@@ -102,7 +103,7 @@ class PasswordInput extends React.Component<CombinedProps, State> {
     }
 
     this.setState({
-      strength: maybeStrength(value),
+      isValidPassword: passwordValidity(value),
       lengthRequirement: value.length >= 6 ? true : false,
       active: true
     });
@@ -117,7 +118,7 @@ class PasswordInput extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { strength, lengthRequirement, active } = this.state;
+    const { isValidPassword, lengthRequirement, active } = this.state;
     const {
       classes,
       value,
@@ -163,7 +164,7 @@ class PasswordInput extends React.Component<CombinedProps, State> {
                       [classes.valid]: lengthRequirement
                     })}
                   >
-                    <Check />
+                    {active && !lengthRequirement ? <Alert /> : <Check />}
                   </span>{' '}
                   <Typography component={'span'}>
                     Be at least <strong>6 characters</strong>
@@ -172,7 +173,7 @@ class PasswordInput extends React.Component<CombinedProps, State> {
                 <li
                   className={classes.listItem}
                   aria-label={
-                    strength
+                    isValidPassword
                       ? "Password's strength is valid"
                       : "Increase password's strength by adding uppercase letters, lowercase letters, numbers, or punctuation"
                   }
@@ -181,10 +182,10 @@ class PasswordInput extends React.Component<CombinedProps, State> {
                     className={classNames({
                       [classes.check]: true,
                       [classes.active]: active,
-                      [classes.valid]: strength
+                      [classes.valid]: isValidPassword
                     })}
                   >
-                    <Check />
+                    {active && !isValidPassword ? <Alert /> : <Check />}
                   </span>{' '}
                   <Typography component={'span'}>
                     Contain at least{' '}
@@ -202,13 +203,16 @@ class PasswordInput extends React.Component<CombinedProps, State> {
   }
 }
 
-const maybeStrength = (value?: string) => {
-  const weekRegex = /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[!@#$%^&*(),.?":{}|<>]))|((?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]))|((?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>])))/;
+const passwordValidity = (value?: string) => {
+  // This regex checks for the password validity only (no length) which is
+  // two of the following character classes: uppercase letters, lowercase letters, numbers, and punctuation.
+  // This check aligns with the backend validation
+  const regex = /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[!@#$%^&*(),.?":{}|<>]))|((?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]))|((?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>])))/;
 
   if (!value || isEmpty(value)) {
     return false;
   } else {
-    if (weekRegex.test(value)) {
+    if (regex.test(value)) {
       return true;
     } else {
       return false;
