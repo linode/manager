@@ -91,12 +91,13 @@ describe('longview suite', () => {
         LongviewPlan.planDetailsDisplay();
       }
     });
+
     it('checks that longview plan can be changed', () => {
-      // checks for managed account
+      // // checks for managed account
       expect(LongviewLanding.checkForManaged(token))
         .withContext(`${managedAccount}`)
         .toBe(false);
-      // Changes a plan
+      // // Changes a plan
       expect(LongviewPlan.isCurrentPlan('free'))
         .withContext(`free plan should be set`)
         .toBe(true);
@@ -117,7 +118,7 @@ describe('longview suite', () => {
       const lvError = `Too many active Longview clients (${clientCount.length}) for the subscription selected (3). Select a larger subscription or reduce the number of Longview clients.`;
       LongviewPlan.lv3Plan.click();
       LongviewPlan.changePlanButton.click();
-      $('[data-qa-notice').waitForDisplayed();
+      $('[data-qa-notice]').waitForDisplayed();
       expect($('[data-qa-error="true"]').isDisplayed())
         .withContext(`Client count error ${assertLog.displayed}`)
         .toBe(true);
