@@ -11,7 +11,7 @@ import {
 import Typography from 'src/components/core/Typography';
 
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-import { Stat } from '../../../request.types';
+import { StatWithDummyPoint } from '../../../request.types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   graphContainer: {
@@ -36,10 +36,12 @@ export interface Props {
   sysInfoType: string;
   isMounted: boolean;
   timezone: string;
-  iFree: Stat[];
-  iTotal: Stat[];
-  free: Stat[];
-  total: Stat[];
+  iFree: StatWithDummyPoint[];
+  iTotal: StatWithDummyPoint[];
+  free: StatWithDummyPoint[];
+  total: StatWithDummyPoint[];
+  reads: StatWithDummyPoint[];
+  writes: StatWithDummyPoint[];
   diskLabel: string;
   startTime: number;
   endTime: number;
@@ -63,7 +65,9 @@ const Graphs: React.FC<CombinedProps> = props => {
     isMounted,
     iTotal,
     startTime,
-    endTime
+    endTime,
+    reads,
+    writes
   } = props;
 
   if (childOf) {
@@ -102,11 +106,16 @@ const Graphs: React.FC<CombinedProps> = props => {
             <LongviewLineGraph
               data={[
                 {
-                  /** idk yet lol */
-                  data: [],
-                  label: 'Disk I/O',
+                  data: formatDiskIO(writes),
+                  label: 'Write',
                   borderColor: theme.graphs.orangeBorder,
                   backgroundColor: theme.graphs.orange
+                },
+                {
+                  data: formatDiskIO(reads),
+                  label: 'Read',
+                  borderColor: theme.graphs.yellowBorder,
+                  backgroundColor: theme.graphs.yellow
                 }
               ]}
               title="Disk I/O"
@@ -163,24 +172,61 @@ const Graphs: React.FC<CombinedProps> = props => {
 };
 
 export const formatINodes = (
-  ifree: Stat[],
-  itotal: Stat[]
-): [number, number][] => {
-  return itotal.map((eachTotalStat, index) => [
-    eachTotalStat.x * 1000,
-    eachTotalStat.y - pathOr(0, [index, 'y'], ifree)
-  ]);
+  ifree: StatWithDummyPoint[],
+  itotal: StatWithDummyPoint[]
+): [number, number | null][] => {
+  return itotal.map((eachTotalStat, index) => {
+    const { y: totalY, x: totalX } = eachTotalStat;
+    const { y: freeY } = pathOr(
+      { y: null, x: 0 },
+      [index],
+      ifree
+    ) as StatWithDummyPoint;
+
+    const cleanedY =
+      typeof totalY === 'number' && typeof freeY === 'number'
+        ? +(totalY - freeY).toFixed(2)
+        : null;
+
+    /* convert seconds to MS */
+    return [totalX * 1000, cleanedY];
+  });
 };
 
 export const formatSpace = (
-  free: Stat[],
-  total: Stat[]
-): [number, number][] => {
-  return total.map((eachTotalStat, index) => [
-    eachTotalStat.x * 1000,
-    /* convert bytes to GB */
-    (eachTotalStat.y - pathOr(0, [index, 'y'], free)) / 1024 / 1024 / 1024
-  ]);
+  free: StatWithDummyPoint[],
+  total: StatWithDummyPoint[]
+): [number, number | null][] => {
+  return total.map((eachTotalStat, index) => {
+    const { y: totalY, x: totalX } = eachTotalStat;
+    const { y: freeY } = pathOr(
+      { y: null, x: 0 },
+      [index],
+      free
+    ) as StatWithDummyPoint;
+
+    const cleanedY =
+      typeof totalY === 'number' && typeof freeY === 'number'
+        ? /* convert bytes to GB */
+          +((totalY - freeY) / 1024 / 1024 / 1024).toFixed(2)
+        : null;
+
+    return [
+      /* convert seconds to MS */
+      totalX * 1000,
+      cleanedY
+    ];
+  });
+};
+
+export const formatDiskIO = (
+  stat: StatWithDummyPoint[]
+): [number, number | null][] => {
+  return stat.map(eachStat => {
+    const cleanedY =
+      typeof eachStat.y === 'number' ? +eachStat.y.toFixed(2) : null;
+    return [eachStat.x * 1000, cleanedY];
+  });
 };
 
 export const generateHelperText = (

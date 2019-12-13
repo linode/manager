@@ -13,6 +13,7 @@ import DiskPaper from './DiskPaper';
 
 import getStats from '../../../request';
 import { Disk } from '../../../request.types';
+import { pathMaybeAddDataInThePast } from '../../../shared/formatters';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -33,7 +34,7 @@ type CombinedProps = Props;
 
 const Disks: React.FC<CombinedProps> = props => {
   const [diskStats, updateDiskStats] = React.useState<
-    Partial<Disk> | undefined
+    Partial<Disk<'yAsNull'>> | undefined
   >();
   const [sysInfoType, updateSysInfoType] = React.useState<string>('');
   const [fetchError, setError] = React.useState<string>('');
@@ -69,7 +70,33 @@ const Disks: React.FC<CombinedProps> = props => {
         .then(r => {
           if (mounted) {
             setLoading(false);
-            updateDiskStats((r || {}).Disk);
+            const _disk = pathOr({}, ['Disk'], r);
+
+            const pathsToAlter = Object.keys(_disk).reduce(
+              (acc, eachKey) => {
+                acc.push(
+                  ...[
+                    [eachKey, 'reads'],
+                    [eachKey, 'writes'],
+                    [eachKey, 'fs', 'free'],
+                    [eachKey, 'fs', 'total'],
+                    [eachKey, 'fs', 'itotal'],
+                    [eachKey, 'fs', 'ifree']
+                  ]
+                );
+
+                return acc;
+              },
+              [] as (string | number)[][]
+            );
+
+            const enhancedDisk = pathMaybeAddDataInThePast<Disk<'yAsNull'>>(
+              _disk,
+              start,
+              pathsToAlter
+            );
+
+            updateDiskStats(enhancedDisk);
             updateSysInfoType(pathOr('', ['SysInfo', 'type'], r));
           }
         })
@@ -123,6 +150,7 @@ const Disks: React.FC<CombinedProps> = props => {
     <div id="tabpanel-disks" role="tabpanel" aria-labelledby="tab-disks">
       <Box display="flex" flexDirection="row" justifyContent="flex-end">
         <TimeRangeSelect
+          small
           className={classes.root}
           handleStatsChange={setStartAndEnd}
           defaultValue="Past 30 Minutes"
