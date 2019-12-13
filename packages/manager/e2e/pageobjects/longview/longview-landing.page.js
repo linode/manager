@@ -1,4 +1,5 @@
 const { assertLog } = require('../../utils/assertionLog');
+const { constants } = require('../../constants');
 import Page from '../page';
 
 class LongviewLanding extends Page {
@@ -116,7 +117,7 @@ class LongviewLanding extends Page {
     this.deleteButton.click();
     this.dialogAlert.waitForDisplayed();
     this.lvDelete.click();
-    this.dialogAlert.waitForDisplayed(true);
+    this.dialogAlert.waitForExist(constants.wait.normal, true);
   }
 
   deleteLVClientsAPI(token, lvClients) {
