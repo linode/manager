@@ -5,6 +5,7 @@ import TableBody from 'src/components/core/TableBody';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
+import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import RenderVolumeData, { RenderVolumeDataProps } from './RenderVolumeData';
 import SortableVolumesTableHeader from './SortableVolumesTableHeader';
 
@@ -20,8 +21,15 @@ type CombinedProps = Props;
 
 const ListVolumes: React.FC<CombinedProps> = props => {
   const { orderBy, order, handleOrderChange, data, renderProps } = props;
+
+  const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
+
   return (
-    <Paginate data={data} pageSize={25}>
+    <Paginate
+      data={data}
+      pageSize={infinitePageSize}
+      pageSizeSetter={setInfinitePageSize}
+    >
       {({
         data: paginatedData,
         count,
@@ -51,6 +59,7 @@ const ListVolumes: React.FC<CombinedProps> = props => {
             handlePageChange={handlePageChange}
             handleSizeChange={handlePageSizeChange}
             eventCategory="volumes landing"
+            showAll
           />
         </React.Fragment>
       )}

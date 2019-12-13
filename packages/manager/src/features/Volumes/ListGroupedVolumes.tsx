@@ -13,12 +13,11 @@ import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
+import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 import RenderVolumeData, { RenderVolumeDataProps } from './RenderVolumeData';
 import { ExtendedVolume } from './types';
 import TableWrapper from './VolumeTableWrapper';
-
-const DEFAULT_PAGE_SIZE = 25;
 
 type ClassNames =
   | 'root'
@@ -93,12 +92,18 @@ const ListGroupedVolumes: React.FC<CombinedProps> = props => {
     isVolumesLanding: renderProps.isVolumesLanding
   };
 
+  const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
+
   return (
     <TableWrapper {...tableWrapperProps}>
       {groupedVolumes.map(([tag, volumes]: [string, Volume[]]) => {
         return (
           <React.Fragment key={tag}>
-            <Paginate data={volumes} pageSize={DEFAULT_PAGE_SIZE}>
+            <Paginate
+              data={volumes}
+              pageSize={infinitePageSize}
+              pageSizeSetter={setInfinitePageSize}
+            >
               {({
                 data: paginatedData,
                 handlePageChange,
@@ -125,7 +130,7 @@ const ListGroupedVolumes: React.FC<CombinedProps> = props => {
                         </TableCell>
                       </TableRow>
                       <RenderVolumeData data={paginatedData} {...renderProps} />
-                      {count > DEFAULT_PAGE_SIZE && (
+                      {count > infinitePageSize && (
                         <TableRow>
                           <TableCell
                             colSpan={7}

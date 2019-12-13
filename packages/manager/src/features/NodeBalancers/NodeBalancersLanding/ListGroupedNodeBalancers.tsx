@@ -13,6 +13,7 @@ import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
+import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 import NodeBalancersLandingTableRows from './NodeBalancersLandingTableRows';
 import TableWrapper from './NodeBalancersTableWrapper';
@@ -99,12 +100,18 @@ const ListGroupedNodeBalancers: React.StatelessComponent<
   )(data);
   const tableWrapperProps = { handleOrderChange, order, orderBy };
 
+  const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
+
   return (
     <TableWrapper {...tableWrapperProps}>
       {groupedNodeBalancers.map(([tag, nodeBalancers]) => {
         return (
           <React.Fragment key={tag}>
-            <Paginate data={nodeBalancers} pageSize={DEFAULT_PAGE_SIZE}>
+            <Paginate
+              data={nodeBalancers}
+              pageSize={infinitePageSize}
+              pageSizeSetter={setInfinitePageSize}
+            >
               {({
                 count,
                 data: paginatedData,
