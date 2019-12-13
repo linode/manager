@@ -1,3 +1,4 @@
+import Edit from '@material-ui/icons/Edit';
 import {
   Domain,
   DomainRecord,
@@ -8,6 +9,7 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
+import Button from 'src/components/Button';
 import {
   createStyles,
   Theme,
@@ -33,7 +35,7 @@ import DomainRecords from './DomainRecordsWrapper';
 
 type RouteProps = RouteComponentProps<{ domainId?: string }>;
 
-type ClassNames = 'error';
+type ClassNames = 'error' | 'tagsButton' | 'editIcon';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -41,6 +43,18 @@ const styles = (theme: Theme) =>
     error: {
       marginTop: `${theme.spacing(3)}px !important`,
       marginBottom: `0 !important`
+    },
+    tagsButton: {
+      padding: `${theme.spacing(0.5)}px ${theme.spacing(2)}px`,
+      height: 34,
+      minWidth: 80,
+      marginRight: theme.spacing(1),
+      marginTop: theme.spacing(1)
+    },
+    editIcon: {
+      width: 20,
+      height: 20,
+      marginRight: theme.spacing(0.5)
     }
   });
 
@@ -66,6 +80,11 @@ const DomainDetail: React.FC<CombinedProps> = props => {
   React.useEffect(() => {
     refreshDomainRecords();
   }, []);
+
+  const tagSection = document.getElementById('domains-tag-section');
+  const scrollToTags = () => {
+    return tagSection && tagSection.scrollIntoView({ behavior: 'smooth' });
+  };
 
   const handleUpdateTags = (tagsList: string[]) => {
     if (!domainId) {
@@ -112,6 +131,14 @@ const DomainDetail: React.FC<CombinedProps> = props => {
             labelOptions={{ noCap: true }}
           />
         </Grid>
+        <Button
+          buttonType="secondary"
+          onClick={() => scrollToTags()}
+          className={classes.tagsButton}
+          aria-label={`Manage tags for "${domain.domain}"`}
+        >
+          <Edit className={classes.editIcon} /> Tags
+        </Button>
       </Grid>
       {props.location.state && props.location.state.recordError && (
         <Notice
