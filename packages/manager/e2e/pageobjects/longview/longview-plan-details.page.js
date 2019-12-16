@@ -47,6 +47,14 @@ class LongviewPlanDetails extends Page {
     return $(`[data-testid=lv-sub-table-row-longview-100]`);
   }
 
+  get loading() {
+    return $('[data-qa-loading="true"]');
+  }
+
+  get notLoading() {
+    return $('[data-qa-loading="false"]');
+  }
+
   isCurrentPlan(clientCount) {
     return $(
       `[data-testid="lv-sub-table-row-longview-${clientCount}"] [data-testid="current-plan"]`
@@ -129,12 +137,9 @@ class LongviewPlanDetails extends Page {
       return false;
     }
     this.changePlanButton.click();
-    browser.pause(1500);
-    // below call is looking for the button to be disabled. Unfortunately, it is
-    // disabled as soon as the loading animation occurs
+    browser.waitUntil(() => this.notLoading.isDisplayed());
     this.changePlanButton.waitForEnabled(constants.wait.short, true);
   }
-  //
 
   // simplified API call to reset the user account
   setPlanLVFree(token) {
