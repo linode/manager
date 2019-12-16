@@ -66,6 +66,7 @@ interface PrimaryLink {
   key: string;
   attr?: { [key: string]: any };
   icon?: JSX.Element;
+  activeLinks?: Array<string>;
   onClick?: (e: React.ChangeEvent<any>) => void;
 }
 
@@ -194,7 +195,12 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
           display: 'Account',
           href: '/account/billing',
           key: 'account',
-          icon: <Account className="small" />
+          icon: <Account className="small" />,
+          activeLinks: [
+            '/account/billing',
+            '/account/users',
+            '/account/settings'
+          ]
         }
       },
       {
@@ -329,7 +335,9 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
           {...primaryLink.attr}
           className={classNames({
             [classes.listItem]: true,
-            [classes.active]: linkIsActive(primaryLink.href),
+            [classes.active]: primaryLink.activeLinks
+              ? linkIsActive('', primaryLink.activeLinks)
+              : linkIsActive(primaryLink.href),
             listItemCollpased: isCollapsed
           })}
         >
