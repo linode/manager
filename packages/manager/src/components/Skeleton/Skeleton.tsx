@@ -15,7 +15,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   hasEntityIcon: {
     position: 'relative',
-    paddingLeft: 54
+    '& > div:nth-of-type(2)': {
+      paddingLeft: 54
+    }
   },
   columnTitle: {
     marginBottom: theme.spacing(1)
@@ -26,7 +28,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   skeletonIconContainer: {
     position: 'absolute',
-    left: theme.spacing(1),
     top: -10
   },
   skeletonIcon: {
