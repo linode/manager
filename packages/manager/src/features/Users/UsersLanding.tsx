@@ -36,7 +36,13 @@ import CreateUserDrawer from './CreateUserDrawer';
 import UserDeleteConfirmationDialog from './UserDeleteConfirmationDialog';
 import ActionMenu from './UsersActionMenu';
 
-type ClassNames = 'title' | 'avatar' | 'emptyImage';
+type ClassNames =
+  | 'title'
+  | 'avatar'
+  | 'emptyImage'
+  | 'userNameCell'
+  | 'emailNameCell'
+  | 'accountNameCell';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -71,6 +77,15 @@ const styles = (theme: Theme) =>
         width: 40,
         height: 40
       }
+    },
+    userNameCell: {
+      width: '32%'
+    },
+    emailNameCell: {
+      width: '32%'
+    },
+    accountNameCell: {
+      width: '32%'
     }
   });
 
@@ -191,7 +206,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
       >
         <TableCell parentColumn="Username" data-qa-username>
           <Grid container alignItems="center">
-            <Grid item>
+            <Grid item style={{ display: 'flex' }}>
               {user.gravatarUrl === undefined ? (
                 <div className={classes.emptyImage} />
               ) : user.gravatarUrl === 'not found' ? (
@@ -273,9 +288,22 @@ class UsersLanding extends React.Component<CombinedProps, State> {
             <Table aria-label="List of Users">
               <TableHead>
                 <TableRow>
-                  <TableCell data-qa-username-column>Username</TableCell>
-                  <TableCell data-qa-email-column>Email Address</TableCell>
-                  <TableCell data-qa-restriction-column>
+                  <TableCell
+                    className={classes.userNameCell}
+                    data-qa-username-column
+                  >
+                    Username
+                  </TableCell>
+                  <TableCell
+                    className={classes.emailNameCell}
+                    data-qa-email-column
+                  >
+                    Email Address
+                  </TableCell>
+                  <TableCell
+                    className={classes.accountNameCell}
+                    data-qa-restriction-column
+                  >
                     Account Access
                   </TableCell>
                   <TableCell />
@@ -316,7 +344,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
     data?: User[]
   ) => {
     if (loading) {
-      return <TableRowLoading colSpan={4} />;
+      return <TableRowLoading colSpan={4} oneLine hasEntityIcon />;
     }
 
     if (error) {
