@@ -101,10 +101,13 @@ describe('longview suite', () => {
       expect(LongviewPlan.isCurrentPlan('free'))
         .withContext(`free plan should be set`)
         .toBe(true);
-
       LongviewPlan.selectLongviewPlan('100');
       LongviewPlan.changeLongviewPlan('100');
       LongviewPlan.verifyPlan('100');
+
+      LongviewPlan.selectLongviewPlan('40');
+      LongviewPlan.changeLongviewPlan('40');
+      LongviewPlan.verifyPlan('40');
     });
 
     it('cannot set a plan that is lower than current longview clients ', () => {
