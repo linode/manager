@@ -32,6 +32,7 @@ export interface Props {
   transparent?: any;
   oneLine?: boolean;
   compact?: boolean;
+  hasEntityIcon?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -44,6 +45,7 @@ const tableRowLoading: React.FC<CombinedProps> = props => {
     firstColWidth,
     oneLine,
     numberOfRows,
+    hasEntityIcon,
     compact
   } = props;
 
@@ -74,6 +76,7 @@ const tableRowLoading: React.FC<CombinedProps> = props => {
               firstColWidth={firstColWidth ? firstColWidth : undefined}
               oneLine={oneLine}
               compact={compact}
+              hasEntityIcon={hasEntityIcon}
             />
           </TableCell>
         </TableRow>

@@ -15,6 +15,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   columnText: {
     marginTop: theme.spacing(1),
     marginBottom: 0
+  },
+  skeletonIcon: {
+    width: 40,
+    height: 40
   }
 }));
 
@@ -25,6 +29,7 @@ interface Props {
   textHeight?: number;
   subtextHeight?: number;
   oneLine?: boolean;
+  hasEntityIcon?: boolean;
   compact?: boolean;
 }
 
@@ -40,6 +45,7 @@ const _Skeleton: React.FC<combinedProps> = props => {
     textHeight,
     subtextHeight,
     oneLine,
+    hasEntityIcon,
     compact
   } = props;
 
@@ -64,10 +70,19 @@ const _Skeleton: React.FC<combinedProps> = props => {
           data-testid={'skeletonCol'}
           className={compact ? 'py0' : undefined}
         >
-          <Skeleton
-            className={classes.columnTitle}
-            height={textHeight && variant === 'text' ? textHeight : 16}
-          />
+          <Grid container alignItems="center">
+            {hasEntityIcon && (
+              <Grid item>
+                <Skeleton variant="circle" className={classes.skeletonIcon} />
+              </Grid>
+            )}
+            <Grid item style={{ flex: 1 }}>
+              <Skeleton
+                className={classes.columnTitle}
+                height={textHeight && variant === 'text' ? textHeight : 16}
+              />
+            </Grid>
+          </Grid>
           {!oneLine && (
             <Grid container>
               <Grid item xs={9} className="py0">
