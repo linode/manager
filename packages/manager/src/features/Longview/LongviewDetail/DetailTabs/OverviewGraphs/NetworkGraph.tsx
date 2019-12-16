@@ -90,13 +90,13 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
 
           borderColor: theme.graphs.emeraldGreenBorder,
           backgroundColor: theme.graphs.emeraldGreen,
-          data: _convertData(rx_bytes, start, formatNetwork)
+          data: _convertData(rx_bytes, start, end, formatNetwork)
         },
         {
           label: 'Outbound',
           borderColor: theme.graphs.forestGreenBorder,
           backgroundColor: theme.graphs.forestGreen,
-          data: _convertData(tx_bytes, start, formatNetwork)
+          data: _convertData(tx_bytes, start, end, formatNetwork)
         }
       ]}
     />

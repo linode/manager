@@ -24,21 +24,29 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
   } = props;
 
   const [data, setData] = React.useState<Partial<AllData>>({});
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
   const request = () => {
     if (!start || !end) {
       return;
     }
+    setLoading(true);
+    /** Set placeholder data to fix the x-axis on the new time window */
+    setData({});
     return getValues(clientAPIKey, {
       fields: ['memory'],
       start,
       end
     })
       .then(response => {
+        setLoading(false);
         setError(undefined);
         setData(response);
       })
-      .catch(_ => setError('Unable to retrieve memory usage data.'));
+      .catch(_ => {
+        setLoading(false);
+        setError('Unable to retrieve memory usage data.');
+      });
   };
 
   React.useEffect(() => {
@@ -71,6 +79,7 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
       title="Memory"
       subtitle={unit}
       error={error}
+      loading={loading}
       showToday={isToday}
       timezone={timezone}
       data={[
@@ -78,25 +87,25 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
           label: 'Swap',
           borderColor: theme.graphs.redBorder,
           backgroundColor: theme.graphs.red,
-          data: _convertData(swap, start, formatMemory)
+          data: _convertData(swap, start, end, formatMemory)
         },
         {
           label: 'Buffers',
           borderColor: theme.graphs.darkPurpleBorder,
           backgroundColor: theme.graphs.darkPurple,
-          data: _convertData(buffers, start, formatMemory)
+          data: _convertData(buffers, start, end, formatMemory)
         },
         {
           label: 'Cache',
           borderColor: theme.graphs.purpleBorder,
           backgroundColor: theme.graphs.purple,
-          data: _convertData(cache, start, formatMemory)
+          data: _convertData(cache, start, end, formatMemory)
         },
         {
           label: 'Used',
           borderColor: theme.graphs.lightPurpleBorder,
           backgroundColor: theme.graphs.lightPurple,
-          data: _convertData(used, start, formatMemory)
+          data: _convertData(used, start, end, formatMemory)
         }
       ]}
     />

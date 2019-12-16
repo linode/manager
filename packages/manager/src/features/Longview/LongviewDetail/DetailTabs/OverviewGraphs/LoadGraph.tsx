@@ -55,7 +55,7 @@ export const LoadGraph: React.FC<CombinedProps> = props => {
           label: 'Load',
           borderColor: theme.graphs.lightGoldBorder,
           backgroundColor: theme.graphs.lightGold,
-          data: _convertData(data.Load || [], start, formatLoad)
+          data: _convertData(data.Load || [], start, end, formatLoad)
         }
       ]}
     />

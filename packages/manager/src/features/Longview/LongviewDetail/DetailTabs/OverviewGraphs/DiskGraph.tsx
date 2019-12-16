@@ -69,19 +69,19 @@ export const DiskGraph: React.FC<CombinedProps> = props => {
           label: 'Swap',
           borderColor: theme.graphs.redBorder,
           backgroundColor: theme.graphs.red,
-          data: _convertData(swap, start, formatDisk)
+          data: _convertData(swap, start, end, formatDisk)
         },
         {
           label: 'Write',
           borderColor: theme.graphs.lightOrangeBorder,
           backgroundColor: theme.graphs.lightOrange,
-          data: _convertData(write, start, formatDisk)
+          data: _convertData(write, start, end, formatDisk)
         },
         {
           label: 'Read',
           borderColor: theme.graphs.lightYellowBorder,
           backgroundColor: theme.graphs.lightYellow,
-          data: _convertData(read, start, formatDisk)
+          data: _convertData(read, start, end, formatDisk)
         }
       ]}
     />

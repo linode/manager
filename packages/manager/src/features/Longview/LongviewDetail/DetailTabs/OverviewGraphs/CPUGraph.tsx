@@ -39,7 +39,7 @@ export const CPUGraph: React.FC<CombinedProps> = props => {
         setError(undefined);
         setData(response);
       })
-      .catch(_ => setError('Unable to retrieve CPU data'));
+      .catch(_ => setError('Unable to retrieve CPU data.'));
   };
 
   const cpuData = React.useMemo(() => {
@@ -69,19 +69,19 @@ export const CPUGraph: React.FC<CombinedProps> = props => {
           label: 'System',
           borderColor: theme.graphs.deepBlueBorder,
           backgroundColor: theme.graphs.deepBlue,
-          data: _convertData(cpuData.system, start, formatCPU)
+          data: _convertData(cpuData.system, start, end, formatCPU)
         },
         {
           label: 'User',
           borderColor: theme.graphs.skyBlueBorder,
           backgroundColor: theme.graphs.skyBlue,
-          data: _convertData(cpuData.user, start, formatCPU)
+          data: _convertData(cpuData.user, start, end, formatCPU)
         },
         {
           label: 'Wait',
           borderColor: theme.graphs.lightBlueBorder,
           backgroundColor: theme.graphs.lightBlue,
-          data: _convertData(cpuData.wait, start, formatCPU)
+          data: _convertData(cpuData.wait, start, end, formatCPU)
         }
       ]}
     />
