@@ -2,8 +2,18 @@ import * as moment from 'moment-timezone';
 import { clone, curry } from 'ramda';
 import * as React from 'react';
 import { ChartData, Line } from 'react-chartjs-2';
+import LineChartIcon from 'src/assets/icons/line-chart.svg';
+import Button from 'src/components/Button';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import TableBody from 'src/components/core/TableBody';
+import TableHead from 'src/components/core/TableHead';
+import TableRow from 'src/components/core/TableRow';
+import Typography from 'src/components/core/Typography';
+import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 import { setUpCharts } from 'src/utilities/charts';
-
+import { Metrics } from 'src/utilities/statMetrics';
+import MetricDisplayStyles from './NewMetricDisplay.styles';
 setUpCharts();
 
 export interface DataSet {
@@ -24,16 +34,21 @@ export interface Props {
   suggestedMax?: number;
   data: DataSet[];
   timezone: string;
+  rowHeaders?: Array<string>;
+  legendRows?: Array<ChartData<any>>;
   unit?: string; // Display unit on Y axis ticks
 }
 
 type CombinedProps = Props;
 
+const useStyles = makeStyles((theme: Theme) => ({
+  ...MetricDisplayStyles(theme)
+}));
+
 const chartOptions: any = {
   maintainAspectRatio: false,
-  animation: {
-    duration: 0
-  },
+  responsive: true,
+  animation: false,
   legend: {
     display: false
   },
@@ -45,7 +60,6 @@ const chartOptions: any = {
           zeroLineWidth: 1,
           zeroLineBorderDashOffset: 2
         },
-        stacked: true,
         ticks: {
           beginAtZero: true,
           callback(value: number, index: number) {
@@ -106,10 +120,47 @@ const humanizeLargeData = (value: number) => {
   return value;
 };
 
-class LineGraph extends React.Component<CombinedProps, {}> {
-  getChartOptions = (suggestedMax?: number, unit?: string) => {
+const LineGraph: React.FC<CombinedProps> = props => {
+  const inputEl: any = React.useRef(null);
+  const [legendRendered, setLegendRendered] = React.useState(false);
+  const [, forceUpdate] = React.useState();
+  const classes = useStyles();
+  const {
+    chartHeight,
+    unit,
+    suggestedMax,
+    showToday,
+    timezone,
+    data,
+    rowHeaders,
+    legendRows,
+    ...rest
+  } = props;
+  const finalRowHeaders = rowHeaders ? rowHeaders : ['Max', 'Avg', 'Last'];
+
+  const handleLegendClick = (datasetIndex: number) => {
+    const chart = inputEl.current.chartInstance;
+    chart.getDatasetMeta(datasetIndex).hidden =
+      chart.getDatasetMeta(datasetIndex).hidden === null
+        ? true
+        : !chart.getDatasetMeta(datasetIndex).hidden;
+    chart.update(); // re-draw chart to hide dataset
+    forceUpdate({}); // re-draw component to update legend styles
+  };
+
+  const plugins = [
+    {
+      afterDatasetsDraw() {
+        // hack to force re-render component in order to show legend
+        if (!legendRendered) {
+          setLegendRendered(true);
+        }
+      }
+    }
+  ];
+
+  const getChartOptions = (_suggestedMax?: number, _unit?: string) => {
     const finalChartOptions = clone(chartOptions);
-    const { showToday, timezone } = this.props;
     const parser = parseInTimeZone(timezone || '');
     finalChartOptions.scales.xAxes[0].time.parser = parser;
     finalChartOptions.scales.xAxes[0].time.offset = moment
@@ -128,23 +179,21 @@ class LineGraph extends React.Component<CombinedProps, {}> {
       };
     }
 
-    if (suggestedMax) {
-      finalChartOptions.scales.yAxes[0].ticks.suggestedMax = suggestedMax;
+    if (_suggestedMax) {
+      finalChartOptions.scales.yAxes[0].ticks.suggestedMax = _suggestedMax;
     }
 
-    if (unit) {
+    if (_unit) {
       finalChartOptions.scales.yAxes[0].ticks.callback = (
         value: number,
         index: number
-      ) => `${humanizeLargeData(value)}${unit}`;
+      ) => `${humanizeLargeData(value)}${_unit}`;
     }
 
     return finalChartOptions;
   };
 
-  formatData = () => {
-    const { data } = this.props;
-
+  const formatData = () => {
     return data.map(dataSet => {
       const timeData = dataSet.data.reduce((acc: any, point: any) => {
         acc.push({ t: point[0], y: point[1] });
@@ -162,28 +211,125 @@ class LineGraph extends React.Component<CombinedProps, {}> {
     });
   };
 
-  render() {
-    const {
-      chartHeight,
-      unit,
-      suggestedMax,
-      showToday,
-      timezone,
-      data,
-      ...rest
-    } = this.props;
+  return (
+    <div className={classes.wrapper}>
+      <div style={{ width: '100%' }}>
+        <Line
+          {...rest}
+          height={chartHeight || 300}
+          options={getChartOptions(suggestedMax, unit)}
+          plugins={plugins}
+          ref={inputEl}
+          data={{
+            datasets: formatData()
+          }}
+        />
+      </div>
+      {legendRendered && legendRows && (
+        <div className={classes.container}>
+          <Table aria-label="Stats and metrics" className={classes.root}>
+            <TableHead>
+              <TableRow>
+                <TableCell className={classes.tableHeadInner}>
+                  <Typography
+                    variant="body2"
+                    component="span"
+                    className={classes.text}
+                  >
+                    Toggle Graphs
+                  </Typography>
+                  <LineChartIcon className={classes.chartIcon} />
+                </TableCell>
+                {finalRowHeaders.map((section, i) => (
+                  <TableCell
+                    key={i}
+                    data-qa-header-cell
+                    className={classes.tableHeadInner}
+                  >
+                    <Typography variant="body2" className={classes.text}>
+                      {section}
+                    </Typography>
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <React.Fragment>
+                {legendRows &&
+                  inputEl.current.chartInstance.legend.legendItems.map(
+                    (tick: ChartData<any>, idx: number) => {
+                      const bgColor: string =
+                        typeof tick.fillStyle === 'string'
+                          ? tick.fillStyle
+                          : 'transparent';
+                      const { data: metricsData, format } = legendRows[idx];
+                      return (
+                        <TableRow key={idx}>
+                          <TableCell className={classes.legend}>
+                            <Button
+                              onClick={() =>
+                                handleLegendClick(tick.datasetIndex)
+                              }
+                              data-qa-legend-title
+                              aria-label="Toggle Chart Visibility"
+                              className={classes.toggleButton}
+                            >
+                              <div
+                                className={`${
+                                  classes.legendIcon
+                                } ${tick.hidden && classes.crossedOut}`}
+                                style={{
+                                  background: bgColor,
+                                  borderColor: bgColor
+                                }}
+                              />
+                              <span
+                                className={
+                                  tick.hidden ? classes.crossedOut : ''
+                                }
+                              >
+                                {tick.text}
+                              </span>
+                            </Button>
+                          </TableCell>
+                          {metricsData &&
+                            metricsBySection(metricsData).map((section, i) => {
+                              return (
+                                <TableCell
+                                  key={i}
+                                  parentColumn={
+                                    rowHeaders ? rowHeaders[idx] : undefined
+                                  }
+                                  data-qa-body-cell
+                                >
+                                  <Typography
+                                    variant="body2"
+                                    className={classes.text}
+                                  >
+                                    {format(section)}
+                                  </Typography>
+                                </TableCell>
+                              );
+                            })}
+                        </TableRow>
+                      );
+                    }
+                  )}
+              </React.Fragment>
+            </TableBody>
+          </Table>
+        </div>
+      )}
+    </div>
+  );
+};
 
-    return (
-      <Line
-        {...rest}
-        height={chartHeight || 300}
-        options={this.getChartOptions(suggestedMax, unit)}
-        data={{
-          datasets: this.formatData()
-        }}
-      />
-    );
-  }
-}
+// Grabs the sections we want (max, average, last) and puts them in an array
+// so we can map through them and create JSX
+export const metricsBySection = (data: Metrics): number[] => [
+  data.max,
+  data.average,
+  data.last
+];
 
 export default LineGraph;
