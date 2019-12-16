@@ -1123,13 +1123,6 @@
     pirates "^4.0.0"
     source-map-support "^0.5.16"
 
-"@babel/runtime@7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.0.0.tgz#adeb78fedfc855aa05bc041640f3f6f98e85424c"
-  integrity sha512-7hGhzlcmg01CvH1EHdSPVXYX1aJ8KCEyz6I9xYIi/asDtzBPMyMhVibhM/K6g/5qnKBwjZtp10bNZIEFTRW1MA==
-  dependencies:
-    regenerator-runtime "^0.12.0"
-
 "@babel/runtime@7.1.5":
   version "7.1.5"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.1.5.tgz#4170907641cf1f61508f563ece3725150cc6fe39"
@@ -3739,11 +3732,6 @@
   resolved "https://registry.yarnpkg.com/@types/podium/-/podium-1.0.0.tgz#bfaa2151be2b1d6109cc69f7faa9dac2cba3bb20"
   integrity sha1-v6ohUb4rHWEJzGn3+qnawsujuyA=
 
-"@types/pretty-bytes@^5.1.0":
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/@types/pretty-bytes/-/pretty-bytes-5.1.0.tgz#1df59db5c7def05dbbb0df2ad80b46863d9fafda"
-  integrity sha512-rc7x/HkZyguytBsCUVvcdARplUf0DsrRXqv3yO0v0CIgXuuwNlgYZRfYGCFHxr1CTnKHjCIJ13tB9t49ZixOIw==
-
 "@types/prop-types@*":
   version "15.7.1"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.1.tgz#f1a11e7babb0c3cad68100be381d1e064c68f1f6"
@@ -3766,12 +3754,7 @@
   resolved "https://registry.yarnpkg.com/@types/qs/-/qs-6.5.1.tgz#a38f69c62528d56ba7bd1f91335a8004988d72f7"
   integrity sha512-mNhVdZHdtKHMMxbqzNK3RzkBcN1cux3AvuCYGTvjEIQT2uheH3eCAyYsbMbh2Bq8nXkeOWs1kyDiF7geWRFQ4Q==
 
-"@types/ramda@0.25.16":
-  version "0.25.16"
-  resolved "https://registry.yarnpkg.com/@types/ramda/-/ramda-0.25.16.tgz#1d4eeb78d3247d1ceef971b458dd8469646cd1b4"
-  integrity sha512-jNxaEg+kSJ58iaM9bBawJugDxexXVPnLU245yEI1p2BTcfR5pcgM6mpsyBhRRo2ozyfJUvTmasL2Ft+C6BNkVQ==
-
-"@types/ramda@^0.26.19":
+"@types/ramda@0.26.19", "@types/ramda@^0.26.19":
   version "0.26.19"
   resolved "https://registry.yarnpkg.com/@types/ramda/-/ramda-0.26.19.tgz#400580597566c016e9743f17c1c48bf4671cda81"
   integrity sha512-lJuMZDXqZ8W2hl0Gz+wEPUhXcf/tZRuaO5vrxFD3Dv2XMqgTZVw+bvfS6iQAsio9XQV+uhkggtT4eLhDmUpI5g==
@@ -4057,11 +4040,6 @@
   integrity sha512-K8/LfZq2duW33XW/tFwEAfnZlqIfVsoyRB3kfXdPXYhl0nfM8mmh7GS0jg7WrX2Dgq/0Ha/pR1PaR+BvmWwjiQ==
   dependencies:
     "@types/yargs-parser" "*"
-
-"@types/yup@^0.24.9":
-  version "0.24.9"
-  resolved "https://registry.yarnpkg.com/@types/yup/-/yup-0.24.9.tgz#da98f4b38eec7ca72146e7042679c8c8628896fa"
-  integrity sha512-PxWHuxuJgCuVenEJk8cW6z7F+JFMHAJMSbih3gyjUOU23tjSjz2/jDBmb17yp1CBbozozQKn3InIXtYH3RzJGg==
 
 "@types/yup@^0.26.22":
   version "0.26.22"
@@ -15277,11 +15255,6 @@ pretty-bytes@^4.0.2:
   resolved "https://registry.yarnpkg.com/pretty-bytes/-/pretty-bytes-4.0.2.tgz#b2bf82e7350d65c6c33aa95aaa5a4f6327f61cd9"
   integrity sha1-sr+C5zUNZcbDOqlaqlpPYyf2HNk=
 
-pretty-bytes@^5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/pretty-bytes/-/pretty-bytes-5.1.0.tgz#6237ecfbdc6525beaef4de722cc60a58ae0e6c6d"
-  integrity sha512-wa5+qGVg9Yt7PB6rYm3kXlKzgzgivYTLRandezh43jjRqgyDyP+9YxfJpJiLs9yKD1WeU8/OvtToWpW7255FtA==
-
 pretty-error@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/pretty-error/-/pretty-error-2.1.1.tgz#5f4f87c8f91e5ae3f3ba87ab4cf5e03b1a17f1a3"
@@ -15649,11 +15622,6 @@ ramda@^0.21.0:
   version "0.21.0"
   resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.21.0.tgz#a001abedb3ff61077d4ff1d577d44de77e8d0a35"
   integrity sha1-oAGr7bP/YQd9T/HVd9RN536NCjU=
-
-ramda@^0.25.0:
-  version "0.25.0"
-  resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.25.0.tgz#8fdf68231cffa90bc2f9460390a0cb74a29b29a9"
-  integrity sha512-GXpfrYVPwx3K7RQ6aYT8KPS8XViSXUVJT1ONhoKPE9VAleW42YE+U+8VEyGWt41EnEQW7gwecYJriTI0pKoecQ==
 
 ramda@^0.26.1:
   version "0.26.1"
@@ -18381,11 +18349,6 @@ symbol.prototype.description@^1.0.0:
   dependencies:
     has-symbols "^1.0.0"
 
-synchronous-promise@^2.0.5:
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/synchronous-promise/-/synchronous-promise-2.0.6.tgz#de76e0ea2b3558c1e673942e47e714a930fa64aa"
-  integrity sha512-TyOuWLwkmtPL49LHCX1caIwHjRzcVd62+GF6h8W/jHOeZUFHpnd2XJDVuUlaTaLPH1nuu2M69mfHr5XbQJnf/g==
-
 synchronous-promise@^2.0.6:
   version "2.0.9"
   resolved "https://registry.yarnpkg.com/synchronous-promise/-/synchronous-promise-2.0.9.tgz#b83db98e9e7ae826bf9c8261fd8ac859126c780a"
@@ -20260,19 +20223,7 @@ yauzl@^2.10.0, yauzl@^2.5.0:
     buffer-crc32 "~0.2.3"
     fd-slicer "~1.1.0"
 
-yup@^0.26.3:
-  version "0.26.7"
-  resolved "https://registry.yarnpkg.com/yup/-/yup-0.26.7.tgz#7480312d1a3efd8a2f5c1f98b0f11fc21c80efc8"
-  integrity sha512-JrOZlPHNYTVerwrIS3x+F8/U/87lNNQU/ig3Y8b2dehZRhdegHVBr5AnUSB+kLLs3Gp9ne8ZybPtTGITKndu+w==
-  dependencies:
-    "@babel/runtime" "7.0.0"
-    fn-name "~2.0.1"
-    lodash "^4.17.10"
-    property-expr "^1.5.0"
-    synchronous-promise "^2.0.5"
-    toposort "^2.0.2"
-
-yup@^0.27.0:
+yup@^0.27, yup@^0.27.0:
   version "0.27.0"
   resolved "https://registry.yarnpkg.com/yup/-/yup-0.27.0.tgz#f8cb198c8e7dd2124beddc2457571329096b06e7"
   integrity sha512-v1yFnE4+u9za42gG/b/081E7uNW9mUj3qtkmelLbW5YPROZzSH/KUUyJu9Wt8vxFJcT9otL/eZopS0YK1L5yPQ==
