@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
 import Skeleton, { SkeletonProps } from 'src/components/core/Skeleton';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -9,6 +10,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(1),
     marginBottom: 10
   },
+  oneLine: {
+    marginBottom: 0
+  },
+  hasEntityIcon: {
+    position: 'relative',
+    paddingLeft: 54
+  },
   columnTitle: {
     marginBottom: theme.spacing(1)
   },
@@ -16,9 +24,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(1),
     marginBottom: 0
   },
+  skeletonIconContainer: {
+    position: 'absolute',
+    left: theme.spacing(1),
+    top: -10
+  },
   skeletonIcon: {
-    width: 40,
-    height: 40
+    width: 36,
+    height: 36
   }
 }));
 
@@ -70,19 +83,10 @@ const _Skeleton: React.FC<combinedProps> = props => {
           data-testid={'skeletonCol'}
           className={compact ? 'py0' : undefined}
         >
-          <Grid container alignItems="center">
-            {hasEntityIcon && (
-              <Grid item>
-                <Skeleton variant="circle" className={classes.skeletonIcon} />
-              </Grid>
-            )}
-            <Grid item style={{ flex: 1 }}>
-              <Skeleton
-                className={classes.columnTitle}
-                height={textHeight && variant === 'text' ? textHeight : 16}
-              />
-            </Grid>
-          </Grid>
+          <Skeleton
+            className={classes.columnTitle}
+            height={textHeight && variant === 'text' ? textHeight : 16}
+          />
           {!oneLine && (
             <Grid container>
               <Grid item xs={9} className="py0">
@@ -112,12 +116,20 @@ const _Skeleton: React.FC<combinedProps> = props => {
           {renderTableSkeleton(ifColumns)}
           <Grid
             container
-            className={classes.root}
-            style={oneLine ? { marginBottom: 0 } : undefined}
+            className={classNames({
+              [classes.root]: true,
+              [classes.oneLine]: oneLine,
+              [classes.hasEntityIcon]: hasEntityIcon
+            })}
             data-testid={'tableSkeleton'}
             aria-label="Table Content Loading"
             tabIndex={0}
           >
+            {hasEntityIcon && (
+              <Grid item className={classes.skeletonIconContainer}>
+                <Skeleton variant="circle" className={classes.skeletonIcon} />
+              </Grid>
+            )}
             {cols}
           </Grid>
         </>

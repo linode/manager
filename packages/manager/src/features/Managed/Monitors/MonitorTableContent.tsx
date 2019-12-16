@@ -31,7 +31,7 @@ export const MonitorTableContent: React.FC<CombinedProps> = props => {
     openHistoryDrawer,
     openMonitorDrawer
   } = props;
-  if (!loading) {
+  if (loading) {
     return (
       <TableRowLoading colSpan={3} firstColWidth={45} oneLine hasEntityIcon />
     );
