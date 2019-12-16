@@ -49,8 +49,8 @@ class LongviewPlanDetails extends Page {
 
   isCurrentPlan(clientCount) {
     return $(
-      `[data-testid=lv-sub-table-row-longview-${clientCount}] [data-testid=current-plan]`
-    ).isDisplayed();
+      `[data-testid="lv-sub-table-row-longview-${clientCount}"] [data-testid="current-plan"]`
+    ).isExisting();
   }
 
   resetToFree() {
@@ -104,7 +104,7 @@ class LongviewPlanDetails extends Page {
     expect(this.isCurrentPlan(clientCount))
       .withContext(`should be current plan`)
       .toBe(true);
-    expect(planRow.$('data-qa-radio=true]'))
+    expect(planRow.$('[data-qa-radio="true"]').isEnabled())
       .withContext(`Plan radio button ${assertLog.enabled}`)
       .toBe(true);
 
