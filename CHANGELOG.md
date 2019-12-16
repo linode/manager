@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [v0.80.0] - 2019-12-13
+## [v0.80.0] - 2019-12-16
 
 ### Added:
 - Remove check zone from domain action menu
