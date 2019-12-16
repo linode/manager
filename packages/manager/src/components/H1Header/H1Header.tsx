@@ -1,10 +1,19 @@
 import * as React from 'react';
+import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
 interface Props {
   title: string;
   className?: string;
 }
+
+const useStyles = makeStyles({
+  root: {
+    '&:focus': {
+      outline: 'none'
+    }
+  }
+});
 
 // Accessibility Feature:
 // The role of this component is to implement focus to the main content when navigating the application
@@ -13,6 +22,7 @@ interface Props {
 const H1Header: React.FC<Props> = props => {
   const h1Header = React.useRef<HTMLDivElement>(null);
   const { className, title } = props;
+  const classes = useStyles();
 
   React.useEffect(() => {
     if (h1Header.current !== null) {
@@ -21,7 +31,12 @@ const H1Header: React.FC<Props> = props => {
   }, []);
 
   return (
-    <Typography variant="h1" className={className} ref={h1Header} tabIndex={-1}>
+    <Typography
+      variant="h1"
+      className={`${classes.root} ${className}`}
+      ref={h1Header}
+      tabIndex={-1}
+    >
       {title}
     </Typography>
   );
