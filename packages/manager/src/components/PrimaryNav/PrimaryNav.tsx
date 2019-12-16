@@ -150,6 +150,10 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
         link: {
           display: 'Object Storage',
           href: '/object-storage/buckets',
+          activeLinks: [
+            '/object-storage/buckets',
+            '/object-storage/access-keys'
+          ],
           key: 'object-storage',
           icon: <Storage />
         }
@@ -227,6 +231,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
       {
         display: 'Linodes',
         href: '/linodes',
+        activeLinks: ['/linodes', '/linodes/create'],
         key: 'linodes',
         icon: <Linode />
       },
