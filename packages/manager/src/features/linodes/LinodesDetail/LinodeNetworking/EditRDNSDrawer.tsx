@@ -83,7 +83,7 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
     rdns: 'RDNS'
   };
 
-  componentWillReceiveProps(nextProps: CombinedProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: CombinedProps) {
     // This is a hack fix. We need to refactor and replace all components with
     // `componentWillReceiveProps`. @todo: do this.
     // https://reactjs.org/docs/react-component.html#unsafe_componentwillreceiveprops

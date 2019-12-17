@@ -161,7 +161,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
-  componentWillReceiveProps(nextProps: Props) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     if (!this.mounted) {
       return;
     }
