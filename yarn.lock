@@ -19030,16 +19030,6 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typeface-lato@^0.0.54:
-  version "0.0.54"
-  resolved "https://registry.yarnpkg.com/typeface-lato/-/typeface-lato-0.0.54.tgz#6ea56309a8b0cfdb7e8246e05de4b58b8272b47c"
-  integrity sha512-2/oP5YrXCBSLg+N2ZdWnMbJ0PRIidrJVFHgRoLxo5MNsdu9eE4aBwsoEY/K/+9rKdktGO8zpiXBYPRn9F6U/Sw==
-
-typeface-ubuntu-mono@^0.0.72:
-  version "0.0.72"
-  resolved "https://registry.yarnpkg.com/typeface-ubuntu-mono/-/typeface-ubuntu-mono-0.0.72.tgz#3ecdb1dc90900522451c90661da7ae316a6fdb8b"
-  integrity sha512-l+Tt4NVCeceb42wNk3iev35xt3d+O3NxPtYq90k70OXjbtQtvUGDNaDB9uouJ1Y7Co0V6DgKHNS5S5ljBz9QRA==
-
 typescript-estree@^18.1.0:
   version "18.1.0"
   resolved "https://registry.yarnpkg.com/typescript-estree/-/typescript-estree-18.1.0.tgz#ea168c3888587cde684ff366e470296196d3ae42"
