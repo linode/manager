@@ -4,7 +4,7 @@ import Page from '../page';
 
 class LongviewLanding extends Page {
   get title() {
-    return $('[data-qa-header]');
+    return $('h1');
   }
 
   get clientsTab() {
@@ -90,8 +90,10 @@ class LongviewLanding extends Page {
   addLVClient(clientCount) {
     for (let count = 0; count < clientCount; count++) {
       this.addClient.click();
-      $('[data-qa-editable-text="true"]').waitForDisplayed();
-      $('[data-testid="installation"]').waitForDisplayed();
+      $('[data-qa-editable-text="true"]').waitForDisplayed(
+        constants.wait.normal
+      );
+      $('[data-testid="installation"]').waitForDisplayed(constants.wait.normal);
     }
   }
 
