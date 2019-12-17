@@ -25,7 +25,10 @@ exports.constants = {
     nodeBalancers: '/nodebalancers',
     domains: '/domains',
     managed: '/managed',
-    longview: '/longview',
+    longview: {
+      clients: '/longview/clients',
+      planDetails: 'longview/plan-details'
+    },
     stackscripts: '/stackscripts',
     createStackScript: '/stackscripts/create',
     images: '/images',

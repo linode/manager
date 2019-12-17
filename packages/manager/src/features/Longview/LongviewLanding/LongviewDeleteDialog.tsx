@@ -92,6 +92,7 @@ const Actions: React.FC<ActionsProps> = props => {
         loading={props.isDeleting}
         destructive
         buttonType="secondary"
+        data-testid="delete-button"
       >
         Delete
       </Button>

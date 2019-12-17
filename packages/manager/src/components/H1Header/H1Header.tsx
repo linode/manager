@@ -4,6 +4,7 @@ import Typography from 'src/components/core/Typography';
 interface Props {
   title: string;
   className?: string;
+  dataQaEl?: string;
 }
 
 // Accessibility Feature:
@@ -12,7 +13,7 @@ interface Props {
 // It should serve as the only source for all H1s
 const H1Header: React.FC<Props> = props => {
   const h1Header = React.useRef<HTMLDivElement>(null);
-  const { className, title } = props;
+  const { className, title, dataQaEl } = props;
 
   React.useEffect(() => {
     if (h1Header.current !== null) {
@@ -21,7 +22,13 @@ const H1Header: React.FC<Props> = props => {
   }, []);
 
   return (
-    <Typography variant="h1" className={className} ref={h1Header} tabIndex={-1}>
+    <Typography
+      variant="h1"
+      className={className}
+      ref={h1Header}
+      tabIndex={-1}
+      data-qa-header={dataQaEl ? dataQaEl : ''}
+    >
       {title}
     </Typography>
   );
