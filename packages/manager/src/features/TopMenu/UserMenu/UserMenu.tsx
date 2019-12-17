@@ -222,11 +222,11 @@ export class UserMenu extends React.Component<CombinedProps, State> {
             onClose={this.handleClose}
             className={classes.menu}
           >
-            <MenuItem
+            {/* <MenuItem
               key="placeholder"
               aria-hidden
               className={classes.hidden}
-            />
+            /> */}
             {menuLinks.map(menuLink => this.renderMenuLink(menuLink))}
           </Menu>
         </Hidden>

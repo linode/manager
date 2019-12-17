@@ -1,7 +1,16 @@
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 
-export const linkIsActive = (href: string, activeLinks?: Array<string>) => {
-  return !activeLinks
-    ? href && isPathOneOf([href], location.pathname)
-    : isPathOneOf(activeLinks, location.pathname);
+export const linkIsActive = (href: string, activeLinks: Array<string> = []) => {
+  const currentlyOnOneClickTab = location.search.match(/one-click/gi);
+  const isOneClickTab = href.match(/one-click/gi);
+
+  /**
+   * mark as active if the tab is "one click"
+   * Other create tabs default back to Linodes active tabs
+   */
+  if (currentlyOnOneClickTab) {
+    return isOneClickTab;
+  }
+
+  return isPathOneOf([href, ...activeLinks], location.pathname);
 };
