@@ -1,6 +1,8 @@
 export const assertLog = {
   displayed: 'should be displayed',
+  enabled: 'should be enabled',
   notDisplayed: 'should not be displayed',
+  notEnabled: 'should not be enabled',
   incorrectText: 'incorrect text found',
   incorrectRegExVal: 'incorrect value found for regex with',
   incorrectNum: 'incorrect number of items',

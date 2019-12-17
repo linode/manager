@@ -103,7 +103,7 @@ const LongviewList: React.FC<CombinedProps> = props => {
   /** Empty state */
   if (longviewClientsLastUpdated !== 0 && longviewClientsResults === 0) {
     return (
-      <Paper className={classes.empty}>
+      <Paper data-testid="no-client-list" className={classes.empty}>
         <Typography variant="body1" className={classes.emptyText}>
           {userCanCreateLongviewClient ? (
             <React.Fragment>

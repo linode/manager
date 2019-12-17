@@ -47,9 +47,7 @@ type CombinedProps = Props;
 const InstallationInstructions: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const command = `curl -s https://lv.linode.com/${
-    props.installationKey
-  } | sudo bash`;
+  const command = `curl -s https://lv.linode.com/${props.installationKey} | sudo bash`;
 
   return (
     <Grid container>
@@ -112,7 +110,7 @@ const InstallationInstructions: React.FC<CombinedProps> = props => {
             </Typography>
           </Grid>
           <Grid item className={classes.instruction}>
-            <Typography>
+            <Typography data-testid="api-key">
               API Key: <span className={classes.apiKey}>{props.APIKey}</span>
             </Typography>
           </Grid>
