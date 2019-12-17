@@ -1,5 +1,6 @@
 import { CreateLinodeRequest, Linode } from 'linode-js-sdk/lib/linodes';
 import { APIError } from 'linode-js-sdk/lib/types';
+import { DeepPartial } from 'src/types/utilities';
 import { GetAllData } from 'src/utilities/getAll';
 import actionCreatorFactory from 'typescript-fsa';
 
@@ -47,7 +48,7 @@ export const createLinodeActions = actionCreator.async<
   APIError[]
 >('create');
 
-export type UpdateLinodeParams = Partial<Linode> & LinodeID;
+export type UpdateLinodeParams = DeepPartial<Linode> & LinodeID;
 export const updateLinodeActions = actionCreator.async<
   UpdateLinodeParams,
   Linode,

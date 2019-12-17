@@ -21,7 +21,8 @@ const props: CombinedProps = {
     schedule: {
       window: null,
       day: null
-    }
+    },
+    last_successful: null
   },
   linodeStatus: '',
   noImage: false,

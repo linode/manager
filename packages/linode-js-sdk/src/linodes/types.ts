@@ -42,6 +42,7 @@ export interface LinodeAlerts {
 export interface LinodeBackups {
   enabled: boolean;
   schedule: LinodeBackupSchedule;
+  last_successful: string | null;
 }
 
 export type Window =
