@@ -93,11 +93,11 @@ describe('longview suite', () => {
     });
 
     it('checks that longview plan can be changed', () => {
-      // // checks for managed account
+      // checks for managed account
       expect(LongviewLanding.checkForManaged(token))
         .withContext(`${managedAccount}`)
         .toBe(false);
-      // // Changes a plan
+      // changes a plan
       expect(LongviewPlan.isCurrentPlan('free'))
         .withContext(`free plan should be set`)
         .toBe(true);

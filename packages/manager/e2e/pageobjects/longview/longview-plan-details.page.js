@@ -8,7 +8,7 @@ import Page from '../page';
 
 class LongviewPlanDetails extends Page {
   get title() {
-    return $('[data-qa-header]');
+    return $('h1');
   }
 
   get clientsTab() {
