@@ -81,7 +81,11 @@ const LongviewLineGraph: React.FC<CombinedProps> = props => {
 };
 
 export const isDataEmpty = (data: DataSet[]) => {
-  return data.every(thisSeries => thisSeries.data.length === 0);
+  return data.every(
+    thisSeries =>
+      thisSeries.data.length === 0 ||
+      thisSeries.data.every(thisPoint => thisPoint[1] === null)
+  );
 };
 
 export default compose<CombinedProps, Props>(React.memo)(LongviewLineGraph);
