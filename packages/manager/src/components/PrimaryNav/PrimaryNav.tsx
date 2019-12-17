@@ -340,9 +340,10 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
           {...primaryLink.attr}
           className={classNames({
             [classes.listItem]: true,
-            [classes.active]: primaryLink.activeLinks
-              ? linkIsActive('', primaryLink.activeLinks)
-              : linkIsActive(primaryLink.href),
+            [classes.active]: linkIsActive(
+              primaryLink.href,
+              primaryLink.activeLinks
+            ),
             listItemCollpased: isCollapsed
           })}
         >
