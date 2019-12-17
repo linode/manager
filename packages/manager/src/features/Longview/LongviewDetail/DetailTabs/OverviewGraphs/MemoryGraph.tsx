@@ -3,11 +3,11 @@ import * as React from 'react';
 import { withTheme, WithTheme } from 'src/components/core/styles';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { readableBytes } from 'src/utilities/unitConversions';
-import { AllData, getValues } from '../../../request';
 import { Stat } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import { generateUsedMemory, statMax } from '../../../shared/utilities';
 import { GraphProps } from './types';
+import { useGraphs } from './useGraphs';
 
 export type CombinedProps = GraphProps & WithTheme;
 
@@ -23,31 +23,12 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
     timezone
   } = props;
 
-  const [data, setData] = React.useState<Partial<AllData>>({});
-  const [loading, setLoading] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<string | undefined>();
-  const request = () => {
-    if (!start || !end) {
-      return;
-    }
-    setLoading(true);
-    /** Set placeholder data to fix the x-axis on the new time window */
-    setData({});
-    return getValues(clientAPIKey, {
-      fields: ['memory'],
-      start,
-      end
-    })
-      .then(response => {
-        setLoading(false);
-        setError(undefined);
-        setData(response);
-      })
-      .catch(_ => {
-        setLoading(false);
-        setError('Unable to retrieve memory usage data.');
-      });
-  };
+  const { data, loading, error, request } = useGraphs(
+    ['memory'],
+    clientAPIKey,
+    start,
+    end
+  );
 
   React.useEffect(() => {
     request();

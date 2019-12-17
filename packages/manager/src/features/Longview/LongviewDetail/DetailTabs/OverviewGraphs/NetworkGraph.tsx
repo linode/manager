@@ -5,9 +5,9 @@ import { withTheme, WithTheme } from 'src/components/core/styles';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { generateUnits } from 'src/features/Longview/LongviewLanding/Gauges/Network';
 import { statMax, sumNetwork } from 'src/features/Longview/shared/utilities';
-import { AllData, getValues } from '../../../request';
 import { convertData } from '../../../shared/formatters';
 import { GraphProps } from './types';
+import { useGraphs } from './useGraphs';
 
 export type CombinedProps = GraphProps & WithTheme;
 
@@ -23,24 +23,12 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
     timezone
   } = props;
 
-  const [data, setData] = React.useState<Partial<AllData>>({});
-  const [error, setError] = React.useState<string | undefined>();
-  const request = () => {
-    if (!start || !end) {
-      return;
-    }
-
-    return getValues(clientAPIKey, {
-      fields: ['network'],
-      start,
-      end
-    })
-      .then(response => {
-        setError(undefined);
-        setData(response);
-      })
-      .catch(_ => setError('Unable to retrieve network data.'));
-  };
+  const { data, loading, error, request } = useGraphs(
+    ['network'],
+    clientAPIKey,
+    start,
+    end
+  );
 
   const networkData = React.useMemo(
     () => sumNetwork(pathOr({}, ['Interface'], data.Network)),
@@ -82,6 +70,7 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
       title="Network"
       subtitle={maxUnit + '/s'}
       error={error}
+      loading={loading}
       showToday={isToday}
       timezone={timezone}
       data={[

@@ -15,6 +15,7 @@ export const useGraphs = (
       return;
     }
     setLoading(true);
+    setData({});
     return getValues(clientAPIKey, {
       fields: requestFields,
       start,
@@ -27,7 +28,7 @@ export const useGraphs = (
       })
       .catch(_ => {
         setLoading(false);
-        setError('Unable to retrieve CPU data.');
+        setError('Unable to retrieve data.');
       });
   };
 

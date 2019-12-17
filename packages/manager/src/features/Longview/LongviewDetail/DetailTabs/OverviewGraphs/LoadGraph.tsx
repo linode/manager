@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { withTheme, WithTheme } from 'src/components/core/styles';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-import { AllData, getValues } from '../../../request';
 import { convertData } from '../../../shared/formatters';
 import { GraphProps } from './types';
+import { useGraphs } from './useGraphs';
 
 export type CombinedProps = GraphProps & WithTheme;
 
@@ -19,23 +19,12 @@ export const LoadGraph: React.FC<CombinedProps> = props => {
     timezone
   } = props;
 
-  const [data, setData] = React.useState<Partial<AllData>>({});
-  const [error, setError] = React.useState<string | undefined>();
-  const request = () => {
-    if (!start || !end) {
-      return;
-    }
-    return getValues(clientAPIKey, {
-      fields: ['load'],
-      start,
-      end
-    })
-      .then(response => {
-        setError(undefined);
-        setData(response);
-      })
-      .catch(_ => setError('Unable to retrieve load data.'));
-  };
+  const { data, loading, error, request } = useGraphs(
+    ['load'],
+    clientAPIKey,
+    start,
+    end
+  );
 
   React.useEffect(() => {
     request();
@@ -48,6 +37,7 @@ export const LoadGraph: React.FC<CombinedProps> = props => {
       title="Load"
       subtitle="Target < 1.00"
       error={error}
+      loading={loading}
       showToday={isToday}
       timezone={timezone}
       data={[

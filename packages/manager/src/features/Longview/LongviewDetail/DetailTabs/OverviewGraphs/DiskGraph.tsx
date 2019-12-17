@@ -3,10 +3,10 @@ import * as React from 'react';
 import { withTheme, WithTheme } from 'src/components/core/styles';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { appendStats } from 'src/features/Longview/shared/utilities';
-import { AllData, getValues } from '../../../request';
 import { Disk, StatWithDummyPoint } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import { GraphProps } from './types';
+import { useGraphs } from './useGraphs';
 
 export type CombinedProps = GraphProps & WithTheme;
 
@@ -22,23 +22,12 @@ export const DiskGraph: React.FC<CombinedProps> = props => {
     timezone
   } = props;
 
-  const [data, setData] = React.useState<Partial<AllData>>({});
-  const [requestError, setError] = React.useState<string | undefined>();
-  const request = () => {
-    if (!start || !end) {
-      return;
-    }
-    return getValues(clientAPIKey, {
-      fields: ['disk', 'sysinfo'],
-      start,
-      end
-    })
-      .then(response => {
-        setError(undefined);
-        setData(response);
-      })
-      .catch(_ => setError('Unable to load Disk I/O data.'));
-  };
+  const { data, loading, error: requestError, request } = useGraphs(
+    ['disk', 'sysinfo'],
+    clientAPIKey,
+    start,
+    end
+  );
 
   React.useEffect(() => {
     request();
@@ -61,6 +50,7 @@ export const DiskGraph: React.FC<CombinedProps> = props => {
       // Only show an error state if we don't have any data,
       // or in the case of special errors returned by processDiskData
       error={(!data.Disk && requestError) || error}
+      loading={loading}
       subtitle={'ops/second'}
       showToday={isToday}
       timezone={timezone}

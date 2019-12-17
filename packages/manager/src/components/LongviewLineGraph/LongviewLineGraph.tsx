@@ -84,6 +84,7 @@ export const isDataEmpty = (data: DataSet[]) => {
   return data.every(
     thisSeries =>
       thisSeries.data.length === 0 ||
+      // If we've padded the data, every y value will be null
       thisSeries.data.every(thisPoint => thisPoint[1] === null)
   );
 };
