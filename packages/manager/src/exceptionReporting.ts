@@ -14,6 +14,14 @@ const promiseRejectionsToIgnore: string[] = [
 ];
 
 window.addEventListener('unhandledrejection', err => {
+  /**
+   * Don't report network errors from LaunchDarkly
+   */
+
+  if (pathOr('', ['reason', 'stack'], err).match(/launchdarkly/i)) {
+    return;
+  }
+
   const firstReason = pathOr('', [0, 'reason'], err.reason);
 
   /* 
