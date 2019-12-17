@@ -3,7 +3,6 @@
   "private": true,
   "license": "Apache-2.0",
   "devDependencies": {
-    "factory.ts": "^0.5.0",
     "husky": "^3.0.1",
     "lerna": "^3.18.4",
     "postinstall": "^0.6.0",
