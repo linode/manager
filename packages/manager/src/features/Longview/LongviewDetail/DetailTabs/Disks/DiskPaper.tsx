@@ -55,7 +55,7 @@ const DiskPaper: React.FC<CombinedProps> = props => {
   return (
     <Paper className={classes.root}>
       <Graphs
-        isSwap={isSwap}
+        isSwap={isSwap === 0 ? false : true}
         childOf={childOf === 0 ? false : true}
         sysInfoType={sysInfoType}
         iFree={iFree}
