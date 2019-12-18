@@ -22,7 +22,7 @@ const useStyles = makeStyles({
 // It should serve as the only source for all H1s
 const H1Header: React.FC<Props> = props => {
   const h1Header = React.useRef<HTMLDivElement>(null);
-  const { className, title } = props;
+  const { className, title, dataQaEl } = props;
   const classes = useStyles();
 
   React.useEffect(() => {
@@ -37,6 +37,7 @@ const H1Header: React.FC<Props> = props => {
       className={`${classes.root} ${className}`}
       ref={h1Header}
       tabIndex={-1}
+      data-qa-header={dataQaEl ? dataQaEl : ''}
     >
       {title}
     </Typography>
