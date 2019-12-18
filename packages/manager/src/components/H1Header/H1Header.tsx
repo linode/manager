@@ -13,7 +13,7 @@ interface Props {
 // It should serve as the only source for all H1s
 const H1Header: React.FC<Props> = props => {
   const h1Header = React.useRef<HTMLDivElement>(null);
-  const { className, title, dataQaEl } = props;
+  const { className, title } = props;
 
   React.useEffect(() => {
     if (h1Header.current !== null) {
@@ -22,13 +22,7 @@ const H1Header: React.FC<Props> = props => {
   }, []);
 
   return (
-    <Typography
-      variant="h1"
-      className={className}
-      ref={h1Header}
-      tabIndex={-1}
-      data-qa-header={dataQaEl ? dataQaEl : ''}
-    >
+    <Typography variant="h1" className={className} ref={h1Header} tabIndex={-1}>
       {title}
     </Typography>
   );
