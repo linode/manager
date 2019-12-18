@@ -1,4 +1,3 @@
-import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { WithTheme, withTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -39,7 +38,7 @@ const StorageGauge: React.FC<CombinedProps> = props => {
       innerText={innerText(
         readableBytes(usedStorage).formatted,
         loading,
-        error || lastUpdatedError
+        !!error || !!lastUpdatedError
       )}
       filledInColor={props.theme.graphs.orange}
       subTitle={
@@ -62,11 +61,7 @@ export default withClientStats<Props>(props => props.clientID)(
   withTheme(StorageGauge)
 );
 
-export const innerText = (
-  value: string,
-  loading: boolean,
-  error?: APIError[]
-) => {
+export const innerText = (value: string, loading: boolean, error: boolean) => {
   if (error) {
     return 'Error';
   }
