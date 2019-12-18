@@ -255,6 +255,7 @@
     "yargs": "^11.0.0"
   },
   "jest": {
+    "testResultsProcessor": "jest-sonar-reporter",
     "roots": [
       "<rootDir>/src"
     ],
