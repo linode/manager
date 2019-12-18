@@ -14,6 +14,14 @@ const promiseRejectionsToIgnore: string[] = [
 ];
 
 window.addEventListener('unhandledrejection', err => {
+  if (pathOr('', ['reason', 'stack'], err).match(/launchdarkly/i)) {
+    /**
+     * This doesn't affect error reporting, but avoids some console noise
+     * until we've cleaned up Sentry.
+     */
+    return;
+  }
+
   const firstReason = pathOr('', [0, 'reason'], err.reason);
 
   /* 
