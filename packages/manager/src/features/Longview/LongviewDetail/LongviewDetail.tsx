@@ -220,11 +220,6 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           href={'https://www.linode.com/docs/platform/longview/longview/'}
         />
       </Box>
-      {/**
-       * To the best of our knowledge, all non-error notifications are
-       * client-specific, so they should be displayed on the Details page
-       * only.
-       */}
       {notifications.map((thisNotification, idx) => (
         <Notice
           key={`lv-warning-${idx}`}
