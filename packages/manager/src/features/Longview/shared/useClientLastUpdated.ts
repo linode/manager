@@ -70,7 +70,7 @@ export const useClientLastUpdated = (
          * The first request we make after creating a new client will almost always
          * return an authentication failed error.
          */
-        const reason = pathOr('', [0, 'reason'], e);
+        const reason = pathOr('', [0, 'TEXT'], e);
 
         if (mounted) {
           if (reason.match(/authentication/i)) {
