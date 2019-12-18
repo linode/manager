@@ -3,11 +3,11 @@ import * as React from 'react';
 import { withTheme, WithTheme } from 'src/components/core/styles';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { readableBytes } from 'src/utilities/unitConversions';
-import { AllData, getValues } from '../../../request';
 import { Stat } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import { generateUsedMemory, statMax } from '../../../shared/utilities';
 import { GraphProps } from './types';
+import { useGraphs } from './useGraphs';
 
 export type CombinedProps = GraphProps & WithTheme;
 
@@ -23,23 +23,12 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
     timezone
   } = props;
 
-  const [data, setData] = React.useState<Partial<AllData>>({});
-  const [error, setError] = React.useState<string | undefined>();
-  const request = () => {
-    if (!start || !end) {
-      return;
-    }
-    return getValues(clientAPIKey, {
-      fields: ['memory'],
-      start,
-      end
-    })
-      .then(response => {
-        setError(undefined);
-        setData(response);
-      })
-      .catch(_ => setError('Unable to retrieve memory usage data.'));
-  };
+  const { data, loading, error, request } = useGraphs(
+    ['memory'],
+    clientAPIKey,
+    start,
+    end
+  );
 
   React.useEffect(() => {
     request();
@@ -71,6 +60,7 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
       title="Memory"
       subtitle={unit}
       error={error}
+      loading={loading}
       showToday={isToday}
       timezone={timezone}
       data={[
@@ -78,25 +68,25 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
           label: 'Swap',
           borderColor: theme.graphs.redBorder,
           backgroundColor: theme.graphs.red,
-          data: _convertData(swap, start, formatMemory)
+          data: _convertData(swap, start, end, formatMemory)
         },
         {
           label: 'Buffers',
           borderColor: theme.graphs.darkPurpleBorder,
           backgroundColor: theme.graphs.darkPurple,
-          data: _convertData(buffers, start, formatMemory)
+          data: _convertData(buffers, start, end, formatMemory)
         },
         {
           label: 'Cache',
           borderColor: theme.graphs.purpleBorder,
           backgroundColor: theme.graphs.purple,
-          data: _convertData(cache, start, formatMemory)
+          data: _convertData(cache, start, end, formatMemory)
         },
         {
           label: 'Used',
           borderColor: theme.graphs.lightPurpleBorder,
           backgroundColor: theme.graphs.lightPurple,
-          data: _convertData(used, start, formatMemory)
+          data: _convertData(used, start, end, formatMemory)
         }
       ]}
     />
