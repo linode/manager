@@ -87,7 +87,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
   const flags = useFlags();
   const showAllTabs = Boolean(flags.longviewTabs);
 
-  const { lastUpdated, lastUpdatedError } = useClientLastUpdated(
+  const { lastUpdated, lastUpdatedError, notifications } = useClientLastUpdated(
     clientAPIKey,
     clientAPIKey
       ? _lastUpdated => props.getClientStats(clientAPIKey, _lastUpdated)
@@ -100,7 +100,8 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     // also check for `lastUpdated`, otherwise we'd make an extraneous request
     // when it is retrieved.
     clientAPIKey && lastUpdated
-      ? () => get(clientAPIKey, 'getTopProcesses')
+      ? () =>
+          get(clientAPIKey, 'getTopProcesses').then(response => response.DATA)
       : null,
     topProcessesEmptyDataSet,
     [clientAPIKey, lastUpdated]
@@ -111,7 +112,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
       ? () =>
           get(clientAPIKey, 'getValues', {
             fields: ['listeningServices', 'activeConnections']
-          })
+          }).then(response => response.DATA)
       : null,
     { Ports: { listening: [], active: [] } },
     [clientAPIKey, lastUpdated]

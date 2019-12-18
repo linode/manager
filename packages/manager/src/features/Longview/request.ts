@@ -1,19 +1,13 @@
 import Axios, { AxiosResponse } from 'axios';
-import { curry, pathOr } from 'ramda';
+import { curry } from 'ramda';
 import { LONGVIEW_ROOT } from 'src/constants';
 import {
-  LastUpdated,
-  LongviewCPU,
-  LongviewDisk,
-  LongviewLoad,
-  LongviewMemory,
-  LongviewNetwork,
-  LongviewPackages,
-  LongviewPortsResponse,
-  LongviewProcesses,
-  LongviewSystemInfo,
-  LongviewTopProcesses,
-  Uptime
+  Get,
+  LongviewAction,
+  LongviewFieldName,
+  LongviewNotification,
+  LongviewResponse,
+  Options
 } from './request.types';
 
 /**
@@ -58,17 +52,6 @@ import {
  * So the errors will be available at response.data[0].NOTIFICATIONS.
  */
 
-export type AllData = LongviewCPU &
-  LongviewDisk &
-  LongviewLoad &
-  LongviewMemory &
-  LongviewNetwork &
-  LongviewSystemInfo &
-  LongviewPackages &
-  Uptime &
-  LongviewPortsResponse &
-  LastUpdated;
-
 /**
  * overload for the actual request
  *
@@ -78,105 +61,6 @@ export type AllData = LongviewCPU &
  * For example if the action is getLatestValue and the field is ['CPU.*'],
  * the return type will be Promise<LongviewCPU>
  */
-
-export interface WithStartAndEnd {
-  start: number;
-  end: number;
-}
-
-interface Get {
-  (token: string, action: 'lastUpdated'): Promise<Partial<LastUpdated>>;
-  (
-    token: string,
-    action: 'getLatestValue',
-    options: {
-      fields: (
-        | 'cpu'
-        | 'disk'
-        | 'load'
-        | 'memory'
-        | 'network'
-        | 'sysinfo'
-        | 'uptime')[];
-    }
-  ): Promise<Partial<Omit<AllData, 'updated'>>>;
-  (
-    token: string,
-    action: LongviewAction,
-    options: { fields: 'packages'[] }
-  ): Promise<Partial<LongviewPackages>>;
-  (
-    token: string,
-    action: LongviewAction,
-    options: { fields: ['listeningServices', 'activeConnections'] }
-  ): Promise<LongviewPortsResponse>;
-  (
-    token: string,
-    action: LongviewAction,
-    options: { fields?: LongviewFieldName[] }
-  ): Promise<Partial<AllData>>;
-  (token: string, action: 'getTopProcesses'): Promise<LongviewTopProcesses>;
-  (
-    token: string,
-    action: 'getValues',
-    options: { fields: 'processes'[] }
-  ): Promise<LongviewProcesses>;
-  (
-    token: string,
-    action: 'getValues',
-    options: {
-      fields: 'cpu'[];
-    } & Partial<WithStartAndEnd>
-  ): Promise<Partial<LongviewCPU>>;
-  (
-    token: string,
-    action: 'getValues',
-    options: {
-      fields: ('disk' | 'sysinfo')[];
-    } & Partial<WithStartAndEnd>
-  ): Promise<Partial<LongviewDisk & LongviewSystemInfo>>;
-  (token: string, action: LongviewAction, options: Partial<Options>): Promise<
-    Partial<AllData>
-  >;
-}
-
-export type LongviewAction =
-  | 'batch'
-  | 'getTopProcesses'
-  | 'getLatestValue'
-  | 'getValue'
-  | 'getValues'
-  | 'lastUpdated';
-
-export interface LongviewResponse {
-  VERSION: number;
-  ACTION: LongviewAction;
-  DATA: any;
-  NOTIFICATIONS: LongviewError[];
-}
-
-export interface LongviewError {
-  CODE: number;
-  SEVERITY: number;
-  TEXT: string;
-}
-
-/**
- * Scaffolding; expand as we gather requirements.
- */
-
-export type LongviewFieldName =
-  | 'cpu'
-  | 'uptime'
-  | 'memory'
-  | 'load'
-  | 'sysinfo'
-  | 'network'
-  | 'disk'
-  | 'packages'
-  | 'processes'
-  | 'listeningServices'
-  | 'activeConnections';
 
 export const fieldNames: Record<LongviewFieldName, string> = {
   cpu: 'CPU.*',
@@ -199,31 +83,22 @@ export const baseRequest = Axios.create({
 });
 
 export const handleLongviewResponse = (
-  response: AxiosResponse<[LongviewResponse]>
+  response: AxiosResponse<LongviewResponse<any>>
 ) => {
   const notifications = response.data[0].NOTIFICATIONS;
-  if (notifications.length > 0) {
-    /**
-     * We have some errors.
-     *
-     * @todo check if there are non-error notifications
-     * and what code/severity checking we should be doing
-     * to make sure we only reject with errors.
-     */
-    const errors = notifications.map((thisNotification: LongviewError) => ({
-      reason: pathOr('Error accessing Longview API', ['TEXT'], thisNotification)
-    }));
+  /**
+   * A SEVERITY code of 3 indicates
+   * a fatal error; we should reject the promise.
+   */
+  const errors = notifications.filter(
+    (thisNotification: LongviewNotification) => thisNotification.SEVERITY === 3
+  );
+  if (errors.length > 0) {
     return Promise.reject(errors);
   } else {
-    return Promise.resolve(response.data[0].DATA);
+    return Promise.resolve(response.data[0]);
   }
 };
-
-interface Options {
-  fields: LongviewFieldName[];
-  start: number;
-  end: number;
-}
 
 export const get: Get = (
   token: string,
@@ -263,6 +138,10 @@ export const getValues = curry((token: string, options: Options) => {
 
 export const getLatestValue = curry((token: string, options: Options) => {
   return get(token, 'getLatestValue', options);
+});
+
+export const getTopProcesses = curry((token: string, options?: Options) => {
+  return get(token, 'getTopProcesses', options);
 });
 
 export default get;
