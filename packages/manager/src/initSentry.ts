@@ -35,6 +35,7 @@ export const initSentry = () => {
         'MyApp_RemoveAllHighlights',
         'http://tt.epicplay.com',
         "Can't find variable: ZiteReader",
+        'LaunchDarklyFlagFetchError',
         'jigsaw is not defined',
         'ComboSearch is not defined',
         'http://loading.retry.widdit.com/',
