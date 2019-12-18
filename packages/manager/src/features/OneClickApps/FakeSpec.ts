@@ -81,8 +81,8 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Django',
-    description: `Django is a high-level Python Web framework that encourages rapid development and clean, pragmatic design. Built by experienced developers, it takes care of much of the hassle of Web development, so you can focus on writing your app without needing to reinvent the wheel. It’s free and open source.`,
-    summary: `Django makes it easier to build better Web apps more quickly and with less code.`,
+    description: `Django is a web development framework for the Python programing language. It enables rapid development, while favoring pragmatic and clean design.`,
+    summary: `A framework for simplifying the process of building your web applications more quickly and with less code.`,
     related_info: [
       {
         title: 'https://www.djangoproject.com/',
