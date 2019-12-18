@@ -186,8 +186,8 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'phpMyAdmin',
-    description: `phpMyAdmin is a free software tool written in PHP, intended to handle the administration of MySQL over the Web. phpMyAdmin supports a wide range of operations on MySQL and MariaDB. Frequently used operations (managing databases, tables, columns, relations, indexes, users, permissions, etc) can be performed via the user interface, while you still have the ability to directly execute any SQL statement.`,
-    summary: `A web application that provides a GUI to aid in MySQL database administration`,
+    description: `phpMyAdmin is a web application that provides a GUI to aid in MySQL and MariaDB database administration. It supports multiple database servers and is a robust and easy alternative to using the MySQL command line client.`,
+    summary: `An easy to use web application that simplifies the management of your MySQL and MariaDB databases.`,
     related_guides: [
       {
         title: 'How to Install and Configure phpMyAdmin on Debian 8',
