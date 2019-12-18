@@ -101,15 +101,15 @@ export const createInvoiceItemsTable = (doc: JSPDF, items: InvoiceItem[]) => {
         },
         {
           styles: { halign: 'center', fontSize: 8, overflow: 'linebreak' },
-          content: `$${item.amount}`
+          content: `$${item.amount.toFixed(2)}`
         },
         {
           styles: { halign: 'center', fontSize: 8, overflow: 'linebreak' },
-          content: `$${item.tax}`
+          content: `$${item.tax.toFixed(2)}`
         },
         {
           styles: { halign: 'center', fontSize: 8, overflow: 'linebreak' },
-          content: `$${item.total}`
+          content: `$${item.total.toFixed(2)}`
         }
       ];
     })
