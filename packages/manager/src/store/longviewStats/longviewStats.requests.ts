@@ -18,7 +18,7 @@ export const getClientStats = createRequestThunk(
     let packages: LongviewPackage[];
     try {
       const result = await get(api_key, 'getValues', { fields: ['packages'] });
-      packages = result.Packages || [];
+      packages = result.DATA.Packages || [];
     } catch {
       packages = [];
     }
@@ -38,7 +38,7 @@ export const getClientStats = createRequestThunk(
     return get(api_key, 'getLatestValue', {
       fields: ['cpu', 'disk', 'load', 'memory', 'network', 'sysinfo', 'uptime']
     }).then(response => ({
-      ...response,
+      ...response.DATA,
       Packages: [...packages]
     }));
   }

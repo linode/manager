@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { AllData, getValues, LongviewFieldName } from '../../../request';
+import { getValues } from '../../../request';
+import { AllData, LongviewFieldName } from '../../../request.types';
 
 export const useGraphs = (
   requestFields: LongviewFieldName[],
@@ -24,7 +25,7 @@ export const useGraphs = (
       .then(response => {
         setLoading(false);
         setError(undefined);
-        setData(response);
+        setData(response.DATA);
       })
       .catch(_ => {
         setLoading(false);

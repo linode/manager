@@ -3,7 +3,7 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import { WithStartAndEnd } from '../../../request';
+import { WithStartAndEnd } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import CPUGraph from './CPUGraph';
 import DiskGraph from './DiskGraph';
