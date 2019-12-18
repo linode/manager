@@ -20,6 +20,7 @@ import DefaultLoader from 'src/components/DefaultLoader';
 import DocumentationButton from 'src/components/DocumentationButton';
 import ErrorState from 'src/components/ErrorState';
 import NotFound from 'src/components/NotFound';
+import Notice from 'src/components/Notice';
 import TabLink from 'src/components/TabLink';
 import withLongviewClients, {
   DispatchProps,
@@ -219,6 +220,20 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           href={'https://www.linode.com/docs/platform/longview/longview/'}
         />
       </Box>
+      {/**
+       * To the best of our knowledge, all non-error notifications are
+       * client-specific, so they should be displayed on the Details page
+       * only.
+       */}
+      {notifications.map((thisNotification, idx) => (
+        <Notice
+          key={`lv-warning-${idx}`}
+          warning
+          spacingTop={8}
+          spacingBottom={0}
+          text={thisNotification.TEXT}
+        />
+      ))}
       <AppBar position="static" color="default" role="tablist">
         <Tabs
           value={tabs.findIndex(tab => matches(tab.routeName)) || 0}

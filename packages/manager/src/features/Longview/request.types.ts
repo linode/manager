@@ -205,6 +205,7 @@ export type AllData = LongviewCPU &
   LongviewNetwork &
   LongviewSystemInfo &
   LongviewPackages &
+  LongviewProcesses &
   Uptime &
   LongviewPortsResponse &
   LastUpdated;
