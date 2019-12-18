@@ -14,11 +14,11 @@ const promiseRejectionsToIgnore: string[] = [
 ];
 
 window.addEventListener('unhandledrejection', err => {
-  /**
-   * Don't report network errors from LaunchDarkly
-   */
-
   if (pathOr('', ['reason', 'stack'], err).match(/launchdarkly/i)) {
+    /**
+     * This doesn't affect error reporting, but avoids some console noise
+     * until we've cleaned up Sentry.
+     */
     return;
   }
 
