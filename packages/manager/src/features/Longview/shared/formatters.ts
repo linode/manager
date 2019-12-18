@@ -106,12 +106,28 @@ export const maybeAddPastData = (
 export const convertData = (
   d: StatWithDummyPoint[],
   startTime: number,
+  endTime: number,
   formatter?: (pt: number | null) => number | null
-) =>
-  maybeAddPastData(d, startTime).map(
+) => {
+  /**
+   * For any empty data series, instead of an empty array
+   * (which would trigger default values for x axis ticks)
+   * add dummy points at the start and end, so that the x axis
+   * is displayed according to the selected time range.
+   *
+   * This is helpful for empty and loading states.
+   */
+  if (d.length === 0) {
+    return [[startTime * 1000, null], [endTime * 1000, null]] as [
+      number,
+      number | null
+    ][];
+  }
+  return maybeAddPastData(d, startTime).map(
     thisPoint =>
       [
         thisPoint.x * 1000,
         formatter ? formatter(thisPoint.y) : thisPoint.y
       ] as [number, number | null]
   );
+};
