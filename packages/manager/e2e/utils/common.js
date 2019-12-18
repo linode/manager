@@ -20,7 +20,7 @@ import NodeBalancers from '../pageobjects/nodebalancers.page';
 import NodeBalancerDetail from '../pageobjects/nodebalancer-detail/details.page';
 
 export const generatePassword = () => {
-  return crypto.randomBytes(20).toString('hex');
+  return crypto.randomBytes(30).toString('hex');
 };
 
 export const timestamp = () => {
@@ -248,6 +248,12 @@ export const checkEnvironment = () => {
   if (environment.includes('dev') || environment.includes('testing')) {
     pending('Feature not available in Testing or Dev environment');
   }
+};
+
+export const createLongviewClient = () => {
+  const token = readToken(browser.options.testUser);
+  const lvClient = browser.createLongviewClients(token);
+  return lvClient;
 };
 
 export const createVolumes = (volumeObjArray, waitForToast) => {

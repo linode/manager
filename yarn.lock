@@ -8882,10 +8882,10 @@ extsprintf@^1.2.0:
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
   integrity sha1-4mifjzVvrWLMplo6kcXfX5VRaS8=
 
-factory.ts@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/factory.ts/-/factory.ts-0.5.0.tgz#7627ed3634e766e97a570771522c04d936505f50"
-  integrity sha512-A4XEgeVqs6lAnQkQeaPYTxUTs8HUSdyRM50mlmTwhfq4z7uUJsVw5LN+5g7Y0G+MX5NGTm2UyJmCBYcYLnzJJQ==
+factory.ts@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/factory.ts/-/factory.ts-0.5.1.tgz#4bab72d8457078906aa6ab396c0d341e8a3ab382"
+  integrity sha512-jwAq8w7MmxUojIFzKezMwTzDc5QoxcqzAA8+n9A0EAWBje2CRHUeBrW9x/ioV2DRjHgkHX7i0G0ipfDhlatIQw==
   dependencies:
     clone-deep "^4.0.1"
     source-map-support "^0.5.9"
@@ -15284,11 +15284,6 @@ pretty-bytes@^4.0.2:
   resolved "https://registry.yarnpkg.com/pretty-bytes/-/pretty-bytes-4.0.2.tgz#b2bf82e7350d65c6c33aa95aaa5a4f6327f61cd9"
   integrity sha1-sr+C5zUNZcbDOqlaqlpPYyf2HNk=
 
-pretty-bytes@^5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/pretty-bytes/-/pretty-bytes-5.1.0.tgz#6237ecfbdc6525beaef4de722cc60a58ae0e6c6d"
-  integrity sha512-wa5+qGVg9Yt7PB6rYm3kXlKzgzgivYTLRandezh43jjRqgyDyP+9YxfJpJiLs9yKD1WeU8/OvtToWpW7255FtA==
-
 pretty-error@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/pretty-error/-/pretty-error-2.1.1.tgz#5f4f87c8f91e5ae3f3ba87ab4cf5e03b1a17f1a3"
@@ -15876,10 +15871,10 @@ react-draggable@^4.0.3:
     classnames "^2.2.5"
     prop-types "^15.6.0"
 
-react-dropzone@^10.1.8:
-  version "10.2.0"
-  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-10.2.0.tgz#6b3df4866045e7c078ddabe795fb8789dbbc4598"
-  integrity sha512-VvJtg6GKtM1Xu+SsMcBNBcB2XcOi27xbNLBMDkrpqsk3cSILFiBVoCuW96FSOWkCK1IFeNg67FjKu/c/KuUhkg==
+react-dropzone@~10.2.1:
+  version "10.2.1"
+  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-10.2.1.tgz#b7520124c4a3b66f96d49f7879027c7a475eaa20"
+  integrity sha512-Me5nOu8hK9/Xyg5easpdfJ6SajwUquqYR/2YTdMotsCUgJ1pHIIwNsv0n+qcIno0tWR2V2rVQtj2r/hXYs2TnQ==
   dependencies:
     attr-accept "^2.0.0"
     file-selector "^0.1.12"

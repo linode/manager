@@ -2,12 +2,12 @@ import * as React from 'react';
 import { withTheme, WithTheme } from 'src/components/core/styles';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { sumCPU } from 'src/features/Longview/shared/utilities';
-import { AllData, getValues } from '../../../request';
 import {
   convertData,
   pathMaybeAddDataInThePast
 } from '../../../shared/formatters';
 import { GraphProps } from './types';
+import { useGraphs } from './useGraphs';
 
 export type CombinedProps = GraphProps & WithTheme;
 
@@ -23,24 +23,12 @@ export const CPUGraph: React.FC<CombinedProps> = props => {
     timezone
   } = props;
 
-  const [data, setData] = React.useState<Partial<AllData>>({});
-  const [error, setError] = React.useState<string | undefined>();
-  const request = () => {
-    if (!start || !end) {
-      return;
-    }
-
-    return getValues(clientAPIKey, {
-      fields: ['cpu'],
-      start,
-      end
-    })
-      .then(response => {
-        setError(undefined);
-        setData(response);
-      })
-      .catch(_ => setError('Unable to retrieve CPU data'));
-  };
+  const { data, loading, error, request } = useGraphs(
+    ['cpu'],
+    clientAPIKey,
+    start,
+    end
+  );
 
   const cpuData = React.useMemo(() => {
     const summedCPUData = sumCPU(data.CPU);
@@ -62,6 +50,7 @@ export const CPUGraph: React.FC<CombinedProps> = props => {
       title="CPU"
       subtitle="%"
       error={error}
+      loading={loading}
       showToday={isToday}
       timezone={timezone}
       data={[
@@ -69,19 +58,19 @@ export const CPUGraph: React.FC<CombinedProps> = props => {
           label: 'System',
           borderColor: theme.graphs.deepBlueBorder,
           backgroundColor: theme.graphs.deepBlue,
-          data: _convertData(cpuData.system, start, formatCPU)
+          data: _convertData(cpuData.system, start, end, formatCPU)
         },
         {
           label: 'User',
           borderColor: theme.graphs.skyBlueBorder,
           backgroundColor: theme.graphs.skyBlue,
-          data: _convertData(cpuData.user, start, formatCPU)
+          data: _convertData(cpuData.user, start, end, formatCPU)
         },
         {
           label: 'Wait',
           borderColor: theme.graphs.lightBlueBorder,
           backgroundColor: theme.graphs.lightBlue,
-          data: _convertData(cpuData.wait, start, formatCPU)
+          data: _convertData(cpuData.wait, start, end, formatCPU)
         }
       ]}
     />
