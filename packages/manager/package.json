@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "0.79.0",
+  "version": "0.80.0",
   "private": true,
   "engines": {
     "node": ">= 10.16.0"
@@ -39,7 +39,7 @@
     "jspdf": "^1.5.3",
     "jspdf-autotable": "^3.2.4",
     "launchdarkly-react-client-sdk": "^2.11.0",
-    "linode-js-sdk": "^0.13.0-alpha.0",
+    "linode-js-sdk": "^0.14.0-alpha.0",
     "logic-query-parser": "^0.0.5",
     "md5": "^2.2.1",
     "memoizee": "^0.4.14",
@@ -61,7 +61,7 @@
     "react-csv": "^1.1.2",
     "react-currency-formatter": "^1.1.0",
     "react-dom": "~16.8.6",
-    "react-dropzone": "^10.1.8",
+    "react-dropzone": "~10.2.1",
     "react-ga": "^2.5.3",
     "react-loadable": "^5.3.1",
     "react-number-format": "^3.5.0",
