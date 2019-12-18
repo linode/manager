@@ -1,5 +1,4 @@
 import { Linode } from 'linode-js-sdk/lib/linodes';
-import { LinodeWithMaintenanceAndMostRecentBackup } from 'src/store/linodes/types';
 
 export const linode1: Linode = {
   specs: {
@@ -31,7 +30,8 @@ export const linode1: Linode = {
       window: 'W2',
       day: 'Saturday'
     },
-    enabled: true
+    enabled: true,
+    last_successful: null
   },
   status: 'running',
   ipv6: '2600:3c03::f03c:91ff:fe0a:109a/64',
@@ -69,7 +69,8 @@ export const linode2: Linode = {
       window: 'Scheduling',
       day: 'Scheduling'
     },
-    enabled: true
+    enabled: true,
+    last_successful: null
   },
   status: 'running',
   ipv6: '2600:3c03::f03c:91ff:fe0a:0d7a/64',
@@ -107,7 +108,8 @@ export const linode3: Linode = {
       window: 'Scheduling',
       day: 'Scheduling'
     },
-    enabled: false
+    enabled: false,
+    last_successful: null
   },
   status: 'running',
   ipv6: '2600:3c03::f03c:91ff:fe0a:0d7a/64',
@@ -145,7 +147,8 @@ export const linode4: Linode = {
       window: 'Scheduling',
       day: 'Scheduling'
     },
-    enabled: false
+    enabled: false,
+    last_successful: null
   },
   status: 'running',
   ipv6: '2600:3c03::f03c:91ff:fe0a:0d7a/64',
@@ -154,18 +157,3 @@ export const linode4: Linode = {
 };
 
 export const linodes = [linode1, linode2, linode3];
-
-export const extendedLinodes: LinodeWithMaintenanceAndMostRecentBackup[] = [
-  {
-    ...linode1,
-    mostRecentBackup: null
-  },
-  {
-    ...linode2,
-    mostRecentBackup: null
-  },
-  {
-    ...linode3,
-    mostRecentBackup: null
-  }
-];
