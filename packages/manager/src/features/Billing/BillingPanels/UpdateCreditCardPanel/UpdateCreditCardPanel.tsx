@@ -6,6 +6,8 @@ import NumberFormat from 'react-number-format';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
+import FormControl from 'src/components/core/FormControl';
+import InputLabel from 'src/components/core/InputLabel';
 import {
   createStyles,
   Theme,
@@ -16,6 +18,7 @@ import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
+import NativeSelect from 'src/components/NativeSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { withAccount } from 'src/features/Billing/context';
@@ -101,8 +104,10 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
     });
   };
 
-  handleExpiryMonthChange = (e: Item<string>) => {
-    this.setState({ expiry_month: +e.value });
+  handleExpiryMonthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      expiry_month: +e.target.value
+    });
   };
 
   handleExpiryYearChange = (e: Item<string>) => {
@@ -193,11 +198,11 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
     );
     const generalError = hasErrorFor('none');
 
-    const defaultMonth = UpdateCreditCardPanel.monthMenuItems.find(
-      eachMonth => {
-        return eachMonth.value === this.state.expiry_month;
-      }
-    );
+    // const defaultMonth = UpdateCreditCardPanel.monthMenuItems.find(
+    //   eachMonth => {
+    //     return eachMonth.value === this.state.expiry_month;
+    //   }
+    // );
 
     const defaultYear = UpdateCreditCardPanel.yearMenuItems.find(eachYear => {
       return eachYear.value === this.state.expiry_year;
@@ -261,14 +266,18 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
                 </Grid>
 
                 <Grid item className={classes.fullWidthMobile}>
-                  <Select
-                    options={UpdateCreditCardPanel.monthMenuItems}
-                    label="Expiration Month"
-                    defaultValue={defaultMonth}
-                    onChange={this.handleExpiryMonthChange}
-                    errorText={hasErrorFor('expiry_month')}
-                    isClearable={false}
-                  />
+                  <FormControl>
+                    <InputLabel>Expiration Month</InputLabel>
+                    <NativeSelect
+                      // options={UpdateCreditCardPanel.monthMenuItems}
+                      // defaultValue={defaultMonth}
+                      onChange={this.handleExpiryMonthChange}
+                      errorText={hasErrorFor('expiry_month')}
+                      value={this.state.expiry_month}
+                    >
+                      {UpdateCreditCardPanel.monthMenuItems}
+                    </NativeSelect>
+                  </FormControl>
                 </Grid>
 
                 <Grid item className={classes.fullWidthMobile}>
@@ -325,9 +334,14 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
     return { label: v, value: v };
   });
 
-  static monthMenuItems = range(1, 13).map((v: any) => {
+  static monthMenuItems = range(1, 13).map((v: any, i: number) => {
     const label = String(v).padStart(2, '0');
-    return { label, value: v };
+    // return { label, value: v };
+    return (
+      <option value={v} key={i} aria-selected>
+        {label}
+      </option>
+    );
   });
 }
 
