@@ -3,7 +3,12 @@
  * should source it directly from there rather than making an additional request. OR We can source
  * it from there and make the (thunk) request to get the latest/greatest information.
  */
-import { Disk, getLinodeKernels, Kernel } from 'linode-js-sdk/lib/linodes';
+import {
+  Config,
+  Disk,
+  getLinodeKernels,
+  Kernel
+} from 'linode-js-sdk/lib/linodes';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import { pathOr } from 'ramda';
@@ -48,7 +53,6 @@ import { getAll } from 'src/utilities/getAll';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import {
   CreateLinodeConfig,
-  GetLinodeConfig,
   UpdateLinodeConfig,
   withLinodeDetailContext
 } from '../linodeDetailContext';
@@ -147,7 +151,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   });
 
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
-    const { linodeConfigId, linodeHypervisor, getLinodeConfig } = this.props;
+    const { config, linodeHypervisor } = this.props;
 
     if (this.isOpening(prevProps.open, this.props.open)) {
       /** Reset the form to the default create state. */
@@ -167,43 +171,27 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         this.requestKernels(linodeHypervisor);
       }
 
-      if (linodeConfigId !== undefined) {
-        this.setState({ loading: { ...this.state.loading, config: true } });
-
-        getLinodeConfig(linodeConfigId)
-          .then(config => {
-            this.setState({
-              loading: {
-                ...this.state.loading,
-                config: false
-              },
-              fields: {
-                useCustomRoot: isUsingCustomRoot(config.root_device),
-                label: config.label,
-                devices: createStringsFromDevices(config.devices),
-                kernel: config.kernel,
-                comments: config.comments,
-                memory_limit: config.memory_limit,
-                run_level: config.run_level,
-                virt_mode: config.virt_mode,
-                helpers: config.helpers,
-                root_device: config.root_device,
-                setMemoryLimit:
-                  config.memory_limit !== 0 ? 'set_limit' : 'no_limit'
-              }
-            });
-          })
-          .catch(error => {
-            this.setState({
-              errors: Error(),
-              loading: { ...this.state.loading, config: false }
-            });
-          });
-      }
       /**
-       * If the linodeConfigId is set, we're editing, so we query to get the config data and
-       * fill out the form with the data.
+       * If config is defined, we're editing. Set the state
+       * to the values of the config.
        */
+      if (config) {
+        this.setState({
+          fields: {
+            useCustomRoot: isUsingCustomRoot(config.root_device),
+            label: config.label,
+            devices: createStringsFromDevices(config.devices),
+            kernel: config.kernel,
+            comments: config.comments,
+            memory_limit: config.memory_limit,
+            run_level: config.run_level,
+            virt_mode: config.virt_mode,
+            helpers: config.helpers,
+            root_device: config.root_device,
+            setMemoryLimit: config.memory_limit !== 0 ? 'set_limit' : 'no_limit'
+          }
+        });
+      }
     }
   }
 
@@ -861,13 +849,13 @@ const styled = withStyles(styles);
 interface StateProps {
   disks: ExtendedDisk[];
   volumes: ExtendedVolume[];
+  config?: Config;
 }
 
 interface LinodeContextProps {
   linodeId: number;
   createLinodeConfig: CreateLinodeConfig;
   updateLinodeConfig: UpdateLinodeConfig;
-  getLinodeConfig: GetLinodeConfig;
   readOnly: boolean;
 }
 
@@ -875,7 +863,7 @@ const enhanced = compose<CombinedProps, Props>(
   styled,
 
   withLinodeDetailContext(
-    ({ linode, createLinodeConfig, updateLinodeConfig, getLinodeConfig }) => ({
+    ({ linode, createLinodeConfig, updateLinodeConfig }) => ({
       disks: linode._disks.map((disk: Disk) => ({
         ...disk,
         _id: `disk-${disk.id}`
@@ -883,14 +871,17 @@ const enhanced = compose<CombinedProps, Props>(
       linodeId: linode.id,
       readOnly: linode._permissions === 'read_only',
       createLinodeConfig,
-      updateLinodeConfig,
-      getLinodeConfig
+      updateLinodeConfig
     })
   ),
 
   connect((state: ApplicationState, ownProps: LinodeContextProps & Props) => {
-    const { linodeId, linodeRegion } = ownProps;
+    const { linodeConfigId, linodeId, linodeRegion } = ownProps;
     const { itemsById } = state.__resources.volumes;
+
+    const config = linodeConfigId
+      ? state.__resources.linodeConfigs.itemsById[linodeConfigId]
+      : undefined;
 
     const volumes = Object.values(itemsById).reduce(
       (result: Volume[], volume: Volume) => {
@@ -912,7 +903,7 @@ const enhanced = compose<CombinedProps, Props>(
       },
       []
     );
-    return { volumes };
+    return { config, volumes };
   })
 );
 
