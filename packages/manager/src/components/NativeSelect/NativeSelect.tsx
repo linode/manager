@@ -1,10 +1,14 @@
+import Caret from '@material-ui/icons/KeyboardArrowDown';
 import * as classNames from 'classnames';
 import * as React from 'react';
+import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Input, { InputProps } from 'src/components/core/Input';
+import InputLabel from 'src/components/core/InputLabel';
 import Select, { SelectProps } from 'src/components/core/Select';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import HelpIcon from 'src/components/HelpIcon';
+import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -22,15 +26,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '0.8rem',
     minHeight: '1em',
     lineHeight: '1em'
-  },
-  inputSucess: {
-    borderColor: `${theme.color.green} !important`,
-    '&[class*="focused"]': {
-      borderColor: theme.color.green
-    },
-    '& + p': {
-      color: theme.color.green
-    }
   },
   helpWrapper: {
     display: 'flex',
@@ -58,13 +53,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props extends SelectProps {
+  label: string;
+  notFullWidth?: boolean;
   tooltipText?: string;
-  success?: boolean;
   open?: boolean;
   errorText?: string;
-  errorGroup?: string;
   small?: boolean;
   className?: any;
+  hideLabel?: boolean;
 }
 
 type CombinedProps = Props;
@@ -72,8 +68,10 @@ type CombinedProps = Props;
 const SSelect: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const {
+    label,
+    hideLabel,
+    notFullWidth,
     children,
-    success,
     error,
     tooltipText,
     errorText,
@@ -88,7 +86,6 @@ const SSelect: React.FC<CombinedProps> = props => {
 
   const c = classNames(
     {
-      [classes.inputSucess]: success === true,
       [classes.inputError]: error === true,
       [classes.helpWrapperSelectField]: Boolean(tooltipText),
       [classes.small]: small
@@ -97,13 +94,23 @@ const SSelect: React.FC<CombinedProps> = props => {
   );
 
   return (
-    <React.Fragment>
+    <FormControl fullWidth={!notFullWidth}>
       <div
         className={classNames({
           [classes.root]: true,
           [classes.helpWrapper]: Boolean(tooltipText)
         })}
       >
+        <InputLabel
+          className={classNames({
+            'visually-hidden': hideLabel
+          })}
+          htmlFor={convertToKebabCase(label)}
+          disableAnimation
+          shrink
+        >
+          {label}
+        </InputLabel>
         <Select
           native
           open={props.open}
@@ -111,6 +118,8 @@ const SSelect: React.FC<CombinedProps> = props => {
           input={<Input {...inputProps} />}
           {...props}
           data-qa-select
+          id={convertToKebabCase(label)}
+          IconComponent={Caret}
         >
           {children}
         </Select>
@@ -121,7 +130,7 @@ const SSelect: React.FC<CombinedProps> = props => {
           {errorText}
         </FormHelperText>
       )}
-    </React.Fragment>
+    </FormControl>
   );
 };
 
