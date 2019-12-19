@@ -74,6 +74,7 @@ interface ConfirmDeleteState {
   submitting: boolean;
   id?: number;
   label?: string;
+  error?: string;
 }
 
 class LinodeConfigs extends React.Component<CombinedProps, State> {
@@ -124,12 +125,13 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
         />
         <ConfirmationDialog
           title="Confirm Delete"
+          error={this.state.confirmDelete.error}
           open={this.state.confirmDelete.open}
           onClose={this.resetConfirmConfigDelete}
           actions={this.deleteConfigConfirmationActions}
         >
           <Typography>
-            Are you sure you want to delete "{this.state.confirmDelete.label}"
+            Are you sure you want to delete "{this.state.confirmDelete.label}?"
           </Typography>
         </ConfirmationDialog>
       </React.Fragment>
@@ -146,6 +148,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
       <Button
         buttonType="secondary"
         destructive
+        loading={this.state.confirmDelete.submitting}
         onClick={this.deleteConfig}
         data-qa-confirm-delete
       >
@@ -155,7 +158,12 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
   );
 
   resetConfirmConfigDelete = () =>
-    this.setConfirmDelete({ open: false, id: undefined });
+    this.setConfirmDelete({
+      open: false,
+      id: undefined,
+      submitting: false,
+      error: undefined
+    });
 
   setConfigDrawer = (obj: Partial<ConfigDrawerState>, fn?: () => void) =>
     this.setState(
@@ -202,7 +210,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
   };
 
   confirmDelete = (id: number, label: string) => {
-    this.setConfirmDelete({ open: true, id, label });
+    this.setConfirmDelete({ open: true, id, label, error: undefined });
   };
 
   handleBoot = (linodeId: number, configId: number, label: string) => {
@@ -224,7 +232,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
   };
 
   deleteConfig = () => {
-    this.setConfirmDelete({ submitting: true });
+    this.setConfirmDelete({ submitting: true, error: undefined });
     const {
       confirmDelete: { id: configId }
     } = this.state;
@@ -248,15 +256,11 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           }
         );
       })
-      .catch(_ => {
+      .catch(err => {
         this.setConfirmDelete({
           submitting: false,
-          open: false,
-          id: undefined
-        });
-        /** @todo move this inside the actual delete modal */
-        this.props.enqueueSnackbar(`Unable to delete configuration.`, {
-          variant: 'error'
+          error: getAPIErrorOrDefault(err, 'Unable to delete configuration.')[0]
+            .reason
         });
       });
   };
