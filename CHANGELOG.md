@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.81.0] - 2019-12-19
+
+### Added:
+- Longview:
+  - Display non-error Notifications from Longview API on Longview Details page
+  - Empty and loading states for Overview graphs
+
+### Changed:
+- Use “Last Backup” data on /linode/instances endpoint to avoid multiple requests to /backups (improves performance)
+- Show deprecated label for distros in Images dropdown
+
+### Fixed:
+- Display invoice PDF total, tax, and amount values in $0.00 format
+- Reduce OCA tile spacing between icon and label
+
 ## [v0.80.0] - 2019-12-16
 
 ### Added:

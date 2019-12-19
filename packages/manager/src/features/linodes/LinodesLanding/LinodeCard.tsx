@@ -55,7 +55,6 @@ interface Props {
   status: LinodeStatus;
   type: null | string;
   tags: string[];
-  mostRecentBackup: string | null;
   imageLabel: string;
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
   openPowerActionDialog: (
