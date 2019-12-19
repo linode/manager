@@ -1,5 +1,5 @@
 import { ZoneName } from 'linode-js-sdk/lib/networking';
-import { path, pathOr } from 'ramda';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import CopyTooltip from 'src/components/CopyTooltip';
@@ -83,9 +83,7 @@ const SummarySection: React.StatelessComponent<any> = props => {
 
 const StyledSummarySection = styled(SummarySection);
 
-const LinodeNetworkingSummaryPanel: React.StatelessComponent<
-  CombinedProps
-> = props => {
+const LinodeNetworkingSummaryPanel: React.StatelessComponent<CombinedProps> = props => {
   const { classes, sshIPAddress, username, linodeRegion, linodeLabel } = props;
 
   const v4Resolvers = getIPv4DNSResolvers(linodeRegion);
@@ -155,7 +153,7 @@ interface StateProps {
 }
 
 const mapStateToProps: MapState<StateProps, Props> = state => ({
-  username: path(['data', 'username'], state.__resources.profile)
+  username: state.__resources?.profile?.data?.username
 });
 
 const connected = connect(mapStateToProps);
