@@ -58,21 +58,49 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: e => `Credit card information has been updated.`
   },
   disk_create: {
-    scheduled: e => `Disk is being added to Linode ${e.entity!.label}.`,
-    started: e => `Disk is being added to ${e.entity!.label}.`,
-    failed: e => `Disk could not be added to Linode ${e.entity!.label}.`,
-    finished: e => `Disk has been added to Linode ${e.entity!.label}.`
+    scheduled: e =>
+      `${safeSecondaryEntityLabel(e, 'Disk')} is being added to Linode ${
+        e.entity!.label
+      }.`,
+    started: e =>
+      `${safeSecondaryEntityLabel(e, 'Disk')} is being added to ${
+        e.entity!.label
+      }.`,
+    failed: e =>
+      `${safeSecondaryEntityLabel(e, 'Disk')} could not be added to Linode ${
+        e.entity!.label
+      }.`,
+    finished: e =>
+      `${safeSecondaryEntityLabel(e, 'Disk')} has been added to Linode ${
+        e.entity!.label
+      }.`
     // notification: e => ``,
   },
   disk_update: {
-    notification: e => `A disk has been updated on Linode ${e.entity!.label}.`
+    notification: e =>
+      `${safeSecondaryEntityLabel(
+        e,
+        'Disk',
+        'A disk'
+      )} has been updated on Linode ${e.entity!.label}.`
   },
   disk_delete: {
     scheduled: e =>
-      `A disk on Linode ${e.entity!.label} is scheduled for deletion.`,
-    started: e => `A disk on Linode ${e.entity!.label} is being deleted.`,
-    failed: e => `A disk on Linode ${e.entity!.label} could not be deleted.`,
-    finished: e => `A disk on Linode ${e.entity!.label} has been deleted`
+      `${safeSecondaryEntityLabel(e, 'Disk', 'A disk')} on Linode ${
+        e.entity!.label
+      } is scheduled for deletion.`,
+    started: e =>
+      `${safeSecondaryEntityLabel(e, 'Disk', 'A disk')} on Linode ${
+        e.entity!.label
+      } is being deleted.`,
+    failed: e =>
+      `${safeSecondaryEntityLabel(e, 'Disk', 'A disk')} on Linode ${
+        e.entity!.label
+      } could not be deleted.`,
+    finished: e =>
+      `${safeSecondaryEntityLabel(e, 'Disk', 'A disk')} on Linode ${
+        e.entity!.label
+      } has been deleted`
     // notification: e => ``,
   },
   disk_duplicate: {
@@ -325,13 +353,28 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     finished: e => `A snapshot backup has been created for ${e.entity!.label}.`
   },
   linode_config_create: {
-    notification: e => `A config has been created on Linode ${e.entity!.label}.`
+    notification: e =>
+      `${safeSecondaryEntityLabel(
+        e,
+        'Config',
+        'A config'
+      )} has been created on Linode ${e.entity!.label}.`
   },
   linode_config_update: {
-    notification: e => `A config has been updated on Linode ${e.entity!.label}.`
+    notification: e =>
+      `${safeSecondaryEntityLabel(
+        e,
+        'Config',
+        'A config'
+      )} has been updated on Linode ${e.entity!.label}.`
   },
   linode_config_delete: {
-    notification: e => `A config has been deleted on Linode ${e.entity!.label}.`
+    notification: e =>
+      `${safeSecondaryEntityLabel(
+        e,
+        'Config',
+        'A config'
+      )} has been deleted on Linode ${e.entity!.label}.`
   },
   longviewclient_create: {
     notification: e => `Longview Client ${e.entity!.label} has been created.`
