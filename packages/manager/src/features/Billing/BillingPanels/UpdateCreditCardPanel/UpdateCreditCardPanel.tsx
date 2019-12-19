@@ -264,7 +264,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
                       errorText={hasErrorFor('expiry_month')}
                       value={this.state.expiry_month}
                     >
-                      {UpdateCreditCardPanel.monthMenuItems}
+                      {this.monthMenuItems()}
                     </NativeSelect>
                   </FormControl>
                 </Grid>
@@ -277,7 +277,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
                       errorText={hasErrorFor('expiry_year')}
                       value={this.state.expiry_year}
                     >
-                      {UpdateCreditCardPanel.yearMenuItems}
+                      {this.yearMenuItems()}
                     </NativeSelect>
                   </FormControl>
                 </Grid>
@@ -318,25 +318,39 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
     );
   };
 
-  static yearMenuItems = range(
-    UpdateCreditCardPanel.currentYear,
-    UpdateCreditCardPanel.currentYear + 20
-  ).map((v: any, i: number) => {
-    return (
-      <option value={v} key={i} aria-selected>
-        {v}
-      </option>
-    );
-  });
+  yearMenuItems = () => {
+    return range(
+      UpdateCreditCardPanel.currentYear,
+      UpdateCreditCardPanel.currentYear + 20
+    ).map((v: any, i: number) => {
+      const selected = v === this.state.expiry_year;
+      return (
+        <option
+          value={v}
+          key={i}
+          aria-selected={selected ? selected : undefined}
+        >
+          {v}
+        </option>
+      );
+    });
+  };
 
-  static monthMenuItems = range(1, 13).map((v: any, i: number) => {
-    const label = String(v).padStart(2, '0');
-    return (
-      <option value={v} key={i} aria-selected>
-        {label}
-      </option>
-    );
-  });
+  monthMenuItems = () => {
+    return range(1, 13).map((v: any, i: number) => {
+      const label = String(v).padStart(2, '0');
+      const selected = v === this.state.expiry_month;
+      return (
+        <option
+          value={v}
+          key={i}
+          aria-selected={selected ? selected : undefined}
+        >
+          {label}
+        </option>
+      );
+    });
+  };
 }
 
 const styled = withStyles(styles);
