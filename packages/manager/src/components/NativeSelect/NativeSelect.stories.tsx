@@ -5,7 +5,7 @@ import FormHelperText from 'src/components/core/FormHelperText';
 import InputLabel from 'src/components/core/InputLabel';
 import Grid from 'src/components/Grid';
 import MenuItem from 'src/components/MenuItem';
-import Select from './Select';
+import Select from './NativeSelect';
 
 interface State {
   selected: number;

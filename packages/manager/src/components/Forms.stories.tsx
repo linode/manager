@@ -3,7 +3,7 @@ import * as React from 'react';
 import CheckBox from './CheckBox';
 import MenuItem from './MenuItem';
 import Radio from './Radio';
-import Select from './Select';
+import Select from './NativeSelect';
 import TextField from './TextField';
 
 import FormControl from 'src/components/core/FormControl';
