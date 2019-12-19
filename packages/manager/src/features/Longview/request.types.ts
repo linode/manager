@@ -197,3 +197,75 @@ export interface TopProcessStat {
   mem: number;
   entries: number;
 }
+
+export type AllData = LongviewCPU &
+  LongviewDisk &
+  LongviewLoad &
+  LongviewMemory &
+  LongviewNetwork &
+  LongviewSystemInfo &
+  LongviewPackages &
+  LongviewProcesses &
+  Uptime &
+  LongviewPortsResponse &
+  LastUpdated;
+
+export interface WithStartAndEnd {
+  start: number;
+  end: number;
+}
+
+export interface Get {
+  (
+    token: string,
+    action: 'lastUpdated' | 'getLatestValue' | 'getValues',
+    options?: Options
+  ): Promise<LongviewResponse>;
+  (token: string, action: 'getTopProcesses', options?: Options): Promise<
+    LongviewResponse<LongviewTopProcesses>
+  >;
+}
+
+export type LongviewAction =
+  | 'batch'
+  | 'getTopProcesses'
+  | 'getLatestValue'
+  | 'getValue'
+  | 'getValues'
+  | 'lastUpdated';
+
+export interface LongviewResponse<T = Partial<AllData>> {
+  VERSION: number;
+  ACTION: LongviewAction;
+  DATA: T;
+  NOTIFICATIONS: LongviewNotification[];
+}
+
+export interface LongviewNotification {
+  CODE: number;
+  SEVERITY: number;
+  TEXT: string;
+}
+
+/**
+ * Scaffolding; expand as we gather requirements.
+ */
+
+export type LongviewFieldName =
+  | 'cpu'
+  | 'uptime'
+  | 'memory'
+  | 'load'
+  | 'sysinfo'
+  | 'network'
+  | 'disk'
+  | 'packages'
+  | 'processes'
+  | 'listeningServices'
+  | 'activeConnections';
+
+export interface Options {
+  fields: LongviewFieldName[];
+  start?: number;
+  end?: number;
+}

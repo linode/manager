@@ -1,4 +1,3 @@
-import { APIError } from 'linode-js-sdk/lib/types';
 import { clamp, pathOr } from 'ramda';
 import * as React from 'react';
 import { WithTheme, withTheme } from 'src/components/core/styles';
@@ -46,7 +45,7 @@ const CPUGauge: React.FC<CombinedProps> = props => {
       innerText={innerText(
         finalUsedCPU || 0,
         loading,
-        error || lastUpdatedError
+        !!error || !!lastUpdatedError
       )}
       filledInColor={props.theme.graphs.blue}
       subTitle={
@@ -88,11 +87,7 @@ export const normalizeValue = (value: number, numCores: number) => {
   return rounded;
 };
 
-export const innerText = (
-  value: number,
-  loading: boolean,
-  error?: APIError[]
-) => {
+export const innerText = (value: number, loading: boolean, error: boolean) => {
   if (error) {
     return 'Error';
   }
