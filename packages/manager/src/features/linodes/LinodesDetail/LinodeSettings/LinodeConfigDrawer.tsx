@@ -105,6 +105,7 @@ interface State {
   kernels: Kernel[];
   errors?: Error | APIError[];
   fields: EditableFields;
+  submitting: boolean;
 }
 
 type CombinedProps = LinodeContextProps &
@@ -121,7 +122,8 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       config: false
     },
     kernels: [],
-    fields: LinodeConfigDrawer.defaultFieldsValues()
+    fields: LinodeConfigDrawer.defaultFieldsValues(),
+    submitting: false
   };
 
   static defaultFieldsValues: () => EditableFields = () => ({
@@ -256,7 +258,8 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         virt_mode,
         helpers,
         root_device
-      }
+      },
+      submitting
     } = this.state;
 
     const errorFor = getAPIErrorsFor(
@@ -295,7 +298,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     ];
 
     return (
-      <React.Fragment>
+      <form onSubmit={this.onSubmit}>
         {generalError && (
           <Notice error errorGroup="linode-config-drawer" text={generalError} />
         )}
@@ -628,6 +631,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               onClick={this.onSubmit}
               buttonType="primary"
               disabled={readOnly}
+              loading={submitting}
             >
               Submit
             </Button>
@@ -636,7 +640,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             </Button>
           </ActionsPanel>
         </Grid>
-      </React.Fragment>
+      </form>
     );
   };
 
@@ -649,6 +653,8 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       createLinodeConfig,
       updateLinodeConfig
     } = this.props;
+
+    this.setState({ submitting: true });
 
     /**
      * This is client-side validation to patch an API bug.
@@ -668,7 +674,8 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               'You must select a valid Disk or Volume as your root device.',
             field: 'root_device'
           }
-        ]
+        ],
+        submitting: false
       });
     }
 
@@ -679,6 +686,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       return updateLinodeConfig(linodeConfigId, configData)
         .then(_ => {
           this.props.onClose();
+          this.setState({ submitting: false });
         })
         .catch(error => {
           this.setState({
@@ -700,7 +708,8 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
           errors: getAPIErrorOrDefault(
             error,
             'Unable to create config. Please try again.'
-          )
+          ),
+          submitting: false
         })
       );
   };
