@@ -6,8 +6,6 @@ import NumberFormat from 'react-number-format';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
-import FormControl from 'src/components/core/FormControl';
-import InputLabel from 'src/components/core/InputLabel';
 import {
   createStyles,
   Theme,
@@ -257,29 +255,25 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
                 </Grid>
 
                 <Grid item className={classes.fullWidthMobile}>
-                  <FormControl>
-                    <InputLabel>Expiration Month</InputLabel>
-                    <NativeSelect
-                      onChange={this.handleExpiryMonthChange}
-                      errorText={hasErrorFor('expiry_month')}
-                      value={this.state.expiry_month}
-                    >
-                      {this.monthMenuItems()}
-                    </NativeSelect>
-                  </FormControl>
+                  <NativeSelect
+                    label="Expiration Month"
+                    onChange={this.handleExpiryMonthChange}
+                    errorText={hasErrorFor('expiry_month')}
+                    value={this.state.expiry_month}
+                  >
+                    {this.monthMenuItems()}
+                  </NativeSelect>
                 </Grid>
 
                 <Grid item className={classes.fullWidthMobile}>
-                  <FormControl>
-                    <InputLabel>Expiration Year</InputLabel>
-                    <NativeSelect
-                      onChange={this.handleExpiryYearChange}
-                      errorText={hasErrorFor('expiry_year')}
-                      value={this.state.expiry_year}
-                    >
-                      {this.yearMenuItems()}
-                    </NativeSelect>
-                  </FormControl>
+                  <NativeSelect
+                    label="Expiration Year"
+                    onChange={this.handleExpiryYearChange}
+                    errorText={hasErrorFor('expiry_year')}
+                    value={this.state.expiry_year}
+                  >
+                    {this.yearMenuItems()}
+                  </NativeSelect>
                 </Grid>
 
                 <Grid item className={classes.fullWidthMobile}>

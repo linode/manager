@@ -1,79 +1,91 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
-import InputLabel from 'src/components/core/InputLabel';
 import Grid from 'src/components/Grid';
-import MenuItem from 'src/components/MenuItem';
-import Select from './NativeSelect';
+import NativeSelect from './NativeSelect';
 
 interface State {
-  selected: number;
+  value: number;
   error: boolean;
-  success: boolean;
 }
 
-class Example extends React.Component<any, State> {
-  state = {
-    selected: this.props.selected || '',
-    error: Boolean(this.props.error),
-    success: Boolean(this.props.success)
-  };
+interface Props {
+  label: string;
+  disabled?: boolean;
+  small?: boolean;
+}
+
+class Example extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      value: 0,
+      error: false
+    };
+  }
 
   handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = Number(e.target.value);
+    const fieldValue = Number(e.target.value);
     this.setState({
-      selected: value,
-      error: value === 9000,
-      success: value > 9000
+      value: fieldValue,
+      error: fieldValue === 4
     });
   };
 
   render() {
-    const { selected } = this.state;
+    const { label, disabled, small } = this.props;
+    const { error, value } = this.state;
+
+    const options = [
+      'Select a band',
+      'U2',
+      'Nickelback',
+      'Limp Bizkit',
+      "They're all crappy"
+    ];
 
     return (
-      <div style={{ marginLeft: '50px', marginTop: '20px' }}>
-        <FormControl fullWidth>
-          <InputLabel
-            htmlFor="awesomeness"
-            disableAnimation
-            shrink={true}
-            error={this.state.error}
-          >
-            Awesomeness
-          </InputLabel>
-          <Select
-            value={selected}
-            onChange={this.handleChange}
-            inputProps={{ name: 'awesomeness', id: 'awesomeness' }}
-            error={this.state.error}
-            success={this.state.success}
-            {...this.props}
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            <MenuItem value={1000}>Meh</MenuItem>
-            <MenuItem value={2500}>Mediocre</MenuItem>
-            <MenuItem value={9000}>9000</MenuItem>
-            <MenuItem value={9001}>It's over 9000!</MenuItem>
-          </Select>
+      <>
+        <NativeSelect
+          label={label}
+          value={value}
+          onChange={this.handleChange}
+          disabled={disabled}
+          small={small}
+          error={error}
+        >
+          {options.map((v: string, i: number) => {
+            return (
+              <option
+                key={i}
+                aria-selected={value === i ? true : undefined}
+                value={i}
+              >
+                {v}
+              </option>
+            );
+          })}
+        </NativeSelect>
+        {error && (
           <FormHelperText error={this.state.error}>
-            Here's some action text!
+            That's true, but you still gotta choose one.
           </FormHelperText>
-        </FormControl>
-      </div>
+        )}
+      </>
     );
   }
 }
 
-storiesOf('Select', module).add('Example', () => (
+storiesOf('Native Select', module).add('Example', () => (
   <Grid container style={{ padding: 16 }}>
     <Grid item xs={12}>
-      <Example />
-      <Example selected={1000} disabled />
-      <Example small />
+      <h2>What is the worst band in recent history?</h2>
+    </Grid>
+    <Grid item xs={12}>
+      <Example label="Select Example" />
+      <Example label="Disabled Select" disabled />
+      <Example label="Small Select" small />
     </Grid>
   </Grid>
 ));
