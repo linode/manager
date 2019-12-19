@@ -59,21 +59,27 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   disk_create: {
     scheduled: e =>
-      `${safeSecondaryEntityLabel(e, 'Disk')} is being added to Linode ${
-        e.entity!.label
-      }.`,
+      `${safeSecondaryEntityLabel(
+        e,
+        'Disk',
+        'A disk'
+      )} is being added to Linode ${e.entity!.label}.`,
     started: e =>
-      `${safeSecondaryEntityLabel(e, 'Disk')} is being added to ${
+      `${safeSecondaryEntityLabel(e, 'Disk', 'A disk')} is being added to ${
         e.entity!.label
       }.`,
     failed: e =>
-      `${safeSecondaryEntityLabel(e, 'Disk')} could not be added to Linode ${
-        e.entity!.label
-      }.`,
+      `${safeSecondaryEntityLabel(
+        e,
+        'Disk',
+        'A disk'
+      )} could not be added to Linode ${e.entity!.label}.`,
     finished: e =>
-      `${safeSecondaryEntityLabel(e, 'Disk')} has been added to Linode ${
-        e.entity!.label
-      }.`
+      `${safeSecondaryEntityLabel(
+        e,
+        'Disk',
+        'A disk'
+      )} has been added to Linode ${e.entity!.label}.`
     // notification: e => ``,
   },
   disk_update: {
