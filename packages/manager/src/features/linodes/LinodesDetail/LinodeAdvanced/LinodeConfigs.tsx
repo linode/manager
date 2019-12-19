@@ -225,7 +225,6 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
 
   deleteConfig = () => {
     this.setConfirmDelete({ submitting: true });
-    const { deleteLinodeConfig } = this.props;
     const {
       confirmDelete: { id: configId }
     } = this.state;
@@ -233,11 +232,12 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
       return;
     }
 
-    deleteLinodeConfig(configId)
+    this.props
+      .deleteLinodeConfig(configId)
       .then(() => {
         this.setConfirmDelete(
           {
-            submitting: false
+            submitting: true
           },
           () => {
             this.setConfirmDelete({
@@ -248,7 +248,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           }
         );
       })
-      .catch(error => {
+      .catch(_ => {
         this.setConfirmDelete({
           submitting: false,
           open: false,
