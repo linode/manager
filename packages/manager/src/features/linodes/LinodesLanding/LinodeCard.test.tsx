@@ -93,7 +93,6 @@ describe('LinodeRow', () => {
     memory: 0,
     vcpus: 0,
     disk: 0,
-    mostRecentBackup: null,
 
     linodeNotifications: [],
     displayType: 'Some Fancy Name',
