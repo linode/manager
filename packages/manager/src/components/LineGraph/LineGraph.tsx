@@ -271,7 +271,7 @@ const LineGraph: React.FC<CombinedProps> = props => {
                                 handleLegendClick(tick.datasetIndex)
                               }
                               data-qa-legend-title
-                              aria-label="Toggle Chart Visibility"
+                              aria-label={`Toggle ${tick.text} visibility`}
                               className={classes.toggleButton}
                             >
                               <div
