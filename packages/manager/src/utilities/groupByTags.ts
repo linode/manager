@@ -83,9 +83,9 @@ export const sortGroups = (groups: GroupedBy<any>) => {
   }
 
   return [
-    groups[foundUntaggedIndex],
     ...groups
       .filter(([tag]) => tag !== NONE)
-      .sort(([firstTag], [secondTag]) => (firstTag > secondTag ? 0 : -1))
+      .sort(([firstTag], [secondTag]) => (firstTag > secondTag ? 0 : -1)),
+    groups[foundUntaggedIndex]
   ];
 };
