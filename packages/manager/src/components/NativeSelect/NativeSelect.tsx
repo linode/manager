@@ -108,6 +108,7 @@ const SSelect: React.FC<CombinedProps> = props => {
           htmlFor={convertToKebabCase(label)}
           disableAnimation
           shrink
+          data-testid="native-select-label"
         >
           {label}
         </InputLabel>
@@ -120,6 +121,7 @@ const SSelect: React.FC<CombinedProps> = props => {
           data-qa-select
           id={convertToKebabCase(label)}
           IconComponent={Caret}
+          data-testid="native-select"
         >
           {children}
         </Select>
