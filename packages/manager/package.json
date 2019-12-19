@@ -67,7 +67,6 @@
     "react-router-dom": "^5.1.0",
     "react-select": "^2.0.0",
     "react-sticky": "^6.0.3",
-    "react-text-mask": "^5.4.3",
     "react-waypoint": "^8.0.3",
     "recompose": "^0.30.0",
     "redux": "^4.0.4",
