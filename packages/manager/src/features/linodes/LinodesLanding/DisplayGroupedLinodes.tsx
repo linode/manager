@@ -14,7 +14,9 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { OrderByProps } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
-import PaginationFooter from 'src/components/PaginationFooter';
+import PaginationFooter, {
+  MIN_PAGE_SIZE
+} from 'src/components/PaginationFooter';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
@@ -225,7 +227,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<
                           </TableCell>
                         </TableRow>
                         <Component {...finalProps} />
-                        {count > infinitePageSize && (
+                        {count > MIN_PAGE_SIZE && (
                           <TableRow>
                             <TableCell
                               colSpan={7}

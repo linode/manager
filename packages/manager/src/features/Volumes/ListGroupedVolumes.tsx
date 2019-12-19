@@ -12,7 +12,9 @@ import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import Paginate from 'src/components/Paginate';
-import PaginationFooter from 'src/components/PaginationFooter';
+import PaginationFooter, {
+  MIN_PAGE_SIZE
+} from 'src/components/PaginationFooter';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 import RenderVolumeData, { RenderVolumeDataProps } from './RenderVolumeData';
@@ -130,7 +132,7 @@ const ListGroupedVolumes: React.FC<CombinedProps> = props => {
                         </TableCell>
                       </TableRow>
                       <RenderVolumeData data={paginatedData} {...renderProps} />
-                      {count > infinitePageSize && (
+                      {count > MIN_PAGE_SIZE && (
                         <TableRow>
                           <TableCell
                             colSpan={7}
@@ -143,6 +145,7 @@ const ListGroupedVolumes: React.FC<CombinedProps> = props => {
                               pageSize={pageSize}
                               page={page}
                               eventCategory={'volumes landing'}
+                              showAll
                             />
                           </TableCell>
                         </TableRow>

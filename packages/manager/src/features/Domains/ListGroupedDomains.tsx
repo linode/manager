@@ -12,7 +12,9 @@ import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import Paginate from 'src/components/Paginate';
-import PaginationFooter from 'src/components/PaginationFooter';
+import PaginationFooter, {
+  MIN_PAGE_SIZE
+} from 'src/components/PaginationFooter';
 import DomainTableRow from 'src/features/Domains/DomainTableRow';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
@@ -140,7 +142,7 @@ const ListGroupedDomains: React.StatelessComponent<CombinedProps> = props => {
                           onCheck={props.onCheck}
                         />
                       ))}
-                      {count > infinitePageSize && (
+                      {count > MIN_PAGE_SIZE && (
                         <TableRow>
                           <TableCell
                             colSpan={7}
@@ -153,6 +155,7 @@ const ListGroupedDomains: React.StatelessComponent<CombinedProps> = props => {
                               pageSize={pageSize}
                               page={page}
                               eventCategory={'domains landing'}
+                              showAll
                             />
                           </TableCell>
                         </TableRow>

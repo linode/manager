@@ -12,7 +12,9 @@ import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import Paginate from 'src/components/Paginate';
-import PaginationFooter from 'src/components/PaginationFooter';
+import PaginationFooter, {
+  MIN_PAGE_SIZE
+} from 'src/components/PaginationFooter';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 import NodeBalancersLandingTableRows from './NodeBalancersLandingTableRows';
@@ -140,7 +142,7 @@ const ListGroupedNodeBalancers: React.StatelessComponent<
                         data={paginatedData}
                       />
                     </TableBody>
-                    {count > infinitePageSize && (
+                    {count > MIN_PAGE_SIZE && (
                       <TableRow>
                         <TableCell
                           colSpan={8}
@@ -153,6 +155,7 @@ const ListGroupedNodeBalancers: React.StatelessComponent<
                             handlePageChange={handlePageChange}
                             handleSizeChange={handlePageSizeChange}
                             eventCategory="nodebalancers landing"
+                            showAll
                           />
                         </TableCell>
                       </TableRow>
