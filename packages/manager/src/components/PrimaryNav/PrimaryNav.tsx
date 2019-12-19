@@ -66,6 +66,7 @@ interface PrimaryLink {
   key: string;
   attr?: { [key: string]: any };
   icon?: JSX.Element;
+  activeLinks?: Array<string>;
   onClick?: (e: React.ChangeEvent<any>) => void;
 }
 
@@ -149,6 +150,10 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
         link: {
           display: 'Object Storage',
           href: '/object-storage/buckets',
+          activeLinks: [
+            '/object-storage/buckets',
+            '/object-storage/access-keys'
+          ],
           key: 'object-storage',
           icon: <Storage />
         }
@@ -194,7 +199,12 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
           display: 'Account',
           href: '/account/billing',
           key: 'account',
-          icon: <Account className="small" />
+          icon: <Account className="small" />,
+          activeLinks: [
+            '/account/billing',
+            '/account/users',
+            '/account/settings'
+          ]
         }
       },
       {
@@ -221,6 +231,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
       {
         display: 'Linodes',
         href: '/linodes',
+        activeLinks: ['/linodes', '/linodes/create'],
         key: 'linodes',
         icon: <Linode />
       },
@@ -329,7 +340,10 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
           {...primaryLink.attr}
           className={classNames({
             [classes.listItem]: true,
-            [classes.active]: linkIsActive(primaryLink.href),
+            [classes.active]: linkIsActive(
+              primaryLink.href,
+              primaryLink.activeLinks
+            ),
             listItemCollpased: isCollapsed
           })}
         >
