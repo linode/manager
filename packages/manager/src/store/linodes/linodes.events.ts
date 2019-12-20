@@ -49,6 +49,12 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
     case 'linode_create':
       return handleLinodeCreation(dispatch, status, id, getState());
 
+    /**
+     * Config actions
+     *
+     * It's not clear that these can actually fail, so this is here
+     * mostly as a failsafe.
+     */
     case 'linode_config_create':
     case 'linode_config_delete':
       return handleConfigEvent(dispatch, status, id);

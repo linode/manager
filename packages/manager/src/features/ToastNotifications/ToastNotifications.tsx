@@ -102,6 +102,11 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
           );
         }
 
+        /**
+         * These create/delete failures are hypothetical.
+         * We don't know if it's possible for these to fail,
+         * but are including handling to be safe.
+         */
         if (
           event.action === 'linode_config_delete' &&
           ['failed'].includes(event.status)

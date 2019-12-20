@@ -1,8 +1,3 @@
-/**
- * @todo The config information is now immediately available on the LinodeDetail context and we
- * should source it directly from there rather than making an additional request. OR We can source
- * it from there and make the (thunk) request to get the latest/greatest information.
- */
 import {
   Config,
   Disk,
@@ -286,7 +281,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     ];
 
     return (
-      <form onSubmit={this.onSubmit}>
+      <React.Fragment>
         {generalError && (
           <Notice error errorGroup="linode-config-drawer" text={generalError} />
         )}
@@ -431,16 +426,16 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
           </FormControl>
 
           {/*
-            it's important to note here that if the memory limit
-            is set to 0, this config is going to use 100% of the
-            Linode's RAM. Otherwise, it only uses the limit
-            explicitly set by the user.
+              it's important to note here that if the memory limit
+              is set to 0, this config is going to use 100% of the
+              Linode's RAM. Otherwise, it only uses the limit
+              explicitly set by the user.
 
-            So to make this more clear to the user, we're going to
-            hide the option to change the RAM limit unless the
-            user explicity selects the option to change the
-            memory limit.
-          */}
+              So to make this more clear to the user, we're going to
+              hide the option to change the RAM limit unless the
+              user explicity selects the option to change the
+              memory limit.
+            */}
           <FormControl updateFor={[this.state.fields.setMemoryLimit, classes]}>
             <FormLabel
               htmlFor="memory_limit"
@@ -628,7 +623,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             </Button>
           </ActionsPanel>
         </Grid>
-      </form>
+      </React.Fragment>
     );
   };
 
@@ -641,8 +636,6 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       createLinodeConfig,
       updateLinodeConfig
     } = this.props;
-
-    this.setState({ submitting: true });
 
     /**
      * This is client-side validation to patch an API bug.
@@ -662,10 +655,11 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               'You must select a valid Disk or Volume as your root device.',
             field: 'root_device'
           }
-        ],
-        submitting: false
+        ]
       });
     }
+
+    this.setState({ submitting: true });
 
     const configData = this.convertStateToData(this.state.fields);
 
@@ -673,15 +667,16 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     if (linodeConfigId) {
       return updateLinodeConfig(linodeConfigId, configData)
         .then(_ => {
-          this.props.onClose();
           this.setState({ submitting: false });
+          this.props.onClose();
         })
         .catch(error => {
           this.setState({
             errors: getAPIErrorOrDefault(
               error,
               'Unable to update config. Please try again.'
-            )
+            ),
+            submitting: false
           });
         });
     }
@@ -689,6 +684,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     /** Creating */
     return createLinodeConfig(configData)
       .then(_ => {
+        this.setState({ submitting: false });
         this.props.onClose();
       })
       .catch(error =>
