@@ -429,7 +429,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     const { error, loading, data } = this.props;
 
     if (loading) {
-      return <TableRowLoading colSpan={6} />;
+      return <TableRowLoading colSpan={6} oneLine />;
     }
 
     if (error) {
