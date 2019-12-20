@@ -1,13 +1,13 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import Chip, { ChipProps } from 'src/components/core/Chip';
+import Popover from 'src/components/core/Popover';
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Tooltip from 'src/components/core/Tooltip';
 
 type CSSClasses = 'chip' | 'label' | 'popover' | 'link';
 
@@ -74,20 +74,17 @@ export class ShowMore<T> extends React.Component<
     anchorEl: undefined
   };
 
-  // handleClick = (event: React.MouseEvent<HTMLElement>) => {
-  //   event.preventDefault();
-  //   const ariaAttr = event.currentTarget.getAttribute('aria-describedby');
-  //   const tooltipEl = document.getElementById(ariaAttr!);
-  //   this.setState({
-  //     anchorEl: event.currentTarget
-  //   });
-  //   tooltipEl && tooltipEl.focus();
-  // };
+  handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    this.setState({
+      anchorEl: event.currentTarget
+    });
+  };
 
-  // handleClose = (event: React.MouseEvent<HTMLElement>) => {
-  //   event.preventDefault();
-  //   this.setState({ anchorEl: undefined });
-  // };
+  handleClose = (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    this.setState({ anchorEl: undefined });
+  };
 
   render() {
     const { classes, render, items, chipProps } = this.props;
@@ -95,27 +92,41 @@ export class ShowMore<T> extends React.Component<
 
     return (
       <React.Fragment>
-        <Tooltip
-          title={<React.Fragment>{render(items)}</React.Fragment>}
-          interactive
+        <Chip
+          className={classNames(
+            {
+              [classes.chip]: true,
+              active: anchorEl
+            },
+            'chip'
+          )}
+          label={`+${items.length}`}
+          classes={{ label: classes.label }}
+          onClick={this.handleClick}
+          {...chipProps}
+          data-qa-show-more-chip
+          component={'button' as 'div'}
+          clickable
+        />
+
+        <Popover
+          classes={{ paper: classes.popover }}
+          role="dialog"
+          aria-label={`${items.length} additional items`}
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={this.handleClose}
+          anchorOrigin={{
+            vertical: 28,
+            horizontal: 'left'
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'left'
+          }}
         >
-          <Chip
-            className={classNames(
-              {
-                [classes.chip]: true,
-                active: anchorEl
-              },
-              'chip'
-            )}
-            label={`+${items.length}`}
-            classes={{ label: classes.label }}
-            // onClick={this.handleClick}
-            {...chipProps}
-            data-qa-show-more-chip
-            component={'button' as 'div'}
-            clickable
-          />
-        </Tooltip>
+          {render(items)}
+        </Popover>
       </React.Fragment>
     );
   }
