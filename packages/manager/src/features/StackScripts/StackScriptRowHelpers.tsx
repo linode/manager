@@ -126,7 +126,7 @@ const createTag: (images: string) => JSX.Element = v => {
 const createTags: (images: string[]) => JSX.Element[] = map(createTag);
 
 const createShowMore: (images: string[]) => JSX.Element = images => (
-  <ShowMore key={0} items={images} render={createTags} />
+  <ShowMore key={0} items={images} render={createTags} itemType="images" />
 );
 
 export const displayTagsAndShowMore: (s: string[]) => JSX.Element[][] = compose<
