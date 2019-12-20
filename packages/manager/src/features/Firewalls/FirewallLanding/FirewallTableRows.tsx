@@ -28,7 +28,7 @@ const FirewallTableRows: React.FC<CombinedProps> = props => {
   } = props;
 
   if (firewallsLoading && firewallsLastUpdated === 0) {
-    return <TableRowLoading colSpan={6} />;
+    return <TableRowLoading colSpan={6} firstColWidth={25} oneLine />;
   }
 
   /**

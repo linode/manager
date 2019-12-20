@@ -337,7 +337,16 @@ export const renderTableBody = (
   const filteredEvents = removeBlacklistedEvents(events, ['profile_update']);
 
   if (loading) {
-    return <TableRowLoading colSpan={12} data-qa-events-table-loading />;
+    return (
+      <TableRowLoading
+        colSpan={3}
+        numberOfRows={10}
+        oneLine
+        data-qa-events-table-loading
+        firstColWidth={70}
+        compact
+      />
+    );
   } else if (error) {
     return (
       <TableRowError
