@@ -38,11 +38,11 @@ class Example extends React.Component<Props, State> {
     const { error, value } = this.state;
 
     const options = [
-      'Select a band',
-      'U2',
-      'Nickelback',
-      'Limp Bizkit',
-      "They're all crappy"
+      { label: 'Select a band' },
+      { label: 'U2' },
+      { label: 'Nickelback' },
+      { label: 'Limp Bizkit' },
+      { label: "They're all crappy" }
     ];
 
     return (
@@ -54,19 +54,8 @@ class Example extends React.Component<Props, State> {
           disabled={disabled}
           small={small}
           error={error}
-        >
-          {options.map((v: string, i: number) => {
-            return (
-              <option
-                key={i}
-                aria-selected={value === i ? true : undefined}
-                value={i}
-              >
-                {v}
-              </option>
-            );
-          })}
-        </NativeSelect>
+          options={options}
+        />
         {error && (
           <FormHelperText error={this.state.error}>
             That's true, but you still gotta choose one.

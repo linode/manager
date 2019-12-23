@@ -253,29 +253,24 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
                     }}
                   />
                 </Grid>
-
                 <Grid item className={classes.fullWidthMobile}>
                   <NativeSelect
                     label="Expiration Month"
                     onChange={this.handleExpiryMonthChange}
                     errorText={hasErrorFor('expiry_month')}
                     value={this.state.expiry_month}
-                  >
-                    {this.monthMenuItems()}
-                  </NativeSelect>
+                    options={UpdateCreditCardPanel.monthMenuItems}
+                  />
                 </Grid>
-
                 <Grid item className={classes.fullWidthMobile}>
                   <NativeSelect
                     label="Expiration Year"
                     onChange={this.handleExpiryYearChange}
                     errorText={hasErrorFor('expiry_year')}
                     value={this.state.expiry_year}
-                  >
-                    {this.yearMenuItems()}
-                  </NativeSelect>
+                    options={UpdateCreditCardPanel.yearMenuItems}
+                  />
                 </Grid>
-
                 <Grid item className={classes.fullWidthMobile}>
                   <TextField
                     required
@@ -312,39 +307,17 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
     );
   };
 
-  yearMenuItems = () => {
-    return range(
-      UpdateCreditCardPanel.currentYear,
-      UpdateCreditCardPanel.currentYear + 20
-    ).map((v: any, i: number) => {
-      const selected = v === this.state.expiry_year;
-      return (
-        <option
-          value={v}
-          key={i}
-          aria-selected={selected ? selected : undefined}
-        >
-          {v}
-        </option>
-      );
-    });
-  };
+  static yearMenuItems = range(
+    UpdateCreditCardPanel.currentYear,
+    UpdateCreditCardPanel.currentYear + 20
+  ).map((v: any) => {
+    return { label: v, value: v };
+  });
 
-  monthMenuItems = () => {
-    return range(1, 13).map((v: any, i: number) => {
-      const label = String(v).padStart(2, '0');
-      const selected = v === this.state.expiry_month;
-      return (
-        <option
-          value={v}
-          key={i}
-          aria-selected={selected ? selected : undefined}
-        >
-          {label}
-        </option>
-      );
-    });
-  };
+  static monthMenuItems = range(1, 13).map((v: any) => {
+    const label = String(v).padStart(2, '0');
+    return { label, value: v };
+  });
 }
 
 const styled = withStyles(styles);
