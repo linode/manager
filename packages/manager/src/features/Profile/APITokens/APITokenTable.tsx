@@ -94,6 +94,7 @@ interface DialogState {
   label?: string;
   errors?: APIError[];
   type: string;
+  submittingDialog: boolean;
 }
 
 interface TokenState {
@@ -134,7 +135,8 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
       id: 0,
       label: undefined,
       errors: undefined,
-      type: ''
+      type: '',
+      submittingDialog: false
     },
     token: {
       open: false,
@@ -224,7 +226,12 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
 
   closeRevokeDialog = () => {
     this.setState({
-      dialog: { ...this.state.dialog, id: undefined, open: false }
+      dialog: {
+        ...this.state.dialog,
+        id: undefined,
+        open: false,
+        submittingDialog: false
+      }
     });
   };
 
@@ -251,10 +258,28 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
 
   revokePersonalAccessToken = () => {
     const { dialog } = this.state;
+    this.setState({
+      ...this.state,
+      dialog: { ...dialog, submittingDialog: true }
+    });
     deletePersonalAccessToken(dialog.id as number)
       .then(() => this.props.onDelete())
+      .then(() =>
+        this.setState({
+          ...this.state,
+          dialog: { ...dialog, submittingDialog: false }
+        })
+      )
       .then(() => this.closeRevokeDialog())
-      .catch((err: any) => this.showDialogError(err));
+      .catch((err: any) => {
+        this.setState(
+          {
+            ...this.state,
+            dialog: { ...dialog, submittingDialog: false }
+          },
+          () => this.showDialogError(err)
+        );
+      });
   };
 
   revokeAppToken = () => {
@@ -641,6 +666,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           </Button>
           <Button
             buttonType="secondary"
+            loading={this.state.dialog.submittingDialog}
             destructive
             onClick={this.revokeAction}
             data-qa-button-confirm
