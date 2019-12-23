@@ -105,6 +105,7 @@ interface State {
   form: FormState;
   dialog: DialogState;
   token?: TokenState;
+  submitting: boolean;
 }
 
 type CombinedProps = Props &
@@ -138,7 +139,8 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     token: {
       open: false,
       value: undefined
-    }
+    },
+    submitting: false
   };
 
   mounted: boolean = false;
@@ -152,7 +154,13 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
       form: {
         ...APITokenTable.defaultState.form,
         mode: 'create',
-        open: true
+        open: true,
+        id: undefined,
+        values: {
+          label: '',
+          expiry: genExpiryTups()[0][1],
+          scopes: undefined
+        }
       }
     });
   };
@@ -318,13 +326,17 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
 
     const { form } = this.state;
     this.setState(
-      { form: { ...form, values: { ...form.values, scopes } } },
+      {
+        submitting: true,
+        form: { ...form, values: { ...form.values, scopes } }
+      },
       () => {
         createPersonalAccessToken(this.state.form.values)
           .then(({ token }) => {
             if (!token) {
               return this.setState(
                 {
+                  submitting: false,
                   form: {
                     ...form,
                     errors: [
@@ -337,6 +349,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
                 }
               );
             }
+            this.setState({ submitting: false });
             this.closeDrawer();
             this.openTokenDialog(token);
           })
@@ -348,6 +361,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
 
             this.setState(
               {
+                submitting: false,
                 form: {
                   ...form,
                   errors: getAPIErrorOrDefault(errResponse)
@@ -493,7 +507,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes, type, title } = this.props;
-    const { form, dialog } = this.state;
+    const { form, dialog, submitting } = this.state;
 
     const basePermsWithLKE = [...basePerms];
     basePermsWithLKE.splice(5, 0, 'lke');
@@ -544,6 +558,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         <APITokenDrawer
           open={form.open}
           mode={form.mode}
+          submitting={submitting}
           errors={form.errors}
           id={form.id}
           label={form.values.label}

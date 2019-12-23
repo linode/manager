@@ -118,6 +118,7 @@ interface Props {
   label?: string;
   scopes?: string;
   expiry?: string;
+  submitting?: boolean;
   perms: string[];
   permNameMap: Record<string, string>;
   errors?: APIError[];
@@ -153,7 +154,9 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
       /* If we are about to display a new token */
       this.props.id !== nextProps.id ||
       /* If we have updated perms (via feature flag) */
-      !equals(this.props.perms, nextProps.perms)
+      !equals(this.props.perms, nextProps.perms) ||
+      /* we're opening the drawer */
+      (!this.props.open && nextProps.open)
     ) {
       /* Then update our current scopes state */
       this.setState({
@@ -372,7 +375,8 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
       mode,
       closeDrawer,
       onCreate,
-      onEdit
+      onEdit,
+      submitting
     } = this.props;
     const { expiryTups } = this.state;
 
@@ -443,6 +447,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
             <Button
               key="create"
               buttonType="primary"
+              loading={submitting}
               onClick={
                 (mode as string) === 'create'
                   ? () =>
