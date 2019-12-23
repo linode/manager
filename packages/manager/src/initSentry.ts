@@ -71,6 +71,13 @@ export const initSentry = () => {
         /** anything from either *.linode.com/* or localhost:3000 */
         /linode.com{1}/g,
         /localhost:3000{1}/g
+      ],
+      blacklistUrls: [
+        // Newrelic script
+        /newrelic\.js/i,
+        // Chrome extensions
+        /extensions\//i,
+        /^chrome:\/\//i
       ]
     });
   }
