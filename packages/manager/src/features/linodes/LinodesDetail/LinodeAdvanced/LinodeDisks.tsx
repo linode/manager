@@ -579,9 +579,6 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     deleteLinodeDisk(diskId)
       .then(() => {
         this.setConfirmDelete({ open: false, errors: undefined });
-        this.props.enqueueSnackbar(`Disk queued for deletion.`, {
-          variant: 'info'
-        });
       })
       .catch(error => {
         // This error only fires if the request fails;

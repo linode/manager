@@ -92,13 +92,43 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
         }
 
         if (event.action === 'disk_delete' && event.status === 'failed') {
-          const label = pathOr(false, ['entity', 'label'], event);
+          const label = pathOr('', ['secondary_entity', 'label'], event);
+          const linode = pathOr(false, ['entity', 'label'], event);
           return enqueueSnackbar(
-            `Unable to delete disk${
-              label ? ` on ${label}` : ''
+            `Unable to delete disk ${label} ${
+              linode ? ` on ${linode}` : ''
             }. Is it attached to a configuration profile that is in use?`,
             { variant: 'error' }
           );
+        }
+
+        /**
+         * These create/delete failures are hypothetical.
+         * We don't know if it's possible for these to fail,
+         * but are including handling to be safe.
+         */
+        if (
+          event.action === 'linode_config_delete' &&
+          ['failed'].includes(event.status)
+        ) {
+          const entity = event.secondary_entity
+            ? event.secondary_entity.label
+            : '';
+          return enqueueSnackbar(`Error deleting config ${entity}.`, {
+            variant: 'error'
+          });
+        }
+
+        if (
+          event.action === 'linode_config_create' &&
+          ['failed'].includes(event.status)
+        ) {
+          const entity = event.secondary_entity
+            ? event.secondary_entity.label
+            : '';
+          return enqueueSnackbar(`Error creating config ${entity}.`, {
+            variant: 'error'
+          });
         }
 
         return;
