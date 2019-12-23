@@ -62,7 +62,7 @@ export const groupByGroup = <T extends Grouped>(arr: T[]): GroupedBy<T> => {
 };
 
 /**
- * Moves the NONE to the top, and alphabetically sorts the remainder.
+ * Moves the NONE to the bottom, and alphabetically sorts the remainder.
  */
 export const sortGroups = (groups: GroupedBy<any>) => {
   let foundUntaggedIndex;
