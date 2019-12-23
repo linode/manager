@@ -40,7 +40,7 @@ export const initSentry = () => {
         'ComboSearch is not defined',
         'http://loading.retry.widdit.com/',
         /** noisy error that appeared to be happening for logged out users? */
-        "mousedownt' of undefined",
+        "mousedown' of undefined",
         /**
          * see https://github.com/getsentry/sentry-javascript/issues/2074
          * for this noisy issue
