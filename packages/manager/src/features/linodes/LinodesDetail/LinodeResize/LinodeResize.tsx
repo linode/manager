@@ -216,7 +216,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           selectedId: '',
           confirmationDialog: {
             ...this.state.confirmationDialog,
-            submitting: true
+            submitting: false
           }
         });
         resetEventsPolling();
@@ -407,10 +407,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-const connected = connect(
-  undefined,
-  mapDispatchToProps
-);
+const connected = connect(undefined, mapDispatchToProps);
 
 const linodeContext = withLinodeDetailContext(state => {
   const { linode } = state;
