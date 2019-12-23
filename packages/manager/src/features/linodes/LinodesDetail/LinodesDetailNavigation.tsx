@@ -111,7 +111,7 @@ const LinodesDetailNavigation: React.StatelessComponent<
     },
     {
       routeName: `${url}/advanced`,
-      title: 'Advanced'
+      title: 'Disks/Configs'
     }
   ];
 
