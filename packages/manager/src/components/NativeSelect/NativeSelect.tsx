@@ -54,6 +54,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props extends SelectProps {
   label: string;
+  options?: Array<OptionProps>;
   notFullWidth?: boolean;
   tooltipText?: string;
   open?: boolean;
@@ -63,12 +64,19 @@ interface Props extends SelectProps {
   hideLabel?: boolean;
 }
 
+interface OptionProps {
+  label: string;
+  value?: string | number;
+}
+
 type CombinedProps = Props;
 
 const SSelect: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const {
     label,
+    options,
+    value,
     hideLabel,
     notFullWidth,
     children,
@@ -122,8 +130,23 @@ const SSelect: React.FC<CombinedProps> = props => {
           id={convertToKebabCase(label)}
           IconComponent={Caret}
           data-testid="native-select"
+          value={value}
         >
-          {children}
+          {options
+            ? options.map((option, i) => {
+                const { label: optionLabel, value: optionValue } = option;
+                const finalVal = optionValue ? optionValue : i;
+                return (
+                  <option
+                    key={i}
+                    value={finalVal}
+                    aria-selected={value === finalVal ? true : undefined}
+                  >
+                    {optionLabel}
+                  </option>
+                );
+              })
+            : children}
         </Select>
         {tooltipText && <HelpIcon text={tooltipText} />}
       </div>
