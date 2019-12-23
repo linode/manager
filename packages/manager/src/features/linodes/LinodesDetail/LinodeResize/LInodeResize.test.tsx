@@ -50,13 +50,13 @@ describe('LinodeResize', () => {
 
   it('submit button should be enabled if a plan is selected', () => {
     component.setState({ selectedId: 'selected' });
-    const submitBtn = component.find('[data-qa-submit]');
+    const submitBtn = component.find('[data-qa-resize]');
     expect(submitBtn.prop('disabled')).toBeFalsy();
   });
 
   it('submit button should be disabled if no plan is selected', () => {
     component.setState({ selectedId: '' });
-    const submitBtn = component.find('[data-qa-submit]');
+    const submitBtn = component.find('[data-qa-resize]');
     expect(submitBtn.prop('disabled')).toBeTruthy();
   });
 
