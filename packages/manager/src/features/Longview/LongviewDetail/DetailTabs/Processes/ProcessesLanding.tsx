@@ -63,7 +63,14 @@ const ProcessesLanding: React.FC<Props> = props => {
     processes.data
   ]);
 
-  const filteredData = filterResults(memoizedExtendedData, inputText);
+  /**
+   * Memoized separately so we don't extendData on every
+   * text input
+   */
+  const memoizedFilteredData = React.useMemo(
+    () => filterResults(memoizedExtendedData, inputText),
+    [memoizedExtendedData, inputText]
+  );
 
   return (
     <>
@@ -96,7 +103,7 @@ const ProcessesLanding: React.FC<Props> = props => {
             />
           </Box>
           <ProcessesTable
-            processesData={filteredData}
+            processesData={memoizedFilteredData}
             // It's correct to set loading to `true` when
             // processes.lastUpdated === 0. The reason we do this is to avoid
             // a state where we haven't made the request to get processes yet
@@ -112,7 +119,7 @@ const ProcessesLanding: React.FC<Props> = props => {
         </Grid>
         <Grid item xs={3}>
           <ProcessesGraphs
-            processesData={filteredData}
+            processesData={memoizedFilteredData}
             processesLoading={processes.loading || processes.lastUpdated === 0}
             processesError={processes.error}
             selectedRow={selectedRow}
