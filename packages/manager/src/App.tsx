@@ -22,6 +22,7 @@ import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 
 import { ApplicationState } from 'src/store';
 import composeState from 'src/utilities/composeState';
+import { configureErrorReportingUser } from './exceptionReporting';
 import { MapState } from './store/types';
 import { isKubernetesEnabled as _isKubernetesEnabled } from './utilities/accountCapabilities';
 
@@ -81,6 +82,14 @@ export class App extends React.Component<CombinedProps, State> {
         (window as any).ga('send', 'pageview', pathname);
       }
     });
+
+    // Configure error reporting to include user information.
+    if (this.props.userId && this.props.username) {
+      configureErrorReportingUser(
+        String(this.props.userId),
+        this.props.username
+      );
+    }
 
     /*
      * We want to listen for migration events side-wide

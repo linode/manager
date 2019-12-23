@@ -40,7 +40,7 @@ export const initSentry = () => {
         'ComboSearch is not defined',
         'http://loading.retry.widdit.com/',
         /** noisy error that appeared to be happening for logged out users? */
-        "mousedownt' of undefined",
+        "mousedown' of undefined",
         /**
          * see https://github.com/getsentry/sentry-javascript/issues/2074
          * for this noisy issue
@@ -71,6 +71,13 @@ export const initSentry = () => {
         /** anything from either *.linode.com/* or localhost:3000 */
         /linode.com{1}/g,
         /localhost:3000{1}/g
+      ],
+      blacklistUrls: [
+        // Newrelic script
+        /newrelic\.js/i,
+        // Chrome extensions
+        /extensions\//i,
+        /^chrome:\/\//i
       ]
     });
   }
