@@ -109,3 +109,4 @@ localStorage.json
 #sonar
 .scannerwork
 .sonar
+packages/manager/test-report.xml
