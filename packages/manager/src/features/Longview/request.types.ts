@@ -103,10 +103,13 @@ export interface InboundOutboundNetwork<WithDummy extends '' | 'yAsNull' = ''> {
   tx_bytes: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
 }
 
+export type LongviewNetworkInterface<
+  WithDummy extends '' | 'yAsNull' = ''
+> = Record<string, InboundOutboundNetwork<WithDummy>>;
 export interface LongviewNetwork<WithDummy extends '' | 'yAsNull' = ''> {
   Network: {
     mac_addr: string;
-    Interface: Record<string, InboundOutboundNetwork<WithDummy>>;
+    Interface: LongviewNetworkInterface<WithDummy>;
   };
 }
 
