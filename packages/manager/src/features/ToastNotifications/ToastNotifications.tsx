@@ -102,6 +102,13 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
           );
         }
 
+        if (event.action === 'linode_snapshot' && event.status === 'failed') {
+          return enqueueSnackbar(
+            `There was an error creating a snapshot on Linode ${event.entity?.label}.`,
+            { variant: 'error' }
+          );
+        }
+
         /**
          * These create/delete failures are hypothetical.
          * We don't know if it's possible for these to fail,
