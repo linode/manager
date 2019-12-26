@@ -36,7 +36,8 @@ export const filterResults = (
   }
   return results.filter(
     thisResult =>
-      thisResult.user.match(inputText) || thisResult.name.match(inputText)
+      thisResult.user.match(RegExp(inputText, 'i')) ||
+      thisResult.name.match(RegExp(inputText, 'i'))
   );
 };
 
