@@ -154,9 +154,8 @@ export class Weblish extends React.Component<CombinedProps, State> {
       }
 
       if (
-        data.type &&
-        data.type === 'error' &&
-        data.reason.toLowerCase() === 'your session has expired.'
+        data?.type === 'error' &&
+        data?.reason.toLowerCase() === 'your session has expired.'
       ) {
         /*
          * We tried to reconnect 3 times
