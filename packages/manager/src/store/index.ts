@@ -136,6 +136,7 @@ import volumeDrawer, {
   defaultState as volumeDrawerDefaultState,
   State as VolumeDrawerState
 } from 'src/store/volumeForm';
+import { loadState } from 'src/utilities/subscribeStore';
 import initialLoad, {
   defaultState as initialLoadState,
   State as InitialLoadState
@@ -227,25 +228,46 @@ export interface ApplicationState {
   longviewStats: LongviewStatsState;
 }
 
-const defaultState: ApplicationState = {
-  __resources: __resourcesDefaultState,
-  authentication: authenticationDefaultState,
-  backups: backupsDefaultState,
-  documentation: documentationDefaultState,
-  domainDrawer: domainDrawerDefaultState,
-  events: eventsDefaultState,
-  stackScriptDrawer: stackScriptDrawerDefaultState,
-  tagImportDrawer: tagDrawerDefaultState,
-  volumeDrawer: volumeDrawerDefaultState,
-  bucketDrawer: bucketDrawerDefaultState,
-  createLinode: linodeCreateDefaultState,
-  preferences: preferencesState,
-  initialLoad: initialLoadState,
-  firewalls: defaultFirewallState,
-  globalErrors: defaultGlobalErrorState,
-  longviewClients: defaultLongviewState,
-  longviewStats: defaultLongviewStatsState
-};
+const defaultStateFromLocalStorage = loadState();
+
+/**
+ * If we have successfully loaded a cached state,
+ * use it. However, we want to make sure we don't use
+ * cached values for account, profile, and authentication,
+ * so override those.
+ *
+ * If the loadState() call didn't work, fall back to our normal
+ * default state.
+ */
+
+const defaultState: ApplicationState = defaultStateFromLocalStorage
+  ? {
+      ...defaultStateFromLocalStorage,
+      authentication: authenticationDefaultState,
+      __resources: {
+        account: defaultAccountState,
+        profile: defaultProfileState
+      }
+    }
+  : {
+      __resources: __resourcesDefaultState,
+      authentication: authenticationDefaultState,
+      backups: backupsDefaultState,
+      documentation: documentationDefaultState,
+      domainDrawer: domainDrawerDefaultState,
+      events: eventsDefaultState,
+      stackScriptDrawer: stackScriptDrawerDefaultState,
+      tagImportDrawer: tagDrawerDefaultState,
+      volumeDrawer: volumeDrawerDefaultState,
+      bucketDrawer: bucketDrawerDefaultState,
+      createLinode: linodeCreateDefaultState,
+      preferences: preferencesState,
+      initialLoad: initialLoadState,
+      firewalls: defaultFirewallState,
+      globalErrors: defaultGlobalErrorState,
+      longviewClients: defaultLongviewState,
+      longviewStats: defaultLongviewStatsState
+    };
 
 /**
  * Reducers

@@ -231,7 +231,9 @@ const withUpdatingLinodes = connect((state: ApplicationState, ownProps: {}) => {
       sortBy(prop('label'))
     )(linodesWithMaintenance),
     linodeCount: state.__resources.linodes.entities.length,
-    loading: state.__resources.linodes.loading,
+    loading:
+      state.__resources.linodes.loading &&
+      state.__resources.linodes.results.length === 0,
     error: path(['read'], state.__resources.linodes.error)
   };
 });

@@ -20,6 +20,7 @@ import Logout from 'src/layouts/Logout';
 import 'src/request';
 import store from 'src/store';
 import 'src/utilities/createImageBitmap';
+import { saveState } from 'src/utilities/subscribeStore';
 import './index.css';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
 
@@ -39,6 +40,15 @@ const OAuthCallbackPage = DefaultLoader({
 
 const Cancel = DefaultLoader({
   loader: () => import('src/features/CancelLanding')
+});
+
+/**
+ * Write the Redux store to localStorage after every action.
+ * This method is throttled, so there will be at most 1 write/second.
+ */
+
+store.subscribe(() => {
+  saveState(store.getState());
 });
 
 /*

@@ -1,4 +1,5 @@
 import { Account, AccountCapability } from 'linode-js-sdk/lib/account';
+import { Domain } from 'linode-js-sdk/lib/domains';
 import { Image } from 'linode-js-sdk/lib/images';
 import { Linode } from 'linode-js-sdk/lib/linodes';
 import { Region } from 'linode-js-sdk/lib/regions';
@@ -97,7 +98,7 @@ export class App extends React.Component<CombinedProps, State> {
     }
 
     /*
-     * We want to listen for migration events side-wide
+     * We want to listen for migration events site-wide
      * It's unpredictable when a migration is going to happen. It could take
      * hours and it could take days. We want to notify to the user when it happens
      * and then update the Linodes in LinodesDetail and LinodesLanding
@@ -134,6 +135,9 @@ export class App extends React.Component<CombinedProps, State> {
       toggleSpacing,
       toggleTheme,
       linodesError,
+      linodes,
+      volumesData,
+      domainsData,
       domainsError,
       typesError,
       imagesError,
@@ -212,13 +216,13 @@ export class App extends React.Component<CombinedProps, State> {
           markAppAsLoaded={this.props.markAppAsDoneLoading}
           flagsHaveLoaded={this.state.flagsLoaded}
           linodesLoadedOrErrorExists={
-            linodesLoading === false || !!linodesError
+            linodesLoading === false || linodes?.length > 0 || !!linodesError
           }
           volumesLoadedOrErrorExists={
-            volumesLoading === false || !!volumesError
+            volumesLoading === false || volumesData.length > 0 || !!volumesError
           }
           domainsLoadedOrErrorExists={
-            domainsLoading === false || !!domainsError
+            domainsLoading === false || domainsData.length > 0 || !!domainsError
           }
           bucketsLoadedOrErrorExists={
             bucketsLoading === false || !!bucketsError
@@ -268,6 +272,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
 interface StateProps {
   /** Profile */
   linodes: Linode[];
+  volumesData: string[];
+  domainsData: Domain[];
   images?: Image[];
   types?: string[];
   regions?: Region[];
@@ -339,7 +345,9 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
   ),
   linodesLoading: state.__resources.linodes.loading,
   volumesLoading: state.__resources.volumes.loading,
+  volumesData: state.__resources.volumes.items || [],
   domainsLoading: state.__resources.domains.loading,
+  domainsData: state.__resources.domains.data || [],
   bucketsLoading: state.__resources.buckets.loading,
   accountLoading: state.__resources.account.loading,
   nodeBalancersLoading: state.__resources.nodeBalancers.loading,

@@ -44,6 +44,8 @@ it('renders without crashing.', () => {
             domainsLoading={false}
             bucketsLoading={false}
             accountSettingsLoading={false}
+            domainsData={[]}
+            volumesData={[]}
           />
         </StaticRouter>
       </LinodeThemeWrapper>
