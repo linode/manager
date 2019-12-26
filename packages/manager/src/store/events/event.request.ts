@@ -3,7 +3,7 @@ import {
   getEvents as _getEvents,
   markEventSeen
 } from 'linode-js-sdk/lib/account'
-import * as moment from 'moment';
+import {DateTime} from "luxon";
 import { dateFormat } from 'src/time';
 import { generatePollingFilter } from 'src/utilities/requestFilters';
 import { ThunkActionCreator } from '../types';
@@ -21,7 +21,7 @@ export const getEvents: ThunkActionCreator<Promise<Event[]>> = () => (
   const { mostRecentEventTime, inProgressEvents } = getState().events;
 
   const filters = generatePollingFilter(
-    moment.utc(mostRecentEventTime).format(dateFormat),
+    DateTime.fromMillis(mostRecentEventTime).toFormat(dateFormat),
     Object.keys(inProgressEvents)
   );
 

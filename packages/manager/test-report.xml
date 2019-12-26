@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testExecutions version="1">
+  <file path="/Users/acourdavault/wc/manager_yarn_2/packages/manager/src/components/AuthenticationWrapper/AuthenticationWrapper.test.tsx">
+    <testCase name="AuthenticationWrapper should render just a react fragment if showChildren state is false" duration="4"/>
+    <testCase name="AuthenticationWrapper should render one child when showChildren state is true" duration="1"/>
+    <testCase name="AuthenticationWrapper should invoke props.initSession when the component is mounted" duration="0"/>
+    <testCase name="AuthenticationWrapper should set showChildren state to true when the isAuhenticated prop goes from false to true" duration="3"/>
+  </file>
+  <file path="/Users/acourdavault/wc/manager_yarn_2/packages/manager/src/App.test.tsx">
+    <testCase name="renders without crashing." duration="11"/>
+    <testCase name="isOAuthError returns true for errors that have oauth errors in them" duration="1"/>
+  </file>
+</testExecutions>

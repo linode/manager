@@ -1,13 +1,13 @@
 import { Token } from 'linode-js-sdk/lib/profile';
-import * as moment from 'moment';
+import {DateTime} from "luxon";
 
 export const appTokens: Token[] = [
   {
     created: '2018-04-26T20:00:00',
-    expiry: moment
+    expiry: DateTime
       .utc()
-      .subtract(1, 'day')
-      .format(),
+      .minus({days:1})
+      .toISO(),
     thumbnail_url: null,
     id: 1,
     scopes: '*',
@@ -16,10 +16,10 @@ export const appTokens: Token[] = [
   },
   {
     created: '2015-04-26T14:45:07',
-    expiry: moment
+    expiry: DateTime
       .utc()
-      .add(1, 'day')
-      .format(),
+      .plus({days:1})
+      .toISO(),
     thumbnail_url: null,
     id: 2,
     scopes: '*',
@@ -28,10 +28,10 @@ export const appTokens: Token[] = [
   },
   {
     created: '2017-04-26T14:45:07',
-    expiry: moment
+    expiry: DateTime
       .utc()
-      .add(3, 'months')
-      .format(),
+      .plus({months:3})
+      .toISO(),
     thumbnail_url: null,
     id: 3,
     scopes: '*',
@@ -40,10 +40,10 @@ export const appTokens: Token[] = [
   },
   {
     created: '2011-04-26T14:45:07',
-    expiry: moment
+    expiry: DateTime
       .utc()
-      .add(3, 'months')
-      .format(),
+      .plus({months:3})
+      .toISO(),
     thumbnail_url: null,
     id: 4,
     scopes: '*',
@@ -52,10 +52,10 @@ export const appTokens: Token[] = [
   },
   {
     created: '2028-04-26T14:45:07',
-    expiry: moment
+    expiry: DateTime
       .utc()
-      .add(3, 'months')
-      .format(),
+      .plus({months:3})
+      .toISO(),
     thumbnail_url: null,
     id: 5,
     scopes: '*',
