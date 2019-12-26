@@ -1,8 +1,16 @@
+import * as moment from 'moment';
 import { throttle } from 'throttle-debounce';
 
 export const loadState = () => {
   try {
     const state = localStorage.getItem('state');
+    const updated = localStorage.getItem('state-updated');
+    /** Don't load from the cache if it's old data */
+    if (updated) {
+      if (moment(updated).diff(moment(), 'days') > 1) {
+        return undefined;
+      }
+    }
     if (state === null) {
       return undefined;
     } else {
@@ -35,6 +43,7 @@ const _saveState = (state: any) => {
   try {
     const stringifiedState = JSON.stringify(_state);
     localStorage.setItem('state', stringifiedState);
+    localStorage.setItem('state-updated', new Date().toUTCString());
   } catch {
     return;
   }
