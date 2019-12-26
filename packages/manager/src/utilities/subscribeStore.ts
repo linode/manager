@@ -19,8 +19,21 @@ export const loadState = () => {
 };
 
 const _saveState = (state: any) => {
+  /**
+   * Don't store account/profile/auth data
+   * in our cache.
+   */
+  const _state = {
+    ...state,
+    authentication: undefined,
+    __resources: {
+      ...state.__resources,
+      profile: undefined,
+      account: undefined
+    }
+  };
   try {
-    const stringifiedState = JSON.stringify(state);
+    const stringifiedState = JSON.stringify(_state);
     localStorage.setItem('state', stringifiedState);
   } catch {
     return;

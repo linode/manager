@@ -229,12 +229,30 @@ export interface ApplicationState {
 }
 
 const defaultStateFromLocalStorage = loadState();
+const normalDefaultState = {
+  __resources: __resourcesDefaultState,
+  authentication: authenticationDefaultState,
+  backups: backupsDefaultState,
+  documentation: documentationDefaultState,
+  domainDrawer: domainDrawerDefaultState,
+  events: eventsDefaultState,
+  stackScriptDrawer: stackScriptDrawerDefaultState,
+  tagImportDrawer: tagDrawerDefaultState,
+  volumeDrawer: volumeDrawerDefaultState,
+  bucketDrawer: bucketDrawerDefaultState,
+  createLinode: linodeCreateDefaultState,
+  preferences: preferencesState,
+  initialLoad: initialLoadState,
+  firewalls: defaultFirewallState,
+  globalErrors: defaultGlobalErrorState,
+  longviewClients: defaultLongviewState,
+  longviewStats: defaultLongviewStatsState
+};
 
 /**
  * If we have successfully loaded a cached state,
- * use it. However, we want to make sure we don't use
- * cached values for account, profile, and authentication,
- * so override those.
+ * use it. We don't store account/profile/auth data,
+ * so use our default state for those.
  *
  * If the loadState() call didn't work, fall back to our normal
  * default state.
@@ -245,29 +263,12 @@ const defaultState: ApplicationState = defaultStateFromLocalStorage
       ...defaultStateFromLocalStorage,
       authentication: authenticationDefaultState,
       __resources: {
-        account: defaultAccountState,
-        profile: defaultProfileState
+        ...defaultStateFromLocalStorage.__resources,
+        profile: defaultProfileState,
+        account: defaultAccountState
       }
     }
-  : {
-      __resources: __resourcesDefaultState,
-      authentication: authenticationDefaultState,
-      backups: backupsDefaultState,
-      documentation: documentationDefaultState,
-      domainDrawer: domainDrawerDefaultState,
-      events: eventsDefaultState,
-      stackScriptDrawer: stackScriptDrawerDefaultState,
-      tagImportDrawer: tagDrawerDefaultState,
-      volumeDrawer: volumeDrawerDefaultState,
-      bucketDrawer: bucketDrawerDefaultState,
-      createLinode: linodeCreateDefaultState,
-      preferences: preferencesState,
-      initialLoad: initialLoadState,
-      firewalls: defaultFirewallState,
-      globalErrors: defaultGlobalErrorState,
-      longviewClients: defaultLongviewState,
-      longviewStats: defaultLongviewStatsState
-    };
+  : normalDefaultState;
 
 /**
  * Reducers
