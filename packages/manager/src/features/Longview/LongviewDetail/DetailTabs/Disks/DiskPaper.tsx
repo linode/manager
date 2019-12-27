@@ -27,11 +27,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   diskLabel: string;
-  stats: Partial<Disk<'yAsNull'>>;
+  stats: Partial<Disk>;
   timezone: string;
   sysInfoType: string;
   startTime: number;
   endTime: number;
+  loading: boolean;
 }
 
 type CombinedProps = Props & WithTheme;
@@ -39,7 +40,15 @@ type CombinedProps = Props & WithTheme;
 const DiskPaper: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const { diskLabel, stats, timezone, sysInfoType, startTime, endTime } = props;
+  const {
+    diskLabel,
+    stats,
+    loading,
+    timezone,
+    sysInfoType,
+    startTime,
+    endTime
+  } = props;
 
   const isSwap = pathOr(0, ['isswap'], stats);
   const childOf = pathOr(0, ['childof'], stats);
@@ -69,6 +78,7 @@ const DiskPaper: React.FC<CombinedProps> = props => {
         endTime={endTime}
         reads={reads}
         writes={writes}
+        loading={loading}
       />
     </Paper>
   );

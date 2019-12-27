@@ -15,12 +15,7 @@ export const useGraphs = (
     if (!start || !end) {
       return;
     }
-    /**
-     * Only show loading state on first load
-     */
-    if (Object.keys(data).length === 0) {
-      setLoading(true);
-    }
+    setLoading(true);
     setData({});
     return getValues(clientAPIKey, {
       fields: requestFields,
