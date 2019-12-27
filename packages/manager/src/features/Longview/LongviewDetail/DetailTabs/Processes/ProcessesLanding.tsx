@@ -36,7 +36,10 @@ const ProcessesLanding: React.FC<Props> = props => {
 
   const processes = useAPIRequest<LongviewProcesses>(
     clientAPIKey && lastUpdated
-      ? () => get(clientAPIKey, 'getValues', { fields: ['processes'] })
+      ? () =>
+          get(clientAPIKey, 'getValues', { fields: ['processes'] }).then(
+            response => response.DATA
+          )
       : null,
     { Processes: {} },
     [clientAPIKey, lastUpdated]

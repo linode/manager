@@ -1031,6 +1031,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       },
       MuiSkeleton: {
         text: {
+          marginTop: 0,
           borderRadius: 0
         }
       },

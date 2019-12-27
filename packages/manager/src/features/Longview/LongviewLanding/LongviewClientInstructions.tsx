@@ -62,7 +62,7 @@ export const LongviewClientInstructions: React.FC<Props> = props => {
   };
 
   return (
-    <Paper className={classes.root}>
+    <Paper data-testid={clientID} className={classes.root}>
       <Grid
         container
         direction="row"
@@ -70,6 +70,7 @@ export const LongviewClientInstructions: React.FC<Props> = props => {
         alignItems="flex-start"
         spacing={2}
         aria-label="Installation instructions for the Longview agent"
+        data-testid="installation"
       >
         <Grid item xs={11}>
           <Grid container>

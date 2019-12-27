@@ -2,7 +2,7 @@ import { longviewLoad, memory, systemInfo } from 'src/__data__/longview';
 import { requestClientStats } from './longviewStats.actions';
 import reducer, { defaultState } from './longviewStats.reducer';
 
-const mockError = [{ reason: 'no reason' }];
+const mockError = [{ TEXT: 'no reason', CODE: 0, SEVERITY: 3 }];
 
 describe('Longview Client Stats Reducer', () => {
   it('should handle an initiated request for Client data', () => {

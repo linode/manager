@@ -1,15 +1,17 @@
-import { APIError } from 'linode-js-sdk/lib/types';
 import { path, pathOr } from 'ramda';
 import { connect } from 'react-redux';
+import {
+  LongviewNotification,
+  LongviewResponse
+} from 'src/features/Longview/request.types';
 import { ApplicationState } from 'src/store';
-import { ReturnType } from 'src/store/longviewStats/longviewStats.actions';
 import { getClientStats } from 'src/store/longviewStats/longviewStats.requests';
 import { ThunkDispatch } from 'src/store/types';
 
 export interface LVClientData {
-  longviewClientData: ReturnType;
+  longviewClientData: LongviewResponse['DATA'];
   longviewClientDataLoading: boolean;
-  longviewClientDataError?: APIError[];
+  longviewClientDataError?: LongviewNotification[];
   longviewClientLastUpdated?: number;
 }
 
@@ -17,7 +19,7 @@ export interface DispatchProps {
   getClientStats: (
     api_key: string,
     lastUpdated?: number
-  ) => Promise<ReturnType>;
+  ) => Promise<LongviewResponse['DATA']>;
 }
 
 export type Props = DispatchProps & LVClientData;

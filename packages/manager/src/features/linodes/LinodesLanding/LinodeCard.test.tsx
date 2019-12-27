@@ -86,13 +86,13 @@ describe('LinodeRow', () => {
     id: 8675309,
     backups: {
       enabled: false,
-      schedule: { day: 'Friday', window: 'W0' }
+      schedule: { day: 'Friday', window: 'W0' },
+      last_successful: null
     },
     image: null,
     memory: 0,
     vcpus: 0,
     disk: 0,
-    mostRecentBackup: null,
 
     linodeNotifications: [],
     displayType: 'Some Fancy Name',

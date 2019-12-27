@@ -240,7 +240,7 @@ const EditableText: React.FC<FinalProps> = props => {
           className={`${classes.button} ${classes.editIcon}`}
           onClick={openEdit}
           data-qa-edit-button
-          aria-label={`Edit ${labelText}`}
+          aria-label={`Edit ${text}`}
         >
           <Edit className={`${classes.icon} ${classes.edit}`} />
         </Button>

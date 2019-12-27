@@ -183,11 +183,12 @@ const wrappedButton: React.StatelessComponent<CombinedProps> = props => {
           className={classNames({
             [classes.reg]: true
           })}
+          data-qa-loading={loading}
         >
           {loading ? (
             loadingText ? (
-              /* 
-                the recommendation here is to not use loadingText that 
+              /*
+                the recommendation here is to not use loadingText that
                 will create a large width for the button. Keep
                 your loading text strings short.
               */

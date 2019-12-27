@@ -6,6 +6,8 @@ import Load from './Load';
 
 afterEach(cleanup);
 
+const mockError = [{ TEXT: 'no reason', CODE: 0, SEVERITY: 3 }];
+
 const loadingStore = {
   longviewStats: {
     123: {
@@ -30,11 +32,7 @@ const errorStore = {
   longviewStats: {
     123: {
       loading: false,
-      error: [
-        {
-          reason: 'this is an error'
-        }
-      ]
+      error: mockError
     }
   }
 };

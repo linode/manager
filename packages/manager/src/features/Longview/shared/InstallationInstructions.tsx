@@ -47,9 +47,7 @@ type CombinedProps = Props;
 const InstallationInstructions: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const command = `curl -s https://lv.linode.com/${
-    props.installationKey
-  } | sudo bash`;
+  const command = `curl -s https://lv.linode.com/${props.installationKey} | sudo bash`;
 
   return (
     <Grid container>
@@ -90,7 +88,7 @@ const InstallationInstructions: React.FC<CombinedProps> = props => {
           <Grid item className={classes.instruction}>
             <Typography>
               <a
-                href="https://www.linode.com/docs/platform/longview/longview/"
+                href="https://www.linode.com/docs/platform/longview/what-is-longview/#troubleshooting"
                 target="_blank"
                 aria-describedby="external-site"
                 rel="noopener noreferrer"
@@ -102,7 +100,7 @@ const InstallationInstructions: React.FC<CombinedProps> = props => {
           <Grid item className={classes.instruction}>
             <Typography>
               <a
-                href="https://www.linode.com/docs/platform/longview/longview/#install-the-longview-client"
+                href="https://www.linode.com/docs/platform/longview/what-is-longview/#install-the-longview-agent"
                 target="_blank"
                 aria-describedby="external-site"
                 rel="noopener noreferrer"
@@ -112,7 +110,7 @@ const InstallationInstructions: React.FC<CombinedProps> = props => {
             </Typography>
           </Grid>
           <Grid item className={classes.instruction}>
-            <Typography>
+            <Typography data-testid="api-key">
               API Key: <span className={classes.apiKey}>{props.APIKey}</span>
             </Typography>
           </Grid>

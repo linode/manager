@@ -2,6 +2,7 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import { useEffect, useRef, useState } from 'react';
 import { getLastUpdated } from '../request';
+import { LongviewNotification } from '../request.types';
 
 export const useClientLastUpdated = (
   clientAPIKey?: string,
@@ -15,6 +16,9 @@ export const useClientLastUpdated = (
    that we differentiate between _0_ and _undefined_
    */
   const [lastUpdated, setLastUpdated] = useState<number | undefined>(undefined);
+  const [notifications, setNotifications] = useState<LongviewNotification[]>(
+    []
+  );
   const currentLastUpdated = useRef(lastUpdated);
   const [lastUpdatedError, setLastUpdatedError] = useState<
     APIError[] | undefined
@@ -37,6 +41,14 @@ export const useClientLastUpdated = (
     // this function.
     return getLastUpdated(apiKey)
       .then(response => {
+        /**
+         * If there are any warnings in the response (found at response.NOTIFICATIONS)
+         * we want to set them to state here so that consumers of this component
+         * can handle them (usually by setting a banner). We choose to do this
+         * here as these are high-level requests, made most frequently, and
+         * notifications are not field-specific.
+         */
+        setNotifications(response.NOTIFICATIONS);
         /*
           only update _lastUpdated_ state if it hasn't already been set
           or the API response is in a time past what's already been set.
@@ -46,8 +58,8 @@ export const useClientLastUpdated = (
           (typeof newLastUpdated === 'undefined' ||
             pathOr(0, ['updated'], response) > newLastUpdated)
         ) {
-          const _lastUpdated = pathOr(0, ['updated'], response);
-          setLastUpdated(response.updated);
+          const _lastUpdated = pathOr(0, ['DATA', 'updated'], response);
+          setLastUpdated(response.DATA.updated);
           if (callback) {
             callback(_lastUpdated);
           }
@@ -58,7 +70,7 @@ export const useClientLastUpdated = (
          * The first request we make after creating a new client will almost always
          * return an authentication failed error.
          */
-        const reason = pathOr('', [0, 'reason'], e);
+        const reason = pathOr('', [0, 'TEXT'], e);
 
         if (mounted) {
           if (reason.match(/authentication/i)) {
@@ -107,5 +119,5 @@ export const useClientLastUpdated = (
     };
   }, [clientAPIKey]);
 
-  return { lastUpdated, lastUpdatedError, authed };
+  return { lastUpdated, lastUpdatedError, authed, notifications };
 };

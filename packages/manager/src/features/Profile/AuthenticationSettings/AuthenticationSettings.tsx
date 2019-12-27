@@ -89,7 +89,7 @@ export class AuthenticationSettings extends React.Component<
         {success && <Notice success text={success} />}
         {!loading && (
           <React.Fragment>
-            <ResetPassword />
+            <ResetPassword username={username} />
             <TwoFactor
               twoFactor={twoFactor}
               username={username}
@@ -145,10 +145,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
   updateProfile: (v: Partial<Profile>) => dispatch(_updateProfile(v) as any)
 });
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const enhanced = compose<CombinedProps, {}>(
   styled,

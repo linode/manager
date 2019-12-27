@@ -296,7 +296,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
     }
 
     if (loading) {
-      return <TableRowLoading colSpan={6} />;
+      return <TableRowLoading colSpan={6} oneLine />;
     }
 
     return data && data.length > 0 ? (

@@ -1,27 +1,11 @@
-import { APIError } from 'linode-js-sdk/lib/types';
 import {
-  LongviewCPU,
-  LongviewDisk,
-  LongviewLoad,
-  LongviewMemory,
-  LongviewNetwork,
-  LongviewPackage,
-  LongviewSystemInfo
+  LongviewNotification,
+  LongviewResponse
 } from 'src/features/Longview/request.types.ts';
 
 import actionCreatorFactory from 'typescript-fsa';
 
 export const actionCreator = actionCreatorFactory(`@@manager/longview/stats`);
-
-export type ReturnType = Partial<
-  LongviewCPU &
-    LongviewDisk &
-    LongviewLoad &
-    LongviewMemory &
-    LongviewNetwork &
-    LongviewSystemInfo &
-    LongviewPackage[]
->;
 
 export const requestClientStats = actionCreator.async<
   {
@@ -36,6 +20,6 @@ export const requestClientStats = actionCreator.async<
    * There is no documentation on why/when keys are missing from the response
    * so it's easier to just play it safe on the client.
    */
-  ReturnType,
-  APIError[]
+  LongviewResponse['DATA'],
+  LongviewNotification[]
 >(`get`);

@@ -1,4 +1,3 @@
-import * as Bluebird from 'bluebird';
 import {
   createLinode as _createLinode,
   deleteLinode as _deleteLinode,
@@ -8,7 +7,6 @@ import {
   linodeReboot as _rebootLinode,
   updateLinode as _updateLinode
 } from 'linode-js-sdk/lib/linodes';
-import requestMostRecentBackupForLinode from 'src/features/linodes/LinodesLanding/requestMostRecentBackupForLinode';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';
@@ -52,17 +50,8 @@ const getAllLinodes = (payload: { params?: any; filter?: any }) =>
 
 export const requestLinodes = createRequestThunk(
   getLinodesActions,
-  ({ params, filter }) =>
-    getAllLinodes({ params, filter }).then(({ data, results }) =>
-      getBackupsForLinodes(data).then(linodesWithBackups => ({
-        data: linodesWithBackups,
-        results
-      }))
-    )
+  ({ params, filter }) => getAllLinodes({ params, filter })
 );
-
-const getBackupsForLinodes = (data: Linode[]) =>
-  Bluebird.map(data, requestMostRecentBackupForLinode);
 
 type RequestLinodeForStoreThunk = ThunkActionCreator<void, number>;
 export const requestLinodeForStore: RequestLinodeForStoreThunk = (
@@ -74,7 +63,6 @@ export const requestLinodeForStore: RequestLinodeForStoreThunk = (
   if (isCreatingOrUpdating || state.__resources.linodes.results.includes(id)) {
     return _getLinode(id)
       .then(response => response.data)
-      .then(requestMostRecentBackupForLinode)
       .then(linode => {
         return dispatch(upsertLinode(linode));
       })

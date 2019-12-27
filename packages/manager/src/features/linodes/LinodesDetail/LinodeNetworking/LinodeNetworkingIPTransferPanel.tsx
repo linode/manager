@@ -187,10 +187,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
         when(
           both(
             () => isSwapping(mode) || isMoving(mode),
-            compose(
-              isNil,
-              view(L.selectedLinodeID(ip))
-            )
+            compose(isNil, view(L.selectedLinodeID(ip)))
           ),
           setSelectedLinodeID(ip, firstLinode.id)
         ),
@@ -219,10 +216,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
          *  Update the selectedIP (to provide a sensible default).
          */
         when(
-          compose(
-            equals('swap'),
-            view(L.mode(ip))
-          ),
+          compose(equals('swap'), view(L.mode(ip))),
 
           compose(
             /** We need to find and return the newly selected Linode's IPs. */
@@ -277,8 +271,9 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
           <TextField
             value={state.sourceIP}
             className={classes.ipField}
-            label="IP Adress"
+            label="IP Address"
             hideLabel
+            aria-readonly={true}
           />
         </Grid>
         <Grid item xs={12} className={classes.autoGridsm}>
@@ -301,7 +296,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
             placeholder="Select Action"
             isClearable={false}
             noMarginTop
-            label="Select Action"
+            label={`Select Action for IP Address ${state.sourceIP}`}
             hideLabel
           />
         </Grid>

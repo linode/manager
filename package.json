@@ -3,16 +3,15 @@
   "private": true,
   "license": "Apache-2.0",
   "devDependencies": {
-    "factory.ts": "^0.5.0",
     "husky": "^3.0.1",
     "lerna": "^3.18.4",
     "postinstall": "^0.6.0",
-    "tslint": "^5.20.0",
+    "tslint": "^5.20.1",
     "tslint-config-prettier": "^1.18.0",
     "tslint-react": "^4.1.0",
     "tslint-react-a11y": "^1.1.0",
     "tslint-react-hooks": "^2.2.1",
-    "typescript": "^3.6.4"
+    "typescript": "~3.7.3"
   },
   "husky": {
     "hooks": {
@@ -44,7 +43,7 @@
     "docker:local": "docker build -f Dockerfile . -t 'manager' -t 'dev' && docker run -it --rm -p 3000:3000 -v $(pwd)/packages/manager/src:/home/node/app/packages/manager/src -v $(pwd)/packages/linode-js-sdk/src:/home/node/app/packages/linode-js-sdk/src manager start:docker",
     "docker:storybook": "docker build -f Dockerfile . -t 'storybook' && docker run -it --rm -p 6006:6006 -v $(pwd)/packages/manager/src:/home/node/app/packages/manager/src -v $(pwd)/packages/linode-js-sdk/src:/home/node/app/packages/linode-js-sdk/src storybook storybook",
     "docker:storybook:test": "docker-compose -f packages/manager/storybook-test.yml up --build --exit-code-from storybook-test",
-    "start:nginx":"docker run --rm --name www -p 3000:80 -v $(pwd)/packages/manager/build:/usr/share/nginx/html -v $(pwd)/nginx-e2e.conf:/etc/nginx/conf.d/default.conf:ro -d nginx"
+    "start:nginx": "docker run --rm --name www -p 3000:80 -v $(pwd)/packages/manager/build:/usr/share/nginx/html -v $(pwd)/nginx-e2e.conf:/etc/nginx/conf.d/default.conf:ro -d nginx"
   },
   "resolutions": {
     "handlebars": "^4.4.3"

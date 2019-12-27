@@ -443,7 +443,11 @@ export const LongviewSubscriptionRow: React.FC<
           />
           {plan}
           {currentSubscriptionOnAccount === id && (
-            <Chip label="Current Plan" className={styles.chip} />
+            <Chip
+              data-testid="current-plan"
+              label="Current Plan"
+              className={styles.chip}
+            />
           )}
         </div>
       </TableCell>
