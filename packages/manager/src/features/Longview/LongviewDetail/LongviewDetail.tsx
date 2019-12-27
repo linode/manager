@@ -296,24 +296,17 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           exact
           strict
           path={`${url}/disks`}
-          render={routerProps => {
-            if (!showAllTabs) {
-              return (
-                <FeatureComingSoon title="Disks" clientLabel={client.label} />
-              );
-            }
-
-            return (
-              <Disks
-                clientID={client.id}
-                clientAPIKey={client.api_key}
-                clientLastUpdated={lastUpdated}
-                lastUpdatedError={lastUpdatedError}
-                timezone={props.timezone}
-                {...routerProps}
-              />
-            );
-          }}
+          render={routerProps => (
+            <Disks
+              clientID={client.id}
+              clientAPIKey={client.api_key}
+              lastUpdated={lastUpdated}
+              clientLastUpdated={lastUpdated}
+              lastUpdatedError={lastUpdatedError}
+              timezone={props.timezone}
+              {...routerProps}
+            />
+          )}
         />
         )}
         <Route

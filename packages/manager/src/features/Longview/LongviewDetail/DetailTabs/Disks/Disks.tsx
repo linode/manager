@@ -25,6 +25,7 @@ interface Props extends RouteComponentProps<{}> {
   clientAPIKey: string;
   clientID: number;
   clientLastUpdated?: number;
+  lastUpdated?: number;
   lastUpdatedError?: APIError[];
   timezone: string;
 }
@@ -33,7 +34,12 @@ type CombinedProps = Props;
 
 const Disks: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const { lastUpdatedError, clientLastUpdated, clientAPIKey } = props;
+  const {
+    lastUpdated,
+    lastUpdatedError,
+    clientLastUpdated,
+    clientAPIKey
+  } = props;
 
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
     start: 0,
@@ -53,7 +59,14 @@ const Disks: React.FC<CombinedProps> = props => {
 
   React.useEffect(() => {
     request();
-  }, [time, clientAPIKey, clientLastUpdated, lastUpdatedError]);
+  }, [
+    time.start,
+    time.end,
+    clientAPIKey,
+    clientLastUpdated,
+    lastUpdatedError,
+    lastUpdated
+  ]);
 
   const renderContent = () => {
     const diskData = data.Disk ?? {};
