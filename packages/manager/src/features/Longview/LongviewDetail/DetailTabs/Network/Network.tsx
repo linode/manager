@@ -16,8 +16,7 @@ import NetworkGraphs from './NetworkGraphs';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: 250,
-    marginBottom: theme.spacing()
+    width: 250
   }
 }));
 
@@ -37,6 +36,7 @@ export const NetworkLanding: React.FC<Props> = props => {
     end: 0
   });
 
+  // @todo would useGraphs be better here?
   const network = useAPIRequest<LongviewNetworkInterface | undefined>(
     clientAPIKey && lastUpdated
       ? () =>
@@ -64,7 +64,12 @@ export const NetworkLanding: React.FC<Props> = props => {
     >
       <DocumentTitleSegment segment={'Network'} />
       <Grid item xs={12}>
-        <Box display="flex" flexDirection="row" justifyContent="space-between">
+        <Box
+          display="flex"
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="center"
+        >
           <Typography variant="h2">Resource Allocation History</Typography>
           <TimeRangeSelect
             small
@@ -76,7 +81,7 @@ export const NetworkLanding: React.FC<Props> = props => {
           />
         </Box>
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} className="py0">
         <NetworkGraphs
           networkData={network.data || {}}
           isToday={isToday}
