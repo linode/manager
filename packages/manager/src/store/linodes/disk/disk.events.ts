@@ -28,9 +28,9 @@ const handleDiskChange = (
   switch (status) {
     case 'finished':
     case 'notification':
+    case 'failed':
       return dispatch(getAllLinodeDisks({ linodeId }));
 
-    case 'failed':
     case 'scheduled':
     case 'started':
     default:

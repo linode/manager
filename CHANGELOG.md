@@ -4,6 +4,66 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.81.1] - 2019-12-23
+
+### Change:
+- Update error reporting to reduce unnecessary reports
+
+## [v0.81.0] - 2019-12-19
+
+### Added:
+- Longview:
+  - Display non-error Notifications from Longview API on Longview Details page
+  - Empty and loading states for Overview graphs
+
+### Changed:
+- Use “Last Backup” data on /linode/instances endpoint to avoid multiple requests to /backups (improves performance)
+- Show deprecated label for distros in Images dropdown
+
+### Fixed:
+- Display invoice PDF total, tax, and amount values in $0.00 format
+- Reduce OCA tile spacing between icon and label
+
+## [v0.80.0] - 2019-12-16
+
+### Added:
+- Remove check zone from domain action menu
+- Move sidebar in Domains detail
+- Duration time to Events Landing and Activity Feed
+- Display billing notice when deleting last Object Storage Bucket
+- Longview:
+	- Landing page
+	- Overview page
+	- Installation page
+	- Enable client sorting on Landing page
+	- Packages drawer
+- New One-Click Apps:
+- Docker
+- Jenkins
+- Grafana
+- Prometheus
+- MySQL
+- LEMP Stack
+- Shadowsocks
+
+### Changed:
+- Remove ZXCVBN and improve password hints
+- Remove (disabled) Check Zone and Zone File actions from Domains
+- LKE added to PAT Scopes
+- Make search bar case-insensitive
+- Option to show all Linodes on Linode Landing
+- Remove same-domain SOA email restriction (client-side validation)
+- Update release docs
+- Styling adjustment to IconTextLink
+
+### Fixed:
+- Accessibility features overhaul
+- Update Object Storage icon color
+- Error formatting on editable input labels
+- Event badge hidden behind scrollbar
+- Linode status not updated after resizing is complete
+- State not responding to Longview events
+
 
 ## [v0.79.0] - 2019-11-19
 
