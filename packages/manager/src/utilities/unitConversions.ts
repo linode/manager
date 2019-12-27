@@ -104,7 +104,7 @@ export const readableBytes = (
   if ((value === 1 || value === -1) && unit === 'bytes') {
     return {
       value: isNegative ? -value : value,
-      unit: 'byte',
+      unit: 'byte' as StorageSymbol,
       formatted: (isNegative ? '-' : '') + value + ' byte'
     };
   }

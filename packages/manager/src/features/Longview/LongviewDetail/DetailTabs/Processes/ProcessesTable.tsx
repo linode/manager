@@ -13,13 +13,14 @@ import TableRowLoading from 'src/components/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
 import { formatCPU } from 'src/features/Longview/shared/formatters';
 import { readableBytes } from 'src/utilities/unitConversions';
+import { Process } from './common';
 
 export interface Props {
   processesData: ExtendedProcess[];
   processesLoading: boolean;
   processesError?: APIError[];
-  selectedRow: string | null;
-  setSelectedRow: (id: string) => void;
+  selectedProcess: Process | null;
+  setSelectedProcess: (process: Process) => void;
   lastUpdatedError?: APIError[];
 }
 
@@ -30,8 +31,8 @@ export const ProcessesTable: React.FC<CombinedProps> = props => {
     processesData,
     processesLoading,
     processesError,
-    selectedRow,
-    setSelectedRow,
+    selectedProcess,
+    setSelectedProcess,
     lastUpdatedError
   } = props;
 
@@ -108,8 +109,8 @@ export const ProcessesTable: React.FC<CombinedProps> = props => {
                 {renderLoadingErrorData(
                   processesLoading,
                   orderedData,
-                  selectedRow,
-                  setSelectedRow,
+                  selectedProcess,
+                  setSelectedProcess,
                   errorMessage
                 )}
               </TableBody>
@@ -124,8 +125,8 @@ export const ProcessesTable: React.FC<CombinedProps> = props => {
 const renderLoadingErrorData = (
   loading: boolean,
   data: ExtendedProcess[],
-  selectedRow: string | null,
-  setSelectedRow: (id: string) => void,
+  selectedProcess: Process | null,
+  setSelectedProcess: (process: Process) => void,
   error?: string
 ) => {
   if (error && data.length === 0) {
@@ -138,21 +139,22 @@ const renderLoadingErrorData = (
     return <TableRowEmptyState colSpan={12} />;
   }
 
-  return data.map((thisProcesses, idx) => (
+  return data.map((thisProcess, idx) => (
     <ProcessesTableRow
       key={`process-${idx}`}
-      id={thisProcesses.id}
-      isSelected={selectedRow === thisProcesses.id}
-      setSelectedRow={setSelectedRow}
-      {...thisProcesses}
+      isSelected={
+        selectedProcess?.name === thisProcess.name &&
+        selectedProcess?.user === thisProcess.user
+      }
+      setSelectedProcess={setSelectedProcess}
+      {...thisProcess}
     />
   ));
 };
 
 export interface ProcessTableRowProps extends ExtendedProcess {
-  id: string;
   isSelected: boolean;
-  setSelectedRow: (id: string) => void;
+  setSelectedProcess: (process: Process) => void;
 }
 
 export const ProcessesTableRow: React.FC<ProcessTableRowProps> = React.memo(
@@ -164,14 +166,15 @@ export const ProcessesTableRow: React.FC<ProcessTableRowProps> = React.memo(
       averageIO,
       averageCPU,
       averageMem,
-      id,
-      setSelectedRow,
+      setSelectedProcess,
       isSelected
     } = props;
     return (
       <TableRow
-        onClick={() => setSelectedRow(id)}
-        onKeyUp={(e: any) => e.keyCode === 13 && setSelectedRow(id)}
+        onClick={() => setSelectedProcess({ name, user })}
+        onKeyUp={(e: any) =>
+          e.keyCode === 13 && setSelectedProcess({ name, user })
+        }
         selected={isSelected}
         data-testid="longview-service-row"
         forceIndex

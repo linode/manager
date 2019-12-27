@@ -79,7 +79,7 @@ export const CPUGraph: React.FC<CombinedProps> = props => {
 
 export default withTheme(CPUGraph);
 
-const formatCPU = (value: number | null) => {
+export const formatCPU = (value: number | null) => {
   if (value === null) {
     return value;
   }

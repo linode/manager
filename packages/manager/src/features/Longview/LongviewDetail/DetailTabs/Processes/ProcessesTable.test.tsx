@@ -12,8 +12,8 @@ const mockSetSelectedRow = jest.fn();
 const props: Props = {
   processesData: [],
   processesLoading: false,
-  selectedRow: '',
-  setSelectedRow: mockSetSelectedRow
+  selectedProcess: null,
+  setSelectedProcess: mockSetSelectedRow
 };
 
 describe('ProcessTable', () => {

@@ -271,9 +271,11 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
 
             return (
               <ProcessesLanding
+                clientID={client.id}
                 clientAPIKey={client.api_key}
                 lastUpdated={lastUpdated}
                 lastUpdatedError={lastUpdatedError}
+                timezone={timezone}
               />
             );
           }}

@@ -2,13 +2,17 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Select from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
 import get from 'src/features/Longview/request';
-import { LongviewProcesses } from 'src/features/Longview/request.types';
+import {
+  LongviewProcesses,
+  WithStartAndEnd
+} from 'src/features/Longview/request.types';
 import { statAverage, statMax } from 'src/features/Longview/shared/utilities';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import TimeRangeSelect from '../../../shared/TimeRangeSelect';
+import { Process } from './common';
 import ProcessesGraphs from './ProcessesGraphs';
 import ProcessesTable, { ExtendedProcess } from './ProcessesTable';
 
@@ -16,33 +20,50 @@ const useStyles = makeStyles((theme: Theme) => ({
   filterInput: {
     width: 300
   },
-  timeSelect: {
+  selectTimeRange: {
     width: 200
   }
 }));
 
 interface Props {
+  clientID?: number;
   clientAPIKey?: string;
   lastUpdated?: number;
   lastUpdatedError?: APIError[];
+  timezone: string;
 }
 
 const ProcessesLanding: React.FC<Props> = props => {
   const classes = useStyles();
 
-  const [selectedRow, setSelectedRow] = React.useState<string | null>(null);
+  const [selectedProcess, setSelectedProcess] = React.useState<Process | null>(
+    null
+  );
 
-  const { clientAPIKey, lastUpdated, lastUpdatedError } = props;
+  const [time, setTimeBox] = React.useState<WithStartAndEnd>({
+    start: 0,
+    end: 0
+  });
+
+  const handleStatsChange = (start: number, end: number) => {
+    setTimeBox({ start, end });
+  };
+
+  const isToday = time.end - time.start < 60 * 60 * 25;
+
+  const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
 
   const processes = useAPIRequest<LongviewProcesses>(
     clientAPIKey && lastUpdated
       ? () =>
-          get(clientAPIKey, 'getValues', { fields: ['processes'] }).then(
-            response => response.DATA
-          )
+          get(clientAPIKey, 'getValues', {
+            fields: ['processes'],
+            start: time.start,
+            end: time.end
+          }).then(response => response.DATA)
       : null,
     { Processes: {} },
-    [clientAPIKey, lastUpdated]
+    [clientAPIKey, lastUpdated, time.start, time.end]
   );
 
   const memoizedExtendedData = React.useMemo(() => extendData(processes.data), [
@@ -57,7 +78,7 @@ const ProcessesLanding: React.FC<Props> = props => {
         role="tabpanel"
         aria-labelledby="tab-processes"
       >
-        <Grid item xs={9}>
+        <Grid item xs={8}>
           <Box display="flex" justifyContent="space-between">
             {/* Doesn't work yet. */}
             <TextField
@@ -67,13 +88,11 @@ const ProcessesLanding: React.FC<Props> = props => {
               label="Filter by process or user"
               hideLabel
             />
-            {/* Doesn't work yet. */}
-            <Select
-              className={classes.timeSelect}
-              small
-              placeholder="Last 12 Hours"
-              onChange={() => null}
+            <TimeRangeSelect
+              handleStatsChange={handleStatsChange}
+              defaultValue={'Past 30 Minutes'}
               label="Select Time Range"
+              className={classes.selectTimeRange}
               hideLabel
             />
           </Box>
@@ -87,17 +106,23 @@ const ProcessesLanding: React.FC<Props> = props => {
             // an empty state, we want to show a loader.
             processesLoading={processes.loading || processes.lastUpdated === 0}
             processesError={processes.error}
-            selectedRow={selectedRow}
-            setSelectedRow={setSelectedRow}
+            selectedProcess={selectedProcess}
+            setSelectedProcess={setSelectedProcess}
             lastUpdatedError={lastUpdatedError}
           />
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={4}>
           <ProcessesGraphs
-            processesData={memoizedExtendedData}
+            processesData={processes.data}
             processesLoading={processes.loading || processes.lastUpdated === 0}
             processesError={processes.error}
-            selectedRow={selectedRow}
+            selectedProcess={selectedProcess}
+            timezone={timezone}
+            time={time}
+            isToday={isToday}
+            clientAPIKey={clientAPIKey || ''}
+            lastUpdated={lastUpdated}
+            lastUpdatedError={Boolean(lastUpdatedError)}
           />
         </Grid>
       </Grid>
