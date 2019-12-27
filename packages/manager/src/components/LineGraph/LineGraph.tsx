@@ -122,7 +122,7 @@ const humanizeLargeData = (value: number) => {
 };
 
 const LineGraph: React.FC<CombinedProps> = props => {
-  const inputEl: any = React.useRef(null);
+  const inputEl: React.RefObject<any> = React.useRef(null);
   const [legendRendered, setLegendRendered] = React.useState(false);
   const [, forceUpdate] = React.useState();
   const classes = useStyles();
