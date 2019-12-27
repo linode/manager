@@ -22,6 +22,7 @@ import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 
 import { ApplicationState } from 'src/store';
 import composeState from 'src/utilities/composeState';
+import { configureErrorReportingUser } from './exceptionReporting';
 import { MapState } from './store/types';
 import { isKubernetesEnabled as _isKubernetesEnabled } from './utilities/accountCapabilities';
 
@@ -30,6 +31,7 @@ import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
 
 import IdentifyUser from './IdentifyUser';
 
+import { initGTMUser } from './analytics';
 import MainContent from './MainContent';
 
 interface Props {
@@ -81,6 +83,18 @@ export class App extends React.Component<CombinedProps, State> {
         (window as any).ga('send', 'pageview', pathname);
       }
     });
+
+    // Configure error reporting to include user information.
+    if (this.props.userId && this.props.username) {
+      configureErrorReportingUser(
+        String(this.props.userId),
+        this.props.username
+      );
+    }
+
+    if (this.props.euuid) {
+      initGTMUser(this.props.euuid);
+    }
 
     /*
      * We want to listen for migration events side-wide
@@ -284,6 +298,7 @@ interface StateProps {
   typesError?: APIError[];
   regionsError?: APIError[];
   appIsLoading: boolean;
+  euuid?: string;
 }
 
 const mapStateToProps: MapState<StateProps, Props> = state => ({
@@ -330,7 +345,8 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
   nodeBalancersLoading: state.__resources.nodeBalancers.loading,
   accountError: path(['read'], state.__resources.account.error),
   nodeBalancersError: path(['read'], state.__resources.nodeBalancers.error),
-  appIsLoading: state.initialLoad.appIsLoading
+  appIsLoading: state.initialLoad.appIsLoading,
+  euuid: state.__resources.account.data?.euuid
 });
 
 export const connected = connect(mapStateToProps, mapDispatchToProps);
