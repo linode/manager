@@ -1014,10 +1014,8 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           }
         },
         select: {
-          '&[aria-pressed="true"]': {
-            '&+ input + $icon': {
-              opacity: 1
-            }
+          '&:focus': {
+            backgroundColor: 'transparent'
           }
         },
         icon: {

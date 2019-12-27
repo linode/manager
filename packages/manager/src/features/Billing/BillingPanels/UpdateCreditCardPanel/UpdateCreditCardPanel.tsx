@@ -13,9 +13,9 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
+import NativeSelect from 'src/components/NativeSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { withAccount } from 'src/features/Billing/context';
@@ -101,12 +101,16 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
     });
   };
 
-  handleExpiryMonthChange = (e: Item<string>) => {
-    this.setState({ expiry_month: +e.value });
+  handleExpiryMonthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      expiry_month: +e.target.value
+    });
   };
 
-  handleExpiryYearChange = (e: Item<string>) => {
-    this.setState({ expiry_year: +e.value });
+  handleExpiryYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      expiry_year: +e.target.value
+    });
   };
 
   handleCVVChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -193,16 +197,6 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
     );
     const generalError = hasErrorFor('none');
 
-    const defaultMonth = UpdateCreditCardPanel.monthMenuItems.find(
-      eachMonth => {
-        return eachMonth.value === this.state.expiry_month;
-      }
-    );
-
-    const defaultYear = UpdateCreditCardPanel.yearMenuItems.find(eachYear => {
-      return eachYear.value === this.state.expiry_year;
-    });
-
     return (
       <ExpansionPanel heading="Update Credit Card" actions={this.renderActions}>
         <Grid container>
@@ -259,29 +253,24 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
                     }}
                   />
                 </Grid>
-
                 <Grid item className={classes.fullWidthMobile}>
-                  <Select
-                    options={UpdateCreditCardPanel.monthMenuItems}
+                  <NativeSelect
                     label="Expiration Month"
-                    defaultValue={defaultMonth}
                     onChange={this.handleExpiryMonthChange}
                     errorText={hasErrorFor('expiry_month')}
-                    isClearable={false}
+                    value={this.state.expiry_month}
+                    options={UpdateCreditCardPanel.monthMenuItems}
                   />
                 </Grid>
-
                 <Grid item className={classes.fullWidthMobile}>
-                  <Select
-                    options={UpdateCreditCardPanel.yearMenuItems}
+                  <NativeSelect
                     label="Expiration Year"
-                    defaultValue={defaultYear}
                     onChange={this.handleExpiryYearChange}
                     errorText={hasErrorFor('expiry_year')}
-                    isClearable={false}
+                    value={this.state.expiry_year}
+                    options={UpdateCreditCardPanel.yearMenuItems}
                   />
                 </Grid>
-
                 <Grid item className={classes.fullWidthMobile}>
                   <TextField
                     required
@@ -351,9 +340,6 @@ const accountContext = withAccount(({ loading, errors, data, update }) => {
   };
 });
 
-const enhanced = compose(
-  styled,
-  accountContext
-);
+const enhanced = compose(styled, accountContext);
 
 export default enhanced(UpdateCreditCardPanel) as React.ComponentType<{}>;
