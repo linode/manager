@@ -30,7 +30,7 @@ export const NetworkGraphs: React.FC<Props> = props => {
 
   return (
     <Paper className={classes.root}>
-      <Grid container direction="column" spacing={4}>
+      <Grid container direction="column" spacing={0}>
         <Grid item xs={12}>
           <LongviewLineGraph
             title="All Traffic"
@@ -42,7 +42,7 @@ export const NetworkGraphs: React.FC<Props> = props => {
             data={[]}
           />
         </Grid>
-        <Grid item className={classes.graphSection}>
+        <Grid item className={classes.graphSection} xs={12}>
           <Grid container direction="row">
             <Grid item xs={12} sm={6}>
               <LongviewLineGraph
@@ -68,7 +68,7 @@ export const NetworkGraphs: React.FC<Props> = props => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item className={classes.graphSection}>
+        <Grid item className={classes.graphSection} xs={12}>
           <Grid container direction="row">
             <Grid item xs={12} sm={6}>
               <LongviewLineGraph

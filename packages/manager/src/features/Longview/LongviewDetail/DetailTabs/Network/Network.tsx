@@ -63,7 +63,7 @@ export const NetworkLanding: React.FC<Props> = props => {
       direction="column"
     >
       <DocumentTitleSegment segment={'Network'} />
-      <Grid item>
+      <Grid item xs={12}>
         <Box display="flex" flexDirection="row" justifyContent="space-between">
           <Typography variant="h2">Resource Allocation History</Typography>
           <TimeRangeSelect
@@ -76,7 +76,7 @@ export const NetworkLanding: React.FC<Props> = props => {
           />
         </Box>
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <NetworkGraphs
           networkData={network.data || {}}
           isToday={isToday}
