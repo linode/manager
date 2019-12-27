@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props extends SelectProps {
   label: string;
   options?: Array<OptionProps>;
-  notFullWidth?: boolean;
+  fullWidth?: boolean;
   tooltipText?: string;
   open?: boolean;
   errorText?: string;
@@ -78,13 +78,14 @@ const SSelect: React.FC<CombinedProps> = props => {
     options,
     value,
     hideLabel,
-    notFullWidth,
+    fullWidth,
     children,
     error,
     tooltipText,
     errorText,
     className,
-    small
+    small,
+    ...rest
   } = props;
 
   const inputProps: InputProps = {
@@ -101,8 +102,12 @@ const SSelect: React.FC<CombinedProps> = props => {
     className
   );
 
+  // Default to `true` if this prop hasn't been defined.
+  // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#nullish-coalescing
+  const _fullWidth = fullWidth ?? true;
+
   return (
-    <FormControl fullWidth={!notFullWidth}>
+    <FormControl fullWidth={_fullWidth}>
       <div
         className={classNames({
           [classes.root]: true,
@@ -125,7 +130,7 @@ const SSelect: React.FC<CombinedProps> = props => {
           open={props.open}
           className={c}
           input={<Input {...inputProps} />}
-          {...props}
+          {...rest}
           data-qa-select
           id={convertToKebabCase(label)}
           IconComponent={Caret}

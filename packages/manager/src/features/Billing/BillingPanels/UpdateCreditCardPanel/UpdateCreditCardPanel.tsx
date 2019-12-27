@@ -340,9 +340,6 @@ const accountContext = withAccount(({ loading, errors, data, update }) => {
   };
 });
 
-const enhanced = compose(
-  styled,
-  accountContext
-);
+const enhanced = compose(styled, accountContext);
 
 export default enhanced(UpdateCreditCardPanel) as React.ComponentType<{}>;
