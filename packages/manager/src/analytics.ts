@@ -1,3 +1,5 @@
+import { GTM_ID } from './constants';
+
 /* tslint:disable */
 const gaInit = (i: any, s: any, o: any, g: any, r: any, a: any, m: any) => {
   const currdate: any = new Date();
@@ -64,4 +66,16 @@ export const initTagManager = (gtmId?: string) => {
   }
 
   initGTM(window, document, 'script', 'dataLayer', gtmId);
+};
+
+export const initGTMUser = (userId: string) => {
+  if (!GTM_ID) {
+    return;
+  }
+  (window as any).dataLayer = (window as any).dataLayer || [];
+  (window as any).dataLayer.push({
+    event: 'userInfo',
+    gtmAccountID: GTM_ID,
+    gtmIndividualUserId: userId
+  });
 };
