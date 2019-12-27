@@ -27,10 +27,25 @@ interface Props {
   lastUpdatedError?: APIError[];
 }
 
+export const filterResults = (
+  results: ExtendedProcess[],
+  inputText?: string
+) => {
+  if (!inputText) {
+    return results;
+  }
+  return results.filter(
+    thisResult =>
+      thisResult.user.match(RegExp(inputText, 'i')) ||
+      thisResult.name.match(RegExp(inputText, 'i'))
+  );
+};
+
 const ProcessesLanding: React.FC<Props> = props => {
   const classes = useStyles();
 
   const [selectedRow, setSelectedRow] = React.useState<string | null>(null);
+  const [inputText, setInputText] = React.useState<string | undefined>();
 
   const { clientAPIKey, lastUpdated, lastUpdatedError } = props;
 
@@ -49,6 +64,15 @@ const ProcessesLanding: React.FC<Props> = props => {
     processes.data
   ]);
 
+  /**
+   * Memoized separately so we don't extendData on every
+   * text input
+   */
+  const memoizedFilteredData = React.useMemo(
+    () => filterResults(memoizedExtendedData, inputText),
+    [memoizedExtendedData, inputText]
+  );
+
   return (
     <>
       <Grid
@@ -59,13 +83,15 @@ const ProcessesLanding: React.FC<Props> = props => {
       >
         <Grid item xs={9}>
           <Box display="flex" justifyContent="space-between">
-            {/* Doesn't work yet. */}
             <TextField
               className={classes.filterInput}
               small
               placeholder="Filter by process or user..."
               label="Filter by process or user"
               hideLabel
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setInputText(e.target.value)
+              }
             />
             {/* Doesn't work yet. */}
             <Select
@@ -78,7 +104,7 @@ const ProcessesLanding: React.FC<Props> = props => {
             />
           </Box>
           <ProcessesTable
-            processesData={memoizedExtendedData}
+            processesData={memoizedFilteredData}
             // It's correct to set loading to `true` when
             // processes.lastUpdated === 0. The reason we do this is to avoid
             // a state where we haven't made the request to get processes yet
@@ -94,7 +120,7 @@ const ProcessesLanding: React.FC<Props> = props => {
         </Grid>
         <Grid item xs={3}>
           <ProcessesGraphs
-            processesData={memoizedExtendedData}
+            processesData={memoizedFilteredData}
             processesLoading={processes.loading || processes.lastUpdated === 0}
             processesError={processes.error}
             selectedRow={selectedRow}
