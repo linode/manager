@@ -38,7 +38,8 @@ export const account: Account = {
   phone: '2151231234',
   company: 'mmckenna',
   active_promotions: activePromotions,
-  capabilities: ['Linodes', 'NodeBalancers', 'Block Storage']
+  capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
+  euuid: '827923A3-566B-4C83-9B84-6BF656628206'
 };
 
 export const accountSettings: AccountSettings = {
