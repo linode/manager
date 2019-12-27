@@ -11,6 +11,7 @@ import {
 import Typography from 'src/components/core/Typography';
 
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
+import { isToday as _isToday } from 'src/utilities/isToday';
 import { Stat, StatWithDummyPoint } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 
@@ -86,7 +87,7 @@ const Graphs: React.FC<CombinedProps> = props => {
     );
   }
 
-  const isToday = endTime - startTime < 60 * 60 * 25;
+  const isToday = _isToday(endTime, startTime);
   const labelHelperText = generateHelperText(sysInfoType, isSwap, isMounted);
 
   const _free = formatSpace(free, total);
