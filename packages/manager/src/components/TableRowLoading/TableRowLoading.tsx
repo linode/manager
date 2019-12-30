@@ -49,10 +49,10 @@ const tableRowLoading: React.FC<CombinedProps> = props => {
     compact
   } = props;
 
-  const rows: JSX.Element[] = [];
-  const ifRows = numberOfRows !== undefined ? numberOfRows : 1;
-  const rowBuilder = (rowCount: number) => {
-    for (rowCount = 0; rowCount <= ifRows - 1; rowCount++) {
+  const ifRows = numberOfRows ?? 1;
+  const rowBuilder = () => {
+    const rows: JSX.Element[] = [];
+    for (let rowCount = 0; rowCount <= ifRows - 1; rowCount++) {
       rows.push(
         <TableRow
           className={classNames({
@@ -82,14 +82,10 @@ const tableRowLoading: React.FC<CombinedProps> = props => {
         </TableRow>
       );
     }
+    return rows;
   };
 
-  return (
-    <>
-      {rowBuilder(ifRows)}
-      {rows}
-    </>
-  );
+  return <>{rowBuilder()}</>;
 };
 
 const styled = withStyles(styles);

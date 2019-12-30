@@ -53,7 +53,7 @@ const _Skeleton: React.FC<combinedProps> = props => {
   const classes = useStyles();
   const {
     table,
-    columns,
+    columns: numColumns,
     firstColWidth,
     variant,
     textHeight,
@@ -63,58 +63,54 @@ const _Skeleton: React.FC<combinedProps> = props => {
     compact
   } = props;
 
-  const cols: JSX.Element[] = [];
-  const ifColumns = columns !== undefined ? columns : 1;
-  const renderTableSkeleton = (colCount: number) => {
-    const calcColumns = () => {
-      if (colCount === 0) {
-        return firstColWidth ? firstColWidth : 100 / ifColumns;
-      } else {
-        return firstColWidth
-          ? (100 - firstColWidth) / (ifColumns - 1)
-          : 100 / ifColumns;
-      }
-    };
-    for (colCount = 0; colCount <= ifColumns - 1; colCount++) {
-      cols.push(
-        <Grid
-          item
-          style={{ flexBasis: `${calcColumns()}%` }}
-          key={`ske-${colCount}`}
-          data-testid={'skeletonCol'}
-          className={compact ? 'py0' : undefined}
-        >
-          <Skeleton
-            className={classes.columnTitle}
-            height={textHeight && variant === 'text' ? textHeight : 16}
-          />
-          {!oneLine && (
-            <Grid container>
-              <Grid item xs={9} className="py0">
-                <Skeleton
-                  className={classes.columnText}
-                  height={subtextHeight ? subtextHeight : 8}
-                />
-              </Grid>
-              <Grid item xs={6} className="py0">
-                <Skeleton
-                  className={classes.columnText}
-                  height={subtextHeight ? subtextHeight : 8}
-                />
-              </Grid>
-            </Grid>
-          )}
-        </Grid>
-      );
+  const totalColumns = numColumns ?? 1;
+  const calcColumns = (colCount: number) => {
+    if (colCount === 0) {
+      return firstColWidth ? firstColWidth : 100 / totalColumns;
+    } else {
+      return firstColWidth
+        ? (100 - firstColWidth) / (totalColumns - 1)
+        : 100 / totalColumns;
     }
-    return;
   };
+  const columns: JSX.Element[] = [];
+  for (let colCount = 0; colCount <= totalColumns - 1; colCount++) {
+    columns.push(
+      <Grid
+        item
+        style={{ flexBasis: `${calcColumns(colCount)}%` }}
+        key={`ske-${colCount}`}
+        data-testid={'skeletonCol'}
+        className={compact ? 'py0' : undefined}
+      >
+        <Skeleton
+          className={classes.columnTitle}
+          height={textHeight && variant === 'text' ? textHeight : 16}
+        />
+        {!oneLine && (
+          <Grid container>
+            <Grid item xs={9} className="py0">
+              <Skeleton
+                className={classes.columnText}
+                height={subtextHeight ? subtextHeight : 8}
+              />
+            </Grid>
+            <Grid item xs={6} className="py0">
+              <Skeleton
+                className={classes.columnText}
+                height={subtextHeight ? subtextHeight : 8}
+              />
+            </Grid>
+          </Grid>
+        )}
+      </Grid>
+    );
+  }
 
   return (
     <>
       {table ? (
         <>
-          {renderTableSkeleton(ifColumns)}
           <Grid
             container
             className={classNames({
@@ -131,7 +127,7 @@ const _Skeleton: React.FC<combinedProps> = props => {
                 <Skeleton variant="circle" className={classes.skeletonIcon} />
               </Grid>
             )}
-            {cols}
+            {columns}
           </Grid>
         </>
       ) : (
