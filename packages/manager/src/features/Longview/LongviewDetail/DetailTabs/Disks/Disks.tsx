@@ -9,7 +9,7 @@ import Box from 'src/components/core/Box';
 import ErrorState from 'src/components/ErrorState';
 import LandingLoading from 'src/components/LandingLoading';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
-import DiskPaper from './DiskPaper';
+import DiskGraph from './DiskGraph';
 
 import getStats from '../../../request';
 import { Disk } from '../../../request.types';
@@ -131,7 +131,7 @@ const Disks: React.FC<CombinedProps> = props => {
     const sortedKeys = Object.keys(diskStats || {}).sort();
 
     return sortedKeys.map(eachKey => (
-      <DiskPaper
+      <DiskGraph
         diskLabel={eachKey}
         key={eachKey}
         stats={(diskStats || {})[eachKey]}
