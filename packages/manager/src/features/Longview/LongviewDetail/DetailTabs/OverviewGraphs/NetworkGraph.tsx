@@ -61,6 +61,7 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
       data={[
         {
           label: 'Inbound',
+          // @todo update colors based on Zeplin palette
           borderColor: theme.graphs.emeraldGreenBorder,
           backgroundColor: theme.graphs.emeraldGreen,
           data: _convertData(rx_bytes, start, end, formatNetwork)

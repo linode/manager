@@ -51,28 +51,30 @@ export const NetworkGraphs: React.FC<CombinedProps> = props => {
 
         return (
           <GraphCard title={name} key={`network-interface-card-${idx}`}>
-            <LongviewLineGraph
-              title="Network Traffic"
-              subtitle={maxUnit + '/s'}
-              error={error}
-              loading={loading}
-              showToday={isToday}
-              timezone={timezone}
-              data={[
-                {
-                  label: 'Inbound',
-                  borderColor: theme.graphs.forestGreenBorder,
-                  backgroundColor: theme.graphs.forestGreen,
-                  data: _convertData(rx_bytes, start, end, formatNetwork)
-                },
-                {
-                  label: 'Outbound',
-                  borderColor: theme.graphs.forestGreenBorder,
-                  backgroundColor: theme.graphs.forestGreen,
-                  data: _convertData(tx_bytes, start, end, formatNetwork)
-                }
-              ]}
-            />
+            <div style={{ paddingTop: theme.spacing(2) }}>
+              <LongviewLineGraph
+                title="Network Traffic"
+                subtitle={maxUnit + '/s'}
+                error={error}
+                loading={loading}
+                showToday={isToday}
+                timezone={timezone}
+                data={[
+                  {
+                    label: 'Inbound',
+                    borderColor: theme.graphs.forestGreenBorder,
+                    backgroundColor: theme.graphs.networkGreenInbound,
+                    data: _convertData(rx_bytes, start, end, formatNetwork)
+                  },
+                  {
+                    label: 'Outbound',
+                    borderColor: theme.graphs.forestGreenBorder,
+                    backgroundColor: theme.graphs.networkGreenOutbound,
+                    data: _convertData(tx_bytes, start, end, formatNetwork)
+                  }
+                ]}
+              />
+            </div>
           </GraphCard>
         );
       })}
