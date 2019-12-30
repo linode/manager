@@ -1,19 +1,16 @@
 import * as React from 'react';
+import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  graphContainer: {
-    marginTop: theme.spacing(),
-    display: 'flex',
-    flexFlow: 'row wrap',
-    justifyContent: 'space-around',
-    '& > div': {
-      flexGrow: 1,
-      width: '33%',
-      [theme.breakpoints.down('md')]: {
-        marginTop: theme.spacing(),
-        width: '60%'
+  root: {
+    marginBottom: theme.spacing(2),
+    padding: theme.spacing(2),
+    '& > h6': {
+      color: theme.color.grey1,
+      '& > strong': {
+        color: theme.color.headline
       }
     }
   }
@@ -29,7 +26,7 @@ export const GraphCard: React.FC<Props> = props => {
   const classes = useStyles();
 
   return (
-    <React.Fragment>
+    <Paper className={classes.root}>
       <Typography variant="subtitle1">
         <React.Fragment>
           <strong>{title}</strong>
@@ -37,8 +34,8 @@ export const GraphCard: React.FC<Props> = props => {
           {helperText}
         </React.Fragment>
       </Typography>
-      <div className={classes.graphContainer}>{props.children}</div>
-    </React.Fragment>
+      <div>{props.children}</div>
+    </Paper>
   );
 };
 

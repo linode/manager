@@ -76,7 +76,6 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
       data={[
         {
           label: 'Inbound',
-
           borderColor: theme.graphs.emeraldGreenBorder,
           backgroundColor: theme.graphs.emeraldGreen,
           data: _convertData(rx_bytes, start, end, formatNetwork)

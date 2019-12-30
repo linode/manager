@@ -1,51 +1,101 @@
-import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
-import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Grid from 'src/components/Grid';
+import { withTheme, WithTheme } from 'src/components/core/styles';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-// import { statMax, sumNetwork } from 'src/features/Longview/shared/utilities';
+import { generateUnits } from 'src/features/Longview/LongviewLanding/Gauges/Network';
+import { statMax } from 'src/features/Longview/shared/utilities';
 import { LongviewNetworkInterface } from '../../../request.types';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: theme.spacing(2)
-  },
-  graphSection: {
-    paddingTop: theme.spacing(2)
-  }
-}));
+import { convertData } from '../../../shared/formatters';
+import GraphCard from '../../GraphCard';
 
 interface Props {
   networkData: LongviewNetworkInterface;
-  error?: APIError[];
+  error?: string;
   loading: boolean;
   timezone: string;
   isToday: boolean;
+  start: number;
+  end: number;
 }
 
-export const NetworkGraphs: React.FC<Props> = props => {
-  const { error, isToday, loading, timezone } = props;
-  const classes = useStyles();
-  const _error = error ? error[0].reason : undefined;
+type CombinedProps = Props & WithTheme;
+
+export const NetworkGraphs: React.FC<CombinedProps> = props => {
+  const {
+    end,
+    error,
+    isToday,
+    loading,
+    networkData,
+    start,
+    theme,
+    timezone
+  } = props;
+  // const classes = useStyles();
+
+  const _convertData = React.useCallback(convertData, [
+    networkData,
+    start,
+    end
+  ]);
+
+  const interfaces = Object.entries(networkData);
 
   return (
-    <Paper className={classes.root}>
-      <Grid container direction="column" spacing={0}>
-        <Grid item xs={12}>
-          <LongviewLineGraph
-            title="Network Traffic"
-            subtitle={'KB' + '/s'}
-            error={_error}
-            loading={loading}
-            showToday={isToday}
-            timezone={timezone}
-            data={[]}
-          />
-        </Grid>
-      </Grid>
-    </Paper>
+    <>
+      {interfaces.map((thisInterface, idx) => {
+        const [name, interfaceData] = thisInterface;
+        const { rx_bytes, tx_bytes } = interfaceData;
+
+        // Determine the unit based on the largest value.
+        const max = Math.max(statMax(rx_bytes), statMax(tx_bytes));
+        const maxUnit = generateUnits(max).unit;
+
+        const formatNetwork = (valueInBytes: number | null) => {
+          if (valueInBytes === null) {
+            return valueInBytes;
+          }
+          const valueInBits = valueInBytes * 8;
+
+          if (maxUnit === 'Mb') {
+            // If the unit we're using for the graph is Mb, return the output in Mb.
+            const valueInMegabits = valueInBits / 1024 / 1024;
+            return Math.round(valueInMegabits * 100) / 100;
+          } else {
+            // If the unit we're using for the graph is Kb, return the output in Kb.
+            const valueInKilobits = valueInBits / 1024;
+            return Math.round(valueInKilobits * 100) / 100;
+          }
+        };
+
+        return (
+          <GraphCard title={name} key={`network-interface-card-${idx}`}>
+            <LongviewLineGraph
+              title="Network Traffic"
+              subtitle={maxUnit + '/s'}
+              error={error}
+              loading={loading}
+              showToday={isToday}
+              timezone={timezone}
+              data={[
+                {
+                  label: 'Inbound',
+                  borderColor: theme.graphs.forestGreenBorder,
+                  backgroundColor: theme.graphs.forestGreen,
+                  data: _convertData(rx_bytes, start, end, formatNetwork)
+                },
+                {
+                  label: 'Outbound',
+                  borderColor: theme.graphs.forestGreenBorder,
+                  backgroundColor: theme.graphs.forestGreen,
+                  data: _convertData(tx_bytes, start, end, formatNetwork)
+                }
+              ]}
+            />
+          </GraphCard>
+        );
+      })}
+    </>
   );
 };
 
-export default NetworkGraphs;
+export default withTheme(NetworkGraphs);

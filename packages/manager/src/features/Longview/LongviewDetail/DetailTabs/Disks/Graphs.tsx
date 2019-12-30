@@ -1,13 +1,35 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { withTheme, WithTheme } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  withTheme,
+  WithTheme
+} from 'src/components/core/styles';
 
 import Typography from 'src/components/core/Typography';
 
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { StatWithDummyPoint } from '../../../request.types';
 import GraphCard from '../../GraphCard';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  graphContainer: {
+    marginTop: theme.spacing(),
+    display: 'flex',
+    flexFlow: 'row wrap',
+    justifyContent: 'space-around',
+    '& > div': {
+      flexGrow: 1,
+      width: '33%',
+      [theme.breakpoints.down('md')]: {
+        marginTop: theme.spacing(),
+        width: '60%'
+      }
+    }
+  }
+}));
 
 export interface Props {
   isSwap: boolean;
@@ -47,6 +69,8 @@ const Graphs: React.FC<CombinedProps> = props => {
     writes
   } = props;
 
+  const classes = useStyles();
+
   if (childOf) {
     /** @todo document the why here. This comes from old Longview.JS */
     return (
@@ -65,71 +89,73 @@ const Graphs: React.FC<CombinedProps> = props => {
 
   return (
     <GraphCard title={diskLabel} helperText={labelHelperText}>
-      {sysInfoType.toLowerCase() !== 'openvz' && (
-        <div data-testid="diskio-graph">
-          <LongviewLineGraph
-            data={[
-              {
-                data: formatDiskIO(writes),
-                label: 'Write',
-                borderColor: theme.graphs.orangeBorder,
-                backgroundColor: theme.graphs.orange
-              },
-              {
-                data: formatDiskIO(reads),
-                label: 'Read',
-                borderColor: theme.graphs.yellowBorder,
-                backgroundColor: theme.graphs.yellow
-              }
-            ]}
-            title="Disk I/O"
-            showToday={isToday}
-            subtitle="ops/s"
-            timezone={timezone}
-          />
-        </div>
-      )}
-      {/*
-            only show inodes and space if the
-            disk is mounted and is not a swap partition
-            because longview doesn't track those stats
-          */
-      !isSwap && isMounted && (
-        <React.Fragment>
-          <div data-testid="space-graph">
+      <div className={classes.graphContainer}>
+        {sysInfoType.toLowerCase() !== 'openvz' && (
+          <div data-testid="diskio-graph">
             <LongviewLineGraph
               data={[
                 {
-                  data: formatSpace(free, total),
-                  label: 'Space',
-                  borderColor: theme.graphs.salmonBorder,
-                  backgroundColor: theme.graphs.salmon
-                }
-              ]}
-              showToday={isToday}
-              title="Space"
-              subtitle="GB"
-              timezone={timezone}
-            />
-          </div>
-          <div data-testid="inodes-graph">
-            <LongviewLineGraph
-              data={[
+                  data: formatDiskIO(writes),
+                  label: 'Write',
+                  borderColor: theme.graphs.orangeBorder,
+                  backgroundColor: theme.graphs.orange
+                },
                 {
-                  data: formatINodes(iFree, iTotal),
-                  label: 'Inodes',
-                  borderColor: theme.graphs.pinkBorder,
-                  backgroundColor: theme.graphs.pink
+                  data: formatDiskIO(reads),
+                  label: 'Read',
+                  borderColor: theme.graphs.yellowBorder,
+                  backgroundColor: theme.graphs.yellow
                 }
               ]}
+              title="Disk I/O"
               showToday={isToday}
-              suggestedMax={1000000}
-              title="Inodes"
+              subtitle="ops/s"
               timezone={timezone}
             />
           </div>
-        </React.Fragment>
-      )}
+        )}
+        {/*
+              only show inodes and space if the
+              disk is mounted and is not a swap partition
+              because longview doesn't track those stats
+            */
+        !isSwap && isMounted && (
+          <React.Fragment>
+            <div data-testid="space-graph">
+              <LongviewLineGraph
+                data={[
+                  {
+                    data: formatSpace(free, total),
+                    label: 'Space',
+                    borderColor: theme.graphs.salmonBorder,
+                    backgroundColor: theme.graphs.salmon
+                  }
+                ]}
+                showToday={isToday}
+                title="Space"
+                subtitle="GB"
+                timezone={timezone}
+              />
+            </div>
+            <div data-testid="inodes-graph">
+              <LongviewLineGraph
+                data={[
+                  {
+                    data: formatINodes(iFree, iTotal),
+                    label: 'Inodes',
+                    borderColor: theme.graphs.pinkBorder,
+                    backgroundColor: theme.graphs.pink
+                  }
+                ]}
+                showToday={isToday}
+                suggestedMax={1000000}
+                title="Inodes"
+                timezone={timezone}
+              />
+            </div>
+          </React.Fragment>
+        )}
+      </div>
     </GraphCard>
   );
 };
