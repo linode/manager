@@ -55,10 +55,9 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <Grid container item spacing={0}>
+    <Grid container spacing={0}>
       <Grid
         container
-        item
         direction="row"
         justify="space-between"
         alignItems="center"
