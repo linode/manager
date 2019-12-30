@@ -70,25 +70,22 @@ const Disks: React.FC<CombinedProps> = props => {
         .then(r => {
           if (mounted) {
             setLoading(false);
-            const _disk = pathOr({}, ['Disk'], r);
+            const _disk = pathOr({}, ['DATA', 'Disk'], r);
 
-            const pathsToAlter = Object.keys(_disk).reduce(
-              (acc, eachKey) => {
-                acc.push(
-                  ...[
-                    [eachKey, 'reads'],
-                    [eachKey, 'writes'],
-                    [eachKey, 'fs', 'free'],
-                    [eachKey, 'fs', 'total'],
-                    [eachKey, 'fs', 'itotal'],
-                    [eachKey, 'fs', 'ifree']
-                  ]
-                );
+            const pathsToAlter = Object.keys(_disk).reduce((acc, eachKey) => {
+              acc.push(
+                ...[
+                  [eachKey, 'reads'],
+                  [eachKey, 'writes'],
+                  [eachKey, 'fs', 'free'],
+                  [eachKey, 'fs', 'total'],
+                  [eachKey, 'fs', 'itotal'],
+                  [eachKey, 'fs', 'ifree']
+                ]
+              );
 
-                return acc;
-              },
-              [] as (string | number)[][]
-            );
+              return acc;
+            }, [] as (string | number)[][]);
 
             const enhancedDisk = pathMaybeAddDataInThePast<Disk<'yAsNull'>>(
               _disk,

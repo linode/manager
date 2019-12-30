@@ -92,9 +92,6 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
   );
 };
 
-const enhanced = compose<CombinedProps, GraphProps>(
-  React.memo,
-  withTheme
-);
+const enhanced = compose<CombinedProps, GraphProps>(React.memo, withTheme);
 
 export default enhanced(NetworkGraph);

@@ -4,6 +4,7 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
+// import { statMax, sumNetwork } from 'src/features/Longview/shared/utilities';
 import { LongviewNetworkInterface } from '../../../request.types';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -33,7 +34,7 @@ export const NetworkGraphs: React.FC<Props> = props => {
       <Grid container direction="column" spacing={0}>
         <Grid item xs={12}>
           <LongviewLineGraph
-            title="All Traffic"
+            title="Network Traffic"
             subtitle={'KB' + '/s'}
             error={_error}
             loading={loading}
@@ -41,58 +42,6 @@ export const NetworkGraphs: React.FC<Props> = props => {
             timezone={timezone}
             data={[]}
           />
-        </Grid>
-        <Grid item className={classes.graphSection} xs={12}>
-          <Grid container direction="row">
-            <Grid item xs={12} sm={6}>
-              <LongviewLineGraph
-                title="IPv4 Public"
-                subtitle={'KB' + '/s'}
-                error={_error}
-                loading={loading}
-                showToday={isToday}
-                timezone={timezone}
-                data={[]}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <LongviewLineGraph
-                title="IPv4 Private"
-                subtitle={'KB' + '/s'}
-                error={_error}
-                loading={loading}
-                showToday={isToday}
-                timezone={timezone}
-                data={[]}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item className={classes.graphSection} xs={12}>
-          <Grid container direction="row">
-            <Grid item xs={12} sm={6}>
-              <LongviewLineGraph
-                title="IPv6 Public"
-                subtitle={'KB' + '/s'}
-                error={_error}
-                loading={loading}
-                showToday={isToday}
-                timezone={timezone}
-                data={[]}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <LongviewLineGraph
-                title="IPv5 Private"
-                subtitle={'KB' + '/s'}
-                error={_error}
-                loading={loading}
-                showToday={isToday}
-                timezone={timezone}
-                data={[]}
-              />
-            </Grid>
-          </Grid>
         </Grid>
       </Grid>
     </Paper>
