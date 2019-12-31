@@ -7,10 +7,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import get from 'src/features/Longview/request';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
-import {
-  LongviewNetworkInterface,
-  WithStartAndEnd
-} from '../../../request.types';
+import { LongviewApplications, WithStartAndEnd } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import NGINXGraphs from './NGINXGraphs';
 
@@ -36,12 +33,11 @@ export const NGINX: React.FC<Props> = props => {
     end: 0
   });
 
-  // @todo would useGraphs be better here?
-  const network = useAPIRequest<LongviewNetworkInterface | undefined>(
+  const nginx = useAPIRequest<LongviewApplications['Applications'] | undefined>(
     clientAPIKey && lastUpdated
       ? () =>
-          get(clientAPIKey, 'getValues', { fields: ['processes'] }).then(
-            response => response.DATA?.Network?.Interface
+          get(clientAPIKey, 'getValues', { fields: ['nginx'] }).then(
+            response => response.DATA?.Applications
           )
       : null,
     {},
@@ -62,7 +58,7 @@ export const NGINX: React.FC<Props> = props => {
       aria-labelledby="tab-processes"
       direction="column"
     >
-      <DocumentTitleSegment segment={'Network'} />
+      <DocumentTitleSegment segment={'NGINX'} />
       <Grid item xs={12}>
         <Box
           display="flex"
@@ -83,10 +79,10 @@ export const NGINX: React.FC<Props> = props => {
       </Grid>
       <Grid item xs={12} className="py0">
         <NGINXGraphs
-          networkData={network.data || {}}
+          data={nginx.data?.Nginx}
           isToday={isToday}
-          loading={network.loading}
-          error={lastUpdatedError || network.error}
+          loading={nginx.loading}
+          error={lastUpdatedError || nginx.error}
           timezone={timezone}
         />
       </Grid>

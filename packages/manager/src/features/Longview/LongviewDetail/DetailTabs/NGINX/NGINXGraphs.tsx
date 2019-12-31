@@ -4,7 +4,7 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-import { LongviewNetworkInterface } from '../../../request.types';
+import { NginxResponse } from '../../../request.types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  networkData: LongviewNetworkInterface;
+  data?: NginxResponse;
   error?: APIError[];
   loading: boolean;
   timezone: string;
@@ -24,9 +24,13 @@ interface Props {
 }
 
 export const NGINXGraphs: React.FC<Props> = props => {
-  const { error, isToday, loading, timezone } = props;
+  const { data, error, isToday, loading, timezone } = props;
   const classes = useStyles();
   const _error = error ? error[0].reason : undefined;
+
+  if (!data) {
+    return null;
+  }
 
   return (
     <Paper className={classes.root}>
