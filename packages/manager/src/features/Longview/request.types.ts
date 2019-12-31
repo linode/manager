@@ -272,3 +272,16 @@ export interface Options {
   start?: number;
   end?: number;
 }
+
+export interface NginxResponse {
+  version: string;
+  status: number;
+  status_message: string;
+  requests: Stat[];
+  writing: Stat[];
+  accepted_cons: Stat[];
+  handled_cons: Stat[];
+  reading: Stat[];
+  waiting: Stat[];
+  active: Stat[];
+}

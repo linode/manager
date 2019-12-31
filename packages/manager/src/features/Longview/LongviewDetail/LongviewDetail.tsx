@@ -40,6 +40,7 @@ import useFlags from 'src/hooks/useFlags';
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
 import FeatureComingSoon from './DetailTabs/FeatureComingSoon';
 import NetworkLanding from './DetailTabs/Network';
+import NGINX from './DetailTabs/NGINX';
 import ProcessesLanding from './DetailTabs/Processes/ProcessesLanding';
 
 const topProcessesEmptyDataSet: LongviewTopProcesses = { Processes: {} };
@@ -330,7 +331,12 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           strict
           path={`${url}/nginx`}
           render={() => (
-            <FeatureComingSoon title="Nginx" clientLabel={client.label} />
+            <NGINX
+              timezone={timezone}
+              clientAPIKey={client.api_key}
+              lastUpdated={lastUpdated}
+              lastUpdatedError={lastUpdatedError}
+            />
           )}
         />
         )}
