@@ -16,14 +16,6 @@ const ClusterDetail = React.lazy(() => import('./KubernetesClusterDetail'));
 
 type Props = RouteComponentProps<{}>;
 
-const WrapWithSuspense = (_Component: React.ComponentType<any>) => {
-  return (
-    <React.Suspense fallback={<CircleProgress />}>
-      {<_Component />}
-    </React.Suspense>
-  );
-};
-
 class Kubernetes extends React.Component<Props> {
   render() {
     const {
@@ -32,25 +24,19 @@ class Kubernetes extends React.Component<Props> {
 
     return (
       <Switch>
-        <Route
-          render={() => WrapWithSuspense(ClusterCreate)}
-          exact
-          path={`${path}/create`}
-        />
-        <Route
-          component={(routeProps: RouteComponentProps<any>) => (
-            <React.Suspense fallback={<CircleProgress />}>
-              <ClusterDetail {...routeProps} />
-            </React.Suspense>
-          )}
-          path={`${path}/clusters/:clusterID`}
-        />
-        <Route
-          component={() => WrapWithSuspense(KubernetesLanding)}
-          exact
-          path={`${path}/clusters`}
-        />
-        <Redirect to={'/kubernetes/clusters'} />
+        <React.Suspense fallback={<CircleProgress />}>
+          <Route component={ClusterCreate} exact path={`${path}/create`} />
+          <Route
+            component={ClusterDetail}
+            path={`${path}/clusters/:clusterID`}
+          />
+          <Route
+            component={KubernetesLanding}
+            exact
+            path={`${path}/clusters`}
+          />
+          <Redirect to={'/kubernetes/clusters'} />
+        </React.Suspense>
       </Switch>
     );
   }
