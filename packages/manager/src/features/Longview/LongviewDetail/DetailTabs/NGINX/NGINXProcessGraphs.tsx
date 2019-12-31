@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { compose } from 'recompose';
+import {
+  makeStyles,
+  Theme,
+  WithTheme,
+  withTheme
+} from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { NginxUserProcess, NginxUserProcesses } from '../../../request.types';
@@ -25,9 +31,11 @@ interface Props {
   end: number;
 }
 
-export const NGINXProcessGraphs: React.FC<Props> = props => {
+type CombinedProps = Props & WithTheme;
+
+export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const { data, error, loading, isToday, timezone, start, end } = props;
+  const { data, error, loading, isToday, timezone, start, end, theme } = props;
 
   const totalDataForAllUsers = React.useMemo(
     () => sumStatsObject<NginxUserProcess>(data),
@@ -43,14 +51,14 @@ export const NGINXProcessGraphs: React.FC<Props> = props => {
           <Grid item xs={12} sm={6}>
             <LongviewLineGraph
               title="CPU"
-              subtitle={'KB' + '/s'}
+              subtitle={'%'}
               error={error}
               loading={loading}
               showToday={isToday}
               timezone={timezone}
               data={[
                 {
-                  label: 'Waiting',
+                  label: 'CPU',
                   borderColor: '#63d997',
                   backgroundColor: '#63d997',
                   data: _convertData(
@@ -66,7 +74,7 @@ export const NGINXProcessGraphs: React.FC<Props> = props => {
           <Grid item xs={12} sm={6}>
             <LongviewLineGraph
               title="RAM"
-              subtitle={'KB' + '/s'}
+              subtitle={'MB'}
               error={error}
               loading={loading}
               showToday={isToday}
@@ -74,8 +82,8 @@ export const NGINXProcessGraphs: React.FC<Props> = props => {
               data={[
                 {
                   label: 'RAM',
-                  borderColor: '#63d997',
-                  backgroundColor: '#63d997',
+                  borderColor: '#e083e0',
+                  backgroundColor: '#e083e0',
                   data: _convertData(
                     totalDataForAllUsers.mem ?? [],
                     start,
@@ -93,7 +101,7 @@ export const NGINXProcessGraphs: React.FC<Props> = props => {
           <Grid item xs={12} sm={6}>
             <LongviewLineGraph
               title="Disk I/O"
-              subtitle={'KB' + '/s'}
+              subtitle={'Bytes/s'}
               error={error}
               loading={loading}
               showToday={isToday}
@@ -101,8 +109,8 @@ export const NGINXProcessGraphs: React.FC<Props> = props => {
               data={[
                 {
                   label: 'Read',
-                  borderColor: '#63d997',
-                  backgroundColor: '#63d997',
+                  borderColor: theme.graphs.lightYellow,
+                  backgroundColor: theme.graphs.lightYellow,
                   data: _convertData(
                     totalDataForAllUsers.ioreadkbytes ?? [],
                     start,
@@ -112,8 +120,8 @@ export const NGINXProcessGraphs: React.FC<Props> = props => {
                 },
                 {
                   label: 'Write',
-                  borderColor: '#63d997',
-                  backgroundColor: '#63d997',
+                  borderColor: theme.graphs.lightOrange,
+                  backgroundColor: theme.graphs.lightOrange,
                   data: _convertData(
                     totalDataForAllUsers.iowritekbytes ?? [],
                     start,
@@ -127,7 +135,6 @@ export const NGINXProcessGraphs: React.FC<Props> = props => {
           <Grid item xs={12} sm={6}>
             <LongviewLineGraph
               title="Process Count"
-              subtitle={'KB' + '/s'}
               error={error}
               loading={loading}
               showToday={isToday}
@@ -135,8 +142,8 @@ export const NGINXProcessGraphs: React.FC<Props> = props => {
               data={[
                 {
                   label: 'Count',
-                  borderColor: '#63d997',
-                  backgroundColor: '#63d997',
+                  borderColor: '#7156f5',
+                  backgroundColor: '#7156f5',
                   data: _convertData(
                     totalDataForAllUsers.count ?? [],
                     start,
@@ -162,4 +169,8 @@ const formatData = (value: number | null) => {
   return Math.round(value * 100) / 100;
 };
 
-export default React.memo(NGINXProcessGraphs);
+const enhanced = compose<CombinedProps, Props>(
+  withTheme,
+  React.memo
+)(NGINXProcessGraphs);
+export default enhanced;
