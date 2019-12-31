@@ -6,16 +6,11 @@ import {
   Switch,
   withRouter
 } from 'react-router-dom';
+import CircleProgress from 'src/components/CircleProgress';
 
-import DefaultLoader from '../../../src/components/DefaultLoader';
+const VolumesLanding = React.lazy(() => import('./VolumesLanding'));
 
-const VolumesLanding = DefaultLoader({
-  loader: () => import('./VolumesLanding')
-});
-
-const VolumeCreate = DefaultLoader({
-  loader: () => import('./VolumeCreate/VolumeCreate')
-});
+const VolumeCreate = React.lazy(() => import('./VolumeCreate/VolumeCreate'));
 
 type Props = RouteComponentProps<{}>;
 
@@ -27,9 +22,16 @@ class Volumes extends React.Component<Props> {
 
     return (
       <Switch>
-        <Route component={VolumesLanding} path={path} exact strict />
-        <Route component={VolumeCreate} path={`${path}/create`} exact strict />
-        <Redirect to={path} />
+        <React.Suspense fallback={<CircleProgress />}>
+          <Route component={VolumesLanding} path={path} exact strict />
+          <Route
+            component={VolumeCreate}
+            path={`${path}/create`}
+            exact
+            strict
+          />
+          <Redirect to={path} />
+        </React.Suspense>
       </Switch>
     );
   }
