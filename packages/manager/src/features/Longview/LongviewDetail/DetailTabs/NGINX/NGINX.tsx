@@ -69,6 +69,10 @@ export const NGINX: React.FC<Props> = props => {
 
   const isToday = time.end - time.start < 60 * 60 * 25;
 
+  /**
+   * We omit the longname, which would otherwise be mistaken for an NGINX user
+   * @todo add an overload for this request so the typing isn't so weird
+   */
   const processesData = React.useMemo(
     () =>
       (omit(
@@ -106,8 +110,6 @@ export const NGINX: React.FC<Props> = props => {
         </Box>
       </Grid>
       <Grid item xs={12} className="py0">
-        {/** We omit the longname, which would otherwise be mistaken for an NGINX user */}
-        {/** @todo add an overload for this request so the typing isn't so weird */}
         <NGINXGraphs
           data={data?.Applications?.Nginx}
           processesData={processesData}
