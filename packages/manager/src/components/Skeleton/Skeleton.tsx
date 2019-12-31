@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   table?: boolean;
-  columns?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+  numColumns?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
   firstColWidth?: number;
   textHeight?: number;
   subtextHeight?: number;
@@ -53,7 +53,7 @@ const _Skeleton: React.FC<combinedProps> = props => {
   const classes = useStyles();
   const {
     table,
-    columns: numColumns,
+    numColumns,
     firstColWidth,
     variant,
     textHeight,

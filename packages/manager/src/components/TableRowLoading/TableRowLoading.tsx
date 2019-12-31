@@ -72,7 +72,7 @@ const tableRowLoading: React.FC<CombinedProps> = props => {
           >
             <Skeleton
               table
-              columns={colSpan ? colSpan : 8}
+              numColumns={colSpan ? colSpan : 8}
               firstColWidth={firstColWidth ? firstColWidth : undefined}
               oneLine={oneLine}
               compact={compact}
