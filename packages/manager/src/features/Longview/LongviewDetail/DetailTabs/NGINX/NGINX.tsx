@@ -5,10 +5,9 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
-import get from 'src/features/Longview/request';
-import { useAPIRequest } from 'src/hooks/useAPIRequest';
-import { LongviewApplications, WithStartAndEnd } from '../../../request.types';
+import { WithStartAndEnd } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
+import { useGraphs } from '../OverviewGraphs/useGraphs';
 import NGINXGraphs from './NGINXGraphs';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -18,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  clientAPIKey?: string;
+  clientAPIKey: string;
   lastUpdated?: number;
   lastUpdatedError?: APIError[];
   timezone: string;
@@ -33,16 +32,16 @@ export const NGINX: React.FC<Props> = props => {
     end: 0
   });
 
-  const nginx = useAPIRequest<LongviewApplications['Applications'] | undefined>(
-    clientAPIKey && lastUpdated
-      ? () =>
-          get(clientAPIKey, 'getValues', { fields: ['nginx'] }).then(
-            response => response.DATA?.Applications
-          )
-      : null,
-    {},
-    [clientAPIKey, lastUpdated]
+  const { data, loading, error, request } = useGraphs(
+    ['nginx'],
+    clientAPIKey,
+    time.start,
+    time.end
   );
+
+  React.useEffect(() => {
+    request();
+  }, [time, clientAPIKey, lastUpdated, lastUpdatedError]);
 
   const handleStatsChange = (start: number, end: number) => {
     setTimeBox({ start, end });
@@ -79,11 +78,13 @@ export const NGINX: React.FC<Props> = props => {
       </Grid>
       <Grid item xs={12} className="py0">
         <NGINXGraphs
-          data={nginx.data?.Nginx}
+          data={data?.Applications?.Nginx}
           isToday={isToday}
-          loading={nginx.loading}
-          error={lastUpdatedError || nginx.error}
+          loading={loading}
+          error={lastUpdatedError?.[0].reason || error}
           timezone={timezone}
+          start={time.start}
+          end={time.end}
         />
       </Grid>
     </Grid>
