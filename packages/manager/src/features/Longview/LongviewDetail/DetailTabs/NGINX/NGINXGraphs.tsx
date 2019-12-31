@@ -3,8 +3,9 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-import { NginxResponse } from '../../../request.types';
+import { NginxResponse, NginxUserProcesses } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
+import NGINXProcessGraphs from './NGINXProcessGraphs';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -27,10 +28,25 @@ interface Props {
   isToday: boolean;
   start: number;
   end: number;
+  processesData: NginxUserProcesses;
+  processesLoading: boolean;
+  processesError?: string;
 }
 
 export const NGINXGraphs: React.FC<Props> = props => {
-  const { data, error, isToday, loading, timezone, start, end } = props;
+  const {
+    data,
+    error,
+    isToday,
+    loading,
+    timezone,
+    start,
+    end,
+    processesData,
+    processesLoading,
+    processesError
+  } = props;
+
   const classes = useStyles();
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
@@ -138,58 +154,15 @@ export const NGINXGraphs: React.FC<Props> = props => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <Grid container direction="row">
-            <Grid item xs={12} sm={6} className={classes.smallGraph}>
-              <LongviewLineGraph
-                title="CPU"
-                subtitle={'KB' + '/s'}
-                error={error}
-                loading={loading}
-                showToday={isToday}
-                timezone={timezone}
-                data={[]}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} className={classes.smallGraph}>
-              <LongviewLineGraph
-                title="RAM"
-                subtitle={'KB' + '/s'}
-                error={error}
-                loading={loading}
-                showToday={isToday}
-                timezone={timezone}
-                data={[]}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12}>
-          <Grid container direction="row">
-            <Grid item xs={12} sm={6} className={classes.smallGraph}>
-              <LongviewLineGraph
-                title="Disk I/O"
-                subtitle={'KB' + '/s'}
-                error={error}
-                loading={loading}
-                showToday={isToday}
-                timezone={timezone}
-                data={[]}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} className={classes.smallGraph}>
-              <LongviewLineGraph
-                title="Process Count"
-                subtitle={'KB' + '/s'}
-                error={error}
-                loading={loading}
-                showToday={isToday}
-                timezone={timezone}
-                data={[]}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
+        <NGINXProcessGraphs
+          data={processesData}
+          loading={processesLoading}
+          error={processesError || error}
+          timezone={timezone}
+          isToday={isToday}
+          start={start}
+          end={end}
+        />
       </Grid>
     </Paper>
   );

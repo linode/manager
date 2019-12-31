@@ -1,11 +1,12 @@
 import { APIError } from 'linode-js-sdk/lib/types';
+import { omit } from 'ramda';
 import * as React from 'react';
 import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
-import { WithStartAndEnd } from '../../../request.types';
+import { NginxUserProcesses, WithStartAndEnd } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import NGINXGraphs from './NGINXGraphs';
@@ -39,8 +40,27 @@ export const NGINX: React.FC<Props> = props => {
     time.end
   );
 
+  /**
+   * We request/store this data separately because:
+   * 1. Classic does (in fact they do each set of fields individually)
+   * 2. The request is huge otherwise
+   * 3. A hybrid nginx/processes interface would be messy
+   * 4. They are conceptually separate
+   *
+   * A downside to this approach is that the data in this view is essentially
+   * in two halves, but this is not clear to the user. They might see, for example,
+   * half the graphs in an error state and the others ok, which could be off-putting.
+   */
+  const processes = useGraphs(
+    ['nginxProcesses'],
+    clientAPIKey,
+    time.start,
+    time.end
+  );
+
   React.useEffect(() => {
     request();
+    processes.request();
   }, [time, clientAPIKey, lastUpdated, lastUpdatedError]);
 
   const handleStatsChange = (start: number, end: number) => {
@@ -48,6 +68,15 @@ export const NGINX: React.FC<Props> = props => {
   };
 
   const isToday = time.end - time.start < 60 * 60 * 25;
+
+  const processesData = React.useMemo(
+    () =>
+      (omit(
+        ['longname'],
+        processes.data.Processes?.nginx
+      ) as NginxUserProcesses) ?? {},
+    [processes.data]
+  );
 
   return (
     <Grid
@@ -77,8 +106,13 @@ export const NGINX: React.FC<Props> = props => {
         </Box>
       </Grid>
       <Grid item xs={12} className="py0">
+        {/** We omit the longname, which would otherwise be mistaken for an NGINX user */}
+        {/** @todo add an overload for this request so the typing isn't so weird */}
         <NGINXGraphs
           data={data?.Applications?.Nginx}
+          processesData={processesData}
+          processesLoading={processes.loading}
+          processesError={processes.error}
           isToday={isToday}
           loading={loading}
           error={lastUpdatedError?.[0].reason || error}
@@ -91,4 +125,4 @@ export const NGINX: React.FC<Props> = props => {
   );
 };
 
-export default NGINX;
+export default React.memo(NGINX);
