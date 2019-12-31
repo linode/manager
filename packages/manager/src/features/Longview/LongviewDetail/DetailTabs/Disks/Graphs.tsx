@@ -251,7 +251,4 @@ export const generateHelperText = (
   return '';
 };
 
-export default compose<CombinedProps, Props>(
-  React.memo,
-  withTheme
-)(Graphs);
+export default compose<CombinedProps, Props>(React.memo, withTheme)(Graphs);
