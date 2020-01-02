@@ -8,9 +8,10 @@ import {
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
+import { readableBytes } from 'src/utilities/unitConversions';
 import { NginxUserProcess, NginxUserProcesses } from '../../../request.types';
-import { convertData } from '../../../shared/formatters';
-import { sumStatsObject } from '../../../shared/utilities';
+import { convertData, formatMemory } from '../../../shared/formatters';
+import { statMax, sumStatsObject } from '../../../shared/utilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -44,6 +45,19 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
 
+  const memoryUnit = readableBytes(statMax(totalDataForAllUsers.mem ?? []))
+    .unit;
+
+  /**
+   * @todo these fields say "kbytes" but Classic displays
+   * them in the graphs labeled as B/s. Need to look into this
+   * and multiply by 1024 if these values really are KB.
+   */
+  const diskRead = totalDataForAllUsers.ioreadkbytes ?? [];
+  const diskWrite = totalDataForAllUsers.iowritekbytes ?? [];
+  const maxDisk = Math.max(statMax(diskRead), statMax(diskWrite));
+  const diskUnit = readableBytes(maxDisk).unit;
+
   return (
     <>
       <Grid item className={classes.graphSection} xs={12}>
@@ -74,7 +88,7 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
           <Grid item xs={12} sm={6}>
             <LongviewLineGraph
               title="RAM"
-              subtitle={'MB'}
+              subtitle={memoryUnit}
               error={error}
               loading={loading}
               showToday={isToday}
@@ -88,7 +102,7 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
                     totalDataForAllUsers.mem ?? [],
                     start,
                     end,
-                    formatData
+                    formatMemory
                   )
                 }
               ]}
@@ -101,7 +115,7 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
           <Grid item xs={12} sm={6}>
             <LongviewLineGraph
               title="Disk I/O"
-              subtitle={'Bytes/s'}
+              subtitle={`${diskUnit}/s`}
               error={error}
               loading={loading}
               showToday={isToday}
@@ -111,23 +125,13 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
                   label: 'Read',
                   borderColor: theme.graphs.lightYellow,
                   backgroundColor: theme.graphs.lightYellow,
-                  data: _convertData(
-                    totalDataForAllUsers.ioreadkbytes ?? [],
-                    start,
-                    end,
-                    formatData
-                  )
+                  data: _convertData(diskRead, start, end, formatData)
                 },
                 {
                   label: 'Write',
                   borderColor: theme.graphs.lightOrange,
                   backgroundColor: theme.graphs.lightOrange,
-                  data: _convertData(
-                    totalDataForAllUsers.iowritekbytes ?? [],
-                    start,
-                    end,
-                    formatData
-                  )
+                  data: _convertData(diskWrite, start, end, formatData)
                 }
               ]}
             />

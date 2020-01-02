@@ -210,6 +210,26 @@ export const statMax = (stats: StatWithDummyPoint[] = []): number => {
   }, 0);
 };
 
+/**
+ * sumStatsObject
+ *
+ * Generalized version of utilities such as sumNetwork, sumCPU, etc.
+ * Many LV endpoints return an indeterminate number of stats fields,
+ * in a format something like:
+ *
+ * Disk: {
+ *  sda: Stat[],
+ *  sdb: Stat[]
+ * }
+ *
+ * A common task is to sum up total usage across all of these series
+ * (e.g. total IO for all disks, total traffic across all net interfaces, etc.)
+ * which is what this method does.
+ *
+ * @param data a Record<string, something> as in the example above. The
+ * output will be a single data series of type T, where the y values will
+ * be summed for each matching value of X.
+ */
 export const sumStatsObject = <T>(data: Record<string, T>): T => {
   return Object.values(data).reduce((accum, thisObject) => {
     return produce(accum, draft => {
