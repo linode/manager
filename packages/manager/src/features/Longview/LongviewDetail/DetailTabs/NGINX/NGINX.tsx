@@ -68,6 +68,7 @@ export const NGINX: React.FC<Props> = props => {
   };
 
   const isToday = time.end - time.start < 60 * 60 * 25;
+  const version = data.Applications?.Nginx?.version;
 
   /**
    * We omit the longname, which would otherwise be mistaken for an NGINX user
@@ -98,7 +99,9 @@ export const NGINX: React.FC<Props> = props => {
           justifyContent="space-between"
           alignItems="center"
         >
-          <Typography variant="h2">Resource Allocation History</Typography>
+          <Typography variant="h2">
+            {loading ? 'Loading...' : version ?? 'NGINX'}
+          </Typography>
           <TimeRangeSelect
             small
             className={classes.root}
