@@ -117,7 +117,7 @@ export const NGINX: React.FC<Props> = props => {
           processesError={processes.error}
           isToday={isToday}
           loading={loading}
-          error={lastUpdatedError?.[0].reason || error}
+          error={lastUpdatedError?.[0]?.reason || error}
           timezone={timezone}
           start={time.start}
           end={time.end}
