@@ -5,6 +5,7 @@ import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import { NginxUserProcesses, WithStartAndEnd } from '../../../request.types';
@@ -87,7 +88,21 @@ export const NGINX: React.FC<Props> = props => {
   );
 
   if (notice !== null) {
-    return <Notice warning text={notice} />;
+    const message = (
+      <>
+        <Typography>{notice}</Typography>
+        <Typography>
+          See our{' '}
+          <ExternalLink
+            fixedIcon
+            link="https://www.linode.com/docs/platform/longview/longview-app-for-nginx/#troubleshooting"
+            text="guide"
+          />{' '}
+          for help troubleshooting the NGINX Longview app.
+        </Typography>
+      </>
+    );
+    return <Notice warning text={message} />;
   }
 
   return (
