@@ -77,7 +77,7 @@ const Disks: React.FC<CombinedProps> = props => {
     }
 
     if (loading) {
-      return <LandingLoading shouldDelay />;
+      return <LandingLoading />;
     }
     /*
       Longview doesn't return the Disk stats in any particular order, so sort them
