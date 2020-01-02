@@ -49,9 +49,10 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
     .unit;
 
   /**
-   * @todo these fields say "kbytes" but Classic displays
-   * them in the graphs labeled as B/s. Need to look into this
-   * and multiply by 1024 if these values really are KB.
+   * These field names say kbytes, but Classic reports them
+   * as bytes and they're read from the read_bytes and write_bytes
+   * from cat /proc/$PID/io, which are bytes. No reason (I hope)
+   * to multiply by 1024 to get the byte value here.
    */
   const diskRead = totalDataForAllUsers.ioreadkbytes ?? [];
   const diskWrite = totalDataForAllUsers.iowritekbytes ?? [];
