@@ -6,6 +6,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import { NginxUserProcesses, WithStartAndEnd } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
@@ -67,8 +68,10 @@ export const NGINX: React.FC<Props> = props => {
     setTimeBox({ start, end });
   };
 
+  const nginx = data.Applications?.Nginx;
   const isToday = time.end - time.start < 60 * 60 * 25;
-  const version = data.Applications?.Nginx?.version;
+  const version = nginx?.version;
+  const notice = Number(nginx?.status) > 0 ? nginx?.status_message : null;
 
   /**
    * We omit the longname, which would otherwise be mistaken for an NGINX user
@@ -82,6 +85,10 @@ export const NGINX: React.FC<Props> = props => {
       ) as NginxUserProcesses) ?? {},
     [processes.data]
   );
+
+  if (notice !== null) {
+    return <Notice warning text={notice} />;
+  }
 
   return (
     <Grid
