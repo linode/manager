@@ -162,3 +162,17 @@ const determineDecimalPlaces = (
     return 0;
   }
 };
+
+export type Unit = 'B' | 'KB' | 'MB' | 'GB';
+export const convertBytesToTarget = (unit: Unit, value: number) => {
+  switch (unit) {
+    case 'B':
+      return value;
+    case 'KB':
+      return value / 1024;
+    case 'MB':
+      return value / 1024 / 1024;
+    case 'GB':
+      return value / 1024 / 1024 / 1024;
+  }
+};

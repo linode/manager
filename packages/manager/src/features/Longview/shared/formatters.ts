@@ -107,7 +107,7 @@ export const convertData = (
   d: StatWithDummyPoint[],
   startTime: number,
   endTime: number,
-  formatter?: (pt: number | null) => number | null
+  formatter?: (pt: number | null, unit?: string) => number | null
 ) => {
   /**
    * For any empty data series, instead of an empty array
