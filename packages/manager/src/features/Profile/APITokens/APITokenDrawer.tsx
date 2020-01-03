@@ -464,7 +464,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
               }
               data-qa-submit
             >
-              {(mode as string) === 'create' ? 'Submit' : 'Save'}
+              {(mode as string) === 'create' ? 'Create Token' : 'Save Token'}
             </Button>,
             <Button
               buttonType="secondary"
