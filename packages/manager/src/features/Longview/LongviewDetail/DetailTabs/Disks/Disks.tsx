@@ -76,7 +76,7 @@ const Disks: React.FC<CombinedProps> = props => {
       );
     }
 
-    if (loading) {
+    if (loading && Object.keys(diskData).length === 0) {
       return <LandingLoading />;
     }
     /*

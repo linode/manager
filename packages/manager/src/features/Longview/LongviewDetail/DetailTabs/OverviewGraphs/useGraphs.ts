@@ -15,15 +15,17 @@ export const useGraphs = (
   const [data, setData] = React.useState<Partial<AllData>>({});
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
-  const request = () => {
+  const request = (isLoading: boolean = true) => {
     if (!mounted) {
       return;
     }
-    if (!start || !end) {
+    if (!start || !end || !clientAPIKey) {
       return;
     }
-    setLoading(true);
-    setData({});
+    if (isLoading) {
+      setLoading(true);
+      setData({});
+    }
     return getValues(clientAPIKey, {
       fields: requestFields,
       start,
@@ -47,19 +49,20 @@ export const useGraphs = (
   };
 
   // Request on first mount and when the clientAPIKey changes.
+  // Also poll the data
   React.useEffect(() => {
     if (!clientAPIKey) {
       return;
     }
     requestInterval = setInterval(() => {
-      request();
+      request(false);
     }, 10000);
 
     return () => {
       mounted = false;
       clearInterval(requestInterval);
     };
-  }, [clientAPIKey, start, end]);
+  }, [clientAPIKey]);
 
   return { error, data, loading, request };
 };
