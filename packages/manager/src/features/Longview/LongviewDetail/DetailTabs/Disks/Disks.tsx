@@ -8,6 +8,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Box from 'src/components/core/Box';
 import ErrorState from 'src/components/ErrorState';
 import LandingLoading from 'src/components/LandingLoading';
+import Placeholder from 'src/components/Placeholder';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import DiskPaper from './DiskPaper';
 
@@ -70,25 +71,22 @@ const Disks: React.FC<CombinedProps> = props => {
         .then(r => {
           if (mounted) {
             setLoading(false);
-            const _disk = pathOr({}, ['Disk'], r);
+            const _disk = pathOr({}, ['DATA', 'Disk'], r);
 
-            const pathsToAlter = Object.keys(_disk).reduce(
-              (acc, eachKey) => {
-                acc.push(
-                  ...[
-                    [eachKey, 'reads'],
-                    [eachKey, 'writes'],
-                    [eachKey, 'fs', 'free'],
-                    [eachKey, 'fs', 'total'],
-                    [eachKey, 'fs', 'itotal'],
-                    [eachKey, 'fs', 'ifree']
-                  ]
-                );
+            const pathsToAlter = Object.keys(_disk).reduce((acc, eachKey) => {
+              acc.push(
+                ...[
+                  [eachKey, 'reads'],
+                  [eachKey, 'writes'],
+                  [eachKey, 'fs', 'free'],
+                  [eachKey, 'fs', 'total'],
+                  [eachKey, 'fs', 'itotal'],
+                  [eachKey, 'fs', 'ifree']
+                ]
+              );
 
-                return acc;
-              },
-              [] as (string | number)[][]
-            );
+              return acc;
+            }, [] as (string | number)[][]);
 
             const enhancedDisk = pathMaybeAddDataInThePast<Disk<'yAsNull'>>(
               _disk,
@@ -132,6 +130,16 @@ const Disks: React.FC<CombinedProps> = props => {
       alphabetically now
     */
     const sortedKeys = Object.keys(diskStats || {}).sort();
+
+    if (sortedKeys.length === 0) {
+      // Empty state
+      return (
+        <Placeholder
+          title="No disks detected"
+          copy="The Longview agent has not detected any disks that it can monitor."
+        />
+      );
+    }
 
     return sortedKeys.map(eachKey => (
       <DiskPaper
