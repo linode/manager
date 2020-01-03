@@ -171,6 +171,8 @@ const Graphs: React.FC<CombinedProps> = props => {
                 showToday={isToday}
                 title="Inodes"
                 timezone={timezone}
+                // @todo replace with byte-to-target converter after rebase
+                suggestedMax={iTotal[0].y}
               />
             </div>
           </React.Fragment>
@@ -197,7 +199,6 @@ export const formatINodes = (
         ? +(totalY - freeY).toFixed(2)
         : null;
 
-    /* convert seconds to MS */
     return { x: totalX, y: cleanedY };
   });
 };
