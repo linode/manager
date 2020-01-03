@@ -8,10 +8,14 @@ import { NginxResponse } from '../../../request.types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(2)
+    padding: `${theme.spacing(3) + 2}px ${theme.spacing(3) +
+      2}px ${theme.spacing(5) + 4}px`
   },
-  graphSection: {
-    paddingTop: theme.spacing(2)
+  smallGraph: {
+    [theme.breakpoints.down('sm')]: {
+      marginTop: theme.spacing(3) + 2
+    },
+    marginTop: theme.spacing(6) + 3
   }
 }));
 
@@ -46,9 +50,9 @@ export const NGINXGraphs: React.FC<Props> = props => {
             data={[]}
           />
         </Grid>
-        <Grid item className={classes.graphSection} xs={12}>
+        <Grid item xs={12}>
           <Grid container direction="row">
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6} className={classes.smallGraph}>
               <LongviewLineGraph
                 title="Connections"
                 subtitle={'KB' + '/s'}
@@ -59,7 +63,7 @@ export const NGINXGraphs: React.FC<Props> = props => {
                 data={[]}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6} className={classes.smallGraph}>
               <LongviewLineGraph
                 title="Workers"
                 subtitle={'KB' + '/s'}
@@ -72,9 +76,9 @@ export const NGINXGraphs: React.FC<Props> = props => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item className={classes.graphSection} xs={12}>
+        <Grid item xs={12}>
           <Grid container direction="row">
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6} className={classes.smallGraph}>
               <LongviewLineGraph
                 title="CPU"
                 subtitle={'KB' + '/s'}
@@ -85,7 +89,7 @@ export const NGINXGraphs: React.FC<Props> = props => {
                 data={[]}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6} className={classes.smallGraph}>
               <LongviewLineGraph
                 title="RAM"
                 subtitle={'KB' + '/s'}
@@ -98,9 +102,9 @@ export const NGINXGraphs: React.FC<Props> = props => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item className={classes.graphSection} xs={12}>
+        <Grid item xs={12}>
           <Grid container direction="row">
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6} className={classes.smallGraph}>
               <LongviewLineGraph
                 title="Disk I/O"
                 subtitle={'KB' + '/s'}
@@ -111,7 +115,7 @@ export const NGINXGraphs: React.FC<Props> = props => {
                 data={[]}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6} className={classes.smallGraph}>
               <LongviewLineGraph
                 title="Process Count"
                 subtitle={'KB' + '/s'}

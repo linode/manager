@@ -53,9 +53,9 @@ export const NGINX: React.FC<Props> = props => {
   return (
     <Grid
       container
-      id="tabpanel-processes"
+      id="tabpanel-nginx"
       role="tabpanel"
-      aria-labelledby="tab-processes"
+      aria-labelledby="tab-nginx"
       direction="column"
     >
       <DocumentTitleSegment segment={'NGINX'} />
