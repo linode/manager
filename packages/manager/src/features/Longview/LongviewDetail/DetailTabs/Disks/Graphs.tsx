@@ -155,7 +155,7 @@ const Graphs: React.FC<CombinedProps> = props => {
                 subtitle="GB"
                 timezone={timezone}
                 // @todo replace with byte-to-target converter after rebase
-                suggestedMax={total[0].y / 1024 / 1024 / 1024}
+                suggestedMax={total[0]?.y / 1024 / 1024 / 1024}
               />
             </div>
             <div data-testid="inodes-graph">
@@ -172,7 +172,7 @@ const Graphs: React.FC<CombinedProps> = props => {
                 title="Inodes"
                 timezone={timezone}
                 // @todo replace with byte-to-target converter after rebase
-                suggestedMax={iTotal[0].y}
+                suggestedMax={iTotal[0]?.y}
               />
             </div>
           </React.Fragment>
