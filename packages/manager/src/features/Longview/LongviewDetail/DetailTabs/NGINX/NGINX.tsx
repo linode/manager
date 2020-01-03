@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  clientAPIKey: string;
+  clientAPIKey?: string;
   lastUpdated?: number;
   lastUpdatedError?: APIError[];
   timezone: string;

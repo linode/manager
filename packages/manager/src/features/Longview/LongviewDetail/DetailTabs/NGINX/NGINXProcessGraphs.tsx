@@ -14,11 +14,11 @@ import { convertData, formatMemory } from '../../../shared/formatters';
 import { statMax, sumStatsObject } from '../../../shared/utilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: theme.spacing(2)
-  },
-  graphSection: {
-    paddingTop: theme.spacing(2)
+  smallGraph: {
+    [theme.breakpoints.down('sm')]: {
+      marginTop: theme.spacing(3) + 2
+    },
+    marginTop: theme.spacing(6) + 3
   }
 }));
 
@@ -61,9 +61,9 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      <Grid item className={classes.graphSection} xs={12}>
+      <Grid item xs={12}>
         <Grid container direction="row">
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} className={classes.smallGraph}>
             <LongviewLineGraph
               title="CPU"
               subtitle={'%'}
@@ -86,7 +86,7 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
               ]}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} className={classes.smallGraph}>
             <LongviewLineGraph
               title="RAM"
               subtitle={memoryUnit}
@@ -111,9 +111,9 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
           </Grid>
         </Grid>
       </Grid>
-      <Grid item className={classes.graphSection} xs={12}>
+      <Grid item xs={12}>
         <Grid container direction="row">
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} className={classes.smallGraph}>
             <LongviewLineGraph
               title="Disk I/O"
               subtitle={`${diskUnit}/s`}
@@ -137,7 +137,7 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
               ]}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} className={classes.smallGraph}>
             <LongviewLineGraph
               title="Process Count"
               error={error}
