@@ -63,6 +63,7 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
       loading={loading}
       showToday={isToday}
       timezone={timezone}
+      nativeLegend
       data={[
         {
           label: 'Swap',
