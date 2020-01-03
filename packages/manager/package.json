@@ -48,7 +48,6 @@
     "novnc-node": "^0.5.3",
     "patch-package": "^6.1.0",
     "postinstall-postinstall": "^2.0.0",
-    "promise": "^8.0.1",
     "qrcode.react": "^0.8.0",
     "qs": "^6.6.0",
     "ramda": "~0.25.0",
