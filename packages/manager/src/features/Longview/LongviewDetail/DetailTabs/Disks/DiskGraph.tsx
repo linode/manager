@@ -1,4 +1,3 @@
-import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import { Disk } from '../../../request.types';
@@ -18,16 +17,16 @@ type CombinedProps = Props;
 const DiskPaper: React.FC<CombinedProps> = props => {
   const { diskLabel, stats, timezone, sysInfoType, startTime, endTime } = props;
 
-  const isSwap = pathOr(0, ['isswap'], stats);
-  const childOf = pathOr(0, ['childof'], stats);
-  const mounted = pathOr(0, ['mounted'], stats);
+  const isSwap = stats?.isswap ?? 0;
+  const childOf = stats?.childof ?? 0;
+  const mounted = stats?.mounted ?? 0;
 
-  const iFree = pathOr([], ['fs', 'ifree'], stats);
-  const iTotal = pathOr([], ['fs', 'itotal'], stats);
-  const free = pathOr([], ['fs', 'free'], stats);
-  const total = pathOr([], ['fs', 'total'], stats);
-  const reads = pathOr([], ['reads'], stats);
-  const writes = pathOr([], ['writes'], stats);
+  const iFree = stats?.fs?.free ?? [];
+  const iTotal = stats?.fs?.total ?? [];
+  const free = stats?.fs?.free ?? [];
+  const total = stats?.fs?.total ?? [];
+  const reads = stats?.reads ?? [];
+  const writes = stats?.writes ?? [];
 
   return (
     <Graphs
