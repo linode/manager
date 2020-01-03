@@ -179,7 +179,6 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
   handleSelectAllScopes = (e: React.SyntheticEvent<RadioButton>): void => {
     const { scopes } = this.state;
     const value = +e.currentTarget.value;
-
     this.setState({
       scopes: scopes.map((scope): Permission => [scope[0], value]),
       selectAllSelectedScope: value
@@ -241,6 +240,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                   checked={
                     selectAllSelectedScope === 0 && this.allScopesIdentical()
                   }
+                  data-testid="set-all-none"
                   value="0"
                   onChange={this.handleSelectAllScopes}
                   data-qa-perm-none-radio
@@ -260,6 +260,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                     selectAllSelectedScope === 1 && this.allScopesIdentical()
                   }
                   value="1"
+                  data-testid="set-all-read"
                   onChange={this.handleSelectAllScopes}
                   data-qa-perm-read-radio
                   inputProps={{
@@ -277,6 +278,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                   checked={
                     selectAllSelectedScope === 2 && this.allScopesIdentical()
                   }
+                  data-testid="set-all-write"
                   value="2"
                   onChange={this.handleSelectAllScopes}
                   data-qa-perm-rw-radio
@@ -349,6 +351,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                     value="2"
                     onChange={this.handleScopeChange}
                     data-qa-perm-rw-radio
+                    data-testid="perm-rw-radio"
                     inputProps={{
                       'aria-label': `read/write for ${scopeTup[0]}`
                     }}
