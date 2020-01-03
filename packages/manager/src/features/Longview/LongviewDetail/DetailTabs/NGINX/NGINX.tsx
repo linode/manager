@@ -8,6 +8,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import { getValues } from '../../../request';
 import { NginxUserProcesses, WithStartAndEnd } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
@@ -60,6 +61,23 @@ export const NGINX: React.FC<Props> = props => {
     time.end
   );
 
+  /**
+   * And we get the NGINX version info here
+   * because we don't want to reset it every time
+   * we poll for data/update the time window
+   */
+  const [version, setVersion] = React.useState<string>('NGINX');
+  React.useEffect(() => {
+    if (!clientAPIKey) {
+      return;
+    }
+    getValues(clientAPIKey, { fields: ['nginxVersion'] })
+      .then(response => {
+        setVersion(response.DATA?.Applications?.Nginx?.version ?? 'NGINX');
+      })
+      .catch(_ => null); // Just leave the default value NGINX as the page label
+  }, [clientAPIKey]);
+
   React.useEffect(() => {
     request();
     processes.request();
@@ -71,7 +89,6 @@ export const NGINX: React.FC<Props> = props => {
 
   const nginx = data.Applications?.Nginx;
   const isToday = time.end - time.start < 60 * 60 * 25;
-  const version = nginx?.version;
   const notice = Number(nginx?.status) > 0 ? nginx?.status_message : null;
 
   /**
