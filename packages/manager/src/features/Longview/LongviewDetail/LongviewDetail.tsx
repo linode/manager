@@ -330,14 +330,21 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           exact
           strict
           path={`${url}/nginx`}
-          render={() => (
-            <NGINX
-              timezone={timezone}
-              clientAPIKey={client.api_key}
-              lastUpdated={lastUpdated}
-              lastUpdatedError={lastUpdatedError}
-            />
-          )}
+          render={() => {
+            if (!showAllTabs) {
+              return (
+                <FeatureComingSoon title="NGINX" clientLabel={client.label} />
+              );
+            }
+            return (
+              <NGINX
+                timezone={timezone}
+                clientAPIKey={clientAPIKey}
+                lastUpdated={lastUpdated}
+                lastUpdatedError={lastUpdatedError}
+              />
+            );
+          }}
         />
         )}
         <Route
