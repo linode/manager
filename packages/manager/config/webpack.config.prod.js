@@ -13,6 +13,7 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -310,7 +311,14 @@ module.exports = {
     }),
     // Makes some environment variables available to the JS code, for example:
     // if (process.env.NODE_ENV === 'development') { ... }. See `./env.js`.
-    new webpack.DefinePlugin(env.stringified)
+    new webpack.DefinePlugin(env.stringified),
+    // Generates a graph to review bumdle size cost (with package dependencies)
+    // https://www.npmjs.com/package/webpack-bundle-analyzer
+    // the file {reportFilename} is in the {output.path} of the bundle
+    new BundleAnalyzerPlugin({
+      analyzerMode:"static",
+      reportFilename:"./bundle_analyzer_report.html"
+    })
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
