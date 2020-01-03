@@ -42,7 +42,7 @@ describe('API Token Drawer', () => {
     const expiry = getByText(/Expiry/);
     expect(expiry).toBeVisible();
 
-    const submitBtn = getByText(/Submit/);
+    const submitBtn = getByText(/Create Token/);
     expect(submitBtn).toBeVisible();
     expect(submitBtn).toBeEnabled();
 
@@ -58,7 +58,7 @@ describe('API Token Drawer', () => {
       'radio'
     );
     fireEvent.click(selectAllBtn);
-    const submit = getByText('Submit');
+    const submit = getByText('Create Token');
     fireEvent.click(submit);
     expect(props.onCreate).toHaveBeenCalledWith('*');
   });
