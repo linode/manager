@@ -213,14 +213,19 @@ export const statMax = (stats: StatWithDummyPoint[] = []): number => {
 /**
  * sumStatsObject
  *
- * Generalized version of utilities such as sumNetwork, sumCPU, etc.
+ * Generalized version of utilities such as sumNetwork.
  * Many LV endpoints return an indeterminate number of stats fields,
  * in a format something like:
  *
- * Disk: {
- *  sda: Stat[],
- *  sdb: Stat[]
- * }
+ * Network: {
+ *  eth0: {
+ *     rx_bytes: Stat[],
+ *     tx_bytes: Stat[]
+ * },
+ *  eth1: {
+ *     rx_bytes: Stat[],
+ *     tx_bytes: Stat[],
+ * }}
  *
  * A common task is to sum up total usage across all of these series
  * (e.g. total IO for all disks, total traffic across all net interfaces, etc.)
@@ -230,16 +235,25 @@ export const statMax = (stats: StatWithDummyPoint[] = []): number => {
  * output will be a single data series of type T, where the y values will
  * be summed for each matching value of X.
  */
-export const sumStatsObject = <T>(data: Record<string, T>): T => {
-  return Object.values(data).reduce((accum, thisObject) => {
-    return produce(accum, draft => {
-      Object.keys(thisObject).forEach(thisKey => {
-        if (thisKey in accum) {
-          draft[thisKey] = appendStats(accum[thisKey], thisObject[thisKey]);
-        } else {
-          draft[thisKey] = thisObject[thisKey];
-        }
+export const sumStatsObject = <T>(
+  data: Record<string, T>,
+  emptyState: T = {} as T
+): T => {
+  if (!data || typeof data !== 'object') {
+    return emptyState;
+  }
+  return Object.values(data).reduce(
+    (accum, thisObject) => {
+      return produce(accum, draft => {
+        Object.keys(thisObject).forEach(thisKey => {
+          if (thisKey in accum) {
+            draft[thisKey] = appendStats(accum[thisKey], thisObject[thisKey]);
+          } else {
+            draft[thisKey] = thisObject[thisKey];
+          }
+        });
       });
-    });
-  }, {} as T);
+    },
+    { ...emptyState }
+  );
 };
