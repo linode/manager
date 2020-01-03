@@ -154,6 +154,8 @@ const Graphs: React.FC<CombinedProps> = props => {
                 title="Space"
                 subtitle="GB"
                 timezone={timezone}
+                // @todo replace with byte-to-target converter after rebase
+                suggestedMax={total[0].y / 1024 / 1024 / 1024}
               />
             </div>
             <div data-testid="inodes-graph">
@@ -167,7 +169,6 @@ const Graphs: React.FC<CombinedProps> = props => {
                   }
                 ]}
                 showToday={isToday}
-                suggestedMax={1000000}
                 title="Inodes"
                 timezone={timezone}
               />
@@ -206,7 +207,9 @@ export const formatSpace = (free: Stat[], total: Stat[]) => {
     const _total = total[idx]?.y;
     const newY =
       typeof thisPoint.y === 'number' && typeof _total === 'number'
-        ? +((_total - thisPoint.y) / 1024 / 1024 / 1024).toFixed(2)
+        ? // @todo replace with byte-to-target converter after rebase
+          // or possibly run getUnit() or equivalent here so it's not always GB
+          +((_total - thisPoint.y) / 1024 / 1024 / 1024).toFixed(2)
         : null;
     return { x: thisPoint.x, y: newY };
   });
