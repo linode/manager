@@ -44,7 +44,7 @@
     "memoizee": "^0.4.14",
     "moment": "^2.21.0",
     "moment-timezone": "^0.5.16",
-    "notistack": "^0.7.0",
+    "notistack": "^0.9.7",
     "novnc-node": "^0.5.3",
     "patch-package": "^6.1.0",
     "postinstall-postinstall": "^2.0.0",
