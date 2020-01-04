@@ -8,7 +8,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import { getValues } from '../../../request';
 import { NginxUserProcesses, WithStartAndEnd } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
@@ -30,6 +29,7 @@ interface Props {
 export const NGINX: React.FC<Props> = props => {
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
   const classes = useStyles();
+  const [version, setVersion] = React.useState<string | undefined>();
 
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
     start: 0,
@@ -61,22 +61,10 @@ export const NGINX: React.FC<Props> = props => {
     time.end
   );
 
-  /**
-   * And we get the NGINX version info here
-   * because we don't want to reset it every time
-   * we poll for data/update the time window
-   */
-  const [version, setVersion] = React.useState<string>('NGINX');
-  React.useEffect(() => {
-    if (!clientAPIKey) {
-      return;
-    }
-    getValues(clientAPIKey, { fields: ['nginxVersion'] })
-      .then(response => {
-        setVersion(response.DATA?.Applications?.Nginx?.version ?? 'NGINX');
-      })
-      .catch(_ => null); // Just leave the default value NGINX as the page label
-  }, [clientAPIKey]);
+  const _version = data.Applications?.Nginx?.version;
+  if (!version && _version) {
+    setVersion(_version);
+  }
 
   React.useEffect(() => {
     request();

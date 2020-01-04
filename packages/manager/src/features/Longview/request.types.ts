@@ -268,8 +268,7 @@ export type LongviewFieldName =
   | 'listeningServices'
   | 'activeConnections'
   | 'nginx'
-  | 'nginxProcesses'
-  | 'nginxVersion';
+  | 'nginxProcesses';
 
 export interface Options {
   fields: LongviewFieldName[];
