@@ -20,7 +20,7 @@
     "@material-ui/icons": "^4.4.1",
     "@material-ui/lab": "^4.0.0-alpha.29",
     "@material-ui/styles": "^4.4.1",
-    "@sentry/browser": "^5.7.1",
+    "@sentry/browser": "~5.10.2",
     "algoliasearch": "^3.30.0",
     "axios": "^0.18.1",
     "axios-mock-adapter": "^1.15.0",

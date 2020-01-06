@@ -58,6 +58,7 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
       loading={loading}
       showToday={isToday}
       timezone={timezone}
+      nativeLegend
       data={[
         {
           label: 'Inbound',
