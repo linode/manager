@@ -2,7 +2,10 @@ import * as React from 'react';
 import { withTheme, WithTheme } from 'src/components/core/styles';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { getMaxUnitAndFormatNetwork } from 'src/features/Longview/shared/utilities';
-import { LongviewNetworkInterface } from '../../../request.types';
+import {
+  InboundOutboundNetwork,
+  LongviewNetworkInterface
+} from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import GraphCard from '../../GraphCard';
 
@@ -36,7 +39,8 @@ export const NetworkGraphs: React.FC<CombinedProps> = props => {
     end
   ]);
 
-  const interfaces = Object.entries(networkData);
+  // Sort interfaces by label alphabetically
+  const interfaces = Object.entries(networkData).sort(sortInterfaces);
 
   return (
     <>
@@ -80,6 +84,17 @@ export const NetworkGraphs: React.FC<CombinedProps> = props => {
       })}
     </>
   );
+};
+
+type InterfaceItem = [string, InboundOutboundNetwork<''>];
+export const sortInterfaces = (a: InterfaceItem, b: InterfaceItem) => {
+  if (a[0] > b[0]) {
+    return 1;
+  }
+  if (a[0] < b[0]) {
+    return -1;
+  }
+  return 0;
 };
 
 export default withTheme(NetworkGraphs);
