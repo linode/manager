@@ -84,7 +84,7 @@ export const NetworkLanding: React.FC<Props> = props => {
           networkData={interfaces}
           isToday={isToday}
           loading={loading}
-          error={lastUpdatedError?.[0].reason || error}
+          error={lastUpdatedError?.[0]?.reason || error}
           timezone={timezone}
           start={time.start}
           end={time.end}
