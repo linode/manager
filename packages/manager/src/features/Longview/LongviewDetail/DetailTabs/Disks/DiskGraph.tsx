@@ -30,8 +30,8 @@ const DiskGraph: React.FC<CombinedProps> = props => {
   const childOf = stats?.childof ?? 0;
   const mounted = stats?.mounted ?? 0;
 
-  const iFree = stats?.fs?.free ?? [];
-  const iTotal = stats?.fs?.total ?? [];
+  const iFree = stats?.fs?.ifree ?? [];
+  const iTotal = stats?.fs?.itotal ?? [];
   const free = stats?.fs?.free ?? [];
   const total = stats?.fs?.total ?? [];
   const reads = stats?.reads ?? [];
