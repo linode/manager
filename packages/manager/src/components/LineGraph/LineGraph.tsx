@@ -15,6 +15,7 @@ import { setUpCharts } from 'src/utilities/charts';
 import { Metrics } from 'src/utilities/statMetrics';
 import {
   convertBytesToTarget,
+  readableBytes,
   StorageSymbol
 } from 'src/utilities/unitConversions';
 import MetricDisplayStyles from './NewMetricDisplay.styles';
@@ -100,7 +101,8 @@ const chartOptions: any = {
     borderWidth: 0.5,
     borderColor: '#999',
     caretPadding: 10,
-    position: 'nearest'
+    position: 'nearest',
+    callbacks: {}
   }
 };
 
@@ -170,7 +172,8 @@ const LineGraph: React.FC<CombinedProps> = props => {
   const getChartOptions = (
     _suggestedMax?: number,
     _unit?: string,
-    _nativeLegend?: boolean
+    _nativeLegend?: boolean,
+    _maxUnit?: StorageSymbol
   ) => {
     const finalChartOptions = clone(chartOptions);
     const parser = parseInTimeZone(timezone || '');
@@ -207,6 +210,14 @@ const LineGraph: React.FC<CombinedProps> = props => {
       finalChartOptions.legend.position = 'bottom';
     }
 
+    if (_maxUnit) {
+      // We've been given a max unit, which indicates that
+      // the data we're looking at is in bytes. We should
+      // adjust the tooltip display so that if the maxUnit is GB we
+      // display 8MB instead of 0.0000000000008 GB
+      finalChartOptions.tooltips.callbacks.label = formatTooltip(data);
+    }
+
     return finalChartOptions;
   };
 
@@ -237,7 +248,7 @@ const LineGraph: React.FC<CombinedProps> = props => {
         <Line
           {...rest}
           height={chartHeight || 300}
-          options={getChartOptions(suggestedMax, unit, nativeLegend)}
+          options={getChartOptions(suggestedMax, unit, nativeLegend, maxUnit)}
           plugins={plugins}
           ref={inputEl}
           data={{
@@ -351,5 +362,21 @@ export const metricsBySection = (data: Metrics): number[] => [
   data.average,
   data.last
 ];
+
+export const formatTooltip = curry((data: any, t: any, d: any) =>
+  /**
+   * Deepest apologies! We want to mimic the behavior of Classic Manager,
+   * and show tooltip values in appropriate units. However,
+   * our formatData() function gets called before this function,
+   * so we have to access the original data series passed into the
+   * component.
+   */
+  d.datasets.map(
+    (thisDataSet: any, idx: number) =>
+      `${thisDataSet.label}: ${
+        readableBytes(data[idx].data[t.index][1]).formatted
+      }`
+  )
+);
 
 export default LineGraph;
