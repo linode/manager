@@ -11,7 +11,9 @@ import {
 import Typography from 'src/components/core/Typography';
 
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-import { StatWithDummyPoint } from '../../../request.types';
+import { isToday as _isToday } from 'src/utilities/isToday';
+import { Stat, StatWithDummyPoint } from '../../../request.types';
+import { convertData } from '../../../shared/formatters';
 
 const useStyles = makeStyles((theme: Theme) => ({
   graphContainer: {
@@ -36,15 +38,16 @@ export interface Props {
   sysInfoType: string;
   isMounted: boolean;
   timezone: string;
-  iFree: StatWithDummyPoint[];
-  iTotal: StatWithDummyPoint[];
-  free: StatWithDummyPoint[];
-  total: StatWithDummyPoint[];
-  reads: StatWithDummyPoint[];
-  writes: StatWithDummyPoint[];
+  iFree: Stat[];
+  iTotal: Stat[];
+  free: Stat[];
+  total: Stat[];
+  reads: Stat[];
+  writes: Stat[];
   diskLabel: string;
   startTime: number;
   endTime: number;
+  loading: boolean;
 }
 
 type CombinedProps = Props & WithTheme;
@@ -58,6 +61,7 @@ const Graphs: React.FC<CombinedProps> = props => {
     sysInfoType,
     diskLabel,
     theme,
+    loading,
     timezone,
     free,
     total,
@@ -83,8 +87,11 @@ const Graphs: React.FC<CombinedProps> = props => {
     );
   }
 
-  const isToday = endTime - startTime < 60 * 60 * 25;
+  const isToday = _isToday(endTime, startTime);
   const labelHelperText = generateHelperText(sysInfoType, isSwap, isMounted);
+
+  const _free = formatSpace(free, total);
+  const _inodes = formatINodes(iFree, iTotal);
 
   return (
     <React.Fragment>
@@ -104,15 +111,16 @@ const Graphs: React.FC<CombinedProps> = props => {
         {sysInfoType.toLowerCase() !== 'openvz' && (
           <div data-testid="diskio-graph">
             <LongviewLineGraph
+              loading={loading}
               data={[
                 {
-                  data: formatDiskIO(writes),
+                  data: convertData(writes, startTime, endTime, formatDiskIO),
                   label: 'Write',
                   borderColor: theme.graphs.orangeBorder,
                   backgroundColor: theme.graphs.orange
                 },
                 {
-                  data: formatDiskIO(reads),
+                  data: convertData(reads, startTime, endTime, formatDiskIO),
                   label: 'Read',
                   borderColor: theme.graphs.yellowBorder,
                   backgroundColor: theme.graphs.yellow
@@ -136,7 +144,7 @@ const Graphs: React.FC<CombinedProps> = props => {
               <LongviewLineGraph
                 data={[
                   {
-                    data: formatSpace(free, total),
+                    data: convertData(_free, startTime, endTime),
                     label: 'Space',
                     borderColor: theme.graphs.salmonBorder,
                     backgroundColor: theme.graphs.salmon
@@ -146,22 +154,25 @@ const Graphs: React.FC<CombinedProps> = props => {
                 title="Space"
                 subtitle="GB"
                 timezone={timezone}
+                // @todo replace with byte-to-target converter after rebase
+                suggestedMax={total[0]?.y / 1024 / 1024 / 1024}
               />
             </div>
             <div data-testid="inodes-graph">
               <LongviewLineGraph
                 data={[
                   {
-                    data: formatINodes(iFree, iTotal),
+                    data: convertData(_inodes, startTime, endTime),
                     label: 'Inodes',
                     borderColor: theme.graphs.pinkBorder,
                     backgroundColor: theme.graphs.pink
                   }
                 ]}
                 showToday={isToday}
-                suggestedMax={1000000}
                 title="Inodes"
                 timezone={timezone}
+                // @todo replace with byte-to-target converter after rebase
+                suggestedMax={iTotal[0]?.y}
               />
             </div>
           </React.Fragment>
@@ -172,9 +183,9 @@ const Graphs: React.FC<CombinedProps> = props => {
 };
 
 export const formatINodes = (
-  ifree: StatWithDummyPoint[],
-  itotal: StatWithDummyPoint[]
-): [number, number | null][] => {
+  ifree: Stat[],
+  itotal: Stat[]
+): StatWithDummyPoint[] => {
   return itotal.map((eachTotalStat, index) => {
     const { y: totalY, x: totalX } = eachTotalStat;
     const { y: freeY } = pathOr(
@@ -188,45 +199,34 @@ export const formatINodes = (
         ? +(totalY - freeY).toFixed(2)
         : null;
 
-    /* convert seconds to MS */
-    return [totalX * 1000, cleanedY];
+    return { x: totalX, y: cleanedY };
   });
 };
 
-export const formatSpace = (
-  free: StatWithDummyPoint[],
-  total: StatWithDummyPoint[]
-): [number, number | null][] => {
-  return total.map((eachTotalStat, index) => {
-    const { y: totalY, x: totalX } = eachTotalStat;
-    const { y: freeY } = pathOr(
-      { y: null, x: 0 },
-      [index],
-      free
-    ) as StatWithDummyPoint;
-
-    const cleanedY =
-      typeof totalY === 'number' && typeof freeY === 'number'
-        ? /* convert bytes to GB */
-          +((totalY - freeY) / 1024 / 1024 / 1024).toFixed(2)
+/**
+ * We want to show how much spaced is used on each disk,
+ * and are given free space and total space from the LV API.
+ *
+ * If we have data for a given point in time (y is not null),
+ * then we can calculate used space by total - free.
+ * @param free
+ * @param total
+ */
+export const formatSpace = (free: Stat[], total: Stat[]) => {
+  return free.map((thisPoint, idx) => {
+    const _total = total[idx]?.y;
+    const newY =
+      typeof thisPoint.y === 'number' && typeof _total === 'number'
+        ? // @todo replace with byte-to-target converter after rebase
+          // or possibly run getUnit() or equivalent here so it's not always GB
+          +((_total - thisPoint.y) / 1024 / 1024 / 1024).toFixed(2)
         : null;
-
-    return [
-      /* convert seconds to MS */
-      totalX * 1000,
-      cleanedY
-    ];
+    return { x: thisPoint.x, y: newY };
   });
 };
 
-export const formatDiskIO = (
-  stat: StatWithDummyPoint[]
-): [number, number | null][] => {
-  return stat.map(eachStat => {
-    const cleanedY =
-      typeof eachStat.y === 'number' ? +eachStat.y.toFixed(2) : null;
-    return [eachStat.x * 1000, cleanedY];
-  });
+export const formatDiskIO = (value: number) => {
+  return typeof value === 'number' ? +value.toFixed(2) : null;
 };
 
 export const generateHelperText = (
