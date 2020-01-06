@@ -42,7 +42,7 @@ export interface Props {
   rowHeaders?: Array<string>;
   legendRows?: Array<ChartData<any>>;
   unit?: string; // Display unit on Y axis ticks
-  maxUnit?: StorageSymbol; // Rounds data to all
+  maxUnit?: StorageSymbol; // Rounds data to this unit. IMPORTANT: if this prop is provided, data should be in bytes
   nativeLegend?: boolean; // Display chart.js native legend
 }
 
@@ -211,10 +211,21 @@ const LineGraph: React.FC<CombinedProps> = props => {
     }
 
     if (_maxUnit) {
-      // We've been given a max unit, which indicates that
-      // the data we're looking at is in bytes. We should
-      // adjust the tooltip display so that if the maxUnit is GB we
-      // display 8MB instead of 0.0000000000008 GB
+      /**
+       * We've been given a max unit, which indicates that
+       * the data we're looking at is in bytes. We should
+       * adjust the tooltip display so that if the maxUnit is GB we
+       * display 8MB instead of 0.0000000000000000000000008 GB
+       *
+       * NOTE: formatTooltip is curried, so here we're creating a new
+       * function has the raw data from props bound to it. This is because
+       * we need to access the original data to determine what unit to display
+       * it in.
+       *
+       * NOTE2: _maxUnit is the unit that all series on the graph will be converted to.
+       * However, in the tooltip, each individual value will be formatted according to
+       * the most appropriate unit.
+       */
       finalChartOptions.tooltips.callbacks.label = formatTooltip(data);
     }
 
@@ -365,18 +376,22 @@ export const metricsBySection = (data: Metrics): number[] => [
 
 export const formatTooltip = curry((data: any, t: any, d: any) =>
   /**
-   * Deepest apologies! We want to mimic the behavior of Classic Manager,
+   * This is a horror show, sorry.
+   * We want to mimic the behavior of Classic Manager,
    * and show tooltip values in appropriate units. However,
    * our formatData() function gets called before this function,
-   * so we have to access the original data series passed into the
+   * so all values will already be <1000 (give or take) and be displayed
+   * as "8 bytes".
+   * In order to customize units for each value,
+   * we have to access the original data series passed into the
    * component.
    */
-  d.datasets.map(
-    (thisDataSet: any, idx: number) =>
-      `${thisDataSet.label}: ${
-        readableBytes(data[idx].data[t.index][1]).formatted
-      }`
-  )
+  d.datasets.map((thisDataSet: any, idx: number) => {
+    // The y value for this entry in this series
+    const value = data[idx].data[t.index][1] || 0;
+    const roundedValue = Math.round(value * 100000000) / 100000000;
+    return `${thisDataSet.label}: ${readableBytes(roundedValue).formatted}`;
+  })
 );
 
 export default LineGraph;
