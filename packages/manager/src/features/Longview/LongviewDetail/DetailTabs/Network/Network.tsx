@@ -4,6 +4,7 @@ import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
+import { isToday as _isToday } from 'src/utilities/isToday';
 import {
   LongviewNetworkInterface,
   WithStartAndEnd
@@ -51,7 +52,7 @@ export const NetworkLanding: React.FC<Props> = props => {
 
   const interfaces: LongviewNetworkInterface = data?.Network?.Interface ?? {};
 
-  const isToday = time.end - time.start < 60 * 60 * 25;
+  const isToday = _isToday(time.start, time.end);
 
   return (
     <Grid

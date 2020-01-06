@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { withTheme, WithTheme } from 'src/components/core/styles';
+import ErrorState from 'src/components/ErrorState';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
+import Placeholder from 'src/components/Placeholder';
 import { getMaxUnitAndFormatNetwork } from 'src/features/Longview/shared/utilities';
 import {
   InboundOutboundNetwork,
@@ -41,6 +43,22 @@ export const NetworkGraphs: React.FC<CombinedProps> = props => {
 
   // Sort interfaces by label alphabetically
   const interfaces = Object.entries(networkData).sort(sortInterfaces);
+
+  if (error) {
+    // We have to show a global error state, since there won't be any
+    // interfaces or graphs if the request failed.
+    return <ErrorState errorText={error} />;
+  }
+
+  if (interfaces.length === 0 && !loading) {
+    // Empty state
+    return (
+      <Placeholder
+        title="No network interfaces detected"
+        copy="The Longview agent has not detected any interfaces that it can monitor."
+      />
+    );
+  }
 
   return (
     <>

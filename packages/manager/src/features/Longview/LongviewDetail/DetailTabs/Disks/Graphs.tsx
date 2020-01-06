@@ -86,7 +86,7 @@ const Graphs: React.FC<CombinedProps> = props => {
     );
   }
 
-  const isToday = _isToday(endTime, startTime);
+  const isToday = _isToday(startTime, endTime);
   const labelHelperText = generateHelperText(sysInfoType, isSwap, isMounted);
 
   const _free = React.useMemo(() => formatSpace(free, total), [free, total]);
