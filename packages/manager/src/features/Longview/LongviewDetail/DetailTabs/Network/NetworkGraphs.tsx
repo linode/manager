@@ -1,4 +1,5 @@
 import * as React from 'react';
+import CircleProgress from 'src/components/CircleProgress';
 import { withTheme, WithTheme } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
@@ -43,6 +44,10 @@ export const NetworkGraphs: React.FC<CombinedProps> = props => {
 
   // Sort interfaces by label alphabetically
   const interfaces = Object.entries(networkData).sort(sortInterfaces);
+
+  if (loading && interfaces.length === 0) {
+    return <CircleProgress />;
+  }
 
   if (error) {
     // We have to show a global error state, since there won't be any
