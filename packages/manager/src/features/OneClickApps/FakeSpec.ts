@@ -180,8 +180,8 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Grafana',
-    description: `Grafana allows you to query, visualize, alert on and understand your metrics no matter where they are stored. Create, explore, and share dashboards with your team and foster a data driven culture.`,
-    summary: `Grafana is the open source analytics & monitoring solution for every database.`,
+    description: `Grafana gives you the ability to create, monitor, store, and share metrics with your team to keep tabs on your infrastructure.`,
+    summary: `An open source analytics and monitoring solution with a focus on accessibility for metric visualization.`,
     related_info: [
       {
         title: 'https://grafana.com/',
@@ -195,8 +195,8 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Jenkins',
-    description: `Jenkins is a self-contained, open source automation server which can be used to automate all sorts of tasks related to building, testing, and delivering or deploying software.`,
-    summary: `Jenkins provides hundreds of plugins to support building, deploying and automating any project.`,
+    description: `Jenkins is an open source automation tool which can build, test, and deploy your infrastructure.`,
+    summary: `A tool that gives you access to a massive library of plugins to support automation in your project's lifecycle.`,
     related_guides: [
       {
         title: 'Using LISH to SSH into your Linode',
@@ -305,9 +305,9 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Prometheus',
-    description: `Prometheus is a an open-source monitoring system with a dimensional data model, flexible query language, efficient time series database and modern alerting approach.`,
+    description: `Prometheus is a powerful monitoring software tool that collects metrics from configurable data points at given intervals, evaluates rule expressions, and can trigger alerts if some condition is observed.`,
     summary:
-      'Power your metrics with a leading open-source monitoring solution.',
+      'Gain metrics and receive alerts with this open-source monitoring tool.',
     related_info: [
       {
         title: 'https://prometheus.io/',
