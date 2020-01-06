@@ -180,7 +180,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Grafana',
-    description: `Grafana gives you the ability to create, monitor, store, and share metrics with to your team to keep tabs on your infrastructure.`,
+    description: `Grafana gives you the ability to create, monitor, store, and share metrics with your team to keep tabs on your infrastructure.`,
     summary: `An open source analytics and monitoring solution with a focus on accessibility for metric visualization.`,
     related_info: [
       {
@@ -305,7 +305,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Prometheus',
-    description: `Prometheus is a powerful monitoring software that collects metrics from configurable data points at given intervals, evaluates rule expressions, and can trigger alerts if some condition is observed.`,
+    description: `Prometheus is a powerful monitoring software tool that collects metrics from configurable data points at given intervals, evaluates rule expressions, and can trigger alerts if some condition is observed.`,
     summary:
       'Gain metrics and receive alerts with this open-source monitoring tool.',
     related_info: [
