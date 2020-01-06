@@ -203,6 +203,15 @@ export const formatINodes = (
   });
 };
 
+/**
+ * We want to show how much spaced is used on each disk,
+ * and are given free space and total space from the LV API.
+ *
+ * If we have data for a given point in time (y is not null),
+ * then we can calculate used space by total - free.
+ * @param free
+ * @param total
+ */
 export const formatSpace = (free: Stat[], total: Stat[]) => {
   return free.map((thisPoint, idx) => {
     const _total = total[idx]?.y;

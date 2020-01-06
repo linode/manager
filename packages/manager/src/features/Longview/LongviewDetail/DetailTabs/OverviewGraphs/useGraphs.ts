@@ -1,4 +1,3 @@
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { getValues } from '../../../request';
 import { AllData, LongviewFieldName } from '../../../request.types';
@@ -41,15 +40,12 @@ export const useGraphs = (
       .catch(e => {
         if (mounted) {
           setLoading(false);
-          setError(
-            pathOr('Unable to retrieve data.', ['NOTIFICATIONS', 0, 'TEXT'], e)
-          );
+          setError(e.NOTIFICATIONS?.[0]?.TEXT ?? 'Unable to retrieve data.');
         }
       });
   };
 
-  // Request on first mount and when the clientAPIKey changes.
-  // Also poll the data
+  // Poll the data. Reset/refresh the interval if the clientAPIKey changes.
   React.useEffect(() => {
     if (!clientAPIKey) {
       return;
