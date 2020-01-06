@@ -12,13 +12,14 @@ import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import Paginate from 'src/components/Paginate';
-import PaginationFooter from 'src/components/PaginationFooter';
+import PaginationFooter, {
+  MIN_PAGE_SIZE
+} from 'src/components/PaginationFooter';
 import DomainTableRow from 'src/features/Domains/DomainTableRow';
+import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 import { Handlers } from './DomainActionMenu';
 import TableWrapper from './DomainsTableWrapper';
-
-const DEFAULT_PAGE_SIZE = 25;
 
 type ClassNames =
   | 'root'
@@ -90,12 +91,18 @@ const ListGroupedDomains: React.StatelessComponent<CombinedProps> = props => {
   )(data);
   const tableWrapperProps = { handleOrderChange, order, orderBy };
 
+  const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
+
   return (
     <TableWrapper {...tableWrapperProps}>
       {groupedDomains.map(([tag, domains]: [string, Domain[]]) => {
         return (
           <React.Fragment key={tag}>
-            <Paginate data={domains} pageSize={DEFAULT_PAGE_SIZE}>
+            <Paginate
+              data={domains}
+              pageSize={infinitePageSize}
+              pageSizeSetter={setInfinitePageSize}
+            >
               {({
                 data: paginatedData,
                 handlePageChange,
@@ -134,7 +141,7 @@ const ListGroupedDomains: React.StatelessComponent<CombinedProps> = props => {
                           onDisableOrEnable={props.onDisableOrEnable}
                         />
                       ))}
-                      {count > DEFAULT_PAGE_SIZE && (
+                      {count > MIN_PAGE_SIZE && (
                         <TableRow>
                           <TableCell
                             colSpan={7}
@@ -147,6 +154,7 @@ const ListGroupedDomains: React.StatelessComponent<CombinedProps> = props => {
                               pageSize={pageSize}
                               page={page}
                               eventCategory={'domains landing'}
+                              showAll
                             />
                           </TableCell>
                         </TableRow>

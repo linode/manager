@@ -12,12 +12,13 @@ import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import Paginate from 'src/components/Paginate';
-import PaginationFooter from 'src/components/PaginationFooter';
+import PaginationFooter, {
+  MIN_PAGE_SIZE
+} from 'src/components/PaginationFooter';
+import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 import NodeBalancersLandingTableRows from './NodeBalancersLandingTableRows';
 import TableWrapper from './NodeBalancersTableWrapper';
-
-const DEFAULT_PAGE_SIZE = 25;
 
 type ClassNames =
   | 'ip'
@@ -99,12 +100,18 @@ const ListGroupedNodeBalancers: React.StatelessComponent<
   )(data);
   const tableWrapperProps = { handleOrderChange, order, orderBy };
 
+  const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
+
   return (
     <TableWrapper {...tableWrapperProps}>
       {groupedNodeBalancers.map(([tag, nodeBalancers]) => {
         return (
           <React.Fragment key={tag}>
-            <Paginate data={nodeBalancers} pageSize={DEFAULT_PAGE_SIZE}>
+            <Paginate
+              data={nodeBalancers}
+              pageSize={infinitePageSize}
+              pageSizeSetter={setInfinitePageSize}
+            >
               {({
                 count,
                 data: paginatedData,
@@ -135,10 +142,10 @@ const ListGroupedNodeBalancers: React.StatelessComponent<
                         data={paginatedData}
                       />
                     </TableBody>
-                    {count > DEFAULT_PAGE_SIZE && (
+                    {count > MIN_PAGE_SIZE && (
                       <TableRow>
                         <TableCell
-                          colSpan={7}
+                          colSpan={8}
                           className={classes.paginationCell}
                         >
                           <PaginationFooter
@@ -148,6 +155,7 @@ const ListGroupedNodeBalancers: React.StatelessComponent<
                             handlePageChange={handlePageChange}
                             handleSizeChange={handlePageSizeChange}
                             eventCategory="nodebalancers landing"
+                            showAll
                           />
                         </TableCell>
                       </TableRow>
