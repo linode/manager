@@ -50,7 +50,7 @@ export interface ReadableBytesOptions {
   unitLabels?: Partial<Record<StorageSymbol, string>>;
 }
 
-type StorageSymbol = 'bytes' | 'KB' | 'MB' | 'GB' | 'TB';
+export type StorageSymbol = 'bytes' | 'KB' | 'MB' | 'GB' | 'TB';
 
 // This code inspired by: https://ourcodeworld.com/articles/read/713/converting-bytes-to-human-readable-values-kb-mb-gb-tb-pb-eb-zb-yb-with-javascript
 export const readableBytes = (
@@ -163,10 +163,9 @@ const determineDecimalPlaces = (
   }
 };
 
-export type Unit = 'B' | 'KB' | 'MB' | 'GB';
-export const convertBytesToTarget = (unit: Unit, value: number) => {
+export const convertBytesToTarget = (unit: StorageSymbol, value: number) => {
   switch (unit) {
-    case 'B':
+    case 'bytes':
       return value;
     case 'KB':
       return value / 1024;
@@ -174,5 +173,7 @@ export const convertBytesToTarget = (unit: Unit, value: number) => {
       return value / 1024 / 1024;
     case 'GB':
       return value / 1024 / 1024 / 1024;
+    case 'TB':
+      return value / 1024 / 1024 / 1024 / 1024;
   }
 };

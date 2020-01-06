@@ -13,6 +13,10 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import { setUpCharts } from 'src/utilities/charts';
 import { Metrics } from 'src/utilities/statMetrics';
+import {
+  convertBytesToTarget,
+  StorageSymbol
+} from 'src/utilities/unitConversions';
 import MetricDisplayStyles from './NewMetricDisplay.styles';
 setUpCharts();
 
@@ -37,6 +41,7 @@ export interface Props {
   rowHeaders?: Array<string>;
   legendRows?: Array<ChartData<any>>;
   unit?: string; // Display unit on Y axis ticks
+  maxUnit?: StorageSymbol; // Rounds data to all
   nativeLegend?: boolean; // Display chart.js native legend
 }
 
@@ -135,6 +140,7 @@ const LineGraph: React.FC<CombinedProps> = props => {
     data,
     rowHeaders,
     legendRows,
+    maxUnit,
     nativeLegend,
     ...rest
   } = props;
@@ -207,7 +213,10 @@ const LineGraph: React.FC<CombinedProps> = props => {
   const formatData = () => {
     return data.map(dataSet => {
       const timeData = dataSet.data.reduce((acc: any, point: any) => {
-        acc.push({ t: point[0], y: point[1] });
+        acc.push({
+          t: point[0],
+          y: maxUnit ? convertBytesToTarget(maxUnit, point[1]) : point[1]
+        });
         return acc;
       }, []);
 

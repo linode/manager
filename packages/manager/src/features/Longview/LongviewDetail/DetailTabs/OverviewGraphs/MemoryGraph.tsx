@@ -2,10 +2,7 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { withTheme, WithTheme } from 'src/components/core/styles';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-import {
-  convertBytesToTarget,
-  readableBytes
-} from 'src/utilities/unitConversions';
+import { readableBytes, StorageSymbol } from 'src/utilities/unitConversions';
 import { Stat } from '../../../request.types';
 import { convertData, formatMemory } from '../../../shared/formatters';
 import { generateUsedMemory, statMax } from '../../../shared/utilities';
@@ -58,18 +55,11 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
   // LV returns stuff in KB so have to convert to bytes using base-2
   const unit = readableBytes(max * 1024).unit;
 
-  const formatMemory = (value: number | null) => {
-    if (value === null) {
-      return value;
-    }
-    // x1024 bc the API returns data in KB
-    return (convertBytesToTarget(unit as any, value * 1024) * 100) / 100;
-  };
-
   return (
     <LongviewLineGraph
       title="Memory"
       subtitle={unit}
+      maxUnit={unit as StorageSymbol}
       error={error}
       loading={loading}
       showToday={isToday}
@@ -105,6 +95,13 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
   );
 };
 
+const formatMemory = (value: number | null) => {
+  if (value === null) {
+    return null;
+  }
+  return value * 1024; // convert from KB to B
+};
+
 /**
  * This uses the generateUsedMemory utility,
  * but unlike in the graphs, here we're dealing
@@ -134,10 +131,3 @@ export const getUsedMemory = (used: Stat[], cache: Stat[], buffers: Stat[]) => {
 };
 
 export default withTheme(MemoryGraph);
-
-export const customRounding = (val: number) => {
-  if (val < 1) {
-    return (val * 100) / 100;
-  }
-  return Math.round(val);
-};
