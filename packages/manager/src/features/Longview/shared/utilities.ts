@@ -1,5 +1,7 @@
+import produce from 'immer';
 import { pathOr } from 'ramda';
 import { LVClientData } from 'src/containers/longview.stats.container';
+import { generateUnits } from 'src/features/Longview/LongviewLanding/Gauges/Network';
 import { pluralize } from 'src/utilities/pluralize';
 import { readableBytes } from 'src/utilities/unitConversions';
 import {
@@ -207,4 +209,81 @@ export const statMax = (stats: StatWithDummyPoint[] = []): number => {
     }
     return acc;
   }, 0);
+};
+
+/**
+ * sumStatsObject
+ *
+ * Generalized version of utilities such as sumNetwork.
+ * Many LV endpoints return an indeterminate number of stats fields,
+ * in a format something like:
+ *
+ * Network: {
+ *  eth0: {
+ *     rx_bytes: Stat[],
+ *     tx_bytes: Stat[]
+ * },
+ *  eth1: {
+ *     rx_bytes: Stat[],
+ *     tx_bytes: Stat[],
+ * }}
+ *
+ * A common task is to sum up total usage across all of these series
+ * (e.g. total IO for all disks, total traffic across all net interfaces, etc.)
+ * which is what this method does.
+ *
+ * @param data a Record<string, something> as in the example above. The
+ * output will be a single data series of type T, where the y values will
+ * be summed for each matching value of X.
+ */
+export const sumStatsObject = <T>(
+  data: Record<string, T>,
+  emptyState: T = {} as T
+): T => {
+  if (!data || typeof data !== 'object') {
+    return emptyState;
+  }
+  return Object.values(data).reduce(
+    (accum, thisObject) => {
+      return produce(accum, draft => {
+        Object.keys(thisObject).forEach(thisKey => {
+          if (thisKey in accum) {
+            draft[thisKey] = appendStats(accum[thisKey], thisObject[thisKey]);
+          } else {
+            draft[thisKey] = thisObject[thisKey];
+          }
+        });
+      });
+    },
+    { ...emptyState }
+  );
+};
+
+export const getMaxUnitAndFormatNetwork = (
+  rx_bytes: StatWithDummyPoint[],
+  tx_bytes: StatWithDummyPoint[]
+) => {
+  // Determine the unit based on the largest value.
+  const max = Math.max(statMax(rx_bytes), statMax(tx_bytes));
+  const maxUnit = generateUnits(max).unit;
+
+  const formatNetwork = (valueInBytes: number | null) => {
+    if (valueInBytes === null) {
+      return valueInBytes;
+    }
+
+    const valueInBits = valueInBytes * 8;
+
+    if (maxUnit === 'Mb') {
+      // If the unit we're using for the graph is Mb, return the output in Mb.
+      const valueInMegabits = valueInBits / 1024 / 1024;
+      return Math.round(valueInMegabits * 100) / 100;
+    } else {
+      // If the unit we're using for the graph is Kb, return the output in Kb.
+      const valueInKilobits = valueInBits / 1024;
+      return Math.round(valueInKilobits * 100) / 100;
+    }
+  };
+
+  return { maxUnit, formatNetwork };
 };

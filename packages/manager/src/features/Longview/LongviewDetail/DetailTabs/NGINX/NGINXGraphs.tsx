@@ -1,10 +1,11 @@
-import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-import { NginxResponse } from '../../../request.types';
+import { NginxResponse, NginxUserProcesses } from '../../../request.types';
+import { convertData } from '../../../shared/formatters';
+import NGINXProcessGraphs from './NGINXProcessGraphs';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -21,20 +22,34 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   data?: NginxResponse;
-  error?: APIError[];
+  error?: string;
   loading: boolean;
   timezone: string;
   isToday: boolean;
+  start: number;
+  end: number;
+  processesData: NginxUserProcesses;
+  processesLoading: boolean;
+  processesError?: string;
 }
 
 export const NGINXGraphs: React.FC<Props> = props => {
-  const { data, error, isToday, loading, timezone } = props;
-  const classes = useStyles();
-  const _error = error ? error[0].reason : undefined;
+  const {
+    data,
+    error,
+    isToday,
+    loading,
+    timezone,
+    start,
+    end,
+    processesData,
+    processesLoading,
+    processesError
+  } = props;
 
-  if (!data) {
-    return null;
-  }
+  const classes = useStyles();
+
+  const _convertData = React.useCallback(convertData, [data, start, end]);
 
   return (
     <Paper className={classes.root}>
@@ -42,12 +57,19 @@ export const NGINXGraphs: React.FC<Props> = props => {
         <Grid item xs={12}>
           <LongviewLineGraph
             title="Requests"
-            subtitle={'KB' + '/s'}
-            error={_error}
+            subtitle="requests/s"
+            error={error}
             loading={loading}
             showToday={isToday}
             timezone={timezone}
-            data={[]}
+            data={[
+              {
+                label: 'Requests',
+                borderColor: '#22ceb6',
+                backgroundColor: '#22ceb6',
+                data: _convertData(data?.requests ?? [], start, end, formatData)
+              }
+            ]}
           />
         </Grid>
         <Grid item xs={12}>
@@ -55,82 +77,106 @@ export const NGINXGraphs: React.FC<Props> = props => {
             <Grid item xs={12} sm={6} className={classes.smallGraph}>
               <LongviewLineGraph
                 title="Connections"
-                subtitle={'KB' + '/s'}
-                error={_error}
+                subtitle="connections/s"
+                nativeLegend
+                error={error}
                 loading={loading}
                 showToday={isToday}
                 timezone={timezone}
-                data={[]}
+                data={[
+                  {
+                    label: 'Accepted',
+                    borderColor: '#5b698b',
+                    backgroundColor: '#5b698b',
+                    data: _convertData(
+                      data?.accepted_cons ?? [],
+                      start,
+                      end,
+                      formatData
+                    )
+                  },
+                  {
+                    label: 'Handled',
+                    borderColor: '#323b4d',
+                    backgroundColor: '#323b4d',
+                    data: _convertData(
+                      data?.handled_cons ?? [],
+                      start,
+                      end,
+                      formatData
+                    )
+                  }
+                ]}
               />
             </Grid>
             <Grid item xs={12} sm={6} className={classes.smallGraph}>
               <LongviewLineGraph
                 title="Workers"
-                subtitle={'KB' + '/s'}
-                error={_error}
+                nativeLegend
+                error={error}
                 loading={loading}
                 showToday={isToday}
                 timezone={timezone}
-                data={[]}
+                data={[
+                  {
+                    label: 'Waiting',
+                    borderColor: '#63d997',
+                    backgroundColor: '#63d997',
+                    data: _convertData(
+                      data?.waiting ?? [],
+                      start,
+                      end,
+                      formatData
+                    )
+                  },
+                  {
+                    label: 'Reading',
+                    borderColor: '#2db969',
+                    backgroundColor: '#2db969',
+                    data: _convertData(
+                      data?.reading ?? [],
+                      start,
+                      end,
+                      formatData
+                    )
+                  },
+                  {
+                    label: 'Writing',
+                    borderColor: '#20834b',
+                    backgroundColor: '#20834b',
+                    data: _convertData(
+                      data?.writing ?? [],
+                      start,
+                      end,
+                      formatData
+                    )
+                  }
+                ]}
               />
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <Grid container direction="row">
-            <Grid item xs={12} sm={6} className={classes.smallGraph}>
-              <LongviewLineGraph
-                title="CPU"
-                subtitle={'KB' + '/s'}
-                error={_error}
-                loading={loading}
-                showToday={isToday}
-                timezone={timezone}
-                data={[]}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} className={classes.smallGraph}>
-              <LongviewLineGraph
-                title="RAM"
-                subtitle={'KB' + '/s'}
-                error={_error}
-                loading={loading}
-                showToday={isToday}
-                timezone={timezone}
-                data={[]}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12}>
-          <Grid container direction="row">
-            <Grid item xs={12} sm={6} className={classes.smallGraph}>
-              <LongviewLineGraph
-                title="Disk I/O"
-                subtitle={'KB' + '/s'}
-                error={_error}
-                loading={loading}
-                showToday={isToday}
-                timezone={timezone}
-                data={[]}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} className={classes.smallGraph}>
-              <LongviewLineGraph
-                title="Process Count"
-                subtitle={'KB' + '/s'}
-                error={_error}
-                loading={loading}
-                showToday={isToday}
-                timezone={timezone}
-                data={[]}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
+        <NGINXProcessGraphs
+          data={processesData}
+          loading={processesLoading}
+          error={processesError || error}
+          timezone={timezone}
+          isToday={isToday}
+          start={start}
+          end={end}
+        />
       </Grid>
     </Paper>
   );
+};
+
+const formatData = (value: number | null) => {
+  if (value === null) {
+    return value;
+  }
+
+  // Round to 2 decimal places.
+  return Math.round(value * 100) / 100;
 };
 
 export default NGINXGraphs;

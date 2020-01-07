@@ -4,7 +4,7 @@ import { AllData, LongviewFieldName } from '../../../request.types';
 
 export const useGraphs = (
   requestFields: LongviewFieldName[],
-  clientAPIKey: string,
+  clientAPIKey: string | undefined,
   start: number,
   end: number
 ) => {
