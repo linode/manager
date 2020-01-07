@@ -66,6 +66,7 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
           <Grid item xs={12} sm={6} className={classes.smallGraph}>
             <LongviewLineGraph
               title="CPU"
+              nativeLegend
               subtitle={'%'}
               error={error}
               loading={loading}
@@ -89,6 +90,7 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
           <Grid item xs={12} sm={6} className={classes.smallGraph}>
             <LongviewLineGraph
               title="RAM"
+              nativeLegend
               subtitle={memoryUnit}
               error={error}
               loading={loading}
@@ -116,6 +118,7 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
           <Grid item xs={12} sm={6} className={classes.smallGraph}>
             <LongviewLineGraph
               title="Disk I/O"
+              nativeLegend
               subtitle={`${diskUnit}/s`}
               error={error}
               loading={loading}
@@ -140,6 +143,7 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
           <Grid item xs={12} sm={6} className={classes.smallGraph}>
             <LongviewLineGraph
               title="Process Count"
+              nativeLegend
               error={error}
               loading={loading}
               showToday={isToday}

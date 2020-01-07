@@ -77,6 +77,7 @@ export const NGINXGraphs: React.FC<Props> = props => {
             <Grid item xs={12} sm={6} className={classes.smallGraph}>
               <LongviewLineGraph
                 title="Connections"
+                nativeLegend
                 error={error}
                 loading={loading}
                 showToday={isToday}
@@ -111,6 +112,7 @@ export const NGINXGraphs: React.FC<Props> = props => {
             <Grid item xs={12} sm={6} className={classes.smallGraph}>
               <LongviewLineGraph
                 title="Workers"
+                nativeLegend
                 error={error}
                 loading={loading}
                 showToday={isToday}
