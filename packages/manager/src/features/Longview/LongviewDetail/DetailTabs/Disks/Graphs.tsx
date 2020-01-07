@@ -7,13 +7,12 @@ import {
   withTheme,
   WithTheme
 } from 'src/components/core/styles';
-
 import Typography from 'src/components/core/Typography';
-
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { isToday as _isToday } from 'src/utilities/isToday';
 import { Stat, StatWithDummyPoint } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
+import GraphCard from '../../GraphCard';
 
 const useStyles = makeStyles((theme: Theme) => ({
   graphContainer: {
@@ -53,8 +52,6 @@ export interface Props {
 type CombinedProps = Props & WithTheme;
 
 const Graphs: React.FC<CombinedProps> = props => {
-  const classes = useStyles();
-
   const {
     isSwap,
     childOf,
@@ -74,6 +71,8 @@ const Graphs: React.FC<CombinedProps> = props => {
     writes
   } = props;
 
+  const classes = useStyles();
+
   if (childOf) {
     /** @todo document the why here. This comes from old Longview.JS */
     return (
@@ -87,27 +86,18 @@ const Graphs: React.FC<CombinedProps> = props => {
     );
   }
 
-  const isToday = _isToday(endTime, startTime);
+  const isToday = _isToday(startTime, endTime);
   const labelHelperText = generateHelperText(sysInfoType, isSwap, isMounted);
 
-  const _free = formatSpace(free, total);
-  const _inodes = formatINodes(iFree, iTotal);
+  const _free = React.useMemo(() => formatSpace(free, total), [free, total]);
+  const _inodes = React.useMemo(() => formatINodes(iFree, iTotal), [
+    iFree,
+    iTotal
+  ]);
 
   return (
-    <React.Fragment>
-      <Typography variant="subtitle1">
-        <React.Fragment>
-          <strong>{diskLabel}</strong>
-          {!!labelHelperText && <React.Fragment> &ndash; </React.Fragment>}
-          {labelHelperText}
-        </React.Fragment>
-      </Typography>
+    <GraphCard title={diskLabel} helperText={labelHelperText}>
       <div className={classes.graphContainer}>
-        {/* 
-            openVZ disks don't have I/O stats. This logic comes straight from 
-            old Longview.JS, so a big @todo here is to document why this
-            is the way it is.
-          */}
         {sysInfoType.toLowerCase() !== 'openvz' && (
           <div data-testid="diskio-graph">
             <LongviewLineGraph
@@ -134,10 +124,10 @@ const Graphs: React.FC<CombinedProps> = props => {
           </div>
         )}
         {/*
-            only show inodes and space if the
-            disk is mounted and is not a swap partition
-            because longview doesn't track those stats
-          */
+              only show inodes and space if the
+              disk is mounted and is not a swap partition
+              because longview doesn't track those stats
+            */
         !isSwap && isMounted && (
           <React.Fragment>
             <div data-testid="space-graph">
@@ -178,13 +168,13 @@ const Graphs: React.FC<CombinedProps> = props => {
           </React.Fragment>
         )}
       </div>
-    </React.Fragment>
+    </GraphCard>
   );
 };
 
 export const formatINodes = (
-  ifree: Stat[],
-  itotal: Stat[]
+  ifree: StatWithDummyPoint[],
+  itotal: StatWithDummyPoint[]
 ): StatWithDummyPoint[] => {
   return itotal.map((eachTotalStat, index) => {
     const { y: totalY, x: totalX } = eachTotalStat;

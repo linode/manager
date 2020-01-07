@@ -1,5 +1,6 @@
 import { pathOr } from 'ramda';
 import { LVClientData } from 'src/containers/longview.stats.container';
+import { generateUnits } from 'src/features/Longview/LongviewLanding/Gauges/Network';
 import { pluralize } from 'src/utilities/pluralize';
 import { readableBytes } from 'src/utilities/unitConversions';
 import {
@@ -207,4 +208,33 @@ export const statMax = (stats: StatWithDummyPoint[] = []): number => {
     }
     return acc;
   }, 0);
+};
+
+export const getMaxUnitAndFormatNetwork = (
+  rx_bytes: StatWithDummyPoint[],
+  tx_bytes: StatWithDummyPoint[]
+) => {
+  // Determine the unit based on the largest value.
+  const max = Math.max(statMax(rx_bytes), statMax(tx_bytes));
+  const maxUnit = generateUnits(max).unit;
+
+  const formatNetwork = (valueInBytes: number | null) => {
+    if (valueInBytes === null) {
+      return valueInBytes;
+    }
+
+    const valueInBits = valueInBytes * 8;
+
+    if (maxUnit === 'Mb') {
+      // If the unit we're using for the graph is Mb, return the output in Mb.
+      const valueInMegabits = valueInBits / 1024 / 1024;
+      return Math.round(valueInMegabits * 100) / 100;
+    } else {
+      // If the unit we're using for the graph is Kb, return the output in Kb.
+      const valueInKilobits = valueInBits / 1024;
+      return Math.round(valueInKilobits * 100) / 100;
+    }
+  };
+
+  return { maxUnit, formatNetwork };
 };
