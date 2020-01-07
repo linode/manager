@@ -267,7 +267,8 @@ export type LongviewFieldName =
   | 'processes'
   | 'listeningServices'
   | 'activeConnections'
-  | 'nginx';
+  | 'nginx'
+  | 'nginxProcesses';
 
 export interface Options {
   fields: LongviewFieldName[];
@@ -294,4 +295,25 @@ export interface NginxResponse {
   reading: Stat[];
   waiting: Stat[];
   active: Stat[];
+}
+
+/**
+ * This has its own process type because it
+ * is used as its own entity in the Nginx tab
+ * of detail view.
+ */
+export interface NginxUserProcess {
+  iowritekbytes: Stat[];
+  ioreadkbytes: Stat[];
+  mem: Stat[];
+  count: Stat[];
+  cpu: Stat[];
+}
+
+export type NginxUserProcesses = Record<string, NginxUserProcess>;
+
+export interface NginxProcesses {
+  nginx: {
+    longname: string;
+  } & NginxUserProcesses;
 }
