@@ -1,4 +1,3 @@
-import { getLinodes } from 'linode-js-sdk/lib/linodes';
 import { assignAddresses } from 'linode-js-sdk/lib/networking';
 import { APIError } from 'linode-js-sdk/lib/types';
 import {
@@ -14,6 +13,7 @@ import {
   when
 } from 'ramda';
 import * as React from 'react';
+import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
@@ -27,9 +27,11 @@ import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
-import LinearProgress from 'src/components/LinearProgress';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
+import withLinodes, {
+  DispatchProps
+} from 'src/containers/withLinodes.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 type ClassNames =
@@ -102,10 +104,8 @@ interface IPRowState {
 
 interface State {
   submitting: boolean;
-  loading: boolean;
   successMessage?: string;
   ips: IPRowState;
-  linodes: { id: number; label: string; ips: string[] }[];
   error?: APIError[];
 }
 
@@ -126,7 +126,10 @@ interface Swap extends Move {
   selectedLinodesIPs: string[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props &
+  WithStyles<ClassNames> &
+  WithLinodesProps &
+  DispatchProps;
 
 class LinodeNetworkingIPTransferPanel extends React.Component<
   CombinedProps,
@@ -146,8 +149,6 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
         }),
         {}
       ),
-      linodes: [],
-      loading: true,
       submitting: false
     };
   }
@@ -165,7 +166,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
 
   onModeChange = (ip: string) => (e: Item) => {
     const mode = e.value as Mode;
-    const firstLinode = this.state.linodes[0];
+    const firstLinode = this.props.linodes[0];
 
     this.setState(
       compose(
@@ -221,7 +222,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
           compose(
             /** We need to find and return the newly selected Linode's IPs. */
             updateSelectedLinodesIPs(ip, (currentIPs: string[]) => {
-              const linode = this.state.linodes.find(
+              const linode = this.props.linodes.find(
                 l => l.id === Number(e.value)
               );
               if (linode) {
@@ -232,7 +233,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
 
             /** We need to find the selected Linode's IPs and return the first. */
             updateSelectedIP(ip, (currentIP: string) => {
-              const linode = this.state.linodes.find(
+              const linode = this.props.linodes.find(
                 l => l.id === Number(e.value)
               );
               if (linode) {
@@ -309,7 +310,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
   linodeSelect = ({ mode, sourceIP, selectedLinodeID }: Move) => {
     const { classes, readOnly } = this.props;
 
-    const linodeList = this.state.linodes.map(l => {
+    const linodeList = this.props.linodes.map(l => {
       return { label: l.label, value: l.id };
     });
 
@@ -326,7 +327,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
               'data-qa-linode-select': true
             }
           }}
-          disabled={readOnly || this.state.linodes.length === 1}
+          disabled={readOnly || this.props.linodes.length === 1}
           defaultValue={defaultLinode}
           onChange={this.onSelectedLinodeChange(sourceIP)}
           isClearable={false}
@@ -413,7 +414,11 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
 
     assignAddresses(createRequestData(this.state.ips, this.props.linodeRegion))
       .then(() => {
-        return Promise.all([this.props.refreshIPs(), this.getLinodes()])
+        // Refresh Linodes in the region in which the changes were made.
+        this.props.getLinodes({ region: this.props.linodeRegion });
+
+        return this.props
+          .refreshIPs()
           .then(() => {
             this.setState({
               submitting: false,
@@ -462,46 +467,11 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
 
   componentDidMount() {
     this.mounted = true;
-    this.getLinodes();
   }
 
   componentWillUnmount() {
     this.mounted = false;
   }
-
-  getLinodes = () => {
-    return getLinodes({}, { region: this.props.linodeRegion })
-      .then(response => ({
-        ...response,
-        data: response.data.filter(l => l.id !== this.props.linodeID)
-      }))
-      .then(response => {
-        if (!this.mounted) {
-          return;
-        }
-        this.setState({
-          linodes: response.data.map(linode => ({
-            id: linode.id,
-            ips: linode.ipv4,
-            label: linode.label
-          })),
-          loading: false
-        });
-      })
-      .catch(() => {
-        if (!this.mounted) {
-          return;
-        }
-        this.setState({
-          error: [
-            {
-              field: 'none',
-              reason: 'Unable to fetch IP addresses. Try reloading?'
-            }
-          ]
-        });
-      });
-  };
 
   transferActions = () => {
     const { readOnly } = this.props;
@@ -511,13 +481,13 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
           loading={this.state.submitting}
           onClick={this.onSubmit}
           buttonType="primary"
-          disabled={readOnly || this.state.linodes.length === 0}
+          disabled={readOnly || this.props.linodes.length === 0}
           data-qa-ip-transfer-save
         >
           Save
         </Button>
         <Button
-          disabled={this.state.submitting || this.state.linodes.length === 0}
+          disabled={this.state.submitting || this.props.linodes.length === 0}
           onClick={this.onReset}
           buttonType="secondary"
           data-qa-ip-transfer-cancel
@@ -569,9 +539,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
                 <Typography>Actions</Typography>
               </Grid>
             </Grid>
-            {this.state.loading ? (
-              <LinearProgress style={{ margin: '50px' }} /> // Loading, chill out man.
-            ) : this.state.linodes.length === 0 ? (
+            {this.props.linodes.length === 0 ? (
               <Typography className={classes.emptyStateText}>
                 You have no other linodes in this Linode's datacenter with which
                 to transfer IPs.
@@ -670,4 +638,23 @@ const createRequestData = (state: IPRowState, region: string) => ({
 
 const styled = withStyles(styles);
 
-export default styled(LinodeNetworkingIPTransferPanel);
+interface WithLinodesProps {
+  linodes: { id: number; label: string; ips: string[] }[];
+}
+
+const enhanced = recompose<CombinedProps, Props>(
+  styled,
+  withLinodes<WithLinodesProps, Props>((ownProps, linodesData) => {
+    const { linodeID, linodeRegion } = ownProps;
+    const linodes = linodesData
+      .filter(l => l.id !== linodeID && l.region === linodeRegion)
+      .map(linode => ({
+        id: linode.id,
+        ips: linode.ipv4,
+        label: linode.label
+      }));
+    return { linodes };
+  })
+);
+
+export default enhanced(LinodeNetworkingIPTransferPanel);
