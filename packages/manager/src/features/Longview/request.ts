@@ -75,7 +75,7 @@ export const fieldNames: Record<LongviewFieldName, string> = {
   listeningServices: 'Ports.listening',
   activeConnections: 'Ports.active',
   nginx: 'Applications.Nginx.*',
-  apache: 'Applications.Apache.Total.*'
+  apache: 'Applications.Apache.*'
 };
 
 export const baseRequest = Axios.create({
