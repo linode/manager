@@ -5,6 +5,7 @@ import {
   Stat
 } from '../request.types';
 import {
+  appendStats,
   generateTotalMemory,
   generateUsedMemory,
   statAverage,
@@ -116,7 +117,10 @@ describe('Utility Functions', () => {
     it('works if stat arrays are of different lengths', () => {
       const mockData: Record<string, CPU> = {
         cpu0: {
-          system: [{ x: 0, y: 1 }, { x: 0, y: 1 }],
+          system: [
+            { x: 0, y: 1 },
+            { x: 0, y: 1 }
+          ],
           user: [],
           wait: []
         },
@@ -184,7 +188,10 @@ describe('Utility Functions', () => {
     it('works if stat arrays are of different lengths', () => {
       const mockData: Record<string, InboundOutboundNetwork> = {
         eth0: {
-          rx_bytes: [{ x: 0, y: 1 }, { x: 0, y: 1 }],
+          rx_bytes: [
+            { x: 0, y: 1 },
+            { x: 0, y: 1 }
+          ],
           tx_bytes: []
         },
         eth1: mockNetworkInterface
@@ -201,6 +208,28 @@ describe('Utility Functions', () => {
       expect(sumNetwork([] as any)).toEqual(emptyNetworkInterface);
       expect(sumNetwork(null as any)).toEqual(emptyNetworkInterface);
       expect(sumNetwork(undefined as any)).toEqual(emptyNetworkInterface);
+    });
+  });
+
+  describe('appendStats', () => {
+    it('sums Y values if X values are equal', () => {
+      const a = [
+        { y: 10, x: 1 },
+        { y: 100, x: 2 }
+      ];
+      const b = [
+        { y: 20, x: 1 },
+        { y: 200, x: 2 }
+      ];
+      const result = appendStats(a, b);
+      expect(result[0].y).toBe(30);
+      expect(result[1].y).toBe(300);
+    });
+    it('sums Y values correctly when values are 0', () => {
+      const a = [{ y: 0, x: 1 }];
+      const b = [{ y: 10, x: 1 }];
+      const result = appendStats(a, b);
+      expect(result[0].y).toBe(10);
     });
   });
 });
