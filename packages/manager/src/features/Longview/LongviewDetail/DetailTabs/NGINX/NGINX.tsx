@@ -8,6 +8,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import { isToday as _isToday } from 'src/utilities/isToday';
 import { NginxUserProcesses, WithStartAndEnd } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
@@ -76,7 +77,7 @@ export const NGINX: React.FC<Props> = props => {
   };
 
   const nginx = data.Applications?.Nginx;
-  const isToday = time.end - time.start < 60 * 60 * 25;
+  const isToday = _isToday(time.start, time.end);
   const notice = Number(nginx?.status) > 0 ? nginx?.status_message : null;
 
   /**

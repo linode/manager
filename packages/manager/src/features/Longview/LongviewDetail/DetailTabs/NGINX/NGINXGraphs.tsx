@@ -57,11 +57,11 @@ export const NGINXGraphs: React.FC<Props> = props => {
         <Grid item xs={12}>
           <LongviewLineGraph
             title="Requests"
+            subtitle="requests/second"
             error={error}
             loading={loading}
             showToday={isToday}
             timezone={timezone}
-            unit="/s"
             data={[
               {
                 label: 'Requests',
@@ -77,12 +77,12 @@ export const NGINXGraphs: React.FC<Props> = props => {
             <Grid item xs={12} sm={6} className={classes.smallGraph}>
               <LongviewLineGraph
                 title="Connections"
+                subtitle="connections/second"
                 nativeLegend
                 error={error}
                 loading={loading}
                 showToday={isToday}
                 timezone={timezone}
-                unit="/s"
                 data={[
                   {
                     label: 'Accepted',
