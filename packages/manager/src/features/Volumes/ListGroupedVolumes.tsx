@@ -83,10 +83,7 @@ const ListGroupedVolumes: React.FC<CombinedProps> = props => {
     renderProps
   } = props;
 
-  const groupedVolumes = compose(
-    sortGroups,
-    groupByTags
-  )(data);
+  const groupedVolumes = compose(sortGroups, groupByTags)(data);
   const tableWrapperProps = {
     handleOrderChange,
     order,
