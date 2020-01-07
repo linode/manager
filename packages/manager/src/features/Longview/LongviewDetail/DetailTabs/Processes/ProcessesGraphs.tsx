@@ -15,9 +15,9 @@ import {
 import { convertData } from 'src/features/Longview/shared/formatters';
 import { statMax } from 'src/features/Longview/shared/utilities';
 import { readableBytes } from 'src/utilities/unitConversions';
-import { formatCPU } from '../OverviewGraphs/CPUGraph';
 // import { formatDisk } from '../OverviewGraphs/DiskGraph';
-import { formatMemory } from '../OverviewGraphs/MemoryGraph';
+import { formatMemory } from '../../../shared/formatters';
+import { formatCPU } from '../OverviewGraphs/CPUGraph';
 import { Process } from './common';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -45,6 +45,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
 
   const {
     processesData,
+    processesLoading,
     selectedProcess,
     timezone,
     isToday,
@@ -98,6 +99,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
         <LongviewLineGraph
           title="CPU"
           subtitle="%"
+          loading={processesLoading}
           data={[
             {
               data: _convertData(cpu, start, end, formatCPU),
@@ -111,6 +113,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
         <LongviewLineGraph
           title="RAM"
           subtitle={memUnit}
+          loading={processesLoading}
           data={[
             {
               data: _convertData(memory, start, end, formatMemory),
@@ -123,6 +126,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
         />
         <LongviewLineGraph
           title="Count"
+          loading={processesLoading}
           data={[
             {
               data: _convertData(count, start, end, formatCount),
@@ -136,6 +140,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
         <LongviewLineGraph
           title="Disk I/O"
           subtitle={ioUnit + '/s'}
+          loading={processesLoading}
           data={[
             {
               label: 'Write',

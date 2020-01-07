@@ -43,7 +43,7 @@ export const ProcessesTable: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      <OrderBy data={processesData} orderBy={'name'} order={'desc'}>
+      <OrderBy data={processesData} orderBy={'user'} order={'desc'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
           <>
             <Table spacingTop={16} noOverflow>
@@ -129,10 +129,10 @@ const renderLoadingErrorData = (
   setSelectedProcess: (process: Process) => void,
   error?: string
 ) => {
-  if (error && data.length === 0) {
+  if (error) {
     return <TableRowError colSpan={12} message={error} />;
   }
-  if (loading && data.length === 0) {
+  if (loading) {
     return <TableRowLoading colSpan={7} />;
   }
   if (data.length === 0) {
