@@ -1,1 +1,1 @@
-export { default } from './MySqlLanding';
+export { default } from './MySQLLanding';

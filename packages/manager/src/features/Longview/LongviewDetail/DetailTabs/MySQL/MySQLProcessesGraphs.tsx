@@ -34,7 +34,7 @@ interface Props {
 
 type CombinedProps = Props & WithTheme;
 
-export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
+export const MySQLProcessGraphs: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const { data, error, loading, isToday, timezone, start, end, theme } = props;
 
@@ -166,5 +166,5 @@ const formatData = (value: number | null) => {
 const enhanced = compose<CombinedProps, Props>(
   withTheme,
   React.memo
-)(NGINXProcessGraphs);
+)(MySQLProcessGraphs);
 export default enhanced;
