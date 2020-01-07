@@ -59,6 +59,10 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
   const maxDisk = Math.max(statMax(diskRead), statMax(diskWrite));
   const diskUnit = readableBytes(maxDisk).unit;
 
+  const cpu = totalDataForAllUsers.cpu ?? [];
+  const memory = totalDataForAllUsers.mem ?? [];
+  const processCount = totalDataForAllUsers.count ?? [];
+
   return (
     <>
       <Grid item xs={12}>
@@ -76,12 +80,7 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
                   label: 'CPU',
                   borderColor: '#63d997',
                   backgroundColor: '#63d997',
-                  data: _convertData(
-                    totalDataForAllUsers.cpu ?? [],
-                    start,
-                    end,
-                    formatData
-                  )
+                  data: _convertData(cpu, start, end, formatData)
                 }
               ]}
             />
@@ -99,12 +98,7 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
                   label: 'RAM',
                   borderColor: '#e083e0',
                   backgroundColor: '#e083e0',
-                  data: _convertData(
-                    totalDataForAllUsers.mem ?? [],
-                    start,
-                    end,
-                    formatMemory
-                  )
+                  data: _convertData(memory, start, end, formatMemory)
                 }
               ]}
             />
@@ -149,12 +143,7 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
                   label: 'Count',
                   borderColor: '#7156f5',
                   backgroundColor: '#7156f5',
-                  data: _convertData(
-                    totalDataForAllUsers.count ?? [],
-                    start,
-                    end,
-                    formatData
-                  )
+                  data: _convertData(processCount, start, end, formatData)
                 }
               ]}
             />

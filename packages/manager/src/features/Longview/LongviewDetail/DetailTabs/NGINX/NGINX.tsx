@@ -54,7 +54,7 @@ export const NGINX: React.FC<Props> = props => {
    * in two halves, but this is not clear to the user. They might see, for example,
    * half the graphs in an error state and the others ok, which could be off-putting.
    */
-  const processes = useGraphs(
+  const nginxProcesses = useGraphs(
     ['nginxProcesses'],
     clientAPIKey,
     time.start,
@@ -68,7 +68,7 @@ export const NGINX: React.FC<Props> = props => {
 
   React.useEffect(() => {
     request();
-    processes.request();
+    nginxProcesses.request();
   }, [time, clientAPIKey, lastUpdated, lastUpdatedError]);
 
   const handleStatsChange = (start: number, end: number) => {
@@ -87,9 +87,9 @@ export const NGINX: React.FC<Props> = props => {
     () =>
       (omit(
         ['longname'],
-        processes.data.Processes?.nginx
+        nginxProcesses.data.Processes?.nginx
       ) as NginxUserProcesses) ?? {},
-    [processes.data]
+    [nginxProcesses.data]
   );
 
   if (notice !== null) {
@@ -143,8 +143,8 @@ export const NGINX: React.FC<Props> = props => {
         <NGINXGraphs
           data={data?.Applications?.Nginx}
           processesData={processesData}
-          processesLoading={processes.loading}
-          processesError={processes.error}
+          processesLoading={nginxProcesses.loading}
+          processesError={nginxProcesses.error}
           isToday={isToday}
           loading={loading}
           error={lastUpdatedError?.[0]?.reason || error}
