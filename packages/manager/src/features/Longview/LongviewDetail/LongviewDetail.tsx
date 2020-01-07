@@ -38,6 +38,7 @@ import {
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import useFlags from 'src/hooks/useFlags';
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
+import Apache from './DetailTabs/Apache';
 import FeatureComingSoon from './DetailTabs/FeatureComingSoon';
 import NetworkLanding from './DetailTabs/Network';
 import NGINX from './DetailTabs/NGINX';
@@ -314,9 +315,21 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           exact
           strict
           path={`${url}/apache`}
-          render={() => (
-            <FeatureComingSoon title="Apache" clientLabel={client.label} />
-          )}
+          render={() => {
+            if (!showAllTabs) {
+              return (
+                <FeatureComingSoon title="Apache" clientLabel={client.label} />
+              );
+            }
+            return (
+              <Apache
+                timezone={timezone}
+                clientAPIKey={clientAPIKey}
+                lastUpdated={lastUpdated}
+                lastUpdatedError={lastUpdatedError}
+              />
+            );
+          }}
         />
         )}
         <Route

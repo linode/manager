@@ -267,7 +267,8 @@ export type LongviewFieldName =
   | 'processes'
   | 'listeningServices'
   | 'activeConnections'
-  | 'nginx';
+  | 'nginx'
+  | 'apache';
 
 export interface Options {
   fields: LongviewFieldName[];
@@ -279,11 +280,24 @@ export interface LongviewApplications {
   Applications?: {
     Nginx?: NginxResponse;
     MySql?: any;
-    Apache?: any;
+    Apache?: ApacheResponse;
   };
 }
 
 export interface NginxResponse {
+  version: string;
+  status: number;
+  status_message: string;
+  requests: Stat[];
+  writing: Stat[];
+  accepted_cons: Stat[];
+  handled_cons: Stat[];
+  reading: Stat[];
+  waiting: Stat[];
+  active: Stat[];
+}
+
+export interface ApacheResponse {
   version: string;
   status: number;
   status_message: string;
