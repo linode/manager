@@ -1,5 +1,5 @@
 import { clone, lensPath, pathOr, set } from 'ramda';
-
+import { readableBytes } from 'src/utilities/unitConversions';
 import { Stat, StatWithDummyPoint } from '../request.types';
 
 // This formatting is from Classic
@@ -118,10 +118,10 @@ export const convertData = (
    * This is helpful for empty and loading states.
    */
   if (d.length === 0) {
-    return [[startTime * 1000, null], [endTime * 1000, null]] as [
-      number,
-      number | null
-    ][];
+    return [
+      [startTime * 1000, null],
+      [endTime * 1000, null]
+    ] as [number, number | null][];
   }
   return maybeAddPastData(d, startTime).map(
     thisPoint =>
@@ -130,4 +130,18 @@ export const convertData = (
         formatter ? formatter(thisPoint.y) : thisPoint.y
       ] as [number, number | null]
   );
+};
+
+/**
+ * Scale of memory data will vary, so we use this function
+ * to run the data through readableBytes to determine
+ * whether to show MB, KB, or GB.
+ * @param value
+ */
+export const formatMemory = (value: number | null) => {
+  if (value === null) {
+    return value;
+  }
+  // x1024 bc the API returns data in KB
+  return readableBytes(value * 1024).value;
 };
