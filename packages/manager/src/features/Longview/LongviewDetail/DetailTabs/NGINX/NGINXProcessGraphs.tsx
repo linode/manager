@@ -45,9 +45,6 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
 
-  const memoryUnit = readableBytes(statMax(totalDataForAllUsers.mem ?? []))
-    .unit;
-
   /**
    * These field names say kbytes, but Classic reports them
    * as bytes and they're read from the read_bytes and write_bytes
@@ -62,6 +59,8 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
   const cpu = totalDataForAllUsers.cpu ?? [];
   const memory = totalDataForAllUsers.mem ?? [];
   const processCount = totalDataForAllUsers.count ?? [];
+
+  const memoryUnit = readableBytes(statMax(memory) * 1024).unit;
 
   return (
     <>

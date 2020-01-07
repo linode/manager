@@ -40,8 +40,6 @@ export const MySQLProcessGraphs: React.FC<CombinedProps> = props => {
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
 
-  const memoryUnit = readableBytes(statMax(data.mem ?? [])).unit;
-
   /**
    * These field names say kbytes, but Classic reports them
    * as bytes and they're read from the read_bytes and write_bytes
@@ -56,6 +54,8 @@ export const MySQLProcessGraphs: React.FC<CombinedProps> = props => {
   const cpu = data.cpu ?? [];
   const memory = data.mem ?? [];
   const processCount = data.count ?? [];
+
+  const memoryUnit = readableBytes(statMax(data.mem ?? []) * 1024).unit;
 
   return (
     <>
