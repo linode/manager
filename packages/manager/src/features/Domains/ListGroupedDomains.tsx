@@ -85,10 +85,7 @@ const ListGroupedDomains: React.StatelessComponent<CombinedProps> = props => {
     classes
   } = props;
 
-  const groupedDomains = compose(
-    sortGroups,
-    groupByTags
-  )(data);
+  const groupedDomains = compose(sortGroups, groupByTags)(data);
   const tableWrapperProps = { handleOrderChange, order, orderBy };
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();

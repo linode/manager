@@ -82,9 +82,7 @@ interface Props {
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
-const ListGroupedNodeBalancers: React.StatelessComponent<
-  CombinedProps
-> = props => {
+const ListGroupedNodeBalancers: React.StatelessComponent<CombinedProps> = props => {
   const {
     classes,
     data,
@@ -94,10 +92,7 @@ const ListGroupedNodeBalancers: React.StatelessComponent<
     toggleDialog
   } = props;
 
-  const groupedNodeBalancers = compose(
-    sortGroups,
-    groupByTags
-  )(data);
+  const groupedNodeBalancers = compose(sortGroups, groupByTags)(data);
   const tableWrapperProps = { handleOrderChange, order, orderBy };
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();

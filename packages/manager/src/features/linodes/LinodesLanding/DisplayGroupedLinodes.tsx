@@ -81,9 +81,7 @@ interface Props {
 
 type CombinedProps = Props & OrderByProps & WithStyles<ClassNames>;
 
-const DisplayGroupedLinodes: React.StatelessComponent<
-  CombinedProps
-> = props => {
+const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = props => {
   const {
     data,
     display,
@@ -95,10 +93,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<
     ...rest
   } = props;
 
-  const orderedGroupedLinodes = compose(
-    sortGroups,
-    groupByTags
-  )(data);
+  const orderedGroupedLinodes = compose(sortGroups, groupByTags)(data);
   const tableWrapperProps = {
     handleOrderChange,
     order,

@@ -9,7 +9,7 @@ import ErrorState from 'src/components/ErrorState';
 import LandingLoading from 'src/components/LandingLoading';
 import Placeholder from 'src/components/Placeholder';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
-import DiskPaper from './DiskPaper';
+import DiskGraph from './DiskGraph';
 
 import { WithStartAndEnd } from '../../../request.types';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
@@ -96,7 +96,7 @@ const Disks: React.FC<CombinedProps> = props => {
     }
 
     return sortedKeys.map(eachKey => (
-      <DiskPaper
+      <DiskGraph
         loading={loading}
         diskLabel={eachKey}
         key={eachKey}

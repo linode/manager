@@ -1,4 +1,3 @@
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import { WithTheme, withTheme } from 'src/components/core/styles';
@@ -21,7 +20,7 @@ const NetworkGauge: React.FC<CombinedProps> = props => {
   } = props;
 
   const networkUsed = generateUsedNetworkAsBytes(
-    pathOr({}, ['Network', 'Interface'], longviewClientData)
+    longviewClientData?.Network?.Interface ?? {}
   );
 
   const generateCopy = (): {
@@ -161,7 +160,7 @@ export const generateUsedNetworkAsBytes = (
            *
            * [{ x: 1234, y: 1234 }],
            */
-          secondAcc += pathOr(0, [0, 'y'], secondElement);
+          secondAcc += secondElement?.[0]?.y ?? 0;
           return secondAcc;
         },
         0

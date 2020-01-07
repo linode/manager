@@ -1,102 +1,123 @@
-import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
-import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Grid from 'src/components/Grid';
+import CircleProgress from 'src/components/CircleProgress';
+import { withTheme, WithTheme } from 'src/components/core/styles';
+import ErrorState from 'src/components/ErrorState';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-import { LongviewNetworkInterface } from '../../../request.types';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: theme.spacing(2)
-  },
-  graphSection: {
-    paddingTop: theme.spacing(2)
-  }
-}));
+import Placeholder from 'src/components/Placeholder';
+import { getMaxUnitAndFormatNetwork } from 'src/features/Longview/shared/utilities';
+import {
+  InboundOutboundNetwork,
+  LongviewNetworkInterface
+} from '../../../request.types';
+import { convertData } from '../../../shared/formatters';
+import GraphCard from '../../GraphCard';
 
 interface Props {
   networkData: LongviewNetworkInterface;
-  error?: APIError[];
+  error?: string;
   loading: boolean;
   timezone: string;
   isToday: boolean;
+  start: number;
+  end: number;
 }
 
-export const NetworkGraphs: React.FC<Props> = props => {
-  const { error, isToday, loading, timezone } = props;
-  const classes = useStyles();
-  const _error = error ? error[0].reason : undefined;
+type CombinedProps = Props & WithTheme;
+
+export const NetworkGraphs: React.FC<CombinedProps> = props => {
+  const {
+    end,
+    error,
+    isToday,
+    loading,
+    networkData,
+    start,
+    theme,
+    timezone
+  } = props;
+
+  const _convertData = React.useCallback(convertData, [
+    networkData,
+    start,
+    end
+  ]);
+
+  // Sort interfaces by label alphabetically
+  const interfaces = Object.entries(networkData).sort(sortInterfaces);
+
+  if (loading && interfaces.length === 0) {
+    return <CircleProgress />;
+  }
+
+  if (error) {
+    // We have to show a global error state, since there won't be any
+    // interfaces or graphs if the request failed.
+    return <ErrorState errorText={error} />;
+  }
+
+  if (interfaces.length === 0 && !loading) {
+    // Empty state
+    return (
+      <Placeholder
+        title="No network interfaces detected"
+        copy="The Longview agent has not detected any interfaces that it can monitor."
+      />
+    );
+  }
 
   return (
-    <Paper className={classes.root}>
-      <Grid container direction="column" spacing={0}>
-        <Grid item xs={12}>
-          <LongviewLineGraph
-            title="All Traffic"
-            subtitle={'KB' + '/s'}
-            error={_error}
-            loading={loading}
-            showToday={isToday}
-            timezone={timezone}
-            data={[]}
-          />
-        </Grid>
-        <Grid item className={classes.graphSection} xs={12}>
-          <Grid container direction="row">
-            <Grid item xs={12} sm={6}>
+    <>
+      {interfaces.map((thisInterface, idx) => {
+        const [name, interfaceData] = thisInterface;
+        const { rx_bytes, tx_bytes } = interfaceData;
+
+        const { maxUnit, formatNetwork } = getMaxUnitAndFormatNetwork(
+          rx_bytes,
+          tx_bytes
+        );
+
+        return (
+          <GraphCard title={name} key={`network-interface-card-${idx}`}>
+            <div style={{ paddingTop: theme.spacing(2) }}>
               <LongviewLineGraph
-                title="IPv4 Public"
-                subtitle={'KB' + '/s'}
-                error={_error}
+                title="Network Traffic"
+                subtitle={maxUnit + '/s'}
+                error={error}
                 loading={loading}
                 showToday={isToday}
                 timezone={timezone}
-                data={[]}
+                data={[
+                  {
+                    label: 'Inbound',
+                    borderColor: theme.graphs.forestGreenBorder,
+                    backgroundColor: theme.graphs.networkGreenInbound,
+                    data: _convertData(rx_bytes, start, end, formatNetwork)
+                  },
+                  {
+                    label: 'Outbound',
+                    borderColor: theme.graphs.forestGreenBorder,
+                    backgroundColor: theme.graphs.networkGreenOutbound,
+                    data: _convertData(tx_bytes, start, end, formatNetwork)
+                  }
+                ]}
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <LongviewLineGraph
-                title="IPv4 Private"
-                subtitle={'KB' + '/s'}
-                error={_error}
-                loading={loading}
-                showToday={isToday}
-                timezone={timezone}
-                data={[]}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item className={classes.graphSection} xs={12}>
-          <Grid container direction="row">
-            <Grid item xs={12} sm={6}>
-              <LongviewLineGraph
-                title="IPv6 Public"
-                subtitle={'KB' + '/s'}
-                error={_error}
-                loading={loading}
-                showToday={isToday}
-                timezone={timezone}
-                data={[]}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <LongviewLineGraph
-                title="IPv5 Private"
-                subtitle={'KB' + '/s'}
-                error={_error}
-                loading={loading}
-                showToday={isToday}
-                timezone={timezone}
-                data={[]}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-    </Paper>
+            </div>
+          </GraphCard>
+        );
+      })}
+    </>
   );
 };
 
-export default NetworkGraphs;
+type InterfaceItem = [string, InboundOutboundNetwork<''>];
+export const sortInterfaces = (a: InterfaceItem, b: InterfaceItem) => {
+  if (a[0] > b[0]) {
+    return 1;
+  }
+  if (a[0] < b[0]) {
+    return -1;
+  }
+  return 0;
+};
+
+export default withTheme(NetworkGraphs);
