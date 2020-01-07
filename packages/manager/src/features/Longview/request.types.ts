@@ -268,7 +268,9 @@ export type LongviewFieldName =
   | 'listeningServices'
   | 'activeConnections'
   | 'nginx'
-  | 'nginxProcesses';
+  | 'nginxProcesses'
+  | 'mysql'
+  | 'mysqlProcesses';
 
 export interface Options {
   fields: LongviewFieldName[];
@@ -279,7 +281,7 @@ export interface Options {
 export interface LongviewApplications {
   Applications?: {
     Nginx?: NginxResponse;
-    MySql?: any;
+    MySQL?: MySQLResponse;
     Apache?: any;
   };
 }
@@ -297,12 +299,32 @@ export interface NginxResponse {
   active: Stat[];
 }
 
+export interface MySQLResponse {
+  status_message: string;
+  status: number;
+  version: string;
+  Qcache_hits: Stat[];
+  Qcache_inserts: Stat[];
+  Qcache_lowmem_prunes: Stat[];
+  Qcache_not_cached: Stat[];
+  Qcache_queries_in_cache: Stat[];
+  Com_insert: Stat[];
+  Com_delete: Stat[];
+  Com_select: Stat[];
+  Com_update: Stat[];
+  Connections: Stat[];
+  Bytes_received: Stat[];
+  Bytes_sent: Stat[];
+  Slow_queries: Stat[];
+  Aborted_clients: Stat[];
+  Aborted_connects: Stat[];
+}
 /**
  * This has its own process type because it
- * is used as its own entity in the Nginx tab
+ * is used as its own entity in the Nginx/MySQL tab
  * of detail view.
  */
-export interface NginxUserProcess {
+export interface UserProcess {
   iowritekbytes: Stat[];
   ioreadkbytes: Stat[];
   mem: Stat[];
@@ -310,10 +332,16 @@ export interface NginxUserProcess {
   cpu: Stat[];
 }
 
-export type NginxUserProcesses = Record<string, NginxUserProcess>;
+export type UserProcesses = Record<string, UserProcess>;
 
 export interface NginxProcesses {
   nginx: {
     longname: string;
-  } & NginxUserProcesses;
+  } & UserProcesses;
+}
+
+export interface MySQLProcesses {
+  mysql: {
+    longname: string;
+  } & UserProcesses;
 }

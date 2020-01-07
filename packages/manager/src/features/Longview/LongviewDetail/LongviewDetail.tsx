@@ -39,6 +39,7 @@ import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import useFlags from 'src/hooks/useFlags';
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
 import FeatureComingSoon from './DetailTabs/FeatureComingSoon';
+import MySQLLanding from './DetailTabs/MySQL';
 import NetworkLanding from './DetailTabs/Network';
 import NGINX from './DetailTabs/NGINX';
 import ProcessesLanding from './DetailTabs/Processes/ProcessesLanding';
@@ -346,9 +347,21 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           exact
           strict
           path={`${url}/mysql`}
-          render={() => (
-            <FeatureComingSoon title="MySQL" clientLabel={client.label} />
-          )}
+          render={() => {
+            if (!showAllTabs) {
+              return (
+                <FeatureComingSoon title="MySQL" clientLabel={client.label} />
+              );
+            }
+            return (
+              <MySQLLanding
+                timezone={timezone}
+                clientAPIKey={clientAPIKey}
+                lastUpdated={lastUpdated}
+                lastUpdatedError={lastUpdatedError}
+              />
+            );
+          }}
         />
         )}
         <Route

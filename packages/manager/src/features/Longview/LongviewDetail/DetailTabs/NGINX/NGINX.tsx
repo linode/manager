@@ -9,7 +9,7 @@ import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import { isToday as _isToday } from 'src/utilities/isToday';
-import { NginxUserProcesses, WithStartAndEnd } from '../../../request.types';
+import { UserProcesses, WithStartAndEnd } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import NGINXGraphs from './NGINXGraphs';
@@ -89,7 +89,7 @@ export const NGINX: React.FC<Props> = props => {
       (omit(
         ['longname'],
         nginxProcesses.data.Processes?.nginx
-      ) as NginxUserProcesses) ?? {},
+      ) as UserProcesses) ?? {},
     [nginxProcesses.data]
   );
 

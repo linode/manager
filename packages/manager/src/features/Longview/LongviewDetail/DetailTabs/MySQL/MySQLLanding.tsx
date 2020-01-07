@@ -9,7 +9,7 @@ import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import { isToday as _isToday } from 'src/utilities/isToday';
-import { NginxUserProcesses, WithStartAndEnd } from '../../../request.types';
+import { UserProcesses, WithStartAndEnd } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import MySQLGraphs from './MySQLGraphs';
@@ -38,7 +38,7 @@ export const MySQLLanding: React.FC<Props> = props => {
   });
 
   const { data, loading, error, request } = useGraphs(
-    ['nginx'],
+    ['mysql'],
     clientAPIKey,
     time.start,
     time.end
@@ -55,8 +55,8 @@ export const MySQLLanding: React.FC<Props> = props => {
    * in two halves, but this is not clear to the user. They might see, for example,
    * half the graphs in an error state and the others ok, which could be off-putting.
    */
-  const nginxProcesses = useGraphs(
-    ['nginxProcesses'],
+  const MySQLProcesses = useGraphs(
+    ['mysqlProcesses'],
     clientAPIKey,
     time.start,
     time.end
@@ -69,7 +69,7 @@ export const MySQLLanding: React.FC<Props> = props => {
 
   React.useEffect(() => {
     request();
-    nginxProcesses.request();
+    MySQLProcesses.request();
   }, [time, clientAPIKey, lastUpdated, lastUpdatedError]);
 
   const handleStatsChange = (start: number, end: number) => {
@@ -88,9 +88,9 @@ export const MySQLLanding: React.FC<Props> = props => {
     () =>
       (omit(
         ['longname'],
-        nginxProcesses.data.Processes?.nginx
-      ) as NginxUserProcesses) ?? {},
-    [nginxProcesses.data]
+        MySQLProcesses.data.Processes?.mysql
+      ) as UserProcesses) ?? {},
+    [MySQLProcesses.data]
   );
 
   if (notice !== null) {
@@ -142,10 +142,10 @@ export const MySQLLanding: React.FC<Props> = props => {
       </Grid>
       <Grid item xs={12} className="py0">
         <MySQLGraphs
-          data={data?.Applications?.Nginx}
+          data={data?.Applications?.MySQL}
           processesData={processesData}
-          processesLoading={nginxProcesses.loading}
-          processesError={nginxProcesses.error}
+          processesLoading={MySQLProcesses.loading}
+          processesError={MySQLProcesses.error}
           isToday={isToday}
           loading={loading}
           error={lastUpdatedError?.[0]?.reason || error}

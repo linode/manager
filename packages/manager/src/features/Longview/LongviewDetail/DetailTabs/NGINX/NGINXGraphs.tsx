@@ -9,7 +9,7 @@ import {
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-import { NginxResponse, NginxUserProcesses } from '../../../request.types';
+import { NginxResponse, UserProcesses } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import NGINXProcessGraphs from './NGINXProcessGraphs';
 
@@ -34,7 +34,7 @@ interface Props {
   isToday: boolean;
   start: number;
   end: number;
-  processesData: NginxUserProcesses;
+  processesData: UserProcesses;
   processesLoading: boolean;
   processesError?: string;
 }

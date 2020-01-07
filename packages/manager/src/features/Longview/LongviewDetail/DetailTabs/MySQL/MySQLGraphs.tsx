@@ -3,7 +3,7 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-import { NginxResponse, NginxUserProcesses } from '../../../request.types';
+import { MySQLResponse, UserProcesses } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import MySQLProcessGraphs from './MySQLProcessesGraphs';
 
@@ -21,14 +21,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  data?: NginxResponse;
+  data?: MySQLResponse;
   error?: string;
   loading: boolean;
   timezone: string;
   isToday: boolean;
   start: number;
   end: number;
-  processesData: NginxUserProcesses;
+  processesData: UserProcesses;
   processesLoading: boolean;
   processesError?: string;
 }
@@ -56,24 +56,97 @@ export const MySQLGraphs: React.FC<Props> = props => {
       <Grid container direction="column" spacing={0}>
         <Grid item xs={12}>
           <LongviewLineGraph
-            title="Requests"
-            subtitle="requests/s"
+            title="Queries"
+            subtitle="queries/s"
             error={error}
             loading={loading}
             showToday={isToday}
             timezone={timezone}
             data={[
               {
-                label: 'Requests',
+                label: 'SELECT',
                 borderColor: '#22ceb6',
                 backgroundColor: '#22ceb6',
-                data: _convertData(data?.requests ?? [], start, end, formatData)
+                data: _convertData(
+                  data?.Com_select ?? [],
+                  start,
+                  end,
+                  formatData
+                )
+              },
+              {
+                label: 'UPDATE',
+                borderColor: '#22ceb6',
+                backgroundColor: '#22ceb6',
+                data: _convertData(
+                  data?.Com_update ?? [],
+                  start,
+                  end,
+                  formatData
+                )
+              },
+              {
+                label: 'INSERT',
+                borderColor: '#22ceb6',
+                backgroundColor: '#22ceb6',
+                data: _convertData(
+                  data?.Com_insert ?? [],
+                  start,
+                  end,
+                  formatData
+                )
+              },
+              {
+                label: 'DELETE',
+                borderColor: '#22ceb6',
+                backgroundColor: '#22ceb6',
+                data: _convertData(
+                  data?.Com_delete ?? [],
+                  start,
+                  end,
+                  formatData
+                )
               }
             ]}
           />
         </Grid>
         <Grid item xs={12}>
           <Grid container direction="row">
+            <Grid item xs={12} sm={6} className={classes.smallGraph}>
+              <LongviewLineGraph
+                title="Throughput"
+                subtitle="KB/s"
+                nativeLegend
+                error={error}
+                loading={loading}
+                showToday={isToday}
+                timezone={timezone}
+                data={[
+                  {
+                    label: 'Inbound',
+                    borderColor: '#5b698b',
+                    backgroundColor: '#5b698b',
+                    data: _convertData(
+                      data?.Bytes_received ?? [],
+                      start,
+                      end,
+                      formatData
+                    )
+                  },
+                  {
+                    label: 'Outbound',
+                    borderColor: '#323b4d',
+                    backgroundColor: '#323b4d',
+                    data: _convertData(
+                      data?.Bytes_sent ?? [],
+                      start,
+                      end,
+                      formatData
+                    )
+                  }
+                ]}
+              />
+            </Grid>
             <Grid item xs={12} sm={6} className={classes.smallGraph}>
               <LongviewLineGraph
                 title="Connections"
@@ -85,22 +158,38 @@ export const MySQLGraphs: React.FC<Props> = props => {
                 timezone={timezone}
                 data={[
                   {
-                    label: 'Accepted',
-                    borderColor: '#5b698b',
-                    backgroundColor: '#5b698b',
+                    label: 'Connections',
+                    borderColor: '#63d997',
+                    backgroundColor: '#63d997',
                     data: _convertData(
-                      data?.accepted_cons ?? [],
+                      data?.Connections ?? [],
                       start,
                       end,
                       formatData
                     )
-                  },
+                  }
+                ]}
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <Grid container direction="row">
+            <Grid item xs={12} sm={6} className={classes.smallGraph}>
+              <LongviewLineGraph
+                title="Slow Queries"
+                nativeLegend
+                error={error}
+                loading={loading}
+                showToday={isToday}
+                timezone={timezone}
+                data={[
                   {
-                    label: 'Handled',
-                    borderColor: '#323b4d',
-                    backgroundColor: '#323b4d',
+                    label: 'Slow Queries',
+                    borderColor: '#5b698b',
+                    backgroundColor: '#5b698b',
                     data: _convertData(
-                      data?.handled_cons ?? [],
+                      data?.Slow_queries ?? [],
                       start,
                       end,
                       formatData
@@ -111,7 +200,7 @@ export const MySQLGraphs: React.FC<Props> = props => {
             </Grid>
             <Grid item xs={12} sm={6} className={classes.smallGraph}>
               <LongviewLineGraph
-                title="Workers"
+                title="Aborted"
                 nativeLegend
                 error={error}
                 loading={loading}
@@ -119,33 +208,22 @@ export const MySQLGraphs: React.FC<Props> = props => {
                 timezone={timezone}
                 data={[
                   {
-                    label: 'Waiting',
+                    label: 'Connections',
                     borderColor: '#63d997',
                     backgroundColor: '#63d997',
                     data: _convertData(
-                      data?.waiting ?? [],
+                      data?.Aborted_connects ?? [],
                       start,
                       end,
                       formatData
                     )
                   },
                   {
-                    label: 'Reading',
-                    borderColor: '#2db969',
-                    backgroundColor: '#2db969',
+                    label: 'Clients',
+                    borderColor: '#63d997',
+                    backgroundColor: '#63d997',
                     data: _convertData(
-                      data?.reading ?? [],
-                      start,
-                      end,
-                      formatData
-                    )
-                  },
-                  {
-                    label: 'Writing',
-                    borderColor: '#20834b',
-                    backgroundColor: '#20834b',
-                    data: _convertData(
-                      data?.writing ?? [],
+                      data?.Aborted_clients ?? [],
                       start,
                       end,
                       formatData

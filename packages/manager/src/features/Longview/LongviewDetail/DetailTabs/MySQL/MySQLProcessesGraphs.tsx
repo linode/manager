@@ -9,7 +9,7 @@ import {
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { readableBytes } from 'src/utilities/unitConversions';
-import { NginxUserProcess, NginxUserProcesses } from '../../../request.types';
+import { UserProcess, UserProcesses } from '../../../request.types';
 import { convertData, formatMemory } from '../../../shared/formatters';
 import { statMax, sumStatsObject } from '../../../shared/utilities';
 
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  data: NginxUserProcesses;
+  data: UserProcesses;
   loading: boolean;
   isToday: boolean;
   timezone: string;
@@ -39,7 +39,7 @@ export const MySQLProcessGraphs: React.FC<CombinedProps> = props => {
   const { data, error, loading, isToday, timezone, start, end, theme } = props;
 
   const totalDataForAllUsers = React.useMemo(
-    () => sumStatsObject<NginxUserProcess>(data),
+    () => sumStatsObject<UserProcess>(data),
     [data]
   );
 
