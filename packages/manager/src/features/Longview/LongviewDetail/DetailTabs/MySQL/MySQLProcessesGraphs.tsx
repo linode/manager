@@ -9,9 +9,9 @@ import {
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { readableBytes } from 'src/utilities/unitConversions';
-import { UserProcess, UserProcesses } from '../../../request.types';
+import { ProcessStats } from '../../../request.types';
 import { convertData, formatMemory } from '../../../shared/formatters';
-import { statMax, sumStatsObject } from '../../../shared/utilities';
+import { statMax } from '../../../shared/utilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
   smallGraph: {
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  data: UserProcesses;
+  data: ProcessStats;
   loading: boolean;
   isToday: boolean;
   timezone: string;
@@ -38,15 +38,9 @@ export const MySQLProcessGraphs: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const { data, error, loading, isToday, timezone, start, end, theme } = props;
 
-  const totalDataForAllUsers = React.useMemo(
-    () => sumStatsObject<UserProcess>(data),
-    [data]
-  );
-
   const _convertData = React.useCallback(convertData, [data, start, end]);
 
-  const memoryUnit = readableBytes(statMax(totalDataForAllUsers.mem ?? []))
-    .unit;
+  const memoryUnit = readableBytes(statMax(data.mem ?? [])).unit;
 
   /**
    * These field names say kbytes, but Classic reports them
@@ -54,14 +48,14 @@ export const MySQLProcessGraphs: React.FC<CombinedProps> = props => {
    * from cat /proc/$PID/io, which are bytes. No reason (I hope)
    * to multiply by 1024 to get the byte value here.
    */
-  const diskRead = totalDataForAllUsers.ioreadkbytes ?? [];
-  const diskWrite = totalDataForAllUsers.iowritekbytes ?? [];
+  const diskRead = data.ioreadkbytes ?? [];
+  const diskWrite = data.iowritekbytes ?? [];
   const maxDisk = Math.max(statMax(diskRead), statMax(diskWrite));
   const diskUnit = readableBytes(maxDisk).unit;
 
-  const cpu = totalDataForAllUsers.cpu ?? [];
-  const memory = totalDataForAllUsers.mem ?? [];
-  const processCount = totalDataForAllUsers.count ?? [];
+  const cpu = data.cpu ?? [];
+  const memory = data.mem ?? [];
+  const processCount = data.count ?? [];
 
   return (
     <>

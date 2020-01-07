@@ -1,5 +1,4 @@
 import { APIError } from 'linode-js-sdk/lib/types';
-import { omit } from 'ramda';
 import * as React from 'react';
 import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -9,8 +8,9 @@ import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import { isToday as _isToday } from 'src/utilities/isToday';
-import { UserProcesses, WithStartAndEnd } from '../../../request.types';
+import { ProcessStats, WithStartAndEnd } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
+import { sumStatsObject } from '../../../shared/utilities';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import MySQLGraphs from './MySQLGraphs';
 
@@ -81,15 +81,28 @@ export const MySQLLanding: React.FC<Props> = props => {
   const notice = Number(nginx?.status) > 0 ? nginx?.status_message : null;
 
   /**
-   * We omit the longname, which would otherwise be mistaken for an MySQL user
-   * @todo add an overload for this request so the typing isn't so weird
+   * Unlike nginx, there are several processes returned by
+   * Processes.mysql.*, such as mysqld and safe_mysql.
+   *
+   * We have to reduce our way through this object, summing
+   * stats as we go. The output will be a UserProcess object.
    */
   const processesData = React.useMemo(
     () =>
-      (omit(
-        ['longname'],
-        MySQLProcesses.data.Processes?.mysql
-      ) as UserProcesses) ?? {},
+      Object.values(MySQLProcesses.data?.Processes ?? {}).reduce(
+        (accum, thisProcess) => {
+          Object.keys(thisProcess).forEach(thisUser => {
+            if (thisUser !== 'longname') {
+              accum = sumStatsObject(
+                { thisUser: thisProcess[thisUser] },
+                { ...accum }
+              );
+            }
+          });
+          return accum;
+        },
+        {} as ProcessStats
+      ),
     [MySQLProcesses.data]
   );
 

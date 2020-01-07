@@ -9,7 +9,7 @@ import {
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { readableBytes } from 'src/utilities/unitConversions';
-import { UserProcess, UserProcesses } from '../../../request.types';
+import { ProcessStats, UserProcesses } from '../../../request.types';
 import { convertData, formatMemory } from '../../../shared/formatters';
 import { statMax, sumStatsObject } from '../../../shared/utilities';
 
@@ -39,7 +39,7 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
   const { data, error, loading, isToday, timezone, start, end, theme } = props;
 
   const totalDataForAllUsers = React.useMemo(
-    () => sumStatsObject<UserProcess>(data),
+    () => sumStatsObject<ProcessStats>(data),
     [data]
   );
 

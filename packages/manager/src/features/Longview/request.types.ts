@@ -319,20 +319,8 @@ export interface MySQLResponse {
   Aborted_clients: Stat[];
   Aborted_connects: Stat[];
 }
-/**
- * This has its own process type because it
- * is used as its own entity in the Nginx/MySQL tab
- * of detail view.
- */
-export interface UserProcess {
-  iowritekbytes: Stat[];
-  ioreadkbytes: Stat[];
-  mem: Stat[];
-  count: Stat[];
-  cpu: Stat[];
-}
 
-export type UserProcesses = Record<string, UserProcess>;
+export type UserProcesses = Record<string, ProcessStats>;
 
 export interface NginxProcesses {
   nginx: {

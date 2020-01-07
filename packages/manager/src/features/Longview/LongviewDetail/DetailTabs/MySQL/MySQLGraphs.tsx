@@ -3,7 +3,7 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-import { MySQLResponse, UserProcesses } from '../../../request.types';
+import { MySQLResponse, ProcessStats } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import MySQLProcessGraphs from './MySQLProcessesGraphs';
 
@@ -28,7 +28,7 @@ interface Props {
   isToday: boolean;
   start: number;
   end: number;
-  processesData: UserProcesses;
+  processesData: ProcessStats;
   processesLoading: boolean;
   processesError?: string;
 }
@@ -215,7 +215,7 @@ export const MySQLGraphs: React.FC<Props> = props => {
                       data?.Aborted_connects ?? [],
                       start,
                       end,
-                      formatData
+                      formatAborted
                     )
                   },
                   {
@@ -226,7 +226,7 @@ export const MySQLGraphs: React.FC<Props> = props => {
                       data?.Aborted_clients ?? [],
                       start,
                       end,
-                      formatData
+                      formatAborted
                     )
                   }
                 ]}
@@ -255,6 +255,13 @@ const formatData = (value: number | null) => {
 
   // Round to 2 decimal places.
   return Math.round(value * 100) / 100;
+};
+
+const formatAborted = (value: number | null) => {
+  if (value === null) {
+    return value;
+  }
+  return Math.ceil(value);
 };
 
 export default MySQLGraphs;
