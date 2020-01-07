@@ -29,7 +29,7 @@ export const defaultState: State = {
   entities: [],
   loading: true,
   lastUpdated: 0,
-  error: undefined
+  error: {}
 };
 
 /**

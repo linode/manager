@@ -1,3 +1,4 @@
+import { mergeDeepRight } from 'ramda';
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import account, {
@@ -259,7 +260,7 @@ const normalDefaultState = {
  */
 
 const defaultState: ApplicationState = defaultStateFromLocalStorage
-  ? { ...normalDefaultState, ...defaultStateFromLocalStorage }
+  ? mergeDeepRight(normalDefaultState, defaultStateFromLocalStorage)
   : normalDefaultState;
 
 /**

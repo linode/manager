@@ -1,6 +1,9 @@
 import * as moment from 'moment';
 import { throttle } from 'throttle-debounce';
 
+import { ApplicationState } from 'src/store';
+import { selectiveCopyObject } from 'src/utilities/selectiveCopyObject';
+
 export const loadState = () => {
   try {
     const state = localStorage.getItem('state');
@@ -26,20 +29,45 @@ export const loadState = () => {
   }
 };
 
-const _saveState = (state: any) => {
+const _saveState = (state: ApplicationState) => {
   /**
    * Don't store account/profile/auth data
    * in our cache.
    */
-  const _state = {
-    ...state,
-    authentication: undefined,
-    __resources: {
-      ...state.__resources,
-      profile: undefined,
-      account: undefined
-    }
-  };
+  const _state = selectiveCopyObject(
+    [
+      '__resources',
+      'linodes',
+      'linodeConfigs',
+      'linodeDisks',
+      'volumes',
+      'domains',
+      'images',
+      'kubernetes',
+      'nodePools',
+      'managed',
+      'managedIssues',
+      'nodeBalancers',
+      'nodeBalancerConfigs',
+      'regions',
+      'types',
+      'clusters',
+      'buckets',
+      'backups',
+      'firewalls',
+      'longviewClients',
+      'longviewStats',
+      // When we recurse, we don't want to store error or loading state information
+      'data',
+      'entities',
+      'items',
+      'results',
+      'itemsById',
+      'error' // error is an object in most cases so this will eval to the correct default {}
+    ],
+    state
+  );
+
   try {
     const stringifiedState = JSON.stringify(_state);
     localStorage.setItem('state', stringifiedState);
