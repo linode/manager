@@ -5,5 +5,5 @@ export const clearLocalStorage = () => {
   authentication.scopes.set('');
   authentication.expire.set('');
   authentication.nonce.set('');
-  localStorage.setItem('store', '');
+  localStorage.removeItem('state');
 };

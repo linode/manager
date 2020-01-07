@@ -7,7 +7,7 @@ export const loadState = () => {
     const updated = localStorage.getItem('state-updated');
     /** Don't load from the cache if it's old data */
     if (updated) {
-      if (moment(updated).diff(moment(), 'days') > 1) {
+      if (moment(updated).diff(moment(), 'days') > 5) {
         return undefined;
       }
     }

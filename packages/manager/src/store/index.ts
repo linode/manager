@@ -259,15 +259,7 @@ const normalDefaultState = {
  */
 
 const defaultState: ApplicationState = defaultStateFromLocalStorage
-  ? {
-      ...defaultStateFromLocalStorage,
-      authentication: authenticationDefaultState,
-      __resources: {
-        ...defaultStateFromLocalStorage.__resources,
-        profile: defaultProfileState,
-        account: defaultAccountState
-      }
-    }
+  ? { ...normalDefaultState, ...defaultStateFromLocalStorage }
   : normalDefaultState;
 
 /**
