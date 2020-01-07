@@ -37,6 +37,7 @@ export interface Props {
   rowHeaders?: Array<string>;
   legendRows?: Array<ChartData<any>>;
   unit?: string; // Display unit on Y axis ticks
+  nativeLegend?: boolean; // Display chart.js native legend
 }
 
 type CombinedProps = Props;
@@ -121,7 +122,7 @@ const humanizeLargeData = (value: number) => {
 };
 
 const LineGraph: React.FC<CombinedProps> = props => {
-  const inputEl: any = React.useRef(null);
+  const inputEl: React.RefObject<any> = React.useRef(null);
   const [legendRendered, setLegendRendered] = React.useState(false);
   const [, forceUpdate] = React.useState();
   const classes = useStyles();
@@ -134,6 +135,7 @@ const LineGraph: React.FC<CombinedProps> = props => {
     data,
     rowHeaders,
     legendRows,
+    nativeLegend,
     ...rest
   } = props;
   const finalRowHeaders = rowHeaders ? rowHeaders : ['Max', 'Avg', 'Last'];
@@ -159,7 +161,11 @@ const LineGraph: React.FC<CombinedProps> = props => {
     }
   ];
 
-  const getChartOptions = (_suggestedMax?: number, _unit?: string) => {
+  const getChartOptions = (
+    _suggestedMax?: number,
+    _unit?: string,
+    _nativeLegend?: boolean
+  ) => {
     const finalChartOptions = clone(chartOptions);
     const parser = parseInTimeZone(timezone || '');
     finalChartOptions.scales.xAxes[0].time.parser = parser;
@@ -190,6 +196,11 @@ const LineGraph: React.FC<CombinedProps> = props => {
       ) => `${humanizeLargeData(value)}${_unit}`;
     }
 
+    if (_nativeLegend) {
+      finalChartOptions.legend.display = true;
+      finalChartOptions.legend.position = 'bottom';
+    }
+
     return finalChartOptions;
   };
 
@@ -217,7 +228,7 @@ const LineGraph: React.FC<CombinedProps> = props => {
         <Line
           {...rest}
           height={chartHeight || 300}
-          options={getChartOptions(suggestedMax, unit)}
+          options={getChartOptions(suggestedMax, unit, nativeLegend)}
           plugins={plugins}
           ref={inputEl}
           data={{

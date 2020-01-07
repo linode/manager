@@ -3,6 +3,7 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import { isToday as _isToday } from 'src/utilities/isToday';
 import { WithStartAndEnd } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import CPUGraph from './CPUGraph';
@@ -42,7 +43,7 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
     setTimeBox({ start, end });
   };
 
-  const isToday = time.end - time.start < 60 * 60 * 25;
+  const isToday = _isToday(time.end, time.start);
 
   const graphProps: GraphProps = {
     clientAPIKey,
@@ -55,10 +56,9 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <Grid container item spacing={0}>
+    <Grid container spacing={0}>
       <Grid
         container
-        item
         direction="row"
         justify="space-between"
         alignItems="center"

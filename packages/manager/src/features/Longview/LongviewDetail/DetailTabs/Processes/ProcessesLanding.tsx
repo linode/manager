@@ -33,6 +33,20 @@ interface Props {
   timezone: string;
 }
 
+export const filterResults = (
+  results: ExtendedProcess[],
+  inputText?: string
+) => {
+  if (!inputText) {
+    return results;
+  }
+  return results.filter(
+    thisResult =>
+      thisResult.user.match(RegExp(inputText, 'i')) ||
+      thisResult.name.match(RegExp(inputText, 'i'))
+  );
+};
+
 const ProcessesLanding: React.FC<Props> = props => {
   const classes = useStyles();
 
@@ -48,6 +62,8 @@ const ProcessesLanding: React.FC<Props> = props => {
   const handleStatsChange = (start: number, end: number) => {
     setTimeBox({ start, end });
   };
+
+  const [inputText, setInputText] = React.useState<string | undefined>();
 
   const isToday = time.end - time.start < 60 * 60 * 25;
 
@@ -70,6 +86,15 @@ const ProcessesLanding: React.FC<Props> = props => {
     processes.data
   ]);
 
+  /**
+   * Memoized separately so we don't extendData on every
+   * text input
+   */
+  const memoizedFilteredData = React.useMemo(
+    () => filterResults(memoizedExtendedData, inputText),
+    [memoizedExtendedData, inputText]
+  );
+
   return (
     <>
       <Grid
@@ -80,13 +105,15 @@ const ProcessesLanding: React.FC<Props> = props => {
       >
         <Grid item xs={8}>
           <Box display="flex" justifyContent="space-between">
-            {/* Doesn't work yet. */}
             <TextField
               className={classes.filterInput}
               small
               placeholder="Filter by process or user..."
               label="Filter by process or user"
               hideLabel
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setInputText(e.target.value)
+              }
             />
             <TimeRangeSelect
               handleStatsChange={handleStatsChange}
@@ -97,7 +124,7 @@ const ProcessesLanding: React.FC<Props> = props => {
             />
           </Box>
           <ProcessesTable
-            processesData={memoizedExtendedData}
+            processesData={memoizedFilteredData}
             // It's correct to set loading to `true` when
             // processes.lastUpdated === 0. The reason we do this is to avoid
             // a state where we haven't made the request to get processes yet

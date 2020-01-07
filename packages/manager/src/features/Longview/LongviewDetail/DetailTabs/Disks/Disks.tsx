@@ -1,5 +1,4 @@
 import { APIError } from 'linode-js-sdk/lib/types';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -8,12 +7,12 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Box from 'src/components/core/Box';
 import ErrorState from 'src/components/ErrorState';
 import LandingLoading from 'src/components/LandingLoading';
+import Placeholder from 'src/components/Placeholder';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
-import DiskPaper from './DiskPaper';
+import DiskGraph from './DiskGraph';
 
-import getStats from '../../../request';
-import { Disk } from '../../../request.types';
-import { pathMaybeAddDataInThePast } from '../../../shared/formatters';
+import { WithStartAndEnd } from '../../../request.types';
+import { useGraphs } from '../OverviewGraphs/useGraphs';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -26,6 +25,7 @@ interface Props extends RouteComponentProps<{}> {
   clientAPIKey: string;
   clientID: number;
   clientLastUpdated?: number;
+  lastUpdated?: number;
   lastUpdatedError?: APIError[];
   timezone: string;
 }
@@ -33,115 +33,78 @@ interface Props extends RouteComponentProps<{}> {
 type CombinedProps = Props;
 
 const Disks: React.FC<CombinedProps> = props => {
-  const [diskStats, updateDiskStats] = React.useState<
-    Partial<Disk<'yAsNull'>> | undefined
-  >();
-  const [sysInfoType, updateSysInfoType] = React.useState<string>('');
-  const [fetchError, setError] = React.useState<string>('');
-  const [statsLoading, setLoading] = React.useState<boolean>(false);
-  const [start, setStart] = React.useState<number>(0);
-  const [end, setEnd] = React.useState<number>(0);
-
   const classes = useStyles();
+  const {
+    lastUpdated,
+    lastUpdatedError,
+    clientLastUpdated,
+    clientAPIKey
+  } = props;
 
-  let mounted = false;
+  const [time, setTimeBox] = React.useState<WithStartAndEnd>({
+    start: 0,
+    end: 0
+  });
 
-  const { lastUpdatedError, clientLastUpdated, clientAPIKey } = props;
-
-  const setStartAndEnd = (_start: number, _end: number) => {
-    setStart(_start);
-    setEnd(_end);
+  const handleStatsChange = (start: number, end: number) => {
+    setTimeBox({ start, end });
   };
 
+  const { data, loading, error, request } = useGraphs(
+    ['disk', 'sysinfo'],
+    clientAPIKey,
+    time.start,
+    time.end
+  );
+
   React.useEffect(() => {
-    mounted = true;
-    if (clientLastUpdated && start && end) {
-      if (!diskStats) {
-        setLoading(true);
-      }
-
-      setError('');
-
-      getStats(clientAPIKey, 'getValues', {
-        fields: ['disk', 'sysinfo'],
-        start,
-        end
-      })
-        .then(r => {
-          if (mounted) {
-            setLoading(false);
-            const _disk = pathOr({}, ['Disk'], r);
-
-            const pathsToAlter = Object.keys(_disk).reduce(
-              (acc, eachKey) => {
-                acc.push(
-                  ...[
-                    [eachKey, 'reads'],
-                    [eachKey, 'writes'],
-                    [eachKey, 'fs', 'free'],
-                    [eachKey, 'fs', 'total'],
-                    [eachKey, 'fs', 'itotal'],
-                    [eachKey, 'fs', 'ifree']
-                  ]
-                );
-
-                return acc;
-              },
-              [] as (string | number)[][]
-            );
-
-            const enhancedDisk = pathMaybeAddDataInThePast<Disk<'yAsNull'>>(
-              _disk,
-              start,
-              pathsToAlter
-            );
-
-            updateDiskStats(enhancedDisk);
-            updateSysInfoType(pathOr('', ['SysInfo', 'type'], r));
-          }
-        })
-        .catch(e => {
-          if (mounted) {
-            setLoading(false);
-            if (!diskStats) {
-              setError(
-                'There was an error fetching statistics for your Disks.'
-              );
-            }
-          }
-        });
-    }
-
-    return () => {
-      mounted = false;
-    };
-  }, [clientLastUpdated, start, end]);
+    request();
+  }, [
+    time.start,
+    time.end,
+    clientAPIKey,
+    clientLastUpdated,
+    lastUpdatedError,
+    lastUpdated
+  ]);
 
   const renderContent = () => {
-    if (fetchError || lastUpdatedError) {
+    const diskData = data.Disk ?? {};
+    if (error || lastUpdatedError) {
       return (
         <ErrorState errorText="There was an error fetching statistics for your Disks." />
       );
     }
 
-    if (statsLoading) {
-      return <LandingLoading shouldDelay />;
+    if (loading && Object.keys(diskData).length === 0) {
+      return <LandingLoading />;
     }
     /*
       Longview doesn't return the Disk stats in any particular order, so sort them
       alphabetically now
     */
-    const sortedKeys = Object.keys(diskStats || {}).sort();
+    const sortedKeys = Object.keys(diskData).sort();
+
+    if (!loading && sortedKeys.length === 0) {
+      // Empty state
+      return (
+        <Placeholder
+          title="No disks detected"
+          copy="The Longview agent has not detected any disks that it can monitor."
+        />
+      );
+    }
 
     return sortedKeys.map(eachKey => (
-      <DiskPaper
+      <DiskGraph
+        loading={loading}
         diskLabel={eachKey}
         key={eachKey}
-        stats={(diskStats || {})[eachKey]}
+        stats={diskData[eachKey]}
         timezone={props.timezone}
-        sysInfoType={sysInfoType}
-        startTime={start}
-        endTime={end}
+        sysInfoType={data.SysInfo?.type ?? ''}
+        startTime={time.start}
+        endTime={time.end}
       />
     ));
   };
@@ -152,7 +115,7 @@ const Disks: React.FC<CombinedProps> = props => {
         <TimeRangeSelect
           small
           className={classes.root}
-          handleStatsChange={setStartAndEnd}
+          handleStatsChange={handleStatsChange}
           defaultValue="Past 30 Minutes"
           label="Select Time Range"
           hideLabel

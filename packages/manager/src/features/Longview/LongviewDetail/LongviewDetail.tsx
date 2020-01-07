@@ -39,6 +39,8 @@ import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import useFlags from 'src/hooks/useFlags';
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
 import FeatureComingSoon from './DetailTabs/FeatureComingSoon';
+import NetworkLanding from './DetailTabs/Network';
+import NGINX from './DetailTabs/NGINX';
 import ProcessesLanding from './DetailTabs/Processes/ProcessesLanding';
 
 const topProcessesEmptyDataSet: LongviewTopProcesses = { Processes: {} };
@@ -285,31 +287,29 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           strict
           path={`${url}/network`}
           render={() => (
-            <FeatureComingSoon title="Network" clientLabel={client.label} />
+            <NetworkLanding
+              clientAPIKey={client.api_key}
+              lastUpdated={lastUpdated}
+              lastUpdatedError={lastUpdatedError}
+              timezone={timezone}
+            />
           )}
         />
         <Route
           exact
           strict
           path={`${url}/disks`}
-          render={routerProps => {
-            if (!showAllTabs) {
-              return (
-                <FeatureComingSoon title="Disks" clientLabel={client.label} />
-              );
-            }
-
-            return (
-              <Disks
-                clientID={client.id}
-                clientAPIKey={client.api_key}
-                clientLastUpdated={lastUpdated}
-                lastUpdatedError={lastUpdatedError}
-                timezone={props.timezone}
-                {...routerProps}
-              />
-            );
-          }}
+          render={routerProps => (
+            <Disks
+              clientID={client.id}
+              clientAPIKey={client.api_key}
+              lastUpdated={lastUpdated}
+              clientLastUpdated={lastUpdated}
+              lastUpdatedError={lastUpdatedError}
+              timezone={props.timezone}
+              {...routerProps}
+            />
+          )}
         />
         )}
         <Route
@@ -325,9 +325,21 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           exact
           strict
           path={`${url}/nginx`}
-          render={() => (
-            <FeatureComingSoon title="Nginx" clientLabel={client.label} />
-          )}
+          render={() => {
+            if (!showAllTabs) {
+              return (
+                <FeatureComingSoon title="NGINX" clientLabel={client.label} />
+              );
+            }
+            return (
+              <NGINX
+                timezone={timezone}
+                clientAPIKey={clientAPIKey}
+                lastUpdated={lastUpdated}
+                lastUpdatedError={lastUpdatedError}
+              />
+            );
+          }}
         />
         )}
         <Route

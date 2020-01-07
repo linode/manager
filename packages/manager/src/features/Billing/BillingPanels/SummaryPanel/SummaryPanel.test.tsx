@@ -33,7 +33,8 @@ describe('SummaryPanel', () => {
       balance_uninvoiced: 0,
       active_since: '2018-05-17T18:22:50',
       active_promotions: activePromotions,
-      capabilities: ['Linodes', 'NodeBalancers', 'Block Storage']
+      capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
+      euuid: '827923A3-566B-4C83-9B84-6BF656628206'
     }
   };
 
