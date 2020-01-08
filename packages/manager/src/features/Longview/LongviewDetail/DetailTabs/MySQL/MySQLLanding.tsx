@@ -43,17 +43,6 @@ export const MySQLLanding: React.FC<Props> = props => {
     time.end
   );
 
-  /**
-   * We request/store this data separately because:
-   * 1. Classic does (in fact they do each set of fields individually)
-   * 2. The request is huge otherwise
-   * 3. A hybrid nginx/processes interface would be messy
-   * 4. They are conceptually separate
-   *
-   * A downside to this approach is that the data in this view is essentially
-   * in two halves, but this is not clear to the user. They might see, for example,
-   * half the graphs in an error state and the others ok, which could be off-putting.
-   */
   const MySQLProcesses = useGraphs(
     ['mysqlProcesses'],
     clientAPIKey,
@@ -61,7 +50,7 @@ export const MySQLLanding: React.FC<Props> = props => {
     time.end
   );
 
-  const _version = data.Applications?.Nginx?.version;
+  const _version = data.Applications?.MySQL?.version;
   if (!version && _version) {
     setVersion(_version);
   }
@@ -75,9 +64,9 @@ export const MySQLLanding: React.FC<Props> = props => {
     setTimeBox({ start, end });
   };
 
-  const nginx = data.Applications?.Nginx;
+  const mySQL = data.Applications?.MySQL;
   const isToday = _isToday(time.start, time.end);
-  const notice = Number(nginx?.status) > 0 ? nginx?.status_message : null;
+  const notice = Number(mySQL?.status) > 0 ? mySQL?.status_message : null;
 
   if (notice !== null) {
     const message = (
@@ -87,7 +76,7 @@ export const MySQLLanding: React.FC<Props> = props => {
           See our{' '}
           <ExternalLink
             fixedIcon
-            link="https://www.linode.com/docs/platform/longview/longview-app-for-nginx/#troubleshooting"
+            link="https://www.linode.com/docs/platform/longview/longview-app-for-mysql/#troubleshooting"
             text="guide"
           />{' '}
           for help troubleshooting the MySQL Longview app.
@@ -100,9 +89,9 @@ export const MySQLLanding: React.FC<Props> = props => {
   return (
     <Grid
       container
-      id="tabpanel-nginx"
+      id="tabpanel-mysql"
       role="tabpanel"
-      aria-labelledby="tab-nginx"
+      aria-labelledby="tab-mysql"
       direction="column"
     >
       <DocumentTitleSegment segment={'MySQL'} />
