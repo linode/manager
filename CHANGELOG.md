@@ -4,6 +4,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.82.0] - 2020-01-08
+
+### Added:
+- Source Linodes from Redux in Networking and Backups
+- Longview: empty and loading states for Disks tab
+- Longview: NGINX tab
+- Longview: Network tab 
+- Show All option for Volumes, Domains, NodeBalancers
+- Sentry improvements 
+- Ignore newrelic and chrome extension errors
+- Add security.txt at cloud.linode.com/.well-known/security.txt
+
+### Changed:
+- Copy for Prometheus and Grafana One-Click Apps
+- Show confirmation dialog when resizing a Linode
+- Update LV documentation to include info on warnings/errors
+- Add copy explaining prorated transfer 
+- Move untagged items under tagged items for all entities
+- Allow primary nav to set multiple active links
+- Allow Charts.js native (canvas) legends for graphs
+- Filter processes by username or process name
+- Error feedback for failed snapshot backups
+- Support for Disks/Configs events
+- Add URL param to reset password button
+- Linode details accessibility adjustments
+
+### Fixed:
+- Layout overflow on Longview overview graph section
+- Missing error/loading states in AccessKey table & drawer
+- Older invoices causing an error when creating PDF
+- Weblish error (safe access properties)
+- Docs links for Longview installation instructions
+
 ## [v0.81.1] - 2019-12-23
 
 ### Change:
