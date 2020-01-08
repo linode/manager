@@ -1,4 +1,5 @@
 import { APIError } from 'linode-js-sdk/lib/types';
+import { prop, sortBy } from 'ramda';
 import * as React from 'react';
 import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -94,6 +95,25 @@ const ProcessesLanding: React.FC<Props> = props => {
     () => filterResults(memoizedExtendedData, inputText),
     [memoizedExtendedData, inputText]
   );
+
+  // Once we have the data set the first row in the table as selected.
+  // The <ProcessesTable /> component does the actual ordering of its data, so
+  // we need to sort the data here in the same manner (by name ascending) and
+  // select the first element.
+  React.useEffect(() => {
+    if (selectedProcess !== null) {
+      return;
+    }
+
+    const sortedByName = sortByName(memoizedFilteredData);
+    if (sortedByName.length > 0) {
+      const { name, user } = sortedByName[0];
+      setSelectedProcess({
+        name,
+        user
+      });
+    }
+  }, [selectedProcess, memoizedFilteredData]);
 
   return (
     <>
@@ -192,3 +212,5 @@ export const extendData = (
 
   return extendedData;
 };
+
+const sortByName = sortBy(prop('name'));

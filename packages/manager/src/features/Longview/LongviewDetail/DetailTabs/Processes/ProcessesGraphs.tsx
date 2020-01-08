@@ -44,9 +44,11 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const {
+    processesError,
     processesData,
     processesLoading,
     selectedProcess,
+    lastUpdatedError,
     timezone,
     isToday,
     time,
@@ -93,6 +95,11 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
     showToday: isToday
   };
 
+  const _hasError = processesError || lastUpdatedError;
+  const errorMessage = Boolean(_hasError)
+    ? _hasError?.[0]?.reason ?? 'Error retrieving data'
+    : undefined;
+
   return (
     <>
       <Paper className={classes.root}>
@@ -100,6 +107,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
           title="CPU"
           subtitle="%"
           loading={processesLoading}
+          error={errorMessage}
           data={[
             {
               data: _convertData(cpu, start, end, formatCPU),
@@ -114,6 +122,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
           title="RAM"
           subtitle={memUnit}
           loading={processesLoading}
+          error={errorMessage}
           data={[
             {
               data: _convertData(memory, start, end, formatMemory),
@@ -127,6 +136,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
         <LongviewLineGraph
           title="Count"
           loading={processesLoading}
+          error={errorMessage}
           data={[
             {
               data: _convertData(count, start, end, formatCount),
@@ -141,6 +151,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
           title="Disk I/O"
           subtitle={ioUnit + '/s'}
           loading={processesLoading}
+          error={errorMessage}
           data={[
             {
               label: 'Write',
