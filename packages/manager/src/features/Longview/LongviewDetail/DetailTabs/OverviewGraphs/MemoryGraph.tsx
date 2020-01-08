@@ -4,7 +4,7 @@ import { withTheme, WithTheme } from 'src/components/core/styles';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { Stat } from '../../../request.types';
-import { convertData } from '../../../shared/formatters';
+import { convertData, formatMemory } from '../../../shared/formatters';
 import { generateUsedMemory, statMax } from '../../../shared/utilities';
 import { GraphProps } from './types';
 import { useGraphs } from './useGraphs';
@@ -120,20 +120,6 @@ export const getUsedMemory = (used: Stat[], cache: Stat[], buffers: Stat[]) => {
     });
   }
   return result;
-};
-
-/**
- * Scale of memory data will vary, so we use this function
- * to run the data through readableBytes to determine
- * whether to show MB, KB, or GB.
- * @param value
- */
-export const formatMemory = (value: number | null) => {
-  if (value === null) {
-    return value;
-  }
-  // x1024 bc the API returns data in KB
-  return readableBytes(value * 1024).value;
 };
 
 export default withTheme(MemoryGraph);

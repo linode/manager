@@ -1,3 +1,4 @@
+import produce from 'immer';
 import { pathOr } from 'ramda';
 import { LVClientData } from 'src/containers/longview.stats.container';
 import { generateUnits } from 'src/features/Longview/LongviewLanding/Gauges/Network';
@@ -208,6 +209,54 @@ export const statMax = (stats: StatWithDummyPoint[] = []): number => {
     }
     return acc;
   }, 0);
+};
+
+/**
+ * sumStatsObject
+ *
+ * Generalized version of utilities such as sumNetwork.
+ * Many LV endpoints return an indeterminate number of stats fields,
+ * in a format something like:
+ *
+ * Network: {
+ *  eth0: {
+ *     rx_bytes: Stat[],
+ *     tx_bytes: Stat[]
+ * },
+ *  eth1: {
+ *     rx_bytes: Stat[],
+ *     tx_bytes: Stat[],
+ * }}
+ *
+ * A common task is to sum up total usage across all of these series
+ * (e.g. total IO for all disks, total traffic across all net interfaces, etc.)
+ * which is what this method does.
+ *
+ * @param data a Record<string, something> as in the example above. The
+ * output will be a single data series of type T, where the y values will
+ * be summed for each matching value of X.
+ */
+export const sumStatsObject = <T>(
+  data: Record<string, T>,
+  emptyState: T = {} as T
+): T => {
+  if (!data || typeof data !== 'object') {
+    return emptyState;
+  }
+  return Object.values(data).reduce(
+    (accum, thisObject) => {
+      return produce(accum, draft => {
+        Object.keys(thisObject).forEach(thisKey => {
+          if (thisKey in accum) {
+            draft[thisKey] = appendStats(accum[thisKey], thisObject[thisKey]);
+          } else {
+            draft[thisKey] = thisObject[thisKey];
+          }
+        });
+      });
+    },
+    { ...emptyState }
+  );
 };
 
 export const getMaxUnitAndFormatNetwork = (
