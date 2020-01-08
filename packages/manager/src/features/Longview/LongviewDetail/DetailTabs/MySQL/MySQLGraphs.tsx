@@ -51,6 +51,17 @@ export const MySQLGraphs: React.FC<Props> = props => {
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
 
+  const selectQueries = data?.Com_select ?? [];
+  const updateQueries = data?.Com_update ?? [];
+  const insertQueries = data?.Com_insert ?? [];
+  const deleteQueries = data?.Com_delete ?? [];
+  const abortedConnections = data?.Aborted_connects ?? [];
+  const abortedClients = data?.Aborted_clients ?? [];
+  const slowQueries = data?.Slow_queries ?? [];
+  const connections = data?.Connections ?? [];
+  const inbound = data?.Bytes_received ?? [];
+  const outbound = data?.Bytes_sent ?? [];
+
   return (
     <Paper className={classes.root}>
       <Grid container direction="column" spacing={0}>
@@ -68,45 +79,25 @@ export const MySQLGraphs: React.FC<Props> = props => {
                 label: 'SELECT',
                 borderColor: 'rgba(34, 192, 206, 0.7)',
                 backgroundColor: 'rgba(34, 192, 206, 0.7)',
-                data: _convertData(
-                  data?.Com_select ?? [],
-                  start,
-                  end,
-                  formatData
-                )
+                data: _convertData(selectQueries, start, end, formatData)
               },
               {
                 label: 'UPDATE',
                 borderColor: 'rgba(19, 110, 118, 0.7)',
                 backgroundColor: 'rgba(19, 110, 118, 0.7)',
-                data: _convertData(
-                  data?.Com_update ?? [],
-                  start,
-                  end,
-                  formatData
-                )
+                data: _convertData(updateQueries, start, end, formatData)
               },
               {
                 label: 'INSERT',
                 borderColor: 'rgba(26, 151, 162, 0.7)',
                 backgroundColor: 'rgba(26, 151, 162, 0.7)',
-                data: _convertData(
-                  data?.Com_insert ?? [],
-                  start,
-                  end,
-                  formatData
-                )
+                data: _convertData(insertQueries, start, end, formatData)
               },
               {
                 label: 'DELETE',
                 borderColor: 'rgba(2, 54, 59, 0.7)',
                 backgroundColor: 'rgba(2, 54, 59, 0.7)',
-                data: _convertData(
-                  data?.Com_delete ?? [],
-                  start,
-                  end,
-                  formatData
-                )
+                data: _convertData(deleteQueries, start, end, formatData)
               }
             ]}
           />
@@ -127,23 +118,13 @@ export const MySQLGraphs: React.FC<Props> = props => {
                     label: 'Inbound',
                     borderColor: 'rgba(49, 206, 62, 0.7)',
                     backgroundColor: 'rgba(49, 206, 62, 0.7)',
-                    data: _convertData(
-                      data?.Bytes_received ?? [],
-                      start,
-                      end,
-                      formatData
-                    )
+                    data: _convertData(inbound, start, end, formatData)
                   },
                   {
                     label: 'Outbound',
                     borderColor: 'rgba(16, 162, 29, 0.7)',
                     backgroundColor: 'rgba(16, 162, 29, 0.7)',
-                    data: _convertData(
-                      data?.Bytes_sent ?? [],
-                      start,
-                      end,
-                      formatData
-                    )
+                    data: _convertData(outbound, start, end, formatData)
                   }
                 ]}
               />
@@ -162,12 +143,7 @@ export const MySQLGraphs: React.FC<Props> = props => {
                     label: 'Connections',
                     borderColor: 'rgba(91, 105, 139, 0.7)',
                     backgroundColor: 'rgba(91, 105, 139, 0.7)',
-                    data: _convertData(
-                      data?.Connections ?? [],
-                      start,
-                      end,
-                      formatData
-                    )
+                    data: _convertData(connections, start, end, formatData)
                   }
                 ]}
               />
@@ -189,12 +165,7 @@ export const MySQLGraphs: React.FC<Props> = props => {
                     label: 'Slow Queries',
                     borderColor: 'rgba(255, 61, 61, 0.7)',
                     backgroundColor: 'rgba(255, 61, 61, 0.7)',
-                    data: _convertData(
-                      data?.Slow_queries ?? [],
-                      start,
-                      end,
-                      formatData
-                    )
+                    data: _convertData(slowQueries, start, end, formatData)
                   }
                 ]}
               />
@@ -213,7 +184,7 @@ export const MySQLGraphs: React.FC<Props> = props => {
                     borderColor: 'rgba(214, 0, 0, 0.7)',
                     backgroundColor: 'rgba(214, 0, 0, 0.7)',
                     data: _convertData(
-                      data?.Aborted_connects ?? [],
+                      abortedConnections,
                       start,
                       end,
                       formatAborted
@@ -224,7 +195,7 @@ export const MySQLGraphs: React.FC<Props> = props => {
                     borderColor: 'rgba(255, 10, 10, 0.7)',
                     backgroundColor: 'rgba(255, 10, 10, 0.7)',
                     data: _convertData(
-                      data?.Aborted_clients ?? [],
+                      abortedClients,
                       start,
                       end,
                       formatAborted
