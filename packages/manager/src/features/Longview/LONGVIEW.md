@@ -83,6 +83,46 @@ We recommend to keep `--form api_action=batch \` untouched and instead make chan
 | Network.\*  | Bytes              | Returns interfaces for inbound and outbound network traffic on the server. Run `apt install -y netload && netload` on the server to compare data |
 | Packages.\* | Array              | Returns an array of Packages that have available upgrades. This check is performed every 24 hours by the agent                                   |
 
+## Longview Errors and Notifications
+
+Errors or warnings from the Longview API will always have HTTP status code 200, so using response codes to identify an error won't work.
+To detect errors/warnings, look in the NOTIFICATIONS array included in every Longview response, which has the following shape:
+
+```
+{
+  CODE: 10,
+  SEVERITY: 1,
+  TEXT: "An error message"
+}
+```
+
+Severity values are interpreted as follows:
+
+- 0: Message
+- 1: Slightly more important message
+- 2: Warning/non-fatal error
+- 3: Fatal error
+
+Within Cloud Manager, we treat notifications of severity 3 as actual errors, and will reject the Promise for any request that returns
+one or more notifications of this type. Other notifications are passed through to the app normally and handled by consuming components.
+
+The full list of possible notifications can be found in the Longview server repo and is reproduced in the table below:
+
+| Name            | SEVERITY | CODE | TEXT                                                                                                    |
+| --------------- | -------- | ---- | ------------------------------------------------------------------------------------------------------- |
+| BADMETHOD       | 3        | 1    | No such method.                                                                                         |
+| BADAUTH         | 3        | 4    | Authentication failed.                                                                                  |
+| INVALIDPROPERTY | 3        | 7    | Property is invalid.                                                                                    |
+| TRANSITION      | 1        | 8    | Your data is currently in a transitional state. Any irregularities will clear up shortly.               |
+| THROTTLED       | 3        | 14   | Requests are temporarily throttled for this Longview client. Please try again later.                    |
+| MAINTENANCE     | 3        | 23   | Longview is currently under maintenance. Data is temporarily unavailable.                               |
+| STORAGEERROR    | 2        | 29   | We've detected a problem with your Longview data. Please contact Support.                               |
+| READONLY        | 1        | 30   | Longview is currently in read-only mode. Current data may not be available at this time.                |
+| FUTUREDATA      | 1        | 38   | Your system's clock is fast. Please ensure that ntp is installed and running.                           |
+| PASTDATA        | 1        | 39   | Your system's clock is slow. Please ensure that ntp is installed and running.                           |
+| CLIENTUPDATE    | 0        | 60   | An update for the Longview agent is available. Please update your installation of Longview.             |
+| MULTIPOST       | 2        | 50   | Multiple clients appear to be posting data with this API key. Please check your clients' configuration. |
+
 ## Populating your Linode with Data
 
 While developing with Longview, you may find it useful to populate your Linode with data for the Longview Client to record. Here are some tricks to up the usage of each reporting area:

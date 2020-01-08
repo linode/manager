@@ -103,10 +103,13 @@ export interface InboundOutboundNetwork<WithDummy extends '' | 'yAsNull' = ''> {
   tx_bytes: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
 }
 
+export type LongviewNetworkInterface<
+  WithDummy extends '' | 'yAsNull' = ''
+> = Record<string, InboundOutboundNetwork<WithDummy>>;
 export interface LongviewNetwork<WithDummy extends '' | 'yAsNull' = ''> {
   Network: {
     mac_addr: string;
-    Interface: Record<string, InboundOutboundNetwork<WithDummy>>;
+    Interface: LongviewNetworkInterface<WithDummy>;
   };
 }
 
@@ -208,7 +211,8 @@ export type AllData = LongviewCPU &
   LongviewProcesses &
   Uptime &
   LongviewPortsResponse &
-  LastUpdated;
+  LastUpdated &
+  LongviewApplications;
 
 export interface WithStartAndEnd {
   start: number;
@@ -262,10 +266,54 @@ export type LongviewFieldName =
   | 'packages'
   | 'processes'
   | 'listeningServices'
-  | 'activeConnections';
+  | 'activeConnections'
+  | 'nginx'
+  | 'nginxProcesses';
 
 export interface Options {
   fields: LongviewFieldName[];
   start?: number;
   end?: number;
+}
+
+export interface LongviewApplications {
+  Applications?: {
+    Nginx?: NginxResponse;
+    MySql?: any;
+    Apache?: any;
+  };
+}
+
+export interface NginxResponse {
+  version: string;
+  status: number;
+  status_message: string;
+  requests: Stat[];
+  writing: Stat[];
+  accepted_cons: Stat[];
+  handled_cons: Stat[];
+  reading: Stat[];
+  waiting: Stat[];
+  active: Stat[];
+}
+
+/**
+ * This has its own process type because it
+ * is used as its own entity in the Nginx tab
+ * of detail view.
+ */
+export interface NginxUserProcess {
+  iowritekbytes: Stat[];
+  ioreadkbytes: Stat[];
+  mem: Stat[];
+  count: Stat[];
+  cpu: Stat[];
+}
+
+export type NginxUserProcesses = Record<string, NginxUserProcess>;
+
+export interface NginxProcesses {
+  nginx: {
+    longname: string;
+  } & NginxUserProcesses;
 }

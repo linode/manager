@@ -1,8 +1,9 @@
-import { getLinodes, Linode } from 'linode-js-sdk/lib/linodes';
+import { Linode } from 'linode-js-sdk/lib/linodes';
 import { shareAddresses } from 'linode-js-sdk/lib/networking';
 import { APIError } from 'linode-js-sdk/lib/types';
-import { clone, flatten, pathOr, uniq } from 'ramda';
+import { clone, flatten, uniq } from 'ramda';
 import * as React from 'react';
+import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
@@ -17,9 +18,11 @@ import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
-import LinearProgress from 'src/components/LinearProgress';
-import RenderGuard from 'src/components/RenderGuard';
+import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
+import withLinodes, {
+  DispatchProps
+} from 'src/containers/withLinodes.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
@@ -85,25 +88,20 @@ interface Props {
 }
 
 interface State {
-  ipChoices: string[];
-  ipChoiceLabels: {
-    [key: string]: string;
-  };
   ipsToShare: string[];
-  loading: boolean;
   submitting: boolean;
   successMessage?: string;
   errors?: APIError[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props &
+  WithStyles<ClassNames> &
+  WithLinodesProps &
+  DispatchProps;
 
 class IPSharingPanel extends React.Component<CombinedProps, State> {
   state: State = {
-    ipChoices: [],
-    ipChoiceLabels: {},
     ipsToShare: this.props.linodeSharedIPs,
-    loading: true,
     submitting: false
   };
   mounted = false;
@@ -113,48 +111,6 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
-    const { linodeRegion, linodeID } = this.props;
-    const choiceLabels = {};
-    getLinodes({}, { region: linodeRegion })
-      .then(response => {
-        const linodes = pathOr([], ['data'], response);
-        const ipChoices = flatten<string>(
-          linodes
-            .filter((linode: Linode) => {
-              return linode.id !== linodeID;
-            })
-            .map((linode: Linode) => {
-              // side-effect of this mapping is saving the labels
-              linode.ipv4.map((ip: string) => {
-                choiceLabels[ip] = linode.label;
-              });
-              return linode.ipv4;
-            })
-        );
-        /**
-         * NB: We were previously filtering private IP addresses out at this point,
-         * but it seems that the API (or our infra) doesn't care about this.
-         */
-        ipChoices.unshift(IPSharingPanel.selectIPText);
-        if (!this.mounted) {
-          return;
-        }
-        this.setState({
-          ipChoices,
-          ipChoiceLabels: choiceLabels,
-          loading: false
-        });
-      })
-      .catch(errorResponse => {
-        const errors = getAPIErrorOrDefault(errorResponse);
-        if (!this.mounted) {
-          return;
-        }
-        this.setState({
-          errors,
-          loading: false
-        });
-      });
   }
 
   componentWillUnmount() {
@@ -219,7 +175,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
   };
 
   remainingChoices = (selectedIP: string) => {
-    return this.state.ipChoices.filter((ip: string) => {
+    return this.props.ipChoices.filter((ip: string) => {
       const hasBeenSelected = this.state.ipsToShare.includes(ip);
       return ip === selectedIP || !hasBeenSelected;
     });
@@ -230,8 +186,8 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
 
     const ipList = this.remainingChoices(ip).map((ipChoice: string) => {
       const label = `${ipChoice} ${
-        this.state.ipChoiceLabels[ipChoice] !== undefined
-          ? this.state.ipChoiceLabels[ipChoice]
+        this.props.ipChoiceLabels[ipChoice] !== undefined
+          ? this.props.ipChoiceLabels[ipChoice]
           : ''
       }`;
       return { label, value: ipChoice };
@@ -341,13 +297,13 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
 
   renderActions = () => {
     const { readOnly } = this.props;
-    const { submitting, loading } = this.state;
-    const noChoices = this.state.ipChoices.length <= 1;
+    const { submitting } = this.state;
+    const noChoices = this.props.ipChoices.length <= 1;
     return (
       <ActionsPanel>
         <Button
           loading={submitting}
-          disabled={readOnly || loading || noChoices}
+          disabled={readOnly || noChoices}
           onClick={this.onSubmit}
           buttonType="primary"
           data-qa-submit
@@ -355,7 +311,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
           Save
         </Button>
         <Button
-          disabled={submitting || loading || noChoices}
+          disabled={submitting || noChoices}
           onClick={this.onCancel}
           buttonType="secondary"
           data-qa-cancel
@@ -367,14 +323,8 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, linodeIPs, readOnly } = this.props;
-    const {
-      errors,
-      successMessage,
-      ipsToShare,
-      loading,
-      ipChoices
-    } = this.state;
+    const { classes, linodeIPs, readOnly, ipChoices } = this.props;
+    const { errors, successMessage, ipsToShare } = this.state;
 
     const errorFor = getAPIErrorsFor(IPSharingPanel.errorResources, errors);
     const generalError = errorFor('none');
@@ -402,9 +352,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
                 <Typography>IP Addresses</Typography>
               </Grid>
             </Grid>
-            {loading ? (
-              <LinearProgress style={{ margin: '50px' }} />
-            ) : ipChoices.length <= 1 ? (
+            {ipChoices.length <= 1 ? (
               <Typography className={classes.noIPsMessage}>
                 You have no other Linodes in this Linode's datacenter with which
                 to share IPs.
@@ -437,4 +385,45 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default styled(RenderGuard<CombinedProps>(IPSharingPanel));
+interface WithLinodesProps {
+  ipChoices: string[];
+  ipChoiceLabels: {
+    [key: string]: string;
+  };
+}
+
+const enhanced = recompose<CombinedProps, Props & RenderGuardProps>(
+  styled,
+  RenderGuard,
+  withLinodes<WithLinodesProps, Props>((ownProps, linodesData) => {
+    const { linodeRegion, linodeID } = ownProps;
+    const choiceLabels = {};
+    const ipChoices = flatten<string>(
+      linodesData
+        .filter((linode: Linode) => {
+          // Filter out:
+          // 1. The current Linode
+          // 2. Linodes outside of the current Linode's region
+          return linode.id !== linodeID && linode.region === linodeRegion;
+        })
+        .map((linode: Linode) => {
+          // side-effect of this mapping is saving the labels
+          linode.ipv4.map((ip: string) => {
+            choiceLabels[ip] = linode.label;
+          });
+          return linode.ipv4;
+        })
+    );
+    /**
+     * NB: We were previously filtering private IP addresses out at this point,
+     * but it seems that the API (or our infra) doesn't care about this.
+     */
+    ipChoices.unshift(IPSharingPanel.selectIPText);
+    return {
+      ipChoices,
+      ipChoiceLabels: choiceLabels
+    };
+  })
+);
+
+export default enhanced(IPSharingPanel);

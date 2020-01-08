@@ -257,7 +257,10 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       forestGreen: '#6FC37C',
       forestGreenBorder: '#32AE4E',
       lightGold: 'rgba(255, 220, 77, 0.7)',
-      lightGoldBorder: 'rgba(255,210,26,1)'
+      lightGoldBorder: 'rgba(255,210,26,1)',
+      // @todo consolidate these with forest/emerald green
+      networkGreenOutbound: '#10a21d',
+      networkGreenInbound: '#31ce3e'
     },
     font: {
       normal: primaryFonts.normal,
@@ -1014,10 +1017,8 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           }
         },
         select: {
-          '&[aria-pressed="true"]': {
-            '&+ input + $icon': {
-              opacity: 1
-            }
+          '&:focus': {
+            backgroundColor: 'transparent'
           }
         },
         icon: {
@@ -1033,6 +1034,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       },
       MuiSkeleton: {
         text: {
+          marginTop: 0,
           borderRadius: 0
         }
       },

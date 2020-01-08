@@ -31,6 +31,7 @@ import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
 
 import IdentifyUser from './IdentifyUser';
 
+import { initGTMUser } from './analytics';
 import MainContent from './MainContent';
 
 interface Props {
@@ -89,6 +90,10 @@ export class App extends React.Component<CombinedProps, State> {
         String(this.props.userId),
         this.props.username
       );
+    }
+
+    if (this.props.euuid) {
+      initGTMUser(this.props.euuid);
     }
 
     /*
@@ -293,6 +298,7 @@ interface StateProps {
   typesError?: APIError[];
   regionsError?: APIError[];
   appIsLoading: boolean;
+  euuid?: string;
 }
 
 const mapStateToProps: MapState<StateProps, Props> = state => ({
@@ -339,7 +345,8 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
   nodeBalancersLoading: state.__resources.nodeBalancers.loading,
   accountError: path(['read'], state.__resources.account.error),
   nodeBalancersError: path(['read'], state.__resources.nodeBalancers.error),
-  appIsLoading: state.initialLoad.appIsLoading
+  appIsLoading: state.initialLoad.appIsLoading,
+  euuid: state.__resources.account.data?.euuid
 });
 
 export const connected = connect(mapStateToProps, mapDispatchToProps);

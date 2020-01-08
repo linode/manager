@@ -54,6 +54,7 @@ export const DiskGraph: React.FC<CombinedProps> = props => {
       subtitle={'ops/second'}
       showToday={isToday}
       timezone={timezone}
+      nativeLegend
       data={[
         {
           label: 'Swap',
