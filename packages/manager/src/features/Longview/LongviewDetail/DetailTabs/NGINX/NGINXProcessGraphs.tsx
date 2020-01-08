@@ -9,9 +9,12 @@ import {
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { readableBytes } from 'src/utilities/unitConversions';
-import { ProcessStats, UserProcesses } from '../../../request.types';
+import { LongviewProcesses } from '../../../request.types';
 import { convertData, formatMemory } from '../../../shared/formatters';
-import { statMax, sumStatsObject } from '../../../shared/utilities';
+import {
+  statMax,
+  sumRelatedProcessesAcrossAllUsers
+} from '../../../shared/utilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
   smallGraph: {
@@ -23,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  data: UserProcesses;
+  data: LongviewProcesses;
   loading: boolean;
   isToday: boolean;
   timezone: string;
@@ -39,7 +42,7 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
   const { data, error, loading, isToday, timezone, start, end, theme } = props;
 
   const totalDataForAllUsers = React.useMemo(
-    () => sumStatsObject<ProcessStats>(data),
+    () => sumRelatedProcessesAcrossAllUsers(data),
     [data]
   );
 

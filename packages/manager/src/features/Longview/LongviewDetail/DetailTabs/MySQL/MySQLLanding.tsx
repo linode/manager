@@ -8,9 +8,8 @@ import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import { isToday as _isToday } from 'src/utilities/isToday';
-import { ProcessStats, WithStartAndEnd } from '../../../request.types';
+import { WithStartAndEnd } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
-import { sumStatsObject } from '../../../shared/utilities';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import MySQLGraphs from './MySQLGraphs';
 
@@ -80,32 +79,6 @@ export const MySQLLanding: React.FC<Props> = props => {
   const isToday = _isToday(time.start, time.end);
   const notice = Number(nginx?.status) > 0 ? nginx?.status_message : null;
 
-  /**
-   * Unlike nginx, there are several processes returned by
-   * Processes.mysql.*, such as mysqld and safe_mysql.
-   *
-   * We have to reduce our way through this object, summing
-   * stats as we go. The output will be a UserProcess object.
-   */
-  const processesData = React.useMemo(
-    () =>
-      Object.values(MySQLProcesses.data?.Processes ?? {}).reduce(
-        (accum, thisProcess) => {
-          Object.keys(thisProcess).forEach(thisUser => {
-            if (thisUser !== 'longname') {
-              accum = sumStatsObject(
-                { thisUser: thisProcess[thisUser] },
-                { ...accum }
-              );
-            }
-          });
-          return accum;
-        },
-        {} as ProcessStats
-      ),
-    [MySQLProcesses.data]
-  );
-
   if (notice !== null) {
     const message = (
       <>
@@ -156,7 +129,7 @@ export const MySQLLanding: React.FC<Props> = props => {
       <Grid item xs={12} className="py0">
         <MySQLGraphs
           data={data?.Applications?.MySQL}
-          processesData={processesData}
+          processesData={MySQLProcesses.data?.Processes ?? {}}
           processesLoading={MySQLProcesses.loading}
           processesError={MySQLProcesses.error}
           isToday={isToday}

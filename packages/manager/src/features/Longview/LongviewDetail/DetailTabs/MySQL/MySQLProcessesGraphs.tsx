@@ -9,9 +9,12 @@ import {
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { readableBytes } from 'src/utilities/unitConversions';
-import { ProcessStats } from '../../../request.types';
+import { LongviewProcesses } from '../../../request.types';
 import { convertData, formatMemory } from '../../../shared/formatters';
-import { statMax } from '../../../shared/utilities';
+import {
+  statMax,
+  sumRelatedProcessesAcrossAllUsers
+} from '../../../shared/utilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
   smallGraph: {
@@ -23,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  data: ProcessStats;
+  data: LongviewProcesses;
   loading: boolean;
   isToday: boolean;
   timezone: string;
@@ -40,22 +43,26 @@ export const MySQLProcessGraphs: React.FC<CombinedProps> = props => {
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
 
+  const _data = React.useMemo(() => sumRelatedProcessesAcrossAllUsers(data), [
+    data
+  ]);
+
   /**
    * These field names say kbytes, but Classic reports them
    * as bytes and they're read from the read_bytes and write_bytes
    * from cat /proc/$PID/io, which are bytes. No reason (I hope)
    * to multiply by 1024 to get the byte value here.
    */
-  const diskRead = data.ioreadkbytes ?? [];
-  const diskWrite = data.iowritekbytes ?? [];
+  const diskRead = _data.ioreadkbytes ?? [];
+  const diskWrite = _data.iowritekbytes ?? [];
   const maxDisk = Math.max(statMax(diskRead), statMax(diskWrite));
   const diskUnit = readableBytes(maxDisk).unit;
 
-  const cpu = data.cpu ?? [];
-  const memory = data.mem ?? [];
-  const processCount = data.count ?? [];
+  const cpu = _data.cpu ?? [];
+  const memory = _data.mem ?? [];
+  const processCount = _data.count ?? [];
 
-  const memoryUnit = readableBytes(statMax(data.mem ?? []) * 1024).unit;
+  const memoryUnit = readableBytes(statMax(_data.mem ?? []) * 1024).unit;
 
   return (
     <>

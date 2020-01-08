@@ -319,17 +319,3 @@ export interface MySQLResponse {
   Aborted_clients: Stat[];
   Aborted_connects: Stat[];
 }
-
-export type UserProcesses = Record<string, ProcessStats>;
-
-export interface NginxProcesses {
-  nginx: {
-    longname: string;
-  } & UserProcesses;
-}
-
-export interface MySQLProcesses {
-  mysql: {
-    longname: string;
-  } & UserProcesses;
-}

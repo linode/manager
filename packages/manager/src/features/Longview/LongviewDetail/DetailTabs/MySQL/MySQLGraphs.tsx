@@ -3,7 +3,7 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-import { MySQLResponse, ProcessStats } from '../../../request.types';
+import { LongviewProcesses, MySQLResponse } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import MySQLProcessGraphs from './MySQLProcessesGraphs';
 
@@ -28,7 +28,7 @@ interface Props {
   isToday: boolean;
   start: number;
   end: number;
-  processesData: ProcessStats;
+  processesData: LongviewProcesses;
   processesLoading: boolean;
   processesError?: string;
 }

@@ -10,6 +10,8 @@ import {
   InboundOutboundNetwork,
   LongviewNetwork,
   LongviewPackage,
+  LongviewProcesses,
+  ProcessStats,
   Stat,
   StatWithDummyPoint
 } from '../request.types';
@@ -258,6 +260,48 @@ export const sumStatsObject = <T>(
     { ...emptyState }
   );
 };
+
+/**
+ * Sometimes, there are several processes returned by
+ * a single query, such as mysql, mysqld and safe_mysql.
+ *
+ * The shape will be:
+ * {
+ *  Processes:
+ *    {
+ *       process1: {
+ *          user1: StatsWeNeedToSum
+ *          user2: StatsWeNeedToSum
+ *          user3: StatsWeNeedToSum
+ *       },
+ *       process2: {
+ *          user1: StatsWeNeedToSum
+ *          user2: StatsWeNeedToSum
+ *          user3: StatsWeNeedToSum
+ *       },
+ *    }
+ * }
+ *
+ * ...etc. All of the StatsWeNeedToSum will have the same shape
+ * (ProcessStats)
+ *
+ * We have to reduce our way through this object, summing
+ * stats as we go. The output will be a UserProcess object.
+ */
+export const sumRelatedProcessesAcrossAllUsers = (
+  relatedProcesses: LongviewProcesses
+) =>
+  Object.values(relatedProcesses).reduce((accum, thisProcess) => {
+    Object.keys(thisProcess).forEach(thisUser => {
+      if (thisUser !== 'longname') {
+        accum = sumStatsObject(
+          { thisUser: thisProcess[thisUser] },
+          { ...accum }
+        );
+      }
+    });
+    return accum;
+  }, {} as ProcessStats);
 
 export const getMaxUnitAndFormatNetwork = (
   rx_bytes: StatWithDummyPoint[],
