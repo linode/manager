@@ -58,6 +58,7 @@ export const MySQLGraphs: React.FC<Props> = props => {
           <LongviewLineGraph
             title="Queries"
             subtitle="queries/s"
+            nativeLegend
             error={error}
             loading={loading}
             showToday={isToday}
@@ -65,8 +66,8 @@ export const MySQLGraphs: React.FC<Props> = props => {
             data={[
               {
                 label: 'SELECT',
-                borderColor: '#22ceb6',
-                backgroundColor: '#22ceb6',
+                borderColor: 'rgba(34, 192, 206, 0.7)',
+                backgroundColor: 'rgba(34, 192, 206, 0.7)',
                 data: _convertData(
                   data?.Com_select ?? [],
                   start,
@@ -76,8 +77,8 @@ export const MySQLGraphs: React.FC<Props> = props => {
               },
               {
                 label: 'UPDATE',
-                borderColor: '#22ceb6',
-                backgroundColor: '#22ceb6',
+                borderColor: 'rgba(19, 110, 118, 0.7)',
+                backgroundColor: 'rgba(19, 110, 118, 0.7)',
                 data: _convertData(
                   data?.Com_update ?? [],
                   start,
@@ -87,8 +88,8 @@ export const MySQLGraphs: React.FC<Props> = props => {
               },
               {
                 label: 'INSERT',
-                borderColor: '#22ceb6',
-                backgroundColor: '#22ceb6',
+                borderColor: 'rgba(26, 151, 162, 0.7)',
+                backgroundColor: 'rgba(26, 151, 162, 0.7)',
                 data: _convertData(
                   data?.Com_insert ?? [],
                   start,
@@ -98,8 +99,8 @@ export const MySQLGraphs: React.FC<Props> = props => {
               },
               {
                 label: 'DELETE',
-                borderColor: '#22ceb6',
-                backgroundColor: '#22ceb6',
+                borderColor: 'rgba(2, 54, 59, 0.7)',
+                backgroundColor: 'rgba(2, 54, 59, 0.7)',
                 data: _convertData(
                   data?.Com_delete ?? [],
                   start,
@@ -124,8 +125,8 @@ export const MySQLGraphs: React.FC<Props> = props => {
                 data={[
                   {
                     label: 'Inbound',
-                    borderColor: '#5b698b',
-                    backgroundColor: '#5b698b',
+                    borderColor: 'rgba(49, 206, 62, 0.7)',
+                    backgroundColor: 'rgba(49, 206, 62, 0.7)',
                     data: _convertData(
                       data?.Bytes_received ?? [],
                       start,
@@ -135,8 +136,8 @@ export const MySQLGraphs: React.FC<Props> = props => {
                   },
                   {
                     label: 'Outbound',
-                    borderColor: '#323b4d',
-                    backgroundColor: '#323b4d',
+                    borderColor: 'rgba(16, 162, 29, 0.7)',
+                    backgroundColor: 'rgba(16, 162, 29, 0.7)',
                     data: _convertData(
                       data?.Bytes_sent ?? [],
                       start,
@@ -159,8 +160,8 @@ export const MySQLGraphs: React.FC<Props> = props => {
                 data={[
                   {
                     label: 'Connections',
-                    borderColor: '#63d997',
-                    backgroundColor: '#63d997',
+                    borderColor: 'rgba(91, 105, 139, 0.7)',
+                    backgroundColor: 'rgba(91, 105, 139, 0.7)',
                     data: _convertData(
                       data?.Connections ?? [],
                       start,
@@ -186,8 +187,8 @@ export const MySQLGraphs: React.FC<Props> = props => {
                 data={[
                   {
                     label: 'Slow Queries',
-                    borderColor: '#5b698b',
-                    backgroundColor: '#5b698b',
+                    borderColor: 'rgba(255, 61, 61, 0.7)',
+                    backgroundColor: 'rgba(255, 61, 61, 0.7)',
                     data: _convertData(
                       data?.Slow_queries ?? [],
                       start,
@@ -209,8 +210,8 @@ export const MySQLGraphs: React.FC<Props> = props => {
                 data={[
                   {
                     label: 'Connections',
-                    borderColor: '#63d997',
-                    backgroundColor: '#63d997',
+                    borderColor: 'rgba(214, 0, 0, 0.7)',
+                    backgroundColor: 'rgba(214, 0, 0, 0.7)',
                     data: _convertData(
                       data?.Aborted_connects ?? [],
                       start,
@@ -220,8 +221,8 @@ export const MySQLGraphs: React.FC<Props> = props => {
                   },
                   {
                     label: 'Clients',
-                    borderColor: '#63d997',
-                    backgroundColor: '#63d997',
+                    borderColor: 'rgba(255, 10, 10, 0.7)',
+                    backgroundColor: 'rgba(255, 10, 10, 0.7)',
                     data: _convertData(
                       data?.Aborted_clients ?? [],
                       start,

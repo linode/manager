@@ -97,8 +97,8 @@ export const MySQLProcessGraphs: React.FC<CombinedProps> = props => {
               data={[
                 {
                   label: 'RAM',
-                  borderColor: '#e083e0',
-                  backgroundColor: '#e083e0',
+                  borderColor: theme.graphs.lightPurpleBorder,
+                  backgroundColor: theme.graphs.lightPurple,
                   data: _convertData(memory, start, end, formatMemory)
                 }
               ]}
