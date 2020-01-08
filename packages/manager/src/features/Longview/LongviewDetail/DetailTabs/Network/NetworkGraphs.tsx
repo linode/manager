@@ -81,6 +81,7 @@ export const NetworkGraphs: React.FC<CombinedProps> = props => {
             <div style={{ paddingTop: theme.spacing(2) }}>
               <LongviewLineGraph
                 title="Network Traffic"
+                nativeLegend
                 subtitle={maxUnit + '/s'}
                 error={error}
                 loading={loading}
