@@ -20,6 +20,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   selectTimeRange: {
     width: 150
+  },
+  headerOuter: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: theme.spacing(1) + 2
   }
 }));
 
@@ -56,15 +63,8 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <Grid container spacing={0}>
-      <Grid
-        container
-        direction="row"
-        justify="space-between"
-        alignItems="center"
-        spacing={0}
-        className="py0"
-      >
+    <Grid item>
+      <Grid item className={classes.headerOuter}>
         <Grid item>
           <Typography variant="h2">Resource Allocation History</Typography>
         </Grid>
