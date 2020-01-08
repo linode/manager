@@ -94,6 +94,7 @@ interface DialogState {
   label?: string;
   errors?: APIError[];
   type: string;
+  submittingDialog: boolean;
 }
 
 interface TokenState {
@@ -105,6 +106,7 @@ interface State {
   form: FormState;
   dialog: DialogState;
   token?: TokenState;
+  submitting: boolean;
 }
 
 type CombinedProps = Props &
@@ -133,12 +135,14 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
       id: 0,
       label: undefined,
       errors: undefined,
-      type: ''
+      type: '',
+      submittingDialog: false
     },
     token: {
       open: false,
       value: undefined
-    }
+    },
+    submitting: false
   };
 
   mounted: boolean = false;
@@ -152,7 +156,13 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
       form: {
         ...APITokenTable.defaultState.form,
         mode: 'create',
-        open: true
+        open: true,
+        id: undefined,
+        values: {
+          label: '',
+          expiry: genExpiryTups()[0][1],
+          scopes: undefined
+        }
       }
     });
   };
@@ -216,7 +226,12 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
 
   closeRevokeDialog = () => {
     this.setState({
-      dialog: { ...this.state.dialog, id: undefined, open: false }
+      dialog: {
+        ...this.state.dialog,
+        id: undefined,
+        open: false,
+        submittingDialog: false
+      }
     });
   };
 
@@ -243,10 +258,28 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
 
   revokePersonalAccessToken = () => {
     const { dialog } = this.state;
+    this.setState({
+      ...this.state,
+      dialog: { ...dialog, submittingDialog: true }
+    });
     deletePersonalAccessToken(dialog.id as number)
       .then(() => this.props.onDelete())
+      .then(() =>
+        this.setState({
+          ...this.state,
+          dialog: { ...dialog, submittingDialog: false }
+        })
+      )
       .then(() => this.closeRevokeDialog())
-      .catch((err: any) => this.showDialogError(err));
+      .catch((err: any) => {
+        this.setState(
+          {
+            ...this.state,
+            dialog: { ...dialog, submittingDialog: false }
+          },
+          () => this.showDialogError(err)
+        );
+      });
   };
 
   revokeAppToken = () => {
@@ -318,13 +351,17 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
 
     const { form } = this.state;
     this.setState(
-      { form: { ...form, values: { ...form.values, scopes } } },
+      {
+        submitting: true,
+        form: { ...form, values: { ...form.values, scopes } }
+      },
       () => {
         createPersonalAccessToken(this.state.form.values)
           .then(({ token }) => {
             if (!token) {
               return this.setState(
                 {
+                  submitting: false,
                   form: {
                     ...form,
                     errors: [
@@ -337,6 +374,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
                 }
               );
             }
+            this.setState({ submitting: false });
             this.closeDrawer();
             this.openTokenDialog(token);
           })
@@ -348,6 +386,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
 
             this.setState(
               {
+                submitting: false,
                 form: {
                   ...form,
                   errors: getAPIErrorOrDefault(errResponse)
@@ -429,7 +468,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     const { error, loading, data } = this.props;
 
     if (loading) {
-      return <TableRowLoading colSpan={6} />;
+      return <TableRowLoading colSpan={6} oneLine />;
     }
 
     if (error) {
@@ -493,7 +532,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes, type, title } = this.props;
-    const { form, dialog } = this.state;
+    const { form, dialog, submitting } = this.state;
 
     const basePermsWithLKE = [...basePerms];
     basePermsWithLKE.splice(5, 0, 'lke');
@@ -544,6 +583,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         <APITokenDrawer
           open={form.open}
           mode={form.mode}
+          submitting={submitting}
           errors={form.errors}
           id={form.id}
           label={form.values.label}
@@ -626,6 +666,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           </Button>
           <Button
             buttonType="secondary"
+            loading={this.state.dialog.submittingDialog}
             destructive
             onClick={this.revokeAction}
             data-qa-button-confirm
