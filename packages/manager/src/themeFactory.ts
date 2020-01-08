@@ -222,6 +222,32 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       primaryNavText: '#c9cacb'
     },
     graphs: {
+      load: 'rgba(255, 220, 77, 0.7)',
+      requests: 'rgba(34, 206, 182, 0.7)',
+      connections: {
+        accepted: 'rgba(91, 105, 139, 0.7)',
+        handled: 'rgba(50, 59, 77, 0.7)'
+      },
+      network: {
+        outbound: 'rgba(49, 206, 62, 0.7)',
+        inbound: 'rgba(16, 162, 29, 0.7)'
+      },
+      workers: {
+        waiting: 'rgba(99, 217, 151, 0.7)',
+        reading: 'rgba(45, 185, 105, 0.7)',
+        writing: 'rgba(32, 131, 75, 0.7)'
+      },
+      cpu: 'rgba(54, 131, 220, 0.7)',
+      ram: 'rgba(224, 131, 224, 0.7)',
+      space: 'rgba(255, 99, 61, 0.7)',
+      inodes: 'rgba(224, 138, 146, 0.7)',
+      // diskIO: {
+      //   read:,
+      //   write:,
+      //   swap:
+      // }
+      processCount: 'rgba(113, 86, 245, 0.7)',
+
       blue: '#64ADF6',
       blueBorder: '#3F99F0',
       green: '#5BD765',

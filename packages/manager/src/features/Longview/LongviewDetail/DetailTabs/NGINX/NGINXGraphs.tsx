@@ -1,6 +1,12 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { compose } from 'recompose';
+import {
+  makeStyles,
+  Theme,
+  WithTheme,
+  withTheme
+} from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { NginxResponse, NginxUserProcesses } from '../../../request.types';
@@ -33,7 +39,9 @@ interface Props {
   processesError?: string;
 }
 
-export const NGINXGraphs: React.FC<Props> = props => {
+type CombinedProps = Props & WithTheme;
+
+export const NGINXGraphs: React.FC<CombinedProps> = props => {
   const {
     data,
     error,
@@ -44,7 +52,8 @@ export const NGINXGraphs: React.FC<Props> = props => {
     end,
     processesData,
     processesLoading,
-    processesError
+    processesError,
+    theme
   } = props;
 
   const classes = useStyles();
@@ -65,8 +74,8 @@ export const NGINXGraphs: React.FC<Props> = props => {
             data={[
               {
                 label: 'Requests',
-                borderColor: '#22ceb6',
-                backgroundColor: '#22ceb6',
+                borderColor: 'transparent',
+                backgroundColor: theme.graphs.requests,
                 data: _convertData(data?.requests ?? [], start, end, formatData)
               }
             ]}
@@ -86,8 +95,8 @@ export const NGINXGraphs: React.FC<Props> = props => {
                 data={[
                   {
                     label: 'Accepted',
-                    borderColor: '#5b698b',
-                    backgroundColor: '#5b698b',
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.connections.accepted,
                     data: _convertData(
                       data?.accepted_cons ?? [],
                       start,
@@ -97,8 +106,8 @@ export const NGINXGraphs: React.FC<Props> = props => {
                   },
                   {
                     label: 'Handled',
-                    borderColor: '#323b4d',
-                    backgroundColor: '#323b4d',
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.connections.handled,
                     data: _convertData(
                       data?.handled_cons ?? [],
                       start,
@@ -120,8 +129,8 @@ export const NGINXGraphs: React.FC<Props> = props => {
                 data={[
                   {
                     label: 'Waiting',
-                    borderColor: '#63d997',
-                    backgroundColor: '#63d997',
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.workers.waiting,
                     data: _convertData(
                       data?.waiting ?? [],
                       start,
@@ -131,8 +140,8 @@ export const NGINXGraphs: React.FC<Props> = props => {
                   },
                   {
                     label: 'Reading',
-                    borderColor: '#2db969',
-                    backgroundColor: '#2db969',
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.workers.reading,
                     data: _convertData(
                       data?.reading ?? [],
                       start,
@@ -142,8 +151,8 @@ export const NGINXGraphs: React.FC<Props> = props => {
                   },
                   {
                     label: 'Writing',
-                    borderColor: '#20834b',
-                    backgroundColor: '#20834b',
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.workers.writing,
                     data: _convertData(
                       data?.writing ?? [],
                       start,
@@ -179,4 +188,8 @@ const formatData = (value: number | null) => {
   return Math.round(value * 100) / 100;
 };
 
-export default NGINXGraphs;
+const enhanced = compose<CombinedProps, Props>(
+  withTheme,
+  React.memo
+)(NGINXGraphs);
+export default enhanced;

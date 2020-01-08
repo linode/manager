@@ -78,8 +78,8 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
               data={[
                 {
                   label: 'CPU',
-                  borderColor: '#63d997',
-                  backgroundColor: '#63d997',
+                  borderColor: 'transparent',
+                  backgroundColor: theme.graphs.cpu,
                   data: _convertData(cpu, start, end, formatData)
                 }
               ]}
@@ -96,8 +96,8 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
               data={[
                 {
                   label: 'RAM',
-                  borderColor: '#e083e0',
-                  backgroundColor: '#e083e0',
+                  borderColor: 'transparent',
+                  backgroundColor: theme.graphs.ram,
                   data: _convertData(memory, start, end, formatMemory)
                 }
               ]}
@@ -108,6 +108,7 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
       <Grid item xs={12}>
         <Grid container direction="row">
           <Grid item xs={12} sm={6} className={classes.smallGraph}>
+            {/* TODO need updated colors */}
             <LongviewLineGraph
               title="Disk I/O"
               subtitle={`${diskUnit}/s`}
@@ -118,13 +119,13 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
               data={[
                 {
                   label: 'Read',
-                  borderColor: theme.graphs.lightYellow,
+                  borderColor: 'transparent',
                   backgroundColor: theme.graphs.lightYellow,
                   data: _convertData(diskRead, start, end, formatData)
                 },
                 {
                   label: 'Write',
-                  borderColor: theme.graphs.lightOrange,
+                  borderColor: 'transparent',
                   backgroundColor: theme.graphs.lightOrange,
                   data: _convertData(diskWrite, start, end, formatData)
                 }
@@ -141,8 +142,8 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
               data={[
                 {
                   label: 'Count',
-                  borderColor: '#7156f5',
-                  backgroundColor: '#7156f5',
+                  borderColor: 'transparent',
+                  backgroundColor: theme.graphs.processCount,
                   data: _convertData(processCount, start, end, formatData)
                 }
               ]}
