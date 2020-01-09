@@ -11,7 +11,8 @@ const gaInit = (i: any, s: any, o: any, g: any, r: any, a: any, m: any) => {
     }),
     (i[r].l = 1 * currdate);
   (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
-  a.async = 1;
+  a.async = true;
+  a.defer = true;
   a.src = g;
   m.parentNode.insertBefore(a, m);
 };
@@ -26,6 +27,7 @@ const initGTM = (w: any, d: any, s: any, l: any, i: any) => {
     j = d.createElement(s),
     dl = l != 'dataLayer' ? '&l=' + l : '';
   j.async = true;
+  j.defer = true;
   j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
   f.parentNode.insertBefore(j, f);
 };
