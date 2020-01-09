@@ -61,6 +61,7 @@ export const MySQLProcessGraphs: React.FC<CombinedProps> = props => {
   const cpu = _data.cpu ?? [];
   const memory = _data.mem ?? [];
   const processCount = _data.count ?? [];
+  const maxProcessCount = Math.max(statMax(processCount), 10);
 
   const memoryUnit = readableBytes(statMax(_data.mem ?? []) * 1024).unit;
 
@@ -133,6 +134,7 @@ export const MySQLProcessGraphs: React.FC<CombinedProps> = props => {
           <Grid item xs={12} sm={6} className={classes.smallGraph}>
             <LongviewLineGraph
               title="Process Count"
+              suggestedMax={maxProcessCount}
               data={[
                 {
                   label: 'Count',

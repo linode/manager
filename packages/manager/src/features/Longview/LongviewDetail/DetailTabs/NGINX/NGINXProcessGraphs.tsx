@@ -62,6 +62,7 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
   const cpu = totalDataForAllUsers.cpu ?? [];
   const memory = totalDataForAllUsers.mem ?? [];
   const processCount = totalDataForAllUsers.count ?? [];
+  const maxProcessCount = Math.max(statMax(processCount), 10);
 
   const memoryUnit = readableBytes(statMax(memory) * 1024).unit;
 
@@ -134,6 +135,7 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
           <Grid item xs={12} sm={6} className={classes.smallGraph}>
             <LongviewLineGraph
               title="Process Count"
+              suggestedMax={maxProcessCount}
               data={[
                 {
                   label: 'Count',
