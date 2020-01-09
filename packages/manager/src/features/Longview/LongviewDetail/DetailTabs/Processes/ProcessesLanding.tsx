@@ -117,11 +117,12 @@ const ProcessesLanding: React.FC<Props> = props => {
     <>
       <Grid
         container
+        spacing={4}
         id="tabpanel-processes"
         role="tabpanel"
         aria-labelledby="tab-processes"
       >
-        <Grid item xs={8}>
+        <Grid item xs={12} lg={7}>
           <Box display="flex" justifyContent="space-between">
             <TextField
               className={classes.filterInput}
@@ -155,7 +156,7 @@ const ProcessesLanding: React.FC<Props> = props => {
             setSelectedProcess={setSelectedProcess}
           />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} lg={5}>
           <ProcessesGraphs
             processesData={data}
             processesLoading={loading || lastUpdated === 0}

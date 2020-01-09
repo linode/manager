@@ -6,6 +6,7 @@ import {
   withTheme,
   WithTheme
 } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import {
   LongviewProcesses,
@@ -19,7 +20,11 @@ import { formatCPU } from '../OverviewGraphs/CPUGraph';
 import { Process } from './common';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    marginTop: theme.spacing(1) + 2,
     padding: theme.spacing(3)
+  },
+  graphWrap: {
+    marginTop: theme.spacing(3)
   }
 }));
 
@@ -64,13 +69,13 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
   const ioreadkbytes = process.ioreadkbytes ?? [];
 
   const memMax = React.useMemo(() => statMax(memory), [memory]);
+  // Multiplied by 1024 because the API returns memory in KB.
   const memUnit = readableBytes(memMax * 1024).unit;
 
   const ioMax = React.useMemo(
     () => Math.max(statMax(iowritekbytes), statMax(ioreadkbytes)),
     [iowritekbytes, ioreadkbytes]
   );
-
   const ioUnit = readableBytes(ioMax).unit;
 
   const formatDisk = (value: number | null) => {
@@ -93,6 +98,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
 
   return (
     <>
+      <Typography variant="h2">Process History{name && `: ${name}`}</Typography>
       <Paper className={classes.root}>
         <LongviewLineGraph
           title="CPU"
@@ -109,56 +115,62 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
           ]}
           {...commonGraphProps}
         />
-        <LongviewLineGraph
-          title="RAM"
-          subtitle={memUnit}
-          loading={processesLoading}
-          error={error}
-          data={[
-            {
-              data: _convertData(memory, start, end, formatMemory),
-              label: 'RAM',
-              borderColor: theme.graphs.purple,
-              backgroundColor: theme.graphs.purpleBorder
-            }
-          ]}
-          {...commonGraphProps}
-        />
-        <LongviewLineGraph
-          title="Count"
-          loading={processesLoading}
-          error={error}
-          data={[
-            {
-              data: _convertData(count, start, end, formatCount),
-              label: 'Count',
-              borderColor: theme.graphs.deepBlue,
-              backgroundColor: theme.graphs.deepBlueBorder
-            }
-          ]}
-          {...commonGraphProps}
-        />
-        <LongviewLineGraph
-          title="Disk I/O"
-          subtitle={ioUnit + '/s'}
-          loading={processesLoading}
-          error={error}
-          data={[
-            {
-              label: 'Write',
-              borderColor: theme.graphs.lightOrangeBorder,
-              backgroundColor: theme.graphs.lightOrange,
-              data: _convertData(iowritekbytes, start, end, formatDisk)
-            },
-            {
-              label: 'Read',
-              borderColor: theme.graphs.lightYellowBorder,
-              backgroundColor: theme.graphs.lightYellow,
-              data: _convertData(ioreadkbytes, start, end, formatDisk)
-            }
-          ]}
-          {...commonGraphProps}
-        />
+        <div className={classes.graphWrap}>
+          <LongviewLineGraph
+            title="RAM"
+            subtitle={memUnit}
+            loading={processesLoading}
+            error={error}
+            data={[
+              {
+                data: _convertData(memory, start, end, formatMemory),
+                label: 'RAM',
+                borderColor: theme.graphs.purple,
+                backgroundColor: theme.graphs.purpleBorder
+              }
+            ]}
+            {...commonGraphProps}
+          />
+        </div>
+        <div className={classes.graphWrap}>
+          <LongviewLineGraph
+            title="Count"
+            loading={processesLoading}
+            error={error}
+            data={[
+              {
+                data: _convertData(count, start, end, formatCount),
+                label: 'Count',
+                borderColor: theme.graphs.deepBlue,
+                backgroundColor: theme.graphs.deepBlueBorder
+              }
+            ]}
+            {...commonGraphProps}
+          />
+        </div>
+        <div className={classes.graphWrap}>
+          <LongviewLineGraph
+            title="Disk I/O"
+            subtitle={ioUnit + '/s'}
+            loading={processesLoading}
+            error={error}
+            data={[
+              {
+                label: 'Write',
+                borderColor: theme.graphs.lightOrangeBorder,
+                backgroundColor: theme.graphs.lightOrange,
+                data: _convertData(iowritekbytes, start, end, formatDisk)
+              },
+              {
+                label: 'Read',
+                borderColor: theme.graphs.lightYellowBorder,
+                backgroundColor: theme.graphs.lightYellow,
+                data: _convertData(ioreadkbytes, start, end, formatDisk)
+              }
+            ]}
+            {...commonGraphProps}
+          />
+        </div>
       </Paper>
     </>
   );
