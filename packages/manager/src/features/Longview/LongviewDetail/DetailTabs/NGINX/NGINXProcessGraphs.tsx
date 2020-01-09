@@ -108,7 +108,6 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
       <Grid item xs={12}>
         <Grid container direction="row">
           <Grid item xs={12} sm={6} className={classes.smallGraph}>
-            {/* TODO need updated colors */}
             <LongviewLineGraph
               title="Disk I/O"
               subtitle={`${diskUnit}/s`}
@@ -120,13 +119,13 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
                 {
                   label: 'Read',
                   borderColor: 'transparent',
-                  backgroundColor: theme.graphs.lightYellow,
+                  backgroundColor: theme.graphs.diskIO.read,
                   data: _convertData(diskRead, start, end, formatData)
                 },
                 {
                   label: 'Write',
                   borderColor: 'transparent',
-                  backgroundColor: theme.graphs.lightOrange,
+                  backgroundColor: theme.graphs.diskIO.write,
                   data: _convertData(diskWrite, start, end, formatData)
                 }
               ]}

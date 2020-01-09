@@ -1,6 +1,6 @@
 import * as React from 'react';
-import Paper from 'src/components/core/Paper';
 import { compose } from 'recompose';
+import Paper from 'src/components/core/Paper';
 import {
   makeStyles,
   Theme,

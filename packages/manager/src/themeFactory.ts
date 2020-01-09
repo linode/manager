@@ -237,56 +237,48 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         reading: 'rgba(45, 185, 105, 0.7)',
         writing: 'rgba(32, 131, 75, 0.7)'
       },
-      cpu: 'rgba(54, 131, 220, 0.7)',
+      cpu: {
+        system: 'rgba(2, 118, 253, 0.7)',
+        user: 'rgba(81, 166, 245, 0.7)',
+        wait: 'rgba(145, 199, 237, 0.7)'
+      },
+      memory: {
+        swap: 'rgba(238, 44, 44, 0.7)',
+        buffers: 'rgba(142, 56, 142, 0.7)',
+        cache: 'rgba(205, 150, 205, 0.7)',
+        used: 'rgba(236, 200, 236, 0.7)'
+      },
+      diskIO: {
+        read: 'rgba(255, 196, 105, 0.7)',
+        write: 'rgba(255, 179, 77, 0.7)',
+        swap: 'rgba(238, 44, 44, 0.7)'
+      },
       ram: 'rgba(224, 131, 224, 0.7)',
       space: 'rgba(255, 99, 61, 0.7)',
       inodes: 'rgba(224, 138, 146, 0.7)',
-      // diskIO: {
-      //   read:,
-      //   write:,
-      //   swap:
-      // }
+      queries: {
+        select: 'rgba(34, 192, 206, 0.7)',
+        insert: 'rgba(26, 151, 162, 0.7)',
+        update: 'rgba(19, 110, 118, 0.7)',
+        delete: 'rgba(2, 54, 59, 0.7)'
+      },
+      slowQueries: 'rgba(255, 61, 61, 0.7)',
+      aborted: {
+        connections: 'rgba(255, 10, 10, 0.7)',
+        clients: 'rgba(214, 0, 0, 0.7)'
+      },
       processCount: 'rgba(113, 86, 245, 0.7)',
-
       blue: '#64ADF6',
       blueBorder: '#3F99F0',
       green: '#5BD765',
       greenBorder: '#18B523',
       orange: 'rgba(255, 179, 77, 0.7)',
-      orangeBorder: '#ff9d1a',
       purple: '#d9b0d9',
       purpleBorder: '#d9b0d9',
-      lightPurple: '#f1d6f0',
-      lightPurpleBorder: '#f1d6f0',
-      darkPurple: '#ac6baa',
-      darkPurpleBorder: 'rgba(130, 38, 148, 0.8)',
       red: '#FF633C',
       redBorder: '#F13A0A',
       yellow: '#FFDC7D',
-      yellowBorder: '#DCB64E',
-      salmon: 'rgba(255, 99, 61, 0.7)',
-      salmonBorder: '#ff3a0a',
-      pinkBorder: '#d5626d',
-      pink: 'rgba(224, 138, 146, 0.7)',
-      deepBlue: '#9CC6F4',
-      deepBlueBorder: '#3595f3',
-      skyBlue: '#8CBDF3',
-      skyBlueBorder: '#72AEF',
-      lightBlue: '#B5D5EF',
-      lightBlueBorder: '#A2C2EA',
-      lightYellow: '#ffd391',
-      lightYellowBorder: '#ffd391',
-      lightOrange: '#FFBE67',
-      lightOrangeBorder: '#FFA823',
-      emeraldGreen: '#74D97E',
-      emeraldGreenBorder: '#31CC4D',
-      forestGreen: '#6FC37C',
-      forestGreenBorder: '#32AE4E',
-      lightGold: 'rgba(255, 220, 77, 0.7)',
-      lightGoldBorder: 'rgba(255,210,26,1)',
-      // @todo consolidate these with forest/emerald green
-      networkGreenOutbound: '#10a21d',
-      networkGreenInbound: '#31ce3e'
+      yellowBorder: '#DCB64E'
     },
     font: {
       normal: primaryFonts.normal,

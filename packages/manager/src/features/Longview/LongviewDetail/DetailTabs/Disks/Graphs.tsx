@@ -100,21 +100,20 @@ const Graphs: React.FC<CombinedProps> = props => {
       <div className={classes.graphContainer}>
         {sysInfoType.toLowerCase() !== 'openvz' && (
           <div data-testid="diskio-graph">
-          {/* TODO update io colors */}
             <LongviewLineGraph
               loading={loading}
               data={[
                 {
                   data: convertData(writes, startTime, endTime, formatDiskIO),
                   label: 'Write',
-                  borderColor: theme.graphs.orangeBorder,
-                  backgroundColor: theme.graphs.orange
+                  borderColor: 'transparent',
+                  backgroundColor: theme.graphs.diskIO.write
                 },
                 {
                   data: convertData(reads, startTime, endTime, formatDiskIO),
                   label: 'Read',
-                  borderColor: theme.graphs.yellowBorder,
-                  backgroundColor: theme.graphs.yellow
+                  borderColor: 'transparent',
+                  backgroundColor: theme.graphs.diskIO.read
                 }
               ]}
               title="Disk I/O"

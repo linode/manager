@@ -57,20 +57,20 @@ export const CPUGraph: React.FC<CombinedProps> = props => {
       data={[
         {
           label: 'System',
-          borderColor: theme.graphs.deepBlueBorder,
-          backgroundColor: theme.graphs.deepBlue,
+          borderColor: 'transparent',
+          backgroundColor: theme.graphs.cpu.system,
           data: _convertData(cpuData.system, start, end, formatCPU)
         },
         {
           label: 'User',
-          borderColor: theme.graphs.skyBlueBorder,
-          backgroundColor: theme.graphs.skyBlue,
+          borderColor: 'transparent',
+          backgroundColor: theme.graphs.cpu.user,
           data: _convertData(cpuData.user, start, end, formatCPU)
         },
         {
           label: 'Wait',
-          borderColor: theme.graphs.lightBlueBorder,
-          backgroundColor: theme.graphs.lightBlue,
+          borderColor: 'transparent',
+          backgroundColor: theme.graphs.cpu.wait,
           data: _convertData(cpuData.wait, start, end, formatCPU)
         }
       ]}
