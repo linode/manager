@@ -148,6 +148,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
           <LongviewLineGraph
             title="Disk I/O"
             subtitle={ioUnit + '/s'}
+            nativeLegend
             data={[
               {
                 label: 'Write',
