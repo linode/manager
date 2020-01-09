@@ -93,7 +93,9 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
 
   const commonGraphProps = {
     timezone,
-    showToday: isToday
+    showToday: isToday,
+    loading: processesLoading,
+    error
   };
 
   return (
@@ -103,8 +105,6 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
         <LongviewLineGraph
           title="CPU"
           subtitle="%"
-          loading={processesLoading}
-          error={error}
           data={[
             {
               data: _convertData(cpu, start, end, formatCPU),
@@ -119,8 +119,6 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
           <LongviewLineGraph
             title="RAM"
             subtitle={memUnit}
-            loading={processesLoading}
-            error={error}
             data={[
               {
                 data: _convertData(memory, start, end, formatMemory),
@@ -135,8 +133,6 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
         <div className={classes.graphWrap}>
           <LongviewLineGraph
             title="Count"
-            loading={processesLoading}
-            error={error}
             data={[
               {
                 data: _convertData(count, start, end, formatCount),
@@ -152,8 +148,6 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
           <LongviewLineGraph
             title="Disk I/O"
             subtitle={ioUnit + '/s'}
-            loading={processesLoading}
-            error={error}
             data={[
               {
                 label: 'Write',
