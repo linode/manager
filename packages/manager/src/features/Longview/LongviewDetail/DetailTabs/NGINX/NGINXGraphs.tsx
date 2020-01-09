@@ -185,7 +185,7 @@ const formatData = (value: number | null) => {
   }
 
   // Round to 2 decimal places.
-  return Math.round(value * 100) / 100;
+  return Math.round(value * 10000) / 10000;
 };
 
 const enhanced = compose<CombinedProps, Props>(
