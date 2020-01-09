@@ -17,7 +17,7 @@ import { Process } from './common';
 export interface Props {
   processesData: ExtendedProcess[];
   processesLoading: boolean;
-  processesError?: APIError[];
+  error?: string;
   selectedProcess: Process | null;
   setSelectedProcess: (process: Process) => void;
   lastUpdatedError?: APIError[];
@@ -29,16 +29,10 @@ export const ProcessesTable: React.FC<CombinedProps> = props => {
   const {
     processesData,
     processesLoading,
-    processesError,
+    error,
     selectedProcess,
-    setSelectedProcess,
-    lastUpdatedError
+    setSelectedProcess
   } = props;
-
-  const _hasError = processesError || lastUpdatedError;
-  const errorMessage = Boolean(_hasError)
-    ? _hasError?.[0]?.reason ?? 'Error retrieving data'
-    : undefined;
 
   return (
     <>
@@ -110,7 +104,7 @@ export const ProcessesTable: React.FC<CombinedProps> = props => {
                   orderedData,
                   selectedProcess,
                   setSelectedProcess,
-                  errorMessage
+                  error
                 )}
               </TableBody>
             </Table>

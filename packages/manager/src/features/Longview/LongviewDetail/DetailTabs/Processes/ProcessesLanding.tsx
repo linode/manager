@@ -5,14 +5,14 @@ import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
-import get from 'src/features/Longview/request';
 import {
   LongviewProcesses,
   WithStartAndEnd
 } from 'src/features/Longview/request.types';
 import { statAverage, statMax } from 'src/features/Longview/shared/utilities';
-import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import { isToday as _isToday } from 'src/utilities/isToday';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
+import { useGraphs } from '../OverviewGraphs/useGraphs';
 import { Process } from './common';
 import ProcessesGraphs from './ProcessesGraphs';
 import ProcessesTable, { ExtendedProcess } from './ProcessesTable';
@@ -49,43 +49,41 @@ export const filterResults = (
 };
 
 const ProcessesLanding: React.FC<Props> = props => {
+  const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
   const classes = useStyles();
 
+  // Text input for filtering processes by name or user.
+  const [inputText, setInputText] = React.useState<string | undefined>();
+
+  // The selected process row.
   const [selectedProcess, setSelectedProcess] = React.useState<Process | null>(
     null
   );
 
+  // For the TimeRangeSelect.
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
     start: 0,
     end: 0
   });
-
   const handleStatsChange = (start: number, end: number) => {
     setTimeBox({ start, end });
   };
 
-  const [inputText, setInputText] = React.useState<string | undefined>();
+  const isToday = _isToday(time.start, time.end);
 
-  const isToday = time.end - time.start < 60 * 60 * 25;
-
-  const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
-
-  const processes = useAPIRequest<LongviewProcesses>(
-    clientAPIKey && lastUpdated
-      ? () =>
-          get(clientAPIKey, 'getValues', {
-            fields: ['processes'],
-            start: time.start,
-            end: time.end
-          }).then(response => response.DATA)
-      : null,
-    { Processes: {} },
-    [clientAPIKey, lastUpdated, time.start, time.end]
+  // We get all the data needed for the table and Graphs in one request.
+  const { data, loading, error, request } = useGraphs(
+    ['processes'],
+    clientAPIKey,
+    time.start,
+    time.end
   );
 
-  const memoizedExtendedData = React.useMemo(() => extendData(processes.data), [
-    processes.data
-  ]);
+  React.useEffect(() => {
+    request();
+  }, [time.start, time.end, clientAPIKey, lastUpdated, lastUpdatedError]);
+
+  const memoizedExtendedData = React.useMemo(() => extendData(data), [data]);
 
   /**
    * Memoized separately so we don't extendData on every
@@ -151,25 +149,23 @@ const ProcessesLanding: React.FC<Props> = props => {
             // (since we're waiting on lastUpdated) and thus processes.loading
             // is `false` but we don't have any data to show. Instead of showing
             // an empty state, we want to show a loader.
-            processesLoading={processes.loading || processes.lastUpdated === 0}
-            processesError={processes.error}
+            processesLoading={loading || lastUpdated === 0}
+            error={lastUpdatedError?.[0]?.reason || error}
             selectedProcess={selectedProcess}
             setSelectedProcess={setSelectedProcess}
-            lastUpdatedError={lastUpdatedError}
           />
         </Grid>
         <Grid item xs={4}>
           <ProcessesGraphs
-            processesData={processes.data}
-            processesLoading={processes.loading || processes.lastUpdated === 0}
-            processesError={processes.error}
+            processesData={data}
+            processesLoading={loading || lastUpdated === 0}
+            error={lastUpdatedError?.[0]?.reason || error}
             selectedProcess={selectedProcess}
             timezone={timezone}
             time={time}
             isToday={isToday}
             clientAPIKey={clientAPIKey || ''}
             lastUpdated={lastUpdated}
-            lastUpdatedError={Boolean(lastUpdatedError)}
           />
         </Grid>
       </Grid>

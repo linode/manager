@@ -42,7 +42,7 @@ describe('ProcessTable', () => {
 
   it('renders error state', () => {
     const { getByText } = renderWithTheme(
-      <ProcessesTable {...props} processesError={[{ reason: 'Error!' }]} />
+      <ProcessesTable {...props} error="Error!" />
     );
     getByText('Error!');
   });

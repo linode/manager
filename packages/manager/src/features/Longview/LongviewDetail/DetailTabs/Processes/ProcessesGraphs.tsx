@@ -1,4 +1,3 @@
-import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import {
@@ -15,7 +14,6 @@ import {
 import { convertData } from 'src/features/Longview/shared/formatters';
 import { statMax } from 'src/features/Longview/shared/utilities';
 import { readableBytes } from 'src/utilities/unitConversions';
-// import { formatDisk } from '../OverviewGraphs/DiskGraph';
 import { formatMemory } from '../../../shared/formatters';
 import { formatCPU } from '../OverviewGraphs/CPUGraph';
 import { Process } from './common';
@@ -28,12 +26,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   processesData: LongviewProcesses;
   processesLoading: boolean;
-  processesError?: APIError[];
+  error?: string;
   selectedProcess: Process | null;
   clientAPIKey: string;
   timezone: string;
   lastUpdated?: number;
-  lastUpdatedError: boolean;
   isToday: boolean;
   time: WithStartAndEnd;
 }
@@ -44,11 +41,10 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const {
-    processesError,
+    error,
     processesData,
     processesLoading,
     selectedProcess,
-    lastUpdatedError,
     timezone,
     isToday,
     time,
@@ -95,11 +91,6 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
     showToday: isToday
   };
 
-  const _hasError = processesError || lastUpdatedError;
-  const errorMessage = Boolean(_hasError)
-    ? _hasError?.[0]?.reason ?? 'Error retrieving data'
-    : undefined;
-
   return (
     <>
       <Paper className={classes.root}>
@@ -107,7 +98,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
           title="CPU"
           subtitle="%"
           loading={processesLoading}
-          error={errorMessage}
+          error={error}
           data={[
             {
               data: _convertData(cpu, start, end, formatCPU),
@@ -122,7 +113,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
           title="RAM"
           subtitle={memUnit}
           loading={processesLoading}
-          error={errorMessage}
+          error={error}
           data={[
             {
               data: _convertData(memory, start, end, formatMemory),
@@ -136,7 +127,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
         <LongviewLineGraph
           title="Count"
           loading={processesLoading}
-          error={errorMessage}
+          error={error}
           data={[
             {
               data: _convertData(count, start, end, formatCount),
@@ -151,7 +142,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
           title="Disk I/O"
           subtitle={ioUnit + '/s'}
           loading={processesLoading}
-          error={errorMessage}
+          error={error}
           data={[
             {
               label: 'Write',
