@@ -113,9 +113,10 @@ export const NGINX: React.FC<Props> = props => {
           justifyContent="space-between"
           alignItems="center"
         >
-          <Typography variant="h2">
-            {loading ? 'Loading...' : version ?? 'NGINX'}
-          </Typography>
+          <div>
+            <Typography variant="h2">{'NGINX'}</Typography>
+            {version && <Typography variant="body1">{version}</Typography>}
+          </div>
           <TimeRangeSelect
             small
             className={classes.root}

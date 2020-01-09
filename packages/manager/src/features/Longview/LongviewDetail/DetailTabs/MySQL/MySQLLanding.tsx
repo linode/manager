@@ -102,9 +102,11 @@ export const MySQLLanding: React.FC<Props> = props => {
           justifyContent="space-between"
           alignItems="center"
         >
-          <Typography variant="h2">
-            {loading ? 'Loading...' : version ?? 'MySQL'}
-          </Typography>
+          <div>
+            <Typography variant="h2">{'MySQL'}</Typography>
+            {version && <Typography variant="body1">{version}</Typography>}
+          </div>
+
           <TimeRangeSelect
             small
             className={classes.root}
