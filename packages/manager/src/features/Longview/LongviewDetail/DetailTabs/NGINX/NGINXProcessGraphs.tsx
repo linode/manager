@@ -65,6 +65,13 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
 
   const memoryUnit = readableBytes(statMax(memory) * 1024).unit;
 
+  const graphProps = {
+    timezone,
+    showToday: isToday,
+    loading,
+    error
+  };
+
   return (
     <>
       <Grid item xs={12}>
@@ -73,10 +80,6 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
             <LongviewLineGraph
               title="CPU"
               subtitle={'%'}
-              error={error}
-              loading={loading}
-              showToday={isToday}
-              timezone={timezone}
               data={[
                 {
                   label: 'CPU',
@@ -85,16 +88,13 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
                   data: _convertData(cpu, start, end, formatData)
                 }
               ]}
+              {...graphProps}
             />
           </Grid>
           <Grid item xs={12} sm={6} className={classes.smallGraph}>
             <LongviewLineGraph
               title="RAM"
               subtitle={memoryUnit}
-              error={error}
-              loading={loading}
-              showToday={isToday}
-              timezone={timezone}
               data={[
                 {
                   label: 'RAM',
@@ -103,6 +103,7 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
                   data: _convertData(memory, start, end, formatMemory)
                 }
               ]}
+              {...graphProps}
             />
           </Grid>
         </Grid>
@@ -113,10 +114,6 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
             <LongviewLineGraph
               title="Disk I/O"
               subtitle={`${diskUnit}/s`}
-              error={error}
-              loading={loading}
-              showToday={isToday}
-              timezone={timezone}
               data={[
                 {
                   label: 'Read',
@@ -131,15 +128,12 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
                   data: _convertData(diskWrite, start, end, formatData)
                 }
               ]}
+              {...graphProps}
             />
           </Grid>
           <Grid item xs={12} sm={6} className={classes.smallGraph}>
             <LongviewLineGraph
               title="Process Count"
-              error={error}
-              loading={loading}
-              showToday={isToday}
-              timezone={timezone}
               data={[
                 {
                   label: 'Count',
@@ -148,6 +142,7 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
                   data: _convertData(processCount, start, end, formatData)
                 }
               ]}
+              {...graphProps}
             />
           </Grid>
         </Grid>
