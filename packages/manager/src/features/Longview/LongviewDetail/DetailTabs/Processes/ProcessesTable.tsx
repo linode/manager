@@ -12,7 +12,7 @@ import TableRowLoading from 'src/components/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
 import { formatCPU } from 'src/features/Longview/shared/formatters';
 import { readableBytes } from 'src/utilities/unitConversions';
-import { Process } from './common';
+import { Process } from './types';
 
 export interface Props {
   processesData: ExtendedProcess[];

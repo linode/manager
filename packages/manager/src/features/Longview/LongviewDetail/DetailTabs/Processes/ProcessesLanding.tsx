@@ -13,9 +13,9 @@ import { statAverage, statMax } from 'src/features/Longview/shared/utilities';
 import { isToday as _isToday } from 'src/utilities/isToday';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
-import { Process } from './common';
 import ProcessesGraphs from './ProcessesGraphs';
 import ProcessesTable, { ExtendedProcess } from './ProcessesTable';
+import { Process } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   filterInput: {

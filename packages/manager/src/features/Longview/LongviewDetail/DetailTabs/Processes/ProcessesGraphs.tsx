@@ -17,7 +17,7 @@ import { statMax } from 'src/features/Longview/shared/utilities';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { formatMemory } from '../../../shared/formatters';
 import { formatCPU } from '../OverviewGraphs/CPUGraph';
-import { Process } from './common';
+import { Process } from './types';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginTop: theme.spacing(1) + 2,
