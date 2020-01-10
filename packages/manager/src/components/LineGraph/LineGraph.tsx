@@ -102,7 +102,9 @@ const chartOptions: any = {
     borderColor: '#999',
     caretPadding: 10,
     position: 'nearest',
-    callbacks: {}
+    callbacks: {},
+    intersect: false,
+    mode: 'index'
   }
 };
 
@@ -374,7 +376,7 @@ export const metricsBySection = (data: Metrics): number[] => [
   data.last
 ];
 
-export const formatTooltip = curry((data: any, t: any, d: any) =>
+export const formatTooltip = curry((data: any, t: any, d: any) => {
   /**
    * This is a horror show, sorry.
    * We want to mimic the behavior of Classic Manager,
@@ -386,12 +388,10 @@ export const formatTooltip = curry((data: any, t: any, d: any) =>
    * we have to access the original data series passed into the
    * component.
    */
-  d.datasets.map((thisDataSet: any, idx: number) => {
-    // The y value for this entry in this series
-    const value = data[idx].data[t.index][1] || 0;
-    const roundedValue = Math.round(value * 100000000) / 100000000;
-    return `${thisDataSet.label}: ${readableBytes(roundedValue).formatted}`;
-  })
-);
+  const dataset = data[t.datasetIndex];
+  const label = dataset.label;
+  const value = readableBytes(dataset.data[t.index][1] || 0).formatted;
+  return `${label}: ${value}`;
+});
 
 export default LineGraph;

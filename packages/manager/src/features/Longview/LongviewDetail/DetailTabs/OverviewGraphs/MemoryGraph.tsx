@@ -95,13 +95,6 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
   );
 };
 
-const formatMemory = (value: number | null) => {
-  if (value === null) {
-    return null;
-  }
-  return value * 1024; // convert from KB to B
-};
-
 /**
  * This uses the generateUsedMemory utility,
  * but unlike in the graphs, here we're dealing
