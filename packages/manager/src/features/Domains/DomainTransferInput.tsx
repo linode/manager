@@ -41,4 +41,4 @@ export const DomainTransferInput: React.FC<Props> = props => {
   );
 };
 
-export default DomainTransferInput;
+export default React.memo(DomainTransferInput);
