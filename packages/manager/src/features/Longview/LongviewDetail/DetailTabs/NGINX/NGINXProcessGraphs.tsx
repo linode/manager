@@ -85,7 +85,7 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
                 {
                   label: 'CPU',
                   borderColor: 'transparent',
-                  backgroundColor: theme.graphs.cpu,
+                  backgroundColor: theme.graphs.cpu.percent,
                   data: _convertData(cpu, start, end, formatData)
                 }
               ]}

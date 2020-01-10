@@ -242,7 +242,8 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       cpu: {
         system: `rgba(2, 118, 253, ${graphTransparency})`,
         user: `rgba(81, 166, 245, ${graphTransparency})`,
-        wait: `rgba(145, 199, 237, ${graphTransparency})`
+        wait: `rgba(145, 199, 237, ${graphTransparency})`,
+        percent: `rgba(54, 131, 220, ${graphTransparency})`
       },
       memory: {
         swap: `rgba(238, 44, 44, ${graphTransparency})`,
