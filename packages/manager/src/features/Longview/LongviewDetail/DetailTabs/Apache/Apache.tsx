@@ -4,11 +4,13 @@ import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
-import get from 'src/features/Longview/request';
-import { useAPIRequest } from 'src/hooks/useAPIRequest';
-import { LongviewApplications, WithStartAndEnd } from '../../../request.types';
+import Notice from 'src/components/Notice';
+import { isToday as _isToday } from 'src/utilities/isToday';
+import { WithStartAndEnd } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
+import { useGraphs } from '../OverviewGraphs/useGraphs';
 import ApacheGraphs from './ApacheGraphs';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -27,30 +29,62 @@ interface Props {
 export const Apache: React.FC<Props> = props => {
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
   const classes = useStyles();
+  const [version, setVersion] = React.useState<string | undefined>();
 
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
     start: 0,
     end: 0
   });
 
-  const apache = useAPIRequest<
-    LongviewApplications['Applications'] | undefined
-  >(
-    clientAPIKey && lastUpdated
-      ? () =>
-          get(clientAPIKey, 'getValues', { fields: ['apache'] }).then(
-            response => response.DATA?.Applications
-          )
-      : null,
-    {},
-    [clientAPIKey, lastUpdated]
+  const { data, loading, error, request } = useGraphs(
+    ['apache'],
+    clientAPIKey,
+    time.start,
+    time.end
   );
+
+  // const apacheProcesses = useGraphs(
+  //   ['apacheProcesses'],
+  //   clientAPIKey,
+  //   time.start,
+  //   time.end
+  // );
+
+  const _version = data.Applications?.Apache?.version;
+  if (!version && _version) {
+    setVersion(_version);
+  }
+
+  React.useEffect(() => {
+    request();
+    // apacheProcesses.request();
+  }, [time, clientAPIKey, lastUpdated, lastUpdatedError]);
 
   const handleStatsChange = (start: number, end: number) => {
     setTimeBox({ start, end });
   };
 
-  const isToday = time.end - time.start < 60 * 60 * 25;
+  const apache = data.Applications?.Apache;
+  const isToday = _isToday(time.start, time.end);
+  const notice = Number(apache?.status) > 0 ? apache?.status_message : null;
+
+  if (notice !== null) {
+    const message = (
+      <>
+        <Typography>{notice}</Typography>
+        <Typography>
+          See our{' '}
+          <ExternalLink
+            fixedIcon
+            link="https://www.linode.com/docs/platform/longview/longview-app-for-mysql/#troubleshooting"
+            text="guide"
+          />{' '}
+          for help troubleshooting the MySQL Longview app.
+        </Typography>
+      </>
+    );
+    return <Notice warning text={message} />;
+  }
 
   return (
     <Grid
@@ -68,7 +102,11 @@ export const Apache: React.FC<Props> = props => {
           justifyContent="space-between"
           alignItems="center"
         >
-          <Typography variant="h2">Resource Allocation History</Typography>
+          <div>
+            <Typography variant="h2">{'Apache'}</Typography>
+            {version && <Typography variant="body1">{version}</Typography>}
+          </div>
+
           <TimeRangeSelect
             small
             className={classes.root}
@@ -81,15 +119,20 @@ export const Apache: React.FC<Props> = props => {
       </Grid>
       <Grid item xs={12} className="py0">
         <ApacheGraphs
-          data={apache.data?.Apache}
+          data={data?.Applications?.Apache}
+          // processesData={MySQLProcesses.data?.Processes ?? {}}
+          // processesLoading={MySQLProcesses.loading}
+          // processesError={MySQLProcesses.error}
           isToday={isToday}
-          loading={apache.loading}
-          error={lastUpdatedError || apache.error}
+          loading={loading}
+          error={lastUpdatedError?.[0]?.reason || error}
           timezone={timezone}
+          start={time.start}
+          end={time.end}
         />
       </Grid>
     </Grid>
   );
 };
 
-export default Apache;
+export default React.memo(Apache);

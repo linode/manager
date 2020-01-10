@@ -299,16 +299,12 @@ export interface NginxResponse {
 }
 
 export interface ApacheResponse {
+  workers: Stat[];
+  status_message: string;
   version: string;
   status: number;
-  status_message: string;
-  requests: Stat[];
-  writing: Stat[];
-  accepted_cons: Stat[];
-  handled_cons: Stat[];
-  reading: Stat[];
-  waiting: Stat[];
-  active: Stat[];
+  totalKbytes: Stat[];
+  totalAccesses: Stat[];
 }
 
 /**
