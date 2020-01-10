@@ -106,14 +106,14 @@ const Graphs: React.FC<CombinedProps> = props => {
                 {
                   data: convertData(writes, startTime, endTime, formatDiskIO),
                   label: 'Write',
-                  borderColor: theme.graphs.orangeBorder,
-                  backgroundColor: theme.graphs.orange
+                  borderColor: 'transparent',
+                  backgroundColor: theme.graphs.diskIO.write
                 },
                 {
                   data: convertData(reads, startTime, endTime, formatDiskIO),
                   label: 'Read',
-                  borderColor: theme.graphs.yellowBorder,
-                  backgroundColor: theme.graphs.yellow
+                  borderColor: 'transparent',
+                  backgroundColor: theme.graphs.diskIO.read
                 }
               ]}
               title="Disk I/O"
@@ -136,8 +136,8 @@ const Graphs: React.FC<CombinedProps> = props => {
                   {
                     data: convertData(_free, startTime, endTime),
                     label: 'Space',
-                    borderColor: theme.graphs.salmonBorder,
-                    backgroundColor: theme.graphs.salmon
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.space
                   }
                 ]}
                 showToday={isToday}
@@ -154,8 +154,8 @@ const Graphs: React.FC<CombinedProps> = props => {
                   {
                     data: convertData(_inodes, startTime, endTime),
                     label: 'Inodes',
-                    borderColor: theme.graphs.pinkBorder,
-                    backgroundColor: theme.graphs.pink
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.inodes
                   }
                 ]}
                 showToday={isToday}
