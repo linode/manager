@@ -16,6 +16,10 @@ export const DomainTransferInput: React.FC<Props> = props => {
      * However, the API is expecting an array
      * of strings. If the user clears the input, set axfr_ips to [].
      * Otherwise, split the list into an array.
+     *
+     * We're relying on the API to validate these, bc there's no easy
+     * way to validate both v4 and v6 without bringing in a library.
+     * Badly-formed input will error on their end.
      */
     const transferIPs = e.target.value === '' ? [] : e.target.value.split(',');
     onChange(transferIPs);
