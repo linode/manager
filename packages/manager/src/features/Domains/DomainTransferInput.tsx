@@ -28,7 +28,7 @@ export const DomainTransferInput: React.FC<Props> = props => {
       placeholder="192.0.2.0,192.0.2.1"
       errorText={error}
       // Include some warnings and info from the API docs.
-      helperText={`Comma-separated list of up to 6 IPs that may perform a zone transfer for this Domain.
+      helperText={`Comma-separated list IPs that may perform a zone transfer for this Domain.
         This is potentially dangerous, and should be left empty unless you intend to use it.`}
       rows="3"
       value={value}
