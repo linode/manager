@@ -122,7 +122,7 @@ const renderLoadingErrorData = (
   setSelectedProcess: (process: Process) => void,
   error?: string
 ) => {
-  if (error) {
+  if (error && data.length === 0) {
     return <TableRowError colSpan={12} message={error} />;
   }
   if (loading) {
