@@ -4,7 +4,7 @@ import { withTheme, WithTheme } from 'src/components/core/styles';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { readableBytes, StorageSymbol } from 'src/utilities/unitConversions';
 import { Stat } from '../../../request.types';
-import { convertData, formatMemory } from '../../../shared/formatters';
+import { convertData } from '../../../shared/formatters';
 import { generateUsedMemory, statMax } from '../../../shared/utilities';
 import { GraphProps } from './types';
 import { useGraphs } from './useGraphs';
@@ -93,6 +93,13 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
       ]}
     />
   );
+};
+
+export const formatMemory = (value: number | null) => {
+  if (value === null) {
+    return null;
+  }
+  return value * 1024; // Convert from KB to B
 };
 
 /**
