@@ -119,6 +119,8 @@ const visuallyHidden = {
   clip: 'rect(1px, 1px, 1px, 1px)'
 };
 
+const graphTransparency = '0.7';
+
 export const COMPACT_SPACING_UNIT = 4;
 export const NORMAL_SPACING_UNIT = 8;
 
@@ -222,57 +224,57 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       primaryNavText: '#c9cacb'
     },
     graphs: {
-      load: 'rgba(255, 220, 77, 0.7)',
-      requests: 'rgba(34, 206, 182, 0.7)',
+      load: `rgba(255, 220, 77, ${graphTransparency})`,
+      requests: `rgba(34, 206, 182, ${graphTransparency})`,
       connections: {
-        accepted: 'rgba(91, 105, 139, 0.7)',
-        handled: 'rgba(50, 59, 77, 0.7)'
+        accepted: `rgba(91, 105, 139, ${graphTransparency})`,
+        handled: `rgba(50, 59, 77, ${graphTransparency})`
       },
       network: {
-        outbound: 'rgba(49, 206, 62, 0.7)',
-        inbound: 'rgba(16, 162, 29, 0.7)'
+        outbound: `rgba(49, 206, 62, ${graphTransparency})`,
+        inbound: `rgba(16, 162, 29, ${graphTransparency})`
       },
       workers: {
-        waiting: 'rgba(99, 217, 151, 0.7)',
-        reading: 'rgba(45, 185, 105, 0.7)',
-        writing: 'rgba(32, 131, 75, 0.7)'
+        waiting: `rgba(99, 217, 151, ${graphTransparency})`,
+        reading: `rgba(45, 185, 105, ${graphTransparency})`,
+        writing: `rgba(32, 131, 75, ${graphTransparency})`
       },
       cpu: {
-        system: 'rgba(2, 118, 253, 0.7)',
-        user: 'rgba(81, 166, 245, 0.7)',
-        wait: 'rgba(145, 199, 237, 0.7)'
+        system: `rgba(2, 118, 253, ${graphTransparency})`,
+        user: `rgba(81, 166, 245, ${graphTransparency})`,
+        wait: `rgba(145, 199, 237, ${graphTransparency})`
       },
       memory: {
-        swap: 'rgba(238, 44, 44, 0.7)',
-        buffers: 'rgba(142, 56, 142, 0.7)',
-        cache: 'rgba(205, 150, 205, 0.7)',
-        used: 'rgba(236, 200, 236, 0.7)'
+        swap: `rgba(238, 44, 44, ${graphTransparency})`,
+        buffers: `rgba(142, 56, 142, ${graphTransparency})`,
+        cache: `rgba(205, 150, 205, ${graphTransparency})`,
+        used: `rgba(236, 200, 236, ${graphTransparency})`
       },
       diskIO: {
-        read: 'rgba(255, 196, 105, 0.7)',
-        write: 'rgba(255, 179, 77, 0.7)',
-        swap: 'rgba(238, 44, 44, 0.7)'
+        read: `rgba(255, 196, 105, ${graphTransparency})`,
+        write: `rgba(255, 179, 77, ${graphTransparency})`,
+        swap: `rgba(238, 44, 44, ${graphTransparency})`
       },
-      ram: 'rgba(224, 131, 224, 0.7)',
-      space: 'rgba(255, 99, 61, 0.7)',
-      inodes: 'rgba(224, 138, 146, 0.7)',
+      ram: `rgba(224, 131, 224, ${graphTransparency})`,
+      space: `rgba(255, 99, 61, ${graphTransparency})`,
+      inodes: `rgba(224, 138, 146, ${graphTransparency})`,
       queries: {
-        select: 'rgba(34, 192, 206, 0.7)',
-        insert: 'rgba(26, 151, 162, 0.7)',
-        update: 'rgba(19, 110, 118, 0.7)',
-        delete: 'rgba(2, 54, 59, 0.7)'
+        select: `rgba(34, 192, 206, ${graphTransparency})`,
+        insert: `rgba(26, 151, 162, ${graphTransparency})`,
+        update: `rgba(19, 110, 118, ${graphTransparency})`,
+        delete: `rgba(2, 54, 59, ${graphTransparency})`
       },
-      slowQueries: 'rgba(255, 61, 61, 0.7)',
+      slowQueries: `rgba(255, 61, 61, ${graphTransparency})`,
       aborted: {
-        connections: 'rgba(255, 10, 10, 0.7)',
-        clients: 'rgba(214, 0, 0, 0.7)'
+        connections: `rgba(255, 10, 10, ${graphTransparency})`,
+        clients: `rgba(214, 0, 0, ${graphTransparency})`
       },
-      processCount: 'rgba(113, 86, 245, 0.7)',
+      processCount: `rgba(113, 86, 245, ${graphTransparency})`,
       blue: '#64ADF6',
       blueBorder: '#3F99F0',
       green: '#5BD765',
       greenBorder: '#18B523',
-      orange: 'rgba(255, 179, 77, 0.7)',
+      orange: `rgba(255, 179, 77, ${graphTransparency})`,
       purple: '#d9b0d9',
       purpleBorder: '#d9b0d9',
       red: '#FF633C',
