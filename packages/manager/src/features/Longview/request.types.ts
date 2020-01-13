@@ -268,8 +268,9 @@ export type LongviewFieldName =
   | 'listeningServices'
   | 'activeConnections'
   | 'nginx'
+  | 'nginxProcesses'
   | 'apache'
-  | 'nginxProcesses';
+  | 'apacheProcesses';
 
 export interface Options {
   fields: LongviewFieldName[];
@@ -299,12 +300,12 @@ export interface NginxResponse {
 }
 
 export interface ApacheResponse {
-  workers: Stat[];
+  Workers: Stat[];
   status_message: string;
   version: string;
   status: number;
-  totalKbytes: Stat[];
-  totalAccesses: Stat[];
+  'Total kBytes': Stat[];
+  'Total Accesses': Stat[];
 }
 
 /**

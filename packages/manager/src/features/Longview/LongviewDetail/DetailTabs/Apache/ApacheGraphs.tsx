@@ -1,10 +1,17 @@
 import * as React from 'react';
+import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  WithTheme,
+  withTheme
+} from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-import { ApacheResponse } from '../../../request.types';
+import { ApacheResponse, LongviewProcesses } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
+import ApacheProcessGraphs from './ApacheProcessGraphs';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -27,12 +34,14 @@ interface Props {
   isToday: boolean;
   start: number;
   end: number;
-  // processesData: LongviewProcesses;
-  // processesLoading: boolean;
-  // processesError?: string;
+  processesData: LongviewProcesses;
+  processesLoading: boolean;
+  processesError?: string;
 }
 
-export const ApacheGraphs: React.FC<Props> = props => {
+type CombinedProps = Props & WithTheme;
+
+export const ApacheGraphs: React.FC<CombinedProps> = props => {
   const {
     data,
     error,
@@ -41,9 +50,10 @@ export const ApacheGraphs: React.FC<Props> = props => {
     timezone,
     start,
     end,
-    // processesData,
-    // processesLoading,
-    // processesError
+    theme,
+    processesData,
+    processesLoading,
+    processesError
   } = props;
 
   const classes = useStyles();
@@ -54,45 +64,84 @@ export const ApacheGraphs: React.FC<Props> = props => {
     return null;
   }
 
-  const workersWaiting = data.workers['Waiting for Connection'];
-  const workersStarting = data.workers['Starting up'];
-  const workersReading = data.workers['Reading Request'];
-  const workersSending = data.workers['Sending Reply'];
-  const workersKeepAlive = data.workers['Keepalive'];
-  const workersDNSLookup = data.workers['DNS Lookup'];
-  const workersClosing = data.workers['Closing connection'];
-  const workersLogging = data.workers['Logging'];
-  const workersFinishing = data.workers['Gracefully finishing'];
-  const workersCleanup = data.workers['Idle cleanup of worker'];
-  console.log(data.workers);
+  const workersWaiting = data.Workers['Waiting for Connection'];
+  const workersStarting = data.Workers['Starting up'];
+  const workersReading = data.Workers['Reading Request'];
+  const workersSending = data.Workers['Sending Reply'];
+  const workersKeepAlive = data.Workers['Keepalive'];
+  const workersDNSLookup = data.Workers['DNS Lookup'];
+  const workersClosing = data.Workers['Closing connection'];
+  const workersLogging = data.Workers['Logging'];
+  const workersFinishing = data.Workers['Gracefully finishing'];
+  const workersCleanup = data.Workers['Idle cleanup of worker'];
+
+  const totalKBytes = data['Total kBytes'];
+  const totalAccesses = data['Total Accesses'];
+
+  const graphProps = {
+    timezone,
+    showToday: isToday,
+    loading,
+    error
+  };
+
   return (
     <Paper className={classes.root}>
       <Grid container direction="column" spacing={0}>
         <Grid item xs={12}>
-        {/* <LongviewLineGraph
+          <LongviewLineGraph
+            title="Requests"
+            subtitle="requests/s"
+            data={[
+              {
+                label: 'Requests',
+                borderColor: 'transparent',
+                backgroundColor: theme.graphs.requests,
+                data: _convertData(totalKBytes, start, end, formatData)
+              }
+            ]}
+            {...graphProps}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Grid container direction="row">
+            <Grid item xs={12} sm={6} className={classes.smallGraph}>
+              <LongviewLineGraph
+                title="Throughput"
+                subtitle={'KB' + '/s'}
+                data={[
+                  {
+                    label: 'Throughput',
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.network.outbound,
+                    data: _convertData(totalAccesses, start, end, formatData)
+                  }
+                ]}
+                {...graphProps}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} className={classes.smallGraph}>
+              <LongviewLineGraph
                 title="Workers"
                 subtitle={'KB' + '/s'}
-                error={error}
-                loading={loading}
-                showToday={isToday}
-                timezone={timezone}
+                nativeLegend
                 data={[
                   {
                     label: 'Waiting',
-                    borderColor: 'rgba(34, 192, 206, 0.7)',
-                    backgroundColor: 'rgba(34, 192, 206, 0.7)',
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.workers.waiting,
                     data: _convertData(workersWaiting, start, end, formatData)
                   },
                   {
                     label: 'Starting',
-                    borderColor: 'rgba(34, 192, 206, 0.7)',
-                    backgroundColor: 'rgba(34, 192, 206, 0.7)',
+                    borderColor: 'transparent',
+                    backgroundColor: 'blue',
                     data: _convertData(workersStarting, start, end, formatData)
                   },
                   {
                     label: 'Reading',
-                    borderColor: 'rgba(19, 110, 118, 0.7)',
-                    backgroundColor: 'rgba(19, 110, 118, 0.7)',
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.workers.reading,
                     data: _convertData(workersReading, start, end, formatData)
                   },
                   {
@@ -138,12 +187,20 @@ export const ApacheGraphs: React.FC<Props> = props => {
                     data: _convertData(workersCleanup, start, end, formatData)
                   }
                 ]}
-              /> */}
+                {...graphProps}
+              />
             </Grid>
-
-
-
-
+          </Grid>
+        </Grid>
+        <ApacheProcessGraphs
+          data={processesData}
+          loading={processesLoading}
+          error={processesError || error}
+          timezone={timezone}
+          isToday={isToday}
+          start={start}
+          end={end}
+        />
       </Grid>
     </Paper>
   );
@@ -158,4 +215,8 @@ const formatData = (value: number | null) => {
   return Math.round(value * 100) / 100;
 };
 
-export default ApacheGraphs;
+const enhanced = compose<CombinedProps, Props>(
+  withTheme,
+  React.memo
+)(ApacheGraphs);
+export default enhanced;

@@ -43,12 +43,23 @@ export const Apache: React.FC<Props> = props => {
     time.end
   );
 
-  // const apacheProcesses = useGraphs(
-  //   ['apacheProcesses'],
-  //   clientAPIKey,
-  //   time.start,
-  //   time.end
-  // );
+  /**
+   * We request/store this data separately because:
+   * 1. Classic does (in fact they do each set of fields individually)
+   * 2. The request is huge otherwise
+   * 3. A hybrid nginx/processes interface would be messy
+   * 4. They are conceptually separate
+   *
+   * A downside to this approach is that the data in this view is essentially
+   * in two halves, but this is not clear to the user. They might see, for example,
+   * half the graphs in an error state and the others ok, which could be off-putting.
+   */
+  const apacheProcesses = useGraphs(
+    ['apacheProcesses'],
+    clientAPIKey,
+    time.start,
+    time.end
+  );
 
   const _version = data.Applications?.Apache?.version;
   if (!version && _version) {
@@ -57,7 +68,7 @@ export const Apache: React.FC<Props> = props => {
 
   React.useEffect(() => {
     request();
-    // apacheProcesses.request();
+    apacheProcesses.request();
   }, [time, clientAPIKey, lastUpdated, lastUpdatedError]);
 
   const handleStatsChange = (start: number, end: number) => {
@@ -76,10 +87,10 @@ export const Apache: React.FC<Props> = props => {
           See our{' '}
           <ExternalLink
             fixedIcon
-            link="https://www.linode.com/docs/platform/longview/longview-app-for-mysql/#troubleshooting"
+            link="https://www.linode.com/docs/platform/longview/longview-app-for-apache/#troubleshooting"
             text="guide"
           />{' '}
-          for help troubleshooting the MySQL Longview app.
+          for help troubleshooting the Apache Longview app.
         </Typography>
       </>
     );
@@ -102,11 +113,9 @@ export const Apache: React.FC<Props> = props => {
           justifyContent="space-between"
           alignItems="center"
         >
-          <div>
-            <Typography variant="h2">{'Apache'}</Typography>
-            {version && <Typography variant="body1">{version}</Typography>}
-          </div>
-
+          <Typography variant="h2">
+            {loading ? 'Loading...' : version ?? 'Apache'}
+          </Typography>
           <TimeRangeSelect
             small
             className={classes.root}
@@ -120,9 +129,9 @@ export const Apache: React.FC<Props> = props => {
       <Grid item xs={12} className="py0">
         <ApacheGraphs
           data={data?.Applications?.Apache}
-          // processesData={MySQLProcesses.data?.Processes ?? {}}
-          // processesLoading={MySQLProcesses.loading}
-          // processesError={MySQLProcesses.error}
+          processesData={apacheProcesses.data?.Processes ?? {}}
+          processesLoading={apacheProcesses.loading}
+          processesError={apacheProcesses.error}
           isToday={isToday}
           loading={loading}
           error={lastUpdatedError?.[0]?.reason || error}
