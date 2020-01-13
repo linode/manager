@@ -78,8 +78,8 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
               data={[
                 {
                   label: 'CPU',
-                  borderColor: '#63d997',
-                  backgroundColor: '#63d997',
+                  borderColor: 'transparent',
+                  backgroundColor: theme.graphs.cpu,
                   data: _convertData(cpu, start, end, formatData)
                 }
               ]}
@@ -96,8 +96,8 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
               data={[
                 {
                   label: 'RAM',
-                  borderColor: '#e083e0',
-                  backgroundColor: '#e083e0',
+                  borderColor: 'transparent',
+                  backgroundColor: theme.graphs.ram,
                   data: _convertData(memory, start, end, formatMemory)
                 }
               ]}
@@ -118,14 +118,14 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
               data={[
                 {
                   label: 'Read',
-                  borderColor: theme.graphs.lightYellow,
-                  backgroundColor: theme.graphs.lightYellow,
+                  borderColor: 'transparent',
+                  backgroundColor: theme.graphs.diskIO.read,
                   data: _convertData(diskRead, start, end, formatData)
                 },
                 {
                   label: 'Write',
-                  borderColor: theme.graphs.lightOrange,
-                  backgroundColor: theme.graphs.lightOrange,
+                  borderColor: 'transparent',
+                  backgroundColor: theme.graphs.diskIO.write,
                   data: _convertData(diskWrite, start, end, formatData)
                 }
               ]}
@@ -141,8 +141,8 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
               data={[
                 {
                   label: 'Count',
-                  borderColor: '#7156f5',
-                  backgroundColor: '#7156f5',
+                  borderColor: 'transparent',
+                  backgroundColor: theme.graphs.processCount,
                   data: _convertData(processCount, start, end, formatData)
                 }
               ]}

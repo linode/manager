@@ -81,6 +81,7 @@ export const NetworkGraphs: React.FC<CombinedProps> = props => {
             <div style={{ paddingTop: theme.spacing(2) }}>
               <LongviewLineGraph
                 title="Network Traffic"
+                nativeLegend
                 subtitle={maxUnit + '/s'}
                 error={error}
                 loading={loading}
@@ -89,14 +90,14 @@ export const NetworkGraphs: React.FC<CombinedProps> = props => {
                 data={[
                   {
                     label: 'Inbound',
-                    borderColor: theme.graphs.forestGreenBorder,
-                    backgroundColor: theme.graphs.networkGreenInbound,
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.network.inbound,
                     data: _convertData(rx_bytes, start, end, formatNetwork)
                   },
                   {
                     label: 'Outbound',
-                    borderColor: theme.graphs.forestGreenBorder,
-                    backgroundColor: theme.graphs.networkGreenOutbound,
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.network.outbound,
                     data: _convertData(tx_bytes, start, end, formatNetwork)
                   }
                 ]}

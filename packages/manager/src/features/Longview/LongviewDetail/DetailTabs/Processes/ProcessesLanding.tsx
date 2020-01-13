@@ -10,6 +10,7 @@ import {
   WithStartAndEnd
 } from 'src/features/Longview/request.types';
 import { statAverage, statMax } from 'src/features/Longview/shared/utilities';
+import { escapeRegExp } from 'src/utilities/escapeRegExp';
 import { isToday as _isToday } from 'src/utilities/isToday';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
@@ -41,10 +42,13 @@ export const filterResults = (
   if (!inputText) {
     return results;
   }
+
+  const escapedInputText = escapeRegExp(inputText);
+
   return results.filter(
     thisResult =>
-      thisResult.user.match(RegExp(inputText, 'i')) ||
-      thisResult.name.match(RegExp(inputText, 'i'))
+      thisResult.user.match(RegExp(escapedInputText, 'i')) ||
+      thisResult.name.match(RegExp(escapedInputText, 'i'))
   );
 };
 

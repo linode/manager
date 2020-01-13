@@ -2,9 +2,9 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { withTheme, WithTheme } from 'src/components/core/styles';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-import { readableBytes } from 'src/utilities/unitConversions';
+import { readableBytes, StorageSymbol } from 'src/utilities/unitConversions';
 import { Stat } from '../../../request.types';
-import { convertData, formatMemory } from '../../../shared/formatters';
+import { convertData } from '../../../shared/formatters';
 import { generateUsedMemory, statMax } from '../../../shared/utilities';
 import { GraphProps } from './types';
 import { useGraphs } from './useGraphs';
@@ -59,6 +59,7 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
     <LongviewLineGraph
       title="Memory"
       subtitle={unit}
+      maxUnit={unit as StorageSymbol}
       error={error}
       loading={loading}
       showToday={isToday}
@@ -67,31 +68,38 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
       data={[
         {
           label: 'Swap',
-          borderColor: theme.graphs.redBorder,
-          backgroundColor: theme.graphs.red,
+          borderColor: 'transparent',
+          backgroundColor: theme.graphs.memory.swap,
           data: _convertData(swap, start, end, formatMemory)
         },
         {
           label: 'Buffers',
-          borderColor: theme.graphs.darkPurpleBorder,
-          backgroundColor: theme.graphs.darkPurple,
+          borderColor: 'transparent',
+          backgroundColor: theme.graphs.memory.buffers,
           data: _convertData(buffers, start, end, formatMemory)
         },
         {
           label: 'Cache',
-          borderColor: theme.graphs.purpleBorder,
-          backgroundColor: theme.graphs.purple,
+          borderColor: 'transparent',
+          backgroundColor: theme.graphs.memory.cache,
           data: _convertData(cache, start, end, formatMemory)
         },
         {
           label: 'Used',
-          borderColor: theme.graphs.lightPurpleBorder,
-          backgroundColor: theme.graphs.lightPurple,
+          borderColor: 'transparent',
+          backgroundColor: theme.graphs.memory.used,
           data: _convertData(used, start, end, formatMemory)
         }
       ]}
     />
   );
+};
+
+export const formatMemory = (value: number | null) => {
+  if (value === null) {
+    return null;
+  }
+  return value * 1024; // Convert from KB to B
 };
 
 /**
