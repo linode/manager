@@ -1,7 +1,6 @@
 import produce from 'immer';
 import { pathOr } from 'ramda';
 import { LVClientData } from 'src/containers/longview.stats.container';
-import { generateUnits } from 'src/features/Longview/LongviewLanding/Gauges/Network';
 import { pluralize } from 'src/utilities/pluralize';
 import { readableBytes } from 'src/utilities/unitConversions';
 import {
@@ -35,7 +34,7 @@ export const getPackageNoticeText = (packages: LongviewPackage[]) => {
   )} available`;
 };
 
-export const getTotalSomething = (used: number, free: number) => {
+export const getTotalMemoryUsage = (used: number, free: number) => {
   const total = used + free;
   const howManyBytesInGB = 1073741824;
   const memoryToBytes = total * 1024;
@@ -303,13 +302,50 @@ export const sumRelatedProcessesAcrossAllUsers = (
     return accum;
   }, {} as ProcessStats);
 
+export type NetworkUnit = 'b' | 'Kb' | 'Mb';
+/**
+ * converts bytes to either Kb (Kilobits) or Mb (Megabits)
+ * depending on if the Kilobit conversion exceeds 1000.
+ *
+ * @param networkUsed inbound and outbound traffic in bytes
+ */
+export const generateNetworkUnits = (networkUsed: number): NetworkUnit => {
+  /** Thanks to http://www.matisse.net/bitcalc/ */
+  const networkUsedToKilobits = (networkUsed * 8) / 1024;
+  if (networkUsedToKilobits <= 1) {
+    return 'b';
+  } else if (networkUsedToKilobits <= 1000) {
+    return 'Kb';
+  } else {
+    return 'Mb';
+  }
+};
+
+export const convertNetworkToUnit = (
+  valueInBits: number,
+  maxUnit: NetworkUnit
+) => {
+  if (maxUnit === 'Mb') {
+    // If the unit we're using for the graph is Mb, return the output in Mb.
+    const valueInMegabits = valueInBits / 1024 / 1024;
+    return Math.round(valueInMegabits * 100) / 100;
+  } else if (maxUnit === 'Kb') {
+    // If the unit we're using for the graph is Kb, return the output in Kb.
+    const valueInKilobits = valueInBits / 1024;
+    return Math.round(valueInKilobits * 100) / 100;
+  } else {
+    // Unit is 'b' so just return the unformatted value, rounded to the nearest bit.
+    return Math.round(valueInBits);
+  }
+};
+
 export const getMaxUnitAndFormatNetwork = (
   rx_bytes: StatWithDummyPoint[],
   tx_bytes: StatWithDummyPoint[]
 ) => {
   // Determine the unit based on the largest value.
   const max = Math.max(statMax(rx_bytes), statMax(tx_bytes));
-  const maxUnit = generateUnits(max).unit;
+  const maxUnit = generateNetworkUnits(max);
 
   const formatNetwork = (valueInBytes: number | null) => {
     if (valueInBytes === null) {
@@ -318,17 +354,7 @@ export const getMaxUnitAndFormatNetwork = (
 
     const valueInBits = valueInBytes * 8;
 
-    if (maxUnit === 'Mb') {
-      // If the unit we're using for the graph is Mb, return the output in Mb.
-      const valueInMegabits = valueInBits / 1024 / 1024;
-      return Math.round(valueInMegabits * 100) / 100;
-    } else if (maxUnit === 'Kb') {
-      // If the unit we're using for the graph is Kb, return the output in Kb.
-      const valueInKilobits = valueInBits / 1024;
-      return Math.round(valueInKilobits * 100) / 100;
-    } else {
-      return Math.round(valueInBits);
-    }
+    return convertNetworkToUnit(valueInBits, maxUnit);
   };
 
   return { maxUnit, formatNetwork };
