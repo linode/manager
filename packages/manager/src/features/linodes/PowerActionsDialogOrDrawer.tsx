@@ -38,11 +38,10 @@ type CombinedProps = Props;
  *
  * @param configs
  */
-const selectDefaultConfig = (configs?: Config[]) => {
+export const selectDefaultConfig = (configs?: Config[]) => {
   if (!configs || configs.length === 0) {
     return;
-  }
-  if (configs.length === 1) {
+  } else if (configs.length === 1) {
     return configs[0].id;
   } else {
     return;
