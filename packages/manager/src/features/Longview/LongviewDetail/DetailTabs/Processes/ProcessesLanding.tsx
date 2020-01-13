@@ -9,6 +9,7 @@ import get from 'src/features/Longview/request';
 import { LongviewProcesses } from 'src/features/Longview/request.types';
 import { statAverage, statMax } from 'src/features/Longview/shared/utilities';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import { escapeRegExp } from 'src/utilities/escapeRegExp';
 import ProcessesGraphs from './ProcessesGraphs';
 import ProcessesTable, { ExtendedProcess } from './ProcessesTable';
 
@@ -34,10 +35,13 @@ export const filterResults = (
   if (!inputText) {
     return results;
   }
+
+  const escapedInputText = escapeRegExp(inputText);
+
   return results.filter(
     thisResult =>
-      thisResult.user.match(RegExp(inputText, 'i')) ||
-      thisResult.name.match(RegExp(inputText, 'i'))
+      thisResult.user.match(RegExp(escapedInputText, 'i')) ||
+      thisResult.name.match(RegExp(escapedInputText, 'i'))
   );
 };
 
