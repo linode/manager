@@ -2,7 +2,7 @@ import { cleanup, waitForElement } from '@testing-library/react';
 import * as React from 'react';
 import { network as mockNetworkData } from 'src/__data__/longview';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import Network, { generateUnits, generateUsedNetworkAsBytes } from './Network';
+import Network, { generateUsedNetworkAsBytes } from './Network';
 
 afterEach(cleanup);
 
@@ -41,16 +41,6 @@ describe('Utility Functions', () => {
     expect(generateUsedNetworkAsBytes(mockNetworkData.Network.Interface)).toBe(
       524288
     );
-  });
-
-  it('should generate the correct units and values', () => {
-    const oneKilobitAsBytes = 128;
-    const oneMegabitAsBytes = 131072;
-    expect(generateUnits(oneKilobitAsBytes)).toEqual({ unit: 'Kb', value: 1 });
-    expect(generateUnits(oneMegabitAsBytes * 3)).toEqual({
-      unit: 'Mb',
-      value: 3
-    });
   });
 });
 

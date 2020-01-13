@@ -37,16 +37,15 @@ interface Props {
 
 type CombinedProps = Props & WithTheme;
 
-export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
+export const MySQLProcessGraphs: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const { data, error, loading, isToday, timezone, start, end, theme } = props;
 
-  const totalDataForAllUsers = React.useMemo(
-    () => sumRelatedProcessesAcrossAllUsers(data),
-    [data]
-  );
-
   const _convertData = React.useCallback(convertData, [data, start, end]);
+
+  const _data = React.useMemo(() => sumRelatedProcessesAcrossAllUsers(data), [
+    data
+  ]);
 
   /**
    * These field names say kbytes, but Classic reports them
@@ -54,17 +53,17 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
    * from cat /proc/$PID/io, which are bytes. No reason (I hope)
    * to multiply by 1024 to get the byte value here.
    */
-  const diskRead = totalDataForAllUsers.ioreadkbytes ?? [];
-  const diskWrite = totalDataForAllUsers.iowritekbytes ?? [];
+  const diskRead = _data.ioreadkbytes ?? [];
+  const diskWrite = _data.iowritekbytes ?? [];
   const maxDisk = Math.max(statMax(diskRead), statMax(diskWrite));
   const diskUnit = readableBytes(maxDisk).unit;
 
-  const cpu = totalDataForAllUsers.cpu ?? [];
-  const memory = totalDataForAllUsers.mem ?? [];
-  const processCount = totalDataForAllUsers.count ?? [];
+  const cpu = _data.cpu ?? [];
+  const memory = _data.mem ?? [];
+  const processCount = _data.count ?? [];
   const maxProcessCount = Math.max(statMax(processCount), 10);
 
-  const memoryUnit = readableBytes(statMax(memory) * 1024).unit;
+  const memoryUnit = readableBytes(statMax(_data.mem ?? []) * 1024).unit;
 
   const graphProps = {
     timezone,
@@ -165,5 +164,5 @@ const formatData = (value: number | null) => {
 const enhanced = compose<CombinedProps, Props>(
   withTheme,
   React.memo
-)(NGINXProcessGraphs);
+)(MySQLProcessGraphs);
 export default enhanced;
