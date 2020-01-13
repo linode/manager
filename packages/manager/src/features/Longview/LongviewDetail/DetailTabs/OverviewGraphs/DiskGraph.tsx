@@ -157,7 +157,7 @@ export const processDiskData = (
   );
 };
 
-const formatDisk = (value: number | null) => {
+export const formatDisk = (value: number | null) => {
   if (value === null) {
     return value;
   }
