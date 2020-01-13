@@ -1,31 +1,38 @@
 import { APIError } from 'linode-js-sdk/lib/types';
+import { prop, sortBy } from 'ramda';
 import * as React from 'react';
 import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Select from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
-import get from 'src/features/Longview/request';
-import { LongviewProcesses } from 'src/features/Longview/request.types';
+import {
+  LongviewProcesses,
+  WithStartAndEnd
+} from 'src/features/Longview/request.types';
 import { statAverage, statMax } from 'src/features/Longview/shared/utilities';
-import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { escapeRegExp } from 'src/utilities/escapeRegExp';
+import { isToday as _isToday } from 'src/utilities/isToday';
+import TimeRangeSelect from '../../../shared/TimeRangeSelect';
+import { useGraphs } from '../OverviewGraphs/useGraphs';
 import ProcessesGraphs from './ProcessesGraphs';
 import ProcessesTable, { ExtendedProcess } from './ProcessesTable';
+import { Process } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   filterInput: {
     width: 300
   },
-  timeSelect: {
+  selectTimeRange: {
     width: 200
   }
 }));
 
 interface Props {
+  clientID?: number;
   clientAPIKey?: string;
   lastUpdated?: number;
   lastUpdatedError?: APIError[];
+  timezone: string;
 }
 
 export const filterResults = (
@@ -46,27 +53,41 @@ export const filterResults = (
 };
 
 const ProcessesLanding: React.FC<Props> = props => {
+  const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
   const classes = useStyles();
 
-  const [selectedRow, setSelectedRow] = React.useState<string | null>(null);
+  // Text input for filtering processes by name or user.
   const [inputText, setInputText] = React.useState<string | undefined>();
 
-  const { clientAPIKey, lastUpdated, lastUpdatedError } = props;
-
-  const processes = useAPIRequest<LongviewProcesses>(
-    clientAPIKey && lastUpdated
-      ? () =>
-          get(clientAPIKey, 'getValues', { fields: ['processes'] }).then(
-            response => response.DATA
-          )
-      : null,
-    { Processes: {} },
-    [clientAPIKey, lastUpdated]
+  // The selected process row.
+  const [selectedProcess, setSelectedProcess] = React.useState<Process | null>(
+    null
   );
 
-  const memoizedExtendedData = React.useMemo(() => extendData(processes.data), [
-    processes.data
-  ]);
+  // For the TimeRangeSelect.
+  const [time, setTimeBox] = React.useState<WithStartAndEnd>({
+    start: 0,
+    end: 0
+  });
+  const handleStatsChange = (start: number, end: number) => {
+    setTimeBox({ start, end });
+  };
+
+  const isToday = _isToday(time.start, time.end);
+
+  // We get all the data needed for the table and Graphs in one request.
+  const { data, loading, error, request } = useGraphs(
+    ['processes'],
+    clientAPIKey,
+    time.start,
+    time.end
+  );
+
+  React.useEffect(() => {
+    request();
+  }, [time.start, time.end, clientAPIKey, lastUpdated, lastUpdatedError]);
+
+  const memoizedExtendedData = React.useMemo(() => extendData(data), [data]);
 
   /**
    * Memoized separately so we don't extendData on every
@@ -77,15 +98,35 @@ const ProcessesLanding: React.FC<Props> = props => {
     [memoizedExtendedData, inputText]
   );
 
+  // Once we have the data set the first row in the table as selected.
+  // The <ProcessesTable /> component does the actual ordering of its data, so
+  // we need to sort the data here in the same manner (by name ascending) and
+  // select the first element.
+  React.useEffect(() => {
+    if (selectedProcess !== null) {
+      return;
+    }
+
+    const sortedByName = sortByName(memoizedFilteredData);
+    if (sortedByName.length > 0) {
+      const { name, user } = sortedByName[0];
+      setSelectedProcess({
+        name,
+        user
+      });
+    }
+  }, [selectedProcess, memoizedFilteredData]);
+
   return (
     <>
       <Grid
         container
+        spacing={4}
         id="tabpanel-processes"
         role="tabpanel"
         aria-labelledby="tab-processes"
       >
-        <Grid item xs={9}>
+        <Grid item xs={12} lg={7}>
           <Box display="flex" justifyContent="space-between">
             <TextField
               className={classes.filterInput}
@@ -97,13 +138,11 @@ const ProcessesLanding: React.FC<Props> = props => {
                 setInputText(e.target.value)
               }
             />
-            {/* Doesn't work yet. */}
-            <Select
-              className={classes.timeSelect}
-              small
-              placeholder="Last 12 Hours"
-              onChange={() => null}
+            <TimeRangeSelect
+              handleStatsChange={handleStatsChange}
+              defaultValue={'Past 30 Minutes'}
               label="Select Time Range"
+              className={classes.selectTimeRange}
               hideLabel
             />
           </Box>
@@ -115,19 +154,23 @@ const ProcessesLanding: React.FC<Props> = props => {
             // (since we're waiting on lastUpdated) and thus processes.loading
             // is `false` but we don't have any data to show. Instead of showing
             // an empty state, we want to show a loader.
-            processesLoading={processes.loading || processes.lastUpdated === 0}
-            processesError={processes.error}
-            selectedRow={selectedRow}
-            setSelectedRow={setSelectedRow}
-            lastUpdatedError={lastUpdatedError}
+            processesLoading={loading || lastUpdated === 0}
+            error={lastUpdatedError?.[0]?.reason || error}
+            selectedProcess={selectedProcess}
+            setSelectedProcess={setSelectedProcess}
           />
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={12} lg={5}>
           <ProcessesGraphs
-            processesData={memoizedFilteredData}
-            processesLoading={processes.loading || processes.lastUpdated === 0}
-            processesError={processes.error}
-            selectedRow={selectedRow}
+            processesData={data}
+            processesLoading={loading || lastUpdated === 0}
+            error={lastUpdatedError?.[0]?.reason || error}
+            selectedProcess={selectedProcess}
+            timezone={timezone}
+            time={time}
+            isToday={isToday}
+            clientAPIKey={clientAPIKey || ''}
+            lastUpdated={lastUpdated}
           />
         </Grid>
       </Grid>
@@ -170,3 +213,5 @@ export const extendData = (
 
   return extendedData;
 };
+
+const sortByName = sortBy(prop('name'));
