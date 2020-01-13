@@ -7,6 +7,10 @@ import withClientStats, {
   Props as LVDataProps
 } from 'src/containers/longview.stats.container';
 import { LongviewNetwork } from '../../request.types';
+import {
+  convertNetworkToUnit,
+  generateNetworkUnits
+} from '../../shared/utilities';
 import { baseGaugeProps, BaseProps as Props } from './common';
 
 type CombinedProps = Props & LVDataProps & WithTheme;
@@ -49,7 +53,17 @@ const NetworkGauge: React.FC<CombinedProps> = props => {
       };
     }
 
-    const { value, unit } = generateUnits(networkUsed);
+    /**
+     * This logic is to match the values displayed
+     * in the gauges in Classic. They're rounded to the nearest
+     * unit, whereas elsewhere (in graphs) we use two digits.
+     *
+     * We also convert from bytes to bits to use our existing
+     * utilities to calculate units.
+     */
+    const networkUsedInBits = networkUsed * 8;
+    const unit = generateNetworkUnits(networkUsedInBits);
+    const value = Math.round(convertNetworkToUnit(networkUsedInBits, unit));
 
     return {
       innerText: `${value} ${unit}/s`,
@@ -90,34 +104,6 @@ export default compose<CombinedProps, Props>(
   withClientStats<Props>(ownProps => ownProps.clientID),
   withTheme
 )(NetworkGauge);
-
-interface Units {
-  value: number;
-  unit: 'Kb' | 'Mb';
-}
-
-/**
- * converts bytes to either Kb (Kilobits) or Mb (Megabits)
- * depending on if the Kilobit conversion exceeds 1000.
- *
- * @param networkUsed inbound and outbound traffic in bytes
- */
-export const generateUnits = (networkUsed: number): Units => {
-  /** Thanks to http://www.matisse.net/bitcalc/ */
-  const networkUsedToKilobits = (networkUsed * 8) / 1024;
-
-  if (networkUsedToKilobits <= 1000) {
-    return {
-      value: Math.round(networkUsedToKilobits),
-      unit: 'Kb'
-    };
-  } else {
-    return {
-      value: Math.round(networkUsedToKilobits / 1024),
-      unit: 'Mb'
-    };
-  }
-};
 
 /*
   What's returned from Network is a bit of an unknown, but assuming that

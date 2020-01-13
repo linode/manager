@@ -6,6 +6,7 @@ import {
 } from '../request.types';
 import {
   appendStats,
+  generateNetworkUnits,
   generateTotalMemory,
   generateUsedMemory,
   statAverage,
@@ -67,6 +68,16 @@ describe('Utility Functions', () => {
 
     it('handles empty input', () => {
       expect(statMax()).toBe(0);
+    });
+  });
+
+  describe('generateNetworkStats', () => {
+    it('should generate the correct units and values', () => {
+      const oneKilobit = 1000;
+      const oneMegabit = 1000000;
+      expect(generateNetworkUnits(oneKilobit)).toEqual('Kb');
+      expect(generateNetworkUnits(oneMegabit)).toEqual('Mb');
+      expect(generateNetworkUnits(100)).toEqual('b');
     });
   });
 
