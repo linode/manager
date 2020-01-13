@@ -13,6 +13,11 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import { setUpCharts } from 'src/utilities/charts';
 import { Metrics } from 'src/utilities/statMetrics';
+import {
+  convertBytesToTarget,
+  readableBytes,
+  StorageSymbol
+} from 'src/utilities/unitConversions';
 import MetricDisplayStyles from './NewMetricDisplay.styles';
 setUpCharts();
 
@@ -37,6 +42,7 @@ export interface Props {
   rowHeaders?: Array<string>;
   legendRows?: Array<ChartData<any>>;
   unit?: string; // Display unit on Y axis ticks
+  maxUnit?: StorageSymbol; // Rounds data to this unit. IMPORTANT: if this prop is provided, data should be in bytes
   nativeLegend?: boolean; // Display chart.js native legend
 }
 
@@ -95,7 +101,10 @@ const chartOptions: any = {
     borderWidth: 0.5,
     borderColor: '#999',
     caretPadding: 10,
-    position: 'nearest'
+    position: 'nearest',
+    callbacks: {},
+    intersect: false,
+    mode: 'index'
   }
 };
 
@@ -135,6 +144,7 @@ const LineGraph: React.FC<CombinedProps> = props => {
     data,
     rowHeaders,
     legendRows,
+    maxUnit,
     nativeLegend,
     ...rest
   } = props;
@@ -164,7 +174,8 @@ const LineGraph: React.FC<CombinedProps> = props => {
   const getChartOptions = (
     _suggestedMax?: number,
     _unit?: string,
-    _nativeLegend?: boolean
+    _nativeLegend?: boolean,
+    _maxUnit?: StorageSymbol
   ) => {
     const finalChartOptions = clone(chartOptions);
     const parser = parseInTimeZone(timezone || '');
@@ -201,13 +212,35 @@ const LineGraph: React.FC<CombinedProps> = props => {
       finalChartOptions.legend.position = 'bottom';
     }
 
+    if (_maxUnit) {
+      /**
+       * We've been given a max unit, which indicates that
+       * the data we're looking at is in bytes. We should
+       * adjust the tooltip display so that if the maxUnit is GB we
+       * display 8MB instead of 0.0000000000000000000000008 GB
+       *
+       * NOTE: formatTooltip is curried, so here we're creating a new
+       * function has the raw data from props bound to it. This is because
+       * we need to access the original data to determine what unit to display
+       * it in.
+       *
+       * NOTE2: _maxUnit is the unit that all series on the graph will be converted to.
+       * However, in the tooltip, each individual value will be formatted according to
+       * the most appropriate unit.
+       */
+      finalChartOptions.tooltips.callbacks.label = formatTooltip(data);
+    }
+
     return finalChartOptions;
   };
 
   const formatData = () => {
     return data.map(dataSet => {
       const timeData = dataSet.data.reduce((acc: any, point: any) => {
-        acc.push({ t: point[0], y: point[1] });
+        acc.push({
+          t: point[0],
+          y: maxUnit ? convertBytesToTarget(maxUnit, point[1]) : point[1]
+        });
         return acc;
       }, []);
 
@@ -228,7 +261,7 @@ const LineGraph: React.FC<CombinedProps> = props => {
         <Line
           {...rest}
           height={chartHeight || 300}
-          options={getChartOptions(suggestedMax, unit, nativeLegend)}
+          options={getChartOptions(suggestedMax, unit, nativeLegend, maxUnit)}
           plugins={plugins}
           ref={inputEl}
           data={{
@@ -342,5 +375,23 @@ export const metricsBySection = (data: Metrics): number[] => [
   data.average,
   data.last
 ];
+
+export const formatTooltip = curry((data: any, t: any, d: any) => {
+  /**
+   * This is a horror show, sorry.
+   * We want to mimic the behavior of Classic Manager,
+   * and show tooltip values in appropriate units. However,
+   * our formatData() function gets called before this function,
+   * so all values will already be <1000 (give or take) and be displayed
+   * as "8 bytes".
+   * In order to customize units for each value,
+   * we have to access the original data series passed into the
+   * component.
+   */
+  const dataset = data[t.datasetIndex];
+  const label = dataset.label;
+  const value = readableBytes(dataset.data[t.index][1] || 0).formatted;
+  return `${label}: ${value}`;
+});
 
 export default LineGraph;

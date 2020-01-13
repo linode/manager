@@ -58,20 +58,20 @@ export const DiskGraph: React.FC<CombinedProps> = props => {
       data={[
         {
           label: 'Swap',
-          borderColor: theme.graphs.redBorder,
-          backgroundColor: theme.graphs.red,
+          borderColor: 'transparent',
+          backgroundColor: theme.graphs.diskIO.swap,
           data: _convertData(swap, start, end, formatDisk)
         },
         {
           label: 'Write',
-          borderColor: theme.graphs.lightOrangeBorder,
-          backgroundColor: theme.graphs.lightOrange,
+          borderColor: 'transparent',
+          backgroundColor: theme.graphs.diskIO.write,
           data: _convertData(write, start, end, formatDisk)
         },
         {
           label: 'Read',
-          borderColor: theme.graphs.lightYellowBorder,
-          backgroundColor: theme.graphs.lightYellow,
+          borderColor: 'transparent',
+          backgroundColor: theme.graphs.diskIO.read,
           data: _convertData(read, start, end, formatDisk)
         }
       ]}
@@ -157,7 +157,7 @@ export const processDiskData = (
   );
 };
 
-const formatDisk = (value: number | null) => {
+export const formatDisk = (value: number | null) => {
   if (value === null) {
     return value;
   }
