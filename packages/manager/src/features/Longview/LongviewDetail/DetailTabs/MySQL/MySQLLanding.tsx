@@ -11,7 +11,7 @@ import { isToday as _isToday } from 'src/utilities/isToday';
 import { WithStartAndEnd } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
-import ApacheGraphs from './ApacheGraphs';
+import MySQLGraphs from './MySQLGraphs';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -26,7 +26,7 @@ interface Props {
   timezone: string;
 }
 
-export const Apache: React.FC<Props> = props => {
+export const MySQLLanding: React.FC<Props> = props => {
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
   const classes = useStyles();
   const [version, setVersion] = React.useState<string | undefined>();
@@ -37,36 +37,36 @@ export const Apache: React.FC<Props> = props => {
   });
 
   const { data, loading, error, request } = useGraphs(
-    ['apache'],
+    ['mysql'],
     clientAPIKey,
     time.start,
     time.end
   );
 
-  const apacheProcesses = useGraphs(
-    ['apacheProcesses'],
+  const MySQLProcesses = useGraphs(
+    ['mysqlProcesses'],
     clientAPIKey,
     time.start,
     time.end
   );
 
-  const _version = data.Applications?.Apache?.version;
+  const _version = data.Applications?.MySQL?.version;
   if (!version && _version) {
     setVersion(_version);
   }
 
   React.useEffect(() => {
     request();
-    apacheProcesses.request();
+    MySQLProcesses.request();
   }, [time, clientAPIKey, lastUpdated, lastUpdatedError]);
 
   const handleStatsChange = (start: number, end: number) => {
     setTimeBox({ start, end });
   };
 
-  const apache = data.Applications?.Apache;
+  const mySQL = data.Applications?.MySQL;
   const isToday = _isToday(time.start, time.end);
-  const notice = Number(apache?.status) > 0 ? apache?.status_message : null;
+  const notice = Number(mySQL?.status) > 0 ? mySQL?.status_message : null;
 
   if (notice !== null) {
     const message = (
@@ -76,10 +76,10 @@ export const Apache: React.FC<Props> = props => {
           See our{' '}
           <ExternalLink
             fixedIcon
-            link="https://www.linode.com/docs/platform/longview/longview-app-for-apache/#troubleshooting"
+            link="https://www.linode.com/docs/platform/longview/longview-app-for-mysql/#troubleshooting"
             text="guide"
           />{' '}
-          for help troubleshooting the Apache Longview app.
+          for help troubleshooting the MySQL Longview app.
         </Typography>
       </>
     );
@@ -89,12 +89,12 @@ export const Apache: React.FC<Props> = props => {
   return (
     <Grid
       container
-      id="tabpanel-apache"
+      id="tabpanel-mysql"
       role="tabpanel"
-      aria-labelledby="tab-apache"
+      aria-labelledby="tab-mysql"
       direction="column"
     >
-      <DocumentTitleSegment segment={'Apache'} />
+      <DocumentTitleSegment segment={'MySQL'} />
       <Grid item xs={12}>
         <Box
           display="flex"
@@ -103,7 +103,7 @@ export const Apache: React.FC<Props> = props => {
           alignItems="center"
         >
           <div>
-            <Typography variant="h2">{'Apache'}</Typography>
+            <Typography variant="h2">{'MySQL'}</Typography>
             {version && <Typography variant="body1">{version}</Typography>}
           </div>
 
@@ -118,11 +118,11 @@ export const Apache: React.FC<Props> = props => {
         </Box>
       </Grid>
       <Grid item xs={12} className="py0">
-        <ApacheGraphs
-          data={data?.Applications?.Apache}
-          processesData={apacheProcesses.data?.Processes ?? {}}
-          processesLoading={apacheProcesses.loading}
-          processesError={apacheProcesses.error}
+        <MySQLGraphs
+          data={data?.Applications?.MySQL}
+          processesData={MySQLProcesses.data?.Processes ?? {}}
+          processesLoading={MySQLProcesses.loading}
+          processesError={MySQLProcesses.error}
           isToday={isToday}
           loading={loading}
           error={lastUpdatedError?.[0]?.reason || error}
@@ -135,4 +135,4 @@ export const Apache: React.FC<Props> = props => {
   );
 };
 
-export default React.memo(Apache);
+export default React.memo(MySQLLanding);

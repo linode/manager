@@ -77,7 +77,9 @@ export const fieldNames: Record<LongviewFieldName, string> = {
   nginx: 'Applications.Nginx.*',
   nginxProcesses: 'Processes.nginx.*',
   apache: 'Applications.Apache.*',
-  apacheProcesses: 'Processes.apache.*'
+  apacheProcesses: 'Processes.apache.*',
+  mysql: 'Applications.MySQL.*',
+  mysqlProcesses: 'Processes.mysql.*'
 };
 
 export const baseRequest = Axios.create({

@@ -48,9 +48,6 @@ export const ApacheProcessGraphs: React.FC<CombinedProps> = props => {
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
 
-  // const memoryUnit = readableBytes(statMax(totalDataForAllUsers.mem ?? []))
-  //   .unit;
-
   /**
    * These field names say kbytes, but Classic reports them
    * as bytes and they're read from the read_bytes and write_bytes

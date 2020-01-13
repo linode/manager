@@ -9,7 +9,7 @@ import {
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-import { NginxResponse, NginxUserProcesses } from '../../../request.types';
+import { LongviewProcesses, NginxResponse } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import NGINXProcessGraphs from './NGINXProcessGraphs';
 
@@ -34,7 +34,7 @@ interface Props {
   isToday: boolean;
   start: number;
   end: number;
-  processesData: NginxUserProcesses;
+  processesData: LongviewProcesses;
   processesLoading: boolean;
   processesError?: string;
 }
@@ -60,6 +60,13 @@ export const NGINXGraphs: React.FC<CombinedProps> = props => {
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
 
+  const graphProps = {
+    error,
+    timezone,
+    loading,
+    showToday: isToday
+  };
+
   return (
     <Paper className={classes.root}>
       <Grid container direction="column" spacing={0}>
@@ -67,10 +74,6 @@ export const NGINXGraphs: React.FC<CombinedProps> = props => {
           <LongviewLineGraph
             title="Requests"
             subtitle="requests/s"
-            error={error}
-            loading={loading}
-            showToday={isToday}
-            timezone={timezone}
             data={[
               {
                 label: 'Requests',
@@ -79,6 +82,7 @@ export const NGINXGraphs: React.FC<CombinedProps> = props => {
                 data: _convertData(data?.requests ?? [], start, end, formatData)
               }
             ]}
+            {...graphProps}
           />
         </Grid>
         <Grid item xs={12}>
@@ -88,10 +92,6 @@ export const NGINXGraphs: React.FC<CombinedProps> = props => {
                 title="Connections"
                 subtitle="connections/s"
                 nativeLegend
-                error={error}
-                loading={loading}
-                showToday={isToday}
-                timezone={timezone}
                 data={[
                   {
                     label: 'Accepted',
@@ -116,16 +116,13 @@ export const NGINXGraphs: React.FC<CombinedProps> = props => {
                     )
                   }
                 ]}
+                {...graphProps}
               />
             </Grid>
             <Grid item xs={12} sm={6} className={classes.smallGraph}>
               <LongviewLineGraph
                 title="Workers"
                 nativeLegend
-                error={error}
-                loading={loading}
-                showToday={isToday}
-                timezone={timezone}
                 data={[
                   {
                     label: 'Waiting',
@@ -161,6 +158,7 @@ export const NGINXGraphs: React.FC<CombinedProps> = props => {
                     )
                   }
                 ]}
+                {...graphProps}
               />
             </Grid>
           </Grid>
@@ -185,7 +183,7 @@ const formatData = (value: number | null) => {
   }
 
   // Round to 2 decimal places.
-  return Math.round(value * 100) / 100;
+  return Math.round(value * 10000) / 10000;
 };
 
 const enhanced = compose<CombinedProps, Props>(
