@@ -97,7 +97,7 @@ export const ApacheGraphs: React.FC<CombinedProps> = props => {
                 label: 'Requests',
                 borderColor: 'transparent',
                 backgroundColor: theme.graphs.requests,
-                data: _convertData(totalKBytes, start, end, formatData)
+                data: _convertData(totalAccesses, start, end, formatData)
               }
             ]}
             {...graphProps}
@@ -114,7 +114,7 @@ export const ApacheGraphs: React.FC<CombinedProps> = props => {
                     label: 'Throughput',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.outbound,
-                    data: _convertData(totalAccesses, start, end, formatData)
+                    data: _convertData(totalKBytes, start, end, formatData)
                   }
                 ]}
                 {...graphProps}
