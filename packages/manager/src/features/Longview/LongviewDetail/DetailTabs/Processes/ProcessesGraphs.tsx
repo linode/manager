@@ -109,8 +109,8 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
             {
               data: _convertData(cpu, start, end, formatCPU),
               label: 'CPU',
-              borderColor: theme.graphs.deepBlue,
-              backgroundColor: theme.graphs.deepBlueBorder
+              borderColor: 'transparent',
+              backgroundColor: theme.graphs.cpu.system
             }
           ]}
           {...commonGraphProps}
@@ -123,8 +123,8 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
               {
                 data: _convertData(memory, start, end, formatMemory),
                 label: 'RAM',
-                borderColor: theme.graphs.purple,
-                backgroundColor: theme.graphs.purpleBorder
+                borderColor: 'transparent',
+                backgroundColor: theme.graphs.memory.used
               }
             ]}
             {...commonGraphProps}
@@ -137,8 +137,8 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
               {
                 data: _convertData(count, start, end, formatCount),
                 label: 'Count',
-                borderColor: theme.graphs.deepBlue,
-                backgroundColor: theme.graphs.deepBlueBorder
+                borderColor: 'transparent',
+                backgroundColor: theme.graphs.processCount
               }
             ]}
             {...commonGraphProps}
@@ -152,14 +152,14 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
             data={[
               {
                 label: 'Write',
-                borderColor: theme.graphs.lightOrangeBorder,
-                backgroundColor: theme.graphs.lightOrange,
+                borderColor: 'transparent',
+                backgroundColor: theme.graphs.diskIO.write,
                 data: _convertData(iowritekbytes, start, end, formatDisk)
               },
               {
                 label: 'Read',
-                borderColor: theme.graphs.lightYellowBorder,
-                backgroundColor: theme.graphs.lightYellow,
+                borderColor: 'transparent',
+                backgroundColor: theme.graphs.diskIO.read,
                 data: _convertData(ioreadkbytes, start, end, formatDisk)
               }
             ]}
