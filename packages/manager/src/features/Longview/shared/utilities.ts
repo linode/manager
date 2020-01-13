@@ -322,10 +322,12 @@ export const getMaxUnitAndFormatNetwork = (
       // If the unit we're using for the graph is Mb, return the output in Mb.
       const valueInMegabits = valueInBits / 1024 / 1024;
       return Math.round(valueInMegabits * 100) / 100;
-    } else {
+    } else if (maxUnit === 'Kb') {
       // If the unit we're using for the graph is Kb, return the output in Kb.
       const valueInKilobits = valueInBits / 1024;
       return Math.round(valueInKilobits * 100) / 100;
+    } else {
+      return Math.round(valueInBits);
     }
   };
 

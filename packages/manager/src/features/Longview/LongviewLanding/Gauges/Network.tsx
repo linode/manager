@@ -93,7 +93,7 @@ export default compose<CombinedProps, Props>(
 
 interface Units {
   value: number;
-  unit: 'Kb' | 'Mb';
+  unit: 'b' | 'Kb' | 'Mb';
 }
 
 /**
@@ -105,8 +105,12 @@ interface Units {
 export const generateUnits = (networkUsed: number): Units => {
   /** Thanks to http://www.matisse.net/bitcalc/ */
   const networkUsedToKilobits = (networkUsed * 8) / 1024;
-
-  if (networkUsedToKilobits <= 1000) {
+  if (networkUsedToKilobits <= 1) {
+    return {
+      value: networkUsed * 8,
+      unit: 'b'
+    };
+  } else if (networkUsedToKilobits <= 1000) {
     return {
       value: Math.round(networkUsedToKilobits),
       unit: 'Kb'

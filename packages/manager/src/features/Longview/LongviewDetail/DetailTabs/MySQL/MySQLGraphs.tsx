@@ -8,6 +8,7 @@ import {
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
+import { getMaxUnitAndFormatNetwork } from 'src/features/Longview/shared/utilities';
 import { LongviewProcesses, MySQLResponse } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import MySQLProcessGraphs from './MySQLProcessesGraphs';
@@ -70,6 +71,11 @@ export const MySQLGraphs: React.FC<CombinedProps> = props => {
   const inbound = data?.Bytes_received ?? [];
   const outbound = data?.Bytes_sent ?? [];
 
+  const { maxUnit: netMaxUnit, formatNetwork } = getMaxUnitAndFormatNetwork(
+    inbound,
+    outbound
+  );
+
   return (
     <Paper className={classes.root}>
       <Grid container direction="column" spacing={0}>
@@ -115,7 +121,7 @@ export const MySQLGraphs: React.FC<CombinedProps> = props => {
             <Grid item xs={12} sm={6} className={classes.smallGraph}>
               <LongviewLineGraph
                 title="Throughput"
-                subtitle="KB/s"
+                subtitle={`${netMaxUnit}/s`}
                 nativeLegend
                 error={error}
                 loading={loading}
@@ -126,13 +132,13 @@ export const MySQLGraphs: React.FC<CombinedProps> = props => {
                     label: 'Inbound',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.inbound,
-                    data: _convertData(inbound, start, end, formatData)
+                    data: _convertData(inbound, start, end, formatNetwork)
                   },
                   {
                     label: 'Outbound',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.outbound,
-                    data: _convertData(outbound, start, end, formatData)
+                    data: _convertData(outbound, start, end, formatNetwork)
                   }
                 ]}
               />
