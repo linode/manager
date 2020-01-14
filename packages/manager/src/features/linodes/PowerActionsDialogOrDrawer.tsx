@@ -38,15 +38,8 @@ type CombinedProps = Props;
  *
  * @param configs
  */
-export const selectDefaultConfig = (configs?: Config[]) => {
-  if (!configs || configs.length === 0) {
-    return;
-  } else if (configs.length === 1) {
-    return configs[0].id;
-  } else {
-    return;
-  }
-};
+export const selectDefaultConfig = (configs?: Config[]) =>
+  configs?.length === 1 ? configs[0].id : undefined;
 
 const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = props => {
   const { linodeConfigs } = props;
