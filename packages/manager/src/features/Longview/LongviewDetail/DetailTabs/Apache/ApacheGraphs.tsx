@@ -135,7 +135,7 @@ export const ApacheGraphs: React.FC<CombinedProps> = props => {
                   {
                     label: 'Starting',
                     borderColor: 'transparent',
-                    backgroundColor: 'blue',
+                    backgroundColor: theme.graphs.workers.starting,
                     data: _convertData(workersStarting, start, end, formatData)
                   },
                   {
@@ -146,44 +146,44 @@ export const ApacheGraphs: React.FC<CombinedProps> = props => {
                   },
                   {
                     label: 'Sending',
-                    borderColor: 'rgba(26, 151, 162, 0.7)',
-                    backgroundColor: 'rgba(26, 151, 162, 0.7)',
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.workers.sending,
                     data: _convertData(workersSending, start, end, formatData)
                   },
                   {
                     label: 'Keepalive',
-                    borderColor: 'rgba(26, 151, 162, 0.7)',
-                    backgroundColor: 'rgba(26, 151, 162, 0.7)',
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.workers.keepAlive,
                     data: _convertData(workersKeepAlive, start, end, formatData)
                   },
                   {
                     label: 'DNS Lookup',
-                    borderColor: 'rgba(26, 151, 162, 0.7)',
-                    backgroundColor: 'rgba(26, 151, 162, 0.7)',
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.workers.DNSLookup,
                     data: _convertData(workersDNSLookup, start, end, formatData)
                   },
                   {
                     label: 'Closing',
-                    borderColor: 'rgba(26, 151, 162, 0.7)',
-                    backgroundColor: 'rgba(26, 151, 162, 0.7)',
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.workers.closing,
                     data: _convertData(workersClosing, start, end, formatData)
                   },
                   {
                     label: 'Logging',
-                    borderColor: 'rgba(26, 151, 162, 0.7)',
-                    backgroundColor: 'rgba(26, 151, 162, 0.7)',
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.workers.logging,
                     data: _convertData(workersLogging, start, end, formatData)
                   },
                   {
                     label: 'Finishing',
-                    borderColor: 'rgba(26, 151, 162, 0.7)',
-                    backgroundColor: 'rgba(26, 151, 162, 0.7)',
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.workers.finishing,
                     data: _convertData(workersFinishing, start, end, formatData)
                   },
                   {
                     label: 'Cleanup',
-                    borderColor: 'rgba(26, 151, 162, 0.7)',
-                    backgroundColor: 'rgba(26, 151, 162, 0.7)',
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.workers.cleanup,
                     data: _convertData(workersCleanup, start, end, formatData)
                   }
                 ]}
