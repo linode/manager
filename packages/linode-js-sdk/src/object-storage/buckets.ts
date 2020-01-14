@@ -1,4 +1,4 @@
-import { BETA_API_ROOT } from 'src/constants';
+import { API_ROOT } from 'src/constants';
 import Request, {
   setData,
   setMethod,
@@ -26,7 +26,7 @@ export const getBuckets = (params?: any, filters?: any) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
-    setURL(`${BETA_API_ROOT}/object-storage/buckets`)
+    setURL(`${API_ROOT}/object-storage/buckets`)
   ).then(response => response.data);
 
 /**
@@ -39,7 +39,7 @@ export const getBuckets = (params?: any, filters?: any) =>
  */
 export const createBucket = (data: ObjectStorageBucketRequestPayload) =>
   Request<ObjectStorageBucket>(
-    setURL(`${BETA_API_ROOT}/object-storage/buckets`),
+    setURL(`${API_ROOT}/object-storage/buckets`),
     setMethod('POST'),
     setData(data, CreateBucketSchema)
   ).then(response => response.data);
@@ -56,7 +56,7 @@ export const deleteBucket = ({
   label
 }: ObjectStorageDeleteBucketRequestPayload) =>
   Request<ObjectStorageBucket>(
-    setURL(`${BETA_API_ROOT}/object-storage/buckets/${cluster}/${label}`),
+    setURL(`${API_ROOT}/object-storage/buckets/${cluster}/${label}`),
     setMethod('DELETE')
   );
 
@@ -72,6 +72,6 @@ export const getObjectList = (
     setMethod('GET'),
     setParams(params),
     setURL(
-      `${BETA_API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/object-list`
+      `${API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/object-list`
     )
   ).then(response => response.data);
