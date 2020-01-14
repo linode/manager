@@ -1,7 +1,6 @@
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 import { AccountCapability } from 'linode-js-sdk/lib/account';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -26,9 +25,6 @@ import { MapState } from 'src/store/types';
 import { isKubernetesEnabled } from 'src/utilities/accountCapabilities';
 import AddNewMenuItem, { MenuItems } from './AddNewMenuItem';
 
-import withLDConsumer, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container';
 import { sendOneClickNavigationEvent } from 'src/utilities/ga';
 
 type CSSClasses =
@@ -95,7 +91,6 @@ type CombinedProps = Props &
   WithStyles<CSSClasses> &
   RouteComponentProps<{}> &
   DispatchProps &
-  FeatureFlagConsumerProps &
   StateProps;
 
 const styled = withStyles(styles);
@@ -147,11 +142,8 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
         },
         body: `Manage your DNS records using Linode’s high-availability name servers`,
         ItemIcon: DomainIcon
-      }
-    ];
-
-    if (this.props.flags.oneClickLocation === 'createmenu') {
-      items.push({
+      },
+      {
         title: 'One-Click App',
         onClick: e => {
           sendOneClickNavigationEvent('Add New Menu');
@@ -162,8 +154,8 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
         body: 'Deploy blogs, game servers, and other web apps with ease.',
         ItemIcon: OneClickIcon,
         attr: { 'data-qa-one-click-add-new': true }
-      });
-    }
+      }
+    ];
 
     if (isKubernetesEnabled(this.props.accountCapabilities)) {
       items.push({
@@ -248,25 +240,17 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (
   ownProps
 ) => {
   return {
-    accountCapabilities: pathOr(
-      [],
-      ['__resources', 'account', 'data', 'capabilities'],
-      state
-    )
+    accountCapabilities: state?.__resources?.account?.data?.capabilities ?? []
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) =>
   bindActionCreators({ openDomainDrawerForCreating }, dispatch);
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose<CombinedProps, {}>(
   connected,
   withRouter,
-  withLDConsumer,
   styled
 )(AddNewMenu);
