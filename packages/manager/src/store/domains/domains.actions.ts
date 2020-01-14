@@ -8,7 +8,7 @@ import {
 import { APIError } from 'linode-js-sdk/lib/types';
 import { Dispatch } from 'redux';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getAll, GetAllParams } from 'src/utilities/getAll';
+import { getAll } from 'src/utilities/getAll';
 import actionCreatorFactory from 'typescript-fsa';
 import { ThunkActionCreator } from '../types';
 
@@ -55,13 +55,15 @@ export const deleteDomainActions = actionCreator.async<
 /**
  * Async
  */
-export const requestDomains: ThunkActionCreator<
-  Promise<Domain[]>,
-  GetAllParams
-> = params => (dispatch: Dispatch<any>) => {
+export const requestDomains: ThunkActionCreator<Promise<Domain[]>> = params => (
+  dispatch: Dispatch<any>,
+  getState
+) => {
   dispatch(getDomainsRequest());
 
-  return getAll<Domain>(getDomains, params.pageSize)()
+  const pageSize = getState().featureFlag.pageSize;
+
+  return getAll<Domain>(getDomains, pageSize)()
     .then(domains => {
       dispatch(getDomainsSuccess(domains));
       return domains;

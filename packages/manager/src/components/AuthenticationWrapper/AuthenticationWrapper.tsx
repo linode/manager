@@ -30,6 +30,7 @@ import { handleInitTokens } from 'src/store/authentication/authentication.action
 import { getAllBuckets } from 'src/store/bucket/bucket.requests';
 import { requestClusters } from 'src/store/clusters/clusters.actions';
 import { requestDomains } from 'src/store/domains/domains.actions';
+import { setPageSize } from 'src/store/featureFlag/featureFlag.actions';
 import { requestImages } from 'src/store/image/image.requests';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
 import { requestTypes } from 'src/store/linodeType/linodeType.requests';
@@ -64,10 +65,13 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     } = this.props;
 
     const { pageSize } = this.props.flags;
+    if (pageSize) {
+      this.props.setPageSize(pageSize);
+    }
 
     const dataFetchingPromises: Promise<any>[] = [
       this.props.requestAccount(),
-      this.props.requestDomains(pageSize),
+      this.props.requestDomains(),
       this.props.requestImages(),
       this.props.requestProfile(),
       this.props.requestLinodes(),
@@ -147,7 +151,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 interface DispatchProps {
   initSession: () => void;
   requestAccount: () => Promise<Account>;
-  requestDomains: (pageSize?: number) => Promise<Domain[]>;
+  requestDomains: () => Promise<Domain[]>;
   requestImages: () => Promise<Image[]>;
   requestLinodes: () => Promise<GetAllData<Linode[]>>;
   requestNotifications: () => Promise<Notification[]>;
@@ -158,6 +162,7 @@ interface DispatchProps {
   requestProfile: () => Promise<Profile>;
   requestBuckets: () => Promise<ObjectStorageBucket[]>;
   requestClusters: () => Promise<ObjectStorageCluster[]>;
+  setPageSize: (pageSize: number) => void;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
@@ -165,7 +170,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 ) => ({
   initSession: () => dispatch(handleInitTokens()),
   requestAccount: () => dispatch(requestAccount()),
-  requestDomains: (pageSize: number) => dispatch(requestDomains({ pageSize })),
+  requestDomains: () => dispatch(requestDomains()),
   requestImages: () => dispatch(requestImages()),
   requestLinodes: () => dispatch(requestLinodes({})),
   requestNotifications: () => dispatch(requestNotifications()),
@@ -175,7 +180,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   requestVolumes: () => dispatch(getAllVolumes()),
   requestProfile: () => dispatch(requestProfile()),
   requestBuckets: () => dispatch(getAllBuckets()),
-  requestClusters: () => dispatch(requestClusters())
+  requestClusters: () => dispatch(requestClusters()),
+  setPageSize: (pageSize: number) => dispatch(setPageSize(pageSize))
 });
 
 const connected = connect(mapStateToProps, mapDispatchToProps);

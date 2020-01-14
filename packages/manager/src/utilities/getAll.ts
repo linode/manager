@@ -33,10 +33,6 @@ export interface GetAllData<T> {
   results: number;
 }
 
-export interface GetAllParams {
-  pageSize?: number;
-}
-
 /**
  * getAll
  *
