@@ -1,6 +1,6 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-
+import ldClient from 'src/__data__/ldClient';
 import { AuthenticationWrapper } from 'src/components/AuthenticationWrapper/AuthenticationWrapper';
 
 /**
@@ -32,6 +32,8 @@ const component = shallow<AuthenticationWrapper>(
       getAllNodeBalancersWithConfigs: jest.fn(),
       updateNodeBalancer: jest.fn()
     }}
+    flags={{}}
+    ldClient={ldClient}
   >
     <div />
   </AuthenticationWrapper>
@@ -49,7 +51,7 @@ describe('AuthenticationWrapper', () => {
     expect(component.instance().props.initSession).toHaveBeenCalledTimes(1);
   });
 
-  it('should set showChildren state to true when the isAuhenticated prop goes from false to true', () => {
+  it('should set showChildren state to true when the isAuthenticated prop goes from false to true', () => {
     component.setState({ showChildren: false });
     component.setProps({ isAuthenticated: true });
     expect(component.state('showChildren')).toBeTruthy();

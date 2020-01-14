@@ -49,7 +49,7 @@ type CombinedProps = DispatchProps &
   WithNodeBalancerActions &
   FeatureFlagConsumerProps;
 
-export class AuthenticationWrapper extends React.Component<CombinedProps> {
+export class DataFetcher extends React.Component<CombinedProps> {
   state = {
     showChildren: false
   };
@@ -184,4 +184,4 @@ export default compose<CombinedProps, {}>(
   connected,
   withNodeBalancerActions,
   withFeatureFlagConsumerContainer
-)(AuthenticationWrapper);
+)(DataFetcher);
