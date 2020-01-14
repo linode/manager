@@ -316,3 +316,7 @@ export const OBJECT_STORAGE_ROOT = 'linodeobjects.com';
  * to simulate folder traversal of a bucket.
  */
 export const OBJECT_STORAGE_DELIMITER = '/';
+
+// Maximum page size allowed by the API. Used in the `getAll()` helper function
+// to request as many items at once as possible.
+export const MAX_PAGE_SIZE = 200;
