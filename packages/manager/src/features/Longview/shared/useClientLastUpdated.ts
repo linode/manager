@@ -54,7 +54,7 @@ export const useClientLastUpdated = (
           or the API response is in a time past what's already been set.
         */
 
-        const _lastUpdated = response.DATA.updated ?? 0;
+        const _lastUpdated = response.DATA?.updated ?? 0;
 
         if (
           mounted &&
