@@ -23,6 +23,7 @@ import Tabs from 'src/components/core/Tabs';
 import DefaultLoader from 'src/components/DefaultLoader';
 import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import RegionStatusBanner from 'src/components/RegionStatusBanner';
 import TabLink from 'src/components/TabLink';
 import { ApplicationState } from 'src/store';
 import { getAllBuckets } from 'src/store/bucket/bucket.requests';
@@ -40,9 +41,7 @@ const AccessKeyLanding = DefaultLoader({
 
 type CombinedProps = StateProps & DispatchProps & RouteComponentProps<{}>;
 
-export const ObjectStorageLanding: React.FunctionComponent<
-  CombinedProps
-> = props => {
+export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = props => {
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     {
@@ -105,6 +104,7 @@ export const ObjectStorageLanding: React.FunctionComponent<
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Object Storage" />
+      <RegionStatusBanner />
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Breadcrumb
           pathname={props.location.pathname}
@@ -192,10 +192,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-export const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+export const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const enhanced = compose<CombinedProps, {}>(connected);
 export default enhanced(ObjectStorageLanding);

@@ -21,6 +21,7 @@ import H1Header from 'src/components/H1Header';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
+import RegionStatusBanner from 'src/components/RegionStatusBanner';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
@@ -122,6 +123,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Kubernetes Clusters" />
+      <RegionStatusBanner />
       <Grid
         container
         justify="space-between"
@@ -260,9 +262,6 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(
-  styled,
-  withTypes
-);
+const enhanced = compose<CombinedProps, Props>(styled, withTypes);
 
 export default enhanced(ClusterList);

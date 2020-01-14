@@ -27,6 +27,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
+import RegionStatusBanner from 'src/components/RegionStatusBanner';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Toggle from 'src/components/Toggle';
 import {
@@ -235,6 +236,7 @@ export class NodeBalancersLanding extends React.Component<
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="NodeBalancers" />
+        <RegionStatusBanner />
         <PreferenceToggle<boolean>
           preferenceKey="nodebalancers_group_by_tag"
           preferenceOptions={[false, true]}
