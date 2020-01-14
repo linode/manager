@@ -153,7 +153,7 @@ export const appendStats = (
 
       // A bit of null checking here is necessary here since Y can be null.
       // We also check that the X values match.
-      else if (existing.y && y && existing.x === x) {
+      else if (existing.y !== null && y !== null && existing.x === x) {
         existing.y += y;
       }
       return acc;
