@@ -64,11 +64,6 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       nodeBalancerActions: { getAllNodeBalancersWithConfigs }
     } = this.props;
 
-    const { pageSize } = this.props.flags;
-    if (pageSize) {
-      this.props.setPageSize(pageSize);
-    }
-
     const dataFetchingPromises: Promise<any>[] = [
       this.props.requestAccount(),
       this.props.requestDomains(),
@@ -91,7 +86,15 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
   };
 
   componentDidMount() {
-    const { initSession } = this.props;
+    const {
+      initSession,
+      flags: { pageSize }
+    } = this.props;
+
+    // Persist pageSize (from feature flag) to Redux store.
+    if (pageSize) {
+      this.props.setPageSize(pageSize);
+    }
     /**
      * set redux state to what's in local storage
      * or expire the tokens if the expiry time is in the past
