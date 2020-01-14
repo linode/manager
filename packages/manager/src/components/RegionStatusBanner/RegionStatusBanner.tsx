@@ -38,6 +38,10 @@ export const RegionStatusBanner: React.FC<CombinedProps> = props => {
     thisRegion => thisRegion.status === 'outage'
   );
 
+  if (statusWarnings.length === 0) {
+    return null;
+  }
+
   return (
     <>
       {statusWarnings.map(thisWarning => (
