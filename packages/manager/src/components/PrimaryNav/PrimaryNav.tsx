@@ -179,20 +179,6 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
         }
       },
       {
-        conditionToAdd: () => flags.oneClickLocation === 'sidenav',
-        insertAfter: 'Longview',
-        link: {
-          display: 'One-Click Apps',
-          href: '/linodes/create?type=One-Click',
-          key: 'one-click',
-          attr: { 'data-qa-one-click-nav-btn': true },
-          icon: <OCA />,
-          onClick: () => {
-            sendOneClickNavigationEvent('Primary Nav');
-          }
-        }
-      },
-      {
         conditionToAdd: () => hasAccountAccess,
         insertAfter: 'Images',
         link: {
@@ -252,6 +238,16 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
         href: '/domains',
         key: 'domains',
         icon: <Domain style={{ transform: 'scale(1.5)' }} />
+      },
+      {
+        display: 'One-Click Apps',
+        href: '/linodes/create?type=One-Click',
+        key: 'one-click',
+        attr: { 'data-qa-one-click-nav-btn': true },
+        icon: <OCA />,
+        onClick: () => {
+          sendOneClickNavigationEvent('Primary Nav');
+        }
       },
       {
         display: 'Longview',
