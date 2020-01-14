@@ -9,6 +9,7 @@ import {
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
+import { generateNetworkUnits } from 'src/features/Longview/shared/utilities';
 import { ApacheResponse, LongviewProcesses } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import ApacheProcessGraphs from './ApacheProcessGraphs';
@@ -60,29 +61,28 @@ export const ApacheGraphs: React.FC<CombinedProps> = props => {
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
 
-  if (!data) {
-    return null;
-  }
+  const workersWaiting = data?.Workers['Waiting for Connection'] ?? [];
+  const workersStarting = data?.Workers['Starting up'] ?? [];
+  const workersReading = data?.Workers['Reading Request'] ?? [];
+  const workersSending = data?.Workers['Sending Reply'] ?? [];
+  const workersKeepAlive = data?.Workers['Keepalive'] ?? [];
+  const workersDNSLookup = data?.Workers['DNS Lookup'] ?? [];
+  const workersClosing = data?.Workers['Closing connection'] ?? [];
+  const workersLogging = data?.Workers['Logging'] ?? [];
+  const workersFinishing = data?.Workers['Gracefully finishing'] ?? [];
+  const workersCleanup = data?.Workers['Idle cleanup of worker'] ?? [];
 
-  const workersWaiting = data.Workers['Waiting for Connection'];
-  const workersStarting = data.Workers['Starting up'];
-  const workersReading = data.Workers['Reading Request'];
-  const workersSending = data.Workers['Sending Reply'];
-  const workersKeepAlive = data.Workers['Keepalive'];
-  const workersDNSLookup = data.Workers['DNS Lookup'];
-  const workersClosing = data.Workers['Closing connection'];
-  const workersLogging = data.Workers['Logging'];
-  const workersFinishing = data.Workers['Gracefully finishing'];
-  const workersCleanup = data.Workers['Idle cleanup of worker'];
+  const totalKBytes = data?.['Total kBytes'] ?? [];
+  const totalAccesses = data?.['Total Accesses'] ?? [];
 
-  const totalKBytes = data['Total kBytes'];
-  const totalAccesses = data['Total Accesses'];
+  const netMaxUnit = generateNetworkUnits(totalKBytes);
 
   const graphProps = {
     timezone,
     showToday: isToday,
     loading,
-    error
+    error,
+    nativeLegend: true
   };
 
   return (
@@ -108,7 +108,7 @@ export const ApacheGraphs: React.FC<CombinedProps> = props => {
             <Grid item xs={12} sm={6} className={classes.smallGraph}>
               <LongviewLineGraph
                 title="Throughput"
-                subtitle={'KB' + '/s'}
+                subtitle={`${netMaxUnit}/s`}
                 data={[
                   {
                     label: 'Throughput',
@@ -124,7 +124,6 @@ export const ApacheGraphs: React.FC<CombinedProps> = props => {
               <LongviewLineGraph
                 title="Workers"
                 subtitle={'KB' + '/s'}
-                nativeLegend
                 data={[
                   {
                     label: 'Waiting',

@@ -8,9 +8,9 @@ import {
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-import { readableBytes } from 'src/utilities/unitConversions';
+import { readableBytes, StorageSymbol } from 'src/utilities/unitConversions';
 import { LongviewProcesses } from '../../../request.types';
-import { convertData, formatMemory } from '../../../shared/formatters';
+import { convertData } from '../../../shared/formatters';
 import {
   statMax,
   sumRelatedProcessesAcrossAllUsers
@@ -64,13 +64,17 @@ export const ApacheProcessGraphs: React.FC<CombinedProps> = props => {
   const processCount = totalDataForAllUsers.count ?? [];
   const maxProcessCount = Math.max(statMax(processCount), 10);
 
-  const memoryUnit = readableBytes(statMax(memory) * 1024).unit;
+  const max = Math.max(statMax(memory));
+
+  // LV returns stuff in KB so have to convert to bytes using base-2
+  const memoryUnit = readableBytes(max * 1024).unit;
 
   const graphProps = {
     timezone,
     showToday: isToday,
     loading,
-    error
+    error,
+    nativeLegend: true
   };
 
   return (
@@ -96,6 +100,7 @@ export const ApacheProcessGraphs: React.FC<CombinedProps> = props => {
             <LongviewLineGraph
               title="RAM"
               subtitle={memoryUnit}
+              maxUnit={memoryUnit as StorageSymbol}
               data={[
                 {
                   label: 'RAM',
@@ -114,7 +119,6 @@ export const ApacheProcessGraphs: React.FC<CombinedProps> = props => {
           <Grid item xs={12} sm={6} className={classes.smallGraph}>
             <LongviewLineGraph
               title="Disk I/O"
-              nativeLegend
               subtitle={`${diskUnit}/s`}
               data={[
                 {
@@ -161,6 +165,13 @@ const formatData = (value: number | null) => {
 
   // Round to 2 decimal places.
   return Math.round(value * 100) / 100;
+};
+
+export const formatMemory = (value: number | null) => {
+  if (value === null) {
+    return null;
+  }
+  return value * 1024; // Convert from KB to B
 };
 
 const enhanced = compose<CombinedProps, Props>(
