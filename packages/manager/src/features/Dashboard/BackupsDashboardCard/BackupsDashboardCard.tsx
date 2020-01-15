@@ -11,6 +11,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import DashboardCard from '../DashboardCard';
 
 type ClassNames =
@@ -70,9 +71,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<ClassNames>;
 
-export const BackupsDashboardCard: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const BackupsDashboardCard: React.FC<CombinedProps> = props => {
   const {
     accountBackups,
     classes,
@@ -80,7 +79,9 @@ export const BackupsDashboardCard: React.StatelessComponent<
     openBackupDrawer
   } = props;
 
-  if (accountBackups && !linodesWithoutBackups) {
+  const restricted = isRestrictedUser();
+
+  if (restricted || (accountBackups && !linodesWithoutBackups)) {
     return null;
   }
 

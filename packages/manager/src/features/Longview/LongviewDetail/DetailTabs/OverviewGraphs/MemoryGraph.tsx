@@ -2,10 +2,10 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { withTheme, WithTheme } from 'src/components/core/styles';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-import { readableBytes, StorageSymbol } from 'src/utilities/unitConversions';
+import { StorageSymbol } from 'src/utilities/unitConversions';
 import { Stat } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
-import { generateUsedMemory, statMax } from '../../../shared/utilities';
+import { generateUsedMemory, getMaxUnit } from '../../../shared/utilities';
 import { GraphProps } from './types';
 import { useGraphs } from './useGraphs';
 
@@ -46,14 +46,12 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
   const swap = pathOr<Stat[]>([], ['Memory', 'swap', 'used'], data);
 
   // Determine the unit based on the largest value
-  const max = Math.max(
-    statMax(buffers),
-    statMax(cache),
-    statMax(used),
-    statMax(swap)
-  );
-  // LV returns stuff in KB so have to convert to bytes using base-2
-  const unit = readableBytes(max * 1024).unit;
+  const unit = React.useMemo(() => getMaxUnit([buffers, cache, used, swap]), [
+    buffers,
+    cache,
+    used,
+    swap
+  ]);
 
   return (
     <LongviewLineGraph
