@@ -302,7 +302,7 @@ export interface NginxResponse {
 }
 
 export interface ApacheResponse {
-  Workers: Stat[];
+  Workers: Record<string, Stat[]>;
   status_message: string;
   version: string;
   status: number;
