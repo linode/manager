@@ -15,7 +15,6 @@ import {
 import { convertData } from 'src/features/Longview/shared/formatters';
 import { statMax } from 'src/features/Longview/shared/utilities';
 import { readableBytes } from 'src/utilities/unitConversions';
-import { formatMemory } from '../../../shared/formatters';
 import { Process } from './types';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -120,7 +119,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
             subtitle={memUnit}
             data={[
               {
-                data: _convertData(memory, start, end, formatMemory),
+                data: _convertData(memory, start, end),
                 label: 'RAM',
                 borderColor: 'transparent',
                 backgroundColor: theme.graphs.memory.used

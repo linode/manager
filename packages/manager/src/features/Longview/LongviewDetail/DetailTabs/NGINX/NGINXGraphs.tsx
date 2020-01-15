@@ -11,7 +11,7 @@ import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { LongviewProcesses, NginxResponse } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
-import NGINXProcessGraphs from './NGINXProcessGraphs';
+import ProcessGraphs from '../ProcessGraphs';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -79,7 +79,7 @@ export const NGINXGraphs: React.FC<CombinedProps> = props => {
                 label: 'Requests',
                 borderColor: 'transparent',
                 backgroundColor: theme.graphs.requests,
-                data: _convertData(data?.requests ?? [], start, end, formatData)
+                data: _convertData(data?.requests ?? [], start, end)
               }
             ]}
             {...graphProps}
@@ -97,23 +97,13 @@ export const NGINXGraphs: React.FC<CombinedProps> = props => {
                     label: 'Accepted',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.connections.accepted,
-                    data: _convertData(
-                      data?.accepted_cons ?? [],
-                      start,
-                      end,
-                      formatData
-                    )
+                    data: _convertData(data?.accepted_cons ?? [], start, end)
                   },
                   {
                     label: 'Handled',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.connections.handled,
-                    data: _convertData(
-                      data?.handled_cons ?? [],
-                      start,
-                      end,
-                      formatData
-                    )
+                    data: _convertData(data?.handled_cons ?? [], start, end)
                   }
                 ]}
                 {...graphProps}
@@ -128,34 +118,19 @@ export const NGINXGraphs: React.FC<CombinedProps> = props => {
                     label: 'Waiting',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.waiting,
-                    data: _convertData(
-                      data?.waiting ?? [],
-                      start,
-                      end,
-                      formatData
-                    )
+                    data: _convertData(data?.waiting ?? [], start, end)
                   },
                   {
                     label: 'Reading',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.reading,
-                    data: _convertData(
-                      data?.reading ?? [],
-                      start,
-                      end,
-                      formatData
-                    )
+                    data: _convertData(data?.reading ?? [], start, end)
                   },
                   {
                     label: 'Writing',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.writing,
-                    data: _convertData(
-                      data?.writing ?? [],
-                      start,
-                      end,
-                      formatData
-                    )
+                    data: _convertData(data?.writing ?? [], start, end)
                   }
                 ]}
                 {...graphProps}
@@ -163,7 +138,7 @@ export const NGINXGraphs: React.FC<CombinedProps> = props => {
             </Grid>
           </Grid>
         </Grid>
-        <NGINXProcessGraphs
+        <ProcessGraphs
           data={processesData}
           loading={processesLoading}
           error={processesError || error}
@@ -175,15 +150,6 @@ export const NGINXGraphs: React.FC<CombinedProps> = props => {
       </Grid>
     </Paper>
   );
-};
-
-const formatData = (value: number | null) => {
-  if (value === null) {
-    return value;
-  }
-
-  // Round to 2 decimal places.
-  return Math.round(value * 10000) / 10000;
 };
 
 const enhanced = compose<CombinedProps, Props>(

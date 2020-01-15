@@ -11,7 +11,7 @@ import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { getMaxUnitAndFormatNetwork } from 'src/features/Longview/shared/utilities';
 import { LongviewProcesses, MySQLResponse } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
-import MySQLProcessGraphs from './MySQLProcessesGraphs';
+import ProcessGraphs from '../ProcessGraphs';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -220,7 +220,7 @@ export const MySQLGraphs: React.FC<CombinedProps> = props => {
             </Grid>
           </Grid>
         </Grid>
-        <MySQLProcessGraphs
+        <ProcessGraphs
           data={processesData}
           loading={processesLoading}
           error={processesError || error}
