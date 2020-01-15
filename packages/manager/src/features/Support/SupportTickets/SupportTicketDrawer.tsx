@@ -24,7 +24,6 @@ import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Notice from 'src/components/Notice';
-import RegionStatusBanner from 'src/components/RegionStatusBanner';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
 import { getNodeBalancers } from 'src/services/nodebalancers';
@@ -476,7 +475,6 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
         onClose={this.props.onClose}
         title="Open a Support Ticket"
       >
-        <RegionStatusBanner />
         {this.props.children || (
           <React.Fragment>
             {generalError && (

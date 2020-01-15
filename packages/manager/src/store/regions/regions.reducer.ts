@@ -31,7 +31,15 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       const { result } = action.payload;
       draft.loading = false;
       draft.lastUpdated = Date.now();
-      draft.entities = result;
+      draft.entities = [
+        ...result,
+        {
+          id: 'us-east',
+          status: 'outage',
+          capabilities: [],
+          country: 'US'
+        }
+      ];
       draft.results = result.map(r => r.id);
     }
 

@@ -18,7 +18,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
-import RegionStatusBanner from 'src/components/RegionStatusBanner';
 import TaxBanner from 'src/components/TaxBanner';
 import TagImportDrawer from 'src/features/TagImport';
 import useFlags from 'src/hooks/useFlags';
@@ -101,7 +100,6 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
         />
       )}
       <Grid container spacing={3}>
-        <RegionStatusBanner />
         <AbuseTicketBanner />
         <TaxBanner location={location} marginBottom={8} />
         <DocumentTitleSegment segment="Dashboard" />

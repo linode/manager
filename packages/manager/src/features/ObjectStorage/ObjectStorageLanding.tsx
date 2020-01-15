@@ -23,7 +23,6 @@ import Tabs from 'src/components/core/Tabs';
 import DefaultLoader from 'src/components/DefaultLoader';
 import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import RegionStatusBanner from 'src/components/RegionStatusBanner';
 import TabLink from 'src/components/TabLink';
 import { ApplicationState } from 'src/store';
 import { getAllBuckets } from 'src/store/bucket/bucket.requests';
@@ -104,7 +103,6 @@ export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = prop
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Object Storage" />
-      <RegionStatusBanner />
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Breadcrumb
           pathname={props.location.pathname}

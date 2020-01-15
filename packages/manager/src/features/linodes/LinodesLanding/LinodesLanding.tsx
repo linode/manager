@@ -20,7 +20,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
-import RegionStatusBanner from 'src/components/RegionStatusBanner';
 import Toggle from 'src/components/Toggle';
 import withBackupCta, {
   BackupCTAProps
@@ -244,7 +243,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           >
             <Grid container>
               <DocumentTitleSegment segment="Linodes" />
-              <RegionStatusBanner />
               <PreferenceToggle<boolean>
                 localStorageKey="GROUP_LINODES"
                 preferenceOptions={[false, true]}

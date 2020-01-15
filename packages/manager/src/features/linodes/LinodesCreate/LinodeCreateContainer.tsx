@@ -30,7 +30,6 @@ import {
 import Breadcrumb from 'src/components/Breadcrumb';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
-import RegionStatusBanner from 'src/components/RegionStatusBanner';
 import { Tag } from 'src/components/TagsInput';
 
 import { dcDisplayNames } from 'src/constants';
@@ -564,7 +563,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     return (
       <StickyContainer>
         <DocumentTitleSegment segment="Create a Linode" />
-        <RegionStatusBanner />
         <Grid container spacing={0}>
           <Grid item xs={12}>
             <Breadcrumb

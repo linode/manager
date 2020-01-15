@@ -11,6 +11,7 @@ import {
   withTheme,
   WithTheme
 } from 'src/components/core/styles';
+import RegionStatusBanner from 'src/components/RegionStatusBanner';
 
 import BackupDrawer from 'src/features/Backups';
 import DomainDrawer from 'src/features/Domains/DomainDrawer';
@@ -312,6 +313,7 @@ const MainContent: React.FC<CombinedProps> = props => {
               <main className={classes.wrapper} id="main-content" role="main">
                 <Grid container spacing={0} className={classes.grid}>
                   <Grid item className={classes.switchWrapper}>
+                    <RegionStatusBanner />
                     <Switch>
                       <Route path="/linodes" component={LinodesRoutes} />
                       <Route path="/volumes" component={Volumes} />

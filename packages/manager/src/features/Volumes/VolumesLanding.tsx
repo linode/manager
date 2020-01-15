@@ -24,7 +24,6 @@ import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import { PaginationProps } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
-import RegionStatusBanner from 'src/components/RegionStatusBanner';
 import Toggle from 'src/components/Toggle';
 import _withEvents, { EventsProps } from 'src/containers/events.container';
 import withVolumes, {
@@ -328,7 +327,6 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Volumes" />
-        <RegionStatusBanner />
         {readOnly && <LinodePermissionsError />}
         <PreferenceToggle<boolean>
           preferenceKey="volumes_group_by_tag"
