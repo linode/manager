@@ -10,13 +10,20 @@ import RegionsContainer, {
 
 export type CombinedProps = RegionsProps;
 
-const renderBanner = (regionID: string) => {
+const getFacilitiesText = (warnings: string[]) => {
+  return warnings.map(thisWarning => (
+    <li key={`facility-outage-${thisWarning}`}>{thisWarning}</li>
+  ));
+};
+
+const renderBanner = (statusWarnings: string[]) => {
+  const facilitiesList = getFacilitiesText(statusWarnings);
   return (
     <>
       <Typography variant="h3" style={{ paddingBottom: '5px' }}>
-        We are aware of an issue affecting service in our{' '}
-        {dcDisplayNames[regionID]} facility.
+        We are aware of an issue affecting service in the following facilities:
       </Typography>
+      <ul>{facilitiesList}</ul>
       <Typography>
         If you are experiencing service issues in this facility, there is no
         need to open a support ticket at this time. Please monitor our{` `}
@@ -34,26 +41,18 @@ const renderBanner = (regionID: string) => {
 export const RegionStatusBanner: React.FC<CombinedProps> = props => {
   const { regionsData } = props;
 
-  const statusWarnings = regionsData.filter(
-    thisRegion => thisRegion.status === 'outage'
-  );
+  const statusWarnings = regionsData
+    .filter(
+      thisRegion =>
+        thisRegion.status === 'outage' && !!dcDisplayNames[thisRegion.id]
+    )
+    .map(thisRegion => dcDisplayNames[thisRegion.id]);
 
   if (statusWarnings.length === 0) {
     return null;
   }
 
-  return (
-    <>
-      {statusWarnings.map(thisWarning => (
-        <Notice
-          key={`status-banner-${thisWarning.id}`}
-          warning
-          important
-          text={renderBanner(thisWarning.id)}
-        />
-      ))}
-    </>
-  );
+  return <Notice warning important text={renderBanner(statusWarnings)} />;
 };
 
 const withRegions = RegionsContainer(({ data, loading, error }) => ({

@@ -38,6 +38,12 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
           status: 'outage',
           capabilities: [],
           country: 'US'
+        },
+        {
+          id: 'ap-south',
+          status: 'outage',
+          capabilities: [],
+          country: 'JP'
         }
       ];
       draft.results = result.map(r => r.id);
