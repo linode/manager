@@ -1,14 +1,11 @@
-import { GlobalGrantTypes } from "linode-js-sdk/lib/account";
-import { pathOr } from 'ramda';
+import { GlobalGrantTypes } from 'linode-js-sdk/lib/account';
+import store, { ApplicationState } from 'src/store';
 
-export const isRestrictedUser = (state: any) => {
-  return pathOr(false, ['__resources', 'profile', 'data', 'restricted'], state);
+export const isRestrictedUser = (_state?: ApplicationState) => {
+  const state = _state ?? store.getState();
+  return state?.__resources?.profile?.data?.restricted ?? false;
 };
 
-export const hasGrant = (state: any, grant: GlobalGrantTypes) => {
-  return pathOr(
-    false,
-    ['__resources', 'profile', 'data', 'grants', 'global', grant],
-    state
-  );
+export const hasGrant = (state: ApplicationState, grant: GlobalGrantTypes) => {
+  return state?.__resources?.profile?.data?.grants?.global?.[grant] ?? false;
 };
