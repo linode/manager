@@ -12,6 +12,7 @@ import { readableBytes, StorageSymbol } from 'src/utilities/unitConversions';
 import { LongviewProcesses } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import {
+  getMaxUnit,
   statMax,
   sumRelatedProcessesAcrossAllUsers
 } from '../../../shared/utilities';
@@ -64,10 +65,8 @@ export const ApacheProcessGraphs: React.FC<CombinedProps> = props => {
   const processCount = totalDataForAllUsers.count ?? [];
   const maxProcessCount = Math.max(statMax(processCount), 10);
 
-  const max = Math.max(statMax(memory));
-
-  // LV returns stuff in KB so have to convert to bytes using base-2
-  const memoryUnit = readableBytes(max * 1024).unit;
+  // Determine the unit based on the largest value
+  const memoryUnit = React.useMemo(() => getMaxUnit([memory]), [memory]);
 
   const graphProps = {
     timezone,

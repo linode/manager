@@ -9,7 +9,8 @@ import {
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-import { generateNetworkUnits } from 'src/features/Longview/shared/utilities';
+import { getMaxUnit } from 'src/features/Longview/shared/utilities';
+import { StorageSymbol } from 'src/utilities/unitConversions';
 import { ApacheResponse, LongviewProcesses } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import ApacheProcessGraphs from './ApacheProcessGraphs';
@@ -75,7 +76,7 @@ export const ApacheGraphs: React.FC<CombinedProps> = props => {
   const totalKBytes = data?.['Total kBytes'] ?? [];
   const totalAccesses = data?.['Total Accesses'] ?? [];
 
-  const netMaxUnit = generateNetworkUnits(totalKBytes);
+  const unit = React.useMemo(() => getMaxUnit([totalKBytes]), [totalKBytes]);
 
   const graphProps = {
     timezone,
@@ -108,13 +109,14 @@ export const ApacheGraphs: React.FC<CombinedProps> = props => {
             <Grid item xs={12} sm={6} className={classes.smallGraph}>
               <LongviewLineGraph
                 title="Throughput"
-                subtitle={`${netMaxUnit}/s`}
+                subtitle={`${unit}/s`}
+                maxUnit={unit as StorageSymbol}
                 data={[
                   {
                     label: 'Throughput',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.outbound,
-                    data: _convertData(totalKBytes, start, end, formatData)
+                    data: _convertData(totalKBytes, start, end, formatNetwork)
                   }
                 ]}
                 {...graphProps}
@@ -123,7 +125,6 @@ export const ApacheGraphs: React.FC<CombinedProps> = props => {
             <Grid item xs={12} sm={6} className={classes.smallGraph}>
               <LongviewLineGraph
                 title="Workers"
-                subtitle={'KB' + '/s'}
                 data={[
                   {
                     label: 'Waiting',
@@ -212,6 +213,14 @@ const formatData = (value: number | null) => {
 
   // Round to 2 decimal places.
   return Math.round(value * 100) / 100;
+};
+
+const formatNetwork = (value: number | null) => {
+  if (value === null) {
+    return value;
+  }
+
+  return value * 8 * 1024;
 };
 
 const enhanced = compose<CombinedProps, Props>(
