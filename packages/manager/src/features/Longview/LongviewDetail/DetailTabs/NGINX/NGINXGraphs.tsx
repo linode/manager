@@ -74,6 +74,7 @@ export const NGINXGraphs: React.FC<CombinedProps> = props => {
           <LongviewLineGraph
             title="Requests"
             subtitle="requests/s"
+            tooltipUnit="requests/s"
             data={[
               {
                 label: 'Requests',
@@ -91,6 +92,7 @@ export const NGINXGraphs: React.FC<CombinedProps> = props => {
               <LongviewLineGraph
                 title="Connections"
                 subtitle="connections/s"
+                tooltipUnit="connections/s"
                 nativeLegend
                 data={[
                   {

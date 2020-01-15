@@ -80,6 +80,7 @@ export const ProcessGraphs: React.FC<CombinedProps> = props => {
             <LongviewLineGraph
               title="CPU"
               subtitle={'%'}
+              tooltipUnit="%"
               data={[
                 {
                   label: 'CPU',
@@ -95,6 +96,7 @@ export const ProcessGraphs: React.FC<CombinedProps> = props => {
             <LongviewLineGraph
               title="RAM"
               subtitle={memoryUnit}
+              tooltipUnit={memoryUnit}
               data={[
                 {
                   label: 'RAM',
@@ -114,6 +116,7 @@ export const ProcessGraphs: React.FC<CombinedProps> = props => {
             <LongviewLineGraph
               title="Disk I/O"
               subtitle={`${diskUnit}/s`}
+              tooltipUnit={`${diskUnit}/s`}
               data={[
                 {
                   label: 'Read',

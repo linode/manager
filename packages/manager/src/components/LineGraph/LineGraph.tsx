@@ -42,6 +42,7 @@ export interface Props {
   rowHeaders?: Array<string>;
   legendRows?: Array<ChartData<any>>;
   unit?: string; // Display unit on Y axis ticks
+  tooltipUnit?: string; // @todo deprecate unit prop above and rename this to unit. graphs should be consistent
   maxUnit?: StorageSymbol; // Rounds data to this unit. IMPORTANT: if this prop is provided, data should be in bytes
   nativeLegend?: boolean; // Display chart.js native legend
 }
@@ -146,6 +147,7 @@ const LineGraph: React.FC<CombinedProps> = props => {
     legendRows,
     maxUnit,
     nativeLegend,
+    tooltipUnit,
     ...rest
   } = props;
   const finalRowHeaders = rowHeaders ? rowHeaders : ['Max', 'Avg', 'Last'];
@@ -175,7 +177,8 @@ const LineGraph: React.FC<CombinedProps> = props => {
     _suggestedMax?: number,
     _unit?: string,
     _nativeLegend?: boolean,
-    _maxUnit?: StorageSymbol
+    _maxUnit?: StorageSymbol,
+    _tooltipUnit?: string
   ) => {
     const finalChartOptions = clone(chartOptions);
     const parser = parseInTimeZone(timezone || '');
@@ -227,7 +230,11 @@ const LineGraph: React.FC<CombinedProps> = props => {
      * However, in the tooltip, each individual value will be formatted according to
      * the most appropriate unit, if a unit is provided.
      */
-    finalChartOptions.tooltips.callbacks.label = formatTooltip(data, _maxUnit);
+    finalChartOptions.tooltips.callbacks.label = formatTooltip(
+      data,
+      _maxUnit,
+      _tooltipUnit
+    );
 
     return finalChartOptions;
   };
@@ -260,7 +267,13 @@ const LineGraph: React.FC<CombinedProps> = props => {
         <Line
           {...rest}
           height={chartHeight || 300}
-          options={getChartOptions(suggestedMax, unit, nativeLegend, maxUnit)}
+          options={getChartOptions(
+            suggestedMax,
+            unit,
+            nativeLegend,
+            maxUnit,
+            tooltipUnit
+          )}
           plugins={plugins}
           ref={inputEl}
           data={{
@@ -376,7 +389,13 @@ export const metricsBySection = (data: Metrics): number[] => [
 ];
 
 export const formatTooltip = curry(
-  (data: any, maxUnit?: StorageSymbol, t?: any, d?: any) => {
+  (
+    data: any,
+    maxUnit: StorageSymbol | undefined,
+    tooltipUnit: string | undefined,
+    t?: any,
+    d?: any
+  ) => {
     /**
      * This is a horror show, sorry.
      * We want to show tooltip values in appropriate units. However,
@@ -397,7 +416,7 @@ export const formatTooltip = curry(
     const value = maxUnit
       ? readableBytes(val).formatted
       : Math.round(val * 100) / 100;
-    return `${label}: ${value}`;
+    return `${label}: ${value} ${tooltipUnit ? tooltipUnit : ''}`;
   }
 );
 
