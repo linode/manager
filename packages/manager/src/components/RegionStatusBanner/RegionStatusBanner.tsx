@@ -10,23 +10,46 @@ import RegionsContainer, {
 
 export type CombinedProps = RegionsProps;
 
-const getFacilitiesText = (warnings: string[]) => {
-  return warnings.map(thisWarning => (
-    <li key={`facility-outage-${thisWarning}`}>{thisWarning}</li>
-  ));
-};
+const getFacilitiesList = (warnings: string[]) => (
+  <ul>
+    {warnings.map(thisWarning => (
+      <li
+        key={`facility-outage-${thisWarning}`}
+        data-testid={`facility-outage-${thisWarning}`}
+      >
+        {thisWarning}
+      </li>
+    ))}
+  </ul>
+);
 
-const renderBanner = (statusWarnings: string[]) => {
-  const facilitiesList = getFacilitiesText(statusWarnings);
+/**
+ * Takes an array of region display names and outputs the appropriate
+ * notice display.
+ *
+ * Includes conditional logic to show a list in the (rare) case that
+ * more than one region is affected. Since most outages only affect
+ * a single region, I thought the more compact display of a single
+ * region in that case was worth the cost in complexity.
+ *
+ * @param statusWarnings
+ */
+const renderBanner = (statusWarnings: string[]): JSX.Element => {
+  const moreThanOneRegionAffected = statusWarnings.length > 1;
   return (
     <>
       <Typography variant="h3" style={{ paddingBottom: '5px' }}>
-        We are aware of an issue affecting service in the following facilities:
+        We are aware of an issue affecting service in {` `}
+        {moreThanOneRegionAffected
+          ? 'the following facilities:'
+          : `our ${statusWarnings[0]} facility.`}
       </Typography>
-      <ul>{facilitiesList}</ul>
+      {moreThanOneRegionAffected && getFacilitiesList(statusWarnings)}
       <Typography>
-        If you are experiencing service issues in this facility, there is no
-        need to open a support ticket at this time. Please monitor our{` `}
+        If you are experiencing service issues in{' '}
+        {moreThanOneRegionAffected ? 'these facilities' : 'this facility'},
+        there is no need to open a support ticket at this time. Please monitor
+        our{` `}
         <ExternalLink
           link="https://status.linode.com"
           text="status blog"
