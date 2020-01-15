@@ -85,7 +85,7 @@ export const MySQLProcessGraphs: React.FC<CombinedProps> = props => {
                   label: 'CPU',
                   borderColor: 'transparent',
                   backgroundColor: theme.graphs.cpu.percent,
-                  data: _convertData(cpu, start, end, formatData)
+                  data: _convertData(cpu, start, end)
                 }
               ]}
               {...graphProps}
@@ -119,13 +119,13 @@ export const MySQLProcessGraphs: React.FC<CombinedProps> = props => {
                   label: 'Read',
                   borderColor: 'transparent',
                   backgroundColor: theme.graphs.diskIO.read,
-                  data: _convertData(diskRead, start, end, formatData)
+                  data: _convertData(diskRead, start, end)
                 },
                 {
                   label: 'Write',
                   borderColor: 'transparent',
                   backgroundColor: theme.graphs.diskIO.write,
-                  data: _convertData(diskWrite, start, end, formatData)
+                  data: _convertData(diskWrite, start, end)
                 }
               ]}
               {...graphProps}
@@ -140,7 +140,7 @@ export const MySQLProcessGraphs: React.FC<CombinedProps> = props => {
                   label: 'Count',
                   borderColor: 'transparent',
                   backgroundColor: theme.graphs.processCount,
-                  data: _convertData(processCount, start, end, formatData)
+                  data: _convertData(processCount, start, end)
                 }
               ]}
               {...graphProps}
@@ -150,15 +150,6 @@ export const MySQLProcessGraphs: React.FC<CombinedProps> = props => {
       </Grid>
     </>
   );
-};
-
-const formatData = (value: number | null) => {
-  if (value === null) {
-    return value;
-  }
-
-  // Round to 2 decimal places.
-  return Math.round(value * 100) / 100;
 };
 
 const enhanced = compose<CombinedProps, Props>(

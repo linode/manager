@@ -93,25 +93,25 @@ export const MySQLGraphs: React.FC<CombinedProps> = props => {
                 label: 'SELECT',
                 borderColor: 'transparent',
                 backgroundColor: theme.graphs.queries.select,
-                data: _convertData(selectQueries, start, end, formatData)
+                data: _convertData(selectQueries, start, end)
               },
               {
                 label: 'UPDATE',
                 borderColor: 'transparent',
                 backgroundColor: theme.graphs.queries.update,
-                data: _convertData(updateQueries, start, end, formatData)
+                data: _convertData(updateQueries, start, end)
               },
               {
                 label: 'INSERT',
                 borderColor: 'transparent',
                 backgroundColor: theme.graphs.queries.insert,
-                data: _convertData(insertQueries, start, end, formatData)
+                data: _convertData(insertQueries, start, end)
               },
               {
                 label: 'DELETE',
                 borderColor: 'transparent',
                 backgroundColor: theme.graphs.queries.delete,
-                data: _convertData(deleteQueries, start, end, formatData)
+                data: _convertData(deleteQueries, start, end)
               }
             ]}
           />
@@ -157,7 +157,7 @@ export const MySQLGraphs: React.FC<CombinedProps> = props => {
                     label: 'Connections',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.connections.accepted,
-                    data: _convertData(connections, start, end, formatData)
+                    data: _convertData(connections, start, end)
                   }
                 ]}
               />
@@ -179,7 +179,7 @@ export const MySQLGraphs: React.FC<CombinedProps> = props => {
                     label: 'Slow Queries',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.slowQueries,
-                    data: _convertData(slowQueries, start, end, formatData)
+                    data: _convertData(slowQueries, start, end)
                   }
                 ]}
               />
@@ -232,15 +232,6 @@ export const MySQLGraphs: React.FC<CombinedProps> = props => {
       </Grid>
     </Paper>
   );
-};
-
-const formatData = (value: number | null) => {
-  if (value === null) {
-    return value;
-  }
-
-  // Round to 2 decimal places.
-  return Math.round(value * 100) / 100;
 };
 
 const formatAborted = (value: number | null) => {

@@ -16,7 +16,6 @@ import { convertData } from 'src/features/Longview/shared/formatters';
 import { statMax } from 'src/features/Longview/shared/utilities';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { formatMemory } from '../../../shared/formatters';
-import { formatCPU } from '../OverviewGraphs/CPUGraph';
 import { Process } from './types';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -107,7 +106,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
           subtitle="%"
           data={[
             {
-              data: _convertData(cpu, start, end, formatCPU),
+              data: _convertData(cpu, start, end),
               label: 'CPU',
               borderColor: 'transparent',
               backgroundColor: theme.graphs.cpu.system
