@@ -95,6 +95,17 @@ export class LinodeCard extends React.PureComponent<CombinedProps, State> {
   };
 
   handleRebootButtonClick = () => {
+    /**
+     * We have to pass a configID to the
+     * API, and since we don't have that data in state
+     * we have to request it.
+     *
+     * The API can handle an empty linode/reboot
+     * request in most cases, but in some situations,
+     * such as a Linode in rescue mode, this will cause
+     * an error. If the API adjusts this behavior,
+     * this logic can be removed/simplified.
+     */
     const { id } = this.props;
     this.setState({ loadingConfigs: true });
     getLinodeConfigs(id)
