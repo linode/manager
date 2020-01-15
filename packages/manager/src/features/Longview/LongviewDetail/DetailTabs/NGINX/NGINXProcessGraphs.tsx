@@ -70,7 +70,8 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
     timezone,
     showToday: isToday,
     loading,
-    error
+    error,
+    nativeLegend: true
   };
 
   return (
