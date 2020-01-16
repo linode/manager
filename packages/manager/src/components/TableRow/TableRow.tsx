@@ -71,6 +71,9 @@ const styles = (theme: Theme) =>
       }
     },
     activeCaret: {
+      [theme.breakpoints.down('md')]: {
+        display: 'none'
+      },
       color: theme.bg.lightBlue,
       position: 'absolute',
       top: 0,
@@ -185,9 +188,6 @@ class TableRow extends React.Component<CombinedProps> {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(
-  withRouter,
-  styled
-)(TableRow);
+const enhanced = compose<CombinedProps, Props>(withRouter, styled)(TableRow);
 
 export default enhanced;
