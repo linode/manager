@@ -9,12 +9,12 @@ import {
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { readableBytes } from 'src/utilities/unitConversions';
-import { LongviewProcesses } from '../../../request.types';
-import { convertData, formatMemory } from '../../../shared/formatters';
+import { LongviewProcesses } from '../../request.types';
+import { convertData, formatMemory } from '../../shared/formatters';
 import {
   statMax,
   sumRelatedProcessesAcrossAllUsers
-} from '../../../shared/utilities';
+} from '../../shared/utilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
   smallGraph: {
@@ -37,16 +37,15 @@ interface Props {
 
 type CombinedProps = Props & WithTheme;
 
-export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
+export const ProcessGraphs: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const { data, error, loading, isToday, timezone, start, end, theme } = props;
 
-  const totalDataForAllUsers = React.useMemo(
-    () => sumRelatedProcessesAcrossAllUsers(data),
-    [data]
-  );
-
   const _convertData = React.useCallback(convertData, [data, start, end]);
+
+  const _data = React.useMemo(() => sumRelatedProcessesAcrossAllUsers(data), [
+    data
+  ]);
 
   /**
    * These field names say kbytes, but Classic reports them
@@ -54,17 +53,17 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
    * from cat /proc/$PID/io, which are bytes. No reason (I hope)
    * to multiply by 1024 to get the byte value here.
    */
-  const diskRead = totalDataForAllUsers.ioreadkbytes ?? [];
-  const diskWrite = totalDataForAllUsers.iowritekbytes ?? [];
+  const diskRead = _data.ioreadkbytes ?? [];
+  const diskWrite = _data.iowritekbytes ?? [];
   const maxDisk = Math.max(statMax(diskRead), statMax(diskWrite));
   const diskUnit = readableBytes(maxDisk).unit;
 
-  const cpu = totalDataForAllUsers.cpu ?? [];
-  const memory = totalDataForAllUsers.mem ?? [];
-  const processCount = totalDataForAllUsers.count ?? [];
+  const cpu = _data.cpu ?? [];
+  const memory = _data.mem ?? [];
+  const processCount = _data.count ?? [];
   const maxProcessCount = Math.max(statMax(processCount), 10);
 
-  const memoryUnit = readableBytes(statMax(memory) * 1024).unit;
+  const memoryUnit = readableBytes(statMax(_data.mem ?? []) * 1024).unit;
 
   const graphProps = {
     timezone,
@@ -82,12 +81,13 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
             <LongviewLineGraph
               title="CPU"
               subtitle={'%'}
+              tooltipUnit="%"
               data={[
                 {
                   label: 'CPU',
                   borderColor: 'transparent',
                   backgroundColor: theme.graphs.cpu.percent,
-                  data: _convertData(cpu, start, end, formatData)
+                  data: _convertData(cpu, start, end)
                 }
               ]}
               {...graphProps}
@@ -97,6 +97,7 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
             <LongviewLineGraph
               title="RAM"
               subtitle={memoryUnit}
+              maxUnit={memoryUnit}
               data={[
                 {
                   label: 'RAM',
@@ -116,18 +117,19 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
             <LongviewLineGraph
               title="Disk I/O"
               subtitle={`${diskUnit}/s`}
+              tooltipUnit={`${diskUnit}/s`}
               data={[
                 {
                   label: 'Read',
                   borderColor: 'transparent',
                   backgroundColor: theme.graphs.diskIO.read,
-                  data: _convertData(diskRead, start, end, formatData)
+                  data: _convertData(diskRead, start, end)
                 },
                 {
                   label: 'Write',
                   borderColor: 'transparent',
                   backgroundColor: theme.graphs.diskIO.write,
-                  data: _convertData(diskWrite, start, end, formatData)
+                  data: _convertData(diskWrite, start, end)
                 }
               ]}
               {...graphProps}
@@ -142,7 +144,7 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
                   label: 'Count',
                   borderColor: 'transparent',
                   backgroundColor: theme.graphs.processCount,
-                  data: _convertData(processCount, start, end, formatData)
+                  data: _convertData(processCount, start, end)
                 }
               ]}
               {...graphProps}
@@ -154,17 +156,8 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
   );
 };
 
-const formatData = (value: number | null) => {
-  if (value === null) {
-    return value;
-  }
-
-  // Round to 2 decimal places.
-  return Math.round(value * 100) / 100;
-};
-
 const enhanced = compose<CombinedProps, Props>(
   withTheme,
   React.memo
-)(NGINXProcessGraphs);
+)(ProcessGraphs);
 export default enhanced;
