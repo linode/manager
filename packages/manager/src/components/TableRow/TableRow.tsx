@@ -2,6 +2,7 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+import Hidden from 'src/components/core/Hidden';
 import {
   createStyles,
   Theme,
@@ -61,13 +62,20 @@ const styles = (theme: Theme) =>
       '&:before': {
         transition: 'none',
         backgroundColor: theme.bg.lightBlue,
-        borderColor: theme.palette.primary.light,
-        borderRight: 0
+        borderColor: theme.palette.primary.light
       },
       '& td': {
         borderTopColor: theme.palette.primary.light,
         borderBottomColor: theme.palette.primary.light,
-        position: 'relative'
+        position: 'relative',
+        [theme.breakpoints.down('md')]: {
+          '&:first-child': {
+            borderLeft: `1px solid ${theme.palette.primary.light}`
+          },
+          '&:last-child': {
+            borderRight: `1px solid ${theme.palette.primary.light}`
+          }
+        }
       }
     },
     activeCaret: {
@@ -177,9 +185,11 @@ class TableRow extends React.Component<CombinedProps> {
       >
         {this.props.children}
         {selected && (
-          <td colSpan={0}>
-            <ActiveCaret className={classes.activeCaret} />
-          </td>
+          <Hidden mdDown>
+            <td colSpan={0}>
+              <ActiveCaret className={classes.activeCaret} />
+            </td>
+          </Hidden>
         )}
       </_TableRow>
     );
