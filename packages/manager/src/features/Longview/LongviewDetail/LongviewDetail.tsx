@@ -14,6 +14,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import AppBar from 'src/components/core/AppBar';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import DefaultLoader from 'src/components/DefaultLoader';
@@ -38,11 +39,18 @@ import {
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import useFlags from 'src/hooks/useFlags';
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
+import Apache from './DetailTabs/Apache';
 import FeatureComingSoon from './DetailTabs/FeatureComingSoon';
 import MySQLLanding from './DetailTabs/MySQL';
 import NetworkLanding from './DetailTabs/Network';
 import NGINX from './DetailTabs/NGINX';
 import ProcessesLanding from './DetailTabs/Processes/ProcessesLanding';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  tabList: {
+    marginBottom: theme.spacing(3) + 6
+  }
+}));
 
 const topProcessesEmptyDataSet: LongviewTopProcesses = { Processes: {} };
 
@@ -80,6 +88,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     longviewClientData,
     timezone
   } = props;
+  const classes = useStyles();
 
   React.useEffect(() => {
     /** request clients if they haven't already been requested */
@@ -240,6 +249,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           textColor="primary"
           variant="scrollable"
           scrollButtons="on"
+          className={classes.tabList}
         >
           {tabs.map(tab => (
             <Tab
@@ -317,9 +327,21 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           exact
           strict
           path={`${url}/apache`}
-          render={() => (
-            <FeatureComingSoon title="Apache" clientLabel={client.label} />
-          )}
+          render={() => {
+            if (!showAllTabs) {
+              return (
+                <FeatureComingSoon title="Apache" clientLabel={client.label} />
+              );
+            }
+            return (
+              <Apache
+                timezone={timezone}
+                clientAPIKey={clientAPIKey}
+                lastUpdated={lastUpdated}
+                lastUpdatedError={lastUpdatedError}
+              />
+            );
+          }}
         />
         )}
         <Route

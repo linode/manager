@@ -8,10 +8,11 @@ import {
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-import { readableBytes } from 'src/utilities/unitConversions';
+import { readableBytes, StorageSymbol } from 'src/utilities/unitConversions';
 import { LongviewProcesses } from '../../../request.types';
-import { convertData, formatMemory } from '../../../shared/formatters';
+import { convertData } from '../../../shared/formatters';
 import {
+  getMaxUnit,
   statMax,
   sumRelatedProcessesAcrossAllUsers
 } from '../../../shared/utilities';
@@ -37,7 +38,7 @@ interface Props {
 
 type CombinedProps = Props & WithTheme;
 
-export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
+export const ApacheProcessGraphs: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const { data, error, loading, isToday, timezone, start, end, theme } = props;
 
@@ -64,7 +65,8 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
   const processCount = totalDataForAllUsers.count ?? [];
   const maxProcessCount = Math.max(statMax(processCount), 10);
 
-  const memoryUnit = readableBytes(statMax(memory) * 1024).unit;
+  // Determine the unit based on the largest value
+  const memoryUnit = React.useMemo(() => getMaxUnit([memory]), [memory]);
 
   const graphProps = {
     timezone,
@@ -97,6 +99,7 @@ export const NGINXProcessGraphs: React.FC<CombinedProps> = props => {
             <LongviewLineGraph
               title="RAM"
               subtitle={memoryUnit}
+              maxUnit={memoryUnit as StorageSymbol}
               data={[
                 {
                   label: 'RAM',
@@ -163,8 +166,15 @@ const formatData = (value: number | null) => {
   return Math.round(value * 100) / 100;
 };
 
+export const formatMemory = (value: number | null) => {
+  if (value === null) {
+    return null;
+  }
+  return value * 1024; // Convert from KB to B
+};
+
 const enhanced = compose<CombinedProps, Props>(
   withTheme,
   React.memo
-)(NGINXProcessGraphs);
+)(ApacheProcessGraphs);
 export default enhanced;
