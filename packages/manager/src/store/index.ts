@@ -136,10 +136,6 @@ import volumeDrawer, {
   defaultState as volumeDrawerDefaultState,
   State as VolumeDrawerState
 } from 'src/store/volumeForm';
-import featureFlag, {
-  defaultState as defaultFeatureFlagState,
-  State as FeatureFlagState
-} from './featureFlag/featureFlag.reducer';
 import initialLoad, {
   defaultState as initialLoadState,
   State as InitialLoadState
@@ -229,7 +225,6 @@ export interface ApplicationState {
   globalErrors: GlobalErrorState;
   longviewClients: LongviewState;
   longviewStats: LongviewStatsState;
-  featureFlag: FeatureFlagState;
 }
 
 const defaultState: ApplicationState = {
@@ -249,8 +244,7 @@ const defaultState: ApplicationState = {
   firewalls: defaultFirewallState,
   globalErrors: defaultGlobalErrorState,
   longviewClients: defaultLongviewState,
-  longviewStats: defaultLongviewStatsState,
-  featureFlag: defaultFeatureFlagState
+  longviewStats: defaultLongviewStatsState
 };
 
 /**
@@ -296,8 +290,7 @@ const reducers = combineReducers<ApplicationState>({
   firewalls,
   globalErrors,
   longviewClients: longview,
-  longviewStats,
-  featureFlag
+  longviewStats
 });
 
 const enhancers = compose(

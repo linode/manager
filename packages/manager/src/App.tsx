@@ -16,6 +16,7 @@ import {
   withDocumentTitleProvider
 } from 'src/components/DocumentTitle';
 
+import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import { events$ } from 'src/events';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 
@@ -350,7 +351,12 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
 
 export const connected = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(connected, withDocumentTitleProvider, withSnackbar)(App);
+export default compose(
+  connected,
+  withDocumentTitleProvider,
+  withSnackbar,
+  withFeatureFlagProvider
+)(App);
 
 export const hasOauthError = (...args: (Error | APIError[] | undefined)[]) => {
   return args.some(eachError => {
