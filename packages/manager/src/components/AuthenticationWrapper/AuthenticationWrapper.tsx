@@ -30,7 +30,7 @@ import { handleInitTokens } from 'src/store/authentication/authentication.action
 import { getAllBuckets } from 'src/store/bucket/bucket.requests';
 import { requestClusters } from 'src/store/clusters/clusters.actions';
 import { requestDomains } from 'src/store/domains/domains.actions';
-import { setPageSize } from 'src/store/featureFlag/featureFlag.actions';
+import { setMaxPageSize } from 'src/store/featureFlag/featureFlag.actions';
 import { requestImages } from 'src/store/image/image.requests';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
 import { requestTypes } from 'src/store/linodeType/linodeType.requests';
@@ -88,12 +88,12 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
   componentDidMount() {
     const {
       initSession,
-      flags: { pageSize }
+      flags: { maxPageSize }
     } = this.props;
 
     // Persist pageSize (from feature flag) to Redux store.
-    if (pageSize) {
-      this.props.setPageSize(pageSize);
+    if (maxPageSize) {
+      this.props.setMaxPageSize(maxPageSize);
     }
     /**
      * set redux state to what's in local storage
@@ -165,7 +165,7 @@ interface DispatchProps {
   requestProfile: () => Promise<Profile>;
   requestBuckets: () => Promise<ObjectStorageBucket[]>;
   requestClusters: () => Promise<ObjectStorageCluster[]>;
-  setPageSize: (pageSize: number) => void;
+  setMaxPageSize: (pageSize: number) => void;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
@@ -184,7 +184,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   requestProfile: () => dispatch(requestProfile()),
   requestBuckets: () => dispatch(getAllBuckets()),
   requestClusters: () => dispatch(requestClusters()),
-  setPageSize: (pageSize: number) => dispatch(setPageSize(pageSize))
+  setMaxPageSize: (pageSize: number) => dispatch(setMaxPageSize(pageSize))
 });
 
 const connected = connect(mapStateToProps, mapDispatchToProps);

@@ -1,24 +1,24 @@
 import { Reducer } from 'redux';
 import { MAX_PAGE_SIZE } from 'src/constants';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
-import { setPageSize } from './featureFlag.actions';
+import { setMaxPageSize } from './featureFlag.actions';
 
 export interface State {
-  pageSize: number;
+  maxPageSize: number;
 }
 
 export const defaultState: State = {
-  pageSize: MAX_PAGE_SIZE
+  maxPageSize: MAX_PAGE_SIZE
 };
 
 const reducer: Reducer<State> = reducerWithInitialState(
   defaultState
-).caseWithAction(setPageSize, (state, action) => {
+).caseWithAction(setMaxPageSize, (state, action) => {
   const { payload } = action;
 
   return {
     ...state,
-    pageSize: payload
+    maxPageSize: payload
   };
 });
 

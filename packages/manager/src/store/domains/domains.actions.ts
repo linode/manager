@@ -61,7 +61,7 @@ export const requestDomains: ThunkActionCreator<Promise<Domain[]>> = params => (
 ) => {
   dispatch(getDomainsRequest());
 
-  const pageSize = getState().featureFlag.pageSize;
+  const pageSize = getState().featureFlag.maxPageSize;
 
   return getAll<Domain>(getDomains, pageSize)()
     .then(domains => {

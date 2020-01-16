@@ -34,7 +34,7 @@ const component = shallow<AuthenticationWrapper>(
     }}
     flags={{}}
     ldClient={ldClient}
-    setPageSize={jest.fn()}
+    setMaxPageSize={jest.fn()}
   >
     <div />
   </AuthenticationWrapper>

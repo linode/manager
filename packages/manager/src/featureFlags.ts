@@ -16,7 +16,7 @@ interface Flags {
   oneClickApps: OneClickApp;
   longview: boolean;
   longviewTabs: boolean;
-  pageSize: number;
+  maxPageSize: number;
 }
 
 /**
