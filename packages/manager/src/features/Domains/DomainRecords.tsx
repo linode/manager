@@ -48,6 +48,7 @@ import {
   getErrorStringOrDefault
 } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { storage } from 'src/utilities/storage';
 import ActionMenu from './DomainRecordActionMenu';
 import Drawer from './DomainRecordDrawer';
 
@@ -282,31 +283,19 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         },
         {
           title: 'Default TTL',
-          render: compose(
-            msToReadable,
-            pathOr(0, ['ttl_sec'])
-          )
+          render: compose(msToReadable, pathOr(0, ['ttl_sec']))
         },
         {
           title: 'Refresh Rate',
-          render: compose(
-            msToReadable,
-            pathOr(0, ['refresh_sec'])
-          )
+          render: compose(msToReadable, pathOr(0, ['refresh_sec']))
         },
         {
           title: 'Retry Rate',
-          render: compose(
-            msToReadable,
-            pathOr(0, ['retry_sec'])
-          )
+          render: compose(msToReadable, pathOr(0, ['retry_sec']))
         },
         {
           title: 'Expire Time',
-          render: compose(
-            msToReadable,
-            pathOr(0, ['expire_sec'])
-          )
+          render: compose(msToReadable, pathOr(0, ['expire_sec']))
         },
         {
           title: '',
@@ -708,7 +697,12 @@ class DomainRecords extends React.Component<CombinedProps, State> {
               >
                 {({ data: orderedData, handleOrderChange, order, orderBy }) => {
                   return (
-                    <Paginate data={orderedData} scrollToRef={ref}>
+                    <Paginate
+                      data={orderedData}
+                      scrollToRef={ref}
+                      pageSize={storage.infinitePageSize.get()}
+                      pageSizeSetter={storage.infinitePageSize.set}
+                    >
                       {({
                         count,
                         data: paginatedData,
@@ -779,6 +773,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                               page={page}
                               pageSize={pageSize}
                               eventCategory={`${type.title.toLowerCase()} panel`}
+                              showAll
                             />
                           </>
                         );
@@ -835,10 +830,7 @@ const msToReadable = (v: number): null | string =>
     2419200: '4 weeks'
   });
 
-const getTTL = compose(
-  msToReadable,
-  pathOr(0, ['ttl_sec'])
-);
+const getTTL = compose(msToReadable, pathOr(0, ['ttl_sec']));
 
 const typeEq = propEq('type');
 
@@ -918,11 +910,7 @@ const getNSRecords = compose<
   DomainRecord[],
   DomainRecord[],
   DomainRecord[]
->(
-  prependLinodeNS,
-  filter(typeEq('NS')),
-  pathOr([], ['domainRecords'])
-);
+>(prependLinodeNS, filter(typeEq('NS')), pathOr([], ['domainRecords']));
 
 const styled = withStyles(styles);
 
