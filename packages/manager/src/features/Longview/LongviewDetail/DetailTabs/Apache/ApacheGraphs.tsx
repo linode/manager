@@ -13,7 +13,7 @@ import { getMaxUnit } from 'src/features/Longview/shared/utilities';
 import { StorageSymbol } from 'src/utilities/unitConversions';
 import { ApacheResponse, LongviewProcesses } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
-import ApacheProcessGraphs from './ApacheProcessGraphs';
+import ProcessGraphs from '../ProcessGraphs';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -192,7 +192,7 @@ export const ApacheGraphs: React.FC<CombinedProps> = props => {
             </Grid>
           </Grid>
         </Grid>
-        <ApacheProcessGraphs
+        <ProcessGraphs
           data={processesData}
           loading={processesLoading}
           error={processesError || error}
