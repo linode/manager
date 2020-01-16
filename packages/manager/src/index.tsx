@@ -1,4 +1,5 @@
 import 'font-logos/assets/font-logos.css';
+import { asyncWithLDProvider } from 'launchdarkly-react-client-sdk';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
@@ -13,7 +14,12 @@ import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
 import CookieWarning from 'src/components/CookieWarning';
 import DefaultLoader from 'src/components/DefaultLoader';
 import SnackBar from 'src/components/SnackBar';
-import { GA_ID, GTM_ID, isProduction } from 'src/constants';
+import {
+  GA_ID,
+  GTM_ID,
+  isProduction,
+  LAUNCH_DARKLY_API_KEY
+} from 'src/constants';
 import 'src/exceptionReporting';
 import LoginAsCustomerCallback from 'src/layouts/LoginAsCustomerCallback';
 import Logout from 'src/layouts/Logout';
@@ -24,6 +30,7 @@ import './index.css';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
 
 import SplashScreen from 'src/components/SplashScreen';
+import { RenderChildren } from './utilities/RenderChildren';
 
 const Lish = DefaultLoader({
   loader: () => import('src/features/Lish')
@@ -103,24 +110,48 @@ const renderAuthentication = () => (
   </Switch>
 );
 
-ReactDOM.render(
-  <React.Fragment>
-    {navigator.cookieEnabled ? (
-      <Provider store={store}>
-        <Router>
-          <Switch>
-            {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
-            <Route exact path="/null" render={renderNull} />
-            <Route render={renderAuthentication} />
-          </Switch>
-        </Router>
-      </Provider>
-    ) : (
-      <CookieWarning />
-    )}
-  </React.Fragment>,
-  document.getElementById('root') as HTMLElement
-);
+// Here we have an async "Self-executing anonymous function" so we can await
+// the LD provider. We do this to prevent the app from rendering until we have
+// feature flags available from LD. Otherwise the UI might be jumpy if it
+// depends on feature flags.
+// Documentation: https://docs.launchdarkly.com/docs/react-sdk-reference#section-async-with-ld-provider
+(async () => {
+  // Use the FeatureFlagProvider if an LD API key is supplied. Otherwise use
+  // the stub RenderChildren component to wrap the app.
+  const FeatureFlagProvider = LAUNCH_DARKLY_API_KEY
+    ? await asyncWithLDProvider({
+        clientSideID: LAUNCH_DARKLY_API_KEY,
+        /**
+         * Initialize the app with an anonymous user.
+         */
+        user: {
+          key: 'anonymous',
+          anonymous: true
+        }
+      })
+    : RenderChildren;
+
+  ReactDOM.render(
+    <React.Fragment>
+      {navigator.cookieEnabled ? (
+        <FeatureFlagProvider>
+          <Provider store={store}>
+            <Router>
+              <Switch>
+                {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
+                <Route exact path="/null" render={renderNull} />
+                <Route render={renderAuthentication} />
+              </Switch>
+            </Router>
+          </Provider>
+        </FeatureFlagProvider>
+      ) : (
+        <CookieWarning />
+      )}
+    </React.Fragment>,
+    document.getElementById('root') as HTMLElement
+  );
+})();
 
 if (module.hot && !isProduction) {
   module.hot.accept();

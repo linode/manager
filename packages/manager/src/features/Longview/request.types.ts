@@ -269,6 +269,8 @@ export type LongviewFieldName =
   | 'activeConnections'
   | 'nginx'
   | 'nginxProcesses'
+  | 'apache'
+  | 'apacheProcesses'
   | 'mysql'
   | 'mysqlProcesses';
 
@@ -281,8 +283,8 @@ export interface Options {
 export interface LongviewApplications {
   Applications?: {
     Nginx?: NginxResponse;
+    Apache?: ApacheResponse;
     MySQL?: MySQLResponse;
-    Apache?: any;
   };
 }
 
@@ -297,6 +299,15 @@ export interface NginxResponse {
   reading: Stat[];
   waiting: Stat[];
   active: Stat[];
+}
+
+export interface ApacheResponse {
+  Workers: Record<string, Stat[]>;
+  status_message: string;
+  version: string;
+  status: number;
+  'Total kBytes': Stat[];
+  'Total Accesses': Stat[];
 }
 
 export interface MySQLResponse {

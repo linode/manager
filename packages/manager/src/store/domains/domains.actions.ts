@@ -55,12 +55,15 @@ export const deleteDomainActions = actionCreator.async<
 /**
  * Async
  */
-export const requestDomains: ThunkActionCreator<Promise<Domain[]>> = () => (
-  dispatch: Dispatch<any>
+export const requestDomains: ThunkActionCreator<Promise<Domain[]>> = params => (
+  dispatch: Dispatch<any>,
+  getState
 ) => {
   dispatch(getDomainsRequest());
 
-  return getAll<Domain>(getDomains)()
+  const pageSize = getState().featureFlag.maxPageSize;
+
+  return getAll<Domain>(getDomains, pageSize)()
     .then(domains => {
       dispatch(getDomainsSuccess(domains));
       return domains;

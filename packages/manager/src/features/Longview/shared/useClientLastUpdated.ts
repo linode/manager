@@ -53,13 +53,15 @@ export const useClientLastUpdated = (
           only update _lastUpdated_ state if it hasn't already been set
           or the API response is in a time past what's already been set.
         */
+
+        const _lastUpdated = response.DATA?.updated ?? 0;
+
         if (
           mounted &&
           (typeof newLastUpdated === 'undefined' ||
-            pathOr(0, ['updated'], response) > newLastUpdated)
+            _lastUpdated > newLastUpdated)
         ) {
-          const _lastUpdated = pathOr(0, ['DATA', 'updated'], response);
-          setLastUpdated(response.DATA.updated);
+          setLastUpdated(_lastUpdated);
           if (callback) {
             callback(_lastUpdated);
           }
