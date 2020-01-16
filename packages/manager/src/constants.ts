@@ -319,4 +319,4 @@ export const OBJECT_STORAGE_DELIMITER = '/';
 
 // Maximum page size allowed by the API. Used in the `getAll()` helper function
 // to request as many items at once as possible.
-export const MAX_PAGE_SIZE = 100;
+export const MAX_PAGE_SIZE = 200;

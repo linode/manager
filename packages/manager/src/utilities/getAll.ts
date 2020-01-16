@@ -51,13 +51,12 @@ export interface GetAllData<T> {
  *
  */
 export const getAll: <T>(
-  getter: GetFunction,
-  pageSize?: number
-) => (params?: any, filter?: any) => Promise<GetAllData<T[]>> = (
-  getter,
-  pageSize = MAX_PAGE_SIZE
-) => (params?: any, filter?: any) => {
-  const pagination = { ...params, page_size: pageSize };
+  getter: GetFunction
+) => (params?: any, filter?: any) => Promise<GetAllData<T[]>> = getter => (
+  params?: any,
+  filter?: any
+) => {
+  const pagination = { ...params, page_size: MAX_PAGE_SIZE };
   return getter(pagination, filter).then(
     ({ data: firstPageData, page, pages, results }) => {
       // If we only have one page, return it.
