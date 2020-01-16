@@ -4,15 +4,46 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.83.0] - 2020-01-16
+
+### Added:
+- Longview:
+    - Apache
+    - MySQL
+    - Processes
+- “Show All” option on Domain Records
+- Ability to edit AXFR for slave Domains
+
+### Changed:
+- Hide Backups CTAs from restricted users
+- Update Longview graph colors
+- Support API requests for up to 200 entities at a time
+- Make One-Click apps visible to all users from primary navigation
+
+### Fixed:
+- Rounding in Longview line graphs
+- Add space to API Tokens HTML title
+- Allow rebooting from Rescue mode
+
+
+### Changed:
+- \[LV] Fix bug in useClientLastUpdated. (#6002)\
+
+### Fixed:
+- \M3 fix rounding in linegraphs (#6011)\
+- \M3 -1867 Fix: Hide Backups CTAs from restricted users (#6000)\
+- \Fix appendStats 0 null bug (#5988)\
+
+
 ## [v0.82.0] - 2020-01-08
 
 ### Added:
 - Source Linodes from Redux in Networking and Backups
 - Longview: empty and loading states for Disks tab
 - Longview: NGINX tab
-- Longview: Network tab 
+- Longview: Network tab
 - Show All option for Volumes, Domains, NodeBalancers
-- Sentry improvements 
+- Sentry improvements
 - Ignore newrelic and chrome extension errors
 - Add security.txt at cloud.linode.com/.well-known/security.txt
 
@@ -20,7 +51,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Copy for Prometheus and Grafana One-Click Apps
 - Show confirmation dialog when resizing a Linode
 - Update LV documentation to include info on warnings/errors
-- Add copy explaining prorated transfer 
+- Add copy explaining prorated transfer
 - Move untagged items under tagged items for all entities
 - Allow primary nav to set multiple active links
 - Allow Charts.js native (canvas) legends for graphs
