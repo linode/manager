@@ -11,6 +11,7 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
 import { formatCPU } from 'src/features/Longview/shared/formatters';
+import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { Process } from './types';
 
@@ -23,7 +24,7 @@ export interface Props {
   lastUpdatedError?: APIError[];
 }
 
-type CombinedProps = Props;
+export type CombinedProps = Props;
 
 export const ProcessesTable: React.FC<CombinedProps> = props => {
   const {
@@ -34,12 +35,20 @@ export const ProcessesTable: React.FC<CombinedProps> = props => {
     setSelectedProcess
   } = props;
 
+  const { width } = useWindowDimensions();
+
   return (
     <>
       <OrderBy data={processesData} orderBy={'name'} order={'asc'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
           <>
-            <Table spacingTop={16} isResponsive={false}>
+            <Table
+              spacingTop={16}
+              // This prop is necessary to show the "ActiveCaret", and we only
+              // want it on large viewports.
+              noOverflow={width >= 1280}
+              isResponsive={false}
+            >
               <TableHead>
                 <TableRow>
                   <TableSortCell
