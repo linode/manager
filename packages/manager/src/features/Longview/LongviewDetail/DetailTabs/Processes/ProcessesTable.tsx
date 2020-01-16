@@ -39,7 +39,7 @@ export const ProcessesTable: React.FC<CombinedProps> = props => {
       <OrderBy data={processesData} orderBy={'name'} order={'asc'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
           <>
-            <Table spacingTop={16} noOverflow isResponsive={false}>
+            <Table spacingTop={16} isResponsive={false}>
               <TableHead>
                 <TableRow>
                   <TableSortCell
