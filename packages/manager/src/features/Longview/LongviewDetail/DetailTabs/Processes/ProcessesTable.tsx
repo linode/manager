@@ -11,6 +11,7 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
 import { formatCPU } from 'src/features/Longview/shared/formatters';
+import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { Process } from './types';
 
@@ -23,7 +24,7 @@ export interface Props {
   lastUpdatedError?: APIError[];
 }
 
-type CombinedProps = Props;
+export type CombinedProps = Props;
 
 export const ProcessesTable: React.FC<CombinedProps> = props => {
   const {
@@ -34,12 +35,20 @@ export const ProcessesTable: React.FC<CombinedProps> = props => {
     setSelectedProcess
   } = props;
 
+  const { width } = useWindowDimensions();
+
   return (
     <>
       <OrderBy data={processesData} orderBy={'name'} order={'asc'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
           <>
-            <Table spacingTop={16} noOverflow>
+            <Table
+              spacingTop={16}
+              // This prop is necessary to show the "ActiveCaret", and we only
+              // want it on large viewports.
+              noOverflow={width >= 1280}
+              isResponsive={false}
+            >
               <TableHead>
                 <TableRow>
                   <TableSortCell
@@ -173,38 +182,22 @@ export const ProcessesTableRow: React.FC<ProcessTableRowProps> = React.memo(
         forceIndex
         aria-label={`${name} for ${user}`}
       >
-        <TableCell parentColumn="Process" data-testid={`name-${name}`}>
-          {name}
-        </TableCell>
-        <TableCell parentColumn="User" data-testid={`user-${user}`}>
-          {user}
-        </TableCell>
-        <TableCell
-          parentColumn="Max Count"
-          data-testid={`max-count-${Math.round(maxCount)}`}
-        >
+        <TableCell data-testid={`name-${name}`}>{name}</TableCell>
+        <TableCell data-testid={`user-${user}`}>{user}</TableCell>
+        <TableCell data-testid={`max-count-${Math.round(maxCount)}`}>
           {Math.round(maxCount)}
         </TableCell>
-        <TableCell
-          parentColumn="Avg IO"
-          data-testid={`average-io-${averageIO}`}
-        >
+        <TableCell data-testid={`average-io-${averageIO}`}>
           {
             readableBytes(averageIO, { round: 0, unitLabels: { bytes: 'B' } })
               .formatted
           }
           /s
         </TableCell>
-        <TableCell
-          parentColumn="Avg CPU"
-          data-testid={`average-cpu-${averageCPU}`}
-        >
+        <TableCell data-testid={`average-cpu-${averageCPU}`}>
           {formatCPU(averageCPU)}
         </TableCell>
-        <TableCell
-          parentColumn="Avg Mem"
-          data-testid={`average-mem-${averageMem}`}
-        >
+        <TableCell data-testid={`average-mem-${averageMem}`}>
           {readableBytes(averageMem * 1024, { round: 0 }).formatted}
         </TableCell>
       </TableRow>
