@@ -49,6 +49,7 @@ export const CPUGraph: React.FC<CombinedProps> = props => {
     <LongviewLineGraph
       title="CPU"
       subtitle="%"
+      tooltipUnit="%"
       nativeLegend
       error={error}
       loading={loading}
@@ -59,19 +60,19 @@ export const CPUGraph: React.FC<CombinedProps> = props => {
           label: 'System',
           borderColor: 'transparent',
           backgroundColor: theme.graphs.cpu.system,
-          data: _convertData(cpuData.system, start, end, formatCPU)
+          data: _convertData(cpuData.system, start, end)
         },
         {
           label: 'User',
           borderColor: 'transparent',
           backgroundColor: theme.graphs.cpu.user,
-          data: _convertData(cpuData.user, start, end, formatCPU)
+          data: _convertData(cpuData.user, start, end)
         },
         {
           label: 'Wait',
           borderColor: 'transparent',
           backgroundColor: theme.graphs.cpu.wait,
-          data: _convertData(cpuData.wait, start, end, formatCPU)
+          data: _convertData(cpuData.wait, start, end)
         }
       ]}
     />
@@ -79,12 +80,3 @@ export const CPUGraph: React.FC<CombinedProps> = props => {
 };
 
 export default withTheme(CPUGraph);
-
-export const formatCPU = (value: number | null) => {
-  if (value === null) {
-    return value;
-  }
-
-  // Round to 2 decimal places.
-  return Math.round(value * 100) / 100;
-};

@@ -52,6 +52,7 @@ export const DiskGraph: React.FC<CombinedProps> = props => {
       error={(!data.Disk && requestError) || error}
       loading={loading}
       subtitle={'ops/second'}
+      tooltipUnit={'ops/second'}
       showToday={isToday}
       timezone={timezone}
       nativeLegend
@@ -60,19 +61,19 @@ export const DiskGraph: React.FC<CombinedProps> = props => {
           label: 'Swap',
           borderColor: 'transparent',
           backgroundColor: theme.graphs.diskIO.swap,
-          data: _convertData(swap, start, end, formatDisk)
+          data: _convertData(swap, start, end)
         },
         {
           label: 'Write',
           borderColor: 'transparent',
           backgroundColor: theme.graphs.diskIO.write,
-          data: _convertData(write, start, end, formatDisk)
+          data: _convertData(write, start, end)
         },
         {
           label: 'Read',
           borderColor: 'transparent',
           backgroundColor: theme.graphs.diskIO.read,
-          data: _convertData(read, start, end, formatDisk)
+          data: _convertData(read, start, end)
         }
       ]}
     />
@@ -155,19 +156,6 @@ export const processDiskData = (
     },
     { ...emptyState }
   );
-};
-
-export const formatDisk = (value: number | null) => {
-  if (value === null) {
-    return value;
-  }
-  // Don't round  to an integer if value is small, otherwise
-  // it might not be displayed
-  if (value < 1) {
-    return Math.round(value * 100) / 100;
-  }
-  // Round to nearest op/s.
-  return Math.round(value);
 };
 
 export default withTheme(DiskGraph);
