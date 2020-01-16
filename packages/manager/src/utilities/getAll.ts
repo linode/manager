@@ -8,7 +8,7 @@ import {
 import { getVolumes, Volume } from 'linode-js-sdk/lib/volumes';
 import { range } from 'ramda';
 
-import { MAX_PAGE_SIZE } from 'src/constants';
+import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { sendFetchAllEvent } from 'src/utilities/ga';
 
 export interface APIResponsePage<T> {
@@ -51,12 +51,13 @@ export interface GetAllData<T> {
  *
  */
 export const getAll: <T>(
-  getter: GetFunction
-) => (params?: any, filter?: any) => Promise<GetAllData<T[]>> = getter => (
-  params?: any,
-  filter?: any
-) => {
-  const pagination = { ...params, page_size: MAX_PAGE_SIZE };
+  getter: GetFunction,
+  pageSize?: number
+) => (params?: any, filter?: any) => Promise<GetAllData<T[]>> = (
+  getter,
+  pageSize = API_MAX_PAGE_SIZE
+) => (params?: any, filter?: any) => {
+  const pagination = { ...params, page_size: pageSize };
   return getter(pagination, filter).then(
     ({ data: firstPageData, page, pages, results }) => {
       // If we only have one page, return it.
@@ -93,13 +94,13 @@ export const getAll: <T>(
 };
 
 export const getAllWithArguments: <T>(
-  getter: GetFunction
-) => (
-  args: any[],
-  params?: any,
-  filter?: any
-) => Promise<GetAllData<T[]>> = getter => (args = [], params, filter) => {
-  const pagination = { ...params, page_size: MAX_PAGE_SIZE };
+  getter: GetFunction,
+  pageSize?: number
+) => (args: any[], params?: any, filter?: any) => Promise<GetAllData<T[]>> = (
+  getter,
+  pageSize = API_MAX_PAGE_SIZE
+) => (args = [], params, filter) => {
+  const pagination = { ...params, page_size: pageSize };
 
   return getter(...args, pagination, filter).then(
     ({ data: firstPageData, page, pages, results }) => {
