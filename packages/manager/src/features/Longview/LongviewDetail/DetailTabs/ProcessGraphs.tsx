@@ -96,7 +96,7 @@ export const ProcessGraphs: React.FC<CombinedProps> = props => {
             <LongviewLineGraph
               title="RAM"
               subtitle={memoryUnit}
-              tooltipUnit={memoryUnit}
+              maxUnit={memoryUnit}
               data={[
                 {
                   label: 'RAM',

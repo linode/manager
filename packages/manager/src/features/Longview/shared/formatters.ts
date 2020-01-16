@@ -1,5 +1,4 @@
 import { clone, lensPath, pathOr, set } from 'ramda';
-import { readableBytes } from 'src/utilities/unitConversions';
 import { Stat, StatWithDummyPoint } from '../request.types';
 
 // This formatting is from Classic
@@ -143,5 +142,5 @@ export const formatMemory = (value: number | null) => {
     return value;
   }
   // x1024 bc the API returns data in KB
-  return readableBytes(value * 1024).value;
+  return value * 1024;
 };

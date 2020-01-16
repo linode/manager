@@ -12,7 +12,10 @@ import {
   LongviewProcesses,
   WithStartAndEnd
 } from 'src/features/Longview/request.types';
-import { convertData } from 'src/features/Longview/shared/formatters';
+import {
+  convertData,
+  formatMemory
+} from 'src/features/Longview/shared/formatters';
 import { statMax } from 'src/features/Longview/shared/utilities';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { Process } from './types';
@@ -103,6 +106,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
         <LongviewLineGraph
           title="CPU"
           subtitle="%"
+          tooltipUnit="%"
           data={[
             {
               data: _convertData(cpu, start, end),
@@ -117,9 +121,10 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
           <LongviewLineGraph
             title="RAM"
             subtitle={memUnit}
+            maxUnit={memUnit}
             data={[
               {
-                data: _convertData(memory, start, end),
+                data: _convertData(memory, start, end, formatMemory),
                 label: 'RAM',
                 borderColor: 'transparent',
                 backgroundColor: theme.graphs.memory.used
@@ -131,6 +136,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
         <div className={classes.graphWrap}>
           <LongviewLineGraph
             title="Count"
+            suggestedMax={10}
             data={[
               {
                 data: _convertData(count, start, end, formatCount),
@@ -146,6 +152,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
           <LongviewLineGraph
             title="Disk I/O"
             subtitle={ioUnit + '/s'}
+            tooltipUnit={ioUnit + '/s'}
             nativeLegend
             data={[
               {
