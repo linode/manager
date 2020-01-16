@@ -18,19 +18,18 @@ import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import withFeatureFlagConsumerContainer, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container';
+
 import { startEventsInterval } from 'src/events';
 import { redirectToLogin } from 'src/session';
 import { ApplicationState } from 'src/store';
+import { handleInitTokens } from 'src/store/authentication/authentication.actions';
+import { MapState } from 'src/store/types';
+
 import { requestAccount } from 'src/store/account/account.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
-import { handleInitTokens } from 'src/store/authentication/authentication.actions';
 import { getAllBuckets } from 'src/store/bucket/bucket.requests';
 import { requestClusters } from 'src/store/clusters/clusters.actions';
 import { requestDomains } from 'src/store/domains/domains.actions';
-import { setMaxPageSize } from 'src/store/featureFlag/featureFlag.actions';
 import { requestImages } from 'src/store/image/image.requests';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
 import { requestTypes } from 'src/store/linodeType/linodeType.requests';
@@ -41,14 +40,10 @@ import {
 import { requestNotifications } from 'src/store/notification/notification.requests';
 import { requestProfile } from 'src/store/profile/profile.requests';
 import { requestRegions } from 'src/store/regions/regions.actions';
-import { MapState } from 'src/store/types';
 import { getAllVolumes } from 'src/store/volume/volume.requests';
 import { GetAllData } from 'src/utilities/getAll';
 
-type CombinedProps = DispatchProps &
-  StateProps &
-  WithNodeBalancerActions &
-  FeatureFlagConsumerProps;
+type CombinedProps = DispatchProps & StateProps & WithNodeBalancerActions;
 
 export class AuthenticationWrapper extends React.Component<CombinedProps> {
   state = {
@@ -86,15 +81,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
   };
 
   componentDidMount() {
-    const {
-      initSession,
-      flags: { maxPageSize }
-    } = this.props;
-
-    // Persist pageSize (from feature flag) to Redux store.
-    if (maxPageSize) {
-      this.props.setMaxPageSize(maxPageSize);
-    }
+    const { initSession } = this.props;
     /**
      * set redux state to what's in local storage
      * or expire the tokens if the expiry time is in the past
@@ -165,7 +152,6 @@ interface DispatchProps {
   requestProfile: () => Promise<Profile>;
   requestBuckets: () => Promise<ObjectStorageBucket[]>;
   requestClusters: () => Promise<ObjectStorageCluster[]>;
-  setMaxPageSize: (pageSize: number) => void;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
@@ -183,14 +169,15 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   requestVolumes: () => dispatch(getAllVolumes()),
   requestProfile: () => dispatch(requestProfile()),
   requestBuckets: () => dispatch(getAllBuckets()),
-  requestClusters: () => dispatch(requestClusters()),
-  setMaxPageSize: (pageSize: number) => dispatch(setMaxPageSize(pageSize))
+  requestClusters: () => dispatch(requestClusters())
 });
 
-const connected = connect(mapStateToProps, mapDispatchToProps);
+const connected = connect(
+  mapStateToProps,
+  mapDispatchToProps
+);
 
 export default compose<CombinedProps, {}>(
   connected,
-  withNodeBalancerActions,
-  withFeatureFlagConsumerContainer
+  withNodeBalancerActions
 )(AuthenticationWrapper);
