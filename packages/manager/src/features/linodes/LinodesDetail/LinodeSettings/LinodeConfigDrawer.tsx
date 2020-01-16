@@ -16,6 +16,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
+import FormHelperText from 'src/components/core/FormHelperText';
 import FormGroup from 'src/components/core/FormGroup';
 import FormLabel from 'src/components/core/FormLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
@@ -51,8 +52,9 @@ import {
   UpdateLinodeConfig,
   withLinodeDetailContext
 } from '../linodeDetailContext';
+import ExternalLink from 'src/components/ExternalLink';
 
-type ClassNames = 'section' | 'divider';
+type ClassNames = 'section' | 'divider' | 'formControlToggle';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -62,6 +64,11 @@ const styles = (theme: Theme) =>
     divider: {
       margin: `${theme.spacing(2)}px ${theme.spacing(1)}px 0 `,
       width: `calc(100% - ${theme.spacing(2)}px)`
+    },
+    formControlToggle: {
+      '& button': {
+        order: 3
+      }
     }
   });
 
@@ -280,6 +287,15 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       { label: '/dev/sdh', value: '/dev/sdh' }
     ];
 
+    const renderLink = () => {
+      return (
+        <ExternalLink
+          text="(more info)"
+          link="https://www.linode.com/docs/platform/network-helper/"
+        />
+      );
+    };
+
     return (
       <React.Fragment>
         {generalError && (
@@ -334,6 +350,8 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               htmlFor="virt_mode"
               component="label"
               disabled={readOnly}
+              aria-describedby="virtModeCaption"
+              //TODO check this works for a11y
             >
               VM Mode
             </FormLabel>
@@ -355,6 +373,11 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                 disabled={readOnly}
                 control={<Radio />}
               />
+              <FormHelperText id="virtModeCaption">
+                Controls if devices inside your virtual machine are
+                paravirtualized or fully virtualized. Paravirt is what you want,
+                unless you're doing weird things.
+              </FormHelperText>
             </RadioGroup>
           </FormControl>
         </Grid>
@@ -553,55 +576,65 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             <FormGroup>
               <FormControlLabel
                 label="Distro Helper"
+                className={classes.formControlToggle}
                 control={
                   <Toggle
                     checked={helpers.distro}
                     onChange={this.handleToggleDistroHelper}
                     disabled={readOnly}
+                    tooltipText="Helps maintain correct inittab/upstart console device"
                   />
                 }
               />
 
               <FormControlLabel
                 label="Disable updatedb"
+                className={classes.formControlToggle}
                 control={
                   <Toggle
                     checked={helpers.updatedb_disabled}
                     onChange={this.handleToggleUpdateDBHelper}
                     disabled={readOnly}
+                    tooltipText="Disables updatedb cron job to avoid disk thrashing"
                   />
                 }
               />
 
               <FormControlLabel
                 label="modules.dep Helper"
+                className={classes.formControlToggle}
                 control={
                   <Toggle
                     checked={helpers.modules_dep}
                     onChange={this.handleToggleModulesDepHelper}
                     disabled={readOnly}
+                    tooltipText="Creates a modules dependency file for the kernel you run"
                   />
                 }
               />
 
               <FormControlLabel
                 label="automount devtpmfs"
+                className={classes.formControlToggle}
                 control={
                   <Toggle
                     checked={helpers.devtmpfs_automount}
                     onChange={this.handleToggleAutoMountHelper}
                     disabled={readOnly}
+                    tooltipText="Controls if pv_ops kernels automount devtmpfs at boot"
                   />
                 }
               />
 
               <FormControlLabel
                 label="auto-configure networking"
+                className={classes.formControlToggle}
                 control={
                   <Toggle
                     checked={helpers.network}
                     onChange={this.handleAuthConfigureNetworkHelper}
                     disabled={readOnly}
+                    tooltipText={`Automatically configure static networking ${renderLink()}`}
                   />
                 }
               />
