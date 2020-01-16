@@ -69,7 +69,8 @@ export const MySQLProcessGraphs: React.FC<CombinedProps> = props => {
     timezone,
     showToday: isToday,
     loading,
-    error
+    error,
+    nativeLegend: true
   };
 
   return (

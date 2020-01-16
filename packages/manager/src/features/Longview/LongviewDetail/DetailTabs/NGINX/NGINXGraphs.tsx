@@ -64,7 +64,8 @@ export const NGINXGraphs: React.FC<CombinedProps> = props => {
     error,
     timezone,
     loading,
-    showToday: isToday
+    showToday: isToday,
+    nativeLegend: true
   };
 
   return (

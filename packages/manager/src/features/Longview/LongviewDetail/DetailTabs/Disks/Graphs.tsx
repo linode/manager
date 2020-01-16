@@ -120,6 +120,7 @@ const Graphs: React.FC<CombinedProps> = props => {
               showToday={isToday}
               subtitle="ops/s"
               timezone={timezone}
+              nativeLegend
             />
           </div>
         )}
@@ -144,6 +145,7 @@ const Graphs: React.FC<CombinedProps> = props => {
                 title="Space"
                 subtitle="GB"
                 timezone={timezone}
+                nativeLegend
                 // @todo replace with byte-to-target converter after rebase
                 suggestedMax={total[0]?.y / 1024 / 1024 / 1024}
               />
@@ -161,6 +163,7 @@ const Graphs: React.FC<CombinedProps> = props => {
                 showToday={isToday}
                 title="Inodes"
                 timezone={timezone}
+                nativeLegend
                 // @todo replace with byte-to-target converter after rebase
                 suggestedMax={iTotal[0]?.y}
               />

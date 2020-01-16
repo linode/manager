@@ -40,6 +40,7 @@ export const LoadGraph: React.FC<CombinedProps> = props => {
       loading={loading}
       showToday={isToday}
       timezone={timezone}
+      nativeLegend
       data={[
         {
           label: 'Load',

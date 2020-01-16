@@ -76,6 +76,8 @@ export const fieldNames: Record<LongviewFieldName, string> = {
   activeConnections: 'Ports.active',
   nginx: 'Applications.Nginx.*',
   nginxProcesses: 'Processes.nginx.*',
+  apache: 'Applications.Apache.*',
+  apacheProcesses: 'Processes.apache.*',
   mysql: 'Applications.MySQL.*',
   mysqlProcesses: 'Processes.mysql.*'
 };

@@ -235,9 +235,17 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         inbound: `rgba(16, 162, 29, ${graphTransparency})`
       },
       workers: {
-        waiting: `rgba(99, 217, 151, ${graphTransparency})`,
-        reading: `rgba(45, 185, 105, ${graphTransparency})`,
-        writing: `rgba(32, 131, 75, ${graphTransparency})`
+        waiting: `rgba(133, 180, 255, ${graphTransparency})`,
+        reading: `rgba(137, 161, 240, ${graphTransparency})`,
+        writing: `rgba(32, 131, 75, ${graphTransparency})`,
+        starting: `rgba(135, 170, 247, ${graphTransparency})`,
+        sending: `rgba(139, 152, 233, ${graphTransparency})`,
+        keepAlive: `rgba(141, 143, 225, ${graphTransparency})`,
+        DNSLookup: `rgba(143, 133, 218, ${graphTransparency})`,
+        closing: `rgba(145, 124, 211, ${graphTransparency})`,
+        logging: `rgba(147, 115, 203, ${graphTransparency})`,
+        finishing: `rgba(149, 106, 196, ${graphTransparency})`,
+        cleanup: `rgba(152, 97, 189, ${graphTransparency})`
       },
       cpu: {
         system: `rgba(2, 118, 253, ${graphTransparency})`,
