@@ -68,10 +68,12 @@ const styles = (theme: Theme) =>
         borderTopColor: theme.palette.primary.light,
         borderBottomColor: theme.palette.primary.light,
         position: 'relative',
-        [theme.breakpoints.down('md')]: {
+        [theme.breakpoints.down('sm')]: {
           '&:first-child': {
             borderLeft: `1px solid ${theme.palette.primary.light}`
-          },
+          }
+        },
+        [theme.breakpoints.down('md')]: {
           '&:last-child': {
             borderRight: `1px solid ${theme.palette.primary.light}`
           }
