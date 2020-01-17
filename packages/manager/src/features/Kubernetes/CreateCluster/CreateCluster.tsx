@@ -100,10 +100,12 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
     getAllVersions()
       .then(response => {
         this.setState({
-          versionOptions: response.data.map(eachVersion => ({
-            value: eachVersion.id,
-            label: eachVersion.id
-          }))
+          versionOptions: response.data
+            .map(eachVersion => ({
+              value: eachVersion.id,
+              label: eachVersion.id
+            }))
+            .sort()
         });
       })
       .catch(error => {
