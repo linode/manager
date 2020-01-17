@@ -7,7 +7,8 @@ import {
   profileRequest,
   profileRequestFail,
   profileRequestSuccess,
-  updateAccountActions
+  updateAccountActions,
+  updateCreditCard
 } from './account.actions';
 
 /**
@@ -67,6 +68,14 @@ const reducer: Reducer<State> = (state: State = defaultState, action) => {
 
       draft.loading = false;
       draft.error.update = error;
+    }
+
+    if (isType(action, updateCreditCard)) {
+      const { payload } = action;
+
+      if (draft.data?.credit_card) {
+        draft.data.credit_card = payload;
+      }
     }
   });
 };

@@ -1,8 +1,9 @@
 import { Account, saveCreditCard } from 'linode-js-sdk/lib/account';
 import { APIError } from 'linode-js-sdk/lib/types';
-import { compose, range, take, takeLast } from 'ramda';
+import { range, take, takeLast } from 'ramda';
 import * as React from 'react';
 import NumberFormat from 'react-number-format';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
@@ -18,6 +19,9 @@ import Grid from 'src/components/Grid';
 import NativeSelect from 'src/components/NativeSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
+import accountContainer, {
+  Props as AccountContainerProps
+} from 'src/containers/account.container';
 import { withAccount } from 'src/features/Billing/context';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -68,7 +72,7 @@ interface AccountContextProps {
   accountErrors: APIError[];
   expiry: string;
   last_four: string;
-  updateAccount: (update: (a: Account) => Account) => void;
+  updateContext: (update: (a: Account) => Account) => void;
   cvv: string;
 }
 
@@ -82,7 +86,9 @@ interface State {
   cvv: string;
 }
 
-type CombinedProps = AccountContextProps & WithStyles<ClassNames>;
+type CombinedProps = AccountContextProps &
+  WithStyles<ClassNames> &
+  AccountContainerProps;
 
 class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
   state: State = {
@@ -129,13 +135,20 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
 
     saveCreditCard({ card_number, expiry_month, expiry_year, cvv })
       .then(() => {
-        this.props.updateAccount(account => ({
+        const credit_card = {
+          last_four: takeLast(4, card_number),
+          expiry: `${String(expiry_month).padStart(2, '0')}/${expiry_year}`,
+          cvv
+        };
+        // Update Redux state so subscribed components will display updated
+        // information.
+        this.props.updateCreditCard(credit_card);
+
+        // Update the context so components within this context tree will
+        // display updated information.
+        this.props.updateContext(account => ({
           ...account,
-          credit_card: {
-            last_four: takeLast(4, card_number),
-            expiry: `${String(expiry_month).padStart(2, '0')}/${expiry_year}`,
-            cvv
-          }
+          credit_card
         }));
         this.setState({
           card_number: '',
@@ -330,7 +343,7 @@ const accountContext = withAccount(({ loading, errors, data, update }) => {
       expiry: data.credit_card.expiry,
       last_four: data.credit_card.last_four,
       cvv: data.credit_card.cvv,
-      updateAccount: update
+      updateContext: update
     };
   }
 
@@ -340,6 +353,10 @@ const accountContext = withAccount(({ loading, errors, data, update }) => {
   };
 });
 
-const enhanced = compose(styled, accountContext);
+const enhanced = compose<CombinedProps, {}>(
+  styled,
+  accountContext,
+  accountContainer()
+);
 
 export default enhanced(UpdateCreditCardPanel) as React.ComponentType<{}>;
