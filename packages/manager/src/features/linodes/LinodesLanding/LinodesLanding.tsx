@@ -515,10 +515,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   deleteLinode: (linodeId: number) => dispatch(deleteLinode({ linodeId }))
 });
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const updateParams = <T extends any>(params: string, updater: (s: T) => T) => {
   const paramsAsObject: T = parse(params, { ignoreQueryPrefix: true });

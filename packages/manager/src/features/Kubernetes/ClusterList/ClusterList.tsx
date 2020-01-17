@@ -260,9 +260,6 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(
-  styled,
-  withTypes
-);
+const enhanced = compose<CombinedProps, Props>(styled, withTypes);
 
 export default enhanced(ClusterList);
