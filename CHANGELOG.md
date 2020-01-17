@@ -26,15 +26,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Allow rebooting from Rescue mode
 
 
-### Changed:
-- \[LV] Fix bug in useClientLastUpdated. (#6002)\
-
-### Fixed:
-- \M3 fix rounding in linegraphs (#6011)\
-- \M3 -1867 Fix: Hide Backups CTAs from restricted users (#6000)\
-- \Fix appendStats 0 null bug (#5988)\
-
-
 ## [v0.82.0] - 2020-01-08
 
 ### Added:
