@@ -16,8 +16,8 @@ import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import FormHelperText from 'src/components/core/FormHelperText';
 import FormGroup from 'src/components/core/FormGroup';
+import FormHelperText from 'src/components/core/FormHelperText';
 import FormLabel from 'src/components/core/FormLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
 import {
@@ -30,6 +30,7 @@ import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
+import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
@@ -52,7 +53,6 @@ import {
   UpdateLinodeConfig,
   withLinodeDetailContext
 } from '../linodeDetailContext';
-import ExternalLink from 'src/components/ExternalLink';
 
 type ClassNames = 'section' | 'divider' | 'formControlToggle';
 
@@ -287,12 +287,15 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       { label: '/dev/sdh', value: '/dev/sdh' }
     ];
 
-    const renderLink = () => {
+    const TooltipText = () => {
       return (
-        <ExternalLink
-          text="(more info)"
-          link="https://www.linode.com/docs/platform/network-helper/"
-        />
+        <>
+          Automatically configure static networking
+          <ExternalLink
+            text="(more info)"
+            link="https://www.linode.com/docs/platform/network-helper/"
+          />
+        </>
       );
     };
 
@@ -351,7 +354,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               component="label"
               disabled={readOnly}
               aria-describedby="virtModeCaption"
-              //TODO check this works for a11y
+              // TODO check this works for a11y
             >
               VM Mode
             </FormLabel>
@@ -634,7 +637,8 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                     checked={helpers.network}
                     onChange={this.handleAuthConfigureNetworkHelper}
                     disabled={readOnly}
-                    tooltipText={`Automatically configure static networking ${renderLink()}`}
+                    tooltipText={<TooltipText />}
+                    interactive={true}
                   />
                 }
               />
