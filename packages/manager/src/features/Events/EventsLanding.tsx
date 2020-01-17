@@ -310,17 +310,17 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
           </TableBody>
         </Table>
       </Paper>
-      {loadMoreEvents && (initialLoaded && !isLoading) ? (
+      {loadMoreEvents && initialLoaded && !isLoading ? (
         <Waypoint onEnter={getNext}>
           <div />
         </Waypoint>
       ) : (
         !isLoading &&
-        (!error && (
+        !error && (
           <Typography className={classes.noMoreEvents}>
             No more events to show
           </Typography>
-        ))
+        )
       )}
     </>
   );
@@ -397,10 +397,6 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose<CombinedProps, Props>(
-  styled,
-  connected,
-  withSnackbar
-);
+const enhanced = compose<CombinedProps, Props>(styled, connected, withSnackbar);
 
 export default enhanced(EventsLanding);
