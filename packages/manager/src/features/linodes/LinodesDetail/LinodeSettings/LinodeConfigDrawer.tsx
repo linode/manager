@@ -354,7 +354,6 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               component="label"
               disabled={readOnly}
               aria-describedby="virtModeCaption"
-              // TODO check this works for a11y
             >
               VM Mode
             </FormLabel>
