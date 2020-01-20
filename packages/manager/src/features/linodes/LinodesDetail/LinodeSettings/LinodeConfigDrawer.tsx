@@ -287,18 +287,6 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       { label: '/dev/sdh', value: '/dev/sdh' }
     ];
 
-    const TooltipText = () => {
-      return (
-        <>
-          Automatically configure static networking
-          <ExternalLink
-            text="(more info)"
-            link="https://www.linode.com/docs/platform/network-helper/"
-          />
-        </>
-      );
-    };
-
     return (
       <React.Fragment>
         {generalError && (
@@ -636,7 +624,15 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                     checked={helpers.network}
                     onChange={this.handleAuthConfigureNetworkHelper}
                     disabled={readOnly}
-                    tooltipText={<TooltipText />}
+                    tooltipText={
+                      <>
+                        Automatically configure static networking
+                        <ExternalLink
+                          text="(more info)"
+                          link="https://www.linode.com/docs/platform/network-helper/"
+                        />
+                      </>
+                    }
                     interactive={true}
                   />
                 }
