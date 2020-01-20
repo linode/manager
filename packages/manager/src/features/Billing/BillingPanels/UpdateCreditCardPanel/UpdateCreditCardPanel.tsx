@@ -142,7 +142,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
         };
         // Update Redux store so subscribed components will display updated
         // information.
-        this.props.updateCreditCard(credit_card);
+        this.props.saveCreditCard(credit_card);
 
         // Update context so components within this context tree will display
         // updated information.

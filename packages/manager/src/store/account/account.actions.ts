@@ -16,7 +16,7 @@ export const profileRequestFail = actionCreator<APIError[]>('fail');
 // Separate action to update credit card information, since updating this info
 // is accomplished with a separate endpoint that doesn't return the new credit
 // card info in the response.
-export const updateCreditCard = actionCreator<Account['credit_card']>(
+export const saveCreditCard = actionCreator<Account['credit_card']>(
   'update-credit-card'
 );
 

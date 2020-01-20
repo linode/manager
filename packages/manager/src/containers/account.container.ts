@@ -1,7 +1,7 @@
 import { Account } from 'linode-js-sdk/lib/account';
 import { connect, InferableComponentEnhancerWithProps } from 'react-redux';
 import { ApplicationState } from 'src/store';
-import { updateCreditCard } from 'src/store/account/account.actions';
+import { saveCreditCard } from 'src/store/account/account.actions';
 import { State } from 'src/store/account/account.reducer';
 import {
   requestAccount,
@@ -19,7 +19,7 @@ export interface StateProps {
 export interface DispatchProps {
   requestAccount: () => void;
   updateAccount: (data: Partial<Account>) => Promise<any>;
-  updateCreditCard: (data: Account['credit_card']) => void;
+  saveCreditCard: (data: Account['credit_card']) => void;
 }
 
 type MapProps<ReduxStateProps, OwnProps> = (
@@ -66,7 +66,7 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
     (dispatch: ThunkDispatch) => ({
       requestAccount: () => dispatch(requestAccount()),
       updateAccount: data => dispatch(updateAccount(data)),
-      updateCreditCard: data => dispatch(updateCreditCard(data))
+      saveCreditCard: data => dispatch(saveCreditCard(data))
     })
   );
 
