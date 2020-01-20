@@ -140,12 +140,12 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
           expiry: `${String(expiry_month).padStart(2, '0')}/${expiry_year}`,
           cvv
         };
-        // Update Redux state so subscribed components will display updated
+        // Update Redux store so subscribed components will display updated
         // information.
         this.props.updateCreditCard(credit_card);
 
-        // Update the context so components within this context tree will
-        // display updated information.
+        // Update context so components within this context tree will display
+        // updated information.
         this.props.updateContext(account => ({
           ...account,
           credit_card
