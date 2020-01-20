@@ -151,6 +151,14 @@ export const printInvoice = (
       unit: 'px'
     });
 
+    const invoiceDateConverted = invoice.date && Date.parse(invoice.date);
+    const GSTDateAdded = 1569888000000;
+    const VATDateAdded = 1559347200000;
+
+    const displayTaxID =
+      invoiceDateConverted >= GSTDateAdded ||
+      invoiceDateConverted >= VATDateAdded;
+
     // Create a separate page for each set of invoice items
     itemsChunks.forEach((itemsChunk, index) => {
       doc.addImage(LinodeLogo, 'JPEG', 150, 5, 120, 50);
@@ -176,7 +184,7 @@ export const printInvoice = (
           300px left margin is a hacky way of aligning the text to the right
           because this library stinks
          */
-              text: `Tax ID: ${account.tax_id}`,
+              text: displayTaxID ? `Tax ID: ${account.tax_id}` : '',
               leftMargin: 300
             }
           ]
