@@ -50,6 +50,11 @@ import StatsPanel from './StatsPanel';
 import SummaryPanel from './SummaryPanel';
 import TotalTraffic, { TotalTrafficProps } from './TotalTraffic';
 
+import {
+  convertNetworkToUnit,
+  generateNetworkUnits
+} from 'src/features/Longview/shared/utilities';
+
 setUpCharts();
 
 type ClassNames =
@@ -386,6 +391,8 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
     const netv4InMetrics = getMetrics(v4Data.publicIn);
     const netv4OutMetrics = getMetrics(v4Data.publicOut);
+    const netv4PrivateInMetrics = getMetrics(v4Data.privateIn);
+    const netv4PrivateOutMetrics = getMetrics(v4Data.privateOut);
 
     const totalTraffic: TotalTrafficProps = map(
       formatBytes,
@@ -398,36 +405,54 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       )
     );
 
+    const unit = generateNetworkUnits(
+      Math.max(
+        netv4InMetrics.max,
+        netv4OutMetrics.max,
+        netv4PrivateInMetrics.max,
+        netv4PrivateOutMetrics.max
+      )
+    );
+
+    const convertNetworkData = (point: any) => {
+      return [point[0], convertNetworkToUnit(point[1], unit)];
+    };
+    const convertedPublicIn = v4Data.publicIn.map(convertNetworkData);
+    const convertedPublicOut = v4Data.publicOut.map(convertNetworkData);
+    const convertedPrivateIn = v4Data.privateIn.map(convertNetworkData);
+    const convertedPrivateOut = v4Data.privateOut.map(convertNetworkData);
+
     return (
       <React.Fragment>
         <div className={classes.chart}>
           <LineGraph
             timezone={timezone}
             chartHeight={chartHeight}
+            tooltipUnit={`${unit}/s`}
             showToday={rangeSelection === '24'}
             data={[
               {
                 borderColor: theme.graphs.blueBorder,
                 backgroundColor: theme.graphs.blue,
-                data: v4Data.publicIn,
+                data: convertedPublicIn,
                 label: 'Public Inbound'
               },
               {
                 borderColor: theme.graphs.greenBorder,
                 backgroundColor: theme.graphs.green,
-                data: v4Data.publicOut,
+                data: convertedPublicOut,
                 label: 'Public Outbound'
               },
               {
                 borderColor: theme.graphs.purpleBorder,
                 backgroundColor: theme.graphs.purple,
-                data: v4Data.privateIn,
+                data: convertedPrivateIn,
                 label: 'Private Inbound'
               },
               {
                 borderColor: theme.graphs.yellowBorder,
                 backgroundColor: theme.graphs.yellow,
-                data: v4Data.privateOut,
+                data: convertedPrivateOut,
                 label: 'Private Outbound'
               }
             ]}
@@ -479,6 +504,8 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
     const publicInMetrics = getMetrics(data.publicIn);
     const publicOutMetrics = getMetrics(data.publicOut);
+    const privateInMetrics = getMetrics(data.privateIn);
+    const privateOutMetrics = getMetrics(data.privateOut);
 
     const totalTraffic: TotalTrafficProps = map(
       formatBytes,
@@ -489,39 +516,57 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       )
     );
 
+    const unit = generateNetworkUnits(
+      Math.max(
+        publicInMetrics.max,
+        publicOutMetrics.max,
+        privateInMetrics.max,
+        privateOutMetrics.max
+      )
+    );
+
+    const convertNetworkData = (point: any) => {
+      return [point[0], convertNetworkToUnit(point[1], unit)];
+    };
+    const convertedPublicIn = data.publicIn.map(convertNetworkData);
+    const convertedPublicOut = data.publicOut.map(convertNetworkData);
+    const convertedPrivateIn = data.privateIn.map(convertNetworkData);
+    const convertedPrivateOut = data.privateOut.map(convertNetworkData);
+
     return (
       <React.Fragment>
         <div className={classes.chart}>
           <LineGraph
             timezone={timezone}
             chartHeight={chartHeight}
+            tooltipUnit={unit}
             showToday={rangeSelection === '24'}
             data={[
               {
                 borderColor: theme.graphs.blueBorder,
                 backgroundColor: theme.graphs.blue,
-                data: data.publicIn,
+                data: convertedPublicIn,
                 label: 'Public Inbound',
                 fill: 'origin'
               },
               {
                 borderColor: theme.graphs.greenBorder,
                 backgroundColor: theme.graphs.green,
-                data: data.publicOut,
+                data: convertedPublicOut,
                 label: 'Public Outbound',
                 fill: '-1'
               },
               {
                 borderColor: theme.graphs.purpleBorder,
                 backgroundColor: theme.graphs.purple,
-                data: data.privateIn,
+                data: convertedPrivateIn,
                 label: 'Private Inbound',
                 fill: '-2'
               },
               {
                 borderColor: theme.graphs.yellowBorder,
                 backgroundColor: theme.graphs.yellow,
-                data: data.privateOut,
+                data: convertedPrivateOut,
                 label: 'Private Outbound'
               }
             ]}
@@ -535,11 +580,11 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                 format
               },
               {
-                data: getMetrics(data.privateIn),
+                data: privateInMetrics,
                 format
               },
               {
-                data: getMetrics(data.privateOut),
+                data: privateOutMetrics,
                 format
               }
             ]}
@@ -716,13 +761,13 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             />
 
             <StatsPanel
-              title="IPv4 Traffic (bits/s)"
+              title={`IPv4 Traffic (${'Kb'}/s)`}
               renderBody={this.renderIPv4TrafficChart}
               {...chartProps}
             />
 
             <StatsPanel
-              title="IPv6 Traffic (bits/s)"
+              title={`IPv6 Traffic (${'Kb'}/s)`}
               renderBody={this.renderIPv6TrafficChart}
               {...chartProps}
             />

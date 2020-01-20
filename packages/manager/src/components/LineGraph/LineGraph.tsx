@@ -32,7 +32,6 @@ export interface DataSet {
   backgroundColor?: string;
   data: [number, number | null][];
 }
-
 export interface Props {
   chartHeight?: number;
   showToday: boolean;
@@ -41,7 +40,6 @@ export interface Props {
   timezone: string;
   rowHeaders?: Array<string>;
   legendRows?: Array<ChartData<any>>;
-  unit?: string; // Display unit on Y axis ticks
   tooltipUnit?: string; // @todo deprecate unit prop above and rename this to unit. graphs should be consistent
   maxUnit?: StorageSymbol; // Rounds data to this unit. IMPORTANT: if this prop is provided, data should be in bytes
   nativeLegend?: boolean; // Display chart.js native legend
@@ -138,7 +136,6 @@ const LineGraph: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const {
     chartHeight,
-    unit,
     suggestedMax,
     showToday,
     timezone,
@@ -269,7 +266,7 @@ const LineGraph: React.FC<CombinedProps> = props => {
           height={chartHeight || 300}
           options={getChartOptions(
             suggestedMax,
-            unit,
+            undefined, // @todo remove this
             nativeLegend,
             maxUnit,
             tooltipUnit
@@ -416,7 +413,7 @@ export const formatTooltip = curry(
     const value = maxUnit
       ? readableBytes(val).formatted
       : Math.round(val * 100) / 100;
-    return `${label}: ${value} ${tooltipUnit ? tooltipUnit : ''}`;
+    return `${label}: ${value} ${tooltipUnit}`;
   }
 );
 
