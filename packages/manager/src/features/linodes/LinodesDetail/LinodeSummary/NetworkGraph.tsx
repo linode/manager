@@ -1,3 +1,4 @@
+import { Stats } from 'linode-js-sdk/lib/linodes';
 import { map, pathOr } from 'ramda';
 import * as React from 'react';
 import {
@@ -36,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props extends ChartProps {
   timezone: string;
   rangeSelection: string;
-  stats: any;
+  stats?: Stats;
 }
 
 export type CombinedProps = Props & WithTheme;
@@ -48,26 +49,33 @@ interface NetworkMetrics {
   privateOut: Metrics;
 }
 
-const _getMetrics = (data: any) => {
+interface NetworkStats {
+  publicIn: [number, number][];
+  publicOut: [number, number][];
+  privateIn: [number, number][];
+  privateOut: [number, number][];
+}
+
+const _getMetrics = (data: NetworkStats) => {
   return {
     publicIn: getMetrics(data.publicIn),
     publicOut: getMetrics(data.publicOut),
     privateIn: getMetrics(data.privateIn),
-    privateOut: data.privateOut && getMetrics(data.privateOut)
+    privateOut: getMetrics(data.privateOut ?? [])
   };
 };
 
 export const NetworkGraph: React.FC<CombinedProps> = props => {
-  const { rangeSelection, stats, timezone, theme, ...rest } = props;
+  const { rangeSelection, stats, theme, ...rest } = props;
 
-  const v4Data = {
+  const v4Data: NetworkStats = {
     publicIn: pathOr([], ['data', 'netv4', 'in'], stats),
     publicOut: pathOr([], ['data', 'netv4', 'out'], stats),
     privateIn: pathOr([], ['data', 'netv4', 'private_in'], stats),
     privateOut: pathOr([], ['data', 'netv4', 'private_out'], stats)
   };
 
-  const v6Data = {
+  const v6Data: NetworkStats = {
     publicIn: pathOr([], ['data', 'netv6', 'in'], stats),
     publicOut: pathOr([], ['data', 'netv6', 'out'], stats),
     privateIn: pathOr([], ['data', 'netv6', 'private_in'], stats),
@@ -116,7 +124,7 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
   );
 
   const commonGraphProps = {
-    timezone,
+    timezone: props.timezone,
     theme,
     chartHeight: props.height,
     rangeSelection
