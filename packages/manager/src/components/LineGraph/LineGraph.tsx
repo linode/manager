@@ -172,7 +172,6 @@ const LineGraph: React.FC<CombinedProps> = props => {
 
   const getChartOptions = (
     _suggestedMax?: number,
-    _unit?: string,
     _nativeLegend?: boolean,
     _maxUnit?: StorageSymbol,
     _tooltipUnit?: string
@@ -198,13 +197,6 @@ const LineGraph: React.FC<CombinedProps> = props => {
 
     if (_suggestedMax) {
       finalChartOptions.scales.yAxes[0].ticks.suggestedMax = _suggestedMax;
-    }
-
-    if (_unit) {
-      finalChartOptions.scales.yAxes[0].ticks.callback = (
-        value: number,
-        index: number
-      ) => `${humanizeLargeData(value)}${_unit}`;
     }
 
     if (_nativeLegend) {
@@ -264,13 +256,7 @@ const LineGraph: React.FC<CombinedProps> = props => {
         <Line
           {...rest}
           height={chartHeight || 300}
-          options={getChartOptions(
-            suggestedMax,
-            undefined, // @todo remove this
-            nativeLegend,
-            maxUnit,
-            unit
-          )}
+          options={getChartOptions(suggestedMax, nativeLegend, maxUnit, unit)}
           plugins={plugins}
           ref={inputEl}
           data={{
