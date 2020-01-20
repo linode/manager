@@ -6,7 +6,6 @@ import {
   Switch,
   withRouter
 } from 'react-router-dom';
-import CircleProgress from 'src/components/CircleProgress';
 
 const KubernetesLanding = React.lazy(() => import('./KubernetesLanding'));
 
@@ -24,19 +23,10 @@ class Kubernetes extends React.Component<Props> {
 
     return (
       <Switch>
-        <React.Suspense fallback={<CircleProgress />}>
-          <Route component={ClusterCreate} exact path={`${path}/create`} />
-          <Route
-            component={ClusterDetail}
-            path={`${path}/clusters/:clusterID`}
-          />
-          <Route
-            component={KubernetesLanding}
-            exact
-            path={`${path}/clusters`}
-          />
-          <Redirect to={'/kubernetes/clusters'} />
-        </React.Suspense>
+        <Route component={ClusterCreate} exact path={`${path}/create`} />
+        <Route component={ClusterDetail} path={`${path}/clusters/:clusterID`} />
+        <Route component={KubernetesLanding} exact path={`${path}/clusters`} />
+        <Redirect to={'/kubernetes/clusters'} />
       </Switch>
     );
   }

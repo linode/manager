@@ -6,7 +6,6 @@ import {
   Switch,
   withRouter
 } from 'react-router-dom';
-import CircleProgress from 'src/components/CircleProgress';
 
 const VolumesLanding = React.lazy(() => import('./VolumesLanding'));
 
@@ -22,16 +21,9 @@ class Volumes extends React.Component<Props> {
 
     return (
       <Switch>
-        <React.Suspense fallback={<CircleProgress />}>
-          <Route component={VolumesLanding} path={path} exact strict />
-          <Route
-            component={VolumeCreate}
-            path={`${path}/create`}
-            exact
-            strict
-          />
-          <Redirect to={path} />
-        </React.Suspense>
+        <Route component={VolumesLanding} path={path} exact strict />
+        <Route component={VolumeCreate} path={`${path}/create`} exact strict />
+        <Redirect to={path} />
       </Switch>
     );
   }
