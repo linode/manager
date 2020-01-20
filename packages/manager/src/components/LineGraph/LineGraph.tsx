@@ -40,7 +40,7 @@ export interface Props {
   timezone: string;
   rowHeaders?: Array<string>;
   legendRows?: Array<ChartData<any>>;
-  tooltipUnit?: string; // @todo deprecate unit prop above and rename this to unit. graphs should be consistent
+  unit?: string; // @todo deprecate unit prop above and rename this to unit. graphs should be consistent
   maxUnit?: StorageSymbol; // Rounds data to this unit. IMPORTANT: if this prop is provided, data should be in bytes
   nativeLegend?: boolean; // Display chart.js native legend
 }
@@ -144,7 +144,7 @@ const LineGraph: React.FC<CombinedProps> = props => {
     legendRows,
     maxUnit,
     nativeLegend,
-    tooltipUnit,
+    unit,
     ...rest
   } = props;
   const finalRowHeaders = rowHeaders ? rowHeaders : ['Max', 'Avg', 'Last'];
@@ -269,7 +269,7 @@ const LineGraph: React.FC<CombinedProps> = props => {
             undefined, // @todo remove this
             nativeLegend,
             maxUnit,
-            tooltipUnit
+            unit
           )}
           plugins={plugins}
           ref={inputEl}
@@ -389,7 +389,7 @@ export const formatTooltip = curry(
   (
     data: any,
     maxUnit: StorageSymbol | undefined,
-    tooltipUnit: string | undefined,
+    unit: string | undefined,
     t?: any,
     d?: any
   ) => {
@@ -413,7 +413,7 @@ export const formatTooltip = curry(
     const value = maxUnit
       ? readableBytes(val).formatted
       : Math.round(val * 100) / 100;
-    return `${label}: ${value} ${tooltipUnit}`;
+    return `${label}: ${value} ${unit}`;
   }
 );
 

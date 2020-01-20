@@ -428,7 +428,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
           <LineGraph
             timezone={timezone}
             chartHeight={chartHeight}
-            tooltipUnit={`${unit}/s`}
+            unit={`${unit}/s`}
             showToday={rangeSelection === '24'}
             data={[
               {
@@ -539,7 +539,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
           <LineGraph
             timezone={timezone}
             chartHeight={chartHeight}
-            tooltipUnit={unit}
+            unit={unit}
             showToday={rangeSelection === '24'}
             data={[
               {
