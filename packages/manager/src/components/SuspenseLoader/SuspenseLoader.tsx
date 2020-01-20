@@ -16,7 +16,7 @@ export const SuspenseLoader: React.FC<Props> = props => {
     return () => {
       clearTimeout(timeout);
     };
-  }, []);
+  }, [delay]);
 
   return <>{show && <CircleProgress />}</>;
 };
