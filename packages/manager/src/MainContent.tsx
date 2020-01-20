@@ -27,6 +27,7 @@ import LandingLoading from 'src/components/LandingLoading';
 import NotFound from 'src/components/NotFound';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import SideMenu from 'src/components/SideMenu';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 
 import withGlobalErrors, {
   Props as GlobalErrorProps
@@ -314,55 +315,60 @@ const MainContent: React.FC<CombinedProps> = props => {
                 <Grid container spacing={0} className={classes.grid}>
                   <Grid item className={classes.switchWrapper}>
                     <RegionStatusBanner />
-                    <Switch>
-                      <Route path="/linodes" component={LinodesRoutes} />
-                      <Route path="/volumes" component={Volumes} />
-                      <Redirect path="/volumes*" to="/volumes" />
-                      <Route path="/nodebalancers" component={NodeBalancers} />
-                      <Route path="/domains" component={Domains} />
-                      <Route path="/managed" component={Managed} />
-                      <Route path="/longview" component={Longview} />
-                      <Route exact strict path="/images" component={Images} />
-                      <Redirect path="/images*" to="/images" />
-                      <Route path="/stackscripts" component={StackScripts} />
-                      {getObjectStorageRoute(
-                        props.accountLoading,
-                        props.accountCapabilities,
-                        props.accountError
-                      )}
-                      {isKubernetesEnabled && (
-                        <Route path="/kubernetes" component={Kubernetes} />
-                      )}
-                      <Route path="/account" component={Account} />
-                      <Route
-                        exact
-                        strict
-                        path="/support/tickets"
-                        component={SupportTickets}
-                      />
-                      <Route
-                        path="/support/tickets/:ticketId"
-                        component={SupportTicketDetail}
-                        exact
-                        strict
-                      />
-                      <Route path="/profile" component={Profile} />
-                      <Route exact path="/support" component={Help} />
-                      <Route path="/dashboard" component={Dashboard} />
-                      <Route path="/search" component={SearchLanding} />
-                      <Route
-                        exact
-                        strict
-                        path="/support/search/"
-                        component={SupportSearchLanding}
-                      />
-                      <Route path="/events" component={EventsLanding} />
-                      {props.flags.firewalls && (
-                        <Route path="/firewalls" component={Firewalls} />
-                      )}
-                      <Redirect exact from="/" to="/dashboard" />
-                      <Route component={NotFound} />
-                    </Switch>
+                    <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+                      <Switch>
+                        <Route path="/linodes" component={LinodesRoutes} />
+                        <Route path="/volumes" component={Volumes} />
+                        <Redirect path="/volumes*" to="/volumes" />
+                        <Route
+                          path="/nodebalancers"
+                          component={NodeBalancers}
+                        />
+                        <Route path="/domains" component={Domains} />
+                        <Route path="/managed" component={Managed} />
+                        <Route path="/longview" component={Longview} />
+                        <Route exact strict path="/images" component={Images} />
+                        <Redirect path="/images*" to="/images" />
+                        <Route path="/stackscripts" component={StackScripts} />
+                        {getObjectStorageRoute(
+                          props.accountLoading,
+                          props.accountCapabilities,
+                          props.accountError
+                        )}
+                        {isKubernetesEnabled && (
+                          <Route path="/kubernetes" component={Kubernetes} />
+                        )}
+                        <Route path="/account" component={Account} />
+                        <Route
+                          exact
+                          strict
+                          path="/support/tickets"
+                          component={SupportTickets}
+                        />
+                        <Route
+                          path="/support/tickets/:ticketId"
+                          component={SupportTicketDetail}
+                          exact
+                          strict
+                        />
+                        <Route path="/profile" component={Profile} />
+                        <Route exact path="/support" component={Help} />
+                        <Route path="/dashboard" component={Dashboard} />
+                        <Route path="/search" component={SearchLanding} />
+                        <Route
+                          exact
+                          strict
+                          path="/support/search/"
+                          component={SupportSearchLanding}
+                        />
+                        <Route path="/events" component={EventsLanding} />
+                        {props.flags.firewalls && (
+                          <Route path="/firewalls" component={Firewalls} />
+                        )}
+                        <Redirect exact from="/" to="/dashboard" />
+                        <Route component={NotFound} />
+                      </Switch>
+                    </React.Suspense>
                   </Grid>
                 </Grid>
               </main>
