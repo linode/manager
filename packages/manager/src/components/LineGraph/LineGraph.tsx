@@ -399,7 +399,7 @@ export const formatTooltip = curry(
     const value = maxUnit
       ? readableBytes(val).formatted
       : Math.round(val * 100) / 100;
-    return `${label}: ${value} ${unit}`;
+    return `${label}: ${value} ${unit ? unit : ''}`;
   }
 );
 
