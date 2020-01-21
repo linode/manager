@@ -16,12 +16,12 @@ interface Props {
   domainLabel: string;
 }
 
-type CombinedProps = Props &
+export type CombinedProps = Props &
   WithSnackbarProps &
   RouteComponentProps &
   DomainActionsProps;
 
-const DeleteDomain: React.FC<CombinedProps> = props => {
+export const DeleteDomain: React.FC<CombinedProps> = props => {
   const {
     dialog,
     openDialog,
