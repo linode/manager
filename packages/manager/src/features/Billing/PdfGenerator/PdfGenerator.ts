@@ -152,7 +152,11 @@ export const printInvoice = (
     });
 
     const convertedInvoiceDate = invoice.date && Date.parse(invoice.date);
+
+    // Added October 1, 2019
     const GSTAddDate = 1569888000000;
+
+    // Added June 1, 2019
     const VATAddDate = 1559347200000;
 
     const displayTaxID =
