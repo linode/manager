@@ -59,7 +59,6 @@ const TimeRangeSelect: React.FC<CombinedProps> = props => {
   const nowInSeconds = Date.now() / 1000;
 
   React.useEffect(() => {
-    // Check if we have a
     // Do the math and send start/end values to the consumer
     // (in most cases the consumer has passed defaultValue={'last 30 minutes'}
     // but the calcs to turn that into start/end numbers live here)
