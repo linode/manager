@@ -1,5 +1,4 @@
 import * as Bluebird from 'bluebird';
-import { pathOr } from 'ramda';
 import { useEffect, useState } from 'react';
 import store from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
@@ -58,6 +57,8 @@ const requestMap: RequestMap = {
   longview: getAllLongviewClients
 };
 
+const STALE_DATA_TIME = 10000;
+
 export const useReduxLoad = <T>(
   deps: ReduxEntity[] = [],
   refreshInterval: number = 60000
@@ -71,12 +72,13 @@ export const useReduxLoad = <T>(
     let needsToLoad = false;
     const requests = [];
     for (i; i < deps.length; i++) {
-      const lastUpdated = pathOr(
-        0,
-        ['__resources', deps[i], 'lastUpdated'],
-        state
+      // This is hacky, but necessary until we have either retired
+      // __resources or moved everything into it.
+      const lastUpdated = Math.max(
+        state.__resources[deps[i]]?.lastUpdated ?? 0,
+        state[deps[i]]?.lastUpdated ?? 0
       );
-      if (lastUpdated === 0) {
+      if (lastUpdated === 0 || lastUpdated - Date.now() > STALE_DATA_TIME) {
         needsToLoad = true;
         requests.push(requestMap[deps[i]]);
       } else if (Date.now() - lastUpdated > refreshInterval) {
