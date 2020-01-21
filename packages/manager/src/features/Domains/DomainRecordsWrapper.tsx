@@ -9,6 +9,7 @@ import TagsPanel from 'src/components/TagsPanel';
 import summaryPanelStyles, {
   StyleProps
 } from 'src/containers/SummaryPanels.styles';
+import DeleteDomain from './DeleteDomain';
 import DomainRecords from './DomainRecords';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -71,6 +72,9 @@ const DomainRecordsWrapper: React.FC<CombinedProps> = props => {
             <TagsPanel tags={domain.tags} updateTags={handleUpdateTags} />
           </div>
         </Paper>
+        <div className={hookClasses.tagPanel}>
+          <DeleteDomain domainId={domain.id} domainLabel={domain.domain} />
+        </div>
       </Grid>
     </Grid>
   );
