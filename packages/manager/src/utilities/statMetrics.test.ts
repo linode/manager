@@ -26,15 +26,36 @@ describe('Stat Metrics', () => {
     expect(metrics.max).toBe(2.98);
     const newData = [...data, [0, 100]];
     expect(getMetrics(newData).max).toBe(100.0);
-    expect(getMetrics([[0, 0], [0, 0]]).max).toBe(0);
+    expect(
+      getMetrics([
+        [0, 0],
+        [0, 0]
+      ]).max
+    ).toBe(0);
   });
 
   it('returns average', () => {
     expect(metrics.average).toBe(0.63);
     expect(getMetrics([[0, 0]]).average).toBe(0);
-    expect(getMetrics([[0, 0], [0, 0]]).average).toBe(0);
-    expect(getMetrics([[0, 0], [0, 1]]).average).toBe(0.5);
-    expect(getMetrics([[0, 0], [0, 3], [0, 12]]).average).toBe(5);
+    expect(
+      getMetrics([
+        [0, 0],
+        [0, 0]
+      ]).average
+    ).toBe(0);
+    expect(
+      getMetrics([
+        [0, 0],
+        [0, 1]
+      ]).average
+    ).toBe(0.5);
+    expect(
+      getMetrics([
+        [0, 0],
+        [0, 3],
+        [0, 12]
+      ]).average
+    ).toBe(5);
   });
 
   it('returns last', () => {
@@ -71,7 +92,12 @@ describe('Stat Metrics', () => {
       max: 3,
       total: 3
     });
-    expect(getMetrics([[3, 'hello'], ['hello', 3]] as any)).toEqual({
+    expect(
+      getMetrics([
+        [3, 'hello'],
+        ['hello', 3]
+      ] as any)
+    ).toEqual({
       average: 1.5,
       last: 3,
       length: 2,
@@ -101,16 +127,10 @@ describe('format magnitude', () => {
     expect(formatMagnitude(99.09, 'b/s')).toBe('99.09 b/s');
   });
 
-  it('milli', () => {
-    expect(formatMagnitude('0.021', 'b/s')).toBe('21.00 mb/s');
-    expect(formatMagnitude('0.001', 'b/s')).toBe('1.00 mb/s');
-    expect(formatMagnitude('0.999', 'b/s')).toBe('999.00 mb/s');
-  });
-
   it('kilo', () => {
-    expect(formatMagnitude('6211.21', 'b/s')).toBe('6.21 kb/s');
-    expect(formatMagnitude('1000', 'b/s')).toBe('1.00 kb/s');
-    expect(formatMagnitude('555555', 'b/s')).toBe('555.55 kb/s');
+    expect(formatMagnitude('6211.21', 'b/s')).toBe('6.21 Kb/s');
+    expect(formatMagnitude('1000', 'b/s')).toBe('1.00 Kb/s');
+    expect(formatMagnitude('555555', 'b/s')).toBe('555.55 Kb/s');
   });
 
   it('mega', () => {
