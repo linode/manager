@@ -1,5 +1,6 @@
 import { Domain, DomainRecord } from 'linode-js-sdk/lib/domains';
 import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme, withStyles } from 'src/components/core/styles';
@@ -43,7 +44,7 @@ interface Props {
   handleUpdateTags: (tagList: string[]) => Promise<Domain>;
 }
 
-type CombinedProps = Props & StyleProps;
+type CombinedProps = Props & StyleProps & RouteComponentProps;
 
 const DomainRecordsWrapper: React.FC<CombinedProps> = props => {
   const { domain, records, updateRecords, handleUpdateTags, classes } = props;
@@ -73,7 +74,11 @@ const DomainRecordsWrapper: React.FC<CombinedProps> = props => {
           </div>
         </Paper>
         <div className={hookClasses.tagPanel}>
-          <DeleteDomain domainId={domain.id} domainLabel={domain.domain} />
+          <DeleteDomain
+            domainId={domain.id}
+            domainLabel={domain.domain}
+            onSuccess={() => props.history.push('/domains')}
+          />
         </div>
       </Grid>
     </Grid>
@@ -84,5 +89,6 @@ const styled = withStyles(summaryPanelStyles);
 
 export default compose<CombinedProps, Props>(
   React.memo,
-  styled
+  styled,
+  withRouter
 )(DomainRecordsWrapper);
