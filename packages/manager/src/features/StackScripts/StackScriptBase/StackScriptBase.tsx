@@ -6,7 +6,7 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import Waypoint from 'react-waypoint';
+import { Waypoint } from 'react-waypoint';
 import { compose } from 'recompose';
 import StackScriptsIcon from 'src/assets/addnewmenu/stackscripts.svg';
 import Button from 'src/components/Button';
@@ -178,8 +178,8 @@ const withStackScriptBase = (isSelecting: boolean) => (
           // AND the filtered data set is 0 before we request the next page automatically
           if (
             isSorting &&
-            (newData.length !== 0 &&
-              newDataWithoutDeprecatedDistros.length === 0)
+            newData.length !== 0 &&
+            newDataWithoutDeprecatedDistros.length === 0
           ) {
             this.getNext();
             return;
@@ -606,11 +606,7 @@ const withStackScriptBase = (isSelecting: boolean) => (
 
   const connected = connect(mapStateToProps);
 
-  return compose(
-    withRouter,
-    connected,
-    withStyles
-  )(EnhancedComponent);
+  return compose(withRouter, connected, withStyles)(EnhancedComponent);
 };
 
 export default withStackScriptBase;
