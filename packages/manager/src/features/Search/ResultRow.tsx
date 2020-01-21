@@ -1,5 +1,6 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
@@ -19,6 +20,8 @@ import TableRow from 'src/components/TableRow';
 import Tags from 'src/components/Tags';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 import { linodeInTransition } from 'src/features/linodes/transitions';
+import { openForEditing } from 'src/store/domainDrawer';
+import { ConditionalWrapper } from 'src/utilities/ConditionalWrapper';
 
 type ClassNames =
   | 'root'
@@ -128,16 +131,26 @@ interface Props {
   result: Item;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames> & DispatchProps;
 
 export const ResultRow: React.StatelessComponent<CombinedProps> = props => {
-  const { classes, result } = props;
+  const { classes, result, openDomainDrawerForEditing } = props;
   const icon = pathOr<string>('default', ['data', 'icon'], result);
   const status = result.data.status;
+
+  // In most cases, clicking on a row takes you to that entity's Details page.
+  // Slave Domains do not have a functional Details page, so in this case we
+  // open the Edit Domain drawer when the row is clicked.
+  const isSlaveDomain = result.data.description === 'slave';
+
+  const rowLink = isSlaveDomain
+    ? () => openDomainDrawerForEditing(result.label, Number(result.value))
+    : result.data.path;
+
   return (
     <TableRow
       className={classes.root}
-      rowLink={result.data.path}
+      rowLink={rowLink}
       data-qa-result-row={result.label}
     >
       <Hidden smDown>
@@ -154,19 +167,29 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = props => {
       </Hidden>
       <TableCell className={classes.labelCell} parentColumn="Label">
         <div className={classes.labelRow}>
-          <Link
-            to={result.data.path}
-            className={classes.link}
-            title={result.label}
+          {/* Don't include a <Link /> if this is a Slave Domain, since in that
+          case clicking a row will open up the Domain Drawer instead of
+          navigating away from the page. */}
+          <ConditionalWrapper
+            condition={!isSlaveDomain}
+            wrapper={children => (
+              <Link
+                to={result.data.path}
+                className={classes.link}
+                title={result.label}
+              >
+                {children}
+              </Link>
+            )}
           >
             <div className={classes.labelRow}>
               <Typography variant="h3" className={classes.label}>
                 {result.label}
               </Typography>
             </div>
-            <Typography variant="body1">{result.data.description}</Typography>
-          </Link>
+          </ConditionalWrapper>
         </div>
+        <Typography variant="body1">{result.data.description}</Typography>
       </TableCell>
       <TableCell className={classes.regionCell} parentColumn="Region">
         {result.data.region && <RegionIndicator region={result.data.region} />}
@@ -189,6 +212,14 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(styled)(ResultRow);
+interface DispatchProps {
+  openDomainDrawerForEditing: (domain: string, id: number) => void;
+}
+
+const connected = connect<{}, DispatchProps>(undefined, {
+  openDomainDrawerForEditing: openForEditing
+});
+
+const enhanced = compose<CombinedProps, Props>(styled, connected)(ResultRow);
 
 export default enhanced;

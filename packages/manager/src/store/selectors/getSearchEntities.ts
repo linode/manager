@@ -101,7 +101,7 @@ const domainToSearchableItem = (domain: Domain): SearchableItem => ({
     description: domain.type,
     status: domain.status,
     icon: 'domain',
-    path: domain.type === 'master' ? `/domains/${domain.id}` : '/domains',
+    path: `/domains/${domain.id}`,
     ips: getDomainIps(domain)
   }
 });
