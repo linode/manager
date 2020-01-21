@@ -151,13 +151,12 @@ export const printInvoice = (
       unit: 'px'
     });
 
-    const invoiceDateConverted = invoice.date && Date.parse(invoice.date);
-    const GSTDateAdded = 1569888000000;
-    const VATDateAdded = 1559347200000;
+    const convertedInvoiceDate = invoice.date && Date.parse(invoice.date);
+    const GSTAddDate = 1569888000000;
+    const VATAddDate = 1559347200000;
 
     const displayTaxID =
-      invoiceDateConverted >= GSTDateAdded ||
-      invoiceDateConverted >= VATDateAdded;
+      convertedInvoiceDate >= GSTAddDate || convertedInvoiceDate >= VATAddDate;
 
     // Create a separate page for each set of invoice items
     itemsChunks.forEach((itemsChunk, index) => {
