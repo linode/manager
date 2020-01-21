@@ -13,11 +13,13 @@ import _TableRow, {
   TableRowProps as _TableRowProps
 } from 'src/components/core/TableRow';
 
-import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
-
-import ActiveCaret from 'src/assets/icons/activeRowCaret.svg';
-
-type ClassNames = 'root' | 'selected' | 'withForcedIndex' | 'activeCaret';
+type ClassNames =
+  | 'root'
+  | 'selected'
+  | 'withForcedIndex'
+  | 'activeCaret'
+  | 'activeCaretOverlay'
+  | 'selectedOuter';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -80,16 +82,48 @@ const styles = (theme: Theme) =>
         }
       }
     },
+    selectedOuter: {
+      padding: 0
+    },
     activeCaret: {
-      [theme.breakpoints.down('md')]: {
-        display: 'none'
+      '&:before': {
+        content: '""',
+        width: 15,
+        height: '50%',
+        position: 'absolute',
+        left: '99%',
+        top: 0,
+        background: `linear-gradient(to right top, ${theme.palette.primary.light} 50%, transparent 50%)`
       },
-      color: theme.bg.lightBlue,
-      position: 'absolute',
-      top: 0,
-      right: theme.spacing() === COMPACT_SPACING_UNIT ? -12 : -14,
-      transform: 'translate(-.5px, -.5px)',
-      height: theme.spacing() === COMPACT_SPACING_UNIT ? 34 : 42
+      '&:after': {
+        content: '""',
+        width: 15,
+        height: '50%',
+        position: 'absolute',
+        left: '99%',
+        top: '50%',
+        background: `linear-gradient(to right bottom, ${theme.palette.primary.light} 50%, transparent 50%)`
+      }
+    },
+    activeCaretOverlay: {
+      '&:before': {
+        content: '""',
+        position: 'absolute',
+        left: '100%',
+        top: 0,
+        width: 15,
+        height: '50%',
+        background: `linear-gradient(to right top, ${theme.bg.lightBlue} 46%, transparent 46%)`
+      },
+      '&:after': {
+        content: '""',
+        position: 'absolute',
+        left: '100%',
+        bottom: 0,
+        width: 15,
+        height: '50%',
+        background: `linear-gradient(to right bottom, ${theme.bg.lightBlue} 46%, transparent 46%)`
+      }
     }
   });
 
@@ -188,8 +222,9 @@ class TableRow extends React.Component<CombinedProps> {
         {this.props.children}
         {selected && (
           <Hidden mdDown>
-            <td colSpan={0}>
-              <ActiveCaret className={classes.activeCaret} />
+            <td colSpan={0} className={classes.selectedOuter}>
+              <span className={classes.activeCaret}></span>
+              <span className={classes.activeCaretOverlay}></span>
             </td>
           </Hidden>
         )}
