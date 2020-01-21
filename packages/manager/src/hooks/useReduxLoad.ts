@@ -100,7 +100,7 @@ export const useReduxLoad = <T>(
     })
       .then(_ => setLoading(false))
       .catch(_ => setLoading(false));
-  }, []);
+  }, [deps, dispatch, refreshInterval, state]);
 
   return { _loading };
 };
