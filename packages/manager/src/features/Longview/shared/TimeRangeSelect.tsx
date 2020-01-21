@@ -6,6 +6,9 @@ import Select, {
   Item
 } from 'src/components/EnhancedSelect/Select';
 import withAccountSettings from 'src/containers/accountSettings.container';
+import withPreferences, {
+  Props as PreferencesProps
+} from 'src/containers/preferences.container';
 
 interface Props extends Omit<BaseSelectProps, 'onChange' | 'defaultValue'> {
   handleStatsChange?: (start: number, end: number) => void;
@@ -24,13 +27,16 @@ export type Labels =
   | 'Past 30 Days'
   | 'Past Year';
 
-type CombinedProps = Props & ReduxStateProps;
+type CombinedProps = Props & ReduxStateProps & PreferencesProps;
 
 const TimeRangeSelect: React.FC<CombinedProps> = props => {
   const {
     defaultValue,
     isLongviewPro,
     handleStatsChange,
+    preferences,
+    getUserPreferences,
+    updateUserPreferences,
     ...restOfSelectProps
   } = props;
 
@@ -40,7 +46,7 @@ const TimeRangeSelect: React.FC<CombinedProps> = props => {
     values when it comes time to make the request
   */
   const [selectedTimeRange, setTimeRange] = React.useState<Labels>(
-    defaultValue || 'Past 30 Minutes'
+    preferences?.longviewTimeRange || defaultValue || 'Past 30 Minutes'
   );
 
   /*
@@ -53,6 +59,7 @@ const TimeRangeSelect: React.FC<CombinedProps> = props => {
   const nowInSeconds = Date.now() / 1000;
 
   React.useEffect(() => {
+    // Check if we have a
     // Do the math and send start/end values to the consumer
     // (in most cases the consumer has passed defaultValue={'last 30 minutes'}
     // but the calcs to turn that into start/end numbers live here)
@@ -77,6 +84,15 @@ const TimeRangeSelect: React.FC<CombinedProps> = props => {
 
   const handleChange = (item: Item<Labels, Labels>) => {
     setTimeRange(item.value);
+
+    getUserPreferences()
+      .then(response => {
+        updateUserPreferences({
+          ...response,
+          longviewTimeRange: item.value
+        });
+      })
+      .catch(_ => null); // swallow the error, it's nbd if the choice isn't saved
 
     if (!!handleStatsChange) {
       handleStatsChange(
@@ -114,7 +130,8 @@ export default compose<CombinedProps, Props>(
         isLongviewPro
       };
     }
-  )
+  ),
+  withPreferences()
 )(TimeRangeSelect);
 
 /**
