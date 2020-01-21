@@ -21,6 +21,7 @@ import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import TaxBanner from 'src/components/TaxBanner';
 import TagImportDrawer from 'src/features/TagImport';
 import useFlags from 'src/hooks/useFlags';
+import useReduxLoad from 'src/hooks/useReduxLoad';
 import { handleOpen } from 'src/store/backupDrawer';
 import { addNotificationsToLinodes } from 'src/store/linodes/linodes.helpers';
 import getEntitiesWithGroupsToImport, {
@@ -89,6 +90,16 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
   } = props;
 
   const flags = useFlags();
+
+  useReduxLoad([
+    'linodes',
+    'volumes',
+    'account',
+    'accountSettings',
+    'notifications',
+    'profile',
+    'managed'
+  ]);
 
   return (
     <React.Fragment>

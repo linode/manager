@@ -10,6 +10,7 @@ import { requestImages } from 'src/store/image/image.requests';
 import { requestKubernetesClusters } from 'src/store/kubernetes/kubernetes.requests';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
 import { requestTypes } from 'src/store/linodeType/linodeType.requests';
+import { getAllLongviewClients } from 'src/store/longview/longview.requests';
 import { requestManagedServices } from 'src/store/managed/managed.requests';
 import { getAllNodeBalancers } from 'src/store/nodeBalancer/nodeBalancer.requests';
 import { requestNotifications } from 'src/store/notification/notification.requests';
@@ -35,7 +36,8 @@ export type ReduxEntity =
   | 'regions'
   | 'types'
   | 'buckets'
-  | 'events';
+  | 'events'
+  | 'longview';
 
 type RequestMap = Record<ReduxEntity, any>;
 const requestMap: RequestMap = {
@@ -52,7 +54,8 @@ const requestMap: RequestMap = {
   types: requestTypes,
   notifications: requestNotifications,
   managed: requestManagedServices,
-  kubernetes: requestKubernetesClusters
+  kubernetes: requestKubernetesClusters,
+  longview: getAllLongviewClients
 };
 
 export const useReduxLoad = <T>(
