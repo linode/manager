@@ -128,9 +128,9 @@ describe('format magnitude', () => {
   });
 
   it('kilo', () => {
-    expect(formatMagnitude('6211.21', 'b/s')).toBe('6.21 Kb/s');
-    expect(formatMagnitude('1000', 'b/s')).toBe('1.00 Kb/s');
-    expect(formatMagnitude('555555', 'b/s')).toBe('555.55 Kb/s');
+    expect(formatMagnitude('6211.21', 'b/s')).toBe('6.21 kb/s');
+    expect(formatMagnitude('1000', 'b/s')).toBe('1.00 kb/s');
+    expect(formatMagnitude('555555', 'b/s')).toBe('555.55 kb/s');
   });
 
   it('mega', () => {
