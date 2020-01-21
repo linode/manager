@@ -1,4 +1,3 @@
-// import '@testing-library/jest-dom/extend-expect';
 import { cleanup, fireEvent, render, wait } from '@testing-library/react';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
