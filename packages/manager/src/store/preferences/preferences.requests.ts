@@ -8,9 +8,9 @@ import {
   handleUpdatePreferences
 } from './preferences.actions';
 
-export const getUserPreferences: ThunkActionCreator<
-  Promise<Record<string, any>>
-> = () => dispatch => {
+export const getUserPreferences: ThunkActionCreator<Promise<
+  Record<string, any>
+>> = () => dispatch => {
   const { started, done, failed } = handleGetPreferences;
 
   dispatch(started());
@@ -40,11 +40,7 @@ export const updateUserPreferences: ThunkActionCreator<
 > = payload => dispatch => {
   const { started, done, failed } = handleUpdatePreferences;
 
-  dispatch(
-    started({
-      params: payload
-    })
-  );
+  dispatch(started(payload));
 
   return _updateUserPreferences(payload)
     .then(response => {
