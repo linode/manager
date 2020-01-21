@@ -195,8 +195,8 @@ export const ProcessesTableRow: React.FC<ProcessTableRowProps> = React.memo(
         forceIndex
         aria-label={`${name} for ${user}`}
       >
-        <TableCell className={classes.processName} data-testid={`name-${name}`}>
-          {name}
+        <TableCell data-testid={`name-${name}`}>
+          <div className={classes.processName}>{name}</div>
         </TableCell>
         <TableCell data-testid={`user-${user}`}>{user}</TableCell>
         <TableCell data-testid={`max-count-${Math.round(maxCount)}`}>
