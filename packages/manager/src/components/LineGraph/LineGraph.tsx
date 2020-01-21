@@ -40,7 +40,7 @@ export interface Props {
   timezone: string;
   rowHeaders?: Array<string>;
   legendRows?: Array<ChartData<any>>;
-  unit?: string; // @todo deprecate unit prop above and rename this to unit. graphs should be consistent
+  unit?: string;
   maxUnit?: StorageSymbol; // Rounds data to this unit. IMPORTANT: if this prop is provided, data should be in bytes
   nativeLegend?: boolean; // Display chart.js native legend
 }

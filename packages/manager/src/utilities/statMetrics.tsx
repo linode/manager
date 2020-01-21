@@ -55,7 +55,7 @@ export const formatMagnitude = (value: number | string, unit: string) => {
   const ranges = [
     { divider: 1e9, suffix: 'G' },
     { divider: 1e6, suffix: 'M' },
-    { divider: 1e3, suffix: 'K' },
+    { divider: 1e3, suffix: 'k' },
     { divider: 1, suffix: '' }
   ];
 

@@ -1,6 +1,7 @@
 import { Stats } from 'linode-js-sdk/lib/linodes';
 import { map, pathOr } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import {
   makeStyles,
   Theme,
@@ -119,7 +120,7 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
       v6Metrics.publicIn.max,
       v6Metrics.publicOut.max,
       v6Metrics.privateIn.max,
-      v6Metrics.privateOut?.max ?? 0
+      v6Metrics.privateOut.max
     )
   );
 
@@ -164,7 +165,7 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
 
 interface GraphProps {
   timezone: string;
-  data: any;
+  data: NetworkStats;
   unit: string;
   theme: Theme;
   rangeSelection: string;
@@ -188,13 +189,23 @@ const Graph: React.FC<GraphProps> = props => {
 
   const format = formatBitsPerSecond;
 
-  const convertNetworkData = (point: any) => {
+  const convertNetworkData = (point: [number, number]) => {
     return [point[0], convertNetworkToUnit(point[1], unit as any)];
   };
-  const convertedPublicIn = data.publicIn.map(convertNetworkData);
-  const convertedPublicOut = data.publicOut.map(convertNetworkData);
-  const convertedPrivateIn = data.privateIn.map(convertNetworkData);
-  const convertedPrivateOut = data.privateOut?.map(convertNetworkData) ?? [];
+  const convertedPublicIn = data.publicIn.map(convertNetworkData) as [
+    number,
+    number
+  ][];
+  const convertedPublicOut = data.publicOut.map(convertNetworkData) as [
+    number,
+    number
+  ][];
+  const convertedPrivateIn = data.privateIn.map(convertNetworkData) as [
+    number,
+    number
+  ][];
+  const convertedPrivateOut =
+    (data.privateOut?.map(convertNetworkData) as [number, number][]) ?? [];
 
   return (
     <React.Fragment>
@@ -263,4 +274,5 @@ const Graph: React.FC<GraphProps> = props => {
   );
 };
 
-export default withTheme(NetworkGraph);
+const enhanced = compose<CombinedProps, Props>(withTheme, React.memo);
+export default enhanced(NetworkGraph);
