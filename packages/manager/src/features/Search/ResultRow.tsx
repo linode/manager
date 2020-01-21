@@ -3,6 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
+import ConditionalWrapper from 'src/components/ConditionalWrapper';
 import Hidden from 'src/components/core/Hidden';
 import {
   createStyles,
@@ -21,7 +22,6 @@ import Tags from 'src/components/Tags';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import { openForEditing } from 'src/store/domainDrawer';
-import { ConditionalWrapper } from 'src/utilities/ConditionalWrapper';
 
 type ClassNames =
   | 'root'
