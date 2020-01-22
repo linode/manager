@@ -305,7 +305,12 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           <Typography data-qa-description>
             If you're expecting a temporary burst of traffic to your website, or
             if you're not using your Linode as much as you thought, you can
-            temporarily or permanently resize your Linode to a different plan.
+            temporarily or permanently resize your Linode to a different plan. 
+            <ExternalLink
+              fixedIcon
+              text="Learn more."
+              link="https://www.linode.com/docs/platform/disk-images/resizing-a-linode/"
+            />
           </Typography>
 
           <SelectPlanPanel
