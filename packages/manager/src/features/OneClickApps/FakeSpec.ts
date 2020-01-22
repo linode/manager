@@ -99,7 +99,7 @@ export const oneClickApps: OCA[] = [
     tips: [
       `Once the script finishes, go to <em>https://[your-Linode's-IP-address]</em> in a browser.`
     ],
-    logo_url: 'assets/flask_color.png'
+    logo_url: 'assets/flask_color.svg'
   },
   {
     name: 'GitLab',
