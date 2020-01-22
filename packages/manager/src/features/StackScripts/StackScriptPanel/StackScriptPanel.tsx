@@ -2,8 +2,10 @@ import { Image } from 'linode-js-sdk/lib/images';
 import { Linode } from 'linode-js-sdk/lib/linodes';
 import { StackScript } from 'linode-js-sdk/lib/stackscripts';
 import { ResourcePage } from 'linode-js-sdk/lib/types';
+import { stringify } from 'qs';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import {
   createStyles,
@@ -53,6 +55,7 @@ interface Props {
   error?: string;
   publicImages: Record<string, Image>;
   queryString: string;
+  history: RouteComponentProps<{}>['history'];
 }
 
 type CombinedProps = Props & StateProps & WithStyles<ClassNames>;
@@ -81,10 +84,30 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, {}> {
     )
   }));
 
+  // When the user clicks on a Tab, update the query string so a specific type
+  // of StackScript can be bookmarked.
+  handleTabChange = (value: number = 0) => {
+    // Don't do anything if `value` isn't in range of the Tabs array. This is
+    // impossible unless the implementation changes.
+    if (value < 0 || value > StackScriptTabs.length - 1) {
+      return;
+    }
+
+    const category = StackScriptTabs[value].category;
+
+    const queryString = '?' + stringify({ type: category });
+
+    // Push a new item of browser history here containing the StackScript type.
+    // It's OK to clear out the "query" QS param from a UX perspective.
+    this.props.history.push({
+      search: queryString
+    });
+  };
+
   render() {
     const { error, classes, queryString } = this.props;
 
-    const initTab = getInitTab(queryString, StackScriptTabs);
+    const tabValue = getTabValueFromQueryString(queryString, StackScriptTabs);
 
     return (
       <React.Fragment>
@@ -94,7 +117,8 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, {}> {
           shrinkTabContent={classes.creating}
           tabs={this.createTabs}
           header=""
-          initTab={initTab}
+          value={tabValue}
+          handleTabChange={this.handleTabChange}
         />
       </React.Fragment>
     );
@@ -126,7 +150,7 @@ export const StackScriptTabs: StackScriptTab[] = [
 
 // Returns the index of the desired tab based on a query string. If no type (or
 // an unknown type) is specified in the query string, return the default.
-export const getInitTab = (
+export const getTabValueFromQueryString = (
   queryString: string,
   tabs: StackScriptTab[],
   defaultTab: number = 0
