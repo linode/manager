@@ -203,7 +203,7 @@ export const oneClickApps: OCA[] = [
     tips: [
       `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:3000</em> in a browser.`
     ],
-    logo_url: 'assets/rubyonrails_color.png'
+    logo_url: 'assets/rubyonrails_color.svg'
   },
   {
     name: 'Rust',
