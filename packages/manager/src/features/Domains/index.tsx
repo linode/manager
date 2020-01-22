@@ -17,7 +17,7 @@ const DomainsLanding = DefaultLoader({
   loader: () => import('./DomainsLanding')
 });
 
-const DomainDetails = DefaultLoader({
+const DomainDetail = DefaultLoader({
   loader: () => import('./DomainDetail')
 });
 
@@ -69,7 +69,7 @@ class DomainsRoutes extends React.Component<CombinedProps> {
 
             // Master Domains have a Detail page.
             if (foundDomain.type === 'master') {
-              return <DomainDetails />;
+              return <DomainDetail />;
             }
 
             // Slave Domains do not have a Detail page, so render the Landing
@@ -88,7 +88,7 @@ class DomainsRoutes extends React.Component<CombinedProps> {
           path={`${path}/:domainId/records`}
           exact
           strict
-          component={DomainDetails}
+          component={DomainDetail}
         />
         <Route component={DomainsLanding} path={path} exact strict />
         <Redirect to={`${path}`} />
