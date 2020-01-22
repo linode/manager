@@ -1,8 +1,7 @@
-import { Profile, UserPreferences } from 'linode-js-sdk/lib/profile';
-
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
 
+import { UserPreferences } from 'src/store/preferences/preferences.actions';
 import { State } from 'src/store/preferences/preferences.reducer';
 import {
   getUserPreferences,
@@ -16,10 +15,8 @@ export interface PreferencesStateProps {
 }
 
 export interface PreferencesActionsProps {
-  getUserPreferences: () => Promise<Record<string, any>>;
-  updateUserPreferences: (
-    params: Record<string, any>
-  ) => Promise<Record<string, any>>;
+  getUserPreferences: () => Promise<UserPreferences>;
+  updateUserPreferences: (params: UserPreferences) => Promise<UserPreferences>;
 }
 
 export type Props = PreferencesActionsProps & PreferencesStateProps;
@@ -36,7 +33,7 @@ export default <TInner extends {}, TOuter extends {}>(
     },
     (dispatch: ThunkDispatch) => ({
       getUserPreferences: () => dispatch(getUserPreferences()),
-      updateUserPreferences: (payload: Partial<Profile>) =>
+      updateUserPreferences: (payload: UserPreferences) =>
         dispatch(updateUserPreferences(payload))
     })
   );
