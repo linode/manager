@@ -29,7 +29,8 @@ import withProfile from 'src/containers/profile.container';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(4),
-    padding: theme.spacing(3)
+    padding: theme.spacing(3),
+    height: 220
   },
   gaugeContainer: {
     [theme.breakpoints.down('sm')]: {
@@ -69,9 +70,12 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
     userCanModifyClient
   } = props;
 
-  const { lastUpdated, lastUpdatedError, authed } = useClientLastUpdated(
-    clientAPIKey,
-    _lastUpdated => props.getClientStats(clientAPIKey, _lastUpdated)
+  const {
+    lastUpdated,
+    lastUpdatedError,
+    authed
+  } = useClientLastUpdated(clientAPIKey, _lastUpdated =>
+    props.getClientStats(clientAPIKey, _lastUpdated)
   );
 
   /**
@@ -116,7 +120,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
               />
             </Grid>
             <Grid item xs={12} md={9}>
-              <Grid container>
+              <Grid container direction="row" alignItems="center">
                 <Grid item xs={4} sm={2} className={classes.gaugeContainer}>
                   <CPUGauge
                     clientID={clientID}
