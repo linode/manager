@@ -106,7 +106,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
         <LongviewLineGraph
           title="CPU"
           subtitle="%"
-          tooltipUnit="%"
+          unit="%"
           data={[
             {
               data: _convertData(cpu, start, end),
@@ -152,7 +152,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
           <LongviewLineGraph
             title="Disk I/O"
             subtitle={ioUnit + '/s'}
-            tooltipUnit={ioUnit + '/s'}
+            unit={ioUnit + '/s'}
             nativeLegend
             data={[
               {

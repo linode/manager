@@ -8,7 +8,7 @@ import {
 import { APIError } from 'linode-js-sdk/lib/types';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as moment from 'moment';
-import { map, pathOr } from 'ramda';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -38,17 +38,15 @@ import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import { initAll } from 'src/utilities/initAll';
 import { isRecent } from 'src/utilities/isRecent';
 import {
-  formatBitsPerSecond,
-  formatBytes,
   formatNumber,
   formatPercentage,
-  getMetrics,
-  getTotalTraffic
+  getMetrics
 } from 'src/utilities/statMetrics';
 import ActivitySummary from './ActivitySummary';
+import NetworkGraph from './NetworkGraph';
 import StatsPanel from './StatsPanel';
 import SummaryPanel from './SummaryPanel';
-import TotalTraffic, { TotalTrafficProps } from './TotalTraffic';
+import { ChartProps } from './types';
 
 setUpCharts();
 
@@ -62,7 +60,6 @@ type ClassNames =
   | 'graphTitle'
   | 'graphSelectTitle'
   | 'graphControls'
-  | 'totalTraffic'
   | 'subHeaderOuter'
   | 'textWrap'
   | 'headerOuter';
@@ -109,9 +106,6 @@ const styles = (theme: Theme) =>
       alignItems: 'center',
       marginTop: theme.spacing(2),
       marginBottom: theme.spacing(2)
-    },
-    totalTraffic: {
-      margin: '12px'
     },
     chartSelect: {
       maxWidth: 150
@@ -359,205 +353,6 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     );
   };
 
-  renderIPv4TrafficChart = () => {
-    const { classes, timezone, theme } = this.props;
-    const { rangeSelection, stats } = this.state;
-
-    const v4Data = {
-      publicIn: pathOr([], ['data', 'netv4', 'in'], stats),
-      publicOut: pathOr([], ['data', 'netv4', 'out'], stats),
-      privateIn: pathOr([], ['data', 'netv4', 'private_in'], stats),
-      privateOut: pathOr([], ['data', 'netv4', 'private_out'], stats)
-    };
-
-    // Need these to calculate Total Traffic
-    const v6Data = {
-      publicIn: pathOr([], ['data', 'netv6', 'in'], stats),
-      publicOut: pathOr([], ['data', 'netv6', 'out'], stats),
-      privateIn: pathOr([], ['data', 'netv6', 'private_in'], stats)
-    };
-
-    const format = formatBitsPerSecond;
-
-    // @todo refactor this component so that these calcs don't need to be done
-    // again when we render the v6 chart
-    const netv6InMetrics = getMetrics(v6Data.publicIn);
-    const netv6OutMetrics = getMetrics(v6Data.publicOut);
-
-    const netv4InMetrics = getMetrics(v4Data.publicIn);
-    const netv4OutMetrics = getMetrics(v4Data.publicOut);
-
-    const totalTraffic: TotalTrafficProps = map(
-      formatBytes,
-      getTotalTraffic(
-        netv4InMetrics.total,
-        netv4OutMetrics.total,
-        v4Data.publicIn.length,
-        netv6InMetrics.total,
-        netv6OutMetrics.total
-      )
-    );
-
-    return (
-      <React.Fragment>
-        <div className={classes.chart}>
-          <LineGraph
-            timezone={timezone}
-            chartHeight={chartHeight}
-            showToday={rangeSelection === '24'}
-            data={[
-              {
-                borderColor: theme.graphs.blueBorder,
-                backgroundColor: theme.graphs.blue,
-                data: v4Data.publicIn,
-                label: 'Public Inbound'
-              },
-              {
-                borderColor: theme.graphs.greenBorder,
-                backgroundColor: theme.graphs.green,
-                data: v4Data.publicOut,
-                label: 'Public Outbound'
-              },
-              {
-                borderColor: theme.graphs.purpleBorder,
-                backgroundColor: theme.graphs.purple,
-                data: v4Data.privateIn,
-                label: 'Private Inbound'
-              },
-              {
-                borderColor: theme.graphs.yellowBorder,
-                backgroundColor: theme.graphs.yellow,
-                data: v4Data.privateOut,
-                label: 'Private Outbound'
-              }
-            ]}
-            legendRows={[
-              {
-                data: netv4InMetrics,
-                format
-              },
-              {
-                data: netv4OutMetrics,
-                format
-              },
-              {
-                data: getMetrics(v4Data.privateIn),
-                format
-              },
-              {
-                data: getMetrics(v4Data.privateOut),
-                format
-              }
-            ]}
-          />
-        </div>
-        {rangeSelection === '24' && (
-          <Grid item xs={12} lg={6} className={classes.totalTraffic}>
-            <TotalTraffic
-              inTraffic={totalTraffic.inTraffic}
-              outTraffic={totalTraffic.outTraffic}
-              combinedTraffic={totalTraffic.combinedTraffic}
-            />
-          </Grid>
-        )}
-      </React.Fragment>
-    );
-  };
-
-  renderIPv6TrafficChart = () => {
-    const { classes, timezone, theme } = this.props;
-    const { rangeSelection, stats } = this.state;
-
-    const data = {
-      publicIn: pathOr([], ['data', 'netv6', 'in'], stats),
-      publicOut: pathOr([], ['data', 'netv6', 'out'], stats),
-      privateIn: pathOr([], ['data', 'netv6', 'private_in'], stats),
-      privateOut: pathOr([], ['data', 'netv6', 'private_out'], stats)
-    };
-
-    const format = formatBitsPerSecond;
-
-    const publicInMetrics = getMetrics(data.publicIn);
-    const publicOutMetrics = getMetrics(data.publicOut);
-
-    const totalTraffic: TotalTrafficProps = map(
-      formatBytes,
-      getTotalTraffic(
-        publicInMetrics.total,
-        publicOutMetrics.total,
-        publicInMetrics.length
-      )
-    );
-
-    return (
-      <React.Fragment>
-        <div className={classes.chart}>
-          <LineGraph
-            timezone={timezone}
-            chartHeight={chartHeight}
-            showToday={rangeSelection === '24'}
-            data={[
-              {
-                borderColor: theme.graphs.blueBorder,
-                backgroundColor: theme.graphs.blue,
-                data: data.publicIn,
-                label: 'Public Inbound',
-                fill: 'origin'
-              },
-              {
-                borderColor: theme.graphs.greenBorder,
-                backgroundColor: theme.graphs.green,
-                data: data.publicOut,
-                label: 'Public Outbound',
-                fill: '-1'
-              },
-              {
-                borderColor: theme.graphs.purpleBorder,
-                backgroundColor: theme.graphs.purple,
-                data: data.privateIn,
-                label: 'Private Inbound',
-                fill: '-2'
-              },
-              {
-                borderColor: theme.graphs.yellowBorder,
-                backgroundColor: theme.graphs.yellow,
-                data: data.privateOut,
-                label: 'Private Outbound'
-              }
-            ]}
-            legendRows={[
-              {
-                data: publicInMetrics,
-                format
-              },
-              {
-                data: publicOutMetrics,
-                format
-              },
-              {
-                data: getMetrics(data.privateIn),
-                format
-              },
-              {
-                data: getMetrics(data.privateOut),
-                format
-              }
-            ]}
-          />
-        </div>
-        {rangeSelection === '24' && (
-          <Grid item xs={12} lg={6} className={classes.totalTraffic}>
-            <TotalTraffic
-              inTraffic={totalTraffic.inTraffic}
-              outTraffic={totalTraffic.outTraffic}
-              combinedTraffic={totalTraffic.combinedTraffic}
-            />
-          </Grid>
-        )}
-      </React.Fragment>
-    );
-  };
-
   renderDiskIOChart = () => {
     const { classes, timezone, theme } = this.props;
     const { rangeSelection, stats } = this.state;
@@ -619,11 +414,13 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     const { dataIsLoading, statsError, isTooEarlyForGraphData } = this.state;
 
     // Shared props for all stats charts
-    const chartProps = {
+    const chartProps: ChartProps = {
       loading: dataIsLoading,
       error: statsError,
       height: chartHeight,
-      isTooEarlyForGraphData
+      isTooEarlyForGraphData: Boolean(isTooEarlyForGraphData),
+      timezone: this.props.timezone,
+      rangeSelection: this.state.rangeSelection
     };
 
     if (!linode) {
@@ -715,15 +512,10 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
               {...chartProps}
             />
 
-            <StatsPanel
-              title="IPv4 Traffic (bits/s)"
-              renderBody={this.renderIPv4TrafficChart}
-              {...chartProps}
-            />
-
-            <StatsPanel
-              title="IPv6 Traffic (bits/s)"
-              renderBody={this.renderIPv6TrafficChart}
+            <NetworkGraph
+              stats={this.state.stats}
+              rangeSelection={this.state.rangeSelection}
+              timezone={this.props.timezone}
               {...chartProps}
             />
 

@@ -23,7 +23,6 @@ describe('LinodeSummary', () => {
         graphControls: '',
         graphTitle: '',
         graphSelectTitle: '',
-        totalTraffic: '',
         chartSelect: '',
         subHeaderOuter: '',
         textWrap: '',

@@ -83,7 +83,7 @@ export const NetworkGraphs: React.FC<CombinedProps> = props => {
                 title="Network Traffic"
                 nativeLegend
                 subtitle={maxUnit + '/s'}
-                tooltipUnit={maxUnit + '/s'}
+                unit={maxUnit + '/s'}
                 error={error}
                 loading={loading}
                 showToday={isToday}
