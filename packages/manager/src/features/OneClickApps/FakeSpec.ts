@@ -205,7 +205,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://redis.io/'
       }
     ],
-    logo_url: 'assets/redis_color.png'
+    logo_url: 'assets/redis_color.svg'
   },
   {
     name: 'Rust',
