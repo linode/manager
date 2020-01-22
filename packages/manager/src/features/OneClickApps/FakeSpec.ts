@@ -191,7 +191,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.mongodb.com/'
       },
     ],
-    logo_url: 'assets/mongodb_color.png'
+    logo_url: 'assets/mongodb_color.svg'
   },
   {
     name: 'Plesk',
