@@ -191,20 +191,22 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Configure PostgreSQL',
-        href: 'https://www.linode.com/docs/databases/postgresql/configure-postgresql/'
+        href:
+          'https://www.linode.com/docs/databases/postgresql/configure-postgresql/'
       },
       {
         title: 'How to Install PostgreSQL on Ubuntu 16.04',
-        href: 'https://www.linode.com/docs/databases/postgresql/how-to-install-postgresql-on-ubuntu-16-04/'
-      },
+        href:
+          'https://www.linode.com/docs/databases/postgresql/how-to-install-postgresql-on-ubuntu-16-04/'
+      }
     ],
     related_info: [
       {
         title: 'https://www.postgresql.org/',
         href: 'https://www.postgresql.org/'
-      },
+      }
     ],
-    logo_url: 'assets/postgresql_color.png'
+    logo_url: 'assets/postgresql_color.svg'
   },
   {
     name: 'Rust',
