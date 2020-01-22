@@ -6,8 +6,12 @@ import {
   Switch,
   withRouter
 } from 'react-router-dom';
-
+import { compose } from 'recompose';
 import DefaultLoader from 'src/components/DefaultLoader';
+import NotFound from 'src/components/NotFound';
+import withDomains, {
+  Props as DomainProps
+} from 'src/containers/domains.container';
 
 const DomainsLanding = DefaultLoader({
   loader: () => import('./DomainsLanding')
@@ -17,9 +21,9 @@ const DomainDetails = DefaultLoader({
   loader: () => import('./DomainDetail')
 });
 
-type Props = RouteComponentProps<{}>;
+type CombinedProps = RouteComponentProps<{ domainId?: string }> & DomainProps;
 
-class DomainsRoutes extends React.Component<Props> {
+class DomainsRoutes extends React.Component<CombinedProps> {
   render() {
     const {
       match: { path }
@@ -28,16 +32,63 @@ class DomainsRoutes extends React.Component<Props> {
     return (
       <Switch>
         <Route
-          component={DomainDetails}
           path={`${path}/:domainId`}
           exact
           strict
+          render={routerProps => {
+            // There are two types of Domains:
+            //
+            // 1. Master Domain
+            // 2. Slave Domain
+            //
+            // Master Domains have a Detail page. Slave Domains do not.
+            //
+            // On the Domain Landing page, clicking on Slave Domain does not
+            // navigate the user away from the Domain Landing page. Instead,
+            // the "Edit Domain" drawer opens.
+            //
+            // We need to handle routing such that going to /domains/:domainId
+            // takes the user to the Domain Landing page with the "Edit Domain"
+            // drawer open.
+            //
+            // Thus, if this routing is matched, we look through the user's
+            // domains to determine if the selected domain is a Slave Domain and
+            // render the components appropriately.
+
+            // The domainId from the URL, i.e. /domains/:domainId
+            const domainId = Number(routerProps.match.params.domainId);
+
+            // The Domain from the store that matches this ID.
+            const foundDomain = (this.props.domainsData || []).find(
+              thisDomain => thisDomain.id === domainId
+            );
+
+            if (!foundDomain) {
+              return <NotFound />;
+            }
+
+            // Master Domains have a Detail page.
+            if (foundDomain.type === 'master') {
+              return <DomainDetails />;
+            }
+
+            // Slave Domains do not have a Detail page, so render the Landing
+            // page with an open drawer.
+            return (
+              <DomainsLanding
+                domainForEditing={{
+                  domainId: foundDomain.id,
+                  domainLabel: foundDomain.domain
+                }}
+              />
+            );
+          }}
         />
         <Route
-          component={DomainDetails}
           path={`${path}/:domainId/records`}
           exact
           strict
+          component={DomainDetails}
         />
         <Route component={DomainsLanding} path={path} exact strict />
         <Redirect to={`${path}`} />
@@ -46,4 +97,6 @@ class DomainsRoutes extends React.Component<Props> {
   }
 }
 
-export default withRouter(DomainsRoutes);
+const enhanced = compose<CombinedProps, {}>(withRouter, withDomains());
+
+export default enhanced(DomainsRoutes);
