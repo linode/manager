@@ -25,6 +25,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import ExternalLink from 'src/components/ExternalLink';
 import HelpIcon from 'src/components/HelpIcon';
 import { resetEventsPolling } from 'src/eventsPolling';
 import SelectPlanPanel, {
@@ -305,7 +306,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           <Typography data-qa-description>
             If you're expecting a temporary burst of traffic to your website, or
             if you're not using your Linode as much as you thought, you can
-            temporarily or permanently resize your Linode to a different plan. 
+            temporarily or permanently resize your Linode to a different plan.{' '} 
             <ExternalLink
               fixedIcon
               text="Learn more."
