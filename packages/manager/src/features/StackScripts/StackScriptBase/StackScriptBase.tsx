@@ -6,7 +6,7 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import Waypoint from 'react-waypoint';
+import { Waypoint } from 'react-waypoint';
 import { compose } from 'recompose';
 import StackScriptsIcon from 'src/assets/addnewmenu/stackscripts.svg';
 import Button from 'src/components/Button';
