@@ -9,8 +9,13 @@ import {
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-import { getMaxUnit } from 'src/features/Longview/shared/utilities';
-import { StorageSymbol } from 'src/utilities/unitConversions';
+import {
+  convertNetworkToBits,
+  convertNetworkToUnit,
+  formatNetworkTooltip,
+  generateNetworkUnits,
+  statMax
+} from 'src/features/Longview/shared/utilities';
 import { ApacheResponse, LongviewProcesses } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import ProcessGraphs from '../ProcessGraphs';
@@ -76,7 +81,9 @@ export const ApacheGraphs: React.FC<CombinedProps> = props => {
   const totalKBytes = data?.['Total kBytes'] ?? [];
   const totalAccesses = data?.['Total Accesses'] ?? [];
 
-  const unit = React.useMemo(() => getMaxUnit([totalKBytes]), [totalKBytes]);
+  const unit = React.useMemo(() => generateNetworkUnits(statMax(totalKBytes)), [
+    totalKBytes
+  ]);
 
   const graphProps = {
     timezone,
@@ -110,13 +117,22 @@ export const ApacheGraphs: React.FC<CombinedProps> = props => {
               <LongviewLineGraph
                 title="Throughput"
                 subtitle={`${unit}/s`}
-                maxUnit={unit as StorageSymbol}
+                unit={'/s'}
+                formatData={(value: number) =>
+                  convertNetworkToUnit(value, unit)
+                }
+                formatTooltip={formatNetworkTooltip}
                 data={[
                   {
                     label: 'Throughput',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.outbound,
-                    data: _convertData(totalKBytes, start, end, formatNetwork)
+                    data: _convertData(
+                      totalKBytes,
+                      start,
+                      end,
+                      convertNetworkToBits
+                    )
                   }
                 ]}
                 {...graphProps}
@@ -213,14 +229,6 @@ const formatData = (value: number | null) => {
 
   // Round to 2 decimal places.
   return Math.round(value * 100) / 100;
-};
-
-const formatNetwork = (value: number | null) => {
-  if (value === null) {
-    return value;
-  }
-
-  return value * 8 * 1024;
 };
 
 const enhanced = compose<CombinedProps, Props>(

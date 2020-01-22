@@ -4,7 +4,12 @@ import { withTheme, WithTheme } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import Placeholder from 'src/components/Placeholder';
-import { getMaxUnitAndFormatNetwork } from 'src/features/Longview/shared/utilities';
+import {
+  convertNetworkToUnit,
+  formatNetworkTooltip,
+  generateNetworkUnits,
+  statMax
+} from 'src/features/Longview/shared/utilities';
 import {
   InboundOutboundNetwork,
   LongviewNetworkInterface
@@ -71,9 +76,8 @@ export const NetworkGraphs: React.FC<CombinedProps> = props => {
         const [name, interfaceData] = thisInterface;
         const { rx_bytes, tx_bytes } = interfaceData;
 
-        const { maxUnit, formatNetwork } = getMaxUnitAndFormatNetwork(
-          rx_bytes,
-          tx_bytes
+        const maxUnit = generateNetworkUnits(
+          Math.max(statMax(rx_bytes), statMax(tx_bytes))
         );
 
         return (
@@ -83,7 +87,11 @@ export const NetworkGraphs: React.FC<CombinedProps> = props => {
                 title="Network Traffic"
                 nativeLegend
                 subtitle={maxUnit + '/s'}
-                unit={maxUnit + '/s'}
+                unit={'/s'}
+                formatData={(value: number) =>
+                  convertNetworkToUnit(value, maxUnit)
+                }
+                formatTooltip={formatNetworkTooltip}
                 error={error}
                 loading={loading}
                 showToday={isToday}
@@ -93,13 +101,13 @@ export const NetworkGraphs: React.FC<CombinedProps> = props => {
                     label: 'Inbound',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.inbound,
-                    data: _convertData(rx_bytes, start, end, formatNetwork)
+                    data: _convertData(rx_bytes, start, end)
                   },
                   {
                     label: 'Outbound',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.outbound,
-                    data: _convertData(tx_bytes, start, end, formatNetwork)
+                    data: _convertData(tx_bytes, start, end)
                   }
                 ]}
               />

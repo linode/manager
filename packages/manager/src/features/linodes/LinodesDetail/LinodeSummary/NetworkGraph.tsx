@@ -12,6 +12,7 @@ import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
 import {
   convertNetworkToUnit,
+  formatNetworkTooltip,
   generateNetworkUnits
 } from 'src/features/Longview/shared/utilities';
 import {
@@ -189,23 +190,14 @@ const Graph: React.FC<GraphProps> = props => {
 
   const format = formatBitsPerSecond;
 
-  const convertNetworkData = (point: [number, number]) => {
-    return [point[0], convertNetworkToUnit(point[1], unit as any)];
+  const convertNetworkData = (value: number) => {
+    return convertNetworkToUnit(value, unit as any);
   };
-  const convertedPublicIn = data.publicIn.map(convertNetworkData) as [
-    number,
-    number
-  ][];
-  const convertedPublicOut = data.publicOut.map(convertNetworkData) as [
-    number,
-    number
-  ][];
-  const convertedPrivateIn = data.privateIn.map(convertNetworkData) as [
-    number,
-    number
-  ][];
-  const convertedPrivateOut =
-    (data.privateOut?.map(convertNetworkData) as [number, number][]) ?? [];
+
+  const convertedPublicIn = data.publicIn;
+  const convertedPublicOut = data.publicOut;
+  const convertedPrivateIn = data.privateIn;
+  const convertedPrivateOut = data.privateOut;
 
   return (
     <React.Fragment>
@@ -213,7 +205,9 @@ const Graph: React.FC<GraphProps> = props => {
         <LineGraph
           timezone={timezone}
           chartHeight={chartHeight}
-          unit={`${unit}/s`}
+          unit={`/s`}
+          formatData={convertNetworkData}
+          formatTooltip={formatNetworkTooltip}
           showToday={rangeSelection === '24'}
           data={[
             {

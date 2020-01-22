@@ -8,7 +8,10 @@ import {
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-import { readableBytes } from 'src/utilities/unitConversions';
+import {
+  convertBytesToTarget,
+  readableBytes
+} from 'src/utilities/unitConversions';
 import { LongviewProcesses } from '../../request.types';
 import { convertData, formatMemory } from '../../shared/formatters';
 import {
@@ -97,7 +100,10 @@ export const ProcessGraphs: React.FC<CombinedProps> = props => {
             <LongviewLineGraph
               title="RAM"
               subtitle={memoryUnit}
-              maxUnit={memoryUnit}
+              formatData={(value: number) =>
+                convertBytesToTarget(memoryUnit, value)
+              }
+              formatTooltip={(value: number) => readableBytes(value).formatted}
               data={[
                 {
                   label: 'RAM',
