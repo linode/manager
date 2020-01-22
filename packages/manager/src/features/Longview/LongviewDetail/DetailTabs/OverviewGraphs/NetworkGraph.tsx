@@ -54,7 +54,7 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
     <LongviewLineGraph
       title="Network"
       subtitle={maxUnit + '/s'}
-      tooltipUnit={maxUnit + '/s'}
+      unit={maxUnit + '/s'}
       error={error}
       loading={loading}
       showToday={isToday}
