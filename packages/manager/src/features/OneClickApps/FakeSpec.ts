@@ -92,7 +92,7 @@ export const oneClickApps: OCA[] = [
     tips: [
       `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:8000</em> in a browser to visit the default web page. You can also visit <em>https://[your-Linode's-IP-address]:8000/admin</em> to view the Djanogo admin panel`
     ],
-    logo_url: 'assets/django_color.png'
+    logo_url: 'assets/django_color.svg'
   },
   {
     name: 'GitLab',
