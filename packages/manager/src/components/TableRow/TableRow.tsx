@@ -91,7 +91,7 @@ const styles = (theme: Theme) =>
         width: 15,
         height: '50%',
         position: 'absolute',
-        left: '99%',
+        left: 0,
         top: 0,
         background: `linear-gradient(to right top, ${theme.palette.primary.light} 0%, ${theme.palette.primary.light} 49%, transparent 50.1%)`
       },
@@ -100,7 +100,7 @@ const styles = (theme: Theme) =>
         width: 15,
         height: '50%',
         position: 'absolute',
-        left: '99%',
+        left: 0,
         top: '50%',
         background: `linear-gradient(to right bottom, ${theme.palette.primary.light} 0%, ${theme.palette.primary.light} 49%, transparent 50.1%)`
       }
@@ -109,7 +109,7 @@ const styles = (theme: Theme) =>
       '&:before': {
         content: '""',
         position: 'absolute',
-        left: '100%',
+        left: 0,
         top: 0,
         width: 15,
         height: '50%',
@@ -118,7 +118,7 @@ const styles = (theme: Theme) =>
       '&:after': {
         content: '""',
         position: 'absolute',
-        left: '100%',
+        left: 0,
         bottom: 0,
         width: 15,
         height: '50%',
