@@ -25,12 +25,15 @@ import withClientStats, {
   Props as LVDataProps
 } from 'src/containers/longview.stats.container';
 import withProfile from 'src/containers/profile.container';
+import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(4),
     padding: theme.spacing(3),
-    height: 220
+    [theme.breakpoints.up('md')]: {
+      height: theme.spacing() === COMPACT_SPACING_UNIT ? 180 : 220
+    }
   },
   gaugeContainer: {
     [theme.breakpoints.down('sm')]: {
