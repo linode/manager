@@ -93,7 +93,7 @@ const styles = (theme: Theme) =>
         position: 'absolute',
         left: '99%',
         top: 0,
-        background: `linear-gradient(to right top, ${theme.palette.primary.light} 50%, transparent 50%)`
+        background: `linear-gradient(to right top, ${theme.palette.primary.light} 0%, ${theme.palette.primary.light} 49%, transparent 50.1%)`
       },
       '&:after': {
         content: '""',
@@ -102,7 +102,7 @@ const styles = (theme: Theme) =>
         position: 'absolute',
         left: '99%',
         top: '50%',
-        background: `linear-gradient(to right bottom, ${theme.palette.primary.light} 50%, transparent 50%)`
+        background: `linear-gradient(to right bottom, ${theme.palette.primary.light} 0%, ${theme.palette.primary.light} 49%, transparent 50.1%)`
       }
     },
     activeCaretOverlay: {
@@ -113,7 +113,7 @@ const styles = (theme: Theme) =>
         top: 0,
         width: 15,
         height: '50%',
-        background: `linear-gradient(to right top, ${theme.bg.lightBlue} 46%, transparent 46%)`
+        background: `linear-gradient(to right top, ${theme.bg.lightBlue} 0%, ${theme.bg.lightBlue} 45%, transparent 46.1%)`
       },
       '&:after': {
         content: '""',
@@ -122,7 +122,7 @@ const styles = (theme: Theme) =>
         bottom: 0,
         width: 15,
         height: '50%',
-        background: `linear-gradient(to right bottom, ${theme.bg.lightBlue} 46%, transparent 46%)`
+        background: `linear-gradient(to right bottom, ${theme.bg.lightBlue} 0%, ${theme.bg.lightBlue} 45%, transparent 46.1%)`
       }
     }
   });
