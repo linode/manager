@@ -54,8 +54,10 @@ describe('cypress e2e poc', () => {
     cy.get('#root-password').type(rootpass);
     cy.get('[data-qa-deploy-linode]').click();
     cy.get('[data-qa-power-control="Busy"]').should('be.visible');
-    cy.get('[data-qa-power-control="Running"]', { timeout: 120000 }).should(
-      'be.visible'
-    );
+    // skipping this step to save time as we are not currently looking to test the
+    // systems side of things
+    // cy.get('[data-qa-power-control="Running"]', { timeout: 120000 }).should(
+    //   'be.visible'
+    // );
   });
 });
