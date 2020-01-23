@@ -3,56 +3,60 @@ const { navigateToStory } = require('../../../e2e/utils/storybook');
 describe('Confirmation Dialog Suite', () => {
   const component = 'Confirmation Dialogs';
   const childStories = ['Simple Confirmation'];
-  const confirmButtonTextElem = '[data-qa-dialog-button]';
-  const dialogTitleElem = '[data-qa-dialog-title]';
-  const confirmButtonElem = '[data-qa-dialog-confirm]';
+  const doSomething = '[data-qa-dialog-button]';
+  const confirmButton = '[data-qa-buttons] [data-qa-dialog-confirm]';
+  const dialogTitle = '.dialog-title';
+  const dismissButton = '[data-qa-buttons] [data-qa-dialog-cancel]';
 
-  let dismissButtonElem = '[data-qa-dialog-cancel]';
-  let confirmButton, dismissButton, dialogTitle;
-
-  beforeAll(() => {
+  beforeEach(() => {
     navigateToStory(component, childStories[0]);
+    $(doSomething).waitForDisplayed();
   });
 
-  it('should display confirm button text', () => {
-    $(confirmButtonTextElem).waitForDisplayed();
+  it('should display Do something!', () => {
+    expect($(doSomething).getText())
+      .withContext(`incorrect text`)
+      .toBe('Do something!');
   });
 
   it('should display dialog on click', () => {
-    $(confirmButtonTextElem).click();
-    dialogTitle = $(dialogTitleElem);
-    confirmButton = $(confirmButtonElem);
-    dismissButton = $(dismissButtonElem);
-
-    expect(dialogTitle.getText())
+    $(doSomething).click();
+    expect($(dialogTitle).getText())
       .withContext(`Incorrect dialog title`)
       .toBe('Are you sure you wanna?');
     expect($('[data-qa-dialog-content]').getText())
       .withContext(`Incorrect dialog text`)
       .toBe('stuff stuff stuff');
-    expect(confirmButton.isDisplayed())
+    expect($(confirmButton).isDisplayed())
       .withContext(`Confirm button should be displayed`)
       .toBe(true);
-    expect(dismissButton.isDisplayed())
+    expect($(dismissButton).isDisplayed())
       .withContext(`Dismiss button should be displayed`)
       .toBe(true);
-    expect(confirmButton.getTagName())
+    expect($(confirmButton).getTagName())
       .withContext(`Incorrect tag name`)
       .toBe('button');
-    expect(dismissButton.getTagName())
+    expect($(dismissButton).getTagName())
       .withContext(`Incorrect tag name`)
       .toBe('button');
+    expect($(confirmButton).getText())
+      .withContext(`Incorrect text`)
+      .toBe(`Continue`);
+    expect($(dismissButton).getText())
+      .withContext(`Incorrect text`)
+      .toBe(`Cancel`);
   });
 
-  it('should close dialog on yes', () => {
-    confirmButton.click();
-    dialogTitle.isDisplayed(1500, true);
+  it('should close dialog with confirm button', () => {
+    $(doSomething).click();
+    $(confirmButton).click();
+    $(dialogTitle).isDisplayed(1500, true);
   });
 
-  it('should close dialog on no', () => {
-    $(confirmButtonTextElem).click();
-    $(dialogTitleElem).waitForDisplayed();
-    dismissButton.click();
-    dialogTitle.waitForDisplayed(1500, true);
+  it('should close dialog with cancel button', () => {
+    $(doSomething).click();
+    $(dialogTitle).waitForDisplayed();
+    $(dismissButton).click();
+    $(dialogTitle).waitForDisplayed(1500, true);
   });
 });
