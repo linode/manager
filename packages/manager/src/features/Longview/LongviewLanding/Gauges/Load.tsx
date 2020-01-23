@@ -1,5 +1,6 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
+import { WithTheme, withTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
 import withClientData, {
@@ -7,7 +8,9 @@ import withClientData, {
 } from 'src/containers/longview.stats.container';
 import { baseGaugeProps, BaseProps as Props } from './common';
 
-const LoadGauge: React.FC<Props & LVDataProps> = props => {
+type CombinedProps = Props & WithTheme & LVDataProps;
+
+const LoadGauge: React.FC<CombinedProps> = props => {
   const {
     longviewClientData,
     longviewClientDataLoading: loading,
@@ -65,10 +68,12 @@ const LoadGauge: React.FC<Props & LVDataProps> = props => {
       {...baseGaugeProps}
       max={numberOfCores}
       value={load}
-      filledInColor="#FADB50"
+      filledInColor={props.theme.graphs.yellow}
       {...generateCopy()}
     />
   );
 };
 
-export default withClientData<Props>(ownProps => ownProps.clientID)(LoadGauge);
+export default withClientData<Props>(ownProps => ownProps.clientID)(
+  withTheme(LoadGauge)
+);

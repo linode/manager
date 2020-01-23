@@ -1,7 +1,7 @@
 import Divider, {
   DividerProps as _DividerProps
 } from '@material-ui/core/Divider';
-import React from 'react';
+import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({

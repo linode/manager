@@ -6,28 +6,34 @@ The unit tests for Linode Cloud Manager are written in Typescript using the [Jes
 
 To run tests:
 
+**You must have built the Js SDK**
 ```
-yarn && npx lerna bootstrap --scope linode-manager && npx lerna run test --stream --scope linode-manager
+yarn install:all && yarn workspace linode-js-sdk run build 
+```
+
+Then yu can start the tests:
+```
+yarn test
 ```
 
 Or you can run the tests in watch mode with:
 
 ```
-yarn && npx lerna bootstrap --scope linode-manager && npx lerna run test --stream --scope linode-manager -- --watch
+yarn test --watch
 ```
 
 To Run a specific file or files in a directory:
 
 ```
-npx lerna run test --stream --scope linode-manager -- myFile.test.tsx
-npx lerna run test --stream --scope linode-manager -- src/some-folder
+yarn test myFile.test.tsx
+yarn test src/some-folder
 ```
 
 Jest includes pattern matching out of the box, so you can also do things like run all tests whose filename
 contains "Linode" with
 
 ```
-npx lerna run test --stream --scope linode-manager -- linode
+yarn test linode
 ```
 
 To run a test in debug mode, add a `debugger` breakpoint inside one of the test cases, then run
@@ -68,34 +74,38 @@ brew cask install java
 ```
 ## Starts the local development environment
 
-yarn && npx lerna bootstrap --scope linode-manager && npx lerna run start --stream --scope linode-manager
+yarn up
 
 ## New shell
 ## Starts selenium (Must be running to execute tests)
 
-npx lerna run selenium --scope linode-manager --stream
+yarn selenium
 
 ## New shell
 ## Executes specs matching e2e/specs/**/*.spec.js
 
-npx lerna run e2e --scope linode-manager --stream
+yarn e2e
+
+# or to run only the smoke tests
+
+yarn e2e --smoke 
 ```
 
 ### Command Line Arguments
 
-The `npx lerna run e2e` command accepts a number of helpful command line arguments that facilitate
+The `yarn e2e` command accepts a number of helpful command line arguments that facilitate
 writing and running tests locally.
 
 Running an individual spec file:
 
 ```
-npx lerna run e2e --scope linode-manager --stream -- --file [/path/to/test.spec.js]
+yarn e2e --file [/path/to/test.spec.js]
 ```
 
 Running E2E suite in a non-default browser
 
 ```
-npx lerna run e2e --scope linode-manager --stream -- --browser [chrome,firefox,headlessChrome,safari]
+yarn e2e --browser [chrome,firefox,headlessChrome,safari]
 ```
 
 #### Run Suite in Docker Local Dev Environment
@@ -116,6 +126,7 @@ to login prior to each test.
 
 ##### Running the Suite
 
+**NOT WORKING ANYMORE**
 ```
 docker-compose -f integration-test.yml up --build --exit-code-from manager-e2e
 
@@ -140,35 +151,32 @@ live in `src/components/ComponentName/ComponentName.spec.js`. The WDIO config li
 ```
 # Starts storybook
 
-npx lerna run storybook --scope linode-manager --stream
+yarn storybook
 
-## New shell
-## Starts selenium (Must be running to execute tests)
-
-npx lerna run seleniun --scope linode-manager --stream
+# you do not need to start selenium for this, this will be started by wdio automatically
 
 ## New shell
 ## Executes specs matching src/components/**/*.spec.js
 
-npx lerna run storybook:e2e --scope linode-manager --stream
+yarn storybook:e2e
 ```
 
 #### Run a Single Test
 ```
 # Executes spec matching src/components/StoryName/StoryName.spec.js
 
-npx lerna run storybook:e2e --scope linode-manager --stream -- --story StoryName
+yarn storybook:e2e --story StoryName
 ```
 
 #### Run a Test in Non-Headless Chrome
 
 ```
-npx lerna run seleniun --scope linode-manager --stream
+yarn selenium
 
 ## New Shell
 ## The --debug flag spawns a visible chrome session
 
-npx lerna run storybook:e2e --scope linode-manager --stream -- --debug --story StoryName
+yarn storybook:e2e --debug --story StoryName
 ```
 
 #### Run Suite in Docker Environment
@@ -178,7 +186,7 @@ npx lerna run storybook:e2e --scope linode-manager --stream -- --debug --story S
 * Same as Testing Manager
 
 ##### Running the Suite
-
+**NOT WORKING ANYMORE**
 ```
 docker-compose -f integration-test.yml up --build --exit-code-from manager-e2e
 
@@ -188,6 +196,7 @@ yarn docker:e2e
 ```
 
 # Accessibility Testing
+**probably not working anymore**
 
 The axe-core accessibility testing script has been integrated into the webdriverIO-based testing framework to enable automated accessibility testing. At present, the script merely navigates to all routes described in `packages/managere2e/constants.js`, loads the page and runs the accessibility tests.
 

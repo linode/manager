@@ -25,7 +25,7 @@ import { combineNodeBalancerConfigNodeAddressAndPort } from './utils';
  */
 export const getNodeBalancers = (params?: any, filters?: any) =>
   Request<Page<NodeBalancer>>(
-    setURL(`${API_ROOT}/nodebalancers/`),
+    setURL(`${API_ROOT}/nodebalancers`),
     setMethod('GET'),
     setParams(params),
     setXFilter(filters)

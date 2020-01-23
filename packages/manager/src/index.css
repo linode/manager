@@ -119,7 +119,12 @@ body.searchOverlay #main-content {
   }
 }
 
-.visually-hidden {
+.label-visually-hidden {
+  margin-right: 0 !important;
+}
+
+.visually-hidden,
+.label-visually-hidden span:last-child {
   /* https://snook.ca/archives/html_and_css/hiding-content-for-accessibility */
   position: absolute !important;
   height: 1px;

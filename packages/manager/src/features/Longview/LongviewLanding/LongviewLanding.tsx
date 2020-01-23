@@ -38,8 +38,14 @@ export const LongviewLanding: React.FunctionComponent<
 
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
-    { title: 'Clients', routeName: `${props.match.url}/clients` },
-    { title: 'Plan Details', routeName: `${props.match.url}/plan-details` }
+    {
+      title: 'Clients',
+      routeName: `${props.match.url}/clients`
+    },
+    {
+      title: 'Plan Details',
+      routeName: `${props.match.url}/plan-details`
+    }
   ];
 
   const handleTabChange = (
@@ -68,7 +74,7 @@ export const LongviewLanding: React.FunctionComponent<
           href={'https://www.linode.com/docs/platform/longview/longview/'}
         />
       </Box>
-      <AppBar position="static" color="default">
+      <AppBar position="static" color="default" role="tablist">
         <Tabs
           value={tabs.findIndex(tab => matches(tab.routeName))}
           onChange={handleTabChange}

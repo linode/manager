@@ -126,7 +126,11 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
     }
 
     return (
-      <React.Fragment>
+      <div
+        id="tabpanel-settings"
+        role="tabpanel"
+        aria-labelledby="tab-settings"
+      >
         <AutoBackups
           isManagedCustomer={isManaged}
           backups_enabled={backups_enabled}
@@ -151,7 +155,7 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
           <ImportGroupsAsTags openDrawer={openImportDrawer} />
         )}
         <TagImportDrawer />
-      </React.Fragment>
+      </div>
     );
   }
 }

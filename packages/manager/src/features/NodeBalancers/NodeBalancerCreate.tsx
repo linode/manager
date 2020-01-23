@@ -17,6 +17,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Sticky, StickyContainer, StickyProps } from 'react-sticky';
 import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
+import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CheckoutBar from 'src/components/CheckoutBar';
 import CircleProgress from 'src/components/CircleProgress';
@@ -30,6 +31,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { ExtendedRegion } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
@@ -57,8 +59,6 @@ import {
   NodeBalancerConfigFieldsWithStatus,
   transformConfigsForRequest
 } from './utils';
-
-import { ExtendedRegion } from 'src/components/EnhancedSelect/variants/RegionSelect';
 
 type ClassNames = 'root' | 'main' | 'sidebar' | 'title';
 
@@ -459,10 +459,10 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         <DocumentTitleSegment segment="Create a NodeBalancer" />
         <Grid container>
           <Grid item className={`${classes.main} mlMain`}>
-            <Typography variant="h1" data-qa-create-nodebalancer-header>
-              Create a NodeBalancer
-            </Typography>
-
+            <Breadcrumb
+              pathname={this.props.location.pathname}
+              data-qa-create-nodebalancer-header
+            />
             {generalError && !disabled && (
               <Notice spacingTop={8} error>
                 {generalError}

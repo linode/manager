@@ -66,6 +66,7 @@ interface PrimaryLink {
   key: string;
   attr?: { [key: string]: any };
   icon?: JSX.Element;
+  activeLinks?: Array<string>;
   onClick?: (e: React.ChangeEvent<any>) => void;
 }
 
@@ -149,6 +150,10 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
         link: {
           display: 'Object Storage',
           href: '/object-storage/buckets',
+          activeLinks: [
+            '/object-storage/buckets',
+            '/object-storage/access-keys'
+          ],
           key: 'object-storage',
           icon: <Storage />
         }
@@ -174,27 +179,18 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
         }
       },
       {
-        conditionToAdd: () => flags.oneClickLocation === 'sidenav',
-        insertAfter: 'Longview',
-        link: {
-          display: 'One-Click Apps',
-          href: '/linodes/create?type=One-Click',
-          key: 'one-click',
-          attr: { 'data-qa-one-click-nav-btn': true },
-          icon: <OCA />,
-          onClick: () => {
-            sendOneClickNavigationEvent('Primary Nav');
-          }
-        }
-      },
-      {
         conditionToAdd: () => hasAccountAccess,
         insertAfter: 'Images',
         link: {
           display: 'Account',
           href: '/account/billing',
           key: 'account',
-          icon: <Account className="small" />
+          icon: <Account className="small" />,
+          activeLinks: [
+            '/account/billing',
+            '/account/users',
+            '/account/settings'
+          ]
         }
       },
       {
@@ -221,6 +217,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
       {
         display: 'Linodes',
         href: '/linodes',
+        activeLinks: ['/linodes', '/linodes/create'],
         key: 'linodes',
         icon: <Linode />
       },
@@ -241,6 +238,16 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
         href: '/domains',
         key: 'domains',
         icon: <Domain style={{ transform: 'scale(1.5)' }} />
+      },
+      {
+        display: 'One-Click Apps',
+        href: '/linodes/create?type=One-Click',
+        key: 'one-click',
+        attr: { 'data-qa-one-click-nav-btn': true },
+        icon: <OCA />,
+        onClick: () => {
+          sendOneClickNavigationEvent('Primary Nav');
+        }
       },
       {
         display: 'Longview',
@@ -318,7 +325,6 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment key={primaryLink.key}>
         <Link
-          role="menuitem"
           to={primaryLink.href}
           onClick={(e: React.ChangeEvent<any>) => {
             this.props.closeMenu();
@@ -330,7 +336,10 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
           {...primaryLink.attr}
           className={classNames({
             [classes.listItem]: true,
-            [classes.active]: linkIsActive(primaryLink.href),
+            [classes.active]: linkIsActive(
+              primaryLink.href,
+              primaryLink.activeLinks
+            ),
             listItemCollpased: isCollapsed
           })}
         >
@@ -367,7 +376,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
           wrap="nowrap"
           spacing={0}
           component="nav"
-          role="menu"
+          role="navigation"
         >
           <Grid item>
             <div
@@ -376,7 +385,11 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
                 [classes.logoCollapsed]: isCollapsed
               })}
             >
-              <Link to={`/dashboard`} onClick={() => this.props.closeMenu()}>
+              <Link
+                to={`/dashboard`}
+                onClick={() => this.props.closeMenu()}
+                title="Dashboard"
+              >
                 <Logo width={115} height={43} />
               </Link>
             </div>
@@ -410,7 +423,6 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
             <Hidden mdUp>
               <Divider className={classes.divider} />
               <Link
-                role="menuitem"
                 to="/profile/display"
                 onClick={this.props.closeMenu}
                 data-qa-nav-item="/profile/display"
@@ -430,7 +442,6 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
                 />
               </Link>
               <Link
-                role="menuitem"
                 to="/logout"
                 onClick={this.props.closeMenu}
                 data-qa-nav-item="/logout"
@@ -455,6 +466,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
                 [classes.settingsCollapsed]: isCollapsed,
                 [classes.activeSettings]: anchorEl
               })}
+              aria-label="User settings"
             >
               <Settings />
             </IconButton>

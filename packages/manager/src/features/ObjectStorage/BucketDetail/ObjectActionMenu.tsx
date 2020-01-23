@@ -30,7 +30,12 @@ export const ObjectActionMenu: React.FC<Props> = props => {
     ];
   };
 
-  return <ActionMenu createActions={createActions()} />;
+  return (
+    <ActionMenu
+      createActions={createActions()}
+      ariaLabel={`Action menu for Object ${props.objectName}`}
+    />
+  );
 };
 
 export default ObjectActionMenu;

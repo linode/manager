@@ -43,6 +43,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     '@keyframes dash': any;
     bg: any;
     color: any;
+    graphs: any;
     visually: any;
     font?: any;
     animateCircleIcon?: any;
@@ -56,6 +57,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     '@keyframes dash'?: any;
     bg?: any;
     color?: any;
+    graphs?: any;
     visually?: any;
     font?: any;
     animateCircleIcon?: any;
@@ -117,6 +119,8 @@ const visuallyHidden = {
   clip: 'rect(1px, 1px, 1px, 1px)'
 };
 
+const graphTransparency = '0.7';
+
 export const COMPACT_SPACING_UNIT = 4;
 export const NORMAL_SPACING_UNIT = 8;
 
@@ -175,7 +179,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       offWhite: '#fbfbfb',
       offWhiteDT: '#fbfbfb', // better handing for dark theme
       navy: '#32363c',
-      lightBlue: '#d7e3ef',
+      lightBlue: '#f0f7ff',
       white: '#fff',
       pureWhite: '#fff',
       tableHeader: '#fbfbfb',
@@ -217,11 +221,75 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       label: '#555',
       disabledText: '#c9cacb',
       kubeLabel: '#272b31',
-      primaryNavText: '#c9cacb',
-      graphBlue: 'rgba(54, 131, 220, .5)',
-      graphYellow: 'rgba(255, 209, 0, .5)',
-      graphPurple: 'rgba(204, 1, 153, .5)',
-      graphGreen: 'rgba(1, 177, 89, .5)'
+      primaryNavText: '#c9cacb'
+    },
+    graphs: {
+      load: `rgba(255, 220, 77, ${graphTransparency})`,
+      requests: `rgba(34, 206, 182, ${graphTransparency})`,
+      connections: {
+        accepted: `rgba(91, 105, 139, ${graphTransparency})`,
+        handled: `rgba(50, 59, 77, ${graphTransparency})`
+      },
+      network: {
+        outbound: `rgba(49, 206, 62, ${graphTransparency})`,
+        inbound: `rgba(16, 162, 29, ${graphTransparency})`
+      },
+      workers: {
+        waiting: `rgba(133, 180, 255, ${graphTransparency})`,
+        reading: `rgba(137, 161, 240, ${graphTransparency})`,
+        writing: `rgba(32, 131, 75, ${graphTransparency})`,
+        starting: `rgba(135, 170, 247, ${graphTransparency})`,
+        sending: `rgba(139, 152, 233, ${graphTransparency})`,
+        keepAlive: `rgba(141, 143, 225, ${graphTransparency})`,
+        DNSLookup: `rgba(143, 133, 218, ${graphTransparency})`,
+        closing: `rgba(145, 124, 211, ${graphTransparency})`,
+        logging: `rgba(147, 115, 203, ${graphTransparency})`,
+        finishing: `rgba(149, 106, 196, ${graphTransparency})`,
+        cleanup: `rgba(152, 97, 189, ${graphTransparency})`
+      },
+      cpu: {
+        system: `rgba(2, 118, 253, ${graphTransparency})`,
+        user: `rgba(81, 166, 245, ${graphTransparency})`,
+        wait: `rgba(145, 199, 237, ${graphTransparency})`,
+        percent: `rgba(54, 131, 220, ${graphTransparency})`
+      },
+      memory: {
+        swap: `rgba(238, 44, 44, ${graphTransparency})`,
+        buffers: `rgba(142, 56, 142, ${graphTransparency})`,
+        cache: `rgba(205, 150, 205, ${graphTransparency})`,
+        used: `rgba(236, 200, 236, ${graphTransparency})`
+      },
+      diskIO: {
+        read: `rgba(255, 196, 105, ${graphTransparency})`,
+        write: `rgba(255, 179, 77, ${graphTransparency})`,
+        swap: `rgba(238, 44, 44, ${graphTransparency})`
+      },
+      ram: `rgba(224, 131, 224, ${graphTransparency})`,
+      space: `rgba(255, 99, 61, ${graphTransparency})`,
+      inodes: `rgba(224, 138, 146, ${graphTransparency})`,
+      queries: {
+        select: `rgba(34, 192, 206, ${graphTransparency})`,
+        insert: `rgba(26, 151, 162, ${graphTransparency})`,
+        update: `rgba(19, 110, 118, ${graphTransparency})`,
+        delete: `rgba(2, 54, 59, ${graphTransparency})`
+      },
+      slowQueries: `rgba(255, 61, 61, ${graphTransparency})`,
+      aborted: {
+        connections: `rgba(255, 10, 10, ${graphTransparency})`,
+        clients: `rgba(214, 0, 0, ${graphTransparency})`
+      },
+      processCount: `rgba(113, 86, 245, ${graphTransparency})`,
+      blue: '#64ADF6',
+      blueBorder: '#3F99F0',
+      green: '#5BD765',
+      greenBorder: '#18B523',
+      orange: `rgba(255, 179, 77, ${graphTransparency})`,
+      purple: '#d9b0d9',
+      purpleBorder: '#d9b0d9',
+      red: '#FF633C',
+      redBorder: '#F13A0A',
+      yellow: '#FFDC7D',
+      yellowBorder: '#DCB64E'
     },
     font: {
       normal: primaryFonts.normal,
@@ -558,7 +626,8 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           marginBottom: spacingUnit * 2 + spacingUnit / 2,
           padding: `${spacingUnit * 2}px ${spacingUnit * 3}px`,
           '& h2': {
-            color: primaryColors.headline
+            color: primaryColors.headline,
+            lineHeight: 1.2
           }
         }
       },
@@ -977,10 +1046,8 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           }
         },
         select: {
-          '&[aria-pressed="true"]': {
-            '&+ input + $icon': {
-              opacity: 1
-            }
+          '&:focus': {
+            backgroundColor: 'transparent'
           }
         },
         icon: {
@@ -996,6 +1063,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       },
       MuiSkeleton: {
         text: {
+          marginTop: 0,
           borderRadius: 0
         }
       },
@@ -1164,7 +1232,8 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       MuiTableCell: {
         root: {
           padding: spacingUnit + 2,
-          borderBottom: `2px solid ${primaryColors.divider}`,
+          borderTop: `1px solid ${primaryColors.divider}`,
+          borderBottom: `1px solid ${primaryColors.divider}`,
           '&:last-child': {
             paddingRight: spacingUnit + 2
           },
@@ -1232,7 +1301,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           backfaceVisibility: 'hidden',
           position: 'relative',
           zIndex: 1,
-          height: spacingUnit * 6,
+          height: spacingUnit * 5 + 1,
           '&:before': {
             borderLeftColor: 'white'
           },

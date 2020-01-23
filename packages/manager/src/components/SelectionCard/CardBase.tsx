@@ -122,7 +122,7 @@ export class CardBase extends React.Component<CombinedProps> {
         className={`${classes.innerGrid} innerGrid`}
       >
         {renderIcon && (
-          <Grid item className={classes.icon}>
+          <Grid item className={`${classes.icon} cardBaseIcon`}>
             {renderIcon()}
           </Grid>
         )}

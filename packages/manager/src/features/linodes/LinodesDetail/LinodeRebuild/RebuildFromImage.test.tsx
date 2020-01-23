@@ -41,10 +41,13 @@ describe('RebuildFromImage', () => {
       wrapWithTheme(<RebuildFromImage {...props} />)
     );
     fireEvent.click(getByTestId('rebuild-button'));
-    await waitForElement(() => [
-      getByText('An image is required.'),
-      getByText('Password cannot be blank.')
-    ]);
+    await waitForElement(
+      () => [
+        getByText('An image is required.'),
+        getByText('Password cannot be blank.')
+      ],
+      {}
+    );
   });
 
   it('opens a confirmation modal after form has been validated', async () => {
@@ -62,6 +65,6 @@ describe('RebuildFromImage', () => {
     });
     fireEvent.click(getByTestId('rebuild-button'));
 
-    await waitForElement(() => getByText('Confirm Linode Rebuild'));
+    await waitForElement(() => getByText('Confirm Linode Rebuild'), {});
   });
 });

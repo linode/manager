@@ -39,6 +39,7 @@ export const DocumentationButton: React.FC<CombinedProps> = props => {
       text="Documentation"
       title="Documentation"
       onClick={() => window.open(href, '_blank', 'noopener')}
+      aria-describedby="external-site"
     >
       Documentation
     </IconTextLink>

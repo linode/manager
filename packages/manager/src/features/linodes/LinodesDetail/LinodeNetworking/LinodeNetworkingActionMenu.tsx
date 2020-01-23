@@ -93,7 +93,13 @@ class LinodeNetworkingActionMenu extends React.Component<CombinedProps> {
   };
 
   render() {
-    return <ActionMenu createActions={this.createActions()} />;
+    const { address } = this.props.ipAddress as any;
+    return (
+      <ActionMenu
+        createActions={this.createActions()}
+        ariaLabel={`Action menu for Address ${address}`}
+      />
+    );
   }
 }
 

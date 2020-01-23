@@ -56,10 +56,13 @@ describe('RebuildFromStackScript', () => {
       wrapWithTheme(<RebuildFromStackScript {...props} />)
     );
     fireEvent.click(getByTestId('rebuild-button'));
-    await waitForElement(() => [
-      getByText('A StackScript is required.'),
-      getByText('An image is required.'),
-      getByText('Password cannot be blank.')
-    ]);
+    await waitForElement(
+      () => [
+        getByText('A StackScript is required.'),
+        getByText('An image is required.'),
+        getByText('Password cannot be blank.')
+      ],
+      {}
+    );
   });
 });

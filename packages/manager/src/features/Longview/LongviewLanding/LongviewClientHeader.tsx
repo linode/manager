@@ -1,9 +1,10 @@
 import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
-import { makeStyles, Theme, WithTheme } from 'src/components/core/styles';
+import Button from 'src/components/Button';
+import ButtonLink from 'src/components/Button/ButtonLink';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EditableEntityLabel from 'src/components/EditableEntityLabel';
 import Grid from 'src/components/Grid';
@@ -12,9 +13,11 @@ import withClientStats, {
   Props as LVDataProps
 } from 'src/containers/longview.stats.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { formatDate } from 'src/utilities/formatDate';
 import { formatUptime } from 'src/utilities/formatUptime';
-import { pluralize } from 'src/utilities/pluralize';
 import { LongviewPackage } from '../request.types';
+import { getPackageNoticeText } from '../shared/utilities';
+import RestrictedUserLabel from './RestrictedUserLabel';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -29,18 +32,25 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   link: {
-    ...pathOr<Object>({}, ['overrides', 'MuiButton', 'root'], theme),
-    ...pathOr<Object>(
-      {},
-      ['overrides', 'MuiButton', 'containedSecondary'],
-      theme
-    ),
-    padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
-    display: 'inline-block',
-    position: 'relative',
+    '& .buttonSpan': {
+      padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`
+    },
     [theme.breakpoints.down('md')]: {
       top: -4
     }
+  },
+  packageButton: {
+    fontSize: '0.875rem',
+    padding: 0,
+    textAlign: 'left'
+  },
+  lastUpdatedOuter: {
+    [theme.breakpoints.up('md')]: {
+      marginTop: theme.spacing(1)
+    }
+  },
+  lastUpdatedText: {
+    fontSize: '0.75rem'
   }
 }));
 
@@ -48,20 +58,13 @@ interface Props {
   clientID: number;
   clientLabel: string;
   lastUpdatedError?: APIError[];
+  openPackageDrawer: () => void;
   updateLongviewClient: DispatchProps['updateLongviewClient'];
+  longviewClientLastUpdated?: number;
+  userCanModifyClient: boolean;
 }
 
-type CombinedProps = Props & DispatchProps & LVDataProps & WithTheme;
-
-const getPackageNoticeText = (packages: LongviewPackage[]) => {
-  if (!packages) {
-    return 'Package information not available';
-  }
-  if (packages.length === 0) {
-    return 'All packages up to date';
-  }
-  return `${pluralize('package', 'packages', packages.length)} have updates`;
-};
+type CombinedProps = Props & DispatchProps & LVDataProps;
 
 export const LongviewClientHeader: React.FC<CombinedProps> = props => {
   const {
@@ -71,7 +74,9 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
     longviewClientData,
     longviewClientDataLoading,
     longviewClientLastUpdated,
-    updateLongviewClient
+    openPackageDrawer,
+    updateLongviewClient,
+    userCanModifyClient
   } = props;
   const classes = useStyles();
   const [updating, setUpdating] = React.useState<boolean>(false);
@@ -103,7 +108,16 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
     ['Packages'],
     longviewClientData
   );
+  const numPackagesToUpdate = packages ? packages.length : 0;
   const packagesToUpdate = getPackageNoticeText(packages);
+
+  const utcLastUpdatedTime = new Date(longviewClientLastUpdated!).toUTCString();
+  const formattedlastUpdatedTime =
+    longviewClientLastUpdated !== undefined
+      ? `Last updated ${formatDate(utcLastUpdatedTime, {
+          humanizeCutoff: 'never'
+        })}`
+      : 'Latest update time not available';
 
   /**
    * The pathOrs ahead will default to 'not available' values if
@@ -119,14 +133,16 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
   return (
     <Grid container direction="column" className={classes.root}>
       <Grid item>
-        <EditableEntityLabel
-          text={clientLabel}
-          iconVariant="linode"
-          subText={hostname}
-          status="running"
-          onEdit={handleUpdateLabel}
-          loading={updating}
-        />
+        {userCanModifyClient ? (
+          <EditableEntityLabel
+            text={clientLabel}
+            subText={hostname}
+            onEdit={handleUpdateLabel}
+            loading={updating}
+          />
+        ) : (
+          <RestrictedUserLabel label={clientLabel} subtext={hostname} />
+        )}
       </Grid>
       <Grid item className={classes.updates}>
         {loading ? (
@@ -134,14 +150,34 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
         ) : (
           <>
             <Typography>{formattedUptime}</Typography>
-            <Typography>{packagesToUpdate}</Typography>
+            {numPackagesToUpdate > 0 ? (
+              <Button
+                className={classes.packageButton}
+                title={packagesToUpdate}
+                onClick={() => openPackageDrawer()}
+              >
+                {packagesToUpdate}
+              </Button>
+            ) : (
+              <Typography>{packagesToUpdate}</Typography>
+            )}
           </>
         )}
       </Grid>
       <Grid item>
-        <Link to={`/longview/clients/${clientID}`} className={classes.link}>
-          View details
-        </Link>
+        <ButtonLink
+          to={`/longview/clients/${clientID}`}
+          linkText="View details"
+          className={classes.link}
+          secondary
+        />
+        {!loading && (
+          <div className={classes.lastUpdatedOuter}>
+            <Typography variant="caption" className={classes.lastUpdatedText}>
+              {formattedlastUpdatedTime}
+            </Typography>
+          </div>
+        )}
       </Grid>
     </Grid>
   );

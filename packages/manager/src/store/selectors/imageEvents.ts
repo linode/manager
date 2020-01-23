@@ -1,5 +1,5 @@
 import { Event } from 'linode-js-sdk/lib/account';
-import { pathOr } from 'ramda';
+import { createSelector } from 'reselect';
 import { ApplicationState } from 'src/store';
 import { isInProgressEvent } from 'src/store/events/event.helpers';
 
@@ -9,12 +9,13 @@ import { isInProgressEvent } from 'src/store/events/event.helpers';
  * is in progress and has a secondary_entity
  * (which will be the actual Image)
  */
-export default (state: ApplicationState['events']) => {
-  const events = pathOr([], ['events'], state);
-  return events.filter(
-    (thisEvent: Event) =>
-      thisEvent.action === 'disk_imagize' &&
-      !!thisEvent.secondary_entity &&
-      isInProgressEvent(thisEvent)
-  );
-};
+export default createSelector<ApplicationState['events'], Event[], Event[]>(
+  state => state.events || [],
+  events =>
+    events.filter(
+      (thisEvent: Event) =>
+        thisEvent.action === 'disk_imagize' &&
+        !!thisEvent.secondary_entity &&
+        isInProgressEvent(thisEvent)
+    )
+);

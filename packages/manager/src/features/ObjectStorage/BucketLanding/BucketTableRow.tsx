@@ -12,7 +12,7 @@ import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import { formatRegion } from 'src/utilities/formatRegion';
+import { formatObjectStorageCluster } from 'src/utilities/formatRegion';
 import BucketActionMenu from './BucketActionMenu';
 
 type ClassNames = 'bucketNameWrapper' | 'bucketRow' | 'link';
@@ -68,6 +68,7 @@ export const BucketTableRow: React.StatelessComponent<
               className={classes.link}
               href={`https://${hostname}`}
               target="_blank"
+              aria-describedby="external-site"
               rel="noopener noreferrer"
               data-qa-hostname
             >
@@ -78,7 +79,7 @@ export const BucketTableRow: React.StatelessComponent<
       </TableCell>
       <TableCell parentColumn="Region">
         <Typography variant="body2" data-qa-region>
-          {formatRegion(cluster)}
+          {formatObjectStorageCluster(cluster)}
         </Typography>
       </TableCell>
       <TableCell parentColumn="Created">
@@ -89,7 +90,11 @@ export const BucketTableRow: React.StatelessComponent<
         />
       </TableCell>
       <TableCell>
-        <BucketActionMenu onRemove={onRemove} data-qa-action-menu />
+        <BucketActionMenu
+          onRemove={onRemove}
+          label={label}
+          data-qa-action-menu
+        />
       </TableCell>
     </TableRow>
   );

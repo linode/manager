@@ -83,7 +83,7 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
     rdns: 'RDNS'
   };
 
-  componentWillReceiveProps(nextProps: CombinedProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: CombinedProps) {
     // This is a hack fix. We need to refactor and replace all components with
     // `componentWillReceiveProps`. @todo: do this.
     // https://reactjs.org/docs/react-component.html#unsafe_componentwillreceiveprops
@@ -185,6 +185,8 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
             <div className={classes.ipv6Input}>
               <TextField
                 placeholder="Enter an IPv6 address"
+                label="Enter an IPv6 address"
+                hideLabel
                 value={ipv6Address || ''}
                 errorText={hasErrorFor('ipv6Address')}
                 onChange={this.handleChangeIPv6Address}
@@ -194,6 +196,8 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
           )}
           <TextField
             placeholder="Enter a domain name"
+            label="Enter a domain name"
+            hideLabel
             value={rdns || ''}
             errorText={hasErrorFor('rdns')}
             onChange={this.handleChangeDomain}
