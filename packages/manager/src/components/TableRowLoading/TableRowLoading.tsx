@@ -27,36 +27,65 @@ const styles = (theme: Theme) =>
 
 export interface Props {
   colSpan: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+  numberOfRows?: number;
   firstColWidth?: number;
   transparent?: any;
+  oneLine?: boolean;
+  compact?: boolean;
+  hasEntityIcon?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const tableRowLoading: React.StatelessComponent<CombinedProps> = props => {
-  const { classes, transparent, colSpan, firstColWidth } = props;
-  return (
-    <TableRow
-      className={classNames({
-        [classes.transparent]: transparent
-      })}
-      data-testid="table-row-loading"
-    >
-      <TableCell
-        colSpan={colSpan}
-        className={classNames({
-          [classes.tableCell]: true,
-          [classes.transparent]: transparent
-        })}
-      >
-        <Skeleton
-          table
-          columns={colSpan ? colSpan : 8}
-          firstColWidth={firstColWidth ? firstColWidth : undefined}
-        />
-      </TableCell>
-    </TableRow>
-  );
+const tableRowLoading: React.FC<CombinedProps> = props => {
+  const {
+    classes,
+    transparent,
+    colSpan,
+    firstColWidth,
+    oneLine,
+    numberOfRows,
+    hasEntityIcon,
+    compact
+  } = props;
+
+  const ifRows = numberOfRows ?? 1;
+  const rowBuilder = () => {
+    const rows: JSX.Element[] = [];
+    for (let rowCount = 0; rowCount <= ifRows - 1; rowCount++) {
+      rows.push(
+        <TableRow
+          className={classNames({
+            [classes.transparent]: transparent
+          })}
+          data-testid="table-row-loading"
+          aria-label="Table content is loading"
+          key={`table-row-loading-${rowCount}`}
+          style={compact ? { height: 'auto' } : undefined}
+        >
+          <TableCell
+            colSpan={colSpan}
+            className={classNames({
+              [classes.tableCell]: true,
+              [classes.transparent]: transparent
+            })}
+          >
+            <Skeleton
+              table
+              numColumns={colSpan ? colSpan : 8}
+              firstColWidth={firstColWidth ? firstColWidth : undefined}
+              oneLine={oneLine}
+              compact={compact}
+              hasEntityIcon={hasEntityIcon}
+            />
+          </TableCell>
+        </TableRow>
+      );
+    }
+    return rows;
+  };
+
+  return <>{rowBuilder()}</>;
 };
 
 const styled = withStyles(styles);

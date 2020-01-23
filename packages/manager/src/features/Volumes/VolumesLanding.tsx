@@ -36,7 +36,7 @@ import withLinodes, {
   Props as WithLinodesProps
 } from 'src/containers/withLinodes.container';
 import { BlockStorage } from 'src/documentation';
-import { resetEventsPolling } from 'src/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import LinodePermissionsError from 'src/features/linodes/LinodesDetail/LinodePermissionsError';
 import {
   LinodeOptions,
@@ -62,6 +62,7 @@ import withRegions, {
   DefaultProps as RegionProps
 } from 'src/containers/regions.container';
 import { doesRegionSupportBlockStorage } from 'src/utilities/doesRegionSupportBlockStorage';
+import { ExtendedVolume } from './types';
 
 type ClassNames =
   | 'root'
@@ -139,11 +140,6 @@ const styles = (theme: Theme) =>
       minWidth: 250
     }
   });
-
-export interface ExtendedVolume extends Volume {
-  linodeLabel?: string;
-  linodeStatus?: string;
-}
 
 interface Props {
   linodeId?: number;
@@ -427,7 +423,13 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   };
 
   renderEmpty = () => {
-    const { linodeConfigs, linodeRegion, readOnly, regionsData } = this.props;
+    const {
+      linodeConfigs,
+      linodeRegion,
+      readOnly,
+      regionsData,
+      fromLinodes
+    } = this.props;
 
     if (
       linodeRegion &&
@@ -474,7 +476,12 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           icon={VolumesIcon}
           buttonProps={[
             {
-              onClick: this.openCreateVolumeDrawer,
+              onClick: fromLinodes
+                ? this.openCreateVolumeDrawer
+                : () => {
+                    this.props.history.push('/volumes/create');
+                  },
+
               children: 'Add a Volume',
               disabled: readOnly
             }
@@ -617,6 +624,7 @@ const EmptyCopy = () => (
       <a
         href="https://linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode-new-manager/"
         target="_blank"
+        aria-describedby="external-site"
         rel="noopener noreferrer"
         className="h-u"
       >
@@ -626,6 +634,7 @@ const EmptyCopy = () => (
       <a
         href="https://www.linode.com/docs/"
         target="_blank"
+        aria-describedby="external-site"
         rel="noopener noreferrer"
         className="h-u"
       >
@@ -647,10 +656,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) =>
     dispatch
   );
 
-const connected = connect(
-  undefined,
-  mapDispatchToProps
-);
+const connected = connect(undefined, mapDispatchToProps);
 
 const documented = setDocs(VolumesLanding.docs);
 

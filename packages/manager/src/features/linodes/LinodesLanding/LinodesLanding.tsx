@@ -24,7 +24,7 @@ import Toggle from 'src/components/Toggle';
 import withBackupCta, {
   BackupCTAProps
 } from 'src/containers/withBackupCTA.container';
-import withImages from 'src/containers/withImages.container';
+import withImages, { WithImages } from 'src/containers/withImages.container';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import { BackupsCTA } from 'src/features/Backups';
 import { ApplicationState } from 'src/store';
@@ -76,7 +76,7 @@ interface Params {
 
 type RouteProps = RouteComponentProps<Params>;
 
-type CombinedProps = WithImagesProps &
+type CombinedProps = WithImages &
   StateProps &
   DispatchProps &
   RouteProps &
@@ -178,7 +178,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       openDeleteDialog: this.openDeleteDialog
     };
 
-    if (imagesError || linodesRequestError) {
+    if (imagesError.read || linodesRequestError) {
       let errorText: string | JSX.Element = pathOr<string | JSX.Element>(
         'Error loading linodes',
         [0, 'reason'],
@@ -220,7 +220,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       { label: 'Image', key: 'image' },
       { label: 'Region', key: 'region' },
       { label: 'Created', key: 'created' },
-      { label: 'Most Recent Backup', key: 'mostRecentBackup' },
+      { label: 'Most Recent Backup', key: 'backups.last_successful' },
       { label: 'Tags', key: 'tags' }
     ];
 
@@ -515,31 +515,19 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   deleteLinode: (linodeId: number) => dispatch(deleteLinode({ linodeId }))
 });
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const updateParams = <T extends any>(params: string, updater: (s: T) => T) => {
   const paramsAsObject: T = parse(params, { ignoreQueryPrefix: true });
   return stringify(updater(paramsAsObject));
 };
 
-interface WithImagesProps {
-  imagesLoading: boolean;
-  imagesError?: APIError[];
-}
-
 export const enhanced = compose<CombinedProps, {}>(
   withRouter,
   setDocs(ListLinodes.docs),
   withSnackbar,
   connected,
-  withImages((ownProps, imagesData, imagesLoading, imagesError) => ({
-    ...ownProps,
-    imagesLoading,
-    imagesError
-  })),
+  withImages(),
   withBackupCta,
   styled
 );

@@ -67,7 +67,7 @@ class VncDisplay extends React.PureComponent<Props> {
     window.clearInterval(this.sizeInterval);
   }
 
-  componentWillReceiveProps(nextProps: Props) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     if (!this.rfb) {
       return;
     }

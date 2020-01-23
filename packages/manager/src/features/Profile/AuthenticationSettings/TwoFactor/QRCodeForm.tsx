@@ -58,7 +58,12 @@ const QRCodeForm: React.StatelessComponent<CombinedProps> = props => {
       <Typography variant="h3" data-qa-copy className={classes.instructions}>
         If your TFA app does not have a scanner, you can use this secret key:
       </Typography>
-      <CopyableTextField className={classes.root} value={secret} />
+      <CopyableTextField
+        className={classes.root}
+        value={secret}
+        label="Secret Key"
+        hideLabel
+      />
     </React.Fragment>
   );
 };

@@ -14,11 +14,11 @@ import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import useFlags from 'src/hooks/useFlags';
 import { ApplicationState } from 'src/store';
 import EnableObjectStorageModal from '../EnableObjectStorageModal';
 import { confirmObjectStorage } from '../utilities';
-import { MODES } from './AccessKeyLanding';
+
+export type MODES = 'creating' | 'editing';
 
 export interface Props {
   open: boolean;
@@ -40,9 +40,7 @@ interface FormState {
   label: string;
 }
 
-export const AccessKeyDrawer: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const AccessKeyDrawer: React.StatelessComponent<CombinedProps> = props => {
   const {
     isRestrictedUser,
     open,
@@ -51,8 +49,6 @@ export const AccessKeyDrawer: React.StatelessComponent<
     mode,
     objectStorageKey
   } = props;
-
-  const flags = useFlags();
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
 
@@ -82,15 +78,15 @@ export const AccessKeyDrawer: React.StatelessComponent<
             handleChange,
             handleBlur,
             handleSubmit,
-            isSubmitting
+            isSubmitting,
+            status
           } = formikProps;
 
           const beforeSubmit = () => {
             confirmObjectStorage<FormState>(
               props.object_storage,
               formikProps,
-              () => setDialogOpen(true),
-              flags.objectStorageBilling
+              () => setDialogOpen(true)
             );
           };
 
@@ -115,6 +111,7 @@ export const AccessKeyDrawer: React.StatelessComponent<
                   <a
                     href="https://linode.com/docs/platform/object-storage/how-to-use-object-storage/#object-storage-tools"
                     target="_blank"
+                    aria-describedby="external-site"
                     rel="noopener noreferrer"
                     className="h-u"
                   >

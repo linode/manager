@@ -100,7 +100,12 @@ export class MonitorActionMenu extends React.Component<CombinedProps, {}> {
   };
 
   render() {
-    return <ActionMenu createActions={this.createActions()} />;
+    return (
+      <ActionMenu
+        createActions={this.createActions()}
+        ariaLabel={`Action menu for Monitor ${this.props.label}`}
+      />
+    );
   }
 }
 

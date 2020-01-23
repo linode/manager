@@ -28,7 +28,7 @@ import LinodeControls from '../LinodesDetail/LinodesDetailHeader/LinodeControls'
 import Notifications from '../LinodesDetail/LinodesDetailHeader/Notifications';
 import LinodeBusyStatus from '../LinodesDetail/LinodeSummary/LinodeBusyStatus';
 
-import { resetEventsPolling } from 'src/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import { displayType } from 'src/features/linodes/presentation';
 import { ApplicationState } from 'src/store';
 import getLinodeDescription from 'src/utilities/getLinodeDescription';

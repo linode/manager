@@ -33,6 +33,7 @@ import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent
 } from 'src/utilities/ga';
+import CancelNotice from '../CancelNotice';
 import BucketTable from './BucketTable';
 
 type ClassNames = 'copy';
@@ -144,6 +145,7 @@ export const BucketLanding: React.StatelessComponent<CombinedProps> = props => {
         <a
           href="https://www.linode.com/docs/platform/object-storage/lifecycle-policies/"
           target="_blank"
+          aria-describedby="external-site"
           rel="noopener noreferrer"
         >
           delete all objects
@@ -152,15 +154,20 @@ export const BucketLanding: React.StatelessComponent<CombinedProps> = props => {
         <a
           href="https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/#object-storage-tools"
           target="_blank"
+          aria-describedby="external-site"
           rel="noopener noreferrer"
         >
           another tool
         </a>{' '}
         to force deletion.
       </Typography>
+      {/* If the user is attempting to delete their last Bucket, remind them
+      that they will still be billed unless they cancel Object Storage in
+      Account Settings. */}
+      {bucketsData.length === 1 && <CancelNotice className={classes.copy} />}
       <Typography className={classes.copy}>
-        To confirm deletion, type the name of the bucket ({bucketToRemove.label}
-        ) in the field below:
+        To confirm deletion, type the name of the bucket (
+        <b>{bucketToRemove.label}</b>) in the field below:
       </Typography>
     </React.Fragment>
   ) : null;
@@ -184,44 +191,47 @@ export const BucketLanding: React.StatelessComponent<CombinedProps> = props => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Buckets" />
-      <Grid container justify="flex-end">
-        <Grid item>
-          <AddNewLink onClick={openBucketDrawer} label="Add a Bucket" />
+      <div id="tabpanel-buckets" role="tabpanel" aria-labelledby="tab-buckets">
+        <Grid container justify="flex-end">
+          <Grid item>
+            <AddNewLink onClick={openBucketDrawer} label="Add a Bucket" />
+          </Grid>
         </Grid>
-      </Grid>
-      <Grid item xs={12}>
-        <OrderBy data={bucketsData} order={'asc'} orderBy={'label'}>
-          {({ data: orderedData, handleOrderChange, order, orderBy }) => {
-            const bucketTableProps = {
-              orderBy,
-              order,
-              handleOrderChange,
-              handleClickRemove,
-              data: orderedData
-            };
-            return <BucketTable {...bucketTableProps} />;
+        <Grid item xs={12}>
+          <OrderBy data={bucketsData} order={'asc'} orderBy={'label'}>
+            {({ data: orderedData, handleOrderChange, order, orderBy }) => {
+              const bucketTableProps = {
+                orderBy,
+                order,
+                handleOrderChange,
+                handleClickRemove,
+                data: orderedData
+              };
+              return <BucketTable {...bucketTableProps} />;
+            }}
+          </OrderBy>
+        </Grid>
+        <ConfirmationDialog
+          open={removeBucketConfirmationDialog.isOpen}
+          onClose={() => {
+            removeBucketConfirmationDialog.close();
           }}
-        </OrderBy>
-      </Grid>
-      <ConfirmationDialog
-        open={removeBucketConfirmationDialog.isOpen}
-        onClose={() => {
-          removeBucketConfirmationDialog.close();
-        }}
-        title={
-          bucketToRemove ? `Delete ${bucketToRemove.label}` : 'Delete bucket'
-        }
-        actions={actions}
-        error={error}
-      >
-        {deleteBucketConfirmationMessage}
-        <TextField
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setConfirmBucketName(e.target.value)
+          title={
+            bucketToRemove ? `Delete ${bucketToRemove.label}` : 'Delete bucket'
           }
-          expand
-        />
-      </ConfirmationDialog>
+          actions={actions}
+          error={error}
+        >
+          {deleteBucketConfirmationMessage}
+          <TextField
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setConfirmBucketName(e.target.value)
+            }
+            expand
+            label="Bucket Name"
+          />
+        </ConfirmationDialog>
+      </div>
     </React.Fragment>
   );
 };
@@ -264,6 +274,7 @@ const EmptyCopy = () => (
       <a
         href="https://linode.com/docs/platform/object-storage"
         target="_blank"
+        aria-describedby="external-site"
         rel="noopener noreferrer"
         className="h-u"
       >

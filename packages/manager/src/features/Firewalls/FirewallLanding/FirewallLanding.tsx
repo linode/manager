@@ -19,7 +19,7 @@ import FirewallTable from './FirewallTable';
 
 const useStyles = makeStyles((theme: Theme) => ({
   line: {
-    marginTop: theme.spacing(10),
+    marginTop: theme.spacing(4),
     marginBottom: theme.spacing(3)
   }
 }));

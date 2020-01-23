@@ -263,6 +263,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
                     selectedID={values.region}
                     handleSelection={value => setFieldValue('region', value)}
                     disabled={disabled}
+                    label={'Select a Region'}
                     styles={{
                       /** altering styles for mobile-view */
                       menuList: (base: any) => ({

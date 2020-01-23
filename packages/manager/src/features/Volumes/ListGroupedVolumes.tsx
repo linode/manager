@@ -12,13 +12,14 @@ import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import Paginate from 'src/components/Paginate';
-import PaginationFooter from 'src/components/PaginationFooter';
+import PaginationFooter, {
+  MIN_PAGE_SIZE
+} from 'src/components/PaginationFooter';
+import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 import RenderVolumeData, { RenderVolumeDataProps } from './RenderVolumeData';
-import { ExtendedVolume } from './VolumesLanding';
+import { ExtendedVolume } from './types';
 import TableWrapper from './VolumeTableWrapper';
-
-const DEFAULT_PAGE_SIZE = 25;
 
 type ClassNames =
   | 'root'
@@ -72,7 +73,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ListGroupedDomains: React.FC<CombinedProps> = props => {
+const ListGroupedVolumes: React.FC<CombinedProps> = props => {
   const {
     data,
     order,
@@ -82,10 +83,7 @@ const ListGroupedDomains: React.FC<CombinedProps> = props => {
     renderProps
   } = props;
 
-  const groupedVolumes = compose(
-    sortGroups,
-    groupByTags
-  )(data);
+  const groupedVolumes = compose(sortGroups, groupByTags)(data);
   const tableWrapperProps = {
     handleOrderChange,
     order,
@@ -93,12 +91,18 @@ const ListGroupedDomains: React.FC<CombinedProps> = props => {
     isVolumesLanding: renderProps.isVolumesLanding
   };
 
+  const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
+
   return (
     <TableWrapper {...tableWrapperProps}>
       {groupedVolumes.map(([tag, volumes]: [string, Volume[]]) => {
         return (
           <React.Fragment key={tag}>
-            <Paginate data={volumes} pageSize={DEFAULT_PAGE_SIZE}>
+            <Paginate
+              data={volumes}
+              pageSize={infinitePageSize}
+              pageSizeSetter={setInfinitePageSize}
+            >
               {({
                 data: paginatedData,
                 handlePageChange,
@@ -125,7 +129,7 @@ const ListGroupedDomains: React.FC<CombinedProps> = props => {
                         </TableCell>
                       </TableRow>
                       <RenderVolumeData data={paginatedData} {...renderProps} />
-                      {count > DEFAULT_PAGE_SIZE && (
+                      {count > MIN_PAGE_SIZE && (
                         <TableRow>
                           <TableCell
                             colSpan={7}
@@ -138,6 +142,7 @@ const ListGroupedDomains: React.FC<CombinedProps> = props => {
                               pageSize={pageSize}
                               page={page}
                               eventCategory={'volumes landing'}
+                              showAll
                             />
                           </TableCell>
                         </TableRow>
@@ -156,4 +161,4 @@ const ListGroupedDomains: React.FC<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-export default styled(ListGroupedDomains);
+export default styled(ListGroupedVolumes);
