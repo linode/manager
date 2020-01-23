@@ -21,7 +21,8 @@ describe('ListLinodes', () => {
       wrapWithTheme(
         <ListLinodes
           imagesLoading={false}
-          imagesError={undefined}
+          imagesError={{}}
+          imagesData={{}}
           userTimezone="GMT"
           userTimezoneLoading={false}
           someLinodesHaveScheduledMaintenance={true}

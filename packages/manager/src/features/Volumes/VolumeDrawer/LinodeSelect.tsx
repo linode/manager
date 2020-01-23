@@ -192,6 +192,7 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
               'data-qa-select-linode': true
             }
           }}
+          hideLabel
           {...rest}
         />
         {!error && (

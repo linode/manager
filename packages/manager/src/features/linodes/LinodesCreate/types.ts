@@ -34,17 +34,6 @@ export interface WithDisplayData {
   backupsMonthlyPrice?: number | null;
 }
 
-/**
- * Redux Props including the error and loading states.
- * These props are meant for the parent component that is doing
- * the null, loading and error checking
- */
-export interface WithImagesProps {
-  imagesData?: Record<string, Image>;
-  imagesLoading: boolean;
-  imagesError?: string;
-}
-
 export interface WithLinodesProps {
   linodesData?: Linode[];
   linodesLoading: boolean;

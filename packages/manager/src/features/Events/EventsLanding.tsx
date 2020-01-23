@@ -4,7 +4,7 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { compose as rCompose, concat, uniq } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import Waypoint from 'react-waypoint';
+import { Waypoint } from 'react-waypoint';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
@@ -16,15 +16,13 @@ import {
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
+import H1Header from 'src/components/H1Header';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import withPerfMetrics, {
-  Props as WithPerfMetricsProps
-} from 'src/components/withPerfMetrics';
 import { ApplicationState } from 'src/store';
 import { setDeletedEvents } from 'src/store/events/event.helpers';
 import { ExtendedEvent } from 'src/store/events/event.types';
@@ -47,12 +45,11 @@ const styles = (theme: Theme) =>
       textAlign: 'center'
     },
     labelCell: {
-      width: '69%',
+      width: '60%',
       minWidth: 200,
       paddingLeft: 10
     },
     timeCell: {
-      width: '30%',
       paddingLeft: theme.spacing(1) / 2
     }
   });
@@ -67,8 +64,7 @@ interface Props {
 type CombinedProps = Props &
   StateProps &
   WithSnackbarProps &
-  WithStyles<ClassNames> &
-  WithPerfMetricsProps;
+  WithStyles<ClassNames>;
 
 const appendToEvents = (oldEvents: Event[], newEvents: Event[]) =>
   rCompose<Event[], Event[], Event[], Event[]>(
@@ -244,9 +240,7 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
     getEventsRequest()
       .then(handleEventsRequestSuccess)
       .then(() => setInitialLoaded(true))
-      .then(() => props.endPerfMeasurement())
       .catch(() => {
-        props.endPerfMeasurement({ didFail: true });
         setLoading(false);
         setError('Error');
       });
@@ -277,11 +271,7 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
   return (
     <>
       {/* Only display this title on the main Events landing page */}
-      {!entityId && (
-        <Typography variant="h1" className={classes.header}>
-          Events
-        </Typography>
-      )}
+      {!entityId && <H1Header title="Events" className={classes.header} />}
       <Paper>
         <Table aria-label="List of Events">
           <TableHead>
@@ -295,10 +285,16 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
                 Event
               </TableCell>
               <TableCell
+                data-qa-events-duration-header
+                className={classes.timeCell}
+              >
+                Duration
+              </TableCell>
+              <TableCell
                 data-qa-events-time-header
                 className={classes.timeCell}
               >
-                Time
+                When
               </TableCell>
             </TableRow>
           </TableHead>
@@ -314,17 +310,17 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
           </TableBody>
         </Table>
       </Paper>
-      {loadMoreEvents && (initialLoaded && !isLoading) ? (
+      {loadMoreEvents && initialLoaded && !isLoading ? (
         <Waypoint onEnter={getNext}>
           <div />
         </Waypoint>
       ) : (
         !isLoading &&
-        (!error && (
+        !error && (
           <Typography className={classes.noMoreEvents}>
             No more events to show
           </Typography>
-        ))
+        )
       )}
     </>
   );
@@ -341,7 +337,16 @@ export const renderTableBody = (
   const filteredEvents = removeBlacklistedEvents(events, ['profile_update']);
 
   if (loading) {
-    return <TableRowLoading colSpan={12} data-qa-events-table-loading />;
+    return (
+      <TableRowLoading
+        colSpan={3}
+        numberOfRows={10}
+        oneLine
+        data-qa-events-table-loading
+        firstColWidth={70}
+        compact
+      />
+    );
   } else if (error) {
     return (
       <TableRowError
@@ -392,11 +397,6 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose<CombinedProps, Props>(
-  withPerfMetrics('EventsLanding'),
-  styled,
-  connected,
-  withSnackbar
-);
+const enhanced = compose<CombinedProps, Props>(styled, connected, withSnackbar);
 
 export default enhanced(EventsLanding);

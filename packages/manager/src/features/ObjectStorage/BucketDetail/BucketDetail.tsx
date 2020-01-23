@@ -9,7 +9,7 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { prop, sortBy } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import Waypoint from 'react-waypoint';
+import { Waypoint } from 'react-waypoint';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Breadcrumb from 'src/components/Breadcrumb';
@@ -542,9 +542,6 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, {}>(
-  styled,
-  withSnackbar
-);
+const enhanced = compose<CombinedProps, {}>(styled, withSnackbar);
 
 export default enhanced(BucketDetail);

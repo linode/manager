@@ -7,15 +7,9 @@ import {
   withRouter
 } from 'react-router-dom';
 
-import DefaultLoader from '../../../src/components/DefaultLoader';
+const VolumesLanding = React.lazy(() => import('./VolumesLanding'));
 
-const VolumesLanding = DefaultLoader({
-  loader: () => import('./VolumesLanding')
-});
-
-const VolumeCreate = DefaultLoader({
-  loader: () => import('./VolumeCreate/VolumeCreate')
-});
+const VolumeCreate = React.lazy(() => import('./VolumeCreate/VolumeCreate'));
 
 type Props = RouteComponentProps<{}>;
 

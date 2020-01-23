@@ -46,6 +46,8 @@ class TicketReply extends React.Component<CombinedProps> {
             handleChange(e.target.value)
           }
           errorText={error}
+          label="Enter your reply"
+          hideLabel
         />
       </React.Fragment>
     );

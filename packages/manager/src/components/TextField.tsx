@@ -88,14 +88,8 @@ const styles = (theme: Theme) =>
       color: theme.color.red
     },
     editable: {
-      fontSize: '.75rem',
-      marginTop: theme.spacing(1) / 2,
-      position: 'absolute',
-      bottom: -5,
-      left: 6,
-      backgroundColor: theme.bg.white,
-      paddingLeft: 4,
-      paddingRight: 4
+      wordBreak: 'keep-all',
+      paddingLeft: 1
     },
     helperTextTop: {
       marginBottom: theme.spacing(),
@@ -133,9 +127,15 @@ interface BaseProps {
   dataAttrs?: Record<string, any>;
   noMarginTop?: boolean;
   loading?: boolean;
+  hideLabel?: boolean;
 }
 
-export type Props = BaseProps & TextFieldProps;
+interface TextFieldPropsOverrides extends TextFieldProps {
+  // We override this prop to make it required
+  label: string;
+}
+
+export type Props = BaseProps & TextFieldProps & TextFieldPropsOverrides;
 
 type CombinedProps = Props & WithTheme & WithStyles<ClassNames>;
 
@@ -152,6 +152,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
         ? this.props.value
         : ''
   };
+
   shouldComponentUpdate(nextProps: CombinedProps, nextState: State) {
     return (
       nextProps.value !== this.props.value ||
@@ -165,6 +166,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
       nextProps.helperText !== this.props.helperText ||
       nextProps.classes !== this.props.classes ||
       nextProps.loading !== this.props.loading ||
+      nextProps.label !== this.props.label ||
       Boolean(
         this.props.select && nextProps.children !== this.props.children
       ) ||
@@ -252,6 +254,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
       value,
       dataAttrs,
       error,
+      hideLabel,
       noMarginTop,
       label,
       loading,
@@ -282,8 +285,14 @@ class LinodeTextField extends React.Component<CombinedProps> {
             data-qa-textfield-label={label}
             className={classNames({
               [classes.wrapper]: noMarginTop ? false : true,
-              [classes.noTransform]: true
+              [classes.noTransform]: true,
+              'visually-hidden': hideLabel
             })}
+            htmlFor={
+              this.props.label
+                ? convertToKebabCase(`${this.props.label}`)
+                : undefined
+            }
           >
             {maybeRequiredLabel || ''}
           </InputLabel>
@@ -326,6 +335,9 @@ class LinodeTextField extends React.Component<CombinedProps> {
             }}
             inputProps={{
               'data-testid': 'textfield-input',
+              id: this.props.label
+                ? convertToKebabCase(`${this.props.label}`)
+                : undefined,
               ...inputProps
             }}
             InputProps={{
@@ -372,11 +384,6 @@ class LinodeTextField extends React.Component<CombinedProps> {
               },
               className
             )}
-            id={
-              this.props.label
-                ? convertToKebabCase(`${this.props.label}`)
-                : undefined
-            }
           >
             {this.props.children}
           </TextField>
@@ -387,6 +394,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
                 editable ? classes.editable : ''
               }`}
               data-qa-textfield-error-text={this.props.label}
+              role="alert"
             >
               {errorText}
             </FormHelperText>

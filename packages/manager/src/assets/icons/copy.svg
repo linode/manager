@@ -1,0 +1,25 @@
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="E-01.-Longview-Installation" transform="translate(-289.000000, -323.000000)">
+            <rect x="0" y="0" width="1440" height="1089"></rect>
+            <g id="list" transform="translate(252.000000, 230.000000)" stroke="#3683DC" stroke-linecap="round" stroke-linejoin="round">
+                <g id="main-content">
+                    <g id="command" transform="translate(25.000000, 83.000000)">
+                        <g id="copy" transform="translate(12.000000, 10.000000)">
+                            <g transform="translate(0.500000, 0.500000)" id="Path">
+                                <path d="M2.5,0.5 L14.5,0.5 C15.604,0.5 16.5,1.396 16.5,2.5 L16.5,14.5 C16.5,15.604 15.604,16.5 14.5,16.5 L2.5,16.5 C1.396,16.5 0.5,15.604 0.5,14.5 L0.5,2.5 C0.5,1.396 1.396,0.5 2.5,0.5 Z" stroke-width="1.5" fill="#FFFFFF"></path>
+                                <line x1="4.5" y1="4" x2="12.5" y2="4" stroke-width="1.5"></line>
+                                <line x1="4.5" y1="8.5" x2="12.5" y2="8" stroke-width="1.5"></line>
+                                <line x1="4.5" y1="13" x2="7.5" y2="13" stroke-width="1.5"></line>
+                                <path d="M8.5,6.5 L20.5,6.5 C21.604,6.5 22.5,7.396 22.5,8.5 L22.5,20.5 C22.5,21.604 21.604,22.5 20.5,22.5 L8.5,22.5 C7.396,22.5 6.5,21.604 6.5,20.5 L6.5,8.5 C6.5,7.396 7.396,6.5 8.5,6.5 Z" stroke-width="1.5" fill="#FFFFFF"></path>
+                                <line x1="10.5" y1="11" x2="18.5" y2="11" stroke-width="1.5"></line>
+                                <line x1="10.5" y1="15" x2="18.5" y2="15" stroke-width="1.5"></line>
+                                <line x1="10.5" y1="19" x2="13.5" y2="19" stroke-width="1.5"></line>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

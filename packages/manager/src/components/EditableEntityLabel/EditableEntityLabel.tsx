@@ -9,19 +9,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     minHeight: 40
   },
+  icon: {
+    marginRight: theme.spacing(1)
+  },
   smallInput: {
     position: 'relative',
-    paddingRight: 20
-  },
-  subText: {
-    fontSize: '0.8em'
+    paddingRight: 20,
+    whiteSpace: 'pre-wrap',
+    wordBreak: 'break-all',
+    fontSize: 15
   }
 }));
 
 interface Props {
   text: string;
   onEdit: (s: string) => Promise<any>;
-  iconVariant: Variant;
+  iconVariant?: Variant;
   loading: boolean;
   subText?: string;
   status?: string;
@@ -64,41 +67,38 @@ export const EditableEntityLabel: React.FC<Props> = props => {
       justify="flex-start"
       className={`${classes.root} m0`}
     >
-      {!isEditing && (
-        <Grid item className="py0">
-          <EntityIcon variant={iconVariant} status={status} />
-        </Grid>
-      )}
-      <Grid
-        container
-        item
-        direction="column"
-        alignItems="flex-start"
-        justify="center"
-        className="py0"
-      >
+      {!isEditing && iconVariant && (
         <Grid item className="py0 px0">
-          <EditableInput
-            errorText={error}
-            loading={loading}
-            onEdit={onSubmit}
-            openForEdit={handleOpen}
-            cancelEdit={handleClose}
-            onInputChange={(t: string) => setInputText(t)}
-            text={text}
-            inputText={inputText}
-            isEditing={isEditing}
-            typeVariant="table-cell"
-            className={classes.smallInput}
+          <EntityIcon
+            variant={iconVariant}
+            status={status}
+            className={classes.icon}
           />
         </Grid>
-        {subText && !isEditing && (
+      )}
+      <Grid item className="py0">
+        <Grid container>
           <Grid item className="py0 px0">
-            <Typography variant="body2" className={classes.subText}>
-              {subText}
-            </Typography>
+            <EditableInput
+              errorText={error}
+              loading={loading}
+              onEdit={onSubmit}
+              openForEdit={handleOpen}
+              cancelEdit={handleClose}
+              onInputChange={(t: string) => setInputText(t)}
+              text={text}
+              inputText={inputText}
+              isEditing={isEditing}
+              typeVariant="table-cell"
+              className={classes.smallInput}
+            />
           </Grid>
-        )}
+          {subText && !isEditing && (
+            <Grid item xs={12} className="py0 px0">
+              <Typography variant="body2">{subText}</Typography>
+            </Grid>
+          )}
+        </Grid>
       </Grid>
     </Grid>
   );

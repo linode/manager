@@ -42,6 +42,7 @@ export const SSHAccessRow: React.FunctionComponent<Props> = props => {
           isEnabled={isAccessEnabled}
           updateOne={updateOne}
           openDrawer={openDrawer}
+          linodeLabel={linodeSetting.label}
         />
       </TableCell>
     </TableRow>
