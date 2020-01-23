@@ -204,7 +204,7 @@ export const oneClickApps: OCA[] = [
     tips: [
       `Once the script finishes, go to <em>https://[your-Linode's-IP-address]/phpmyadmin</em> in a browser.`
     ],
-    logo_url: 'assets/phpMyAdmin_color.svg'
+    logo_url: 'assets/phpmyadmin_color.svg'
   },
   {
     name: 'Rust',
