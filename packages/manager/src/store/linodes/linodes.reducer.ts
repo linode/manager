@@ -12,7 +12,7 @@ import {
   upsertLinode
 } from './linodes.actions';
 
-import { LinodeWithMaintenanceAndMostRecentBackup } from './types';
+import { LinodeWithMaintenanceAndDisplayStatus } from './types';
 
 const getId = <E extends HasNumericID>({ id }: E) => id;
 
@@ -20,7 +20,7 @@ const getId = <E extends HasNumericID>({ id }: E) => id;
  * State
  */
 export type State = EntityState<
-  LinodeWithMaintenanceAndMostRecentBackup,
+  LinodeWithMaintenanceAndDisplayStatus,
   EntityError
 >;
 

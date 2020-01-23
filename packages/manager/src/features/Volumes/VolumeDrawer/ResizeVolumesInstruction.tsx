@@ -52,6 +52,8 @@ const ResizeVolumeInstructions: React.FC<CombinedProps> = props => {
           className={classes.copyField}
           value={`umount /dev/disk/by-id/scsi-0Linode_Volume_${volumeLabel}`}
           data-qa-umount
+          label="Make sure the volume is unmounted for safety"
+          hideLabel
         />
       </div>
 
@@ -64,11 +66,15 @@ const ResizeVolumeInstructions: React.FC<CombinedProps> = props => {
           className={classes.copyField}
           value={`e2fsck -f /dev/disk/by-id/scsi-0Linode_Volume_${volumeLabel}`}
           data-qa-check-filesystem
+          label="Run a file system check"
+          hideLabel
         />
         <CopyableTextField
           className={classes.copyField}
           value={`resize2fs /dev/disk/by-id/scsi-0Linode_Volume_${volumeLabel}`}
           data-qa-resize-filesystem
+          label="Resize file system to fill the new volume"
+          hideLabel
         />
       </div>
 
@@ -80,6 +86,8 @@ const ResizeVolumeInstructions: React.FC<CombinedProps> = props => {
           className={classes.copyField}
           value={`mount /dev/disk/by-id/scsi-0Linode_Volume_${volumeLabel} /mnt/${volumeLabel}`}
           data-qa-mount
+          label="Mount back onto the filesystem"
+          hideLabel
         />
       </div>
       <ActionsPanel>

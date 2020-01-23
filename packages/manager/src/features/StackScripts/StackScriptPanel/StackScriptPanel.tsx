@@ -1,6 +1,7 @@
 import { Image } from 'linode-js-sdk/lib/images';
 import { Linode } from 'linode-js-sdk/lib/linodes';
-import { pathOr } from 'ramda';
+import { StackScript } from 'linode-js-sdk/lib/stackscripts';
+import { ResourcePage } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
@@ -13,6 +14,7 @@ import {
 import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { MapState } from 'src/store/types';
+import { getQueryParam } from 'src/utilities/queryParams';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts
@@ -50,6 +52,7 @@ const styles = (theme: Theme) =>
 interface Props {
   error?: string;
   publicImages: Record<string, Image>;
+  queryString: string;
 }
 
 type CombinedProps = Props & StateProps & WithStyles<ClassNames>;
@@ -79,7 +82,9 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, {}> {
   }));
 
   render() {
-    const { error, classes } = this.props;
+    const { error, classes, queryString } = this.props;
+
+    const initTab = getInitTab(queryString, StackScriptTabs);
 
     return (
       <React.Fragment>
@@ -89,14 +94,24 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, {}> {
           shrinkTabContent={classes.creating}
           tabs={this.createTabs}
           header=""
-          initTab={0}
+          initTab={initTab}
         />
       </React.Fragment>
     );
   }
 }
 
-export const StackScriptTabs = [
+export interface StackScriptTab {
+  title: string;
+  request: (
+    currentUser: string,
+    params?: any,
+    filter?: any
+  ) => Promise<ResourcePage<StackScript>>;
+  category: 'account' | 'community';
+}
+
+export const StackScriptTabs: StackScriptTab[] = [
   {
     title: 'Account StackScripts',
     request: getMineAndAccountStackScripts,
@@ -109,12 +124,33 @@ export const StackScriptTabs = [
   }
 ];
 
+// Returns the index of the desired tab based on a query string. If no type (or
+// an unknown type) is specified in the query string, return the default.
+export const getInitTab = (
+  queryString: string,
+  tabs: StackScriptTab[],
+  defaultTab: number = 0
+) => {
+  // Grab the desired type from the query string.
+  const stackScriptType = getQueryParam(queryString, 'type');
+
+  // Find the index of the tab whose category matches the desired type.
+  const tabIndex = tabs.findIndex(tab => tab.category === stackScriptType);
+
+  // Return the default if the desired type isn't found.
+  if (tabIndex === -1) {
+    return defaultTab;
+  }
+
+  return tabIndex;
+};
+
 interface StateProps {
   username: string;
 }
 
 const mapStateToProps: MapState<StateProps, Props> = state => ({
-  username: pathOr('', ['data', 'username'], state.__resources.profile)
+  username: state.__resources.profile?.data?.username ?? ''
 });
 
 const connected = connect(mapStateToProps);

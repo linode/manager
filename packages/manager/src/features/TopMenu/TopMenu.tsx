@@ -1,6 +1,7 @@
 import MenuIcon from '@material-ui/icons/Menu';
 import * as React from 'react';
 import AppBar from 'src/components/core/AppBar';
+import Hidden from 'src/components/core/Hidden';
 import IconButton from 'src/components/core/IconButton';
 import {
   createStyles,
@@ -33,19 +34,18 @@ const styles = (theme: Theme) =>
       paddingRight: '0 !important'
     },
     toolbar: {
-      minHeight: theme.spacing(4) + 32,
       padding: `${theme.spacing(1)}px 0`,
       [theme.breakpoints.up('md')]: {
         paddingLeft: theme.spacing(1),
         paddingRight: theme.spacing(1)
       },
       [theme.breakpoints.up('lg')]: {
-        minHeight: theme.spacing(5) + 40,
         paddingLeft: theme.spacing(3),
         paddingRight: theme.spacing(3)
       }
     },
     navIconHide: {
+      order: 1,
       '& > span': {
         justifyContent: 'flex-start'
       },
@@ -54,13 +54,14 @@ const styles = (theme: Theme) =>
         height: 32
       },
       [theme.breakpoints.up('lg')]: {
-        display: 'none'
+        marginLeft: -theme.spacing(2)
       }
     }
   });
 
 interface Props {
   openSideMenu: () => void;
+  desktopMenuToggle: () => void;
   isLoggedInAsCustomer: boolean;
   username: string;
 }
@@ -69,7 +70,7 @@ type PropsWithStyles = Props & WithStyles<ClassNames>;
 
 class TopMenu extends React.Component<PropsWithStyles> {
   render() {
-    const { classes, openSideMenu } = this.props;
+    const { classes, openSideMenu, desktopMenuToggle } = this.props;
 
     return (
       <React.Fragment>
@@ -89,16 +90,28 @@ class TopMenu extends React.Component<PropsWithStyles> {
         )}
         <AppBar className={classes.appBar}>
           <Toolbar className={classes.toolbar}>
-            <IconButton
-              color="inherit"
-              aria-label="open menu"
-              onClick={openSideMenu}
-              className={classes.navIconHide}
-            >
-              <MenuIcon />
-            </IconButton>
-            <AddNewMenu />
+            <Hidden smDown>
+              <IconButton
+                color="inherit"
+                aria-label="open menu"
+                onClick={desktopMenuToggle}
+                className={classes.navIconHide}
+              >
+                <MenuIcon />
+              </IconButton>
+            </Hidden>
+            <Hidden mdUp>
+              <IconButton
+                color="inherit"
+                aria-label="open menu"
+                onClick={openSideMenu}
+                className={classes.navIconHide}
+              >
+                <MenuIcon />
+              </IconButton>
+            </Hidden>
             <SearchBar />
+            <AddNewMenu />
             <UserMenu />
             <UserNotificationsMenu />
             <UserEventsMenu />

@@ -101,6 +101,7 @@ const MaintenanceBanner: React.FC<CombinedProps> = props => {
         Please see
         <a
           target="_blank"
+          aria-describedby="external-site"
           rel="noopener noreferrer"
           href="https://status.linode.com"
         >

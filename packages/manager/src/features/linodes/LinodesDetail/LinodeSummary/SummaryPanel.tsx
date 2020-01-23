@@ -18,7 +18,6 @@ import summaryPanelStyles, {
   StyleProps
 } from 'src/containers/SummaryPanels.styles';
 import withImage from 'src/containers/withImage.container';
-import withMostRecentBackup from 'src/containers/withMostRecentBackup.container';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import {
   LinodeActionsProps,
@@ -117,7 +116,7 @@ class SummaryPanel extends React.Component<CombinedProps> {
           <BackupStatus
             linodeId={linodeId}
             backupsEnabled={backupsEnabled}
-            mostRecentBackup={mostRecentBackup || null}
+            mostRecentBackup={mostRecentBackup}
           />
         </Paper>
         <Paper className={classes.summarySection}>
@@ -156,7 +155,7 @@ interface LinodeContextProps {
   linodeIpv6: any;
   linodeRegion: string;
   linodeTags: string[];
-  mostRecentBackup?: string | null;
+  mostRecentBackup: string | null;
   linodeVolumes: Volume[];
   linodeVolumesError?: APIError[];
   backupsEnabled: boolean;
@@ -173,16 +172,13 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   backupsEnabled: linode.backups.enabled,
   linodeVolumes: linode._volumes,
   linodeVolumesError: linode._volumesError,
-  readOnly: linode._permissions === 'read_only'
+  readOnly: linode._permissions === 'read_only',
+  mostRecentBackup: linode.backups.last_successful
 }));
 
 const enhanced = compose<CombinedProps, {}>(
   linodeContext,
   withLinodeActions,
-  withMostRecentBackup<LinodeContextProps & WithImage, LinodeContextProps>(
-    props => props.linodeId,
-    (ownProps, mostRecentBackup) => ({ ...ownProps, mostRecentBackup })
-  ),
   withImage<LinodeContextProps & WithImage, LinodeContextProps>(
     props => props.linodeImageId,
     (ownProps, image) => ({ ...ownProps, image })

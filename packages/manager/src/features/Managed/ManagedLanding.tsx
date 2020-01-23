@@ -3,9 +3,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import useFlags from 'src/hooks/useFlags';
 import ManagedLandingContent from './ManagedLandingContent';
-import ManagedPlaceholder from './ManagedPlaceholder';
 
 export type CombinedProps = RouteComponentProps<{}>;
 
@@ -18,12 +16,6 @@ const docs: Linode.Doc[] = [
 ];
 
 export const ManagedLanding: React.FunctionComponent<CombinedProps> = props => {
-  const flags = useFlags();
-
-  if (!flags.managed) {
-    return <ManagedPlaceholder />;
-  }
-
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Managed" />

@@ -4,7 +4,7 @@ const { apiDeleteAllDomains } = require('../../utils/common');
 import ListDomains from '../../pageobjects/list-domains.page';
 
 describe('Domains - List Suite', () => {
-  let domainId, domainElement;
+  let domainElement;
   const initialDomain = `a${new Date().getTime()}.com`;
   const cloneDomain = `b${new Date().getTime()}.com`;
 
@@ -52,8 +52,7 @@ describe('Domains - List Suite', () => {
       'Clone',
       'Delete',
       'Edit DNS Records',
-      'Check Zone',
-      'Zone File'
+      'Check Zone'
     ];
 
     ListDomains.actionMenuItem.waitForDisplayed(constants.wait.normal);

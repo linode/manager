@@ -41,14 +41,16 @@ export const Monitors: React.FC<CombinedProps> = props => {
   }, [requestManagedServices]);
 
   return (
-    <MonitorTable
-      monitors={monitors || []}
-      credentials={credentials}
-      groups={groups}
-      loading={loading || (managedLoading && managedLastUpdated === 0)}
-      error={managedError.read || errorFromProps}
-      {...rest}
-    />
+    <div id="tabpanel-monitors" role="tabpanel" aria-labelledby="tab-monitors">
+      <MonitorTable
+        monitors={monitors || []}
+        credentials={credentials}
+        groups={groups}
+        loading={loading || (managedLoading && managedLastUpdated === 0)}
+        error={managedError.read || errorFromProps}
+        {...rest}
+      />
+    </div>
   );
 };
 

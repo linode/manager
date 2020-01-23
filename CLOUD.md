@@ -1,14 +1,12 @@
-# Running the Cloud Manager Locally
-
-## Creating an `.env` file
+# Creating an `.env` File to Run Cloud Manager Locally
 
 Please refer to the [`.env.example` file](./packages/manager/.env.example) in this directory. This will get you started in creating your own `.env` file so you can run the Manager.
 
-:rotating_light: Your `.env` file should be located in the `packages/manager` directory before your local development server is started.
+:rotating_light: Your `.env` file should be located in the `packages/manager` directory before your local development server is started. :rotating_light:
 
 Here are a list of all the required and optional environment variables the Manager uses:
 
-### Required Variables
+## Required Variables
 
 `REACT_APP_APP_ROOT`: The root location where you will be running the app
 * e.g. `http://localhost:3000`
@@ -22,11 +20,12 @@ Here are a list of all the required and optional environment variables the Manag
 `REACT_APP_LISH_ROOT`: The root location of LISH, Linode's web-based console
 * e.g. `webconsole.linode.com`
 
-`REACT_APP_CLIENT_ID`: The Client ID you created above in the first step
+`REACT_APP_CLIENT_ID`: The Client ID you create by following [these steps](./CREATE_CLIENT.md)
+
+
+## Optional Variables
 
 `REACT_APP_LAUNCH_DARKLY_ID`: The Client ID that matches up with the Launch Darkly Service. Contact a team member for this.
-
-### Optional Variables
 
 `REACT_APP_ALGOLIA_APPLICATION_ID`: Client ID for Linode's Algolia account
 
@@ -39,7 +38,7 @@ Here are a list of all the required and optional environment variables the Manag
 `REACT_APP_GTM_ID`: The ID that matches with a configured Google Tag Manager property
 
 `REACT_APP_ACCESS_TOKEN`: Access Token that overrides the token received from the Login service.
-e.g `Bearer 1232313` or `Admin 1231423`
+* e.g `Bearer 1232313` or `Admin 1231423`
 
 `REACT_APP_DISABLE_EVENT_THROTTLE`: <Boolean> Whether the app should poll the `/events` endpoint at provided intervals
 
@@ -48,7 +47,7 @@ e.g `Bearer 1232313` or `Admin 1231423`
 `REACT_APP_PAYPAL_ENV`: Set to `production` or `sandbox` to alter which Paypal environment is used
 for making payments. Defaults to `production`.
 
-### Testing Variables
+## Testing Variables
 
 These are environment variables that can be used for automated testing processes
 

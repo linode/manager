@@ -31,7 +31,12 @@ class SSHKeyActionMenu extends React.Component<CombinedProps> {
   };
 
   render() {
-    return <ActionMenu createActions={this.createActions()} />;
+    return (
+      <ActionMenu
+        createActions={this.createActions()}
+        ariaLabel={`Action menu for SSH Key ${this.props.label}`}
+      />
+    );
   }
 }
 

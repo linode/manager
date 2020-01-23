@@ -22,6 +22,7 @@ const CookieWarning: React.FC<{}> = () => {
       <a
         href="https://orteil.dashnet.org/cookieclicker/"
         target="_blank"
+        aria-describedby="external-site"
         rel="noopener noreferrer"
         style={{
           position: 'absolute',

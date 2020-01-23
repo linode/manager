@@ -11,6 +11,7 @@ interface Props {
   config: Config;
   linodeId: number;
   readOnly?: boolean;
+  label: string;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
@@ -91,7 +92,12 @@ class ConfigActionMenu extends React.Component<CombinedProps> {
   };
 
   render() {
-    return <ActionMenu createActions={this.createConfigActions()} />;
+    return (
+      <ActionMenu
+        createActions={this.createConfigActions()}
+        ariaLabel={`Action menu for Linode Config ${this.props.label}`}
+      />
+    );
   }
 }
 

@@ -1,12 +1,12 @@
 import { Image } from 'linode-js-sdk/lib/images';
-import { path } from 'ramda';
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
+import { EntityError } from 'src/store/types';
 
 export interface WithImages {
-  images: Record<string, Image>;
+  imagesData: Record<string, Image>;
   imagesLoading: boolean;
-  imageError?: string;
+  imagesError: EntityError;
 }
 
 export default <TInner extends {}, TOuter extends {}>(
@@ -14,21 +14,24 @@ export default <TInner extends {}, TOuter extends {}>(
     ownProps: TOuter,
     images: Record<string, Image>,
     imagesLoading: boolean,
-    imageError?: string
+    imagesError: EntityError
   ) => TInner
 ) =>
   connect((state: ApplicationState, ownProps: TOuter) => {
-    const { data: images, error, loading } = state.__resources.images;
-    const imageError = path<undefined | string>(['read', 0, 'reason'], error);
+    const {
+      data: imagesData,
+      error: imagesError,
+      loading
+    } = state.__resources.images;
 
     if (!mapImagesToProps) {
       return {
         ...ownProps,
-        images,
+        imagesData,
         loading,
-        imageError
+        imagesError
       };
     }
 
-    return mapImagesToProps(ownProps, images, loading, imageError);
+    return mapImagesToProps(ownProps, imagesData, loading, imagesError);
   });
