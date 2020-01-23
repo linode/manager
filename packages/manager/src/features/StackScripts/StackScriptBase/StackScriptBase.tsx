@@ -653,7 +653,7 @@ const updateQueryString = (
   query: string,
   history: RouteComponentProps<{}>['history']
 ) => {
-  const queryString = '?' + stringify({ type, query });
+  const queryString = stringify({ type, query });
 
   // Use `replace` instead of `push` so that each keystroke is not a separate
   // browser history item.

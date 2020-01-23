@@ -95,7 +95,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, {}> {
 
     const category = StackScriptTabs[value].category;
 
-    const queryString = '?' + stringify({ type: category });
+    const queryString = stringify({ type: category });
 
     // Push a new item of browser history here containing the StackScript type.
     // It's OK to clear out the "query" QS param from a UX perspective.
