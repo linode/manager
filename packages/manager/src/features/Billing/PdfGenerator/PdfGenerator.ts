@@ -14,8 +14,8 @@ import {
   LINODE_EU_TAX_ID
 } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
+import useFlags from 'src/hooks/useFlags';
 import formatDate from 'src/utilities/formatDate';
-
 import {
   createFooter,
   createInvoiceItemsTable,
@@ -151,16 +151,14 @@ export const printInvoice = (
       unit: 'px'
     });
 
+    const flags = useFlags();
+
     const convertedInvoiceDate = invoice.date && Date.parse(invoice.date);
 
-    // Added October 1, 2019
-    const GSTAddDate = 1569888000000;
+    const GSTAddDate = flags.vatBanner && flags.vatBanner.date;
 
     // Added June 1, 2019
     const VATAddDate = 1559347200000;
-
-    const displayTaxID =
-      convertedInvoiceDate >= GSTAddDate || convertedInvoiceDate >= VATAddDate;
 
     // Create a separate page for each set of invoice items
     itemsChunks.forEach((itemsChunk, index) => {
@@ -187,7 +185,11 @@ export const printInvoice = (
           300px left margin is a hacky way of aligning the text to the right
           because this library stinks
          */
-              text: displayTaxID ? `Tax ID: ${account.tax_id}` : '',
+              text:
+                VATAddDate <= convertedInvoiceDate ||
+                (GSTAddDate && GSTAddDate <= convertedInvoiceDate)
+                  ? ''
+                  : `Tax ID: ${account.tax_id}`,
               leftMargin: 300
             }
           ]
