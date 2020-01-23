@@ -1,61 +1,67 @@
 import { cleanup, waitForElement } from '@testing-library/react';
-import MockAdapter from 'axios-mock-adapter';
 import * as React from 'react';
 import { longviewLoad, systemInfo } from 'src/__data__/longview';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { baseRequest } from '../../request';
 import Load from './Load';
-
-const mockApi = new MockAdapter(baseRequest);
 
 afterEach(cleanup);
 
-afterAll(async done => {
-  done();
-});
+const mockError = [{ TEXT: 'no reason', CODE: 0, SEVERITY: 3 }];
+
+const loadingStore = {
+  longviewStats: {
+    123: {
+      loading: true
+    }
+  }
+};
+
+const dataStore = {
+  longviewStats: {
+    123: {
+      loading: false,
+      data: {
+        ...longviewLoad,
+        ...systemInfo
+      }
+    }
+  }
+};
+
+const errorStore = {
+  longviewStats: {
+    123: {
+      loading: false,
+      error: mockError
+    }
+  }
+};
 
 describe('Longview Load Gauge UI', () => {
   it('should render a loading state initially', () => {
-    const { getByText } = renderWithTheme(<Load lastUpdated={0} token="" />);
+    const { getByText } = renderWithTheme(<Load clientID={123} />, {
+      customStore: loadingStore
+    });
 
     expect(getByText(/Loading/)).toBeInTheDocument();
   });
 
   it('should render an error state on 400 responses', async () => {
-    const { getByText } = renderWithTheme(<Load lastUpdated={0} token="" />);
+    const { getByText } = renderWithTheme(<Load clientID={123} />, {
+      customStore: errorStore
+    });
 
-    mockApi.onPost().reply(400, [
-      {
-        /** everything inside is the response from the Longview API */
-        NOTIFICATIONS: [],
-        DATA: {
-          ...longviewLoad,
-          ...systemInfo
-        }
-      }
-    ]);
-
-    const resolvedDiv = await waitForElement(() => getByText(/Error/));
-
-    expect(resolvedDiv).toHaveTextContent(/Error/);
+    await waitForElement(() => getByText(/Error/));
   });
 
   it('should render a data state on 200 responses', async () => {
-    const { getByTestId } = renderWithTheme(<Load lastUpdated={0} token="" />);
+    const { getByTestId } = renderWithTheme(<Load clientID={123} />, {
+      customStore: dataStore
+    });
 
-    mockApi.onPost().reply(200, [
-      {
-        /** everything inside is the response from the Longview API */
-        NOTIFICATIONS: [],
-        DATA: {
-          ...longviewLoad,
-          ...systemInfo
-        }
-      }
-    ]);
-
-    const innerText = await waitForElement(() =>
-      getByTestId('gauge-innertext')
+    const innerText = await waitForElement(
+      () => getByTestId('gauge-innertext'),
+      {}
     );
 
     expect(innerText).toHaveTextContent('2');

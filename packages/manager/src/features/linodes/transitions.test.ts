@@ -15,7 +15,8 @@ describe('transitionText helper', () => {
         seen: true,
         status: 'started',
         time_remaining: null,
-        username: 'linode'
+        username: 'linode',
+        duration: 0
       })
     ).toEqual('Snapshot');
   });
@@ -38,7 +39,8 @@ describe('transitionText helper', () => {
         seen: true,
         status: 'started',
         time_remaining: null,
-        username: 'linode'
+        username: 'linode',
+        duration: 0
       })
     ).toEqual('Optimus');
   });

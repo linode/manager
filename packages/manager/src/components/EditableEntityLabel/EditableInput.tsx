@@ -33,6 +33,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     position: 'relative'
   },
+  containerEditing: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    position: 'relative'
+  },
   initial: {
     '&:hover, &:focus': {
       '& $editIcon': {
@@ -72,7 +78,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 24,
     minWidth: 'auto',
     minHeight: 'auto',
-    marginTop: 0,
+    marginTop: 5,
     background: 'transparent !important'
   },
   icon: {
@@ -104,7 +110,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   editIcon: {
     position: 'absolute',
-    right: 0,
+    marginTop: '0 !important',
+    right: 10,
     [theme.breakpoints.up('sm')]: {
       opacity: 0,
       '&:focus': {
@@ -142,11 +149,11 @@ export const EditableInput: React.FC<FinalProps> = props => {
     onEdit,
     openForEdit,
     cancelEdit,
+    isEditing,
     onInputChange,
     text,
     typeVariant,
     className,
-    isEditing,
     inputText,
     loading,
     ...rest
@@ -168,6 +175,7 @@ export const EditableInput: React.FC<FinalProps> = props => {
     <Typography
       className={className ? className : classes.root}
       variant={typeVariant === 'table-cell' ? 'body1' : 'h1'}
+      aria-label={text}
       data-qa-editable-text
     >
       <strong>{text}</strong>
@@ -176,7 +184,7 @@ export const EditableInput: React.FC<FinalProps> = props => {
 
   return !isEditing && !errorText ? (
     <div
-      className={`${classes.container} ${classes.initial} ${className}`}
+      className={`${classes.initial} ${className} ${classes.container}`}
       data-testid={'editable-text'}
     >
       <React.Fragment>
@@ -186,7 +194,7 @@ export const EditableInput: React.FC<FinalProps> = props => {
           className={`${classes.button} ${classes.editIcon}`}
           onClick={openForEdit}
           data-qa-edit-button
-          aria-label={`Edit ${labelText}`}
+          aria-label={`Edit ${text}`}
         >
           <Edit className={`${classes.icon} ${classes.edit}`} />
         </Button>
@@ -195,7 +203,7 @@ export const EditableInput: React.FC<FinalProps> = props => {
   ) : (
     <ClickAwayListener onClickAway={cancelEdit} mouseEvent="onMouseDown">
       <div
-        className={`${classes.container} ${classes.edit} ${className}`}
+        className={`${classes.containerEditing} ${classes.edit} ${className}`}
         data-qa-edit-field
       >
         <TextField
@@ -203,6 +211,8 @@ export const EditableInput: React.FC<FinalProps> = props => {
           loading={loading}
           className={classes.textField}
           type="text"
+          label="Edit Label"
+          hideLabel
           onChange={(e: any) => onInputChange(e.target.value)}
           onKeyDown={handleKeyPress}
           value={inputText}
@@ -224,6 +234,7 @@ export const EditableInput: React.FC<FinalProps> = props => {
               className={`${classes.button} ${classes.saveButton}`}
               onClick={() => onEdit()}
               data-qa-save-edit
+              aria-label="Save new label"
             >
               <Check className={`${classes.icon} ${classes.save}`} />
             </Button>
@@ -231,6 +242,7 @@ export const EditableInput: React.FC<FinalProps> = props => {
               className={classes.button}
               onClick={cancelEdit}
               data-qa-cancel-edit
+              aria-label="Cancel label edit"
             >
               <Close className={`${classes.icon} ${classes.close}`} />
             </Button>

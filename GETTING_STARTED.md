@@ -16,9 +16,8 @@ If your intention is to start a development server for all projects, you have a 
 To start all projects:
 
 While in the root...
-1. Run `yarn` to install all root dependencies.
-2. Run `npx lerna bootstrap` to install all package dependencies.
-3. Run `npx lerna run start --parallel` to start a development server for all projects
+1. Run `yarn install:all` to install all dependencies and setup `lerna`
+2. Run `yarn start:all` to start a development server for all projects
 
 Alternatively, you can run `yarn up` which runs all previous commands.
 
@@ -26,10 +25,20 @@ Alternatively, you can run `yarn up` which runs all previous commands.
 
 Starting a single project is similar to the previous instructions with the exception of adding a `--scope` flag to to the command. So for example, starting the Cloud Manager project looks like:
 
-1. Run `yarn` to install all root dependencies.
-2. Run `npx lerna bootstrap` to install all package dependencies.
-3. Run `npx lerna run start --scope linode-js-sdk` to start a development server for the JavaScript SDK
+1. Run `yarn install:all` to install all dependencies and setup `lerna`
+2. Run `npx lerna run start --scope linode-js-sdk` to start a development server for the JavaScript SDK
    * `linode-js-sdk` is the name located in `packages/linode-js-sdk/package.json`
+
+### To do the same thing with Yarn
+
+You can write a command like this:
+`yarn workspace linode-js-sdk run start`
+
+Or in the case of the manager
+`yarn workspace linode-manager run start`
+
+## Testing
+See [this document](./TESTING.md)
 
 ## Helper Scripts
 
@@ -43,3 +52,18 @@ Starting a single project is similar to the previous instructions with the excep
 Please see our [contributing](./CONTRIBUTING.md) and [code conventions](./CODE_CONVENTIONS.md) guides for instructions on how to get started with contributing to this project.
 
 
+## Just serving the built app
+### legacy solution
+You can use the command `yarn docker:local` which will build a container based on the `Dockerfile` and starts the manager server. *this operation is slow*
+
+### Better solution
+Although, you can also do it with a small nginx container.
+You probably already have done this.
+```bash
+yarn install:all
+yarn build
+```
+Just start a small nginx container
+```bash
+yarn start:nginx
+```

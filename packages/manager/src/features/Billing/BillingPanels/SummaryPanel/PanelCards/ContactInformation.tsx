@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
+import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
 import Paper from 'src/components/core/Paper';
@@ -17,9 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     wordBreak: 'break-all'
   },
   cancel: {
-    marginTop: theme.spacing(2),
-    color: theme.palette.primary.main,
-    cursor: 'pointer'
+    marginTop: theme.spacing(2)
   }
 }));
 
@@ -102,12 +101,12 @@ const ContactInformation: React.FC<CombinedProps> = props => {
           <DateTimeDisplay value={activeSince} format="D MMM YYYY" />
         </div>
         {!isRestrictedUser && (
-          <Typography
+          <Button
             onClick={() => toggleModal(true)}
-            className={classes.cancel}
+            className={`${classes.cancel} px0`}
           >
             <strong>Close Account</strong>
-          </Typography>
+          </Button>
         )}
       </Paper>
       <Dialog

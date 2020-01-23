@@ -22,15 +22,18 @@ describe('Debounced Search Suite', () => {
 
     it('should display select search bar', () => {
       expect($(enhancedSelect).isDisplayed())
-        .withContext(`Enhanced Select should be displayed`).toBe(true);
+        .withContext(`Enhanced Select should be displayed`)
+        .toBe(true);
       expect($(enhancedSelect).getText())
-        .withContext(`Incorrect text value`).toContain(placeholderMsg)
+        .withContext(`Incorrect text value`)
+        .toContain(placeholderMsg);
     });
 
     it('should not have options selected on pageload', () => {
       selectedOptionMsg = $(currentResultSelector);
       expect(selectedOptionMsg.getText())
-        .withContext(`Should have no results`).toBe(emptyResult);
+        .withContext(`Should have no results`)
+        .toBe(emptyResult);
     });
 
     it('should display no options on a bad search query', () => {
@@ -45,20 +48,16 @@ describe('Debounced Search Suite', () => {
       $(enhancedSelectInput).setValue(validQuery);
 
       browser.waitUntil(() => {
-        $(optionSelector).isDisplayed() === true;
         return $(optionSelector).isDisplayed();
       }, constants.wait.normal);
-
 
       expect($(optionSelector).isDisplayed())
         .withContext(`select option not displayed`)
         .toBe(true);
 
       browser.waitUntil(() => {
-        $(optionSelector).isDisplayed() === true;
         return $(optionSelector).isDisplayed();
       }, constants.wait.normal);
-
 
       expect($(optionSelector).isDisplayed())
         .withContext(`select option not displayed`)
@@ -66,7 +65,8 @@ describe('Debounced Search Suite', () => {
 
       selectOptions = $$(optionSelector);
       expect(selectOptions.length)
-        .withContext(`Should only have one result`).toBe(1);
+        .withContext(`Should only have one result`)
+        .toBe(1);
     });
 
     it('should update the selected option text on select', () => {
@@ -76,19 +76,20 @@ describe('Debounced Search Suite', () => {
 
       selectedOptionMsg = $(currentResultSelector);
       expect(selectedOptionMsg.getText())
-        .withContext(`Incorrect text found`).toBe('You selected: apples');
+        .withContext(`Incorrect text found`)
+        .toBe('You selected: apples');
     });
   });
 
   describe('Text Field Suite', () => {
     let searchTextfield,
-        displayedListItems,
-        initialOptions = [];
+      displayedListItems,
+      initialOptions = [];
 
     const debouncedSearchSelector = '[data-qa-debounced-search]';
     const listItemSelector = '[data-qa-list-item]';
     const validQuery = 'apples';
-    const mainList = '[data-qa-listOfItems]'
+    const mainList = '[data-qa-listOfItems]';
 
     beforeEach(() => {
       navigateToStory(component, childStories[1]);
@@ -99,16 +100,19 @@ describe('Debounced Search Suite', () => {
       searchTextfield = $(debouncedSearchSelector).$('input');
 
       expect(searchTextfield.getAttribute('placeholder'))
-        .withContext(`Incorrect placeholder text`).toBe(placeholderMsg);
+        .withContext(`Incorrect placeholder text`)
+        .toBe(placeholderMsg);
     });
 
     it('should display unfiltered list of options', () => {
       displayedListItems = $$(listItemSelector);
       displayedListItems.forEach(i => {
         expect(i.isDisplayed())
-          .withContext(`Unfiltered options should be displayed`).toBe(true);
+          .withContext(`Unfiltered options should be displayed`)
+          .toBe(true);
         expect(i.getText())
-          .withContext(`Incorrect text match`).toMatch(/\w/ig);
+          .withContext(`Incorrect text match`)
+          .toMatch(/\w/gi);
         initialOptions.push(i.getText());
       });
     });
@@ -117,25 +121,28 @@ describe('Debounced Search Suite', () => {
       const badQuery = 'lkajsdkhsdklf';
       searchTextfield.setValue(badQuery);
       expect(searchTextfield.getAttribute('value'))
-        .withContext(`Incorrect text found`).toEqual(badQuery);
+        .withContext(`Incorrect text found`)
+        .toEqual(badQuery);
       $(mainList + ' li').waitForDisplayed(constants.wait.normal, true);
     });
 
     it('should display a single option on query of a single matching list item', () => {
       searchTextfield = '[data-qa-debounced-search] input';
-      $(searchTextfield).setValue(validQuery)
+      $(searchTextfield).setValue(validQuery);
       browser.waitUntil(() => {
         displayedListItems = $$(listItemSelector);
         return displayedListItems.length === 1;
       }, constants.wait.normal);
       expect(displayedListItems[0].getText())
-        .withContext(`Incorrect query value found`).toBe(validQuery);
+        .withContext(`Incorrect query value found`)
+        .toBe(validQuery);
     });
 
     it('should display all list options on clear', () => {
-
       validQuery.split('').forEach(i => {
-        $(debouncedSearchSelector).$('input').addValue('\uE003');
+        $(debouncedSearchSelector)
+          .$('input')
+          .addValue('\uE003');
       });
 
       browser.waitUntil(() => {
