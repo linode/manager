@@ -162,6 +162,7 @@ export interface Props {
   disabled?: boolean;
   tooltip?: string;
   variant?: 'check' | 'info';
+  className?: string;
 }
 
 interface WithTooltipProps {
@@ -214,7 +215,7 @@ class SelectionCard extends React.PureComponent<CombinedProps, {}> {
     switch (variant) {
       case 'info':
         return (
-          <Grid item className={`${classes.info}`} xs={2}>
+          <Grid item className={`${classes.info} cardBaseInfo`} xs={2}>
             <Info onClick={this.handleInfoClick} />
           </Grid>
         );
@@ -242,7 +243,14 @@ class SelectionCard extends React.PureComponent<CombinedProps, {}> {
   };
 
   render() {
-    const { checked, classes, disabled, onClick, tooltip } = this.props;
+    const {
+      checked,
+      classes,
+      disabled,
+      onClick,
+      tooltip,
+      className
+    } = this.props;
 
     const cardGrid = () => (
       <Grid
@@ -252,13 +260,16 @@ class SelectionCard extends React.PureComponent<CombinedProps, {}> {
         lg={4}
         xl={3}
         tabIndex={0}
-        className={classNames({
-          [classes.root]: true,
-          checked: checked === true,
-          [classes.disabled]: disabled === true,
-          [classes.showCursor]: onClick && !disabled,
-          selectionCard: true
-        })}
+        className={classNames(
+          {
+            [classes.root]: true,
+            checked: checked === true,
+            [classes.disabled]: disabled === true,
+            [classes.showCursor]: onClick && !disabled,
+            selectionCard: true
+          },
+          className
+        )}
         onClick={this.handleClick}
         onKeyPress={this.handleKeyPress}
         data-qa-selection-card

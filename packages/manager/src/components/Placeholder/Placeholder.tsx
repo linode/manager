@@ -9,6 +9,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import H1Header from 'src/components/H1Header';
 
 type ClassNames = 'root' | 'title' | 'copy' | 'icon' | 'button';
 
@@ -94,7 +95,7 @@ export interface Props {
   icon?: React.ComponentType<any>;
   animate?: boolean;
   copy?: string | React.ReactNode;
-  title?: string;
+  title: string;
   buttonProps?: ExtendedButtonProps[];
   className?: string;
 }
@@ -116,13 +117,11 @@ const Placeholder: React.StatelessComponent<CombinedProps> = props => {
         {Icon && <Icon className={`${classes.icon} ${animate && 'animate'}`} />}
       </Grid>
       <Grid item xs={12}>
-        <Typography
+        <H1Header
+          title={title}
           className={classes.title}
           data-qa-placeholder-title
-          variant="h1"
-        >
-          {title}
-        </Typography>
+        />
       </Grid>
       <Grid item xs={12} lg={10} className={classes.copy}>
         {typeof copy === 'string' ? (

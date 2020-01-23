@@ -1,6 +1,8 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
+import Hidden from 'src/components/core/Hidden';
 import {
   createStyles,
   Theme,
@@ -11,7 +13,13 @@ import _TableRow, {
   TableRowProps as _TableRowProps
 } from 'src/components/core/TableRow';
 
-type ClassNames = 'root';
+type ClassNames =
+  | 'root'
+  | 'selected'
+  | 'withForcedIndex'
+  | 'activeCaret'
+  | 'activeCaretOverlay'
+  | 'selectedOuter';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -24,10 +32,97 @@ const styles = (theme: Theme) =>
           width: '0.01%',
           height: '100%',
           backgroundColor: 'transparent',
-          borderBottom: `2px solid ${theme.palette.divider}`,
+          borderTop: `1px solid ${theme.palette.divider}`,
+          borderBottom: `1px solid ${theme.palette.divider}`,
           transition: theme.transitions.create(['background-color']),
           paddingLeft: 5
         }
+      }
+    },
+    withForcedIndex: {
+      '& td': {
+        transition: theme.transitions.create(['color'])
+      },
+      transition: theme.transitions.create(['border-color']),
+      '&:before': {
+        borderLeft: `1px solid transparent`,
+        paddingLeft: 4
+      },
+      '&:hover': {
+        cursor: 'pointer',
+        '& td': {
+          color: theme.palette.primary.light
+        }
+      },
+      '&:focus': {
+        backgroundColor: theme.bg.lightBlue
+      }
+    },
+    selected: {
+      backgroundColor: theme.bg.lightBlue,
+      transform: 'scale(1)',
+      '&:before': {
+        transition: 'none',
+        backgroundColor: theme.bg.lightBlue,
+        borderColor: theme.palette.primary.light
+      },
+      '& td': {
+        borderTopColor: theme.palette.primary.light,
+        borderBottomColor: theme.palette.primary.light,
+        position: 'relative',
+        [theme.breakpoints.down('sm')]: {
+          '&:first-child': {
+            borderLeft: `1px solid ${theme.palette.primary.light}`
+          }
+        },
+        [theme.breakpoints.down('md')]: {
+          '&:last-child': {
+            borderRight: `1px solid ${theme.palette.primary.light}`
+          }
+        }
+      }
+    },
+    selectedOuter: {
+      padding: 0
+    },
+    activeCaret: {
+      '&:before': {
+        content: '""',
+        width: 15,
+        height: '50%',
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        background: `linear-gradient(to right top, ${theme.palette.primary.light} 0%, ${theme.palette.primary.light} 49%, transparent 50.1%)`
+      },
+      '&:after': {
+        content: '""',
+        width: 15,
+        height: '50%',
+        position: 'absolute',
+        left: 0,
+        top: '50%',
+        background: `linear-gradient(to right bottom, ${theme.palette.primary.light} 0%, ${theme.palette.primary.light} 49%, transparent 50.1%)`
+      }
+    },
+    activeCaretOverlay: {
+      '&:before': {
+        content: '""',
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        width: 15,
+        height: '50%',
+        background: `linear-gradient(to right top, ${theme.bg.lightBlue} 0%, ${theme.bg.lightBlue} 45%, transparent 46.1%)`
+      },
+      '&:after': {
+        content: '""',
+        position: 'absolute',
+        left: 0,
+        bottom: 0,
+        width: 15,
+        height: '50%',
+        background: `linear-gradient(to right bottom, ${theme.bg.lightBlue} 0%, ${theme.bg.lightBlue} 45%, transparent 46.1%)`
       }
     }
   });
@@ -36,9 +131,13 @@ type onClickFn = (e: React.ChangeEvent<HTMLTableRowElement>) => void;
 
 interface Props {
   rowLink?: string | onClickFn;
+  onClick?: onClickFn;
+  onKeyUp?: any;
   className?: string;
   staticContext?: boolean;
   htmlFor?: string;
+  selected?: boolean;
+  forceIndex?: boolean;
 }
 
 type CombinedProps = Props &
@@ -81,7 +180,15 @@ class TableRow extends React.Component<CombinedProps> {
   };
 
   render() {
-    const { classes, className, rowLink, staticContext, ...rest } = this.props;
+    const {
+      classes,
+      className,
+      rowLink,
+      staticContext,
+      selected,
+      forceIndex,
+      ...rest
+    } = this.props;
 
     let role;
     switch (typeof rowLink) {
@@ -103,13 +210,24 @@ class TableRow extends React.Component<CombinedProps> {
         }
         hover={rowLink !== undefined}
         role={role}
+        aria-label={rowLink ? `View Details` : undefined}
         className={classNames(className, {
-          [classes.root]: true
+          [classes.root]: true,
+          [classes.selected]: selected,
+          [classes.withForcedIndex]: forceIndex
         })}
         {...rest}
-        tabIndex={rowLink ? 0 : -1}
+        tabIndex={rowLink || forceIndex ? 0 : -1}
       >
         {this.props.children}
+        {selected && (
+          <Hidden mdDown>
+            <td colSpan={0} className={classes.selectedOuter}>
+              <span className={classes.activeCaret}></span>
+              <span className={classes.activeCaretOverlay}></span>
+            </td>
+          </Hidden>
+        )}
       </_TableRow>
     );
   }
@@ -117,4 +235,6 @@ class TableRow extends React.Component<CombinedProps> {
 
 const styled = withStyles(styles);
 
-export default styled(withRouter(TableRow));
+const enhanced = compose<CombinedProps, Props>(withRouter, styled)(TableRow);
+
+export default enhanced;

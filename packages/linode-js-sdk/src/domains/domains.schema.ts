@@ -46,5 +46,6 @@ export const createDomainSchema = domainSchemaBase.shape({
 
 export const updateDomainSchema = domainSchemaBase.shape({
   domainId: number(),
-  soa_email: string().email('SOA Email is not valid.')
+  soa_email: string().email('SOA Email is not valid.'),
+  axfr_ips: array().of(string())
 });

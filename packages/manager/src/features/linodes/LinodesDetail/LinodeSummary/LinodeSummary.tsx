@@ -1,4 +1,3 @@
-import { Image } from 'linode-js-sdk/lib/images';
 import {
   getLinodeStats,
   getLinodeStatsByDate,
@@ -9,7 +8,7 @@ import {
 import { APIError } from 'linode-js-sdk/lib/types';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as moment from 'moment';
-import { map, pathOr } from 'ramda';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -18,14 +17,16 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
+  WithTheme,
+  withTheme
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
-import withImages from 'src/containers/withImages.container';
+import withImages, { WithImages } from 'src/containers/withImages.container';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { displayType } from 'src/features/linodes/presentation';
 import { ApplicationState } from 'src/store';
@@ -37,18 +38,15 @@ import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import { initAll } from 'src/utilities/initAll';
 import { isRecent } from 'src/utilities/isRecent';
 import {
-  formatBitsPerSecond,
-  formatBytes,
   formatNumber,
   formatPercentage,
-  getMetrics,
-  getTotalTraffic
+  getMetrics
 } from 'src/utilities/statMetrics';
 import ActivitySummary from './ActivitySummary';
-import MetricsDisplay from './MetricsDisplay';
+import NetworkGraph from './NetworkGraph';
 import StatsPanel from './StatsPanel';
 import SummaryPanel from './SummaryPanel';
-import TotalTraffic, { TotalTrafficProps } from './TotalTraffic';
+import { ChartProps } from './types';
 
 setUpCharts();
 
@@ -57,14 +55,11 @@ type ClassNames =
   | 'sidebar'
   | 'headerWrapper'
   | 'chart'
-  | 'ioChart'
   | 'chartSelect'
-  | 'leftLegend'
   | 'bottomLegend'
   | 'graphTitle'
   | 'graphSelectTitle'
   | 'graphControls'
-  | 'totalTraffic'
   | 'subHeaderOuter'
   | 'textWrap'
   | 'headerOuter';
@@ -87,17 +82,7 @@ const styles = (theme: Theme) =>
     },
     chart: {
       position: 'relative',
-      paddingLeft: 32
-    },
-    ioChart: {
-      paddingLeft: 54
-    },
-    leftLegend: {
-      position: 'absolute',
-      left: 0,
-      bottom: 23,
-      color: '#777',
-      fontSize: 14
+      paddingLeft: theme.spacing(1)
     },
     bottomLegend: {
       margin: `${theme.spacing(2)}px ${theme.spacing(1)}px ${theme.spacing(
@@ -121,9 +106,6 @@ const styles = (theme: Theme) =>
       alignItems: 'center',
       marginTop: theme.spacing(2),
       marginBottom: theme.spacing(2)
-    },
-    totalTraffic: {
-      margin: '12px'
     },
     chartSelect: {
       maxWidth: 150
@@ -156,10 +138,6 @@ interface LinodeContextProps {
   linodeVolumesError?: APIError[];
 }
 
-interface WithImagesProps {
-  imagesData: Record<string, Image>;
-}
-
 interface State {
   stats?: Stats;
   rangeSelection: string;
@@ -170,8 +148,9 @@ interface State {
 }
 
 type CombinedProps = LinodeContextProps &
+  WithTheme &
   WithTypesProps &
-  WithImagesProps &
+  WithImages &
   WithStyles<ClassNames>;
 
 const chartHeight = 300;
@@ -339,7 +318,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
   renderCPUChart = () => {
     const { rangeSelection, stats } = this.state;
-    const { classes, timezone } = this.props;
+    const { classes, timezone, theme } = this.props;
     const data = pathOr([], ['data', 'cpu'], stats);
 
     const metrics = getMetrics(data);
@@ -348,273 +327,34 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <div className={classes.chart}>
-          <div className={classes.leftLegend}>CPU %</div>
           <LineGraph
             timezone={timezone}
             chartHeight={chartHeight}
             showToday={rangeSelection === '24'}
             data={[
               {
-                borderColor: 'rgba(54, 131, 220, 1)',
-                backgroundColor: 'rgba(54, 131, 220, .5)',
+                borderColor: theme.graphs.blueBorder,
+                backgroundColor: theme.graphs.blue,
                 data,
                 label: 'CPU %'
               }
             ]}
-          />
-        </div>
-        <div className={classes.bottomLegend}>
-          <Grid container>
-            <Grid item xs={12}>
-              <MetricsDisplay
-                rows={[
-                  {
-                    legendTitle: 'CPU %',
-                    legendColor: 'blue',
-                    data: metrics,
-                    format
-                  }
-                ]}
-              />
-            </Grid>
-          </Grid>
-        </div>
-      </React.Fragment>
-    );
-  };
-
-  renderIPv4TrafficChart = () => {
-    const { classes, timezone } = this.props;
-    const { rangeSelection, stats } = this.state;
-
-    const v4Data = {
-      publicIn: pathOr([], ['data', 'netv4', 'in'], stats),
-      publicOut: pathOr([], ['data', 'netv4', 'out'], stats),
-      privateIn: pathOr([], ['data', 'netv4', 'private_in'], stats),
-      privateOut: pathOr([], ['data', 'netv4', 'private_out'], stats)
-    };
-
-    // Need these to calculate Total Traffic
-    const v6Data = {
-      publicIn: pathOr([], ['data', 'netv6', 'in'], stats),
-      publicOut: pathOr([], ['data', 'netv6', 'out'], stats),
-      privateIn: pathOr([], ['data', 'netv6', 'private_in'], stats)
-    };
-
-    const format = formatBitsPerSecond;
-
-    // @todo refactor this component so that these calcs don't need to be done
-    // again when we render the v6 chart
-    const netv6InMetrics = getMetrics(v6Data.publicIn);
-    const netv6OutMetrics = getMetrics(v6Data.publicOut);
-
-    const netv4InMetrics = getMetrics(v4Data.publicIn);
-    const netv4OutMetrics = getMetrics(v4Data.publicOut);
-
-    const totalTraffic: TotalTrafficProps = map(
-      formatBytes,
-      getTotalTraffic(
-        netv4InMetrics.total,
-        netv4OutMetrics.total,
-        v4Data.publicIn.length,
-        netv6InMetrics.total,
-        netv6OutMetrics.total
-      )
-    );
-
-    return (
-      <React.Fragment>
-        <div className={classes.chart}>
-          <div className={classes.leftLegend}>bits/s</div>
-          <LineGraph
-            timezone={timezone}
-            chartHeight={chartHeight}
-            showToday={rangeSelection === '24'}
-            data={[
+            legendRows={[
               {
-                borderColor: 'rgba(54, 131, 220, 1)',
-                backgroundColor: 'rgba(54, 131, 220, .5)',
-                data: v4Data.publicIn,
-                label: 'Public Traffic In'
-              },
-              {
-                borderColor: 'rgba(1, 177, 89, 1)',
-                backgroundColor: 'rgba(1, 177, 89, .5)',
-                data: v4Data.publicOut,
-                label: 'Public Traffic Out'
-              },
-              {
-                borderColor: 'rgba(204, 1, 153, 1)',
-                backgroundColor: 'rgba(204, 1, 153, .5)',
-                data: v4Data.privateIn,
-                label: 'Private Traffic In'
-              },
-              {
-                borderColor: 'rgba(255, 209, 0, 1)',
-                backgroundColor: 'rgba(255, 209, 0, .5)',
-                data: v4Data.privateOut,
-                label: 'Private Traffic Out'
+                legendTitle: 'CPU %',
+                legendColor: 'blue',
+                data: metrics,
+                format
               }
             ]}
           />
         </div>
-        <div className={classes.bottomLegend}>
-          <Grid container>
-            <Grid item xs={12}>
-              <MetricsDisplay
-                rows={[
-                  {
-                    legendTitle: 'Private Outbound',
-                    legendColor: 'yellow',
-                    data: getMetrics(v4Data.privateOut),
-                    format
-                  },
-                  {
-                    legendTitle: 'Private Inbound',
-                    legendColor: 'purple',
-                    data: getMetrics(v4Data.privateIn),
-                    format
-                  },
-                  {
-                    legendTitle: 'Public Outbound',
-                    legendColor: 'green',
-                    data: netv4OutMetrics,
-                    format
-                  },
-                  {
-                    legendTitle: 'Public Inbound',
-                    legendColor: 'blue',
-                    data: netv4InMetrics,
-                    format
-                  }
-                ]}
-              />
-            </Grid>
-          </Grid>
-        </div>
-        {rangeSelection === '24' && (
-          <Grid item xs={12} lg={6} className={classes.totalTraffic}>
-            <TotalTraffic
-              inTraffic={totalTraffic.inTraffic}
-              outTraffic={totalTraffic.outTraffic}
-              combinedTraffic={totalTraffic.combinedTraffic}
-            />
-          </Grid>
-        )}
-      </React.Fragment>
-    );
-  };
-
-  renderIPv6TrafficChart = () => {
-    const { classes, timezone } = this.props;
-    const { rangeSelection, stats } = this.state;
-
-    const data = {
-      publicIn: pathOr([], ['data', 'netv6', 'in'], stats),
-      publicOut: pathOr([], ['data', 'netv6', 'out'], stats),
-      privateIn: pathOr([], ['data', 'netv6', 'private_in'], stats),
-      privateOut: pathOr([], ['data', 'netv6', 'private_out'], stats)
-    };
-
-    const format = formatBitsPerSecond;
-
-    const publicInMetrics = getMetrics(data.publicIn);
-    const publicOutMetrics = getMetrics(data.publicOut);
-
-    const totalTraffic: TotalTrafficProps = map(
-      formatBytes,
-      getTotalTraffic(
-        publicInMetrics.total,
-        publicOutMetrics.total,
-        publicInMetrics.length
-      )
-    );
-
-    return (
-      <React.Fragment>
-        <div className={classes.chart}>
-          <div className={classes.leftLegend}>bits/s</div>
-          <LineGraph
-            timezone={timezone}
-            chartHeight={chartHeight}
-            showToday={rangeSelection === '24'}
-            data={[
-              {
-                borderColor: 'rgba(54, 131, 220, 1)',
-                backgroundColor: 'rgba(54, 131, 220, .5)',
-                data: data.publicIn,
-                label: 'Public Traffic In'
-              },
-              {
-                borderColor: 'rgba(1, 177, 89, 1)',
-                backgroundColor: 'rgba(1, 177, 89, .5)',
-                data: data.publicOut,
-                label: 'Public Traffic Out'
-              },
-              {
-                borderColor: 'rgba(204, 1, 153, 1)',
-                backgroundColor: 'rgba(204, 1, 153, .5)',
-                data: data.privateIn,
-                label: 'Private Traffic In'
-              },
-              {
-                borderColor: 'rgba(255, 209, 0, 1)',
-                backgroundColor: 'rgba(255, 209, 0, .5)',
-                data: data.privateOut,
-                label: 'Private Traffic Out'
-              }
-            ]}
-          />
-        </div>
-        <div className={classes.bottomLegend}>
-          <Grid container>
-            <Grid item xs={12}>
-              <MetricsDisplay
-                rows={[
-                  {
-                    legendTitle: 'Private Outbound',
-                    legendColor: 'yellow',
-                    data: getMetrics(data.privateOut),
-                    format
-                  },
-                  {
-                    legendTitle: 'Private Inbound',
-                    legendColor: 'purple',
-                    data: getMetrics(data.privateIn),
-                    format
-                  },
-                  {
-                    legendTitle: 'Public Outbound',
-                    legendColor: 'green',
-                    data: publicOutMetrics,
-                    format
-                  },
-                  {
-                    legendTitle: 'Public Inbound',
-                    legendColor: 'blue',
-                    data: publicInMetrics,
-                    format
-                  }
-                ]}
-              />
-            </Grid>
-          </Grid>
-        </div>
-        {rangeSelection === '24' && (
-          <Grid item xs={12} lg={6} className={classes.totalTraffic}>
-            <TotalTraffic
-              inTraffic={totalTraffic.inTraffic}
-              outTraffic={totalTraffic.outTraffic}
-              combinedTraffic={totalTraffic.combinedTraffic}
-            />
-          </Grid>
-        )}
       </React.Fragment>
     );
   };
 
   renderDiskIOChart = () => {
-    const { classes, timezone } = this.props;
+    const { classes, timezone, theme } = this.props;
     const { rangeSelection, stats } = this.state;
 
     const data = {
@@ -626,49 +366,36 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <div className={`${classes.chart} ${classes.ioChart}`}>
-          <div className={classes.leftLegend}>blocks/s</div>
+        <div className={`${classes.chart}`}>
           <LineGraph
             timezone={timezone}
             chartHeight={chartHeight}
             showToday={rangeSelection === '24'}
             data={[
               {
-                borderColor: 'rgba(255, 209, 0, 1)',
-                backgroundColor: 'rgba(255, 209, 0, .5)',
+                borderColor: theme.graphs.yellowBorder,
+                backgroundColor: theme.graphs.yellow,
                 data: data.io,
-                label: 'Disk I/O'
+                label: 'I/O Rate'
               },
               {
-                borderColor: 'rgba(204, 1, 153, 1)',
-                backgroundColor: 'rgba(204, 1, 153, .5)',
+                borderColor: theme.graphs.redBorder,
+                backgroundColor: theme.graphs.red,
                 data: data.swap,
-                label: 'Swap I/O'
+                label: 'Swap Rate'
+              }
+            ]}
+            legendRows={[
+              {
+                data: getMetrics(data.io),
+                format
+              },
+              {
+                data: getMetrics(data.swap),
+                format
               }
             ]}
           />
-        </div>
-        <div className={classes.bottomLegend}>
-          <Grid container>
-            <Grid item xs={12}>
-              <MetricsDisplay
-                rows={[
-                  {
-                    legendTitle: 'I/O Rate',
-                    legendColor: 'yellow',
-                    data: getMetrics(data.io),
-                    format
-                  },
-                  {
-                    legendTitle: 'Swap Rate',
-                    legendColor: 'purple',
-                    data: getMetrics(data.swap),
-                    format
-                  }
-                ]}
-              />
-            </Grid>
-          </Grid>
         </div>
       </React.Fragment>
     );
@@ -687,11 +414,13 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     const { dataIsLoading, statsError, isTooEarlyForGraphData } = this.state;
 
     // Shared props for all stats charts
-    const chartProps = {
+    const chartProps: ChartProps = {
       loading: dataIsLoading,
       error: statsError,
       height: chartHeight,
-      isTooEarlyForGraphData
+      isTooEarlyForGraphData: Boolean(isTooEarlyForGraphData),
+      timezone: this.props.timezone,
+      rangeSelection: this.state.rangeSelection
     };
 
     if (!linode) {
@@ -711,10 +440,12 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <DocumentTitleSegment segment={`${linode.label} - Summary`} />
 
-        <Grid container>
-          <Grid item xs={12} md={4} lg={3} className={classes.sidebar}>
-            <SummaryPanel />
-          </Grid>
+        <Grid
+          container
+          id="tabpanel-summary"
+          role="tabpanel"
+          aria-labelledby="tab-summary"
+        >
           <Grid item xs={12} md={8} lg={9} className={classes.main}>
             <Grid
               container
@@ -776,28 +507,26 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             </Grid>
 
             <StatsPanel
-              title="CPU Usage"
+              title="CPU Usage (%)"
               renderBody={this.renderCPUChart}
               {...chartProps}
             />
 
-            <StatsPanel
-              title="IPv4 Traffic"
-              renderBody={this.renderIPv4TrafficChart}
+            <NetworkGraph
+              stats={this.state.stats}
+              rangeSelection={this.state.rangeSelection}
+              timezone={this.props.timezone}
               {...chartProps}
             />
 
             <StatsPanel
-              title="IPv6 Traffic"
-              renderBody={this.renderIPv6TrafficChart}
-              {...chartProps}
-            />
-
-            <StatsPanel
-              title="Disk IO"
+              title="Disk IO (blocks/s)"
               renderBody={this.renderDiskIOChart}
               {...chartProps}
             />
+          </Grid>
+          <Grid item xs={12} md={4} lg={3} className={classes.sidebar}>
+            <SummaryPanel />
           </Grid>
         </Grid>
       </React.Fragment>
@@ -838,10 +567,8 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
 const enhanced = compose<CombinedProps, {}>(
   withTypes,
   linodeContext,
-  withImages((ownProps, imagesData) => ({
-    ...ownProps,
-    imagesData
-  })),
+  withImages(),
+  withTheme,
   styled
 );
 

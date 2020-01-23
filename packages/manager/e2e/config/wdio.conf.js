@@ -85,6 +85,7 @@ exports.config = {
   // debug: true,
   // execArgv: ['--inspect=127.0.0.1:5859'],
   // Selenium Host/Port
+  runner: 'local',
   hostname: process.env.DOCKER ? 'selenium' : 'localhost',
   port: 4444,
   //
@@ -143,7 +144,7 @@ exports.config = {
   coloredLogs: true,
   //
   // Warns when a deprecated command is used
-  deprecationWarnings: false,
+  deprecationWarnings: true,
   //
   // If you only want to run your tests until a specific amount of tests have failed use
   // bail (default is 0 - don't bail, run all tests).

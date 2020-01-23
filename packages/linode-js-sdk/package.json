@@ -1,6 +1,6 @@
 {
   "name": "linode-js-sdk",
-  "version": "0.11.0-alpha.0",
+  "version": "0.17.0-alpha.0",
   "homepage": "https://github.com/linode/manager/tree/develop/packages/linode-js-sdk",
   "bugs": {
     "url": "https://github.com/linode/manager/issues",
@@ -50,10 +50,10 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
     "@babel/plugin-transform-modules-commonjs": "^7.5.0",
     "@babel/preset-env": "^7.5.5",
-    "@babel/preset-typescript": "^7.3.3",
-    "@types/jest": "^24.0.17",
+    "@babel/preset-typescript": "^7.6.0",
+    "@types/jest": "^24.0.23",
     "@types/node": "^12.7.1",
-    "@types/ramda": "^0.26.19",
+    "@types/ramda": "^0.26.33",
     "@types/yup": "^0.26.22",
     "babel-plugin-module-resolver": "^3.2.0",
     "concurrently": "^4.1.1",
@@ -61,7 +61,7 @@
     "lint-staged": "^9.4.2",
     "npm-dts-webpack-plugin": "^1.1.10",
     "prettier": "^1.18.2",
-    "ts-jest": "^24.0.2",
+    "ts-jest": "^24.1.0",
     "webpack": "^4.39.2",
     "webpack-cli": "^3.3.6",
     "webpack-dev-server": "^3.8.0"
