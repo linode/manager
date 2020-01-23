@@ -19,11 +19,11 @@ COPY --chown=node:node lerna.json .
 COPY --chown=node:node scripts ./scripts/
 
 # Copy Cloud Manager deps
-COPY --chown=node:node packages/manager/package.json packages/manager/yarn.lock ./packages/manager/
+COPY --chown=node:node packages/manager/package.json ./packages/manager/
 COPY --chown=node:node packages/manager/patches ./packages/manager/patches/
 
 # Copy JS SDK deps
-COPY --chown=node:node packages/linode-js-sdk/package.json packages/linode-js-sdk/yarn.lock ./packages/linode-js-sdk/
+COPY --chown=node:node packages/linode-js-sdk/package.json ./packages/linode-js-sdk/
 
 # Runs "yarn install" for all child packages
 RUN npx lerna bootstrap

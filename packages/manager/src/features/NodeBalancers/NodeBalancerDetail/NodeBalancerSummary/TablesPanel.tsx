@@ -12,13 +12,15 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
+  WithTheme,
+  withTheme
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
-import MetricsDisplay from 'src/features/linodes/LinodesDetail/LinodeSummary/MetricsDisplay';
+import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
 import { ExtendedNodeBalancer } from 'src/services/nodebalancers';
 import { ApplicationState } from 'src/store';
 import { initAll } from 'src/utilities/initAll';
@@ -30,8 +32,6 @@ import {
 
 type ClassNames =
   | 'chart'
-  | 'cxnChart'
-  | 'leftLegend'
   | 'bottomLegend'
   | 'graphControls'
   | 'blue'
@@ -61,17 +61,7 @@ const styles = (theme: Theme) =>
     chart: {
       position: 'relative',
       width: '100%',
-      paddingLeft: 24
-    },
-    cxnChart: {
-      paddingLeft: 40
-    },
-    leftLegend: {
-      position: 'absolute',
-      left: 0,
-      bottom: 23,
-      color: '#777',
-      fontSize: 14
+      paddingLeft: theme.spacing(1)
     },
     bottomLegend: {
       margin: `${theme.spacing(2)}px ${theme.spacing(1)}px ${theme.spacing(
@@ -123,7 +113,7 @@ interface State {
   statsError?: string;
 }
 
-type CombinedProps = Props & StateProps & WithStyles<ClassNames>;
+type CombinedProps = Props & WithTheme & StateProps & WithStyles<ClassNames>;
 
 const statsFetchInterval = 30000;
 
@@ -231,7 +221,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
     statsError: string | undefined,
     loadingStats: boolean
   ) => {
-    const { classes, timezone } = this.props;
+    const { classes, timezone, theme } = this.props;
     const { stats } = this.state;
     const data = pathOr([[]], ['data', 'connections'], stats);
 
@@ -246,19 +236,18 @@ class TablesPanel extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Typography variant="h3" className={classes.header}>
-          Connections (5 min avg.)
+          Connections (CXN/s, 5 min avg.)
         </Typography>
         <React.Fragment>
-          <div className={`${classes.chart} ${classes.cxnChart}`}>
-            <div className={classes.leftLegend}>CXN/s</div>
+          <div className={classes.chart}>
             <LineGraph
               timezone={timezone}
               showToday={true}
               data={[
                 {
                   label: 'Connections',
-                  borderColor: 'rgba(204, 1, 153, 1)',
-                  backgroundColor: 'rgba(204, 1, 153, .5)',
+                  borderColor: theme.graphs.purpleBorder,
+                  backgroundColor: theme.graphs.purple,
                   data
                 }
               ]}
@@ -289,7 +278,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
     statsError: string | undefined,
     loadingStats: boolean
   ) => {
-    const { classes, timezone } = this.props;
+    const { classes, timezone, theme } = this.props;
     const { stats } = this.state;
     const trafficIn = pathOr([[]], ['data', 'traffic', 'in'], stats);
     const trafficOut = pathOr([[]], ['data', 'traffic', 'out'], stats);
@@ -303,25 +292,24 @@ class TablesPanel extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Typography variant="h3" className={classes.header}>
-          Traffic (5 min avg.)
+          Traffic (bits/s, 5 min avg.)
         </Typography>
         <React.Fragment>
           <div className={classes.chart}>
-            <div className={classes.leftLegend}>bits/s</div>
             <LineGraph
               timezone={timezone}
               showToday={true}
               data={[
                 {
                   label: 'Traffic In',
-                  borderColor: 'rgba(54, 131, 220, 1)',
-                  backgroundColor: 'rgba(54, 131, 220, .5)',
+                  borderColor: theme.graphs.blueBorder,
+                  backgroundColor: theme.graphs.blue,
                   data: trafficIn
                 },
                 {
                   label: 'Traffic Out',
-                  borderColor: 'rgba(1, 177, 89, 1)',
-                  backgroundColor: 'rgba(1, 177, 89, .5)',
+                  borderColor: theme.graphs.greenBorder,
+                  backgroundColor: theme.graphs.green,
                   data: trafficOut
                 }
               ]}
@@ -382,6 +370,7 @@ const withTimezone = connect((state: ApplicationState, ownProps) => ({
 const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
+  withTheme,
   withTimezone,
   styled
 );

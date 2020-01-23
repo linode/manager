@@ -2,9 +2,11 @@ import { cleanup, waitForElement } from '@testing-library/react';
 import * as React from 'react';
 import { memory } from 'src/__data__/longview';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import RAM, { generateTotalMemory, generateUsedMemory } from './RAM';
+import RAM from './RAM';
 
 afterEach(cleanup);
+
+const mockError = [{ TEXT: 'no reason', CODE: 0, SEVERITY: 3 }];
 
 const loadingStore = {
   longviewStats: {
@@ -32,28 +34,10 @@ const errorStore = {
   longviewStats: {
     123: {
       loading: false,
-      error: [
-        {
-          reason: 'this is an error'
-        }
-      ]
+      error: mockError
     }
   }
 };
-
-describe('Utility Functions', () => {
-  it('should generate used memory correctly', () => {
-    expect(generateUsedMemory(400, 100, 100)).toBe(200);
-    expect(generateUsedMemory(0, 100, 100)).toBe(0);
-    expect(generateUsedMemory(1000, 100, 100)).toBe(800);
-  });
-
-  it('should generate total memory correctly', () => {
-    expect(generateTotalMemory(100, 400)).toBe(500);
-    expect(generateTotalMemory(500, 400)).toBe(900);
-    expect(generateTotalMemory(100, 900)).toBe(1000);
-  });
-});
 
 describe('Longview RAM Gauge UI', () => {
   it('should render a loading state initially', () => {

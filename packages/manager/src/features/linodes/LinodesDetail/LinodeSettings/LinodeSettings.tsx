@@ -43,7 +43,11 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = props => {
           ) : null;
 
         return (
-          <React.Fragment>
+          <div
+            id="tabpanel-settings"
+            role="tabpanel"
+            aria-labelledby="tab-settings"
+          >
             <DocumentTitleSegment segment={`${linode.label} - Settings`} />
             {permissionsError}
             <Typography
@@ -72,7 +76,7 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = props => {
               linodeId={linode.id}
               linodeLabel={linode.label}
             />
-          </React.Fragment>
+          </div>
         );
       }}
     </LinodeDetailContextConsumer>

@@ -246,7 +246,13 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Grid item className={`${classes.main} mlMain py0`}>
+        <Grid
+          item
+          className={`${classes.main} mlMain py0`}
+          id="tabpanel-backup-create"
+          role="tabpanel"
+          aria-labelledby="tab-backup-create"
+        >
           {this.state.isGettingBackups ? (
             <Paper>
               <CircleProgress noTopMargin />

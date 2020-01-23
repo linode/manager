@@ -28,11 +28,13 @@ const styles = (theme: Theme) =>
       opacity: 1,
       transition: theme.transitions.create(['opacity']),
       [theme.breakpoints.up('md')]: {
-        marginRight: 0
+        marginRight:
+          theme.spacing(1) === 8 ? theme.spacing(1) : theme.spacing(2)
       },
       [theme.breakpoints.up('lg')]: {
         marginLeft: theme.spacing(1),
-        marginRight: -theme.spacing(2)
+        marginRight:
+          theme.spacing(1) === 8 ? -theme.spacing(1) : theme.spacing(1)
       },
       '&:hover': {
         '& $icon': {
@@ -81,6 +83,7 @@ interface Props {
   count?: number;
   disabled?: boolean;
   className?: string;
+  open?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -90,7 +93,8 @@ const UserEventsButton: React.StatelessComponent<CombinedProps> = ({
   count,
   onClick,
   disabled,
-  className
+  className,
+  open
 }) => {
   return (
     <IconButton
@@ -98,7 +102,6 @@ const UserEventsButton: React.StatelessComponent<CombinedProps> = ({
       className={`${classes.root} ${className}`}
       disabled={disabled}
       aria-label="User Events"
-      aria-owns={open ? 'menu-list-grow' : undefined}
       aria-haspopup="true"
       data-testid="ueb"
     >

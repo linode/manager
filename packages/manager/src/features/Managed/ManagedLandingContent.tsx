@@ -73,10 +73,22 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
 
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
-    { title: 'Monitors', routeName: `${props.match.url}/monitors` },
-    { title: 'SSH Access', routeName: `${props.match.url}/ssh-access` },
-    { title: 'Credentials', routeName: `${props.match.url}/credentials` },
-    { title: 'Contacts', routeName: `${props.match.url}/contacts` }
+    {
+      title: 'Monitors',
+      routeName: `${props.match.url}/monitors`
+    },
+    {
+      title: 'SSH Access',
+      routeName: `${props.match.url}/ssh-access`
+    },
+    {
+      title: 'Credentials',
+      routeName: `${props.match.url}/credentials`
+    },
+    {
+      title: 'Contacts',
+      routeName: `${props.match.url}/contacts`
+    }
   ];
 
   const credentialsError = credentials.error
@@ -123,7 +135,7 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
           </Grid>
         </Grid>
       </Box>
-      <AppBar position="static" color="default">
+      <AppBar position="static" color="default" role="tablist">
         <Tabs
           value={tabs.findIndex(tab => matches(tab.routeName))}
           onChange={handleTabChange}

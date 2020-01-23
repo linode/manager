@@ -220,7 +220,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       { label: 'Image', key: 'image' },
       { label: 'Region', key: 'region' },
       { label: 'Created', key: 'created' },
-      { label: 'Most Recent Backup', key: 'mostRecentBackup' },
+      { label: 'Most Recent Backup', key: 'backups.last_successful' },
       { label: 'Tags', key: 'tags' }
     ];
 
@@ -515,10 +515,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   deleteLinode: (linodeId: number) => dispatch(deleteLinode({ linodeId }))
 });
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const updateParams = <T extends any>(params: string, updater: (s: T) => T) => {
   const paramsAsObject: T = parse(params, { ignoreQueryPrefix: true });

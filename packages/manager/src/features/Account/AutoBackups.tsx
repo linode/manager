@@ -90,6 +90,7 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = props => {
                 data-qa-backups-price
                 href="https://linode.com/backups"
                 target="_blank"
+                aria-describedby="external-site"
                 rel="noopener noreferrer"
               >
                 {` Backups pricing page`}

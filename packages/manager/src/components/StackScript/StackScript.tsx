@@ -13,9 +13,10 @@ import {
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import ExternalLink from 'src/components/ExternalLink';
+import H1Header from 'src/components/H1Header';
 import ScriptCode from 'src/components/ScriptCode';
+import { APP_ROOT } from 'src/constants';
 import withImages from 'src/containers/withImages.container';
-
 import { filterImagesByType } from 'src/store/image/image.helpers';
 
 type CSSClasses =
@@ -121,18 +122,16 @@ export class _StackScript extends React.Component<CombinedProps> {
 
     return (
       <div className={classes.root}>
-        <Typography variant="h1" component="h2" data-qa-stack-title={label}>
-          {label}
-        </Typography>
+        <H1Header title={label} data-qa-stack-title={label} />
         <Typography
-          variant="h3"
+          variant="h2"
           className={classes.author}
           data-qa-stack-author={username}
         >
           by&nbsp;
           <ExternalLink
             text={username}
-            link={`https://www.linode.com/stackscripts/profile/${username}`}
+            link={`${APP_ROOT}/stackscripts?type=community&query=username:${username}`}
             data-qa-community-stack-link
           />
         </Typography>

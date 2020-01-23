@@ -4,6 +4,7 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   contactId: number;
+  contactName: string;
   updateOrAdd: (contact: ManagedContact) => void;
   openDialog: (id: number) => void;
   openDrawer: (contactId: number) => void;
@@ -34,7 +35,12 @@ export const ContactsActionMenu: React.FC<CombinedProps> = props => {
     return actions;
   };
 
-  return <ActionMenu createActions={createActions} />;
+  return (
+    <ActionMenu
+      createActions={createActions}
+      ariaLabel={`Action menu for Contact ${props.contactName}`}
+    />
+  );
 };
 
 export default ContactsActionMenu;

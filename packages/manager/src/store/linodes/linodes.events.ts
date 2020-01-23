@@ -49,6 +49,16 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
     case 'linode_create':
       return handleLinodeCreation(dispatch, status, id, getState());
 
+    /**
+     * Config actions
+     *
+     * It's not clear that these can actually fail, so this is here
+     * mostly as a failsafe.
+     */
+    case 'linode_config_create':
+    case 'linode_config_delete':
+      return handleConfigEvent(dispatch, status, id);
+
     case 'disk_delete':
       if (status === 'failed') {
         /**
@@ -116,6 +126,18 @@ const handleLinodeMigrate = (
       // Once the migration/resize is done, we request notifications in order
       // to clear the Migration Imminent notification
       dispatch(requestNotifications());
+      /**
+       * After resizing, a Linode is booted (if it was booted before);
+       * however, no boot event is sent. Additionally, the 'finished'
+       * resize event is sent before this is complete. As a result,
+       * the requestLinodeForStore below will often return a
+       * status of 'offline', which will then not be updated.
+       *
+       * We send a follow-on request here to make sure the status is accurate.
+       * 20 seconds is ridiculous but shorter timeouts still end up telling
+       * us the Linode is offline.
+       */
+      setTimeout(() => dispatch(requestLinodeForStore(id, true)), 20000);
       return dispatch(requestLinodeForStore(id));
     default:
       return;
@@ -179,6 +201,27 @@ const handleLinodeCreation = (
     case 'started':
       return dispatch(requestLinodeForStore(id, true));
 
+    default:
+      return;
+  }
+};
+
+const handleConfigEvent = (
+  dispatch: Dispatch<any>,
+  status: EventStatus,
+  id: number
+) => {
+  switch (status) {
+    case 'failed':
+      /**
+       * We optimistically add or remove configs as soon
+       * as the initial API request returns a 200.
+       *
+       * If we receive an event indicating that the creation/deletion
+       * failed on the backend, we need to re-request this Linode's configs
+       * (which will re-add or remove the target config).
+       */
+      return dispatch(getAllLinodeConfigs({ linodeId: id }));
     default:
       return;
   }

@@ -60,6 +60,7 @@ interface Props {
   absoluteIcon?: boolean;
   black?: boolean;
   fixedIcon?: boolean;
+  hideIcon?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -73,12 +74,14 @@ class ExternalLink extends React.Component<CombinedProps> {
       className,
       absoluteIcon,
       black,
-      fixedIcon
+      fixedIcon,
+      hideIcon
     } = this.props;
 
     return (
       <a
         target="_blank"
+        aria-describedby="external-site"
         rel="noopener noreferrer"
         href={link}
         className={classNames(
@@ -92,11 +95,12 @@ class ExternalLink extends React.Component<CombinedProps> {
         data-qa-external-link
       >
         {text}
-        {fixedIcon ? (
-          <OpenInNew className={classes.fixedIcon} />
-        ) : (
-          <Arrow className={classes.icon} />
-        )}
+        {!hideIcon &&
+          (fixedIcon ? (
+            <OpenInNew className={classes.fixedIcon} />
+          ) : (
+            <Arrow className={classes.icon} />
+          ))}
       </a>
     );
   }

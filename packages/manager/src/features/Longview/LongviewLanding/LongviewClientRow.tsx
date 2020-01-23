@@ -1,8 +1,8 @@
-import Close from '@material-ui/icons/Close';
+import { Grant } from 'linode-js-sdk/lib/account';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 
-import IconButton from 'src/components/core/IconButton';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
@@ -14,6 +14,7 @@ import NetworkGauge from './Gauges/Network';
 import RAMGauge from './Gauges/RAM';
 import StorageGauge from './Gauges/Storage';
 import SwapGauge from './Gauges/Swap';
+import ActionMenu, { ActionHandlers } from './LongviewActionMenu';
 import LongviewClientHeader from './LongviewClientHeader';
 import LongviewClientInstructions from './LongviewClientInstructions';
 
@@ -23,6 +24,7 @@ import withLongviewClients, {
 import withClientStats, {
   Props as LVDataProps
 } from 'src/containers/longview.stats.container';
+import withProfile from 'src/containers/profile.container';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -31,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   gaugeContainer: {
     [theme.breakpoints.down('sm')]: {
-      marginBottom: theme.spacing(2)
+      marginBottom: 30
     }
   },
   button: {
@@ -43,18 +45,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   label: {}
 }));
 
-interface Props {
+interface Props extends ActionHandlers {
   clientID: number;
   clientLabel: string;
   clientAPIKey: string;
   clientInstallKey: string;
-  triggerDeleteLongviewClient: (
-    longviewClientID: number,
-    longviewClientLabel: string
-  ) => void;
+  openPackageDrawer: () => void;
 }
 
-type CombinedProps = Props & LVDataProps & DispatchProps;
+type CombinedProps = Props & LVDataProps & DispatchProps & GrantProps;
 
 const LongviewClientRow: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -65,12 +64,14 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
     clientAPIKey,
     triggerDeleteLongviewClient,
     clientInstallKey,
-    updateLongviewClient
+    openPackageDrawer,
+    updateLongviewClient,
+    userCanModifyClient
   } = props;
 
   const { lastUpdated, lastUpdatedError, authed } = useClientLastUpdated(
     clientAPIKey,
-    () => props.getClientStats(clientAPIKey)
+    _lastUpdated => props.getClientStats(clientAPIKey, _lastUpdated)
   );
 
   /**
@@ -86,12 +87,13 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
         installCode={clientInstallKey}
         triggerDeleteLongviewClient={triggerDeleteLongviewClient}
         updateLongviewClient={updateLongviewClient}
+        userCanModifyClient={userCanModifyClient}
       />
     );
   }
 
   return (
-    <Paper className={classes.root}>
+    <Paper data-testid={clientID} className={classes.root}>
       <Grid
         container
         wrap="nowrap"
@@ -107,7 +109,10 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
                 clientID={clientID}
                 clientLabel={clientLabel}
                 lastUpdatedError={lastUpdatedError}
+                openPackageDrawer={openPackageDrawer}
                 updateLongviewClient={updateLongviewClient}
+                longviewClientLastUpdated={lastUpdated}
+                userCanModifyClient={userCanModifyClient}
               />
             </Grid>
             <Grid item xs={12} md={9}>
@@ -155,14 +160,12 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
         <Grid item xs={1}>
           <Grid container justify="flex-end">
             <Grid item>
-              <IconButton
-                onClick={() =>
-                  triggerDeleteLongviewClient(clientID, clientLabel)
-                }
-                className={classes.button}
-              >
-                <Close width={30} height={30} />
-              </IconButton>
+              <ActionMenu
+                longviewClientID={clientID}
+                longviewClientLabel={clientLabel}
+                triggerDeleteLongviewClient={triggerDeleteLongviewClient}
+                userCanModifyClient={userCanModifyClient}
+              />
             </Grid>
           </Grid>
         </Grid>
@@ -171,9 +174,30 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
   );
 };
 
+interface GrantProps {
+  userCanModifyClient: boolean;
+}
+
 export default compose<CombinedProps, Props>(
   React.memo,
   withClientStats<Props>(ownProps => ownProps.clientID),
   /** We only need the update action here, easier than prop drilling through 4 components */
-  withLongviewClients(() => ({}))
+  withLongviewClients(() => ({})),
+  withProfile<GrantProps, Props>((ownProps, { profileData }) => {
+    const longviewPermissions = pathOr<Grant[]>(
+      [],
+      ['grants', 'longview'],
+      profileData
+    );
+
+    const thisPermission = (longviewPermissions as Grant[]).find(
+      r => r.id === ownProps.clientID
+    );
+
+    return {
+      userCanModifyClient: thisPermission
+        ? thisPermission.permissions === 'read_write'
+        : true
+    };
+  })
 )(LongviewClientRow);

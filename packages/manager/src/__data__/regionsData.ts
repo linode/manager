@@ -4,32 +4,38 @@ export const regions: Region[] = [
   {
     capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
     country: 'in',
-    id: 'ap-west'
+    id: 'ap-west',
+    status: 'ok'
   },
   {
     capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
     country: 'au',
-    id: 'ap-southeast'
+    id: 'ap-southeast',
+    status: 'ok'
   },
   {
     capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
     country: 'ca',
-    id: 'ca-central'
+    id: 'ca-central',
+    status: 'ok'
   },
   {
     capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
     country: 'us',
-    id: 'us-central'
+    id: 'us-central',
+    status: 'ok'
   },
   {
     capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
     country: 'us',
-    id: 'us-west'
+    id: 'us-west',
+    status: 'ok'
   },
   {
     capabilities: ['Linodes', 'NodeBalancers'],
     country: 'us',
-    id: 'us-southeast'
+    id: 'us-southeast',
+    status: 'ok'
   },
   {
     capabilities: [
@@ -39,27 +45,32 @@ export const regions: Region[] = [
       'Object Storage'
     ],
     country: 'us',
-    id: 'us-east'
+    id: 'us-east',
+    status: 'ok'
   },
   {
     capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
     country: 'uk',
-    id: 'eu-west'
+    id: 'eu-west',
+    status: 'ok'
   },
   {
     capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
     country: 'sg',
-    id: 'ap-south'
+    id: 'ap-south',
+    status: 'ok'
   },
   {
     capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
     country: 'de',
-    id: 'eu-central'
+    id: 'eu-central',
+    status: 'ok'
   },
   {
     capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
     country: 'jp',
-    id: 'ap-northeast'
+    id: 'ap-northeast',
+    status: 'ok'
   }
 ];
 

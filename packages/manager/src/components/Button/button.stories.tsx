@@ -27,11 +27,11 @@ storiesOf('Button', module)
       <Divider />
       <Button buttonType="remove" data-qa-button="remove" />
       <Divider />
-      <ButtonLink link="javascript:void(0)" linkText="Link as Primary" />
+      <ButtonLink to="javascript:void(0)" linkText="Link as Primary" />
       <Divider />
       <ButtonLink
         secondary
-        link="javascript:void(0)"
+        to="javascript:void(0)"
         linkText="Link as Secondary"
       />
     </React.Fragment>
@@ -77,6 +77,69 @@ storiesOf('Button', module)
       <Divider />
     </React.Fragment>
   ))
+  .add('Loading With Text', () => {
+    return (
+      <React.Fragment>
+        <Button
+          loading
+          buttonType="primary"
+          data-qa-button="primary"
+          loadingText="Fetching Linodes..."
+        >
+          Primary
+        </Button>
+        <Divider />
+        <Button
+          loading
+          buttonType="secondary"
+          data-qa-button="secondary"
+          loadingText="Fetching Volumes..."
+        >
+          Secondary
+        </Button>
+        <Divider />
+        <Button
+          loading
+          buttonType="cancel"
+          data-qa-button="cancel"
+          loadingText="Fetching Domains..."
+        >
+          Cancel
+        </Button>
+        <Divider />
+        <Button
+          loading
+          buttonType="primary"
+          compact
+          data-qa-button="primary"
+          loadingText="Fetching Linodes..."
+        >
+          Primary Compact
+        </Button>
+        <Divider />
+        <Button
+          loading
+          compact
+          buttonType="secondary"
+          data-qa-button="secondary"
+          loadingText="Fetching Volumes..."
+        >
+          Secondary Compact
+        </Button>
+        <Divider />
+        <Button
+          loading
+          compact
+          buttonType="cancel"
+          data-qa-button="cancel"
+          loadingText="Fetching Domains..."
+        >
+          Cancel Compact
+        </Button>
+        <Divider />
+      </React.Fragment>
+    );
+  })
   .add('Destructive', () => (
     <React.Fragment>
       <Button
