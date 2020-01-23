@@ -12,7 +12,7 @@ import IconButton from 'src/components/IconButton';
 type ClassNames = 'icon';
 
 interface Props {
-  uuid: string;
+  key: string;
   text: string;
 }
 
@@ -31,7 +31,7 @@ const CloseSnackbar: React.FC<CombinedProps> = props => {
   const { closeSnackbar } = useSnackbar();
 
   const handleClose = () => {
-    closeSnackbar(props.uuid);
+    closeSnackbar(props.key);
   };
 
   return (

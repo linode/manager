@@ -118,6 +118,7 @@ interface Props {
   label?: string;
   scopes?: string;
   expiry?: string;
+  submitting?: boolean;
   perms: string[];
   permNameMap: Record<string, string>;
   errors?: APIError[];
@@ -148,12 +149,14 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
   };
 
   /* NB: Upon updating React, port this to getDerivedStateFromProps */
-  componentWillReceiveProps(nextProps: CombinedProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: CombinedProps) {
     if (
       /* If we are about to display a new token */
       this.props.id !== nextProps.id ||
       /* If we have updated perms (via feature flag) */
-      !equals(this.props.perms, nextProps.perms)
+      !equals(this.props.perms, nextProps.perms) ||
+      /* we're opening the drawer */
+      (!this.props.open && nextProps.open)
     ) {
       /* Then update our current scopes state */
       this.setState({
@@ -176,7 +179,6 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
   handleSelectAllScopes = (e: React.SyntheticEvent<RadioButton>): void => {
     const { scopes } = this.state;
     const value = +e.currentTarget.value;
-
     this.setState({
       scopes: scopes.map((scope): Permission => [scope[0], value]),
       selectAllSelectedScope: value
@@ -238,6 +240,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                   checked={
                     selectAllSelectedScope === 0 && this.allScopesIdentical()
                   }
+                  data-testid="set-all-none"
                   value="0"
                   onChange={this.handleSelectAllScopes}
                   data-qa-perm-none-radio
@@ -257,6 +260,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                     selectAllSelectedScope === 1 && this.allScopesIdentical()
                   }
                   value="1"
+                  data-testid="set-all-read"
                   onChange={this.handleSelectAllScopes}
                   data-qa-perm-read-radio
                   inputProps={{
@@ -274,6 +278,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                   checked={
                     selectAllSelectedScope === 2 && this.allScopesIdentical()
                   }
+                  data-testid="set-all-write"
                   value="2"
                   onChange={this.handleSelectAllScopes}
                   data-qa-perm-rw-radio
@@ -346,6 +351,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                     value="2"
                     onChange={this.handleScopeChange}
                     data-qa-perm-rw-radio
+                    data-testid="perm-rw-radio"
                     inputProps={{
                       'aria-label': `read/write for ${scopeTup[0]}`
                     }}
@@ -372,7 +378,8 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
       mode,
       closeDrawer,
       onCreate,
-      onEdit
+      onEdit,
+      submitting
     } = this.props;
     const { expiryTups } = this.state;
 
@@ -443,6 +450,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
             <Button
               key="create"
               buttonType="primary"
+              loading={submitting}
               onClick={
                 (mode as string) === 'create'
                   ? () =>
@@ -456,7 +464,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
               }
               data-qa-submit
             >
-              {(mode as string) === 'create' ? 'Submit' : 'Save'}
+              {(mode as string) === 'create' ? 'Create Token' : 'Save Token'}
             </Button>,
             <Button
               buttonType="secondary"

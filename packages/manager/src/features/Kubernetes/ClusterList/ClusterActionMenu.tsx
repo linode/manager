@@ -90,7 +90,12 @@ export const ClusterActionMenu: React.FunctionComponent<
       });
   };
 
-  return <ActionMenu createActions={createActions()} />;
+  return (
+    <ActionMenu
+      createActions={createActions()}
+      ariaLabel={`Action menu for Cluster ${props.clusterLabel}`}
+    />
+  );
 };
 
 const enhanced = compose<CombinedProps, Props>(

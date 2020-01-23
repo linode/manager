@@ -38,8 +38,14 @@ export const LongviewLanding: React.FunctionComponent<
 
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
-    { title: 'Clients', routeName: `${props.match.url}/clients` },
-    { title: 'Plan Details', routeName: `${props.match.url}/plan-details` }
+    {
+      title: 'Clients',
+      routeName: `${props.match.url}/clients`
+    },
+    {
+      title: 'Plan Details',
+      routeName: `${props.match.url}/plan-details`
+    }
   ];
 
   const handleTabChange = (
@@ -63,9 +69,12 @@ export const LongviewLanding: React.FunctionComponent<
           labelTitle="Longview"
           removeCrumbX={1}
         />
-        <DocumentationButton href={'https://google.com'} />
+        <DocumentationButton
+          /** This URL points to the old guide until the update is live */
+          href={'https://www.linode.com/docs/platform/longview/longview/'}
+        />
       </Box>
-      <AppBar position="static" color="default">
+      <AppBar position="static" color="default" role="tablist">
         <Tabs
           value={tabs.findIndex(tab => matches(tab.routeName))}
           onChange={handleTabChange}
@@ -95,7 +104,12 @@ export const LongviewLanding: React.FunctionComponent<
           exact
           strict
           path={`${url}/clients`}
-          render={() => <LongviewClients {...props} />}
+          render={() => (
+            <LongviewClients
+              subscriptionsData={subscriptionRequestHook.data || []}
+              {...props}
+            />
+          )}
         />
         <Route
           exact

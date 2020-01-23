@@ -1,5 +1,4 @@
 import { Event } from 'linode-js-sdk/lib/account';
-import { Image } from 'linode-js-sdk/lib/images';
 import { LinodeBackups, LinodeStatus } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -16,7 +15,7 @@ import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import TableCell from 'src/components/TableCell';
-import withImages from 'src/containers/withImages.container';
+import withImages, { WithImages } from 'src/containers/withImages.container';
 import {
   linodeInTransition,
   transitionText
@@ -127,13 +126,9 @@ interface Props {
   isDashboard?: boolean;
 }
 
-interface WithImagesProps {
-  imagesData: Record<string, Image>;
-}
-
 type CombinedProps = Props &
   WithDisplayType &
-  WithImagesProps &
+  Pick<WithImages, 'imagesData'> &
   WithStyles<ClassNames>;
 
 const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
@@ -239,7 +234,7 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
 const styled = withStyles(styles);
 const enhanced = compose<CombinedProps, Props>(
   withDisplayType,
-  withImages((ownProps, imagesData, imagesLoading) => ({
+  withImages((ownProps, imagesData) => ({
     ...ownProps,
     imagesData: filterImagesByType(imagesData, 'public')
   })),

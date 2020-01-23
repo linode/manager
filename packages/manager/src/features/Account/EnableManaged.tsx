@@ -13,7 +13,6 @@ import SupportLink from 'src/components/SupportLink';
 import withLinodes, {
   DispatchProps
 } from 'src/containers/withLinodes.container';
-import useFlags from 'src/hooks/useFlags';
 import { pluralize } from 'src/utilities/pluralize';
 
 interface Props {
@@ -70,7 +69,6 @@ export const ManagedContent: React.FC<ContentProps> = props => {
 
 export const EnableManaged: React.FC<CombinedProps> = props => {
   const { isManaged, linodeCount, push, update } = props;
-  const flags = useFlags();
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
   const [isLoading, setLoading] = React.useState<boolean>(false);
@@ -112,10 +110,6 @@ export const EnableManaged: React.FC<CombinedProps> = props => {
       </Button>
     </ActionsPanel>
   );
-
-  if (!flags.managed) {
-    return null;
-  }
 
   return (
     <>

@@ -42,7 +42,11 @@ export const Configs: React.FC<Props> = props => {
         count
       }) => {
         return (
-          <React.Fragment>
+          <div
+            id="tabpanel-configurationProfiles"
+            role="tabpanel"
+            aria-labelledby="tab-configurationProfiles"
+          >
             <Table
               isResponsive={false}
               aria-label="List of Configurations"
@@ -79,7 +83,7 @@ export const Configs: React.FC<Props> = props => {
               handleSizeChange={handlePageSizeChange}
               eventCategory="linode configs"
             />
-          </React.Fragment>
+          </div>
         );
       }}
     </Paginate>

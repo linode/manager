@@ -1,22 +1,16 @@
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 
-export const linkIsActive = (href: string) => {
-  const currentlyOnCreateLinodeFlow = location.pathname.match(
-    /linodes[/]create/gi
-  );
+export const linkIsActive = (href: string, activeLinks: Array<string> = []) => {
   const currentlyOnOneClickTab = location.search.match(/one-click/gi);
   const isOneClickTab = href.match(/one-click/gi);
 
   /**
-   * mark as active if the tab is "one click" and we're on the one-click route
-   * any other create flow tabs don't need an active nav element
+   * mark as active if the tab is "one click"
+   * Other create tabs default back to Linodes active tabs
    */
-  if (currentlyOnCreateLinodeFlow) {
-    if (currentlyOnOneClickTab) {
-      return isOneClickTab;
-    }
-    return false;
+  if (currentlyOnOneClickTab) {
+    return isOneClickTab;
   }
 
-  return isPathOneOf([href], location.pathname);
+  return isPathOneOf([href, ...activeLinks], location.pathname);
 };

@@ -37,6 +37,7 @@ const SearchItem: React.StatelessComponent<Props> = props => {
         [classes.selectedMenuItem]: isFocused
       })}
       value={data.label}
+      aria-describedby={!isFinal ? 'external-site' : undefined}
       attrs={{ ['data-qa-search-result']: source }}
       {...props}
     >

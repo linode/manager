@@ -8,7 +8,7 @@ import { compose } from 'recompose';
 import withVolumesRequests, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
-import { resetEventsPolling } from 'src/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import { MapState } from 'src/store/types';
 import { openForCreating } from 'src/store/volumeForm';
 import {

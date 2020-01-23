@@ -59,7 +59,12 @@ class ImagesActionMenu extends React.Component<CombinedProps> {
   };
 
   render() {
-    return <ActionMenu createActions={this.createActions()} />;
+    return (
+      <ActionMenu
+        createActions={this.createActions()}
+        ariaLabel={`Action menu for Image ${this.props.image.label}`}
+      />
+    );
   }
 }
 

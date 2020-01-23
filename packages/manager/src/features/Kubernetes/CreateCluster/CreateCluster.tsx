@@ -18,10 +18,10 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
+import H1Header from 'src/components/H1Header';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import TextField from 'src/components/TextField';
@@ -44,7 +44,8 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     title: {
-      marginBottom: theme.spacing(1) + theme.spacing(1) / 2
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(1)
     },
     sidebar: {
       [theme.breakpoints.up('md')]: {
@@ -248,9 +249,11 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
         <Grid container spacing={2}>
           <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
           <Grid item className={`mlMain py0`}>
-            <Typography variant="h1" data-qa-title className={classes.title}>
-              Create a Kubernetes Cluster
-            </Typography>
+            <H1Header
+              title="Create a Kubernetes Cluster"
+              data-qa-title
+              className={classes.title}
+            />
             {errorMap.none && <Notice text={errorMap.none} error />}
             <SelectRegionPanel
               error={errorMap.region}
