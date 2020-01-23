@@ -86,3 +86,37 @@ export const generateMigrationTimeString = (migrationTimeInMins: number) => {
 
   return pluralize('minute', 'minutes', migrationTimeInMins);
 };
+
+export const formatEventSeconds = (seconds: number | null) => {
+  if (!seconds) {
+    return 'Unknown';
+  }
+
+  if (seconds >= 3600) {
+    const hours = Math.floor(seconds / 60 / 60);
+    const minutes = Math.floor((seconds % 3600) / 60);
+
+    return minutes === 0
+      ? `${pluralize('hour', 'hours', hours)}`
+      : `${pluralize('hour', 'hours', hours)}, ${pluralize(
+          'minute',
+          'minutes',
+          minutes
+        )}`;
+  }
+
+  if (seconds >= 60) {
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+
+    return secs === 0
+      ? `${pluralize('minute', 'minutes', minutes)}`
+      : `${pluralize('minute', 'minutes', minutes)}, ${pluralize(
+          'second',
+          'seconds',
+          secs
+        )}`;
+  }
+
+  return `${pluralize('second', 'seconds', seconds)}`;
+};

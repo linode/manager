@@ -30,7 +30,7 @@ export const createPaymentsTable = (doc: JSPDF, payment: Payment) => {
       [
         { content: 'Payment: Thank You' },
         { content: formatDate(payment.date, { format: 'YYYY-MM-DD' }) },
-        { content: `$${payment.usd.toFixed(2)}` }
+        { content: `$${Number(payment.usd).toFixed(2)}` }
       ]
     ]
   });
@@ -47,7 +47,9 @@ export const createPaymentsTotalsTable = (doc: JSPDF, payment: Payment) => {
     headStyles: {
       fillColor: '#444444'
     },
-    body: [['Payment Total (USD)        ', `$${payment.usd.toFixed(2)}`]]
+    body: [
+      ['Payment Total (USD)        ', `$${Number(payment.usd).toFixed(2)}`]
+    ]
   });
 };
 
@@ -99,17 +101,23 @@ export const createInvoiceItemsTable = (doc: JSPDF, items: InvoiceItem[]) => {
           styles: { halign: 'center', fontSize: 8, overflow: 'linebreak' },
           content: item.unit_price || ''
         },
+        /**
+         * We do number conversion here because some older invoice items
+         * (specifically Customer Packages) return these values as strings.
+         *
+         * The API team will fix this in ARB-1607.
+         */
         {
           styles: { halign: 'center', fontSize: 8, overflow: 'linebreak' },
-          content: `$${item.amount}`
+          content: `$${Number(item.amount).toFixed(2)}`
         },
         {
           styles: { halign: 'center', fontSize: 8, overflow: 'linebreak' },
-          content: `$${item.tax}`
+          content: `$${Number(item.tax).toFixed(2)}`
         },
         {
           styles: { halign: 'center', fontSize: 8, overflow: 'linebreak' },
-          content: `$${item.total}`
+          content: `$${Number(item.total).toFixed(2)}`
         }
       ];
     })
@@ -128,9 +136,9 @@ export const createInvoiceTotalsTable = (doc: JSPDF, invoice: Invoice) => {
       fillColor: '#444444'
     },
     body: [
-      ['Subtotal (USD)', `$${invoice.subtotal.toFixed(2)}`],
-      ['Tax (USD)', `$${invoice.tax.toFixed(2)}`],
-      [`Total (USD)`, `$${invoice.total.toFixed(2)}`]
+      ['Subtotal (USD)', `$${Number(invoice.subtotal).toFixed(2)}`],
+      ['Tax (USD)', `$${Number(invoice.tax).toFixed(2)}`],
+      [`Total (USD)`, `$${Number(invoice.total).toFixed(2)}`]
     ]
   });
 };

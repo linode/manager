@@ -135,7 +135,13 @@ const UserSSHKeyPanel: React.FunctionComponent<CombinedProps> = props => {
                   data-testid="ssh-public-key"
                 >
                   <TableCell className={classes.cellCheckbox}>
-                    <CheckBox checked={selected} onChange={onSSHKeyChange} />
+                    <CheckBox
+                      checked={selected}
+                      onChange={onSSHKeyChange}
+                      inputProps={{
+                        'aria-label': `Enable SSH for ${username}`
+                      }}
+                    />
                   </TableCell>
                   <TableCell className={classes.cellUser}>
                     <div className={classes.userWrapper}>

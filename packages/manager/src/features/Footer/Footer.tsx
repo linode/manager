@@ -11,8 +11,13 @@ import createMailto from './createMailto';
 
 import AdaLink from './AdaLink';
 
+interface Props {
+  desktopMenuIsOpen: boolean;
+}
+
 type CSSClasses =
   | 'container'
+  | 'desktopMenuIsOpen'
   | 'linkContainer'
   | 'link'
   | 'version'
@@ -29,11 +34,17 @@ const styles = (theme: Theme) =>
         flexDirection: 'column',
         alignItems: 'flex-start'
       },
-      [theme.breakpoints.up('lg')]: {
+      [theme.breakpoints.up('md')]: {
         paddingLeft: theme.spacing(17) + 79 // 215
       },
       [theme.breakpoints.up('xl')]: {
         paddingLeft: theme.spacing(22) + 99 // 275
+      }
+    },
+    desktopMenuIsOpen: {
+      paddingLeft: 0,
+      [theme.breakpoints.up('md')]: {
+        paddingLeft: theme.spacing(7) + 36
       }
     },
     version: {
@@ -82,55 +93,61 @@ const styles = (theme: Theme) =>
 
 const styled = withStyles(styles);
 
-type CombinedProps = WithStyles<CSSClasses>;
+type CombinedProps = Props & WithStyles<CSSClasses>;
 
 export class Footer extends React.PureComponent<CombinedProps> {
   render() {
-    const { classes } = this.props;
+    const { classes, desktopMenuIsOpen } = this.props;
 
     return (
-      <Grid
-        container
-        spacing={4}
-        alignItems="center"
-        className={classes.container}
-      >
-        <Grid item className={classes.version}>
-          {this.renderVersion(classes.link)}
-        </Grid>
+      <footer role="contentinfo">
         <Grid
-          item
+          container
+          spacing={4}
+          alignItems="center"
           className={classNames({
-            [classes.linkContainer]: true
+            [classes.container]: true,
+            [classes.desktopMenuIsOpen]: desktopMenuIsOpen
           })}
         >
-          <a
-            className={classes.link}
-            href="https://developers.linode.com"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Grid item className={classes.version}>
+            {this.renderVersion(classes.link)}
+          </Grid>
+          <Grid
+            item
+            className={classNames({
+              [classes.linkContainer]: true
+            })}
           >
-            API Reference
-          </a>
-        </Grid>
-        <Grid
-          item
-          className={classNames({
-            [classes.linkContainer]: true,
-            [classes.feedbackLink]: true
-          })}
-        >
-          <a
-            className={classes.link}
-            href={createMailto(window.navigator.userAgent || '')}
+            <a
+              className={classes.link}
+              href="https://developers.linode.com"
+              target="_blank"
+              aria-describedby="external-site"
+              rel="noopener noreferrer"
+            >
+              API Reference
+            </a>
+          </Grid>
+          <Grid
+            item
+            className={classNames({
+              [classes.linkContainer]: true,
+              [classes.feedbackLink]: true
+            })}
           >
-            Provide Feedback
-          </a>
+            <a
+              className={classes.link}
+              href={createMailto(window.navigator.userAgent || '')}
+            >
+              Provide Feedback
+            </a>
+          </Grid>
+          <Grid item className={classes.adaLink}>
+            <AdaLink />
+          </Grid>
         </Grid>
-        <Grid item className={classes.adaLink}>
-          <AdaLink />
-        </Grid>
-      </Grid>
+      </footer>
     );
   }
 
@@ -145,6 +162,7 @@ export class Footer extends React.PureComponent<CombinedProps> {
         className={className}
         href={`https://github.com/linode/manager/releases/tag/v${VERSION}`}
         target="_blank"
+        aria-describedby="external-site"
         rel="noopener noreferrer"
       >
         v{VERSION}

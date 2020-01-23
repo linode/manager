@@ -90,9 +90,12 @@ export const imagesToGroupedItems = (images: Image[]) => {
           label: thisGroup,
           options: group
             .map(thisImage => {
+              const isDeprecated = thisImage.deprecated;
+              const fullLabel =
+                thisImage.label + (isDeprecated ? ' (Deprecated)' : '');
               const _option = {
                 created: thisImage.created,
-                label: thisImage.label,
+                label: fullLabel,
                 value: thisImage.id,
                 className: thisImage.vendor
                   ? `fl-${distroIcons[thisImage.vendor]}`

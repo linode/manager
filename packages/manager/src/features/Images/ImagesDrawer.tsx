@@ -17,7 +17,7 @@ import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
-import { resetEventsPolling } from 'src/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/linodes/DiskSelect';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';

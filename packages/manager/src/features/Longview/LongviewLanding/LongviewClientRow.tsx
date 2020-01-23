@@ -1,39 +1,39 @@
-import Close from '@material-ui/icons/Close';
+import { Grant } from 'linode-js-sdk/lib/account';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 
-import IconButton from 'src/components/core/IconButton';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import CPUGauge from './Gauges/CPU';
 
-import { getLastUpdated } from '../request';
+import { useClientLastUpdated } from '../shared/useClientLastUpdated';
 import LoadGauge from './Gauges/Load';
 import NetworkGauge from './Gauges/Network';
 import RAMGauge from './Gauges/RAM';
 import StorageGauge from './Gauges/Storage';
 import SwapGauge from './Gauges/Swap';
+import ActionMenu, { ActionHandlers } from './LongviewActionMenu';
 import LongviewClientHeader from './LongviewClientHeader';
 import LongviewClientInstructions from './LongviewClientInstructions';
 
+import withLongviewClients, {
+  DispatchProps
+} from 'src/containers/longview.container';
 import withClientStats, {
   Props as LVDataProps
 } from 'src/containers/longview.stats.container';
+import withProfile from 'src/containers/profile.container';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(4),
-    padding: `0px ${theme.spacing()}px ${theme.spacing(
-      3
-    )}px ${theme.spacing()}px`
+    padding: theme.spacing(3)
   },
-  container: {
-    height: 150,
-    '@media (max-width: 1100px)': {
-      flexDirection: 'column',
-      height: 'inherit'
+  gaugeContainer: {
+    [theme.breakpoints.down('sm')]: {
+      marginBottom: 30
     }
   },
   button: {
@@ -42,85 +42,37 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: theme.color.red
     }
   },
-  label: {
-    paddingLeft: theme.spacing(2)
-  }
+  label: {}
 }));
 
-interface Props {
+interface Props extends ActionHandlers {
   clientID: number;
   clientLabel: string;
   clientAPIKey: string;
-  triggerDeleteLongviewClient: (
-    longviewClientID: number,
-    longviewClientLabel: string
-  ) => void;
+  clientInstallKey: string;
+  openPackageDrawer: () => void;
 }
 
-type CombinedProps = Props & LVDataProps;
+type CombinedProps = Props & LVDataProps & DispatchProps & GrantProps;
 
 const LongviewClientRow: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-
-  let requestInterval: NodeJS.Timeout;
-  let mounted = true;
 
   const {
     clientID,
     clientLabel,
     clientAPIKey,
-    triggerDeleteLongviewClient
+    triggerDeleteLongviewClient,
+    clientInstallKey,
+    openPackageDrawer,
+    updateLongviewClient,
+    userCanModifyClient
   } = props;
 
-  /*
-   lastUpdated _might_ come back from the endpoint as 0, so it's important
-   that we differentiate between _0_ and _undefined_
-   */
-  const [lastUpdated, setLastUpdated] = React.useState<number | undefined>(
-    undefined
+  const { lastUpdated, lastUpdatedError, authed } = useClientLastUpdated(
+    clientAPIKey,
+    _lastUpdated => props.getClientStats(clientAPIKey, _lastUpdated)
   );
-  const [authed, setAuthed] = React.useState<boolean>(true);
-
-  const requestAndSetLastUpdated = () => {
-    return getLastUpdated(clientAPIKey)
-      .then(response => {
-        /*
-          only update _lastUpdated_ state if it hasn't already been set
-          or the API response is in a time past what's already been set.
-        */
-        if (
-          mounted &&
-          (!lastUpdated || pathOr(0, ['updated'], response) > lastUpdated)
-        ) {
-          setLastUpdated(response.updated);
-          props.getClientStats(props.clientAPIKey);
-        }
-      })
-      .catch(e => {
-        /**
-         * The first request we make after creating a new client will almost always
-         * return an authentication failed error.
-         */
-        const reason = pathOr('', [0, 'reason'], e);
-        if (mounted && reason.match(/authentication/i)) {
-          setAuthed(false);
-        }
-      });
-  };
-
-  /** request on first mount */
-  React.useEffect(() => {
-    requestAndSetLastUpdated().then(() => {
-      requestInterval = setInterval(() => {
-        requestAndSetLastUpdated();
-      }, 10000);
-    });
-
-    return () => {
-      mounted = false;
-      clearInterval(requestInterval);
-    };
-  }, []);
 
   /**
    * We want to show a "waiting for data" state
@@ -131,59 +83,121 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
       <LongviewClientInstructions
         clientID={clientID}
         clientLabel={clientLabel}
-        installCode={'D3DD4F69-817B-4FF5-8F4C80029AD4F815'}
+        clientAPIKey={clientAPIKey}
+        installCode={clientInstallKey}
         triggerDeleteLongviewClient={triggerDeleteLongviewClient}
+        updateLongviewClient={updateLongviewClient}
+        userCanModifyClient={userCanModifyClient}
       />
     );
   }
 
   return (
-    <Paper className={classes.root}>
+    <Paper data-testid={clientID} className={classes.root}>
       <Grid
         container
-        direction="row"
         wrap="nowrap"
         justify="space-between"
-        alignItems="center"
-        className={classes.container}
+        alignItems="flex-start"
         aria-label="List of Your Longview Clients"
         data-testid="longview-client-row"
       >
-        <Grid item xs={2} className={classes.label}>
-          <LongviewClientHeader clientID={clientID} clientLabel={clientLabel} />
+        <Grid item xs={11}>
+          <Grid container>
+            <Grid item xs={12} md={3}>
+              <LongviewClientHeader
+                clientID={clientID}
+                clientLabel={clientLabel}
+                lastUpdatedError={lastUpdatedError}
+                openPackageDrawer={openPackageDrawer}
+                updateLongviewClient={updateLongviewClient}
+                longviewClientLastUpdated={lastUpdated}
+                userCanModifyClient={userCanModifyClient}
+              />
+            </Grid>
+            <Grid item xs={12} md={9}>
+              <Grid container>
+                <Grid item xs={4} sm={2} className={classes.gaugeContainer}>
+                  <CPUGauge
+                    clientID={clientID}
+                    lastUpdatedError={lastUpdatedError}
+                  />
+                </Grid>
+                <Grid item xs={4} sm={2} className={classes.gaugeContainer}>
+                  <RAMGauge
+                    clientID={clientID}
+                    lastUpdatedError={lastUpdatedError}
+                  />
+                </Grid>
+                <Grid item xs={4} sm={2} className={classes.gaugeContainer}>
+                  <SwapGauge
+                    clientID={clientID}
+                    lastUpdatedError={lastUpdatedError}
+                  />
+                </Grid>
+                <Grid item xs={4} sm={2} className={classes.gaugeContainer}>
+                  <LoadGauge
+                    clientID={clientID}
+                    lastUpdatedError={lastUpdatedError}
+                  />
+                </Grid>
+                <Grid item xs={4} sm={2} className={classes.gaugeContainer}>
+                  <NetworkGauge
+                    clientID={clientID}
+                    lastUpdatedError={lastUpdatedError}
+                  />
+                </Grid>
+                <Grid item xs={4} sm={2} className={classes.gaugeContainer}>
+                  <StorageGauge
+                    clientID={clientID}
+                    lastUpdatedError={lastUpdatedError}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
         </Grid>
-        <Grid item>
-          <CPUGauge clientID={clientID} />
-        </Grid>
-        <Grid item>
-          <RAMGauge clientID={clientID} />
-        </Grid>
-        <Grid item>
-          <SwapGauge token={clientAPIKey} lastUpdated={lastUpdated} />
-        </Grid>
-        <Grid item>
-          <LoadGauge token={clientAPIKey} lastUpdated={lastUpdated} />
-        </Grid>
-        <Grid item>
-          <NetworkGauge token={clientAPIKey} lastUpdated={lastUpdated} />
-        </Grid>
-        <Grid item>
-          <StorageGauge clientAPIKey={clientAPIKey} lastUpdated={lastUpdated} />
-        </Grid>
-        <Grid item style={{ alignSelf: 'flex-start' }}>
-          <IconButton
-            onClick={() => triggerDeleteLongviewClient(clientID, clientLabel)}
-            className={classes.button}
-          >
-            <Close width={30} height={30} />
-          </IconButton>
+        <Grid item xs={1}>
+          <Grid container justify="flex-end">
+            <Grid item>
+              <ActionMenu
+                longviewClientID={clientID}
+                longviewClientLabel={clientLabel}
+                triggerDeleteLongviewClient={triggerDeleteLongviewClient}
+                userCanModifyClient={userCanModifyClient}
+              />
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     </Paper>
   );
 };
 
+interface GrantProps {
+  userCanModifyClient: boolean;
+}
+
 export default compose<CombinedProps, Props>(
   React.memo,
-  withClientStats<Props>(ownProps => ownProps.clientID)
+  withClientStats<Props>(ownProps => ownProps.clientID),
+  /** We only need the update action here, easier than prop drilling through 4 components */
+  withLongviewClients(() => ({})),
+  withProfile<GrantProps, Props>((ownProps, { profileData }) => {
+    const longviewPermissions = pathOr<Grant[]>(
+      [],
+      ['grants', 'longview'],
+      profileData
+    );
+
+    const thisPermission = (longviewPermissions as Grant[]).find(
+      r => r.id === ownProps.clientID
+    );
+
+    return {
+      userCanModifyClient: thisPermission
+        ? thisPermission.permissions === 'read_write'
+        : true
+    };
+  })
 )(LongviewClientRow);
