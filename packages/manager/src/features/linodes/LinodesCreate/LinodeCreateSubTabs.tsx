@@ -43,6 +43,7 @@ export interface Tab {
   title: string | JSX.Element;
   render: () => JSX.Element;
   type: CreateTypes;
+  name: string;
 }
 
 interface Props {
@@ -51,6 +52,7 @@ interface Props {
   reset: () => void;
   tabs: Tab[];
   handleClick: (value: CreateTypes) => void;
+  name: string;
 }
 
 interface State {
@@ -112,7 +114,7 @@ class LinodeCreateSubTabs extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { tabs, classes, errors } = this.props;
+    const { tabs, classes, errors, name } = this.props;
     const { selectedTab: selectedTabFromState } = this.state;
 
     const queryParams = parse(location.search.replace('?', ''));
@@ -135,7 +137,12 @@ class LinodeCreateSubTabs extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Grid item className="mlMain py0">
           {generalError && <Notice error spacingTop={8} text={generalError} />}
-          <Paper className={`${classes.root}`}>
+          <Paper
+            className={`${classes.root}`}
+            role="tabpanel"
+            id={`tabpanel-${name}`}
+            aria-labelledby={`tab-${name}`}
+          >
             <div className={`${classes.inner}`}>
               <Typography variant="h2">Create From:</Typography>
               <AppBar position="static" color="default">
@@ -150,6 +157,9 @@ class LinodeCreateSubTabs extends React.Component<CombinedProps, State> {
                   {tabs.map((tab, idx) => (
                     <MUITab
                       key={idx}
+                      role="tab"
+                      aria-controls={`tabpanel-${tab.name}`}
+                      id={`tab-${tab.name}`}
                       label={tab.title}
                       data-qa-create-from={
                         typeof tab.title === 'string' ? tab.title : tab.type

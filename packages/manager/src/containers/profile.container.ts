@@ -1,30 +1,75 @@
-import { Profile } from 'linode-js-sdk/lib/profile'
-import { connect } from 'react-redux';
+import { Profile } from 'linode-js-sdk/lib/profile';
+import { connect, InferableComponentEnhancerWithProps } from 'react-redux';
 import { ApplicationState } from 'src/store';
-
 import { State } from 'src/store/profile/profile.reducer';
 import {
   requestProfile,
   updateProfile
 } from 'src/store/profile/profile.requests';
-
 import { ThunkDispatch } from 'src/store/types';
 
-export interface ProfileActionsProps {
+export interface DispatchProps {
   getProfile: () => Promise<Profile>;
   updateProfile: (params: Partial<Profile>) => Promise<Profile>;
 }
 
-export default <TInner extends {}, TOuter extends {}>(
-  mapAccountToProps: (ownProps: TOuter, profile: State) => TInner
+export interface StateProps {
+  profileError: State['error'];
+  profileLoading: State['loading'];
+  profileData: State['data'];
+  profileLastUpdated: State['lastUpdated'];
+}
+
+type MapProps<ReduxStateProps, OwnProps> = (
+  ownProps: OwnProps,
+  data: StateProps
+) => ReduxStateProps & Partial<StateProps>;
+
+export type Props = DispatchProps & StateProps;
+
+interface Connected {
+  <ReduxStateProps, OwnProps>(
+    mapStateToProps: MapProps<ReduxStateProps, OwnProps>
+  ): InferableComponentEnhancerWithProps<
+    ReduxStateProps & Partial<StateProps> & DispatchProps & OwnProps,
+    OwnProps
+  >;
+  <ReduxStateProps, OwnProps>(): InferableComponentEnhancerWithProps<
+    ReduxStateProps & DispatchProps & OwnProps,
+    OwnProps
+  >;
+}
+
+const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
+  mapStateToProps?: MapProps<ReduxState, OwnProps>
 ) =>
-  connect(
-    (state: ApplicationState, ownProps: TOuter) => {
-      return mapAccountToProps(ownProps, state.__resources.profile);
+  connect<
+    (ReduxState & Partial<StateProps>) | StateProps,
+    DispatchProps,
+    OwnProps,
+    ApplicationState
+  >(
+    (state, ownProps) => {
+      const {
+        lastUpdated: profileLastUpdated,
+        loading: profileLoading,
+        error: profileError,
+        data: profileData
+      } = state.__resources.profile;
+
+      const result = {
+        profileLoading,
+        profileError,
+        profileData,
+        profileLastUpdated
+      };
+
+      return !!mapStateToProps ? mapStateToProps(ownProps, result) : result;
     },
     (dispatch: ThunkDispatch) => ({
       getProfile: () => dispatch(requestProfile()),
-      updateProfile: (payload: Partial<Profile>) =>
-        dispatch(updateProfile(payload))
+      updateProfile: profile => dispatch(updateProfile(profile))
     })
   );
+
+export default connected;

@@ -10,7 +10,7 @@ describe('DrawerContent', () => {
   );
 
   it('should show loading component while loading is in progress', () => {
-    expect(component.name()).toEqual('WithStyles(circleProgressComponent)');
+    expect(component.name()).toEqual('WithStyles(CircleProgressComponent)');
     expect(component.find('table')).toHaveLength(0);
   });
 

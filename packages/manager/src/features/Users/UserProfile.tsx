@@ -128,7 +128,11 @@ class UserProfile extends React.Component<CombinedProps> {
     const generalProfileError = hasProfileErrorFor('none');
 
     return (
-      <React.Fragment>
+      <div
+        id="tabpanel-userProfile"
+        role="tabpanel"
+        aria-labelledby="tab-userProfile"
+      >
         <Typography variant="h2" data-qa-profile-header>
           User Profile
         </Typography>
@@ -199,7 +203,7 @@ class UserProfile extends React.Component<CombinedProps> {
             </ActionsPanel>
           </div>
         </Paper>
-      </React.Fragment>
+      </div>
     );
   };
 

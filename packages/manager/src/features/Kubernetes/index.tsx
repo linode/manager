@@ -7,19 +7,11 @@ import {
   withRouter
 } from 'react-router-dom';
 
-import DefaultLoader from 'src/components/DefaultLoader';
+const KubernetesLanding = React.lazy(() => import('./KubernetesLanding'));
 
-const KubernetesLanding = DefaultLoader({
-  loader: () => import('./KubernetesLanding')
-});
+const ClusterCreate = React.lazy(() => import('./CreateCluster'));
 
-const ClusterCreate = DefaultLoader({
-  loader: () => import('./CreateCluster')
-});
-
-const ClusterDetail = DefaultLoader({
-  loader: () => import('./KubernetesClusterDetail')
-});
+const ClusterDetail = React.lazy(() => import('./KubernetesClusterDetail'));
 
 type Props = RouteComponentProps<{}>;
 
@@ -32,13 +24,9 @@ class Kubernetes extends React.Component<Props> {
     return (
       <Switch>
         <Route component={ClusterCreate} exact path={`${path}/create`} />
-        <Route
-          component={ClusterDetail}
-          exact
-          path={`${path}/clusters/:clusterID`}
-        />
-        <Route component={KubernetesLanding} exact path={path} />
-        <Redirect to={'/kubernetes'} />
+        <Route component={ClusterDetail} path={`${path}/clusters/:clusterID`} />
+        <Route component={KubernetesLanding} exact path={`${path}/clusters`} />
+        <Redirect to={'/kubernetes/clusters'} />
       </Switch>
     );
   }

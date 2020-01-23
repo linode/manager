@@ -211,23 +211,11 @@ describe('Object Storage utilities', () => {
       handleSubmit
     } as any;
 
-    it("doesn't call the confirmation handler if the feature flag is off", async () => {
-      await confirmObjectStorage(
-        'disabled',
-        mockFormikProps,
-        openConfirmationDialog,
-        false
-      );
-      expect(openConfirmationDialog).toHaveBeenCalledTimes(0);
-      expect(handleSubmit).toHaveBeenCalledTimes(1);
-    });
-
     it("doesn't call the confirmation handler if OBJ is active", async () => {
       await confirmObjectStorage(
         'active',
         mockFormikProps,
-        openConfirmationDialog,
-        true
+        openConfirmationDialog
       );
       expect(openConfirmationDialog).toHaveBeenCalledTimes(0);
       expect(handleSubmit).toHaveBeenCalledTimes(1);
@@ -236,8 +224,7 @@ describe('Object Storage utilities', () => {
       await confirmObjectStorage(
         'disabled',
         mockFormikProps,
-        openConfirmationDialog,
-        true
+        openConfirmationDialog
       );
       expect(openConfirmationDialog).toHaveBeenCalledTimes(1);
       expect(handleSubmit).toHaveBeenCalledTimes(0);

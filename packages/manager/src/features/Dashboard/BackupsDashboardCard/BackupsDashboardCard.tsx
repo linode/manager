@@ -11,6 +11,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import DashboardCard from '../DashboardCard';
 
 type ClassNames =
@@ -34,7 +35,8 @@ const styles = (theme: Theme) =>
     },
     icon: {
       color: theme.color.blueDTwhite,
-      margin: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      marginLeft: theme.spacing(2),
       fontSize: 32
     },
     itemTitle: {
@@ -53,7 +55,7 @@ const styles = (theme: Theme) =>
       display: 'flex',
       flexFlow: 'row nowrap',
       alignItems: 'center',
-      justifyContent: 'center',
+      justifyContent: 'flex-start',
       padding: `${theme.spacing(1)}px !important`
     },
     ctaLink: {
@@ -69,9 +71,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<ClassNames>;
 
-export const BackupsDashboardCard: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const BackupsDashboardCard: React.FC<CombinedProps> = props => {
   const {
     accountBackups,
     classes,
@@ -79,12 +79,14 @@ export const BackupsDashboardCard: React.StatelessComponent<
     openBackupDrawer
   } = props;
 
-  if (accountBackups && !linodesWithoutBackups) {
+  const restricted = isRestrictedUser();
+
+  if (restricted || (accountBackups && !linodesWithoutBackups)) {
     return null;
   }
 
   return (
-    <DashboardCard>
+    <DashboardCard data-qa-backups-dashboard-card>
       <Paper
         className={classNames({
           [classes.section]: true,
@@ -92,7 +94,7 @@ export const BackupsDashboardCard: React.StatelessComponent<
         })}
       >
         <Backup className={classes.icon} />
-        <Typography className={classes.header} variant="h1">
+        <Typography className={classes.header} variant="h2">
           Back Up Your Data and Keep it Safe
         </Typography>
       </Paper>
@@ -154,8 +156,8 @@ BackupsDashboardCard.displayName = 'BackupsDashboardCard';
 const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
-  styled,
-  withRouter
+  withRouter,
+  styled
 )(BackupsDashboardCard);
 
 export default enhanced;

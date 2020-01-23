@@ -102,7 +102,10 @@ class UserDetail extends React.Component<CombinedProps> {
 
   tabs = [
     /* NB: These must correspond to the routes inside the Switch */
-    { title: 'User Profile', routeName: `${this.props.match.url}/profile` },
+    {
+      title: 'User Profile',
+      routeName: `${this.props.match.url}/profile`
+    },
     {
       title: 'User Permissions',
       routeName: `${this.props.match.url}/permissions`
@@ -395,7 +398,7 @@ class UserDetail extends React.Component<CombinedProps> {
             />
           </Grid>
         </Grid>
-        <AppBar position="static" color="default">
+        <AppBar position="static" color="default" role="tablist">
           <Tabs
             value={this.clampTabChoice()}
             onChange={this.handleTabChange}

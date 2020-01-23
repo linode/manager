@@ -1,5 +1,3 @@
-import * as Cookies from 'js-cookie';
-
 const localStorageCache = {};
 
 export const getStorage = (key: string, fallback?: any) => {
@@ -40,7 +38,7 @@ export const setStorage = (key: string, value: string) => {
 };
 
 const PAGE_SIZE = 'PAGE_SIZE';
-const BETA_NOTIFICATION = 'BetaNotification';
+const INFINITE_PAGE_SIZE = 'INFINITE_PAGE_SIZE';
 const HIDE_DISPLAY_GROUPS_CTA = 'importDisplayGroupsCTA';
 const HAS_IMPORTED_GROUPS = 'hasImportedGroups';
 const BACKUPSCTA_DISMISSED = 'BackupsCtaDismissed';
@@ -50,7 +48,6 @@ const SCOPES = 'authentication/scopes';
 const EXPIRE = 'authentication/expire';
 
 export type PageSize = number;
-type Beta = 'open' | 'closed';
 
 interface AuthGetAndSet {
   get: () => any;
@@ -68,15 +65,9 @@ export interface Storage {
     get: () => PageSize;
     set: (perPage: PageSize) => void;
   };
-  notifications: {
-    welcome: {
-      get: () => Beta;
-      set: (open: Beta) => void;
-    };
-  };
-  loginCloudManager: {
-    get: () => undefined | string;
-    set: (v: string | object, options?: Cookies.CookieAttributes) => void;
+  infinitePageSize: {
+    get: () => PageSize;
+    set: (perPage: PageSize) => void;
   };
   hideGroupImportCTA: {
     get: () => 'true' | 'false';
@@ -117,22 +108,18 @@ export const storage: Storage = {
     },
     set: v => setStorage(PAGE_SIZE, `${v}`)
   },
-  notifications: {
-    welcome: {
-      /** Leaving the LS key alone so it's not popping for those who've dismissed it. */
-      get: () => getStorage(BETA_NOTIFICATION, 'open'),
-      set: open => setStorage(BETA_NOTIFICATION, open)
-    }
-  },
-  loginCloudManager: {
-    get: () => Cookies.get('loginCloudManager'),
-    set: (
-      v: string | object,
-      options: Cookies.CookieAttributes = {
-        domain: '.linode.com',
-        expires: 1000 * 60 * 60 * 24 * 356
-      }
-    ) => Cookies.set('loginCloudManager', v, options)
+  // Page Size of Linodes Landing page.
+  infinitePageSize: {
+    get: () => {
+      // For backwards compatibility, we'll fall back to the value of PAGE_SIZE.
+      // If that doesn't exist, we use '25' as a second fallback.
+      const fallback = parseInt(getStorage(PAGE_SIZE, '25'), 10);
+
+      // I used Number() instead of parseInt() here because parseInt() does not
+      // parse the string "Infinity" as a Number.
+      return Number(getStorage(INFINITE_PAGE_SIZE, fallback));
+    },
+    set: v => setStorage(INFINITE_PAGE_SIZE, `${v}`)
   },
   hideGroupImportCTA: {
     get: () => getStorage(HIDE_DISPLAY_GROUPS_CTA),
@@ -148,4 +135,4 @@ export const storage: Storage = {
   }
 };
 
-export const { notifications, authentication, BackupsCtaDismissed } = storage;
+export const { authentication, BackupsCtaDismissed } = storage;

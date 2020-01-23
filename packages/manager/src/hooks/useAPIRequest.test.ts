@@ -51,4 +51,12 @@ describe('useAPIRequest', () => {
 
     expect(result.current.error).toEqual(mockError);
   });
+  it('returns default state when the request is null', () => {
+    const { result } = renderHook(() => useAPIRequest(null, []));
+    const { loading, error, lastUpdated, data } = result.current;
+    expect(loading).toBe(false);
+    expect(error).toBeUndefined();
+    expect(lastUpdated).toBe(0);
+    expect(data).toEqual([]);
+  });
 });

@@ -4,6 +4,7 @@ import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Chip from 'src/components/core/Chip';
+import FormControlLabel from 'src/components/core/FormControlLabel';
 import Hidden from 'src/components/core/Hidden';
 import {
   createStyles,
@@ -38,6 +39,7 @@ type ClassNames =
   | 'copy'
   | 'disabledRow'
   | 'chip'
+  | 'headingCellContainer'
   | 'currentPlanChipCell'
   | 'radioCell';
 
@@ -54,6 +56,10 @@ const styles = (theme: Theme) =>
     disabledRow: {
       backgroundColor: theme.bg.tableHeader,
       cursor: 'not-allowed'
+    },
+    headingCellContainer: {
+      display: 'flex',
+      alignItems: 'center'
     },
     chip: {
       backgroundColor: theme.color.green,
@@ -116,41 +122,64 @@ export class SelectPlanPanel extends React.Component<
       tooltip = `This plan is too small for the selected image.`;
     }
 
+    const rowAriaLabel =
+      type && type.label && isSamePlan
+        ? `${type.label} this is your current plan`
+        : planTooSmall
+        ? `${type.label} this plan is too small for resize`
+        : type.label;
+
     return (
       <React.Fragment key={`tabbed-panel-${idx}`}>
         {/* Displays Table Row for larger screens */}
         <Hidden smDown>
           <TableRow
             data-qa-plan-row={type.label}
+            aria-label={rowAriaLabel}
             key={type.id}
             onClick={!isSamePlan ? this.onSelect(type.id) : undefined}
             rowLink={this.onSelect ? this.onSelect(type.id) : undefined}
+            aria-disabled={isSamePlan || planTooSmall}
             className={classnames({
               [classes.disabledRow]: isSamePlan || planTooSmall
             })}
           >
             <TableCell className={classes.radioCell}>
               {!isSamePlan && (
-                <Radio
-                  checked={!planTooSmall && type.id === String(selectedID)}
-                  onChange={this.onSelect(type.id)}
-                  disabled={planTooSmall || disabled}
-                  id={type.id}
+                <FormControlLabel
+                  label={type.heading}
+                  aria-label={type.heading}
+                  className={'label-visually-hidden'}
+                  control={
+                    <Radio
+                      checked={!planTooSmall && type.id === String(selectedID)}
+                      onChange={this.onSelect(type.id)}
+                      disabled={planTooSmall || disabled}
+                      id={type.id}
+                    />
+                  }
                 />
               )}
             </TableCell>
             <TableCell data-qa-plan-name>
-              {type.heading}{' '}
-              {isSamePlan && (
-                <Chip
-                  data-qa-current-plan
-                  label="Current Plan"
-                  className={classes.chip}
-                />
-              )}
-              {tooltip && (
-                <HelpIcon text={tooltip} tooltipPosition="right-end" />
-              )}
+              <div className={classes.headingCellContainer}>
+                {type.heading}{' '}
+                {isSamePlan && (
+                  <Chip
+                    data-qa-current-plan
+                    label="Current Plan"
+                    aria-label="This is your current plan"
+                    className={classes.chip}
+                  />
+                )}
+                {tooltip && (
+                  <HelpIcon
+                    text={tooltip}
+                    tooltipPosition="right-end"
+                    className="py0"
+                  />
+                )}
+              </div>
             </TableCell>
             <TableCell data-qa-monthly> ${type.price.monthly}</TableCell>
             <TableCell data-qa-hourly>
@@ -206,9 +235,16 @@ export class SelectPlanPanel extends React.Component<
         <Hidden mdUp>{plans.map(this.renderSelection)}</Hidden>
         <Hidden smDown>
           <Grid item xs={12} lg={10}>
-            <Table isResponsive={false} border spacingBottom={16}>
+            <Table
+              isResponsive={false}
+              border
+              spacingBottom={16}
+              aria-label="List of Linode Plans"
+            >
               {tableHeader}
-              <TableBody>{plans.map(this.renderSelection)}</TableBody>
+              <TableBody role="radiogroup">
+                {plans.map(this.renderSelection)}
+              </TableBody>
             </Table>
           </Grid>
         </Hidden>
@@ -307,6 +343,7 @@ export class SelectPlanPanel extends React.Component<
           <a
             href="https://www.linode.com/docs/platform/linode-gpu/getting-started-with-gpu/"
             target="_blank"
+            aria-describedby="external-site"
             rel="noopener noreferrer"
           >
             {` `}Here is a guide

@@ -18,7 +18,9 @@ import { Profile, TrustedDevice } from './types';
  *
  */
 export const getProfile = () =>
-  Request<Profile>(setURL(`${API_ROOT}/profile`), setMethod('GET'));
+  Request<Profile>(setURL(`${API_ROOT}/profile`), setMethod('GET')).then(
+    response => response.data
+  );
 
 /**
  * updateProfile

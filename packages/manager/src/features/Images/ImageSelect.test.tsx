@@ -217,7 +217,11 @@ describe('ImageSelect', () => {
       component.setProps({ imageError: 'An error' });
       expect(
         component.containsMatchingElement(
-          <Select onChange={props.onSelect} errorText={'An error'} />
+          <Select
+            onChange={props.onSelect}
+            errorText={'An error'}
+            label="Image"
+          />
         )
       ).toBeTruthy();
     });

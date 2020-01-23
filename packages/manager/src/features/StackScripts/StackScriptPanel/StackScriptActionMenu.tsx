@@ -22,11 +22,13 @@ interface Props {
   // /LandingPanel that uses different values for categories that we shouldn't
   // change until we're actually using it.
   category: StackScriptCategory | string;
-  // From Profile HOC
+}
+
+interface ProfileProps {
   username?: string;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}>;
+type CombinedProps = Props & RouteComponentProps<{}> & ProfileProps;
 
 const StackScriptActionMenu: React.StatelessComponent<
   CombinedProps
@@ -110,14 +112,18 @@ const StackScriptActionMenu: React.StatelessComponent<
       return actions;
     };
   };
-  return <ActionMenu createActions={createActions()} />;
+  return (
+    <ActionMenu
+      createActions={createActions()}
+      ariaLabel={`Action menu for StackScript ${props.stackScriptLabel}`}
+    />
+  );
 };
 
 const enhanced = compose<CombinedProps, Props>(
   withRouter,
-  withProfile((ownProps, profile) => {
+  withProfile<ProfileProps, Props>((ownProps, { profileData: profile }) => {
     return {
-      ...ownProps,
       username: path(['data', 'username'], profile)
     };
   })
