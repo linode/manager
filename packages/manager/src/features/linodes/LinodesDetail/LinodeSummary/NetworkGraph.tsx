@@ -194,6 +194,16 @@ const Graph: React.FC<GraphProps> = props => {
     return convertNetworkToUnit(value, unit as any);
   };
 
+  /**
+   * formatNetworkTooltip is a helper method from Longview, where
+   * data is expected in bytes. The method does the rounding, unit conversions, etc.
+   * that we want, but it first multiplies by 8 to convert to bits.
+   * APIv4 returns this data in bits to begin with,
+   * so we have to preemptively divide by 8 to counter the conversion inside the helper.
+   *
+   */
+  const _formatTooltip = (value: number) => formatNetworkTooltip(value / 8);
+
   const convertedPublicIn = data.publicIn;
   const convertedPublicOut = data.publicOut;
   const convertedPrivateIn = data.privateIn;
@@ -207,7 +217,7 @@ const Graph: React.FC<GraphProps> = props => {
           chartHeight={chartHeight}
           unit={`/s`}
           formatData={convertNetworkData}
-          formatTooltip={formatNetworkTooltip}
+          formatTooltip={_formatTooltip}
           showToday={rangeSelection === '24'}
           data={[
             {
