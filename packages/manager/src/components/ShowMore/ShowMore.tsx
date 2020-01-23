@@ -43,10 +43,20 @@ const styles = (theme: Theme) =>
     popover: {
       minWidth: 'auto',
       maxWidth: 400,
-      overflow: 'visible',
+      maxHeight: 200,
+      overflowY: 'scroll',
       padding: theme.spacing(1),
       [theme.breakpoints.down('xs')]: {
         maxWidth: 285
+      },
+      '&::-webkit-scrollbar': {
+        webkitAppearance: 'none',
+        width: 7
+      },
+      '&::-webkit-scrollbar-thumb': {
+        borderRadius: 4,
+        backgroundColor: theme.color.grey2,
+        WebkitBoxShadow: '0 0 1px rgba(255,255,255,.5)'
       }
     }
   });

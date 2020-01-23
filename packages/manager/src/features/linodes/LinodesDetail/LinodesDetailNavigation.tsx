@@ -73,16 +73,46 @@ const LinodesDetailNavigation: React.StatelessComponent<
 
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
-    { routeName: `${url}/summary`, title: 'Summary' },
-    { routeName: `${url}/volumes`, title: 'Volumes' },
-    { routeName: `${url}/networking`, title: 'Networking' },
-    { routeName: `${url}/resize`, title: 'Resize' },
-    { routeName: `${url}/rescue`, title: 'Rescue' },
-    { routeName: `${url}/rebuild`, title: 'Rebuild' },
-    { routeName: `${url}/backup`, title: 'Backups' },
-    { routeName: `${url}/activity`, title: 'Activity' },
-    { routeName: `${url}/settings`, title: 'Settings' },
-    { routeName: `${url}/advanced`, title: 'Advanced' }
+    {
+      routeName: `${url}/summary`,
+      title: 'Summary'
+    },
+    {
+      routeName: `${url}/volumes`,
+      title: 'Volumes'
+    },
+    {
+      routeName: `${url}/networking`,
+      title: 'Networking'
+    },
+    {
+      routeName: `${url}/resize`,
+      title: 'Resize'
+    },
+    {
+      routeName: `${url}/rescue`,
+      title: 'Rescue'
+    },
+    {
+      routeName: `${url}/rebuild`,
+      title: 'Rebuild'
+    },
+    {
+      routeName: `${url}/backup`,
+      title: 'Backups'
+    },
+    {
+      routeName: `${url}/activity`,
+      title: 'Activity'
+    },
+    {
+      routeName: `${url}/settings`,
+      title: 'Settings'
+    },
+    {
+      routeName: `${url}/advanced`,
+      title: 'Disks/Configs'
+    }
   ];
 
   const handleTabChange = (
@@ -96,7 +126,7 @@ const LinodesDetailNavigation: React.StatelessComponent<
 
   return (
     <>
-      <AppBar position="static" color="default">
+      <AppBar position="static" color="default" role="tablist">
         <Tabs
           value={tabs.findIndex(tab => matches(tab.routeName))}
           onChange={handleTabChange}
@@ -132,16 +162,22 @@ const LinodesDetailNavigation: React.StatelessComponent<
           exact
           path={`/linodes/:linodeId/volumes`}
           render={routeProps => (
-            <VolumesLanding
-              linodeId={linodeId}
-              linodeLabel={linodeLabel}
-              linodeRegion={linodeRegion}
-              linodeConfigs={linodeConfigs}
-              readOnly={readOnly}
-              fromLinodes
-              removeBreadCrumb
-              {...routeProps}
-            />
+            <div
+              id="tabpanel-volumes"
+              role="tabpanel"
+              aria-labelledby="tab-volumes"
+            >
+              <VolumesLanding
+                linodeId={linodeId}
+                linodeLabel={linodeLabel}
+                linodeRegion={linodeRegion}
+                linodeConfigs={linodeConfigs}
+                readOnly={readOnly}
+                fromLinodes
+                removeBreadCrumb
+                {...routeProps}
+              />
+            </div>
           )}
         />
         <Route

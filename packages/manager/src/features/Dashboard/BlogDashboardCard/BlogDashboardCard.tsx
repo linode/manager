@@ -134,6 +134,7 @@ export class BlogDashboardCard extends React.Component<CombinedProps, State> {
             href={item.link}
             className="blue"
             target="_blank"
+            aria-describedby="external-site"
             rel="noopener noreferrer"
             data-qa-blog-post
           >

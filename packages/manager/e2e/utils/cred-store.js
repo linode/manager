@@ -1,6 +1,6 @@
+/*eslint no-console: ["error", { allow: ["warn", "error"] }] */
 const { resetAccounts } = require('../setup/cleanup');
 const { constants } = require('../constants');
-
 class CredStore {
   // default browser object is a mock to support testing outside the context
   // of running the e2e tests.  when running under e2e browser is passed in via
@@ -11,8 +11,6 @@ class CredStore {
   }
 
   setBrowser(browser) {
-    // console.log("setting browser to:");
-    // console.log(browser);
     this.browser = browser;
   }
 
@@ -20,35 +18,37 @@ class CredStore {
   // let implementor know that child class must provide an impl for this
   // method.
   getAllCreds() {
-    throw 'CredStore.getAllCreds() needs to be implemented in child class';
+    try {
+      throw new Error(
+        'CredStore.getAllCreds() needs to be implemented in child class'
+      );
+    } catch (e) {
+      alert(e.message);
+    }
   }
 
   cleanupAccounts() {
     if (this.shouldCleanupUsingAPI) {
-      console.log('cleaning up user resources via API');
+      //console.log('cleaning up user resources via API');
       return this.getAllCreds().then(credCollection => {
-        console.log(credCollection);
+        //console.log(credCollection);
         return resetAccounts(credCollection);
       });
     } else {
-      console.log('not cleaning up resources via API');
+      //console.log('not cleaning up resources via API');
       return Promise.resolve(false);
     }
   }
 
   login(username, password, shouldStoreToken = false) {
-    console.log('logging in for user: ' + username);
-
     let browser = this.browser;
 
     browser.url(constants.routes.linodes);
-    console.log(`route to follow: ${constants.routes.linodes}`);
     try {
-      console.log(`attempting to enter username`);
       $('#username').waitForDisplayed(constants.wait.long);
     } catch (err) {
-      //console.log(`page source`)
-      console.log(browser.getPageSource());
+      //error(`page source`)
+      error(browser.getPageSource());
     }
 
     $('#password').waitForDisplayed(constants.wait.long);
@@ -70,7 +70,7 @@ class CredStore {
         $('.oauthauthorize-page').waitForDisplayed(1000);
         return true;
       } catch (err) {
-        console.log('Not on the Oauth Page, continuing');
+        console.error('Not on the Oauth Page, continuing');
         return false;
       }
     };
@@ -104,7 +104,7 @@ class CredStore {
     try {
       $('[data-qa-add-new-menu-button]').waitForExist(constants.wait.normal);
     } catch (err) {
-      console.log(
+      console.error(
         'Add an entity menu failed to exist',
         'Failed to login to the Manager for some reason.'
       );
@@ -112,16 +112,16 @@ class CredStore {
       console.error(`Page source: \n ${browser.getPageSource()}`);
     }
 
-    // Wait for the welcome modal to display, click it once it appears
-    if ($('[role="dialog"]').waitForDisplayed()) {
-      const letsGoButton = url.includes('dev')
-        ? '.btn#submit'
-        : '[data-qa-welcome-button]';
-      $(letsGoButton).click();
-      $('[role="dialog"]').waitForDisplayed(constants.wait.long, true);
-    }
+    // // Wait for the welcome modal to display, click it once it appears
+    // if ($('[role="dialog"]').waitForDisplayed()) {
+    //   const letsGoButton = url.includes('dev')
+    //     ? '.btn#submit'
+    //     : '[data-qa-welcome-button]';
+    //   $(letsGoButton).click();
+    //   $('[role="dialog"]').waitForDisplayed(constants.wait.long, true);
+    // }
 
-    $('[data-qa-add-new-menu-button]').waitForDisplayed(constants.wait.long);
+    // $('[data-qa-add-new-menu-button]').waitForDisplayed(constants.wait.long);
 
     // TODO fix storeToken implementation
     //if (shouldStoreToken) {

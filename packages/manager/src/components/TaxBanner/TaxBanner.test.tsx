@@ -51,7 +51,7 @@ describe('Utility Functions', () => {
 
     const container = queryByTestId('hello');
     expect(container).toContainHTML(
-      '<div data-testid="hello">Please see docs at <a href="https://linode.com" target="_blank" rel="noopener noreferrer">this location</a>. And change <a href="/account/billing">your account</a>.</div>'
+      '<div data-testid="hello">Please see docs at <a href="https://linode.com" target="_blank" aria-describedby="external-site" rel="noopener noreferrer">this location</a>. And change <a href="/account/billing">your account</a>.</div>'
     );
   });
 });

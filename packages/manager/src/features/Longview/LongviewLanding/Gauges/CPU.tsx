@@ -1,25 +1,30 @@
-import { APIError } from 'linode-js-sdk/lib/types';
 import { clamp, pathOr } from 'ramda';
 import * as React from 'react';
+import { WithTheme, withTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
 import { pluralize } from 'src/utilities/pluralize';
 import { CPU } from '../../request.types';
-import { baseGaugeProps } from './common';
+import { baseGaugeProps, BaseProps as Props } from './common';
 
 import withClientStats, {
   Props as LVDataProps
 } from 'src/containers/longview.stats.container';
 
-interface Props {
-  clientID: number;
-}
+type CombinedProps = Props & WithTheme & LVDataProps;
 
-const CPUGauge: React.FC<Props & LVDataProps> = props => {
+export const getFinalUsedCPU = (data: LVDataProps['longviewClientData']) => {
+  const numberOfCores = pathOr(0, ['SysInfo', 'cpu', 'cores'], data);
+  const usedCPU = sumCPUUsage(data.CPU);
+  return normalizeValue(usedCPU, numberOfCores);
+};
+
+const CPUGauge: React.FC<CombinedProps> = props => {
   const {
     longviewClientDataLoading: loading,
     longviewClientDataError: error,
-    longviewClientData
+    longviewClientData,
+    lastUpdatedError
   } = props;
 
   const numberOfCores = pathOr(
@@ -37,7 +42,12 @@ const CPUGauge: React.FC<Props & LVDataProps> = props => {
       // doesn't exist or is 0.
       max={100 * numberOfCores}
       value={usedCPU}
-      innerText={innerText(finalUsedCPU || 0, loading, error)}
+      innerText={innerText(
+        finalUsedCPU || 0,
+        loading,
+        !!error || !!lastUpdatedError
+      )}
+      filledInColor={props.theme.graphs.blue}
       subTitle={
         <>
           <Typography>
@@ -54,7 +64,9 @@ const CPUGauge: React.FC<Props & LVDataProps> = props => {
   );
 };
 
-export default withClientStats<Props>(ownProps => ownProps.clientID)(CPUGauge);
+export default withClientStats<Props>(ownProps => ownProps.clientID)(
+  withTheme(CPUGauge)
+);
 
 // UTILITIES
 export const sumCPUUsage = (CPUData: Record<string, CPU> = {}) => {
@@ -75,11 +87,7 @@ export const normalizeValue = (value: number, numCores: number) => {
   return rounded;
 };
 
-export const innerText = (
-  value: number,
-  loading: boolean,
-  error?: APIError[]
-) => {
+export const innerText = (value: number, loading: boolean, error: boolean) => {
   if (error) {
     return 'Error';
   }

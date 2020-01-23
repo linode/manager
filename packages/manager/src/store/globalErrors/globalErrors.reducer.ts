@@ -7,10 +7,12 @@ export const defaultState: State = {};
 
 const reducer: Reducer<State> = reducerWithInitialState(defaultState)
   .case(setErrors, (state, payload) => {
-    return {
-      ...state,
-      ...payload
-    };
+    return payload
+      ? {
+          ...state,
+          ...payload
+        }
+      : {};
   })
   .case(clearErrors, (state, payload) => {
     /**

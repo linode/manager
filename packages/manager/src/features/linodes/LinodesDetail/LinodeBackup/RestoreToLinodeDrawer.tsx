@@ -1,4 +1,4 @@
-import { getLinodes, restoreBackup } from 'linode-js-sdk/lib/linodes';
+import { restoreBackup } from 'linode-js-sdk/lib/linodes';
 import { Profile } from 'linode-js-sdk/lib/profile';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
@@ -14,6 +14,9 @@ import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import withProfile from 'src/containers/profile.container';
+import withLinodes, {
+  Props as LinodeProps
+} from 'src/containers/withLinodes.container';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector.ts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
@@ -30,15 +33,16 @@ interface Props {
 }
 
 interface State {
-  linodes: string[][];
   overwrite: boolean;
   selectedLinode?: string;
   errors?: APIError[];
 }
 
-type CombinedProps = Props & {
+interface ProfileProps {
   profile?: Profile;
-};
+}
+
+export type CombinedProps = Props & ProfileProps & LinodeProps;
 
 const canEditLinode = (profile: Profile | null, linodeId: number): boolean => {
   return getPermissionsForLinode(profile, linodeId) === 'read_only';
@@ -48,7 +52,6 @@ export class RestoreToLinodeDrawer extends React.Component<
   State
 > {
   defaultState = {
-    linodes: [],
     overwrite: false,
     selectedLinode: 'none',
     errors: []
@@ -62,21 +65,11 @@ export class RestoreToLinodeDrawer extends React.Component<
     if (!this.mounted) {
       return;
     }
-    this.setState({ ...this.defaultState, linodes: this.state.linodes });
+    this.setState({ ...this.defaultState });
   };
 
   componentDidMount() {
     this.mounted = true;
-    const { linodeRegion } = this.props;
-    getLinodes({ page: 1 }, { region: linodeRegion }).then(response => {
-      if (!this.mounted) {
-        return;
-      }
-      const linodeChoices = response.data.map(linode => {
-        return [`${linode.id}`, linode.label];
-      });
-      this.setState({ linodes: linodeChoices });
-    });
   }
 
   componentWillUnmount() {
@@ -138,7 +131,7 @@ export class RestoreToLinodeDrawer extends React.Component<
 
   render() {
     const { open, backupCreated, profile } = this.props;
-    const { linodes, selectedLinode, overwrite, errors } = this.state;
+    const { selectedLinode, overwrite, errors } = this.state;
 
     const hasErrorFor = getAPIErrorsFor(this.errorResources, errors);
     const linodeError = hasErrorFor('linode_id');
@@ -148,11 +141,10 @@ export class RestoreToLinodeDrawer extends React.Component<
     const readOnly = canEditLinode(profile || null, Number(selectedLinode));
     const selectError = Boolean(linodeError) || readOnly;
 
-    const linodeList =
-      linodes &&
-      linodes.map(l => {
-        const label = l[1];
-        return { label, value: l[0] };
+    const linodeOptions = this.props.linodesData
+      .filter(linode => linode.region === this.props.linodeRegion)
+      .map(({ label, id }) => {
+        return { label, value: id };
       });
 
     return (
@@ -177,11 +169,13 @@ export class RestoreToLinodeDrawer extends React.Component<
               }
             }}
             defaultValue={selectedLinode || ''}
-            options={linodeList}
+            options={linodeOptions}
             onChange={this.handleSelectLinode}
             errorText={linodeError}
             placeholder="Select a Linode"
             isClearable={false}
+            label="Select a Linode"
+            hideLabel
           />
           {selectError && (
             <FormHelperText error>
@@ -229,12 +223,12 @@ export class RestoreToLinodeDrawer extends React.Component<
 }
 
 const enhanced = compose<CombinedProps, Props>(
-  withProfile((ownProps, profile) => {
+  withProfile<ProfileProps, Props>((ownProps, { profileData: profile }) => {
     return {
-      ...ownProps,
-      profile: profile.data
+      profile
     };
-  })
+  }),
+  withLinodes()
 );
 
 export default enhanced(RestoreToLinodeDrawer);

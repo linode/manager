@@ -34,11 +34,8 @@ import {
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import {
-  isValidCNAME,
-  isValidDomainRecord,
-  isValidSOAEmail
-} from './domainUtils';
+import DomainTransferInput from './DomainTransferInput';
+import { isValidCNAME, isValidDomainRecord } from './domainUtils';
 
 const TextField: React.StatelessComponent<TextFieldProps> = props => (
   <_TextField {...props} />
@@ -166,15 +163,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     expire_sec: 'expire rate'
   };
 
-  handleTransferUpdate = (e: React.ChangeEvent<HTMLInputElement>) => {
-    /**
-     * This is a textarea input type, and users
-     * are expected to input a comma-separated list of IPs.
-     * However, the API is expecting an array
-     * of strings. If the user clears the input, set axfr_ips to [].
-     * Otherwise, split the list into an array.
-     */
-    const transferIPs = e.target.value === '' ? [] : e.target.value.split(',');
+  handleTransferUpdate = (transferIPs: string[]) => {
     this.updateField('axfr_ips')(transferIPs);
   };
 
@@ -406,18 +395,11 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   };
 
   DomainTransferField = () => (
-    <TextField
-      multiline
-      label="Domain Transfers"
-      placeholder="192.0.2.0,192.0.2.1"
-      errorText={getAPIErrorsFor(
+    <DomainTransferInput
+      error={getAPIErrorsFor(
         DomainRecordDrawer.errorFields,
         this.state.errors
       )('axfr_ips')}
-      // Include some warnings and info from the API docs.
-      helperText={`Comma-separated list of IPs that may perform a zone transfer for this Domain.
-        This is potentially dangerous, and should be left empty unless you intend to use it.`}
-      rows="3"
       value={defaultTo(
         DomainRecordDrawer.defaultFieldsState(this.props).axfr_ips,
         (this.state.fields as EditableDomainFields).axfr_ips
@@ -439,28 +421,12 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   };
 
   onDomainEdit = () => {
-    const { domain, domainId, type, domainActions } = this.props;
+    const { domainId, type, domainActions } = this.props;
     this.setState({ submitting: true, errors: undefined });
 
     const data = {
       ...this.filterDataByType(this.state.fields, type)
     } as Partial<EditableDomainFields>;
-
-    /**
-     * Prevent changing the soa_email to an
-     * email within this Domain. This isn't breaking,
-     * but is bad practice.
-     */
-
-    if (!isValidSOAEmail(data.soa_email || '', domain || '')) {
-      const error = {
-        field: 'soa_email',
-        reason:
-          'Please choose an SOA email address that does not belong to this Domain.'
-      };
-      this.handleSubmissionErrors([error]);
-      return;
-    }
 
     if (data.axfr_ips) {
       /**
@@ -702,7 +668,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     this.props.onClose();
   };
 
-  componentWillReceiveProps(nextProps: CombinedProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: CombinedProps) {
     this.setState({ fields: DomainRecordDrawer.defaultFieldsState(nextProps) });
   }
 

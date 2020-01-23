@@ -68,6 +68,7 @@ class TableSortCell extends React.PureComponent<CombinedProps, {}> {
           className={classes.root}
           IconComponent={SortUp}
           hideSortIcon={true}
+          aria-label={`Sort by ${label}`}
         >
           {children}
           {!active && <Sort className={classes.initialIcon} />}
