@@ -29,7 +29,6 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
     if (isType(action, regionsRequestActions.done)) {
       const { result } = action.payload;
-
       draft.loading = false;
       draft.lastUpdated = Date.now();
       draft.entities = result;

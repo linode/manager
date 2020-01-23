@@ -9,6 +9,7 @@ import TagsPanel from 'src/components/TagsPanel';
 import summaryPanelStyles, {
   StyleProps
 } from 'src/containers/SummaryPanels.styles';
+import DeleteDomain from './DeleteDomain';
 import DomainRecords from './DomainRecords';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -27,8 +28,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   domainSidebar: {
     [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing(1) + 24
+      marginTop: theme.spacing(1)
     }
+  },
+  tagPanel: {
+    maxWidth: 500
   }
 }));
 
@@ -47,25 +51,30 @@ const DomainRecordsWrapper: React.FC<CombinedProps> = props => {
 
   return (
     <Grid container className={hookClasses.root}>
-      <Grid
-        item
-        xs={12}
-        md={3}
-        className={`${hookClasses.sidebar} ${hookClasses.domainSidebar}`}
-      >
-        <Paper className={classes.summarySection}>
-          <Typography variant="h3" className={classes.title} data-qa-title>
-            Tags
-          </Typography>
-          <TagsPanel tags={domain.tags} updateTags={handleUpdateTags} />
-        </Paper>
-      </Grid>
-      <Grid item xs={12} md={9} className={hookClasses.main}>
+      <Grid item xs={12} className={hookClasses.main}>
         <DomainRecords
           domain={domain}
           domainRecords={records}
           updateRecords={updateRecords}
         />
+      </Grid>
+      <Grid
+        item
+        xs={12}
+        className={`${hookClasses.sidebar} ${hookClasses.domainSidebar}`}
+        id="domains-tag-section"
+      >
+        <Paper className={classes.summarySection}>
+          <Typography variant="h3" className={classes.title} data-qa-title>
+            Tags
+          </Typography>
+          <div className={hookClasses.tagPanel}>
+            <TagsPanel tags={domain.tags} updateTags={handleUpdateTags} />
+          </div>
+        </Paper>
+        <div className={hookClasses.tagPanel}>
+          <DeleteDomain domainId={domain.id} domainLabel={domain.domain} />
+        </div>
       </Grid>
     </Grid>
   );

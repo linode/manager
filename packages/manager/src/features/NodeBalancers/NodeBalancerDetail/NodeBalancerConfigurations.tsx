@@ -1087,7 +1087,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   );
 
   render() {
-    const { classes, nodeBalancerLabel } = this.props;
+    const { nodeBalancerLabel } = this.props;
     const {
       configs,
       configErrors,
@@ -1097,14 +1097,14 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     } = this.state;
 
     return (
-      <React.Fragment>
+      <div
+        role="tabpanel"
+        id="tabpanel--configurations"
+        aria-labelledby="tab-configurations"
+      >
         <DocumentTitleSegment
           segment={`${nodeBalancerLabel} - Configurations`}
         />
-        <Typography variant="h1" data-qa-title className={classes.title}>
-          NodeBalancer Configurations
-        </Typography>
-
         {Array.isArray(configs) &&
           configs.map(
             this.renderConfig(panelMessages, configErrors, configSubmitting)
@@ -1129,9 +1129,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           title={
             typeof this.state.deleteConfigConfirmDialog.portToDelete !==
             'undefined'
-              ? `Delete this configuration on port ${
-                  this.state.deleteConfigConfirmDialog.portToDelete
-                }?`
+              ? `Delete this configuration on port ${this.state.deleteConfigConfirmDialog.portToDelete}?`
               : 'Delete this configuration?'
           }
           error={this.confirmationConfigError()}
@@ -1142,7 +1140,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
             Are you sure you want to delete this NodeBalancer Configuration?
           </Typography>
         </ConfirmationDialog>
-      </React.Fragment>
+      </div>
     );
   }
 }

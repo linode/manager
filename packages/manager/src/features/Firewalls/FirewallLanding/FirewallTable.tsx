@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-// import { makeStyles, Theme } from 'src/components/core/styles'
+import { makeStyles, Theme } from 'src/components/core/styles';
 import { Props as FireProps } from 'src/containers/firewalls.container';
 
 import Paper from 'src/components/core/Paper';
@@ -17,16 +17,27 @@ import TableSortCell from 'src/components/TableSortCell';
 import { ActionHandlers } from './FirewallActionMenu';
 import FirewallRows from './FirewallTableRows';
 
-// const useStyles = makeStyles((theme: Theme) => ({
-//   root: {}
-// }))
+const useStyles = makeStyles((theme: Theme) => ({
+  labelCell: {
+    width: '25%'
+  },
+  statusCell: {
+    width: '15%'
+  },
+  ruleCell: {
+    width: '25%'
+  },
+  linodeCell: {
+    width: '25%'
+  }
+}));
 
 type FirewallProps = Omit<FireProps, 'getFirewalls'> & ActionHandlers;
 
 type CombinedProps = FirewallProps;
 
 const FirewallTable: React.FC<CombinedProps> = props => {
-  // const classes = useStyles();
+  const classes = useStyles();
 
   const {
     data: firewalls,
@@ -61,6 +72,7 @@ const FirewallTable: React.FC<CombinedProps> = props => {
                           direction={order}
                           handleClick={handleOrderChange}
                           data-qa-firewall-label-header
+                          className={classes.labelCell}
                         >
                           Firewall
                         </TableSortCell>
@@ -70,13 +82,20 @@ const FirewallTable: React.FC<CombinedProps> = props => {
                           direction={order}
                           handleClick={handleOrderChange}
                           data-qa-firewall-status-header
+                          className={classes.statusCell}
                         >
                           Status
                         </TableSortCell>
-                        <TableCell data-qa-firewall-rules-header>
+                        <TableCell
+                          data-qa-firewall-rules-header
+                          className={classes.ruleCell}
+                        >
                           Rules
                         </TableCell>
-                        <TableCell data-qa-firewall-rules-header>
+                        <TableCell
+                          data-qa-firewall-rules-header
+                          className={classes.linodeCell}
+                        >
                           Linodes
                         </TableCell>
                         <TableCell />

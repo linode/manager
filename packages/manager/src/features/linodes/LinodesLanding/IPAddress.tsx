@@ -137,6 +137,7 @@ export class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
       <div className={`${classes.ipLink}`} data-qa-copy-ip>
         <CopyTooltip
           text={ip}
+          ariaLabel={`Copy IP Address ${ip} to clipboard`}
           className={`${classes.icon} ${showCopyOnHover ? classes.hide : ''}
             ${copyRight ? classes.right : classes.left} copy`}
         />

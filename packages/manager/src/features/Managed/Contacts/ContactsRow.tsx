@@ -31,6 +31,7 @@ export const ContactsRow: React.FunctionComponent<Props> = props => {
           updateOrAdd={updateOrAdd}
           openDrawer={openDrawer}
           openDialog={openDialog}
+          contactName={contact.name}
         />
       </TableCell>
     </TableRow>

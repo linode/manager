@@ -20,6 +20,10 @@ interface Props extends TextFieldProps {
   debounceTime?: number;
   isSearching?: boolean;
   className?: string;
+  placeholder?: string;
+  label: string;
+  hideLabel?: boolean;
+  defaultValue?: string;
 }
 
 type CombinedProps = Props;
@@ -31,6 +35,10 @@ const DebouncedSearch: React.FC<CombinedProps> = props => {
     InputProps,
     debounceTime,
     onSearch,
+    placeholder,
+    label,
+    hideLabel,
+    defaultValue,
     ...restOfTextFieldProps
   } = props;
   const [query, setQuery] = React.useState<string>('');
@@ -44,7 +52,7 @@ const DebouncedSearch: React.FC<CombinedProps> = props => {
       See: https://github.com/facebook/react/issues/14369#issuecomment-468267798
     */
     let didCancel = false;
-    /* 
+    /*
       don't run the search if the query hasn't changed.
       This is mostly to prevent this effect from running on first mount
     */
@@ -66,9 +74,13 @@ const DebouncedSearch: React.FC<CombinedProps> = props => {
 
   return (
     <TextField
+      data-qa-debounced-search
       className={className}
-      placeholder="Filter by query"
+      placeholder={placeholder || 'Filter by query'}
       onChange={_setQuery}
+      defaultValue={defaultValue}
+      label={label}
+      hideLabel={hideLabel}
       InputProps={{
         startAdornment: (
           <InputAdornment position="end">

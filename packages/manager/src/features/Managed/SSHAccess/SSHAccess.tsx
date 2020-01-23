@@ -6,9 +6,15 @@ import SSHAccessTable from './SSHAccessTable';
 const SSHAcess: React.FC<{}> = props => {
   return (
     <>
-      <DocumentTitleSegment segment="SSH Access" />
-      <LinodePubKey />
-      <SSHAccessTable />
+      <div
+        id="tabpanel-sshAccess"
+        role="tabpanel"
+        aria-labelledby="tab-sshAccess"
+      >
+        <DocumentTitleSegment segment="SSH Access" />
+        <LinodePubKey />
+        <SSHAccessTable />
+      </div>
     </>
   );
 };

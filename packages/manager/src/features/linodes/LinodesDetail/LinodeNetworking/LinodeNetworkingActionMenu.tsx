@@ -1,4 +1,4 @@
-import { IPAddress } from 'linode-js-sdk/lib/networking';
+import { IPAddress, IPRange } from 'linode-js-sdk/lib/networking';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
@@ -6,10 +6,10 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   onView: () => void;
-  onEdit?: (ip: IPAddress) => void;
-  onRemove?: (ip: IPAddress) => void;
+  onEdit?: (ip: IPAddress | IPRange) => void;
+  onRemove?: (ip: IPAddress | IPRange) => void;
   ipType: IPTypes;
-  ipAddress?: IPAddress;
+  ipAddress?: IPAddress | IPRange;
   readOnly?: boolean;
 }
 
@@ -93,7 +93,13 @@ class LinodeNetworkingActionMenu extends React.Component<CombinedProps> {
   };
 
   render() {
-    return <ActionMenu createActions={this.createActions()} />;
+    const { address } = this.props.ipAddress as any;
+    return (
+      <ActionMenu
+        createActions={this.createActions()}
+        ariaLabel={`Action menu for Address ${address}`}
+      />
+    );
   }
 }
 

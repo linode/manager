@@ -29,6 +29,7 @@ const props: CombinedProps = {
   imagesData: images,
   requestKeys: jest.fn(),
   imagesLoading: false,
+  imagesError: {},
   userSSHKeys: [],
   closeSnackbar: jest.fn(),
   enqueueSnackbar: jest.fn(),
@@ -55,10 +56,13 @@ describe('RebuildFromStackScript', () => {
       wrapWithTheme(<RebuildFromStackScript {...props} />)
     );
     fireEvent.click(getByTestId('rebuild-button'));
-    await waitForElement(() => [
-      getByText('A StackScript is required.'),
-      getByText('An image is required.'),
-      getByText('Password cannot be blank.')
-    ]);
+    await waitForElement(
+      () => [
+        getByText('A StackScript is required.'),
+        getByText('An image is required.'),
+        getByText('Password cannot be blank.')
+      ],
+      {}
+    );
   });
 });
