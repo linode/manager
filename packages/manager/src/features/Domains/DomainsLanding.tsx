@@ -5,7 +5,7 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -26,8 +26,10 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import OrderBy from 'src/components/OrderBy';
 import Placeholder from 'src/components/Placeholder';
+import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import Toggle from 'src/components/Toggle';
 import domainsContainer, {
   Props as DomainProps,
@@ -36,6 +38,7 @@ import domainsContainer, {
 import { Domains } from 'src/documentation';
 import ListDomains from 'src/features/Domains/ListDomains';
 import ListGroupedDomains from 'src/features/Domains/ListGroupedDomains';
+import { ApplicationState } from 'src/store';
 import {
   openForCloning,
   openForCreating,
@@ -46,10 +49,6 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
 import DisableDomainDialog from './DisableDomainDialog';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
-
-import Notice from 'src/components/Notice';
-import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
-import { ApplicationState } from 'src/store';
 
 type ClassNames =
   | 'root'
@@ -578,7 +577,6 @@ export default compose<CombinedProps, Props>(
       domainsLoading
     })
   ),
-  withRouter,
   connected,
   withSnackbar,
   styled

@@ -52,7 +52,7 @@ export const DiskGraph: React.FC<CombinedProps> = props => {
       error={(!data.Disk && requestError) || error}
       loading={loading}
       subtitle={'ops/second'}
-      tooltipUnit={'ops/second'}
+      unit={'ops/second'}
       showToday={isToday}
       timezone={timezone}
       nativeLegend

@@ -331,23 +331,6 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
       );
       return;
     }
-    if (!this.state.form.values.label) {
-      // if no label
-      this.setState(
-        {
-          form: {
-            ...this.state.form,
-            errors: [
-              { reason: 'You must give your token a label.', field: 'label' }
-            ]
-          }
-        },
-        () => {
-          scrollErrorIntoView();
-        }
-      );
-      return;
-    }
 
     const { form } = this.state;
     this.setState(

@@ -100,10 +100,12 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
     getAllVersions()
       .then(response => {
         this.setState({
-          versionOptions: response.data.map(eachVersion => ({
-            value: eachVersion.id,
-            label: eachVersion.id
-          }))
+          versionOptions: response.data
+            .map(eachVersion => ({
+              value: eachVersion.id,
+              label: eachVersion.id
+            }))
+            .sort(sortByLabelDescending)
         });
       })
       .catch(error => {
@@ -354,6 +356,15 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
     );
   }
 }
+
+const sortByLabelDescending = (a: Item, b: Item) => {
+  if (a.value > b.value) {
+    return -1;
+  } else if (a.value < b.value) {
+    return 1;
+  }
+  return 0;
+};
 
 const styled = withStyles(styles);
 
