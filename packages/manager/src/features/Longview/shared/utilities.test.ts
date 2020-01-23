@@ -5,12 +5,15 @@ import {
   Stat
 } from '../request.types';
 import {
+  appendStats,
+  generateNetworkUnits,
   generateTotalMemory,
   generateUsedMemory,
   statAverage,
   statMax,
   sumCPU,
-  sumNetwork
+  sumNetwork,
+  sumStatsObject
 } from './utilities';
 
 const generateStats = (yValues: number[]): Stat[] => {
@@ -68,6 +71,16 @@ describe('Utility Functions', () => {
     });
   });
 
+  describe('generateNetworkStats', () => {
+    it('should generate the correct units and values', () => {
+      const oneKilobit = 1000;
+      const oneMegabit = 1000000;
+      expect(generateNetworkUnits(oneKilobit)).toEqual('Kb');
+      expect(generateNetworkUnits(oneMegabit)).toEqual('Mb');
+      expect(generateNetworkUnits(100)).toEqual('b');
+    });
+  });
+
   describe('sumCPU', () => {
     const mockCPU: CPU = {
       system: generateStats([1]),
@@ -116,7 +129,10 @@ describe('Utility Functions', () => {
     it('works if stat arrays are of different lengths', () => {
       const mockData: Record<string, CPU> = {
         cpu0: {
-          system: [{ x: 0, y: 1 }, { x: 0, y: 1 }],
+          system: [
+            { x: 0, y: 1 },
+            { x: 0, y: 1 }
+          ],
           user: [],
           wait: []
         },
@@ -184,7 +200,10 @@ describe('Utility Functions', () => {
     it('works if stat arrays are of different lengths', () => {
       const mockData: Record<string, InboundOutboundNetwork> = {
         eth0: {
-          rx_bytes: [{ x: 0, y: 1 }, { x: 0, y: 1 }],
+          rx_bytes: [
+            { x: 0, y: 1 },
+            { x: 0, y: 1 }
+          ],
           tx_bytes: []
         },
         eth1: mockNetworkInterface
@@ -201,6 +220,146 @@ describe('Utility Functions', () => {
       expect(sumNetwork([] as any)).toEqual(emptyNetworkInterface);
       expect(sumNetwork(null as any)).toEqual(emptyNetworkInterface);
       expect(sumNetwork(undefined as any)).toEqual(emptyNetworkInterface);
+    });
+  });
+
+  describe('appendStats', () => {
+    it('sums Y values if X values are equal', () => {
+      const a = [
+        { y: 10, x: 1 },
+        { y: 100, x: 2 }
+      ];
+      const b = [
+        { y: 20, x: 1 },
+        { y: 200, x: 2 }
+      ];
+      const result = appendStats(a, b);
+      expect(result[0].y).toBe(30);
+      expect(result[1].y).toBe(300);
+    });
+    it('sums Y values correctly when values are 0', () => {
+      const a = [{ y: 0, x: 1 }];
+      const b = [{ y: 10, x: 1 }];
+      const result = appendStats(a, b);
+      expect(result[0].y).toBe(10);
+    });
+  });
+
+  describe('sumStatsObject', () => {
+    const mockNetworkInterface: InboundOutboundNetwork = {
+      rx_bytes: generateStats([1]),
+      tx_bytes: generateStats([2])
+    };
+    const emptyState = {
+      rx_bytes: [],
+      tx_bytes: []
+    };
+
+    it('sums all sub-fields for a given data set', () => {
+      const mockData: LongviewNetwork['Network']['Interface'] = {
+        eth0: mockNetworkInterface,
+        eth1: mockNetworkInterface,
+        eth2: mockNetworkInterface
+      };
+      const result = sumStatsObject<InboundOutboundNetwork>(
+        mockData,
+        emptyState
+      );
+
+      expect(result.rx_bytes[0].y).toBe(3);
+      expect(result.tx_bytes[0].y).toBe(6);
+    });
+
+    it('returns stats untouched if there is only one provided object', () => {
+      const mockData: Record<string, InboundOutboundNetwork> = {
+        eth0: mockNetworkInterface
+      };
+      const result = sumStatsObject<InboundOutboundNetwork>(
+        mockData,
+        emptyState
+      );
+
+      expect(result.rx_bytes[0].y).toBe(1);
+      expect(result.tx_bytes[0].y).toBe(2);
+    });
+
+    it('leaves X values untouched', () => {
+      const mockStats = [{ x: 100, y: 1 }];
+      const mockData: Record<string, InboundOutboundNetwork> = {
+        cpu0: {
+          rx_bytes: mockStats,
+          tx_bytes: mockStats
+        }
+      };
+      const result = sumStatsObject<InboundOutboundNetwork>(
+        mockData,
+        emptyState
+      );
+
+      expect(result.rx_bytes[0].x).toBe(100);
+      expect(result.tx_bytes[0].x).toBe(100);
+    });
+
+    it('works if stat arrays are of different lengths', () => {
+      const mockData: Record<string, InboundOutboundNetwork> = {
+        eth0: {
+          rx_bytes: [
+            { x: 0, y: 1 },
+            { x: 0, y: 1 }
+          ],
+          tx_bytes: []
+        },
+        eth1: mockNetworkInterface
+      };
+      const result = sumStatsObject<InboundOutboundNetwork>(
+        mockData,
+        emptyState
+      );
+      expect(result.rx_bytes).toHaveLength(2);
+      expect(result.tx_bytes[0].y).toBe(2);
+    });
+
+    it('gracefully fails when given malformed data', () => {
+      const emptyNetworkInterface = { rx_bytes: [], tx_bytes: [] };
+
+      expect(sumStatsObject({} as any, emptyState)).toEqual(
+        emptyNetworkInterface
+      );
+      expect(sumStatsObject([] as any, emptyState)).toEqual(
+        emptyNetworkInterface
+      );
+      expect(sumStatsObject(null as any, emptyState)).toEqual(
+        emptyNetworkInterface
+      );
+      expect(sumStatsObject(undefined as any, emptyState)).toEqual(
+        emptyNetworkInterface
+      );
+    });
+
+    it('defaults to {} when emptyState is not provided', () => {
+      expect(sumStatsObject({})).toEqual({});
+      expect(sumStatsObject(undefined as any)).toEqual({});
+    });
+
+    it('handles arbitrary data shapes', () => {
+      const weirdData = {
+        series1: {
+          apples: generateStats([1]),
+          oranges: generateStats([2]),
+          pears: generateStats([3])
+        },
+        series2: {
+          apples: generateStats([1]),
+          oranges: generateStats([2]),
+          pears: generateStats([3])
+        }
+      };
+      const result = sumStatsObject<any>(weirdData);
+      expect(result).toHaveProperty('apples');
+      expect(result).toHaveProperty('oranges');
+      expect(result).toHaveProperty('pears');
+      expect(result.apples[0].y).toEqual(2);
+      expect(result.pears[0].y).toEqual(6);
     });
   });
 });

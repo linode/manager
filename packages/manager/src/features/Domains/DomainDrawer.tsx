@@ -55,6 +55,7 @@ import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import NodeBalancerSelect from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { sendCreateDomainEvent } from 'src/utilities/ga';
+import DomainTransferInput from './DomainTransferInput';
 
 type ClassNames = 'root' | 'masterIPErrorNotice' | 'addIP';
 
@@ -80,6 +81,7 @@ interface State {
   errors?: APIError[];
   submitting: boolean;
   master_ips: string[];
+  axfr_ips: string[];
   masterIPsCount: number;
   defaultRecordsSetting: DefaultRecordsType;
   selectedDefaultLinode?: Linode;
@@ -158,10 +160,7 @@ const generateDefaultDomainRecords = (
 
 const masterIPsLens = lensPath(['master_ips']);
 const masterIPLens = (idx: number) =>
-  compose(
-    masterIPsLens,
-    lensPath([idx])
-  ) as Lens;
+  compose(masterIPsLens, lensPath([idx])) as Lens;
 const viewMasterIP = (idx: number, obj: any) =>
   view<any, string | undefined>(masterIPLens(idx), obj);
 const setMasterIP = (idx: number, value: string) =>
@@ -182,6 +181,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     submitting: false,
     errors: [],
     master_ips: [],
+    axfr_ips: [],
     masterIPsCount: 1,
     defaultRecordsSetting: 'none',
     selectedDefaultLinode: undefined,
@@ -217,6 +217,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
 
       // then put it props into state to populate fields
       const {
+        axfr_ips,
         domain,
         tags,
         master_ips,
@@ -229,6 +230,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         type,
         domain,
         master_ips,
+        axfr_ips,
         soaEmail: soa_email
       });
     }
@@ -248,6 +250,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
 
     const errorMap = getErrorMap(
       [
+        'axfr_ips',
         'master_ips',
         'domain',
         'type',
@@ -339,6 +342,14 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         )}
         {(isCreatingSlaveDomain || isEditingSlaveDomain) && (
           <React.Fragment>
+            {isEditingSlaveDomain && (
+              // Only when editing
+              <DomainTransferInput
+                value={this.state.axfr_ips.join(',')}
+                onChange={this.handleTransferInput}
+                error={errorMap.axfr_ips}
+              />
+            )}
             {masterIPsError && (
               <Notice
                 className={classes.masterIPErrorNotice}
@@ -474,6 +485,12 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     );
   }
 
+  handleTransferInput = (axfr_ips: string[]) => {
+    if (this.mounted) {
+      this.setState({ axfr_ips });
+    }
+  };
+
   resetInternalState = () => {
     if (this.mounted) {
       this.setState({ ...this.defaultState });
@@ -591,9 +608,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               })
               .catch((e: APIError[]) => {
                 reportException(
-                  `Default DNS Records couldn't be created from Linode: ${
-                    e[0].reason
-                  }`,
+                  `Default DNS Records couldn't be created from Linode: ${e[0].reason}`,
                   {
                     selectedLinode: this.state.selectedDefaultLinode!.id,
                     domainID: domainData.id,
@@ -620,9 +635,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               })
               .catch((e: APIError[]) => {
                 reportException(
-                  `Default DNS Records couldn't be created from NodeBalancer: ${
-                    e[0].reason
-                  }`,
+                  `Default DNS Records couldn't be created from NodeBalancer: ${e[0].reason}`,
                   {
                     selectedNodeBalancer: this.state
                       .selectedDefaultNodeBalancer!.id,
@@ -694,7 +707,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
   };
 
   update = () => {
-    const { domain, type, soaEmail, master_ips } = this.state;
+    const { axfr_ips, domain, type, soaEmail, master_ips } = this.state;
     const { domainActions, id } = this.props;
     const tags = this.state.tags.map(tag => tag.value);
 
@@ -723,12 +736,19 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
       type === 'master'
         ? // not sending type for master. There is a bug on server and it returns an error that `master_ips` is required
           { domain, tags, soa_email: soaEmail, domainId: id }
-        : { domain, type, tags, master_ips: finalMasterIPs, domainId: id };
+        : {
+            domain,
+            type,
+            tags,
+            master_ips: finalMasterIPs,
+            domainId: id,
+            axfr_ips
+          };
 
     this.setState({ submitting: true });
     domainActions
       .updateDomain(data)
-      .then((domainData: Domain) => {
+      .then(_ => {
         if (!this.mounted) {
           return;
         }
@@ -837,10 +857,7 @@ const mapStateToProps = (state: ApplicationState) => {
   };
 };
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose<CombinedProps, {}>(
   withDomainActions,

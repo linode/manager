@@ -180,7 +180,8 @@ type CombinedProps = ContextProps & WithStyles<ClassNames> & DispatchProps;
 // Save some typing below
 export const uniqByIP = uniqBy((thisIP: IPAddress) => thisIP.address);
 
-const getAllIPs = getAll<IPAddress>(getIPs);
+// The API returns an error if more than 100 IPs are requested.
+const getAllIPs = getAll<IPAddress>(getIPs, 100);
 
 class LinodeNetworking extends React.Component<CombinedProps, State> {
   state: State = {
@@ -864,10 +865,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   upsertLinode: linode => dispatch(_upsertLinode(linode))
 });
 
-const connected = connect(
-  undefined,
-  mapDispatchToProps
-);
+const connected = connect(undefined, mapDispatchToProps);
 
 const enhanced = recompose<CombinedProps, {}>(connected, linodeContext, styled);
 

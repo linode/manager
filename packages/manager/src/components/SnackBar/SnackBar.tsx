@@ -48,7 +48,7 @@ class SnackBar extends React.Component<CombinedProps> {
           variantWarning: classes.warning,
           variantInfo: classes.info
         }}
-        action={<CloseSnackbar uuid={v4()} text="Dismiss Notification" />}
+        action={<CloseSnackbar key={v4()} text="Dismiss Notification" />}
       >
         {children}
       </SnackbarProvider>

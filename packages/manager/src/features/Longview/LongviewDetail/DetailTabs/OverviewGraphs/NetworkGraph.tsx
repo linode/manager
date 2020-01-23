@@ -3,8 +3,10 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import { withTheme, WithTheme } from 'src/components/core/styles';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-import { generateUnits } from 'src/features/Longview/LongviewLanding/Gauges/Network';
-import { statMax, sumNetwork } from 'src/features/Longview/shared/utilities';
+import {
+  getMaxUnitAndFormatNetwork,
+  sumNetwork
+} from 'src/features/Longview/shared/utilities';
 import { convertData } from '../../../shared/formatters';
 import { GraphProps } from './types';
 import { useGraphs } from './useGraphs';
@@ -43,48 +45,32 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
 
   const { rx_bytes, tx_bytes } = networkData;
 
-  // Determine the unit based on the largest value.
-  const max = Math.max(statMax(rx_bytes), statMax(tx_bytes));
-  const maxUnit = generateUnits(max).unit;
-
-  const formatNetwork = (valueInBytes: number | null) => {
-    if (valueInBytes === null) {
-      return valueInBytes;
-    }
-
-    const valueInBits = valueInBytes * 8;
-
-    if (maxUnit === 'Mb') {
-      // If the unit we're using for the graph is Mb, return the output in Mb.
-      const valueInMegabits = valueInBits / 1024 / 1024;
-      return Math.round(valueInMegabits * 100) / 100;
-    } else {
-      // If the unit we're using for the graph is Kb, return the output in Kb.
-      const valueInKilobits = valueInBits / 1024;
-      return Math.round(valueInKilobits * 100) / 100;
-    }
-  };
+  const { maxUnit, formatNetwork } = getMaxUnitAndFormatNetwork(
+    rx_bytes,
+    tx_bytes
+  );
 
   return (
     <LongviewLineGraph
       title="Network"
       subtitle={maxUnit + '/s'}
+      unit={maxUnit + '/s'}
       error={error}
       loading={loading}
       showToday={isToday}
       timezone={timezone}
+      nativeLegend
       data={[
         {
           label: 'Inbound',
-
-          borderColor: theme.graphs.emeraldGreenBorder,
-          backgroundColor: theme.graphs.emeraldGreen,
+          borderColor: 'transparent',
+          backgroundColor: theme.graphs.network.inbound,
           data: _convertData(rx_bytes, start, end, formatNetwork)
         },
         {
           label: 'Outbound',
-          borderColor: theme.graphs.forestGreenBorder,
-          backgroundColor: theme.graphs.forestGreen,
+          borderColor: 'transparent',
+          backgroundColor: theme.graphs.network.outbound,
           data: _convertData(tx_bytes, start, end, formatNetwork)
         }
       ]}
@@ -92,9 +78,6 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
   );
 };
 
-const enhanced = compose<CombinedProps, GraphProps>(
-  React.memo,
-  withTheme
-);
+const enhanced = compose<CombinedProps, GraphProps>(React.memo, withTheme);
 
 export default enhanced(NetworkGraph);

@@ -2,10 +2,8 @@ import {
   createImage as _create,
   getImage,
   getImages,
-  Image,
   updateImage as _update
 } from 'linode-js-sdk/lib/images';
-import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import {
   createImageActions,
@@ -14,10 +12,8 @@ import {
   updateImageActions
 } from './image.actions';
 
-const getAllImages = getAll<Image>(getImages);
-
 export const requestImages = createRequestThunk(requestImagesActions, () =>
-  getAllImages().then(response => response.data)
+  getImages().then(response => response.data)
 );
 
 export const createImage = createRequestThunk(

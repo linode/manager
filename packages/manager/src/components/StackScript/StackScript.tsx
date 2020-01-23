@@ -15,8 +15,8 @@ import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import ExternalLink from 'src/components/ExternalLink';
 import H1Header from 'src/components/H1Header';
 import ScriptCode from 'src/components/ScriptCode';
+import { APP_ROOT } from 'src/constants';
 import withImages from 'src/containers/withImages.container';
-
 import { filterImagesByType } from 'src/store/image/image.helpers';
 
 type CSSClasses =
@@ -131,7 +131,7 @@ export class _StackScript extends React.Component<CombinedProps> {
           by&nbsp;
           <ExternalLink
             text={username}
-            link={`https://www.linode.com/stackscripts/profile/${username}`}
+            link={`${APP_ROOT}/stackscripts?type=community&query=username:${username}`}
             data-qa-community-stack-link
           />
         </Typography>
