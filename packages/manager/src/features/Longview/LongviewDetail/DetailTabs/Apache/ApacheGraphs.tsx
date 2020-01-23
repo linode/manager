@@ -138,7 +138,12 @@ export const ApacheGraphs: React.FC<CombinedProps> = props => {
                     label: 'Throughput',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.outbound,
-                    data: _convertData(totalKBytes, start, end, kilobytesToBits)
+                    data: _convertData(
+                      totalKBytes,
+                      start,
+                      end,
+                      kilobytesToBytes
+                    )
                   }
                 ]}
                 {...graphProps}
@@ -228,7 +233,7 @@ export const ApacheGraphs: React.FC<CombinedProps> = props => {
   );
 };
 
-export const kilobytesToBits = (value: number | null) => {
+export const kilobytesToBytes = (value: number | null) => {
   if (value === null) {
     return null;
   }

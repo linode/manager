@@ -124,6 +124,10 @@ export const ProcessGraphs: React.FC<CombinedProps> = props => {
               title="Disk I/O"
               subtitle={`${diskUnit}/s`}
               unit={` ${diskUnit}/s`}
+              formatData={(value: number) =>
+                convertBytesToTarget(diskUnit, value)
+              }
+              formatTooltip={(value: number) => readableBytes(value).formatted}
               data={[
                 {
                   label: 'Read',
