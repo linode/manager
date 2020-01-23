@@ -123,7 +123,7 @@ export const ProcessGraphs: React.FC<CombinedProps> = props => {
             <LongviewLineGraph
               title="Disk I/O"
               subtitle={`${diskUnit}/s`}
-              unit={` ${diskUnit}/s`}
+              unit={`/s`}
               formatData={(value: number) =>
                 convertBytesToTarget(diskUnit, value)
               }
