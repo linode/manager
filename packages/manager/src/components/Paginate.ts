@@ -3,11 +3,15 @@ import * as React from 'react';
 import scrollTo from 'src/utilities/scrollTo';
 import { storage } from 'src/utilities/storage';
 
-const createDiplayPage = <T extends any>(page: number, pageSize: number) => (
+const createDisplayPage = <T extends any>(page: number, pageSize: number) => (
   list: T[]
 ): T[] => {
   const count = list.length;
   if (count === 0) {
+    return list;
+  }
+
+  if (pageSize === Infinity) {
     return list;
   }
 
@@ -37,12 +41,13 @@ interface Props {
   page?: number;
   pageSize?: number;
   scrollToRef?: React.RefObject<any>;
+  pageSizeSetter?: (v: number) => void;
 }
 
 export default class Paginate extends React.Component<Props, State> {
   state: State = {
     page: this.props.page || 1,
-    pageSize: storage.pageSize.get() || 25
+    pageSize: this.props.pageSize || storage.pageSize.get() || 25
   };
 
   handlePageChange = (page: number) => {
@@ -53,11 +58,16 @@ export default class Paginate extends React.Component<Props, State> {
 
   handlePageSizeChange = (pageSize: number) => {
     this.setState({ pageSize });
-    storage.pageSize.set(pageSize);
+    // Use the custom setter if one has been supplied.
+    if (this.props.pageSizeSetter) {
+      this.props.pageSizeSetter(pageSize);
+    } else {
+      storage.pageSize.set(pageSize);
+    }
   };
 
   render() {
-    const view = createDiplayPage(this.state.page, this.state.pageSize);
+    const view = createDisplayPage(this.state.page, this.state.pageSize);
 
     const props = {
       ...this.props,

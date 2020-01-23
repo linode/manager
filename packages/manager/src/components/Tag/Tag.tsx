@@ -146,7 +146,11 @@ class Tag extends React.Component<CombinedProps, {}> {
         })}
         deleteIcon={
           chipProps.onDelete ? (
-            <Button data-qa-delete-tag className={classes.deleteButton}>
+            <Button
+              data-qa-delete-tag
+              className={classes.deleteButton}
+              aria-label={`Delete Tag "${this.props.label}"`}
+            >
               <Close />
             </Button>
           ) : (
@@ -159,6 +163,7 @@ class Tag extends React.Component<CombinedProps, {}> {
         component="div"
         clickable
         role="button"
+        aria-label={`Search for Tag "${this.props.label}"`}
       />
     );
   }

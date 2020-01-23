@@ -1,5 +1,3 @@
-import { Image } from 'linode-js-sdk/lib/images';
-import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -15,7 +13,9 @@ import {
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import withImagesContainer from 'src/containers/withImages.container';
+import withImagesContainer, {
+  WithImages
+} from 'src/containers/withImages.container';
 import StackScriptPanel from './StackScriptPanel';
 
 import { filterImagesByType } from 'src/store/image/image.helpers';
@@ -31,7 +31,7 @@ const styles = (theme: Theme) =>
     }
   });
 
-type CombinedProps = WithImagesProps &
+type CombinedProps = WithImages &
   WithStyles<ClassNames> &
   RouteComponentProps<{}>;
 
@@ -88,7 +88,10 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
             <CircleProgress />
           ) : (
             <Grid item xs={12}>
-              <StackScriptPanel publicImages={imagesData} />
+              <StackScriptPanel
+                publicImages={imagesData}
+                queryString={this.props.location.search}
+              />
             </Grid>
           )}
         </Grid>
@@ -98,12 +101,6 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
 }
 
 const styled = withStyles(styles);
-
-interface WithImagesProps {
-  imagesData: Record<string, Image>;
-  imagesLoading: boolean;
-  imagesError?: APIError[];
-}
 
 export default compose<CombinedProps, {}>(
   withImagesContainer((ownProps, imagesData, imagesLoading, imagesError) => ({

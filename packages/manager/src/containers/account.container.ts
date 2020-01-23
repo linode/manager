@@ -1,19 +1,18 @@
 import { Account } from 'linode-js-sdk/lib/account';
-import { connect, MapDispatchToProps } from 'react-redux';
-import { AnyAction } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
+import { connect, InferableComponentEnhancerWithProps } from 'react-redux';
 import { ApplicationState } from 'src/store';
+import { State } from 'src/store/account/account.reducer';
 import {
   requestAccount,
   updateAccount
 } from 'src/store/account/account.requests';
-import { EntityError } from 'src/store/types';
+import { ThunkDispatch } from 'src/store/types';
 
-export interface AccountProps {
-  account?: Account;
-  accountLoading: boolean;
-  accountError: EntityError;
-  lastUpdated?: number;
+export interface StateProps {
+  accountData: State['data'];
+  accountLoading: State['loading'];
+  accountError: State['error'];
+  accountLastUpdated: State['lastUpdated'];
 }
 
 export interface DispatchProps {
@@ -21,36 +20,51 @@ export interface DispatchProps {
   updateAccount: (data: Partial<Account>) => Promise<any>;
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
-  dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
-) => ({
-  requestAccount: () => dispatch(requestAccount()),
-  updateAccount: (data: Partial<Account>) => dispatch(updateAccount(data))
-});
+type MapProps<ReduxStateProps, OwnProps> = (
+  ownProps: OwnProps,
+  data: StateProps
+) => ReduxStateProps & Partial<StateProps>;
 
-export default <TInner extends {}, TOuter extends {}>(
-  mapAccountToProps: (
-    ownProps: TOuter,
-    accountLoading: boolean,
-    lastUpdated: number,
-    accountError: EntityError,
-    account?: Account
-  ) => TInner
+export type Props = DispatchProps & StateProps;
+
+interface Connected {
+  <ReduxStateProps, OwnProps>(
+    mapStateToProps: MapProps<ReduxStateProps, OwnProps>
+  ): InferableComponentEnhancerWithProps<
+    ReduxStateProps & Partial<StateProps> & DispatchProps & OwnProps,
+    OwnProps
+  >;
+  <ReduxStateProps, OwnProps>(): InferableComponentEnhancerWithProps<
+    ReduxStateProps & DispatchProps & OwnProps,
+    OwnProps
+  >;
+}
+
+const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
+  mapStateToProps?: MapProps<ReduxState, OwnProps>
 ) =>
-  connect(
-    (state: ApplicationState, ownProps: TOuter) => {
-      const account = state.__resources.account.data;
-      const accountLoading = state.__resources.account.loading;
-      const accountError = state.__resources.account.error;
-      const lastUpdated = state.__resources.account.lastUpdated;
+  connect<
+    (ReduxState & Partial<StateProps>) | StateProps,
+    DispatchProps,
+    OwnProps,
+    ApplicationState
+  >(
+    (state, ownProps) => {
+      const { loading, error, data, lastUpdated } = state.__resources.account;
 
-      return mapAccountToProps(
-        ownProps,
-        accountLoading,
-        lastUpdated,
-        accountError,
-        account
-      );
+      const result = {
+        accountData: data,
+        accountError: error,
+        accountLastUpdated: lastUpdated,
+        accountLoading: loading
+      };
+
+      return !!mapStateToProps ? mapStateToProps(ownProps, result) : result;
     },
-    mapDispatchToProps
+    (dispatch: ThunkDispatch) => ({
+      requestAccount: () => dispatch(requestAccount()),
+      updateAccount: data => dispatch(updateAccount(data))
+    })
   );
+
+export default connected;

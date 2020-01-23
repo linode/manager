@@ -17,7 +17,10 @@ const {
   createVolume,
   getLinodeImage,
   createDomain,
-  createNodeBalancer
+  createNodeBalancer,
+  createLongviewClient,
+  deleteLongviewClient,
+  getLVClients
 } = require('../setup/setup');
 
 const {
@@ -84,6 +87,18 @@ exports.browserCommands = () => {
     )
       .then(res => res)
       .catch(err => err);
+  });
+
+  browser.addCommand('createLongviewClient', function async(token) {
+    return createLongviewClient(token).then(res => res);
+  });
+
+  browser.addCommand('getLVClients', function async(token) {
+    return getLVClients(token).then(res => res);
+  });
+
+  browser.addCommand('deleteLongviewClient', function async(token, lvClientId) {
+    return deleteLongviewClient(token, lvClientId).then(res => res);
   });
 
   browser.addCommand('removeAllLinodes', function async(token) {

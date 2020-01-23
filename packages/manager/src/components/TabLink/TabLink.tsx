@@ -26,6 +26,15 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
+export const convertForAria = (str: string) => {
+  return str
+    .trim()
+    .toLowerCase()
+    .replace(/([^A-Z0-9]+)(.)/gi, function(match) {
+      return arguments[2].toUpperCase();
+    });
+};
+
 class TabLink extends React.Component<CombinedProps> {
   render() {
     const { classes, title, to } = this.props;
@@ -39,6 +48,8 @@ class TabLink extends React.Component<CombinedProps> {
           [classes.selected]: pathName === to
         })}
         role="tab"
+        id={`tab-${convertForAria(title)}`}
+        aria-controls={`tabpanel-${convertForAria(title)}`}
         tabIndex={0}
         aria-selected={pathName === to}
         data-qa-tab={title}

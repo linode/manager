@@ -32,7 +32,12 @@ const styles = (theme: Theme) =>
       }
     },
     iconLink: {
-      marginRight: theme.spacing(1)
+      marginRight: theme.spacing(1),
+      background: 'none',
+      border: 'none',
+      padding: 0,
+      font: 'inherit',
+      cursor: 'pointer'
     }
   });
 

@@ -36,7 +36,13 @@ import CreateUserDrawer from './CreateUserDrawer';
 import UserDeleteConfirmationDialog from './UserDeleteConfirmationDialog';
 import ActionMenu from './UsersActionMenu';
 
-type ClassNames = 'title' | 'avatar' | 'emptyImage';
+type ClassNames =
+  | 'title'
+  | 'avatar'
+  | 'emptyImage'
+  | 'userNameCell'
+  | 'emailNameCell'
+  | 'accountNameCell';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -71,6 +77,15 @@ const styles = (theme: Theme) =>
         width: 40,
         height: 40
       }
+    },
+    userNameCell: {
+      width: '32%'
+    },
+    emailNameCell: {
+      width: '32%'
+    },
+    accountNameCell: {
+      width: '32%'
     }
   });
 
@@ -191,7 +206,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
       >
         <TableCell parentColumn="Username" data-qa-username>
           <Grid container alignItems="center">
-            <Grid item>
+            <Grid item style={{ display: 'flex' }}>
               {user.gravatarUrl === undefined ? (
                 <div className={classes.emptyImage} />
               ) : user.gravatarUrl === 'not found' ? (
@@ -235,73 +250,90 @@ class UsersLanding extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Users" />
-        <Grid container justify="space-between" alignItems="flex-end">
-          <Grid item>
-            <Typography variant="h2" data-qa-title className={classes.title}>
-              Users
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Grid container alignItems="flex-end">
-              <Grid item>
-                <AddNewLink
-                  disabled={this.props.isRestrictedUser}
-                  disabledReason={
-                    this.props.isRestrictedUser
-                      ? 'You cannot create other users as a restricted user.'
-                      : undefined
-                  }
-                  onClick={this.openForCreate}
-                  label="Add a User"
-                />
+        <div id="tabpanel-users" role="tabpanel" aria-labelledby="tab-users">
+          <Grid container justify="space-between" alignItems="flex-end">
+            <Grid item>
+              <Typography variant="h2" data-qa-title className={classes.title}>
+                Users
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Grid container alignItems="flex-end">
+                <Grid item>
+                  <AddNewLink
+                    disabled={this.props.isRestrictedUser}
+                    disabledReason={
+                      this.props.isRestrictedUser
+                        ? 'You cannot create other users as a restricted user.'
+                        : undefined
+                    }
+                    onClick={this.openForCreate}
+                    label="Add a User"
+                  />
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
-        {newUsername && (
-          <Notice success text={`User ${newUsername} created successfully`} />
-        )}
-        {userDeleteError && (
-          <Notice
-            style={{ marginTop: newUsername ? 16 : 0 }}
-            error
-            text={`Error when deleting user, please try again later`}
+          {newUsername && (
+            <Notice success text={`User ${newUsername} created successfully`} />
+          )}
+          {userDeleteError && (
+            <Notice
+              style={{ marginTop: newUsername ? 16 : 0 }}
+              error
+              text={`Error when deleting user, please try again later`}
+            />
+          )}
+          <Paper>
+            <Table aria-label="List of Users">
+              <TableHead>
+                <TableRow>
+                  <TableCell
+                    className={classes.userNameCell}
+                    data-qa-username-column
+                  >
+                    Username
+                  </TableCell>
+                  <TableCell
+                    className={classes.emailNameCell}
+                    data-qa-email-column
+                  >
+                    Email Address
+                  </TableCell>
+                  <TableCell
+                    className={classes.accountNameCell}
+                    data-qa-restriction-column
+                  >
+                    Account Access
+                  </TableCell>
+                  <TableCell />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {this.renderTableContent(loading, error, users)}
+              </TableBody>
+            </Table>
+          </Paper>
+          <PaginationFooter
+            count={this.props.count}
+            page={this.props.page}
+            pageSize={this.props.pageSize}
+            handlePageChange={this.props.handlePageChange}
+            handleSizeChange={this.props.handlePageSizeChange}
+            eventCategory="users landing"
           />
-        )}
-        <Paper>
-          <Table aria-label="List of Users">
-            <TableHead>
-              <TableRow>
-                <TableCell data-qa-username-column>Username</TableCell>
-                <TableCell data-qa-email-column>Email Address</TableCell>
-                <TableCell data-qa-restriction-column>Account Access</TableCell>
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {this.renderTableContent(loading, error, users)}
-            </TableBody>
-          </Table>
-        </Paper>
-        <PaginationFooter
-          count={this.props.count}
-          page={this.props.page}
-          pageSize={this.props.pageSize}
-          handlePageChange={this.props.handlePageChange}
-          handleSizeChange={this.props.handlePageSizeChange}
-          eventCategory="users landing"
-        />
-        <CreateUserDrawer
-          open={createDrawerOpen}
-          onClose={this.userCreateOnClose}
-          addUser={this.addUser}
-        />
-        <UserDeleteConfirmationDialog
-          username={toDeleteUsername || ''}
-          open={deleteConfirmDialogOpen}
-          onDelete={this.onDeleteConfirm}
-          onCancel={this.onDeleteCancel}
-        />
+          <CreateUserDrawer
+            open={createDrawerOpen}
+            onClose={this.userCreateOnClose}
+            addUser={this.addUser}
+          />
+          <UserDeleteConfirmationDialog
+            username={toDeleteUsername || ''}
+            open={deleteConfirmDialogOpen}
+            onDelete={this.onDeleteConfirm}
+            onCancel={this.onDeleteCancel}
+          />
+        </div>
       </React.Fragment>
     );
   }
@@ -312,7 +344,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
     data?: User[]
   ) => {
     if (loading) {
-      return <TableRowLoading colSpan={4} />;
+      return <TableRowLoading colSpan={4} oneLine hasEntityIcon />;
     }
 
     if (error) {

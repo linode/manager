@@ -1,4 +1,3 @@
-import { Account } from 'linode-js-sdk/lib/account';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
@@ -8,17 +7,20 @@ import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
 
-import withAccount from 'src/containers/account.container';
+import withAccount, {
+  Props as AccountProps
+} from 'src/containers/account.container';
 import withProfile from 'src/containers/profile.container';
 
 import BillingInfo from './PanelCards/BillingInformation';
 import ContactInfo from './PanelCards/ContactInformation';
 
-interface AccountContextProps {
-  accountError?: APIError[];
-  lastUpdated: number;
-  account?: Account;
-  accountLoading: boolean;
+interface AccountContextProps
+  extends Pick<
+    AccountProps,
+    'accountLoading' | 'accountLastUpdated' | 'accountData'
+  > {
+  _accountError?: APIError[];
 }
 
 interface Props extends Pick<RouteComponentProps, 'history'> {}
@@ -28,8 +30,8 @@ export type CombinedProps = AccountContextProps & Profile & Props;
 export class SummaryPanel extends React.Component<CombinedProps, {}> {
   render() {
     const {
-      account,
-      accountError,
+      accountData: account,
+      _accountError,
       accountLoading,
       username,
       profileError,
@@ -41,7 +43,7 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
       return <CircleProgress noTopMargin />;
     }
 
-    if (accountError || profileError) {
+    if (_accountError || profileError) {
       return <ErrorState compact errorText="Unable to load account details." />;
     }
 
@@ -94,20 +96,25 @@ interface Profile {
 }
 
 const enhanced = compose<CombinedProps, Props>(
-  withAccount(
-    (ownProps, accountLoading, lastUpdated, accountError, account) => ({
+  withAccount<AccountContextProps, {}>(
+    (
+      ownProps,
+      { accountLoading, accountLastUpdated, accountError, accountData }
+    ) => ({
       accountLoading,
-      lastUpdated,
-      accountError: accountError.read,
-      account
+      accountLastUpdated,
+      _accountError: accountError.read,
+      accountData
     })
   ),
-  withProfile<Profile, {}>((ownProps, profile) => ({
-    username: path(['username'], profile.data),
-    profileError: path(['read'], profile.error),
-    profileLoading: profile.loading,
-    isRestricted: pathOr(false, ['restricted'], profile.data)
-  }))
+  withProfile<Profile, {}>(
+    (ownProps, { profileLoading, profileData, profileError }) => ({
+      username: path(['username'], profileData),
+      profileError: path(['read'], profileError),
+      profileLoading,
+      isRestricted: pathOr(false, ['restricted'], profileData)
+    })
+  )
 );
 
 export default enhanced(SummaryPanel) as React.ComponentType<Props>;

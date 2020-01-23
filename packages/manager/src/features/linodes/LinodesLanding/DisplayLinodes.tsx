@@ -5,9 +5,9 @@ import Grid from 'src/components/Grid';
 import { OrderByProps } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
-import TableWrapper from './TableWrapper';
-
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
+import TableWrapper from './TableWrapper';
 
 interface Props {
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
@@ -36,8 +36,14 @@ const DisplayLinodes: React.StatelessComponent<CombinedProps> = props => {
     ...rest
   } = props;
 
+  const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
+
   return (
-    <Paginate data={data}>
+    <Paginate
+      data={data}
+      pageSize={infinitePageSize}
+      pageSizeSetter={setInfinitePageSize}
+    >
       {({
         data: paginatedData,
         handlePageChange,
@@ -78,6 +84,7 @@ const DisplayLinodes: React.StatelessComponent<CombinedProps> = props => {
                   pageSize={pageSize}
                   page={page}
                   eventCategory={'linodes landing'}
+                  showAll
                 />
               }
             </Grid>

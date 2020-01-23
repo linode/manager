@@ -7,10 +7,10 @@ export const basePerms = [
   'images',
   'ips',
   'linodes',
+  // 'lke',
   'longview',
   'nodebalancers',
-  // @todo: Once Object Storage is safely in GA, uncomment:
-  // 'object_storage'
+  'object_storage',
   'stackscripts',
   'volumes'
 ];
@@ -22,10 +22,10 @@ export const basePermNameMap: Record<string, string> = {
   images: 'Images',
   ips: 'IPs',
   linodes: 'Linodes',
+  // lke: 'Kubernetes',
   longview: 'Longview',
   nodebalancers: 'NodeBalancers',
-  // @todo: Once Object Storage is safely in GA, uncomment:
-  // object_storage: 'Object Storage'
+  object_storage: 'Object Storage',
   stackscripts: 'StackScripts',
   volumes: 'Volumes'
 };

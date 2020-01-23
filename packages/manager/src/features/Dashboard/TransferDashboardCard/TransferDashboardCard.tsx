@@ -21,7 +21,8 @@ export type ClassNames =
   | 'poolUsageProgress'
   | 'initialLoader'
   | 'title'
-  | 'overLimit';
+  | 'overLimit'
+  | 'proratedNotice';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -54,6 +55,9 @@ const styles = (theme: Theme) =>
     overLimit: {
       color: theme.palette.status.warningDark,
       fontFamily: theme.font.bold
+    },
+    proratedNotice: {
+      marginTop: theme.spacing(1)
     }
   });
 
@@ -139,6 +143,9 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
                   </Typography>
                 </Grid>
               </Grid>
+              <Typography className={classes.proratedNotice}>
+                Your transfer is prorated and will reset next month
+              </Typography>
             </Grid>
           </Grid>
         </Paper>

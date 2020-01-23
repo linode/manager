@@ -48,7 +48,7 @@ const styles = (theme: Theme) =>
     icon: {
       transition: theme.transitions.create(['fill', 'color']),
       fontSize: 18,
-      marginRight: theme.spacing(1) + 1,
+      marginRight: theme.spacing(0.5),
       color: theme.palette.primary.main,
       '& .border': {
         transition: theme.transitions.create(['color'])
@@ -58,7 +58,9 @@ const styles = (theme: Theme) =>
       left: -(theme.spacing(1) + theme.spacing(1) / 2)
     },
     label: {
-      whiteSpace: 'nowrap'
+      whiteSpace: 'nowrap',
+      position: 'relative',
+      top: -1
     }
   });
 

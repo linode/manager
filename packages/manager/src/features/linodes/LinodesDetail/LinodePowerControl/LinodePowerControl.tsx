@@ -241,7 +241,6 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           transformOrigin={{ vertical: -10, horizontal: 'right' }}
         >
-          <MenuItem key="placeholder" aria-hidden className={classes.hidden} />
           {isRunning && (
             <MenuItem
               onClick={() => this.openDialog('Reboot')}
@@ -252,6 +251,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
               <div className={classes.menuItemInner}>
                 <EntityIcon
                   variant="linode"
+                  aria-hidden={true}
                   loading={true}
                   size={26}
                   marginTop={2}
@@ -271,6 +271,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
               <div className={classes.menuItemInner}>
                 <EntityIcon
                   variant="linode"
+                  aria-hidden={true}
                   status="offline"
                   size={26}
                   marginTop={2}
