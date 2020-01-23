@@ -9,7 +9,6 @@ import {
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import {
-  convertNetworkToBits,
   formatNetworkTooltip,
   getMaxUnitAndFormatNetwork
 } from 'src/features/Longview/shared/utilities';
@@ -75,7 +74,10 @@ export const MySQLGraphs: React.FC<CombinedProps> = props => {
   const inbound = data?.Bytes_received ?? [];
   const outbound = data?.Bytes_sent ?? [];
 
-  const { formatNetwork } = getMaxUnitAndFormatNetwork(inbound, outbound);
+  const { maxUnit, formatNetwork } = getMaxUnitAndFormatNetwork(
+    inbound,
+    outbound
+  );
 
   return (
     <Paper className={classes.root}>
@@ -122,7 +124,7 @@ export const MySQLGraphs: React.FC<CombinedProps> = props => {
             <Grid item xs={12} sm={6} className={classes.smallGraph}>
               <LongviewLineGraph
                 title="Throughput"
-                subtitle={`/s`}
+                subtitle={`${maxUnit}/s`}
                 formatData={formatNetwork}
                 formatTooltip={formatNetworkTooltip}
                 nativeLegend
@@ -135,23 +137,13 @@ export const MySQLGraphs: React.FC<CombinedProps> = props => {
                     label: 'Inbound',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.inbound,
-                    data: _convertData(
-                      inbound,
-                      start,
-                      end,
-                      convertNetworkToBits
-                    )
+                    data: _convertData(inbound, start, end)
                   },
                   {
                     label: 'Outbound',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.outbound,
-                    data: _convertData(
-                      outbound,
-                      start,
-                      end,
-                      convertNetworkToBits
-                    )
+                    data: _convertData(outbound, start, end)
                   }
                 ]}
               />

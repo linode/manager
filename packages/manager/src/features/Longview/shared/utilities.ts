@@ -367,7 +367,7 @@ export const getMaxUnit = (stats: Stat[][]) => {
 
 export const formatNetworkTooltip = (value: number) => {
   const _unit = generateNetworkUnits(value);
-  const converted = convertNetworkToUnit(value, _unit);
+  const converted = convertNetworkToUnit(value * 8, _unit);
   return `${Math.round(converted * 100) / 100} ${_unit}`;
 };
 

@@ -4,7 +4,6 @@ import { compose } from 'recompose';
 import { withTheme, WithTheme } from 'src/components/core/styles';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import {
-  convertNetworkToBits,
   formatNetworkTooltip,
   getMaxUnitAndFormatNetwork,
   sumNetwork
@@ -69,13 +68,13 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
           label: 'Inbound',
           borderColor: 'transparent',
           backgroundColor: theme.graphs.network.inbound,
-          data: _convertData(rx_bytes, start, end, convertNetworkToBits)
+          data: _convertData(rx_bytes, start, end)
         },
         {
           label: 'Outbound',
           borderColor: 'transparent',
           backgroundColor: theme.graphs.network.outbound,
-          data: _convertData(tx_bytes, start, end, convertNetworkToBits)
+          data: _convertData(tx_bytes, start, end)
         }
       ]}
     />
