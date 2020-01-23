@@ -12,11 +12,11 @@ afterEach(cleanup);
 
 describe('Skeleton component', () => {
   it('renders a skeleton component if columns and table props are set', () => {
-    const { queryByTestId } = renderComponent({ table: true, columns: 4 });
+    const { queryByTestId } = renderComponent({ table: true, numColumns: 4 });
     expect(queryByTestId('tableSkeleton')).toBeInTheDocument();
   });
   it('renders the right column count', () => {
-    const { getAllByTestId } = renderComponent({ table: true, columns: 5 });
+    const { getAllByTestId } = renderComponent({ table: true, numColumns: 5 });
     expect(getAllByTestId('skeletonCol')).toHaveLength(5);
   });
 });

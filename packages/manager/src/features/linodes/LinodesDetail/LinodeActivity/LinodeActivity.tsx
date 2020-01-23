@@ -29,7 +29,7 @@ export const LinodeActivity: React.StatelessComponent<
   const { classes, linodeID } = props;
 
   return (
-    <React.Fragment>
+    <div id="tabpanel-activity" role="tabpanel" aria-labelledby="tab-activity">
       <Typography
         variant="h2"
         className={classes.title}
@@ -45,7 +45,7 @@ export const LinodeActivity: React.StatelessComponent<
         errorMessage="There was an error retrieving activity for this Linode."
         data-qa-events-landing-for-linode
       />
-    </React.Fragment>
+    </div>
   );
 };
 

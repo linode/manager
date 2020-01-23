@@ -20,7 +20,8 @@ const someEvent: Event[] = [
       type: 'linode',
       url: '/v4/linode/instances/11440645'
     },
-    status: 'finished'
+    status: 'finished',
+    duration: 0
   }
 ];
 

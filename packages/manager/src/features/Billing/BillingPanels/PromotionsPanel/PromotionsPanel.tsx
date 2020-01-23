@@ -5,7 +5,9 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import ExpansionPanel from 'src/components/ExpansionPanel';
-import withAccount from 'src/containers/account.container';
+import withAccount, {
+  Props as AccountProps
+} from 'src/containers/account.container';
 import useFlags from 'src/hooks/useFlags';
 
 import PanelContent from './PanelContent';
@@ -19,17 +21,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface StateProps {
-  accountLoading: boolean;
-  accountError?: APIError[];
-  accountUpdated: number;
+interface StateProps
+  extends Pick<AccountProps, 'accountLastUpdated' | 'accountLoading'> {
+  _accountError?: APIError[];
   promotions: ActivePromotion[];
 }
 
 export type CombinedProps = StateProps;
 
 export const PromotionsPanel: React.FC<StateProps> = props => {
-  const { accountError, accountLoading, accountUpdated, promotions } = props;
+  const {
+    _accountError,
+    accountLoading,
+    accountLastUpdated,
+    promotions
+  } = props;
   const classes = useStyles();
   const flags = useFlags();
 
@@ -55,8 +61,8 @@ export const PromotionsPanel: React.FC<StateProps> = props => {
   return (
     <ExpansionPanel heading={header}>
       <PanelContent
-        error={Boolean(accountError)}
-        loading={accountLoading && accountUpdated === 0}
+        error={Boolean(_accountError)}
+        loading={accountLoading && accountLastUpdated === 0}
         promotions={promotions}
       />
     </ExpansionPanel>
@@ -64,13 +70,15 @@ export const PromotionsPanel: React.FC<StateProps> = props => {
 };
 
 const enhanced = compose<CombinedProps, {}>(
-  withAccount(
-    (ownProps, accountLoading, lastUpdated, accountError, accountData) => ({
-      ...ownProps,
+  withAccount<StateProps, {}>(
+    (
+      ownProps,
+      { accountLoading, accountLastUpdated, accountError, accountData }
+    ) => ({
       // Should never be more than one of these for the MVF
       promotions: pathOr([], ['active_promotions'], accountData),
-      accountUpdated: lastUpdated,
-      accountError: accountError.read,
+      accountLastUpdated,
+      _accountError: accountError.read,
       accountLoading
     })
   )

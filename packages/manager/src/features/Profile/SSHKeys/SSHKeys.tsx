@@ -73,7 +73,7 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
 
   render() {
     return (
-      <React.Fragment>
+      <div id="tabpanel-sshKeys" role="tabpanel" aria-labelledby="tab-sshKeys">
         <TableHeader title="SSH Keys" action={this.headerAction} />
         <Paper>
           <Table>
@@ -108,7 +108,7 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
           onSuccess={this.handleSuccessfulCreation}
           onCancel={this.closeCreationDrawer}
         />
-      </React.Fragment>
+      </div>
     );
   }
 

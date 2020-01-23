@@ -9,7 +9,7 @@ import {
   WithStyles,
   WithTheme
 } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
+import H1Header from 'src/components/H1Header';
 import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
 import AlgoliaSearchBar from './AlgoliaSearchBar';
 
@@ -82,13 +82,11 @@ class SearchPanel extends React.Component<CombinedProps, {}> {
               [classes.bgIconCompact]: spacingMode === 'compact'
             })}
           />
-          <Typography
-            variant="h1"
+          <H1Header
+            title="What can we help you with?"
             className={classes.searchHeading}
             data-qa-search-heading
-          >
-            What can we help you with?
-          </Typography>
+          />
           <AlgoliaSearchBar />
         </Paper>
       </React.Fragment>

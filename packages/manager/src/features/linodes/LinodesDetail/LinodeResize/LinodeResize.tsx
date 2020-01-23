@@ -15,6 +15,7 @@ import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import Checkbox from 'src/components/CheckBox';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -24,7 +25,8 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { resetEventsPolling } from 'src/events';
+import HelpIcon from 'src/components/HelpIcon';
+import { resetEventsPolling } from 'src/eventsPolling';
 import SelectPlanPanel, {
   ExtendedType
 } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
@@ -35,9 +37,7 @@ import { ApplicationState } from 'src/store';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import LinodePermissionsError from '../LinodePermissionsError';
-
-import Checkbox from 'src/components/CheckBox';
-import HelpIcon from 'src/components/HelpIcon';
+import ResizeConfirmation from './ResizeConfirmationDialog';
 
 type ClassNames =
   | 'root'
@@ -97,11 +97,19 @@ interface LinodeContextProps {
   linodeDisks: Disk[];
 }
 
+interface ConfirmationDialog {
+  isOpen: boolean;
+  error?: string;
+  submitting: boolean;
+  currentPlan: string;
+  targetPlan: string;
+}
+
 interface State {
   selectedId: string;
-  isLoading: boolean;
   errors?: APIError[];
   autoDiskResize: boolean;
+  confirmationDialog: ConfirmationDialog;
 }
 
 type CombinedProps = WithTypesProps &
@@ -114,8 +122,13 @@ type CombinedProps = WithTypesProps &
 export class LinodeResize extends React.Component<CombinedProps, State> {
   state: State = {
     selectedId: '',
-    isLoading: false,
-    autoDiskResize: shouldEnableAutoResizeDiskOption(this.props.linodeDisks)[1]
+    autoDiskResize: shouldEnableAutoResizeDiskOption(this.props.linodeDisks)[1],
+    confirmationDialog: {
+      isOpen: false,
+      submitting: false,
+      currentPlan: '',
+      targetPlan: ''
+    }
   };
 
   static extendType = (type: LinodeType): ExtendedType => {
@@ -139,6 +152,33 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     };
   };
 
+  openConfirmationModal = () => {
+    const { linodeType, currentTypesData } = this.props;
+    const { selectedId } = this.state;
+    const _current = getLinodeType(currentTypesData, linodeType || 'none');
+    const _target = getLinodeType(currentTypesData, selectedId);
+    const currentPlan = _current ? _current.label : 'Unknown plan';
+    const targetPlan = _target ? _target.label : 'Unknown plan';
+    this.setState({
+      confirmationDialog: {
+        ...this.state.confirmationDialog,
+        isOpen: true,
+        error: undefined,
+        currentPlan,
+        targetPlan
+      }
+    });
+  };
+
+  closeConfirmationModal = () => {
+    this.setState({
+      confirmationDialog: {
+        ...this.state.confirmationDialog,
+        isOpen: false
+      }
+    });
+  };
+
   onSubmit = () => {
     const {
       linodeId,
@@ -160,7 +200,9 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       currentTypesData
     );
 
-    this.setState({ isLoading: true });
+    this.setState({
+      confirmationDialog: { ...this.state.confirmationDialog, submitting: true }
+    });
 
     /**
      * Only set the allow_auto_disk_resize flag to true if both the user
@@ -170,7 +212,13 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
      */
     resizeLinode(linodeId, selectedId, this.state.autoDiskResize && !isSmaller)
       .then(_ => {
-        this.setState({ selectedId: '', isLoading: false });
+        this.setState({
+          selectedId: '',
+          confirmationDialog: {
+            ...this.state.confirmationDialog,
+            submitting: false
+          }
+        });
         resetEventsPolling();
         enqueueSnackbar('Linode queued for resize.', {
           variant: 'info'
@@ -185,15 +233,17 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         history.push(`/linodes/${linodeId}/summary`);
       })
       .catch(errorResponse => {
-        getAPIErrorOrDefault(
+        const error = getAPIErrorOrDefault(
           errorResponse,
           'There was an issue resizing your Linode.'
-        ).forEach((err: APIError) =>
-          enqueueSnackbar(err.reason, {
-            variant: 'error'
-          })
-        );
-        this.setState({ selectedId: '', isLoading: false });
+        )[0].reason;
+        this.setState({
+          confirmationDialog: {
+            ...this.state.confirmationDialog,
+            error,
+            submitting: false
+          }
+        });
       });
   };
 
@@ -239,7 +289,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     );
 
     return (
-      <React.Fragment>
+      <div id="tabpanel-resize" role="tabpanel" aria-labelledby="tab-resize">
         <DocumentTitleSegment segment={`${linodeLabel} - Resize`} />
         <Paper className={classes.root}>
           {disabled && <LinodePermissionsError />}
@@ -311,15 +361,19 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
               linodeInTransition(this.props.linodeStatus || '') ||
               disabled
             }
-            loading={this.state.isLoading}
             buttonType="primary"
-            onClick={this.onSubmit}
-            data-qa-submit
+            onClick={this.openConfirmationModal}
+            data-qa-resize
           >
-            Submit
+            Resize
           </Button>
         </ActionsPanel>
-      </React.Fragment>
+        <ResizeConfirmation
+          {...this.state.confirmationDialog}
+          onClose={this.closeConfirmationModal}
+          onResize={this.onSubmit}
+        />
+      </div>
     );
   }
 }
@@ -353,10 +407,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-const connected = connect(
-  undefined,
-  mapDispatchToProps
-);
+const connected = connect(undefined, mapDispatchToProps);
 
 const linodeContext = withLinodeDetailContext(state => {
   const { linode } = state;
@@ -369,6 +420,10 @@ const linodeContext = withLinodeDetailContext(state => {
     linodeDisks: linode._disks
   };
 });
+
+export const getLinodeType = (types: LinodeType[], selectedTypeID: string) => {
+  return types.find(thisType => thisType.id === selectedTypeID);
+};
 
 /**
  * the user should only be given the option to automatically resize

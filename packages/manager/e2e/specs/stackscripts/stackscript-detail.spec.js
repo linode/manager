@@ -32,10 +32,10 @@ xdescribe('StackScript - detail page and drawer suite', () => {
       .filter(d => !d.includes(`\n+`));
     const getTitleAndAuthor = titleAndAuthor.split('/');
     const stackScriptDetails = {
-      title: getTitleAndAuthor[1].trim(),
       author: getTitleAndAuthor[0].trim(),
       deploys: deploys,
-      distributions: compatibleDistributions
+      distributions: compatibleDistributions,
+      title: getTitleAndAuthor[1].trim()
     };
     return stackScriptDetails;
   };
@@ -96,10 +96,9 @@ xdescribe('StackScript - detail page and drawer suite', () => {
     });
 
     it('Breadcrumb link navigates back to StackScript landing', () => {
-      //TODO un-skip once M3-3509 is fixed
-      // expect(StackScriptDetail.breadcrumbStaticText.getText()).toEqual(
-      //   `${selectedStackScript.author} / ${selectedStackScript.title}`
-      // );
+      expect(StackScriptDetail.breadcrumbStaticText.getText()).toEqual(
+        `${selectedStackScript.author} / ${selectedStackScript.title}`
+      );
       StackScriptDetail.breadcrumbBackLink.click();
       ListStackScripts.baseElementsDisplay();
     });
@@ -107,9 +106,9 @@ xdescribe('StackScript - detail page and drawer suite', () => {
 
   describe('Created StackScript - detail page and detail drawer', () => {
     const stackConfig = {
-      label: `AutoStackScript${timestamp()}`,
       description: 'test stackscript example',
       images: ['debian9', 'arch', 'containerlinux'],
+      label: `AutoStackScript${timestamp()}`,
       script: '#!/bin/bash\necho "Hello Linode"'
     };
 

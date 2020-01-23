@@ -20,7 +20,6 @@ import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import { startEventsInterval } from 'src/events';
-import { perfume } from 'src/perfMetrics';
 import { redirectToLogin } from 'src/session';
 import { ApplicationState } from 'src/store';
 import { handleInitTokens } from 'src/store/authentication/authentication.actions';
@@ -60,7 +59,6 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       nodeBalancerActions: { getAllNodeBalancersWithConfigs }
     } = this.props;
 
-    perfume.start('InitialRequests');
     const dataFetchingPromises: Promise<any>[] = [
       this.props.requestAccount(),
       this.props.requestDomains(),
@@ -77,9 +75,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
 
     try {
       await Promise.all(dataFetchingPromises);
-      perfume.end('InitialRequests');
     } catch (error) {
-      perfume.end('InitialRequests', { didFail: true });
       /** We choose to do nothing, relying on the Redux error state. */
     }
   };

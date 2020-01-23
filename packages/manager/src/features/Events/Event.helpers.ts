@@ -85,10 +85,10 @@ export const formatEventWithUsername = (
   message: string
 ) => {
   return username && action !== 'lassie_reboot'
-    ? /**
-       * The event message for Lassie events already includes "by the Lassie Watchdog service",
-       * so we don't want to add "by Linode" after that.
-       */
+    ? /*
+        The event message for Lassie events already includes "by the Lassie Watchdog service",
+        so we don't want to add "by Linode" after that.
+      */
       `${maybeRemoveTrailingPeriod(message)} by ${username}.`
     : message;
 };

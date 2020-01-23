@@ -1,7 +1,7 @@
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const path = require('path');
-const includePath = path.resolve(__dirname, '..');
-const webpack = require('webpack');
+// include path of webpack needs to include the node modules folder at root of project
+const includePath = path.resolve(__dirname, '../../..');
 
 const paths = require('../config/paths');
 // you can use this file to add your custom webpack plugins, loaders and anything you like.
@@ -14,20 +14,12 @@ const paths = require('../config/paths');
 
 module.exports = {
   resolve: {
-    extensions: [
-      '.ts',
-      '.tsx',
-      '.js',
-      '.json',
-      '.jsx',
-    ],
+    extensions: ['.ts', '.tsx', '.js', '.json', '.jsx'],
     alias: {
       'src/': paths.appSrc,
-      'joi': 'joi-browser',
+      joi: 'joi-browser'
     },
-    plugins: [
-      new TsconfigPathsPlugin({configFile: paths.appTsConfig}),
-    ],
+    plugins: [new TsconfigPathsPlugin({ configFile: paths.appTsConfig })]
   },
   module: {
     rules: [
@@ -36,15 +28,15 @@ module.exports = {
         include: includePath,
         use: [
           {
-            loader: 'style-loader',
+            loader: 'style-loader'
           },
           {
             loader: 'css-loader',
             options: {
-              sourceMap: false,
-            },
-          },
-        ],
+              sourceMap: false
+            }
+          }
+        ]
       },
       {
         test: /(font-logos.svg)|(\.(woff|woff2|eot|ttf))$/,
@@ -54,24 +46,24 @@ module.exports = {
       {
         test: /\.svg$/,
         exclude: [/font-logos.svg$/],
-        loader: ['svgr/webpack'],
+        loader: ['svgr/webpack']
       },
       {
         test: /\.tsx?$/,
         include: paths.appSrc,
         exclude: [
           path.resolve(__dirname, 'src/components/__image_snapshots__'),
-          path.resolve(__dirname, 'src/components/__snapshots__'),
+          path.resolve(__dirname, 'src/components/__snapshots__')
         ],
         use: [
           {
             loader: require.resolve('ts-loader'),
             options: {
-              transpileOnly: true,
-            },
-          },
-        ],
-      },
-    ],
-  },
+              transpileOnly: true
+            }
+          }
+        ]
+      }
+    ]
+  }
 };

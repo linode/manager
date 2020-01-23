@@ -241,7 +241,13 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Grid item className={`mlMain py0`}>
+        <Grid
+          item
+          className={`mlMain py0`}
+          role="tabpanel"
+          id="tabpanel-one-click-apps-create"
+          aria-labelledby="tab-one-click-apps-create"
+        >
           <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
           <SelectAppPanel
             appInstances={appInstances}
