@@ -1,4 +1,3 @@
-import { ObjectStorageClusterID } from 'linode-js-sdk/lib/object-storage';
 import {
   /* dcDisplayCountry, */ dcDisplayNames,
   objectStorageClusterDisplay
@@ -48,5 +47,5 @@ export const getHumanReadableCountry = (regionSlug: string) => {
   return 'Other';
 };
 
-export const formatObjectStorageCluster = (clusterId: ObjectStorageClusterID) =>
-  objectStorageClusterDisplay[clusterId];
+export const formatObjectStorageCluster = (clusterId: string) =>
+  objectStorageClusterDisplay[clusterId] || '';

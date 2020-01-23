@@ -25,10 +25,7 @@ afterEach(cleanup);
 describe('Domain action menu', () => {
   it('should include standard Domain actions', () => {
     const { queryByText } = renderWithTheme(<DomainActionMenu {...props} />);
-    includesActions(
-      ['Edit', 'Check Zone', 'Zone File', 'Clone', 'Delete'],
-      queryByText
-    );
+    includesActions(['Edit', 'Clone', 'Delete'], queryByText);
   });
 
   it('master Domains should include Edit DNS records action', () => {

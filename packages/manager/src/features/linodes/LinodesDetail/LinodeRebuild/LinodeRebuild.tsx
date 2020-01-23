@@ -51,7 +51,7 @@ const LinodeRebuild: React.StatelessComponent<CombinedProps> = props => {
   const [mode, setMode] = React.useState<MODES>('fromImage');
 
   return (
-    <React.Fragment>
+    <div id="tabpanel-rebuild" role="tabpanel" aria-labelledby="tab-rebuild">
       <DocumentTitleSegment segment={`${linodeLabel} - Rebuild`} />
       <Paper className={classes.root}>
         {disabled && <LinodePermissionsError />}
@@ -76,6 +76,8 @@ const LinodeRebuild: React.StatelessComponent<CombinedProps> = props => {
           onChange={(selected: Item<MODES>) => setMode(selected.value)}
           isClearable={false}
           disabled={disabled}
+          label="From Image"
+          hideLabel
         />
       </Paper>
       {mode === 'fromImage' && <RebuildFromImage />}
@@ -85,7 +87,7 @@ const LinodeRebuild: React.StatelessComponent<CombinedProps> = props => {
       {mode === 'fromAccountStackScript' && (
         <RebuildFromStackScript type="account" />
       )}
-    </React.Fragment>
+    </div>
   );
 };
 

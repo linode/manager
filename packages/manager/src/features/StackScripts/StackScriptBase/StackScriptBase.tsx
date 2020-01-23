@@ -6,7 +6,7 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import Waypoint from 'react-waypoint';
+import { Waypoint } from 'react-waypoint';
 import { compose } from 'recompose';
 import StackScriptsIcon from 'src/assets/addnewmenu/stackscripts.svg';
 import Button from 'src/components/Button';
@@ -25,6 +25,7 @@ import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendStackscriptsSearchEvent } from 'src/utilities/ga';
 import { handleUnauthorizedErrors } from 'src/utilities/handleUnauthorizedErrors';
+import { getQueryParam } from 'src/utilities/queryParams';
 import StackScriptTableHead from '../Partials/StackScriptTableHead';
 import {
   AcceptedFilters,
@@ -119,6 +120,13 @@ const withStackScriptBase = (isSelecting: boolean) => (
 
     componentDidMount() {
       this.mounted = true;
+
+      // If the URL contains a QS param called "query" treat it as a filter.
+      const query = getQueryParam(this.props.location.search, 'query');
+      if (query) {
+        return this.handleSearch(query);
+      }
+
       return this.getDataAtPage(1);
     }
 
@@ -178,8 +186,8 @@ const withStackScriptBase = (isSelecting: boolean) => (
           // AND the filtered data set is 0 before we request the next page automatically
           if (
             isSorting &&
-            (newData.length !== 0 &&
-              newDataWithoutDeprecatedDistros.length === 0)
+            newData.length !== 0 &&
+            newDataWithoutDeprecatedDistros.length === 0
           ) {
             this.getNext();
             return;
@@ -358,7 +366,8 @@ const withStackScriptBase = (isSelecting: boolean) => (
           }
           this.setState({
             listOfStackScripts: response.data,
-            isSearching: false
+            isSearching: false,
+            loading: false
           });
           /*
            * If we're searching for search result, prevent the user
@@ -385,7 +394,8 @@ const withStackScriptBase = (isSelecting: boolean) => (
               e,
               'There was an error loading StackScripts'
             ),
-            isSearching: false
+            isSearching: false,
+            loading: false
           });
         });
     };
@@ -432,6 +442,8 @@ const withStackScriptBase = (isSelecting: boolean) => (
           </div>
         );
       }
+
+      const query = getQueryParam(this.props.location.search, 'query');
 
       return (
         <React.Fragment>
@@ -485,6 +497,9 @@ const withStackScriptBase = (isSelecting: boolean) => (
                   search term with "username:", "label:", or "description:"`
                       : ''
                   }
+                  label="Search by Label, Username, or Description"
+                  hideLabel
+                  defaultValue={query}
                 />
               </div>
               <Table
@@ -582,6 +597,7 @@ const withStackScriptBase = (isSelecting: boolean) => (
         <a
           href="https://linode.com/docs/platform/stackscripts-new-manager/"
           target="_blank"
+          aria-describedby="external-site"
           rel="noopener noreferrer"
           className="h-u"
         >
@@ -591,6 +607,7 @@ const withStackScriptBase = (isSelecting: boolean) => (
         <a
           href="https://www.linode.com/docs/"
           target="_blank"
+          aria-describedby="external-site"
           rel="noopener noreferrer"
           className="h-u"
         >
@@ -602,11 +619,7 @@ const withStackScriptBase = (isSelecting: boolean) => (
 
   const connected = connect(mapStateToProps);
 
-  return compose(
-    withRouter,
-    connected,
-    withStyles
-  )(EnhancedComponent);
+  return compose(withRouter, connected, withStyles)(EnhancedComponent);
 };
 
 export default withStackScriptBase;

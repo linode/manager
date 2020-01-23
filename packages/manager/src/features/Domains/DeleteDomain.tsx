@@ -1,0 +1,76 @@
+import { withSnackbar, WithSnackbarProps } from 'notistack';
+import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
+import Button from 'src/components/Button';
+import DeletionDialog from 'src/components/DeletionDialog';
+import { useDialog } from 'src/hooks/useDialog';
+import {
+  DomainActionsProps,
+  withDomainActions
+} from 'src/store/domains/domains.container';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+interface Props {
+  domainId: number;
+  domainLabel: string;
+}
+
+export type CombinedProps = Props &
+  WithSnackbarProps &
+  RouteComponentProps &
+  DomainActionsProps;
+
+export const DeleteDomain: React.FC<CombinedProps> = props => {
+  const {
+    dialog,
+    openDialog,
+    closeDialog,
+    submitDialog,
+    handleError
+  } = useDialog<number>((domainId: number) =>
+    props.domainActions.deleteDomain({ domainId })
+  );
+
+  const handleDelete = () => {
+    submitDialog(dialog.entityID)
+      .then(() => {
+        props.enqueueSnackbar('Domain deleted successfully.', {
+          variant: 'success'
+        });
+        props.history.push('/domains');
+      })
+      .catch(e =>
+        handleError(getAPIErrorOrDefault(e, 'Error deleting domain.')[0].reason)
+      );
+  };
+
+  return (
+    <>
+      <Button
+        buttonType="secondary"
+        destructive
+        onClick={() => openDialog(props.domainId, props.domainLabel)}
+      >
+        Delete Domain
+      </Button>
+      <DeletionDialog
+        open={dialog.isOpen}
+        label={dialog.entityLabel || ''}
+        loading={dialog.isLoading}
+        error={dialog.error}
+        onClose={closeDialog}
+        onDelete={handleDelete}
+      />
+    </>
+  );
+};
+
+const enhanced = compose<CombinedProps, Props>(
+  withSnackbar,
+  withRouter,
+  withDomainActions,
+  React.memo
+);
+
+export default enhanced(DeleteDomain);

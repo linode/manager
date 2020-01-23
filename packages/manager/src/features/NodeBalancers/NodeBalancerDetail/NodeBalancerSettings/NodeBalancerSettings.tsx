@@ -13,7 +13,6 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -141,11 +140,12 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
     const generalError = hasErrorFor('none');
 
     return (
-      <React.Fragment>
+      <div
+        role="tabpanel"
+        id="tabpanel-settings"
+        aria-labelledby="tab-settings"
+      >
         <DocumentTitleSegment segment={`${nodeBalancerLabel} - Settings`} />
-        <Typography variant="h1" className={classes.title}>
-          Settings
-        </Typography>
         <Paper className={classes.root}>
           <Grid item xs={12}>
             {generalError && <Notice error text={generalError} />}
@@ -192,7 +192,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
             </Button>
           </ActionsPanel>
         </Paper>
-      </React.Fragment>
+      </div>
     );
   }
 }

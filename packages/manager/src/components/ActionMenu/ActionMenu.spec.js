@@ -50,6 +50,7 @@ describe('Action Menu Suite', () => {
     $(disabledMenuItem).waitForDisplayed();
 
     $(tooltipIcon).waitForDisplayed();
+    $(tooltipIcon).moveTo();
     $(tooltipIcon).click();
 
     $(tooltip).waitForDisplayed();

@@ -1,5 +1,6 @@
 import { compose, equals, uniqWith } from 'ramda';
 import { Middleware } from 'redux';
+import { resetEventsPolling } from 'src/eventsPolling';
 import {
   isEntityEvent,
   isInProgressEvent
@@ -7,7 +8,6 @@ import {
 import { EventHandler } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import { addEvents } from '../events/event.actions';
-import { resetEventsPolling } from '../events/event.helpers';
 import { ExtendedEvent } from '../events/event.types';
 
 const eventsMiddlewareFactory = (
@@ -54,7 +54,7 @@ const eventsMiddlewareFactory = (
        */
       if (isInProgressEvent(event)) {
         // If the event is in_progress, we poll more aggressively
-        resetEventsPolling(dispatch);
+        resetEventsPolling();
       }
     }
   }

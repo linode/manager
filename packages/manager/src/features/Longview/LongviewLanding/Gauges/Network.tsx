@@ -1,77 +1,39 @@
-import { APIError } from 'linode-js-sdk/lib/types';
-import { pathOr } from 'ramda';
 import * as React from 'react';
-
+import { compose } from 'recompose';
+import { WithTheme, withTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
-import { baseGaugeProps } from './common';
-
-import requestStats from '../../request';
+import withClientStats, {
+  Props as LVDataProps
+} from 'src/containers/longview.stats.container';
 import { LongviewNetwork } from '../../request.types';
+import {
+  convertNetworkToUnit,
+  generateNetworkUnits
+} from '../../shared/utilities';
+import { baseGaugeProps, BaseProps as Props } from './common';
 
-interface Props {
-  lastUpdated?: number;
-  token: string;
-}
+type CombinedProps = Props & LVDataProps & WithTheme;
 
-const NetworkGauge: React.FC<Props> = props => {
-  const [dataHasResolved, markDataResolved] = React.useState<boolean>(false);
-  const [networkUsed, setNetworkUsed] = React.useState<number>(0);
-  const [loading, setLoading] = React.useState<boolean>(true);
-  const [error, setError] = React.useState<APIError | undefined>();
+const NetworkGauge: React.FC<CombinedProps> = props => {
+  const {
+    longviewClientDataLoading: loading,
+    longviewClientDataError: error,
+    longviewClientData,
+    lastUpdatedError
+  } = props;
 
-  let mounted = true;
-
-  React.useEffect(() => {
-    requestStats(props.token, 'getLatestValue', ['network'])
-      .then(response => {
-        const interfaces = pathOr(
-          {},
-          ['Network', 'Interface'],
-          response
-        ) as LongviewNetwork['Network']['Interface'];
-
-        if (mounted) {
-          setNetworkUsed(generateUsedNetworkAsBytes(interfaces));
-
-          setError(undefined);
-
-          if (!!loading) {
-            setLoading(false);
-          }
-
-          if (!dataHasResolved) {
-            markDataResolved(true);
-          }
-        }
-      })
-      .catch(() => {
-        /** only set error if we don't already have data */
-        if (mounted) {
-          if (!dataHasResolved) {
-            setError({
-              reason: 'Error'
-            });
-          }
-
-          if (!!loading) {
-            setLoading(false);
-          }
-        }
-      });
-
-    return () => {
-      mounted = false;
-    };
-  }, [props.lastUpdated]);
+  const networkUsed = generateUsedNetworkAsBytes(
+    longviewClientData?.Network?.Interface ?? {}
+  );
 
   const generateCopy = (): {
     innerText: string;
     subTitle: JSX.Element | null;
   } => {
-    if (error) {
+    if (error || lastUpdatedError) {
       return {
-        innerText: error.reason,
+        innerText: 'Error',
         subTitle: (
           <Typography>
             <strong>Network</strong>
@@ -91,7 +53,17 @@ const NetworkGauge: React.FC<Props> = props => {
       };
     }
 
-    const { value, unit } = generateUnits(networkUsed);
+    /**
+     * This logic is to match the values displayed
+     * in the gauges in Classic. They're rounded to the nearest
+     * unit, whereas elsewhere (in graphs) we use two digits.
+     *
+     * We also convert from bytes to bits to use our existing
+     * utilities to calculate units.
+     */
+    const networkUsedInBits = networkUsed * 8;
+    const unit = generateNetworkUnits(networkUsedInBits);
+    const value = Math.round(convertNetworkToUnit(networkUsedInBits, unit));
 
     return {
       innerText: `${value} ${unit}/s`,
@@ -121,41 +93,17 @@ const NetworkGauge: React.FC<Props> = props => {
       */
       max={howManyBytesInAGigabit}
       value={networkUsed}
-      filledInColor="#4FAD62"
+      filledInColor={props.theme.graphs.green}
       {...generateCopy()}
     />
   );
 };
 
-export default React.memo(NetworkGauge);
-
-interface Units {
-  value: number;
-  unit: 'Kb' | 'Mb';
-}
-
-/**
- * converts bytes to either Kb (Kilobits) or Mb (Megabits)
- * depending on if the Kilobit conversion exceeds 1000.
- *
- * @param networkUsed inbound and outbound traffic in bytes
- */
-export const generateUnits = (networkUsed: number): Units => {
-  /** Thanks to http://www.matisse.net/bitcalc/ */
-  const networkUsedToKilobits = (networkUsed * 8) / 1024;
-
-  if (networkUsedToKilobits <= 1000) {
-    return {
-      value: Math.round(networkUsedToKilobits),
-      unit: 'Kb'
-    };
-  } else {
-    return {
-      value: Math.round(networkUsedToKilobits / 1024),
-      unit: 'Mb'
-    };
-  }
-};
+export default compose<CombinedProps, Props>(
+  React.memo,
+  withClientStats<Props>(ownProps => ownProps.clientID),
+  withTheme
+)(NetworkGauge);
 
 /*
   What's returned from Network is a bit of an unknown, but assuming that
@@ -198,7 +146,7 @@ export const generateUsedNetworkAsBytes = (
            *
            * [{ x: 1234, y: 1234 }],
            */
-          secondAcc += pathOr(0, [0, 'y'], secondElement);
+          secondAcc += secondElement?.[0]?.y ?? 0;
           return secondAcc;
         },
         0

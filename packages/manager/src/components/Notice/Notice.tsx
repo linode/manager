@@ -221,6 +221,7 @@ const Notice: React.StatelessComponent<CombinedProps> = props => {
         marginBottom: spacingBottom !== undefined ? spacingBottom : 24
       }}
       {...dataAttributes}
+      role="alert"
     >
       {flag && (
         <Grid item>

@@ -79,13 +79,17 @@ export class AuthenticationSettings extends React.Component<
     const { success } = this.state;
 
     return (
-      <React.Fragment>
+      <div
+        id="tabpanel-passwordAuthentication"
+        role="tabpanel"
+        aria-labelledby="tab-passwordAuthentication"
+      >
         <DocumentTitleSegment segment={`Password & Authentication`} />
         {/* Remove when logic above is cleared */}
         {success && <Notice success text={success} />}
         {!loading && (
           <React.Fragment>
-            <ResetPassword />
+            <ResetPassword username={username} />
             <TwoFactor
               twoFactor={twoFactor}
               username={username}
@@ -104,7 +108,7 @@ export class AuthenticationSettings extends React.Component<
             )}
           </React.Fragment>
         )}
-      </React.Fragment>
+      </div>
     );
   }
 
@@ -141,10 +145,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
   updateProfile: (v: Partial<Profile>) => dispatch(_updateProfile(v) as any)
 });
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const enhanced = compose<CombinedProps, {}>(
   styled,

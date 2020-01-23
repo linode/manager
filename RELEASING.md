@@ -1,6 +1,7 @@
 # Deploying
 
 We are following a CI/CD (continuous integration / continuous deployment) process for Cloud Manager. This means:
+
 1. `develop` branch gets automatically deployed to our development environment
 2. `testing` branch gets automatically deployed to our testing environment
 3. `staging` branch gets automatically deployed to our staging environment
@@ -17,35 +18,37 @@ NOTE: These instructions assume your upstream is called `origin`
 These instructions assume you have your local branches configured so that the upstream is set to their
 remote counterpart. If you haven't done so already, run the following commands.
 
-* `git checkout origin/testing && git checkout -b testing && git branch --set-upstream-to origin/testing`
-* `git checkout origin/staging && git checkout -b staging && git branch --set-upstream-to origin/staging`
-* `git checkout origin/master && git checkout -b master && git branch --set-upstream-to origin/master`
+- `git checkout origin/testing && git checkout -b testing && git branch --set-upstream-to origin/testing`
+- `git checkout origin/staging && git checkout -b staging && git branch --set-upstream-to origin/staging`
+- `git checkout origin/master && git checkout -b master && git branch --set-upstream-to origin/master`
 
 When you plan on releasing a new version of Cloud Manager:
 
 1. Pull down the latest `testing` and `develop` branches locally
-    * `git checkout develop && git pull && git checkout testing && git pull`
+   - `git checkout develop && git pull && git checkout testing && git pull`
 2. Merge develop into testing with `git checkout testing && git merge develop`
-    * This should result in 0 merge conflicts
+   - This should result in 0 merge conflicts
 3. While `testing` branch is checked out, [generate the Changelog](#generating-the-changelog) first
 4. Review the Changelog and update manually if necessary
-    * This includes getting rid of any references to PR numbers, JIRA ticket numbers or grammar and spelling mistakes
-    * You should also ensure that everything in the Changelog is user-facing. Removing anything that users won't directly be interacting with
+   - This includes getting rid of any references to PR numbers, JIRA ticket numbers or grammar and spelling mistakes
+   - You should also ensure that everything in the Changelog is user-facing. Removing anything that users won't directly be interacting with
 5. Push the changes from your local `testing` branch to the upstream with `git push origin testing`
 6. At this point, you can begin deploying to the rest of the environments
 7. Deploy to the staging environment by merging `testing` into `staging` with `git checkout staging && git pull && git merge testing && git push origin staging`
 8. At this point, run the end-to-end test suite. Please see a team member on instructions how to do so.
-9. When you're ready to make the merge to master AKA release to production, you need to do 2 things: Add the git tag, and ensure the changelog has the correct date. 
+9. When you're ready to make the merge to master AKA release to production, you need to do 2 things: Add the git tag, and ensure the changelog has the correct date.
 10. Make the date change to CHANGELOG.md if necessary and stage the changes with `git add . && git commit -m "updates changelog date"`.
 11. Then, run `git checkout staging && git add . && npx lerna version --no-push`
-    * This will prompt you for a new version number, apply the Git tags, and update the version number in the `package.json` of each child project.
-    * This will also automatically commit the changes with a generated commit message.
+    - This will prompt you for a new version number, apply the Git tags, and update the version number in the `package.json` of each child project.
+    - This will also automatically commit the changes with a generated commit message.
 12. Push changes to staging with `git push origin staging && git push origin --tags`
 13. IMPORTANT: Wait for the new changes to deploy to staging before merging to master.
-14. Deploy to the production environment by merging `staging` into `master` with `git checkout master && git pull && git merge staging && git push origin master` 
+14. Deploy to the production environment by merging `staging` into `master` with `git checkout master && git pull && git merge staging && git push origin master`
 15. Once your new version has being deployed to production, open a PR to merge `master` branch into `develop` branch - **DO NOT SQUASH MERGE**
-    * Seriously...**DO NOT SQUASH MERGE**
-16. Finally, on GitHub, create a new release from the Git tag you've just pushed to `master` branch. **Do not have an open PR if you plan on hotfixing to master. The build will not succeed if there is an open master -> develop PR**
+    - Seriously...**DO NOT SQUASH MERGE**
+16. Finally, on GitHub, create a new release from the Git tag you've just pushed to `master` branch. NOTE: when creating the GitHub release, the tag you pin the release to
+    should have the format vX.XX.XX. `lerna publish` creates tags such as "linode-manager@X.XX.XX", and GitHub will often autocomplete to these. Using these will break the link from
+    the footer in Cloud to the current release. **Do not have an open PR if you plan on hotfixing to master. The build will not succeed if there is an open master -> develop PR**
 
 ## Pushing a Hotfix
 
@@ -67,6 +70,7 @@ Finally, start again at step 11 of the above instructions
 At the end of the release process, `master` branch will be merged back into `develop`, so don't fear that you also need to apply your changes to `develop`.
 
 ## Generating the changelog
+
 Get a Python 3 installation with `pip`. On a Mac:
 
 `brew install python` (Python 3 is now the default)
@@ -74,12 +78,13 @@ Get a Python 3 installation with `pip`. On a Mac:
 The Changelog is generated by the script `generate_changelog.py`. This script should ideally only be run on the `testing` branch
 
 The script accepts 3 parameters:
+
 1. `${release version}`
-    * `vX.X.X` for example
+   - `vX.X.X` for example
 2. `${release-date yyyy.MM.dd}`
-    * `2019-09-17` for example
+   - `2019-09-17` for example
 3. `${mangerRemote}`
-    * `origin` for example
+   - `origin` for example
 
 So altogether, the command should look like:
 

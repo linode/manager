@@ -140,6 +140,7 @@ const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
           disableFocusRipple={true}
           disableRipple={true}
           disabled={disabled}
+          aria-describedby="new-window"
         >
           Launch Console
         </Button>

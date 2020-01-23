@@ -28,6 +28,7 @@ import Tabs from 'src/components/core/Tabs';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import { convertForAria } from 'src/components/TabLink/TabLink';
 import withLoadingAndError, {
   LoadingAndErrorHandlers,
   LoadingAndErrorState
@@ -329,7 +330,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
               />
             </Grid>
           </Grid>
-          <AppBar position="static" color="default">
+          <AppBar position="static" color="default" role="tablist">
             <Tabs
               value={findTabIndex === -1 ? 0 : findTabIndex}
               onChange={this.handleTabChange}
@@ -341,6 +342,9 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
               {this.tabs.map(tab => (
                 <Tab
                   key={tab.title}
+                  role="tab"
+                  id={`tab-${convertForAria(tab.title)}`}
+                  aria-controls={`tabpanel-${convertForAria(tab.title)}`}
                   label={tab.title}
                   data-qa-tab={tab.title}
                 />
