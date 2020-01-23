@@ -111,9 +111,9 @@ localStorage.json
 .sonar
 packages/manager/test-report.xml
 
-#cypress
-packages/manager/config/staging.json
-packages/manager/cypress/videos/
-packages/manager/cypress/screenshots/
+# cypress files/folders
+**/manager/config/development.json
+**/manager/config/staging.json
+**/manager/cypress/videos/
+**/manager/cypress/screenshots/
 
-packages/manager/config/development.json
