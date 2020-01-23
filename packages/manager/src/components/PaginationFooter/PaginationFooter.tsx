@@ -10,6 +10,8 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import PaginationControls from '../PaginationControls';
 
+export const MIN_PAGE_SIZE = 25;
+
 type ClassNames = 'root' | 'padded';
 
 const styles = (theme: Theme) =>
@@ -27,6 +29,7 @@ export interface PaginationProps {
   page: number;
   pageSize: number;
   eventCategory: string;
+  showAll?: boolean;
 }
 
 interface Props extends PaginationProps {
@@ -37,8 +40,8 @@ interface Props extends PaginationProps {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const options = [
-  { label: 'Show 25', value: 25 },
+const baseOptions = [
+  { label: 'Show 25', value: MIN_PAGE_SIZE },
   { label: 'Show 50', value: 50 },
   { label: 'Show 75', value: 75 },
   { label: 'Show 100', value: 100 }
@@ -55,16 +58,26 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
       pageSize,
       handlePageChange,
       padded,
-      eventCategory
+      eventCategory,
+      showAll
     } = this.props;
 
-    if (count <= 25) {
+    if (count <= MIN_PAGE_SIZE) {
       return null;
     }
 
-    const defaultPagination = options.find(eachOption => {
+    const finalOptions = [...baseOptions];
+    // Add "Show All" to the list of options if the consumer has so specified.
+    if (showAll) {
+      finalOptions.push({ label: 'Show All', value: Infinity });
+    }
+
+    const defaultPagination = finalOptions.find(eachOption => {
       return eachOption.value === pageSize;
     });
+
+    // If "Show All" is currently selected, pageSize is `Infinity`.
+    const isShowingAll = pageSize === Infinity;
 
     return (
       <Grid
@@ -77,19 +90,23 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
         })}
       >
         <Grid item>
-          <PaginationControls
-            onClickHandler={handlePageChange}
-            page={page}
-            count={count}
-            pageSize={pageSize}
-            eventCategory={eventCategory}
-          />
+          {!isShowingAll && (
+            <PaginationControls
+              onClickHandler={handlePageChange}
+              page={page}
+              count={count}
+              pageSize={pageSize}
+              eventCategory={eventCategory}
+            />
+          )}
         </Grid>
         <Grid item>
           <Select
-            options={options}
+            options={finalOptions}
             defaultValue={defaultPagination}
             onChange={this.handleSizeChange}
+            label="Number of items to show"
+            hideLabel
             isClearable={false}
             noMarginTop
             menuPlacement="top"

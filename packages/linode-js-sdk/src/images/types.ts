@@ -11,3 +11,9 @@ export interface Image {
   deprecated: boolean;
   expiry: null | string;
 }
+
+export interface CreateImagePayload {
+  diskID: number;
+  label?: string;
+  description?: string;
+}

@@ -34,7 +34,7 @@ const styles = (theme: Theme) =>
       marginBottom: theme.spacing(2)
     },
     labelCell: {
-      width: '40%'
+      width: '48%'
     },
     copyIcon: {
       '& svg': {
@@ -71,11 +71,11 @@ export const AccessKeyTable: React.StatelessComponent<
 
   const renderContent = () => {
     if (isRestrictedUser) {
-      return <TableRowEmptyState colSpan={6} />;
+      return <TableRowEmptyState colSpan={12} />;
     }
 
     if (loading) {
-      return <TableRowLoading colSpan={6} />;
+      return <TableRowLoading colSpan={3} firstColWidth={50} oneLine />;
     }
 
     if (error) {
@@ -90,7 +90,7 @@ export const AccessKeyTable: React.StatelessComponent<
     return data && data.length > 0 ? (
       renderRows(data)
     ) : (
-      <TableRowEmptyState colSpan={6} />
+      <TableRowEmptyState colSpan={12} />
     );
   };
 
@@ -116,6 +116,7 @@ export const AccessKeyTable: React.StatelessComponent<
             objectStorageKey={eachKey}
             openRevokeDialog={openRevokeDialog}
             openDrawerForEditing={openDrawerForEditing}
+            label={eachKey.label}
           />
         </TableCell>
       </TableRow>

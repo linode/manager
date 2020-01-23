@@ -23,7 +23,9 @@ import getEventsActionLink from 'src/utilities/getEventsActionLink';
 
 import { formatEventWithUsername } from './Event.helpers';
 
-type ClassNames = 'root' | 'message';
+import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
+
+type ClassNames = 'root' | 'message' | 'occurredCell';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -64,6 +66,7 @@ export const EventRow: React.StatelessComponent<CombinedProps> = props => {
     status: pathOr(undefined, ['status'], entity),
     type,
     entityId,
+    duration: event.duration,
     username: event.username,
     action: event.action,
     classes
@@ -81,6 +84,7 @@ export interface RowProps extends WithStyles<ClassNames> {
   action: EventAction;
   created: string;
   username: string | null;
+  duration: Event['duration'];
 }
 
 export const Row: React.StatelessComponent<RowProps> = props => {
@@ -93,7 +97,8 @@ export const Row: React.StatelessComponent<RowProps> = props => {
     status,
     type,
     created,
-    username
+    username,
+    duration
   } = props;
 
   /** Some event types may not be handled by our system (or new types
@@ -103,8 +108,13 @@ export const Row: React.StatelessComponent<RowProps> = props => {
     return null;
   }
 
+  const displayedMessage = formatEventWithUsername(action, username, message);
+
   return (
-    <TableRow rowLink={entityId ? undefined : (linkTarget as any)}>
+    <TableRow
+      rowLink={entityId ? undefined : (linkTarget as any)}
+      data-qa-event-row
+    >
       {/** We don't use the event argument, so typing isn't critical here. */}
       {/* Only display entity icon on the Global EventsLanding page */}
       {!entityId && (
@@ -126,11 +136,16 @@ export const Row: React.StatelessComponent<RowProps> = props => {
           data-qa-event-message
           variant="body1"
         >
-          {formatEventWithUsername(action, username, message)}
+          {displayedMessage}
         </Typography>
       </TableCell>
-      <TableCell parentColumn={'Time'} data-qa-event-created-cell compact>
-        <DateTimeDisplay value={created} humanizeCutoff={'month'} />
+      <TableCell parentColumn="Duration">
+        <Typography variant="body1">{`${formatEventSeconds(
+          duration
+        )}`}</Typography>
+      </TableCell>
+      <TableCell parentColumn={'When'} data-qa-event-created-cell compact>
+        <DateTimeDisplay value={created} />
       </TableCell>
     </TableRow>
   );

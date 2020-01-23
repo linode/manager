@@ -1,3 +1,4 @@
+import { AccountCapability } from 'linode-js-sdk/lib/account';
 import {
   createPersonalAccessToken,
   deleteAppToken,
@@ -9,6 +10,7 @@ import {
 } from 'linode-js-sdk/lib/profile';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as moment from 'moment';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -36,15 +38,14 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import withFeatureFlagConsumer, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import isPast from 'src/utilities/isPast';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import APITokenDrawer, { DrawerMode, genExpiryTups } from './APITokenDrawer';
 import APITokenMenu from './APITokenMenu';
 import { basePermNameMap, basePerms } from './utils';
+
+import withAccount from 'src/containers/account.container';
 
 type ClassNames = 'headline' | 'paper' | 'labelCell' | 'createdCell';
 
@@ -93,6 +94,7 @@ interface DialogState {
   label?: string;
   errors?: APIError[];
   type: string;
+  submittingDialog: boolean;
 }
 
 interface TokenState {
@@ -104,12 +106,13 @@ interface State {
   form: FormState;
   dialog: DialogState;
   token?: TokenState;
+  submitting: boolean;
 }
 
 type CombinedProps = Props &
   PaginationProps<Token> &
   WithStyles<ClassNames> &
-  FeatureFlagConsumerProps;
+  AccountStateProps;
 
 export const filterOutLinodeApps = (token: Token) =>
   !token.website || !/.linode.com$/.test(token.website);
@@ -132,12 +135,14 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
       id: 0,
       label: undefined,
       errors: undefined,
-      type: ''
+      type: '',
+      submittingDialog: false
     },
     token: {
       open: false,
       value: undefined
-    }
+    },
+    submitting: false
   };
 
   mounted: boolean = false;
@@ -151,7 +156,13 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
       form: {
         ...APITokenTable.defaultState.form,
         mode: 'create',
-        open: true
+        open: true,
+        id: undefined,
+        values: {
+          label: '',
+          expiry: genExpiryTups()[0][1],
+          scopes: undefined
+        }
       }
     });
   };
@@ -215,7 +226,12 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
 
   closeRevokeDialog = () => {
     this.setState({
-      dialog: { ...this.state.dialog, id: undefined, open: false }
+      dialog: {
+        ...this.state.dialog,
+        id: undefined,
+        open: false,
+        submittingDialog: false
+      }
     });
   };
 
@@ -242,10 +258,28 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
 
   revokePersonalAccessToken = () => {
     const { dialog } = this.state;
+    this.setState({
+      ...this.state,
+      dialog: { ...dialog, submittingDialog: true }
+    });
     deletePersonalAccessToken(dialog.id as number)
       .then(() => this.props.onDelete())
+      .then(() =>
+        this.setState({
+          ...this.state,
+          dialog: { ...dialog, submittingDialog: false }
+        })
+      )
       .then(() => this.closeRevokeDialog())
-      .catch((err: any) => this.showDialogError(err));
+      .catch((err: any) => {
+        this.setState(
+          {
+            ...this.state,
+            dialog: { ...dialog, submittingDialog: false }
+          },
+          () => this.showDialogError(err)
+        );
+      });
   };
 
   revokeAppToken = () => {
@@ -317,13 +351,17 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
 
     const { form } = this.state;
     this.setState(
-      { form: { ...form, values: { ...form.values, scopes } } },
+      {
+        submitting: true,
+        form: { ...form, values: { ...form.values, scopes } }
+      },
       () => {
         createPersonalAccessToken(this.state.form.values)
           .then(({ token }) => {
             if (!token) {
               return this.setState(
                 {
+                  submitting: false,
                   form: {
                     ...form,
                     errors: [
@@ -336,6 +374,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
                 }
               );
             }
+            this.setState({ submitting: false });
             this.closeDrawer();
             this.openTokenDialog(token);
           })
@@ -347,6 +386,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
 
             this.setState(
               {
+                submitting: false,
                 form: {
                   ...form,
                   errors: getAPIErrorOrDefault(errResponse)
@@ -428,7 +468,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     const { error, loading, data } = this.props;
 
     if (loading) {
-      return <TableRowLoading colSpan={6} />;
+      return <TableRowLoading colSpan={6} oneLine />;
     }
 
     if (error) {
@@ -491,23 +531,11 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, flags, type, title } = this.props;
-    const { form, dialog } = this.state;
+    const { classes, type, title } = this.props;
+    const { form, dialog, submitting } = this.state;
 
-    // If Object Storage is enabled, add it to the list of perms.
-    // @todo: Once Object Storage is safely in GA, remove this logic and add
-    // it to the hard-coded list of scopes.
-    const perms = flags.objectStorage
-      ? //  Scopes are returned from the API sorted alphabetically. Since we're
-        // manually inserting a scope here, I chose to sort the entire list
-        // instead of inserting 'object_storage' in the correct place according
-        // to the hard-coded basePerms array (that seemed brittle).
-        [...basePerms, 'object_storage'].sort()
-      : basePerms;
-
-    const permNameMap = flags.objectStorage
-      ? { ...basePermNameMap, object_storage: 'Object Storage' }
-      : basePermNameMap;
+    const basePermsWithLKE = [...basePerms];
+    basePermsWithLKE.splice(5, 0, 'lke');
 
     return (
       <React.Fragment>
@@ -555,13 +583,25 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         <APITokenDrawer
           open={form.open}
           mode={form.mode}
+          submitting={submitting}
           errors={form.errors}
           id={form.id}
           label={form.values.label}
           scopes={form.values.scopes}
           expiry={form.values.expiry}
-          perms={perms}
-          permNameMap={permNameMap}
+          perms={
+            !this.props.accountCapabilities.includes('Kubernetes')
+              ? basePerms
+              : basePermsWithLKE
+          }
+          permNameMap={
+            !this.props.accountCapabilities.includes('Kubernetes')
+              ? basePermNameMap
+              : {
+                  ...basePermNameMap,
+                  lke: 'Kubernetes'
+                }
+          }
           closeDrawer={this.closeDrawer}
           onChange={this.handleDrawerChange}
           onCreate={this.createToken}
@@ -626,6 +666,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           </Button>
           <Button
             buttonType="secondary"
+            loading={this.state.dialog.submittingDialog}
             destructive
             onClick={this.revokeAction}
             data-qa-button-confirm
@@ -671,10 +712,16 @@ const updatedRequest = (ownProps: Props, params: any, filters: any) => {
 
 const paginated = Pagey(updatedRequest);
 
+interface AccountStateProps {
+  accountCapabilities: AccountCapability[];
+}
+
 const enhanced = compose<CombinedProps, Props>(
+  withAccount<AccountStateProps, {}>((_, { accountData }) => ({
+    accountCapabilities: pathOr([], ['capabilities'], accountData)
+  })),
   paginated,
-  styled,
-  withFeatureFlagConsumer
+  styled
 );
 
 export default enhanced(APITokenTable);

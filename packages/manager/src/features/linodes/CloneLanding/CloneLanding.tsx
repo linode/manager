@@ -32,7 +32,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import TabLink from 'src/components/TabLink';
 import withLinodes from 'src/containers/withLinodes.container';
-import { resetEventsPolling } from 'src/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import { ApplicationState } from 'src/store';
 import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -121,7 +121,10 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
       title: 'Configuration Profiles',
       routeName: `${props.match.url}/configs`
     },
-    { title: 'Disks', routeName: `${props.match.url}/disks` }
+    {
+      title: 'Disks',
+      routeName: `${props.match.url}/disks`
+    }
   ];
 
   // Update browser URL with tab change
@@ -348,6 +351,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
               className={classes.appBar}
               position="static"
               color="default"
+              role="tablist"
             >
               <Tabs
                 value={tabs.findIndex(tab => matches(tab.routeName))}

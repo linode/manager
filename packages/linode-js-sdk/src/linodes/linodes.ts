@@ -6,7 +6,7 @@ import Request, {
   setURL,
   setXFilter
 } from '../request';
-import { ResourcePage as Page } from '../types';
+import { DeepPartial, ResourcePage as Page } from '../types';
 import { Volume } from '../volumes/types';
 import { CreateLinodeSchema, UpdateLinodeSchema } from './linodes.schema';
 import { CreateLinodeRequest, Linode } from './types';
@@ -98,7 +98,7 @@ export const createLinode = (data: CreateLinodeRequest) =>
  * @param values { object } the fields of the Linode object to be updated.
  * Fields not included in this parameter will be left unchanged.
  */
-export const updateLinode = (linodeId: number, values: Partial<Linode>) =>
+export const updateLinode = (linodeId: number, values: DeepPartial<Linode>) =>
   Request<Linode>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}`),
     setMethod('PUT'),
