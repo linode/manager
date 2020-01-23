@@ -13,6 +13,11 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import { setUpCharts } from 'src/utilities/charts';
 import { Metrics } from 'src/utilities/statMetrics';
+import {
+  convertBytesToTarget,
+  readableBytes,
+  StorageSymbol
+} from 'src/utilities/unitConversions';
 import MetricDisplayStyles from './NewMetricDisplay.styles';
 setUpCharts();
 
@@ -27,7 +32,6 @@ export interface DataSet {
   backgroundColor?: string;
   data: [number, number | null][];
 }
-
 export interface Props {
   chartHeight?: number;
   showToday: boolean;
@@ -36,7 +40,9 @@ export interface Props {
   timezone: string;
   rowHeaders?: Array<string>;
   legendRows?: Array<ChartData<any>>;
-  unit?: string; // Display unit on Y axis ticks
+  unit?: string;
+  maxUnit?: StorageSymbol; // Rounds data to this unit. IMPORTANT: if this prop is provided, data should be in bytes
+  nativeLegend?: boolean; // Display chart.js native legend
 }
 
 type CombinedProps = Props;
@@ -94,7 +100,10 @@ const chartOptions: any = {
     borderWidth: 0.5,
     borderColor: '#999',
     caretPadding: 10,
-    position: 'nearest'
+    position: 'nearest',
+    callbacks: {},
+    intersect: false,
+    mode: 'index'
   }
 };
 
@@ -121,19 +130,21 @@ const humanizeLargeData = (value: number) => {
 };
 
 const LineGraph: React.FC<CombinedProps> = props => {
-  const inputEl: any = React.useRef(null);
+  const inputEl: React.RefObject<any> = React.useRef(null);
   const [legendRendered, setLegendRendered] = React.useState(false);
   const [, forceUpdate] = React.useState();
   const classes = useStyles();
   const {
     chartHeight,
-    unit,
     suggestedMax,
     showToday,
     timezone,
     data,
     rowHeaders,
     legendRows,
+    maxUnit,
+    nativeLegend,
+    unit,
     ...rest
   } = props;
   const finalRowHeaders = rowHeaders ? rowHeaders : ['Max', 'Avg', 'Last'];
@@ -159,7 +170,12 @@ const LineGraph: React.FC<CombinedProps> = props => {
     }
   ];
 
-  const getChartOptions = (_suggestedMax?: number, _unit?: string) => {
+  const getChartOptions = (
+    _suggestedMax?: number,
+    _nativeLegend?: boolean,
+    _maxUnit?: StorageSymbol,
+    _tooltipUnit?: string
+  ) => {
     const finalChartOptions = clone(chartOptions);
     const parser = parseInTimeZone(timezone || '');
     finalChartOptions.scales.xAxes[0].time.parser = parser;
@@ -183,12 +199,31 @@ const LineGraph: React.FC<CombinedProps> = props => {
       finalChartOptions.scales.yAxes[0].ticks.suggestedMax = _suggestedMax;
     }
 
-    if (_unit) {
-      finalChartOptions.scales.yAxes[0].ticks.callback = (
-        value: number,
-        index: number
-      ) => `${humanizeLargeData(value)}${_unit}`;
+    if (_nativeLegend) {
+      finalChartOptions.legend.display = true;
+      finalChartOptions.legend.position = 'bottom';
     }
+
+    /**
+     * We've been given a max unit, which indicates that
+     * the data we're looking at is in bytes. We should
+     * adjust the tooltip display so that if the maxUnit is GB we
+     * display 8MB instead of 0.0000000000000000000000008 GB
+     *
+     * NOTE: formatTooltip is curried, so here we're creating a new
+     * function has the raw data from props bound to it. This is because
+     * we need to access the original data to determine what unit to display
+     * it in.
+     *
+     * NOTE2: _maxUnit is the unit that all series on the graph will be converted to.
+     * However, in the tooltip, each individual value will be formatted according to
+     * the most appropriate unit, if a unit is provided.
+     */
+    finalChartOptions.tooltips.callbacks.label = formatTooltip(
+      data,
+      _maxUnit,
+      _tooltipUnit
+    );
 
     return finalChartOptions;
   };
@@ -196,7 +231,11 @@ const LineGraph: React.FC<CombinedProps> = props => {
   const formatData = () => {
     return data.map(dataSet => {
       const timeData = dataSet.data.reduce((acc: any, point: any) => {
-        acc.push({ t: point[0], y: point[1] });
+        acc.push({
+          t: point[0],
+          // If we have a max unit (B/KB/MB etc.) convert the data to that unit
+          y: maxUnit ? convertBytesToTarget(maxUnit, point[1]) : point[1]
+        });
         return acc;
       }, []);
 
@@ -217,7 +256,7 @@ const LineGraph: React.FC<CombinedProps> = props => {
         <Line
           {...rest}
           height={chartHeight || 300}
-          options={getChartOptions(suggestedMax, unit)}
+          options={getChartOptions(suggestedMax, nativeLegend, maxUnit, unit)}
           plugins={plugins}
           ref={inputEl}
           data={{
@@ -331,5 +370,37 @@ export const metricsBySection = (data: Metrics): number[] => [
   data.average,
   data.last
 ];
+
+export const formatTooltip = curry(
+  (
+    data: any,
+    maxUnit: StorageSymbol | undefined,
+    unit: string | undefined,
+    t?: any,
+    d?: any
+  ) => {
+    /**
+     * This is a horror show, sorry.
+     * We want to show tooltip values in appropriate units. However,
+     * our formatData() function gets called before this function,
+     * so all values will already be <1000 (give or take) and be displayed
+     * as "8 bytes".
+     * In order to customize units for each value,
+     * we have to access the original data series passed into the
+     * component.
+     *
+     * t and d are the params passed by chart.js to this component.
+     * data and maxUnit should be partially applied before this function
+     * is called directly by chart.js
+     */
+    const dataset = data[t.datasetIndex];
+    const label = dataset.label;
+    const val = dataset.data[t.index][1] || 0;
+    const value = maxUnit
+      ? readableBytes(val).formatted
+      : Math.round(val * 100) / 100;
+    return `${label}: ${value} ${unit ? unit : ''}`;
+  }
+);
 
 export default LineGraph;

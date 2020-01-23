@@ -30,11 +30,23 @@ interface Props {
 
 type CombinedProps = Props;
 
+/**
+ * In special cases, such as Rescue mode, the API's method
+ * for determining the last booted config doesn't work as
+ * expected. To avoid these cases, we should always pass
+ * the configId if there's only a single available config.
+ *
+ * @param configs
+ */
+export const selectDefaultConfig = (configs?: Config[]) =>
+  configs?.length === 1 ? configs[0].id : undefined;
+
 const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = props => {
+  const { linodeConfigs } = props;
   const [isTakingAction, setTakingAction] = React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [selectedConfigID, selectConfigID] = React.useState<number | undefined>(
-    undefined
+    selectDefaultConfig(linodeConfigs)
   );
 
   const hasMoreThanOneConfigOnSelectedLinode =
@@ -47,7 +59,7 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = props => {
        */
       setErrors(undefined);
       setTakingAction(false);
-      selectConfigID(undefined);
+      selectConfigID(selectDefaultConfig(linodeConfigs));
     }
   }, [props.isOpen]);
 
@@ -98,7 +110,7 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = props => {
         onSelectConfig={selectConfigID}
         onSubmit={handleSubmit}
         onClose={props.close}
-        linodeConfigs={props.linodeConfigs!}
+        linodeConfigs={props.linodeConfigs ?? []}
         selectedConfigID={selectedConfigID}
       />
     );

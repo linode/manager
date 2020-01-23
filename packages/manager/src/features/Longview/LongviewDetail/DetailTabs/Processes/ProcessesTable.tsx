@@ -1,6 +1,6 @@
 import { APIError } from 'linode-js-sdk/lib/types';
-import { pathOr } from 'ramda';
 import * as React from 'react';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import OrderBy from 'src/components/OrderBy';
@@ -12,40 +12,53 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
 import { formatCPU } from 'src/features/Longview/shared/formatters';
+import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { readableBytes } from 'src/utilities/unitConversions';
+import { Process } from './types';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  processName: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    wordBreak: 'break-all',
+    alignItems: 'center'
+  }
+}));
 
 export interface Props {
   processesData: ExtendedProcess[];
   processesLoading: boolean;
-  processesError?: APIError[];
-  selectedRow: string | null;
-  setSelectedRow: (id: string) => void;
+  error?: string;
+  selectedProcess: Process | null;
+  setSelectedProcess: (process: Process) => void;
   lastUpdatedError?: APIError[];
 }
 
-type CombinedProps = Props;
+export type CombinedProps = Props;
 
 export const ProcessesTable: React.FC<CombinedProps> = props => {
   const {
     processesData,
     processesLoading,
-    processesError,
-    selectedRow,
-    setSelectedRow,
-    lastUpdatedError
+    error,
+    selectedProcess,
+    setSelectedProcess
   } = props;
 
-  const _hasError = processesError || lastUpdatedError;
-  const errorMessage = Boolean(_hasError)
-    ? pathOr<string>('Error retrieving data', [0, 'reason'], _hasError)
-    : undefined;
+  const { width } = useWindowDimensions();
 
   return (
     <>
-      <OrderBy data={processesData} orderBy={'name'} order={'desc'}>
+      <OrderBy data={processesData} orderBy={'name'} order={'asc'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
           <>
-            <Table spacingTop={16} noOverflow>
+            <Table
+              spacingTop={16}
+              // This prop is necessary to show the "ActiveCaret", and we only
+              // want it on large viewports.
+              noOverflow={width >= 1280}
+              isResponsive={false}
+            >
               <TableHead>
                 <TableRow>
                   <TableSortCell
@@ -108,9 +121,9 @@ export const ProcessesTable: React.FC<CombinedProps> = props => {
                 {renderLoadingErrorData(
                   processesLoading,
                   orderedData,
-                  selectedRow,
-                  setSelectedRow,
-                  errorMessage
+                  selectedProcess,
+                  setSelectedProcess,
+                  error
                 )}
               </TableBody>
             </Table>
@@ -124,35 +137,36 @@ export const ProcessesTable: React.FC<CombinedProps> = props => {
 const renderLoadingErrorData = (
   loading: boolean,
   data: ExtendedProcess[],
-  selectedRow: string | null,
-  setSelectedRow: (id: string) => void,
+  selectedProcess: Process | null,
+  setSelectedProcess: (process: Process) => void,
   error?: string
 ) => {
   if (error && data.length === 0) {
     return <TableRowError colSpan={12} message={error} />;
   }
-  if (loading && data.length === 0) {
+  if (loading) {
     return <TableRowLoading colSpan={7} />;
   }
   if (data.length === 0) {
     return <TableRowEmptyState colSpan={12} />;
   }
 
-  return data.map((thisProcesses, idx) => (
+  return data.map((thisProcess, idx) => (
     <ProcessesTableRow
       key={`process-${idx}`}
-      id={thisProcesses.id}
-      isSelected={selectedRow === thisProcesses.id}
-      setSelectedRow={setSelectedRow}
-      {...thisProcesses}
+      isSelected={
+        selectedProcess?.name === thisProcess.name &&
+        selectedProcess?.user === thisProcess.user
+      }
+      setSelectedProcess={setSelectedProcess}
+      {...thisProcess}
     />
   ));
 };
 
 export interface ProcessTableRowProps extends ExtendedProcess {
-  id: string;
   isSelected: boolean;
-  setSelectedRow: (id: string) => void;
+  setSelectedProcess: (process: Process) => void;
 }
 
 export const ProcessesTableRow: React.FC<ProcessTableRowProps> = React.memo(
@@ -164,51 +178,41 @@ export const ProcessesTableRow: React.FC<ProcessTableRowProps> = React.memo(
       averageIO,
       averageCPU,
       averageMem,
-      id,
-      setSelectedRow,
+      setSelectedProcess,
       isSelected
     } = props;
+
+    const classes = useStyles();
+
     return (
       <TableRow
-        onClick={() => setSelectedRow(id)}
-        onKeyUp={(e: any) => e.keyCode === 13 && setSelectedRow(id)}
+        onClick={() => setSelectedProcess({ name, user })}
+        onKeyUp={(e: any) =>
+          e.keyCode === 13 && setSelectedProcess({ name, user })
+        }
         selected={isSelected}
         data-testid="longview-service-row"
         forceIndex
         aria-label={`${name} for ${user}`}
       >
-        <TableCell parentColumn="Process" data-testid={`name-${name}`}>
-          {name}
+        <TableCell data-testid={`name-${name}`}>
+          <div className={classes.processName}>{name}</div>
         </TableCell>
-        <TableCell parentColumn="User" data-testid={`user-${user}`}>
-          {user}
-        </TableCell>
-        <TableCell
-          parentColumn="Max Count"
-          data-testid={`max-count-${Math.round(maxCount)}`}
-        >
+        <TableCell data-testid={`user-${user}`}>{user}</TableCell>
+        <TableCell data-testid={`max-count-${Math.round(maxCount)}`}>
           {Math.round(maxCount)}
         </TableCell>
-        <TableCell
-          parentColumn="Avg IO"
-          data-testid={`average-io-${averageIO}`}
-        >
+        <TableCell data-testid={`average-io-${averageIO}`}>
           {
             readableBytes(averageIO, { round: 0, unitLabels: { bytes: 'B' } })
               .formatted
           }
           /s
         </TableCell>
-        <TableCell
-          parentColumn="Avg CPU"
-          data-testid={`average-cpu-${averageCPU}`}
-        >
+        <TableCell data-testid={`average-cpu-${averageCPU}`}>
           {formatCPU(averageCPU)}
         </TableCell>
-        <TableCell
-          parentColumn="Avg Mem"
-          data-testid={`average-mem-${averageMem}`}
-        >
+        <TableCell data-testid={`average-mem-${averageMem}`}>
           {readableBytes(averageMem * 1024, { round: 0 }).formatted}
         </TableCell>
       </TableRow>
