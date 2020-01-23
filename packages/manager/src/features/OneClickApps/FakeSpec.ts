@@ -176,7 +176,7 @@ export const oneClickApps: OCA[] = [
         href: 'http://meanjs.org/'
       }
     ],
-    logo_url: 'assets/mean_color.png'
+    logo_url: 'assets/mean_color.svg'
   },
   {
     name: 'Plesk',
