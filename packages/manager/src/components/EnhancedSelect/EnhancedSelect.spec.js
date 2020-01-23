@@ -2,7 +2,6 @@ const { navigateToStory } = require('../../../e2e/utils/storybook');
 const { constants } = require('../../../e2e/constants');
 
 describe('Enhanced Select -', () => {
-  let selectElement, selectOptions;
   const component = 'Enhanced Select';
   const childComponents = ['Example'];
 
@@ -11,7 +10,7 @@ describe('Enhanced Select -', () => {
   });
 
   describe('Basic Select -', () => {
-    let basicSelect, basicSelects, options;
+    let basicSelects, options;
 
     it('should display the placeholder text in the select', () => {
       selectLabels = $$('[data-qa-textfield-label]');
@@ -107,7 +106,8 @@ describe('Enhanced Select -', () => {
     });
 
     it('should remove the chip on click of the remove icon', () => {
-      $('#multi-select svg').click();
+      $('[data-qa-moFruit-select] .react-select__indicators').click();
+      multiSelect.click();
       expect((selectedOption = options[0].getText()))
         .withContext(`Apple should be the first select option`)
         .toBe('Apple');
@@ -122,8 +122,7 @@ describe('Enhanced Select -', () => {
     const createdText = 'Choose some timezones';
 
     beforeAll(() => {
-      // Close any potentially open select menus
-      $('body').click();
+      navigateToStory(component, childComponents[0]);
     });
 
     it('should display the creatable select with placeholder text', () => {
