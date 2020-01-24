@@ -1,8 +1,7 @@
 import { Domain } from 'linode-js-sdk/lib/domains';
-import { equals } from 'ramda';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { pathOr } from 'ramda';
+import { equals, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
