@@ -125,6 +125,7 @@ export const MySQLGraphs: React.FC<CombinedProps> = props => {
               <LongviewLineGraph
                 title="Throughput"
                 subtitle={`${maxUnit}/s`}
+                unit={'/s'}
                 formatData={formatNetwork}
                 formatTooltip={formatNetworkTooltip}
                 nativeLegend
@@ -152,6 +153,7 @@ export const MySQLGraphs: React.FC<CombinedProps> = props => {
               <LongviewLineGraph
                 title="Connections"
                 subtitle="connections/s"
+                unit={' connections/s'}
                 nativeLegend
                 error={error}
                 loading={loading}

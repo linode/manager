@@ -83,7 +83,8 @@ export const ApacheGraphs: React.FC<CombinedProps> = props => {
   /**
    * NB: unlike some other places in Longview,
    * totalKBytes appears to actually be returned
-   * in kilobytes. Our network helper utilities
+   * in kilobytes (usually it's bytes, even if the variable name
+   * has kb in it). Our network helper utilities
    * aren't prepared for this, so we have to convert
    * to bytes by passing a formatter to convertData.
    *

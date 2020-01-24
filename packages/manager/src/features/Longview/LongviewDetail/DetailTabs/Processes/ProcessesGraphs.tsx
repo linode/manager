@@ -156,7 +156,9 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
           <LongviewLineGraph
             title="Disk I/O"
             subtitle={ioUnit + '/s'}
-            unit={ioUnit + '/s'}
+            unit={'/s'}
+            formatData={(value: number) => convertBytesToTarget(ioUnit, value)}
+            formatTooltip={(value: number) => readableBytes(value).formatted}
             nativeLegend
             data={[
               {

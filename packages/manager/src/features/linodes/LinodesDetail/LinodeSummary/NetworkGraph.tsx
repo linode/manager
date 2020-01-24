@@ -202,7 +202,8 @@ const Graph: React.FC<GraphProps> = props => {
    * so we have to preemptively divide by 8 to counter the conversion inside the helper.
    *
    */
-  const _formatTooltip = (value: number) => formatNetworkTooltip(value / 8);
+  const _formatTooltip = (valueInBytes: number) =>
+    formatNetworkTooltip(valueInBytes / 8);
 
   const convertedPublicIn = data.publicIn;
   const convertedPublicOut = data.publicOut;
