@@ -173,7 +173,7 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
             .then(response => {
               props
                 .updateUserPreferences({
-                  ...response.preferences,
+                  ...response,
                   [preferenceKey]: currentlySetPreference
                 })
                 .catch(() => /** swallow the error */ null);
