@@ -153,12 +153,29 @@ export const printInvoice = (
 
     const flags = useFlags();
 
-    const convertedInvoiceDate = invoice.date && Date.parse(invoice.date);
+    const dateConversion = (str: string) => {
+      return Date.parse(str);
+    };
 
-    const GSTAddDate = flags.vatBanner && flags.vatBanner.date;
+    const convertedInvoiceDate = invoice.date && dateConversion(invoice.date);
+
+    const GSTAddDate = flags.vatBanner && dateConversion(flags.vatBanner.date);
 
     // Added June 1, 2019
     const VATAddDate = 1559347200000;
+
+    const determineTaxDisplay = () => {
+      if (
+        VATAddDate > convertedInvoiceDate ||
+        (GSTAddDate && GSTAddDate > convertedInvoiceDate)
+      ) {
+        return '';
+      } else {
+        return `Tax ID: ${account.tax_id}`;
+      }
+    };
+
+    const taxDisplay = determineTaxDisplay();
 
     // Create a separate page for each set of invoice items
     itemsChunks.forEach((itemsChunk, index) => {
@@ -185,11 +202,7 @@ export const printInvoice = (
           300px left margin is a hacky way of aligning the text to the right
           because this library stinks
          */
-              text:
-                VATAddDate <= convertedInvoiceDate ||
-                (GSTAddDate && GSTAddDate <= convertedInvoiceDate)
-                  ? ''
-                  : `Tax ID: ${account.tax_id}`,
+              text: taxDisplay,
               leftMargin: 300
             }
           ]
