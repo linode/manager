@@ -1,5 +1,6 @@
 import { Image } from 'linode-js-sdk/lib/images';
 import { StackScript } from 'linode-js-sdk/lib/stackscripts';
+import { stringify } from 'qs';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Chip from 'src/components/core/Chip';
@@ -120,6 +121,11 @@ export class _StackScript extends React.Component<CombinedProps> {
         return acc;
       }, []) || 'No compatible images found';
 
+    const queryString = stringify({
+      type: 'community',
+      query: `username:${username}`
+    });
+
     return (
       <div className={classes.root}>
         <H1Header title={label} data-qa-stack-title={label} />
@@ -131,7 +137,7 @@ export class _StackScript extends React.Component<CombinedProps> {
           by&nbsp;
           <ExternalLink
             text={username}
-            link={`${APP_ROOT}/stackscripts?type=community&query=username:${username}`}
+            link={`${APP_ROOT}/stackscripts?${queryString}`}
             data-qa-community-stack-link
           />
         </Typography>

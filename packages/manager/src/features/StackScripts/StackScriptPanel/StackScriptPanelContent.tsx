@@ -167,9 +167,7 @@ class StackScriptPanelContent extends React.Component<CombinedProps, State> {
           return;
         }
         this.setState({
-          successMessage: `${
-            dialog.stackScriptLabel
-          } successfully published to the public library`,
+          successMessage: `${dialog.stackScriptLabel} successfully published to the public library`,
           dialog: {
             delete: {
               open: false
@@ -298,6 +296,6 @@ class StackScriptPanelContent extends React.Component<CombinedProps, State> {
   }
 }
 
-export default compose<CombinedProps, Props>(StackScriptBase(false))(
-  StackScriptPanelContent
-);
+export default compose<CombinedProps, Props>(
+  StackScriptBase({ isSelecting: false, useQueryString: true })
+)(StackScriptPanelContent);
