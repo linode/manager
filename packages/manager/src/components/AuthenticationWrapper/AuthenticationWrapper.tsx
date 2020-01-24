@@ -25,6 +25,8 @@ import { ApplicationState } from 'src/store';
 import { handleInitTokens } from 'src/store/authentication/authentication.actions';
 import { MapState } from 'src/store/types';
 
+import { initAnalytics, initTagManager } from 'src/analytics';
+import { GA_ID, GTM_ID, isProduction } from 'src/constants';
 import { requestAccount } from 'src/store/account/account.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import { getAllBuckets } from 'src/store/bucket/bucket.requests';
@@ -42,8 +44,6 @@ import { requestProfile } from 'src/store/profile/profile.requests';
 import { requestRegions } from 'src/store/regions/regions.actions';
 import { getAllVolumes } from 'src/store/volume/volume.requests';
 import { GetAllData } from 'src/utilities/getAll';
-import { initAnalytics, initTagManager } from 'src/analytics';
-import { GA_ID, GTM_ID, isProduction } from 'src/constants';
 
 type CombinedProps = DispatchProps & StateProps & WithNodeBalancerActions;
 
