@@ -2,6 +2,7 @@ import { Image } from 'linode-js-sdk/lib/images';
 import { StackScript } from 'linode-js-sdk/lib/stackscripts';
 import { stringify } from 'qs';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
@@ -13,10 +14,8 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import ExternalLink from 'src/components/ExternalLink';
 import H1Header from 'src/components/H1Header';
 import ScriptCode from 'src/components/ScriptCode';
-import { APP_ROOT } from 'src/constants';
 import withImages from 'src/containers/withImages.container';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 
@@ -135,11 +134,12 @@ export class _StackScript extends React.Component<CombinedProps> {
           data-qa-stack-author={username}
         >
           by&nbsp;
-          <ExternalLink
-            text={username}
-            link={`${APP_ROOT}/stackscripts?${queryString}`}
+          <Link
+            to={`/stackscripts?${queryString}`}
             data-qa-community-stack-link
-          />
+          >
+            {username}
+          </Link>
         </Typography>
         <div data-qa-stack-deployments className={classes.deployments}>
           <Typography className={classes.deploymentSection}>
