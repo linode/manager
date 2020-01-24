@@ -1,7 +1,7 @@
 import { Domain } from 'linode-js-sdk/lib/domains';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { pathOr } from 'ramda';
+import { equals, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
@@ -107,6 +107,12 @@ interface State {
 interface Props {
   /** purely so we can force a preference to get the unit tests to pass */
   shouldGroupDomains?: boolean;
+  // Since Slave Domains do not have a Detail page, we allow the consumer to
+  // render this component with the "Edit Domain" drawer already opened.
+  domainForEditing?: {
+    domainId: number;
+    domainLabel: string;
+  };
 }
 
 export type CombinedProps = DomainProps &
@@ -130,6 +136,28 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
   };
 
   static docs: Linode.Doc[] = [Domains];
+
+  componentDidMount = () => {
+    // Open the "Edit Domain" drawer if so specified by this component's props.
+    if (this.props.domainForEditing) {
+      const { domainId, domainLabel } = this.props.domainForEditing;
+      this.props.openForEditing(domainLabel, domainId);
+    }
+  };
+
+  componentDidUpdate = (prevProps: CombinedProps) => {
+    // Open the "Edit Domain" drawer if so specified by this component's props.
+    const { domainForEditing } = this.props;
+    if (
+      !equals(prevProps.domainForEditing, domainForEditing) &&
+      domainForEditing
+    ) {
+      this.props.openForEditing(
+        domainForEditing.domainLabel,
+        domainForEditing.domainId
+      );
+    }
+  };
 
   cancelRequest: Function;
 
@@ -311,7 +339,11 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                 >
                   <Grid item className={classes.titleWrapper}>
                     <Breadcrumb
-                      pathname={this.props.location.pathname}
+                      // This component can be rendered with the URL
+                      // /domains/:domainId, which would result in a double
+                      // breadcrumb. Thus we give the <Breadcrumb /> an explicit
+                      // pathname.
+                      pathname="Domains"
                       labelTitle="Domains"
                       className={classes.breadcrumbs}
                     />
