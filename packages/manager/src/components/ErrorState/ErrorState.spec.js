@@ -1,14 +1,14 @@
-const { constants } = require('../../../e2e/constants');
 const { navigateToStory } = require('../../../e2e/utils/storybook');
 
 describe('Error State Component Suite', () => {
   const component = 'Error Display';
-  const childStories = [
-      'with text'
-  ]
+  const childStories = ['with text'];
   const icon = '[data-qa-error-icon="true"]';
   const errorMsg = '[data-qa-error-msg="true"]';
-  const fontValues = { property: 'font', value: 'normal normal 400 normal 16px / 22.4px latowebbold, sans-serif' }
+  const fontValues = {
+    property: 'font',
+    value: '16px / 22.4px latowebbold, sans-serif'
+  };
 
   beforeAll(() => {
     navigateToStory(component, childStories[0]);

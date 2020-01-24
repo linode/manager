@@ -5,12 +5,13 @@ import {
 import { ThunkActionCreator } from 'src/store/types';
 import {
   handleGetPreferences,
-  handleUpdatePreferences
+  handleUpdatePreferences,
+  UserPreferences
 } from './preferences.actions';
 
-export const getUserPreferences: ThunkActionCreator<
-  Promise<Record<string, any>>
-> = () => dispatch => {
+export const getUserPreferences: ThunkActionCreator<Promise<
+  UserPreferences
+>> = () => dispatch => {
   const { started, done, failed } = handleGetPreferences;
 
   dispatch(started());
@@ -35,16 +36,12 @@ export const getUserPreferences: ThunkActionCreator<
 };
 
 export const updateUserPreferences: ThunkActionCreator<
-  Promise<Record<string, any>>,
-  Record<string, any>
+  Promise<UserPreferences>,
+  UserPreferences
 > = payload => dispatch => {
   const { started, done, failed } = handleUpdatePreferences;
 
-  dispatch(
-    started({
-      params: payload
-    })
-  );
+  dispatch(started(payload));
 
   return _updateUserPreferences(payload)
     .then(response => {

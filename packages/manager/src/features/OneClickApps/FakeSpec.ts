@@ -304,6 +304,28 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/plesk_color.svg'
   },
   {
+    name: 'phpMyAdmin',
+    description: `phpMyAdmin is a web application that provides a GUI to aid in MySQL and MariaDB database administration. It supports multiple database servers and is a robust and easy alternative to using the MySQL command line client.`,
+    summary: `An easy to use web application that simplifies the management of your MySQL and MariaDB databases.`,
+    related_guides: [
+      {
+        title: 'How to Install and Configure phpMyAdmin on Debian 8',
+        href:
+          'https://www.linode.com/docs/databases/mysql/install-and-configure-phpmyadmin-on-debian-8/'
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://www.phpmyadmin.net/',
+        href: 'https://www.phpmyadmin.net/'
+      },
+    ],
+    tips: [
+      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]/phpmyadmin</em> in a browser.`
+    ],
+    logo_url: 'assets/phpmyadmin_color.svg'
+  },
+  {  
     name: 'Prometheus',
     description: `Prometheus is a powerful monitoring software tool that collects metrics from configurable data points at given intervals, evaluates rule expressions, and can trigger alerts if some condition is observed.`,
     summary:
