@@ -8,12 +8,11 @@ import {
   RouteComponentProps,
   Switch
 } from 'react-router-dom';
-import { initAnalytics, initTagManager } from 'src/analytics';
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
 import CookieWarning from 'src/components/CookieWarning';
 import DefaultLoader from 'src/components/DefaultLoader';
 import SnackBar from 'src/components/SnackBar';
-import { GA_ID, GTM_ID, isProduction } from 'src/constants';
+import { isProduction } from 'src/constants';
 import 'src/exceptionReporting';
 import LoginAsCustomerCallback from 'src/layouts/LoginAsCustomerCallback';
 import Logout from 'src/layouts/Logout';
@@ -41,12 +40,6 @@ const Cancel = DefaultLoader({
   loader: () => import('src/features/CancelLanding')
 });
 
-/*
- * Initialize Analytic and Google Tag Manager
- */
-initAnalytics(isProduction, GA_ID);
-
-initTagManager(GTM_ID);
 
 const renderNullAuth = () => <span>null auth route</span>;
 

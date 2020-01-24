@@ -42,6 +42,8 @@ import { requestProfile } from 'src/store/profile/profile.requests';
 import { requestRegions } from 'src/store/regions/regions.actions';
 import { getAllVolumes } from 'src/store/volume/volume.requests';
 import { GetAllData } from 'src/utilities/getAll';
+import { initAnalytics, initTagManager } from 'src/analytics';
+import { GA_ID, GTM_ID, isProduction } from 'src/constants';
 
 type CombinedProps = DispatchProps & StateProps & WithNodeBalancerActions;
 
@@ -65,7 +67,6 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       this.props.requestImages(),
       this.props.requestProfile(),
       this.props.requestLinodes(),
-      this.props.requestNotifications(),
       this.props.requestSettings(),
       this.props.requestTypes(),
       this.props.requestRegions(),
@@ -78,6 +79,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     } catch (error) {
       /** We choose to do nothing, relying on the Redux error state. */
     }
+    this.props.requestNotifications();
   };
 
   componentDidMount() {
@@ -98,6 +100,12 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       this.setState({ showChildren: true });
       this.makeInitialRequests();
       startEventsInterval();
+      /*
+       * Initialize Analytic and Google Tag Manager
+       */
+      initAnalytics(isProduction, GA_ID);
+      
+      initTagManager(GTM_ID);
     }
   }
 
