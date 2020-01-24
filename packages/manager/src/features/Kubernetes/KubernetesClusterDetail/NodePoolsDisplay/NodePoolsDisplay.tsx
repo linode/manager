@@ -20,7 +20,7 @@ import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import NodePoolDisplayTable from '../../CreateCluster/NodePoolDisplayTable';
-import { getTotalClusterPrice } from '../../kubeUtils';
+import { getTotalClusterPrice, nodeWarning } from '../../kubeUtils';
 import { PoolNodeWithPrice } from '../../types';
 
 type ClassNames =
@@ -135,7 +135,10 @@ export const NodePoolsDisplay: React.FunctionComponent<CombinedProps> = props =>
   };
   const errorMap = getErrorMap(['count'], submissionError);
 
+  // If a user is about to put their cluster in a state where it will
+  // only have a single node, we want to show a warning.
   const hasSingleNode =
+    !submitDisabled &&
     poolsForEdit.reduce((acc, thisPool) => {
       if (thisPool.queuedForDeletion) {
         return acc;
@@ -169,12 +172,7 @@ export const NodePoolsDisplay: React.FunctionComponent<CombinedProps> = props =>
         </Grid>
         {hasSingleNode && (
           <Grid item xs={12}>
-            <Notice
-              warning
-              text={
-                'A single Node cluster may suffer downtime during Kubernetes upgrades. For high availability, we suggest clusters with three or more Nodes.'
-              }
-            />
+            <Notice warning text={nodeWarning} />
           </Grid>
         )}
         {submissionSuccess && (

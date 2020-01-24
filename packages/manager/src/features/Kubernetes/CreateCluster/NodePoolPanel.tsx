@@ -4,14 +4,10 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
+import Notice from 'src/components/Notice';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 
@@ -19,32 +15,32 @@ import SelectPlanPanel, {
   ExtendedType
 } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 
-import { getMonthlyPrice } from '.././kubeUtils';
+import { getMonthlyPrice, nodeWarning } from '.././kubeUtils';
 import { PoolNodeWithPrice } from '.././types';
 import NodePoolDisplayTable from './NodePoolDisplayTable';
 
-type ClassNames = 'root' | 'title' | 'gridItem' | 'countInput';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      marginTop: theme.spacing(3),
-      marginBottom: theme.spacing(3),
-      '& .tabbedPanel': {
-        marginTop: 0
-      }
-    },
-    title: {
-      marginBottom: theme.spacing(1)
-    },
-    gridItem: {
-      paddingLeft: theme.spacing(3),
-      marginBottom: theme.spacing(3)
-    },
-    countInput: {
-      maxWidth: '5em'
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3),
+    '& .tabbedPanel': {
+      marginTop: 0
     }
-  });
+  },
+  title: {
+    marginBottom: theme.spacing(1)
+  },
+  gridItem: {
+    paddingLeft: theme.spacing(3),
+    marginBottom: theme.spacing(3)
+  },
+  countInput: {
+    maxWidth: '5em'
+  },
+  notice: {
+    paddingLeft: theme.spacing(3)
+  }
+}));
 
 interface Props {
   types: ExtendedType[];
@@ -63,10 +59,10 @@ interface Props {
   updatePool?: (poolIdx: number, updatedPool: PoolNodeWithPrice) => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 export const NodePoolPanel: React.FunctionComponent<CombinedProps> = props => {
-  const { classes } = props;
+  const classes = useStyles();
   return (
     <Paper className={classes.root}>
       <RenderLoadingOrContent {...props} />
@@ -74,9 +70,7 @@ export const NodePoolPanel: React.FunctionComponent<CombinedProps> = props => {
   );
 };
 
-const RenderLoadingOrContent: React.FunctionComponent<
-  CombinedProps
-> = props => {
+const RenderLoadingOrContent: React.FunctionComponent<CombinedProps> = props => {
   const { typesError, typesLoading } = props;
 
   if (typesError) {
@@ -97,8 +91,8 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
   const [countError, setCountError] = React.useState<string | undefined>(
     undefined
   );
+  const classes = useStyles();
   const {
-    classes,
     addNodePool,
     apiError,
     deleteNodePool,
@@ -154,6 +148,13 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
     handleTypeSelect(newType);
   };
 
+  // If the user is about to create a cluster with a single node,
+  // we want to show a warning.
+  const showSingleNodeWarning =
+    pools?.reduce((acc, thisPool) => {
+      return acc + thisPool.count;
+    }, 0) === 1;
+
   return (
     <Grid container direction="column">
       <Grid item>
@@ -189,27 +190,29 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
       </Grid>
       {!hideTable && (
         /* We checked for these props above so it's safe to assume they're defined. */
-        <Grid item className={classes.gridItem}>
-          <NodePoolDisplayTable
-            small
-            editable
-            loading={false} // When creating we never need to load node pools from the API
-            pools={pools || []}
-            types={types}
-            handleDelete={(poolIdx: number) => deleteNodePool!(poolIdx)}
-            updatePool={updatePool!}
-          />
-        </Grid>
+        <>
+          {showSingleNodeWarning && (
+            <Grid item className={classes.notice}>
+              <Notice warning text={nodeWarning} spacingBottom={0} />
+            </Grid>
+          )}
+          <Grid item className={classes.gridItem}>
+            <NodePoolDisplayTable
+              small
+              editable
+              loading={false} // When creating we never need to load node pools from the API
+              pools={pools || []}
+              types={types}
+              handleDelete={(poolIdx: number) => deleteNodePool!(poolIdx)}
+              updatePool={updatePool!}
+            />
+          </Grid>
+        </>
       )}
     </Grid>
   );
 };
 
-const styled = withStyles(styles);
-
-const enhanced = compose<CombinedProps, Props & RenderGuardProps>(
-  styled,
-  renderGuard
-);
+const enhanced = compose<CombinedProps, Props & RenderGuardProps>(renderGuard);
 
 export default enhanced(NodePoolPanel);
