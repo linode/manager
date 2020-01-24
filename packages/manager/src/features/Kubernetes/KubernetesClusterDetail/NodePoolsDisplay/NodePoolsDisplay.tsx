@@ -103,9 +103,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const command = 'kubectl get nodes -o wide';
 
-export const NodePoolsDisplay: React.FunctionComponent<
-  CombinedProps
-> = props => {
+export const NodePoolsDisplay: React.FunctionComponent<CombinedProps> = props => {
   const {
     classes,
     deletePool,
@@ -137,6 +135,14 @@ export const NodePoolsDisplay: React.FunctionComponent<
   };
   const errorMap = getErrorMap(['count'], submissionError);
 
+  const hasSingleNode =
+    poolsForEdit.reduce((acc, thisPool) => {
+      if (thisPool.queuedForDeletion) {
+        return acc;
+      }
+      return acc + thisPool.count;
+    }, 0) === 1;
+
   return (
     <Paper className={classes.root}>
       <Grid container direction="column">
@@ -161,6 +167,16 @@ export const NodePoolsDisplay: React.FunctionComponent<
             />
           </Grid>
         </Grid>
+        {hasSingleNode && (
+          <Grid item xs={12}>
+            <Notice
+              warning
+              text={
+                'A single Node cluster may suffer downtime during Kubernetes upgrades. For high availability, we suggest clusters with three or more Nodes.'
+              }
+            />
+          </Grid>
+        )}
         {submissionSuccess && (
           <Grid item xs={12}>
             <Notice success text={'Your node pools are being updated.'} />
@@ -230,9 +246,6 @@ export const NodePoolsDisplay: React.FunctionComponent<
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(
-  React.memo,
-  styled
-);
+const enhanced = compose<CombinedProps, Props>(React.memo, styled);
 
 export default enhanced(NodePoolsDisplay);
