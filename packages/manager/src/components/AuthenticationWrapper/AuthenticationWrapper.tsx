@@ -99,13 +99,12 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     if (this.props.isAuthenticated) {
       this.setState({ showChildren: true });
       this.makeInitialRequests();
-      startEventsInterval();
       /*
        * Initialize Analytic and Google Tag Manager
        */
       initAnalytics(isProduction, GA_ID);
-      
       initTagManager(GTM_ID);
+      startEventsInterval();
     }
   }
 
