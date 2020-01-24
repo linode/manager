@@ -69,7 +69,7 @@ class DomainsRoutes extends React.Component<CombinedProps> {
 
             // Master Domains have a Detail page.
             if (foundDomain.type === 'master') {
-              return <DomainDetail />;
+              return <DomainDetail {...routerProps} />;
             }
 
             // Slave Domains do not have a Detail page, so render the Landing
@@ -80,6 +80,7 @@ class DomainsRoutes extends React.Component<CombinedProps> {
                   domainId: foundDomain.id,
                   domainLabel: foundDomain.domain
                 }}
+                {...routerProps}
               />
             );
           }}
