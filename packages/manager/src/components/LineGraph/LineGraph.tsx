@@ -12,6 +12,7 @@ import Typography from 'src/components/core/Typography';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import { setUpCharts } from 'src/utilities/charts';
+import roundTo from 'src/utilities/roundTo';
 import { Metrics } from 'src/utilities/statMetrics';
 import MetricDisplayStyles from './NewMetricDisplay.styles';
 setUpCharts();
@@ -382,7 +383,7 @@ export const _formatTooltip = curry(
     const dataset = data[t.datasetIndex];
     const label = dataset.label;
     const val = dataset.data[t.index][1] || 0;
-    const value = formatter ? formatter(val) : Math.round(val * 100) / 100;
+    const value = formatter ? formatter(val) : roundTo(val);
     return `${label}: ${value}${unit ? unit : ''}`;
   }
 );

@@ -15,6 +15,7 @@ import {
   generateNetworkUnits,
   statMax
 } from 'src/features/Longview/shared/utilities';
+import roundTo from 'src/utilities/roundTo';
 import { ApacheResponse, LongviewProcesses } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import ProcessGraphs from '../ProcessGraphs';
@@ -129,9 +130,7 @@ export const ApacheGraphs: React.FC<CombinedProps> = props => {
                 subtitle={`${networkUnit}/s`}
                 unit={'/s'}
                 formatData={(value: number) =>
-                  Math.round(
-                    convertNetworkToUnit(value * 8, networkUnit) * 100
-                  ) / 100
+                  roundTo(convertNetworkToUnit(value * 8, networkUnit))
                 }
                 formatTooltip={formatNetworkTooltip}
                 data={[
