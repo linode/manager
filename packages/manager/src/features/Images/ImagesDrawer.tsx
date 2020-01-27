@@ -152,6 +152,12 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
     }
   }
 
+  handleLinodeChange = (linodeID: number) => {
+    // Clear any disk errors
+    this.setState({ errors: undefined });
+    this.props.changeLinode(linodeID);
+  };
+
   close = () => {
     this.props.onClose();
     if (this.mounted) {
@@ -202,7 +208,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
               submitting: false,
               errors: getAPIErrorOrDefault(
                 errorResponse,
-                'Unable to edit image'
+                'Unable to edit Image'
               )
             });
           });
@@ -284,7 +290,6 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       selectedLinode,
       mode,
       changeDisk,
-      changeLinode,
       changeLabel,
       changeDescription,
       classes
@@ -323,7 +328,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           <LinodeSelect
             selectedLinode={selectedLinode}
             linodeError={linodeError}
-            handleChange={linode => changeLinode(linode.id)}
+            handleChange={linode => this.handleLinodeChange(linode.id)}
             updateFor={[selectedLinode, linodeError, classes]}
           />
         )}
