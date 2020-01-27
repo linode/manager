@@ -44,6 +44,8 @@ const styles = (theme: Theme) =>
     button: {
       padding: theme.spacing(1),
       borderRadius: 30,
+      order: 4,
+      marginRight: -theme.spacing(1),
       '&:hover, &.active': {
         '& $username': {
           color: theme.palette.primary.main
@@ -61,13 +63,13 @@ const styles = (theme: Theme) =>
     userWrapper: {
       marginRight: theme.spacing(1),
       borderRadius: '50%',
-      width: '42px',
-      height: '42px',
+      width: '40px',
+      height: '40px',
       transition: theme.transitions.create(['box-shadow']),
       [theme.breakpoints.down('md')]: {
         margin: 0,
-        width: '30px',
-        height: '30px'
+        width: '28px',
+        height: '28px'
       }
     },
     leftIcon: {
@@ -143,7 +145,7 @@ export class UserMenu extends React.Component<CombinedProps, State> {
     });
   }
 
-  componentWillReceiveProps(nextProps: StateProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: StateProps) {
     /** 2018-09-06: Should this be in componentDidUpdate? */
     const { userEmail: currentUserEmail } = this.props;
     const { userEmail } = nextProps;
@@ -220,11 +222,11 @@ export class UserMenu extends React.Component<CombinedProps, State> {
             onClose={this.handleClose}
             className={classes.menu}
           >
-            <MenuItem
+            {/* <MenuItem
               key="placeholder"
               aria-hidden
               className={classes.hidden}
-            />
+            /> */}
             {menuLinks.map(menuLink => this.renderMenuLink(menuLink))}
           </Menu>
         </Hidden>

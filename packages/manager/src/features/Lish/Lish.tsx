@@ -21,6 +21,7 @@ import {
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import NotFound from 'src/components/NotFound';
+import { convertForAria } from 'src/components/TabLink/TabLink';
 import Glish from './Glish';
 import Weblish from './Weblish';
 
@@ -196,6 +197,16 @@ class Lish extends React.Component<CombinedProps, State> {
     } = this.props;
     const { loading, linode, token } = this.state;
 
+    const tabA11yProps = (idName: string) => {
+      const ariaVal = convertForAria(idName);
+
+      return {
+        id: `tab-${ariaVal}`,
+        role: 'tab',
+        'aria-controls': `tabpanel-${ariaVal}`
+      };
+    };
+
     return (
       <React.Fragment>
         <Tabs
@@ -214,6 +225,7 @@ class Lish extends React.Component<CombinedProps, State> {
               key={tab.title}
               label={tab.title}
               data-qa-tab={tab.title}
+              {...tabA11yProps(tab.title)}
             />
           ))}
         </Tabs>

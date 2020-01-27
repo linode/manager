@@ -16,7 +16,11 @@ import { getParamFromUrl } from 'src/utilities/queryParams';
 import Panel from './Panel';
 import { AppsData } from './types';
 
-type ClassNames = 'flatImagePanelSelections' | 'panel' | 'loading';
+type ClassNames =
+  | 'flatImagePanelSelections'
+  | 'panel'
+  | 'loading'
+  | 'selectionCard';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -30,6 +34,20 @@ const styles = (theme: Theme) =>
     loading: {
       marginTop: theme.spacing(2),
       marginBottom: theme.spacing(2)
+    },
+    selectionCard: {
+      '& .cardBaseIcon': {
+        width: 40,
+        paddingRight: 0,
+        justifyContent: 'flex-start'
+      },
+      '& .cardBaseInfo': {
+        paddingLeft: 0,
+        '& svg': {
+          width: 28,
+          height: 28
+        }
+      }
     }
   });
 
@@ -131,6 +149,7 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
               disabled={disabled}
               id={eachApp.id}
               iconUrl={eachApp.logo_url || ''}
+              classes={classes}
             />
           ))}
         </Grid>
@@ -164,7 +183,9 @@ interface SelectionProps {
   checked: boolean;
 }
 
-class SelectionCardWrapper extends React.PureComponent<SelectionProps> {
+class SelectionCardWrapper extends React.PureComponent<
+  SelectionProps & WithStyles<ClassNames>
+> {
   handleSelectApp = (event: React.SyntheticEvent<HTMLElement, Event>) => {
     const { id, label, userDefinedFields, availableImages } = this.props;
 
@@ -183,7 +204,7 @@ class SelectionCardWrapper extends React.PureComponent<SelectionProps> {
   };
 
   render() {
-    const { iconUrl, id, checked, label, disabled } = this.props;
+    const { iconUrl, id, checked, label, disabled, classes } = this.props;
     /**
      * '' is the default value for a stackscript's logo_url;
      * display a fallback image in this case, to avoid broken image icons
@@ -206,6 +227,7 @@ class SelectionCardWrapper extends React.PureComponent<SelectionProps> {
         data-qa-selection-card
         disabled={disabled}
         variant="info"
+        className={classes.selectionCard}
       />
     );
   }
