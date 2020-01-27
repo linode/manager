@@ -118,13 +118,14 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     // notification: e => ``,
   },
   disk_imagize: {
-    // Currently, the event contains no information about the image,
-    // making it impossible to access the label for these messages.
-    scheduled: e => `Image scheduled for creation.`,
-    started: e => `Image being created.`,
-    failed: e => `Image creation failed.`,
-    finished: e => `Image has been created.`
-    // notification: e => ``,
+    scheduled: e =>
+      `Image ${e?.secondary_entity?.label + ' ' ?? ''}scheduled for creation.`,
+    started: e =>
+      `Image ${e?.secondary_entity?.label + ' ' ?? ''}being created.`,
+    failed: e =>
+      `Error creating Image ${e?.secondary_entity?.label + ' ' ?? ''}.`,
+    finished: e =>
+      `Image ${e?.secondary_entity?.label + ' ' ?? ''}has been created.`
   },
   disk_resize: {
     scheduled: e => `A disk on ${e.entity!.label} is scheduled for resizing.`,
@@ -165,14 +166,14 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
       `A domain record has been deleted from ${e.entity!.label}`
   },
   image_update: {
-    notification: e => `Image ${e.entity!.label} has been updated.`
+    notification: e => `Image ${e.entity?.label ?? ''} has been updated.`
   },
   image_delete: {
-    // scheduled: e => `Image ${e.entity!.label} scheduled for deletion.`,
-    // started: e => `Image ${e.entity!.label} is being deleted.`,
-    // failed: e => `There was a problem deleting ${e.entity!.label}.`,
-    // finished: e => `${e.entity!.label}`,
-    notification: e => `Image ${e.entity!.label} has been deleted.`
+    scheduled: e => `Image ${e.entity?.label ?? ''} scheduled for deletion.`,
+    started: e => `Image ${e.entity?.label ?? ''} is being deleted.`,
+    failed: e => `There was a problem deleting ${e.entity?.label ?? ''}.`,
+    finished: e => `Image ${e.entity?.label ?? ''} has been deleted.`,
+    notification: e => `Image ${e.entity?.label ?? ''} has been deleted.`
   },
   linode_addip: {
     notification: e => `An IP has been added to ${e.entity!.label}.`
