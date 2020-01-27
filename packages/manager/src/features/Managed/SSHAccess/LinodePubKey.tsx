@@ -147,7 +147,12 @@ const LinodePubKey: React.FC<{}> = props => {
             </Box>
             <Typography>
               You must{' '}
-              <a href={DOC_URL} target="_blank" rel="noopener noreferrer">
+              <a
+                href={DOC_URL}
+                target="_blank"
+                aria-describedby="external-site"
+                rel="noopener noreferrer"
+              >
                 install our public SSH key
               </a>{' '}
               on all managed Linodes so we can access them and diagnose issues.

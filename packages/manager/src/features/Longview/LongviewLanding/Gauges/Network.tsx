@@ -1,16 +1,19 @@
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-
+import { WithTheme, withTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
 import withClientStats, {
   Props as LVDataProps
 } from 'src/containers/longview.stats.container';
 import { LongviewNetwork } from '../../request.types';
+import {
+  convertNetworkToUnit,
+  generateNetworkUnits
+} from '../../shared/utilities';
 import { baseGaugeProps, BaseProps as Props } from './common';
 
-type CombinedProps = Props & LVDataProps;
+type CombinedProps = Props & LVDataProps & WithTheme;
 
 const NetworkGauge: React.FC<CombinedProps> = props => {
   const {
@@ -21,7 +24,7 @@ const NetworkGauge: React.FC<CombinedProps> = props => {
   } = props;
 
   const networkUsed = generateUsedNetworkAsBytes(
-    pathOr({}, ['Network', 'Interface'], longviewClientData)
+    longviewClientData?.Network?.Interface ?? {}
   );
 
   const generateCopy = (): {
@@ -50,7 +53,17 @@ const NetworkGauge: React.FC<CombinedProps> = props => {
       };
     }
 
-    const { value, unit } = generateUnits(networkUsed);
+    /**
+     * This logic is to match the values displayed
+     * in the gauges in Classic. They're rounded to the nearest
+     * unit, whereas elsewhere (in graphs) we use two digits.
+     *
+     * We also convert from bytes to bits to use our existing
+     * utilities to calculate units.
+     */
+    const networkUsedInBits = networkUsed * 8;
+    const unit = generateNetworkUnits(networkUsedInBits);
+    const value = Math.round(convertNetworkToUnit(networkUsedInBits, unit));
 
     return {
       innerText: `${value} ${unit}/s`,
@@ -80,7 +93,7 @@ const NetworkGauge: React.FC<CombinedProps> = props => {
       */
       max={howManyBytesInAGigabit}
       value={networkUsed}
-      filledInColor="#4FAD62"
+      filledInColor={props.theme.graphs.green}
       {...generateCopy()}
     />
   );
@@ -88,36 +101,9 @@ const NetworkGauge: React.FC<CombinedProps> = props => {
 
 export default compose<CombinedProps, Props>(
   React.memo,
-  withClientStats<Props>(ownProps => ownProps.clientID)
+  withClientStats<Props>(ownProps => ownProps.clientID),
+  withTheme
 )(NetworkGauge);
-
-interface Units {
-  value: number;
-  unit: 'Kb' | 'Mb';
-}
-
-/**
- * converts bytes to either Kb (Kilobits) or Mb (Megabits)
- * depending on if the Kilobit conversion exceeds 1000.
- *
- * @param networkUsed inbound and outbound traffic in bytes
- */
-export const generateUnits = (networkUsed: number): Units => {
-  /** Thanks to http://www.matisse.net/bitcalc/ */
-  const networkUsedToKilobits = (networkUsed * 8) / 1024;
-
-  if (networkUsedToKilobits <= 1000) {
-    return {
-      value: Math.round(networkUsedToKilobits),
-      unit: 'Kb'
-    };
-  } else {
-    return {
-      value: Math.round(networkUsedToKilobits / 1024),
-      unit: 'Mb'
-    };
-  }
-};
 
 /*
   What's returned from Network is a bit of an unknown, but assuming that
@@ -160,7 +146,7 @@ export const generateUsedNetworkAsBytes = (
            *
            * [{ x: 1234, y: 1234 }],
            */
-          secondAcc += pathOr(0, [0, 'y'], secondElement);
+          secondAcc += secondElement?.[0]?.y ?? 0;
           return secondAcc;
         },
         0

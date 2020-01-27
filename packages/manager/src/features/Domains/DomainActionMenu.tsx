@@ -55,26 +55,6 @@ export class DomainActionMenu extends React.Component<CombinedProps> {
         }
       },
       {
-        title: 'Check Zone',
-        tooltip:
-          "Currently we don't support this action but will in the future.",
-        disabled: true,
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          closeMenu();
-          e.preventDefault();
-        }
-      },
-      {
-        title: 'Zone File',
-        tooltip:
-          "Currently we don't support this action but will in the future.",
-        disabled: true,
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          closeMenu();
-          e.preventDefault();
-        }
-      },
-      {
         title: 'Clone',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           this.handleClone();
@@ -131,7 +111,12 @@ export class DomainActionMenu extends React.Component<CombinedProps> {
   };
 
   render() {
-    return <ActionMenu createActions={this.createActions()} />;
+    return (
+      <ActionMenu
+        createActions={this.createActions()}
+        ariaLabel={`Action menu for Domain ${this.props.domain}`}
+      />
+    );
   }
 }
 

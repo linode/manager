@@ -70,7 +70,7 @@ class OverflowIPs extends React.Component<Props & WithStyles<CSSClasses>> {
           }}
         >
           {ips.map(ip => (
-            <div key={ip}>
+            <div key={ip} role="listitem">
               <IPAddress ips={[ip]} />
             </div>
           ))}

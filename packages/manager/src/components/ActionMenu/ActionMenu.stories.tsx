@@ -43,7 +43,9 @@ class StoryActionMenu extends React.Component<CombinedProps> {
   };
 
   render() {
-    return <ActionMenu createActions={this.createActions()} />;
+    return (
+      <ActionMenu createActions={this.createActions()} ariaLabel="label" />
+    );
   }
 }
 
@@ -77,7 +79,9 @@ class StoryActionMenuWithTooltip extends React.Component<CombinedProps> {
   };
 
   render() {
-    return <ActionMenu createActions={this.createActions()} />;
+    return (
+      <ActionMenu createActions={this.createActions()} ariaLabel="label" />
+    );
   }
 }
 
@@ -93,7 +97,9 @@ class StoryActionMenuWithOneAction extends React.Component<CombinedProps> {
     ];
   };
   render() {
-    return <ActionMenu createActions={this.createActions()} />;
+    return (
+      <ActionMenu createActions={this.createActions()} ariaLabel="label" />
+    );
   }
 }
 

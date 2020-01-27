@@ -74,6 +74,7 @@ const ViewAllLink: React.StatelessComponent<CombinedProps> = props => {
           })}
           data-qa-view-all-link
           target="_blank"
+          aria-describedby="external-site"
           rel="noopener noreferrer"
         >
           {text}

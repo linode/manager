@@ -111,7 +111,13 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
     return (
       <React.Fragment>
         {linodes && linodes.length === 0 ? (
-          <Grid item className={`${classes.main} mlMain py0`}>
+          <Grid
+            item
+            className={`${classes.main} mlMain py0`}
+            id="tabpanel-clone-create"
+            role="tabpanel"
+            aria-labelledby="tab-clone-create"
+          >
             <Paper>
               <Placeholder
                 icon={VolumeIcon}
@@ -123,7 +129,13 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
           </Grid>
         ) : (
           <React.Fragment>
-            <Grid item className={`${classes.main} mlMain py0`}>
+            <Grid
+              item
+              className={`${classes.main} mlMain py0`}
+              id="tabpanel-clone-create"
+              role="tabpanel"
+              aria-labelledby="tab-clone-create"
+            >
               <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
               <SelectLinodePanel
                 error={hasErrorFor('linode_id')}

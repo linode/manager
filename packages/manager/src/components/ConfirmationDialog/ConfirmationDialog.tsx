@@ -3,13 +3,13 @@ import Dialog, { DialogProps } from 'src/components/core/Dialog';
 import DialogActions from 'src/components/core/DialogActions';
 import DialogContent from 'src/components/core/DialogContent';
 import DialogContentText from 'src/components/core/DialogContentText';
-import DialogTitle from 'src/components/core/DialogTitle';
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import DialogTitle from 'src/components/DialogTitle';
 
 type ClassNames = 'root' | 'error' | 'actions';
 
@@ -29,21 +29,26 @@ interface Props extends DialogProps {
   actions?: ((props: any) => JSX.Element) | JSX.Element;
   error?: string;
   onClose: () => void;
+  title: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ConfirmationDialog: React.StatelessComponent<CombinedProps> = props => {
+const ConfirmationDialog: React.FC<CombinedProps> = props => {
   const { title, classes, children, actions, error, ...dialogProps } = props;
+
   return (
-    <Dialog {...dialogProps} disableBackdropClick={true}>
+    <Dialog
+      {...dialogProps}
+      disableBackdropClick={true}
+      PaperProps={{ role: undefined }}
+      role="dialog"
+    >
       <DialogTitle
-        id="alert-dialog-title"
         data-qa-dialog-title={title}
         className="dialog-title"
-      >
-        {title}
-      </DialogTitle>
+        title={title}
+      />
       <DialogContent data-qa-dialog-content className="dialog-content">
         {children}
         {error && (

@@ -4,6 +4,156 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.83.0] - 2020-01-17
+
+### Added:
+- Longview:
+    - Apache
+    - MySQL
+    - Processes
+- “Show All” option on Domain Records
+- Ability to edit AXFR for slave Domains
+
+### Changed:
+- Hide Backups CTAs from restricted users
+- Update Longview graph colors
+- Support API requests for up to 200 entities at a time
+- Make One-Click apps visible to all users from primary navigation
+
+### Fixed:
+- Rounding in Longview line graphs
+- Add space to API Tokens HTML title
+- Allow rebooting from Rescue mode
+
+
+## [v0.82.0] - 2020-01-08
+
+### Added:
+- Source Linodes from Redux in Networking and Backups
+- Longview: empty and loading states for Disks tab
+- Longview: NGINX tab
+- Longview: Network tab
+- Show All option for Volumes, Domains, NodeBalancers
+- Sentry improvements
+- Ignore newrelic and chrome extension errors
+- Add security.txt at cloud.linode.com/.well-known/security.txt
+
+### Changed:
+- Copy for Prometheus and Grafana One-Click Apps
+- Show confirmation dialog when resizing a Linode
+- Update LV documentation to include info on warnings/errors
+- Add copy explaining prorated transfer
+- Move untagged items under tagged items for all entities
+- Allow primary nav to set multiple active links
+- Allow Charts.js native (canvas) legends for graphs
+- Filter processes by username or process name
+- Error feedback for failed snapshot backups
+- Support for Disks/Configs events
+- Add URL param to reset password button
+- Linode details accessibility adjustments
+
+### Fixed:
+- Layout overflow on Longview overview graph section
+- Missing error/loading states in AccessKey table & drawer
+- Older invoices causing an error when creating PDF
+- Weblish error (safe access properties)
+- Docs links for Longview installation instructions
+
+## [v0.81.1] - 2019-12-23
+
+### Change:
+- Update error reporting to reduce unnecessary reports
+
+## [v0.81.0] - 2019-12-19
+
+### Added:
+- Longview:
+  - Display non-error Notifications from Longview API on Longview Details page
+  - Empty and loading states for Overview graphs
+
+### Changed:
+- Use “Last Backup” data on /linode/instances endpoint to avoid multiple requests to /backups (improves performance)
+- Show deprecated label for distros in Images dropdown
+
+### Fixed:
+- Display invoice PDF total, tax, and amount values in $0.00 format
+- Reduce OCA tile spacing between icon and label
+
+## [v0.80.0] - 2019-12-16
+
+### Added:
+- Remove check zone from domain action menu
+- Move sidebar in Domains detail
+- Duration time to Events Landing and Activity Feed
+- Display billing notice when deleting last Object Storage Bucket
+- Longview:
+	- Landing page
+	- Overview page
+	- Installation page
+	- Enable client sorting on Landing page
+	- Packages drawer
+- New One-Click Apps:
+- Docker
+- Jenkins
+- Grafana
+- Prometheus
+- MySQL
+- LEMP Stack
+- Shadowsocks
+
+### Changed:
+- Remove ZXCVBN and improve password hints
+- Remove (disabled) Check Zone and Zone File actions from Domains
+- LKE added to PAT Scopes
+- Make search bar case-insensitive
+- Option to show all Linodes on Linode Landing
+- Remove same-domain SOA email restriction (client-side validation)
+- Update release docs
+- Styling adjustment to IconTextLink
+
+### Fixed:
+- Accessibility features overhaul
+- Update Object Storage icon color
+- Error formatting on editable input labels
+- Event badge hidden behind scrollbar
+- Linode status not updated after resizing is complete
+- State not responding to Longview events
+
+
+## [v0.79.0] - 2019-11-19
+
+### Added:
+- Longview: Static tables for listening services/active connections
+- Longview: Line Graph abstraction
+- Longview: Sort clients by values
+- Longview: Client count warning modal
+- Longview: Installation tab
+- Longview: Overview section scaffolding
+- Longview: Footer text for non-Pro users
+- Longview: Uptime, Packages, and Hostname data added to client rows
+- Longview: Display circle loader if client doesn’t exist or is still being loaded
+- Longview: Overview icon section with some static data
+- Ability to edit rDNS for IPv6 ranges and pools
+- Display of route target for IPv6 ranges
+- Abstraction of buttonLink
+- Ability to collapse main navigation on larger screen sizes
+
+### Changed:
+- Longview: Change landing view from table to cards
+- LKE Landing documentation link target
+- Loading state and clear errors on Linode Backups form submission
+- Longview documentation link target
+- Remove welcome banner
+- Updated logo asset
+- Updated header and footer styles
+
+### Fixed:
+- Linode list not being updated when creating Linodes externally
+- Type checking in getAPIErrorFor
+- Duplicate error display in account/settings
+- Empty volumes create button
+
+
 ## [v0.78.0] - 2019-11-12
 
 ### Added:

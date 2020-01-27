@@ -8,6 +8,7 @@ import {
 import { getVolumes, Volume } from 'linode-js-sdk/lib/volumes';
 import { range } from 'ramda';
 
+import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { sendFetchAllEvent } from 'src/utilities/ga';
 
 export interface APIResponsePage<T> {
@@ -40,8 +41,7 @@ export interface GetAllData<T> {
  * using the getter, then uses the response to determine the number of remaining pages.
  * Subsequent requests are then made and the results combined into a single array. This
  * procedure is necessary when retrieving all entities whenever the possible number of
- * entities is greater than 100 (the max number of results the API will return in a single
- * page).
+ * entities is greater than the max number of results the API will return in a single page).
  *
  * @param getter { Function } one of the Get functions from the API services library. Accepts
  * pagination or filter parameters.
@@ -51,12 +51,13 @@ export interface GetAllData<T> {
  *
  */
 export const getAll: <T>(
-  getter: GetFunction
-) => (params?: any, filter?: any) => Promise<GetAllData<T[]>> = getter => (
-  params?: any,
-  filter?: any
-) => {
-  const pagination = { ...params, page_size: 100 };
+  getter: GetFunction,
+  pageSize?: number
+) => (params?: any, filter?: any) => Promise<GetAllData<T[]>> = (
+  getter,
+  pageSize = API_MAX_PAGE_SIZE
+) => (params?: any, filter?: any) => {
+  const pagination = { ...params, page_size: pageSize };
   return getter(pagination, filter).then(
     ({ data: firstPageData, page, pages, results }) => {
       // If we only have one page, return it.
@@ -93,13 +94,13 @@ export const getAll: <T>(
 };
 
 export const getAllWithArguments: <T>(
-  getter: GetFunction
-) => (
-  args: any[],
-  params?: any,
-  filter?: any
-) => Promise<GetAllData<T[]>> = getter => (args = [], params, filter) => {
-  const pagination = { ...params, page_size: 100 };
+  getter: GetFunction,
+  pageSize?: number
+) => (args: any[], params?: any, filter?: any) => Promise<GetAllData<T[]>> = (
+  getter,
+  pageSize = API_MAX_PAGE_SIZE
+) => (args = [], params, filter) => {
+  const pagination = { ...params, page_size: pageSize };
 
   return getter(...args, pagination, filter).then(
     ({ data: firstPageData, page, pages, results }) => {

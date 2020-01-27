@@ -21,19 +21,17 @@ export const getMetrics = (data: number[][]): Metrics => {
   let sum = 0;
 
   // The data is large, so we get everything we need in one iteration
-  data.forEach(
-    ([_, value]: number[], idx): void => {
-      if (!value || isNaN(value)) {
-        return;
-      }
-
-      if (value > max) {
-        max = value;
-      }
-
-      sum += value;
+  data.forEach(([_, value]: number[], idx): void => {
+    if (!value || isNaN(value)) {
+      return;
     }
-  );
+
+    if (value > max) {
+      max = value;
+    }
+
+    sum += value;
+  });
 
   const length = data.length;
 
@@ -58,8 +56,7 @@ export const formatMagnitude = (value: number | string, unit: string) => {
     { divider: 1e9, suffix: 'G' },
     { divider: 1e6, suffix: 'M' },
     { divider: 1e3, suffix: 'k' },
-    { divider: 1, suffix: '' },
-    { divider: 1e-3, suffix: 'm' }
+    { divider: 1, suffix: '' }
   ];
 
   let finalNum;

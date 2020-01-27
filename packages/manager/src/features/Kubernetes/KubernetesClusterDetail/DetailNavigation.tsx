@@ -30,7 +30,10 @@ export const DetailNavigation: React.FC<ResizeProps> = props => {
 
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
-    { routeName: `${url}/details`, title: 'Details' },
+    {
+      routeName: `${url}/details`,
+      title: 'Details'
+    },
     { routeName: `${url}/resize`, title: 'Resize' }
   ];
 
@@ -45,7 +48,7 @@ export const DetailNavigation: React.FC<ResizeProps> = props => {
 
   return (
     <>
-      <AppBar position="static" color="default">
+      <AppBar position="static" color="default" role="tablist">
         <Tabs
           value={tabs.findIndex(tab => matches(tab.routeName)) || 0}
           onChange={handleTabChange}

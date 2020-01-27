@@ -47,9 +47,7 @@ type CombinedProps = Props;
 const InstallationInstructions: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const command = `curl -s https://lv.linode.com/${
-    props.installationKey
-  } | sudo bash`;
+  const command = `curl -s https://lv.linode.com/${props.installationKey} | sudo bash`;
 
   return (
     <Grid container>
@@ -78,20 +76,21 @@ const InstallationInstructions: React.FC<CombinedProps> = props => {
           </Grid>
         </Grid>
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <Typography>
           This should work for most installations, but if you have issues,
           please consult our troubleshooting guide and manual installation
           instructions (API key required):
         </Typography>
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <Grid container>
           <Grid item className={classes.instruction}>
             <Typography>
               <a
-                href="https://www.linode.com/docs/platform/longview/longview/"
+                href="https://www.linode.com/docs/platform/longview/what-is-longview/#troubleshooting"
                 target="_blank"
+                aria-describedby="external-site"
                 rel="noopener noreferrer"
               >
                 Troubleshooting guide
@@ -101,8 +100,9 @@ const InstallationInstructions: React.FC<CombinedProps> = props => {
           <Grid item className={classes.instruction}>
             <Typography>
               <a
-                href="https://www.linode.com/docs/platform/longview/longview/#install-the-longview-client"
+                href="https://www.linode.com/docs/platform/longview/what-is-longview/#install-the-longview-agent"
                 target="_blank"
+                aria-describedby="external-site"
                 rel="noopener noreferrer"
               >
                 Manual installation instructions
@@ -110,7 +110,7 @@ const InstallationInstructions: React.FC<CombinedProps> = props => {
             </Typography>
           </Grid>
           <Grid item className={classes.instruction}>
-            <Typography>
+            <Typography data-testid="api-key">
               API Key: <span className={classes.apiKey}>{props.APIKey}</span>
             </Typography>
           </Grid>

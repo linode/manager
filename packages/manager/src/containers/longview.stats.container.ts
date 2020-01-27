@@ -1,20 +1,25 @@
-import { APIError } from 'linode-js-sdk/lib/types';
 import { path, pathOr } from 'ramda';
 import { connect } from 'react-redux';
+import {
+  LongviewNotification,
+  LongviewResponse
+} from 'src/features/Longview/request.types';
 import { ApplicationState } from 'src/store';
-import { ReturnType } from 'src/store/longviewStats/longviewStats.actions';
 import { getClientStats } from 'src/store/longviewStats/longviewStats.requests';
 import { ThunkDispatch } from 'src/store/types';
 
 export interface LVClientData {
-  longviewClientData: ReturnType;
+  longviewClientData: LongviewResponse['DATA'];
   longviewClientDataLoading: boolean;
-  longviewClientDataError?: APIError[];
+  longviewClientDataError?: LongviewNotification[];
   longviewClientLastUpdated?: number;
 }
 
 export interface DispatchProps {
-  getClientStats: (api_key: string) => Promise<ReturnType>;
+  getClientStats: (
+    api_key: string,
+    lastUpdated?: number
+  ) => Promise<LongviewResponse['DATA']>;
 }
 
 export type Props = DispatchProps & LVClientData;
@@ -64,9 +69,13 @@ const connected = <OwnProps extends {}>(
       };
     },
     (dispatch: ThunkDispatch, ownProps: OwnProps) => ({
-      getClientStats: api_key =>
+      getClientStats: (api_key, lastUpdated) =>
         dispatch(
-          getClientStats({ clientID: supplyClientID(ownProps), api_key })
+          getClientStats({
+            clientID: supplyClientID(ownProps),
+            api_key,
+            lastUpdated
+          })
         )
     })
   );

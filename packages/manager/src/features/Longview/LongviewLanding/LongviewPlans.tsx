@@ -21,8 +21,7 @@ import TableRow from 'src/components/TableRow';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import accountSettingsContainer, {
-  DispatchProps,
-  SettingsProps
+  Props as AccountSettingsProps
 } from 'src/containers/accountSettings.container';
 import {
   hasGrant,
@@ -94,19 +93,29 @@ const useStyles = makeStyles((theme: Theme) => {
       marginLeft: theme.spacing(2)
     },
     planCell: {
-      width: '40%'
+      [theme.breakpoints.up('md')]: {
+        width: '40%'
+      }
     },
     clientCell: {
-      width: '10%'
+      [theme.breakpoints.up('md')]: {
+        width: '10%'
+      }
     },
     dataRetentionCell: {
-      width: '15%'
+      [theme.breakpoints.up('md')]: {
+        width: '15%'
+      }
     },
     dataResolutionCell: {
-      width: '15%'
+      [theme.breakpoints.up('md')]: {
+        width: '15%'
+      }
     },
     priceCell: {
-      width: '15%'
+      [theme.breakpoints.up('md')]: {
+        width: '15%'
+      }
     },
     submitButton: {
       alignSelf: 'flex-start',
@@ -129,10 +138,7 @@ interface Props {
   subscriptionRequestHook: UseAPIRequest<LongviewSubscription[]>;
 }
 
-export type CombinedProps = Props &
-  SettingsProps &
-  DispatchProps &
-  ReduxStateProps;
+export type CombinedProps = Props & AccountSettingsProps & ReduxStateProps;
 
 export const managedText = (
   <span>
@@ -225,6 +231,9 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
           [styles.root]: true,
           [styles.collapsedTable]: isManaged
         })}
+        id="tabpanel-planDetails"
+        role="tabpanel"
+        aria-labelledby="tab-planDetails"
       >
         {updateErrorMsg && <Notice error text={updateErrorMsg} />}
         {!mayUserModifyLVSubscription && !isManaged && (
@@ -434,7 +443,11 @@ export const LongviewSubscriptionRow: React.FC<
           />
           {plan}
           {currentSubscriptionOnAccount === id && (
-            <Chip label="Current Plan" className={styles.chip} />
+            <Chip
+              data-testid="current-plan"
+              label="Current Plan"
+              className={styles.chip}
+            />
           )}
         </div>
       </TableCell>

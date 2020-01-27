@@ -180,7 +180,8 @@ type CombinedProps = ContextProps & WithStyles<ClassNames> & DispatchProps;
 // Save some typing below
 export const uniqByIP = uniqBy((thisIP: IPAddress) => thisIP.address);
 
-const getAllIPs = getAll<IPAddress>(getIPs);
+// The API returns an error if more than 100 IPs are requested.
+const getAllIPs = getAll<IPAddress>(getIPs, 100);
 
 class LinodeNetworking extends React.Component<CombinedProps, State> {
   state: State = {
@@ -312,7 +313,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         <TableCell parentColumn="Address">
           <React.Fragment>
             {range.range}
-            <span style={{ margin: '0 5px 0 5px' }}>/</span>
+            <span style={{ margin: '0 5px' }}>/</span>
             {range.prefix}
           </React.Fragment>
           {range.route_target && <span> routed to {range.route_target}</span>}
@@ -532,7 +533,11 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         : [];
 
     return (
-      <React.Fragment>
+      <div
+        id="tabpanel-networking"
+        role="tabpanel"
+        aria-labelledby="tab-networking"
+      >
         <DocumentTitleSegment segment={`${linodeLabel} - Networking`} />
         {readOnly && <LinodePermissionsError />}
         <LinodeNetworkingSummaryPanel
@@ -610,7 +615,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             ipRemoveSuccess={this.handleRemoveIPSuccess}
           />
         )}
-      </React.Fragment>
+      </div>
     );
   }
 
@@ -860,10 +865,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   upsertLinode: linode => dispatch(_upsertLinode(linode))
 });
 
-const connected = connect(
-  undefined,
-  mapDispatchToProps
-);
+const connected = connect(undefined, mapDispatchToProps);
 
 const enhanced = recompose<CombinedProps, {}>(connected, linodeContext, styled);
 

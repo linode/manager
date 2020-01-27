@@ -73,9 +73,9 @@ const SortableTableHead: React.StatelessComponent<combinedProps> = props => {
         </TableSortCell>
         <TableSortCell
           noWrap
-          label="mostRecentBackup"
+          label="backups:last_successful"
           direction={order}
-          active={isActive('mostRecentBackup')}
+          active={isActive('backups:last_successful')}
           handleClick={handleOrderChange}
         >
           Last Backup

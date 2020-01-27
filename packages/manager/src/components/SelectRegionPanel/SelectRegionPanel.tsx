@@ -66,6 +66,7 @@ const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = props => {
             {` `}
             <a
               target="_blank"
+              aria-describedby="external-site"
               rel="noopener noreferrer"
               href="https://www.linode.com/speedtest"
             >
@@ -81,6 +82,7 @@ const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = props => {
           handleSelection={handleSelection}
           regions={regions}
           selectedID={selectedID || null}
+          label="Select a Region"
         />
       </Paper>
     </>

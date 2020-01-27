@@ -30,7 +30,7 @@ import {
   isInProgressEvent
 } from 'src/store/events/event.helpers';
 import { addNotificationsToLinodes } from 'src/store/linodes/linodes.helpers';
-import { LinodeWithMaintenanceAndMostRecentBackup } from 'src/store/linodes/types';
+import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
 import { formatNotifications } from 'src/utilities/formatNotifications';
 import DashboardCard from '../DashboardCard';
 
@@ -172,7 +172,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps> {
             status={linode.status}
             displayStatus={linode.displayStatus || ''}
             tags={linode.tags}
-            mostRecentBackup={linode.mostRecentBackup || null}
+            mostRecentBackup={linode.backups.last_successful}
             disk={linode.specs.disk}
             vcpus={linode.specs.vcpus}
             memory={linode.specs.memory}
@@ -205,7 +205,7 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
 
 type ExtendedLinode = {
   recentEvent: Event;
-} & LinodeWithMaintenanceAndMostRecentBackup;
+} & LinodeWithMaintenanceAndDisplayStatus;
 
 interface WithUpdatingLinodesProps {
   linodes: ExtendedLinode[];

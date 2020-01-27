@@ -124,6 +124,11 @@ class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
                   />
                 }
                 label={currentStatus ? 'Enabled' : 'Disabled'}
+                aria-label={
+                  currentStatus
+                    ? 'Shutdown Watchdog is enabled'
+                    : 'Shutdown Watchdog is disabled'
+                }
                 disabled={submitting || disabled}
               />
             </Grid>
