@@ -96,7 +96,13 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
      */
     if (this.props.isAuthenticated) {
       this.setState({ showChildren: true });
+      if(window.location.pathname.includes("/lish/")){
+        console.log("Lish, skipping loading all this")
+        return;
+      }
+  
       this.makeInitialRequests();
+
       startEventsInterval();
     }
   }
