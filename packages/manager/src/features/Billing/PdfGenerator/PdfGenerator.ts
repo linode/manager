@@ -153,29 +153,19 @@ export const printInvoice = (
 
     const flags = useFlags();
 
-    const dateConversion = (str: string) => {
-      return Date.parse(str);
-    };
+    const dateConversion = (str: string) => Date.parse(str);
 
     const convertedInvoiceDate = invoice.date && dateConversion(invoice.date);
 
-    const GSTAddDate = flags.vatBanner && dateConversion(flags.vatBanner.date);
+    const GSTAddDate = flags.vatBanner
+      ? dateConversion(flags.vatBanner.date)
+      : 0;
 
     // Added June 1, 2019
     const VATAddDate = 1559347200000;
 
-    const determineTaxDisplay = () => {
-      if (
-        VATAddDate > convertedInvoiceDate ||
-        (GSTAddDate && GSTAddDate > convertedInvoiceDate)
-      ) {
-        return '';
-      } else {
-        return `Tax ID: ${account.tax_id}`;
-      }
-    };
-
-    const taxDisplay = determineTaxDisplay();
+    const determineTaxDisplay =
+      convertedInvoiceDate > VATAddDate || convertedInvoiceDate > GSTAddDate;
 
     // Create a separate page for each set of invoice items
     itemsChunks.forEach((itemsChunk, index) => {
@@ -191,22 +181,23 @@ export const printInvoice = (
       );
       addRightHeader(doc, account);
 
-      /** only show tax ID if there is one provided */
-      const strings = account.tax_id
-        ? [
-            {
-              text: `Invoice: #${invoiceId}`
-            },
-            {
-              /*
+      /** only show tax ID if there is one provided and determineTaxDisplay === true */
+      const strings =
+        account.tax_id && determineTaxDisplay
+          ? [
+              {
+                text: `Invoice: #${invoiceId}`
+              },
+              {
+                /*
           300px left margin is a hacky way of aligning the text to the right
           because this library stinks
          */
-              text: taxDisplay,
-              leftMargin: 300
-            }
-          ]
-        : [{ text: `Invoice: #${invoiceId}` }];
+                text: `Tax ID: ${account.tax_id}`,
+                leftMargin: 300
+              }
+            ]
+          : [{ text: `Invoice: #${invoiceId}` }];
 
       addTitle(doc, ...strings);
 
