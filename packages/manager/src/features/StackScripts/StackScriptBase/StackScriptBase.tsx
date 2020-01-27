@@ -2,6 +2,7 @@ import { Grant } from 'linode-js-sdk/lib/account';
 import { Image } from 'linode-js-sdk/lib/images';
 import { StackScript } from 'linode-js-sdk/lib/stackscripts';
 import { APIError, ResourcePage } from 'linode-js-sdk/lib/types';
+import { stringify } from 'qs';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -24,6 +25,7 @@ import {
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendStackscriptsSearchEvent } from 'src/utilities/ga';
+import { getDisplayName } from 'src/utilities/getDisplayName';
 import { handleUnauthorizedErrors } from 'src/utilities/handleUnauthorizedErrors';
 import { getQueryParam } from 'src/utilities/queryParams';
 import StackScriptTableHead from '../Partials/StackScriptTableHead';
@@ -33,8 +35,6 @@ import {
   generateSpecificFilter
 } from '../stackScriptUtils';
 import withStyles, { StyleProps } from './StackScriptBase.styles';
-
-import { getDisplayName } from 'src/utilities/getDisplayName';
 
 type CurrentFilter = 'label' | 'deploys' | 'revision';
 
@@ -87,10 +87,19 @@ interface HelperFunctions {
 
 export type StateProps = HelperFunctions & State;
 
+interface WithStackScriptBaseOptions {
+  isSelecting: boolean;
+  // Whether or not `type=` and `query=` QS params should be respected and
+  // written to on user input.
+  useQueryString?: boolean;
+}
+
 /* tslint:disable-next-line */
-const withStackScriptBase = (isSelecting: boolean) => (
+const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
   Component: React.ComponentType<StateProps>
 ) => {
+  const { isSelecting, useQueryString } = options;
+
   class EnhancedComponent extends React.Component<CombinedProps, State> {
     static displayName = `WithStackScriptBase(${getDisplayName(Component)})`;
 
@@ -305,10 +314,21 @@ const withStackScriptBase = (isSelecting: boolean) => (
 
     handleSearch = (value: string) => {
       const { currentFilter } = this.state;
-      const { category, currentUser, request, stackScriptGrants } = this.props;
+      const {
+        category,
+        currentUser,
+        request,
+        stackScriptGrants,
+        history
+      } = this.props;
       const filteredUser = category === 'linode' ? 'linode' : currentUser;
 
       const lowerCaseValue = value.toLowerCase().trim();
+
+      // Update the Query String as the user types.
+      if (useQueryString) {
+        updateQueryString(category, lowerCaseValue, history);
+      }
 
       let filter: any;
 
@@ -443,7 +463,10 @@ const withStackScriptBase = (isSelecting: boolean) => (
         );
       }
 
-      const query = getQueryParam(this.props.location.search, 'query');
+      // Use the query string if the argument has been specified.
+      const query = useQueryString
+        ? getQueryParam(this.props.location.search, 'query')
+        : undefined;
 
       return (
         <React.Fragment>
@@ -623,3 +646,18 @@ const withStackScriptBase = (isSelecting: boolean) => (
 };
 
 export default withStackScriptBase;
+
+// Update the query string with a `type=` and `query=`.
+const updateQueryString = (
+  type: string,
+  query: string,
+  history: RouteComponentProps<{}>['history']
+) => {
+  const queryString = stringify({ type, query });
+
+  // Use `replace` instead of `push` so that each keystroke is not a separate
+  // browser history item.
+  history.replace({
+    search: queryString
+  });
+};

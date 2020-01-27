@@ -154,14 +154,25 @@ class Example extends React.Component<{}, State> {
         />
         <Select
           label="Multi Select"
+          textFieldProps={{
+            dataAttrs: {
+              'data-qa-moFruit-select': true
+            }
+          }}
           isMulti={true}
           value={valueMulti}
           placeholder="Choose some fruit"
           onChange={this.handleChangeMulti}
           options={fruit}
+          data-qa-test
         />
         <Select
           label="Creatable Select"
+          textFieldProps={{
+            dataAttrs: {
+              'data-qa-creatable-select': true
+            }
+          }}
           variant="creatable"
           isMulti={true}
           value={valueCreatable}
@@ -172,6 +183,11 @@ class Example extends React.Component<{}, State> {
         />
         <Select
           loadOptions={this.loadOptions}
+          textFieldProps={{
+            dataAttrs: {
+              'data-qa-small-select': true
+            }
+          }}
           label="Small Select"
           value={valueAsync}
           onChange={this.handleChangeAsync}

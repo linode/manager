@@ -27,7 +27,7 @@ export interface DomainActionsProps {
 export type Props = StateProps & DomainActionsProps;
 
 export default <InnerStateProps extends {}, TOuter extends {}>(
-  mapDomainsToProps: (
+  mapDomainsToProps?: (
     ownProps: TOuter,
     domainsLoading: boolean,
     domainsError: EntityError,
@@ -36,12 +36,20 @@ export default <InnerStateProps extends {}, TOuter extends {}>(
 ) =>
   connect(
     (state: ApplicationState, ownProps: TOuter) => {
-      return mapDomainsToProps(
-        ownProps,
-        state.__resources.domains.loading,
-        state.__resources.domains.error,
-        state.__resources.domains.data
-      );
+      if (mapDomainsToProps) {
+        return mapDomainsToProps(
+          ownProps,
+          state.__resources.domains.loading,
+          state.__resources.domains.error,
+          state.__resources.domains.data
+        );
+      }
+
+      return {
+        domainsLoading: state.__resources.domains.loading,
+        domainsError: state.__resources.domains.error,
+        domainsData: state.__resources.domains.data
+      };
     },
     (dispatch: ThunkDispatch) => ({
       createDomain: (payload: CreateDomainPayload) =>
