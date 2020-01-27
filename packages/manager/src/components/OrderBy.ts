@@ -2,6 +2,8 @@ import * as moment from 'moment';
 import { pathOr, sort, splitAt } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
+import { debounce } from 'throttle-debounce';
+
 import { Order } from 'src/components/Pagey';
 import withPreferences, {
   Props as PreferencesProps
@@ -114,13 +116,8 @@ export class OrderBy extends React.Component<CombinedProps, State> {
     this.props.order ?? 'asc'
   );
 
-  handleOrderChange = (orderBy: string, order: Order) => {
+  _updateUserPreferences = (orderBy: string, order: Order) => {
     /**
-     * All that we really have to do here is save the updated
-     * values to state. However, if a consumer asks us, we
-     * can also store the selection in user preferences, so that
-     * it will be preserved for later visits.
-     *
      * If the preferenceKey is provided, we will store the passed
      * order props in user preferences. They will be read the next
      * time this component is loaded.
@@ -144,7 +141,13 @@ export class OrderBy extends React.Component<CombinedProps, State> {
         // It doesn't matter if this fails, the value simply won't be preserved.
         .catch(_ => null);
     }
+  };
+
+  updateUserPreferences = debounce(2000, false, this._updateUserPreferences);
+
+  handleOrderChange = (orderBy: string, order: Order) => {
     this.setState({ orderBy, order });
+    this.updateUserPreferences(orderBy, order);
   };
 
   render() {
