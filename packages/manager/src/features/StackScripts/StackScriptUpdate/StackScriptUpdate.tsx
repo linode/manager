@@ -214,7 +214,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
           return;
         }
         this.setState({ isSubmitting: false });
-        history.push('/stackscripts', {
+        history.push('/stackscripts?type=account', {
           successMessage: `${updatedStackScript.label} successfully updated`
         });
       })

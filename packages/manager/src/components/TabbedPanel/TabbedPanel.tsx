@@ -57,6 +57,7 @@ interface Props {
   bodyClass?: string;
   noPadding?: boolean;
   handleTabChange?: (value?: number) => void;
+  value?: number;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -84,7 +85,11 @@ class TabbedPanel extends React.Component<CombinedProps> {
       noPadding,
       ...rest
     } = this.props;
-    const { value } = this.state;
+
+    // Allow the consumer to pass in a custom tab value. Otherwise, read it from
+    // component state.
+    const value = this.props.value ?? this.state.value;
+
     // if this bombs the app shouldn't crash
     const render = safeGetTabRender(tabs, value);
 

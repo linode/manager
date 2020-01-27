@@ -61,3 +61,5 @@ export interface Secret {
   secret: string;
   expiry: Date;
 }
+
+export type UserPreferences = Record<string, any>;
