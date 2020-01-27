@@ -1,7 +1,12 @@
 import * as moment from 'moment';
 import { pathOr, sort, splitAt } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import { Order } from 'src/components/Pagey';
+import withPreferences, {
+  Props as PreferencesProps
+} from 'src/containers/preferences.container';
+import { UserPreferences } from 'src/store/preferences/preferences.actions';
 import { isArray } from 'util';
 
 import {
@@ -26,7 +31,24 @@ interface Props {
   children: (p: OrderByProps) => React.ReactNode;
   order?: Order;
   orderBy?: string;
+  preferenceKey?: string; // If provided, will store/read values from user preferences
 }
+
+type CombinedProps = Props & PreferencesProps;
+
+export const getInitialValuesFromUserPreferences = (
+  preferenceKey: string,
+  preferences: UserPreferences,
+  defaultOrderBy: string,
+  defaultOrder: Order
+) => {
+  return (
+    preferences?.sortKeys?.[preferenceKey] ?? {
+      orderBy: defaultOrderBy,
+      order: defaultOrder
+    }
+  );
+};
 
 export const sortData = (orderBy: string, order: Order) =>
   sort((a, b) => {
@@ -55,7 +77,7 @@ export const sortData = (orderBy: string, order: Order) =>
     /**
      * @todo document this in a README
      *
-     * this allows us to pass a value such as 'maintenance:when' to the handleOrderChagne
+     * this allows us to pass a value such as 'maintenance:when' to the handleOrderChange
      * callback and it will turn it into a pathOr-friendly format
      *
      * so "maintenance:when" turns into ['maintenance', 'when']
@@ -84,19 +106,52 @@ export const sortData = (orderBy: string, order: Order) =>
     return sortByNumber(aValue, bValue, order);
   });
 
-export default class OrderBy extends React.Component<Props, State> {
-  state: State = {
-    order: this.props.order || 'asc',
-    orderBy: this.props.orderBy || 'label'
+export class OrderBy extends React.Component<CombinedProps, State> {
+  state: State = getInitialValuesFromUserPreferences(
+    this.props.preferenceKey ?? '',
+    this.props.preferences,
+    this.props.orderBy ?? 'label',
+    this.props.order ?? 'asc'
+  );
+
+  handleOrderChange = (orderBy: string, order: Order) => {
+    /**
+     * All that we really have to do here is save the updated
+     * values to state. However, if a consumer asks us, we
+     * can also store the selection in user preferences, so that
+     * it will be preserved for later visits.
+     *
+     * If the preferenceKey is provided, we will store the passed
+     * order props in user preferences. They will be read the next
+     * time this component is loaded.
+     */
+    const {
+      getUserPreferences,
+      preferenceKey,
+      updateUserPreferences
+    } = this.props;
+    if (preferenceKey) {
+      getUserPreferences()
+        .then(preferences => {
+          updateUserPreferences({
+            ...preferences,
+            sortKeys: {
+              ...preferences.sortKeys,
+              [preferenceKey]: { order, orderBy }
+            }
+          });
+        })
+        // It doesn't matter if this fails, the value simply won't be preserved.
+        .catch(_ => null);
+    }
+    this.setState({ orderBy, order });
   };
 
-  handleOrderChange = (orderBy: string, order: Order) =>
-    this.setState({ orderBy, order });
-
   render() {
-    const sortedData = sortData(this.state.orderBy, this.state.order)(
-      this.props.data
-    );
+    const sortedData = sortData(
+      this.state.orderBy,
+      this.state.order
+    )(this.props.data);
 
     const props = {
       ...this.props,
@@ -109,6 +164,10 @@ export default class OrderBy extends React.Component<Props, State> {
     return this.props.children(props);
   }
 }
+
+const enhanced = compose<CombinedProps, Props>(withPreferences());
+
+export default enhanced(OrderBy);
 
 const isValidDate = (date: any) => {
   return moment(date, moment.ISO_8601, true).isValid();
