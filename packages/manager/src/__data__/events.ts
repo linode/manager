@@ -19,7 +19,8 @@ export const events: Event[] = [
       type: 'linode',
       url: '/v4/linode/instances/11241778'
     },
-    status: 'finished'
+    status: 'finished',
+    duration: 0
   },
   {
     id: 18029767,
@@ -38,7 +39,8 @@ export const events: Event[] = [
       type: 'linode',
       url: '/v4/linode/instances/11241778'
     },
-    status: 'finished'
+    status: 'finished',
+    duration: 0
   },
   {
     id: 18029572,
@@ -57,7 +59,8 @@ export const events: Event[] = [
       type: 'linode',
       url: '/v4/linode/instances/11241778'
     },
-    status: 'finished'
+    status: 'finished',
+    duration: 0
   },
   {
     id: 18022171,
@@ -76,7 +79,8 @@ export const events: Event[] = [
       type: 'linode',
       url: '/v4/linode/instances/11642886'
     },
-    status: 'finished'
+    status: 'finished',
+    duration: 0
   },
   {
     id: 18022021,
@@ -95,7 +99,8 @@ export const events: Event[] = [
       type: 'linode',
       url: '/v4/linode/instances/11642886'
     },
-    status: 'finished'
+    status: 'finished',
+    duration: 0
   },
   {
     id: 18021942,
@@ -114,7 +119,8 @@ export const events: Event[] = [
       type: 'linode',
       url: '/v4/linode/instances/11241778'
     },
-    status: 'finished'
+    status: 'finished',
+    duration: 0
   },
   {
     id: 17957943,
@@ -133,7 +139,8 @@ export const events: Event[] = [
       type: 'linode',
       url: '/v4/linode/instances/11440645'
     },
-    status: 'finished'
+    status: 'finished',
+    duration: 0
   },
   {
     id: 17957944,
@@ -152,7 +159,8 @@ export const events: Event[] = [
       type: 'linode',
       url: '/v4/linode/instances/11440645'
     },
-    status: 'finished'
+    status: 'finished',
+    duration: 0
   },
   {
     id: 17957718,
@@ -171,7 +179,8 @@ export const events: Event[] = [
       type: 'linode',
       url: '/v4/linode/instances/11440645'
     },
-    status: 'finished'
+    status: 'finished',
+    duration: 0
   },
   {
     id: 17957108,
@@ -190,7 +199,8 @@ export const events: Event[] = [
       type: 'linode',
       url: '/v4/linode/instances/11440645'
     },
-    status: 'finished'
+    status: 'finished',
+    duration: 0
   },
   {
     id: 17956743,
@@ -209,7 +219,8 @@ export const events: Event[] = [
       type: 'linode',
       url: '/v4/linode/instances/11440645'
     },
-    status: 'finished'
+    status: 'finished',
+    duration: 0
   },
   {
     id: 17956360,
@@ -228,7 +239,8 @@ export const events: Event[] = [
       type: 'linode',
       url: '/v4/linode/instances/11440645'
     },
-    status: 'finished'
+    status: 'finished',
+    duration: 0
   },
   {
     id: 17955994,
@@ -247,7 +259,8 @@ export const events: Event[] = [
       type: 'linode',
       url: '/v4/linode/instances/11440645'
     },
-    status: 'finished'
+    status: 'finished',
+    duration: 0
   },
   {
     id: 17955841,
@@ -266,7 +279,8 @@ export const events: Event[] = [
       type: 'linode',
       url: '/v4/linode/instances/11440645'
     },
-    status: 'finished'
+    status: 'finished',
+    duration: 0
   },
   {
     id: 17955781,
@@ -285,7 +299,8 @@ export const events: Event[] = [
       type: 'linode',
       url: '/v4/linode/instances/11440645'
     },
-    status: 'finished'
+    status: 'finished',
+    duration: 0
   },
   {
     id: 17955694,
@@ -304,7 +319,8 @@ export const events: Event[] = [
       type: 'linode',
       url: '/v4/linode/instances/11440645'
     },
-    status: 'finished'
+    status: 'finished',
+    duration: 0
   },
   {
     id: 17955636,
@@ -323,7 +339,8 @@ export const events: Event[] = [
       type: 'linode',
       url: '/v4/linode/instances/11440645'
     },
-    status: 'finished'
+    status: 'finished',
+    duration: 0
   },
   {
     id: 17955613,
@@ -342,7 +359,8 @@ export const events: Event[] = [
       type: 'linode',
       url: '/v4/linode/instances/11440645'
     },
-    status: 'finished'
+    status: 'finished',
+    duration: 0
   },
   {
     id: 17955464,
@@ -361,7 +379,8 @@ export const events: Event[] = [
       type: 'linode',
       url: '/v4/linode/instances/11440645'
     },
-    status: 'finished'
+    status: 'finished',
+    duration: 0
   },
   {
     id: 17954738,
@@ -380,7 +399,8 @@ export const events: Event[] = [
       type: 'linode',
       url: '/v4/linode/instances/11440645'
     },
-    status: 'finished'
+    status: 'finished',
+    duration: 0
   },
   {
     id: 17951319,
@@ -399,7 +419,8 @@ export const events: Event[] = [
       type: 'linode',
       url: '/v4/linode/instances/11440645'
     },
-    status: 'finished'
+    status: 'finished',
+    duration: 0
   },
   {
     id: 17951106,
@@ -418,7 +439,8 @@ export const events: Event[] = [
       type: 'linode',
       url: '/v4/linode/instances/11440645'
     },
-    status: 'finished'
+    status: 'finished',
+    duration: 0
   },
   {
     id: 17950945,
@@ -437,7 +459,8 @@ export const events: Event[] = [
       type: 'linode',
       url: '/v4/linode/instances/11440645'
     },
-    status: 'finished'
+    status: 'finished',
+    duration: 0
   },
   {
     id: 17950407,
@@ -456,7 +479,8 @@ export const events: Event[] = [
       type: 'linode',
       url: '/v4/linode/instances/11440645'
     },
-    status: 'finished'
+    status: 'finished',
+    duration: 0
   },
   {
     id: 17950183,
@@ -475,7 +499,8 @@ export const events: Event[] = [
       type: 'linode',
       url: '/v4/linode/instances/11440645'
     },
-    status: 'finished'
+    status: 'finished',
+    duration: 0
   }
 ];
 
@@ -497,7 +522,8 @@ export const uniqueEvents: Event[] = [
       type: 'linode',
       url: '/v4/linode/instances/11440645'
     },
-    status: 'finished'
+    status: 'finished',
+    duration: 0
   },
   {
     id: 17950407,
@@ -516,7 +542,8 @@ export const uniqueEvents: Event[] = [
       type: 'linode',
       url: '/v4/linode/instances/11440645'
     },
-    status: 'finished'
+    status: 'finished',
+    duration: 0
   }
 ];
 
@@ -538,5 +565,6 @@ export const reduxEvent: ExtendedEvent = {
     type: 'linode',
     url: '/v4/linode/instances/11440645'
   },
-  status: 'finished'
+  status: 'finished',
+  duration: 0
 };

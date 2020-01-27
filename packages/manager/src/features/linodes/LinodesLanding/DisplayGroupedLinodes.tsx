@@ -14,13 +14,13 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { OrderByProps } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
-import PaginationFooter from 'src/components/PaginationFooter';
+import PaginationFooter, {
+  MIN_PAGE_SIZE
+} from 'src/components/PaginationFooter';
+import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 import TableWrapper from './TableWrapper';
-
-import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-
-const DEFAULT_PAGE_SIZE = 25;
 
 type ClassNames =
   | 'root'
@@ -81,9 +81,7 @@ interface Props {
 
 type CombinedProps = Props & OrderByProps & WithStyles<ClassNames>;
 
-const DisplayGroupedLinodes: React.StatelessComponent<
-  CombinedProps
-> = props => {
+const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = props => {
   const {
     data,
     display,
@@ -95,10 +93,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<
     ...rest
   } = props;
 
-  const orderedGroupedLinodes = compose(
-    sortGroups,
-    groupByTags
-  )(data);
+  const orderedGroupedLinodes = compose(sortGroups, groupByTags)(data);
   const tableWrapperProps = {
     handleOrderChange,
     order,
@@ -106,6 +101,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<
     someLinodesHaveMaintenance: props.someLinodesHaveMaintenance
   };
 
+  const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
   if (display === 'grid') {
     return (
       <>
@@ -129,7 +125,11 @@ const DisplayGroupedLinodes: React.StatelessComponent<
                   </div>
                 </Grid>
               </Grid>
-              <Paginate data={linodes} pageSize={DEFAULT_PAGE_SIZE}>
+              <Paginate
+                data={linodes}
+                pageSize={infinitePageSize}
+                pageSizeSetter={setInfinitePageSize}
+              >
                 {({
                   data: paginatedData,
                   handlePageChange,
@@ -160,6 +160,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<
                           pageSize={pageSize}
                           page={page}
                           eventCategory={'linodes landing'}
+                          showAll
                         />
                       </Grid>
                     </React.Fragment>
@@ -179,7 +180,11 @@ const DisplayGroupedLinodes: React.StatelessComponent<
         {orderedGroupedLinodes.map(([tag, linodes]) => {
           return (
             <React.Fragment key={tag}>
-              <Paginate data={linodes} pageSize={DEFAULT_PAGE_SIZE}>
+              <Paginate
+                data={linodes}
+                pageSize={infinitePageSize}
+                pageSizeSetter={setInfinitePageSize}
+              >
                 {({
                   data: paginatedData,
                   handlePageChange,
@@ -217,7 +222,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<
                           </TableCell>
                         </TableRow>
                         <Component {...finalProps} />
-                        {count > DEFAULT_PAGE_SIZE && (
+                        {count > MIN_PAGE_SIZE && (
                           <TableRow>
                             <TableCell
                               colSpan={7}
@@ -230,6 +235,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<
                                 pageSize={pageSize}
                                 page={page}
                                 eventCategory={'linodes landing'}
+                                showAll
                               />
                             </TableCell>
                           </TableRow>

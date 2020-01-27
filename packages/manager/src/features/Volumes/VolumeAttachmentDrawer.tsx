@@ -17,7 +17,7 @@ import withVolumesRequests, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
 import withLinodes from 'src/containers/withLinodes.container';
-import { resetEventsPolling } from 'src/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import { MapState } from 'src/store/types';
@@ -99,7 +99,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
     this.props.onClose();
   };
 
-  componentWillReceiveProps(nextProps: CombinedProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: CombinedProps) {
     this.setState({ configs: [] });
   }
 

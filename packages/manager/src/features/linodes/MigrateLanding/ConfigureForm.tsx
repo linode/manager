@@ -77,6 +77,7 @@ const ConfigureForm: React.FC<CombinedProps> = props => {
         styles={{
           menuList: (base: any) => ({ ...base, maxHeight: `30vh !important` })
         }}
+        label="Select a Region"
       />
     </Paper>
   );

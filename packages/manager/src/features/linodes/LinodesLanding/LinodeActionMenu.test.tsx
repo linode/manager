@@ -21,7 +21,8 @@ const props: CombinedProps = {
     schedule: {
       window: null,
       day: null
-    }
+    },
+    last_successful: null
   },
   linodeStatus: '',
   noImage: false,
@@ -42,7 +43,9 @@ describe('LinodeActionMenu', () => {
     it('includes `regionID` param if valid region', () => {
       wrapper.setProps({
         linodeRegion: 'us-east',
-        regionsData: [{ id: 'us-east', country: 'us', capabilities: [] }]
+        regionsData: [
+          { id: 'us-east', country: 'us', capabilities: [], status: 'ok' }
+        ]
       });
       expect(wrapper.instance().buildQueryStringForLinodeClone()).toMatch(
         'regionID=us-east'

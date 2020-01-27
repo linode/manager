@@ -71,7 +71,12 @@ class APITokenMenu extends React.Component<CombinedProps> {
   };
 
   render() {
-    return <ActionMenu createActions={this.createActions()} />;
+    return (
+      <ActionMenu
+        createActions={this.createActions()}
+        ariaLabel={`Action menu for API Token ${this.props.token.label}`}
+      />
+    );
   }
 }
 

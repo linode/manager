@@ -1,28 +1,27 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-
-import { RestoreToLinodeDrawer } from './RestoreToLinodeDrawer';
+import { CombinedProps, RestoreToLinodeDrawer } from './RestoreToLinodeDrawer';
 
 describe('RestoreToLinodeDrawer', () => {
-  const props = {
+  const props: CombinedProps = {
     open: true,
     linodeID: 1234,
     linodeRegion: 'us-east',
     backupCreated: '12 hours ago',
     onClose: jest.fn(),
-    onSubmit: jest.fn()
+    onSubmit: jest.fn(),
+    linodesData: [],
+    linodesLastUpdated: 0,
+    linodesLoading: false,
+    getLinodes: jest.fn(),
+    linodesResults: []
   };
 
   const wrapper = shallow<RestoreToLinodeDrawer>(
     <RestoreToLinodeDrawer {...props} />
   );
 
-  it("doesn't wipe linodes when calling reset() method", () => {
-    const mockLinodes = [['123456', 'test-label']];
-
-    wrapper.setState({ linodes: mockLinodes });
-    const instance = wrapper.instance() as any;
-    instance.reset();
-    expect(wrapper.instance().state.linodes).toBe(mockLinodes);
+  it('renders without crashing', () => {
+    expect(wrapper).toHaveLength(1);
   });
 });

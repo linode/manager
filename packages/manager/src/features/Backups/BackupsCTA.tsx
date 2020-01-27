@@ -13,6 +13,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import { handleOpen } from 'src/store/backupDrawer';
 import { MapState } from 'src/store/types';
 
@@ -61,7 +62,13 @@ const BackupsCTA: React.StatelessComponent<CombinedProps> = props => {
     dismissed
   } = props;
 
-  if (managed || (linodesWithoutBackups && isEmpty(linodesWithoutBackups))) {
+  const restricted = isRestrictedUser();
+
+  if (
+    restricted ||
+    managed ||
+    (linodesWithoutBackups && isEmpty(linodesWithoutBackups))
+  ) {
     return null;
   }
 
@@ -77,6 +84,7 @@ const BackupsCTA: React.StatelessComponent<CombinedProps> = props => {
             and be sure to read our guide on Backups{` `}
             <a
               target="_blank"
+              aria-describedby="external-site"
               rel="noopener noreferrer"
               href={
                 'https://www.linode.com/docs/platform' +
@@ -144,14 +152,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 
 const styled = withStyles(styles);
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced = compose<CombinedProps, Props>(
-  styled,
-  connected
-)(BackupsCTA);
+const enhanced = compose<CombinedProps, Props>(styled, connected)(BackupsCTA);
 
 export default enhanced;

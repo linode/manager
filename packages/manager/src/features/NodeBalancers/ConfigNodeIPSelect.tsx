@@ -29,7 +29,7 @@ interface Props {
   errorText?: string;
   nodeAddress?: string;
   workflow: 'create' | 'edit';
-  textfieldProps: TextFieldProps;
+  textfieldProps: Omit<TextFieldProps, 'label'>;
 }
 
 type CombinedProps = WithStyles<ClassNames> & Props;

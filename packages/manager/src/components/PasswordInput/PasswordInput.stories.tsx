@@ -4,7 +4,7 @@ import PasswordInput from './PasswordInput';
 
 storiesOf('Password Input', module).add('Example', () => (
   <div>
-    <PasswordInput />
+    <PasswordInput label="Password" />
     <p>Some text underneath</p>
   </div>
 ));

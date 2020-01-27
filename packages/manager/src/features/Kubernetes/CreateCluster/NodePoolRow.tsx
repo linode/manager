@@ -140,9 +140,7 @@ export const getStatusString = (
 
   // All systems normal.
   return (
-    <Typography>{`${count} (${status.ready} up, ${
-      status.not_ready
-    } down)`}</Typography>
+    <Typography>{`${count} (${status.ready} up, ${status.not_ready} down)`}</Typography>
   );
 };
 
@@ -191,6 +189,8 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
             max={100}
             errorText={errorMap.count}
             type="number"
+            label="Node Count"
+            hideLabel
             className={classes.editableCount}
             value={pool.count}
             onChange={e =>

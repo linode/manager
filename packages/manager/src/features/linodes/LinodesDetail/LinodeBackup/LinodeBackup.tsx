@@ -52,7 +52,8 @@ import PromiseLoader, {
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TextField from 'src/components/TextField';
-import { events$, resetEventsPolling } from 'src/events';
+import { events$ } from 'src/events';
+import { resetEventsPolling } from 'src/eventsPolling';
 import { linodeInTransition as isLinodeInTransition } from 'src/features/linodes/transitions';
 import {
   LinodeActionsProps,
@@ -514,9 +515,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     const { history, linodeID } = this.props;
     history.push(
       '/linodes/create' +
-        `?type=My%20Images&subtype=Backups&backupID=${
-          backup.id
-        }&linodeID=${linodeID}`
+        `?type=My%20Images&subtype=Backups&backupID=${backup.id}&linodeID=${linodeID}`
     );
   };
 
@@ -889,8 +888,14 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <DocumentTitleSegment segment={`${linodeLabel} - Backups`} />
-        {backupsEnabled ? <this.Management /> : <this.Placeholder />}
+        <div
+          id="tabpanel-backups"
+          role="tabpanel"
+          aria-labelledby="tab-backups"
+        >
+          <DocumentTitleSegment segment={`${linodeLabel} - Backups`} />
+          {backupsEnabled ? <this.Management /> : <this.Placeholder />}
+        </div>
       </React.Fragment>
     );
   }
