@@ -29,11 +29,7 @@ import {
   isEntityEvent,
   isInProgressEvent
 } from 'src/store/events/event.helpers';
-import {
-  isEventRelevantToLinodeAsSecondaryEntity,
-  isPrimaryEntity,
-  isSecondaryEntity
-} from 'src/store/events/event.selectors';
+import { isEventRelevantToLinode } from 'src/store/events/event.selectors';
 import { addNotificationsToLinodes } from 'src/store/linodes/linodes.helpers';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
 import { formatNotifications } from 'src/utilities/formatNotifications';
@@ -244,9 +240,7 @@ const mergeEvents = (events: Event[]) => (linodes: Linode[]) =>
   events.reduce((updatedLinodes, event) => {
     if (isWantedEvent(event)) {
       return updatedLinodes.map(linode =>
-        isPrimaryEntity(event, linode.id) ||
-        (isSecondaryEntity(event, linode.id) &&
-          isEventRelevantToLinodeAsSecondaryEntity(event))
+        isEventRelevantToLinode(event, linode.id)
           ? { ...linode, recentEvent: event }
           : linode
       );

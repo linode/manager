@@ -2,14 +2,13 @@ import { Event, EventAction } from 'linode-js-sdk/lib/account';
 import { State } from './event.reducer';
 
 export const eventsForLinode = (state: State, linodeId: number) => {
-  return state.events.filter(event => {
-    return (
-      isPrimaryEntity(event, linodeId) ||
-      (isSecondaryEntity(event, linodeId) &&
-        isEventRelevantToLinodeAsSecondaryEntity(event))
-    );
-  });
+  return state.events.filter(event => isEventRelevantToLinode(event, linodeId));
 };
+
+export const isEventRelevantToLinode = (event: Event, linodeId: number) =>
+  isPrimaryEntity(event, linodeId) ||
+  (isSecondaryEntity(event, linodeId) &&
+    isEventRelevantToLinodeAsSecondaryEntity(event));
 
 export const isPrimaryEntity = (event: Event, linodeId: number) =>
   event?.entity?.type === 'linode' && event?.entity?.id === linodeId;
