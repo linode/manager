@@ -2,7 +2,10 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { withTheme, WithTheme } from 'src/components/core/styles';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-import { StorageSymbol } from 'src/utilities/unitConversions';
+import {
+  convertBytesToTarget,
+  readableBytes
+} from 'src/utilities/unitConversions';
 import { Stat } from '../../../request.types';
 import { convertData, formatMemory } from '../../../shared/formatters';
 import { generateUsedMemory, getMaxUnit } from '../../../shared/utilities';
@@ -57,7 +60,8 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
     <LongviewLineGraph
       title="Memory"
       subtitle={unit}
-      maxUnit={unit as StorageSymbol}
+      formatData={(value: number) => convertBytesToTarget(unit, value)}
+      formatTooltip={(value: number) => readableBytes(value).formatted}
       error={error}
       loading={loading}
       showToday={isToday}

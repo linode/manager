@@ -1,6 +1,5 @@
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import DeletionDialog from 'src/components/DeletionDialog';
@@ -14,12 +13,11 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 interface Props {
   domainId: number;
   domainLabel: string;
+  // Function that is invoked after Domain has been successfully deleted.
+  onSuccess?: () => void;
 }
 
-export type CombinedProps = Props &
-  WithSnackbarProps &
-  RouteComponentProps &
-  DomainActionsProps;
+export type CombinedProps = Props & WithSnackbarProps & DomainActionsProps;
 
 export const DeleteDomain: React.FC<CombinedProps> = props => {
   const {
@@ -38,7 +36,9 @@ export const DeleteDomain: React.FC<CombinedProps> = props => {
         props.enqueueSnackbar('Domain deleted successfully.', {
           variant: 'success'
         });
-        props.history.push('/domains');
+        if (props.onSuccess) {
+          props.onSuccess();
+        }
       })
       .catch(e =>
         handleError(getAPIErrorOrDefault(e, 'Error deleting domain.')[0].reason)
@@ -68,7 +68,6 @@ export const DeleteDomain: React.FC<CombinedProps> = props => {
 
 const enhanced = compose<CombinedProps, Props>(
   withSnackbar,
-  withRouter,
   withDomainActions,
   React.memo
 );
