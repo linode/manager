@@ -1,9 +1,10 @@
 import { createImage, updateImage } from 'linode-js-sdk/lib/images';
 import { Disk, getLinodeDisks } from 'linode-js-sdk/lib/linodes';
 import { APIError } from 'linode-js-sdk/lib/types';
-import { compose, equals } from 'ramda';
+import { equals } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import {
@@ -62,6 +63,7 @@ interface State {
   disks: Disk[];
   notice?: string;
   errors?: APIError[];
+  submitting: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
@@ -87,7 +89,8 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
   state = {
     disks: [],
     errors: undefined,
-    notice: undefined
+    notice: undefined,
+    submitting: false
   };
 
   componentDidMount() {
@@ -151,7 +154,13 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
   close = () => {
     this.props.onClose();
-    this.setState({ errors: undefined, notice: undefined });
+    if (this.mounted) {
+      this.setState({
+        errors: undefined,
+        notice: undefined,
+        submitting: false
+      });
+    }
   };
 
   onSubmit = () => {
@@ -166,12 +175,12 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       selectedLinode
     } = this.props;
 
-    this.setState({ errors: undefined, notice: undefined });
+    this.setState({ errors: undefined, notice: undefined, submitting: true });
     const safeDescription = description ? description : ' ';
-
     switch (mode) {
       case modes.EDITING:
         if (!imageID) {
+          this.setState({ submitting: false });
           return;
         }
 
@@ -190,6 +199,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             }
 
             this.setState({
+              submitting: false,
               errors: getAPIErrorOrDefault(
                 errorResponse,
                 'Unable to edit image'
@@ -208,6 +218,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
             resetEventsPolling();
             this.setState({
+              submitting: false,
               notice: 'Image scheduled for creation.'
             });
             setTimeout(this.close, 4000);
@@ -218,6 +229,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             }
 
             this.setState({
+              submitting: false,
               errors: getAPIErrorOrDefault(
                 errorResponse,
                 'There was an error creating the image.'
@@ -229,6 +241,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       case modes.RESTORING:
         if (!selectedLinode) {
           this.setState({
+            submitting: false,
             errors: [{ field: 'linode_id', reason: 'Choose a Linode.' }]
           });
           return;
@@ -244,9 +257,9 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
   };
 
   checkRequirements = () => {
-    // When creating an image, disable the submit button until a Linode,
-    // disk, and label are selected. When editing, only a label is required.
-    // When restoring to an existing Linode, the Linode select is the only field.
+    // When creating an image, disable the submit button until a Linode and
+    // disk are selected. When restoring to an existing Linode, the Linode select is the only field.
+    // When imagizing, the Linode is selected already so only check for a disk selection.
     const { mode, selectedDisk, selectedLinode } = this.props;
 
     const isDiskSelected = Boolean(selectedDisk);
@@ -276,8 +289,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       changeDescription,
       classes
     } = this.props;
-    const { disks, notice } = this.state;
-    const { errors } = this.state;
+    const { disks, errors, notice, submitting } = this.state;
 
     const requirementsMet = this.checkRequirements();
 
@@ -363,11 +375,12 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
         <ActionsPanel
           style={{ marginTop: 16 }}
-          updateFor={[requirementsMet, classes]}
+          updateFor={[requirementsMet, classes, submitting]}
         >
           <Button
             onClick={this.onSubmit}
             disabled={requirementsMet}
+            loading={submitting}
             buttonType="primary"
             data-qa-submit
           >
@@ -389,7 +402,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default compose<any, any, any, any>(
+export default compose<CombinedProps, Props>(
   styled,
   withRouter,
   SectionErrorBoundary

@@ -360,10 +360,14 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
         description={description}
         label={label}
         disks={disk ? [disk] : []}
-        selectedDisk={disk && '' + disk.id}
+        selectedDisk={disk ? '' + disk.id : null}
         onClose={this.closeImagizeDrawer}
         changeDescription={this.changeImageDescription}
         changeLabel={this.changeImageLabel}
+        changeDisk={() => null}
+        onSuccess={() => null}
+        changeLinode={() => null}
+        selectedLinode={null}
       />
     );
   };

@@ -274,7 +274,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
         label={imageDrawer.label}
         description={imageDrawer.description}
         selectedDisk={imageDrawer.selectedDisk}
-        selectedLinode={imageDrawer.selectedLinode}
+        selectedLinode={imageDrawer.selectedLinode || null}
         imageID={imageDrawer.imageID}
         changeDisk={this.changeSelectedDisk}
         changeLinode={this.changeSelectedLinode}
