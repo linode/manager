@@ -75,8 +75,8 @@ describe('Utility Functions', () => {
     it('should generate the correct units and values', () => {
       const oneKilobit = 1000;
       const oneMegabit = 1000000;
-      expect(generateNetworkUnits(oneKilobit)).toEqual('Kb');
-      expect(generateNetworkUnits(oneMegabit)).toEqual('Mb');
+      expect(generateNetworkUnits(oneKilobit)).toEqual('Kibit');
+      expect(generateNetworkUnits(oneMegabit)).toEqual('Mibit');
       expect(generateNetworkUnits(100)).toEqual('b');
     });
   });
