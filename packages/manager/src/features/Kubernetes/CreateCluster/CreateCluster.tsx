@@ -87,7 +87,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
   state: State = {
     selectedRegion: undefined,
     selectedType: undefined,
-    numberOfLinodes: 1,
+    numberOfLinodes: 3,
     nodePools: [],
     label: undefined,
     version: undefined,
