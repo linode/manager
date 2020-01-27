@@ -49,6 +49,8 @@ export const CPUGraph: React.FC<CombinedProps> = props => {
     <LongviewLineGraph
       title="CPU"
       subtitle="%"
+      unit="%"
+      nativeLegend
       error={error}
       loading={loading}
       showToday={isToday}
@@ -56,21 +58,21 @@ export const CPUGraph: React.FC<CombinedProps> = props => {
       data={[
         {
           label: 'System',
-          borderColor: theme.graphs.deepBlueBorder,
-          backgroundColor: theme.graphs.deepBlue,
-          data: _convertData(cpuData.system, start, end, formatCPU)
+          borderColor: 'transparent',
+          backgroundColor: theme.graphs.cpu.system,
+          data: _convertData(cpuData.system, start, end)
         },
         {
           label: 'User',
-          borderColor: theme.graphs.skyBlueBorder,
-          backgroundColor: theme.graphs.skyBlue,
-          data: _convertData(cpuData.user, start, end, formatCPU)
+          borderColor: 'transparent',
+          backgroundColor: theme.graphs.cpu.user,
+          data: _convertData(cpuData.user, start, end)
         },
         {
           label: 'Wait',
-          borderColor: theme.graphs.lightBlueBorder,
-          backgroundColor: theme.graphs.lightBlue,
-          data: _convertData(cpuData.wait, start, end, formatCPU)
+          borderColor: 'transparent',
+          backgroundColor: theme.graphs.cpu.wait,
+          data: _convertData(cpuData.wait, start, end)
         }
       ]}
     />
@@ -78,12 +80,3 @@ export const CPUGraph: React.FC<CombinedProps> = props => {
 };
 
 export default withTheme(CPUGraph);
-
-const formatCPU = (value: number | null) => {
-  if (value === null) {
-    return value;
-  }
-
-  // Round to 2 decimal places.
-  return Math.round(value * 100) / 100;
-};

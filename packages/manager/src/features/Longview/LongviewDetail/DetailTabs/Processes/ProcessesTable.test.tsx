@@ -12,8 +12,8 @@ const mockSetSelectedRow = jest.fn();
 const props: Props = {
   processesData: [],
   processesLoading: false,
-  selectedRow: '',
-  setSelectedRow: mockSetSelectedRow
+  selectedProcess: null,
+  setSelectedProcess: mockSetSelectedRow
 };
 
 describe('ProcessTable', () => {
@@ -42,7 +42,7 @@ describe('ProcessTable', () => {
 
   it('renders error state', () => {
     const { getByText } = renderWithTheme(
-      <ProcessesTable {...props} processesError={[{ reason: 'Error!' }]} />
+      <ProcessesTable {...props} error="Error!" />
     );
     getByText('Error!');
   });

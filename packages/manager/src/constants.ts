@@ -31,6 +31,11 @@ export const ALGOLIA_SEARCH_KEY =
 export const LAUNCH_DARKLY_API_KEY =
   process.env.REACT_APP_LAUNCH_DARKLY_ID || '';
 
+// Maximum page size allowed by the API. Used in the `getAll()` helper function
+// to request as many items at once as possible.
+export const API_MAX_PAGE_SIZE =
+  Number(process.env.REACT_APP_API_MAX_PAGE_SIZE) || 100;
+
 // Sets Paypal Environment, valid values: 'sandbox|production'
 export const PAYPAL_CLIENT_ENV =
   process.env.REACT_APP_PAYPAL_ENV || 'production';

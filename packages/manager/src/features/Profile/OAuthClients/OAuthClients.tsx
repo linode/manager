@@ -220,7 +220,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
           secret: data.secret
         });
       })
-      .then(data => {
+      .then(_ => {
         if (!this.mounted) {
           return;
         }
