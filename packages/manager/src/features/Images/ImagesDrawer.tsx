@@ -1,4 +1,3 @@
-import { createImage, updateImage } from 'linode-js-sdk/lib/images';
 import { Disk, getLinodeDisks } from 'linode-js-sdk/lib/linodes';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { equals } from 'ramda';
@@ -18,6 +17,9 @@ import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
+import withImages, {
+  ImagesDispatch
+} from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/linodes/DiskSelect';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
@@ -66,7 +68,10 @@ interface State {
   submitting: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps = Props &
+  WithStyles<ClassNames> &
+  RouteComponentProps<{}> &
+  ImagesDispatch;
 
 export const modes = {
   CLOSED: 'closed',
@@ -178,7 +183,9 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       description,
       history,
       selectedDisk,
-      selectedLinode
+      selectedLinode,
+      updateImage,
+      createImage
     } = this.props;
 
     this.setState({ errors: undefined, notice: undefined, submitting: true });
@@ -190,7 +197,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           return;
         }
 
-        updateImage(imageID, label, safeDescription)
+        updateImage({ imageID, label, description: safeDescription })
           .then(() => {
             if (!this.mounted) {
               return;
@@ -216,7 +223,11 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
       case modes.CREATING:
       case modes.IMAGIZING:
-        createImage(Number(selectedDisk), label, safeDescription)
+        createImage({
+          diskID: Number(selectedDisk),
+          label,
+          description: safeDescription
+        })
           .then(_ => {
             if (!this.mounted) {
               return;
@@ -410,5 +421,6 @@ const styled = withStyles(styles);
 export default compose<CombinedProps, Props>(
   styled,
   withRouter,
+  withImages(),
   SectionErrorBoundary
 )(ImageDrawer);
