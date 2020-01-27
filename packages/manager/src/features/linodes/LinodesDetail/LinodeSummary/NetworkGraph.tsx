@@ -220,7 +220,6 @@ const Graph: React.FC<GraphProps> = props => {
           formatData={convertNetworkData}
           formatTooltip={_formatTooltip}
           showToday={rangeSelection === '24'}
-          // TODO Get these colors right
           data={[
             {
               borderColor: 'transparent',
