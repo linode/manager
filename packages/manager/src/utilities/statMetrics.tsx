@@ -1,4 +1,5 @@
 import { StatsData } from 'linode-js-sdk/lib/linodes';
+import { formatNetworkTooltip } from 'src/features/Longview/shared/utilities';
 
 export interface Metrics {
   max: number;
@@ -45,42 +46,10 @@ export const getMetrics = (data: number[][]): Metrics => {
 
 export const formatNumber = (n: number): string => n.toFixed(2);
 
-// Applies SI Magnitude prefix.
-// 1400 --> "1.40 K"
-// 1400000 --> "1.40 M"
-// 1400000000 --> "1.40 G"
-export const formatMagnitude = (value: number | string, unit: string) => {
-  const num = Number(value);
-
-  const ranges = [
-    { divider: 1e9, suffix: 'G' },
-    { divider: 1e6, suffix: 'M' },
-    { divider: 1e3, suffix: 'k' },
-    { divider: 1, suffix: '' }
-  ];
-
-  let finalNum;
-  let magnitude;
-
-  // Use Array.prototype.some, because we might need to break this loop early.
-  ranges.some(range => {
-    if (num >= range.divider) {
-      finalNum = num / range.divider;
-      magnitude = range.suffix;
-      return true;
-    }
-    return false;
-  });
-
-  return finalNum
-    ? `${formatNumber(finalNum)} ${magnitude}${unit}`
-    : `${formatNumber(num)} ${unit}`;
-};
-
 export const formatPercentage = (value: number) => formatNumber(value) + '%';
+
 export const formatBitsPerSecond = (value: number) =>
-  formatMagnitude(value, 'b/s');
-export const formatBytes = (value: number) => formatMagnitude(value, 'B');
+  formatNetworkTooltip(value / 8) + '/s';
 
 export const getTraffic = (averageInBits: number): number => {
   const averageInBytes = averageInBits / 8;

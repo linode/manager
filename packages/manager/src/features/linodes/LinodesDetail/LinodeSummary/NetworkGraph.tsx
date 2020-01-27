@@ -17,14 +17,16 @@ import {
 } from 'src/features/Longview/shared/utilities';
 import {
   formatBitsPerSecond,
-  formatBytes,
   getMetrics,
   getTotalTraffic,
   Metrics
 } from 'src/utilities/statMetrics';
+import { readableBytes } from 'src/utilities/unitConversions';
 import StatsPanel from './StatsPanel';
 import TotalTraffic, { TotalTrafficProps } from './TotalTraffic';
 import { ChartProps } from './types';
+
+const formatTotalTraffic = (value: number) => readableBytes(value).formatted;
 
 const useStyles = makeStyles((theme: Theme) => ({
   chart: {
@@ -88,7 +90,7 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
   const v6Metrics = _getMetrics(v6Data);
 
   const v4totalTraffic: TotalTrafficProps = map(
-    formatBytes,
+    formatTotalTraffic,
     getTotalTraffic(
       v4Metrics.publicIn.total,
       v4Metrics.publicOut.total,
@@ -99,7 +101,7 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
   );
 
   const v6totalTraffic: TotalTrafficProps = map(
-    formatBytes,
+    formatTotalTraffic,
     getTotalTraffic(
       v6Metrics.publicIn.total,
       v6Metrics.publicOut.total,

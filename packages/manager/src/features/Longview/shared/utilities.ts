@@ -302,7 +302,7 @@ export const sumRelatedProcessesAcrossAllUsers = (
     return accum;
   }, {} as ProcessStats);
 
-export type NetworkUnit = 'b' | 'Kb' | 'Mb';
+export type NetworkUnit = 'b' | 'Kibit' | 'Mibit';
 /**
  * converts bytes to either Kb (Kilobits) or Mb (Megabits)
  * depending on if the Kilobit conversion exceeds 1000.
@@ -315,9 +315,9 @@ export const generateNetworkUnits = (networkUsed: number): NetworkUnit => {
   if (networkUsedToKilobits <= 1) {
     return 'b';
   } else if (networkUsedToKilobits <= 1000) {
-    return 'Kb';
+    return 'Kibit';
   } else {
-    return 'Mb';
+    return 'Mibit';
   }
 };
 
@@ -325,11 +325,11 @@ export const convertNetworkToUnit = (
   valueInBits: number,
   maxUnit: NetworkUnit
 ) => {
-  if (maxUnit === 'Mb') {
+  if (maxUnit === 'Mibit') {
     // If the unit we're using for the graph is Mb, return the output in Mb.
     const valueInMegabits = valueInBits / 1024 / 1024;
     return valueInMegabits;
-  } else if (maxUnit === 'Kb') {
+  } else if (maxUnit === 'Kibit') {
     // If the unit we're using for the graph is Kb, return the output in Kb.
     const valueInKilobits = valueInBits / 1024;
     return valueInKilobits;
