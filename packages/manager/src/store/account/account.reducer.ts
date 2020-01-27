@@ -7,6 +7,7 @@ import {
   profileRequest,
   profileRequestFail,
   profileRequestSuccess,
+  saveCreditCard,
   updateAccountActions
 } from './account.actions';
 
@@ -67,6 +68,19 @@ const reducer: Reducer<State> = (state: State = defaultState, action) => {
 
       draft.loading = false;
       draft.error.update = error;
+    }
+
+    if (isType(action, saveCreditCard)) {
+      const { payload } = action;
+
+      // This action updates a nested slice of `data.` If `data` is undefined,
+      // don't do anything. This situation is impossible in practice but the
+      // logic is here to make the TypeScript compiler happy.
+      if (!draft.data) {
+        return;
+      }
+
+      draft.data.credit_card = payload;
     }
   });
 };

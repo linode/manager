@@ -15,8 +15,8 @@ import {
   sendThemeToggleEvent
 } from 'src/utilities/ga';
 
-type ThemeChoice = 'light' | 'dark';
-type SpacingChoice = 'compact' | 'normal';
+export type ThemeChoice = 'light' | 'dark';
+export type SpacingChoice = 'compact' | 'normal';
 
 type RenderChildren = (
   toggle: () => void,
@@ -96,7 +96,10 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
             togglePreference: _toggleSpacing
           }: ToggleProps<SpacingChoice>) => (
             <ThemeProvider
-              theme={safelyGetTheme(themes, themeChoice)({
+              theme={safelyGetTheme(
+                themes,
+                themeChoice
+              )({
                 spacingOverride:
                   spacingChoice === 'compact'
                     ? COMPACT_SPACING_UNIT

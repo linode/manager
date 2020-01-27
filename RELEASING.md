@@ -38,7 +38,7 @@ When you plan on releasing a new version of Cloud Manager:
 8. At this point, run the end-to-end test suite. Please see a team member on instructions how to do so.
 9. When you're ready to make the merge to master AKA release to production, you need to do 2 things: Add the git tag, and ensure the changelog has the correct date.
 10. Make the date change to CHANGELOG.md if necessary and stage the changes with `git add . && git commit -m "updates changelog date"`.
-11. Then, run `git checkout staging && git add . && npx lerna version --no-push`
+11. Then, run `git checkout staging && git add . && yarn version --no-push`
     - This will prompt you for a new version number, apply the Git tags, and update the version number in the `package.json` of each child project.
     - This will also automatically commit the changes with a generated commit message.
 12. Push changes to staging with `git push origin staging && git push origin --tags`
@@ -47,7 +47,7 @@ When you plan on releasing a new version of Cloud Manager:
 15. Once your new version has being deployed to production, open a PR to merge `master` branch into `develop` branch - **DO NOT SQUASH MERGE**
     - Seriously...**DO NOT SQUASH MERGE**
 16. Finally, on GitHub, create a new release from the Git tag you've just pushed to `master` branch. NOTE: when creating the GitHub release, the tag you pin the release to
-    should have the format vX.XX.XX. `lerna publish` creates tags such as "linode-manager@X.XX.XX", and GitHub will often autocomplete to these. Using these will break the link from
+    should have the format vX.XX.XX. `yarn publish` creates tags such as "linode-manager@X.XX.XX", and GitHub will often autocomplete to these. Using these will break the link from
     the footer in Cloud to the current release. **Do not have an open PR if you plan on hotfixing to master. The build will not succeed if there is an open master -> develop PR**
 
 ## Pushing a Hotfix

@@ -1,5 +1,6 @@
 import { Domain, DomainRecord } from 'linode-js-sdk/lib/domains';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme, withStyles } from 'src/components/core/styles';
@@ -48,6 +49,7 @@ type CombinedProps = Props & StyleProps;
 const DomainRecordsWrapper: React.FC<CombinedProps> = props => {
   const { domain, records, updateRecords, handleUpdateTags, classes } = props;
   const hookClasses = useStyles();
+  const history = useHistory();
 
   return (
     <Grid container className={hookClasses.root}>
@@ -73,7 +75,11 @@ const DomainRecordsWrapper: React.FC<CombinedProps> = props => {
           </div>
         </Paper>
         <div className={hookClasses.tagPanel}>
-          <DeleteDomain domainId={domain.id} domainLabel={domain.domain} />
+          <DeleteDomain
+            domainId={domain.id}
+            domainLabel={domain.domain}
+            onSuccess={() => history.push('/domains')}
+          />
         </div>
       </Grid>
     </Grid>
