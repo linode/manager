@@ -1,6 +1,8 @@
 import { Image } from 'linode-js-sdk/lib/images';
 import { StackScript } from 'linode-js-sdk/lib/stackscripts';
+import { stringify } from 'qs';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
@@ -12,11 +14,9 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import ExternalLink from 'src/components/ExternalLink';
 import H1Header from 'src/components/H1Header';
 import ScriptCode from 'src/components/ScriptCode';
 import withImages from 'src/containers/withImages.container';
-
 import { filterImagesByType } from 'src/store/image/image.helpers';
 
 type CSSClasses =
@@ -120,6 +120,11 @@ export class _StackScript extends React.Component<CombinedProps> {
         return acc;
       }, []) || 'No compatible images found';
 
+    const queryString = stringify({
+      type: 'community',
+      query: `username:${username}`
+    });
+
     return (
       <div className={classes.root}>
         <H1Header title={label} data-qa-stack-title={label} />
@@ -129,11 +134,12 @@ export class _StackScript extends React.Component<CombinedProps> {
           data-qa-stack-author={username}
         >
           by&nbsp;
-          <ExternalLink
-            text={username}
-            link={`https://www.linode.com/stackscripts/profile/${username}`}
+          <Link
+            to={`/stackscripts?${queryString}`}
             data-qa-community-stack-link
-          />
+          >
+            {username}
+          </Link>
         </Typography>
         <div data-qa-stack-deployments className={classes.deployments}>
           <Typography className={classes.deploymentSection}>

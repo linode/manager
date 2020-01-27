@@ -41,8 +41,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   closeIcon: {
     cursor: 'pointer',
-    position: 'relative',
-    top: -4
+    paddingTop: 0,
+    paddingBottom: 0,
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: theme.color.white,
+    border: 'none',
+    '& path': {
+      fill: theme.color.blue
+    }
   },
   divider: {
     marginTop: theme.spacing(2),
@@ -55,6 +62,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   labelOuter: {
     display: 'flex',
     justifyContent: 'space-between',
+    alignItems: 'center',
     width: '100%'
   },
   errorText: {

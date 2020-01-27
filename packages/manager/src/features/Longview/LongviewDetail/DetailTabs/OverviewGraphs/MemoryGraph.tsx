@@ -2,10 +2,13 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { withTheme, WithTheme } from 'src/components/core/styles';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-import { readableBytes } from 'src/utilities/unitConversions';
+import {
+  convertBytesToTarget,
+  readableBytes
+} from 'src/utilities/unitConversions';
 import { Stat } from '../../../request.types';
-import { convertData } from '../../../shared/formatters';
-import { generateUsedMemory, statMax } from '../../../shared/utilities';
+import { convertData, formatMemory } from '../../../shared/formatters';
+import { generateUsedMemory, getMaxUnit } from '../../../shared/utilities';
 import { GraphProps } from './types';
 import { useGraphs } from './useGraphs';
 
@@ -46,46 +49,47 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
   const swap = pathOr<Stat[]>([], ['Memory', 'swap', 'used'], data);
 
   // Determine the unit based on the largest value
-  const max = Math.max(
-    statMax(buffers),
-    statMax(cache),
-    statMax(used),
-    statMax(swap)
-  );
-  // LV returns stuff in KB so have to convert to bytes using base-2
-  const unit = readableBytes(max * 1024).unit;
+  const unit = React.useMemo(() => getMaxUnit([buffers, cache, used, swap]), [
+    buffers,
+    cache,
+    used,
+    swap
+  ]);
 
   return (
     <LongviewLineGraph
       title="Memory"
       subtitle={unit}
+      formatData={(value: number) => convertBytesToTarget(unit, value)}
+      formatTooltip={(value: number) => readableBytes(value).formatted}
       error={error}
       loading={loading}
       showToday={isToday}
       timezone={timezone}
+      nativeLegend
       data={[
         {
           label: 'Swap',
-          borderColor: theme.graphs.redBorder,
-          backgroundColor: theme.graphs.red,
+          borderColor: 'transparent',
+          backgroundColor: theme.graphs.memory.swap,
           data: _convertData(swap, start, end, formatMemory)
         },
         {
           label: 'Buffers',
-          borderColor: theme.graphs.darkPurpleBorder,
-          backgroundColor: theme.graphs.darkPurple,
+          borderColor: 'transparent',
+          backgroundColor: theme.graphs.memory.buffers,
           data: _convertData(buffers, start, end, formatMemory)
         },
         {
           label: 'Cache',
-          borderColor: theme.graphs.purpleBorder,
-          backgroundColor: theme.graphs.purple,
+          borderColor: 'transparent',
+          backgroundColor: theme.graphs.memory.cache,
           data: _convertData(cache, start, end, formatMemory)
         },
         {
           label: 'Used',
-          borderColor: theme.graphs.lightPurpleBorder,
-          backgroundColor: theme.graphs.lightPurple,
+          borderColor: 'transparent',
+          backgroundColor: theme.graphs.memory.used,
           data: _convertData(used, start, end, formatMemory)
         }
       ]}
@@ -119,20 +123,6 @@ export const getUsedMemory = (used: Stat[], cache: Stat[], buffers: Stat[]) => {
     });
   }
   return result;
-};
-
-/**
- * Scale of memory data will vary, so we use this function
- * to run the data through readableBytes to determine
- * whether to show MB, KB, or GB.
- * @param value
- */
-export const formatMemory = (value: number | null) => {
-  if (value === null) {
-    return value;
-  }
-  // x1024 bc the API returns data in KB
-  return readableBytes(value * 1024).value;
 };
 
 export default withTheme(MemoryGraph);

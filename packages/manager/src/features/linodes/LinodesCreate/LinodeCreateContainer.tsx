@@ -628,10 +628,7 @@ interface DispatchProps {
   upsertLinode: (l: Linode) => void;
 }
 
-const connected = connect(
-  mapStateToProps,
-  { upsertLinode }
-);
+const connected = connect(mapStateToProps, { upsertLinode });
 
 const withRegions = regionsContainer(({ data, loading, error }) => ({
   regionsData: data.map(r => ({ ...r, display: dcDisplayNames[r.id] })),

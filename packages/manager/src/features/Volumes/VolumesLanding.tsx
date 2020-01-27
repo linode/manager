@@ -656,10 +656,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) =>
     dispatch
   );
 
-const connected = connect(
-  undefined,
-  mapDispatchToProps
-);
+const connected = connect(undefined, mapDispatchToProps);
 
 const documented = setDocs(VolumesLanding.docs);
 

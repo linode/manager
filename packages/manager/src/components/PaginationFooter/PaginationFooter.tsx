@@ -10,6 +10,8 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import PaginationControls from '../PaginationControls';
 
+export const MIN_PAGE_SIZE = 25;
+
 type ClassNames = 'root' | 'padded';
 
 const styles = (theme: Theme) =>
@@ -39,7 +41,7 @@ interface Props extends PaginationProps {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const baseOptions = [
-  { label: 'Show 25', value: 25 },
+  { label: 'Show 25', value: MIN_PAGE_SIZE },
   { label: 'Show 50', value: 50 },
   { label: 'Show 75', value: 75 },
   { label: 'Show 100', value: 100 }
@@ -60,7 +62,7 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
       showAll
     } = this.props;
 
-    if (count <= 25) {
+    if (count <= MIN_PAGE_SIZE) {
       return null;
     }
 

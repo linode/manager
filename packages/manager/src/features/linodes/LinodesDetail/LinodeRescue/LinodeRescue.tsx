@@ -289,7 +289,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
                 data-qa-submit
                 disabled={disabled}
               >
-                Submit
+                Reboot into Rescue Mode
               </Button>
             </ActionsPanel>
           </Paper>

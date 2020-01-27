@@ -29,7 +29,9 @@ export const createBucket = createRequestThunk<
 /*
  * Get All Buckets
  */
-const _getAll = getAll<ObjectStorageBucket>(_getBuckets);
+
+// The API returns an error if more than 100 Buckets are requested.
+const _getAll = getAll<ObjectStorageBucket>(_getBuckets, 100);
 
 const getAllBucketsRequest = () => _getAll().then(({ data }) => data);
 

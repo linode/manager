@@ -1,11 +1,11 @@
 const { navigateToStory } = require('../../../e2e/utils/storybook');
 const { constants } = require('../../../e2e/constants');
 
-describe('Tags Input Suite', () => {
+describe('Tags Input Suite - ', () => {
   const component = 'Tags Input';
   const childStories = ['Tags Input', 'Tags Input with an error'];
   const selectBox = '[data-qa-select-placeholder]';
-  const tagInput = '#add-tags input';
+  const tagInput = 'input#add-tags';
   const tagOptions = '[data-qa-option]';
   const selectedTags = '[data-qa-multi-option]';
   const inputError = '[data-qa-textfield-error-text]';
@@ -64,7 +64,7 @@ describe('Tags Input Suite', () => {
     $(selectedTags).waitForDisplayed(constants.wait.normal, true);
   });
 
-  it('a new tag can be created and selected', () => {
+  it('creates a new tag and selects it', () => {
     const testTag = 'TEST_TAG';
     $(tagInput).setValue(testTag);
     $(tagOptions).waitForDisplayed(constants.wait.normal);
@@ -86,10 +86,7 @@ describe('Tags Input Suite', () => {
     it('an error message should be displayed when tags can not be retrieved', () => {
       navigateToStory(component, childStories[1]);
       $(selectBox).waitForDisplayed(constants.wait.normal);
-      const errorMessaage = $$('p').find(error =>
-        error.getAttribute('class').includes('error')
-      );
-      expect(errorMessaage.getText())
+      expect($('[data-qa-textfield-error-text="Add Tags"]').getText())
         .withContext(`Incorrect text found`)
         .toContain('There was an error retrieving your tags.');
     });

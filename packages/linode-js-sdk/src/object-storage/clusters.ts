@@ -1,4 +1,4 @@
-import { BETA_API_ROOT } from 'src/constants';
+import { API_ROOT } from 'src/constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
 import { ResourcePage as Page } from '../types';
 import { ObjectStorageCluster } from './types';
@@ -13,5 +13,5 @@ export const getClusters = (params?: any, filters?: any) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
-    setURL(`${BETA_API_ROOT}/object-storage/clusters`)
+    setURL(`${API_ROOT}/object-storage/clusters`)
   ).then(response => response.data);

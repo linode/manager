@@ -39,7 +39,7 @@ yarn test linode
 To run a test in debug mode, add a `debugger` breakpoint inside one of the test cases, then run
 
 ```
-npx lerna run test:debug --stream --scope linode-manager
+yarn workspace linode-manager run test:debug
 ```
 
 Test execution will stop at the debugger statement, and you will be able to use Chrome's normal debugger to step through
@@ -209,10 +209,8 @@ The axe-core accessibility testing script has been integrated into the webdriver
 ```
 # Starts the local development environment
 
-yarn && npx lerna bootstrap --scope linode-manager && npx lerna run start --stream --scope linode-manager
-
-
-npx lerna run axe --stream --scope linode-manager
+yarn install:all && yarn up
+yarn workspace linode-manager run axe
 ```
 
 The test results will be saved as a JSON file with Critical accessibility violations appearing at the top of the list.

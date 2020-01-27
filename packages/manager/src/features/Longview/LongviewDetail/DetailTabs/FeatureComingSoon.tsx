@@ -15,7 +15,7 @@ type LongviewFeature =
   | 'Network'
   | 'Disks'
   | 'Apache'
-  | 'Nginx'
+  | 'NGINX'
   | 'MySQL';
 
 interface Props {
