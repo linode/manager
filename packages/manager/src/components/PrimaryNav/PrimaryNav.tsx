@@ -257,7 +257,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
       },
       {
         display: 'StackScripts',
-        href: '/stackscripts',
+        href: '/stackscripts?type=account',
         key: 'stackscripts',
         icon: <StackScript />
       },

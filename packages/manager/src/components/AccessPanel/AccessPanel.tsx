@@ -126,9 +126,10 @@ class AccessPanel extends React.Component<CombinedProps> {
           className
         )}
       >
-        <div className={!noPadding ? classes.inner : ''} data-qa-password-input>
+        <div className={!noPadding ? classes.inner : ''}>
           {error && <Notice text={error} error />}
           <PasswordInput
+            data-qa-password-input
             className={classes.passwordInputOuter}
             required={required}
             disabled={disabled}
