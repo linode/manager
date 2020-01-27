@@ -12,6 +12,8 @@ import Grid from 'src/components/Grid';
 import eventMessageGenerator from 'src/eventMessageGenerator';
 import { formatEventWithUsername } from 'src/features/Events/Event.helpers';
 
+import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
+
 type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
@@ -39,6 +41,12 @@ export const ActivityRow: React.StatelessComponent<CombinedProps> = props => {
     return null;
   }
 
+  const displayedMessage = formatEventWithUsername(
+    event.action,
+    event.username,
+    message
+  );
+
   return (
     <Grid
       className={classes.root}
@@ -50,11 +58,11 @@ export const ActivityRow: React.StatelessComponent<CombinedProps> = props => {
     >
       <Grid item>
         <Typography>
-          {formatEventWithUsername(event.action, event.username, message)}
+          {displayedMessage} ({formatEventSeconds(event.duration)})
         </Typography>
       </Grid>
       <Grid item>
-        <DateTimeDisplay value={event.created} humanizeCutoff={'month'} />
+        <DateTimeDisplay value={event.created} />
       </Grid>
     </Grid>
   );

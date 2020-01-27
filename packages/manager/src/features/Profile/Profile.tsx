@@ -9,8 +9,8 @@ import {
 import AppBar from 'src/components/core/AppBar';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
-import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import H1Header from 'src/components/H1Header';
 import TabLink from 'src/components/TabLink';
 
 import DefaultLoader from 'src/components/DefaultLoader';
@@ -61,17 +61,38 @@ class Profile extends React.Component<Props> {
 
   tabs = [
     /* NB: These must correspond to the routes inside the Switch */
-    { title: 'Display', routeName: `${this.props.match.url}/display` },
+    {
+      title: 'Display',
+      routeName: `${this.props.match.url}/display`
+    },
     {
       title: 'Password & Authentication',
       routeName: `${this.props.match.url}/auth`
     },
-    { title: 'SSH Keys', routeName: `${this.props.match.url}/keys` },
-    { title: 'LISH', routeName: `${this.props.match.url}/lish` },
-    { title: 'API Tokens', routeName: `${this.props.match.url}/tokens` },
-    { title: 'OAuth Apps', routeName: `${this.props.match.url}/clients` },
-    { title: 'Referrals', routeName: `${this.props.match.url}/referrals` },
-    { title: 'Settings', routeName: `${this.props.match.url}/settings` }
+    {
+      title: 'SSH Keys',
+      routeName: `${this.props.match.url}/keys`
+    },
+    {
+      title: 'LISH',
+      routeName: `${this.props.match.url}/lish`
+    },
+    {
+      title: 'API Tokens',
+      routeName: `${this.props.match.url}/tokens`
+    },
+    {
+      title: 'OAuth Apps',
+      routeName: `${this.props.match.url}/clients`
+    },
+    {
+      title: 'Referrals',
+      routeName: `${this.props.match.url}/referrals`
+    },
+    {
+      title: 'Settings',
+      routeName: `${this.props.match.url}/settings`
+    }
   ];
 
   render() {
@@ -85,10 +106,8 @@ class Profile extends React.Component<Props> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="My Profile" />
-        <Typography variant="h1" data-qa-profile-header>
-          My Profile
-        </Typography>
-        <AppBar position="static" color="default">
+        <H1Header title="My Profile" data-qa-profile-header />
+        <AppBar position="static" color="default" role="tablist">
           <Tabs
             value={this.tabs.findIndex(tab => matches(tab.routeName))}
             onChange={this.handleTabChange}

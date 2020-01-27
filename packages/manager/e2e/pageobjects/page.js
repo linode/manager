@@ -186,6 +186,10 @@ export default class Page {
     return '\ue013';
   }
 
+  get documentationLink() {
+    return $('[data-qa-icon-text-link="Documentation"]');
+  }
+
   //Shared in create linode and rebuild flow
   get selectImageHeader() {
     return $('[data-qa-tp="Choose a Distribution"]');

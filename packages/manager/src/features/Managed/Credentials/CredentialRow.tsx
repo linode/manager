@@ -10,12 +10,6 @@ import ActionMenu from './CredentialActionMenu';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    label: {
-      width: '30%',
-      [theme.breakpoints.down('sm')]: {
-        width: '100%'
-      }
-    },
     credentialDescription: {
       paddingTop: theme.spacing(1) / 2
     },
@@ -46,11 +40,7 @@ export const CredentialRow: React.FunctionComponent<CombinedProps> = props => {
       data-testid={'credential-row'}
       className={classes.credentialRow}
     >
-      <TableCell
-        parentColumn="Credential"
-        className={classes.label}
-        data-qa-credential-label
-      >
+      <TableCell parentColumn="Credential" data-qa-credential-label>
         <Typography variant="h3">{credential.label}</Typography>
       </TableCell>
       <TableCell parentColumn="Last Decrypted" data-qa-credential-decrypted>

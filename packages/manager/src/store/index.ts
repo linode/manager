@@ -86,6 +86,7 @@ import types, {
   defaultState as defaultTypesState,
   State as TypesState
 } from 'src/store/linodeType/linodeType.reducer';
+import longviewEvents from 'src/store/longview/longview.events';
 import longview, {
   defaultState as defaultLongviewState,
   State as LongviewState
@@ -297,6 +298,7 @@ const enhancers = compose(
     thunk,
     combineEventsMiddleware(
       linodeEvents,
+      longviewEvents,
       imageEvents,
       domainEvents,
       nodeBalancerEvents,

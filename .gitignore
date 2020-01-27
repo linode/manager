@@ -105,3 +105,8 @@ localStorage.json
 
 # Vim users
 *.swp
+
+#sonar
+.scannerwork
+.sonar
+packages/manager/test-report.xml

@@ -7,18 +7,20 @@ const mockData = [
   {
     label: 'Linodes',
     borderColor: 'blue',
-    data: [[1537979728, 1000], [1637979728, 2000], [1737979728, 5000]] as [
-      number,
-      number
-    ][]
+    data: [
+      [1537979728, 1000],
+      [1637979728, 2000],
+      [1737979728, 5000]
+    ] as [number, number][]
   },
   {
     label: 'Volumes',
     borderColor: 'red',
-    data: [[1537979728, 100], [1637979728, 200], [1737979728, 500]] as [
-      number,
-      number
-    ][]
+    data: [
+      [1537979728, 100],
+      [1637979728, 200],
+      [1737979728, 500]
+    ] as [number, number][]
   }
 ];
 
@@ -42,6 +44,14 @@ storiesOf('Line Graph', module)
       showToday={false}
       data={mockData}
       suggestedMax={7000}
+      timezone={'America/Los_Angeles'}
+    />
+  ))
+  .add('Using the Chart.js native legend functionality', () => (
+    <LineGraph
+      nativeLegend
+      showToday={false}
+      data={mockData}
       timezone={'America/Los_Angeles'}
     />
   ));

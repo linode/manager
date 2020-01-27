@@ -28,6 +28,7 @@ interface Props {
   onEdit: (data: Domain | EditPayload) => void;
   deleteData?: DeleteData;
   editPayload: Domain | EditPayload;
+  label: string;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
@@ -66,7 +67,12 @@ class DomainRecordActionMenu extends React.Component<CombinedProps> {
       })
     )([]);
   render() {
-    return <ActionMenu createActions={this.createActions()} />;
+    return (
+      <ActionMenu
+        createActions={this.createActions()}
+        ariaLabel={`Action menu for Record ${this.props.label}`}
+      />
+    );
   }
 }
 

@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { linodes } from 'src/__data__/linodes';
-
+import { light } from 'src/themes';
 import { LinodeSummary } from './LinodeSummary';
 
 describe('LinodeSummary', () => {
@@ -19,21 +19,23 @@ describe('LinodeSummary', () => {
         sidebar: '',
         headerWrapper: '',
         chart: '',
-        ioChart: '',
-        leftLegend: '',
         bottomLegend: '',
         graphControls: '',
         graphTitle: '',
         graphSelectTitle: '',
-        totalTraffic: '',
         chartSelect: '',
         subHeaderOuter: '',
         textWrap: '',
         headerOuter: ''
       }}
+      theme={light({
+        spacingOverride: 4
+      })}
       linodeVolumes={[]}
       typesData={[]}
       imagesData={{}}
+      imagesError={{}}
+      imagesLoading={false}
     />
   );
 
