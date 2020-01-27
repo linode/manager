@@ -48,8 +48,8 @@ export const formatNumber = (n: number): string => n.toFixed(2);
 
 export const formatPercentage = (value: number) => formatNumber(value) + '%';
 
-export const formatBitsPerSecond = (value: number) =>
-  formatNetworkTooltip(value / 8) + '/s';
+export const formatBitsPerSecond = (valueInBits: number) =>
+  formatNetworkTooltip(valueInBits / 8) + '/s';
 
 export const getTraffic = (averageInBits: number): number => {
   const averageInBytes = averageInBits / 8;
