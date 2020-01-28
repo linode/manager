@@ -364,3 +364,9 @@ export const getMaxUnit = (stats: Stat[][]) => {
   const max = Math.max(...stats.map(statMax));
   return readableBytes(max * 1024).unit; // LV always returns in KB, need bytes here
 };
+
+export const formatNetworkTooltip = (valueInBytes: number) => {
+  const _unit = generateNetworkUnits(valueInBytes);
+  const converted = convertNetworkToUnit(valueInBytes * 8, _unit);
+  return `${Math.round(converted * 100) / 100} ${_unit}`;
+};

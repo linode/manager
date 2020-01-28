@@ -23,7 +23,7 @@ const useStyles = (options: Options) =>
     },
     innerText: {
       position: 'absolute',
-      top: `calc((${options.height}px / 2))`,
+      top: `calc((${options.height + theme.spacing(3.75)}px / 2))`,
       width: options.width,
       textAlign: 'center',
       fontSize: '1rem',
@@ -33,7 +33,7 @@ const useStyles = (options: Options) =>
       position: 'absolute',
       width: options.width,
       textAlign: 'center',
-      top: `calc(${options.height}px)`,
+      top: `calc(${options.height + theme.spacing(1.25)}px)`,
       fontSize: options.fontSize || `${theme.spacing(2.5)}px `,
       color: theme.color.headline
     }
@@ -78,7 +78,8 @@ const GaugePercent: React.FC<CombinedProps> = props => {
       <div
         className={classes.gaugeWrapper}
         style={{
-          width
+          width,
+          height: height + props.theme.spacing(3.75)
         }}
       >
         <Doughnut
