@@ -9,7 +9,7 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { Lens, lensPath, over, path, pathOr, set, view } from 'ramda';
 import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
+import { connect, DispatchProp as Dispatch } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators } from 'redux';

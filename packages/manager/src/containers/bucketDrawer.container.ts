@@ -1,4 +1,4 @@
-import { connect, Dispatch } from 'react-redux';
+import { connect, DispatchProp as Dispatch } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import {
   closeBucketDrawer,
@@ -23,7 +23,4 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   closeBucketDrawer: () => dispatch(closeBucketDrawer())
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+export default connect(mapStateToProps, mapDispatchToProps);

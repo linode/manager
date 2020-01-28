@@ -3,7 +3,7 @@ import { Config, Linode } from 'linode-js-sdk/lib/linodes';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
+import { connect, DispatchProp as Dispatch } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators } from 'redux';

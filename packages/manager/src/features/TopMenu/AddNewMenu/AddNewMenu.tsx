@@ -2,7 +2,7 @@ import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 import { AccountCapability } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
+import { connect, DispatchProp as Dispatch } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators } from 'redux';

@@ -62,3 +62,12 @@ jest.mock('react-chartjs-2', () => ({
     }
   }
 }));
+
+window.document.createRange = () => ({
+  setStart: () => {},
+  setEnd: () => {},
+  commonAncestorContainer: {
+    nodeName: 'BODY',
+    ownerDocument: document
+  }
+});
