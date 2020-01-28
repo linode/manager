@@ -1,7 +1,7 @@
-import { Event } from 'linode-js-sdk/lib/account'
+import { Event } from 'linode-js-sdk/lib/account';
 import { createSelector } from 'reselect';
 import { ApplicationState } from 'src/store';
-import { isInProgressEvent } from 'src/store/events/event.helpers';
+import { isEventRelevantToLinode } from '../events/event.selectors';
 
 export default (linodeId: number) =>
   createSelector<ApplicationState, Event[], undefined | Event>(
@@ -11,13 +11,7 @@ export default (linodeId: number) =>
       const len = events.length;
       for (; idx < len; idx += 1) {
         const event = events[idx];
-        const { entity } = event;
-        if (
-          isInProgressEvent(event) &&
-          entity &&
-          entity.type === 'linode' &&
-          entity.id === linodeId
-        ) {
+        if (isEventRelevantToLinode(event, linodeId)) {
           return event;
         }
       }
