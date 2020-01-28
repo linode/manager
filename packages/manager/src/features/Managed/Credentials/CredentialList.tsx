@@ -41,6 +41,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   subHeader: {
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2)
+  },
+  credCell: {
+    width: '30%'
+  },
+  decryptCell: {
+    width: '60%'
   }
 }));
 
@@ -250,6 +256,7 @@ export const CredentialList: React.FC<CombinedProps> = props => {
                             direction={order}
                             handleClick={handleOrderChange}
                             data-qa-credential-label-header
+                            className={classes.credCell}
                           >
                             Credential
                           </TableSortCell>
@@ -259,6 +266,7 @@ export const CredentialList: React.FC<CombinedProps> = props => {
                             direction={order}
                             handleClick={handleOrderChange}
                             data-qa-credential-decrypted-header
+                            className={classes.decryptCell}
                           >
                             Last Decrypted
                           </TableSortCell>

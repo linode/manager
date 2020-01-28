@@ -1,8 +1,9 @@
 import { Account, saveCreditCard } from 'linode-js-sdk/lib/account';
 import { APIError } from 'linode-js-sdk/lib/types';
-import { compose, range, take, takeLast } from 'ramda';
+import { range, take, takeLast } from 'ramda';
 import * as React from 'react';
 import NumberFormat from 'react-number-format';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
@@ -13,11 +14,14 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
+import NativeSelect from 'src/components/NativeSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
+import accountContainer, {
+  Props as AccountContainerProps
+} from 'src/containers/account.container';
 import { withAccount } from 'src/features/Billing/context';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -68,7 +72,7 @@ interface AccountContextProps {
   accountErrors: APIError[];
   expiry: string;
   last_four: string;
-  updateAccount: (update: (a: Account) => Account) => void;
+  updateContext: (update: (a: Account) => Account) => void;
   cvv: string;
 }
 
@@ -82,7 +86,9 @@ interface State {
   cvv: string;
 }
 
-type CombinedProps = AccountContextProps & WithStyles<ClassNames>;
+type CombinedProps = AccountContextProps &
+  WithStyles<ClassNames> &
+  AccountContainerProps;
 
 class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
   state: State = {
@@ -101,12 +107,16 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
     });
   };
 
-  handleExpiryMonthChange = (e: Item<string>) => {
-    this.setState({ expiry_month: +e.value });
+  handleExpiryMonthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      expiry_month: +e.target.value
+    });
   };
 
-  handleExpiryYearChange = (e: Item<string>) => {
-    this.setState({ expiry_year: +e.value });
+  handleExpiryYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      expiry_year: +e.target.value
+    });
   };
 
   handleCVVChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -125,13 +135,20 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
 
     saveCreditCard({ card_number, expiry_month, expiry_year, cvv })
       .then(() => {
-        this.props.updateAccount(account => ({
+        const credit_card = {
+          last_four: takeLast(4, card_number),
+          expiry: `${String(expiry_month).padStart(2, '0')}/${expiry_year}`,
+          cvv
+        };
+        // Update Redux store so subscribed components will display updated
+        // information.
+        this.props.saveCreditCard(credit_card);
+
+        // Update context so components within this context tree will display
+        // updated information.
+        this.props.updateContext(account => ({
           ...account,
-          credit_card: {
-            last_four: takeLast(4, card_number),
-            expiry: `${String(expiry_month).padStart(2, '0')}/${expiry_year}`,
-            cvv
-          }
+          credit_card
         }));
         this.setState({
           card_number: '',
@@ -193,16 +210,6 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
     );
     const generalError = hasErrorFor('none');
 
-    const defaultMonth = UpdateCreditCardPanel.monthMenuItems.find(
-      eachMonth => {
-        return eachMonth.value === this.state.expiry_month;
-      }
-    );
-
-    const defaultYear = UpdateCreditCardPanel.yearMenuItems.find(eachYear => {
-      return eachYear.value === this.state.expiry_year;
-    });
-
     return (
       <ExpansionPanel heading="Update Credit Card" actions={this.renderActions}>
         <Grid container>
@@ -259,29 +266,24 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
                     }}
                   />
                 </Grid>
-
                 <Grid item className={classes.fullWidthMobile}>
-                  <Select
-                    options={UpdateCreditCardPanel.monthMenuItems}
+                  <NativeSelect
                     label="Expiration Month"
-                    defaultValue={defaultMonth}
                     onChange={this.handleExpiryMonthChange}
                     errorText={hasErrorFor('expiry_month')}
-                    isClearable={false}
+                    value={this.state.expiry_month}
+                    options={UpdateCreditCardPanel.monthMenuItems}
                   />
                 </Grid>
-
                 <Grid item className={classes.fullWidthMobile}>
-                  <Select
-                    options={UpdateCreditCardPanel.yearMenuItems}
+                  <NativeSelect
                     label="Expiration Year"
-                    defaultValue={defaultYear}
                     onChange={this.handleExpiryYearChange}
                     errorText={hasErrorFor('expiry_year')}
-                    isClearable={false}
+                    value={this.state.expiry_year}
+                    options={UpdateCreditCardPanel.yearMenuItems}
                   />
                 </Grid>
-
                 <Grid item className={classes.fullWidthMobile}>
                   <TextField
                     required
@@ -341,7 +343,7 @@ const accountContext = withAccount(({ loading, errors, data, update }) => {
       expiry: data.credit_card.expiry,
       last_four: data.credit_card.last_four,
       cvv: data.credit_card.cvv,
-      updateAccount: update
+      updateContext: update
     };
   }
 
@@ -351,9 +353,10 @@ const accountContext = withAccount(({ loading, errors, data, update }) => {
   };
 });
 
-const enhanced = compose(
+const enhanced = compose<CombinedProps, {}>(
   styled,
-  accountContext
+  accountContext,
+  accountContainer()
 );
 
 export default enhanced(UpdateCreditCardPanel) as React.ComponentType<{}>;

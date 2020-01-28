@@ -103,10 +103,13 @@ export interface InboundOutboundNetwork<WithDummy extends '' | 'yAsNull' = ''> {
   tx_bytes: WithDummy extends 'yAsNull' ? StatWithDummyPoint[] : Stat[];
 }
 
+export type LongviewNetworkInterface<
+  WithDummy extends '' | 'yAsNull' = ''
+> = Record<string, InboundOutboundNetwork<WithDummy>>;
 export interface LongviewNetwork<WithDummy extends '' | 'yAsNull' = ''> {
   Network: {
     mac_addr: string;
-    Interface: Record<string, InboundOutboundNetwork<WithDummy>>;
+    Interface: LongviewNetworkInterface<WithDummy>;
   };
 }
 
@@ -208,7 +211,8 @@ export type AllData = LongviewCPU &
   LongviewProcesses &
   Uptime &
   LongviewPortsResponse &
-  LastUpdated;
+  LastUpdated &
+  LongviewApplications;
 
 export interface WithStartAndEnd {
   start: number;
@@ -262,10 +266,67 @@ export type LongviewFieldName =
   | 'packages'
   | 'processes'
   | 'listeningServices'
-  | 'activeConnections';
+  | 'activeConnections'
+  | 'nginx'
+  | 'nginxProcesses'
+  | 'apache'
+  | 'apacheProcesses'
+  | 'mysql'
+  | 'mysqlProcesses';
 
 export interface Options {
   fields: LongviewFieldName[];
   start?: number;
   end?: number;
+}
+
+export interface LongviewApplications {
+  Applications?: {
+    Nginx?: NginxResponse;
+    Apache?: ApacheResponse;
+    MySQL?: MySQLResponse;
+  };
+}
+
+export interface NginxResponse {
+  version: string;
+  status: number;
+  status_message: string;
+  requests: Stat[];
+  writing: Stat[];
+  accepted_cons: Stat[];
+  handled_cons: Stat[];
+  reading: Stat[];
+  waiting: Stat[];
+  active: Stat[];
+}
+
+export interface ApacheResponse {
+  Workers: Record<string, Stat[]>;
+  status_message: string;
+  version: string;
+  status: number;
+  'Total kBytes': Stat[];
+  'Total Accesses': Stat[];
+}
+
+export interface MySQLResponse {
+  status_message: string;
+  status: number;
+  version: string;
+  Qcache_hits: Stat[];
+  Qcache_inserts: Stat[];
+  Qcache_lowmem_prunes: Stat[];
+  Qcache_not_cached: Stat[];
+  Qcache_queries_in_cache: Stat[];
+  Com_insert: Stat[];
+  Com_delete: Stat[];
+  Com_select: Stat[];
+  Com_update: Stat[];
+  Connections: Stat[];
+  Bytes_received: Stat[];
+  Bytes_sent: Stat[];
+  Slow_queries: Stat[];
+  Aborted_clients: Stat[];
+  Aborted_connects: Stat[];
 }

@@ -180,8 +180,8 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Grafana',
-    description: `Grafana allows you to query, visualize, alert on and understand your metrics no matter where they are stored. Create, explore, and share dashboards with your team and foster a data driven culture.`,
-    summary: `Grafana is the open source analytics & monitoring solution for every database.`,
+    description: `Grafana gives you the ability to create, monitor, store, and share metrics with your team to keep tabs on your infrastructure.`,
+    summary: `An open source analytics and monitoring solution with a focus on accessibility for metric visualization.`,
     related_info: [
       {
         title: 'https://grafana.com/',
@@ -195,8 +195,8 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Jenkins',
-    description: `Jenkins is a self-contained, open source automation server which can be used to automate all sorts of tasks related to building, testing, and delivering or deploying software.`,
-    summary: `Jenkins provides hundreds of plugins to support building, deploying and automating any project.`,
+    description: `Jenkins is an open source automation tool which can build, test, and deploy your infrastructure.`,
+    summary: `A tool that gives you access to a massive library of plugins to support automation in your project's lifecycle.`,
     related_guides: [
       {
         title: 'Using LISH to SSH into your Linode',
@@ -304,10 +304,32 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/plesk_color.svg'
   },
   {
+    name: 'phpMyAdmin',
+    description: `phpMyAdmin is a web application that provides a GUI to aid in MySQL and MariaDB database administration. It supports multiple database servers and is a robust and easy alternative to using the MySQL command line client.`,
+    summary: `An easy to use web application that simplifies the management of your MySQL and MariaDB databases.`,
+    related_guides: [
+      {
+        title: 'How to Install and Configure phpMyAdmin on Debian 8',
+        href:
+          'https://www.linode.com/docs/databases/mysql/install-and-configure-phpmyadmin-on-debian-8/'
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://www.phpmyadmin.net/',
+        href: 'https://www.phpmyadmin.net/'
+      },
+    ],
+    tips: [
+      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]/phpmyadmin</em> in a browser.`
+    ],
+    logo_url: 'assets/phpmyadmin_color.svg'
+  },
+  {  
     name: 'Prometheus',
-    description: `Prometheus is a an open-source monitoring system with a dimensional data model, flexible query language, efficient time series database and modern alerting approach.`,
+    description: `Prometheus is a powerful monitoring software tool that collects metrics from configurable data points at given intervals, evaluates rule expressions, and can trigger alerts if some condition is observed.`,
     summary:
-      'Power your metrics with a leading open-source monitoring solution.',
+      'Gain metrics and receive alerts with this open-source monitoring tool.',
     related_info: [
       {
         title: 'https://prometheus.io/',
@@ -343,7 +365,7 @@ export const oneClickApps: OCA[] = [
   {
     name: 'Shadowsocks',
     description:
-      'Shadowsocks is a lightweight SOCKS5 web proxy tool primarily utilized to bypass network censorship and blocking on certain websites and web protocols. A full setup requires a Linode server to host the Shadowsocks daemon, and a client installed on PC, Mac, Linux, or a mobile device. Unlike other proxy software, Shadowsocks traffic is designed to be both indiscernible from other traffic to third-party monitoring tools, and also able to disguise itself as a normal direct connection. Data passing through Shadowsocks is encrypted for additional security and privacy.',
+      'Shadowsocks is a lightweight SOCKS5 web proxy tool. A full setup requires a Linode server to host the Shadowsocks daemon, and a client installed on PC, Mac, Linux, or a mobile device. Unlike other proxy software, Shadowsocks traffic is designed to be both indiscernible from other traffic to third-party monitoring tools, and also able to disguise itself as a normal direct connection. Data passing through Shadowsocks is encrypted for additional security and privacy.',
     summary:
       'A secure socks5 proxy, designed to protect your Internet traffic.',
     related_info: [

@@ -3,6 +3,7 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import { isToday as _isToday } from 'src/utilities/isToday';
 import { WithStartAndEnd } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import CPUGraph from './CPUGraph';
@@ -19,6 +20,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   selectTimeRange: {
     width: 150
+  },
+  headerOuter: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: theme.spacing(1) + 2
   }
 }));
 
@@ -42,7 +50,7 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
     setTimeBox({ start, end });
   };
 
-  const isToday = time.end - time.start < 60 * 60 * 25;
+  const isToday = _isToday(time.end, time.start);
 
   const graphProps: GraphProps = {
     clientAPIKey,
@@ -55,16 +63,8 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <Grid container item spacing={0}>
-      <Grid
-        container
-        item
-        direction="row"
-        justify="space-between"
-        alignItems="center"
-        spacing={0}
-        className="py0"
-      >
+    <Grid item>
+      <Grid item className={classes.headerOuter}>
         <Grid item>
           <Typography variant="h2">Resource Allocation History</Typography>
         </Grid>

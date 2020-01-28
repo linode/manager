@@ -25,6 +25,7 @@ export interface Account {
   company: string;
   active_promotions: ActivePromotion[];
   capabilities: AccountCapability[];
+  euuid: string;
 }
 
 export type AccountCapability =
@@ -251,8 +252,8 @@ export interface Event {
   action: EventAction;
   created: string;
   entity: Entity | null;
-  /* 
-    NOTE: events before the duration key was added will have a duration of 0 
+  /*
+    NOTE: events before the duration key was added will have a duration of 0
   */
   duration: number | null;
   percent_complete: number | null;

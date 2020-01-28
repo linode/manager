@@ -4,7 +4,7 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { compose as rCompose, concat, uniq } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import Waypoint from 'react-waypoint';
+import { Waypoint } from 'react-waypoint';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
@@ -310,17 +310,17 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
           </TableBody>
         </Table>
       </Paper>
-      {loadMoreEvents && (initialLoaded && !isLoading) ? (
+      {loadMoreEvents && initialLoaded && !isLoading ? (
         <Waypoint onEnter={getNext}>
           <div />
         </Waypoint>
       ) : (
         !isLoading &&
-        (!error && (
+        !error && (
           <Typography className={classes.noMoreEvents}>
             No more events to show
           </Typography>
-        ))
+        )
       )}
     </>
   );
@@ -337,7 +337,16 @@ export const renderTableBody = (
   const filteredEvents = removeBlacklistedEvents(events, ['profile_update']);
 
   if (loading) {
-    return <TableRowLoading colSpan={12} data-qa-events-table-loading />;
+    return (
+      <TableRowLoading
+        colSpan={3}
+        numberOfRows={10}
+        oneLine
+        data-qa-events-table-loading
+        firstColWidth={70}
+        compact
+      />
+    );
   } else if (error) {
     return (
       <TableRowError
@@ -388,10 +397,6 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose<CombinedProps, Props>(
-  styled,
-  connected,
-  withSnackbar
-);
+const enhanced = compose<CombinedProps, Props>(styled, connected, withSnackbar);
 
 export default enhanced(EventsLanding);

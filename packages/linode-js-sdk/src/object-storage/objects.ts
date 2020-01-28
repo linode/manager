@@ -1,4 +1,4 @@
-import { BETA_API_ROOT } from 'src/constants';
+import { API_ROOT } from 'src/constants';
 import Request, { setData, setMethod, setURL } from '../request';
 import { ObjectStorageObjectURL, ObjectStorageObjectURLOptions } from './types';
 
@@ -15,7 +15,7 @@ export const getObjectURL = (
   Request<ObjectStorageObjectURL>(
     setMethod('POST'),
     setURL(
-      `${BETA_API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/object-url`
+      `${API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/object-url`
     ),
     setData({ name, method, ...options })
   ).then(response => response.data);

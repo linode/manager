@@ -16,6 +16,7 @@ import { bindActionCreators } from 'redux';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
+import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
 import RadioGroup from 'src/components/core/RadioGroup';
@@ -26,10 +27,14 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TagsInput, { Tag } from 'src/components/TagsInput';
 import TextField from 'src/components/TextField';
+import { reportException } from 'src/exceptionReporting';
+import LinodeSelect from 'src/features/linodes/LinodeSelect';
+import NodeBalancerSelect from 'src/features/NodeBalancers/NodeBalancerSelect';
 import {
   hasGrant,
   isRestrictedUser
@@ -46,26 +51,23 @@ import {
   DomainActionsProps,
   withDomainActions
 } from 'src/store/domains/domains.container';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { reportException } from 'src/exceptionReporting';
-import LinodeSelect from 'src/features/linodes/LinodeSelect';
-import NodeBalancerSelect from 'src/features/NodeBalancers/NodeBalancerSelect';
-import { getErrorMap } from 'src/utilities/errorUtils';
+import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { sendCreateDomainEvent } from 'src/utilities/ga';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import DeleteDomain from './DeleteDomain';
+import DomainTransferInput from './DomainTransferInput';
 
-type ClassNames = 'root' | 'masterIPErrorNotice' | 'addIP';
+type ClassNames = 'root' | 'addIP' | 'divider';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {},
-    masterIPErrorNotice: {
-      marginTop: theme.spacing(2)
-    },
     addIP: {
       left: -theme.spacing(2) + 3
+    },
+    divider: {
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(4)
     }
   });
 
@@ -80,6 +82,7 @@ interface State {
   errors?: APIError[];
   submitting: boolean;
   master_ips: string[];
+  axfr_ips: string[];
   masterIPsCount: number;
   defaultRecordsSetting: DefaultRecordsType;
   selectedDefaultLinode?: Linode;
@@ -158,10 +161,7 @@ const generateDefaultDomainRecords = (
 
 const masterIPsLens = lensPath(['master_ips']);
 const masterIPLens = (idx: number) =>
-  compose(
-    masterIPsLens,
-    lensPath([idx])
-  ) as Lens;
+  compose(masterIPsLens, lensPath([idx])) as Lens;
 const viewMasterIP = (idx: number, obj: any) =>
   view<any, string | undefined>(masterIPLens(idx), obj);
 const setMasterIP = (idx: number, value: string) =>
@@ -182,6 +182,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     submitting: false,
     errors: [],
     master_ips: [],
+    axfr_ips: [],
     masterIPsCount: 1,
     defaultRecordsSetting: 'none',
     selectedDefaultLinode: undefined,
@@ -217,6 +218,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
 
       // then put it props into state to populate fields
       const {
+        axfr_ips,
         domain,
         tags,
         master_ips,
@@ -229,6 +231,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         type,
         domain,
         master_ips,
+        axfr_ips,
         soaEmail: soa_email
       });
     }
@@ -248,6 +251,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
 
     const errorMap = getErrorMap(
       [
+        'axfr_ips',
         'master_ips',
         'domain',
         'type',
@@ -341,9 +345,9 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
           <React.Fragment>
             {masterIPsError && (
               <Notice
-                className={classes.masterIPErrorNotice}
                 error
                 text={`Master IP addresses must be valid IPv4 addresses.`}
+                spacingTop={16}
               />
             )}
             {Array.from(Array(this.state.masterIPsCount)).map((slave, idx) => (
@@ -364,6 +368,14 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               data-qa-add-master-ip-field
               disabled={disabled}
             />
+            {isEditingSlaveDomain && (
+              // Only when editing
+              <DomainTransferInput
+                value={this.state.axfr_ips.join(',')}
+                onChange={this.handleTransferInput}
+                error={errorMap.axfr_ips}
+              />
+            )}
           </React.Fragment>
         )}
         {this.props.mode !== CLONING && (
@@ -470,9 +482,25 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
             Cancel
           </Button>
         </ActionsPanel>
+        {mode === EDITING && this.props.id && this.props.domain && (
+          <>
+            <Divider className={classes.divider} />
+            <DeleteDomain
+              domainId={this.props.id}
+              domainLabel={this.props.domain}
+              onSuccess={this.closeDrawer}
+            />
+          </>
+        )}
       </Drawer>
     );
   }
+
+  handleTransferInput = (axfr_ips: string[]) => {
+    if (this.mounted) {
+      this.setState({ axfr_ips });
+    }
+  };
 
   resetInternalState = () => {
     if (this.mounted) {
@@ -591,9 +619,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               })
               .catch((e: APIError[]) => {
                 reportException(
-                  `Default DNS Records couldn't be created from Linode: ${
-                    e[0].reason
-                  }`,
+                  `Default DNS Records couldn't be created from Linode: ${e[0].reason}`,
                   {
                     selectedLinode: this.state.selectedDefaultLinode!.id,
                     domainID: domainData.id,
@@ -620,9 +646,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               })
               .catch((e: APIError[]) => {
                 reportException(
-                  `Default DNS Records couldn't be created from NodeBalancer: ${
-                    e[0].reason
-                  }`,
+                  `Default DNS Records couldn't be created from NodeBalancer: ${e[0].reason}`,
                   {
                     selectedNodeBalancer: this.state
                       .selectedDefaultNodeBalancer!.id,
@@ -694,7 +718,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
   };
 
   update = () => {
-    const { domain, type, soaEmail, master_ips } = this.state;
+    const { axfr_ips, domain, type, soaEmail, master_ips } = this.state;
     const { domainActions, id } = this.props;
     const tags = this.state.tags.map(tag => tag.value);
 
@@ -723,12 +747,19 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
       type === 'master'
         ? // not sending type for master. There is a bug on server and it returns an error that `master_ips` is required
           { domain, tags, soa_email: soaEmail, domainId: id }
-        : { domain, type, tags, master_ips: finalMasterIPs, domainId: id };
+        : {
+            domain,
+            type,
+            tags,
+            master_ips: finalMasterIPs,
+            domainId: id,
+            axfr_ips
+          };
 
     this.setState({ submitting: true });
     domainActions
       .updateDomain(data)
-      .then((domainData: Domain) => {
+      .then(_ => {
         if (!this.mounted) {
           return;
         }
@@ -837,10 +868,7 @@ const mapStateToProps = (state: ApplicationState) => {
   };
 };
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose<CombinedProps, {}>(
   withDomainActions,

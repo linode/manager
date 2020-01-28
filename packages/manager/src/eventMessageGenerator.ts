@@ -18,7 +18,7 @@ export const safeSecondaryEntityLabel = (
   text: string,
   fallback: string = ''
 ) => {
-  const label = path<string>(['secondary_entity', 'label'], e);
+  const label = e?.secondary_entity?.label;
   return label ? `${text} ${label}` : fallback;
 };
 
@@ -58,21 +58,55 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: e => `Credit card information has been updated.`
   },
   disk_create: {
-    scheduled: e => `Disk is being added to Linode ${e.entity!.label}.`,
-    started: e => `Disk is being added to ${e.entity!.label}.`,
-    failed: e => `Disk could not be added to Linode ${e.entity!.label}.`,
-    finished: e => `Disk has been added to Linode ${e.entity!.label}.`
+    scheduled: e =>
+      `${safeSecondaryEntityLabel(
+        e,
+        'Disk',
+        'A disk'
+      )} is being added to Linode ${e.entity!.label}.`,
+    started: e =>
+      `${safeSecondaryEntityLabel(e, 'Disk', 'A disk')} is being added to ${
+        e.entity!.label
+      }.`,
+    failed: e =>
+      `${safeSecondaryEntityLabel(
+        e,
+        'Disk',
+        'A disk'
+      )} could not be added to Linode ${e.entity!.label}.`,
+    finished: e =>
+      `${safeSecondaryEntityLabel(
+        e,
+        'Disk',
+        'A disk'
+      )} has been added to Linode ${e.entity!.label}.`
     // notification: e => ``,
   },
   disk_update: {
-    notification: e => `A disk has been updated on Linode ${e.entity!.label}.`
+    notification: e =>
+      `${safeSecondaryEntityLabel(
+        e,
+        'Disk',
+        'A disk'
+      )} has been updated on Linode ${e.entity!.label}.`
   },
   disk_delete: {
     scheduled: e =>
-      `A disk on Linode ${e.entity!.label} is scheduled for deletion.`,
-    started: e => `A disk on Linode ${e.entity!.label} is being deleted.`,
-    failed: e => `A disk on Linode ${e.entity!.label} could not be deleted.`,
-    finished: e => `A disk on Linode ${e.entity!.label} has been deleted`
+      `${safeSecondaryEntityLabel(e, 'Disk', 'A disk')} on Linode ${
+        e.entity!.label
+      } is scheduled for deletion.`,
+    started: e =>
+      `${safeSecondaryEntityLabel(e, 'Disk', 'A disk')} on Linode ${
+        e.entity!.label
+      } is being deleted.`,
+    failed: e =>
+      `${safeSecondaryEntityLabel(e, 'Disk', 'A disk')} on Linode ${
+        e.entity!.label
+      } could not be deleted.`,
+    finished: e =>
+      `${safeSecondaryEntityLabel(e, 'Disk', 'A disk')} on Linode ${
+        e.entity!.label
+      } has been deleted`
     // notification: e => ``,
   },
   disk_duplicate: {
@@ -169,48 +203,53 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
         'booted'
       )}.`
   },
+  /**
+   * For these events, we expect an entity (the Linode being rebooted)
+   * but there have been cases where an event has come through with
+   * entity === null. Handle them safely.
+   */
   lassie_reboot: {
     scheduled: e =>
-      `Linode ${
-        e.entity!.label
-      } is scheduled to be rebooted by the Lassie watchdog service.`,
+      `Linode ${e.entity?.label ??
+        ''} is scheduled to be rebooted by the Lassie watchdog service.`,
     started: e =>
-      `Linode ${
-        e.entity!.label
-      } is being booted by the Lassie watchdog service.`,
+      `Linode ${e.entity?.label ??
+        ''} is being booted by the Lassie watchdog service.`,
     failed: e =>
-      `Linode ${
-        e.entity!.label
-      } could not be booted by the Lassie watchdog service.`,
+      `Linode ${e.entity?.label ??
+        ''} could not be booted by the Lassie watchdog service.`,
     finished: e =>
-      `Linode ${
-        e.entity!.label
-      } has been booted by the Lassie watchdog service.`
+      `Linode ${e.entity?.label ??
+        ''} has been booted by the Lassie watchdog service.`
   },
   host_reboot: {
     scheduled: e =>
-      `Linode ${
-        e.entity!.label
-      } is scheduled to reboot (Host initiated restart).`,
+      `Linode ${e.entity?.label ??
+        ''} is scheduled to reboot (Host initiated restart).`,
     started: e =>
-      `Linode ${e.entity!.label} is being booted (Host initiated restart).`,
+      `Linode ${e.entity?.label ??
+        ''} is being booted (Host initiated restart).`,
     failed: e =>
-      `Linode ${e.entity!.label} could not be booted (Host initiated restart).`,
+      `Linode ${e.entity?.label ??
+        ''} could not be booted (Host initiated restart).`,
     finished: e =>
-      `Linode ${e.entity!.label} has been booted (Host initiated restart).`
+      `Linode ${e.entity?.label ??
+        ''} has been booted (Host initiated restart).`
   },
   ipaddress_update: {
     notification: e => `An IP address has been updated on your account.`
   },
   lish_boot: {
     scheduled: e =>
-      `Linode ${e.entity!.label} is scheduled to boot (Lish initiated boot).`,
+      `Linode ${e.entity?.label ??
+        ''} is scheduled to boot (Lish initiated boot).`,
     started: e =>
-      `Linode ${e.entity!.label} is being booted (Lish initiated boot).`,
+      `Linode ${e.entity?.label ?? ''} is being booted (Lish initiated boot).`,
     failed: e =>
-      `Linode ${e.entity!.label} could not be booted (Lish initiated boot).`,
+      `Linode ${e.entity?.label ??
+        ''} could not be booted (Lish initiated boot).`,
     finished: e =>
-      `Linode ${e.entity!.label} has been booted (Lish initiated boot).`
+      `Linode ${e.entity?.label ?? ''} has been booted (Lish initiated boot).`
   },
   linode_clone: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled to be cloned.`,
@@ -325,13 +364,28 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     finished: e => `A snapshot backup has been created for ${e.entity!.label}.`
   },
   linode_config_create: {
-    notification: e => `A config has been created on Linode ${e.entity!.label}.`
+    notification: e =>
+      `${safeSecondaryEntityLabel(
+        e,
+        'Config',
+        'A config'
+      )} has been created on Linode ${e.entity!.label}.`
   },
   linode_config_update: {
-    notification: e => `A config has been updated on Linode ${e.entity!.label}.`
+    notification: e =>
+      `${safeSecondaryEntityLabel(
+        e,
+        'Config',
+        'A config'
+      )} has been updated on Linode ${e.entity!.label}.`
   },
   linode_config_delete: {
-    notification: e => `A config has been deleted on Linode ${e.entity!.label}.`
+    notification: e =>
+      `${safeSecondaryEntityLabel(
+        e,
+        'Config',
+        'A config'
+      )} has been deleted on Linode ${e.entity!.label}.`
   },
   longviewclient_create: {
     notification: e => `Longview Client ${e.entity!.label} has been created.`

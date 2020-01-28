@@ -31,7 +31,6 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
     case 'linode_snapshot':
     case 'linode_addip':
     case 'linode_boot':
-    case 'backups_restore':
     case 'backups_enable':
     case 'backups_cancel':
     case 'disk_imagize':
@@ -39,6 +38,7 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
       return handleLinodeUpdate(dispatch, status, id);
 
     case 'linode_rebuild':
+    case 'backups_restore':
       return handleLinodeRebuild(dispatch, status, id, percent_complete);
 
     /** Remove Linode */
@@ -48,6 +48,16 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
     /** Create Linode */
     case 'linode_create':
       return handleLinodeCreation(dispatch, status, id, getState());
+
+    /**
+     * Config actions
+     *
+     * It's not clear that these can actually fail, so this is here
+     * mostly as a failsafe.
+     */
+    case 'linode_config_create':
+    case 'linode_config_delete':
+      return handleConfigEvent(dispatch, status, id);
 
     case 'disk_delete':
       if (status === 'failed') {
@@ -191,6 +201,27 @@ const handleLinodeCreation = (
     case 'started':
       return dispatch(requestLinodeForStore(id, true));
 
+    default:
+      return;
+  }
+};
+
+const handleConfigEvent = (
+  dispatch: Dispatch<any>,
+  status: EventStatus,
+  id: number
+) => {
+  switch (status) {
+    case 'failed':
+      /**
+       * We optimistically add or remove configs as soon
+       * as the initial API request returns a 200.
+       *
+       * If we receive an event indicating that the creation/deletion
+       * failed on the backend, we need to re-request this Linode's configs
+       * (which will re-add or remove the target config).
+       */
+      return dispatch(getAllLinodeConfigs({ linodeId: id }));
     default:
       return;
   }

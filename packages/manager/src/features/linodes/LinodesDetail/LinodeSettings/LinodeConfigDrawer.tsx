@@ -1,9 +1,9 @@
-/**
- * @todo The config information is now immediately available on the LinodeDetail context and we
- * should source it directly from there rather than making an additional request. OR We can source
- * it from there and make the (thunk) request to get the latest/greatest information.
- */
-import { Disk, getLinodeKernels, Kernel } from 'linode-js-sdk/lib/linodes';
+import {
+  Config,
+  Disk,
+  getLinodeKernels,
+  Kernel
+} from 'linode-js-sdk/lib/linodes';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import { pathOr } from 'ramda';
@@ -17,6 +17,7 @@ import Divider from 'src/components/core/Divider';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormGroup from 'src/components/core/FormGroup';
+import FormHelperText from 'src/components/core/FormHelperText';
 import FormLabel from 'src/components/core/FormLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
 import {
@@ -29,6 +30,7 @@ import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
+import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
@@ -48,12 +50,11 @@ import { getAll } from 'src/utilities/getAll';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import {
   CreateLinodeConfig,
-  GetLinodeConfig,
   UpdateLinodeConfig,
   withLinodeDetailContext
 } from '../linodeDetailContext';
 
-type ClassNames = 'section' | 'divider';
+type ClassNames = 'section' | 'divider' | 'formControlToggle';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -63,6 +64,11 @@ const styles = (theme: Theme) =>
     divider: {
       margin: `${theme.spacing(2)}px ${theme.spacing(1)}px 0 `,
       width: `calc(100% - ${theme.spacing(2)}px)`
+    },
+    formControlToggle: {
+      '& button': {
+        order: 3
+      }
     }
   });
 
@@ -105,6 +111,7 @@ interface State {
   kernels: Kernel[];
   errors?: Error | APIError[];
   fields: EditableFields;
+  submitting: boolean;
 }
 
 type CombinedProps = LinodeContextProps &
@@ -121,7 +128,8 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       config: false
     },
     kernels: [],
-    fields: LinodeConfigDrawer.defaultFieldsValues()
+    fields: LinodeConfigDrawer.defaultFieldsValues(),
+    submitting: false
   };
 
   static defaultFieldsValues: () => EditableFields = () => ({
@@ -145,7 +153,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   });
 
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
-    const { linodeConfigId, linodeHypervisor, getLinodeConfig } = this.props;
+    const { config, linodeHypervisor } = this.props;
 
     if (this.isOpening(prevProps.open, this.props.open)) {
       /** Reset the form to the default create state. */
@@ -165,43 +173,27 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         this.requestKernels(linodeHypervisor);
       }
 
-      if (linodeConfigId !== undefined) {
-        this.setState({ loading: { ...this.state.loading, config: true } });
-
-        getLinodeConfig(linodeConfigId)
-          .then(config => {
-            this.setState({
-              loading: {
-                ...this.state.loading,
-                config: false
-              },
-              fields: {
-                useCustomRoot: isUsingCustomRoot(config.root_device),
-                label: config.label,
-                devices: createStringsFromDevices(config.devices),
-                kernel: config.kernel,
-                comments: config.comments,
-                memory_limit: config.memory_limit,
-                run_level: config.run_level,
-                virt_mode: config.virt_mode,
-                helpers: config.helpers,
-                root_device: config.root_device,
-                setMemoryLimit:
-                  config.memory_limit !== 0 ? 'set_limit' : 'no_limit'
-              }
-            });
-          })
-          .catch(error => {
-            this.setState({
-              errors: Error(),
-              loading: { ...this.state.loading, config: false }
-            });
-          });
-      }
       /**
-       * If the linodeConfigId is set, we're editing, so we query to get the config data and
-       * fill out the form with the data.
+       * If config is defined, we're editing. Set the state
+       * to the values of the config.
        */
+      if (config) {
+        this.setState({
+          fields: {
+            useCustomRoot: isUsingCustomRoot(config.root_device),
+            label: config.label,
+            devices: createStringsFromDevices(config.devices),
+            kernel: config.kernel,
+            comments: config.comments,
+            memory_limit: config.memory_limit,
+            run_level: config.run_level,
+            virt_mode: config.virt_mode,
+            helpers: config.helpers,
+            root_device: config.root_device,
+            setMemoryLimit: config.memory_limit !== 0 ? 'set_limit' : 'no_limit'
+          }
+        });
+      }
     }
   }
 
@@ -256,7 +248,8 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         virt_mode,
         helpers,
         root_device
-      }
+      },
+      submitting
     } = this.state;
 
     const errorFor = getAPIErrorsFor(
@@ -348,6 +341,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               htmlFor="virt_mode"
               component="label"
               disabled={readOnly}
+              aria-describedby="virtModeCaption"
             >
               VM Mode
             </FormLabel>
@@ -369,6 +363,11 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                 disabled={readOnly}
                 control={<Radio />}
               />
+              <FormHelperText id="virtModeCaption">
+                Controls if devices inside your virtual machine are
+                paravirtualized or fully virtualized. Paravirt is what you want,
+                unless you're doing weird things.
+              </FormHelperText>
             </RadioGroup>
           </FormControl>
         </Grid>
@@ -440,16 +439,16 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
           </FormControl>
 
           {/*
-            it's important to note here that if the memory limit
-            is set to 0, this config is going to use 100% of the
-            Linode's RAM. Otherwise, it only uses the limit
-            explicitly set by the user.
+              it's important to note here that if the memory limit
+              is set to 0, this config is going to use 100% of the
+              Linode's RAM. Otherwise, it only uses the limit
+              explicitly set by the user.
 
-            So to make this more clear to the user, we're going to
-            hide the option to change the RAM limit unless the
-            user explicity selects the option to change the
-            memory limit.
-          */}
+              So to make this more clear to the user, we're going to
+              hide the option to change the RAM limit unless the
+              user explicity selects the option to change the
+              memory limit.
+            */}
           <FormControl updateFor={[this.state.fields.setMemoryLimit, classes]}>
             <FormLabel
               htmlFor="memory_limit"
@@ -567,55 +566,74 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             <FormGroup>
               <FormControlLabel
                 label="Distro Helper"
+                className={classes.formControlToggle}
                 control={
                   <Toggle
                     checked={helpers.distro}
                     onChange={this.handleToggleDistroHelper}
                     disabled={readOnly}
+                    tooltipText="Helps maintain correct inittab/upstart console device"
                   />
                 }
               />
 
               <FormControlLabel
                 label="Disable updatedb"
+                className={classes.formControlToggle}
                 control={
                   <Toggle
                     checked={helpers.updatedb_disabled}
                     onChange={this.handleToggleUpdateDBHelper}
                     disabled={readOnly}
+                    tooltipText="Disables updatedb cron job to avoid disk thrashing"
                   />
                 }
               />
 
               <FormControlLabel
                 label="modules.dep Helper"
+                className={classes.formControlToggle}
                 control={
                   <Toggle
                     checked={helpers.modules_dep}
                     onChange={this.handleToggleModulesDepHelper}
                     disabled={readOnly}
+                    tooltipText="Creates a modules dependency file for the kernel you run"
                   />
                 }
               />
 
               <FormControlLabel
                 label="automount devtpmfs"
+                className={classes.formControlToggle}
                 control={
                   <Toggle
                     checked={helpers.devtmpfs_automount}
                     onChange={this.handleToggleAutoMountHelper}
                     disabled={readOnly}
+                    tooltipText="Controls if pv_ops kernels automount devtmpfs at boot"
                   />
                 }
               />
 
               <FormControlLabel
                 label="auto-configure networking"
+                className={classes.formControlToggle}
                 control={
                   <Toggle
                     checked={helpers.network}
                     onChange={this.handleAuthConfigureNetworkHelper}
                     disabled={readOnly}
+                    tooltipText={
+                      <>
+                        Automatically configure static networking
+                        <ExternalLink
+                          text="(more info)"
+                          link="https://www.linode.com/docs/platform/network-helper/"
+                        />
+                      </>
+                    }
+                    interactive={true}
                   />
                 }
               />
@@ -628,6 +646,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               onClick={this.onSubmit}
               buttonType="primary"
               disabled={readOnly}
+              loading={submitting}
             >
               Submit
             </Button>
@@ -672,12 +691,15 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       });
     }
 
+    this.setState({ submitting: true });
+
     const configData = this.convertStateToData(this.state.fields);
 
     /** Editing */
     if (linodeConfigId) {
       return updateLinodeConfig(linodeConfigId, configData)
         .then(_ => {
+          this.setState({ submitting: false });
           this.props.onClose();
         })
         .catch(error => {
@@ -685,7 +707,8 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             errors: getAPIErrorOrDefault(
               error,
               'Unable to update config. Please try again.'
-            )
+            ),
+            submitting: false
           });
         });
     }
@@ -693,6 +716,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     /** Creating */
     return createLinodeConfig(configData)
       .then(_ => {
+        this.setState({ submitting: false });
         this.props.onClose();
       })
       .catch(error =>
@@ -700,7 +724,8 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
           errors: getAPIErrorOrDefault(
             error,
             'Unable to create config. Please try again.'
-          )
+          ),
+          submitting: false
         })
       );
   };
@@ -852,13 +877,13 @@ const styled = withStyles(styles);
 interface StateProps {
   disks: ExtendedDisk[];
   volumes: ExtendedVolume[];
+  config?: Config;
 }
 
 interface LinodeContextProps {
   linodeId: number;
   createLinodeConfig: CreateLinodeConfig;
   updateLinodeConfig: UpdateLinodeConfig;
-  getLinodeConfig: GetLinodeConfig;
   readOnly: boolean;
 }
 
@@ -866,7 +891,7 @@ const enhanced = compose<CombinedProps, Props>(
   styled,
 
   withLinodeDetailContext(
-    ({ linode, createLinodeConfig, updateLinodeConfig, getLinodeConfig }) => ({
+    ({ linode, createLinodeConfig, updateLinodeConfig }) => ({
       disks: linode._disks.map((disk: Disk) => ({
         ...disk,
         _id: `disk-${disk.id}`
@@ -874,14 +899,17 @@ const enhanced = compose<CombinedProps, Props>(
       linodeId: linode.id,
       readOnly: linode._permissions === 'read_only',
       createLinodeConfig,
-      updateLinodeConfig,
-      getLinodeConfig
+      updateLinodeConfig
     })
   ),
 
   connect((state: ApplicationState, ownProps: LinodeContextProps & Props) => {
-    const { linodeId, linodeRegion } = ownProps;
+    const { linodeConfigId, linodeId, linodeRegion } = ownProps;
     const { itemsById } = state.__resources.volumes;
+
+    const config = linodeConfigId
+      ? state.__resources.linodeConfigs.itemsById[linodeConfigId]
+      : undefined;
 
     const volumes = Object.values(itemsById).reduce(
       (result: Volume[], volume: Volume) => {
@@ -903,7 +931,7 @@ const enhanced = compose<CombinedProps, Props>(
       },
       []
     );
-    return { volumes };
+    return { config, volumes };
   })
 );
 
