@@ -55,6 +55,10 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
   };
 
   makeInitialRequests = async () => {
+    // When loading lish we avoid all this extra data loading
+    if (!window.location?.pathname?.includes('/lish/')) {
+      return;
+    }
     const {
       nodeBalancerActions: { getAllNodeBalancersWithConfigs }
     } = this.props;
@@ -97,11 +101,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     if (this.props.isAuthenticated) {
       this.setState({ showChildren: true });
 
-      // When loading lish we avoid all this extra data loading
-      if (!window.location?.pathname?.includes('/lish/')) {
-        this.makeInitialRequests();
-      }
-
+      this.makeInitialRequests();
       startEventsInterval();
     }
   }
@@ -117,11 +117,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       this.props.isAuthenticated &&
       !this.state.showChildren
     ) {
-      // When loading lish we avoid all this extra data loading
-      if (!window.location?.pathname?.includes('/lish/')) {
-        this.makeInitialRequests();
-      }
-
+      this.makeInitialRequests();
       startEventsInterval();
 
       return this.setState({ showChildren: true });
