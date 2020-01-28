@@ -16,7 +16,7 @@ const props = {
   classes,
   items: ['a', 'b'],
   render: mockRender,
-  itemType: 'items'
+  ariaItemType: 'items'
 };
 
 describe('ShowMore', () => {

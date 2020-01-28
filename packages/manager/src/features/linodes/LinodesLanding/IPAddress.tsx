@@ -177,7 +177,7 @@ export class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
         {formattedIPS.length > 1 && showMore && !showAll && (
           <ShowMore
             items={tail(formattedIPS)}
-            itemType="IP addresses"
+            ariaItemType="IP addresses"
             render={(ipsAsArray: string[]) => {
               return ipsAsArray.map((ip, idx) =>
                 this.renderIP(ip.replace('/64', ''), copyRight, idx)

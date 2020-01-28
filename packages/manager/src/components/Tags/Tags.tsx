@@ -45,7 +45,9 @@ export class Tags extends React.Component<CombinedProps, {}> {
   };
 
   renderMoreTags = (tags: string[]) => {
-    return <ShowMore items={tags} render={this.renderTags} itemType="tags" />;
+    return (
+      <ShowMore items={tags} render={this.renderTags} ariaItemType="tags" />
+    );
   };
 
   render() {
