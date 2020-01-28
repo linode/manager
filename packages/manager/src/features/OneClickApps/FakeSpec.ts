@@ -80,6 +80,28 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/csgo_color.svg'
   },
   {
+    name: 'Flask',
+    description: `Flask is a lightweight WSGI web application framework. It is designed to make getting started quick and easy, with the ability to scale up to complex applications.`,
+    summary: `A quick light-weight web framework for Python that includes several utilities and libraries you can use to create a web application.`,
+    related_guides: [
+      {
+        title: 'Deploy a Flask Application on Ubuntu',
+        href:
+          'https://www.linode.com/docs/development/python/flask-and-gunicorn-on-ubuntu/'
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://www.palletsprojects.com/p/flask/',
+        href: 'https://www.palletsprojects.com/p/flask/'
+      },
+    ],
+    tips: [
+      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]</em> in a browser.`
+    ],
+    logo_url: 'assets/flask_color.svg'
+  },
+  {
     name: 'Docker',
     description: `Docker is a tool that enables you to create, deploy, and manage lightweight, stand-alone packages that contain everything needed to run an application (code, libraries, runtime, system settings, and dependencies).`,
     summary: `Securely build, share and run modern applications anywhere.`,
