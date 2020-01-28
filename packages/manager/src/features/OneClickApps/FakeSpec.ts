@@ -244,6 +244,18 @@ export const oneClickApps: OCA[] = [
     // href: 'https://www.ibm.com/cloud/learn/lamp-stack-explained' Not sure this is kosher.
   },
   {
+    name: 'Mean',
+    description: `MEAN is a full-stack JavaScript-based framework, which accelerates web application development much faster than other frameworks.  All of these technologies are well-established, offer robust feature sets, and are well-supported by their maintaining organizations. These characteristics make them a great choice for your applications.`,
+    summary: `A MERN (MongoDB, Express, Angular, Node.js) stack is a free and open-source web software bundle used to build modern web applications:`,
+    related_info: [
+      {
+        title: 'http://meanjs.org/',
+        href: 'http://meanjs.org/'
+      }
+    ],
+    logo_url: 'assets/mean_color.svg'
+  },
+  {
     name: 'LEMP',
     description: `LEMP provides a platform for applications that is compatible with the LAMP stack for nearly all applications; however, because NGINX is able to serve more pages at once with a more predictable memory usage profile, it may be more suited to high demand situations.`,
     summary: `The LEMP stack replaces the Apache web server component with NGINX (“Engine-X”), providing the E in the acronym: Linux, NGINX, MySQL/MariaDB, PHP.    `,
