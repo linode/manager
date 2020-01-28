@@ -62,7 +62,8 @@ export const ResizeCluster: React.FC<ResizeProps> = props => {
   const [selectedType, setSelectedType] = React.useState<string | undefined>(
     undefined
   );
-  const [count, setCount] = React.useState<number>(1);
+  // Default to 3 nodes in each pool; single nodes are possible but have downtime/performance risks.
+  const [count, setCount] = React.useState<number>(3);
   /** Form submission */
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [generalError, setErrors] = React.useState<APIError[] | undefined>(

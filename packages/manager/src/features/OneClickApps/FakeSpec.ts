@@ -244,6 +244,18 @@ export const oneClickApps: OCA[] = [
     // href: 'https://www.ibm.com/cloud/learn/lamp-stack-explained' Not sure this is kosher.
   },
   {
+    name: 'Mean',
+    description: `MEAN is a full-stack JavaScript-based framework, which accelerates web application development much faster than other frameworks.  All of these technologies are well-established, offer robust feature sets, and are well-supported by their maintaining organizations. These characteristics make them a great choice for your applications.`,
+    summary: `A MERN (MongoDB, Express, Angular, Node.js) stack is a free and open-source web software bundle used to build modern web applications:`,
+    related_info: [
+      {
+        title: 'http://meanjs.org/',
+        href: 'http://meanjs.org/'
+      }
+    ],
+    logo_url: 'assets/mean_color.svg'
+  },
+  {
     name: 'LEMP',
     description: `LEMP provides a platform for applications that is compatible with the LAMP stack for nearly all applications; however, because NGINX is able to serve more pages at once with a more predictable memory usage profile, it may be more suited to high demand situations.`,
     summary: `The LEMP stack replaces the Apache web server component with NGINX (“Engine-X”), providing the E in the acronym: Linux, NGINX, MySQL/MariaDB, PHP.    `,
@@ -323,6 +335,30 @@ export const oneClickApps: OCA[] = [
       `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:3000</em> in a browser.`
     ],
     logo_url: 'assets/rubyonrails_color.svg'
+  },
+  {
+    name: 'PostgreSQL',
+    description: `PostgreSQL is a popular, open source relational database system that provides many advanced configuration options that can help optimize your databases’s performance in a production environment.`,
+    summary: `The PostgreSQL relational database system is a powerful, scalable, and standards-compliant open-source database platform.`,
+    related_guides: [
+      {
+        title: 'Configure PostgreSQL',
+        href:
+          'https://www.linode.com/docs/databases/postgresql/configure-postgresql/'
+      },
+      {
+        title: 'How to Install PostgreSQL on Ubuntu 16.04',
+        href:
+          'https://www.linode.com/docs/databases/postgresql/how-to-install-postgresql-on-ubuntu-16-04/'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://www.postgresql.org/',
+        href: 'https://www.postgresql.org/'
+      }
+    ],
+    logo_url: 'assets/postgresql_color.svg'
   },
   {
     name: 'phpMyAdmin',

@@ -125,6 +125,12 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
               pathname={this.props.location.pathname}
               labelOptions={{ prefixComponent: userNameSlash, noCap: true }}
               labelTitle={stackScript.label}
+              crumbOverrides={[
+                {
+                  position: 1,
+                  label: 'StackScripts'
+                }
+              ]}
             />
           </Grid>
           <Grid item className={classes.cta}>

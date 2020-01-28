@@ -355,17 +355,17 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
   );
 };
 
+interface StateProps {
+  lvClientData: StatsState;
+}
+
 /**
  * Calling connect directly here rather than use a
  * container because this is a unique case; we need
  * access to data from all clients.
  */
-interface StateProps {
-  lvClientData: Record<string, StatsState>;
-}
-
 const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
-  const lvClientData = pathOr({}, ['longviewStats'], state);
+  const lvClientData = state.longviewStats ?? {};
   return {
     lvClientData
   };
@@ -428,7 +428,7 @@ export const sortFunc = (
 export const sortClientsBy = (
   sortKey: SortKey,
   clients: LongviewClient[],
-  clientData: Record<string, StatsState>
+  clientData: StatsState
 ) => {
   switch (sortKey) {
     case 'name':
@@ -500,7 +500,7 @@ export const sortClientsBy = (
 export const filterLongviewClientsByQuery = (
   query: string,
   clientList: LongviewClient[],
-  clientData: Record<string, StatsState>
+  clientData: StatsState
 ) => {
   /** just return the original list if there's no query */
   if (!query.trim()) {
