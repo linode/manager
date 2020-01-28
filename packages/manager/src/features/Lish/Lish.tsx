@@ -22,6 +22,7 @@ import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import NotFound from 'src/components/NotFound';
 import { convertForAria } from 'src/components/TabLink/TabLink';
+// import { authentication } from 'src/utilities/storage';
 import Glish from './Glish';
 import Weblish from './Weblish';
 
@@ -71,6 +72,7 @@ class Lish extends React.Component<CombinedProps, State> {
     loading: true
   };
 
+  interval: number;
   mounted: boolean;
 
   componentDidMount() {
@@ -109,10 +111,19 @@ class Lish extends React.Component<CombinedProps, State> {
       });
 
     this.refreshToken();
+    // If the user signs out in another window, close this session
+    this.interval = window.setInterval(() => {
+      const token = localStorage.getItem('authentication/token');
+
+      if (!token) {
+        window.close();
+      }
+    }, 5000);
   }
 
   componentWillUnmount() {
     this.mounted = false;
+    window.clearInterval(this.interval);
   }
 
   refreshToken = () => {
