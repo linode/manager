@@ -96,12 +96,11 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
      */
     if (this.props.isAuthenticated) {
       this.setState({ showChildren: true });
-      if(window.location?.pathname?.includes("/lish/")){
-        // console.log("Lish, skipping loading all this")
-        return;
+
+      // When loading lish we avoid all this extra data loading
+      if (!window.location?.pathname?.includes('/lish/')) {
+        this.makeInitialRequests();
       }
-  
-      this.makeInitialRequests();
 
       startEventsInterval();
     }
@@ -118,8 +117,13 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       this.props.isAuthenticated &&
       !this.state.showChildren
     ) {
-      this.makeInitialRequests();
+      // When loading lish we avoid all this extra data loading
+      if (!window.location?.pathname?.includes('/lish/')) {
+        this.makeInitialRequests();
+      }
+
       startEventsInterval();
+
       return this.setState({ showChildren: true });
     }
 
@@ -178,10 +182,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   requestClusters: () => dispatch(requestClusters())
 });
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose<CombinedProps, {}>(
   connected,
