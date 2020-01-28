@@ -326,6 +326,10 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
               labelTitle="Edit"
               data-qa-update-stackscript-breadcrumb
               crumbOverrides={[
+                {
+                  position: 1,
+                  label: 'StackScripts'
+                },
                 { position: 2, label: this.defaultStackScriptValues.labelText }
               ]}
             />
