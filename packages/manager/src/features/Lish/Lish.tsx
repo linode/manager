@@ -20,9 +20,10 @@ import {
 } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
+import Typography from 'src/components/core/Typography';
+import ErrorState from 'src/components/ErrorState';
 import NotFound from 'src/components/NotFound';
 import { convertForAria } from 'src/components/TabLink/TabLink';
-// import { authentication } from 'src/utilities/storage';
 import Glish from './Glish';
 import Weblish from './Weblish';
 
@@ -60,6 +61,7 @@ const styles = (theme: Theme) =>
 
 interface State {
   loading: boolean;
+  authenticated: boolean;
   linode?: Linode;
   token?: string;
 }
@@ -69,7 +71,8 @@ type CombinedProps = WithStyles<ClassNames> &
 
 class Lish extends React.Component<CombinedProps, State> {
   state: State = {
-    loading: true
+    loading: true,
+    authenticated: true
   };
 
   interval: number;
@@ -111,14 +114,27 @@ class Lish extends React.Component<CombinedProps, State> {
       });
 
     this.refreshToken();
-    // If the user signs out in another window, close this session
+    // If the user signs out in another window, we want to close this session
     this.interval = window.setInterval(() => {
       const token = localStorage.getItem('authentication/token');
 
-      if (!token) {
-        window.close();
+      if (!token && !!this.state.authenticated) {
+        try {
+          window.close();
+        } catch (e) {
+          /**
+           * window.close() will only work if the window was opened
+           * with window.open() or similar. If a user bookmarks a
+           * Lish url and navigates there directly, this will fail.
+           * Failure is ok here--there's no real way we can close a
+           * tab if a user opened
+           */
+        }
+        if (this.mounted) {
+          this.setState({ authenticated: false });
+        }
       }
-    }, 5000);
+    }, 2000);
   }
 
   componentWillUnmount() {
@@ -206,7 +222,21 @@ class Lish extends React.Component<CombinedProps, State> {
       classes,
       match: { path }
     } = this.props;
-    const { loading, linode, token } = this.state;
+    const { authenticated, loading, linode, token } = this.state;
+
+    // If the window.close() logic above fails, we render an error state as a fallback
+    if (!authenticated) {
+      return (
+        <ErrorState
+          errorText={
+            <Typography style={{ color: 'white' }}>
+              You have been logged out in another window. Please log in again to
+              continue using Lish.
+            </Typography>
+          }
+        />
+      );
+    }
 
     const tabA11yProps = (idName: string) => {
       const ariaVal = convertForAria(idName);
