@@ -316,6 +316,30 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/plesk_color.svg'
   },
   {
+    name: 'PostgreSQL',
+    description: `PostgreSQL is a popular, open source relational database system that provides many advanced configuration options that can help optimize your databases’s performance in a production environment.`,
+    summary: `The PostgreSQL relational database system is a powerful, scalable, and standards-compliant open-source database platform.`,
+    related_guides: [
+      {
+        title: 'Configure PostgreSQL',
+        href:
+          'https://www.linode.com/docs/databases/postgresql/configure-postgresql/'
+      },
+      {
+        title: 'How to Install PostgreSQL on Ubuntu 16.04',
+        href:
+          'https://www.linode.com/docs/databases/postgresql/how-to-install-postgresql-on-ubuntu-16-04/'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://www.postgresql.org/',
+        href: 'https://www.postgresql.org/'
+      }
+    ],
+    logo_url: 'assets/postgresql_color.svg'
+  },
+  {
     name: 'phpMyAdmin',
     description: `phpMyAdmin is a web application that provides a GUI to aid in MySQL and MariaDB database administration. It supports multiple database servers and is a robust and easy alternative to using the MySQL command line client.`,
     summary: `An easy to use web application that simplifies the management of your MySQL and MariaDB databases.`,
