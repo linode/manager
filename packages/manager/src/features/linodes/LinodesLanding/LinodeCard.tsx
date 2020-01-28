@@ -217,7 +217,7 @@ export class LinodeCard extends React.PureComponent<CombinedProps, State> {
           >
             {recentEvent && linodeInTransition(status, recentEvent) && (
               <ProgressDisplay
-                text={transitionText(status, recentEvent)}
+                text={transitionText(status, id, recentEvent)}
                 progress={recentEvent.percent_complete}
                 classes={{
                   statusProgress: classes.statusProgress,

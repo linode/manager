@@ -74,9 +74,7 @@ export const NodePoolPanel: React.FunctionComponent<CombinedProps> = props => {
   );
 };
 
-const RenderLoadingOrContent: React.FunctionComponent<
-  CombinedProps
-> = props => {
+const RenderLoadingOrContent: React.FunctionComponent<CombinedProps> = props => {
   const { typesError, typesLoading } = props;
 
   if (typesError) {
@@ -146,7 +144,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
       totalMonthlyPrice: getMonthlyPrice(selectedType, nodeCount, types)
     });
     handleTypeSelect(undefined);
-    updateNodeCount(1);
+    updateNodeCount(3);
   };
 
   const selectType = (newType: string) => {

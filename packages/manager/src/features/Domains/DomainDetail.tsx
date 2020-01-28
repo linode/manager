@@ -171,7 +171,7 @@ interface DomainProps extends Omit<StateProps, 'domainsData'> {
   domain?: Domain;
 }
 
-export default compose<CombinedProps, {}>(
+export default compose<CombinedProps, RouteProps>(
   reloaded,
   domainsContainer<DomainProps, RouteComponentProps<{ domainId?: string }>>(
     (ownProps, domainsLoading, domainsError, domains) => ({
