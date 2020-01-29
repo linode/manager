@@ -1,7 +1,14 @@
 import { update } from 'ramda';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TextField from 'src/components/TextField';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  addIP: {
+    left: -theme.spacing(2) + 3
+  }
+}));
 
 interface Props {
   error?: string;
@@ -11,6 +18,7 @@ interface Props {
 
 export const DomainTransferInput: React.FC<Props> = props => {
   const { error, onChange, ips } = props;
+  const classes = useStyles();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -50,6 +58,7 @@ export const DomainTransferInput: React.FC<Props> = props => {
         onClick={addNewInput}
         label="Add IP"
         data-qa-add-domain-transfer-ip-field
+        className={classes.addIP}
       />
     </>
   );
