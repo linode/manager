@@ -149,7 +149,8 @@ module.exports = {
                 loader: require.resolve('ts-loader'),
                 options: {
                   // disable type checker - we will use it in fork plugin
-                  transpileOnly: true
+                  transpileOnly: true,
+                  onlyCompileBundledFiles:true
                 }
               }
             ]
