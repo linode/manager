@@ -17,7 +17,10 @@ import {
   formatMemory
 } from 'src/features/Longview/shared/formatters';
 import { statMax } from 'src/features/Longview/shared/utilities';
-import { readableBytes } from 'src/utilities/unitConversions';
+import {
+  convertBytesToTarget,
+  readableBytes
+} from 'src/utilities/unitConversions';
 import { Process } from './types';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -121,7 +124,8 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
           <LongviewLineGraph
             title="RAM"
             subtitle={memUnit}
-            maxUnit={memUnit}
+            formatData={(value: number) => convertBytesToTarget(memUnit, value)}
+            formatTooltip={(value: number) => readableBytes(value).formatted}
             data={[
               {
                 data: _convertData(memory, start, end, formatMemory),
@@ -152,7 +156,9 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
           <LongviewLineGraph
             title="Disk I/O"
             subtitle={ioUnit + '/s'}
-            unit={ioUnit + '/s'}
+            unit={'/s'}
+            formatData={(value: number) => convertBytesToTarget(ioUnit, value)}
+            formatTooltip={(value: number) => readableBytes(value).formatted}
             nativeLegend
             data={[
               {

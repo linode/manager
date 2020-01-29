@@ -44,11 +44,7 @@ const ConfirmationDialog: React.FC<CombinedProps> = props => {
       PaperProps={{ role: undefined }}
       role="dialog"
     >
-      <DialogTitle
-        data-qa-dialog-title={title}
-        className="dialog-title"
-        title={title}
-      />
+      <DialogTitle className="dialog-title" title={title} />
       <DialogContent data-qa-dialog-content className="dialog-content">
         {children}
         {error && (
