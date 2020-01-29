@@ -400,7 +400,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         DomainRecordDrawer.errorFields,
         this.state.errors
       )('axfr_ips')}
-      value={defaultTo(
+      ips={defaultTo(
         DomainRecordDrawer.defaultFieldsState(this.props).axfr_ips,
         (this.state.fields as EditableDomainFields).axfr_ips
       )}

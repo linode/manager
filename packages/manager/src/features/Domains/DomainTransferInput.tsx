@@ -1,43 +1,57 @@
+import { update } from 'ramda';
 import * as React from 'react';
+import AddNewLink from 'src/components/AddNewLink';
 import TextField from 'src/components/TextField';
 
 interface Props {
   error?: string;
-  value: string;
+  ips: string[];
   onChange: (ips: string[]) => void;
 }
 
 export const DomainTransferInput: React.FC<Props> = props => {
-  const { error, onChange, value } = props;
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    /**
-     * This is a textarea input type, and users
-     * are expected to input a comma-separated list of IPs.
-     * However, the API is expecting an array
-     * of strings. If the user clears the input, set axfr_ips to [].
-     * Otherwise, split the list into an array.
-     *
-     * We're relying on the API to validate these, bc there's no easy
-     * way to validate both v4 and v6 without bringing in a library.
-     * Badly-formed input will error on their end.
-     */
-    const transferIPs = e.target.value === '' ? [] : e.target.value.split(',');
+  const { error, onChange, ips } = props;
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    idx: number,
+    currentIPs: string[]
+  ) => {
+    const transferIPs = update(idx, e.target.value, currentIPs);
     onChange(transferIPs);
   };
 
+  const addNewInput = () => {
+    onChange([...ips, '']);
+  };
+
+  if (!ips) {
+    return null;
+  }
+
+  // Make sure there's at least one blank field
+  const _ips = ips.length > 0 ? ips : [''];
+
   return (
-    <TextField
-      multiline
-      label="Domain Transfers"
-      placeholder="192.0.2.0,192.0.2.1"
-      errorText={error}
-      // Include some warnings and info from the API docs.
-      helperText={`Comma-separated list IPs that may perform a zone transfer for this Domain.
-        This is potentially dangerous, and should be left empty unless you intend to use it.`}
-      rows="3"
-      value={value}
-      onChange={handleChange}
-    />
+    <>
+      {_ips.map((thisIP, idx) => (
+        <TextField
+          key={`domain-transfer-ip-${idx}`}
+          // Prevent unique ID errors, since the underlying abstraction sets the input element's ID to the label
+          label={`Domain Transfer IP Address${idx > 0 ? ' ' + (idx + 1) : ''}`}
+          errorText={error}
+          value={thisIP}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            handleChange(e, idx, _ips)
+          }
+        />
+      ))}
+      <AddNewLink
+        onClick={addNewInput}
+        label="Add IP"
+        data-qa-add-domain-transfer-ip-field
+      />
+    </>
   );
 };
 

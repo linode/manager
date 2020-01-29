@@ -350,7 +350,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
                 spacingTop={16}
               />
             )}
-            {Array.from(Array(this.state.masterIPsCount)).map((slave, idx) => (
+            {Array.from(Array(this.state.masterIPsCount)).map((_, idx) => (
               <TextField
                 key={idx}
                 label="Master Nameserver IP Address"
@@ -371,7 +371,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
             {isEditingSlaveDomain && (
               // Only when editing
               <DomainTransferInput
-                value={this.state.axfr_ips.join(',')}
+                ips={this.state.axfr_ips}
                 onChange={this.handleTransferInput}
                 error={errorMap.axfr_ips}
               />
