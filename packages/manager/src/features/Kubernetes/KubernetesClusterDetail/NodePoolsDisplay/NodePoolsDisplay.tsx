@@ -20,7 +20,7 @@ import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import NodePoolDisplayTable from '../../CreateCluster/NodePoolDisplayTable';
-import { getTotalClusterPrice } from '../../kubeUtils';
+import { getTotalClusterPrice, nodeWarning } from '../../kubeUtils';
 import { PoolNodeWithPrice } from '../../types';
 
 type ClassNames =
@@ -103,9 +103,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const command = 'kubectl get nodes -o wide';
 
-export const NodePoolsDisplay: React.FunctionComponent<
-  CombinedProps
-> = props => {
+export const NodePoolsDisplay: React.FunctionComponent<CombinedProps> = props => {
   const {
     classes,
     deletePool,
@@ -137,6 +135,17 @@ export const NodePoolsDisplay: React.FunctionComponent<
   };
   const errorMap = getErrorMap(['count'], submissionError);
 
+  // If a user is about to put their cluster in a state where it will
+  // only have a single node, we want to show a warning.
+  const hasSingleNode =
+    !submitDisabled &&
+    poolsForEdit.reduce((acc, thisPool) => {
+      if (thisPool.queuedForDeletion) {
+        return acc;
+      }
+      return acc + thisPool.count;
+    }, 0) === 1;
+
   return (
     <Paper className={classes.root}>
       <Grid container direction="column">
@@ -161,6 +170,11 @@ export const NodePoolsDisplay: React.FunctionComponent<
             />
           </Grid>
         </Grid>
+        {hasSingleNode && (
+          <Grid item xs={12}>
+            <Notice warning text={nodeWarning} />
+          </Grid>
+        )}
         {submissionSuccess && (
           <Grid item xs={12}>
             <Notice success text={'Your node pools are being updated.'} />
@@ -230,9 +244,6 @@ export const NodePoolsDisplay: React.FunctionComponent<
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(
-  React.memo,
-  styled
-);
+const enhanced = compose<CombinedProps, Props>(React.memo, styled);
 
 export default enhanced(NodePoolsDisplay);
