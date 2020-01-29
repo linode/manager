@@ -1,8 +1,10 @@
+import Close from '@material-ui/icons/Close';
 import { update } from 'ramda';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -39,6 +41,12 @@ export const DomainTransferInput: React.FC<Props> = props => {
     onChange([...ips, '']);
   };
 
+  const removeInput = (idx: number) => {
+    const _ips = [...ips];
+    _ips.splice(idx, 1);
+    onChange(_ips);
+  };
+
   if (!ips) {
     return null;
   }
@@ -58,18 +66,21 @@ export const DomainTransferInput: React.FC<Props> = props => {
         potentially dangerous, and should be left empty unless you intend to use
         it.
       </Typography>
+      {error && <Notice error text={error} />}
       {ips.map((thisIP, idx) => (
-        <TextField
-          key={`domain-transfer-ip-${idx}`}
-          className={classes.input}
-          // Prevent unique ID errors, since the underlying abstraction sets the input element's ID to the label
-          label={`Domain Transfer IP Address-${idx}`}
-          value={thisIP}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            handleChange(e, idx)
-          }
-          hideLabel
-        />
+        <div key={`domain-transfer-ip-${idx}`}>
+          <TextField
+            className={classes.input}
+            // Prevent unique ID errors, since TextField sets the input element's ID to the label
+            label={`domain-transfer-ip-${idx}`}
+            value={thisIP}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handleChange(e, idx)
+            }
+            hideLabel
+          />
+          <Close onClick={() => removeInput(idx)} />
+        </div>
       ))}
       <AddNewLink
         onClick={addNewInput}
