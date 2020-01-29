@@ -530,9 +530,6 @@ const mapDispatchToProps: MapDispatchToProps<
   setTab: value => dispatch(handleChangeCreateType(value))
 });
 
-const connected = connect(
-  undefined,
-  mapDispatchToProps
-);
+const connected = connect(undefined, mapDispatchToProps);
 
 export default connected(LinodeCreate);

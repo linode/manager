@@ -1,5 +1,6 @@
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import OrderBy from 'src/components/OrderBy';
@@ -14,6 +15,15 @@ import { formatCPU } from 'src/features/Longview/shared/formatters';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { Process } from './types';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  processName: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    wordBreak: 'break-all',
+    alignItems: 'center'
+  }
+}));
 
 export interface Props {
   processesData: ExtendedProcess[];
@@ -171,6 +181,9 @@ export const ProcessesTableRow: React.FC<ProcessTableRowProps> = React.memo(
       setSelectedProcess,
       isSelected
     } = props;
+
+    const classes = useStyles();
+
     return (
       <TableRow
         onClick={() => setSelectedProcess({ name, user })}
@@ -182,7 +195,9 @@ export const ProcessesTableRow: React.FC<ProcessTableRowProps> = React.memo(
         forceIndex
         aria-label={`${name} for ${user}`}
       >
-        <TableCell data-testid={`name-${name}`}>{name}</TableCell>
+        <TableCell data-testid={`name-${name}`}>
+          <div className={classes.processName}>{name}</div>
+        </TableCell>
         <TableCell data-testid={`user-${user}`}>{user}</TableCell>
         <TableCell data-testid={`max-count-${Math.round(maxCount)}`}>
           {Math.round(maxCount)}

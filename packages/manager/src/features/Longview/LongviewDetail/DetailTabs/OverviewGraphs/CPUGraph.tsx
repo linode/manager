@@ -49,7 +49,7 @@ export const CPUGraph: React.FC<CombinedProps> = props => {
     <LongviewLineGraph
       title="CPU"
       subtitle="%"
-      tooltipUnit="%"
+      unit="%"
       nativeLegend
       error={error}
       loading={loading}

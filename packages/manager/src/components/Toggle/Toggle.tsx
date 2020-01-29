@@ -23,13 +23,14 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  tooltipText?: string;
+  tooltipText?: JSX.Element | string;
+  interactive?: boolean;
 }
 
 type CombinedProps = Props & SwitchProps & WithStyles<CSSClasses>;
 
 const LinodeSwitchControl: React.StatelessComponent<CombinedProps> = props => {
-  const { classes, tooltipText, ...rest } = props;
+  const { classes, tooltipText, interactive, ...rest } = props;
 
   return (
     <React.Fragment>
@@ -40,7 +41,7 @@ const LinodeSwitchControl: React.StatelessComponent<CombinedProps> = props => {
         color="primary"
         {...rest}
       />
-      {tooltipText && <HelpIcon text={tooltipText} />}
+      {tooltipText && <HelpIcon text={tooltipText} interactive={interactive} />}
     </React.Fragment>
   );
 };

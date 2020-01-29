@@ -3,10 +3,11 @@ import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { EntityError, RequestableData } from '../types';
 import {
   handleGetPreferences,
-  handleUpdatePreferences
+  handleUpdatePreferences,
+  UserPreferences
 } from './preferences.actions';
 
-export type State = RequestableData<Record<string, any>, EntityError>;
+export type State = RequestableData<UserPreferences, EntityError>;
 
 export const defaultState: State = {
   lastUpdated: 0,

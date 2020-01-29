@@ -2,6 +2,9 @@ import { KubernetesCluster } from 'linode-js-sdk/lib/kubernetes';
 import { LinodeType } from 'linode-js-sdk/lib/linodes';
 import { ExtendedCluster, ExtendedPoolNode, PoolNodeWithPrice } from './types';
 
+export const nodeWarning = `A single Node cluster may suffer downtime during Kubernetes upgrades. 
+For high availability, we suggest clusters with three or more Nodes.`;
+
 export const getMonthlyPrice = (
   type: string,
   count: number,
