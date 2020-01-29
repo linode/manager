@@ -13,6 +13,8 @@ import { CombinedProps, RebuildFromImage } from './RebuildFromImage';
 jest.mock('src/utilities/scrollErrorIntoView');
 jest.mock('src/components/EnhancedSelect/Select');
 afterEach(cleanup);
+global['zxcvbn']=     jest.fn( x => 3 );
+
 
 const props: CombinedProps = {
   classes: { root: '', error: '' },
@@ -66,5 +68,6 @@ describe('RebuildFromImage', () => {
     fireEvent.click(getByTestId('rebuild-button'));
 
     await waitForElement(() => getByText('Confirm Linode Rebuild'), {});
+
   });
 });
