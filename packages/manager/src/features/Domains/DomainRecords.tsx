@@ -817,7 +817,7 @@ const msToReadable = (v: number): null | string =>
   pathOr(null, [v], {
     0: 'Default',
     300: '5 minutes',
-    3600: '1 hours',
+    3600: '1 hour',
     7200: '2 hours',
     14400: '4 hours',
     28800: '8 hours',
