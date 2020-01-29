@@ -11,6 +11,9 @@ cache: yarn
 before_install: sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev
   build-essential g++ google-chrome-stable curl
 install:
+# This script should be the first that runs to reduce the risk of
+# executing a script from a compromised NPM package.
+- if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then audit-ci --moderate; fi
 - yarn install:all
 
 script:
