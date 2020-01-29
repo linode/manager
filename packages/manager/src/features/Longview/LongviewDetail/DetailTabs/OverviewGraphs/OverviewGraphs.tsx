@@ -50,7 +50,7 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
     setTimeBox({ start, end });
   };
 
-  const isToday = _isToday(time.end, time.start);
+  const isToday = _isToday(time.start, time.end);
 
   const graphProps: GraphProps = {
     clientAPIKey,
