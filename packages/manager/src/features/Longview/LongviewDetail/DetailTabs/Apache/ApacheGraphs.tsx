@@ -9,8 +9,13 @@ import {
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-import { getMaxUnit } from 'src/features/Longview/shared/utilities';
-import { StorageSymbol } from 'src/utilities/unitConversions';
+import {
+  convertNetworkToUnit,
+  formatNetworkTooltip,
+  generateNetworkUnits,
+  statMax
+} from 'src/features/Longview/shared/utilities';
+import roundTo from 'src/utilities/roundTo';
 import { ApacheResponse, LongviewProcesses } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import ProcessGraphs from '../ProcessGraphs';
@@ -76,7 +81,20 @@ export const ApacheGraphs: React.FC<CombinedProps> = props => {
   const totalKBytes = data?.['Total kBytes'] ?? [];
   const totalAccesses = data?.['Total Accesses'] ?? [];
 
-  const unit = React.useMemo(() => getMaxUnit([totalKBytes]), [totalKBytes]);
+  /**
+   * NB: unlike some other places in Longview,
+   * totalKBytes appears to actually be returned
+   * in kilobytes (usually it's bytes, even if the variable name
+   * has kb in it). Our network helper utilities
+   * aren't prepared for this, so we have to convert
+   * to bytes by passing a formatter to convertData.
+   *
+   * Conversion from bytes to bits takes place inside the helpers.
+   */
+  const networkUnit = React.useMemo(
+    () => generateNetworkUnits(statMax(totalKBytes)),
+    [totalKBytes]
+  );
 
   const graphProps = {
     timezone,
@@ -98,7 +116,7 @@ export const ApacheGraphs: React.FC<CombinedProps> = props => {
                 label: 'Requests',
                 borderColor: 'transparent',
                 backgroundColor: theme.graphs.requests,
-                data: _convertData(totalAccesses, start, end, formatData)
+                data: _convertData(totalAccesses, start, end)
               }
             ]}
             {...graphProps}
@@ -109,14 +127,23 @@ export const ApacheGraphs: React.FC<CombinedProps> = props => {
             <Grid item xs={12} sm={6} className={classes.smallGraph}>
               <LongviewLineGraph
                 title="Throughput"
-                subtitle={`${unit}/s`}
-                maxUnit={unit as StorageSymbol}
+                subtitle={`${networkUnit}/s`}
+                unit={'/s'}
+                formatData={(value: number) =>
+                  roundTo(convertNetworkToUnit(value * 8, networkUnit))
+                }
+                formatTooltip={formatNetworkTooltip}
                 data={[
                   {
                     label: 'Throughput',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.outbound,
-                    data: _convertData(totalKBytes, start, end, formatNetwork)
+                    data: _convertData(
+                      totalKBytes,
+                      start,
+                      end,
+                      kilobytesToBytes
+                    )
                   }
                 ]}
                 {...graphProps}
@@ -130,61 +157,61 @@ export const ApacheGraphs: React.FC<CombinedProps> = props => {
                     label: 'Waiting',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.waiting,
-                    data: _convertData(workersWaiting, start, end, formatData)
+                    data: _convertData(workersWaiting, start, end)
                   },
                   {
                     label: 'Starting',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.starting,
-                    data: _convertData(workersStarting, start, end, formatData)
+                    data: _convertData(workersStarting, start, end)
                   },
                   {
                     label: 'Reading',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.reading,
-                    data: _convertData(workersReading, start, end, formatData)
+                    data: _convertData(workersReading, start, end)
                   },
                   {
                     label: 'Sending',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.sending,
-                    data: _convertData(workersSending, start, end, formatData)
+                    data: _convertData(workersSending, start, end)
                   },
                   {
                     label: 'Keepalive',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.keepAlive,
-                    data: _convertData(workersKeepAlive, start, end, formatData)
+                    data: _convertData(workersKeepAlive, start, end)
                   },
                   {
                     label: 'DNS Lookup',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.DNSLookup,
-                    data: _convertData(workersDNSLookup, start, end, formatData)
+                    data: _convertData(workersDNSLookup, start, end)
                   },
                   {
                     label: 'Closing',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.closing,
-                    data: _convertData(workersClosing, start, end, formatData)
+                    data: _convertData(workersClosing, start, end)
                   },
                   {
                     label: 'Logging',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.logging,
-                    data: _convertData(workersLogging, start, end, formatData)
+                    data: _convertData(workersLogging, start, end)
                   },
                   {
                     label: 'Finishing',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.finishing,
-                    data: _convertData(workersFinishing, start, end, formatData)
+                    data: _convertData(workersFinishing, start, end)
                   },
                   {
                     label: 'Cleanup',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.cleanup,
-                    data: _convertData(workersCleanup, start, end, formatData)
+                    data: _convertData(workersCleanup, start, end)
                   }
                 ]}
                 {...graphProps}
@@ -206,21 +233,11 @@ export const ApacheGraphs: React.FC<CombinedProps> = props => {
   );
 };
 
-const formatData = (value: number | null) => {
+export const kilobytesToBytes = (value: number | null) => {
   if (value === null) {
-    return value;
+    return null;
   }
-
-  // Round to 2 decimal places.
-  return Math.round(value * 100) / 100;
-};
-
-const formatNetwork = (value: number | null) => {
-  if (value === null) {
-    return value;
-  }
-
-  return value * 8 * 1024;
+  return value * 1024;
 };
 
 const enhanced = compose<CombinedProps, Props>(
