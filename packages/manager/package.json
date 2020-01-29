@@ -79,9 +79,7 @@
     "typescript-fsa": "^3.0.0",
     "typescript-fsa-reducers": "^1.2.0",
     "xml2js": "^0.4.19",
-    "xterm": "^4.2.0",
-    "yup": "^0.26.3",
-    "zxcvbn": "^4.4.2"
+    "xterm": "^4.2.0"
   },
   "scripts": {
     "postinstall": "patch-package",
