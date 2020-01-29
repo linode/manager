@@ -63,15 +63,24 @@ export const useDialog = <T>(
   const [entityID, setEntityID] = React.useState<number>(-1);
   const [entityLabel, setEntityLabel] = React.useState<string>('');
 
+  const mountedRef = React.useRef<boolean>(true);
+
   const submitDialog = (params: T) => {
     setErrors(undefined);
     setLoading(true);
     return request(params)
       .then(response => {
+        if (!mountedRef.current) {
+          return;
+        }
         handleSuccess();
         return response;
       })
       .catch((e: APIError[]) => {
+        if (!mountedRef.current) {
+          return;
+        }
+
         /**
          * This sets the error to whatever the API returns.
          * Consumers can use the exposed handleError method
@@ -104,6 +113,12 @@ export const useDialog = <T>(
   const closeDialog = () => {
     setOpen(false);
   };
+
+  React.useEffect(() => {
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   return {
     dialog: { isOpen, isLoading, error, entityLabel, entityID },

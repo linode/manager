@@ -76,6 +76,6 @@ class SelectStackScriptPanelContent extends React.Component<
   }
 }
 
-export default compose<CombinedProps, Props>(StackScriptBase(true))(
-  SelectStackScriptPanelContent
-);
+export default compose<CombinedProps, Props>(
+  StackScriptBase({ isSelecting: true })
+)(SelectStackScriptPanelContent);
