@@ -1,13 +1,35 @@
 import * as sanitize from 'sanitize-html';
 import { allowedHTMLAttr, allowedHTMLTags } from 'src/constants';
 
+const offSiteURL = /(?=.{1,2000}$)((\s)*((ht|f)tp(s?):\/\/|mailto:)[A-Za-z0-9]+[~a-zA-Z0-9-_\.@\#\$%&amp;;:,\?=/\+!\(\)]*(\s)*)/;
+const onSiteURL = /^([A-Za-z0-9/\.\?=&\-~]){1,2000}$/;
+export const isURLValid = (url: string) =>
+  offSiteURL.test(url) || onSiteURL.test(url);
+
 export const sanitizeHTML = (text: string) =>
   sanitize(text, {
     allowedTags: allowedHTMLTags,
     allowedAttributes: {
-      '*': allowedHTMLAttr,
-      /** only allowing classes on spans for the sole purpose of code highlighting */
-      span: ['class']
+      '*': allowedHTMLAttr
+    },
+    transformTags: {
+      a: (tagName, attribs) => {
+        const href = attribs.href ?? '';
+
+        // If the URL is invalid, transform the tag to a span.
+        if (href && !isURLValid(href)) {
+          return {
+            tagName: 'span',
+            attribs: {}
+          };
+        }
+
+        // Otherwise, return the tag as-is.
+        return {
+          tagName,
+          attribs
+        };
+      }
     },
     /**
      * this option is not supported and was patched

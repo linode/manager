@@ -244,7 +244,7 @@ export const allowedHTMLTags = [
   'tr'
 ];
 
-export const allowedHTMLAttr = ['href', 'lang', 'title', 'align', 'target'];
+export const allowedHTMLAttr = ['href', 'lang', 'title', 'align'];
 
 // List of country codes in the European Union; used for VAT display
 export const EU_COUNTRIES = [
