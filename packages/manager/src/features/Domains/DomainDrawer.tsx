@@ -182,7 +182,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     submitting: false,
     errors: [],
     master_ips: [],
-    axfr_ips: [],
+    axfr_ips: [''],
     masterIPsCount: 1,
     defaultRecordsSetting: 'none',
     selectedDefaultLinode: undefined,

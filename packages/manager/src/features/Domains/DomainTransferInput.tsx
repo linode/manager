@@ -2,11 +2,18 @@ import { update } from 'ramda';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import TextField from 'src/components/TextField';
 
 const useStyles = makeStyles((theme: Theme) => ({
   addIP: {
     left: -theme.spacing(2) + 3
+  },
+  input: {
+    marginTop: theme.spacing()
+  },
+  root: {
+    marginTop: theme.spacing()
   }
 }));
 
@@ -22,10 +29,9 @@ export const DomainTransferInput: React.FC<Props> = props => {
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    idx: number,
-    currentIPs: string[]
+    idx: number
   ) => {
-    const transferIPs = update(idx, e.target.value, currentIPs);
+    const transferIPs = update(idx, e.target.value, ips);
     onChange(transferIPs);
   };
 
@@ -37,21 +43,32 @@ export const DomainTransferInput: React.FC<Props> = props => {
     return null;
   }
 
-  // Make sure there's at least one blank field
-  const _ips = ips.length > 0 ? ips : [''];
+  if (ips.length === 0) {
+    // Consumer logic to determine initial state is tricky,
+    // so we're handling it here. Basically if we're passed [],
+    // turn it to [''] so we have a blank input ready to go.
+    addNewInput();
+  }
 
   return (
-    <>
-      {_ips.map((thisIP, idx) => (
+    <div className={classes.root}>
+      <Typography variant="h3">Domain Transfer</Typography>
+      <Typography>
+        IP addresses that may perform a zone transfer for this Domain. This is
+        potentially dangerous, and should be left empty unless you intend to use
+        it.
+      </Typography>
+      {ips.map((thisIP, idx) => (
         <TextField
           key={`domain-transfer-ip-${idx}`}
+          className={classes.input}
           // Prevent unique ID errors, since the underlying abstraction sets the input element's ID to the label
-          label={`Domain Transfer IP Address${idx > 0 ? ' ' + (idx + 1) : ''}`}
-          errorText={error}
+          label={`Domain Transfer IP Address-${idx}`}
           value={thisIP}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            handleChange(e, idx, _ips)
+            handleChange(e, idx)
           }
+          hideLabel
         />
       ))}
       <AddNewLink
@@ -60,7 +77,7 @@ export const DomainTransferInput: React.FC<Props> = props => {
         data-qa-add-domain-transfer-ip-field
         className={classes.addIP}
       />
-    </>
+    </div>
   );
 };
 

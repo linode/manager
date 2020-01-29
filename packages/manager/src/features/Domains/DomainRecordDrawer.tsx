@@ -122,7 +122,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     weight: pathOr(5, ['weight'], props),
     domain: pathOr(undefined, ['domain'], props),
     soa_email: pathOr('', ['soa_email'], props),
-    axfr_ips: pathOr(0, ['axfr_ips'], props),
+    axfr_ips: pathOr([''], ['axfr_ips'], props),
     refresh_sec: pathOr(0, ['refresh_sec'], props),
     retry_sec: pathOr(0, ['retry_sec'], props),
     expire_sec: pathOr(0, ['expire_sec'], props)
