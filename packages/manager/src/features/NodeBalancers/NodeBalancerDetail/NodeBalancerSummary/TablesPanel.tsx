@@ -21,14 +21,11 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
 import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
+import { formatBitsPerSecond } from 'src/features/Longview/shared/utilities';
 import { ExtendedNodeBalancer } from 'src/services/nodebalancers';
 import { ApplicationState } from 'src/store';
 import { initAll } from 'src/utilities/initAll';
-import {
-  formatBitsPerSecond,
-  formatNumber,
-  getMetrics
-} from 'src/utilities/statMetrics';
+import { formatNumber, getMetrics } from 'src/utilities/statMetrics';
 
 type ClassNames =
   | 'chart'
@@ -369,10 +366,6 @@ const withTimezone = connect((state: ApplicationState, ownProps) => ({
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(
-  withTheme,
-  withTimezone,
-  styled
-);
+const enhanced = compose<CombinedProps, Props>(withTheme, withTimezone, styled);
 
 export default enhanced(TablesPanel);

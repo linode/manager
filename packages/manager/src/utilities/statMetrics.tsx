@@ -1,5 +1,4 @@
 import { StatsData } from 'linode-js-sdk/lib/linodes';
-import { formatNetworkTooltip } from 'src/features/Longview/shared/utilities';
 
 export interface Metrics {
   max: number;
@@ -47,9 +46,6 @@ export const getMetrics = (data: number[][]): Metrics => {
 export const formatNumber = (n: number): string => n.toFixed(2);
 
 export const formatPercentage = (value: number) => formatNumber(value) + '%';
-
-export const formatBitsPerSecond = (valueInBits: number) =>
-  formatNetworkTooltip(valueInBits / 8) + '/s';
 
 export const getTraffic = (averageInBits: number): number => {
   const averageInBytes = averageInBits / 8;

@@ -6,6 +6,7 @@ import {
 } from '../request.types';
 import {
   appendStats,
+  formatBitsPerSecond,
   generateNetworkUnits,
   generateTotalMemory,
   generateUsedMemory,
@@ -360,6 +361,13 @@ describe('Utility Functions', () => {
       expect(result).toHaveProperty('pears');
       expect(result.apples[0].y).toEqual(2);
       expect(result.pears[0].y).toEqual(6);
+    });
+  });
+  describe('formatBitsPerSecond', () => {
+    it('adds unit', () => {
+      expect(formatBitsPerSecond(12)).toBe('12 b/s');
+      expect(formatBitsPerSecond(0)).toBe('0 b/s');
+      expect(formatBitsPerSecond(123456789)).toBe('117.74 Mibit/s');
     });
   });
 });

@@ -370,3 +370,6 @@ export const formatNetworkTooltip = (valueInBytes: number) => {
   const converted = convertNetworkToUnit(valueInBytes * 8, _unit);
   return `${Math.round(converted * 100) / 100} ${_unit}`;
 };
+
+export const formatBitsPerSecond = (valueInBits: number) =>
+  formatNetworkTooltip(valueInBits / 8) + '/s';

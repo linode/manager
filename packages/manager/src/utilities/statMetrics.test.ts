@@ -1,5 +1,4 @@
 import {
-  formatBitsPerSecond,
   formatNumber,
   formatPercentage,
   getMetrics,
@@ -135,10 +134,5 @@ describe('formatting', () => {
     expect(formatPercentage(12)).toBe('12.00%');
     expect(formatPercentage(0)).toBe('0.00%');
     expect(formatPercentage(123456789)).toBe('123456789.00%');
-  });
-  it('formatBitsPerSecond adds unit', () => {
-    expect(formatBitsPerSecond(12)).toBe('12 b/s');
-    expect(formatBitsPerSecond(0)).toBe('0 b/s');
-    expect(formatBitsPerSecond(123456789)).toBe('117.74 Mibit/s');
   });
 });

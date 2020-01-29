@@ -12,11 +12,11 @@ import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
 import {
   convertNetworkToUnit,
+  formatBitsPerSecond,
   formatNetworkTooltip,
   generateNetworkUnits
 } from 'src/features/Longview/shared/utilities';
 import {
-  formatBitsPerSecond,
   getMetrics,
   getTotalTraffic,
   Metrics
