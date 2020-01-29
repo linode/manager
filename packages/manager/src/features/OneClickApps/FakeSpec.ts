@@ -80,6 +80,28 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/csgo_color.svg'
   },
   {
+    name: 'Flask',
+    description: `Flask is a lightweight WSGI web application framework. It is designed to make getting started quick and easy, with the ability to scale up to complex applications.`,
+    summary: `A quick light-weight web framework for Python that includes several utilities and libraries you can use to create a web application.`,
+    related_guides: [
+      {
+        title: 'Deploy a Flask Application on Ubuntu',
+        href:
+          'https://www.linode.com/docs/development/python/flask-and-gunicorn-on-ubuntu/'
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://www.palletsprojects.com/p/flask/',
+        href: 'https://www.palletsprojects.com/p/flask/'
+      },
+    ],
+    tips: [
+      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]</em> in a browser.`
+    ],
+    logo_url: 'assets/flask_color.svg'
+  },
+  {
     name: 'Docker',
     description: `Docker is a tool that enables you to create, deploy, and manage lightweight, stand-alone packages that contain everything needed to run an application (code, libraries, runtime, system settings, and dependencies).`,
     summary: `Securely build, share and run modern applications anywhere.`,
@@ -244,6 +266,18 @@ export const oneClickApps: OCA[] = [
     // href: 'https://www.ibm.com/cloud/learn/lamp-stack-explained' Not sure this is kosher.
   },
   {
+    name: 'Mean',
+    description: `MEAN is a full-stack JavaScript-based framework, which accelerates web application development much faster than other frameworks.  All of these technologies are well-established, offer robust feature sets, and are well-supported by their maintaining organizations. These characteristics make them a great choice for your applications.`,
+    summary: `A MERN (MongoDB, Express, Angular, Node.js) stack is a free and open-source web software bundle used to build modern web applications:`,
+    related_info: [
+      {
+        title: 'http://meanjs.org/',
+        href: 'http://meanjs.org/'
+      }
+    ],
+    logo_url: 'assets/mean_color.svg'
+  },
+  {
     name: 'LEMP',
     description: `LEMP provides a platform for applications that is compatible with the LAMP stack for nearly all applications; however, because NGINX is able to serve more pages at once with a more predictable memory usage profile, it may be more suited to high demand situations.`,
     summary: `The LEMP stack replaces the Apache web server component with NGINX (“Engine-X”), providing the E in the acronym: Linux, NGINX, MySQL/MariaDB, PHP.    `,
@@ -304,27 +338,72 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/plesk_color.svg'
   },
   {
-    name: 'Redis',
-    description: `Redis is an open-source, in-memory, data-structure store with optional disk writes
-  for persistence, which can be used as key-value database, cache and message broker. Redis features
-  built-in transactions, replication, and support for a variety of data structures such as strings,
-  hashes, lists, sets and others.`,
-    summary:
-      'Flexible, in-memory, NoSQL database service supported in many different coding languages.',
+   name: 'Redis',
+   description: `Redis is an open-source, in-memory, data-structure store with optional disk writes
+ for persistence, which can be used as key-value database, cache and message broker. Redis features
+ built-in transactions, replication, and support for a variety of data structures such as strings,
+ hashes, lists, sets and others.`,
+   summary:
+     'Flexible, in-memory, NoSQL database service supported in many different coding languages.',
+   related_guides: [
+     {
+       title: 'How to Install a Redis Server on Ubuntu or Debian 8',
+       href:
+         'https://www.linode.com/docs/databases/redis/how-to-install-a-redis-server-on-ubuntu-or-debian8/'
+     }
+   ],
+   related_info: [
+     {
+       title: 'https://redis.io/',
+       href: 'https://redis.io/'
+     }
+   ],
+   logo_url: 'assets/redis_color.svg'
+ },
+ {
+    name: 'Ruby on Rails',
+    description: `Rails is a web application development framework written in the Ruby programming language. It is designed to make programming web applications easier by making assumptions about what every developer needs to get started. It allows you to write less code while accomplishing more than many other languages and frameworks.`,
+    summary: `Ruby on Rails is a web framework that allows web designers and developers to implement dynamic, fully featured web applications. `,
     related_guides: [
       {
-        title: 'How to Install a Redia Server on Ubuntu or Debian 8',
+        title: 'Ruby on Rails with NGINX On Debian 9',
+        href: 'https://www.linode.com/docs/development/ror/ruby-on-rails-nginx-debian/'
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://rubyonrails.org/',
+        href: 'https://rubyonrails.org/'
+      },
+    ],
+    tips: [
+      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:3000</em> in a browser.`
+    ],
+    logo_url: 'assets/rubyonrails_color.svg'
+  },
+  {
+    name: 'PostgreSQL',
+    description: `PostgreSQL is a popular, open source relational database system that provides many advanced configuration options that can help optimize your databases’s performance in a production environment.`,
+    summary: `The PostgreSQL relational database system is a powerful, scalable, and standards-compliant open-source database platform.`,
+    related_guides: [
+      {
+        title: 'Configure PostgreSQL',
         href:
-          'https://www.linode.com/docs/databases/redis/how-to-install-a-redis-server-on-ubuntu-or-debian8/'
+          'https://www.linode.com/docs/databases/postgresql/configure-postgresql/'
+      },
+      {
+        title: 'How to Install PostgreSQL on Ubuntu 16.04',
+        href:
+          'https://www.linode.com/docs/databases/postgresql/how-to-install-postgresql-on-ubuntu-16-04/'
       }
     ],
     related_info: [
       {
-        title: 'https://redis.io/',
-        href: 'https://redis.io/'
+        title: 'https://www.postgresql.org/',
+        href: 'https://www.postgresql.org/'
       }
     ],
-    logo_url: 'assets/redis_color.svg'
+    logo_url: 'assets/postgresql_color.svg'
   },
   {
     name: 'phpMyAdmin',
