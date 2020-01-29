@@ -11,6 +11,7 @@ import Grid from 'src/components/Grid';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import StrengthIndicator from '../PasswordInput/StrengthIndicator';
 import HideShowText from './HideShowText';
+declare var zxcvbn : (s:string)=>any;
 
 type Props = TextFieldProps & {
   value?: string;
@@ -120,7 +121,7 @@ const maybeStrength = (value?: string) => {
   if (!value || isEmpty(value)) {
     return null;
   } else {
-    const score = (window as any).zxcvbn(value).score;
+    const score = zxcvbn(value).score;
     if (score === 4) {
       return 3;
     }
