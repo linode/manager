@@ -365,7 +365,6 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
         changeDescription={this.changeImageDescription}
         changeLabel={this.changeImageLabel}
         changeDisk={() => null}
-        onSuccess={() => null}
         changeLinode={() => null}
         selectedLinode={null}
       />

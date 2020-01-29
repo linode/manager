@@ -55,7 +55,6 @@ export interface Props {
   onClose: () => void;
   changeDisk: (disk: string | null) => void;
   selectedLinode: number | null;
-  onSuccess: () => void;
   changeLinode: (linodeId: number) => void;
   changeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
   changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -158,9 +157,15 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
   }
 
   handleLinodeChange = (linodeID: number) => {
-    // Clear any disk errors
+    // Clear any errors
     this.setState({ errors: undefined });
     this.props.changeLinode(linodeID);
+  };
+
+  handleDiskChange = (diskID: string | null) => {
+    // Clear any errors
+    this.setState({ errors: undefined });
+    this.props.changeDisk(diskID);
   };
 
   close = () => {
@@ -178,7 +183,6 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
     const {
       mode,
       imageID,
-      onSuccess,
       label,
       description,
       history,
@@ -203,7 +207,6 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
               return;
             }
 
-            onSuccess();
             this.close();
           })
           .catch(errorResponse => {
@@ -300,7 +303,6 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       selectedDisk,
       selectedLinode,
       mode,
-      changeDisk,
       changeLabel,
       changeDescription,
       classes
@@ -350,7 +352,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
               selectedDisk={selectedDisk}
               disks={disks}
               diskError={diskError}
-              handleChange={changeDisk}
+              handleChange={this.handleDiskChange}
               updateFor={[disks, selectedDisk, diskError, classes]}
               disabled={mode === modes.IMAGIZING}
               data-qa-disk-select

@@ -281,7 +281,6 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
         changeLabel={this.setLabel}
         changeDescription={this.setDescription}
         onClose={this.closeImageDrawer}
-        onSuccess={() => null}
       />
     );
   };

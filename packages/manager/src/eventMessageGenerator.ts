@@ -122,8 +122,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
       `Image ${e?.secondary_entity?.label + ' ' ?? ''}scheduled for creation.`,
     started: e =>
       `Image ${e?.secondary_entity?.label + ' ' ?? ''}being created.`,
-    failed: e =>
-      `Error creating Image ${e?.secondary_entity?.label + ' ' ?? ''}.`,
+    failed: e => `Error creating Image ${e?.secondary_entity?.label ?? ''}.`,
     finished: e =>
       `Image ${e?.secondary_entity?.label + ' ' ?? ''}has been created.`
   },

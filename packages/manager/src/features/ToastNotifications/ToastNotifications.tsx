@@ -90,7 +90,7 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
           ['finished', 'notification'].includes(event.status)
         ) {
           return enqueueSnackbar(
-            `Image ${event.entity?.label ?? ''}deleted successfully.`,
+            `Image ${event.entity?.label + ' ' ?? ''}deleted successfully.`,
             {
               variant: 'success'
             }
