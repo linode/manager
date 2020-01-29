@@ -12,12 +12,8 @@ import Typography from 'src/components/core/Typography';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import { setUpCharts } from 'src/utilities/charts';
+import roundTo from 'src/utilities/roundTo';
 import { Metrics } from 'src/utilities/statMetrics';
-import {
-  convertBytesToTarget,
-  readableBytes,
-  StorageSymbol
-} from 'src/utilities/unitConversions';
 import MetricDisplayStyles from './NewMetricDisplay.styles';
 setUpCharts();
 
@@ -32,7 +28,6 @@ export interface DataSet {
   backgroundColor?: string;
   data: [number, number | null][];
 }
-
 export interface Props {
   chartHeight?: number;
   showToday: boolean;
@@ -41,10 +36,10 @@ export interface Props {
   timezone: string;
   rowHeaders?: Array<string>;
   legendRows?: Array<ChartData<any>>;
-  unit?: string; // Display unit on Y axis ticks
-  tooltipUnit?: string; // @todo deprecate unit prop above and rename this to unit. graphs should be consistent
-  maxUnit?: StorageSymbol; // Rounds data to this unit. IMPORTANT: if this prop is provided, data should be in bytes
+  unit?: string;
   nativeLegend?: boolean; // Display chart.js native legend
+  formatData?: (value: number) => number | null;
+  formatTooltip?: (value: number) => string;
 }
 
 type CombinedProps = Props;
@@ -138,16 +133,16 @@ const LineGraph: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const {
     chartHeight,
-    unit,
+    formatData,
+    formatTooltip,
     suggestedMax,
     showToday,
     timezone,
     data,
     rowHeaders,
     legendRows,
-    maxUnit,
     nativeLegend,
-    tooltipUnit,
+    unit,
     ...rest
   } = props;
   const finalRowHeaders = rowHeaders ? rowHeaders : ['Max', 'Avg', 'Last'];
@@ -175,9 +170,7 @@ const LineGraph: React.FC<CombinedProps> = props => {
 
   const getChartOptions = (
     _suggestedMax?: number,
-    _unit?: string,
     _nativeLegend?: boolean,
-    _maxUnit?: StorageSymbol,
     _tooltipUnit?: string
   ) => {
     const finalChartOptions = clone(chartOptions);
@@ -203,13 +196,6 @@ const LineGraph: React.FC<CombinedProps> = props => {
       finalChartOptions.scales.yAxes[0].ticks.suggestedMax = _suggestedMax;
     }
 
-    if (_unit) {
-      finalChartOptions.scales.yAxes[0].ticks.callback = (
-        value: number,
-        index: number
-      ) => `${humanizeLargeData(value)}${_unit}`;
-    }
-
     if (_nativeLegend) {
       finalChartOptions.legend.display = true;
       finalChartOptions.legend.position = 'bottom';
@@ -230,22 +216,21 @@ const LineGraph: React.FC<CombinedProps> = props => {
      * However, in the tooltip, each individual value will be formatted according to
      * the most appropriate unit, if a unit is provided.
      */
-    finalChartOptions.tooltips.callbacks.label = formatTooltip(
+    finalChartOptions.tooltips.callbacks.label = _formatTooltip(
       data,
-      _maxUnit,
+      formatTooltip,
       _tooltipUnit
     );
 
     return finalChartOptions;
   };
 
-  const formatData = () => {
+  const _formatData = () => {
     return data.map(dataSet => {
       const timeData = dataSet.data.reduce((acc: any, point: any) => {
         acc.push({
           t: point[0],
-          // If we have a max unit (B/KB/MB etc.) convert the data to that unit
-          y: maxUnit ? convertBytesToTarget(maxUnit, point[1]) : point[1]
+          y: formatData ? formatData(point[1]) : point[1]
         });
         return acc;
       }, []);
@@ -267,17 +252,11 @@ const LineGraph: React.FC<CombinedProps> = props => {
         <Line
           {...rest}
           height={chartHeight || 300}
-          options={getChartOptions(
-            suggestedMax,
-            unit,
-            nativeLegend,
-            maxUnit,
-            tooltipUnit
-          )}
+          options={getChartOptions(suggestedMax, nativeLegend, unit)}
           plugins={plugins}
           ref={inputEl}
           data={{
-            datasets: formatData()
+            datasets: _formatData()
           }}
         />
       </div>
@@ -388,35 +367,24 @@ export const metricsBySection = (data: Metrics): number[] => [
   data.last
 ];
 
-export const formatTooltip = curry(
+export const _formatTooltip = curry(
   (
     data: any,
-    maxUnit: StorageSymbol | undefined,
-    tooltipUnit: string | undefined,
+    formatter: ((v: number) => string) | undefined,
+    unit: string | undefined,
     t?: any,
     d?: any
   ) => {
     /**
-     * This is a horror show, sorry.
-     * We want to show tooltip values in appropriate units. However,
-     * our formatData() function gets called before this function,
-     * so all values will already be <1000 (give or take) and be displayed
-     * as "8 bytes".
-     * In order to customize units for each value,
-     * we have to access the original data series passed into the
-     * component.
-     *
      * t and d are the params passed by chart.js to this component.
-     * data and maxUnit should be partially applied before this function
+     * data and formatter should be partially applied before this function
      * is called directly by chart.js
      */
     const dataset = data[t.datasetIndex];
     const label = dataset.label;
     const val = dataset.data[t.index][1] || 0;
-    const value = maxUnit
-      ? readableBytes(val).formatted
-      : Math.round(val * 100) / 100;
-    return `${label}: ${value} ${tooltipUnit ? tooltipUnit : ''}`;
+    const value = formatter ? formatter(val) : roundTo(val);
+    return `${label}: ${value}${unit ? unit : ''}`;
   }
 );
 

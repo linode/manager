@@ -189,7 +189,7 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
             {recentEvent && linodeInTransition(status, recentEvent) && (
               <ProgressDisplay
                 className={classes.loadingStatus}
-                text={transitionText(status, recentEvent)}
+                text={transitionText(status, id, recentEvent)}
                 progress={recentEvent.percent_complete}
               />
             )}
