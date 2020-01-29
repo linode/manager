@@ -2,8 +2,10 @@ import Close from '@material-ui/icons/Close';
 import { update } from 'ramda';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
+import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 
@@ -16,6 +18,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   root: {
     marginTop: theme.spacing()
+  },
+  button: {
+    minWidth: 'auto',
+    minHeight: 'auto',
+    marginTop: theme.spacing(),
+    marginLeft: -theme.spacing(),
+    padding: 0,
+    '& > span': {
+      padding: 2
+    },
+    '& :hover, & :focus': {
+      color: 'white',
+      backgroundColor: theme.palette.primary.main
+    }
   }
 }));
 
@@ -68,19 +84,31 @@ export const DomainTransferInput: React.FC<Props> = props => {
       </Typography>
       {error && <Notice error text={error} />}
       {ips.map((thisIP, idx) => (
-        <div key={`domain-transfer-ip-${idx}`}>
-          <TextField
-            className={classes.input}
-            // Prevent unique ID errors, since TextField sets the input element's ID to the label
-            label={`domain-transfer-ip-${idx}`}
-            value={thisIP}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              handleChange(e, idx)
-            }
-            hideLabel
-          />
-          <Close onClick={() => removeInput(idx)} />
-        </div>
+        <Grid
+          container
+          key={`domain-transfer-ip-${idx}`}
+          direction="row"
+          alignItems="center"
+          justify="center"
+        >
+          <Grid item xs={11}>
+            <TextField
+              className={classes.input}
+              // Prevent unique ID errors, since TextField sets the input element's ID to the label
+              label={`domain-transfer-ip-${idx}`}
+              value={thisIP}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                handleChange(e, idx)
+              }
+              hideLabel
+            />
+          </Grid>
+          <Grid item xs={1}>
+            <Button className={classes.button} onClick={() => removeInput(idx)}>
+              <Close />
+            </Button>
+          </Grid>
+        </Grid>
       ))}
       <AddNewLink
         onClick={addNewInput}
