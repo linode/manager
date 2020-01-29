@@ -310,7 +310,7 @@ export const oneClickApps: OCA[] = [
   built-in transactions, replication, and support for a variety of data structures such as strings,
   hashes, lists, sets and others.`,
     summary:
-      'Flexible, in-memory, NoSQL database service supported in many different coding languages',
+      'Flexible, in-memory, NoSQL database service supported in many different coding languages.',
     related_guides: [
       {
         title: 'How to Install a Redia Server on Ubuntu or Debian 8',
