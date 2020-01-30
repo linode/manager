@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     left: -theme.spacing(2) + 3
   },
   input: {
-    marginTop: theme.spacing()
+    marginBottom: theme.spacing()
   },
   root: {
     marginTop: theme.spacing()
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     minWidth: 'auto',
     minHeight: 'auto',
-    marginTop: theme.spacing(),
+    marginBottom: theme.spacing(),
     marginLeft: -theme.spacing(),
     padding: 0,
     '& > span': {
@@ -80,7 +80,7 @@ export const MultipleIPInput: React.FC<Props> = props => {
     <div className={classes.root}>
       <Typography variant="h3">{title}</Typography>
       {helperText && <Typography>{helperText}</Typography>}
-      {error && <Notice error text={error} />}
+      {error && <Notice error text={error} spacingTop={8} />}
       {ips.map((thisIP, idx) => (
         <Grid
           container
@@ -94,6 +94,7 @@ export const MultipleIPInput: React.FC<Props> = props => {
               className={classes.input}
               // Prevent unique ID errors, since TextField sets the input element's ID to the label
               label={`domain-transfer-ip-${idx}`}
+              InputProps={{ 'aria-label': `${title} ip-address-${idx}` }}
               value={thisIP}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 handleChange(e, idx)
