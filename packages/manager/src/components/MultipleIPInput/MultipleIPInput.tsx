@@ -105,16 +105,19 @@ export const MultipleIPInput: React.FC<Props> = props => {
               hideLabel
             />
           </Grid>
+          {/** Don't show the button for the first input since it won't do anything */}
           <Grid item xs={1}>
-            <Button
-              className={classes.button}
-              onClick={() => removeInput(idx)}
-              // Disable this if the value is empty and it's the only input,
-              // since in that case clicking delete won't do anything.
-              disabled={ips.length === 1 && thisIP === ''}
-            >
-              <Close />
-            </Button>
+            {idx > 0 && (
+              <Button
+                className={classes.button}
+                onClick={() => removeInput(idx)}
+                // Disable this if the value is empty and it's the only input,
+                // since in that case clicking delete won't do anything.
+                disabled={ips.length === 1 && thisIP === ''}
+              >
+                <Close />
+              </Button>
+            )}
           </Grid>
         </Grid>
       ))}
