@@ -36,6 +36,7 @@ export const ActivityRow: React.StatelessComponent<CombinedProps> = props => {
   const { classes, event } = props;
 
   const message = eventMessageGenerator(event);
+  const duration = formatEventSeconds(event.duration);
 
   if (!message) {
     return null;
@@ -58,7 +59,7 @@ export const ActivityRow: React.StatelessComponent<CombinedProps> = props => {
     >
       <Grid item>
         <Typography>
-          {displayedMessage} ({formatEventSeconds(event.duration)})
+          {displayedMessage} {duration === '' ? '' : `(${duration})`}
         </Typography>
       </Grid>
       <Grid item>

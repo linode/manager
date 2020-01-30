@@ -252,11 +252,20 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
       `Linode ${e.entity?.label ?? ''} has been booted (Lish initiated boot).`
   },
   linode_clone: {
-    scheduled: e => `Linode ${e.entity!.label} is scheduled to be cloned.`,
-    started: e => `Linode ${e.entity!.label} is being cloned.`,
-    failed: e => `Linode ${e.entity!.label} could not be cloned.`,
-    finished: e => `Linode ${e.entity!.label} has been cloned.`,
-    notification: e => `Linode ${e.entity!.label} is scheduled to be cloned.`
+    scheduled: e =>
+      `Linode ${e.entity?.label ?? ''} is scheduled to be cloned to ${e
+        .secondary_entity?.label ?? ''}.`,
+    started: e =>
+      `Linode ${e.entity?.label ?? ''} is being cloned to ${e.secondary_entity
+        ?.label ?? ''}.`,
+    failed: e =>
+      `Linode ${e.entity?.label ?? ''} could not be cloned to ${e
+        .secondary_entity?.label ?? ''}.`,
+    finished: e =>
+      `Linode ${e.entity?.label ?? ''} has been cloned to ${e.secondary_entity
+        ?.label ?? ''}.`,
+    notification: e =>
+      `Linode ${e.entity?.label ?? ''} is scheduled to be cloned.`
   },
   linode_create: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled for creation.`,

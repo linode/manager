@@ -152,6 +152,32 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
           });
         }
 
+        if (
+          event.action === 'linode_clone' &&
+          ['failed'].includes(event.status)
+        ) {
+          return enqueueSnackbar(
+            `Error cloning Linode ${event.entity?.label ?? ''}.`,
+            {
+              variant: 'error'
+            }
+          );
+        }
+
+        if (
+          event.action === 'linode_clone' &&
+          ['finished', 'notification'].includes(event.status)
+        ) {
+          return enqueueSnackbar(
+            `Linode ${event.entity?.label ??
+              ''} has been cloned successfully to ${event.secondary_entity
+              ?.label ?? ''}.`,
+            {
+              variant: 'success'
+            }
+          );
+        }
+
         return;
       })
       /**
