@@ -11,7 +11,10 @@ import TextField from 'src/components/TextField';
 
 const useStyles = makeStyles((theme: Theme) => ({
   addIP: {
-    left: -theme.spacing(2) + 3
+    paddingLeft: 0,
+    '& span:first-of-type': {
+      justifyContent: 'flex-start'
+    }
   },
   input: {
     'nth-child(n+2)': {
@@ -24,7 +27,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     minWidth: 'auto',
     minHeight: 'auto',
-    marginTop: theme.spacing(),
     marginLeft: -theme.spacing(),
     padding: 0,
     '& > span': {
