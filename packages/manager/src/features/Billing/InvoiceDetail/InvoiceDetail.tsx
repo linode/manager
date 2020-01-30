@@ -23,6 +23,9 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import IconButton from 'src/components/IconButton';
 import Notice from 'src/components/Notice';
+import withFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import createMailto from 'src/features/Footer/createMailto';
 import { ApplicationState } from 'src/store';
@@ -70,6 +73,7 @@ interface State {
 
 type CombinedProps = RouteComponentProps<{ invoiceId: string }> &
   StateProps &
+  FeatureFlagConsumerProps &
   WithStyles<ClassNames>;
 
 class InvoiceDetail extends React.Component<CombinedProps, State> {
@@ -125,7 +129,8 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
   }
 
   printInvoice(account: Account, invoice: Invoice, items: InvoiceItem[]) {
-    const result = printInvoice(account, invoice, items);
+    const vatBannerFlag = this.props.flags.vatBanner;
+    const result = printInvoice(account, invoice, items, vatBannerFlag);
     this.setState({
       pdfGenerationError: result.status === 'error' ? result.error : undefined
     });
@@ -231,7 +236,8 @@ const styled = withStyles(styles);
 const enhanced = compose<CombinedProps, {}>(
   connected,
   styled,
-  withRouter
+  withRouter,
+  withFlags
 );
 
 export default enhanced(InvoiceDetail);

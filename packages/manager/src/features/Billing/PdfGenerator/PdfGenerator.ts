@@ -14,8 +14,9 @@ import {
   LINODE_EU_TAX_ID
 } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
-import useFlags from 'src/hooks/useFlags';
+import { FlagSet } from 'src/featureFlags';
 import formatDate from 'src/utilities/formatDate';
+import LinodeLogo from './LinodeLogo';
 import {
   createFooter,
   createInvoiceItemsTable,
@@ -23,8 +24,6 @@ import {
   createPaymentsTable,
   createPaymentsTotalsTable
 } from './utils';
-
-import LinodeLogo from './LinodeLogo';
 
 const leftMargin = 15; // space that needs to be applied to every parent element
 const baseFont = 'helvetica';
@@ -135,7 +134,8 @@ interface PdfResult {
 export const printInvoice = (
   account: Account,
   invoice: Invoice,
-  items: InvoiceItem[]
+  items: InvoiceItem[],
+  vatBannerFlag: FlagSet['vatBanner']
 ): PdfResult => {
   try {
     const itemsPerPage = 12;
@@ -151,15 +151,10 @@ export const printInvoice = (
       unit: 'px'
     });
 
-    const flags = useFlags();
-
     const dateConversion = (str: string) => Date.parse(str);
 
     const convertedInvoiceDate = invoice.date && dateConversion(invoice.date);
-
-    const GSTAddDate = flags.vatBanner
-      ? dateConversion(flags.vatBanner.date)
-      : 0;
+    const GSTAddDate = vatBannerFlag ? dateConversion(vatBannerFlag.date) : 0;
 
     // Added June 1, 2019
     const VATAddDate = 1559347200000;
