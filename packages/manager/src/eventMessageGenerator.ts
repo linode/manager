@@ -286,10 +286,11 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: e => `An IP was deleted from Linode ${e.entity!.id}`
   },
   linode_migrate: {
-    scheduled: e => `Linode ${e.entity!.label} is scheduled for migration.`,
-    started: e => `Linode ${e.entity!.label} is being migrated.`,
-    failed: e => `Migration failed for Linode ${e.entity!.label}.`,
-    finished: e => `Linode ${e.entity!.label} has been migrated.`
+    scheduled: e =>
+      `Linode ${e.entity?.label ?? ''} is scheduled for migration.`,
+    started: e => `Linode ${e.entity?.label ?? ''} is being migrated.`,
+    failed: e => `Migration failed for Linode ${e.entity?.label ?? ''}.`,
+    finished: e => `Linode ${e.entity?.label ?? ''} has been migrated.`
   },
   // This event type isn't currently being displayed, but I added a message here just in case.
   linode_migrate_datacenter_create: {
@@ -298,10 +299,11 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   // These are the same as the messages for `linode_migrate`.
   linode_migrate_datacenter: {
-    scheduled: e => `Linode ${e.entity!.label} is scheduled for migration.`,
-    started: e => `Linode ${e.entity!.label} is being migrated.`,
-    failed: e => `Migration failed for Linode ${e.entity!.label}.`,
-    finished: e => `Linode ${e.entity!.label} has been migrated.`
+    scheduled: e =>
+      `Linode ${e.entity?.label ?? ''} is scheduled for migration.`,
+    started: e => `Linode ${e.entity?.label ?? ''} is being migrated.`,
+    failed: e => `Migration failed for Linode ${e.entity?.label ?? ''}.`,
+    finished: e => `Linode ${e.entity?.label ?? ''} has been migrated.`
   },
   // This event type isn't currently being displayed, but I added a message here just in case.
   linode_mutate_create: {
@@ -309,11 +311,12 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
       `Upgrade for Linode ${e.entity!.label} has been initiated.`
   },
   linode_mutate: {
-    scheduled: e => `Linode ${e.entity!.label} is scheduled for an upgrade.`,
-    started: e => `Linode ${e.entity!.label} is being upgraded.`,
-    failed: e => `Linode ${e.entity!.label} could not be upgraded.`,
-    finished: e => `Linode ${e.entity!.label} has been upgraded.`,
-    notification: e => `Linode ${e.entity!.label} is being upgraded.`
+    scheduled: e =>
+      `Linode ${e.entity?.label ?? ''} is scheduled for an upgrade.`,
+    started: e => `Linode ${e.entity?.label ?? ''} is being upgraded.`,
+    failed: e => `Linode ${e.entity?.label ?? ''} could not be upgraded.`,
+    finished: e => `Linode ${e.entity?.label ?? ''} has been upgraded.`,
+    notification: e => `Linode ${e.entity?.label ?? ''} is being upgraded.`
   },
   linode_reboot: {
     scheduled: e =>
@@ -353,10 +356,11 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
       `Resize for Linode ${e.entity!.label} has been initiated.`
   },
   linode_resize: {
-    scheduled: e => `Linode ${e.entity!.label} is scheduled for resizing.`,
-    started: e => `Linode ${e.entity!.label} is resizing.`,
-    failed: e => `Linode ${e.entity!.label} could not be resized`,
-    finished: e => `Linode ${e.entity!.label} has been resized.`
+    scheduled: e =>
+      `Linode ${e.entity?.label ?? ''} is scheduled for resizing.`,
+    started: e => `Linode ${e.entity?.label ?? ''} is resizing.`,
+    failed: e => `Linode ${e.entity?.label ?? ''} could not be resized`,
+    finished: e => `Linode ${e.entity?.label ?? ''} has been resized.`
   },
   linode_shutdown: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled for shutdown.`,

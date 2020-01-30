@@ -178,6 +178,60 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
           );
         }
 
+        if (
+          ['linode_migrate_datacenter', 'linode_migrate'].includes(
+            event.action
+          ) &&
+          ['failed'].includes(event.status)
+        ) {
+          return enqueueSnackbar(
+            `Error migrating Linode ${event.entity?.label ?? ''}.`,
+            {
+              variant: 'error'
+            }
+          );
+        }
+
+        if (
+          ['linode_migrate_datacenter', 'linode_migrate'].includes(
+            event.action
+          ) &&
+          ['finished', 'notification'].includes(event.status)
+        ) {
+          return enqueueSnackbar(
+            `Linode ${event.entity?.label ??
+              ''} has been migrated successfully.`,
+            {
+              variant: 'success'
+            }
+          );
+        }
+
+        if (
+          event.action === 'linode_resize' &&
+          ['failed'].includes(event.status)
+        ) {
+          return enqueueSnackbar(
+            `Error resizing Linode ${event.entity?.label ?? ''}.`,
+            {
+              variant: 'error'
+            }
+          );
+        }
+
+        if (
+          event.action === 'linode_resize' &&
+          ['finished', 'notification'].includes(event.status)
+        ) {
+          return enqueueSnackbar(
+            `Linode ${event.entity?.label ??
+              ''} has been resized successfully.`,
+            {
+              variant: 'success'
+            }
+          );
+        }
+
         return;
       })
       /**
