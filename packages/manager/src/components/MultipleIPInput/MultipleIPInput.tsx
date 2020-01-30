@@ -14,7 +14,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     left: -theme.spacing(2) + 3
   },
   input: {
-    marginBottom: theme.spacing()
+    'nth-child(n+2)': {
+      marginTop: theme.spacing()
+    }
   },
   root: {
     marginTop: theme.spacing()
@@ -22,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     minWidth: 'auto',
     minHeight: 'auto',
-    marginBottom: theme.spacing(),
+    marginTop: theme.spacing(),
     marginLeft: -theme.spacing(),
     padding: 0,
     '& > span': {
@@ -32,6 +34,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: 'white',
       backgroundColor: theme.palette.primary.main
     }
+  },
+  helperText: {
+    marginBottom: theme.spacing()
   }
 }));
 
@@ -79,7 +84,9 @@ export const MultipleIPInput: React.FC<Props> = props => {
   return (
     <div className={classes.root}>
       <Typography variant="h3">{title}</Typography>
-      {helperText && <Typography>{helperText}</Typography>}
+      {helperText && (
+        <Typography className={classes.helperText}>{helperText}</Typography>
+      )}
       {error && <Notice error text={error} spacingTop={8} />}
       {ips.map((thisIP, idx) => (
         <Grid
