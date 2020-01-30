@@ -338,6 +338,29 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/plesk_color.svg'
   },
   {
+   name: 'Redis',
+   description: `Redis is an open-source, in-memory, data-structure store with optional disk writes
+ for persistence, which can be used as key-value database, cache and message broker. Redis features
+ built-in transactions, replication, and support for a variety of data structures such as strings,
+ hashes, lists, sets and others.`,
+   summary:
+     'Flexible, in-memory, NoSQL database service supported in many different coding languages.',
+   related_guides: [
+     {
+       title: 'How to Install a Redis Server on Ubuntu or Debian 8',
+       href:
+         'https://www.linode.com/docs/databases/redis/how-to-install-a-redis-server-on-ubuntu-or-debian8/'
+     }
+   ],
+   related_info: [
+     {
+       title: 'https://redis.io/',
+       href: 'https://redis.io/'
+     }
+   ],
+   logo_url: 'assets/redis_color.svg'
+ },
+ {
     name: 'Ruby on Rails',
     description: `Rails is a web application development framework written in the Ruby programming language. It is designed to make programming web applications easier by making assumptions about what every developer needs to get started. It allows you to write less code while accomplishing more than many other languages and frameworks.`,
     summary: `Ruby on Rails is a web framework that allows web designers and developers to implement dynamic, fully featured web applications. `,
