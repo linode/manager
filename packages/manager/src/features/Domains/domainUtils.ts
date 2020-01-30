@@ -25,3 +25,8 @@ export const isValidCNAME = (cname: string, records: DomainRecord[]) => {
 export const transferHelperText = `IP addresses that may perform a zone transfer for this Domain. This is
 potentially dangerous, and should be left empty unless you intend to
 use it.`;
+
+export const getInitialIPs = (ipsFromProps?: string[]): string[] => {
+  const ips = ipsFromProps ?? [''];
+  return ips.length > 0 ? ips : [''];
+};

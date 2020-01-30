@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface Props {
+export interface Props {
   title: string;
   helperText?: string;
   error?: string;
@@ -76,13 +76,6 @@ export const MultipleIPInput: React.FC<Props> = props => {
     return null;
   }
 
-  if (ips.length === 0) {
-    // Consumer logic to determine initial state is tricky,
-    // so we're handling it here. Basically if we're passed [],
-    // transform it to [''] so we have a blank input ready to go.
-    addNewInput();
-  }
-
   return (
     <div className={classes.root}>
       <Typography variant="h3">{title}</Typography>
@@ -97,6 +90,7 @@ export const MultipleIPInput: React.FC<Props> = props => {
           direction="row"
           alignItems="center"
           justify="center"
+          data-testid="domain-transfer-input"
         >
           <Grid item xs={11}>
             <TextField

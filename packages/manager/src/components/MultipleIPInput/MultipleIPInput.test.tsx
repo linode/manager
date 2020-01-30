@@ -1,9 +1,23 @@
-// import * as React from 'react';
+import { cleanup } from '@testing-library/react';
+import * as React from 'react';
 
-// import MultipleIPInput from './MultipleIPInput';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import MultipleIPInput, { Props } from './MultipleIPInput';
+
+afterEach(cleanup);
+
+const baseProps: Props = {
+  title: 'My Input',
+  ips: [],
+  onChange: jest.fn()
+};
 
 describe('MultipleIPInput', () => {
-  it.skip('should render a single input field when ips is an empty array', () => {
-    expect(true).toBe(true);
+  it('should render a single input field when ips is an empty array', () => {
+    const { queryAllByTestId } = renderWithTheme(
+      <MultipleIPInput {...baseProps} />
+    );
+    expect(queryAllByTestId('domain-transfer-input')).toHaveLength(1);
   });
 });

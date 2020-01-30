@@ -55,7 +55,7 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { sendCreateDomainEvent } from 'src/utilities/ga';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import DeleteDomain from './DeleteDomain';
-import { transferHelperText as helperText } from './domainUtils';
+import { getInitialIPs, transferHelperText as helperText } from './domainUtils';
 
 type ClassNames = 'root' | 'addIP' | 'divider';
 
@@ -168,8 +168,8 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     tags: [],
     submitting: false,
     errors: [],
-    master_ips: [],
-    axfr_ips: [],
+    master_ips: [''],
+    axfr_ips: [''],
     defaultRecordsSetting: 'none',
     selectedDefaultLinode: undefined,
     selectedDefaultNodeBalancer: undefined
@@ -215,8 +215,8 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         tags: tags.map(tag => ({ label: tag, value: tag })),
         type,
         domain,
-        master_ips,
-        axfr_ips,
+        master_ips: getInitialIPs(master_ips),
+        axfr_ips: getInitialIPs(axfr_ips),
         soaEmail: soa_email
       });
     }
@@ -464,7 +464,8 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     );
   }
 
-  handleTransferInput = (axfr_ips: string[]) => {
+  handleTransferInput = (newIPs: string[]) => {
+    const axfr_ips = newIPs.length > 0 ? newIPs : [''];
     if (this.mounted) {
       this.setState({ axfr_ips });
     }
@@ -794,8 +795,9 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
   ) => this.setState({ type: value });
 
   updateMasterIPAddress = (newIPs: string[]) => {
+    const master_ips = newIPs.length > 0 ? newIPs : [''];
     if (this.mounted) {
-      this.setState({ master_ips: newIPs });
+      this.setState({ master_ips });
     }
   };
 }
