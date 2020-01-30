@@ -55,7 +55,8 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { sendCreateDomainEvent } from 'src/utilities/ga';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import DeleteDomain from './DeleteDomain';
-import DomainTransferInput from './DomainTransferInput';
+import { transferHelperText as helperText } from './domainUtils';
+import MultipleIPInput from './MultipleIPInput';
 
 type ClassNames = 'root' | 'addIP' | 'divider';
 
@@ -370,7 +371,9 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
             />
             {isEditingSlaveDomain && (
               // Only when editing
-              <DomainTransferInput
+              <MultipleIPInput
+                title="Domain Transfer IPs"
+                helperText={helperText}
                 ips={this.state.axfr_ips}
                 onChange={this.handleTransferInput}
                 error={errorMap.axfr_ips}

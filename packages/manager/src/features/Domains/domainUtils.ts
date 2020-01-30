@@ -21,3 +21,7 @@ export const isUniqueHostname = (hostname: string, records: DomainRecord[]) => {
 export const isValidCNAME = (cname: string, records: DomainRecord[]) => {
   return !records.some(thisRecord => thisRecord.name === cname);
 };
+
+export const transferHelperText = `IP addresses that may perform a zone transfer for this Domain. This is
+potentially dangerous, and should be left empty unless you intend to
+use it.`;

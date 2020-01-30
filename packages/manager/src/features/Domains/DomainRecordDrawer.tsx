@@ -34,8 +34,12 @@ import {
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import DomainTransferInput from './DomainTransferInput';
-import { isValidCNAME, isValidDomainRecord } from './domainUtils';
+import {
+  isValidCNAME,
+  isValidDomainRecord,
+  transferHelperText as helperText
+} from './domainUtils';
+import MultipleIPInput from './MultipleIPInput';
 
 const TextField: React.StatelessComponent<TextFieldProps> = props => (
   <_TextField {...props} />
@@ -395,7 +399,9 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   };
 
   DomainTransferField = () => (
-    <DomainTransferInput
+    <MultipleIPInput
+      title="Domain Transfer IPs"
+      helperText={helperText}
       error={getAPIErrorsFor(
         DomainRecordDrawer.errorFields,
         this.state.errors

@@ -36,13 +36,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
+  title: string;
+  helperText?: string;
   error?: string;
   ips: string[];
   onChange: (ips: string[]) => void;
 }
 
-export const DomainTransferInput: React.FC<Props> = props => {
-  const { error, onChange, ips } = props;
+export const MultipleIPInput: React.FC<Props> = props => {
+  const { error, onChange, ips, title, helperText } = props;
   const classes = useStyles();
 
   const handleChange = (
@@ -70,18 +72,14 @@ export const DomainTransferInput: React.FC<Props> = props => {
   if (ips.length === 0) {
     // Consumer logic to determine initial state is tricky,
     // so we're handling it here. Basically if we're passed [],
-    // turn it to [''] so we have a blank input ready to go.
+    // transform it to [''] so we have a blank input ready to go.
     addNewInput();
   }
 
   return (
     <div className={classes.root}>
-      <Typography variant="h3">Domain Transfer</Typography>
-      <Typography>
-        IP addresses that may perform a zone transfer for this Domain. This is
-        potentially dangerous, and should be left empty unless you intend to use
-        it.
-      </Typography>
+      <Typography variant="h3">{title}</Typography>
+      {helperText && <Typography>{helperText}</Typography>}
       {error && <Notice error text={error} />}
       {ips.map((thisIP, idx) => (
         <Grid
@@ -104,7 +102,13 @@ export const DomainTransferInput: React.FC<Props> = props => {
             />
           </Grid>
           <Grid item xs={1}>
-            <Button className={classes.button} onClick={() => removeInput(idx)}>
+            <Button
+              className={classes.button}
+              onClick={() => removeInput(idx)}
+              // Disable this if the value is empty and it's the only input,
+              // since in that case clicking delete won't do anything.
+              disabled={ips.length === 1 && thisIP === ''}
+            >
               <Close />
             </Button>
           </Grid>
@@ -120,4 +124,4 @@ export const DomainTransferInput: React.FC<Props> = props => {
   );
 };
 
-export default React.memo(DomainTransferInput);
+export default React.memo(MultipleIPInput);
