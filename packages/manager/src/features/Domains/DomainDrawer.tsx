@@ -27,6 +27,7 @@ import {
 } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import MultipleIPInput from 'src/components/MultipleIPInput';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TagsInput, { Tag } from 'src/components/TagsInput';
@@ -55,7 +56,6 @@ import { sendCreateDomainEvent } from 'src/utilities/ga';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import DeleteDomain from './DeleteDomain';
 import { transferHelperText as helperText } from './domainUtils';
-import MultipleIPInput from './MultipleIPInput';
 
 type ClassNames = 'root' | 'addIP' | 'divider';
 

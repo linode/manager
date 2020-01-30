@@ -22,6 +22,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button, { ButtonProps } from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import MultipleIPInput from 'src/components/MultipleIPInput';
 import Notice from 'src/components/Notice';
 import {
   default as _TextField,
@@ -39,7 +40,6 @@ import {
   isValidDomainRecord,
   transferHelperText as helperText
 } from './domainUtils';
-import MultipleIPInput from './MultipleIPInput';
 
 const TextField: React.StatelessComponent<TextFieldProps> = props => (
   <_TextField {...props} />
