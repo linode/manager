@@ -1,5 +1,6 @@
+import { Event, EventStatus } from 'linode-js-sdk/lib/account/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { pathOr } from 'ramda';
+import { curry } from 'ramda';
 import * as React from 'react';
 import 'rxjs/add/operator/bufferTime';
 import 'rxjs/add/operator/filter';
@@ -7,6 +8,41 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/merge';
 import { Subscription } from 'rxjs/Subscription';
 import { events$ } from 'src/events';
+
+/**
+ * Boilerplate for sending a success toast
+ * when an event succeeds and a failure toast
+ * when it fails. Intended to be partially applied
+ * with the snackbar method and event status.
+ *
+ * Note: due to the nature of currying, if you want to
+ * omit the success or failure message, you must manually pass `undefined`
+ * as the final argument, otherwise you get a function that's expecting
+ * a failureMessage instead of the toasts you want.
+ */
+export const toastSuccessAndFailure = curry(
+  (
+    enqueueSnackbar: any,
+    eventStatus: EventStatus,
+    successMessage: string | undefined,
+    failureMessage: string | undefined
+  ) => {
+    if (
+      ['finished', 'notification'].includes(eventStatus) &&
+      Boolean(successMessage)
+    ) {
+      return enqueueSnackbar(successMessage, { variant: 'success' });
+    } else if (['failed'].includes(eventStatus) && Boolean(failureMessage)) {
+      return enqueueSnackbar(failureMessage, { variant: 'error' });
+    } else {
+      return;
+    }
+  }
+);
+
+export const getLabel = (event: Event) => event.entity?.label ?? '';
+export const getSecondaryLabel = (event: Event) =>
+  event.secondary_entity?.label ?? '';
 
 class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
   subscription: Subscription;
@@ -16,223 +52,86 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
       .filter(e => !e._initial)
       .map(event => {
         const { enqueueSnackbar } = this.props;
-
-        if (
-          event.action === 'volume_detach' &&
-          ['finished', 'notification'].includes(event.status)
-        ) {
-          return enqueueSnackbar(`Volume successfully detached.`, {
-            variant: 'success'
-          });
+        const _toast = toastSuccessAndFailure(enqueueSnackbar, event.status);
+        const label = getLabel(event);
+        const secondaryLabel = getSecondaryLabel(event);
+        switch (event.action) {
+          case 'volume_attach':
+            return _toast(
+              'Volume successfully attached.',
+              'Volume successfully detached.'
+            );
+          case 'volume_detach':
+            return _toast(
+              'Volume successfully detached.',
+              'Error detaching Volume.'
+            );
+          case 'volume_create':
+            return _toast(
+              'Volume successfully created.',
+              'Error creating Volume.'
+            );
+          case 'volume_delete':
+            return _toast(
+              `Volume successfully deleted.`,
+              `Error deleting Volume.`
+            );
+          case 'disk_imagize':
+            return _toast(
+              `Image ${secondaryLabel} created successfully.`,
+              `Error creating Image ${secondaryLabel}.`
+            );
+          case 'image_delete':
+            return _toast(
+              `Image ${label} deleted successfully.`,
+              `Error deleting Image ${label}.`
+            );
+          case 'disk_delete':
+            return _toast(
+              `Disk ${secondaryLabel} deleted successfully.`,
+              `Unable to delete disk ${secondaryLabel} ${
+                label ? ` on ${label}` : ''
+              }. Is it attached to a configuration profile that is in use?`
+            );
+          case 'linode_snapshot':
+            return _toast(
+              undefined,
+              `There was an error creating a snapshot on Linode ${label}.`
+            );
+          /**
+           * These create/delete failures are hypothetical.
+           * We don't know if it's possible for these to fail,
+           * but are including handling to be safe.
+           */
+          case 'linode_config_delete':
+            return _toast(
+              undefined,
+              `Error deleting config ${secondaryLabel}.`
+            );
+          case 'linode_config_create':
+            return _toast(
+              undefined,
+              `Error creating config ${secondaryLabel}.`
+            );
+          case 'linode_clone':
+            return _toast(
+              `Linode ${label} has been cloned successfully to ${secondaryLabel}.`,
+              `Error cloning Linode ${label}.`
+            );
+          case 'linode_migrate_datacenter':
+          case 'linode_migrate':
+            return _toast(
+              `Linode ${label} has been migrated successfully.`,
+              `Error migrating Linode ${label}.`
+            );
+          case 'linode_resize':
+            return _toast(
+              `Linode ${label} has been resized successfully.`,
+              `Error resizing Linode ${label}.`
+            );
+          default:
+            return;
         }
-
-        if (
-          event.action === 'volume_attach' &&
-          ['finished', 'notification'].includes(event.status)
-        ) {
-          return enqueueSnackbar(`Volume successfully attached.`, {
-            variant: 'success'
-          });
-        }
-
-        if (
-          event.action === 'volume_create' &&
-          ['finished', 'notification'].includes(event.status)
-        ) {
-          return enqueueSnackbar(`Volume successfully created.`, {
-            variant: 'success'
-          });
-        }
-
-        if (
-          event.action === 'volume_delete' &&
-          ['finished', 'notification'].includes(event.status)
-        ) {
-          return enqueueSnackbar(`Volume successfully deleted.`, {
-            variant: 'success'
-          });
-        }
-
-        if (event.action === 'disk_imagize' && event.status === 'failed') {
-          return enqueueSnackbar(
-            `There was an error creating image ${event.secondary_entity
-              ?.label ?? ''}.`,
-            {
-              variant: 'error'
-            }
-          );
-        }
-
-        if (event.action === 'image_delete' && event.status === 'failed') {
-          return enqueueSnackbar(
-            `There was an error deleting image ${event.entity?.label ?? ''}.`,
-            {
-              variant: 'error'
-            }
-          );
-        }
-
-        if (
-          event.action === 'disk_imagize' &&
-          ['finished', 'notification'].includes(event.status)
-        ) {
-          return enqueueSnackbar(
-            `Image ${event.secondary_entity?.label ??
-              ''} created successfully.`,
-            {
-              variant: 'success'
-            }
-          );
-        }
-
-        if (
-          event.action === 'image_delete' &&
-          ['finished', 'notification'].includes(event.status)
-        ) {
-          return enqueueSnackbar(
-            `Image ${event.entity?.label + ' ' ?? ''}deleted successfully.`,
-            {
-              variant: 'success'
-            }
-          );
-        }
-
-        if (event.action === 'volume_create' && event.status === 'failed') {
-          return enqueueSnackbar(
-            `There was an error attaching volume ${event.entity &&
-              event.entity.label}.`,
-            { variant: 'error' }
-          );
-        }
-
-        if (event.action === 'disk_delete' && event.status === 'failed') {
-          const label = pathOr('', ['secondary_entity', 'label'], event);
-          const linode = pathOr(false, ['entity', 'label'], event);
-          return enqueueSnackbar(
-            `Unable to delete disk ${label} ${
-              linode ? ` on ${linode}` : ''
-            }. Is it attached to a configuration profile that is in use?`,
-            { variant: 'error' }
-          );
-        }
-
-        if (event.action === 'linode_snapshot' && event.status === 'failed') {
-          return enqueueSnackbar(
-            `There was an error creating a snapshot on Linode ${event.entity?.label}.`,
-            { variant: 'error' }
-          );
-        }
-
-        /**
-         * These create/delete failures are hypothetical.
-         * We don't know if it's possible for these to fail,
-         * but are including handling to be safe.
-         */
-        if (
-          event.action === 'linode_config_delete' &&
-          ['failed'].includes(event.status)
-        ) {
-          const entity = event.secondary_entity
-            ? event.secondary_entity.label
-            : '';
-          return enqueueSnackbar(`Error deleting config ${entity}.`, {
-            variant: 'error'
-          });
-        }
-
-        if (
-          event.action === 'linode_config_create' &&
-          ['failed'].includes(event.status)
-        ) {
-          const entity = event.secondary_entity
-            ? event.secondary_entity.label
-            : '';
-          return enqueueSnackbar(`Error creating config ${entity}.`, {
-            variant: 'error'
-          });
-        }
-
-        if (
-          event.action === 'linode_clone' &&
-          ['failed'].includes(event.status)
-        ) {
-          return enqueueSnackbar(
-            `Error cloning Linode ${event.entity?.label ?? ''}.`,
-            {
-              variant: 'error'
-            }
-          );
-        }
-
-        if (
-          event.action === 'linode_clone' &&
-          ['finished', 'notification'].includes(event.status)
-        ) {
-          return enqueueSnackbar(
-            `Linode ${event.entity?.label ??
-              ''} has been cloned successfully to ${event.secondary_entity
-              ?.label ?? ''}.`,
-            {
-              variant: 'success'
-            }
-          );
-        }
-
-        if (
-          ['linode_migrate_datacenter', 'linode_migrate'].includes(
-            event.action
-          ) &&
-          ['failed'].includes(event.status)
-        ) {
-          return enqueueSnackbar(
-            `Error migrating Linode ${event.entity?.label ?? ''}.`,
-            {
-              variant: 'error'
-            }
-          );
-        }
-
-        if (
-          ['linode_migrate_datacenter', 'linode_migrate'].includes(
-            event.action
-          ) &&
-          ['finished', 'notification'].includes(event.status)
-        ) {
-          return enqueueSnackbar(
-            `Linode ${event.entity?.label ??
-              ''} has been migrated successfully.`,
-            {
-              variant: 'success'
-            }
-          );
-        }
-
-        if (
-          event.action === 'linode_resize' &&
-          ['failed'].includes(event.status)
-        ) {
-          return enqueueSnackbar(
-            `Error resizing Linode ${event.entity?.label ?? ''}.`,
-            {
-              variant: 'error'
-            }
-          );
-        }
-
-        if (
-          event.action === 'linode_resize' &&
-          ['finished', 'notification'].includes(event.status)
-        ) {
-          return enqueueSnackbar(
-            `Linode ${event.entity?.label ??
-              ''} has been resized successfully.`,
-            {
-              variant: 'success'
-            }
-          );
-        }
-
-        return;
       })
       /**
        * In the somewhat unlikely scenario that we get a flood of events, we're
