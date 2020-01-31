@@ -12,7 +12,7 @@ before_install: sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev 
   build-essential g++ google-chrome-stable curl
 install:
 - yarn install:all
-- if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then npx audit-ci --low; fi
+- if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then audit-ci --low; fi
 
 script:
 - yarn build
