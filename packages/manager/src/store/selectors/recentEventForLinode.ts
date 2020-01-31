@@ -1,6 +1,7 @@
 import { Event } from 'linode-js-sdk/lib/account';
 import { createSelector } from 'reselect';
 import { ApplicationState } from 'src/store';
+import { isInProgressEvent } from '../events/event.helpers';
 import { isEventRelevantToLinode } from '../events/event.selectors';
 
 export default (linodeId: number) =>
@@ -11,7 +12,10 @@ export default (linodeId: number) =>
       const len = events.length;
       for (; idx < len; idx += 1) {
         const event = events[idx];
-        if (isEventRelevantToLinode(event, linodeId)) {
+        if (
+          isInProgressEvent(event) &&
+          isEventRelevantToLinode(event, linodeId)
+        ) {
           return event;
         }
       }
