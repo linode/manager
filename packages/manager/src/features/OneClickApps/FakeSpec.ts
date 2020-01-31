@@ -266,6 +266,33 @@ export const oneClickApps: OCA[] = [
     // href: 'https://www.ibm.com/cloud/learn/lamp-stack-explained' Not sure this is kosher.
   },
   {
+    name: 'MongoDB',
+    description: `MongoDB seeks to provide an alternative to traditional relational database management systems (RDBMS). In addition to its schema-free design and scalable architecture, MongoDB provides a JSON output and specialized, language-specific bindings that make it particularly attractive for use in custom application development and rapid prototyping.`,
+    summary: `MongoDB is a database engine that provides access to non-relational, document-oriented databases.`,
+    related_guides: [
+      {
+        title: 'Create a MongoDB Replica Set',
+        href: 'https://www.linode.com/docs/databases/mongodb/create-a-mongodb-replica-set/'
+      },
+      {
+        title: 'Build Database Clusters with MongoDB',
+        href: 'https://www.linode.com/docs/databases/mongodb/build-database-clusters-with-mongodb/'
+      },
+      {
+        title: 'Install MongoDB on Ubuntu 16.04',
+        href:
+          'https://www.linode.com/docs/databases/mongodb/install-mongodb-on-ubuntu-16-04/'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://www.mongodb.com/',
+        href: 'https://www.mongodb.com/'
+      },
+    ],
+    logo_url: 'assets/mongodb_color.svg'
+  },
+  {
     name: 'Mean',
     description: `MEAN is a full-stack JavaScript-based framework, which accelerates web application development much faster than other frameworks.  All of these technologies are well-established, offer robust feature sets, and are well-supported by their maintaining organizations. These characteristics make them a great choice for your applications.`,
     summary: `A MERN (MongoDB, Express, Angular, Node.js) stack is a free and open-source web software bundle used to build modern web applications:`,
@@ -338,6 +365,29 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/plesk_color.svg'
   },
   {
+   name: 'Redis',
+   description: `Redis is an open-source, in-memory, data-structure store with optional disk writes
+ for persistence, which can be used as key-value database, cache and message broker. Redis features
+ built-in transactions, replication, and support for a variety of data structures such as strings,
+ hashes, lists, sets and others.`,
+   summary:
+     'Flexible, in-memory, NoSQL database service supported in many different coding languages.',
+   related_guides: [
+     {
+       title: 'How to Install a Redis Server on Ubuntu or Debian 8',
+       href:
+         'https://www.linode.com/docs/databases/redis/how-to-install-a-redis-server-on-ubuntu-or-debian8/'
+     }
+   ],
+   related_info: [
+     {
+       title: 'https://redis.io/',
+       href: 'https://redis.io/'
+     }
+   ],
+   logo_url: 'assets/redis_color.svg'
+ },
+ {
     name: 'Ruby on Rails',
     description: `Rails is a web application development framework written in the Ruby programming language. It is designed to make programming web applications easier by making assumptions about what every developer needs to get started. It allows you to write less code while accomplishing more than many other languages and frameworks.`,
     summary: `Ruby on Rails is a web framework that allows web designers and developers to implement dynamic, fully featured web applications. `,
