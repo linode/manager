@@ -1,5 +1,10 @@
 pipeline {
-    agent { docker { image 'node:10-slim' } }
+    agent { 
+        docker { 
+            image 'node:10-slim'
+            args '-u root:sudo -v $(pwd):/usr/src -w /usr/src'
+        }
+    }
     stages {
         stage('install') {
             steps {
