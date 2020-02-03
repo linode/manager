@@ -10,6 +10,7 @@ const isLoading = (state: { loading: boolean; lastUpdated: number }) =>
 interface OuterProps {
   configsLoading: boolean;
   disksLoading: boolean;
+  linodeId: number;
 }
 
 interface InnerProps {
@@ -28,7 +29,7 @@ const collectLoadingState: MapState<InnerProps, OuterProps> = (
     linodeConfigs,
     linodeDisks
   } = state.__resources;
-  const { configsLoading, disksLoading } = ownProps;
+  const { configsLoading, disksLoading, linodeId } = ownProps;
 
   return {
     loading:
@@ -39,7 +40,7 @@ const collectLoadingState: MapState<InnerProps, OuterProps> = (
       isLoading(volumes) ||
       isLoading(notifications) ||
       isLoading(linodeConfigs) ||
-      isLoading(linodeDisks)
+      isLoading(linodeDisks[linodeId] ?? mockLoading)
   };
 };
 
@@ -50,5 +51,10 @@ const collectLoadingState: MapState<InnerProps, OuterProps> = (
  */
 export default compose(
   connect(collectLoadingState),
-  branch(({ loading }) => loading, renderComponent(() => <CircleProgress />))
+  branch(
+    ({ loading }) => loading,
+    renderComponent(() => <CircleProgress />)
+  )
 );
+
+const mockLoading = { lastUpdated: 0, loading: true };

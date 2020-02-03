@@ -1,7 +1,7 @@
+import produce from 'immer';
 import { Reducer } from 'redux';
 import {
   addMany,
-  createDefaultState,
   onCreateOrUpdate,
   onDeleteSuccess,
   onError,
@@ -22,97 +22,104 @@ import {
 } from './disk.actions';
 import { Entity } from './disk.types';
 
-export type State = MappedEntityState<Entity, EntityError>;
+export type State = Record<number, MappedEntityState<Entity, EntityError>>;
 
-export const defaultState: State = createDefaultState<Entity, EntityError>();
+export const defaultState: State = {};
 
 const reducer: Reducer<State> = (state = defaultState, action) => {
-  if (isType(action, deleteLinodeActions.done)) {
-    const {
-      params: { linodeId }
-    } = action.payload;
+  return produce(state, draft => {
+    if (isType(action, deleteLinodeActions.done)) {
+      const {
+        params: { linodeId }
+      } = action.payload;
 
-    const configIdsToRemove = Object.values(state.itemsById)
-      .filter(({ linode_id }) => linode_id === linodeId)
-      .map(({ id }) => String(id));
+      const configIdsToRemove = Object.values(state[linodeId]?.itemsById ?? {})
+        .filter(({ linode_id }) => linode_id === linodeId)
+        .map(({ id }) => String(id));
 
-    return removeMany(configIdsToRemove, state);
-  }
+      draft[linodeId] = removeMany(configIdsToRemove, state[linodeId]);
+    }
 
-  if (isType(action, deleteLinode)) {
-    const { payload } = action;
+    if (isType(action, deleteLinode)) {
+      const { payload } = action;
+      const linodeId = action.payload;
 
-    const configIdsToRemove = Object.values(state.itemsById)
-      .filter(({ linode_id }) => linode_id === payload)
-      .map(({ id }) => String(id));
+      const configIdsToRemove = Object.values(state[linodeId]?.itemsById ?? {})
+        .filter(({ linode_id }) => linode_id === payload)
+        .map(({ id }) => String(id));
 
-    return removeMany(configIdsToRemove, state);
-  }
+      draft[linodeId] = removeMany(configIdsToRemove, state[linodeId]);
+    }
 
-  if (isType(action, getLinodeDisksActions.done)) {
-    const { result } = action.payload;
-    return addMany(result, state);
-  }
+    if (isType(action, getLinodeDisksActions.done)) {
+      const { result } = action.payload;
+      const { linodeId } = action.payload.params;
+      draft[linodeId] = addMany(result, state[linodeId]);
+    }
 
-  if (isType(action, createLinodeDiskActions.done)) {
-    const { result } = action.payload;
-    return onCreateOrUpdate(result, state);
-  }
+    if (
+      isType(action, createLinodeDiskActions.done) ||
+      isType(action, getLinodeDiskActions.done) ||
+      isType(action, updateLinodeDiskActions.done)
+    ) {
+      const { result } = action.payload;
+      const { linodeId } = action.payload.params;
+      draft[linodeId] = onCreateOrUpdate(result, state[linodeId]);
+    }
 
-  if (isType(action, getLinodeDiskActions.done)) {
-    const { result } = action.payload;
-    return onCreateOrUpdate(result, state);
-  }
+    if (isType(action, deleteLinodeDiskActions.started)) {
+      const { linodeId } = action.payload;
+      draft[linodeId] = onError<
+        MappedEntityState<Entity, EntityError>,
+        EntityError
+      >(
+        {
+          delete: undefined
+        },
+        state[linodeId]
+      );
+    }
 
-  if (isType(action, updateLinodeDiskActions.done)) {
-    const { result } = action.payload;
-    return onCreateOrUpdate(result, state);
-  }
+    if (isType(action, deleteLinodeDiskActions.done)) {
+      const {
+        params: { diskId: DiskId, linodeId }
+      } = action.payload;
+      draft[linodeId] = onDeleteSuccess(DiskId, state[linodeId]);
+    }
 
-  if (isType(action, deleteLinodeDiskActions.started)) {
-    return onError<MappedEntityState<Entity, EntityError>, EntityError>(
-      {
-        delete: undefined
-      },
-      state
-    );
-  }
+    /**
+     * reset error state when our request to disks has started and
+     * or a request to get one disk has started
+     */
+    if (
+      isType(action, getAllLinodeDisksActions.started) ||
+      isType(action, getLinodeDiskActions.started)
+    ) {
+      const { linodeId } = action.payload;
+      draft[linodeId] = onStart(state[linodeId]);
+    }
 
-  if (isType(action, deleteLinodeDiskActions.done)) {
-    const {
-      params: { diskId: DiskId }
-    } = action.payload;
+    if (isType(action, getAllLinodeDisksActions.done)) {
+      const { result } = action.payload;
+      const { linodeId } = action.payload.params;
+      draft[linodeId] = onGetAllSuccess(result, state[linodeId]);
+    }
 
-    return onDeleteSuccess(DiskId, state);
-  }
+    if (isType(action, getAllLinodeDisksActions.failed)) {
+      const { error } = action.payload;
+      const { linodeId } = action.payload.params;
 
-  /**
-   * reset error state when our request to disks has started and
-   * or a request to get one disk has started
-   */
-  if (
-    isType(action, getAllLinodeDisksActions.started) ||
-    isType(action, getLinodeDiskActions.started)
-  ) {
-    return onStart(state);
-  }
-
-  if (isType(action, getAllLinodeDisksActions.done)) {
-    const { result } = action.payload;
-    return onGetAllSuccess(result, state);
-  }
-
-  if (isType(action, getAllLinodeDisksActions.failed)) {
-    const { error } = action.payload;
-    return onError<MappedEntityState<Entity, EntityError>, EntityError>(
-      {
-        read: error
-      },
-      state
-    );
-  }
-
-  return state;
+      draft[linodeId] = onError<
+        MappedEntityState<Entity, EntityError>,
+        EntityError
+      >(
+        {
+          read: error
+        },
+        state[linodeId]
+      );
+    }
+  });
 };
 
 export default reducer;
