@@ -11,7 +11,9 @@ pipeline {
             steps {
                 sh 'pwd && ls -la'
                 sh 'yarn install:all'
+                sh 'yarn workspace linode-js-sdk build'
                 sh 'yarn workspace linode-mamager cypress -v'
+                sh 'yarn cy:e2e'
             }
         }
     }
