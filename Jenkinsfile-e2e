@@ -3,6 +3,7 @@ pipeline {
     stages {
         stage('install') {
             steps {
+                sh 'pwd && ls -la'
                 sh 'yarn install:all'
                 sh 'yarn workspace linode-mamager cypress -v'
             }
