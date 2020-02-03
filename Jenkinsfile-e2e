@@ -1,8 +1,9 @@
 pipeline {
+    
     agent { 
         docker { 
+            args '-u root:sudo -w /usr/src'
             image 'node:10-slim'
-            args '-u root:sudo -v ${pwd()}:/usr/src -w /usr/src'
         }
     }
     stages {
