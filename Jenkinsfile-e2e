@@ -1,0 +1,11 @@
+pipeline {
+    agent { docker { image 'node:10-slim' } }
+    stages {
+        stage('install') {
+            steps {
+                sh 'yarn install:all'
+                sh 'yarn workspace linode-mamager cypress -v'
+            }
+        }
+    }
+}
