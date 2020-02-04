@@ -12,7 +12,8 @@ import Drawer from 'src/components/Drawer';
 import { APP_ROOT } from 'src/constants';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
-import { oneClickApps } from './FakeSpec';
+import { getOneClickApps, OneClickApp } from 'linode-js-sdk/lib/one-click-apps';
+
 import LinkSection from './LinkSection';
 import TipSection from './TipSection';
 
@@ -53,90 +54,102 @@ const styles = (theme: Theme) =>
       marginBottom: theme.spacing(2)
     },
     image: {
-      maxWidth: 50
+      maxWidth: 60
     }
   });
 
 interface Props {
+  app: OneClickApp;
   stackscriptID: string;
   open: boolean;
   onClose: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
-
-export const AppDetailDrawer: React.FunctionComponent<
-  CombinedProps
-> = props => {
-  const { classes, stackscriptID, open, onClose } = props;
-  const app = oneClickApps.find(eachApp =>
-    Boolean(stackscriptID.match(eachApp.name))
-  ); // This is horrible
-  if (!app) {
-    return null;
+class AppDetailDrawer extends React.PureComponent<CombinedProps>{
+  constructor(props: CombinedProps) {
+    super(props)
+    this.state = {
+      apps: []
+    }
   }
 
-  return (
-    <Drawer
-      open={open}
-      onClose={onClose}
-      title={
-        '' /* Empty so that we can display the logo beneath the close button rather than a text title */
-      }
-    >
-      <Grid container direction="row" alignItems="center" justify="center">
-        <Grid item className={classes.logo}>
-          <img
-            className={classes.image}
-            src={`${APP_ROOT}/${app.logo_url}`}
-            alt={`${app.name} logo`}
-          />
+  componentDidMount(){
+    getOneClickApps().then(response => {
+      this.setState({ apps: response.data });
+    })
+  }
+
+  render() {
+    const { classes, stackscriptID, open, onClose } = this.props;
+    
+    const app = this.state["apps"].find(eachApp => stackscriptID == eachApp.label);
+    if(!app) {
+      return null;
+    }
+
+    return (
+      <Drawer
+        open={open}
+        onClose={onClose}
+        title={
+          '' /* Empty so that we can display the logo beneath the close button rather than a text title */
+        }
+      >
+        <Grid container direction="row" alignItems="center" justify="center">
+          <Grid item className={classes.logo}>
+            <img
+                className={classes.image}
+                src={`${APP_ROOT}/${app.color_logo_url}`}
+                alt={`${app.name} logo`}
+              />
+          </Grid>
+          <Grid item>
+            <Typography variant="h2" className={classes.appName}>
+              {app.label}
+            </Typography>
+          </Grid>
         </Grid>
-        <Grid item>
-          <Typography variant="h2" className={classes.appName}>
-            {app.name}
-          </Typography>
+        <Divider className={classes.divider} />
+        <Grid container direction="column" alignItems="center" justify="center">
+          <Grid item>
+            <Typography variant="h3" className={classes.summary}>
+              {app.summary}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography
+            variant="body1"
+            className={classes.description}
+            dangerouslySetInnerHTML={{ __html: sanitizeHTML(app.description) }}
+            />
+          </Grid>
+          {app.related_info.length > 0 && (
+            <LinkSection
+              title="More info"
+              links={app.related_info}
+              icon={Link}
+            />
+          )}
+          {app.related_guides.length > 0 && (
+            <LinkSection
+              title="Guides"
+              links={app.related_guides}
+              icon={LibraryBook}
+            />
+          )}
+          {app.tips.length > 0 && (
+            <TipSection
+            title="Tips"
+            tips={app.tips}
+            icon={Info}
+            />
+          )}
         </Grid>
-      </Grid>
-      <Divider className={classes.divider} />
-      <Grid container direction="column" alignItems="center" justify="center">
-        <Grid item>
-          <Typography variant="h3" className={classes.summary}>
-            {app.summary}
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Typography
-          variant="body1"
-          className={classes.description}
-          dangerouslySetInnerHTML={{ __html: sanitizeHTML(app.description) }}
-          />
-        </Grid>
-        {app.related_info && (
-          <LinkSection
-            title="More info"
-            links={app.related_info}
-            icon={Link}
-          />
-        )}
-        {app.related_guides && (
-          <LinkSection
-            title="Guides"
-            links={app.related_guides}
-            icon={LibraryBook}
-          />
-        )}
-        {app.tips && (
-          <TipSection
-          title="Tips"
-          tips={app.tips}
-          icon={Info}
-          />
-        )}
-      </Grid>
-    </Drawer>
-  );
-};
+      </Drawer>
+    );
+  }
+}
 
 const styled = withStyles(styles);
 

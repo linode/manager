@@ -6,6 +6,7 @@ import {
 } from 'linode-js-sdk/lib/linodes';
 import { StackScript, UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
 import { APIError } from 'linode-js-sdk/lib/types';
+import { getOneClickApps } from 'linode-js-sdk/lib/one-click-apps';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -59,11 +60,6 @@ import {
 } from './types';
 
 import { resetEventsPolling } from 'src/eventsPolling';
-import {
-  baseApps,
-  getOneClickApps
-} from 'src/features/StackScripts/stackScriptUtils';
-
 import { upsertLinode } from 'src/store/linodes/linodes.actions';
 import { MapState } from 'src/store/types';
 
@@ -130,13 +126,6 @@ const defaultState: State = {
   appInstancesLoading: false
 };
 
-const trimOneClickFromLabel = (script: StackScript) => {
-  return {
-    ...script,
-    label: script.label.replace('One-Click', '')
-  };
-};
-
 const nonImageCreateTypes = ['fromStackScript', 'fromBackup', 'fromLinode'];
 
 const isNonDefaultImageType = (prevType: string, type: string) => {
@@ -169,9 +158,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   componentDidMount() {
     const params = getParamsFromUrl(this.props.location.search);
-    // Allowed apps include the base set of original apps + anything LD tells us to show
-    const newApps = this.props.flags.oneClickApps || [];
-    const allowedApps = Object.keys({ ...baseApps, ...newApps });
     if (params && params !== {}) {
       this.setState({
         // This set is for creating from a Backup
@@ -186,19 +172,14 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       this.setState({ selectedImageID: undefined });
     }
     this.setState({ appInstancesLoading: true });
+
     getOneClickApps()
       // Don't display One-Click Helpers to the user
       // Filter out any apps that we don't have info for
       .then(response =>
         response.data.filter(script => {
-          return (
-            !script.label.match(/helpers/i) &&
-            allowedApps.includes(String(script.id))
-          );
+          return (script);
         })
-      )
-      .then(response =>
-        response.map(stackscript => trimOneClickFromLabel(stackscript))
       )
       .then(response => {
         this.setState({
