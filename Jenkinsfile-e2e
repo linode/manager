@@ -2,7 +2,7 @@ pipeline {
     
     agent { 
         docker { 
-            args '-u root:sudo -w /usr/src'
+            args '-u root:sudo -w /usr/src -e CYPRESS_CACHE_FOLDER=$HOME/.cypress'
             image 'node:10-slim'
         }
     }
@@ -12,7 +12,7 @@ pipeline {
                 sh 'pwd && ls -la'
                 sh 'yarn install:all'
 
-                sh '$CYPRESS_CACHE_FOLDER'
+                sh 'echo $CYPRESS_CACHE_FOLDER'
                 sh 'ls $CYPRESS_CACHE_FOLDER'
                 sh 'yarn workspace linode-js-sdk build'
                 sh 'ls /root/.cache/'
