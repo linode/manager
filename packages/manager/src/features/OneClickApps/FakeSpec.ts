@@ -90,10 +90,32 @@ export const oneClickApps: OCA[] = [
       }
     ],
     tips: [
-       `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:8000</em> in a browser to visit the default web page.`,
-       `You can also visit <em>https://[your-Linode's-IP-address]:8000/admin</em> to view the Djanogo admin panel.`
+      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:8000</em> in a browser to visit the default web page.`,
+      `You can also visit <em>https://[your-Linode's-IP-address]:8000/admin</em> to view the Djanogo admin panel.`
     ],
     logo_url: 'assets/django_color.svg'
+  },
+  {
+    name: 'Flask',
+    description: `Flask is a lightweight WSGI web application framework. It is designed to make getting started quick and easy, with the ability to scale up to complex applications.`,
+    summary: `A quick light-weight web framework for Python that includes several utilities and libraries you can use to create a web application.`,
+    related_guides: [
+      {
+        title: 'Deploy a Flask Application on Ubuntu',
+        href:
+          'https://www.linode.com/docs/development/python/flask-and-gunicorn-on-ubuntu/'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://www.palletsprojects.com/p/flask/',
+        href: 'https://www.palletsprojects.com/p/flask/'
+      }
+    ],
+    tips: [
+      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]</em> in a browser.`
+    ],
+    logo_url: 'assets/flask_color.svg'
   },
   {
     name: 'Docker',
@@ -260,6 +282,18 @@ export const oneClickApps: OCA[] = [
     // href: 'https://www.ibm.com/cloud/learn/lamp-stack-explained' Not sure this is kosher.
   },
   {
+    name: 'Mean',
+    description: `MEAN is a full-stack JavaScript-based framework, which accelerates web application development much faster than other frameworks.  All of these technologies are well-established, offer robust feature sets, and are well-supported by their maintaining organizations. These characteristics make them a great choice for your applications.`,
+    summary: `A MERN (MongoDB, Express, Angular, Node.js) stack is a free and open-source web software bundle used to build modern web applications:`,
+    related_info: [
+      {
+        title: 'http://meanjs.org/',
+        href: 'http://meanjs.org/'
+      }
+    ],
+    logo_url: 'assets/mean_color.svg'
+  },
+  {
     name: 'LEMP',
     description: `LEMP provides a platform for applications that is compatible with the LAMP stack for nearly all applications; however, because NGINX is able to serve more pages at once with a more predictable memory usage profile, it may be more suited to high demand situations.`,
     summary: `The LEMP stack replaces the Apache web server component with NGINX (“Engine-X”), providing the E in the acronym: Linux, NGINX, MySQL/MariaDB, PHP.    `,
@@ -318,6 +352,74 @@ export const oneClickApps: OCA[] = [
       }
     ],
     logo_url: 'assets/plesk_color.svg'
+  },
+  {
+    name: 'Ruby on Rails',
+    description: `Rails is a web application development framework written in the Ruby programming language. It is designed to make programming web applications easier by making assumptions about what every developer needs to get started. It allows you to write less code while accomplishing more than many other languages and frameworks.`,
+    summary: `Ruby on Rails is a web framework that allows web designers and developers to implement dynamic, fully featured web applications. `,
+    related_guides: [
+      {
+        title: 'Ruby on Rails with NGINX On Debian 9',
+        href:
+          'https://www.linode.com/docs/development/ror/ruby-on-rails-nginx-debian/'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://rubyonrails.org/',
+        href: 'https://rubyonrails.org/'
+      }
+    ],
+    tips: [
+      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:3000</em> in a browser.`
+    ],
+    logo_url: 'assets/rubyonrails_color.svg'
+  },
+  {
+    name: 'PostgreSQL',
+    description: `PostgreSQL is a popular, open source relational database system that provides many advanced configuration options that can help optimize your databases’s performance in a production environment.`,
+    summary: `The PostgreSQL relational database system is a powerful, scalable, and standards-compliant open-source database platform.`,
+    related_guides: [
+      {
+        title: 'Configure PostgreSQL',
+        href:
+          'https://www.linode.com/docs/databases/postgresql/configure-postgresql/'
+      },
+      {
+        title: 'How to Install PostgreSQL on Ubuntu 16.04',
+        href:
+          'https://www.linode.com/docs/databases/postgresql/how-to-install-postgresql-on-ubuntu-16-04/'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://www.postgresql.org/',
+        href: 'https://www.postgresql.org/'
+      }
+    ],
+    logo_url: 'assets/postgresql_color.svg'
+  },
+  {
+    name: 'phpMyAdmin',
+    description: `phpMyAdmin is a web application that provides a GUI to aid in MySQL and MariaDB database administration. It supports multiple database servers and is a robust and easy alternative to using the MySQL command line client.`,
+    summary: `An easy to use web application that simplifies the management of your MySQL and MariaDB databases.`,
+    related_guides: [
+      {
+        title: 'How to Install and Configure phpMyAdmin on Debian 8',
+        href:
+          'https://www.linode.com/docs/databases/mysql/install-and-configure-phpmyadmin-on-debian-8/'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://www.phpmyadmin.net/',
+        href: 'https://www.phpmyadmin.net/'
+      }
+    ],
+    tips: [
+      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]/phpmyadmin</em> in a browser.`
+    ],
+    logo_url: 'assets/phpmyadmin_color.svg'
   },
   {
     name: 'Prometheus',
