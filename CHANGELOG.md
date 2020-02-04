@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.84.1] - 2020-02-04
+
+### Fixed:
+- Fix images pagination issue (#6074)
+
+
 ## [v0.84.0] - 2020-01-28
 
 ### Added:
