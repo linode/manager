@@ -90,8 +90,8 @@ export const oneClickApps: OCA[] = [
       }
     ],
     tips: [
-       `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:8000</em> in a browser to visit the default web page.`,
-       `You can also visit <em>https://[your-Linode's-IP-address]:8000/admin</em> to view the Djanogo admin panel`
+      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:8000</em> in a browser to visit the default web page.`,
+      `You can also visit <em>https://[your-Linode's-IP-address]:8000/admin</em> to view the Djanogo admin panel.`
     ],
     logo_url: 'assets/django_color.svg'
   },
@@ -104,13 +104,13 @@ export const oneClickApps: OCA[] = [
         title: 'Deploy a Flask Application on Ubuntu',
         href:
           'https://www.linode.com/docs/development/python/flask-and-gunicorn-on-ubuntu/'
-      },
+      }
     ],
     related_info: [
       {
         title: 'https://www.palletsprojects.com/p/flask/',
         href: 'https://www.palletsprojects.com/p/flask/'
-      },
+      }
     ],
     tips: [
       `Once the script finishes, go to <em>https://[your-Linode's-IP-address]</em> in a browser.`
@@ -360,14 +360,15 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Ruby on Rails with NGINX On Debian 9',
-        href: 'https://www.linode.com/docs/development/ror/ruby-on-rails-nginx-debian/'
-      },
+        href:
+          'https://www.linode.com/docs/development/ror/ruby-on-rails-nginx-debian/'
+      }
     ],
     related_info: [
       {
         title: 'https://rubyonrails.org/',
         href: 'https://rubyonrails.org/'
-      },
+      }
     ],
     tips: [
       `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:3000</em> in a browser.`
@@ -407,20 +408,20 @@ export const oneClickApps: OCA[] = [
         title: 'How to Install and Configure phpMyAdmin on Debian 8',
         href:
           'https://www.linode.com/docs/databases/mysql/install-and-configure-phpmyadmin-on-debian-8/'
-      },
+      }
     ],
     related_info: [
       {
         title: 'https://www.phpmyadmin.net/',
         href: 'https://www.phpmyadmin.net/'
-      },
+      }
     ],
     tips: [
       `Once the script finishes, go to <em>https://[your-Linode's-IP-address]/phpmyadmin</em> in a browser.`
     ],
     logo_url: 'assets/phpmyadmin_color.svg'
   },
-  {  
+  {
     name: 'Prometheus',
     description: `Prometheus is a powerful monitoring software tool that collects metrics from configurable data points at given intervals, evaluates rule expressions, and can trigger alerts if some condition is observed.`,
     summary:
