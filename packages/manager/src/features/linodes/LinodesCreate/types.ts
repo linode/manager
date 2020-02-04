@@ -1,6 +1,7 @@
 import { Image } from 'linode-js-sdk/lib/images';
 import { CreateLinodeRequest, Linode } from 'linode-js-sdk/lib/linodes';
-import { StackScript, UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
+import { OneClickApp } from 'linode-js-sdk/lib/one-click-apps';
+import { UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { ExtendedRegion } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { Tag } from 'src/components/TagsInput';
@@ -153,7 +154,7 @@ export interface BackupFormStateHandlers extends CloneFormStateHandlers {
 }
 
 export interface AppsData {
-  appInstances?: StackScript[];
+  appInstances?: OneClickApp[];
   appInstancesLoading: boolean;
   appInstancesError?: string;
 }

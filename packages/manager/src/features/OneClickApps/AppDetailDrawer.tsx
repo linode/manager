@@ -54,19 +54,24 @@ const styles = (theme: Theme) =>
       marginBottom: theme.spacing(2)
     },
     image: {
-      maxWidth: 60
+      maxWidth: 50
     }
   });
 
 interface Props {
-  app: OneClickApp;
   stackscriptID: string;
   open: boolean;
   onClose: () => void;
 }
+interface State {
+  apps: OneClickApp[];
+}
 
 type CombinedProps = Props & WithStyles<ClassNames>;
-class AppDetailDrawer extends React.PureComponent<CombinedProps>{
+class AppDetailDrawer extends React.PureComponent<
+  CombinedProps,
+  State
+>{
   constructor(props: CombinedProps) {
     super(props)
     this.state = {
@@ -83,7 +88,9 @@ class AppDetailDrawer extends React.PureComponent<CombinedProps>{
   render() {
     const { classes, stackscriptID, open, onClose } = this.props;
     
-    const app = this.state["apps"].find(eachApp => stackscriptID == eachApp.label);
+    const app = this.state.apps.find((eachApp: { label: string; }) => 
+      Boolean(stackscriptID.match(eachApp.label))
+    );
     if(!app) {
       return null;
     }
@@ -101,7 +108,7 @@ class AppDetailDrawer extends React.PureComponent<CombinedProps>{
             <img
                 className={classes.image}
                 src={`${APP_ROOT}/${app.color_logo_url}`}
-                alt={`${app.name} logo`}
+                alt={`${app.label} logo`}
               />
           </Grid>
           <Grid item>

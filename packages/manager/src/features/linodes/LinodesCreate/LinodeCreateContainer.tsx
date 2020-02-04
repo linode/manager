@@ -4,9 +4,9 @@ import {
   CreateLinodeRequest,
   Linode
 } from 'linode-js-sdk/lib/linodes';
-import { StackScript, UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
+import { getOneClickApps, OneClickApp } from 'linode-js-sdk/lib/one-click-apps';
+import { UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
 import { APIError } from 'linode-js-sdk/lib/types';
-import { getOneClickApps } from 'linode-js-sdk/lib/one-click-apps';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -88,7 +88,7 @@ interface State {
   tags?: Tag[];
   errors?: APIError[];
   formIsSubmitting: boolean;
-  appInstances?: StackScript[];
+  appInstances?: OneClickApp[];
   appInstancesLoading: boolean;
   appInstancesError?: string;
 }
