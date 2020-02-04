@@ -11,8 +11,11 @@ pipeline {
             steps {
                 sh 'pwd && ls -la'
                 sh 'yarn install:all'
+
+                sh '$CYPRESS_CACHE_FOLDER'
+                sh 'ls $CYPRESS_CACHE_FOLDER'
                 sh 'yarn workspace linode-js-sdk build'
-                sh 'yarn workspace linode-mamager run cypress -v'
+                sh 'ls /root/.cache/'
                 sh 'yarn workspace linode-manager run cypress run'
                 sh 'yarn cy:e2e'
             }
