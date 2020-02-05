@@ -58,7 +58,12 @@ const ListDomains: React.StatelessComponent<CombinedProps> = props => {
       }) => (
         <React.Fragment>
           <Paper>
-            <Table removeLabelonMobile aria-label="List of your Domains">
+            <Table
+              removeLabelonMobile
+              aria-label="List of your Domains"
+              rowCount={data.length}
+              colCount={3}
+            >
               <TableHead>
                 <TableRow>
                   <TableSortCell
