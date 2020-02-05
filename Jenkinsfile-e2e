@@ -9,11 +9,7 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                sh 'sudo ls -la /'
-                sh 'sudo ls -la /.cache'
-                sh 'sudo mkdir /.yarn'
-                sh 'sudo chmod -R 777 /.cache'
-                sh 'sudo chmod -R 777 /.yarn'
+                sh 'echo $CYPRESS_CACHE_FOLDER'
                 sh 'yarn install:all'
                 sh 'yarn run cypress verify'
                 sh 'yarn workspace linode-js-sdk build'
