@@ -3,7 +3,7 @@ pipeline {
     agent { 
         docker {
             image 'node:10-slim'
-            args '-e CYPRESS_CACHE_FOLDER=/home/node/app/.cache -v $HOME:/home/node/app'
+            args '-e CYPRESS_CACHE_FOLDER=/home/node/app/.cache -e YARN_CACHE_FOLDER=/home/node/app/.yarn -v $(pwd):/home/node/app -v $(pwd)/config:/.config'
         }
     }
     stages {
@@ -13,7 +13,7 @@ pipeline {
                 sh 'pwd'
                 sh 'yarn cache dir'
                 sh 'yarn global dir'
-                sh 'yarn add cypress@3.8.2'
+                sh 'yarn global add cypress@3.8.2'
                 sh 'yarn install:all'
                 sh 'yarn run cypress verify'
                 sh 'yarn workspace linode-js-sdk build'
