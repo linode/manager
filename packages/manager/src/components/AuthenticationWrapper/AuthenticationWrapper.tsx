@@ -72,12 +72,16 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
 
     try {
       await Promise.all(dataFetchingPromises);
-      await Promise.all([
+      // console.log("data part 1")
+      Promise.all([
         this.props.requestTypes(),
         this.props.requestRegions(),
         this.props.requestSettings(),
         this.props.requestAccount(),
-        this.props.requestNotifications()]);
+        this.props.requestNotifications()]).then( ()=>{
+          // console.log("all data here")
+        }
+        );
     } catch (error) {
       /** We choose to do nothing, relying on the Redux error state. */
     }
@@ -98,8 +102,9 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
      * to show the children onMount
      */
     if (this.props.isAuthenticated) {
-      this.setState({ showChildren: true });
+      // console.log('component did mount req');
       this.makeInitialRequests();
+      this.setState({ showChildren: true });
       /*
        * Initialize Analytic and Google Tag Manager
        */
@@ -114,15 +119,18 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
    * and redux has now been synced with what is in local storage
    */
   componentDidUpdate(prevProps: CombinedProps) {
+    
     /** if we were previously not authed and now we are authed */
     if (
       !prevProps.isAuthenticated &&
       this.props.isAuthenticated &&
       !this.state.showChildren
     ) {
+      //console.log('component did update req');
       this.makeInitialRequests();
+      this.setState({ showChildren: true });
       startEventsInterval();
-      return this.setState({ showChildren: true });
+      return ;
     }
 
     /** basically handles for the case where our token is expired or we got a 401 error */
@@ -132,6 +140,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
   }
 
   render() {
+    // console.log("render auth wrap")
     const { children } = this.props;
     const { showChildren } = this.state;
     return <React.Fragment>{showChildren ? children : null}</React.Fragment>;
