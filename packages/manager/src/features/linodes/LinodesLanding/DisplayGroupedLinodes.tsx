@@ -98,7 +98,8 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = props => 
     handleOrderChange,
     order,
     orderBy,
-    someLinodesHaveMaintenance: props.someLinodesHaveMaintenance
+    someLinodesHaveMaintenance: props.someLinodesHaveMaintenance,
+    data
   };
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
