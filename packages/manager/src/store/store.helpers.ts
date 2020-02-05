@@ -158,3 +158,13 @@ export const updateInPlace = <E extends Entity>(
     }
   };
 };
+
+export const ensureInitializedNestedState = (
+  draft: Record<number, any>,
+  id: number
+) => {
+  if (!draft[id]) {
+    draft[id] = createDefaultState();
+  }
+  return draft;
+};

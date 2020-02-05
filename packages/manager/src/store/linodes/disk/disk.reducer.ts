@@ -2,6 +2,7 @@ import produce from 'immer';
 import { Reducer } from 'redux';
 import {
   addMany,
+  ensureInitializedNestedState,
   onCreateOrUpdate,
   onDeleteSuccess,
   onError,
@@ -33,11 +34,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
         params: { linodeId }
       } = action.payload;
 
-      const configIdsToRemove = Object.values(state[linodeId]?.itemsById ?? {})
-        .filter(({ linode_id }) => linode_id === linodeId)
-        .map(({ id }) => String(id));
-
-      draft[linodeId] = removeMany(configIdsToRemove, state[linodeId]);
+      delete draft[linodeId];
     }
 
     if (isType(action, deleteLinode)) {
@@ -48,13 +45,15 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
         .filter(({ linode_id }) => linode_id === payload)
         .map(({ id }) => String(id));
 
+      // @todo: Should this actually just remove the key from state?
       draft[linodeId] = removeMany(configIdsToRemove, state[linodeId]);
     }
 
     if (isType(action, getLinodeDisksActions.done)) {
       const { result } = action.payload;
       const { linodeId } = action.payload.params;
-      draft[linodeId] = addMany(result, state[linodeId]);
+      draft[linodeId].loading = false;
+      draft[linodeId] = addMany(result, draft[linodeId]);
     }
 
     if (
@@ -64,7 +63,11 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     ) {
       const { result } = action.payload;
       const { linodeId } = action.payload.params;
-      draft[linodeId] = onCreateOrUpdate(result, state[linodeId]);
+
+      draft = ensureInitializedNestedState(draft, linodeId);
+
+      draft[linodeId].loading = false;
+      draft[linodeId] = onCreateOrUpdate(result, draft[linodeId]);
     }
 
     if (isType(action, deleteLinodeDiskActions.started)) {
