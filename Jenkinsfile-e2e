@@ -13,7 +13,7 @@ pipeline {
                 sh 'pwd'
                 sh 'yarn cache dir'
                 sh 'yarn global dir'
-                sh 'yarn global add cypress@3.8.2'
+                sh 'yarn add cypress@3.8.2'
                 sh 'yarn install:all'
                 sh 'yarn run cypress verify'
                 sh 'yarn workspace linode-js-sdk build'
