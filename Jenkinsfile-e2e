@@ -2,14 +2,15 @@ pipeline {
     
     agent { 
         docker {
-            args '-u root:sudo'
-            image 'cypress/base:10.18.0'
+            image 'node:10-slim'
+            args '-e CYPRESS_CACHE_FOLDER=/home/node/app/.cache'
         }
     }
     stages {
         stage('build') {
             steps {
                 sh 'echo $CYPRESS_CACHE_FOLDER'
+                sh 'pwd'
                 sh 'yarn install:all'
                 sh 'yarn run cypress verify'
                 sh 'yarn workspace linode-js-sdk build'
