@@ -3,7 +3,7 @@ pipeline {
     agent { 
         docker {
             image 'node:10-slim'
-            args '-e CYPRESS_CACHE_FOLDER=/home/node/app/.cache -w /home/node/app'
+            args '-e CYPRESS_CACHE_FOLDER=/home/node/app/.cache -v $HOME:/home/node/app'
         }
     }
     stages {
