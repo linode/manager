@@ -3,7 +3,7 @@ pipeline {
     agent { 
         docker {
             image 'node:10-slim'
-            args '-e CYPRESS_CACHE_FOLDER=/home/node/app/.cache -e YARN_CACHE_FOLDER=/home/node/app/.yarn -v $HOME:/home/node/app'
+            args '-e CYPRESS_CACHE_FOLDER=/home/node/app/.cache -e Y_CACHE_FOLDER=/home/node/app/.yarn -e Y_CONFIG_FOLDER=/home/node/app/.config -v $HOME:/home/node/app'
         }
     }
     stages {
@@ -11,6 +11,8 @@ pipeline {
             steps {
                 sh 'echo $CYPRESS_CACHE_FOLDER'
                 sh 'pwd'
+                sh 'yarn config set cache-folder $Y_CACHE_FOLDER'
+                sh 'yarn config set global-folder $Y_CONFIG_FOLDER'
                 sh 'yarn cache dir'
                 sh 'yarn global dir'
                 sh 'yarn global add cypress@3.8.2'
