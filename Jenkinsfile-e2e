@@ -2,7 +2,7 @@ pipeline {
     
     agent { 
         docker { 
-            image 'cypress/included:3.8.2'
+            image 'cypress/included:3.8.2'\
         }
     }
     stages {
@@ -15,7 +15,7 @@ pipeline {
                 echo "Running build ${env.BUILD_ID} on ${env.JENKINS_URL}"
     
                 sh 'yarn install:all'
-                sh 'npx cypress verify'
+                sh 'yarn run cypress verify'
                 sh 'yarn workspace linode-js-sdk build'
             }
         }
