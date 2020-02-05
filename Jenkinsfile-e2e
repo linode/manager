@@ -2,7 +2,7 @@ pipeline {
     
     agent { 
         docker {
-            image 'cypress/base:10.18.0'
+            image 'node:10-slim'
             args '-u root:sudo'
 
         }
