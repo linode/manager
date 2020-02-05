@@ -80,6 +80,22 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/csgo_color.svg'
   },
   {
+    name: 'Django',
+    description: `Django is a web development framework for the Python programing language. It enables rapid development, while favoring pragmatic and clean design.`,
+    summary: `A framework for simplifying the process of building your web applications more quickly and with less code.`,
+    related_info: [
+      {
+        title: 'https://www.djangoproject.com/',
+        href: 'https://www.djangoproject.com/'
+      }
+    ],
+    tips: [
+      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:8000</em> in a browser to visit the default web page.`,
+      `You can also visit <em>https://[your-Linode's-IP-address]:8000/admin</em> to view the Djanogo admin panel.`
+    ],
+    logo_url: 'assets/django_color.svg'
+  },
+  {
     name: 'Flask',
     description: `Flask is a lightweight WSGI web application framework. It is designed to make getting started quick and easy, with the ability to scale up to complex applications.`,
     summary: `A quick light-weight web framework for Python that includes several utilities and libraries you can use to create a web application.`,
@@ -88,13 +104,13 @@ export const oneClickApps: OCA[] = [
         title: 'Deploy a Flask Application on Ubuntu',
         href:
           'https://www.linode.com/docs/development/python/flask-and-gunicorn-on-ubuntu/'
-      },
+      }
     ],
     related_info: [
       {
         title: 'https://www.palletsprojects.com/p/flask/',
         href: 'https://www.palletsprojects.com/p/flask/'
-      },
+      }
     ],
     tips: [
       `Once the script finishes, go to <em>https://[your-Linode's-IP-address]</em> in a browser.`
@@ -394,14 +410,15 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Ruby on Rails with NGINX On Debian 9',
-        href: 'https://www.linode.com/docs/development/ror/ruby-on-rails-nginx-debian/'
-      },
+        href:
+          'https://www.linode.com/docs/development/ror/ruby-on-rails-nginx-debian/'
+      }
     ],
     related_info: [
       {
         title: 'https://rubyonrails.org/',
         href: 'https://rubyonrails.org/'
-      },
+      }
     ],
     tips: [
       `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:3000</em> in a browser.`
@@ -410,7 +427,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'PostgreSQL',
-    description: `PostgreSQL is a popular, open source relational database system that provides many advanced configuration options that can help optimize your databases’s performance in a production environment.`,
+    description: `PostgreSQL is a popular, open source relational database system that provides many advanced configuration options that can help optimize your databases’s performance in a production environment.`,
     summary: `The PostgreSQL relational database system is a powerful, scalable, and standards-compliant open-source database platform.`,
     related_guides: [
       {
@@ -441,20 +458,20 @@ export const oneClickApps: OCA[] = [
         title: 'How to Install and Configure phpMyAdmin on Debian 8',
         href:
           'https://www.linode.com/docs/databases/mysql/install-and-configure-phpmyadmin-on-debian-8/'
-      },
+      }
     ],
     related_info: [
       {
         title: 'https://www.phpmyadmin.net/',
         href: 'https://www.phpmyadmin.net/'
-      },
+      }
     ],
     tips: [
       `Once the script finishes, go to <em>https://[your-Linode's-IP-address]/phpmyadmin</em> in a browser.`
     ],
     logo_url: 'assets/phpmyadmin_color.svg'
   },
-  {  
+  {
     name: 'Prometheus',
     description: `Prometheus is a powerful monitoring software tool that collects metrics from configurable data points at given intervals, evaluates rule expressions, and can trigger alerts if some condition is observed.`,
     summary:
