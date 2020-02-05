@@ -39,9 +39,6 @@ pipeline {
                 // screenshots and videos folders. Tell Cypress not to delete these folders
                 CYPRESS_trashAssetsBeforeRuns = 'false'
             }
-        }
-
-        stage('test local') {
             steps {
                 echo "Running build ${env.BUILD_ID}"
                 sh "yarn cy:e2e"
