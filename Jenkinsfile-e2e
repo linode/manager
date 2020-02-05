@@ -3,12 +3,14 @@ pipeline {
     agent { 
         docker {
             image 'node:10-slim'
-            args '-e CYPRESS_CACHE_FOLDER=/home/node/app/.cache -e YARN_CACHE_FOLDER=/home/node/app/.yarn -v $HOME:/home/node/app -v $HOME/config:/.config'
+            args '-u node -w /home/node/app'
+            //-e CYPRESS_CACHE_FOLDER=/home/node/app/.cache -e YARN_CACHE_FOLDER=/home/node/app/.yarn -v $HOME:/home/node/app'
         }
     }
     stages {
         stage('build') {
             steps {
+                sh 'echo $(whoami)'
                 sh 'echo $CYPRESS_CACHE_FOLDER'
                 sh 'pwd'
                 sh 'yarn cache dir'
