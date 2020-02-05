@@ -2,9 +2,9 @@ pipeline {
     
     agent { 
         docker {
-            image 'node:10-slim'
             args '-u node -w /home/node/app'
-            //-e CYPRESS_CACHE_FOLDER=/home/node/app/.cache -e YARN_CACHE_FOLDER=/home/node/app/.yarn -v $HOME:/home/node/app'
+            image 'node:10-slim'
+            //-e CYPRESS_CACHE_FOLDER=/home/node/app/.cache'
         }
     }
     stages {
