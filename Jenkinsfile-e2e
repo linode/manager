@@ -3,7 +3,7 @@ node {
     docker.image('node:10-slim').inside('-u node -w /home/node/app') {
 
         stage('build') {
-            steps {
+
                 sh 'echo $(whoami)'
                 sh 'echo $CYPRESS_CACHE_FOLDER'
                 sh 'pwd'
@@ -13,22 +13,21 @@ node {
                 sh 'yarn install:all'
                 sh 'yarn run cypress verify'
                 sh 'yarn workspace linode-js-sdk build'
-            }
         }
         
         stage('start local server') {
-            steps {
+
                 // start local server in the background
                 // we will shut it down in "post" command block
                 sh 'nohup yarn up &'
-            }
+
         }
 
         stage('cypress parallel tests') {
-            steps {
+
                 echo "Running build ${env.BUILD_ID}"
                 sh "yarn cy:e2e"
-            }
+
         }
     }
 }
