@@ -4,7 +4,7 @@ pipeline {
         docker {
             args '-u node -w /home/node/app'
             image 'node:10-slim'
-            //-e CYPRESS_CACHE_FOLDER=/home/node/app/.cache'
+
         }
     }
     stages {
