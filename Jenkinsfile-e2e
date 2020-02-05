@@ -17,9 +17,6 @@ pipeline {
                 sh 'yarn install:all'
                 sh 'npx cypress verify'
                 sh 'yarn workspace linode-js-sdk build'
-                sh 'ls /root/.cache/'
-                sh 'yarn workspace linode-manager run cypress run'
-                sh 'yarn cy:e2e'
             }
         }
         
@@ -29,7 +26,7 @@ pipeline {
                 // we will shut it down in "post" command block
                 sh 'yarn up &'
             }
-        }    
+        }
         // this stage runs end-to-end tests, and each agent uses the workspace
         // from the previous stage
         stage('cypress parallel tests') {
