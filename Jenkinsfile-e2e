@@ -11,6 +11,7 @@ pipeline {
             steps {
                 sh 'echo $CYPRESS_CACHE_FOLDER'
                 sh 'pwd'
+                sh 'yarn global add cypress@3.8.2'
                 sh 'yarn install:all'
                 sh 'yarn run cypress verify'
                 sh 'yarn workspace linode-js-sdk build'
