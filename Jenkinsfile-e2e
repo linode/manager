@@ -11,7 +11,6 @@ pipeline {
             steps {
                 sh 'echo $CYPRESS_CACHE_FOLDER'
                 sh 'pwd'
-                sh 'yarn config set prefix /home/node/app/.yarn'
                 sh 'yarn cache dir'
                 sh 'yarn global dir'
                 sh 'yarn global add cypress@3.8.2'
