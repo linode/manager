@@ -3,7 +3,7 @@ pipeline {
     agent { 
         docker {
             args '-u root:sudo'
-            image 'cypress/base:10.8.0'
+            image 'cypress/base:10.18.0'
         }
     }
     stages {
