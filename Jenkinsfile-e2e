@@ -1,19 +1,20 @@
 pipeline {
     
     agent { 
-        docker { 
+        docker {
             image 'cypress/base:10.18.0'
+            args '-u root:sudo'
+
         }
     }
     stages {
-        // first stage installs node dependencies and Cypress binary
         stage('build') {
             steps {
-                // there a few default environment variables on Jenkins
-                // on local Jenkins machine (assuming port 8080) see
-                // http://localhost:8080/pipeline-syntax/globals#env
-                echo "Running build ${env.BUILD_ID} on ${env.JENKINS_URL}"
-    
+                sh 'sudo ls -la /'
+                sh 'sudo ls -la /.cache'
+                sh 'sudo mkdir /.yarn'
+                sh 'sudo chmod -R 777 /.cache'
+                sh 'sudo chmod -R 777 /.yarn'
                 sh 'yarn install:all'
                 sh 'yarn run cypress verify'
                 sh 'yarn workspace linode-js-sdk build'
