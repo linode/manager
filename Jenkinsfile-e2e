@@ -2,7 +2,7 @@ pipeline {
     
     agent { 
         docker { 
-            image 'cypress/included:3.8.2'\
+            image 'cypress/base:10.18.0'
         }
     }
     stages {
@@ -29,16 +29,6 @@ pipeline {
         }
 
         stage('cypress parallel tests') {
-            environment {
-                // we will be recording test results and video on Cypress dashboard
-                // to record we need to set an environment variable
-                // we can load the record key variable from credentials store
-                // see https://jenkins.io/doc/book/using/using-credentials/
-                CYPRESS_RECORD_KEY = credentials('cypress-example-kitchensink-record-key')
-                // because parallel steps share the workspace they might race to delete
-                // screenshots and videos folders. Tell Cypress not to delete these folders
-                CYPRESS_trashAssetsBeforeRuns = 'false'
-            }
             steps {
                 echo "Running build ${env.BUILD_ID}"
                 sh "yarn cy:e2e"
