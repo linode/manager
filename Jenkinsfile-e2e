@@ -1,13 +1,7 @@
-pipeline {
-    
-    agent { 
-        docker {
-            args '-u node -w /home/node/app'
-            image 'node:10-slim'
+node {
+    /* Requires the Docker Pipeline plugin to be installed */
+    docker.image('node:10-slim').inside('-u node -w /home/node/app') {
 
-        }
-    }
-    stages {
         stage('build') {
             steps {
                 sh 'echo $(whoami)'
@@ -38,3 +32,5 @@ pipeline {
         }
     }
 }
+
+
