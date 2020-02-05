@@ -3,7 +3,7 @@ pipeline {
     agent { 
         docker {
             image 'node:10-slim'
-            args '-e CYPRESS_CACHE_FOLDER=/home/node/app/.cache -e YARN_CACHE_FOLDER=/home/node/app/.yarn -v $(pwd):/home/node/app -v $(pwd)/config:/.config'
+            args '-e CYPRESS_CACHE_FOLDER=/home/node/app/.cache -e YARN_CACHE_FOLDER=/home/node/app/.yarn -v ${pwd()}:/home/node/app -v ${pwd()}/config:/.config'
         }
     }
     stages {
