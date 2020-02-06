@@ -18,7 +18,7 @@ export const safeSecondaryEntityLabel = (
   text: string,
   fallback: string = ''
 ) => {
-  const label = path<string>(['secondary_entity', 'label'], e);
+  const label = e?.secondary_entity?.label;
   return label ? `${text} ${label}` : fallback;
 };
 
@@ -118,13 +118,13 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     // notification: e => ``,
   },
   disk_imagize: {
-    // Currently, the event contains no information about the image,
-    // making it impossible to access the label for these messages.
-    scheduled: e => `Image scheduled for creation.`,
-    started: e => `Image being created.`,
-    failed: e => `Image creation failed.`,
-    finished: e => `Image has been created.`
-    // notification: e => ``,
+    scheduled: e =>
+      `Image ${e?.secondary_entity?.label + ' ' ?? ''}scheduled for creation.`,
+    started: e =>
+      `Image ${e?.secondary_entity?.label + ' ' ?? ''}being created.`,
+    failed: e => `Error creating Image ${e?.secondary_entity?.label ?? ''}.`,
+    finished: e =>
+      `Image ${e?.secondary_entity?.label + ' ' ?? ''}has been created.`
   },
   disk_resize: {
     scheduled: e => `A disk on ${e.entity!.label} is scheduled for resizing.`,
@@ -165,14 +165,14 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
       `A domain record has been deleted from ${e.entity!.label}`
   },
   image_update: {
-    notification: e => `Image ${e.entity!.label} has been updated.`
+    notification: e => `Image ${e.entity?.label ?? ''} has been updated.`
   },
   image_delete: {
-    // scheduled: e => `Image ${e.entity!.label} scheduled for deletion.`,
-    // started: e => `Image ${e.entity!.label} is being deleted.`,
-    // failed: e => `There was a problem deleting ${e.entity!.label}.`,
-    // finished: e => `${e.entity!.label}`,
-    notification: e => `Image ${e.entity!.label} has been deleted.`
+    scheduled: e => `Image ${e.entity?.label ?? ''} scheduled for deletion.`,
+    started: e => `Image ${e.entity?.label ?? ''} is being deleted.`,
+    failed: e => `There was a problem deleting ${e.entity?.label ?? ''}.`,
+    finished: e => `Image ${e.entity?.label ?? ''} has been deleted.`,
+    notification: e => `Image ${e.entity?.label ?? ''} has been deleted.`
   },
   linode_addip: {
     notification: e => `An IP has been added to ${e.entity!.label}.`
@@ -203,48 +203,53 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
         'booted'
       )}.`
   },
+  /**
+   * For these events, we expect an entity (the Linode being rebooted)
+   * but there have been cases where an event has come through with
+   * entity === null. Handle them safely.
+   */
   lassie_reboot: {
     scheduled: e =>
-      `Linode ${
-        e.entity!.label
-      } is scheduled to be rebooted by the Lassie watchdog service.`,
+      `Linode ${e.entity?.label ??
+        ''} is scheduled to be rebooted by the Lassie watchdog service.`,
     started: e =>
-      `Linode ${
-        e.entity!.label
-      } is being booted by the Lassie watchdog service.`,
+      `Linode ${e.entity?.label ??
+        ''} is being booted by the Lassie watchdog service.`,
     failed: e =>
-      `Linode ${
-        e.entity!.label
-      } could not be booted by the Lassie watchdog service.`,
+      `Linode ${e.entity?.label ??
+        ''} could not be booted by the Lassie watchdog service.`,
     finished: e =>
-      `Linode ${
-        e.entity!.label
-      } has been booted by the Lassie watchdog service.`
+      `Linode ${e.entity?.label ??
+        ''} has been booted by the Lassie watchdog service.`
   },
   host_reboot: {
     scheduled: e =>
-      `Linode ${
-        e.entity!.label
-      } is scheduled to reboot (Host initiated restart).`,
+      `Linode ${e.entity?.label ??
+        ''} is scheduled to reboot (Host initiated restart).`,
     started: e =>
-      `Linode ${e.entity!.label} is being booted (Host initiated restart).`,
+      `Linode ${e.entity?.label ??
+        ''} is being booted (Host initiated restart).`,
     failed: e =>
-      `Linode ${e.entity!.label} could not be booted (Host initiated restart).`,
+      `Linode ${e.entity?.label ??
+        ''} could not be booted (Host initiated restart).`,
     finished: e =>
-      `Linode ${e.entity!.label} has been booted (Host initiated restart).`
+      `Linode ${e.entity?.label ??
+        ''} has been booted (Host initiated restart).`
   },
   ipaddress_update: {
     notification: e => `An IP address has been updated on your account.`
   },
   lish_boot: {
     scheduled: e =>
-      `Linode ${e.entity!.label} is scheduled to boot (Lish initiated boot).`,
+      `Linode ${e.entity?.label ??
+        ''} is scheduled to boot (Lish initiated boot).`,
     started: e =>
-      `Linode ${e.entity!.label} is being booted (Lish initiated boot).`,
+      `Linode ${e.entity?.label ?? ''} is being booted (Lish initiated boot).`,
     failed: e =>
-      `Linode ${e.entity!.label} could not be booted (Lish initiated boot).`,
+      `Linode ${e.entity?.label ??
+        ''} could not be booted (Lish initiated boot).`,
     finished: e =>
-      `Linode ${e.entity!.label} has been booted (Lish initiated boot).`
+      `Linode ${e.entity?.label ?? ''} has been booted (Lish initiated boot).`
   },
   linode_clone: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled to be cloned.`,

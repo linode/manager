@@ -119,6 +119,8 @@ const visuallyHidden = {
   clip: 'rect(1px, 1px, 1px, 1px)'
 };
 
+const graphTransparency = '0.7';
+
 export const COMPACT_SPACING_UNIT = 4;
 export const NORMAL_SPACING_UNIT = 8;
 
@@ -222,45 +224,72 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       primaryNavText: '#c9cacb'
     },
     graphs: {
+      load: `rgba(255, 220, 77, ${graphTransparency})`,
+      requests: `rgba(34, 206, 182, ${graphTransparency})`,
+      connections: {
+        accepted: `rgba(91, 105, 139, ${graphTransparency})`,
+        handled: `rgba(50, 59, 77, ${graphTransparency})`
+      },
+      network: {
+        outbound: `rgba(49, 206, 62, ${graphTransparency})`,
+        inbound: `rgba(16, 162, 29, ${graphTransparency})`
+      },
+      workers: {
+        waiting: `rgba(133, 180, 255, ${graphTransparency})`,
+        reading: `rgba(137, 161, 240, ${graphTransparency})`,
+        writing: `rgba(32, 131, 75, ${graphTransparency})`,
+        starting: `rgba(135, 170, 247, ${graphTransparency})`,
+        sending: `rgba(139, 152, 233, ${graphTransparency})`,
+        keepAlive: `rgba(141, 143, 225, ${graphTransparency})`,
+        DNSLookup: `rgba(143, 133, 218, ${graphTransparency})`,
+        closing: `rgba(145, 124, 211, ${graphTransparency})`,
+        logging: `rgba(147, 115, 203, ${graphTransparency})`,
+        finishing: `rgba(149, 106, 196, ${graphTransparency})`,
+        cleanup: `rgba(152, 97, 189, ${graphTransparency})`
+      },
+      cpu: {
+        system: `rgba(2, 118, 253, ${graphTransparency})`,
+        user: `rgba(81, 166, 245, ${graphTransparency})`,
+        wait: `rgba(145, 199, 237, ${graphTransparency})`,
+        percent: `rgba(54, 131, 220, ${graphTransparency})`
+      },
+      memory: {
+        swap: `rgba(238, 44, 44, ${graphTransparency})`,
+        buffers: `rgba(142, 56, 142, ${graphTransparency})`,
+        cache: `rgba(205, 150, 205, ${graphTransparency})`,
+        used: `rgba(236, 200, 236, ${graphTransparency})`
+      },
+      diskIO: {
+        read: `rgba(255, 196, 105, ${graphTransparency})`,
+        write: `rgba(255, 179, 77, ${graphTransparency})`,
+        swap: `rgba(238, 44, 44, ${graphTransparency})`
+      },
+      ram: `rgba(224, 131, 224, ${graphTransparency})`,
+      space: `rgba(255, 99, 61, ${graphTransparency})`,
+      inodes: `rgba(224, 138, 146, ${graphTransparency})`,
+      queries: {
+        select: `rgba(34, 192, 206, ${graphTransparency})`,
+        insert: `rgba(26, 151, 162, ${graphTransparency})`,
+        update: `rgba(19, 110, 118, ${graphTransparency})`,
+        delete: `rgba(2, 54, 59, ${graphTransparency})`
+      },
+      slowQueries: `rgba(255, 61, 61, ${graphTransparency})`,
+      aborted: {
+        connections: `rgba(255, 10, 10, ${graphTransparency})`,
+        clients: `rgba(214, 0, 0, ${graphTransparency})`
+      },
+      processCount: `rgba(113, 86, 245, ${graphTransparency})`,
       blue: '#64ADF6',
       blueBorder: '#3F99F0',
       green: '#5BD765',
       greenBorder: '#18B523',
-      orange: 'rgba(255, 179, 77, 0.7)',
-      orangeBorder: '#ff9d1a',
+      orange: `rgba(255, 179, 77, ${graphTransparency})`,
       purple: '#d9b0d9',
       purpleBorder: '#d9b0d9',
-      lightPurple: '#f1d6f0',
-      lightPurpleBorder: '#f1d6f0',
-      darkPurple: '#ac6baa',
-      darkPurpleBorder: 'rgba(130, 38, 148, 0.8)',
       red: '#FF633C',
       redBorder: '#F13A0A',
       yellow: '#FFDC7D',
-      yellowBorder: '#DCB64E',
-      salmon: 'rgba(255, 99, 61, 0.7)',
-      salmonBorder: '#ff3a0a',
-      pinkBorder: '#d5626d',
-      pink: 'rgba(224, 138, 146, 0.7)',
-      deepBlue: '#9CC6F4',
-      deepBlueBorder: '#3595f3',
-      skyBlue: '#8CBDF3',
-      skyBlueBorder: '#72AEF',
-      lightBlue: '#B5D5EF',
-      lightBlueBorder: '#A2C2EA',
-      lightYellow: '#ffd391',
-      lightYellowBorder: '#ffd391',
-      lightOrange: '#FFBE67',
-      lightOrangeBorder: '#FFA823',
-      emeraldGreen: '#74D97E',
-      emeraldGreenBorder: '#31CC4D',
-      forestGreen: '#6FC37C',
-      forestGreenBorder: '#32AE4E',
-      lightGold: 'rgba(255, 220, 77, 0.7)',
-      lightGoldBorder: 'rgba(255,210,26,1)',
-      // @todo consolidate these with forest/emerald green
-      networkGreenOutbound: '#10a21d',
-      networkGreenInbound: '#31ce3e'
+      yellowBorder: '#DCB64E'
     },
     font: {
       normal: primaryFonts.normal,

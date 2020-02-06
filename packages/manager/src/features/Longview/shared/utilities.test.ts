@@ -5,6 +5,9 @@ import {
   Stat
 } from '../request.types';
 import {
+  appendStats,
+  formatBitsPerSecond,
+  generateNetworkUnits,
   generateTotalMemory,
   generateUsedMemory,
   statAverage,
@@ -66,6 +69,16 @@ describe('Utility Functions', () => {
 
     it('handles empty input', () => {
       expect(statMax()).toBe(0);
+    });
+  });
+
+  describe('generateNetworkStats', () => {
+    it('should generate the correct units and values', () => {
+      const oneKilobit = 1000;
+      const oneMegabit = 1000000;
+      expect(generateNetworkUnits(oneKilobit)).toEqual('Kibit');
+      expect(generateNetworkUnits(oneMegabit)).toEqual('Mibit');
+      expect(generateNetworkUnits(100)).toEqual('b');
     });
   });
 
@@ -210,6 +223,29 @@ describe('Utility Functions', () => {
       expect(sumNetwork(undefined as any)).toEqual(emptyNetworkInterface);
     });
   });
+
+  describe('appendStats', () => {
+    it('sums Y values if X values are equal', () => {
+      const a = [
+        { y: 10, x: 1 },
+        { y: 100, x: 2 }
+      ];
+      const b = [
+        { y: 20, x: 1 },
+        { y: 200, x: 2 }
+      ];
+      const result = appendStats(a, b);
+      expect(result[0].y).toBe(30);
+      expect(result[1].y).toBe(300);
+    });
+    it('sums Y values correctly when values are 0', () => {
+      const a = [{ y: 0, x: 1 }];
+      const b = [{ y: 10, x: 1 }];
+      const result = appendStats(a, b);
+      expect(result[0].y).toBe(10);
+    });
+  });
+
   describe('sumStatsObject', () => {
     const mockNetworkInterface: InboundOutboundNetwork = {
       rx_bytes: generateStats([1]),
@@ -325,6 +361,13 @@ describe('Utility Functions', () => {
       expect(result).toHaveProperty('pears');
       expect(result.apples[0].y).toEqual(2);
       expect(result.pears[0].y).toEqual(6);
+    });
+  });
+  describe('formatBitsPerSecond', () => {
+    it('adds unit', () => {
+      expect(formatBitsPerSecond(12)).toBe('12 b/s');
+      expect(formatBitsPerSecond(0)).toBe('0 b/s');
+      expect(formatBitsPerSecond(123456789)).toBe('117.74 Mibit/s');
     });
   });
 });

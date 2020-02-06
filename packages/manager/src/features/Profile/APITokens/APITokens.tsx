@@ -9,7 +9,7 @@ export const APITokens: React.StatelessComponent = () => {
       role="tabpanel"
       aria-labelledby="tab-apiTokens"
     >
-      <DocumentTitleSegment segment="APITokens" />
+      <DocumentTitleSegment segment="API Tokens" />
 
       <APITokenTable
         title="Personal Access Tokens"

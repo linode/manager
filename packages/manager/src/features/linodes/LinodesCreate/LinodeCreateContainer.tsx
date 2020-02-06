@@ -152,7 +152,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     ...defaultState,
     // These can be passed in as query params
     selectedTypeID: this.params.typeID,
-    selectedRegionID: this.params.regionID
+    selectedRegionID: this.params.regionID,
+    selectedImageID: this.params.imageID
   };
 
   componentDidUpdate(prevProps: CombinedProps) {
@@ -628,10 +629,7 @@ interface DispatchProps {
   upsertLinode: (l: Linode) => void;
 }
 
-const connected = connect(
-  mapStateToProps,
-  { upsertLinode }
-);
+const connected = connect(mapStateToProps, { upsertLinode });
 
 const withRegions = regionsContainer(({ data, loading, error }) => ({
   regionsData: data.map(r => ({ ...r, display: dcDisplayNames[r.id] })),

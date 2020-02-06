@@ -214,7 +214,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
           return;
         }
         this.setState({ isSubmitting: false });
-        history.push('/stackscripts', {
+        history.push('/stackscripts?type=account', {
           successMessage: `${updatedStackScript.label} successfully updated`
         });
       })
@@ -326,6 +326,10 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
               labelTitle="Edit"
               data-qa-update-stackscript-breadcrumb
               crumbOverrides={[
+                {
+                  position: 1,
+                  label: 'StackScripts'
+                },
                 { position: 2, label: this.defaultStackScriptValues.labelText }
               ]}
             />

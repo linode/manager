@@ -268,7 +268,11 @@ export type LongviewFieldName =
   | 'listeningServices'
   | 'activeConnections'
   | 'nginx'
-  | 'nginxProcesses';
+  | 'nginxProcesses'
+  | 'apache'
+  | 'apacheProcesses'
+  | 'mysql'
+  | 'mysqlProcesses';
 
 export interface Options {
   fields: LongviewFieldName[];
@@ -279,8 +283,8 @@ export interface Options {
 export interface LongviewApplications {
   Applications?: {
     Nginx?: NginxResponse;
-    MySql?: any;
-    Apache?: any;
+    Apache?: ApacheResponse;
+    MySQL?: MySQLResponse;
   };
 }
 
@@ -297,23 +301,32 @@ export interface NginxResponse {
   active: Stat[];
 }
 
-/**
- * This has its own process type because it
- * is used as its own entity in the Nginx tab
- * of detail view.
- */
-export interface NginxUserProcess {
-  iowritekbytes: Stat[];
-  ioreadkbytes: Stat[];
-  mem: Stat[];
-  count: Stat[];
-  cpu: Stat[];
+export interface ApacheResponse {
+  Workers: Record<string, Stat[]>;
+  status_message: string;
+  version: string;
+  status: number;
+  'Total kBytes': Stat[];
+  'Total Accesses': Stat[];
 }
 
-export type NginxUserProcesses = Record<string, NginxUserProcess>;
-
-export interface NginxProcesses {
-  nginx: {
-    longname: string;
-  } & NginxUserProcesses;
+export interface MySQLResponse {
+  status_message: string;
+  status: number;
+  version: string;
+  Qcache_hits: Stat[];
+  Qcache_inserts: Stat[];
+  Qcache_lowmem_prunes: Stat[];
+  Qcache_not_cached: Stat[];
+  Qcache_queries_in_cache: Stat[];
+  Com_insert: Stat[];
+  Com_delete: Stat[];
+  Com_select: Stat[];
+  Com_update: Stat[];
+  Connections: Stat[];
+  Bytes_received: Stat[];
+  Bytes_sent: Stat[];
+  Slow_queries: Stat[];
+  Aborted_clients: Stat[];
+  Aborted_connects: Stat[];
 }

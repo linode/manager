@@ -12,13 +12,11 @@ before_install: sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev 
   build-essential g++ google-chrome-stable curl
 install:
 - yarn install:all
+- if [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then audit-ci --low; fi
 
-#before_script:
-#- lerna run --stream --scope linode-manager storybook &
 script:
 - yarn build
 - yarn test
-#- lerna run --stream --scope linode-manager storybook:e2e
 #- 'pkill -f selenium-standalone || :'
 #- pkill -f storybook
 env:

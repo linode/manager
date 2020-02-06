@@ -1,7 +1,6 @@
 import produce from 'immer';
 import { pathOr } from 'ramda';
 import { LVClientData } from 'src/containers/longview.stats.container';
-import { generateUnits } from 'src/features/Longview/LongviewLanding/Gauges/Network';
 import { pluralize } from 'src/utilities/pluralize';
 import { readableBytes } from 'src/utilities/unitConversions';
 import {
@@ -10,6 +9,8 @@ import {
   InboundOutboundNetwork,
   LongviewNetwork,
   LongviewPackage,
+  LongviewProcesses,
+  ProcessStats,
   Stat,
   StatWithDummyPoint
 } from '../request.types';
@@ -33,7 +34,7 @@ export const getPackageNoticeText = (packages: LongviewPackage[]) => {
   )} available`;
 };
 
-export const getTotalSomething = (used: number, free: number) => {
+export const getTotalMemoryUsage = (used: number, free: number) => {
   const total = used + free;
   const howManyBytesInGB = 1073741824;
   const memoryToBytes = total * 1024;
@@ -152,7 +153,7 @@ export const appendStats = (
 
       // A bit of null checking here is necessary here since Y can be null.
       // We also check that the X values match.
-      else if (existing.y && y && existing.x === x) {
+      else if (existing.y !== null && y !== null && existing.x === x) {
         existing.y += y;
       }
       return acc;
@@ -259,13 +260,92 @@ export const sumStatsObject = <T>(
   );
 };
 
+/**
+ * Sometimes, there are several processes returned by
+ * a single query, such as mysql, mysqld and safe_mysql.
+ *
+ * The shape will be:
+ * {
+ *  Processes:
+ *    {
+ *       process1: {
+ *          user1: StatsWeNeedToSum
+ *          user2: StatsWeNeedToSum
+ *          user3: StatsWeNeedToSum
+ *       },
+ *       process2: {
+ *          user1: StatsWeNeedToSum
+ *          user2: StatsWeNeedToSum
+ *          user3: StatsWeNeedToSum
+ *       },
+ *    }
+ * }
+ *
+ * ...etc. All of the StatsWeNeedToSum will have the same shape
+ * (ProcessStats)
+ *
+ * We have to reduce our way through this object, summing
+ * stats as we go. The output will be a UserProcess object.
+ */
+export const sumRelatedProcessesAcrossAllUsers = (
+  relatedProcesses: LongviewProcesses
+) =>
+  Object.values(relatedProcesses).reduce((accum, thisProcess) => {
+    Object.keys(thisProcess).forEach(thisUser => {
+      if (thisUser !== 'longname') {
+        accum = sumStatsObject(
+          { thisUser: thisProcess[thisUser] },
+          { ...accum }
+        );
+      }
+    });
+    return accum;
+  }, {} as ProcessStats);
+
+export type NetworkUnit = 'b' | 'Kibit' | 'Mibit';
+/**
+ * converts bytes to either Kb (Kilobits) or Mb (Megabits)
+ * depending on if the Kilobit conversion exceeds 1000.
+ *
+ * @param networkUsed inbound and outbound traffic in bytes
+ */
+export const generateNetworkUnits = (networkUsed: number): NetworkUnit => {
+  /** Thanks to http://www.matisse.net/bitcalc/ */
+  const networkUsedToKilobits = (networkUsed * 8) / 1024;
+  if (networkUsedToKilobits <= 1) {
+    return 'b';
+  } else if (networkUsedToKilobits <= 1000) {
+    return 'Kibit';
+  } else {
+    return 'Mibit';
+  }
+};
+
+export const convertNetworkToUnit = (
+  valueInBits: number,
+  maxUnit: NetworkUnit
+) => {
+  if (maxUnit === 'Mibit') {
+    // If the unit we're using for the graph is Mb, return the output in Mb.
+    const valueInMegabits = valueInBits / 1024 / 1024;
+    return valueInMegabits;
+  } else if (maxUnit === 'Kibit') {
+    // If the unit we're using for the graph is Kb, return the output in Kb.
+    const valueInKilobits = valueInBits / 1024;
+    return valueInKilobits;
+  } else {
+    // Unit is 'b' so just return the unformatted value, rounded to the nearest bit.
+    return Math.round(valueInBits);
+  }
+};
+
 export const getMaxUnitAndFormatNetwork = (
   rx_bytes: StatWithDummyPoint[],
   tx_bytes: StatWithDummyPoint[]
 ) => {
   // Determine the unit based on the largest value.
   const max = Math.max(statMax(rx_bytes), statMax(tx_bytes));
-  const maxUnit = generateUnits(max).unit;
+  const maxUnit = generateNetworkUnits(max);
 
   const formatNetwork = (valueInBytes: number | null) => {
     if (valueInBytes === null) {
@@ -274,16 +354,22 @@ export const getMaxUnitAndFormatNetwork = (
 
     const valueInBits = valueInBytes * 8;
 
-    if (maxUnit === 'Mb') {
-      // If the unit we're using for the graph is Mb, return the output in Mb.
-      const valueInMegabits = valueInBits / 1024 / 1024;
-      return Math.round(valueInMegabits * 100) / 100;
-    } else {
-      // If the unit we're using for the graph is Kb, return the output in Kb.
-      const valueInKilobits = valueInBits / 1024;
-      return Math.round(valueInKilobits * 100) / 100;
-    }
+    return convertNetworkToUnit(valueInBits, maxUnit);
   };
 
   return { maxUnit, formatNetwork };
 };
+
+export const getMaxUnit = (stats: Stat[][]) => {
+  const max = Math.max(...stats.map(statMax));
+  return readableBytes(max * 1024).unit; // LV always returns in KB, need bytes here
+};
+
+export const formatNetworkTooltip = (valueInBytes: number) => {
+  const _unit = generateNetworkUnits(valueInBytes);
+  const converted = convertNetworkToUnit(valueInBytes * 8, _unit);
+  return `${Math.round(converted * 100) / 100} ${_unit}`;
+};
+
+export const formatBitsPerSecond = (valueInBits: number) =>
+  formatNetworkTooltip(valueInBits / 8) + '/s';

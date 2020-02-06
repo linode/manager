@@ -1,11 +1,17 @@
 import * as React from 'react';
+import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  WithTheme,
+  withTheme
+} from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-import { NginxResponse, NginxUserProcesses } from '../../../request.types';
+import { LongviewProcesses, NginxResponse } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
-import NGINXProcessGraphs from './NGINXProcessGraphs';
+import ProcessGraphs from '../ProcessGraphs';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -28,12 +34,14 @@ interface Props {
   isToday: boolean;
   start: number;
   end: number;
-  processesData: NginxUserProcesses;
+  processesData: LongviewProcesses;
   processesLoading: boolean;
   processesError?: string;
 }
 
-export const NGINXGraphs: React.FC<Props> = props => {
+type CombinedProps = Props & WithTheme;
+
+export const NGINXGraphs: React.FC<CombinedProps> = props => {
   const {
     data,
     error,
@@ -44,12 +52,21 @@ export const NGINXGraphs: React.FC<Props> = props => {
     end,
     processesData,
     processesLoading,
-    processesError
+    processesError,
+    theme
   } = props;
 
   const classes = useStyles();
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
+
+  const graphProps = {
+    error,
+    timezone,
+    loading,
+    showToday: isToday,
+    nativeLegend: true
+  };
 
   return (
     <Paper className={classes.root}>
@@ -58,18 +75,16 @@ export const NGINXGraphs: React.FC<Props> = props => {
           <LongviewLineGraph
             title="Requests"
             subtitle="requests/s"
-            error={error}
-            loading={loading}
-            showToday={isToday}
-            timezone={timezone}
+            unit=" requests/s"
             data={[
               {
                 label: 'Requests',
-                borderColor: '#22ceb6',
-                backgroundColor: '#22ceb6',
-                data: _convertData(data?.requests ?? [], start, end, formatData)
+                borderColor: 'transparent',
+                backgroundColor: theme.graphs.requests,
+                data: _convertData(data?.requests ?? [], start, end)
               }
             ]}
+            {...graphProps}
           />
         </Grid>
         <Grid item xs={12}>
@@ -78,85 +93,55 @@ export const NGINXGraphs: React.FC<Props> = props => {
               <LongviewLineGraph
                 title="Connections"
                 subtitle="connections/s"
+                unit=" connections/s"
                 nativeLegend
-                error={error}
-                loading={loading}
-                showToday={isToday}
-                timezone={timezone}
                 data={[
                   {
                     label: 'Accepted',
-                    borderColor: '#5b698b',
-                    backgroundColor: '#5b698b',
-                    data: _convertData(
-                      data?.accepted_cons ?? [],
-                      start,
-                      end,
-                      formatData
-                    )
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.connections.accepted,
+                    data: _convertData(data?.accepted_cons ?? [], start, end)
                   },
                   {
                     label: 'Handled',
-                    borderColor: '#323b4d',
-                    backgroundColor: '#323b4d',
-                    data: _convertData(
-                      data?.handled_cons ?? [],
-                      start,
-                      end,
-                      formatData
-                    )
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.connections.handled,
+                    data: _convertData(data?.handled_cons ?? [], start, end)
                   }
                 ]}
+                {...graphProps}
               />
             </Grid>
             <Grid item xs={12} sm={6} className={classes.smallGraph}>
               <LongviewLineGraph
                 title="Workers"
                 nativeLegend
-                error={error}
-                loading={loading}
-                showToday={isToday}
-                timezone={timezone}
                 data={[
                   {
                     label: 'Waiting',
-                    borderColor: '#63d997',
-                    backgroundColor: '#63d997',
-                    data: _convertData(
-                      data?.waiting ?? [],
-                      start,
-                      end,
-                      formatData
-                    )
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.workers.waiting,
+                    data: _convertData(data?.waiting ?? [], start, end)
                   },
                   {
                     label: 'Reading',
-                    borderColor: '#2db969',
-                    backgroundColor: '#2db969',
-                    data: _convertData(
-                      data?.reading ?? [],
-                      start,
-                      end,
-                      formatData
-                    )
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.workers.reading,
+                    data: _convertData(data?.reading ?? [], start, end)
                   },
                   {
                     label: 'Writing',
-                    borderColor: '#20834b',
-                    backgroundColor: '#20834b',
-                    data: _convertData(
-                      data?.writing ?? [],
-                      start,
-                      end,
-                      formatData
-                    )
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.workers.writing,
+                    data: _convertData(data?.writing ?? [], start, end)
                   }
                 ]}
+                {...graphProps}
               />
             </Grid>
           </Grid>
         </Grid>
-        <NGINXProcessGraphs
+        <ProcessGraphs
           data={processesData}
           loading={processesLoading}
           error={processesError || error}
@@ -170,13 +155,8 @@ export const NGINXGraphs: React.FC<Props> = props => {
   );
 };
 
-const formatData = (value: number | null) => {
-  if (value === null) {
-    return value;
-  }
-
-  // Round to 2 decimal places.
-  return Math.round(value * 100) / 100;
-};
-
-export default NGINXGraphs;
+const enhanced = compose<CombinedProps, Props>(
+  withTheme,
+  React.memo
+)(NGINXGraphs);
+export default enhanced;

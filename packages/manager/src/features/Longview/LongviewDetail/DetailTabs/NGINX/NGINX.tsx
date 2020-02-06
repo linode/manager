@@ -1,5 +1,4 @@
 import { APIError } from 'linode-js-sdk/lib/types';
-import { omit } from 'ramda';
 import * as React from 'react';
 import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -9,7 +8,7 @@ import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import { isToday as _isToday } from 'src/utilities/isToday';
-import { NginxUserProcesses, WithStartAndEnd } from '../../../request.types';
+import { WithStartAndEnd } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import NGINXGraphs from './NGINXGraphs';
@@ -80,19 +79,6 @@ export const NGINX: React.FC<Props> = props => {
   const isToday = _isToday(time.start, time.end);
   const notice = Number(nginx?.status) > 0 ? nginx?.status_message : null;
 
-  /**
-   * We omit the longname, which would otherwise be mistaken for an NGINX user
-   * @todo add an overload for this request so the typing isn't so weird
-   */
-  const processesData = React.useMemo(
-    () =>
-      (omit(
-        ['longname'],
-        nginxProcesses.data.Processes?.nginx
-      ) as NginxUserProcesses) ?? {},
-    [nginxProcesses.data]
-  );
-
   if (notice !== null) {
     const message = (
       <>
@@ -127,9 +113,10 @@ export const NGINX: React.FC<Props> = props => {
           justifyContent="space-between"
           alignItems="center"
         >
-          <Typography variant="h2">
-            {loading ? 'Loading...' : version ?? 'NGINX'}
-          </Typography>
+          <div>
+            <Typography variant="h2">{'NGINX'}</Typography>
+            {version && <Typography variant="body1">{version}</Typography>}
+          </div>
           <TimeRangeSelect
             small
             className={classes.root}
@@ -143,7 +130,7 @@ export const NGINX: React.FC<Props> = props => {
       <Grid item xs={12} className="py0">
         <NGINXGraphs
           data={data?.Applications?.Nginx}
-          processesData={processesData}
+          processesData={nginxProcesses.data?.Processes ?? {}}
           processesLoading={nginxProcesses.loading}
           processesError={nginxProcesses.error}
           isToday={isToday}

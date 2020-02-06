@@ -57,6 +57,9 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
   };
 
   makeInitialRequests = async () => {
+    // When loading lish we avoid all this extra data loading
+    if (window.location?.pathname?.includes('/lish/')) { return; }
+    
     const {
       nodeBalancerActions: { getAllNodeBalancersWithConfigs }
     } = this.props;
@@ -97,7 +100,6 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
      * to show the children onMount
      */
     if (this.props.isAuthenticated) {
-      // console.log('component did mount req');
       this.makeInitialRequests();
       this.setState({ showChildren: true });
       /*
@@ -125,7 +127,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       this.makeInitialRequests();
       this.setState({ showChildren: true });
       startEventsInterval();
-      return ;
+      return;
     }
 
     /** basically handles for the case where our token is expired or we got a 401 error */
@@ -184,10 +186,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   requestClusters: () => dispatch(requestClusters())
 });
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose<CombinedProps, {}>(
   connected,

@@ -18,7 +18,7 @@ import { Props as LVDataProps } from 'src/containers/longview.stats.container';
 import { LongviewPackage } from '../../request.types';
 import {
   getPackageNoticeText,
-  getTotalSomething,
+  getTotalMemoryUsage,
   sumStorage
 } from '../../shared/utilities';
 
@@ -152,8 +152,8 @@ const IconSection: React.FC<Props> = props => {
     props.longviewClientData
   );
 
-  const convertedTotalMemory = getTotalSomething(usedMemory, freeMemory);
-  const convertedTotalSwap = getTotalSomething(usedSwap, freeSwap);
+  const convertedTotalMemory = getTotalMemoryUsage(usedMemory, freeMemory);
+  const convertedTotalSwap = getTotalMemoryUsage(usedSwap, freeSwap);
 
   const storageInBytes = sumStorage(props.longviewClientData.Disk);
 
