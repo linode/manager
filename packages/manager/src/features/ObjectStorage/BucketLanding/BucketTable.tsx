@@ -60,7 +60,12 @@ export const BucketTable: React.StatelessComponent<CombinedProps> = props => {
       }) => (
         <React.Fragment>
           <Paper>
-            <Table removeLabelonMobile aria-label="List of your Buckets">
+            <Table
+              removeLabelonMobile
+              aria-label="List of your Buckets"
+              rowCount={data.length}
+              colCount={3}
+            >
               <TableHead>
                 <TableRow>
                   <TableSortCell
