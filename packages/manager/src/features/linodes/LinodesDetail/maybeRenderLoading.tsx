@@ -40,7 +40,7 @@ const collectLoadingState: MapState<InnerProps, OuterProps> = (
       isLoading(volumes) ||
       isLoading(notifications) ||
       isLoading(linodeConfigs) ||
-      isLoading(linodeDisks[linodeId] ?? mockLoading)
+      (linodeDisks[linodeId] && isLoading(linodeDisks[linodeId]))
   };
 };
 
@@ -56,5 +56,3 @@ export default compose(
     renderComponent(() => <CircleProgress />)
   )
 );
-
-const mockLoading = { lastUpdated: 0, loading: true };
