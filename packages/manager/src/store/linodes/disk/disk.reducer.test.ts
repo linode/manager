@@ -1,4 +1,3 @@
-// import { diskFactory } from 'src/factories/disk';
 import { diskFactory } from 'src/factories/disk';
 import { deleteLinodeActions } from '../linodes.actions';
 import {
@@ -55,89 +54,6 @@ describe('Disk reducer', () => {
     });
   });
 
-  describe('createLinodeDiskActions', () => {
-    it('loads the disk when the request is complete', () => {
-      const newState = reducer(
-        defaultState,
-        createLinodeDiskActions.done({
-          params: {
-            linodeId: mockDisk1.linode_id,
-            label: mockDisk1.label,
-            size: mockDisk1.size
-          },
-          result: mockDisk1
-        })
-      );
-      verifyDisk(newState, mockDisk1);
-    });
-  });
-
-  describe('updateLinodeDiskActions', () => {
-    it('updates the disk when the request is complete', () => {
-      const newState = reducer(
-        defaultState,
-        updateLinodeDiskActions.done({
-          params: {
-            linodeId: mockDisk1.linode_id,
-            diskId: mockDisk1.id,
-            label: 'test-disk'
-          },
-          result: mockDisk1
-        })
-      );
-      verifyDisk(newState, mockDisk1);
-    });
-  });
-
-  describe('deleteLinodeDiskActions', () => {
-    // Create state with disks.
-    let state = reducer(
-      defaultState,
-      createLinodeDiskActions.done({
-        params: {
-          linodeId: mockDisk1.linode_id
-        } as any,
-        result: mockDisk1
-      })
-    );
-    state = reducer(
-      state,
-      createLinodeDiskActions.done({
-        params: {
-          linodeId: mockDisk2.linode_id
-        } as any,
-        result: mockDisk2
-      })
-    );
-
-    it('sets error.delete to `undefined` when the request is started', () => {
-      const newState = reducer(
-        state,
-        deleteLinodeDiskActions.started({
-          linodeId: mockDisk1.linode_id,
-          diskId: mockDisk1.id
-        })
-      );
-      expect(newState[mockDisk1.linode_id].error?.delete).toBeUndefined();
-    });
-    it('removes the disk when the request is complete', () => {
-      const newState = reducer(
-        state,
-        deleteLinodeDiskActions.done({
-          params: {
-            linodeId: mockDisk1.linode_id,
-            diskId: mockDisk1.id
-          },
-          result: {}
-        })
-      );
-      expect(
-        newState[mockDisk1.linode_id].itemsById[mockDisk1.id]
-      ).toBeUndefined();
-      expect(newState[mockDisk1.linode_id].items).toHaveLength(1);
-    });
-  });
-
   describe('getAllLinodeDisksActions', () => {
     it('should set loading to `true` and error to `undefined` when the request is started', () => {
       const newState = reducer(
@@ -178,6 +94,85 @@ describe('Disk reducer', () => {
       );
     });
   });
+
+  describe('createLinodeDiskActions', () => {
+    it('loads the disk when the request is complete', () => {
+      const newState = reducer(
+        defaultState,
+        createLinodeDiskActions.done({
+          params: {
+            linodeId: mockDisk1.linode_id,
+            label: mockDisk1.label,
+            size: mockDisk1.size
+          },
+          result: mockDisk1
+        })
+      );
+      verifyDisk(newState, mockDisk1);
+    });
+  });
+
+  describe('updateLinodeDiskActions', () => {
+    it('updates the disk when the request is complete', () => {
+      const newState = reducer(
+        defaultState,
+        updateLinodeDiskActions.done({
+          params: {
+            linodeId: mockDisk1.linode_id,
+            diskId: mockDisk1.id,
+            label: mockDisk1.label
+          },
+          result: mockDisk1
+        })
+      );
+      verifyDisk(newState, mockDisk1);
+    });
+  });
+
+  describe('deleteLinodeDiskActions', () => {
+    const state: State = {
+      [mockDisk1.linode_id]: {
+        items: [String(mockDisk1.id)],
+        itemsById: { [mockDisk1.id]: mockDisk1 },
+        lastUpdated: 1,
+        loading: false
+      },
+      [mockDisk2.linode_id]: {
+        items: [String(mockDisk2.id)],
+        itemsById: { [mockDisk2.id]: mockDisk2 },
+        lastUpdated: 1,
+        loading: false
+      }
+    };
+
+    it('sets error.delete to `undefined` when the request is started', () => {
+      const newState = reducer(
+        state,
+        deleteLinodeDiskActions.started({
+          linodeId: mockDisk1.linode_id,
+          diskId: mockDisk1.id
+        })
+      );
+      expect(newState[mockDisk1.linode_id].error?.delete).toBeUndefined();
+    });
+    it('removes the disk when the request is complete', () => {
+      const newState = reducer(
+        state,
+        deleteLinodeDiskActions.done({
+          params: {
+            linodeId: mockDisk1.linode_id,
+            diskId: mockDisk1.id
+          },
+          result: {}
+        })
+      );
+      expect(
+        newState[mockDisk1.linode_id].itemsById[mockDisk1.id]
+      ).toBeUndefined();
+      expect(newState[mockDisk1.linode_id].items).toHaveLength(1);
+    });
+  });
+
   describe('deleteLinodeActions', () => {
     const state = reducer(
       defaultState,
@@ -188,7 +183,6 @@ describe('Disk reducer', () => {
         result: mockDisk1
       })
     );
-
     it('removes the linodeId from the state when the request is complete', () => {
       const newState = reducer(
         state,

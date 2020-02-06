@@ -159,12 +159,15 @@ export const updateInPlace = <E extends Entity>(
   };
 };
 
+// Given a nested state and an ID, ensures that MappedEntityState exists at the
+// provided key. If the nested state already exists, return the state untouched.
+// If it doesn't exist, initialize the state with `createDefaultState()`.
 export const ensureInitializedNestedState = (
-  draft: Record<number, any>,
+  state: Record<number, any>,
   id: number
 ) => {
-  if (!draft[id]) {
-    draft[id] = createDefaultState();
+  if (!state[id]) {
+    state[id] = createDefaultState();
   }
-  return draft;
+  return state;
 };
