@@ -34,8 +34,19 @@ const DataLoadedListener: React.FC<Props> = props => {
       props.accountSettingsLoadedOrErrorExists,
       props.flagsHaveLoaded
     );
+    // Uncomment this to see what is loaded along the time of the app load
     // const d =new Date();
-    // console.log('should mark app as done ',d.getSeconds(), d.getMilliseconds(), smaad);
+    // console.log('should mark app as done ',d.getSeconds(), d.getMilliseconds(), smaad, {
+    //   "profileLoadedOrErrorExists":props.profileLoadedOrErrorExists,
+    //   "accountLoadedOrErrorExists":props.accountLoadedOrErrorExists,
+    //   "linodesLoadedOrErrorExists":props.linodesLoadedOrErrorExists,
+    //   "volumesLoadedOrErrorExists":props.volumesLoadedOrErrorExists,
+    //   "nodeBalancersLoadedOrErrorExists":props.nodeBalancersLoadedOrErrorExists,
+    //   "bucketsLoadedOrErrorExists":props.bucketsLoadedOrErrorExists,
+    //   "domainsLoadedOrErrorExists":props.domainsLoadedOrErrorExists,
+    //   "accountSettingsLoadedOrErrorExists":props.accountSettingsLoadedOrErrorExists,
+    //   "flagsHaveLoaded":props.flagsHaveLoaded
+    // });
     if (smaad) {
       // && !props.appIsLoaded
       props.markAppAsLoaded();
@@ -93,11 +104,11 @@ const shouldMarkAppAsDone = (
   if (
     pathname.match(/dashboard/i) &&
     linodesLoadedOrErrorExists &&
-      volumesLoadedOrErrorExists &&
-      nodeBalancersLoadedOrErrorExists &&
-      // accountLoadedOrErrorExists &&
-      profileLoadedOrErrorExists &&
-      domainsLoadedOrErrorExists
+    volumesLoadedOrErrorExists &&
+    nodeBalancersLoadedOrErrorExists &&
+    // accountLoadedOrErrorExists &&
+    profileLoadedOrErrorExists &&
+    domainsLoadedOrErrorExists
     /** not checking bucket data here for now */
   ) {
     return true;
