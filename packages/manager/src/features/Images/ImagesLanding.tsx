@@ -340,7 +340,11 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
               }) => (
                 <>
                   <Paper>
-                    <Table aria-label="List of Your Images">
+                    <Table
+                      aria-label="List of Your Images"
+                      rowCount={data.length}
+                      colCount={4}
+                    >
                       <TableHead>
                         <TableRow>
                           <TableSortCell
