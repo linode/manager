@@ -28,7 +28,7 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.up('md')]: {
         '&:before': {
           content: "''",
-          display: 'table-cell',
+          display: 'inline-block',
           width: '0.01%',
           height: '100%',
           backgroundColor: 'transparent',
