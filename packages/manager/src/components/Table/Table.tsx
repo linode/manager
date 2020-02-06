@@ -7,7 +7,6 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Table, { TableProps } from 'src/components/core/Table';
-import Typography from 'src/components/core/Typography';
 
 type ClassNames =
   | 'root'
@@ -160,7 +159,6 @@ class WrappedTable extends React.Component<CombinedProps> {
           aria-rowcount={rowCount}
           role="table"
         >
-          <Typography className="visually-hidden">{tableCaption}</Typography>
           {this.props.children}
         </Table>
       </div>
