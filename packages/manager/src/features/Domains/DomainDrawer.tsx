@@ -57,14 +57,11 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import DeleteDomain from './DeleteDomain';
 import DomainTransferInput from './DomainTransferInput';
 
-type ClassNames = 'root' | 'masterIPErrorNotice' | 'addIP' | 'divider';
+type ClassNames = 'root' | 'addIP' | 'divider';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {},
-    masterIPErrorNotice: {
-      marginTop: theme.spacing(2)
-    },
     addIP: {
       left: -theme.spacing(2) + 3
     },
@@ -346,19 +343,11 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         )}
         {(isCreatingSlaveDomain || isEditingSlaveDomain) && (
           <React.Fragment>
-            {isEditingSlaveDomain && (
-              // Only when editing
-              <DomainTransferInput
-                value={this.state.axfr_ips.join(',')}
-                onChange={this.handleTransferInput}
-                error={errorMap.axfr_ips}
-              />
-            )}
             {masterIPsError && (
               <Notice
-                className={classes.masterIPErrorNotice}
                 error
                 text={`Master IP addresses must be valid IPv4 addresses.`}
+                spacingTop={16}
               />
             )}
             {Array.from(Array(this.state.masterIPsCount)).map((slave, idx) => (
@@ -379,6 +368,14 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               data-qa-add-master-ip-field
               disabled={disabled}
             />
+            {isEditingSlaveDomain && (
+              // Only when editing
+              <DomainTransferInput
+                value={this.state.axfr_ips.join(',')}
+                onChange={this.handleTransferInput}
+                error={errorMap.axfr_ips}
+              />
+            )}
           </React.Fragment>
         )}
         {this.props.mode !== CLONING && (
