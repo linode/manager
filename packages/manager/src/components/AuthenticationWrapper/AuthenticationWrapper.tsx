@@ -66,25 +66,17 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       nodeBalancerActions: { getAllNodeBalancersWithConfigs }
     } = this.props;
 
-    const dataFetchingPromises: Promise<any>[] = [
-      this.props.requestDomains(),
-      this.props.requestImages(),
-      this.props.requestProfile(),
-      this.props.requestLinodes(),
-      this.props.requestVolumes(),
-      getAllNodeBalancersWithConfigs()
-    ];
-
-    try {
-      await Promise.all(dataFetchingPromises);
-      this.props.requestTypes();
-      this.props.requestRegions();
-      this.props.requestSettings();
-      this.props.requestAccount();
-      this.props.requestNotifications();
-    } catch (error) {
-      /** We choose to do nothing, relying on the Redux error state. */
-    }
+    this.props.requestDomains();
+    this.props.requestImages();
+    this.props.requestProfile();
+    this.props.requestLinodes();
+    this.props.requestVolumes();
+    getAllNodeBalancersWithConfigs();
+    this.props.requestTypes();
+    this.props.requestRegions();
+    this.props.requestSettings();
+    this.props.requestAccount();
+    this.props.requestNotifications();
   };
 
   componentDidMount() {
