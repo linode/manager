@@ -1,0 +1,5 @@
+FROM cypress/included:3.8.2
+
+RUN echo 'ready'
+
+ENTRYPOINT '/bin/bash'
