@@ -311,7 +311,7 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/mongodb_color.svg'
   },
   {
-    name: 'Mean',
+    name: 'MEAN',
     description: `MEAN is a full-stack JavaScript-based framework which accelerates web application development much faster than other frameworks.  All involved technologies are well-established, offer robust feature sets, and are well-supported by their maintaining organizations. These characteristics make them a great choice for your applications.`,
     summary: `A MEAN (MongoDB, Express, Angular, Node.js) stack is a free and open-source web software bundle used to build modern web applications:`,
     related_info: [
