@@ -129,7 +129,6 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
   }
 
   render() {
-    // console.log("render auth wrap")
     const { children } = this.props;
     const { showChildren } = this.state;
     return <React.Fragment>{showChildren ? children : null}</React.Fragment>;
