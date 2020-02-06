@@ -64,7 +64,6 @@ class TableSortCell extends React.PureComponent<CombinedProps, {}> {
         className={noWrap ? `${classes.noWrap}` : ''}
         {...rest}
         sortDirection={direction}
-        role="columnheader"
       >
         <TableSortLabel
           active={active}
@@ -74,6 +73,7 @@ class TableSortCell extends React.PureComponent<CombinedProps, {}> {
           IconComponent={SortUp}
           hideSortIcon={true}
           aria-label={`Sort by ${label}`}
+          role="columnheader"
         >
           {children}
           {!active && <Sort className={classes.initialIcon} />}
