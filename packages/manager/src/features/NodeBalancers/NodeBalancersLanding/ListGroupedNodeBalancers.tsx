@@ -93,7 +93,7 @@ const ListGroupedNodeBalancers: React.StatelessComponent<CombinedProps> = props 
   } = props;
 
   const groupedNodeBalancers = compose(sortGroups, groupByTags)(data);
-  const tableWrapperProps = { handleOrderChange, order, orderBy };
+  const tableWrapperProps = { handleOrderChange, order, orderBy, data };
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
 

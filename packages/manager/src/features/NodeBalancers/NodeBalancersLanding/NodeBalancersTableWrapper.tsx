@@ -21,18 +21,27 @@ const styles = (theme: Theme) =>
     }
   });
 
-type CombinedProps = Omit<OrderByProps, 'data'> & WithStyles<ClassNames>;
+interface Props {
+  data: any[];
+}
 
-const NodeBalancersTableWrapper: React.StatelessComponent<
-  CombinedProps
-> = props => {
-  const { order, orderBy, handleOrderChange, classes } = props;
+type CombinedProps = Omit<OrderByProps, 'data'> &
+  WithStyles<ClassNames> &
+  Props;
+
+const NodeBalancersTableWrapper: React.StatelessComponent<CombinedProps> = props => {
+  const { order, orderBy, handleOrderChange, classes, data } = props;
 
   return (
     <Paper className={classes.paperWrapper}>
       <Grid container className="my0">
         <Grid item xs={12} className="py0">
-          <Table removeLabelonMobile aria-label="List of NodeBalancers">
+          <Table
+            removeLabelonMobile
+            aria-label="List of NodeBalancers"
+            rowCount={data.length}
+            colCount={6}
+          >
             <SortableTableHead
               order={order}
               orderBy={orderBy}

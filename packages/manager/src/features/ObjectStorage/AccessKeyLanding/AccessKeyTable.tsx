@@ -56,9 +56,7 @@ export type CombinedProps = Props &
   WithStyles<ClassNames> &
   PaginationProps<ObjectStorageKey>;
 
-export const AccessKeyTable: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const AccessKeyTable: React.StatelessComponent<CombinedProps> = props => {
   const {
     classes,
     data,
@@ -126,7 +124,11 @@ export const AccessKeyTable: React.StatelessComponent<
   return (
     <React.Fragment>
       <Paper className={classes.paper}>
-        <Table aria-label="List of Object Storage Access Keys">
+        <Table
+          aria-label="List of Object Storage Access Keys"
+          rowCount={data && data.length}
+          colCount={2}
+        >
           <TableHead>
             <TableRow data-qa-table-head>
               <TableCell className={classes.labelCell} data-qa-header-label>
