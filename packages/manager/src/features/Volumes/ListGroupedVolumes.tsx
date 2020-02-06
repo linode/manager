@@ -88,7 +88,8 @@ const ListGroupedVolumes: React.FC<CombinedProps> = props => {
     handleOrderChange,
     order,
     orderBy,
-    isVolumesLanding: renderProps.isVolumesLanding
+    isVolumesLanding: renderProps.isVolumesLanding,
+    data
   };
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
