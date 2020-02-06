@@ -43,7 +43,8 @@ const ListVolumes: React.FC<CombinedProps> = props => {
             <Table
               removeLabelonMobile
               aria-label="List of your Volumes"
-              {...data}
+              rowCount={data.length}
+              colCount={5}
             >
               <SortableVolumesTableHeader
                 order={order}
