@@ -23,20 +23,21 @@ interface Props {
 
 const DataLoadedListener: React.FC<Props> = props => {
   React.useEffect(() => {
-    if (
-      shouldMarkAppAsDone(
-        props.profileLoadedOrErrorExists,
-        props.accountLoadedOrErrorExists,
-        props.linodesLoadedOrErrorExists,
-        props.volumesLoadedOrErrorExists,
-        props.nodeBalancersLoadedOrErrorExists,
-        props.bucketsLoadedOrErrorExists,
-        props.domainsLoadedOrErrorExists,
-        props.accountSettingsLoadedOrErrorExists,
-        props.flagsHaveLoaded
-      ) &&
-      !props.appIsLoaded
-    ) {
+    const smaad = shouldMarkAppAsDone(
+      props.profileLoadedOrErrorExists,
+      props.accountLoadedOrErrorExists,
+      props.linodesLoadedOrErrorExists,
+      props.volumesLoadedOrErrorExists,
+      props.nodeBalancersLoadedOrErrorExists,
+      props.bucketsLoadedOrErrorExists,
+      props.domainsLoadedOrErrorExists,
+      props.accountSettingsLoadedOrErrorExists,
+      props.flagsHaveLoaded
+    );
+    // const d =new Date();
+    // console.log('should mark app as done ',d.getSeconds(), d.getMilliseconds(), smaad);
+    if (smaad) {
+      // && !props.appIsLoaded
       props.markAppAsLoaded();
     }
   });
@@ -59,10 +60,14 @@ const shouldMarkAppAsDone = (
 ): boolean => {
   const pathname = window.location.pathname;
 
-  if (!flagsHaveLoaded) {
-    // We're still waiting for feature flags. Don't load the app.
-    return false;
-  }
+  // launch darkly flags
+  // should we really wait?
+  // no by default we hide
+
+  // if (!flagsHaveLoaded) {
+  //   // We're still waiting for feature flags. Don't load the app.
+  //   return false;
+  // }
 
   /**
    * if we're not on a route that we recognize,
@@ -87,12 +92,12 @@ const shouldMarkAppAsDone = (
 
   if (
     pathname.match(/dashboard/i) &&
-    (linodesLoadedOrErrorExists &&
+    linodesLoadedOrErrorExists &&
       volumesLoadedOrErrorExists &&
       nodeBalancersLoadedOrErrorExists &&
-      accountLoadedOrErrorExists &&
+      // accountLoadedOrErrorExists &&
       profileLoadedOrErrorExists &&
-      domainsLoadedOrErrorExists)
+      domainsLoadedOrErrorExists
     /** not checking bucket data here for now */
   ) {
     return true;

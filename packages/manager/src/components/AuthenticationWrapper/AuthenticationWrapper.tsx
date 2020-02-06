@@ -58,8 +58,10 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
 
   makeInitialRequests = async () => {
     // When loading lish we avoid all this extra data loading
-    if (window.location?.pathname?.includes('/lish/')) { return; }
-    
+    if (window.location?.pathname?.includes('/lish/')) {
+      return;
+    }
+
     const {
       nodeBalancerActions: { getAllNodeBalancersWithConfigs }
     } = this.props;
@@ -116,14 +118,12 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
    * and redux has now been synced with what is in local storage
    */
   componentDidUpdate(prevProps: CombinedProps) {
-    
     /** if we were previously not authed and now we are authed */
     if (
       !prevProps.isAuthenticated &&
       this.props.isAuthenticated &&
       !this.state.showChildren
     ) {
-      //console.log('component did update req');
       this.makeInitialRequests();
       this.setState({ showChildren: true });
       startEventsInterval();
