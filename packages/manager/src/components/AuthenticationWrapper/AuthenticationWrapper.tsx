@@ -72,16 +72,11 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
 
     try {
       await Promise.all(dataFetchingPromises);
-      // console.log("data part 1")
-      Promise.all([
-        this.props.requestTypes(),
-        this.props.requestRegions(),
-        this.props.requestSettings(),
-        this.props.requestAccount(),
-        this.props.requestNotifications()]).then( ()=>{
-          // console.log("all data here")
-        }
-        );
+      this.props.requestTypes();
+      this.props.requestRegions();
+      this.props.requestSettings();
+      this.props.requestAccount();
+      this.props.requestNotifications();
     } catch (error) {
       /** We choose to do nothing, relying on the Redux error state. */
     }
