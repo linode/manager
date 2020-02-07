@@ -1234,6 +1234,9 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           padding: spacingUnit + 2,
           borderTop: `1px solid ${primaryColors.divider}`,
           borderBottom: `1px solid ${primaryColors.divider}`,
+          '&:first-child': {
+            paddingLeft: 15
+          },
           '&:last-child': {
             paddingRight: spacingUnit + 2
           },
@@ -1307,13 +1310,12 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           position: 'relative',
           zIndex: 1,
           height: spacingUnit * 5 + 1,
-          '&:before': {
-            borderLeftColor: 'white'
-          },
           '&:hover, &:focus': {
             '&$hover': {
               backgroundColor: '#fbfbfb',
-              boxShadow: `inset 5px 0 0 ${primaryColors.main}`
+              [breakpoints.up('md')]: {
+                boxShadow: `inset 5px 0 0 ${primaryColors.main}`
+              }
             }
           }
         },
