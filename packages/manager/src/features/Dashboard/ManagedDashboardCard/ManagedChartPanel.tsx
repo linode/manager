@@ -10,8 +10,12 @@ import {
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import LineGraph from 'src/components/LineGraph';
-import SimpleLegend from 'src/components/LineGraph/SimpleLegend';
 import TabbedPanel from 'src/components/TabbedPanel';
+import {
+  convertNetworkToUnit,
+  formatNetworkTooltip,
+  generateNetworkUnits
+} from 'src/features/Longview/shared/utilities';
 import useTimezone from 'src/utilities/useTimezone';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -82,6 +86,9 @@ const chartHeight = 300;
 const formatData = (value: DataSeries[]): [number, number][] =>
   value.map(thisPoint => [thisPoint.x, thisPoint.y]);
 
+const _formatTooltip = (valueInBytes: number) =>
+  formatNetworkTooltip(valueInBytes / 8);
+
 const createTabs = (
   data: ManagedStatsData | null,
   timezone: string,
@@ -96,6 +103,18 @@ const createTabs = (
   if (!data) {
     return [];
   }
+
+  const formattedNetIn = data.net_in.map(dataPoint => dataPoint.y);
+  const formattedNetOut = data.net_out.map(dataPoint => dataPoint.y);
+  const netInMax = Math.max(...formattedNetIn);
+  const netOutMax = Math.max(...formattedNetOut);
+
+  const unit = generateNetworkUnits(Math.max(netInMax, netOutMax));
+
+  const convertNetworkData = (value: number) => {
+    return convertNetworkToUnit(value, unit as any);
+  };
+
   return [
     {
       render: () => {
@@ -127,20 +146,15 @@ const createTabs = (
         return (
           <div className={classes.root}>
             <div>{summaryCopy}</div>
-            <SimpleLegend
-              rows={[
-                { legendTitle: 'Network Traffic In', legendColor: 'darkGreen' },
-                {
-                  legendTitle: 'Network Traffic Out',
-                  legendColor: 'lightGreen'
-                }
-              ]}
-            />
             <div className={classes.canvasContainer}>
               <LineGraph
                 timezone={timezone}
                 chartHeight={chartHeight}
                 showToday={true}
+                nativeLegend
+                unit="/s"
+                formatData={convertNetworkData}
+                formatTooltip={_formatTooltip}
                 data={[
                   {
                     borderColor: 'transparent',
@@ -160,7 +174,7 @@ const createTabs = (
           </div>
         );
       },
-      title: 'Network Transfer (bits/s)'
+      title: `Network Transfer (${unit}/s)`
     },
     {
       render: () => {
