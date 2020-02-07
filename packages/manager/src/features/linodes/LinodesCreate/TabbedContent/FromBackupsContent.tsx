@@ -3,7 +3,7 @@ import {
   Linode,
   LinodeBackupsResponse
 } from 'linode-js-sdk/lib/linodes';
-import { pathOr } from 'ramda';
+import { compose as ramdaCompose, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
@@ -81,6 +81,9 @@ const errorResources = {
   tags: 'Tags for this Linode'
 };
 
+const filterLinodesWithBackups = (linodes: Linode[]) =>
+  linodes.filter(linode => linode.backups.enabled);
+
 export class FromBackupsContent extends React.Component<CombinedProps, State> {
   state: State = {
     linodesWithBackups: [],
@@ -121,7 +124,6 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
         thisLinode => thisLinode.id === selectedLinodeID
       );
 
-      // Safeguard – return early.
       if (!selectedLinode) {
         return this.setState({ isGettingBackups: false });
       }
@@ -265,7 +267,11 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
               <CreateLinodeDisabled isDisabled={disabled} />
               <SelectLinodePanel
                 error={hasErrorFor('linode_id')}
-                linodes={extendLinodes(linodesData, imagesData, typesData)}
+                linodes={ramdaCompose(
+                  (linodes: Linode[]) =>
+                    extendLinodes(linodes, imagesData, typesData),
+                  filterLinodesWithBackups
+                )(linodesData)}
                 selectedLinodeID={selectedLinodeID}
                 handleSelection={updateLinodeID}
                 updateFor={[selectedLinodeID, errors]}
