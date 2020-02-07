@@ -114,7 +114,7 @@ const ListGroupedDomains: React.StatelessComponent<CombinedProps> = props => {
                       className={classes.groupContainer}
                       data-qa-tag-header={tag}
                     >
-                      <TableRow className={classes.tagHeaderRow}>
+                      <TableRow className={classes.tagHeaderRow} role="cell">
                         <TableCell colSpan={7}>
                           <Typography
                             variant="h2"
