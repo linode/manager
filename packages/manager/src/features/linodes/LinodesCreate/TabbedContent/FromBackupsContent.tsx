@@ -99,8 +99,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
   userHasBackups = () => {
     const { linodesData } = this.props;
     return (
-      linodesData.filter(thisLinode => thisLinode.backups.enabled === true)
-        .length > 0
+      linodesData.filter(thisLinode => thisLinode.backups.enabled).length > 0
     );
   };
 

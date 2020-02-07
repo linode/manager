@@ -76,22 +76,6 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
     backups: []
   };
 
-  updateBackupInfo() {
-    const selectedBackup =
-      this.state.backups &&
-      this.state.backups.filter(
-        backup => backup.id === Number(this.props.selectedBackupID)
-      )[0];
-    if (selectedBackup) {
-      const backupInfo_ = this.getBackupInfo(selectedBackup);
-      const backupInfo = {
-        title: backupInfo_.infoName,
-        details: backupInfo_.subheading
-      };
-      this.props.handleChangeBackupInfo(backupInfo);
-    }
-  }
-
   getBackupInfo(backup: LinodeBackup) {
     const heading = backup.label
       ? backup.label
