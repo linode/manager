@@ -37,7 +37,7 @@ const DomainsTableWrapper: React.StatelessComponent<CombinedProps> = props => {
       <Grid container className="my0">
         <Grid item xs={12} className="py0">
           <Table
-            aria-label="List of Linodes"
+            aria-label="List of Domains"
             colCount={3}
             rowCount={data.length}
           >

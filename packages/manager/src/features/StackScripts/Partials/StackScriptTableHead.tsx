@@ -108,7 +108,7 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
         : {};
 
     return (
-      <TableHead>
+      <TableHead role="rowgroup">
         <TableRow className={classes.tr}>
           {!!isSelecting && (
             <TableCell

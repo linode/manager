@@ -345,7 +345,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
                       rowCount={data.length}
                       colCount={4}
                     >
-                      <TableHead>
+                      <TableHead role="rowgroup">
                         <TableRow>
                           <TableSortCell
                             active={orderBy === 'label'}
@@ -356,10 +356,15 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
                           >
                             Label
                           </TableSortCell>
-                          <TableCell data-qa-image-created-header>
+                          <TableCell
+                            role="columnheader"
+                            data-qa-image-created-header
+                          >
                             Created
                           </TableCell>
-                          <TableCell data-qa-expiry-header>Expires</TableCell>
+                          <TableCell role="columnheader" data-qa-expiry-header>
+                            Expires
+                          </TableCell>
                           <TableSortCell
                             active={orderBy === 'size'}
                             label={'size'}
