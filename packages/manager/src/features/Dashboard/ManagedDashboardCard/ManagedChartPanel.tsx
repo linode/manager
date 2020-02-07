@@ -109,7 +109,10 @@ const createTabs = (
   const netInMax = Math.max(...formattedNetIn);
   const netOutMax = Math.max(...formattedNetOut);
 
-  const unit = generateNetworkUnits(Math.max(netInMax, netOutMax));
+  // Find the max and convert to bytes, which is what generateNetworkUnits
+  // expects.
+  const maxNetworkInBytes = Math.max(netInMax, netOutMax) / 8;
+  const unit = generateNetworkUnits(maxNetworkInBytes);
 
   const convertNetworkData = (value: number) => {
     return convertNetworkToUnit(value, unit as any);
