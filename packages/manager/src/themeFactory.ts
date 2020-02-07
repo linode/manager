@@ -1247,7 +1247,9 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           fontSize: '.9rem',
           lineHeight: 1.1,
           '&.emptyCell': {
-            display: 'display-block'
+            display: 'inline-block',
+            width: '100%',
+            height: 42
           }
         },
         body: {
@@ -1311,18 +1313,13 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           '&:hover, &:focus': {
             '&$hover': {
               backgroundColor: '#fbfbfb',
-              '&:before': {
-                backgroundColor: primaryColors.main
-              }
+              boxShadow: `inset 5px 0 0 ${primaryColors.main}`
             }
           }
         },
         head: {
           height: 'auto',
-          backgroundColor: '#fbfbfb',
-          '&:before': {
-            borderLeftColor: '#fbfbfb'
-          }
+          backgroundColor: '#fbfbfb'
         },
         hover: {
           cursor: 'pointer',
