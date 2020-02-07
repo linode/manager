@@ -2918,11 +2918,6 @@
   resolved "https://registry.yarnpkg.com/@types/podium/-/podium-1.0.0.tgz#bfaa2151be2b1d6109cc69f7faa9dac2cba3bb20"
   integrity sha1-v6ohUb4rHWEJzGn3+qnawsujuyA=
 
-"@types/pretty-bytes@^5.1.0":
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/@types/pretty-bytes/-/pretty-bytes-5.1.0.tgz#1df59db5c7def05dbbb0df2ad80b46863d9fafda"
-  integrity sha512-rc7x/HkZyguytBsCUVvcdARplUf0DsrRXqv3yO0v0CIgXuuwNlgYZRfYGCFHxr1CTnKHjCIJ13tB9t49ZixOIw==
-
 "@types/prop-types@*":
   version "15.7.1"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.1.tgz#f1a11e7babb0c3cad68100be381d1e064c68f1f6"
