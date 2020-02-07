@@ -154,7 +154,6 @@
     "@types/memoizee": "^0.4.2",
     "@types/moment-timezone": "^0.5.4",
     "@types/node": "^12.7.1",
-    "@types/normalizr": "^2.0.18",
     "@types/pretty-bytes": "^5.1.0",
     "@types/qrcode.react": "^0.8.0",
     "@types/qs": "^6.5.1",
