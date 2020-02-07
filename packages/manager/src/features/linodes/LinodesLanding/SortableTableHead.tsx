@@ -80,7 +80,7 @@ const SortableTableHead: React.StatelessComponent<combinedProps> = props => {
         >
           Last Backup
         </TableSortCell>
-        <TableCell />
+        <TableCell variant="body" />
       </TableRow>
     </TableHead>
   );

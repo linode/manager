@@ -24,19 +24,9 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      transition: theme.transitions.create(['background-color']),
+      transition: theme.transitions.create(['box-shadow']),
       [theme.breakpoints.up('md')]: {
-        '&:before': {
-          content: "''",
-          display: 'inline-block',
-          width: '0.01%',
-          height: '100%',
-          backgroundColor: 'transparent',
-          borderTop: `1px solid ${theme.palette.divider}`,
-          borderBottom: `1px solid ${theme.palette.divider}`,
-          transition: theme.transitions.create(['background-color']),
-          paddingLeft: 5
-        }
+        boxShadow: `inset 3px 0 0 transparent`
       }
     },
     withForcedIndex: {
@@ -44,10 +34,10 @@ const styles = (theme: Theme) =>
         transition: theme.transitions.create(['color'])
       },
       transition: theme.transitions.create(['border-color']),
-      '&:before': {
-        borderLeft: `1px solid transparent`,
-        paddingLeft: 4
-      },
+      // '&:before': {
+      //   borderLeft: `1px solid transparent`,
+      //   paddingLeft: 4
+      // },
       '&:hover': {
         cursor: 'pointer',
         '& td': {
@@ -61,11 +51,12 @@ const styles = (theme: Theme) =>
     selected: {
       backgroundColor: theme.bg.lightBlue,
       transform: 'scale(1)',
-      '&:before': {
-        transition: 'none',
-        backgroundColor: theme.bg.lightBlue,
-        borderColor: theme.palette.primary.light
-      },
+      boxShadow: `inset 3px 0 0 ${theme.bg.lightBlue}`,
+      // '&:before': {
+      //   transition: 'none',
+      //   backgroundColor: theme.bg.lightBlue,
+      //   borderColor: theme.palette.primary.light
+      // },
       '& td': {
         borderTopColor: theme.palette.primary.light,
         borderBottomColor: theme.palette.primary.light,
