@@ -291,7 +291,7 @@ export const LINODE_ARN_TAX_ID = '3000 1606 0612';
 export const MBpsIntraDC = 75;
 
 /**
- * MBps rate for intra DC migrations (AKA Cross-Datacenter migrations )
+ * MBps rate for inter DC migrations (AKA Cross-Datacenter migrations )
  */
 export const MBpsInterDC = 1.5;
 

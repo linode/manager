@@ -54,33 +54,47 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
         }
 
         if (event.action === 'disk_imagize' && event.status === 'failed') {
-          return enqueueSnackbar('There was an error creating an image.', {
-            variant: 'error'
-          });
+          return enqueueSnackbar(
+            `There was an error creating image ${event.secondary_entity
+              ?.label ?? ''}.`,
+            {
+              variant: 'error'
+            }
+          );
         }
 
         if (event.action === 'image_delete' && event.status === 'failed') {
-          return enqueueSnackbar('There was an error deleting an image.', {
-            variant: 'error'
-          });
+          return enqueueSnackbar(
+            `There was an error deleting image ${event.entity?.label ?? ''}.`,
+            {
+              variant: 'error'
+            }
+          );
         }
 
         if (
           event.action === 'disk_imagize' &&
           ['finished', 'notification'].includes(event.status)
         ) {
-          return enqueueSnackbar('Image created successfully.', {
-            variant: 'success'
-          });
+          return enqueueSnackbar(
+            `Image ${event.secondary_entity?.label ??
+              ''} created successfully.`,
+            {
+              variant: 'success'
+            }
+          );
         }
 
         if (
           event.action === 'image_delete' &&
           ['finished', 'notification'].includes(event.status)
         ) {
-          return enqueueSnackbar('Image deleted successfully.', {
-            variant: 'success'
-          });
+          return enqueueSnackbar(
+            `Image ${event.entity?.label + ' ' ?? ''}deleted successfully.`,
+            {
+              variant: 'success'
+            }
+          );
         }
 
         if (event.action === 'volume_create' && event.status === 'failed') {
