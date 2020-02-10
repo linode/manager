@@ -117,7 +117,7 @@ const defaultState: State = {
   backupsEnabled: false,
   label: '',
   password: '',
-  selectedImageID: 'linode/debian9',
+  selectedImageID: undefined,
   selectedBackupID: undefined,
   selectedDiskSize: undefined,
   selectedLinodeID: undefined,
