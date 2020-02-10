@@ -1,48 +1,33 @@
-// import { API_ROOT } from '../constants';
-// import Request, {
-//   setData,
-//   setMethod,
-//   setParams,
-//   setURL,
-//   setXFilter
-// } from '../request';
+import { BETA_API_ROOT } from '../constants';
+import Request, {
+  // setData,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter
+} from '../request';
 import { ResourcePage as Page } from '../types';
 import { Firewall, FirewallDevice } from './types';
 
 /**
- * mocked GET firewalls
+ * GET firewalls
  */
-export const getFirewalls = (
-  mockData: Firewall[],
-  params: any = {},
-  filter: any = {}
-): Promise<Page<Firewall>> => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve({
-        data: mockData,
-        page: 1,
-        pages: 1,
-        results: mockData.length
-      });
-    }, 1000);
-  }).then((data: any) => {
-    return data;
-  });
-};
+export const getFirewalls = (params?: any, filters?: any) =>
+  Request<Page<Firewall>>(
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
+    setURL(`${BETA_API_ROOT}/networking/firewalls`)
+  ).then(response => response.data);
 
 export const getFirewallDevices = (
-  id: number,
-  mockData: FirewallDevice[]
-): Promise<Page<FirewallDevice>> => {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve({
-        data: mockData,
-        page: 1,
-        pages: 1,
-        results: mockData.length
-      });
-    });
-  }).then((data: any) => data);
-};
+  firewallID: number,
+  params?: any,
+  filters?: any
+) =>
+  Request<Page<FirewallDevice>>(
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
+    setURL(`${BETA_API_ROOT}/networking/firewalls/${firewallID}/devices`)
+  ).then(response => response.data);

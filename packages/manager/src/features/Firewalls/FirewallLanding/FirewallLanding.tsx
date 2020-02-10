@@ -67,7 +67,7 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
       firewallsLastUpdated === 0 &&
       !firewallsLoading
     ) {
-      props.getFirewalls({ hello: 'hello' }, { world: 'world' });
+      props.getFirewalls();
     }
   }, [firewallsLastUpdated, firewallsLoading, firewallsKeys]);
 

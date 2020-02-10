@@ -7,7 +7,10 @@ import { ThunkDispatch } from 'src/store/types';
 import { GetAllData } from 'src/utilities/getAll';
 
 interface DispatchProps {
-  getFirewalls: (params: any, filters: any) => Promise<GetAllData<Firewall[]>>;
+  getFirewalls: (
+    params?: any,
+    filters?: any
+  ) => Promise<GetAllData<Firewall[]>>;
 }
 
 /* tslint:disable-next-line */
