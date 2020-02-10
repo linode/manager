@@ -242,7 +242,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
             <Paper>
               <Placeholder
                 icon={VolumeIcon}
-                copy="You do not have backups enabled for your Linodes. Please visit the Backups panel in the Linode Details view"
+                copy="You do not have backups enabled for your Linodes. Please visit the Backups panel in the Linode Details view."
                 title="Create from Backup"
               />
             </Paper>
