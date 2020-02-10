@@ -92,10 +92,10 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     this.setState({ backupInfo: info });
   };
 
-  getBackupsForLinode = () => {
-    const { selectedLinodeID, linodesData } = this.props;
+  getBackupsForLinode = (linodeId: number) => {
+    const { linodesData } = this.props;
 
-    if (!selectedLinodeID) {
+    if (!linodeId) {
       return;
     }
 
@@ -103,9 +103,9 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       isGettingBackups: true
     });
 
-    getLinodeBackups(selectedLinodeID).then(backups => {
+    getLinodeBackups(linodeId).then(backups => {
       const selectedLinode = linodesData.find(
-        thisLinode => thisLinode.id === selectedLinodeID
+        thisLinode => thisLinode.id === linodeId
       );
 
       if (!selectedLinode) {
@@ -175,17 +175,15 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     // is set to state as if it had been selected manually.
     if (this.props.selectedLinodeID) {
       this.updateRegion(this.props.selectedLinodeID);
-      this.getBackupsForLinode();
+      this.getBackupsForLinode(this.props.selectedLinodeID);
     }
   }
 
-  componentDidUpdate(prevProps: CombinedProps) {
-    const { selectedLinodeID } = this.props;
-    if (!!selectedLinodeID && prevProps.selectedLinodeID !== selectedLinodeID) {
-      this.updateRegion(selectedLinodeID);
-      this.getBackupsForLinode();
-    }
-  }
+  handleLinodeSelect = (linodeId: number, diskSize?: number) => {
+    this.props.updateLinodeID(linodeId, diskSize);
+    this.updateRegion(linodeId);
+    this.getBackupsForLinode(linodeId);
+  };
 
   render() {
     const { isGettingBackups, selectedLinodeWithBackups } = this.state;
@@ -209,7 +207,6 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       label,
       tags,
       typesData,
-      updateLinodeID,
       updateTypeID,
       updateTags,
       backupsMonthlyPrice,
@@ -218,8 +215,9 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     } = this.props;
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
 
-    const userHasBackups =
-      linodesData.filter(thisLinode => thisLinode.backups.enabled).length > 0;
+    const userHasBackups = linodesData.some(
+      thisLinode => thisLinode.backups.enabled
+    );
 
     const hasBackups = Boolean(backupsEnabled || accountBackupsEnabled);
 
@@ -236,7 +234,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
             <Paper>
               <Placeholder
                 icon={VolumeIcon}
-                copy="You do not have backups enabled for your Linodes. Please visit the 'Backups' panel in the Linode Settings view"
+                copy="You do not have backups enabled for your Linodes. Please visit the Backups panel in the Linode Details view"
                 title="Create from Backup"
               />
             </Paper>
@@ -251,7 +249,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                   filterLinodesWithBackups
                 )(linodesData)}
                 selectedLinodeID={selectedLinodeID}
-                handleSelection={updateLinodeID}
+                handleSelection={this.handleLinodeSelect}
                 updateFor={[selectedLinodeID, errors]}
                 disabled={disabled}
                 notice={{
