@@ -10,12 +10,13 @@ export interface KubernetesCluster {
 export interface KubeNodePoolResponse {
   count: number;
   id: number;
-  linodes: PoolNodeResponse[];
+  nodes: PoolNodeResponse[];
   type: string;
 }
 
 export interface PoolNodeResponse {
-  id: number;
+  id: string;
+  instance_id: number | null;
   status: string;
 }
 
