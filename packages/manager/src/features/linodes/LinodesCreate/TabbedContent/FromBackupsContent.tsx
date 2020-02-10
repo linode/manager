@@ -60,6 +60,7 @@ interface State {
   backupInfo: Info;
   isGettingBackups: boolean;
   selectedLinodeWithBackups?: LinodeWithBackups;
+  backupsError?: string;
 }
 
 export type CombinedProps = Props &
@@ -103,22 +104,29 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       isGettingBackups: true
     });
 
-    getLinodeBackups(linodeId).then(backups => {
-      const selectedLinode = linodesData.find(
-        thisLinode => thisLinode.id === linodeId
-      );
+    getLinodeBackups(linodeId)
+      .then(backups => {
+        const selectedLinode = linodesData.find(
+          thisLinode => thisLinode.id === linodeId
+        );
 
-      if (!selectedLinode) {
-        return this.setState({ isGettingBackups: false });
-      }
+        if (!selectedLinode) {
+          return this.setState({ isGettingBackups: false });
+        }
 
-      const selectedLinodeWithBackups: LinodeWithBackups = {
-        ...selectedLinode,
-        currentBackups: { ...backups }
-      };
+        const selectedLinodeWithBackups: LinodeWithBackups = {
+          ...selectedLinode,
+          currentBackups: { ...backups }
+        };
 
-      this.setState({ selectedLinodeWithBackups, isGettingBackups: false });
-    });
+        this.setState({ selectedLinodeWithBackups, isGettingBackups: false });
+      })
+      .catch(err => {
+        this.setState({
+          isGettingBackups: false,
+          backupsError: 'Error retrieving backups for this Linode.'
+        });
+      });
   };
 
   createLinode = () => {
@@ -261,7 +269,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                 }}
               />
               <SelectBackupPanel
-                error={hasErrorFor('backup_id')}
+                error={hasErrorFor('backup_id') || this.state.backupsError}
                 selectedLinodeWithBackups={selectedLinodeWithBackups}
                 selectedLinodeID={selectedLinodeID}
                 selectedBackupID={selectedBackupID}
