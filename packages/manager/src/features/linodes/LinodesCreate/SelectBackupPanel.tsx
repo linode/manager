@@ -3,9 +3,9 @@ import {
   LinodeBackup,
   LinodeBackupsResponse
 } from 'linode-js-sdk/lib/linodes';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
+import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -57,22 +57,15 @@ interface Props {
   selectedLinodeID?: number;
   selectedBackupID?: number;
   error?: string;
-  backups: LinodeWithBackups[];
+  selectedLinodeWithBackups?: LinodeWithBackups;
   handleChangeBackup: (id: number) => void;
   handleChangeBackupInfo: (info: BackupInfo) => void;
+  loading: boolean;
 }
 
 interface State {
   backups?: LinodeBackup[];
 }
-
-const mockBackup: LinodeBackupsResponse = {
-  snapshot: {
-    in_progress: null,
-    current: null
-  },
-  automatic: []
-};
 
 type StyledProps = Props & WithStyles<ClassNames>;
 
@@ -82,55 +75,6 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
   state: State = {
     backups: []
   };
-
-  componentDidMount() {
-    const { backups } = this.props;
-    if (this.props.selectedLinodeID) {
-      // the backups prop will always be an array of one beacuse a filter is happening
-      // a component higher to only pass the backups for the selected Linode
-      this.setState({
-        backups: aggregateBackups(
-          pathOr(mockBackup, [0, 'currentBackups'], backups)
-        )
-      });
-    }
-    this.updateBackupInfo();
-  }
-
-  componentDidUpdate(prevProps: CombinedProps, prevState: State) {
-    const { backups } = this.props;
-    if (prevProps.selectedLinodeID !== this.props.selectedLinodeID) {
-      // the backups prop will always be an array of one beacuse a filter is happening
-      // a component higher to only pass the backups for the selected Linode
-      this.setState({
-        backups: aggregateBackups(
-          pathOr(mockBackup, [0, 'currentBackups'], backups)
-        )
-      });
-    }
-    if (
-      prevProps.selectedBackupID !== this.props.selectedBackupID ||
-      prevState.backups !== this.state.backups
-    ) {
-      this.updateBackupInfo();
-    }
-  }
-
-  updateBackupInfo() {
-    const selectedBackup =
-      this.state.backups &&
-      this.state.backups.filter(
-        backup => backup.id === Number(this.props.selectedBackupID)
-      )[0];
-    if (selectedBackup) {
-      const backupInfo_ = this.getBackupInfo(selectedBackup);
-      const backupInfo = {
-        title: backupInfo_.infoName,
-        details: backupInfo_.subheading
-      };
-      this.props.handleChangeBackupInfo(backupInfo);
-    }
-  }
 
   getBackupInfo(backup: LinodeBackup) {
     const heading = backup.label
@@ -173,8 +117,17 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { error, classes, selectedLinodeID } = this.props;
-    const { backups } = this.state;
+    const {
+      error,
+      classes,
+      selectedLinodeID,
+      loading,
+      selectedLinodeWithBackups
+    } = this.props;
+
+    const aggregatedBackups = selectedLinodeWithBackups
+      ? aggregateBackups(selectedLinodeWithBackups.currentBackups)
+      : [];
 
     return (
       <Paper className={`${classes.root}`}>
@@ -182,12 +135,14 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
           {error && <Notice text={error} error />}
           <Typography variant="h2">Select Backup</Typography>
           <Grid container alignItems="center" className={classes.wrapper}>
-            {selectedLinodeID ? (
+            {loading ? (
+              <CircleProgress />
+            ) : selectedLinodeID ? (
               <React.Fragment>
-                {backups!.length !== 0 ? (
+                {aggregatedBackups.length !== 0 ? (
                   <Typography component="div" className={classes.panelBody}>
                     <Grid container>
-                      {backups!.map(backup => {
+                      {aggregatedBackups.map(backup => {
                         return this.renderCard(backup);
                       })}
                     </Grid>

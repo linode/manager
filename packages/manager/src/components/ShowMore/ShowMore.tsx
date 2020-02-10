@@ -65,6 +65,7 @@ interface Props<T> {
   items: T[];
   render: (items: T[]) => any;
   chipProps?: ChipProps;
+  ariaItemType: string;
 }
 
 export class ShowMore<T> extends React.Component<
@@ -87,7 +88,7 @@ export class ShowMore<T> extends React.Component<
   };
 
   render() {
-    const { classes, render, items, chipProps } = this.props;
+    const { classes, render, items, chipProps, ariaItemType } = this.props;
     const { anchorEl } = this.state;
 
     return (
@@ -101,6 +102,7 @@ export class ShowMore<T> extends React.Component<
             'chip'
           )}
           label={`+${items.length}`}
+          aria-label={`+${items.length} ${ariaItemType}`}
           classes={{ label: classes.label }}
           onClick={this.handleClick}
           {...chipProps}
@@ -111,6 +113,8 @@ export class ShowMore<T> extends React.Component<
 
         <Popover
           classes={{ paper: classes.popover }}
+          role="dialog"
+          aria-label={`${items.length} additional ${ariaItemType}`}
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
           onClose={this.handleClose}

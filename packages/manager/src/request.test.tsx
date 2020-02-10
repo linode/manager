@@ -1,13 +1,14 @@
-import { AxiosError } from 'axios';
+import { AxiosError, AxiosRequestConfig } from 'axios';
 import { handleStartSession } from 'src/store/authentication/authentication.actions';
 import { handleError } from './request';
 import store from './store';
 
+const baseErrorConfig: AxiosRequestConfig = {
+  method: 'POST',
+  headers: {}
+};
 const baseError = {
-  config: {
-    method: 'POST',
-    headers: {}
-  },
+  config: baseErrorConfig,
   name: 'requestName',
   message: 'helloworld',
   response: {
@@ -15,11 +16,16 @@ const baseError = {
     data: [],
     config: {},
     headers: {}
-  }
+  },
+  isAxiosError: true
+};
+const baseErrorWithJson = {
+  ...baseError,
+  toJSON: () => baseError
 };
 
 const error400: AxiosError = {
-  ...baseError,
+  ...baseErrorWithJson,
   response: {
     ...baseError.response,
     status: 400
@@ -27,7 +33,7 @@ const error400: AxiosError = {
 };
 
 const error401: AxiosError = {
-  ...baseError,
+  ...baseErrorWithJson,
   response: {
     ...baseError.response,
     status: 401

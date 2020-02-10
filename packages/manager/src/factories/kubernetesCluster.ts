@@ -20,7 +20,8 @@ import {
  */
 
 export const kubeLinodeFactory = Factory.Sync.makeFactory<PoolNodeResponse>({
-  id: Factory.each(id => id),
+  id: Factory.each(id => `id-${id}`),
+  instance_id: Factory.each(id => id),
   status: 'ready'
 });
 
@@ -33,7 +34,7 @@ export const _nodePoolFactory = Factory.Sync.makeFactory<PoolNodeWithPrice>({
 
 export const nodePoolFactory = _nodePoolFactory.withDerivation1(
   ['count'],
-  'linodes',
+  'nodes',
   (count: number) => {
     const linodes = [];
     let i = 0;
