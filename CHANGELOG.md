@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [0.84.1] - 2020-02-04
 
 ### Fixed:
-- Fix images pagination issue (#6074)
+- Fix issue where only 100 Images were displayed
 
 
 ## [v0.84.0] - 2020-01-28
