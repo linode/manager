@@ -29,6 +29,8 @@ import Weblish from './Weblish';
 
 type ClassNames = 'tabs' | 'tabRoot' | 'progress' | 'notFound';
 
+const AUTH_POLLING_INTERVAL = 2000;
+
 const styles = (theme: Theme) =>
   createStyles({
     tabs: {
@@ -114,33 +116,44 @@ class Lish extends React.Component<CombinedProps, State> {
       });
 
     this.refreshToken();
-    // If the user signs out in another window, we want to close this session
-    this.interval = window.setInterval(() => {
-      const token = localStorage.getItem('authentication/token');
+    /**
+     * If the user signs out in another window, we want to close this session.
+     * We're using window.localStorage directly here because of closures, and
+     * because using Redux state won't work since a Lish window will have its
+     * independent store that will be unaffected by logouts in other tabs/windows.
+     */
 
-      if (!token && !!this.state.authenticated) {
-        try {
-          window.close();
-        } catch (e) {
-          /**
-           * window.close() will only work if the window was opened
-           * with window.open() or similar. If a user bookmarks a
-           * Lish url and navigates there directly, this will fail.
-           * Failure is ok here--there's no real way we can close a
-           * tab if a user opened
-           */
-        }
-        if (this.mounted) {
-          this.setState({ authenticated: false });
-        }
-      }
-    }, 2000);
+    this.interval = window.setInterval(
+      this.checkAuthentication,
+      AUTH_POLLING_INTERVAL
+    );
   }
 
   componentWillUnmount() {
     this.mounted = false;
     window.clearInterval(this.interval);
   }
+
+  checkAuthentication = () => {
+    const token = window.localStorage.getItem('authentication/token');
+    if (!token && !!this.state.authenticated) {
+      try {
+        window.close();
+      } catch (e) {
+        /**
+         * window.close() will only work if the window was opened
+         * with window.open() or similar. If a user bookmarks a
+         * Lish url and navigates there directly, this will fail.
+         * Failure is ok here--there's no real way we can close a
+         * tab if a user opened it directly.
+         */
+      }
+      if (this.mounted) {
+        // In case the above didn't work, we'll render an error state based on this flag.
+        this.setState({ authenticated: false });
+      }
+    }
+  };
 
   refreshToken = () => {
     const {
