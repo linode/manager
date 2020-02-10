@@ -221,6 +221,8 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     const userHasBackups =
       linodesData.filter(thisLinode => thisLinode.backups.enabled).length > 0;
 
+    const hasBackups = Boolean(backupsEnabled || accountBackupsEnabled);
+
     return (
       <React.Fragment>
         <Grid
@@ -341,7 +343,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                 }
 
                 if (
-                  accountBackupsEnabled &&
+                  hasBackups &&
                   typeDisplayInfo &&
                   typeDisplayInfo.backupsMonthly
                 ) {
@@ -355,7 +357,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 
                 let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
                 if (
-                  accountBackupsEnabled &&
+                  hasBackups &&
                   typeDisplayInfo &&
                   typeDisplayInfo.backupsMonthly
                 ) {
