@@ -13,6 +13,8 @@ export type ClassNames =
   | 'yellow'
   | 'blue'
   | 'green'
+  | 'lightGreen'
+  | 'darkGreen'
   | 'text'
   | 'tableHeadInner'
   | 'simpleLegend'
@@ -94,6 +96,16 @@ const styles = (theme: Theme) =>
     green: {
       '&:before': {
         backgroundColor: theme.graphs.green
+      }
+    },
+    lightGreen: {
+      '&:before': {
+        backgroundColor: theme.graphs.network.outbound
+      }
+    },
+    darkGreen: {
+      '&:before': {
+        backgroundColor: theme.graphs.network.inbound
       }
     },
     legend: {
