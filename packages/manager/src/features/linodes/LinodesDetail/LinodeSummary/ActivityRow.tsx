@@ -59,7 +59,7 @@ export const ActivityRow: React.StatelessComponent<CombinedProps> = props => {
     >
       <Grid item>
         <Typography>
-          {displayedMessage} {duration === '' ? '' : `(${duration})`}
+          {displayedMessage} {duration && `(${duration})`}
         </Typography>
       </Grid>
       <Grid item>

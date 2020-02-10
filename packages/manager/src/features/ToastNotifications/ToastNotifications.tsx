@@ -22,7 +22,7 @@ import { events$ } from 'src/events';
  */
 export const toastSuccessAndFailure = curry(
   (
-    enqueueSnackbar: any,
+    enqueueSnackbar: WithSnackbarProps['enqueueSnackbar'],
     eventStatus: EventStatus,
     successMessage: string | undefined,
     failureMessage: string | undefined
@@ -58,18 +58,18 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
         switch (event.action) {
           case 'volume_attach':
             return _toast(
-              'Volume successfully attached.',
-              'Volume successfully detached.'
+              `Volume ${label} successfully attached.`,
+              `Error attaching Volume ${label}.`
             );
           case 'volume_detach':
             return _toast(
-              'Volume successfully detached.',
-              'Error detaching Volume.'
+              `Volume ${label} successfully detached.`,
+              `Error detaching Volume ${label}.`
             );
           case 'volume_create':
             return _toast(
-              'Volume successfully created.',
-              'Error creating Volume.'
+              `Volume ${label} successfully created.`,
+              `Error creating Volume ${label}.`
             );
           case 'volume_delete':
             return _toast(
