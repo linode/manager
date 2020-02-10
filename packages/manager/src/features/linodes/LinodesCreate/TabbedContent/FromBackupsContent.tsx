@@ -57,10 +57,6 @@ interface Props {
 }
 
 interface State {
-  linodesWithBackups: LinodeWithBackups[] | null;
-  userHasBackups: boolean;
-  backups: boolean;
-  selectedBackupInfo: Info;
   backupInfo: Info;
   isGettingBackups: boolean;
   selectedLinodeWithBackups?: LinodeWithBackups;
@@ -86,22 +82,11 @@ const filterLinodesWithBackups = (linodes: Linode[]) =>
 
 export class FromBackupsContent extends React.Component<CombinedProps, State> {
   state: State = {
-    linodesWithBackups: [],
-    userHasBackups: false,
-    backups: false,
-    selectedBackupInfo: undefined,
     backupInfo: undefined,
     isGettingBackups: false
   };
 
   mounted: boolean = false;
-
-  userHasBackups = () => {
-    const { linodesData } = this.props;
-    return (
-      linodesData.filter(thisLinode => thisLinode.backups.enabled).length > 0
-    );
-  };
 
   handleSelectBackupInfo = (info: Info) => {
     this.setState({ backupInfo: info });
@@ -203,12 +188,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const {
-      backups,
-      selectedBackupInfo,
-      isGettingBackups,
-      selectedLinodeWithBackups
-    } = this.state;
+    const { isGettingBackups, selectedLinodeWithBackups } = this.state;
     const {
       accountBackupsEnabled,
       classes,
@@ -238,9 +218,8 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     } = this.props;
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
 
-    const imageInfo = selectedBackupInfo;
-
-    const hasBackups = backups || accountBackupsEnabled;
+    const userHasBackups =
+      linodesData.filter(thisLinode => thisLinode.backups.enabled).length > 0;
 
     return (
       <React.Fragment>
@@ -251,13 +230,11 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
           role="tabpanel"
           aria-labelledby="tab-backup-create"
         >
-          {!this.userHasBackups() ? (
+          {!userHasBackups ? (
             <Paper>
               <Placeholder
                 icon={VolumeIcon}
-                copy="You either do not have backups enabled for any Linode
-                or your Linodes have not been backed up. Please visit the 'Backups'
-                panel in the Linode Settings view"
+                copy="You do not have backups enabled for your Linodes. Please visit the 'Backups' panel in the Linode Settings view"
                 title="Create from Backup"
               />
             </Paper>
@@ -337,16 +314,13 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
             </React.Fragment>
           )}
         </Grid>
-        {!this.userHasBackups() ? (
+        {!userHasBackups ? (
           <React.Fragment />
         ) : (
           <Grid item className={`${classes.sidebar} mlSidebar`}>
             <Sticky topOffset={-24} disableCompensation>
               {(props: StickyProps) => {
                 const displaySections = [];
-                if (imageInfo) {
-                  displaySections.push(imageInfo);
-                }
 
                 if (regionDisplayInfo) {
                   displaySections.push({
@@ -367,7 +341,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                 }
 
                 if (
-                  hasBackups &&
+                  accountBackupsEnabled &&
                   typeDisplayInfo &&
                   typeDisplayInfo.backupsMonthly
                 ) {
@@ -381,7 +355,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 
                 let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
                 if (
-                  hasBackups &&
+                  accountBackupsEnabled &&
                   typeDisplayInfo &&
                   typeDisplayInfo.backupsMonthly
                 ) {
