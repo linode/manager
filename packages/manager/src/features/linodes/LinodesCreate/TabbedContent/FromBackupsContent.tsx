@@ -101,7 +101,8 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     }
 
     this.setState({
-      isGettingBackups: true
+      isGettingBackups: true,
+      backupsError: undefined
     });
 
     getLinodeBackups(linodeId)
