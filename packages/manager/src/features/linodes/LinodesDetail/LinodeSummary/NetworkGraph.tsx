@@ -224,25 +224,25 @@ const Graph: React.FC<GraphProps> = props => {
           showToday={rangeSelection === '24'}
           data={[
             {
-              borderColor: theme.graphs.blueBorder,
-              backgroundColor: theme.graphs.blue,
+              borderColor: 'transparent',
+              backgroundColor: theme.graphs.network.inbound,
               data: convertedPublicIn,
               label: 'Public Inbound'
             },
             {
-              borderColor: theme.graphs.greenBorder,
-              backgroundColor: theme.graphs.green,
+              borderColor: 'transparent',
+              backgroundColor: theme.graphs.network.outbound,
               data: convertedPublicOut,
               label: 'Public Outbound'
             },
             {
-              borderColor: theme.graphs.purpleBorder,
+              borderColor: 'transparent',
               backgroundColor: theme.graphs.purple,
               data: convertedPrivateIn,
               label: 'Private Inbound'
             },
             {
-              borderColor: theme.graphs.yellowBorder,
+              borderColor: 'transparent',
               backgroundColor: theme.graphs.yellow,
               data: convertedPrivateOut,
               label: 'Private Outbound'

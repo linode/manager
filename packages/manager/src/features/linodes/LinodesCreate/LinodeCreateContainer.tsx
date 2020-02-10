@@ -72,6 +72,8 @@ import { sendCreateLinodeEvent } from 'src/utilities/ga';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { getRegionIDFromLinodeID } from './utilities';
 
+const DEFAULT_IMAGE = 'linode/debian10';
+
 interface State {
   selectedImageID?: string;
   selectedRegionID?: string;
@@ -115,7 +117,7 @@ const defaultState: State = {
   backupsEnabled: false,
   label: '',
   password: '',
-  selectedImageID: 'linode/debian9',
+  selectedImageID: undefined,
   selectedBackupID: undefined,
   selectedDiskSize: undefined,
   selectedLinodeID: undefined,
@@ -153,7 +155,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     // These can be passed in as query params
     selectedTypeID: this.params.typeID,
     selectedRegionID: this.params.regionID,
-    selectedImageID: this.params.imageID
+    selectedImageID: this.params.imageID ?? DEFAULT_IMAGE
   };
 
   componentDidUpdate(prevProps: CombinedProps) {
