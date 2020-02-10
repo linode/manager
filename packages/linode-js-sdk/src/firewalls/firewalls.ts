@@ -1,13 +1,14 @@
 import { BETA_API_ROOT } from '../constants';
 import Request, {
-  // setData,
+  setData,
   setMethod,
   setParams,
   setURL,
   setXFilter
 } from '../request';
 import { ResourcePage as Page } from '../types';
-import { Firewall, FirewallDevice } from './types';
+import { CreateFirewallSchema } from './firewalls.schema';
+import { CreateFirewallPayload, Firewall, FirewallDevice } from './types';
 
 /**
  * GET firewalls
@@ -30,4 +31,11 @@ export const getFirewallDevices = (
     setParams(params),
     setXFilter(filters),
     setURL(`${BETA_API_ROOT}/networking/firewalls/${firewallID}/devices`)
+  ).then(response => response.data);
+
+export const createFirewall = (data: CreateFirewallPayload) =>
+  Request<Firewall>(
+    setMethod('POST'),
+    setData(data, CreateFirewallSchema),
+    setURL(`${BETA_API_ROOT}/networking/firewalls`)
   ).then(response => response.data);

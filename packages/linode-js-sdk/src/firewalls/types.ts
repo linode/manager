@@ -38,3 +38,9 @@ export interface FirewallDevice {
   id: number;
   entity: FirewallDeviceEntity;
 }
+
+export interface CreateFirewallPayload {
+  label?: string;
+  tags?: string[];
+  rules: FirewallRules;
+}
