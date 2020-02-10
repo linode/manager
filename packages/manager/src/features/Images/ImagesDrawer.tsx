@@ -88,6 +88,14 @@ const titleMap = {
   [modes.IMAGIZING]: 'Create an Image'
 };
 
+const buttonTextMap = {
+  [modes.CLOSED]: '',
+  [modes.CREATING]: 'Create',
+  [modes.RESTORING]: 'Restore',
+  [modes.EDITING]: 'Update',
+  [modes.IMAGIZING]: 'Create'
+};
+
 class ImageDrawer extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
   state = {
@@ -393,7 +401,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
         <ActionsPanel
           style={{ marginTop: 16 }}
-          updateFor={[requirementsMet, classes, submitting]}
+          updateFor={[requirementsMet, classes, submitting, mode]}
         >
           <Button
             onClick={this.onSubmit}
@@ -402,7 +410,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             buttonType="primary"
             data-qa-submit
           >
-            {mode === modes.EDITING ? 'Update' : 'Create'}
+            {buttonTextMap[mode] ?? 'Submit'}
           </Button>
           <Button
             onClick={this.close}
