@@ -155,7 +155,14 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     // These can be passed in as query params
     selectedTypeID: this.params.typeID,
     selectedRegionID: this.params.regionID,
-    selectedImageID: this.params.imageID ?? DEFAULT_IMAGE
+    selectedImageID: this.params.imageID ?? DEFAULT_IMAGE,
+    // @todo: Abstract and test.
+    selectedLinodeID: isNaN(+this.params.linodeID)
+      ? undefined
+      : +this.params.linodeID,
+    selectedBackupID: isNaN(+this.params.backupID)
+      ? undefined
+      : +this.params.backupID
   };
 
   componentDidUpdate(prevProps: CombinedProps) {
@@ -170,19 +177,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   }
 
   componentDidMount() {
-    const params = getParamsFromUrl(this.props.location.search);
     // Allowed apps include the base set of original apps + anything LD tells us to show
     const newApps = this.props.flags.oneClickApps || [];
     const allowedApps = Object.keys({ ...baseApps, ...newApps });
-    if (params && params !== {}) {
-      this.setState({
-        // This set is for creating from a Backup
-        selectedBackupID: isNaN(+params.backupID)
-          ? undefined
-          : +params.backupID,
-        selectedLinodeID: isNaN(+params.linodeID) ? undefined : +params.linodeID
-      });
-    }
     if (nonImageCreateTypes.includes(this.props.createType)) {
       // If we're navigating directly to e.g. the clone page, don't select an image by default
       this.setState({ selectedImageID: undefined });
