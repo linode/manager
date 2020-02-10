@@ -253,17 +253,21 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   linode_clone: {
     scheduled: e =>
-      `Linode ${e.entity?.label ?? ''} is scheduled to be cloned to ${e
-        .secondary_entity?.label ?? ''}.`,
+      `Linode ${e.entity?.label ??
+        ''} is scheduled to be cloned ${safeSecondaryEntityLabel(
+        e,
+        'to',
+        ''
+      )}.`,
     started: e =>
-      `Linode ${e.entity?.label ?? ''} is being cloned to ${e.secondary_entity
-        ?.label ?? ''}.`,
+      `Linode ${e.entity?.label ??
+        ''} is being cloned${safeSecondaryEntityLabel(e, ' to', '')}.`,
     failed: e =>
-      `Linode ${e.entity?.label ?? ''} could not be cloned to ${e
-        .secondary_entity?.label ?? ''}.`,
+      `Linode ${e.entity?.label ??
+        ''} could not be cloned${safeSecondaryEntityLabel(e, ' to', '')}.`,
     finished: e =>
-      `Linode ${e.entity?.label ?? ''} has been cloned to ${e.secondary_entity
-        ?.label ?? ''}.`,
+      `Linode ${e.entity?.label ??
+        ''} has been cloned${safeSecondaryEntityLabel(e, ' to', '')}.`,
     notification: e =>
       `Linode ${e.entity?.label ?? ''} is scheduled to be cloned.`
   },
