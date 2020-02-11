@@ -41,7 +41,7 @@ import { ApplicationState } from 'src/store';
 import imageEvents from 'src/store/selectors/imageEvents';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ImageRow from './ImageRow';
-import ImagesDrawer from './ImagesDrawer';
+import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
 
 type ClassNames = 'root' | 'title';
 
@@ -56,7 +56,7 @@ const styles = (theme: Theme) =>
 interface State {
   imageDrawer: {
     open: boolean;
-    mode: 'edit' | 'create' | 'restore';
+    mode: DrawerMode;
     imageID?: string;
     label?: string;
     description?: string;
@@ -274,14 +274,13 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
         label={imageDrawer.label}
         description={imageDrawer.description}
         selectedDisk={imageDrawer.selectedDisk}
-        selectedLinode={imageDrawer.selectedLinode}
+        selectedLinode={imageDrawer.selectedLinode || null}
         imageID={imageDrawer.imageID}
         changeDisk={this.changeSelectedDisk}
         changeLinode={this.changeSelectedLinode}
         changeLabel={this.setLabel}
         changeDescription={this.setDescription}
         onClose={this.closeImageDrawer}
-        onSuccess={() => null}
       />
     );
   };

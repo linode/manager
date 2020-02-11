@@ -9,10 +9,10 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { Lens, lensPath, over, path, pathOr, set, view } from 'ramda';
 import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, Dispatch } from 'redux';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
@@ -837,7 +837,7 @@ interface DispatchProps {
   resetDrawer: () => void;
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) =>
+const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators({ resetDrawer }, dispatch);
 
 interface StateProps {
