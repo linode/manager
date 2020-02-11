@@ -30,7 +30,8 @@ RUN npx cypress verify
 
 # Copy the rest of the files that don't require installation
 COPY --chown=node:node packages/linode-js-sdk  ./packages/linode-js-sdk/
-
 COPY --chown=node:node packages/manager ./packages/manager
+
+RUN yarn workspace linode-js-sdk build
 
 
