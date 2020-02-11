@@ -77,9 +77,9 @@ export type DrawerMode = 'closed' | 'create' | 'imagize' | 'restore' | 'edit';
 const titleMap: Record<DrawerMode, string> = {
   closed: '',
   create: 'Create an Image',
-  imagize: 'Restore from an Image',
+  imagize: 'Create an Image',
   edit: 'Edit an Image',
-  restore: 'Create an Image'
+  restore: 'Restore from an Image'
 };
 
 const buttonTextMap: Record<DrawerMode, string> = {
