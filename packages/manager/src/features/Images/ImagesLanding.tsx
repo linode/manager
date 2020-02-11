@@ -374,7 +374,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
                           >
                             Size
                           </TableSortCell>
-                          <TableCell></TableCell>
+                          <TableCell />
                         </TableRow>
                       </TableHead>
                       <TableBody>
