@@ -190,7 +190,7 @@ export type EventAction =
   | 'firewall_create'
   | 'firewall_delete'
   | 'firewall_device_add'
-  | 'firewall_device_delete'
+  | 'firewall_device_remove'
   | 'firewall_disable'
   | 'firewall_enable'
   | 'firewall_update'
