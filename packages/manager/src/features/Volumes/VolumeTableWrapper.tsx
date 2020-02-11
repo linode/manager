@@ -23,7 +23,7 @@ const styles = (theme: Theme) =>
 
 interface VolumeTableWrapperProps {
   isVolumesLanding: boolean;
-  data: any[];
+  dataLength: number;
 }
 
 type CombinedProps = Omit<OrderByProps, 'data'> &
@@ -37,7 +37,7 @@ const DomainsTableWrapper: React.FC<CombinedProps> = props => {
     handleOrderChange,
     classes,
     isVolumesLanding,
-    data
+    dataLength
   } = props;
 
   return (
@@ -46,7 +46,7 @@ const DomainsTableWrapper: React.FC<CombinedProps> = props => {
         <Grid item xs={12} className="py0">
           <Table
             aria-label="List of Volumes"
-            rowCount={data.length}
+            rowCount={dataLength}
             colCount={5}
           >
             <SortableVolumesTableHeader

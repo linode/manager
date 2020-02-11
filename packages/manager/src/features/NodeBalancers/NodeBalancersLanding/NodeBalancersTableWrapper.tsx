@@ -22,7 +22,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  data: any[];
+  dataLength: number;
 }
 
 type CombinedProps = Omit<OrderByProps, 'data'> &
@@ -30,7 +30,7 @@ type CombinedProps = Omit<OrderByProps, 'data'> &
   Props;
 
 const NodeBalancersTableWrapper: React.StatelessComponent<CombinedProps> = props => {
-  const { order, orderBy, handleOrderChange, classes, data } = props;
+  const { order, orderBy, handleOrderChange, classes, dataLength } = props;
 
   return (
     <Paper className={classes.paperWrapper}>
@@ -39,7 +39,7 @@ const NodeBalancersTableWrapper: React.StatelessComponent<CombinedProps> = props
           <Table
             removeLabelonMobile
             aria-label="List of NodeBalancers"
-            rowCount={data.length}
+            rowCount={dataLength}
             colCount={6}
           >
             <SortableTableHead
