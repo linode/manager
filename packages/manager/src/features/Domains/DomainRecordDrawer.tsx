@@ -125,7 +125,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     weight: pathOr(5, ['weight'], props),
     domain: pathOr(undefined, ['domain'], props),
     soa_email: pathOr('', ['soa_email'], props),
-    axfr_ips: getInitialIPs(props.axfr_ips ?? ['']),
+    axfr_ips: getInitialIPs(props.axfr_ips),
     refresh_sec: pathOr(0, ['refresh_sec'], props),
     retry_sec: pathOr(0, ['retry_sec'], props),
     expire_sec: pathOr(0, ['expire_sec'], props)
@@ -406,10 +406,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         DomainRecordDrawer.errorFields,
         this.state.errors
       )('axfr_ips')}
-      ips={defaultTo(
-        DomainRecordDrawer.defaultFieldsState(this.props).axfr_ips,
-        (this.state.fields as EditableDomainFields).axfr_ips ?? ['']
-      )}
+      ips={(this.state.fields as EditableDomainFields).axfr_ips ?? ['']}
       onChange={this.handleTransferUpdate}
     />
   );
