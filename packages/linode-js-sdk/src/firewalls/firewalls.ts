@@ -81,7 +81,7 @@ export const updateFirewall = (
   Request<Firewall>(
     setMethod('PUT'),
     setData(data, UpdateFirewallSchema),
-    setURL(`${BETA_API_ROOT}/networking/firewalls${firewallID}`)
+    setURL(`${BETA_API_ROOT}/networking/firewalls/${firewallID}`)
   ).then(response => response.data);
 
 /**
@@ -113,7 +113,7 @@ export const disableFirewall = (firewallID: number) =>
 export const deleteFirewall = (firewallID: number) =>
   Request<{}>(
     setMethod('DELETE'),
-    setURL(`${BETA_API_ROOT}/networking/firewalls${firewallID}`)
+    setURL(`${BETA_API_ROOT}/networking/firewalls/${firewallID}`)
   ).then(response => response.data);
 
 // FIREWALL RULES
