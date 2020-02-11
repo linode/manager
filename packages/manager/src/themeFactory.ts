@@ -1252,7 +1252,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           '&.emptyCell': {
             display: 'inline-block',
             width: '100%',
-            height: 42
+            height: 48
           }
         },
         body: {

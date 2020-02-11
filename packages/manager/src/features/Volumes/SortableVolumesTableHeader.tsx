@@ -89,9 +89,8 @@ const SortableTableHeader: React.FC<CombinedProps> = props => {
       className={
         isVolumesLanding ? classes.volumesWrapper : classes.linodeVolumesWrapper
       }
-      role="rowgroup"
     >
-      <TableRow>
+      <TableRow role="rowgroup">
         <TableSortCell
           className={classes.labelCol}
           active={isActive('label')}
