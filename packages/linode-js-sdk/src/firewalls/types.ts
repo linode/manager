@@ -54,7 +54,7 @@ export interface CreateFirewallPayload {
 export interface UpdateFirewallPayload {
   label?: string;
   tags?: string[];
-  status?: FirewallStatus;
+  status?: Omit<FirewallStatus, 'deleted'>;
 }
 
 export interface FirewallDevicePayload {
