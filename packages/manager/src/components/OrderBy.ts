@@ -41,8 +41,22 @@ interface Props {
 
 type CombinedProps = Props & PreferencesProps;
 
+/**
+ * Given a set of UserPreferences (returned from the API),
+ * and a preferenceKey, returns the order and orderby for
+ * that preferenceKey if it exists. If the key isn't found,
+ * or isn't provided, it will instead return
+ * {
+ *   order: defaultOrder,
+ *   orderBy: defaultOrderBy
+ * }
+ * @param preferenceKey
+ * @param preferences
+ * @param defaultOrderBy
+ * @param defaultOrder
+ */
 export const getInitialValuesFromUserPreferences = (
-  preferenceKey: string,
+  preferenceKey: SortKey | '',
   preferences: UserPreferences,
   defaultOrderBy: string,
   defaultOrder: Order

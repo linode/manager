@@ -23,7 +23,7 @@ export interface UserPreferences {
   theme?: ThemeChoice;
   spacing?: SpacingChoice;
   desktop_sidebar_open?: boolean;
-  sortKeys?: Record<SortKey, OrderSet>;
+  sortKeys?: Partial<Record<SortKey, OrderSet>>;
 }
 
 export const handleGetPreferences = actionCreator.async<
