@@ -47,6 +47,12 @@ export interface CreateFirewallPayload {
   rules: FirewallRules;
 }
 
+export interface UpdateFirewallPayload {
+  label?: string;
+  tags?: string[];
+  status?: FirewallStatus;
+}
+
 export interface FirewallDevicePayload {
   id: number;
   type: FirewallDeviceEntityType;

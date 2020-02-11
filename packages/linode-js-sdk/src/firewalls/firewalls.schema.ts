@@ -6,6 +6,12 @@ export const CreateFirewallSchema = object({
   rules: object().required('You must provide a set of Firewall rules.')
 });
 
+export const UpdateFirewallSchema = object().shape({
+  label: string(),
+  tags: array().of(string()),
+  status: string().oneOf(['enabled', 'disabled']) // 'deleted' is also a status but it's not settable
+});
+
 export const FirewallDeviceSchema = object({
   type: string()
     .oneOf(['linode', 'nodebalancer'])
