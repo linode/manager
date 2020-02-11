@@ -85,6 +85,26 @@ export const updateFirewall = (
   ).then(response => response.data);
 
 /**
+ * enableFirewall
+ *
+ * Convenience method for enabling a Cloud Firewall. Calls updateFirewall internally
+ * with { status: 'enabled' }
+ *
+ */
+export const enableFirewall = (firewallID: number) =>
+  updateFirewall(firewallID, { status: 'enabled' });
+
+/**
+ * disableFirewall
+ *
+ * Convenience method for disabling a Cloud Firewall. Calls updateFirewall internally
+ * with { status: 'disabled' }
+ *
+ */
+export const disableFirewall = (firewallID: number) =>
+  updateFirewall(firewallID, { status: 'disabled' });
+
+/**
  * deleteFirewall
  *
  * Deletes a single Cloud Firewall.
