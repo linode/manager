@@ -45,6 +45,10 @@ export interface CreateFirewallPayload {
   label?: string;
   tags?: string[];
   rules: FirewallRules;
+  devices?: {
+    linodes?: number[];
+    nodebalancers?: number[];
+  };
 }
 
 export interface UpdateFirewallPayload {
