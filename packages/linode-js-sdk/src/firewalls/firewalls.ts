@@ -7,8 +7,14 @@ import Request, {
   setXFilter
 } from '../request';
 import { ResourcePage as Page } from '../types';
-import { CreateFirewallSchema } from './firewalls.schema';
-import { CreateFirewallPayload, Firewall, FirewallDevice } from './types';
+import { CreateFirewallSchema, FirewallDeviceSchema } from './firewalls.schema';
+import {
+  CreateFirewallPayload,
+  Firewall,
+  FirewallDevice,
+  FirewallDevicePayload,
+  FirewallRules
+} from './types';
 
 /**
  * GET firewalls
@@ -19,6 +25,18 @@ export const getFirewalls = (params?: any, filters?: any) =>
     setParams(params),
     setXFilter(filters),
     setURL(`${BETA_API_ROOT}/networking/firewalls`)
+  ).then(response => response.data);
+
+export const getFirewallRules = (
+  firewallID: number,
+  params?: any,
+  filters?: any
+) =>
+  Request<Page<FirewallRules>>(
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
+    setURL(`${BETA_API_ROOT}/networking/firewalls/${firewallID}/rules`)
   ).then(response => response.data);
 
 export const getFirewallDevices = (
@@ -38,4 +56,22 @@ export const createFirewall = (data: CreateFirewallPayload) =>
     setMethod('POST'),
     setData(data, CreateFirewallSchema),
     setURL(`${BETA_API_ROOT}/networking/firewalls`)
+  ).then(response => response.data);
+
+export const addFirewallDevice = (
+  firewallID: number,
+  data: FirewallDevicePayload
+) =>
+  Request<FirewallDevice>(
+    setMethod('POST'),
+    setURL(`${BETA_API_ROOT}/networking/firewalls/${firewallID}/devices`),
+    setData(data, FirewallDeviceSchema)
+  ).then(response => response.data);
+
+export const deleteFirewallDevice = (firewallID: number, deviceID: number) =>
+  Request<{}>(
+    setMethod('DELETE'),
+    setURL(
+      `${BETA_API_ROOT}/networking/firewalls/${firewallID}/devices/${deviceID}`
+    )
   ).then(response => response.data);
