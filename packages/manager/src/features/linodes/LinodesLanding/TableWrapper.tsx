@@ -22,7 +22,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  data: any[];
+  dataLength: number;
 }
 
 type CombinedProps = Omit<OrderByProps, 'data'> &
@@ -30,7 +30,7 @@ type CombinedProps = Omit<OrderByProps, 'data'> &
   Props;
 
 const TableWrapper: React.StatelessComponent<CombinedProps> = props => {
-  const { order, orderBy, handleOrderChange, data, classes } = props;
+  const { order, orderBy, handleOrderChange, dataLength, classes } = props;
 
   return (
     <Paper className={classes.paperWrapper}>
@@ -38,7 +38,7 @@ const TableWrapper: React.StatelessComponent<CombinedProps> = props => {
         <Grid item xs={12} className="py0">
           <Table
             aria-label="List of Linodes"
-            rowCount={data.length}
+            rowCount={dataLength}
             colCount={5}
           >
             <SortableTableHead

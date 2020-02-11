@@ -93,13 +93,15 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = props => 
     ...rest
   } = props;
 
+  const dataLength = data.length;
+
   const orderedGroupedLinodes = compose(sortGroups, groupByTags)(data);
   const tableWrapperProps = {
     handleOrderChange,
     order,
     orderBy,
     someLinodesHaveMaintenance: props.someLinodesHaveMaintenance,
-    data
+    dataLength
   };
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();

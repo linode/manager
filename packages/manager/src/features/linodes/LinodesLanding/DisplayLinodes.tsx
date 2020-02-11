@@ -64,7 +64,7 @@ const DisplayLinodes: React.StatelessComponent<CombinedProps> = props => {
           order,
           orderBy,
           someLinodesHaveMaintenance: props.someLinodesHaveMaintenance,
-          data: paginatedData
+          dataLength: paginatedData.length
         };
         return (
           <React.Fragment>

@@ -92,8 +92,10 @@ const ListGroupedNodeBalancers: React.StatelessComponent<CombinedProps> = props 
     toggleDialog
   } = props;
 
+  const dataLength = data.length;
+
   const groupedNodeBalancers = compose(sortGroups, groupByTags)(data);
-  const tableWrapperProps = { handleOrderChange, order, orderBy, data };
+  const tableWrapperProps = { handleOrderChange, order, orderBy, dataLength };
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
 
