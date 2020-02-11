@@ -13,8 +13,8 @@ describe('withLabelGenerator HOC', () => {
   let wrapper: ShallowWrapper<LabelProps, {}>;
   let nestedComponent: ShallowWrapper<LabelProps, {}>;
   beforeEach(() => {
-    wrapper = shallow(<RawComponent />, { context: { store } });
-    nestedComponent = wrapper.dive();
+    wrapper = shallow(<RawComponent store={store} />);
+    nestedComponent = wrapper.dive().dive();
   });
 
   it('returns label', () => {
