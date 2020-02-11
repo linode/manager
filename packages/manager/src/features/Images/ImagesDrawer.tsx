@@ -44,7 +44,7 @@ const styles = (theme: Theme) =>
   });
 
 export interface Props {
-  mode: string;
+  mode: DrawerMode;
   open: boolean;
   description?: string;
   imageID?: string;
@@ -72,20 +72,22 @@ type CombinedProps = Props &
   RouteComponentProps<{}> &
   ImagesDispatch;
 
-export const modes = {
-  CLOSED: 'closed',
-  CREATING: 'create',
-  IMAGIZING: 'imagize',
-  RESTORING: 'restore',
-  EDITING: 'edit'
+export type DrawerMode = 'closed' | 'create' | 'imagize' | 'restore' | 'edit';
+
+const titleMap: Record<DrawerMode, string> = {
+  closed: '',
+  create: 'Create an Image',
+  imagize: 'Create an Image',
+  edit: 'Edit an Image',
+  restore: 'Restore from an Image'
 };
 
-const titleMap = {
-  [modes.CLOSED]: '',
-  [modes.CREATING]: 'Create an Image',
-  [modes.RESTORING]: 'Restore from an Image',
-  [modes.EDITING]: 'Edit an Image',
-  [modes.IMAGIZING]: 'Create an Image'
+const buttonTextMap: Record<DrawerMode, string> = {
+  closed: '',
+  create: 'Create',
+  restore: 'Restore',
+  edit: 'Update',
+  imagize: 'Create'
 };
 
 class ImageDrawer extends React.Component<CombinedProps, State> {
@@ -195,7 +197,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
     this.setState({ errors: undefined, notice: undefined, submitting: true });
     const safeDescription = description ? description : ' ';
     switch (mode) {
-      case modes.EDITING:
+      case 'edit':
         if (!imageID) {
           this.setState({ submitting: false });
           return;
@@ -224,8 +226,8 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           });
         return;
 
-      case modes.CREATING:
-      case modes.IMAGIZING:
+      case 'create':
+      case 'imagize':
         createImage({
           diskID: Number(selectedDisk),
           label,
@@ -258,7 +260,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           });
         return;
 
-      case modes.RESTORING:
+      case 'restore':
         if (!selectedLinode) {
           this.setState({
             submitting: false,
@@ -285,11 +287,11 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
     const isDiskSelected = Boolean(selectedDisk);
 
     switch (mode) {
-      case modes.CREATING:
+      case 'create':
         return !(isDiskSelected && selectedLinode);
-      case modes.IMAGIZING:
+      case 'imagize':
         return !isDiskSelected;
-      case modes.RESTORING:
+      case 'restore':
         return !selectedLinode;
       default:
         return false;
@@ -337,7 +339,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
         {notice && <Notice success text={notice} data-qa-notice />}
 
-        {[modes.CREATING, modes.RESTORING].includes(mode) && (
+        {['create', 'restore'].includes(mode) && (
           <LinodeSelect
             selectedLinode={selectedLinode}
             linodeError={linodeError}
@@ -346,7 +348,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           />
         )}
 
-        {[modes.CREATING, modes.IMAGIZING].includes(mode) && (
+        {['create', 'imagize'].includes(mode) && (
           <>
             <DiskSelect
               selectedDisk={selectedDisk}
@@ -354,7 +356,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
               diskError={diskError}
               handleChange={this.handleDiskChange}
               updateFor={[disks, selectedDisk, diskError, classes]}
-              disabled={mode === modes.IMAGIZING}
+              disabled={mode === 'imagize'}
               data-qa-disk-select
             />
             <Typography className={classes.helperText} variant="body1">
@@ -367,7 +369,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           </>
         )}
 
-        {[modes.CREATING, modes.EDITING, modes.IMAGIZING].includes(mode) && (
+        {['create', 'edit', 'imagizing'].includes(mode) && (
           <React.Fragment>
             <TextField
               label="Label"
@@ -393,7 +395,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
         <ActionsPanel
           style={{ marginTop: 16 }}
-          updateFor={[requirementsMet, classes, submitting]}
+          updateFor={[requirementsMet, classes, submitting, mode]}
         >
           <Button
             onClick={this.onSubmit}
@@ -402,7 +404,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             buttonType="primary"
             data-qa-submit
           >
-            {mode === modes.EDITING ? 'Update' : 'Create'}
+            {buttonTextMap[mode] ?? 'Submit'}
           </Button>
           <Button
             onClick={this.close}

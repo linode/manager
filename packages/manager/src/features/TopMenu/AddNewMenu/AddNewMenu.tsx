@@ -2,10 +2,10 @@ import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 import { AccountCapability } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, Dispatch } from 'redux';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import KubernetesIcon from 'src/assets/addnewmenu/kubernetes.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
@@ -244,7 +244,7 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) =>
+const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators({ openDomainDrawerForCreating }, dispatch);
 
 const connected = connect(mapStateToProps, mapDispatchToProps);

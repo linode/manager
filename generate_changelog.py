@@ -43,14 +43,19 @@ def checkKeyWords(list_keywords, commit):
             return True
     return False
 
+# Given a commit message from a merged Pull Request, remove the PR ID.
+# Example: "My first commit (#1)" -> "My first commit"
+def remove_pull_request_id(commit_message):
+    regexp = "\(#\d+\)"
+    return re.sub(regexp, '', commit_message).strip()
+
 def generateChangeLog(release, date, origin):
-    git_diff=subprocess.Popen(['git', 'log', '--no-merges', '--oneline', "--pretty=split:'%s'", origin+'/master...HEAD'],
-               stdout=subprocess.PIPE,
-               stderr=subprocess.STDOUT)
-    stdout,stderr = git_diff.communicate()
-    clean_sdout = str(stdout).replace('b\"', '').replace('\n', '').replace('\\n','').replace("'", '').replace('\"','')
-    commit_array=clean_sdout.split('split:')
-    commit_array.pop(0)
+    git_log_command = ["git", "log", "--no-merges", "--oneline", "--pretty='%s'", "{}/master...HEAD".format(origin)]
+
+    commits = subprocess.check_output(git_log_command, subprocess.STDOUT).decode('utf-8').split('\n')
+
+    # Strip the first and last characters of each line, which are single quotes.
+    commits = [c[1:-1] for c in commits]
 
     breaking=[]
     added=[]
@@ -58,30 +63,32 @@ def generateChangeLog(release, date, origin):
     fixed=[]
     jql_query=[]
 
-    for i,commit in enumerate(commit_array):
-        jira_key_regex=re.match('(''|\s)M3(-|\s)\d{1,5}(-|\s|:)', commit)
-        if( not (jira_key_regex is None) ):
+    for commit in commits:
+        commit = remove_pull_request_id(commit)
+
+        jira_key_regex=re.match('M3-\d{4}', commit)
+        if (jira_key_regex is not None):
             jira_key=jira_key_regex.group(0)
             jql_query.append(jira_key)
-            commit_array[i]=commit.lstrip(jira_key)
+            commit.lstrip(jira_key)
 
         if(checkKeyWords(TEST_KEYWORDS, commit.lower())):
-            NOT_INCLUDED_IN_LOG.append(commit_array[i])
+            NOT_INCLUDED_IN_LOG.append(commit)
             continue
 
         if(checkKeyWords(BREAKING_KEYWORDS, commit.lower())):
-            breaking.append(commit_array[i])
+            breaking.append(commit)
             continue
 
         if(checkKeyWords(CHANGED_KEYWORDS, commit.lower())):
-            changed.append(commit_array[i])
+            changed.append(commit)
             continue
 
         if(checkKeyWords(FIXED_KEYWORDS, commit.lower())):
-            fixed.append(commit_array[i])
+            fixed.append(commit)
             continue
 
-        added.append(commit_array[i])
+        added.append(commit)
 
 
     generateJQLQuery(jql_query)

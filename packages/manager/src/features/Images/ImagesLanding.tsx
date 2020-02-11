@@ -41,7 +41,7 @@ import { ApplicationState } from 'src/store';
 import imageEvents from 'src/store/selectors/imageEvents';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ImageRow from './ImageRow';
-import ImagesDrawer from './ImagesDrawer';
+import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
 
 type ClassNames = 'root' | 'title';
 
@@ -56,7 +56,7 @@ const styles = (theme: Theme) =>
 interface State {
   imageDrawer: {
     open: boolean;
-    mode: 'edit' | 'create' | 'restore';
+    mode: DrawerMode;
     imageID?: string;
     label?: string;
     description?: string;

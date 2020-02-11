@@ -109,8 +109,8 @@ const createTabs = (
                 showToday={true}
                 data={[
                   {
-                    borderColor: theme.graphs.blueBorder,
-                    backgroundColor: theme.graphs.blue,
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.cpu.percent,
                     data: formatData(data.cpu),
                     label: 'CPU %'
                   }
@@ -129,8 +129,11 @@ const createTabs = (
             <div>{summaryCopy}</div>
             <SimpleLegend
               rows={[
-                { legendTitle: 'Network Traffic In', legendColor: 'blue' },
-                { legendTitle: 'Network Traffic Out', legendColor: 'green' }
+                { legendTitle: 'Network Traffic In', legendColor: 'darkGreen' },
+                {
+                  legendTitle: 'Network Traffic Out',
+                  legendColor: 'lightGreen'
+                }
               ]}
             />
             <div className={classes.canvasContainer}>
@@ -140,14 +143,14 @@ const createTabs = (
                 showToday={true}
                 data={[
                   {
-                    borderColor: theme.graphs.blueBorder,
-                    backgroundColor: theme.graphs.blue,
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.network.inbound,
                     data: formatData(data.net_in),
                     label: 'Network Traffic In'
                   },
                   {
-                    borderColor: theme.graphs.greenBorder,
-                    backgroundColor: theme.graphs.green,
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.network.outbound,
                     data: formatData(data.net_out),
                     label: 'Network Traffic Out'
                   }
@@ -171,7 +174,7 @@ const createTabs = (
                 showToday={true}
                 data={[
                   {
-                    borderColor: theme.graphs.yellowBorder,
+                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.yellow,
                     data: formatData(data.disk),
                     label: 'Disk I/O'
