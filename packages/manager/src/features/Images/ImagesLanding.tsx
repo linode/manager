@@ -345,8 +345,8 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
                       rowCount={data.length}
                       colCount={4}
                     >
-                      <TableHead role="rowgroup">
-                        <TableRow>
+                      <TableHead>
+                        <TableRow role="rowgroup">
                           <TableSortCell
                             active={orderBy === 'label'}
                             label={'label'}
@@ -374,7 +374,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
                           >
                             Size
                           </TableSortCell>
-                          <TableCell />
+                          <TableCell></TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>

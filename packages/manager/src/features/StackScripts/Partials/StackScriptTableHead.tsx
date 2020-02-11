@@ -7,8 +7,8 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import TableHead from 'src/components/core/TableHead';
+import TableRow from 'src/components/core/TableRow';
 import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 
 type ClassNames =
@@ -108,8 +108,8 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
         : {};
 
     return (
-      <TableHead role="rowgroup">
-        <TableRow className={classes.tr}>
+      <TableHead>
+        <TableRow className={classes.tr} role="rowgroup">
           {!!isSelecting && (
             <TableCell
               className={classNames({
