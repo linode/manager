@@ -80,21 +80,37 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/csgo_color.svg'
   },
   {
+    name: 'Django',
+    description: `Django is a web development framework for the Python programing language. It enables rapid development, while favoring pragmatic and clean design.`,
+    summary: `A framework for simplifying the process of building your web applications more quickly and with less code.`,
+    related_info: [
+      {
+        title: 'https://www.djangoproject.com/',
+        href: 'https://www.djangoproject.com/'
+      }
+    ],
+    tips: [
+      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:8000</em> in a browser to visit the default web page.`,
+      `You can also visit <em>https://[your-Linode's-IP-address]:8000/admin</em> to view the Djanogo admin panel.`
+    ],
+    logo_url: 'assets/django_color.svg'
+  },
+  {
     name: 'Flask',
-    description: `Flask is a lightweight WSGI web application framework. It is designed to make getting started quick and easy, with the ability to scale up to complex applications.`,
+    description: `Flask is a lightweight WSGI web application framework written in Python. It is designed to make getting started quick and easy, with the ability to scale up to complex applications.`,
     summary: `A quick light-weight web framework for Python that includes several utilities and libraries you can use to create a web application.`,
     related_guides: [
       {
         title: 'Deploy a Flask Application on Ubuntu',
         href:
           'https://www.linode.com/docs/development/python/flask-and-gunicorn-on-ubuntu/'
-      },
+      }
     ],
     related_info: [
       {
         title: 'https://www.palletsprojects.com/p/flask/',
         href: 'https://www.palletsprojects.com/p/flask/'
-      },
+      }
     ],
     tips: [
       `Once the script finishes, go to <em>https://[your-Linode's-IP-address]</em> in a browser.`
@@ -267,16 +283,18 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'MongoDB',
-    description: `MongoDB seeks to provide an alternative to traditional relational database management systems (RDBMS). In addition to its schema-free design and scalable architecture, MongoDB provides a JSON output and specialized, language-specific bindings that make it particularly attractive for use in custom application development and rapid prototyping.`,
+    description: `MongoDB provides an alternative to traditional relational database management systems (RDBMS). In addition to its schema-free design and scalable architecture, MongoDB provides JSON output and specialized language-specific bindings that make it particularly attractive for use in custom application development and rapid prototyping.`,
     summary: `MongoDB is a database engine that provides access to non-relational, document-oriented databases.`,
     related_guides: [
       {
         title: 'Create a MongoDB Replica Set',
-        href: 'https://www.linode.com/docs/databases/mongodb/create-a-mongodb-replica-set/'
+        href:
+          'https://www.linode.com/docs/databases/mongodb/create-a-mongodb-replica-set/'
       },
       {
         title: 'Build Database Clusters with MongoDB',
-        href: 'https://www.linode.com/docs/databases/mongodb/build-database-clusters-with-mongodb/'
+        href:
+          'https://www.linode.com/docs/databases/mongodb/build-database-clusters-with-mongodb/'
       },
       {
         title: 'Install MongoDB on Ubuntu 16.04',
@@ -288,14 +306,14 @@ export const oneClickApps: OCA[] = [
       {
         title: 'https://www.mongodb.com/',
         href: 'https://www.mongodb.com/'
-      },
+      }
     ],
     logo_url: 'assets/mongodb_color.svg'
   },
   {
-    name: 'Mean',
-    description: `MEAN is a full-stack JavaScript-based framework, which accelerates web application development much faster than other frameworks.  All of these technologies are well-established, offer robust feature sets, and are well-supported by their maintaining organizations. These characteristics make them a great choice for your applications.`,
-    summary: `A MERN (MongoDB, Express, Angular, Node.js) stack is a free and open-source web software bundle used to build modern web applications:`,
+    name: 'MEAN',
+    description: `MEAN is a full-stack JavaScript-based framework which accelerates web application development much faster than other frameworks.  All involved technologies are well-established, offer robust feature sets, and are well-supported by their maintaining organizations. These characteristics make them a great choice for your applications.`,
+    summary: `A MEAN (MongoDB, Express, Angular, Node.js) stack is a free and open-source web software bundle used to build modern web applications:`,
     related_info: [
       {
         title: 'http://meanjs.org/',
@@ -365,43 +383,42 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/plesk_color.svg'
   },
   {
-   name: 'Redis',
-   description: `Redis is an open-source, in-memory, data-structure store with optional disk writes
- for persistence, which can be used as key-value database, cache and message broker. Redis features
- built-in transactions, replication, and support for a variety of data structures such as strings,
- hashes, lists, sets and others.`,
-   summary:
-     'Flexible, in-memory, NoSQL database service supported in many different coding languages.',
-   related_guides: [
-     {
-       title: 'How to Install a Redis Server on Ubuntu or Debian 8',
-       href:
-         'https://www.linode.com/docs/databases/redis/how-to-install-a-redis-server-on-ubuntu-or-debian8/'
-     }
-   ],
-   related_info: [
-     {
-       title: 'https://redis.io/',
-       href: 'https://redis.io/'
-     }
-   ],
-   logo_url: 'assets/redis_color.svg'
- },
- {
+    name: 'Redis',
+    description: `Redis is an open-source, in-memory, data-structure store, with the optional ability to write and persist data to a disk, which can be used as a key-value database, cache, and message broker. Redis features
+ built-in transactions, replication, and support for a variety of data structures such as strings, hashes, lists, sets, and others.`,
+    summary:
+      'Flexible, in-memory, NoSQL database service supported in many different coding languages.',
+    related_guides: [
+      {
+        title: 'How to Install a Redis Server on Ubuntu or Debian 8',
+        href:
+          'https://www.linode.com/docs/databases/redis/how-to-install-a-redis-server-on-ubuntu-or-debian8/'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://redis.io/',
+        href: 'https://redis.io/'
+      }
+    ],
+    logo_url: 'assets/redis_color.svg'
+  },
+  {
     name: 'Ruby on Rails',
-    description: `Rails is a web application development framework written in the Ruby programming language. It is designed to make programming web applications easier by making assumptions about what every developer needs to get started. It allows you to write less code while accomplishing more than many other languages and frameworks.`,
+    description: `Rails is a web application development framework written in the Ruby programming language. It is designed to make programming web applications easier by giving every developer a number of common tools they need to get started. Ruby on Rails empowers you to accomplish more with less code.`,
     summary: `Ruby on Rails is a web framework that allows web designers and developers to implement dynamic, fully featured web applications. `,
     related_guides: [
       {
         title: 'Ruby on Rails with NGINX On Debian 9',
-        href: 'https://www.linode.com/docs/development/ror/ruby-on-rails-nginx-debian/'
-      },
+        href:
+          'https://www.linode.com/docs/development/ror/ruby-on-rails-nginx-debian/'
+      }
     ],
     related_info: [
       {
         title: 'https://rubyonrails.org/',
         href: 'https://rubyonrails.org/'
-      },
+      }
     ],
     tips: [
       `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:3000</em> in a browser.`
@@ -410,7 +427,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'PostgreSQL',
-    description: `PostgreSQL is a popular, open source relational database system that provides many advanced configuration options that can help optimize your databases’s performance in a production environment.`,
+    description: `PostgreSQL is a popular open source relational database system that provides many advanced configuration options that can help optimize your database’s performance in a production environment.`,
     summary: `The PostgreSQL relational database system is a powerful, scalable, and standards-compliant open-source database platform.`,
     related_guides: [
       {
@@ -441,20 +458,20 @@ export const oneClickApps: OCA[] = [
         title: 'How to Install and Configure phpMyAdmin on Debian 8',
         href:
           'https://www.linode.com/docs/databases/mysql/install-and-configure-phpmyadmin-on-debian-8/'
-      },
+      }
     ],
     related_info: [
       {
         title: 'https://www.phpmyadmin.net/',
         href: 'https://www.phpmyadmin.net/'
-      },
+      }
     ],
     tips: [
       `Once the script finishes, go to <em>https://[your-Linode's-IP-address]/phpmyadmin</em> in a browser.`
     ],
     logo_url: 'assets/phpmyadmin_color.svg'
   },
-  {  
+  {
     name: 'Prometheus',
     description: `Prometheus is a powerful monitoring software tool that collects metrics from configurable data points at given intervals, evaluates rule expressions, and can trigger alerts if some condition is observed.`,
     summary:
