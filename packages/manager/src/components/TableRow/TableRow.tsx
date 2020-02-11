@@ -34,10 +34,10 @@ const styles = (theme: Theme) =>
         transition: theme.transitions.create(['color'])
       },
       transition: theme.transitions.create(['border-color']),
-      // '&:before': {
-      //   borderLeft: `1px solid transparent`,
-      //   paddingLeft: 4
-      // },
+      '&:before': {
+        borderLeft: `1px solid transparent`,
+        paddingLeft: 4
+      },
       '&:hover': {
         cursor: 'pointer',
         '& td': {
@@ -52,19 +52,17 @@ const styles = (theme: Theme) =>
       backgroundColor: theme.bg.lightBlue,
       transform: 'scale(1)',
       boxShadow: `inset 3px 0 0 ${theme.bg.lightBlue}`,
-      // '&:before': {
-      //   transition: 'none',
-      //   backgroundColor: theme.bg.lightBlue,
-      //   borderColor: theme.palette.primary.light
-      // },
+      '&:before': {
+        transition: 'none',
+        backgroundColor: theme.bg.lightBlue,
+        borderColor: theme.palette.primary.light
+      },
       '& td': {
         borderTopColor: theme.palette.primary.light,
         borderBottomColor: theme.palette.primary.light,
         position: 'relative',
-        [theme.breakpoints.down('sm')]: {
-          '&:first-child': {
-            borderLeft: `1px solid ${theme.palette.primary.light}`
-          }
+        '&:first-child': {
+          borderLeft: `1px solid ${theme.palette.primary.light}`
         },
         [theme.breakpoints.down('md')]: {
           '&:last-child': {
@@ -214,8 +212,8 @@ class TableRow extends React.Component<CombinedProps> {
         {selected && (
           <Hidden mdDown>
             <td colSpan={0} className={classes.selectedOuter}>
-              <span className={classes.activeCaret}></span>
-              <span className={classes.activeCaretOverlay}></span>
+              <span className={classes.activeCaret} />
+              <span className={classes.activeCaretOverlay} />
             </td>
           </Hidden>
         )}
