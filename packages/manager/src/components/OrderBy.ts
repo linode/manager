@@ -8,7 +8,10 @@ import { Order } from 'src/components/Pagey';
 import withPreferences, {
   Props as PreferencesProps
 } from 'src/containers/preferences.container';
-import { UserPreferences } from 'src/store/preferences/preferences.actions';
+import {
+  SortKey,
+  UserPreferences
+} from 'src/store/preferences/preferences.actions';
 import { isArray } from 'util';
 
 import {
@@ -33,7 +36,7 @@ interface Props {
   children: (p: OrderByProps) => React.ReactNode;
   order?: Order;
   orderBy?: string;
-  preferenceKey?: string; // If provided, will store/read values from user preferences
+  preferenceKey?: SortKey; // If provided, will store/read values from user preferences
 }
 
 type CombinedProps = Props & PreferencesProps;
@@ -135,7 +138,7 @@ export class OrderBy extends React.Component<CombinedProps, State> {
             sortKeys: {
               ...preferences.sortKeys,
               [preferenceKey]: { order, orderBy }
-            }
+            } as UserPreferences['sortKeys']
           });
         })
         // It doesn't matter if this fails, the value simply won't be preserved.
@@ -143,7 +146,7 @@ export class OrderBy extends React.Component<CombinedProps, State> {
     }
   };
 
-  updateUserPreferences = debounce(2000, false, this._updateUserPreferences);
+  updateUserPreferences = debounce(1500, false, this._updateUserPreferences);
 
   handleOrderChange = (orderBy: string, order: Order) => {
     this.setState({ orderBy, order });
