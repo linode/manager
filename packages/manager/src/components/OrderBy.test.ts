@@ -1,4 +1,4 @@
-import { sortData } from './OrderBy';
+import { getInitialValuesFromUserPreferences, sortData } from './OrderBy';
 
 const a = {
   name: 'april',
@@ -48,6 +48,44 @@ describe('OrderBy', () => {
     it('should sort by array length', () => {
       const order = sortData('hobbies', 'asc')(data);
       expect(order).toEqual([b, c, e, a, d]);
+    });
+  });
+
+  describe('getInitialValuesFromUserPreferences', () => {
+    const preferences = {
+      sortKeys: {
+        ['listening-services']: {
+          orderBy: 'test-order',
+          order: 'desc' as any
+        }
+      }
+    };
+    it('should return values from preferences if the preference key exists', () => {
+      expect(
+        getInitialValuesFromUserPreferences(
+          'listening-services',
+          preferences,
+          'default',
+          'desc'
+        )
+      ).toEqual({ orderBy: 'test-order', order: 'desc' });
+    });
+
+    it("should return the defaults if the key isn't found", () => {
+      expect(
+        getInitialValuesFromUserPreferences(
+          'listening-services',
+          {},
+          'default',
+          'asc'
+        )
+      ).toEqual({ order: 'asc', orderBy: 'default' });
+    });
+
+    it('should return the defaults if there is no preference key provided', () => {
+      expect(
+        getInitialValuesFromUserPreferences('', preferences, 'default', 'asc')
+      ).toEqual({ order: 'asc', orderBy: 'default' });
     });
   });
 });
