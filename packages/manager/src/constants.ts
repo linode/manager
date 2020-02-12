@@ -182,7 +182,6 @@ export const objectStorageClusterDisplay: Record<
   string
 > = {
   'us-east-1': 'Newark, NJ',
-  'us-east': 'Newark, NJ',
   'eu-central-1': 'Frankfurt, DE'
 };
 
