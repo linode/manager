@@ -2,6 +2,7 @@ pipeline {
     
     agent { 
         docker {
+            args '-e YARN_GLOBAL
             image 'cypress/included:4.0.1'
         }
     }
@@ -14,9 +15,8 @@ pipeline {
                 sh 'ls'
                 sh 'yarn cache dir'
                 sh 'yarn global dir'
-                sh 'yarn global add cypress@3.8.2'
-                sh 'yarn install:all'
                 sh 'yarn run cypress verify'
+                sh 'yarn install:all'
                 sh 'yarn workspace linode-js-sdk build'
             }
         }
