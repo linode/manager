@@ -6,14 +6,14 @@ RUN echo "user $(whoami)"
 # and https://github.com/nodejs/docker-node/issues/1
 WORKDIR /home/node/app
 RUN chown -R node:node /home/node/app
-RUN chmod -R 777 /home/node
+# issue with jenkins
+# RUN chmod -R 777 /home/node
 USER node
 
 # Copy the root level package.json and run yarn if anything changes
 COPY --chown=node:node package.json ./
 COPY --chown=node:node tslint.json ./
 COPY --chown=node:node yarn.lock ./
-RUN yarn
 
 COPY --chown=node:node scripts ./scripts/
 
@@ -33,9 +33,8 @@ RUN npx cypress verify
 COPY --chown=node:node packages/linode-js-sdk  ./packages/linode-js-sdk/
 COPY --chown=node:node packages/manager ./packages/manager
 
-
-
-
 RUN yarn workspace linode-js-sdk build
+COPY --chown=node:node run_cypress_docker.sh ./
 
+ENTRYPOINT ["sh","run_cypress_docker.sh"]
 
