@@ -1,10 +1,17 @@
 import { APIError } from 'linode-js-sdk/lib/types';
 import { actionCreatorFactory } from 'typescript-fsa';
 
+import { Order } from 'src/components/Pagey';
 import { SpacingChoice, ThemeChoice } from 'src/LinodeThemeWrapper';
 
 const actionCreator = actionCreatorFactory(`@@manager/preferences`);
 
+export interface OrderSet {
+  order: Order;
+  orderBy: string;
+}
+
+export type SortKey = 'listening-services' | 'active-connections';
 export interface UserPreferences {
   longviewTimeRange?: string;
   gst_banner_dismissed?: boolean;
@@ -16,6 +23,7 @@ export interface UserPreferences {
   theme?: ThemeChoice;
   spacing?: SpacingChoice;
   desktop_sidebar_open?: boolean;
+  sortKeys?: Partial<Record<SortKey, OrderSet>>;
 }
 
 export const handleGetPreferences = actionCreator.async<
