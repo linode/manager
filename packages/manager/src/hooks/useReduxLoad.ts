@@ -5,11 +5,13 @@ import { requestAccount } from 'src/store/account/account.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import { getAllBuckets } from 'src/store/bucket/bucket.requests';
 import { getEvents } from 'src/store/events/event.request';
+import { getAllFirewalls } from 'src/store/firewalls/firewalls.requests';
 import { requestImages } from 'src/store/image/image.requests';
 import { requestKubernetesClusters } from 'src/store/kubernetes/kubernetes.requests';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
 import { requestTypes } from 'src/store/linodeType/linodeType.requests';
 import { getAllLongviewClients } from 'src/store/longview/longview.requests';
+import { requestManagedIssues } from 'src/store/managed/issues.requests';
 import { requestManagedServices } from 'src/store/managed/managed.requests';
 import { getAllNodeBalancers } from 'src/store/nodeBalancer/nodeBalancer.requests';
 import { requestNotifications } from 'src/store/notification/notification.requests';
@@ -29,6 +31,7 @@ export type ReduxEntity =
   | 'images'
   | 'kubernetes'
   | 'managed'
+  | 'managedIssues'
   | 'nodeBalancers'
   | 'notifications'
   | 'profile'
@@ -36,7 +39,8 @@ export type ReduxEntity =
   | 'types'
   | 'buckets'
   | 'events'
-  | 'longview';
+  | 'longview'
+  | 'firewalls';
 
 type RequestMap = Record<ReduxEntity, any>;
 const requestMap: RequestMap = {
@@ -53,11 +57,11 @@ const requestMap: RequestMap = {
   types: requestTypes,
   notifications: requestNotifications,
   managed: requestManagedServices,
+  managedIssues: requestManagedIssues,
   kubernetes: requestKubernetesClusters,
-  longview: getAllLongviewClients
+  longview: getAllLongviewClients,
+  firewalls: getAllFirewalls
 };
-
-const STALE_DATA_TIME = 10000;
 
 export const useReduxLoad = <T>(
   deps: ReduxEntity[] = [],
@@ -78,7 +82,7 @@ export const useReduxLoad = <T>(
         state.__resources[deps[i]]?.lastUpdated ?? 0,
         state[deps[i]]?.lastUpdated ?? 0
       );
-      if (lastUpdated === 0 || lastUpdated - Date.now() > STALE_DATA_TIME) {
+      if (lastUpdated === 0) {
         needsToLoad = true;
         requests.push(requestMap[deps[i]]);
       } else if (Date.now() - lastUpdated > refreshInterval) {

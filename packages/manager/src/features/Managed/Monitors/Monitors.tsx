@@ -36,12 +36,7 @@ export const Monitors: React.FC<CombinedProps> = props => {
     ...rest
   } = props;
 
-  React.useEffect(() => {
-    requestManagedIssues().catch(_ => null); // Errors handled in Redux state
-    requestManagedServices().catch(_ => null); // Errors handled in Redux state
-  }, [requestManagedServices]);
-
-  const { _loading } = useReduxLoad(['managed']);
+  const { _loading } = useReduxLoad(['managed', 'managedIssues']);
 
   return (
     <div id="tabpanel-monitors" role="tabpanel" aria-labelledby="tab-monitors">
