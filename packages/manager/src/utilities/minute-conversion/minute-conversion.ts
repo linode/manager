@@ -89,7 +89,7 @@ export const generateMigrationTimeString = (migrationTimeInMins: number) => {
 
 export const formatEventSeconds = (seconds: number | null) => {
   if (!seconds) {
-    return 'Unknown';
+    return ''; // Show nothing if we don't know a duration
   }
 
   if (seconds >= 3600) {
