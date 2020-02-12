@@ -6,6 +6,7 @@ RUN echo "user $(whoami)"
 # and https://github.com/nodejs/docker-node/issues/1
 WORKDIR /home/node/app
 RUN chown -R node:node /home/node/app
+RUN chmod -R 777 /home/node
 USER node
 
 # Copy the root level package.json and run yarn if anything changes
@@ -31,6 +32,9 @@ RUN npx cypress verify
 # Copy the rest of the files that don't require installation
 COPY --chown=node:node packages/linode-js-sdk  ./packages/linode-js-sdk/
 COPY --chown=node:node packages/manager ./packages/manager
+
+
+
 
 RUN yarn workspace linode-js-sdk build
 
