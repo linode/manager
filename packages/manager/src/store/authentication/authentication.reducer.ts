@@ -50,9 +50,10 @@ const reducer = reducerWithInitialState(defaultState)
     const expiryDate = new Date(expiryDateFromLocalStorage);
     if (expiryDateFromLocalStorage && expiryDate < new Date()) {
       /**
-       * the case where the user refreshes the page and has a expiry time in localstorage
-       * but it's  expired
+       * the case where the user refreshes the page and has an expiry time in localStorage
+       * but it's expired
        */
+      clearLocalStorage();
       redirectToLogin(location.pathname, location.search);
       return {
         ...state,
@@ -98,9 +99,10 @@ const reducer = reducerWithInitialState(defaultState)
   })
   .case(handleRefreshTokens, state => {
     /** get local storage values and append to redux state */
-    const [localToken, localScopes, localExpiry] = (tokenInLocalStorage.get(),
-    scopesInLocalStorage.get(),
-    expiryInLocalStorage.get());
+    const [localToken, localScopes, localExpiry] =
+      (tokenInLocalStorage.get(),
+      scopesInLocalStorage.get(),
+      expiryInLocalStorage.get());
     return {
       ...state,
       token: localToken,

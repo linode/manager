@@ -2,7 +2,7 @@ export const selectiveCopyObject = <T>(keys: string[], objToCopy: T) => {
   return Object.keys(objToCopy).reduce((acc, thisKey) => {
     if (keys.includes(thisKey)) {
       const thisField = objToCopy[thisKey];
-      if (typeof thisField === 'object') {
+      if (typeof thisField === 'object' && !Array.isArray(thisField)) {
         // recurse
         acc[thisKey] = selectiveCopyObject(keys, { ...thisField });
       } else {
@@ -10,6 +10,6 @@ export const selectiveCopyObject = <T>(keys: string[], objToCopy: T) => {
         acc[thisKey] = objToCopy[thisKey];
       }
     }
-    return acc;
+    return { ...acc };
   }, {} as T);
 };
