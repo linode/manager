@@ -1,0 +1,42 @@
+FROM selenium/standalone-chrome
+# Run commands as "node" user. We don't want to run these commands as root
+#
+# See https://github.com/nodejs/docker-node/blob/d094c98a48659ff9f8d59db8dafb7020e181446a/docs/BestPractices.md
+# and https://github.com/nodejs/docker-node/issues/1
+RUN curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+RUN sudo apt-get -qqy update && sudo apt-get -y install yarn nodejs
+RUN node --version
+RUN yarn --version
+WORKDIR /home/seluser
+RUN chown -R seluser:seluser /home/seluser
+
+USER seluser
+
+# Copy the root level package.json and run yarn if anything changesz
+COPY --chown=seluser:seluser package.json ./
+COPY --chown=seluser:seluser tslint.json ./
+COPY --chown=seluser:seluser yarn.lock ./
+
+COPY --chown=seluser:seluser scripts ./scripts/
+
+# Copy Cloud Manager deps
+COPY --chown=seluser:seluser packages/manager/package.json ./packages/manager/
+COPY --chown=seluser:seluser packages/manager/patches ./packages/manager/patches/
+
+# Copy JS SDK deps
+COPY --chown=seluser:seluser packages/linode-js-sdk/package.json ./packages/linode-js-sdk/
+
+# Runs "yarn install" for all child packages
+RUN yarn install:all
+
+# Copy the rest of the files that don't require installation
+COPY --chown=seluser:seluser packages/linode-js-sdk  ./packages/linode-js-sdk/
+COPY --chown=seluser:seluser packages/manager ./packages/manager
+
+RUN yarn workspace linode-js-sdk build
+COPY --chown=seluser:seluser run_storybook_docker.sh ./
+
+ENTRYPOINT ["sh","run_storybook_docker.sh"]
+
