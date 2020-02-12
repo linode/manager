@@ -2,7 +2,7 @@ pipeline {
     
     agent { 
         docker {
-            args '-e YARN_GLOBAL
+
             image 'cypress/included:4.0.1'
         }
     }
