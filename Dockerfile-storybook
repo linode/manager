@@ -4,10 +4,11 @@ FROM selenium/standalone-chrome
 # See https://github.com/nodejs/docker-node/blob/d094c98a48659ff9f8d59db8dafb7020e181446a/docs/BestPractices.md
 # and https://github.com/nodejs/docker-node/issues/1
 RUN curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+RUN sudo apt-get -qqy update && sudo apt-get -y install nodejs
+RUN node --version
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-RUN sudo apt-get -qqy update && sudo apt-get -y install yarn nodejs
-RUN node --version
+RUN sudo apt-get -qqy update && sudo apt-get -y install yarn
 RUN yarn --version
 WORKDIR /home/seluser
 RUN chown -R seluser:seluser /home/seluser
