@@ -3,7 +3,7 @@ pipeline {
     agent { 
         docker {
             args '-u node -w /home/node/app -e CYPRESS_CACHE_FOLDER=/home/node/app/.cache''
-            image 'node:10-slim'
+            image 'cypress/included:4.0.1'
         }
     }
     stages {
@@ -25,7 +25,7 @@ pipeline {
             steps {
                 // start local server in the background
                 // we will shut it down in "post" command block
-                sh 'nohup yarn up &'
+                sh 'nohup yarn workspace linode-manager start &'
             }
         }
 
