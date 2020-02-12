@@ -2,7 +2,6 @@ pipeline {
     
     agent { 
         docker {
-            args '-w /home/node/app'
             image 'cypress/included:4.0.1'
         }
     }
@@ -12,6 +11,7 @@ pipeline {
                 sh 'echo $(whoami)'
                 sh 'echo $CYPRESS_CACHE_FOLDER'
                 sh 'pwd'
+                sh 'ls'
                 sh 'yarn cache dir'
                 sh 'yarn global dir'
                 sh 'yarn global add cypress@3.8.2'
