@@ -254,9 +254,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   linode_clone: {
     scheduled: e =>
       `Linode ${e.entity?.label ??
-        ''} is scheduled to be cloned ${safeSecondaryEntityLabel(
+        ''} is scheduled to be cloned${safeSecondaryEntityLabel(
         e,
-        'to',
+        ' to',
         ''
       )}.`,
     started: e =>
