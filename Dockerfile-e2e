@@ -35,6 +35,7 @@ COPY --chown=node:node packages/manager ./packages/manager
 
 RUN yarn workspace linode-js-sdk build
 COPY --chown=node:node run_cypress_docker.sh ./
+COPY --chown=node:node run_storybook_docker.sh ./
 
 ENTRYPOINT ["sh","run_cypress_docker.sh"]
 
