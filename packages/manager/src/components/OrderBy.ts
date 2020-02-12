@@ -152,7 +152,7 @@ export class OrderBy extends React.Component<CombinedProps, State> {
             sortKeys: {
               ...preferences.sortKeys,
               [preferenceKey]: { order, orderBy }
-            } as UserPreferences['sortKeys']
+            }
           });
         })
         // It doesn't matter if this fails, the value simply won't be preserved.
