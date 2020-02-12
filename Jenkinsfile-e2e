@@ -2,7 +2,7 @@ pipeline {
     
     agent { 
         docker {
-            args '-u node -w /home/node/app -e CYPRESS_CACHE_FOLDER=/home/node/app/.cache''
+            args '-w /home/node/app'
             image 'cypress/included:4.0.1'
         }
     }
