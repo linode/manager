@@ -126,8 +126,7 @@ export const dcDisplayNames = {
   'ca-central': 'Toronto, ON',
   'ca-east': 'Toronto, ON', // @todo Fallback for old Toronto ID; remove once DB has been updated.
   'ap-west': 'Mumbai, IN',
-  'ap-southeast': 'Sydney, AU',
-  philadelphia: 'Philadelphia, PA' // internal use only
+  'ap-southeast': 'Sydney, AU'
 };
 
 // @todo no longer in use; remove if current design is approved.
@@ -179,12 +178,11 @@ export const dcDisplayCountry = {
 
 // Map OBJ Cluster IDs to their display country.
 export const objectStorageClusterDisplay: Record<
-  ObjectStorageClusterID | 'philadelphia',
+  ObjectStorageClusterID,
   string
 > = {
   'us-east-1': 'Newark, NJ',
   'us-east': 'Newark, NJ',
-  philadelphia: 'Philadelphia, PA',
   'eu-central-1': 'Frankfurt, DE'
 };
 

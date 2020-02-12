@@ -28,7 +28,7 @@ export const ClusterSelect: React.StatelessComponent<CombinedProps> = props => {
 
   const options: Item<string>[] = clustersData.map(eachCluster => ({
     value: eachCluster.id,
-    label: formatRegion(eachCluster.region)
+    label: formatRegion(eachCluster.region) || eachCluster.region
   }));
 
   React.useEffect(() => {
