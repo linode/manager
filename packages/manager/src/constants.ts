@@ -176,13 +176,13 @@ export const dcDisplayCountry = {
   'ap-southeast': 'AU'
 };
 
+// Map OBJ Cluster IDs to their display country.
 export const objectStorageClusterDisplay: Record<
-  ObjectStorageClusterID | 'philadelphia',
+  ObjectStorageClusterID,
   string
 > = {
   'us-east-1': 'Newark, NJ',
-  'us-east': 'Newark, NJ',
-  philadelphia: 'Philadelphia, PA'
+  'eu-central-1': 'Frankfurt, DE'
 };
 
 export type ContinentKey = 'NA' | 'EU' | 'AS';
