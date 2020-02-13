@@ -164,6 +164,29 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: e =>
       `A domain record has been deleted from ${e.entity!.label}`
   },
+  firewall_enable: {
+    notification: e => `Firewall ${e.entity?.label ?? ''} has been enabled.`
+  },
+  firewall_disable: {
+    notification: e => `Firewall ${e.entity?.label ?? ''} has been disabled.`
+  },
+  firewall_update: {
+    notification: e => `Firewall ${e.entity?.label ?? ''} has been updated.`
+  },
+  firewall_device_add: {
+    notification: e =>
+      `A device has been added to Firewall ${e.entity?.label ?? ''}.`
+  },
+  firewall_device_remove: {
+    notification: e =>
+      `A device has been removed from Firewall ${e.entity?.label ?? ''}.`
+  },
+  firewall_delete: {
+    notification: e => `Firewall ${e.entity?.label ?? ''} has been deleted.`
+  },
+  firewall_create: {
+    notification: e => `Firewall ${e.entity?.label ?? ''} has been created.`
+  },
   image_update: {
     notification: e => `Image ${e.entity?.label ?? ''} has been updated.`
   },
