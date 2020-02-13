@@ -3,13 +3,9 @@ FROM selenium/standalone-chrome
 #
 # See https://github.com/nodejs/docker-node/blob/d094c98a48659ff9f8d59db8dafb7020e181446a/docs/BestPractices.md
 # and https://github.com/nodejs/docker-node/issues/1
-RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
-RUN sudo apt-get -qqy update && sudo apt-get -y install nodejs
-RUN node --version
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-RUN sudo apt-get -qqy update && sudo apt-get -y install yarn
-RUN yarn --version
+RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash - && sudo apt-get -qqy update && sudo apt-get -y install nodejs && node --version \
+  && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list \
+  && sudo apt-get -qqy update && sudo apt-get -y install yarn && yarn --version
 WORKDIR /home/seluser
 RUN chown -R seluser:seluser /home/seluser
 
@@ -35,6 +31,8 @@ RUN yarn install:all
 # Copy the rest of the files that don't require installation
 COPY --chown=seluser:seluser packages/linode-js-sdk  ./packages/linode-js-sdk/
 COPY --chown=seluser:seluser packages/manager ./packages/manager
+# will install some chromedriver dependancies depending on configuration
+RUN yarn selenium
 
 RUN yarn workspace linode-js-sdk build
 COPY --chown=seluser:seluser run_storybook_docker.sh ./
