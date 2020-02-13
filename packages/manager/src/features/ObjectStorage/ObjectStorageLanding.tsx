@@ -23,7 +23,9 @@ import Tabs from 'src/components/core/Tabs';
 import DefaultLoader from 'src/components/DefaultLoader';
 import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import PromotionalOfferCard from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
 import TabLink from 'src/components/TabLink';
+import { promotionalOfferFactory } from 'src/factories/promotionalOffer';
 import { ApplicationState } from 'src/store';
 import { getAllBuckets } from 'src/store/bucket/bucket.requests';
 import { requestClusters as _requestClusters } from 'src/store/clusters/clusters.actions';
@@ -100,6 +102,16 @@ export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = prop
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
 
+  // @todo BEFORE MERGE: Use feature flags instead of this hardcoded promo.
+  const promotionalOffer = promotionalOfferFactory.build({
+    body:
+      'Object Storage is FREE* to all customers until May 1st. Try it now in the Newark or Frankfurt data centers.',
+    footnote:
+      '*Offer is inclusive of list price and inbound transfer fees only.',
+    feature: 'Object Storage',
+    logo: 'Heavenly Bucket'
+  });
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Object Storage" />
@@ -136,6 +148,7 @@ export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = prop
           ))}
         </Tabs>
       </AppBar>
+      <PromotionalOfferCard {...promotionalOffer} fullWidth />
       <Switch>
         <Route
           exact
