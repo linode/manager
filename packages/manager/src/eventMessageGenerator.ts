@@ -404,6 +404,14 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
         'A config'
       )} has been deleted on Linode ${e.entity!.label}.`
   },
+  lke_node_create: {
+    // This event is a special case; a notification means the node creation failed.
+    // The entity is the node pool, but entity.label contains the cluster's label.
+    notification: e =>
+      `Failed to create a node on Kubernetes Cluster${
+        e.entity?.label ? ` ${e.entity.label}` : ''
+      }.`
+  },
   longviewclient_create: {
     notification: e => `Longview Client ${e.entity!.label} has been created.`
   },
