@@ -18,7 +18,9 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
+import PromotionalOfferCard from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
 import TaxBanner from 'src/components/TaxBanner';
+import { promotionalOfferFactory } from 'src/factories/promotionalOffer';
 import TagImportDrawer from 'src/features/TagImport';
 import useFlags from 'src/hooks/useFlags';
 import { handleOpen } from 'src/store/backupDrawer';
@@ -34,6 +36,7 @@ import shouldDisplayGroupImport from 'src/utilities/shouldDisplayGroupImportCTA'
 import { storage } from 'src/utilities/storage';
 import BackupsDashboardCard from './BackupsDashboardCard';
 import BlogDashboardCard from './BlogDashboardCard';
+import DashboardCard from './DashboardCard';
 import DomainsDashboardCard from './DomainsDashboardCard';
 import ImportGroupsCard from './GroupImportCard';
 import LinodesDashboardCard from './LinodesDashboardCard';
@@ -90,6 +93,16 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
 
   const flags = useFlags();
 
+  // @todo BEFORE MERGE: Use feature flags instead of this hardcoded promo.
+  const promotionalOffers = promotionalOfferFactory.buildList(1, {
+    body:
+      'Object Storage is FREE* to all customers until May 1st. Try it now in the Newark or Frankfurt data centers.',
+    footnote:
+      '*Offer is inclusive of list price and inbound transfer fees only.',
+    feature: 'Object Storage',
+    logo: 'Heavenly Bucket'
+  });
+
   return (
     <React.Fragment>
       {props.someLinodesHaveScheduledMaintenance && (
@@ -126,6 +139,13 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
         </Grid>
         <Grid item xs={12} md={5}>
           <TransferDashboardCard />
+
+          {promotionalOffers.map(promotionalOffer => (
+            <DashboardCard key={promotionalOffer.name}>
+              <PromotionalOfferCard {...promotionalOffer} />
+            </DashboardCard>
+          ))}
+
           {!managed && !backupError && (
             <BackupsDashboardCard
               accountBackups={accountBackups}
