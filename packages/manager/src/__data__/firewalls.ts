@@ -12,13 +12,13 @@ export const firewall: Firewall = {
     inbound: [
       {
         protocol: 'ALL',
-        start_port: 443
+        ports: '443'
       }
     ],
     outbound: [
       {
         protocol: 'UDP',
-        start_port: 22,
+        ports: '22',
         addresses: {
           ipv4: ['12.12.12.12'],
           ipv6: ['192.168.12.12']
@@ -40,11 +40,11 @@ export const firewall2: Firewall = {
     outbound: [
       {
         protocol: 'ALL',
-        start_port: 443
+        ports: '443'
       },
       {
         protocol: 'ALL',
-        start_port: 80
+        ports: '80'
       }
     ]
   }

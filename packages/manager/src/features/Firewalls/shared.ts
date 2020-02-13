@@ -1,6 +1,8 @@
+import { FirewallRules } from 'linode-js-sdk/lib/firewalls/types';
+
 export interface FirewallOption {
   label: string;
-  value: any;
+  value: FirewallRules;
 }
 
 export const predefinedFirewalls: FirewallOption[] = [
@@ -12,8 +14,8 @@ export const predefinedFirewalls: FirewallOption[] = [
           ports: '22',
           protocol: 'TCP',
           addresses: {
-            ipv4: '0.0.0.0/0',
-            ipv6: '::0/0'
+            ipv4: ['0.0.0.0/0'],
+            ipv6: ['::0/0']
           }
         }
       ],
@@ -22,8 +24,8 @@ export const predefinedFirewalls: FirewallOption[] = [
           ports: '22',
           protocol: 'TCP',
           addresses: {
-            ipv4: '0.0.0.0/0',
-            ipv6: '::0/0'
+            ipv4: ['0.0.0.0/0'],
+            ipv6: ['::0/0']
           }
         }
       ]
@@ -37,8 +39,8 @@ export const predefinedFirewalls: FirewallOption[] = [
           ports: '80',
           protocol: 'TCP',
           addresses: {
-            ipv4: '0.0.0.0/0',
-            ipv6: '::0/0'
+            ipv4: ['0.0.0.0/0'],
+            ipv6: ['::0/0']
           }
         }
       ],
@@ -47,8 +49,8 @@ export const predefinedFirewalls: FirewallOption[] = [
           ports: '80',
           protocol: 'TCP',
           addresses: {
-            ipv4: '0.0.0.0/0',
-            ipv6: '::0/0'
+            ipv4: ['0.0.0.0/0'],
+            ipv6: ['::0/0']
           }
         }
       ]
@@ -62,8 +64,8 @@ export const predefinedFirewalls: FirewallOption[] = [
           ports: '443',
           protocol: 'TCP',
           addresses: {
-            ipv4: '0.0.0.0/0',
-            ipv6: '::0/0'
+            ipv4: ['0.0.0.0/0'],
+            ipv6: ['::0/0']
           }
         }
       ],
@@ -72,8 +74,8 @@ export const predefinedFirewalls: FirewallOption[] = [
           ports: '443',
           protocol: 'TCP',
           addresses: {
-            ipv4: '0.0.0.0/0',
-            ipv6: '::0/0'
+            ipv4: ['0.0.0.0/0'],
+            ipv6: ['::0/0']
           }
         }
       ]
@@ -87,8 +89,8 @@ export const predefinedFirewalls: FirewallOption[] = [
           ports: '3306',
           protocol: 'TCP',
           addresses: {
-            ipv4: '0.0.0.0/0',
-            ipv6: '::0/0'
+            ipv4: ['0.0.0.0/0'],
+            ipv6: ['::0/0']
           }
         }
       ],
@@ -97,8 +99,8 @@ export const predefinedFirewalls: FirewallOption[] = [
           ports: '3306',
           protocol: 'TCP',
           addresses: {
-            ipv4: '0.0.0.0/0',
-            ipv6: '::0/0'
+            ipv4: ['0.0.0.0/0'],
+            ipv6: ['::0/0']
           }
         }
       ]
@@ -112,8 +114,8 @@ export const predefinedFirewalls: FirewallOption[] = [
           ports: '53',
           protocol: 'TCP',
           addresses: {
-            ipv4: '0.0.0.0/0',
-            ipv6: '::0/0'
+            ipv4: ['0.0.0.0/0'],
+            ipv6: ['::0/0']
           }
         }
       ],
@@ -122,8 +124,8 @@ export const predefinedFirewalls: FirewallOption[] = [
           ports: '53',
           protocol: 'TCP',
           addresses: {
-            ipv4: '0.0.0.0/0',
-            ipv6: '::0/0'
+            ipv4: ['0.0.0.0/0'],
+            ipv6: ['::0/0']
           }
         }
       ]
