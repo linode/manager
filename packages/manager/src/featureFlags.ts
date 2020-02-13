@@ -15,6 +15,25 @@ interface Flags {
   oneClickApps: OneClickApp;
   longview: boolean;
   longviewTabs: boolean;
+  promotionalOffers: PromotionalOffer[];
+}
+
+export interface PromotionalOffer {
+  name: string;
+  body: string;
+  footnote: string;
+  logo: 'Heavenly Bucket'; // Add more logos here.
+  alt: string;
+  backgroundColor: string;
+  feature:
+    | 'None'
+    | 'Linodes'
+    | 'Volumes'
+    | 'NodeBalancers'
+    | 'Object Storage'
+    | 'Kubernetes';
+  displayOnDashboard: boolean;
+  displayInPrimaryNav: boolean;
 }
 
 /**
