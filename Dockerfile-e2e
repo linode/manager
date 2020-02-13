@@ -8,31 +8,14 @@ RUN chown -R node:node /home/node/app
 USER node
 
 # Copy the root level package.json and run yarn if anything changes
-COPY --chown=node:node package.json ./
-COPY --chown=node:node tslint.json ./
-COPY --chown=node:node yarn.lock ./
-
-COPY --chown=node:node scripts ./scripts/
-
-# Copy Cloud Manager deps
-COPY --chown=node:node packages/manager/package.json ./packages/manager/
-COPY --chown=node:node packages/manager/patches ./packages/manager/patches/
-
-# Copy JS SDK deps
-COPY --chown=node:node packages/linode-js-sdk/package.json ./packages/linode-js-sdk/
-
-# Runs "yarn install" for all child packages
-RUN yarn install:all
-RUN npx cypress verify
-
+COPY --chown=node:node package.json tslint.json yarn.lock run_cypress_docker.sh scripts ./
 
 # Copy the rest of the files that don't require installation
 COPY --chown=node:node packages/linode-js-sdk  ./packages/linode-js-sdk/
 COPY --chown=node:node packages/manager ./packages/manager
 
-RUN yarn workspace linode-js-sdk build
-COPY --chown=node:node run_cypress_docker.sh ./
-
+# Runs "yarn install" for all child packages
+RUN yarn install:all && npx cypress verify && yarn workspace linode-js-sdk build
 
 ENTRYPOINT ["sh","run_cypress_docker.sh"]
 
