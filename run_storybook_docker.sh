@@ -1,6 +1,7 @@
 #!/bin/bash
 echo "starting server"
 nohup yarn storybook&
-echo "sleeping 60 sec for storybook server to start"
-sleep 60
+echo "waiting for storybook server to start"
+# need npx for docker container
+npx wait-on http://localhost:6006
 yarn storybook:e2e

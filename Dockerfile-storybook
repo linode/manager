@@ -12,30 +12,13 @@ RUN chown -R seluser:seluser /home/seluser
 USER seluser
 
 # Copy the root level package.json and run yarn if anything changesz
-COPY --chown=seluser:seluser package.json ./
-COPY --chown=seluser:seluser tslint.json ./
-COPY --chown=seluser:seluser yarn.lock ./
-
-COPY --chown=seluser:seluser scripts ./scripts/
-
-# Copy Cloud Manager deps
-COPY --chown=seluser:seluser packages/manager/package.json ./packages/manager/
-COPY --chown=seluser:seluser packages/manager/patches ./packages/manager/patches/
-
-# Copy JS SDK deps
-COPY --chown=seluser:seluser packages/linode-js-sdk/package.json ./packages/linode-js-sdk/
-
-# Runs "yarn install" for all child packages
-RUN yarn install:all
+COPY --chown=seluser:seluser package.json tslint.json run_storybook_docker.sh yarn.lock scripts ./
 
 # Copy the rest of the files that don't require installation
 COPY --chown=seluser:seluser packages/linode-js-sdk  ./packages/linode-js-sdk/
 COPY --chown=seluser:seluser packages/manager ./packages/manager
-# will install some chromedriver dependancies depending on configuration
-RUN yarn selenium
-
-RUN yarn workspace linode-js-sdk build
-COPY --chown=seluser:seluser run_storybook_docker.sh ./
+# Runs "yarn install" for all child packages
+RUN yarn install:all && npx selenium-standalone install --config=./packages/manager/e2e/config/selenium-config.js && yarn workspace linode-js-sdk build
 
 ENTRYPOINT ["sh","run_storybook_docker.sh"]
 
