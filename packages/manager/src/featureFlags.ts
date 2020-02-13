@@ -13,8 +13,6 @@ interface Flags {
   lkeHideButtons: boolean;
   firewalls: boolean;
   oneClickApps: OneClickApp;
-  longview: boolean;
-  longviewTabs: boolean;
 }
 
 /**
