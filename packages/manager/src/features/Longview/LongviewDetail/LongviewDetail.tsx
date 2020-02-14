@@ -37,10 +37,8 @@ import {
   LongviewTopProcesses
 } from 'src/features/Longview/request.types';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
-import useFlags from 'src/hooks/useFlags';
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
 import Apache from './DetailTabs/Apache';
-import FeatureComingSoon from './DetailTabs/FeatureComingSoon';
 import MySQLLanding from './DetailTabs/MySQL';
 import NetworkLanding from './DetailTabs/Network';
 import NGINX from './DetailTabs/NGINX';
@@ -97,8 +95,6 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     }
   }, []);
   const clientAPIKey = client && client.api_key;
-  const flags = useFlags();
-  const showAllTabs = Boolean(flags.longviewTabs);
 
   const { lastUpdated, lastUpdatedError, notifications } = useClientLastUpdated(
     clientAPIKey,
@@ -273,15 +269,6 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           strict
           path={`${url}/processes`}
           render={() => {
-            if (!showAllTabs) {
-              return (
-                <FeatureComingSoon
-                  title="Processes"
-                  clientLabel={client.label}
-                />
-              );
-            }
-
             return (
               <ProcessesLanding
                 clientID={client.id}
@@ -328,11 +315,6 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           strict
           path={`${url}/apache`}
           render={() => {
-            if (!showAllTabs) {
-              return (
-                <FeatureComingSoon title="Apache" clientLabel={client.label} />
-              );
-            }
             return (
               <Apache
                 timezone={timezone}
@@ -349,11 +331,6 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           strict
           path={`${url}/nginx`}
           render={() => {
-            if (!showAllTabs) {
-              return (
-                <FeatureComingSoon title="NGINX" clientLabel={client.label} />
-              );
-            }
             return (
               <NGINX
                 timezone={timezone}
@@ -370,11 +347,6 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           strict
           path={`${url}/mysql`}
           render={() => {
-            if (!showAllTabs) {
-              return (
-                <FeatureComingSoon title="MySQL" clientLabel={client.label} />
-              );
-            }
             return (
               <MySQLLanding
                 timezone={timezone}
