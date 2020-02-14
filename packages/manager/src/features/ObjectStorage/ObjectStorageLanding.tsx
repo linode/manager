@@ -103,7 +103,7 @@ export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = prop
   };
 
   // @todo BEFORE MERGE: Use feature flags instead of this hardcoded promo.
-  const promotionalOffer = promotionalOfferFactory.build({
+  const promotionalOffers = promotionalOfferFactory.buildList(1, {
     body:
       'Object Storage is FREE* to all customers until May 1st. Try it now in the Newark or Frankfurt data centers.',
     footnote:
@@ -111,6 +111,10 @@ export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = prop
     features: ['Object Storage'],
     logo: 'heavenly-bucket.svg'
   });
+
+  const objPromotionalOffers = promotionalOffers.filter(promotionalOffer =>
+    promotionalOffer.features.includes('Object Storage')
+  );
 
   return (
     <React.Fragment>
@@ -148,7 +152,13 @@ export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = prop
           ))}
         </Tabs>
       </AppBar>
-      <PromotionalOfferCard {...promotionalOffer} fullWidth />
+      {objPromotionalOffers.map(promotionalOffer => (
+        <PromotionalOfferCard
+          key={promotionalOffer.name}
+          {...promotionalOffer}
+          fullWidth
+        />
+      ))}
       <Switch>
         <Route
           exact

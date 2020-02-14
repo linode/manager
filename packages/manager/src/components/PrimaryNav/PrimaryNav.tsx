@@ -335,8 +335,11 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
       logo: 'heavenly-bucket.svg'
     });
 
-    const isEntityPromoted = promotionalOffers.some(promo => {
-      return promo.features.includes(primaryLink.display as any);
+    const isEntityPromoted = promotionalOffers.some(promotionalOffer => {
+      return (
+        promotionalOffer.features.includes(primaryLink.display as any) &&
+        promotionalOffer.displayInPrimaryNav
+      );
     });
 
     // If the feature is promoted, add the indicator icon (unless the Primary

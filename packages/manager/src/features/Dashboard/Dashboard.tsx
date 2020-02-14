@@ -103,6 +103,10 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
     logo: 'heavenly-bucket.svg'
   });
 
+  const dashboardPromos = promotionalOffers.filter(
+    promo => promo.displayOnDashboard
+  );
+
   return (
     <React.Fragment>
       {props.someLinodesHaveScheduledMaintenance && (
@@ -140,7 +144,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
         <Grid item xs={12} md={5}>
           <TransferDashboardCard />
 
-          {promotionalOffers.map(promotionalOffer => (
+          {dashboardPromos.map(promotionalOffer => (
             <DashboardCard key={promotionalOffer.name}>
               <PromotionalOfferCard {...promotionalOffer} />
             </DashboardCard>
