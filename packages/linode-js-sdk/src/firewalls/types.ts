@@ -21,8 +21,7 @@ export interface FirewallRules {
 
 export interface FirewallRuleType {
   protocol: FirewallRuleProtocol;
-  start_port: number;
-  end_port?: null | number;
+  ports: string;
   addresses?: null | {
     ipv4?: null | string[];
     ipv6?: null | string[];
