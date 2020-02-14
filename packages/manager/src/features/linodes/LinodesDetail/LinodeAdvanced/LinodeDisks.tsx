@@ -25,7 +25,7 @@ import Notice from 'src/components/Notice';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import { resetEventsPolling } from 'src/eventsPolling';
-import ImagesDrawer, { modes } from 'src/features/Images/ImagesDrawer';
+import ImagesDrawer, { DrawerMode } from 'src/features/Images/ImagesDrawer';
 import {
   CreateLinodeDisk,
   DeleteLinodeDisk,
@@ -355,15 +355,18 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     const { open, description, label, disk } = this.state.imagizeDrawer;
     return (
       <ImagesDrawer
-        mode={modes.IMAGIZING}
+        mode={'imagize' as DrawerMode}
         open={open}
         description={description}
         label={label}
         disks={disk ? [disk] : []}
-        selectedDisk={disk && '' + disk.id}
+        selectedDisk={disk ? '' + disk.id : null}
         onClose={this.closeImagizeDrawer}
         changeDescription={this.changeImageDescription}
         changeLabel={this.changeImageLabel}
+        changeDisk={() => null}
+        changeLinode={() => null}
+        selectedLinode={null}
       />
     );
   };

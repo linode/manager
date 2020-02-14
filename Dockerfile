@@ -8,14 +8,10 @@ WORKDIR /home/node/app
 RUN chown -R node:node /home/node/app
 USER node
 
-RUN yarn global add lerna
-
 # Copy the root level package.json and run yarn if anything changes
 COPY --chown=node:node package.json yarn.lock tslint.json ./
 RUN yarn
 
-# Copy lerna.json
-COPY --chown=node:node lerna.json .
 COPY --chown=node:node scripts ./scripts/
 
 # Copy Cloud Manager deps
@@ -26,7 +22,7 @@ COPY --chown=node:node packages/manager/patches ./packages/manager/patches/
 COPY --chown=node:node packages/linode-js-sdk/package.json ./packages/linode-js-sdk/
 
 # Runs "yarn install" for all child packages
-RUN npx lerna bootstrap
+RUN yarn install:all
 
 # Copy the rest of the files that don't require installation
 COPY --chown=node:node packages/linode-js-sdk  ./packages/linode-js-sdk/

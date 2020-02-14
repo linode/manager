@@ -4,6 +4,74 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v1.0.0] - 2020-02-10
+ 
+### Added:
+- New One-Click Apps:
+	- MEAN
+	- MongoDB
+	- Flask
+	- Django
+	- Redis
+	- Ruby on Rails
+	- PostgreSQL
+ 
+### Changed:
+- Change default distro to Debian 10
+- Fix changelog to match GitHub release
+- Update graph units on Linode Details page
+- Fetch backups after selecting Linode in Linode Create
+- Toast notifications for Image related events
+- Unify graph colors across the app
+- LKE: Warn users before allowing a single-node cluster
+- LKE: Update typings for node pools
+- Show Domains Import Zone Drawer button when a user has no Domains
+- Improve compile time
+- Cleanup axios version management and aligning
+- Prevent unneeded requests when loading Lish window
+ 
+### Fixed:
+- Updating a Linode causes in-progress events to stop being displayed
+- Safari: Open ticket button issue
+- Remove plural for hour on DNS manager
+- 'Show More' tooltip accessibility fix
+
+## [0.84.1] - 2020-02-04
+
+### Fixed:
+- Fix issue where only 100 Images were displayed
+
+
+## [v0.84.0] - 2020-01-28
+
+### Added:
+- Add Domain Transfers to Domain Drawer for slave Domains
+- “Delete” button to Domain Drawer
+- Improve Form context help/info in Configuration Edit
+- Ability to delete a Domain from Domain Detail
+- Show a banner when one or more Regions experience outages
+- New One-Click App: phpMyAdmin
+- Show progress on the target Linode while cloning
+
+### Changed:
+- Add link to Resizing a Linode Guide
+- [LKE] Node pools should have 3 nodes by default
+- Longview Process Arrow Rework
+- StackScript author links from StackScript Detail page
+- Sort Kubernetes versions by label descending in dropdown
+- OAuth Scopes can be space separated
+- Store Longview time selection in user preferences
+
+### Fixed:
+- Longview Overview graphs were incorrectly showing data as “today”
+- Refactor LineGraphs to allow mixed units for network graphs
+- Routing on Search Landing page for slave Domains
+- Fix Linode network graph units
+- Display updated credit card info in Billing Summary when credit card is updated
+- Visual regression on Clone Configs/Disks
+- Loading state for Longview landing page (visual bug)
+
+
 ## [v0.83.0] - 2020-01-17
 
 ### Added:

@@ -27,6 +27,7 @@ const classes = {
 const props = {
   result: searchbarResult1,
   redirect: jest.fn(),
+  openDomainDrawerForEditing: jest.fn(),
   classes
 };
 

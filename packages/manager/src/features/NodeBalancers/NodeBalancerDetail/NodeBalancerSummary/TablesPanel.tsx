@@ -21,14 +21,11 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
 import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
+import { formatBitsPerSecond } from 'src/features/Longview/shared/utilities';
 import { ExtendedNodeBalancer } from 'src/services/nodebalancers';
 import { ApplicationState } from 'src/store';
 import { initAll } from 'src/utilities/initAll';
-import {
-  formatBitsPerSecond,
-  formatNumber,
-  getMetrics
-} from 'src/utilities/statMetrics';
+import { formatNumber, getMetrics } from 'src/utilities/statMetrics';
 
 type ClassNames =
   | 'chart'
@@ -246,7 +243,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
               data={[
                 {
                   label: 'Connections',
-                  borderColor: theme.graphs.purpleBorder,
+                  borderColor: 'transparent',
                   backgroundColor: theme.graphs.purple,
                   data
                 }
@@ -302,14 +299,14 @@ class TablesPanel extends React.Component<CombinedProps, State> {
               data={[
                 {
                   label: 'Traffic In',
-                  borderColor: theme.graphs.blueBorder,
-                  backgroundColor: theme.graphs.blue,
+                  borderColor: 'transparent',
+                  backgroundColor: theme.graphs.network.inbound,
                   data: trafficIn
                 },
                 {
                   label: 'Traffic Out',
-                  borderColor: theme.graphs.greenBorder,
-                  backgroundColor: theme.graphs.green,
+                  borderColor: 'transparent',
+                  backgroundColor: theme.graphs.network.outbound,
                   data: trafficOut
                 }
               ]}
@@ -320,13 +317,13 @@ class TablesPanel extends React.Component<CombinedProps, State> {
               rows={[
                 {
                   legendTitle: 'Inbound',
-                  legendColor: 'blue',
+                  legendColor: 'darkGreen',
                   data: getMetrics(trafficIn),
                   format: formatBitsPerSecond
                 },
                 {
                   legendTitle: 'Outbound',
-                  legendColor: 'green',
+                  legendColor: 'lightGreen',
                   data: getMetrics(trafficOut),
                   format: formatBitsPerSecond
                 }
@@ -369,10 +366,6 @@ const withTimezone = connect((state: ApplicationState, ownProps) => ({
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(
-  withTheme,
-  withTimezone,
-  styled
-);
+const enhanced = compose<CombinedProps, Props>(withTheme, withTimezone, styled);
 
 export default enhanced(TablesPanel);

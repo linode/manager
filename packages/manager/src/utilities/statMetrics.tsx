@@ -21,19 +21,17 @@ export const getMetrics = (data: number[][]): Metrics => {
   let sum = 0;
 
   // The data is large, so we get everything we need in one iteration
-  data.forEach(
-    ([_, value]: number[], idx): void => {
-      if (!value || isNaN(value)) {
-        return;
-      }
-
-      if (value > max) {
-        max = value;
-      }
-
-      sum += value;
+  data.forEach(([_, value]: number[], idx): void => {
+    if (!value || isNaN(value)) {
+      return;
     }
-  );
+
+    if (value > max) {
+      max = value;
+    }
+
+    sum += value;
+  });
 
   const length = data.length;
 
@@ -47,43 +45,7 @@ export const getMetrics = (data: number[][]): Metrics => {
 
 export const formatNumber = (n: number): string => n.toFixed(2);
 
-// Applies SI Magnitude prefix.
-// 1400 --> "1.40 K"
-// 1400000 --> "1.40 M"
-// 1400000000 --> "1.40 G"
-export const formatMagnitude = (value: number | string, unit: string) => {
-  const num = Number(value);
-
-  const ranges = [
-    { divider: 1e9, suffix: 'G' },
-    { divider: 1e6, suffix: 'M' },
-    { divider: 1e3, suffix: 'k' },
-    { divider: 1, suffix: '' },
-    { divider: 1e-3, suffix: 'm' }
-  ];
-
-  let finalNum;
-  let magnitude;
-
-  // Use Array.prototype.some, because we might need to break this loop early.
-  ranges.some(range => {
-    if (num >= range.divider) {
-      finalNum = num / range.divider;
-      magnitude = range.suffix;
-      return true;
-    }
-    return false;
-  });
-
-  return finalNum
-    ? `${formatNumber(finalNum)} ${magnitude}${unit}`
-    : `${formatNumber(num)} ${unit}`;
-};
-
 export const formatPercentage = (value: number) => formatNumber(value) + '%';
-export const formatBitsPerSecond = (value: number) =>
-  formatMagnitude(value, 'b/s');
-export const formatBytes = (value: number) => formatMagnitude(value, 'B');
 
 export const getTraffic = (averageInBits: number): number => {
   const averageInBytes = averageInBits / 8;
