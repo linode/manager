@@ -48,7 +48,6 @@ const DataLoadedListener: React.FC<Props> = props => {
     //   "flagsHaveLoaded":props.flagsHaveLoaded
     // });
     if (smaad) {
-      // && !props.appIsLoaded
       props.markAppAsLoaded();
     }
   });
@@ -70,15 +69,6 @@ const shouldMarkAppAsDone = (
   flagsHaveLoaded: boolean
 ): boolean => {
   const pathname = window.location.pathname;
-
-  // launch darkly flags
-  // should we really wait?
-  // no by default we hide
-
-  // if (!flagsHaveLoaded) {
-  //   // We're still waiting for feature flags. Don't load the app.
-  //   return false;
-  // }
 
   /**
    * if we're not on a route that we recognize,
