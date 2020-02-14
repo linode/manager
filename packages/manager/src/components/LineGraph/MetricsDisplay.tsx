@@ -13,7 +13,14 @@ interface MetricsDisplayProps {
 }
 
 interface MetricsDisplayRow {
-  legendColor: 'yellow' | 'red' | 'blue' | 'green' | 'purple';
+  legendColor:
+    | 'yellow'
+    | 'red'
+    | 'blue'
+    | 'green'
+    | 'purple'
+    | 'lightGreen'
+    | 'darkGreen';
   legendTitle: string;
   format: (n: number) => string;
   data: Metrics;

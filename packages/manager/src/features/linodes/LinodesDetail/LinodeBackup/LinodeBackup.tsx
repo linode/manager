@@ -200,9 +200,9 @@ export const aggregateBackups = (
   backups: LinodeBackupsResponse
 ): LinodeBackup[] => {
   const manualSnapshot =
-    path(['status'], backups.snapshot.in_progress) === 'needsPostProcessing'
-      ? backups.snapshot.in_progress
-      : backups.snapshot.current;
+    backups?.snapshot.in_progress?.status === 'needsPostProcessing'
+      ? backups?.snapshot.in_progress
+      : backups?.snapshot.current;
   return (
     backups && [...backups.automatic!, manualSnapshot!].filter(b => Boolean(b))
   );

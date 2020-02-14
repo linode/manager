@@ -64,7 +64,12 @@ export const ConnectionsTable: React.FC<TableProps> = props => {
   const classes = useStyles();
 
   return (
-    <OrderBy data={connections} orderBy={'process'} order={'asc'}>
+    <OrderBy
+      data={connections}
+      orderBy={'process'}
+      order={'asc'}
+      preferenceKey={'active-connections'}
+    >
       {({ data: orderedData, handleOrderChange, order, orderBy }) => (
         <Paginate data={orderedData} pageSize={25}>
           {({

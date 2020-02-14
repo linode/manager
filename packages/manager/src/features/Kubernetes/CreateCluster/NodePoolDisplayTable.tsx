@@ -49,9 +49,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const NodePoolDisplayTable: React.FunctionComponent<
-  CombinedProps
-> = props => {
+export const NodePoolDisplayTable: React.FunctionComponent<CombinedProps> = props => {
   const {
     classes,
     editable,
@@ -119,9 +117,6 @@ export const NodePoolDisplayTable: React.FunctionComponent<
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(
-  React.memo,
-  styled
-);
+const enhanced = compose<CombinedProps, Props>(React.memo, styled);
 
 export default enhanced(NodePoolDisplayTable);

@@ -9,7 +9,7 @@ import Request, {
 } from '../request';
 import { ResourcePage } from '../types';
 import { updateProfileSchema } from './profile.schema';
-import { Profile, TrustedDevice } from './types';
+import { Profile, TrustedDevice, UserPreferences } from './types';
 
 /**
  * getProfile
@@ -110,8 +110,8 @@ export const getUserPreferences = () => {
  * Stores an arbitrary JSON blob for the purposes of implementing
  * conditional logic based on preferences the user chooses
  */
-export const updateUserPreferences = (payload: Record<string, any>) => {
-  return Request<Record<string, any>>(
+export const updateUserPreferences = (payload: UserPreferences) => {
+  return Request<UserPreferences>(
     setURL(`${API_ROOT}/profile/preferences`),
     setData(payload),
     setMethod('PUT')
