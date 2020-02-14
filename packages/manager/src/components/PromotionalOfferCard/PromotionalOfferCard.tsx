@@ -1,7 +1,6 @@
 import * as classnames from 'classnames';
 import * as React from 'react';
 import HeavenlyBucketIcon from 'src/assets/icons/promotionalOffers/heavenly-bucket.svg';
-// import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -35,12 +34,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   copy: {
     width: '100%'
   },
-  body: {
-    color: theme.color.white
-  },
   footnote: {
-    marginTop: theme.spacing(2),
-    color: theme.color.grey1
+    marginTop: theme.spacing(2)
   },
   centerText: {
     textAlign: 'center'
@@ -82,22 +77,25 @@ const PromotionalOfferCard: React.FC<CombinedProps> = props => {
       <div className={classes.copy}>
         <Typography
           variant="subtitle2"
+          style={{ color: offer.bodyColor }}
           className={classnames({
-            [classes.body]: true,
             [classes.centerText]: !fullWidth
           })}
         >
           {offer.body}
         </Typography>
-        <Typography
-          variant="body2"
-          className={classnames({
-            [classes.footnote]: true,
-            [classes.centerText]: !fullWidth
-          })}
-        >
-          {offer.footnote}
-        </Typography>
+        {offer.footnote && (
+          <Typography
+            variant="body2"
+            style={{ color: offer.footnoteColor }}
+            className={classnames({
+              [classes.footnote]: true,
+              [classes.centerText]: !fullWidth
+            })}
+          >
+            {offer.footnote}
+          </Typography>
+        )}
       </div>
     </Paper>
   );
@@ -112,17 +110,28 @@ export default PromotionalOfferCard;
 export const promotionalOfferOrDefaults = (
   offer: PromotionalOffer
 ): PromotionalOffer => ({
-  name: offer.name ?? '',
-  body: offer.body ?? '',
-  footnote: offer.footnote ?? '',
-  logo: offer.logo ?? '',
-  alt: offer.alt ?? '',
-  backgroundColor: offer.backgroundColor ?? '#406E51',
-  feature: offer.feature ?? 'None',
+  name: checkStringOrDefault(offer.name),
+  body: checkStringOrDefault(offer.body),
+  footnote: checkStringOrDefault(offer.footnote),
+  logo: checkStringOrDefault(offer.logo),
+  alt: checkStringOrDefault(offer.alt),
+  backgroundColor: checkStringOrDefault(offer.backgroundColor, '#406E51'),
+  bodyColor: checkStringOrDefault(offer.bodyColor, '#FFFFFF'),
+  footnoteColor: checkStringOrDefault(offer.footnoteColor, '#93AE9E'),
+  features: offer.features ?? ['None'],
   displayOnDashboard: offer.displayOnDashboard ?? false,
   displayInPrimaryNav: offer.displayInPrimaryNav ?? false
 });
 
+const checkStringOrDefault = (maybeString: any, defaultVal?: string) => {
+  if (typeof maybeString === 'string') {
+    return maybeString;
+  } else if (defaultVal) {
+    return defaultVal;
+  }
+  return '';
+};
+
 export const logoMap: Record<PromotionalOffer['logo'], any> = {
-  'Heavenly Bucket': HeavenlyBucketIcon
+  'heavenly-bucket.svg': HeavenlyBucketIcon
 };

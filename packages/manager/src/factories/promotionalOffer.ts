@@ -5,13 +5,15 @@ export const promotionalOfferFactory = Factory.Sync.makeFactory<
   PromotionalOffer
 >({
   name: Factory.each(i => `offer-${i}`),
-  feature: 'Object Storage',
+  features: ['Object Storage'],
   body:
     'Sample promotional body. This offer is valid until January 1st. Try it out now.',
   footnote: 'Offer is inclusive of list price only.',
-  logo: 'Heavenly Bucket',
+  logo: 'heavenly-bucket.svg',
   alt: 'Promotional Offer',
   backgroundColor: '#406E51',
+  bodyColor: '#FFFFFF',
+  footnoteColor: '#93AE9E',
   displayInPrimaryNav: true,
   displayOnDashboard: true
 });

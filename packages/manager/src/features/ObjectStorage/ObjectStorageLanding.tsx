@@ -108,8 +108,8 @@ export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = prop
       'Object Storage is FREE* to all customers until May 1st. Try it now in the Newark or Frankfurt data centers.',
     footnote:
       '*Offer is inclusive of list price and inbound transfer fees only.',
-    feature: 'Object Storage',
-    logo: 'Heavenly Bucket'
+    features: ['Object Storage'],
+    logo: 'heavenly-bucket.svg'
   });
 
   return (

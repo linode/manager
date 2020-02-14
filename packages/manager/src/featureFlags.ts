@@ -18,20 +18,26 @@ interface Flags {
   promotionalOffers: PromotionalOffer[];
 }
 
+type PromotionalOfferFeature =
+  // "None" is used to indicate this offer isn't specific to a feature, and should
+  // be displayed on the Dashboard only.
+  | 'None'
+  | 'Linodes'
+  | 'Volumes'
+  | 'NodeBalancers'
+  | 'Object Storage'
+  | 'Kubernetes';
+
 export interface PromotionalOffer {
   name: string;
   body: string;
   footnote: string;
-  logo: 'Heavenly Bucket'; // Add more logos here.
+  logo: string;
   alt: string;
   backgroundColor: string;
-  feature:
-    | 'None'
-    | 'Linodes'
-    | 'Volumes'
-    | 'NodeBalancers'
-    | 'Object Storage'
-    | 'Kubernetes';
+  bodyColor: string;
+  footnoteColor: string;
+  features: PromotionalOfferFeature[];
   displayOnDashboard: boolean;
   displayInPrimaryNav: boolean;
 }
