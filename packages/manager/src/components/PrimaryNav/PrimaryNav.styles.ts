@@ -10,7 +10,6 @@ export type ClassNames =
   | 'menuGrid'
   | 'fadeContainer'
   | 'logoItem'
-  | 'listItemPromo'
   | 'logoCollapsed'
   | 'logoItemCompact'
   | 'listItem'
@@ -121,9 +120,6 @@ const styles = (theme: Theme) =>
         }
       }
     },
-    listItemPromo: {
-      paddingRight: theme.spacing(2)
-    },
     listItemCollpased: {},
     collapsible: {
       fontSize: '0.9rem'
@@ -145,8 +141,8 @@ const styles = (theme: Theme) =>
         borderStyle: 'solid',
         borderWidth: `
           ${theme.spacing(1) + 11}px
-          ${theme.spacing(1) + 6}px
-          ${theme.spacing(1) + 11}px
+          ${theme.spacing(1) + 6}px 
+          ${theme.spacing(1) + 11}px 
           0
         `,
         borderColor: `transparent ${theme.bg.primaryNavActive} transparent transparent`,

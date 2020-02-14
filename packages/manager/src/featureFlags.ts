@@ -39,7 +39,6 @@ export interface PromotionalOffer {
   footnoteColor: string;
   features: PromotionalOfferFeature[];
   displayOnDashboard: boolean;
-  displayInPrimaryNav: boolean;
 }
 
 /**

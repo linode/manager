@@ -14,6 +14,5 @@ export const promotionalOfferFactory = Factory.Sync.makeFactory<
   backgroundColor: '#406E51',
   bodyColor: '#FFFFFF',
   footnoteColor: '#93AE9E',
-  displayInPrimaryNav: true,
   displayOnDashboard: true
 });

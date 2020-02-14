@@ -17,9 +17,7 @@ import Menu from 'src/components/core/Menu';
 import withFeatureFlagConsumer, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container';
-import { promotionalOfferFactory } from 'src/factories/promotionalOffer';
 import { MapState } from 'src/store/types';
-import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
 import {
   isKubernetesEnabled,
   isObjectStorageEnabled
@@ -45,7 +43,6 @@ import Volume from 'src/assets/icons/entityIcons/volume.svg';
 import Firewall from 'src/assets/icons/firewall.svg';
 import Longview from 'src/assets/icons/longview.svg';
 import Managed from 'src/assets/icons/managednav.svg';
-import NavPromo from 'src/assets/icons/promotionalOffers/left-nav-promo.svg';
 
 type Entity =
   | 'Linodes'
@@ -323,48 +320,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
   };
 
   renderPrimaryLink = (primaryLink: PrimaryLink, isLast: boolean) => {
-    const { classes, isCollapsed, theme } = this.props;
-
-    // const promotionalOffers = this.props.flags.promotionalOffers ?? [];
-    // @todo BEFORE MERGE: Use feature flags instead of this hardcoded promo.
-    const promotionalOffers = promotionalOfferFactory.buildList(1, {
-      body:
-        'Object Storage is FREE* to all customers until May 1st. Try it now in the Newark or Frankfurt data centers.',
-      footnote:
-        '*Offer is inclusive of list price and inbound transfer fees only.',
-      features: ['Object Storage'],
-      logo: 'heavenly-bucket.svg'
-    });
-
-    const isEntityPromoted = promotionalOffers.some(promotionalOffer => {
-      return (
-        promotionalOffer.features.includes(primaryLink.display as any) &&
-        promotionalOffer.displayInPrimaryNav
-      );
-    });
-
-    const isCompact = theme.spacing() === COMPACT_SPACING_UNIT;
-
-    // If the feature is promoted, add the indicator icon (unless the Primary
-    // Nav is collapsed or we're in Compact Mode, in which case there isn't room
-    // for this icon).
-    const display =
-      isEntityPromoted && !isCollapsed && !isCompact ? (
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            alignContent: 'center',
-            width: '100%'
-          }}
-        >
-          <span>{primaryLink.display}</span>
-          <NavPromo />
-        </div>
-      ) : (
-        primaryLink.display
-      );
+    const { classes, isCollapsed } = this.props;
 
     return (
       <React.Fragment key={primaryLink.key}>
@@ -380,7 +336,6 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
           {...primaryLink.attr}
           className={classNames({
             [classes.listItem]: true,
-            [classes.listItemPromo]: isEntityPromoted,
             [classes.active]: linkIsActive(
               primaryLink.href,
               primaryLink.activeLinks
@@ -392,7 +347,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
             <div className="icon">{primaryLink.icon}</div>
           )}
           <ListItemText
-            primary={display}
+            primary={primaryLink.display}
             disableTypography={true}
             className={classNames({
               [classes.linkItem]: true,

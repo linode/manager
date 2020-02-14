@@ -119,8 +119,7 @@ export const promotionalOfferOrDefaults = (
   bodyColor: checkStringOrDefault(offer.bodyColor, '#FFFFFF'),
   footnoteColor: checkStringOrDefault(offer.footnoteColor, '#93AE9E'),
   features: offer.features ?? ['None'],
-  displayOnDashboard: offer.displayOnDashboard ?? false,
-  displayInPrimaryNav: offer.displayInPrimaryNav ?? false
+  displayOnDashboard: offer.displayOnDashboard ?? false
 });
 
 const checkStringOrDefault = (maybeString: any, defaultVal?: string) => {
