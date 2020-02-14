@@ -43,6 +43,8 @@ import Volume from 'src/assets/icons/entityIcons/volume.svg';
 import Firewall from 'src/assets/icons/firewall.svg';
 import Longview from 'src/assets/icons/longview.svg';
 import Managed from 'src/assets/icons/managednav.svg';
+import NavPromo from 'src/assets/icons/promotionalOffers/left-nav-promo.svg';
+import { promotionalOfferFactory } from 'src/factories/promotionalOffer';
 
 type Entity =
   | 'Linodes'
@@ -322,6 +324,41 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
   renderPrimaryLink = (primaryLink: PrimaryLink, isLast: boolean) => {
     const { classes, isCollapsed } = this.props;
 
+    // const promotionalOffers = this.props.flags.promotionalOffers ?? [];
+    // @todo BEFORE MERGE: Use feature flags instead of this hardcoded promo.
+    const promotionalOffers = promotionalOfferFactory.buildList(1, {
+      body:
+        'Object Storage is FREE* to all customers until May 1st. Try it now in the Newark or Frankfurt data centers.',
+      footnote:
+        '*Offer is inclusive of list price and inbound transfer fees only.',
+      features: ['Object Storage'],
+      logo: 'heavenly-bucket.svg'
+    });
+
+    const isEntityPromoted = promotionalOffers.some(promo => {
+      return promo.features.includes(primaryLink.display as any);
+    });
+
+    // If the feature is promoted, add the indicator icon (unless the Primary
+    // Nav is collapsed, in which case there isn't room for this icon).
+    const display =
+      isEntityPromoted && !isCollapsed ? (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            alignContent: 'center',
+            width: '100%'
+          }}
+        >
+          <span>{primaryLink.display}</span>
+          <NavPromo />
+        </div>
+      ) : (
+        primaryLink.display
+      );
+
     return (
       <React.Fragment key={primaryLink.key}>
         <Link
@@ -336,6 +373,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
           {...primaryLink.attr}
           className={classNames({
             [classes.listItem]: true,
+            [classes.listItemPromo]: isEntityPromoted,
             [classes.active]: linkIsActive(
               primaryLink.href,
               primaryLink.activeLinks
@@ -347,7 +385,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
             <div className="icon">{primaryLink.icon}</div>
           )}
           <ListItemText
-            primary={primaryLink.display}
+            primary={display}
             disableTypography={true}
             className={classNames({
               [classes.linkItem]: true,

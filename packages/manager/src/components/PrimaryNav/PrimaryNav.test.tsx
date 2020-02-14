@@ -18,6 +18,7 @@ const mockClasses: Record<ClassNames, string> = {
   fadeContainer: '',
   linkItem: '',
   listItem: '',
+  listItemPromo: '',
   listItemAccount: '',
   logoItem: '',
   logoCollapsed: '',
