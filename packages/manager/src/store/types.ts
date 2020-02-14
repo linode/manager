@@ -97,7 +97,7 @@ export interface EntitiesAsObjectState<T> {
   results: number;
   lastUpdated: number;
   loading: boolean;
-  listOfIDsInOriginalOrder: (string | number)[];
+  listOfIDsInOriginalOrder?: (string | number)[];
 }
 
 /**

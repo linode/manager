@@ -1,3 +1,4 @@
+import { Firewall } from 'linode-js-sdk/lib/firewalls/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -6,13 +7,12 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 
 import { Props as FireProps } from 'src/containers/firewalls.container';
-import { FirewallWithSequence } from 'src/store/firewalls/firewalls.reducer';
 import { ActionHandlers } from './FirewallActionMenu';
 
 import FirewallRow from './FirewallRow';
 
 interface Props extends Omit<FireProps, 'data' | 'results' | 'getFirewalls'> {
-  data: FirewallWithSequence[];
+  data: Firewall[];
 }
 
 type CombinedProps = Props & ActionHandlers;
@@ -23,7 +23,6 @@ const FirewallTableRows: React.FC<CombinedProps> = props => {
     loading: firewallsLoading,
     error: firewallsError,
     lastUpdated: firewallsLastUpdated,
-    listOfIDsInOriginalOrder: firewallsKeys,
     ...actionMenuHandlers
   } = props;
 
@@ -40,7 +39,7 @@ const FirewallTableRows: React.FC<CombinedProps> = props => {
     );
   }
 
-  if (firewallsLastUpdated !== 0 && firewallsKeys.length === 0) {
+  if (firewallsLastUpdated !== 0 && Object.keys(firewalls).length === 0) {
     return (
       <TableRowEmpty colSpan={6} message="You do not have any Firewalls" />
     );

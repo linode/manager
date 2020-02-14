@@ -44,7 +44,6 @@ const FirewallTable: React.FC<CombinedProps> = props => {
     loading: firewallsLoading,
     error: firewallsError,
     lastUpdated: firewallsLastUpdated,
-    listOfIDsInOriginalOrder: firewallsKeys,
     ...actionMenuHandlers
   } = props;
 
@@ -106,7 +105,6 @@ const FirewallTable: React.FC<CombinedProps> = props => {
                         data={paginatedAndOrderedData}
                         loading={firewallsLoading}
                         error={firewallsError}
-                        listOfIDsInOriginalOrder={firewallsKeys}
                         lastUpdated={firewallsLastUpdated}
                         {...actionMenuHandlers}
                       />

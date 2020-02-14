@@ -171,3 +171,9 @@ export const ensureInitializedNestedState = (
   }
   return state;
 };
+
+export const apiResponseToMappedState = <T extends Entity>(data: T[]) => {
+  return data.reduce((acc, thisEntity) => {
+    acc[thisEntity.id] = thisEntity;
+    return acc;
+  }, {});

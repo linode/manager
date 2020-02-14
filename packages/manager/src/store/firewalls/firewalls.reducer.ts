@@ -1,76 +1,63 @@
-import { Firewall, FirewallRuleType } from 'linode-js-sdk/lib/firewalls';
-import { reducerWithInitialState } from 'typescript-fsa-reducers';
+import produce from 'immer';
+import { Firewall } from 'linode-js-sdk/lib/firewalls';
+import { Reducer } from 'redux';
+import { isType } from 'typescript-fsa';
+import { apiResponseToMappedState } from '../store.helpers';
 import { EntitiesAsObjectState } from '../types';
-import { getFirewalls } from './firewalls.actions';
+import { createFirewallActions, getFirewalls } from './firewalls.actions';
 
-interface FirewallRuleTypeWithSequence extends FirewallRuleType {
-  sequence: number;
-}
-
-interface FirewallRuleWithSequence {
-  inbound?: FirewallRuleTypeWithSequence[] | null;
-  outbound?: FirewallRuleTypeWithSequence[] | null;
-}
-
-export interface FirewallWithSequence extends Omit<Firewall, 'rules'> {
-  rules: FirewallRuleWithSequence;
-}
-
-export type State = EntitiesAsObjectState<FirewallWithSequence>;
+export type State = EntitiesAsObjectState<Firewall>;
 
 export const defaultState: State = {
   loading: false,
   lastUpdated: 0,
   results: 0,
   data: {},
-  error: {},
-  listOfIDsInOriginalOrder: []
+  error: {}
 };
 
-const reducer = reducerWithInitialState(defaultState)
-  .case(getFirewalls.started, state => ({
-    ...state,
-    loading: true
-  }))
-  .caseWithAction(getFirewalls.done, (state, { payload: { result } }) => ({
-    ...state,
-    data: result.data.reduce((acc, eachFirewall) => {
-      acc[eachFirewall.id] = {
-        ...eachFirewall,
-        rules: {
-          /**
-           * map over each inbound and outbound rule and add the original order to them.
-           * This is important because the API's original ordering matters
-           * and the order they are returned in is the order they are applied.
-           */
-          inbound: (eachFirewall.rules.inbound || []).map(
-            (eachInboundRule, index) => ({
-              ...eachInboundRule,
-              sequence: index + 1
-            })
-          ),
-          outbound: (eachFirewall.rules.outbound || []).map(
-            (eachOutboundRule, index) => ({
-              ...eachOutboundRule,
-              sequence: index + 1
-            })
-          )
-        }
-      };
-      return acc;
-    }, {}),
-    loading: false,
-    results: result.results,
-    listOfIDsInOriginalOrder: result.data.map(eachFirewall => eachFirewall.id),
-    lastUpdated: Date.now()
-  }))
-  .caseWithAction(getFirewalls.failed, (state, { payload: result }) => ({
-    ...state,
-    error: {
-      read: result.error
-    },
-    loading: false
-  }))
-  .default(state => state);
+/**
+ * Reducer
+ */
+const reducer: Reducer<State> = (state = defaultState, action) => {
+  return produce(state, draft => {
+    if (isType(action, getFirewalls.started)) {
+      draft.loading = true;
+    }
+
+    if (isType(action, getFirewalls.done)) {
+      const { result } = action.payload;
+      const data = apiResponseToMappedState<Firewall>(result.data);
+      draft.loading = false;
+      draft.lastUpdated = Date.now();
+      draft.data = data;
+      draft.results = result.results;
+    }
+
+    if (isType(action, getFirewalls.failed)) {
+      const { error } = action.payload;
+
+      draft.loading = false;
+      draft.error.read = error;
+    }
+
+    if (isType(action, createFirewallActions.started)) {
+      draft.error.create = undefined;
+    }
+
+    if (isType(action, createFirewallActions.done)) {
+      const newFirewall = action.payload.result;
+      draft.data[newFirewall.id] = newFirewall;
+      draft.results++;
+      draft.lastUpdated = Date.now();
+    }
+
+    if (isType(action, createFirewallActions.failed)) {
+      const { error } = action.payload;
+
+      draft.error.create = error;
+    }
+  });
+};
 
 export default reducer;
