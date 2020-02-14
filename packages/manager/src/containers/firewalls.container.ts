@@ -1,8 +1,11 @@
-import { Firewall } from 'linode-js-sdk/lib/firewalls';
+import { CreateFirewallPayload, Firewall } from 'linode-js-sdk/lib/firewalls';
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { State } from 'src/store/firewalls/firewalls.reducer';
-import { getAllFirewalls as _getFirewalls } from 'src/store/firewalls/firewalls.requests';
+import {
+  createFirewall as _create,
+  getAllFirewalls as _getFirewalls
+} from 'src/store/firewalls/firewalls.requests';
 import { ThunkDispatch } from 'src/store/types';
 import { GetAllData } from 'src/utilities/getAll';
 
@@ -11,6 +14,7 @@ interface DispatchProps {
     params?: any,
     filters?: any
   ) => Promise<GetAllData<Firewall[]>>;
+  createFirewall: (payload: CreateFirewallPayload) => Promise<Firewall>;
 }
 
 /* tslint:disable-next-line */
@@ -39,7 +43,8 @@ const connected = <ReduxStateProps extends {}, OwnProps extends {}>(
     },
     (dispatch: ThunkDispatch) => ({
       getFirewalls: (params, filter) =>
-        dispatch(_getFirewalls({ params, filter }))
+        dispatch(_getFirewalls({ params, filter })),
+      createFirewall: payload => dispatch(_create(payload))
     })
   );
 

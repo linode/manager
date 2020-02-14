@@ -1,9 +1,10 @@
-import { Firewall } from 'linode-js-sdk/lib/firewalls';
-import { getFirewalls } from './firewalls.actions';
+import { firewallFactory, firewallRulesFactory } from 'src/factories/firewalls';
+import { createFirewallActions, getFirewalls } from './firewalls.actions';
 import reducer, { defaultState } from './firewalls.reducer';
 
 const mockError = [{ reason: 'no reason' }];
 
+<<<<<<< HEAD
 const baseFirewall: Firewall[] = [
   {
     id: 1,
@@ -27,6 +28,9 @@ const baseFirewall: Firewall[] = [
     tags: []
   }
 ];
+=======
+const baseFirewall = firewallFactory.buildList(1);
+>>>>>>> Add partial factories and tests
 
 describe('Cloud Firewalls Reducer', () => {
   it('should handle an initiated request for services', () => {
@@ -53,33 +57,23 @@ describe('Cloud Firewalls Reducer', () => {
         result: { data: baseFirewall, results: 2 }
       })
     );
-    expect(newState).toHaveProperty('data', {
-      1: {
-        id: 1,
-        rules: {
-          inbound: [],
-          outbound: [
-            {
-              protocol: 'ALL',
-              ports: '443',
-              sequence: 1
-            },
-            {
-              protocol: 'ALL',
-              ports: '80',
-              sequence: 2
-            }
-          ]
-        },
-        status: 'disabled',
-        label: 'zzz',
-        created_dt: '2019-12-11T19:44:38.526Z',
-        updated_dt: '2019-12-11T19:44:38.526Z',
-        tags: []
-      }
-    });
+    expect(newState).toHaveProperty('data', baseFirewall);
     expect(newState).toHaveProperty('loading', false);
     expect(newState.error!.read).toBeUndefined();
     expect(newState.results).toBe(2);
+  });
+
+  it('should handle a successful Create action', () => {
+    const params = {
+      rules: firewallRulesFactory.build()
+    };
+    const newFirewall = firewallFactory.build();
+    const newState = reducer(
+      defaultState,
+      createFirewallActions.done({ params, result: newFirewall })
+    );
+
+    expect(newState.error.create).toBeUndefined();
+    expect(newState.data).toHaveLength(1);
   });
 });
