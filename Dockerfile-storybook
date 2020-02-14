@@ -1,4 +1,4 @@
-FROM selenium/standalone-chrome
+FROM selenium/standalone-chrome:3.141.59
 # Run commands as "node" user. We don't want to run these commands as root
 #
 # See https://github.com/nodejs/docker-node/blob/d094c98a48659ff9f8d59db8dafb7020e181446a/docs/BestPractices.md
@@ -18,7 +18,7 @@ COPY --chown=seluser:seluser package.json tslint.json run_storybook_docker.sh ya
 COPY --chown=seluser:seluser packages/linode-js-sdk  ./packages/linode-js-sdk/
 COPY --chown=seluser:seluser packages/manager ./packages/manager
 # Runs "yarn install" for all child packages
-RUN yarn install:all && npx selenium-standalone install --config=./packages/manager/e2e/config/selenium-config.js && yarn workspace linode-js-sdk build
+RUN yarn install:all && yarn run selenium-standalone install --config=./packages/manager/e2e/config/selenium-config.js && yarn workspace linode-js-sdk build
 
 ENTRYPOINT ["sh","run_storybook_docker.sh"]
 
