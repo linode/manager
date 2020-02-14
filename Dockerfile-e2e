@@ -1,4 +1,4 @@
-FROM cypress/base:10.18.0
+FROM cypress/base:12.8.1
 # Run commands as "node" user. We don't want to run these commands as root
 #
 # See https://github.com/nodejs/docker-node/blob/d094c98a48659ff9f8d59db8dafb7020e181446a/docs/BestPractices.md
@@ -15,7 +15,7 @@ COPY --chown=node:node packages/linode-js-sdk  ./packages/linode-js-sdk/
 COPY --chown=node:node packages/manager ./packages/manager
 
 # Runs "yarn install" for all child packages
-RUN yarn install:all && npx cypress verify && yarn workspace linode-js-sdk build
+RUN yarn install:all && yarn run cypress verify && yarn workspace linode-js-sdk build
 
 ENTRYPOINT ["sh","run_cypress_docker.sh"]
 
