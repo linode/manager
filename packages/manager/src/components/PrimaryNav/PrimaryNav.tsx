@@ -17,7 +17,9 @@ import Menu from 'src/components/core/Menu';
 import withFeatureFlagConsumer, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container';
+import { promotionalOfferFactory } from 'src/factories/promotionalOffer';
 import { MapState } from 'src/store/types';
+import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
 import {
   isKubernetesEnabled,
   isObjectStorageEnabled
@@ -44,7 +46,6 @@ import Firewall from 'src/assets/icons/firewall.svg';
 import Longview from 'src/assets/icons/longview.svg';
 import Managed from 'src/assets/icons/managednav.svg';
 import NavPromo from 'src/assets/icons/promotionalOffers/left-nav-promo.svg';
-import { promotionalOfferFactory } from 'src/factories/promotionalOffer';
 
 type Entity =
   | 'Linodes'
@@ -322,7 +323,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
   };
 
   renderPrimaryLink = (primaryLink: PrimaryLink, isLast: boolean) => {
-    const { classes, isCollapsed } = this.props;
+    const { classes, isCollapsed, theme } = this.props;
 
     // const promotionalOffers = this.props.flags.promotionalOffers ?? [];
     // @todo BEFORE MERGE: Use feature flags instead of this hardcoded promo.
@@ -342,10 +343,13 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
       );
     });
 
+    const isCompact = theme.spacing() === COMPACT_SPACING_UNIT;
+
     // If the feature is promoted, add the indicator icon (unless the Primary
-    // Nav is collapsed, in which case there isn't room for this icon).
+    // Nav is collapsed or we're in Compact Mode, in which case there isn't room
+    // for this icon).
     const display =
-      isEntityPromoted && !isCollapsed ? (
+      isEntityPromoted && !isCollapsed && !isCompact ? (
         <div
           style={{
             display: 'flex',
