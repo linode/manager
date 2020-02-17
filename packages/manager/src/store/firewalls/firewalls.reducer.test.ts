@@ -5,6 +5,7 @@ import reducer, { defaultState } from './firewalls.reducer';
 const mockError = [{ reason: 'no reason' }];
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 const baseFirewall: Firewall[] = [
   {
     id: 1,
@@ -28,9 +29,8 @@ const baseFirewall: Firewall[] = [
     tags: []
   }
 ];
-=======
-const baseFirewall = firewallFactory.buildList(1);
->>>>>>> Add partial factories and tests
+
+const baseFirewall = firewallFactory.buildList(3);
 
 describe('Cloud Firewalls Reducer', () => {
   it('should handle an initiated request for services', () => {
@@ -57,10 +57,24 @@ describe('Cloud Firewalls Reducer', () => {
         result: { data: baseFirewall, results: 2 }
       })
     );
-    expect(newState).toHaveProperty('data', baseFirewall);
+    expect(Object.values(newState.data)).toEqual(baseFirewall);
     expect(newState).toHaveProperty('loading', false);
     expect(newState.error!.read).toBeUndefined();
     expect(newState.results).toBe(2);
+  });
+
+  it('should handle a successful GET with an empty response', () => {
+    const newState = reducer(
+      { ...defaultState, loading: true },
+      getFirewalls.done({
+        params: {},
+        result: { data: [], results: 0 }
+      })
+    );
+    expect(newState.data).toEqual({});
+    expect(newState).toHaveProperty('loading', false);
+    expect(newState.error!.read).toBeUndefined();
+    expect(newState.results).toBe(0);
   });
 
   it('should handle a successful Create action', () => {
@@ -74,6 +88,17 @@ describe('Cloud Firewalls Reducer', () => {
     );
 
     expect(newState.error.create).toBeUndefined();
-    expect(newState.data).toHaveLength(1);
+    expect(newState.data).toHaveProperty(String(newFirewall.id), newFirewall);
+  });
+
+  it('should handle a failed Create action', () => {
+    const params = {
+      rules: firewallRulesFactory.build()
+    };
+    const newState = reducer(
+      defaultState,
+      createFirewallActions.failed({ params, error: mockError })
+    );
+    expect(newState.error).toHaveProperty('create', mockError);
   });
 });
