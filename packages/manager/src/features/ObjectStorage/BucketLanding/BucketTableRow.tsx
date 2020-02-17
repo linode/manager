@@ -1,5 +1,6 @@
 import { ObjectStorageBucket } from 'linode-js-sdk/lib/object-storage';
 import * as React from 'react';
+import CopyTooltip from 'src/components/CopyTooltip';
 import {
   createStyles,
   Theme,
@@ -15,7 +16,12 @@ import TableRow from 'src/components/TableRow';
 import { formatObjectStorageCluster } from 'src/utilities/formatRegion';
 import BucketActionMenu from './BucketActionMenu';
 
-type ClassNames = 'bucketNameWrapper' | 'bucketRow' | 'link';
+type ClassNames =
+  | 'bucketNameWrapper'
+  | 'bucketRow'
+  | 'link'
+  | 'hostnameWrapper'
+  | 'copyTooltip';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -27,6 +33,14 @@ const styles = (theme: Theme) =>
       flexFlow: 'row nowrap',
       alignItems: 'center',
       wordBreak: 'break-all'
+    },
+    hostnameWrapper: {
+      display: 'flex',
+      alignItems: 'center',
+      flexDirection: 'row'
+    },
+    copyTooltip: {
+      padding: 0
     },
     link: {
       '&:hover': {
@@ -62,16 +76,14 @@ export const BucketTableRow: React.StatelessComponent<CombinedProps> = props => 
                 {label}
               </Typography>
             </div>
-            <a
-              className={classes.link}
-              href={`https://${hostname}`}
-              target="_blank"
-              aria-describedby="external-site"
-              rel="noopener noreferrer"
-              data-qa-hostname
-            >
-              {hostname}
-            </a>
+            <div className={classes.hostnameWrapper}>
+              <Typography>{hostname}</Typography>
+              <CopyTooltip
+                className={classes.copyTooltip}
+                standAlone
+                text={`https://${hostname}`}
+              />
+            </div>
           </Grid>
         </Grid>
       </TableCell>

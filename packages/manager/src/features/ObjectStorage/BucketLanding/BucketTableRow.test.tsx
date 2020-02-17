@@ -11,7 +11,9 @@ describe('BucketTableRow', () => {
       classes={{
         bucketNameWrapper: '',
         bucketRow: '',
-        link: ''
+        link: '',
+        hostnameWrapper: '',
+        copyTooltip: ''
       }}
       label="test-bucket-001"
       created="2019-02-24 18:46:15.516813"
