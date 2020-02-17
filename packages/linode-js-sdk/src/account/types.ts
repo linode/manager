@@ -218,6 +218,7 @@ export type EventAction =
   | 'linode_config_create'
   | 'linode_config_update'
   | 'linode_config_delete'
+  | 'lke_node_create'
   | 'longviewclient_create'
   | 'longviewclient_delete'
   | 'longviewclient_update'
