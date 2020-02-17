@@ -1,7 +1,6 @@
 import { UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -13,6 +12,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
+import { compose } from 'src/utilities/compose';
 import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
 import UserDefinedSelect from './FieldTypes/UserDefinedSelect';
 import UserDefinedText from './FieldTypes/UserDefinedText';

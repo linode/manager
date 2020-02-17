@@ -18,7 +18,6 @@ import {
   Switch,
   withRouter
 } from 'react-router-dom';
-import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import AppBar from 'src/components/core/AppBar';
@@ -35,6 +34,7 @@ import withLinodes from 'src/containers/withLinodes.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { ApplicationState } from 'src/store';
 import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
+import { compose } from 'src/utilities/compose';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import { withLinodeDetailContext } from '../LinodesDetail/linodeDetailContext';
@@ -484,10 +484,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-const connected = connect(
-  undefined,
-  mapDispatchToProps
-);
+const connected = connect(undefined, mapDispatchToProps);
 
 const enhanced = compose<CombinedProps, {}>(
   connected,

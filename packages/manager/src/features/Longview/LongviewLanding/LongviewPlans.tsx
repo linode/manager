@@ -4,7 +4,6 @@ import { LongviewSubscription } from 'linode-js-sdk/lib/longview/types';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import Chip from 'src/components/core/Chip';
 import Paper from 'src/components/core/Paper';
@@ -30,6 +29,7 @@ import {
 import { UseAPIRequest } from 'src/hooks/useAPIRequest';
 import { MapState } from 'src/store/types';
 import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
+import { compose } from 'src/utilities/compose';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -330,52 +330,52 @@ interface LongviewPlansTableBodyProps {
   disabled: boolean;
 }
 
-export const LongviewPlansTableBody: React.FC<
-  LongviewPlansTableBodyProps
-> = React.memo(props => {
-  const { loading, error, subscriptions, selectedSub, ...rest } = props;
+export const LongviewPlansTableBody: React.FC<LongviewPlansTableBodyProps> = React.memo(
+  props => {
+    const { loading, error, subscriptions, selectedSub, ...rest } = props;
 
-  if (loading) {
-    return <TableRowLoading colSpan={12} />;
-  }
+    if (loading) {
+      return <TableRowLoading colSpan={12} />;
+    }
 
-  if (error && error.length > 0) {
-    return <TableRowError colSpan={12} message={error[0].reason} />;
-  }
+    if (error && error.length > 0) {
+      return <TableRowError colSpan={12} message={error[0].reason} />;
+    }
 
-  return (
-    <>
-      {/* The first row is hard-coded, as the "free" plan is not returned from
+    return (
+      <>
+        {/* The first row is hard-coded, as the "free" plan is not returned from
       the API. */}
-      <LongviewSubscriptionRow
-        key={LONGVIEW_FREE_ID}
-        id={LONGVIEW_FREE_ID}
-        plan="Longview Free"
-        clients={10}
-        dataRetention="Limited to 12 hours"
-        dataResolution="Every 5 minutes"
-        price="FREE"
-        isSelected={selectedSub === LONGVIEW_FREE_ID}
-        {...rest}
-      />
-      {/* We use data from /longview/subscriptions to generate the remaining
-      rows. */}
-      {subscriptions.map(sub => (
         <LongviewSubscriptionRow
-          key={sub.id}
-          id={sub.id}
-          plan={sub.label}
-          clients={sub.clients_included}
-          dataRetention="Unlimited"
-          dataResolution="Every minute"
-          price={formatPrice(sub.price)}
-          isSelected={selectedSub === sub.id}
+          key={LONGVIEW_FREE_ID}
+          id={LONGVIEW_FREE_ID}
+          plan="Longview Free"
+          clients={10}
+          dataRetention="Limited to 12 hours"
+          dataResolution="Every 5 minutes"
+          price="FREE"
+          isSelected={selectedSub === LONGVIEW_FREE_ID}
           {...rest}
         />
-      ))}
-    </>
-  );
-});
+        {/* We use data from /longview/subscriptions to generate the remaining
+      rows. */}
+        {subscriptions.map(sub => (
+          <LongviewSubscriptionRow
+            key={sub.id}
+            id={sub.id}
+            plan={sub.label}
+            clients={sub.clients_included}
+            dataRetention="Unlimited"
+            dataResolution="Every minute"
+            price={formatPrice(sub.price)}
+            isSelected={selectedSub === sub.id}
+            {...rest}
+          />
+        ))}
+      </>
+    );
+  }
+);
 
 // =============================================================================
 // LongviewSubscriptionRow
@@ -394,87 +394,90 @@ interface LongviewSubscriptionRowProps {
   disabled: boolean;
 }
 
-export const LongviewSubscriptionRow: React.FC<
-  LongviewSubscriptionRowProps
-> = React.memo(props => {
-  const {
-    id,
-    plan,
-    clients,
-    dataRetention,
-    dataResolution,
-    price,
-    onRowSelect,
-    onRadioSelect,
-    currentSubscriptionOnAccount,
-    isSelected,
-    disabled
-  } = props;
+export const LongviewSubscriptionRow: React.FC<LongviewSubscriptionRowProps> = React.memo(
+  props => {
+    const {
+      id,
+      plan,
+      clients,
+      dataRetention,
+      dataResolution,
+      price,
+      onRowSelect,
+      onRadioSelect,
+      currentSubscriptionOnAccount,
+      isSelected,
+      disabled
+    } = props;
 
-  const styles = useStyles();
+    const styles = useStyles();
 
-  const handleClick = () => {
-    if (disabled) {
-      return;
-    }
-    onRowSelect(id);
-  };
+    const handleClick = () => {
+      if (disabled) {
+        return;
+      }
+      onRowSelect(id);
+    };
 
-  return (
-    <TableRow
-      key={id}
-      onClick={handleClick}
-      rowLink={disabled ? undefined : handleClick}
-      className={classnames({
-        [styles.disabledTableRow]: disabled
-      })}
-      data-testid={`lv-sub-table-row-${id}`}
-    >
-      <TableCell data-testid={`plan-cell-${id}`}>
-        <div className={styles.currentSubscriptionLabel}>
-          <Radio
-            value={id}
-            checked={isSelected}
-            onChange={onRadioSelect}
-            className={styles.radio}
-            id={id}
-            data-testid={`lv-sub-radio-${id}`}
-            disabled={disabled}
-          />
-          {plan}
-          {currentSubscriptionOnAccount === id && (
-            <Chip
-              data-testid="current-plan"
-              label="Current Plan"
-              className={styles.chip}
+    return (
+      <TableRow
+        key={id}
+        onClick={handleClick}
+        rowLink={disabled ? undefined : handleClick}
+        className={classnames({
+          [styles.disabledTableRow]: disabled
+        })}
+        data-testid={`lv-sub-table-row-${id}`}
+      >
+        <TableCell data-testid={`plan-cell-${id}`}>
+          <div className={styles.currentSubscriptionLabel}>
+            <Radio
+              value={id}
+              checked={isSelected}
+              onChange={onRadioSelect}
+              className={styles.radio}
+              id={id}
+              data-testid={`lv-sub-radio-${id}`}
+              disabled={disabled}
             />
-          )}
-        </div>
-      </TableCell>
-      <TableCell
-        className={styles.clientCell}
-        data-testid={`clients-cell-${id}`}
-      >
-        {clients}
-      </TableCell>
-      <TableCell
-        className={styles.dataRetentionCell}
-        data-testid={`data-retention-cell-${id}`}
-      >
-        {dataRetention}
-      </TableCell>
-      <TableCell
-        className={styles.dataResolutionCell}
-        data-testid={`data-resolution-cell-${id}`}
-      >
-        {dataResolution}
-      </TableCell>
-      <TableCell className={styles.priceCell} data-testid={`price-cell-${id}`}>
-        {price}
-      </TableCell>
-    </TableRow>
-  );
-});
+            {plan}
+            {currentSubscriptionOnAccount === id && (
+              <Chip
+                data-testid="current-plan"
+                label="Current Plan"
+                className={styles.chip}
+              />
+            )}
+          </div>
+        </TableCell>
+        <TableCell
+          className={styles.clientCell}
+          data-testid={`clients-cell-${id}`}
+        >
+          {clients}
+        </TableCell>
+        <TableCell
+          className={styles.dataRetentionCell}
+          data-testid={`data-retention-cell-${id}`}
+        >
+          {dataRetention}
+        </TableCell>
+        <TableCell
+          className={styles.dataResolutionCell}
+          data-testid={`data-resolution-cell-${id}`}
+        >
+          {dataResolution}
+        </TableCell>
+        <TableCell
+          className={styles.priceCell}
+          data-testid={`price-cell-${id}`}
+        >
+          {price}
+        </TableCell>
+      </TableRow>
+    );
+  }
+);
 
 // =============================================================================
 // Utilities

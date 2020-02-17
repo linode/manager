@@ -1,6 +1,5 @@
 import { ObjectStorageBucket } from 'linode-js-sdk/lib/object-storage';
 import * as React from 'react';
-import { compose } from 'recompose';
 import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
@@ -28,6 +27,7 @@ import bucketRequestsContainer, {
   BucketsRequests
 } from 'src/containers/bucketRequests.container';
 import useOpenClose from 'src/hooks/useOpenClose';
+import { compose } from 'src/utilities/compose';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import {
   sendDeleteBucketEvent,

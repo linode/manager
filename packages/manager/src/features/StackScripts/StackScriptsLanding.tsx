@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
@@ -16,6 +15,7 @@ import Notice from 'src/components/Notice';
 import withImagesContainer, {
   WithImages
 } from 'src/containers/withImages.container';
+import { compose } from 'src/utilities/compose';
 import StackScriptPanel from './StackScriptPanel';
 
 import { filterImagesByType } from 'src/store/image/image.helpers';

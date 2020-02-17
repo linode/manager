@@ -1,7 +1,6 @@
 import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import ButtonLink from 'src/components/Button/ButtonLink';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -12,6 +11,7 @@ import { DispatchProps } from 'src/containers/longview.container';
 import withClientStats, {
   Props as LVDataProps
 } from 'src/containers/longview.stats.container';
+import { compose } from 'src/utilities/compose';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 import { formatUptime } from 'src/utilities/formatUptime';

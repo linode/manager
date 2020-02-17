@@ -4,7 +4,6 @@ import { getTags } from 'linode-js-sdk/lib/tags';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { clone } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import {
@@ -16,6 +15,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import Select from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
+import { compose } from 'src/utilities/compose';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import TagsPanelItem from './TagsPanelItem';
 
@@ -431,7 +431,4 @@ class TagsPanel extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default compose<CombinedProps, Props>(
-  styled,
-  withSnackbar
-)(TagsPanel);
+export default compose<CombinedProps, Props>(styled, withSnackbar)(TagsPanel);

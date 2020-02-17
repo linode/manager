@@ -12,7 +12,6 @@ import {
   RouteComponentProps,
   Switch
 } from 'react-router-dom';
-import { compose } from 'recompose';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import Breadcrumb from 'src/components/Breadcrumb';
@@ -28,6 +27,7 @@ import { ApplicationState } from 'src/store';
 import { getAllBuckets } from 'src/store/bucket/bucket.requests';
 import { requestClusters as _requestClusters } from 'src/store/clusters/clusters.actions';
 import { MapState } from 'src/store/types';
+import { compose } from 'src/utilities/compose';
 import BucketDrawer from './BucketLanding/BucketDrawer';
 
 const BucketLanding = DefaultLoader({

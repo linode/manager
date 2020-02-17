@@ -1,7 +1,6 @@
 import { Domain, DomainRecord } from 'linode-js-sdk/lib/domains';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -10,6 +9,7 @@ import TagsPanel from 'src/components/TagsPanel';
 import summaryPanelStyles, {
   StyleProps
 } from 'src/containers/SummaryPanels.styles';
+import { compose } from 'src/utilities/compose';
 import DeleteDomain from './DeleteDomain';
 import DomainRecords from './DomainRecords';
 

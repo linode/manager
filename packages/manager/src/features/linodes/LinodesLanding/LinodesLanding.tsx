@@ -7,7 +7,6 @@ import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import AddNewLink from 'src/components/AddNewLink';
@@ -30,6 +29,7 @@ import { BackupsCTA } from 'src/features/Backups';
 import { ApplicationState } from 'src/store';
 import { deleteLinode } from 'src/store/linodes/linode.requests';
 import { MapState } from 'src/store/types';
+import { compose } from 'src/utilities/compose';
 import formatDate from 'src/utilities/formatDate';
 import { formatNotifications } from 'src/utilities/formatNotifications';
 import {

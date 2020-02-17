@@ -1,6 +1,5 @@
 import { UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
 import * as React from 'react';
-import { compose } from 'recompose';
 import {
   createStyles,
   Theme,
@@ -12,6 +11,7 @@ import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import SelectionCard from 'src/components/SelectionCard';
 import { APP_ROOT } from 'src/constants';
+import { compose } from 'src/utilities/compose';
 import { getParamFromUrl } from 'src/utilities/queryParams';
 import Panel from './Panel';
 import { AppsData } from './types';

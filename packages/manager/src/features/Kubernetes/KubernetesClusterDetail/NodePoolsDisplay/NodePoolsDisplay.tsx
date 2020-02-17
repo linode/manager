@@ -1,6 +1,6 @@
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
-import { compose } from 'recompose';
+import { compose } from 'src/utilities/compose';
 
 import Button from 'src/components/Button';
 import CopyTooltip from 'src/components/CopyTooltip';

@@ -1,12 +1,12 @@
 import { Form, Formik } from 'formik';
 import { CloneVolumeSchema } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Typography from 'src/components/core/Typography';
 import withVolumesRequests, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/eventsPolling';
+import { compose } from 'src/utilities/compose';
 import {
   handleFieldErrors,
   handleGeneralErrors

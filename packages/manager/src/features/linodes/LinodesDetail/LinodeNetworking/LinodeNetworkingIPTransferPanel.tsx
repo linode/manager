@@ -13,7 +13,6 @@ import {
   when
 } from 'ramda';
 import * as React from 'react';
-import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
@@ -32,6 +31,7 @@ import TextField from 'src/components/TextField';
 import withLinodes, {
   DispatchProps
 } from 'src/containers/withLinodes.container';
+import { compose as recompose } from 'src/utilities/compose';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 type ClassNames =

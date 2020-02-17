@@ -3,7 +3,6 @@ import { Account } from 'linode-js-sdk/lib/account';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { defaultTo, lensPath, set } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import {
@@ -20,6 +19,7 @@ import TextField from 'src/components/TextField';
 import AccountContainer, {
   Props as AccountProps
 } from 'src/containers/account.container';
+import { compose } from 'src/utilities/compose';
 import composeState from 'src/utilities/composeState';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -613,10 +613,7 @@ const styled = withStyles(styles);
 
 const withAccount = AccountContainer();
 
-const enhanced = compose(
-  styled,
-  withAccount
-);
+const enhanced = compose(styled, withAccount);
 
 export default enhanced(
   UpdateContactInformationPanel

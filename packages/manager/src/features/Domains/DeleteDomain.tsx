@@ -1,6 +1,5 @@
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import DeletionDialog from 'src/components/DeletionDialog';
 import { useDialog } from 'src/hooks/useDialog';
@@ -8,6 +7,7 @@ import {
   DomainActionsProps,
   withDomainActions
 } from 'src/store/domains/domains.container';
+import { compose } from 'src/utilities/compose';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface Props {

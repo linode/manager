@@ -6,7 +6,6 @@ import {
 } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { compose } from 'recompose';
 import Menu from 'src/components/core/Menu';
 import {
   createStyles,
@@ -19,6 +18,7 @@ import MenuItem from 'src/components/MenuItem';
 import GDPRNotification from 'src/GDPRNotification';
 import { MapState } from 'src/store/types';
 import UserAgentNotification from 'src/UserAgentNotification';
+import { compose } from 'src/utilities/compose';
 import UserNotificationButton from './UserNotificationsButton';
 import UserNotificationsList from './UserNotificationsList';
 
@@ -264,9 +264,6 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose<CombinedProps, {}>(
-  styled,
-  connected
-);
+const enhanced = compose<CombinedProps, {}>(styled, connected);
 
 export default enhanced(UserNotificationsMenu);

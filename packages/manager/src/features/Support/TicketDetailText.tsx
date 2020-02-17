@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import Collapse from 'src/assets/icons/minus-square.svg';
 import Expand from 'src/assets/icons/plus-square.svg';
 import {
@@ -11,6 +10,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import IconButton from 'src/components/IconButton';
+import { compose } from 'src/utilities/compose';
 
 import truncateText from 'src/utilities/truncateText';
 

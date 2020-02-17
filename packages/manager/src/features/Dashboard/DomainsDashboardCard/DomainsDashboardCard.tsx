@@ -5,7 +5,6 @@ import { compose, prop, sortBy, take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { compose as recompose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -30,6 +29,7 @@ import {
   isEntityEvent,
   isInProgressEvent
 } from 'src/store/events/event.helpers';
+import { compose as recompose } from 'src/utilities/compose';
 import DashboardCard from '../DashboardCard';
 
 interface EntityEvent extends Omit<Event, 'entity'> {

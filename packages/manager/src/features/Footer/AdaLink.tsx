@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import AdaIcon from 'src/assets/icons/ada.svg';
 import {
   createStyles,
@@ -9,6 +8,7 @@ import {
 } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import IconButton from 'src/components/IconButton';
+import { compose } from 'src/utilities/compose';
 import { sendAdaEvent } from 'src/utilities/ga';
 
 type ClassNames = 'root' | 'disabled';
@@ -79,7 +79,4 @@ const AdaLink: React.FC<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-export default compose<CombinedProps, Props>(
-  React.memo,
-  styled
-)(AdaLink);
+export default compose<CombinedProps, Props>(React.memo, styled)(AdaLink);

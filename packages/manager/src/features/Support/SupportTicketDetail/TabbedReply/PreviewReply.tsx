@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import { Converter } from 'showdown';
 import 'showdown-highlightjs-extension';
 import Paper from 'src/components/core/Paper';
@@ -10,6 +9,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import { compose } from 'src/utilities/compose';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
 type ClassNames = 'root';
@@ -53,7 +53,4 @@ const PreviewReply: React.FC<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-export default compose<CombinedProps, Props>(
-  React.memo,
-  styled
-)(PreviewReply);
+export default compose<CombinedProps, Props>(React.memo, styled)(PreviewReply);

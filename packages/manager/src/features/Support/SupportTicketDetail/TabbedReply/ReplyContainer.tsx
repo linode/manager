@@ -3,7 +3,6 @@ import { createReply, uploadAttachment } from 'linode-js-sdk/lib/support';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { lensPath, set } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import {
   createStyles,
   Theme,
@@ -13,6 +12,7 @@ import {
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import { compose } from 'src/utilities/compose';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import AttachFileForm from '../../AttachFileForm';

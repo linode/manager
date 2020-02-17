@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import clustersContainer, {
   StateProps
 } from 'src/containers/clusters.container';
+import { compose } from 'src/utilities/compose';
 import { formatRegion } from 'src/utilities/formatRegion';
 
 interface Props {

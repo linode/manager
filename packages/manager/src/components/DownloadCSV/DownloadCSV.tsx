@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CSVLink } from 'react-csv';
-import { compose } from 'recompose';
+import { compose } from 'src/utilities/compose';
 
 /**
  * these aren't all the props provided by react-csv

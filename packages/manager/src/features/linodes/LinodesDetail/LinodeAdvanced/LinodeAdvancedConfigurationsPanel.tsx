@@ -1,7 +1,6 @@
 import { Disk } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -12,6 +11,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
+import { compose } from 'src/utilities/compose';
 import LinodeConfigs from './LinodeConfigs';
 import LinodeDisks from './LinodeDisks';
 import LinodeDiskSpace from './LinodeDiskSpace';
@@ -115,9 +115,6 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, {}>(
-  styled,
-  linodeContext
-);
+const enhanced = compose<CombinedProps, {}>(styled, linodeContext);
 
 export default enhanced(LinodeAdvancedConfigurationsPanel);

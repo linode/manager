@@ -2,7 +2,6 @@ import { Event } from 'linode-js-sdk/lib/account';
 import { LinodeBackups, LinodeStatus } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 import {
   createStyles,
   Theme,
@@ -20,6 +19,7 @@ import {
   linodeInTransition,
   transitionText
 } from 'src/features/linodes/transitions';
+import { compose } from 'src/utilities/compose';
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import withDisplayType, { WithDisplayType } from '../withDisplayType';
 

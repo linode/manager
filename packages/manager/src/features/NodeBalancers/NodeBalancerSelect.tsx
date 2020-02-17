@@ -1,11 +1,11 @@
 import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
-import { compose } from 'recompose';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import withNodeBalancers from 'src/containers/withNodeBalancers.container';
+import { compose } from 'src/utilities/compose';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 interface WithNodeBalancersProps {

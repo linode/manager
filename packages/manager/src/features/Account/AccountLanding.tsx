@@ -7,13 +7,13 @@ import {
   RouteComponentProps,
   Switch
 } from 'react-router-dom';
-import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import AppBar from 'src/components/core/AppBar';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import TabLink from 'src/components/TabLink';
+import { compose } from 'src/utilities/compose';
 
 import DefaultLoader from 'src/components/DefaultLoader';
 import withProfile, {

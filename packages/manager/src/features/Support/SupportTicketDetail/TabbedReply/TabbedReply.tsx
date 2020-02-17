@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import {
   createStyles,
   Theme,
@@ -7,6 +6,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import TabbedPanel, { Tab } from 'src/components/TabbedPanel';
+import { compose } from 'src/utilities/compose';
 import Preview from './PreviewReply';
 import Reply, { Props as ReplyProps } from './TicketReply';
 

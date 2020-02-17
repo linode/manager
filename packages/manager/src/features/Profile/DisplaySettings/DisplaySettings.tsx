@@ -2,7 +2,6 @@ import { Profile } from 'linode-js-sdk/lib/profile';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import { compose as recompose } from 'recompose';
 import {
   createStyles,
   Theme,
@@ -14,6 +13,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { AccountsAndPasswords } from 'src/documentation';
 import { updateProfile as handleUpdateProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
+import { compose as recompose } from 'src/utilities/compose';
 import EmailChangeForm from './EmailChangeForm';
 import TimezoneForm from './TimezoneForm';
 
@@ -119,10 +119,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
   updateProfile: (v: Profile) => dispatch(handleUpdateProfile(v) as any)
 });
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const enhanced = recompose<CombinedProps, {}>(
   styled,

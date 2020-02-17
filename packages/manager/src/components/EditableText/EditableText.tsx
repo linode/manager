@@ -4,7 +4,6 @@ import Edit from '@material-ui/icons/Edit';
 import * as classnames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
 import {
@@ -15,6 +14,7 @@ import {
 } from 'src/components/core/styles';
 import { TextFieldProps } from 'src/components/core/TextField';
 import H1Header from 'src/components/H1Header';
+import { compose } from 'src/utilities/compose';
 import TextField from '../TextField';
 
 type ClassNames =

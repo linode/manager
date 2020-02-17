@@ -3,7 +3,6 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import { take } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import {
@@ -25,6 +24,7 @@ import TableRowLoading from 'src/components/TableRowLoading';
 import ViewAllLink from 'src/components/ViewAllLink';
 import NodeBalancerContainer from 'src/containers/withNodeBalancers.container';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
+import { compose } from 'src/utilities/compose';
 import DashboardCard from '../DashboardCard';
 
 type ClassNames =
@@ -85,9 +85,7 @@ interface NodeBalancerProps {
 
 type CombinedProps = NodeBalancerProps & WithStyles<ClassNames>;
 
-const NodeBalancersDashboardCard: React.FunctionComponent<
-  CombinedProps
-> = props => {
+const NodeBalancersDashboardCard: React.FunctionComponent<CombinedProps> = props => {
   const {
     classes,
     nodeBalancersError,
@@ -190,9 +188,6 @@ const withNodeBalancers = NodeBalancerContainer(
     nodeBalancersError
   })
 );
-const enhanced = compose<CombinedProps, {}>(
-  withNodeBalancers,
-  styled
-);
+const enhanced = compose<CombinedProps, {}>(withNodeBalancers, styled);
 
 export default enhanced(NodeBalancersDashboardCard);

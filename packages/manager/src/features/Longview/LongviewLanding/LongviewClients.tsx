@@ -7,7 +7,6 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -23,6 +22,7 @@ import withLongviewClients, {
 import withProfile from 'src/containers/profile.container';
 import { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
 import { MapState } from 'src/store/types';
+import { compose } from 'src/utilities/compose';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import LongviewPackageDrawer from '../LongviewPackageDrawer';
 import { sumUsedMemory } from '../shared/utilities';

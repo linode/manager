@@ -1,8 +1,8 @@
 import { path } from 'ramda';
 import * as React from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
-import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import { compose } from 'src/utilities/compose';
 
 import Logo from 'src/assets/logo/logo-footer.svg';
 import Button from 'src/components/Button';

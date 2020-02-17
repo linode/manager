@@ -6,12 +6,12 @@ import {
   Switch,
   withRouter
 } from 'react-router-dom';
-import { compose } from 'recompose';
 import DefaultLoader from 'src/components/DefaultLoader';
 import NotFound from 'src/components/NotFound';
 import withDomains, {
   Props as DomainProps
 } from 'src/containers/domains.container';
+import { compose } from 'src/utilities/compose';
 
 const DomainsLanding = DefaultLoader({
   loader: () => import('./DomainsLanding')

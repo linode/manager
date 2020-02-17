@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
   makeStyles,
@@ -15,6 +14,7 @@ import {
   generateNetworkUnits,
   statMax
 } from 'src/features/Longview/shared/utilities';
+import { compose } from 'src/utilities/compose';
 import roundTo from 'src/utilities/roundTo';
 import { ApacheResponse, LongviewProcesses } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
@@ -71,10 +71,10 @@ export const ApacheGraphs: React.FC<CombinedProps> = props => {
   const workersStarting = data?.Workers['Starting up'] ?? [];
   const workersReading = data?.Workers['Reading Request'] ?? [];
   const workersSending = data?.Workers['Sending Reply'] ?? [];
-  const workersKeepAlive = data?.Workers['Keepalive'] ?? [];
+  const workersKeepAlive = data?.Workers.Keepalive ?? [];
   const workersDNSLookup = data?.Workers['DNS Lookup'] ?? [];
   const workersClosing = data?.Workers['Closing connection'] ?? [];
-  const workersLogging = data?.Workers['Logging'] ?? [];
+  const workersLogging = data?.Workers.Logging ?? [];
   const workersFinishing = data?.Workers['Gracefully finishing'] ?? [];
   const workersCleanup = data?.Workers['Idle cleanup of worker'] ?? [];
 

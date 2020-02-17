@@ -1,6 +1,5 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import { withTheme, WithTheme } from 'src/components/core/styles';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import {
@@ -8,6 +7,7 @@ import {
   getMaxUnitAndFormatNetwork,
   sumNetwork
 } from 'src/features/Longview/shared/utilities';
+import { compose } from 'src/utilities/compose';
 import { convertData } from '../../../shared/formatters';
 import { GraphProps } from './types';
 import { useGraphs } from './useGraphs';

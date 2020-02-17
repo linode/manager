@@ -8,7 +8,7 @@ import { stringify } from 'qs';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { compose } from 'recompose';
+import { compose } from 'src/utilities/compose';
 
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 

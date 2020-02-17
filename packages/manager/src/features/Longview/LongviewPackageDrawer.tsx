@@ -1,6 +1,5 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
@@ -13,6 +12,7 @@ import withLongviewStats, {
   DispatchProps,
   LVClientData
 } from 'src/containers/longview.stats.container';
+import { compose } from 'src/utilities/compose';
 import LongviewPackageRow from './LongviewPackageRow';
 import { LongviewPackage } from './request.types';
 

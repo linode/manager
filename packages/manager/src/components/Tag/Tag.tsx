@@ -2,7 +2,6 @@ import Close from '@material-ui/icons/Close';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 import Button from 'src/components/core/Button';
 import Chip, { ChipProps } from 'src/components/core/Chip';
 import {
@@ -11,6 +10,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import { compose } from 'src/utilities/compose';
 
 type Variants =
   | 'white'
@@ -171,9 +171,6 @@ class Tag extends React.Component<CombinedProps, {}> {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(
-  styled,
-  withRouter
-)(Tag);
+const enhanced = compose<CombinedProps, Props>(styled, withRouter)(Tag);
 
 export default enhanced;

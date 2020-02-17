@@ -1,6 +1,5 @@
 import { LongviewClient } from 'linode-js-sdk/lib/longview/types';
 import * as React from 'react';
-import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
@@ -10,6 +9,7 @@ import ErrorState from 'src/components/ErrorState';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import { Props as LVProps } from 'src/containers/longview.container';
+import { compose } from 'src/utilities/compose';
 import LongviewRows from './LongviewListRows';
 
 const useStyles = makeStyles((theme: Theme) => ({

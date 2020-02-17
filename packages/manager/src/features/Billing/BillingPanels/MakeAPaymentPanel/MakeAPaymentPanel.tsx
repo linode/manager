@@ -31,7 +31,6 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import scriptLoader from 'react-async-script-loader';
 import * as ReactDOM from 'react-dom';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
@@ -53,6 +52,7 @@ import { PAYPAL_CLIENT_ENV } from 'src/constants';
 import AccountContainer, {
   DispatchProps as AccountDispatchProps
 } from 'src/containers/account.container';
+import { compose } from 'src/utilities/compose';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 

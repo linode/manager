@@ -15,7 +15,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Sticky, StickyContainer, StickyProps } from 'react-sticky';
-import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
@@ -48,6 +47,7 @@ import {
   WithNodeBalancerActions
 } from 'src/store/nodeBalancer/nodeBalancer.containers';
 import { MapState } from 'src/store/types';
+import { compose as recompose } from 'src/utilities/compose';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendCreateNodeBalancerEvent } from 'src/utilities/ga';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -189,10 +189,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
   afterProtocolUpdate = (L: { [key: string]: Lens }) => () => {
     this.setState(
-      compose(
-        set(L.sslCertificateLens, ''),
-        set(L.privateKeyLens, '')
-      )
+      compose(set(L.sslCertificateLens, ''), set(L.privateKeyLens, ''))
     );
   };
 
@@ -394,7 +391,10 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
   tagsChange = (tags: Tag[]) => {
     this.setState(
-      set(lensPath(['nodeBalancerFields', 'tags']), tags.map(tag => tag.value))
+      set(
+        lensPath(['nodeBalancerFields', 'tags']),
+        tags.map(tag => tag.value)
+      )
     );
   };
 

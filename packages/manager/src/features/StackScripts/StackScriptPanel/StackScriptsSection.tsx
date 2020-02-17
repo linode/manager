@@ -4,7 +4,6 @@ import { StackScript } from 'linode-js-sdk/lib/stackscripts';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import {
   createStyles,
@@ -24,6 +23,7 @@ import {
   StackScriptCategory
 } from 'src/features/StackScripts/stackScriptUtils';
 import { MapState } from 'src/store/types';
+import { compose } from 'src/utilities/compose';
 import { formatDate } from 'src/utilities/format-date-iso8601';
 import stripImageName from 'src/utilities/stripImageName';
 import truncateText from 'src/utilities/truncateText';
@@ -128,9 +128,6 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose<CombinedProps, Props>(
-  connected,
-  styled
-);
+const enhanced = compose<CombinedProps, Props>(connected, styled);
 
 export default enhanced(StackScriptsSection);

@@ -2,7 +2,6 @@ import Backup from '@material-ui/icons/Backup';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -12,6 +11,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
+import { compose } from 'src/utilities/compose';
 import DashboardCard from '../DashboardCard';
 
 type ClassNames =

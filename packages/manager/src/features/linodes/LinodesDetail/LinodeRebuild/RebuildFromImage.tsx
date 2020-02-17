@@ -9,7 +9,6 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -27,6 +26,7 @@ import { resetEventsPolling } from 'src/eventsPolling';
 import userSSHKeyHoc, {
   UserSSHKeyProps
 } from 'src/features/linodes/userSSHKeyHoc';
+import { compose } from 'src/utilities/compose';
 import {
   handleFieldErrors,
   handleGeneralErrors
@@ -69,9 +69,7 @@ const initialValues: RebuildFromImageForm = {
   root_pass: ''
 };
 
-export const RebuildFromImage: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const RebuildFromImage: React.StatelessComponent<CombinedProps> = props => {
   const {
     classes,
     imagesData,

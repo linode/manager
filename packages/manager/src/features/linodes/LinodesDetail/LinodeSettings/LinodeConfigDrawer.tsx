@@ -9,7 +9,6 @@ import { Volume } from 'linode-js-sdk/lib/volumes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
@@ -41,6 +40,7 @@ import DeviceSelection, {
   ExtendedVolume
 } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import { ApplicationState } from 'src/store';
+import { compose } from 'src/utilities/compose';
 import createDevicesFromStrings, {
   DevicesAsStrings
 } from 'src/utilities/createDevicesFromStrings';

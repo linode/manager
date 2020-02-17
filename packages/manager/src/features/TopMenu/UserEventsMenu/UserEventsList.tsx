@@ -2,9 +2,9 @@ import { Event } from 'linode-js-sdk/lib/account';
 import * as moment from 'moment';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 import eventMessageGenerator from 'src/eventMessageGenerator';
 import { ExtendedEvent } from 'src/store/events/event.types';
+import { compose } from 'src/utilities/compose';
 import createLinkHandlerForNotification from 'src/utilities/getEventsActionLinkStrings';
 import UserEventsListItem, {
   Props as UserEventsListItemProps
@@ -17,9 +17,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<void>;
 
-export const UserEventsList: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const UserEventsList: React.StatelessComponent<CombinedProps> = props => {
   const { events, closeMenu } = props;
 
   return (

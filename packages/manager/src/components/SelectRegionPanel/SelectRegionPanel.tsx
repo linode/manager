@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -9,6 +8,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
+import { compose } from 'src/utilities/compose';
 
 import RegionSelect, {
   ExtendedRegion

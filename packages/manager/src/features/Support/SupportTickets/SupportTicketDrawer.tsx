@@ -9,7 +9,6 @@ import { APIError, ResourcePage } from 'linode-js-sdk/lib/types';
 import { getVolumes } from 'linode-js-sdk/lib/volumes';
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
-import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormHelperText from 'src/components/core/FormHelperText';
@@ -27,6 +26,7 @@ import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
 import { getNodeBalancers } from 'src/services/nodebalancers';
+import { compose as recompose } from 'src/utilities/compose';
 import composeState from 'src/utilities/composeState';
 import {
   getAPIErrorOrDefault,

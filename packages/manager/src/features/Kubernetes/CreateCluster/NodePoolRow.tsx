@@ -2,7 +2,6 @@ import * as classNames from 'classnames';
 import produce from 'immer';
 import { PoolNodeResponse } from 'linode-js-sdk/lib/kubernetes';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import {
   createStyles,
@@ -20,6 +19,7 @@ import TableRow from 'src/components/TableRow';
 import TextField from 'src/components/TextField';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { displayTypeForKubePoolNode } from 'src/features/linodes/presentation';
+import { compose } from 'src/utilities/compose';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { PoolNodeWithPrice } from '.././types';
 

@@ -3,9 +3,9 @@ import { LinodeStatus } from 'linode-js-sdk/lib/linodes';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { path } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import ProductNotification from 'src/components/ProductNotification';
 import { withNotifications } from 'src/store/notification/notification.containers';
+import { compose } from 'src/utilities/compose';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 
 import MaintenanceBanner from 'src/components/MaintenanceBanner';

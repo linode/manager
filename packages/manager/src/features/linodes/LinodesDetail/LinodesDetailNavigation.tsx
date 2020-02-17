@@ -8,12 +8,12 @@ import {
   Switch,
   withRouter
 } from 'react-router-dom';
-import { compose } from 'recompose';
 import AppBar from 'src/components/core/AppBar';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import TabLink from 'src/components/TabLink';
 import VolumesLanding from 'src/features/Volumes/VolumesLanding';
+import { compose } from 'src/utilities/compose';
 import { withLinodeDetailContext } from './linodeDetailContext';
 
 import DefaultLoader from 'src/components/DefaultLoader';
@@ -59,9 +59,7 @@ type CombinedProps = ContextProps &
     linodeId: string;
   }>;
 
-const LinodesDetailNavigation: React.StatelessComponent<
-  CombinedProps
-> = props => {
+const LinodesDetailNavigation: React.StatelessComponent<CombinedProps> = props => {
   const {
     match: { url },
     linodeLabel,

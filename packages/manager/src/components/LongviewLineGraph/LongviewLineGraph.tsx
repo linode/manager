@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import { compose } from 'src/utilities/compose';
 
 import Divider from 'src/components/core/Divider';
 import Typography from 'src/components/core/Typography';

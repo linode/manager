@@ -1,7 +1,6 @@
 import { path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -14,6 +13,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import CopyableTextField from 'src/features/Volumes/CopyableTextField';
 import { MapState } from 'src/store/types';
+import { compose } from 'src/utilities/compose';
 
 type ClassNames = 'root' | 'results' | 'title' | 'copyField';
 
@@ -128,9 +128,6 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose<CombinedProps, {}>(
-  styled,
-  connected
-);
+const enhanced = compose<CombinedProps, {}>(styled, connected);
 
 export default enhanced(Referrals);

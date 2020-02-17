@@ -2,7 +2,6 @@ import { Event, EventAction } from 'linode-js-sdk/lib/account';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
 import {
   createStyles,
@@ -17,6 +16,7 @@ import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import eventMessageGenerator from 'src/eventMessageGenerator';
+import { compose } from 'src/utilities/compose';
 
 import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
 import getEventsActionLink from 'src/utilities/getEventsActionLink';

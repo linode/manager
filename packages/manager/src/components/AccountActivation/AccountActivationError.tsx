@@ -1,7 +1,7 @@
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
-import { compose } from 'recompose';
 import withGlobalErrors, { Props } from 'src/containers/globalErrors.container';
+import { compose } from 'src/utilities/compose';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface InnerProps {

@@ -1,6 +1,5 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import CPUIcon from 'src/assets/icons/longview/cpu-icon.svg';
 import DiskIcon from 'src/assets/icons/longview/disk.svg';
 import PackageIcon from 'src/assets/icons/longview/package-icon.svg';
@@ -11,6 +10,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import IconTextLink from 'src/components/IconTextLink';
 import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
+import { compose } from 'src/utilities/compose';
 import { formatUptime } from 'src/utilities/formatUptime';
 import { readableBytes } from 'src/utilities/unitConversions';
 

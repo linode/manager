@@ -1,10 +1,10 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { compose } from 'recompose';
 import { makeStyles } from 'src/components/core/styles';
 import { MapState } from 'src/store/types';
 import { srSpeak } from 'src/utilities/accessibility';
+import { compose } from 'src/utilities/compose';
 
 import Logo from 'src/assets/logo/logo-animated.svg';
 import './keyframes.css';
@@ -72,7 +72,4 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 
 const connected = connect(mapStateToProps);
 
-export default compose<CombinedProps, {}>(
-  connected,
-  React.memo
-)(SplashScreen);
+export default compose<CombinedProps, {}>(connected, React.memo)(SplashScreen);

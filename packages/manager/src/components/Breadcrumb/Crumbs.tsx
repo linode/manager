@@ -2,8 +2,8 @@ import * as classNames from 'classnames';
 import { LocationDescriptor } from 'history';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import { compose } from 'src/utilities/compose';
 
 import Typography from 'src/components/core/Typography';
 import FinalCrumb from './FinalCrumb';

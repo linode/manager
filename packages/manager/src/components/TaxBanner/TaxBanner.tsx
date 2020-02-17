@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import useFlags from 'src/hooks/useFlags';
+import { compose } from 'src/utilities/compose';
 
 interface Props {
   location: RouteComponentProps<{}>['location'];

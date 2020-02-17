@@ -12,7 +12,7 @@ import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
+import { compose } from 'src/utilities/compose';
 
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';

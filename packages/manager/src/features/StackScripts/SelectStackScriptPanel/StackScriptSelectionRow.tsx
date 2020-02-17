@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import { compose as recompose } from 'recompose';
 import Button from 'src/components/Button';
 import { withStyles, WithStyles } from 'src/components/core/styles';
 import TableCell from 'src/components/core/TableCell';
@@ -10,6 +9,7 @@ import Radio from 'src/components/Radio';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TableRow from 'src/components/TableRow';
 import { openStackScriptDrawer as openStackScriptDrawerAction } from 'src/store/stackScriptDrawer';
+import { compose as recompose } from 'src/utilities/compose';
 import { ClassNames, styles } from '../StackScriptRowHelpers';
 
 export interface Props {
@@ -65,9 +65,7 @@ export class StackScriptSelectionRow extends React.Component<
               {stackScriptUsername && (
                 <label
                   htmlFor={`${stackScriptID}`}
-                  className={`${classes.libRadioLabel} ${
-                    classes.stackScriptUsername
-                  }`}
+                  className={`${classes.libRadioLabel} ${classes.stackScriptUsername}`}
                 >
                   {stackScriptUsername} /&nbsp;
                 </label>
@@ -135,10 +133,7 @@ const mapDispatchToProps: MapDispatchToProps<
 };
 
 export default recompose<CombinedProps, Props & RenderGuardProps>(
-  connect(
-    undefined,
-    mapDispatchToProps
-  ),
+  connect(undefined, mapDispatchToProps),
   RenderGuard,
   withStyles(styles)
 )(StackScriptSelectionRow);

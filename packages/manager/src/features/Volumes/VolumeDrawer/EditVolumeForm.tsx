@@ -1,13 +1,13 @@
 import { Form, Formik } from 'formik';
 import { UpdateVolumeSchema } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Notice from 'src/components/Notice';
 import TagsInput, { Tag } from 'src/components/TagsInput';
 import withVolumesRequest, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
 import { updateVolumes$ } from 'src/features/Volumes/WithEvents';
+import { compose } from 'src/utilities/compose';
 import {
   handleFieldErrors,
   handleGeneralErrors

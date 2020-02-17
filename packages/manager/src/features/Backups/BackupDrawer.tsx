@@ -3,7 +3,6 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
@@ -22,17 +21,11 @@ import {
   handleResetSuccess
 } from 'src/store/backupDrawer';
 import { ThunkDispatch } from 'src/store/types';
+import { compose } from 'src/utilities/compose';
 import { getTypeInfo } from 'src/utilities/typesHelpers';
 import AutoEnroll from './AutoEnroll';
 import BackupsTable from './BackupsTable';
-
-export interface ExtendedLinode extends LinodeWithTypeInfo {
-  linodeError?: BackupError;
-}
-
-export interface LinodeWithTypeInfo extends Linode {
-  typeInfo?: LinodeType;
-}
+import { ExtendedLinode, LinodeWithTypeInfo } from './types';
 
 interface DispatchProps {
   actions: {
@@ -290,10 +283,7 @@ const mapStateToProps: MapStateToProps<
   };
 };
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 interface WithTypesProps {
   typesData: LinodeType[];
@@ -303,10 +293,6 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
   typesData: state.__resources.types.entities
 }));
 
-const enhanced = compose<CombinedProps, {}>(
-  withTypes,
-  connected,
-  withSnackbar
-);
+const enhanced = compose<CombinedProps, {}>(withTypes, connected, withSnackbar);
 
 export default enhanced(BackupDrawer);

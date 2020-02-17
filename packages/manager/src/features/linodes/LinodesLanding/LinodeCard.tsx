@@ -8,7 +8,6 @@ import {
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 import Flag from 'src/assets/icons/flag.svg';
 import Button from 'src/components/Button';
 import Card from 'src/components/core/Card';
@@ -30,6 +29,7 @@ import {
   transitionText
 } from 'src/features/linodes/transitions';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
+import { compose } from 'src/utilities/compose';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { typeLabelDetails } from '../presentation';
 import hasMutationAvailable, {

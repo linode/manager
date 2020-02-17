@@ -8,7 +8,6 @@ import {
 } from 'linode-js-sdk/lib/account';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
-import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
 import Paper from 'src/components/core/Paper';
 import {
@@ -32,6 +31,7 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { LinodeAPI } from 'src/documentation';
+import { compose } from 'src/utilities/compose';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import ActionMenu from './OAuthClientActionMenu';

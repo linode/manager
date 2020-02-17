@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Box from 'src/components/core/Box';
@@ -12,6 +11,7 @@ import Grid from 'src/components/Grid';
 import withFirewalls, {
   Props as FireProps
 } from 'src/containers/firewalls.container';
+import { compose } from 'src/utilities/compose';
 import AddFirewallDrawer from './AddFirewallDrawer';
 import DeleteDialog from './DeleteFirewallDialog';
 import DisableDialog from './DisableFirewallDialog';

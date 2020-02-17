@@ -2,7 +2,6 @@ import { Linode } from 'linode-js-sdk/lib/linodes';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { groupBy } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import EnhancedSelect, {
   GroupType,
   Item
@@ -11,6 +10,7 @@ import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import withLinodes from 'src/containers/withLinodes.container';
 import { formatRegion } from 'src/utilities';
+import { compose } from 'src/utilities/compose';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 interface WithLinodesProps {

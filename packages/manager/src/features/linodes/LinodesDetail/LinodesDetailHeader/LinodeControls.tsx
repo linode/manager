@@ -2,7 +2,6 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import { last } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 import Breadcrumb, { BreadcrumbProps } from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import {
@@ -13,6 +12,7 @@ import {
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
+import { compose } from 'src/utilities/compose';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import {

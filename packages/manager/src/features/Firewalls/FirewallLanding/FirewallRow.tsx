@@ -6,7 +6,7 @@ import {
 import { APIError } from 'linode-js-sdk/lib/types';
 import { take } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
+import { compose } from 'src/utilities/compose';
 
 import TableRow from 'src/components/core/TableRow';
 import TableCell from 'src/components/TableCell';

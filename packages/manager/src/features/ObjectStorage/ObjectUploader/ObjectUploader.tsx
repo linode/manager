@@ -3,13 +3,13 @@ import { getObjectURL } from 'linode-js-sdk/lib/object-storage';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { useDropzone } from 'react-dropzone';
-import { compose } from 'recompose';
 import CloudUpload from 'src/assets/icons/cloudUpload.svg';
 import Button from 'src/components/Button';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
+import { compose } from 'src/utilities/compose';
 import { sendObjectsQueuedForUploadEvent } from 'src/utilities/ga';
 import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
@@ -397,10 +397,7 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(
-  withSnackbar,
-  React.memo
-);
+const enhanced = compose<CombinedProps, Props>(withSnackbar, React.memo);
 
 export default enhanced(ObjectUploader);
 

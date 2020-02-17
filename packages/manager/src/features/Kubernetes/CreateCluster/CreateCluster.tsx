@@ -9,7 +9,6 @@ import { pick, remove, update } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { StickyContainer } from 'react-sticky';
-import { compose } from 'recompose';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import {
@@ -29,6 +28,7 @@ import { dcDisplayNames } from 'src/constants';
 import regionsContainer from 'src/containers/regions.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { WithRegionsProps } from 'src/features/linodes/LinodesCreate/types';
+import { compose } from 'src/utilities/compose';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';

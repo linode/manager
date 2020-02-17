@@ -2,7 +2,6 @@ import { GrantLevel } from 'linode-js-sdk/lib/account';
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose as recompose } from 'recompose';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import {
   createStyles,
@@ -21,6 +20,7 @@ import {
   LinodeActionsProps,
   withLinodeActions
 } from 'src/store/linodes/linode.containers';
+import { compose as recompose } from 'src/utilities/compose';
 
 type ClassNames = 'root' | 'shutDownWatchdog';
 

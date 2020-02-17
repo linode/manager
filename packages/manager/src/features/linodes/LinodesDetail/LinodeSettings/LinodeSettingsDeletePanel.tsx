@@ -2,7 +2,6 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import { lensPath, set } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -15,6 +14,7 @@ import {
   LinodeActionsProps,
   withLinodeActions
 } from 'src/store/linodes/linode.containers';
+import { compose } from 'src/utilities/compose';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 interface Props {

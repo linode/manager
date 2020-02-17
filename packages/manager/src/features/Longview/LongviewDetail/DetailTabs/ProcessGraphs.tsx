@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import {
   makeStyles,
   Theme,
@@ -8,6 +7,7 @@ import {
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
+import { compose } from 'src/utilities/compose';
 import {
   convertBytesToTarget,
   readableBytes

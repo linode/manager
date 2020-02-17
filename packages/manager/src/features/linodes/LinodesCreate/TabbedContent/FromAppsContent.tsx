@@ -4,7 +4,6 @@ import { assocPath, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { Sticky, StickyProps } from 'react-sticky';
-import { compose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
@@ -26,6 +25,7 @@ import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
 import { AppDetailDrawer } from 'src/features/OneClickApps';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
+import { compose } from 'src/utilities/compose';
 import AddonsPanel from '../AddonsPanel';
 import SelectAppPanel from '../SelectAppPanel';
 import SelectPlanPanel from '../SelectPlanPanel';
@@ -109,16 +109,13 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
      * to our list of master images supported by Linode and filter out the ones
      * that aren't compatible with our selected StackScript
      */
-    const compatibleImages = Object.keys(imagesData).reduce(
-      (acc, eachKey) => {
-        if (stackScriptImages.some(eachSSImage => eachSSImage === eachKey)) {
-          acc.push(imagesData[eachKey]);
-        }
+    const compatibleImages = Object.keys(imagesData).reduce((acc, eachKey) => {
+      if (stackScriptImages.some(eachSSImage => eachSSImage === eachKey)) {
+        acc.push(imagesData[eachKey]);
+      }
 
-        return acc;
-      },
-      [] as Image[]
-    );
+      return acc;
+    }, [] as Image[]);
 
     /**
      * if a UDF field comes back from the API with a "default"

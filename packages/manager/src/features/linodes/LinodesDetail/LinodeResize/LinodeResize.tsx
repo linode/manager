@@ -10,7 +10,6 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -36,6 +35,7 @@ import { typeLabelDetails } from 'src/features/linodes/presentation';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import { ApplicationState } from 'src/store';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
+import { compose } from 'src/utilities/compose';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import LinodePermissionsError from '../LinodePermissionsError';
 import ResizeConfirmation from './ResizeConfirmationDialog';
@@ -306,7 +306,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           <Typography data-qa-description>
             If you're expecting a temporary burst of traffic to your website, or
             if you're not using your Linode as much as you thought, you can
-            temporarily or permanently resize your Linode to a different plan.{' '} 
+            temporarily or permanently resize your Linode to a different plan.{' '}
             <ExternalLink
               fixedIcon
               text="Learn more."

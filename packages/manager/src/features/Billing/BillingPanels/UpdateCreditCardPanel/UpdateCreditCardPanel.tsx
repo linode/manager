@@ -3,7 +3,6 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import { range, take, takeLast } from 'ramda';
 import * as React from 'react';
 import NumberFormat from 'react-number-format';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
@@ -23,6 +22,7 @@ import accountContainer, {
   Props as AccountContainerProps
 } from 'src/containers/account.container';
 import { withAccount } from 'src/features/Billing/context';
+import { compose } from 'src/utilities/compose';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import isCreditCardExpired from 'src/utilities/isCreditCardExpired';

@@ -1,7 +1,6 @@
 import { getManagedStats, ManagedStatsData } from 'linode-js-sdk/lib/managed';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -16,6 +15,7 @@ import withManaged, {
   ManagedProps
 } from 'src/containers/managedServices.container';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import { compose } from 'src/utilities/compose';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import DashboardCard from '../DashboardCard';
@@ -208,9 +208,6 @@ const LoadingErrorOrContent: React.FC<ContentProps> = props => {
   );
 };
 
-const enhanced = compose<CombinedProps, {}>(
-  withManaged(),
-  withManagedIssues()
-);
+const enhanced = compose<CombinedProps, {}>(withManaged(), withManagedIssues());
 
 export default enhanced(ManagedDashboardCard);

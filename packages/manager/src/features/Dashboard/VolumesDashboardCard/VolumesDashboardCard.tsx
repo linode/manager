@@ -2,10 +2,10 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import { take } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import Table from 'src/components/core/Table';
 import TableBody from 'src/components/core/TableBody';
+import { compose } from 'src/utilities/compose';
 
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
@@ -23,9 +23,7 @@ interface VolumeProps {
 
 type CombinedProps = VolumeProps;
 
-export const VolumesDashboardCard: React.FunctionComponent<
-  CombinedProps
-> = props => {
+export const VolumesDashboardCard: React.FunctionComponent<CombinedProps> = props => {
   const { volumesData, volumesLoading, volumesError } = props;
 
   const volumes = take(5, volumesData);

@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import { WithTheme, withTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
 import withClientStats, {
   Props as LVDataProps
 } from 'src/containers/longview.stats.container';
+import { compose } from 'src/utilities/compose';
 import { LongviewNetwork } from '../../request.types';
 import {
   convertNetworkToUnit,

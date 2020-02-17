@@ -9,7 +9,6 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -37,6 +36,7 @@ import {
 } from 'src/features/StackScripts/stackScriptUtils';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import { useStackScript } from 'src/hooks/useStackScript';
+import { compose } from 'src/utilities/compose';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
@@ -95,9 +95,7 @@ const initialValues: RebuildFromStackScriptForm = {
   stackscript_id: ''
 };
 
-export const RebuildFromStackScript: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const RebuildFromStackScript: React.StatelessComponent<CombinedProps> = props => {
   const {
     classes,
     imagesData,

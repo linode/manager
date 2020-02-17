@@ -1,6 +1,6 @@
 import Search from '@material-ui/icons/Search';
 import * as React from 'react';
-import { compose } from 'recompose';
+import { compose } from 'src/utilities/compose';
 
 import CircleProgress from 'src/components/CircleProgress';
 import InputAdornment from 'src/components/core/InputAdornment';

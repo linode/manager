@@ -1,6 +1,5 @@
 import { ObjectStorageKey } from 'linode-js-sdk/lib/object-storage';
 import * as React from 'react';
-import { compose } from 'recompose';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Paper from 'src/components/core/Paper';
 import {
@@ -19,6 +18,7 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
+import { compose } from 'src/utilities/compose';
 import AccessKeyMenu from './AccessKeyMenu';
 
 type ClassNames = 'root' | 'headline' | 'paper' | 'labelCell' | 'copyIcon';
@@ -56,9 +56,7 @@ export type CombinedProps = Props &
   WithStyles<ClassNames> &
   PaginationProps<ObjectStorageKey>;
 
-export const AccessKeyTable: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const AccessKeyTable: React.StatelessComponent<CombinedProps> = props => {
   const {
     classes,
     data,

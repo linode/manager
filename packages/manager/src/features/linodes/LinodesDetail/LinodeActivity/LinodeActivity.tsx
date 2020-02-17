@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import {
   createStyles,
   Theme,
@@ -8,6 +7,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EventsLanding from 'src/features/Events/EventsLanding';
+import { compose } from 'src/utilities/compose';
 import { getEventsForEntity } from 'src/utilities/getEventsForEntity';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 
@@ -23,9 +23,7 @@ const styles = (theme: Theme) =>
 
 type CombinedProps = WithStyles<ClassNames> & StateProps;
 
-export const LinodeActivity: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const LinodeActivity: React.StatelessComponent<CombinedProps> = props => {
   const { classes, linodeID } = props;
 
   return (
@@ -58,9 +56,6 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, {}>(
-  linodeContext,
-  styled
-);
+const enhanced = compose<CombinedProps, {}>(linodeContext, styled);
 
 export default enhanced(LinodeActivity);

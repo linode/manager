@@ -1,11 +1,11 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 import Divider from 'src/components/core/Divider';
 import ListItem from 'src/components/core/ListItem';
 import ListItemText from 'src/components/core/ListItemText';
 import Tooltip from 'src/components/core/Tooltip';
+import { compose } from 'src/utilities/compose';
 
 interface Props extends PrimaryLink {
   closeMenu: () => void;

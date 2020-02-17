@@ -4,7 +4,6 @@ import { AccountCapability } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import KubernetesIcon from 'src/assets/addnewmenu/kubernetes.svg';
@@ -23,6 +22,7 @@ import {
 import { openForCreating as openDomainDrawerForCreating } from 'src/store/domainDrawer';
 import { MapState } from 'src/store/types';
 import { isKubernetesEnabled } from 'src/utilities/accountCapabilities';
+import { compose } from 'src/utilities/compose';
 import AddNewMenuItem, { MenuItems } from './AddNewMenuItem';
 
 import { sendOneClickNavigationEvent } from 'src/utilities/ga';

@@ -2,7 +2,7 @@ import * as classNames from 'classnames';
 import { getKubeConfig } from 'linode-js-sdk/lib/kubernetes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
-import { compose } from 'recompose';
+import { compose } from 'src/utilities/compose';
 
 import Download from 'src/assets/icons/download.svg';
 import View from 'src/assets/icons/view.svg';

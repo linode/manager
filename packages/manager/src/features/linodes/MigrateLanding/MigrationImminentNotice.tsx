@@ -1,6 +1,6 @@
 import { Notification } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
-import { compose } from 'recompose';
+import { compose } from 'src/utilities/compose';
 
 import Notice from 'src/components/Notice';
 import SupportLink from 'src/components/SupportLink';

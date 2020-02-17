@@ -3,7 +3,7 @@ import * as classNames from 'classnames';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
+import { compose } from 'src/utilities/compose';
 
 import {
   createStyles,

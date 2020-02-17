@@ -2,7 +2,6 @@ import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import * as classNames from 'classnames';
 import { clamp, equals } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import InputAdornment from 'src/components/core/InputAdornment';
 import {
@@ -14,6 +13,7 @@ import {
 } from 'src/components/core/styles';
 import TextField, { TextFieldProps } from 'src/components/core/TextField';
 import HelpIcon from 'src/components/HelpIcon';
+import { compose } from 'src/utilities/compose';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
 import FormHelperText from 'src/components/core/FormHelperText';

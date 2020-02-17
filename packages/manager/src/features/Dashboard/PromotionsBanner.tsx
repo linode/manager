@@ -1,7 +1,7 @@
 import { Notification } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
+import { compose } from 'src/utilities/compose';
 
 import AttachMoney from '@material-ui/icons/AttachMoney';
 import Paper from 'src/components/core/Paper';
@@ -73,8 +73,5 @@ export const PromotionsBanner: React.FC<CombinedProps> = props => {
 };
 
 const styled = withStyles(styles);
-const enhanced = compose<CombinedProps, Props>(
-  styled,
-  React.memo
-);
+const enhanced = compose<CombinedProps, Props>(styled, React.memo);
 export default enhanced(PromotionsBanner);

@@ -5,7 +5,6 @@ import { CreateVolumeSchema } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
 import CheckoutBar from 'src/components/CheckoutBar';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Paper from 'src/components/core/Paper';
@@ -31,6 +30,7 @@ import {
 } from 'src/features/Profile/permissionsHelpers';
 import { MapState } from 'src/store/types';
 import { Origin as VolumeDrawerOrigin } from 'src/store/volumeForm';
+import { compose } from 'src/utilities/compose';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,

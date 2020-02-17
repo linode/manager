@@ -2,7 +2,7 @@ import { getKubeConfig } from 'linode-js-sdk/lib/kubernetes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
+import { compose } from 'src/utilities/compose';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 import { reportException } from 'src/exceptionReporting';
@@ -17,9 +17,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}> & WithSnackbarProps;
 
-export const ClusterActionMenu: React.FunctionComponent<
-  CombinedProps
-> = props => {
+export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = props => {
   const {
     clusterId,
     clusterLabel,
@@ -98,9 +96,6 @@ export const ClusterActionMenu: React.FunctionComponent<
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(
-  withSnackbar,
-  withRouter
-);
+const enhanced = compose<CombinedProps, Props>(withSnackbar, withRouter);
 
 export default enhanced(ClusterActionMenu);

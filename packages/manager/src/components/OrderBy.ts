@@ -1,7 +1,7 @@
 import * as moment from 'moment';
 import { pathOr, sort, splitAt } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
+import { compose } from 'src/utilities/compose';
 import { debounce } from 'throttle-debounce';
 
 import { Order } from 'src/components/Pagey';

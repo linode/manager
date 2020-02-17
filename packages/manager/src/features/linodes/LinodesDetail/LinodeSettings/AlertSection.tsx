@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import InputAdornment from 'src/components/core/InputAdornment';
@@ -14,6 +13,7 @@ import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
+import { compose } from 'src/utilities/compose';
 
 type ClassNames = 'root' | 'switch' | 'copy' | 'usage' | 'usageWrapper';
 
@@ -148,7 +148,4 @@ class AlertSection extends React.Component<CombinedProps> {
 
 const styled = withStyles(styles);
 
-export default compose<CombinedProps, any>(
-  RenderGuard,
-  styled
-)(AlertSection);
+export default compose<CombinedProps, any>(RenderGuard, styled)(AlertSection);

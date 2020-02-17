@@ -1,6 +1,6 @@
 import _Paper, { PaperProps as _PaperProps } from '@material-ui/core/Paper';
 import * as React from 'react';
-import { compose } from 'recompose';
+import { compose } from 'src/utilities/compose';
 import FormHelperText from './FormHelperText';
 
 import {

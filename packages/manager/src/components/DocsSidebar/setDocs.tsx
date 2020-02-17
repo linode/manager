@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import { compose } from 'recompose';
 import {
   clearDocs as _clearDocs,
   setDocs as _setDocs
 } from 'src/store/documentation';
+import { compose } from 'src/utilities/compose';
 
 export type SetDocsProps = DispatchProps;
 

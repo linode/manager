@@ -2,7 +2,7 @@ import { Account, getAccountInfo } from 'linode-js-sdk/lib/account';
 import { lensPath, set, view } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
+import { compose } from 'src/utilities/compose';
 
 import {
   createStyles,

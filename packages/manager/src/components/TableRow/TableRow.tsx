@@ -1,7 +1,6 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
 import {
   createStyles,
@@ -12,6 +11,7 @@ import {
 import _TableRow, {
   TableRowProps as _TableRowProps
 } from 'src/components/core/TableRow';
+import { compose } from 'src/utilities/compose';
 
 type ClassNames =
   | 'root'
@@ -223,8 +223,8 @@ class TableRow extends React.Component<CombinedProps> {
         {selected && (
           <Hidden mdDown>
             <td colSpan={0} className={classes.selectedOuter}>
-              <span className={classes.activeCaret}></span>
-              <span className={classes.activeCaretOverlay}></span>
+              <span className={classes.activeCaret} />
+              <span className={classes.activeCaretOverlay} />
             </td>
           </Hidden>
         )}

@@ -2,7 +2,6 @@ import { Image } from 'linode-js-sdk/lib/images';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
-import { compose } from 'recompose';
 import BackupStatus from 'src/components/BackupStatus';
 import Paper from 'src/components/core/Paper';
 import {
@@ -23,6 +22,7 @@ import {
   LinodeActionsProps,
   withLinodeActions
 } from 'src/store/linodes/linode.containers';
+import { compose } from 'src/utilities/compose';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import LinodeNetSummary from './LinodeNetSummary';
 

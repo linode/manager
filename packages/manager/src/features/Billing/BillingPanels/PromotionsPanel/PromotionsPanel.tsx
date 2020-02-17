@@ -2,13 +2,13 @@ import { ActivePromotion } from 'linode-js-sdk/lib/account';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import withAccount, {
   Props as AccountProps
 } from 'src/containers/account.container';
 import useFlags from 'src/hooks/useFlags';
+import { compose } from 'src/utilities/compose';
 
 import PanelContent from './PanelContent';
 

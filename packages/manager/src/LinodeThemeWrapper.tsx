@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import { ThemeProvider } from 'src/components/core/styles';
 import { dark, light } from 'src/themes';
+import { compose } from 'src/utilities/compose';
 
 import { COMPACT_SPACING_UNIT, NORMAL_SPACING_UNIT } from 'src/themeFactory';
 

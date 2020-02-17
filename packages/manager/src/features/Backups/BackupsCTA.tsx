@@ -2,7 +2,6 @@ import { Linode } from 'linode-js-sdk/lib/linodes';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import {
@@ -16,6 +15,7 @@ import Grid from 'src/components/Grid';
 import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import { handleOpen } from 'src/store/backupDrawer';
 import { MapState } from 'src/store/types';
+import { compose } from 'src/utilities/compose';
 
 type ClassNames = 'root' | 'container' | 'buttonsContainer' | 'dismiss';
 

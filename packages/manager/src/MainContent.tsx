@@ -3,7 +3,7 @@ import { AccountCapability } from 'linode-js-sdk/lib/account';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
-import { compose } from 'recompose';
+import Logo from 'src/assets/logo/logo-text.svg';
 import Box from 'src/components/core/Box';
 import {
   makeStyles,
@@ -11,33 +11,28 @@ import {
   withTheme,
   WithTheme
 } from 'src/components/core/styles';
-import RegionStatusBanner from 'src/components/RegionStatusBanner';
-
-import BackupDrawer from 'src/features/Backups';
-import DomainDrawer from 'src/features/Domains/DomainDrawer';
-import Footer from 'src/features/Footer';
-import ToastNotifications from 'src/features/ToastNotifications';
-import TopMenu from 'src/features/TopMenu';
-import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
-
 import DefaultLoader from 'src/components/DefaultLoader';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LandingLoading from 'src/components/LandingLoading';
 import NotFound from 'src/components/NotFound';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
+import RegionStatusBanner from 'src/components/RegionStatusBanner';
 import SideMenu from 'src/components/SideMenu';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-
 import withGlobalErrors, {
   Props as GlobalErrorProps
 } from 'src/containers/globalErrors.container';
 import withFeatureFlags, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container.ts';
-
-import Logo from 'src/assets/logo/logo-text.svg';
-
+import BackupDrawer from 'src/features/Backups';
+import DomainDrawer from 'src/features/Domains/DomainDrawer';
+import Footer from 'src/features/Footer';
+import ToastNotifications from 'src/features/ToastNotifications';
+import TopMenu from 'src/features/TopMenu';
+import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
+import { compose } from 'src/utilities/compose';
 import {
   isKubernetesEnabled as _isKubernetesEnabled,
   isObjectStorageEnabled

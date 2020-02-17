@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { compose } from 'recompose';
+import { compose } from 'src/utilities/compose';
 
 import Paper from 'src/components/core/Paper';
 import {
@@ -54,9 +54,7 @@ const renderEndpoint = (
   return endpoint || ''; // Just leave it blank if endpoint === null (which should never happen)
 };
 
-export const KubeSummaryPanel: React.FunctionComponent<
-  CombinedProps
-> = props => {
+export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props => {
   const { classes, cluster, endpoint, endpointError, endpointLoading } = props;
   const region = dcDisplayNames[cluster.region] || 'Unknown region';
   return (
@@ -100,9 +98,6 @@ export const KubeSummaryPanel: React.FunctionComponent<
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(
-  React.memo,
-  styled
-);
+const enhanced = compose<CombinedProps, Props>(React.memo, styled);
 
 export default enhanced(KubeSummaryPanel);

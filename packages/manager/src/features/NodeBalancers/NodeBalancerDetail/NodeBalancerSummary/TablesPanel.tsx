@@ -5,7 +5,6 @@ import {
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import {
@@ -24,6 +23,7 @@ import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
 import { formatBitsPerSecond } from 'src/features/Longview/shared/utilities';
 import { ExtendedNodeBalancer } from 'src/services/nodebalancers';
 import { ApplicationState } from 'src/store';
+import { compose } from 'src/utilities/compose';
 import { initAll } from 'src/utilities/initAll';
 import { formatNumber, getMetrics } from 'src/utilities/statMetrics';
 

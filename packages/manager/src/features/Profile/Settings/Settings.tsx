@@ -2,7 +2,6 @@ import { Profile } from 'linode-js-sdk/lib/profile';
 import { path } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import { compose } from 'recompose';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
 import {
@@ -17,6 +16,7 @@ import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
 import { updateProfile as handleUpdateProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
+import { compose } from 'src/utilities/compose';
 
 type ClassNames = 'root' | 'title' | 'label';
 
@@ -110,14 +110,8 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
   status: path(['data', 'email_notifications'], state.__resources.profile)
 });
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced = compose<CombinedProps, {}>(
-  styled,
-  connected
-);
+const enhanced = compose<CombinedProps, {}>(styled, connected);
 
 export default enhanced(ProfileSettings);

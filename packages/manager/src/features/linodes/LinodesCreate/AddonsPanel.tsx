@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 import CheckBox from 'src/components/CheckBox';
 import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
@@ -15,6 +14,7 @@ import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import Grid from 'src/components/Grid';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
+import { compose } from 'src/utilities/compose';
 
 type ClassNames =
   | 'root'

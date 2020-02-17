@@ -2,7 +2,6 @@ import { getStackScript, StackScript } from 'linode-js-sdk/lib/stackscripts';
 import { path } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
@@ -19,6 +18,7 @@ import NotFound from 'src/components/NotFound';
 import _StackScript from 'src/components/StackScript';
 import withProfile from 'src/containers/profile.container';
 import { StackScripts as StackScriptsDocs } from 'src/documentation';
+import { compose } from 'src/utilities/compose';
 import { getStackScriptUrl } from './stackScriptUtils';
 
 interface MatchProps {

@@ -7,7 +7,6 @@ import {
 import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
-import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
 import Paper from 'src/components/core/Paper';
 import {
@@ -31,6 +30,7 @@ import TableSortCell from 'src/components/TableSortCell';
 import { ManagedIssuesProps } from 'src/containers/managedIssues.container';
 import { DispatchProps } from 'src/containers/managedServices.container';
 import { useDialog } from 'src/hooks/useDialog';
+import { compose } from 'src/utilities/compose';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
@@ -302,8 +302,5 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
 };
 
 const styled = withStyles(styles);
-const enhanced = compose<CombinedProps, Props>(
-  withSnackbar,
-  styled
-);
+const enhanced = compose<CombinedProps, Props>(withSnackbar, styled);
 export default enhanced(MonitorTable);

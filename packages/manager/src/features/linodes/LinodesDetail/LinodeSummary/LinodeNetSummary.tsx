@@ -2,7 +2,6 @@ import { getLinodeTransfer, Linode } from 'linode-js-sdk/lib/linodes';
 import * as moment from 'moment';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { compose } from 'recompose';
 import BarPercent from 'src/components/BarPercent';
 import CircleProgress from 'src/components/CircleProgress';
 import { WithStyles } from 'src/components/core/styles';
@@ -14,6 +13,7 @@ import {
   styled
 } from 'src/features/Dashboard/TransferDashboardCard/TransferDashboardCard';
 import { MapState } from 'src/store/types';
+import { compose } from 'src/utilities/compose';
 import { isRecent } from 'src/utilities/isRecent.ts';
 import { readableBytes } from 'src/utilities/unitConversions';
 

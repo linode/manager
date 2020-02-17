@@ -1,7 +1,6 @@
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 import {
   createStyles,
   Theme,
@@ -10,6 +9,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
+import { compose } from 'src/utilities/compose';
 import { formatDate } from 'src/utilities/formatDate';
 import isPast from 'src/utilities/isPast';
 

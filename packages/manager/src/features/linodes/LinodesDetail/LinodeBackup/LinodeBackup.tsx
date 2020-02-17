@@ -19,7 +19,6 @@ import { path, pathOr, sortBy } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 import 'rxjs/add/operator/filter';
 import { Subscription } from 'rxjs/Subscription';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
@@ -60,6 +59,7 @@ import {
   withLinodeActions
 } from 'src/store/linodes/linode.containers';
 import { MapState } from 'src/store/types';
+import { compose } from 'src/utilities/compose';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 import {

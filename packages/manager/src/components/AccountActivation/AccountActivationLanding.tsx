@@ -1,7 +1,6 @@
 import Warning from '@material-ui/icons/CheckCircle';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
 import {
   makeStyles,
   Theme,
@@ -10,6 +9,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
+import { compose } from 'src/utilities/compose';
 
 import { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
 import SupportTicketDrawer from 'src/features/Support/SupportTickets/SupportTicketDrawer';

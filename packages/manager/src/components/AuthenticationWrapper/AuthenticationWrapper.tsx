@@ -15,9 +15,9 @@ import { Region } from 'linode-js-sdk/lib/regions';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import { compose } from 'recompose';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+import { compose } from 'src/utilities/compose';
 
 import { startEventsInterval } from 'src/events';
 import { redirectToLogin } from 'src/session';
@@ -56,8 +56,10 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
 
   makeInitialRequests = async () => {
     // When loading lish we avoid all this extra data loading
-    if (window.location?.pathname?.includes('/lish/')) { return; }
-    
+    if (window.location?.pathname?.includes('/lish/')) {
+      return;
+    }
+
     const {
       nodeBalancerActions: { getAllNodeBalancersWithConfigs }
     } = this.props;

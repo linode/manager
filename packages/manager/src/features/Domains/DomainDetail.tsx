@@ -7,7 +7,6 @@ import {
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import {
@@ -23,6 +22,7 @@ import summaryPanelStyles, {
   StyleProps
 } from 'src/containers/SummaryPanels.styles';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
+import { compose } from 'src/utilities/compose';
 import { getAllWithArguments } from 'src/utilities/getAll';
 
 import Loading from 'src/components/LandingLoading';

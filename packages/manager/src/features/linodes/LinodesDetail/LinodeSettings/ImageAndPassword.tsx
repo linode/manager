@@ -1,10 +1,10 @@
 import { GrantLevel } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
-import { compose } from 'recompose';
 import AccessPanel, { UserSSHKeyObject } from 'src/components/AccessPanel';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { ImageSelect } from 'src/features/Images';
+import { compose } from 'src/utilities/compose';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import LinodePermissionsError from '../LinodePermissionsError';
 
@@ -27,9 +27,7 @@ interface Props {
 
 type CombinedProps = Props & ContextProps & WithImages;
 
-export const ImageAndPassword: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const ImageAndPassword: React.StatelessComponent<CombinedProps> = props => {
   const {
     imagesData,
     imagesError,

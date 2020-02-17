@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Notice from 'src/components/Notice';
@@ -7,6 +6,7 @@ import { dcDisplayNames } from 'src/constants';
 import RegionsContainer, {
   DefaultProps as RegionsProps
 } from 'src/containers/regions.container';
+import { compose } from 'src/utilities/compose';
 
 export type CombinedProps = RegionsProps;
 

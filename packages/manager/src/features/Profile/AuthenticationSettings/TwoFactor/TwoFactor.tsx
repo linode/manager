@@ -4,7 +4,6 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import { path } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
@@ -21,6 +20,7 @@ import Toggle from 'src/components/Toggle';
 import ToggleState from 'src/components/ToggleState';
 import { requestProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
+import { compose } from 'src/utilities/compose';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -374,15 +374,9 @@ const mapDispatchToProps: MapDispatchToProps<
   refreshProfile: () => dispatch(requestProfile() as any)
 });
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose<CombinedProps, Props>(
-  styled,
-  connected
-)(TwoFactor);
+export default compose<CombinedProps, Props>(styled, connected)(TwoFactor);
 
 interface ToggleProps {
   toggleDisableDialog: () => void;

@@ -1,6 +1,5 @@
 import { Event } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -11,6 +10,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import LinearProgress from 'src/components/LinearProgress';
 import { transitionText } from 'src/features/linodes/transitions';
+import { compose } from 'src/utilities/compose';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 
 type ClassNames = 'root' | 'status';

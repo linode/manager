@@ -2,7 +2,6 @@ import * as classnames from 'classnames';
 import { LinodeType, LinodeTypeClass } from 'linode-js-sdk/lib/linodes';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Chip from 'src/components/core/Chip';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Hidden from 'src/components/core/Hidden';
@@ -27,6 +26,7 @@ import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import { compose } from 'src/utilities/compose';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 export interface ExtendedType extends LinodeType {

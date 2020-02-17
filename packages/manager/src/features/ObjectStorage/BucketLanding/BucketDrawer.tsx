@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import Drawer from 'src/components/Drawer';
 import bucketDrawerContainer, {
   DispatchProps,
   StateProps
 } from 'src/containers/bucketDrawer.container';
+import { compose } from 'src/utilities/compose';
 import CreateBucketForm from './CreateBucketForm';
 
 interface Props {

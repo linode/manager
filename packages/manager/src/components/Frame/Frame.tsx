@@ -15,7 +15,7 @@
 // import { pathOr } from 'ramda'
 import * as React from 'react';
 // import Frame from 'react-frame-component';
-import { compose } from 'recompose';
+import { compose } from 'src/utilities/compose';
 
 // let contentDocument: any;
 // let contentWindow: any;

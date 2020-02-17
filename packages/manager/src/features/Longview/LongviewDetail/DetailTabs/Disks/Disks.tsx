@@ -1,8 +1,8 @@
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import { compose } from 'src/utilities/compose';
 
 import Box from 'src/components/core/Box';
 import ErrorState from 'src/components/ErrorState';

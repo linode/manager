@@ -1,6 +1,5 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import { compose } from 'recompose';
 import {
   createStyles,
   Theme,
@@ -15,6 +14,7 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+import { compose } from 'src/utilities/compose';
 import { PoolNodeWithPrice } from '.././types';
 import NodePoolRow from './NodePoolRow';
 

@@ -1,8 +1,8 @@
 import { Event } from 'linode-js-sdk/lib/account';
 import { Disk, LinodeStatus } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
-import { compose } from 'recompose';
 import { linodeInTransition } from 'src/features/linodes/transitions';
+import { compose } from 'src/utilities/compose';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import LinodeBusyStatus from '../LinodeSummary/LinodeBusyStatus';
 import LinodeControls from './LinodeControls';

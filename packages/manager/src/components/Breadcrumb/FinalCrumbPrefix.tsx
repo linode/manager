@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import { CSSProperties, makeStyles } from 'src/components/core/styles';
+import { compose } from 'src/utilities/compose';
 
 const useStyles = makeStyles({
   prefixComponentWrapper: {

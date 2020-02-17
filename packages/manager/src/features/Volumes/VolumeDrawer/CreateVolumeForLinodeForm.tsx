@@ -6,7 +6,6 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import { CreateVolumeSchema } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import { compose } from 'recompose';
 import {
   createStyles,
   Theme,
@@ -29,6 +28,7 @@ import {
   openForAttaching,
   Origin as VolumeDrawerOrigin
 } from 'src/store/volumeForm';
+import { compose } from 'src/utilities/compose';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
@@ -303,10 +303,7 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
   origin: state.volumeDrawer.origin
 });
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const enhanced = compose<CombinedProps, Props>(
   styled,

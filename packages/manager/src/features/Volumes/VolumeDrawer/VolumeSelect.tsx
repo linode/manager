@@ -3,12 +3,12 @@ import { getVolumes, Volume } from 'linode-js-sdk/lib/volumes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { compose } from 'recompose';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import { MapState } from 'src/store/types';
+import { compose } from 'src/utilities/compose';
 import { debounce } from 'throttle-debounce';
 
 interface Props {

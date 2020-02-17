@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
 import withKubernetes, {
   DispatchProps,
   KubernetesProps
 } from 'src/containers/kubernetes.container';
+import { compose } from 'src/utilities/compose';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import ClusterList from '../ClusterList';
@@ -13,9 +13,7 @@ import KubernetesLandingEmptyState from './KubernetesLandingEmptyState';
 
 type CombinedProps = DispatchProps & KubernetesProps;
 
-export const KubernetesLanding: React.FunctionComponent<
-  CombinedProps
-> = props => {
+export const KubernetesLanding: React.FunctionComponent<CombinedProps> = props => {
   const {
     clusters,
     clustersError,

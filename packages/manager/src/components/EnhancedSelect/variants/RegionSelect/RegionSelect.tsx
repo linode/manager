@@ -9,13 +9,13 @@ import US from 'flag-icon-css/flags/4x3/us.svg';
 import { Region } from 'linode-js-sdk/lib/regions';
 import { groupBy, pathOr } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import Select, {
   BaseSelectProps,
   GroupType
 } from 'src/components/EnhancedSelect/Select';
+import { compose } from 'src/utilities/compose';
 
 import RegionOption, { RegionItem } from './RegionOption';
 

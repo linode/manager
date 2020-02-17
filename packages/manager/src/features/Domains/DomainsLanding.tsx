@@ -5,7 +5,6 @@ import { equals, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
@@ -44,6 +43,7 @@ import {
   openForEditing,
   Origin as DomainDrawerOrigin
 } from 'src/store/domainDrawer';
+import { compose } from 'src/utilities/compose';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
 import DisableDomainDialog from './DisableDomainDialog';

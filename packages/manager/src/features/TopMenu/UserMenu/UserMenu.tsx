@@ -2,7 +2,6 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 import UserIcon from 'src/assets/icons/user.svg';
 import ButtonBase from 'src/components/core/ButtonBase';
 import Hidden from 'src/components/core/Hidden';
@@ -15,6 +14,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import { MapState } from 'src/store/types';
+import { compose } from 'src/utilities/compose';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 
 interface MenuLink {

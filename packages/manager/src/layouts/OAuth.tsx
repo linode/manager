@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
+import { compose } from 'src/utilities/compose';
 
 import { handleStartSession } from 'src/store/authentication/authentication.actions';
 import { parseQueryParams, splitIntoTwo } from 'src/utilities/queryParams';
@@ -138,10 +138,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => {
   };
 };
 
-const connected = connect(
-  undefined,
-  mapDispatchToProps
-);
+const connected = connect(undefined, mapDispatchToProps);
 
 export default compose<CombinedProps, {}>(
   connected,

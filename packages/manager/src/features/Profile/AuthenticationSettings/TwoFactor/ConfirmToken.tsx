@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import {
@@ -12,6 +11,7 @@ import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
+import { compose } from 'src/utilities/compose';
 
 type ClassNames = 'root' | 'warning';
 

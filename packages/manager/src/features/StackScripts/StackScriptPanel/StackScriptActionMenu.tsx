@@ -1,7 +1,7 @@
 import { path } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
+import { compose } from 'src/utilities/compose';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 import withProfile from 'src/containers/profile.container';
@@ -30,9 +30,7 @@ interface ProfileProps {
 
 type CombinedProps = Props & RouteComponentProps<{}> & ProfileProps;
 
-const StackScriptActionMenu: React.StatelessComponent<
-  CombinedProps
-> = props => {
+const StackScriptActionMenu: React.StatelessComponent<CombinedProps> = props => {
   const {
     stackScriptID,
     stackScriptUsername,

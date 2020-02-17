@@ -7,7 +7,6 @@ import {
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import {
@@ -28,6 +27,7 @@ import bucketRequestsContainer, {
 import BucketsActionPanel from 'src/features/Volumes/VolumeDrawer/VolumesActionsPanel';
 import { ApplicationState } from 'src/store';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
+import { compose } from 'src/utilities/compose';
 import {
   handleFieldErrors,
   handleGeneralErrors

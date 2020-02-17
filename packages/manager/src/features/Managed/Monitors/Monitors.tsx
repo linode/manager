@@ -1,7 +1,6 @@
 import { ManagedCredential } from 'linode-js-sdk/lib/managed';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
-import { compose } from 'recompose';
 import withManagedIssues, {
   DispatchProps as IssuesDispatchProps
 } from 'src/containers/managedIssues.container';
@@ -9,6 +8,7 @@ import withManagedServices, {
   DispatchProps,
   ManagedProps
 } from 'src/containers/managedServices.container';
+import { compose } from 'src/utilities/compose';
 import MonitorTable from './MonitorTable';
 
 interface Props {

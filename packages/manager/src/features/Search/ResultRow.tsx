@@ -1,7 +1,6 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
 import {
   createStyles,
@@ -19,6 +18,7 @@ import TableRow from 'src/components/TableRow';
 import Tags from 'src/components/Tags';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 import { linodeInTransition } from 'src/features/linodes/transitions';
+import { compose } from 'src/utilities/compose';
 
 type ClassNames =
   | 'root'

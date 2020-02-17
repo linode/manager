@@ -1,7 +1,6 @@
 import { Stats } from 'linode-js-sdk/lib/linodes';
 import { map, pathOr } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import {
   makeStyles,
   Theme,
@@ -16,6 +15,7 @@ import {
   formatNetworkTooltip,
   generateNetworkUnits
 } from 'src/features/Longview/shared/utilities';
+import { compose } from 'src/utilities/compose';
 import {
   getMetrics,
   getTotalTraffic,

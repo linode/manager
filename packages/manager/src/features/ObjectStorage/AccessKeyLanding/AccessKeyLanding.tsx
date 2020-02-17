@@ -11,7 +11,6 @@ import {
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import AddNewLink from 'src/components/AddNewLink';
@@ -29,6 +28,7 @@ import { useErrors } from 'src/hooks/useErrors';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import { ApplicationState } from 'src/store';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
+import { compose } from 'src/utilities/compose';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import {
   sendCreateAccessKeyEvent,
@@ -70,9 +70,7 @@ type CombinedProps = Props &
   ReduxStateProps &
   DispatchProps;
 
-export const AccessKeyLanding: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const AccessKeyLanding: React.StatelessComponent<CombinedProps> = props => {
   const {
     classes,
     object_storage,
@@ -351,15 +349,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced = compose<CombinedProps, Props>(
-  styled,
-  paginated,
-  connected
-);
+const enhanced = compose<CombinedProps, Props>(styled, paginated, connected);
 
 export default enhanced(AccessKeyLanding);

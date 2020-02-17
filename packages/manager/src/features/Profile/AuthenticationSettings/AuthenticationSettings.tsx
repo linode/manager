@@ -3,7 +3,6 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import { lensPath, path, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import { compose } from 'recompose';
 import {
   createStyles,
   Theme,
@@ -16,6 +15,7 @@ import Notice from 'src/components/Notice';
 import { AccountsAndPasswords, SecurityControls } from 'src/documentation';
 import { updateProfile as _updateProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
+import { compose } from 'src/utilities/compose';
 import ResetPassword from './ResetPassword';
 import SecuritySettings from './SecuritySettings';
 import TrustedDevices from './TrustedDevices';

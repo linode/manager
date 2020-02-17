@@ -1,7 +1,6 @@
 import * as classNames from 'classnames';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
 import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
 import FolderIcon from 'src/assets/icons/entityIcons/folder.svg';
@@ -21,6 +20,7 @@ import {
   WithTheme
 } from 'src/components/core/styles';
 import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
+import { compose } from 'src/utilities/compose';
 
 type ClassNames =
   | 'root'
@@ -192,9 +192,6 @@ const EntityIcon: React.StatelessComponent<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(
-  styled,
-  withTheme
-);
+const enhanced = compose<CombinedProps, Props>(styled, withTheme);
 
 export default enhanced(EntityIcon);

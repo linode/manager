@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import {
   makeStyles,
   Theme,
   withTheme,
   WithTheme
 } from 'src/components/core/styles';
+import { compose } from 'src/utilities/compose';
 
 import { Doughnut } from 'react-chartjs-2';
 

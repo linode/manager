@@ -1,10 +1,10 @@
 import { Image } from 'linode-js-sdk/lib/images';
 import { Config } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Grid from 'src/components/Grid';
 import { PaginationProps } from 'src/components/Paginate';
 import withImages from 'src/containers/withImages.container';
+import { compose } from 'src/utilities/compose';
 import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 import LinodeCard from './LinodeCard';
 

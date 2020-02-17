@@ -1,6 +1,5 @@
 import { ObjectStorageKey } from 'linode-js-sdk/lib/object-storage';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import {
@@ -11,6 +10,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
+import { compose } from 'src/utilities/compose';
 
 type ClassNames = 'helperText' | 'confirmationDialog';
 
@@ -33,9 +33,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const AccessKeyDisplayDialog: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const AccessKeyDisplayDialog: React.StatelessComponent<CombinedProps> = props => {
   const { classes, objectStorageKey, isOpen, close } = props;
 
   // This should never happen, but just in case.

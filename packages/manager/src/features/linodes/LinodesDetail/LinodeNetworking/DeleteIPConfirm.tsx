@@ -1,6 +1,6 @@
 import { Linode, removeIPAddress } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
-import { compose } from 'recompose';
+import { compose } from 'src/utilities/compose';
 
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';

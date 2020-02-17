@@ -6,7 +6,6 @@ import { parse, stringify } from 'qs';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
 import {
   createStyles,
   Theme,
@@ -16,6 +15,7 @@ import {
 import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { MapState } from 'src/store/types';
+import { compose } from 'src/utilities/compose';
 import { getQueryParam } from 'src/utilities/queryParams';
 import {
   getCommunityStackscripts,

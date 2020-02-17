@@ -12,7 +12,6 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 import {
   createStyles,
   Theme,
@@ -33,6 +32,7 @@ import { ApplicationState } from 'src/store';
 import { ExtendedEvent } from 'src/store/events/event.types';
 import { formatRegion } from 'src/utilities';
 import { setUpCharts } from 'src/utilities/charts';
+import { compose } from 'src/utilities/compose';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import { initAll } from 'src/utilities/initAll';

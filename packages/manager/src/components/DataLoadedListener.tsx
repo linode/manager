@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react';
-import { compose } from 'recompose';
+import { compose } from 'src/utilities/compose';
 
 interface Props {
   profileLoadedOrErrorExists: boolean;
@@ -87,12 +87,12 @@ const shouldMarkAppAsDone = (
 
   if (
     pathname.match(/dashboard/i) &&
-    (linodesLoadedOrErrorExists &&
-      volumesLoadedOrErrorExists &&
-      nodeBalancersLoadedOrErrorExists &&
-      accountLoadedOrErrorExists &&
-      profileLoadedOrErrorExists &&
-      domainsLoadedOrErrorExists)
+    linodesLoadedOrErrorExists &&
+    volumesLoadedOrErrorExists &&
+    nodeBalancersLoadedOrErrorExists &&
+    accountLoadedOrErrorExists &&
+    profileLoadedOrErrorExists &&
+    domainsLoadedOrErrorExists
     /** not checking bucket data here for now */
   ) {
     return true;

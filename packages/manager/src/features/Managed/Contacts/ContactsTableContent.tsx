@@ -2,11 +2,11 @@ import { ManagedContact } from 'linode-js-sdk/lib/managed';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { equals } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import TableRowEmpty from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { arePropsEqual } from 'src/utilities/arePropsEqual';
+import { compose } from 'src/utilities/compose';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ContactsRow from './ContactsRow';
 

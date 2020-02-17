@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose as recompose } from 'recompose';
 import { withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
@@ -8,6 +7,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import StackScriptsActionMenu from 'src/features/StackScripts/StackScriptPanel/StackScriptActionMenu';
 import { StackScriptCategory } from 'src/features/StackScripts/stackScriptUtils';
+import { compose as recompose } from 'src/utilities/compose';
 import {
   ClassNames,
   displayTagsAndShowMore,
@@ -62,9 +62,7 @@ export class StackScriptRow extends React.Component<CombinedProps, {}> {
             <Typography variant="h3" className={classes.libTitle}>
               {stackScriptUsername && (
                 <span
-                  className={`${classes.libRadioLabel} ${
-                    classes.stackScriptUsername
-                  }`}
+                  className={`${classes.libRadioLabel} ${classes.stackScriptUsername}`}
                 >
                   {stackScriptUsername} /&nbsp;
                 </span>

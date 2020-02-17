@@ -2,7 +2,7 @@ import { MonitorStatus } from 'linode-js-sdk/lib/managed';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
-import { compose } from 'recompose';
+import { compose } from 'src/utilities/compose';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 import withManagedServices, {

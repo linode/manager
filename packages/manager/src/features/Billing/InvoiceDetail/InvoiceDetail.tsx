@@ -10,7 +10,6 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import {
@@ -28,6 +27,7 @@ import createMailto from 'src/features/Footer/createMailto';
 import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
 import { ThunkDispatch } from 'src/store/types';
+import { compose } from 'src/utilities/compose';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import InvoiceTable from './InvoiceTable';
@@ -228,10 +228,6 @@ const connected = connect(
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, {}>(
-  connected,
-  styled,
-  withRouter
-);
+const enhanced = compose<CombinedProps, {}>(connected, styled, withRouter);
 
 export default enhanced(InvoiceDetail);

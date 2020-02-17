@@ -4,7 +4,6 @@ import {
   LinodeBackupsResponse
 } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
-import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import {
@@ -19,6 +18,7 @@ import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
 import { aggregateBackups } from 'src/features/linodes/LinodesDetail/LinodeBackup';
+import { compose } from 'src/utilities/compose';
 import { formatDate } from 'src/utilities/formatDate';
 
 export interface LinodeWithBackups extends Linode {

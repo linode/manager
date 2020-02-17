@@ -8,7 +8,6 @@ import {
   RouteComponentProps,
   Switch
 } from 'react-router-dom';
-import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import AppBar from 'src/components/core/AppBar';
@@ -37,6 +36,7 @@ import {
   LongviewTopProcesses
 } from 'src/features/Longview/request.types';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import { compose } from 'src/utilities/compose';
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
 import Apache from './DetailTabs/Apache';
 import MySQLLanding from './DetailTabs/MySQL';

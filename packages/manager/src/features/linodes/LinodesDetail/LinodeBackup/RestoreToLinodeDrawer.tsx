@@ -2,7 +2,6 @@ import { restoreBackup } from 'linode-js-sdk/lib/linodes';
 import { Profile } from 'linode-js-sdk/lib/profile';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
@@ -18,6 +17,7 @@ import withLinodes, {
   Props as LinodeProps
 } from 'src/containers/withLinodes.container';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector.ts';
+import { compose } from 'src/utilities/compose';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { Props as FireProps } from 'src/containers/firewalls.container';
+import { compose } from 'src/utilities/compose';
 
 import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';

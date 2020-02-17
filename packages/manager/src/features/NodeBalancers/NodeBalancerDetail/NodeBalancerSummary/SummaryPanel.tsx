@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -15,6 +14,7 @@ import summaryPanelStyles, {
 } from 'src/containers/SummaryPanels.styles';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import { formatRegion } from 'src/utilities';
+import { compose } from 'src/utilities/compose';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { NodeBalancerConsumer } from '../context';
 
@@ -62,9 +62,7 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = props => {
         return (
           <div className={classes.root}>
             <Paper
-              className={`${classes.summarySection} ${
-                classes.NBsummarySection
-              }`}
+              className={`${classes.summarySection} ${classes.NBsummarySection}`}
             >
               <Typography variant="h3" className={classes.title} data-qa-title>
                 NodeBalancer Details
@@ -76,9 +74,7 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = props => {
                   {nodeBalancer.configPorts.map(({ port, configId }, i) => (
                     <React.Fragment key={configId}>
                       <Link
-                        to={`/nodebalancers/${
-                          nodeBalancer.id
-                        }/configurations/${configId}`}
+                        to={`/nodebalancers/${nodeBalancer.id}/configurations/${configId}`}
                         className="secondaryLink"
                       >
                         {port}

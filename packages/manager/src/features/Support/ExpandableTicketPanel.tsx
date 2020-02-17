@@ -1,7 +1,6 @@
-import { SupportReply, SupportTicket } from "linode-js-sdk/lib/account";
+import { SupportReply, SupportTicket } from 'linode-js-sdk/lib/account';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import { Converter } from 'showdown';
 import 'showdown-highlightjs-extension';
 import UserIcon from 'src/assets/icons/user.svg';
@@ -14,6 +13,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
+import { compose } from 'src/utilities/compose';
 
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import { Hively, shouldRenderHively } from './Hively';

@@ -5,7 +5,6 @@ import { compose, path, pathOr, prop, sortBy, take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { compose as recompose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import {
@@ -32,6 +31,7 @@ import {
 import { isEventRelevantToLinode } from 'src/store/events/event.selectors';
 import { addNotificationsToLinodes } from 'src/store/linodes/linodes.helpers';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
+import { compose as recompose } from 'src/utilities/compose';
 import { formatNotifications } from 'src/utilities/formatNotifications';
 import DashboardCard from '../DashboardCard';
 

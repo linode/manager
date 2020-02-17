@@ -2,7 +2,6 @@ import { getSSHKeys, SSHKey } from 'linode-js-sdk/lib/profile';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as moment from 'moment-timezone';
 import * as React from 'react';
-import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
 import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';
@@ -20,6 +19,7 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import DeleteSSHKeyDialog from 'src/features/Profile/SSHKeys/DeleteSSHKeyDialog';
 import SSHKeyActionMenu from 'src/features/Profile/SSHKeys/SSHKeyActionMenu';
+import { compose } from 'src/utilities/compose';
 import fingerprint from 'src/utilities/ssh-fingerprint';
 import SSHKeyCreationDrawer from './SSHKeyCreationDrawer';
 
@@ -227,9 +227,6 @@ const updatedRequest = (ownProps: any, params: any, filters: any) =>
 
 const paginated = paginate(updatedRequest);
 
-const enhanced = compose<CombinedProps, {}>(
-  paginated,
-  documented
-);
+const enhanced = compose<CombinedProps, {}>(paginated, documented);
 
 export default enhanced(SSHKeys);

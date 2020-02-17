@@ -1,6 +1,5 @@
 import { ObjectStorageBucket } from 'linode-js-sdk/lib/object-storage';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -16,6 +15,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
+import { compose } from 'src/utilities/compose';
 import BucketTableRow from './BucketTableRow';
 
 type ClassNames = 'root' | 'label' | 'confirmationCopy';

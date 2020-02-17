@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { compose } from 'recompose';
+import { compose } from 'src/utilities/compose';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';

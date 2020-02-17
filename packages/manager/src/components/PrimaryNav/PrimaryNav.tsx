@@ -6,7 +6,6 @@ import { clone, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 import Logo from 'src/assets/logo/new-logo.svg';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
@@ -22,6 +21,7 @@ import {
   isKubernetesEnabled,
   isObjectStorageEnabled
 } from 'src/utilities/accountCapabilities';
+import { compose } from 'src/utilities/compose';
 import { sendOneClickNavigationEvent } from 'src/utilities/ga';
 import AdditionalMenuItems from './AdditionalMenuItems';
 import styled, { StyleProps } from './PrimaryNav.styles';

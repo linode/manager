@@ -1,7 +1,7 @@
 import { ManagedServiceMonitor } from 'linode-js-sdk/lib/managed';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
+import { compose } from 'src/utilities/compose';
 
 import MonitorFailed from 'src/assets/icons/monitor-failed.svg';
 import MonitorOK from 'src/assets/icons/monitor-ok.svg';

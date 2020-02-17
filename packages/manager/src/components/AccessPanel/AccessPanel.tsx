@@ -1,6 +1,5 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -11,6 +10,7 @@ import {
 import Notice from 'src/components/Notice';
 import PasswordInput from 'src/components/PasswordInput';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
+import { compose } from 'src/utilities/compose';
 
 import UserSSHKeyPanel from './UserSSHKeyPanel';
 

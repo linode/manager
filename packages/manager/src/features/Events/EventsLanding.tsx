@@ -5,7 +5,6 @@ import { compose as rCompose, concat, uniq } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
-import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -27,6 +26,7 @@ import { ApplicationState } from 'src/store';
 import { setDeletedEvents } from 'src/store/events/event.helpers';
 import { ExtendedEvent } from 'src/store/events/event.types';
 import areEntitiesLoading from 'src/store/selectors/entitiesLoading';
+import { compose } from 'src/utilities/compose';
 import { removeBlacklistedEvents } from 'src/utilities/eventUtils';
 
 import { filterUniqueEvents, shouldUpdateEvents } from './Event.helpers';

@@ -1,6 +1,5 @@
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
-import { compose } from 'recompose';
 import { UserSSHKeyObject } from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -19,6 +18,7 @@ import Grid from 'src/components/Grid';
 import ModeSelect, { Mode } from 'src/components/ModeSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
+import { compose } from 'src/utilities/compose';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 import ImageAndPassword from '../LinodeSettings/ImageAndPassword';

@@ -12,7 +12,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { StickyContainer } from 'react-sticky';
-import { compose as recompose } from 'recompose';
+import { compose as recompose } from 'src/utilities/compose';
 
 import regionsContainer from 'src/containers/regions.container';
 import withTypes from 'src/containers/types.container';

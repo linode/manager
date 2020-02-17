@@ -2,8 +2,8 @@ import { Volume } from 'linode-js-sdk/lib/volumes';
 import moment from 'moment';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import { compose } from 'src/utilities/compose';
 
 import Checkbox from 'src/components/CheckBox';
 import Typography from 'src/components/core/Typography';

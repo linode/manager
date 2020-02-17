@@ -3,7 +3,6 @@ import { shareAddresses } from 'linode-js-sdk/lib/networking';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { clone, flatten, uniq } from 'ramda';
 import * as React from 'react';
-import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
@@ -23,6 +22,7 @@ import TextField from 'src/components/TextField';
 import withLinodes, {
   DispatchProps
 } from 'src/containers/withLinodes.container';
+import { compose as recompose } from 'src/utilities/compose';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 

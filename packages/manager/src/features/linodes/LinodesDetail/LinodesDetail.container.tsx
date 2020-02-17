@@ -1,4 +1,4 @@
-import { compose } from 'recompose';
+import { compose } from 'src/utilities/compose';
 // import initLinode from './initLinode';
 import initLinodeConfigs from './initLinodeConfigs';
 import initLinodeDisks from './initLinodeDisks';

@@ -2,7 +2,6 @@ import { GrantLevel } from 'linode-js-sdk/lib/account';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
-import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ExpansionPanel from 'src/components/ExpansionPanel';
@@ -13,6 +12,7 @@ import {
   UpdateLinode,
   withLinodeDetailContext
 } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
+import { compose as recompose } from 'src/utilities/compose';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -132,6 +132,7 @@ const linodeContext = withLinodeDetailContext<ContextProps>(
   })
 );
 
-export default recompose<CombinedProps, {}>(errorBoundary, linodeContext)(
-  LinodeSettingsLabelPanel
-) as React.ComponentType<{}>;
+export default recompose<CombinedProps, {}>(
+  errorBoundary,
+  linodeContext
+)(LinodeSettingsLabelPanel) as React.ComponentType<{}>;

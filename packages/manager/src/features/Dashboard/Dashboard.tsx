@@ -5,7 +5,6 @@ import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
 import AbuseTicketBanner from 'src/components/AbuseTicketBanner';
 import {
   createStyles,
@@ -29,6 +28,7 @@ import getEntitiesWithGroupsToImport, {
 } from 'src/store/selectors/getEntitiesWithGroupsToImport';
 import { openDrawer as openGroupDrawer } from 'src/store/tagImportDrawer';
 import { MapState } from 'src/store/types';
+import { compose } from 'src/utilities/compose';
 import { formatNotifications } from 'src/utilities/formatNotifications';
 import shouldDisplayGroupImport from 'src/utilities/shouldDisplayGroupImportCTA';
 import { storage } from 'src/utilities/storage';

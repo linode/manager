@@ -1,7 +1,6 @@
 import { equals } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import {
   createStyles,
@@ -15,6 +14,7 @@ import H1Header from 'src/components/H1Header';
 import Notice from 'src/components/Notice';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { ErrorObject } from 'src/store/selectors/entitiesErrors';
+import { compose } from 'src/utilities/compose';
 import { getQueryParam } from 'src/utilities/queryParams';
 import ResultGroup from './ResultGroup';
 import { emptyResults } from './utils';

@@ -5,7 +5,6 @@ import {
   InvoiceItem
 } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
-import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Currency from 'src/components/Currency';
@@ -15,6 +14,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import createMailto from 'src/features/Footer/createMailto';
+import { compose } from 'src/utilities/compose';
 import { getAll } from 'src/utilities/getAll';
 
 const useStyles = makeStyles((theme: Theme) => ({

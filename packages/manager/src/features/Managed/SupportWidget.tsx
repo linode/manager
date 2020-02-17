@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
+import { compose } from 'src/utilities/compose';
 
 import TicketIcon from 'src/assets/icons/ticket.svg';
 import {
@@ -68,9 +68,5 @@ export const SupportWidget: React.FC<CombinedProps> = props => {
 };
 
 const styled = withStyles(styles);
-const enhanced = compose<CombinedProps, {}>(
-  styled,
-  React.memo,
-  withRouter
-);
+const enhanced = compose<CombinedProps, {}>(styled, React.memo, withRouter);
 export default enhanced(SupportWidget);

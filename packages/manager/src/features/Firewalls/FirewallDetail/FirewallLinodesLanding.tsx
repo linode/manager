@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
+import { compose } from 'src/utilities/compose';
 // import { makeStyles, Theme } from 'src/components/core/styles'
 
 // const useStyles = makeStyles((theme: Theme) => ({

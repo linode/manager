@@ -1,6 +1,5 @@
 import { disableTwoFactor } from 'linode-js-sdk/lib/profile';
 import * as React from 'react';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -8,6 +7,7 @@ import Typography from 'src/components/core/Typography';
 import withLoadingAndError, {
   Props as LoadingAndErrorProps
 } from 'src/components/withLoadingAndError';
+import { compose } from 'src/utilities/compose';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 interface Props {

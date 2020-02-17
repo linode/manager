@@ -1,13 +1,13 @@
 import AttachFile from '@material-ui/icons/AttachFile';
 import { equals, remove } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import { compose } from 'src/utilities/compose';
 
 import Button from 'src/components/Button';
 

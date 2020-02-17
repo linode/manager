@@ -7,7 +7,6 @@ import {
 import { APIError } from 'linode-js-sdk/lib/types';
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
-import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
@@ -15,6 +14,7 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import PasswordInput from 'src/components/PasswordInput';
+import { compose as recompose } from 'src/utilities/compose';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { debounce } from 'throttle-debounce';
@@ -251,6 +251,7 @@ const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Reset Root Password' });
 
-export default recompose<CombinedProps, Props>(errorBoundary, linodeContext)(
-  LinodeSettingsPasswordPanel
-) as React.ComponentType<Props>;
+export default recompose<CombinedProps, Props>(
+  errorBoundary,
+  linodeContext
+)(LinodeSettingsPasswordPanel) as React.ComponentType<Props>;

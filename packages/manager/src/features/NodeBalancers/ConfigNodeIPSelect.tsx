@@ -1,6 +1,6 @@
 import { Linode } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
-import { compose } from 'recompose';
+import { compose } from 'src/utilities/compose';
 
 import {
   createStyles,

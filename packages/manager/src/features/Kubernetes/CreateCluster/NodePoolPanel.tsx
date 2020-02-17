@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/core/Grid';
@@ -10,6 +9,7 @@ import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
+import { compose } from 'src/utilities/compose';
 
 import SelectPlanPanel, {
   ExtendedType

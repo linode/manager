@@ -3,13 +3,13 @@ import { Notification } from 'linode-js-sdk/lib/account';
 import { Config, LinodeBackups, LinodeStatus } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 import Flag from 'src/assets/icons/flag.svg';
 import Tooltip from 'src/components/core/Tooltip';
 import HelpIcon from 'src/components/HelpIcon';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { linodeInTransition } from 'src/features/linodes/transitions';
+import { compose } from 'src/utilities/compose';
 import hasMutationAvailable, {
   HasMutationAvailable
 } from '../hasMutationAvailable';

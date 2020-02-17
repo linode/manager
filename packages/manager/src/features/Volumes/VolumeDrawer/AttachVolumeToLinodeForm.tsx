@@ -4,13 +4,13 @@ import { attachVolume } from 'linode-js-sdk/lib/volumes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import { compose } from 'recompose';
 import withVolumesRequests, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { MapState } from 'src/store/types';
 import { openForCreating } from 'src/store/volumeForm';
+import { compose } from 'src/utilities/compose';
 import {
   handleFieldErrors,
   handleGeneralErrors
@@ -190,14 +190,8 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
   )
 });
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced = compose<CombinedProps, Props>(
-  connected,
-  withVolumesRequests
-);
+const enhanced = compose<CombinedProps, Props>(connected, withVolumesRequests);
 
 export default enhanced(AttachVolumeToLinodeForm);

@@ -1,10 +1,10 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EditableText from 'src/components/EditableText';
 import H1Header from 'src/components/H1Header';
+import { compose } from 'src/utilities/compose';
 import { EditableProps, LabelProps } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
