@@ -94,16 +94,7 @@ const reducer: Reducer<State> = (state = defaultState, action) =>
     if (isType(action, deleteLinodeDiskActions.started)) {
       const { linodeId } = action.payload;
       draft = ensureInitializedNestedState(draft, linodeId);
-
-      draft[linodeId] = onError<
-        MappedEntityState<Entity, EntityError>,
-        EntityError
-      >(
-        {
-          delete: undefined
-        },
-        draft[linodeId]
-      );
+      draft[linodeId].error = { ...draft[linodeId].error, delete: undefined };
     }
 
     if (isType(action, deleteLinodeDiskActions.done)) {
