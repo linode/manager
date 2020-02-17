@@ -228,7 +228,7 @@ Run:
 `npx wait-on` will simply wait for the website on 3000 to be ready.
 
 #### How to run with docker
-Check docker is installer.
+Check docker is installed.
 Run `yarn docker:cy` or `docker build -t cloudcy -f Dockerfile-e2e . && docker run --rm cloudcy`
 
 
@@ -247,6 +247,6 @@ Run:
 `npx wait-on` will simply wait for the storybook server on 6006 to be ready.
 
 #### How to run with docker
-Check docker is installer.
+Check docker is installed.
 Run `yarn docker:sb` or `docker build -t cloudsb -f Dockerfile-storybook . && docker run --rm cloudsb`
 
