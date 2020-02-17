@@ -36,7 +36,6 @@
 
 .formatted-text span.hljs-variable,
 .formatted-text span.hljs-template-variable,
-.formatted-text span.hljs-attribute,
 .formatted-text span.hljs-tag,
 .formatted-text span.hljs-name,
 .formatted-text span.hljs-regexp .formatted-text span.hljs-link,
@@ -45,7 +44,8 @@
   color: #be4678;
 }
 
-.formatted-text span.hljs-attr {
+.formatted-text span.hljs-attr,
+.formatted-text span.hljs-attribute {
   color: #2466b3;
 }
 

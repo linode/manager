@@ -18,6 +18,8 @@ import 'showdown-highlightjs-extension';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
+import 'src/formatted-text.css';
+
 type ClassNames = 'root' | 'icon' | 'tooltip' | 'iconLink';
 
 const styles = (theme: Theme) =>
@@ -101,7 +103,10 @@ export const KubeConfigDrawer: React.FC<CombinedProps> = props => {
           </Grid>
         </Grid>
         <div>
-          <div dangerouslySetInnerHTML={{ __html: sanitizeHTML(html) }} />
+          <div
+            className="formatted-text"
+            dangerouslySetInnerHTML={{ __html: sanitizeHTML(html) }}
+          />
         </div>
       </DrawerContent>
     </Drawer>
