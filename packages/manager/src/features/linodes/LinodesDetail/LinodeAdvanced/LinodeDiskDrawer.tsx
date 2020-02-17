@@ -122,6 +122,12 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
     }
   }
 
+  handleCloseDrawer = () => {
+    const { onClose } = this.props;
+    onClose();
+    this.setState({ selectedMode: modes.EMPTY });
+  };
+
   onLabelChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.props.onLabelChange(e.target.value);
 
@@ -211,7 +217,6 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
       mode,
       onSubmit,
       submitting,
-      onClose,
       classes,
       password,
       userSSHKeys,
@@ -227,7 +232,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
       <Drawer
         title={LinodeDiskDrawer.getTitle(mode)}
         open={open}
-        onClose={onClose}
+        onClose={this.handleCloseDrawer}
       >
         <Grid container direction="row">
           {mode === 'create' && (
@@ -276,7 +281,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
                 {submitLabelMap[mode]}
               </Button>
               <Button
-                onClick={onClose}
+                onClick={this.handleCloseDrawer}
                 buttonType="secondary"
                 className="cancel"
                 data-qa-disk-cancel
