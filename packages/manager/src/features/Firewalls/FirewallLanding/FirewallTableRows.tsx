@@ -6,12 +6,12 @@ import TableRowEmpty from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 
-import { Props as FireProps } from 'src/containers/firewalls.container';
+import { StateProps as FireProps } from 'src/containers/firewalls.container';
 import { ActionHandlers } from './FirewallActionMenu';
 
 import FirewallRow from './FirewallRow';
 
-interface Props extends Omit<FireProps, 'data' | 'results' | 'getFirewalls'> {
+interface Props extends Omit<FireProps, 'data' | 'results'> {
   data: Firewall[];
 }
 

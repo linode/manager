@@ -4,7 +4,12 @@ import { Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
 import { apiResponseToMappedState } from '../store.helpers';
 import { EntitiesAsObjectState } from '../types';
-import { createFirewallActions, getFirewalls } from './firewalls.actions';
+import {
+  createFirewallActions,
+  deleteFirewallActions,
+  getFirewalls,
+  updateFirewallActions
+} from './firewalls.actions';
 
 export type State = EntitiesAsObjectState<Firewall>;
 
@@ -56,6 +61,45 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       const { error } = action.payload;
 
       draft.error.create = error;
+    }
+
+    if (isType(action, createFirewallActions.failed)) {
+      const { error } = action.payload;
+
+      draft.error.create = error;
+    }
+
+    if (isType(action, updateFirewallActions.started)) {
+      draft.error.update = undefined;
+    }
+
+    if (isType(action, updateFirewallActions.done)) {
+      const { result } = action.payload;
+      draft.data[result.id] = result;
+      draft.lastUpdated = Date.now();
+    }
+
+    if (isType(action, updateFirewallActions.failed)) {
+      const { error } = action.payload;
+
+      draft.error.update = error;
+    }
+
+    if (isType(action, deleteFirewallActions.started)) {
+      draft.error.delete = undefined;
+    }
+
+    if (isType(action, deleteFirewallActions.done)) {
+      const { firewallID } = action.payload.params;
+      delete draft.data[firewallID];
+      draft.results--;
+      draft.lastUpdated = Date.now();
+    }
+
+    if (isType(action, deleteFirewallActions.failed)) {
+      const { error } = action.payload;
+
+      draft.error.delete = error;
     }
   });
 };

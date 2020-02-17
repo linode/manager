@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import { Props as FireProps } from 'src/containers/firewalls.container';
+import {
+  DispatchProps,
+  StateProps as FireProps
+} from 'src/containers/firewalls.container';
 
 import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';
@@ -32,7 +35,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-type FirewallProps = Omit<FireProps, 'getFirewalls'> & ActionHandlers;
+type FirewallProps = FireProps &
+  Pick<DispatchProps, 'createFirewall'> &
+  ActionHandlers;
 
 type CombinedProps = FirewallProps;
 
