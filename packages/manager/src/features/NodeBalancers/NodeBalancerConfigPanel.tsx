@@ -355,8 +355,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       },
       {
         label: 'TCP Connection',
-        value: 'connection',
-        isDisabled: protocol === 'http' || protocol === 'https'
+        value: 'connection'
       },
       {
         label: 'HTTP Status',
