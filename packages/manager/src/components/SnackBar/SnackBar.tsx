@@ -1,4 +1,8 @@
-import { SnackbarProvider, SnackbarProviderProps } from 'notistack';
+import {
+  SnackbarProvider,
+  SnackbarProviderProps,
+  WithSnackbarProps
+} from 'notistack';
 import * as React from 'react';
 import {
   createStyles,
@@ -34,9 +38,13 @@ const styles = (theme: Theme) =>
 type CombinedProps = SnackbarProviderProps & WithStyles<ClassNames>;
 
 const SnackBar: React.FC<CombinedProps> = props => {
-  const notistackRef: React.Ref<any> = React.createRef();
+  /**
+   * This pattern is taken from the Notistack docs:
+   * https://iamhosseindhv.com/notistack/demos#action-for-all-snackbars
+   */
+  const notistackRef: React.Ref<WithSnackbarProps> = React.createRef();
   const onClickDismiss = (key: string | number | undefined) => () => {
-    notistackRef.current.closeSnackbar(key);
+    notistackRef?.current?.closeSnackbar(key);
   };
 
   const { children, classes, ...rest } = props;
