@@ -12,11 +12,11 @@ const baseFirewall: Firewall[] = [
       outbound: [
         {
           protocol: 'ALL',
-          start_port: 443
+          ports: '443'
         },
         {
           protocol: 'ALL',
-          start_port: 80
+          ports: '80'
         }
       ]
     },
@@ -61,12 +61,12 @@ describe('Cloud Firewalls Reducer', () => {
           outbound: [
             {
               protocol: 'ALL',
-              start_port: 443,
+              ports: '443',
               sequence: 1
             },
             {
               protocol: 'ALL',
-              start_port: 80,
+              ports: '80',
               sequence: 2
             }
           ]
