@@ -48,7 +48,7 @@ interface Props {
   clusterLabel: string;
   open: boolean;
   loading: boolean;
-  error: boolean;
+  error: string | null;
   closeDrawer: () => void;
 }
 
@@ -72,7 +72,12 @@ export const KubeConfigDrawer: React.FC<CombinedProps> = props => {
 
   return (
     <Drawer title={'View Kubeconfig'} open={open} onClose={closeDrawer} wide>
-      <DrawerContent title={clusterLabel} error={error} loading={loading}>
+      <DrawerContent
+        title={clusterLabel}
+        error={!!error}
+        errorMessage={error || undefined}
+        loading={loading}
+      >
         <Grid container spacing={2}>
           <Grid item>
             <Typography variant="h3">{clusterLabel}</Typography>

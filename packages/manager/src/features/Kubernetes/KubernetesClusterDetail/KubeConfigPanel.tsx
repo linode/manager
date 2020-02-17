@@ -1,5 +1,6 @@
 import * as classNames from 'classnames';
 import { getKubeConfig } from 'linode-js-sdk/lib/kubernetes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -88,7 +89,7 @@ export type CombinedProps = Props &
 export const KubeConfigPanel: React.FC<CombinedProps> = props => {
   const { classes, clusterID, clusterLabel, enqueueSnackbar, theme } = props;
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
-  const [drawerError, setDrawerError] = React.useState<boolean>(false);
+  const [drawerError, setDrawerError] = React.useState<string | null>(null);
   const [drawerLoading, setDrawerLoading] = React.useState<boolean>(false);
   const [kubeConfig, setKubeConfig] = React.useState<string>('');
   const spacingMode =
@@ -113,7 +114,7 @@ export const KubeConfigPanel: React.FC<CombinedProps> = props => {
   };
 
   const handleOpenDrawer = () => {
-    setDrawerError(false);
+    setDrawerError(null);
     setDrawerLoading(true);
     setDrawerOpen(true);
     fetchKubeConfig()
@@ -125,8 +126,8 @@ export const KubeConfigPanel: React.FC<CombinedProps> = props => {
           // There was a parsing error; the user will see an error toast.
         }
       })
-      .catch(_ => {
-        setDrawerError(true);
+      .catch((error: APIError[]) => {
+        setDrawerError(error[0].reason);
         setDrawerLoading(false);
       });
   };
