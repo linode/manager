@@ -77,7 +77,7 @@ export const BucketTableRow: React.StatelessComponent<CombinedProps> = props => 
               </Typography>
             </div>
             <div className={classes.hostnameWrapper}>
-              <Typography>{hostname}</Typography>
+              <Typography data-qa-hostname>{hostname}</Typography>
               <CopyTooltip
                 className={classes.copyTooltip}
                 standAlone
