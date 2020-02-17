@@ -9,32 +9,6 @@ import reducer, { defaultState } from './firewalls.reducer';
 
 const mockError = [{ reason: 'no reason' }];
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-const baseFirewall: Firewall[] = [
-  {
-    id: 1,
-    rules: {
-      inbound: [],
-      outbound: [
-        {
-          protocol: 'ALL',
-          ports: '443'
-        },
-        {
-          protocol: 'ALL',
-          ports: '80'
-        }
-      ]
-    },
-    status: 'disabled',
-    label: 'zzz',
-    created_dt: '2019-12-11T19:44:38.526Z',
-    updated_dt: '2019-12-11T19:44:38.526Z',
-    tags: []
-  }
-];
-
 const baseFirewall = firewallFactory.buildList(3);
 
 const addEntities = () =>
