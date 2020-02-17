@@ -60,12 +60,6 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
     lastUpdated: firewallsLastUpdated
   } = props;
 
-  React.useEffect(() => {
-    if (firewallsLastUpdated === 0 && !firewallsLoading) {
-      props.getFirewalls();
-    }
-  }, [firewallsLastUpdated, firewallsLoading]);
-
   return (
     <React.Fragment>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
