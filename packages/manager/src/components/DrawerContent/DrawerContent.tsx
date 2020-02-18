@@ -6,11 +6,12 @@ export interface Props {
   title: string;
   loading: boolean;
   error: boolean;
+  errorMessage?: string;
 }
 
 export class DrawerContent extends React.PureComponent<Props> {
   render() {
-    const { title, loading, error, children } = this.props;
+    const { title, loading, error, errorMessage, children } = this.props;
     if (loading) {
       return <CircleProgress />;
     }
@@ -18,7 +19,7 @@ export class DrawerContent extends React.PureComponent<Props> {
     if (error) {
       return (
         <Notice error spacingTop={8}>
-          Couldn't load {title}
+          {errorMessage ?? `Couldn't load ${title}`}
         </Notice>
       );
     }

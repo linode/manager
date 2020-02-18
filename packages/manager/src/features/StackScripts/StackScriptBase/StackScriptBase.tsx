@@ -528,6 +528,8 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
               <Table
                 isResponsive={!isSelecting}
                 aria-label="List of StackScripts"
+                rowCount={listOfStackScripts.length}
+                colCount={isSelecting ? 1 : 4}
                 noOverflow={true}
                 tableClass={classes.table}
                 removeLabelonMobile={!isSelecting}

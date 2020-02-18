@@ -307,11 +307,13 @@ export type NetworkUnit = 'b' | 'Kibit' | 'Mibit';
  * converts bytes to either Kb (Kilobits) or Mb (Megabits)
  * depending on if the Kilobit conversion exceeds 1000.
  *
- * @param networkUsed inbound and outbound traffic in bytes
+ * @param networkUsedInBytes inbound and outbound traffic in bytes
  */
-export const generateNetworkUnits = (networkUsed: number): NetworkUnit => {
+export const generateNetworkUnits = (
+  networkUsedInBytes: number
+): NetworkUnit => {
   /** Thanks to http://www.matisse.net/bitcalc/ */
-  const networkUsedToKilobits = (networkUsed * 8) / 1024;
+  const networkUsedToKilobits = (networkUsedInBytes * 8) / 1024;
   if (networkUsedToKilobits <= 1) {
     return 'b';
   } else if (networkUsedToKilobits <= 1000) {

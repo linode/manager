@@ -1,6 +1,6 @@
 import strings from '../support/cypresshelpers';
 
-describe('cypress e2e poc', () => {
+xdescribe('cypress e2e poc', () => {
   beforeEach(() => {
     cy.login();
   });

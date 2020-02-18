@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import { Props as FireProps } from 'src/containers/firewalls.container';
+import {
+  DispatchProps,
+  StateProps as FireProps
+} from 'src/containers/firewalls.container';
 
 import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';
@@ -32,7 +35,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-type FirewallProps = Omit<FireProps, 'getFirewalls'> & ActionHandlers;
+type FirewallProps = FireProps &
+  Pick<DispatchProps, 'createFirewall'> &
+  ActionHandlers;
 
 type CombinedProps = FirewallProps;
 
@@ -44,7 +49,6 @@ const FirewallTable: React.FC<CombinedProps> = props => {
     loading: firewallsLoading,
     error: firewallsError,
     lastUpdated: firewallsLastUpdated,
-    listOfIDsInOriginalOrder: firewallsKeys,
     ...actionMenuHandlers
   } = props;
 
@@ -105,8 +109,7 @@ const FirewallTable: React.FC<CombinedProps> = props => {
                       <FirewallRows
                         data={paginatedAndOrderedData}
                         loading={firewallsLoading}
-                        error={firewallsError}
-                        listOfIDsInOriginalOrder={firewallsKeys}
+                        error={firewallsError.read}
                         lastUpdated={firewallsLastUpdated}
                         {...actionMenuHandlers}
                       />
