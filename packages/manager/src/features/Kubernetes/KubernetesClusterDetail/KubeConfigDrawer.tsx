@@ -18,6 +18,8 @@ import 'showdown-highlightjs-extension';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
+import 'src/formatted-text.css';
+
 type ClassNames = 'root' | 'icon' | 'tooltip' | 'iconLink';
 
 const styles = (theme: Theme) =>
@@ -46,24 +48,11 @@ interface Props {
   clusterLabel: string;
   open: boolean;
   loading: boolean;
-  error: boolean;
+  error: string | null;
   closeDrawer: () => void;
 }
 
 export type CombinedProps = Props & WithStyles<ClassNames>;
-
-const splitCode = (code: string): string => {
-  const MAX_LENGTH = 75;
-  const lines = code.trim().split('\n');
-  const shortLines = lines.map(thisLine =>
-    thisLine.length > MAX_LENGTH
-      ? splitCode(
-          thisLine.slice(0, MAX_LENGTH) + '\n' + thisLine.slice(MAX_LENGTH)
-        )
-      : thisLine
-  );
-  return shortLines.join('\n');
-};
 
 export const KubeConfigDrawer: React.FC<CombinedProps> = props => {
   const {
@@ -79,11 +68,16 @@ export const KubeConfigDrawer: React.FC<CombinedProps> = props => {
     extensions: ['highlightjs'],
     simplifiedAutoLink: true,
     openLinksInNewWindow: true
-  }).makeHtml(splitCode('```\n' + kubeConfig + '\n```'));
+  }).makeHtml('```\n' + kubeConfig + '\n```');
 
   return (
     <Drawer title={'View Kubeconfig'} open={open} onClose={closeDrawer} wide>
-      <DrawerContent title={clusterLabel} error={error} loading={loading}>
+      <DrawerContent
+        title={clusterLabel}
+        error={!!error}
+        errorMessage={error || undefined}
+        loading={loading}
+      >
         <Grid container spacing={2}>
           <Grid item>
             <Typography variant="h3">{clusterLabel}</Typography>
@@ -101,7 +95,10 @@ export const KubeConfigDrawer: React.FC<CombinedProps> = props => {
           </Grid>
         </Grid>
         <div>
-          <div dangerouslySetInnerHTML={{ __html: sanitizeHTML(html) }} />
+          <div
+            className="formatted-text"
+            dangerouslySetInnerHTML={{ __html: sanitizeHTML(html) }}
+          />
         </div>
       </DrawerContent>
     </Drawer>
