@@ -508,10 +508,7 @@ export const dark = (options: ThemeOverrides) =>
           },
           '&:hover, &:focus': {
             '&$hover': {
-              backgroundColor: 'rgba(0, 0, 0, 0.1)',
-              '&:before': {
-                borderLeftColor: primaryColors.main
-              }
+              backgroundColor: 'rgba(0, 0, 0, 0.1)'
             }
           }
         },

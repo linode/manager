@@ -40,7 +40,12 @@ const ListVolumes: React.FC<CombinedProps> = props => {
       }) => (
         <React.Fragment>
           <Paper>
-            <Table removeLabelonMobile aria-label="List of your Volumes">
+            <Table
+              removeLabelonMobile
+              aria-label="List of your Volumes"
+              rowCount={data.length}
+              colCount={5}
+            >
               <SortableVolumesTableHeader
                 order={order}
                 orderBy={orderBy}
