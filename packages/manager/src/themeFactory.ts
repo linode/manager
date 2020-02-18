@@ -1229,6 +1229,10 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           padding: spacingUnit + 2,
           borderTop: `1px solid ${primaryColors.divider}`,
           borderBottom: `1px solid ${primaryColors.divider}`,
+          '&:first-child': {
+            paddingLeft: 15,
+            borderLeft: `1px solid ${primaryColors.divider}`
+          },
           '&:last-child': {
             paddingRight: spacingUnit + 2
           },
@@ -1240,7 +1244,12 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         },
         head: {
           fontSize: '.9rem',
-          lineHeight: 1.1
+          lineHeight: 1.1,
+          '&.emptyCell': {
+            display: 'inline-block',
+            width: '100%',
+            height: 48
+          }
         },
         body: {
           fontSize: '.9rem'
@@ -1297,24 +1306,18 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           position: 'relative',
           zIndex: 1,
           height: spacingUnit * 5 + 1,
-          '&:before': {
-            borderLeftColor: 'white'
-          },
           '&:hover, &:focus': {
             '&$hover': {
               backgroundColor: '#fbfbfb',
-              '&:before': {
-                backgroundColor: primaryColors.main
+              [breakpoints.up('md')]: {
+                boxShadow: `inset 5px 0 0 ${primaryColors.main}`
               }
             }
           }
         },
         head: {
           height: 'auto',
-          backgroundColor: '#fbfbfb',
-          '&:before': {
-            borderLeftColor: '#fbfbfb'
-          }
+          backgroundColor: '#fbfbfb'
         },
         hover: {
           cursor: 'pointer',

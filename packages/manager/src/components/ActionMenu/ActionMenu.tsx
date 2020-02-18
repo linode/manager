@@ -160,6 +160,7 @@ export class ActionMenu extends React.Component<CombinedProps, State> {
               tooltip={a.tooltip}
               isLoading={a.isLoading}
               aria-describedby={a.ariaDescribedBy}
+              role="menuitem"
             >
               {a.title}
             </MenuItem>

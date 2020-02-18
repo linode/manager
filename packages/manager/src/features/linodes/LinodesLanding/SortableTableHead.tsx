@@ -33,7 +33,7 @@ const SortableTableHead: React.StatelessComponent<combinedProps> = props => {
     label.toLowerCase() === orderBy.toLowerCase();
 
   return (
-    <TableHead data-qa-table-head>
+    <TableHead data-qa-table-head role="rowgroup">
       <TableRow>
         <TableSortCell
           label="label"
