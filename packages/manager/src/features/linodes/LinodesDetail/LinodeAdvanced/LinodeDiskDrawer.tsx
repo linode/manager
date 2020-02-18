@@ -128,6 +128,12 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
     this.setState({ selectedMode: modes.EMPTY });
   };
 
+  handleSubmit = () => {
+    const { onSubmit } = this.props;
+    onSubmit();
+    this.setState({ selectedMode: modes.EMPTY });
+  };
+
   onLabelChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.props.onLabelChange(e.target.value);
 
@@ -215,7 +221,6 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
     const {
       open,
       mode,
-      onSubmit,
       submitting,
       classes,
       password,
@@ -273,7 +278,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
           <Grid item className={classes.section}>
             <ActionsPanel>
               <Button
-                onClick={onSubmit}
+                onClick={this.handleSubmit}
                 buttonType="primary"
                 loading={submitting}
                 data-qa-disk-submit
