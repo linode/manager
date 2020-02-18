@@ -43,7 +43,7 @@ const EnableDisableFirewallDialog: React.FC<CombinedProps> = props => {
   const handleSubmit = () => {
     const defaultError = `There was an issue ${
       mode === 'disable' ? 'disabling' : 'enabling'
-    } this firewall.`;
+    } this Firewall.`;
     if (!selectedFirewallID) {
       return setError(defaultError);
     }
