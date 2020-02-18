@@ -48,7 +48,7 @@ describe('Cloud Firewalls Reducer', () => {
     expect(Object.values(newState.data)).toEqual(baseFirewall);
     expect(newState).toHaveProperty('loading', false);
     expect(newState.error!.read).toBeUndefined();
-    expect(newState.results).toBe(2);
+    expect(newState.results).toBe(3);
   });
 
   it('should handle a successful GET with an empty response', () => {
