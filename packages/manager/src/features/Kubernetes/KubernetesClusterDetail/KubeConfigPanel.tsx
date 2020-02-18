@@ -127,7 +127,7 @@ export const KubeConfigPanel: React.FC<CombinedProps> = props => {
         }
       })
       .catch((error: APIError[]) => {
-        setDrawerError(error[0].reason);
+        setDrawerError(error[0]?.reason || null);
         setDrawerLoading(false);
       });
   };
