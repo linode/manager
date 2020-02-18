@@ -13,7 +13,6 @@ import AppBar from 'src/components/core/AppBar';
 import Box from 'src/components/core/Box';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
-import DefaultLoader from 'src/components/DefaultLoader';
 import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
@@ -23,13 +22,11 @@ import withFirewalls, {
   Props as WithFirewallsProps
 } from 'src/containers/firewalls.container';
 
-const FirewallRulesLanding = DefaultLoader({
-  loader: () => import('./FirewallRulesLanding')
-});
+const FirewallRulesLanding = React.lazy(() => import('./FirewallRulesLanding'));
 
-const FirewallLinodesLanding = DefaultLoader({
-  loader: () => import('./FirewallLinodesLanding')
-});
+const FirewallLinodesLanding = React.lazy(() =>
+  import('./FirewallLinodesLanding')
+);
 
 type CombinedProps = RouteComponentProps<{ id: string }> & WithFirewallsProps;
 
