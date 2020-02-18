@@ -105,13 +105,22 @@ export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = prop
   // @todo BEFORE MERGE: Use feature flags instead of this hardcoded promo.
   const promotionalOffers = promotionalOfferFactory.buildList(1, {
     body:
-      'Object Storage is FREE* to all customers until May 1st. Try it now in the Newark or Frankfurt data centers.',
+      "Linode's S3-compatible Object Storage is FREE* until April 30, 2020.",
     footnote:
-      '*Offer is inclusive of list price and inbound transfer fees only.',
+      '*Offer includes list price and inbound network transfer. 1TB will be added to your network outbound transfer pool; regular overages apply. Offer valid through 4/30/2020.',
     features: ['Object Storage'],
-    logo: 'heavenly-bucket.svg'
+    logo: 'heavenly-bucket.svg',
+    buttons: [
+      {
+        text: 'Try it Now',
+        href: '/object-storage/buckets'
+      },
+      {
+        text: 'Cost Estimator',
+        href: 'https://www.linode.com/products/object-storage/'
+      }
+    ]
   });
-
   const objPromotionalOffers = promotionalOffers.filter(promotionalOffer =>
     promotionalOffer.features.includes('Object Storage')
   );

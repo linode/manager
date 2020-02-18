@@ -1,11 +1,13 @@
 import * as classnames from 'classnames';
 import * as React from 'react';
 import HeavenlyBucketIcon from 'src/assets/icons/promotionalOffers/heavenly-bucket.svg';
+import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { PromotionalOffer } from 'src/featureFlags';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
+import { isURLValid } from 'src/utilities/sanitize-html/sanitizeHTML';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -13,7 +15,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column',
-    padding: theme.spacing(2)
+    padding: theme.spacing(2),
+    backgroundColor: theme.bg.main
   },
   fullWidth: {
     flexDirection: 'row',
@@ -39,6 +42,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   centerText: {
     textAlign: 'center'
+  },
+  buttonSection: {
+    margin: theme.spacing(2),
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  button: {
+    backgroundColor: '#4FAD62',
+    color: 'white',
+    marginRight: theme.spacing(2),
+    marginLeft: theme.spacing(2),
+    textAlign: 'center',
+    '&:hover, &:focus': {
+      backgroundColor: '#3f8a4e',
+      color: 'white'
+    }
   }
 }));
 
@@ -65,7 +85,6 @@ const PromotionalOfferCard: React.FC<CombinedProps> = props => {
 
   return (
     <Paper
-      style={{ backgroundColor: offer.backgroundColor }}
       className={classnames({
         [classes.root]: true,
         [classes.fullWidth]: props.fullWidth
@@ -77,17 +96,33 @@ const PromotionalOfferCard: React.FC<CombinedProps> = props => {
       <div className={classes.copy}>
         <Typography
           variant="subtitle2"
-          style={{ color: offer.bodyColor }}
           className={classnames({
             [classes.centerText]: !fullWidth
           })}
         >
           {offer.body}
         </Typography>
+        {/* Don't display buttons on full-width promotional banners. */}
+        {!props.fullWidth && offer.buttons && (
+          <div className={classes.buttonSection}>
+            {/* Only display the first two buttons. Any offer containing more
+            than three buttons is a mistake. */}
+            {offer.buttons.slice(0, 2).map(button => (
+              <Button
+                key={button.text}
+                className={classes.button}
+                // Check URL validity first as a security measure.
+                href={isURLValid(button.href) ? button.href : undefined}
+              >
+                {button.text}
+              </Button>
+            ))}
+          </div>
+        )}
+
         {offer.footnote && (
           <Typography
             variant="body2"
-            style={{ color: offer.footnoteColor }}
             className={classnames({
               [classes.footnote]: true,
               [classes.centerText]: !fullWidth
@@ -115,11 +150,9 @@ export const promotionalOfferOrDefaults = (
   footnote: checkStringOrDefault(offer.footnote),
   logo: checkStringOrDefault(offer.logo),
   alt: checkStringOrDefault(offer.alt),
-  backgroundColor: checkStringOrDefault(offer.backgroundColor, '#406E51'),
-  bodyColor: checkStringOrDefault(offer.bodyColor, '#FFFFFF'),
-  footnoteColor: checkStringOrDefault(offer.footnoteColor, '#93AE9E'),
   features: offer.features ?? ['None'],
-  displayOnDashboard: offer.displayOnDashboard ?? false
+  displayOnDashboard: offer.displayOnDashboard ?? false,
+  buttons: offer.buttons ?? []
 });
 
 const checkStringOrDefault = (maybeString: any, defaultVal?: string) => {

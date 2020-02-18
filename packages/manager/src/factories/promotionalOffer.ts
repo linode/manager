@@ -11,8 +11,12 @@ export const promotionalOfferFactory = Factory.Sync.makeFactory<
   footnote: 'Offer is inclusive of list price only.',
   logo: 'heavenly-bucket.svg',
   alt: 'Promotional Offer',
-  backgroundColor: '#406E51',
-  bodyColor: '#FFFFFF',
-  footnoteColor: '#93AE9E',
-  displayOnDashboard: true
+  displayOnDashboard: true,
+  buttons: [
+    { text: 'Try it Now', href: '/object-storage/buckets' },
+    {
+      text: 'Cost Estimator',
+      href: 'https://www.linode.com/products/object-storage/'
+    }
+  ]
 });

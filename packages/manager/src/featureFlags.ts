@@ -28,17 +28,20 @@ type PromotionalOfferFeature =
   | 'Object Storage'
   | 'Kubernetes';
 
+interface PromotionalOfferButton {
+  text: string;
+  href: string;
+}
+
 export interface PromotionalOffer {
   name: string;
   body: string;
   footnote: string;
   logo: string;
   alt: string;
-  backgroundColor: string;
-  bodyColor: string;
-  footnoteColor: string;
   features: PromotionalOfferFeature[];
   displayOnDashboard: boolean;
+  buttons?: PromotionalOfferButton[];
 }
 
 /**
