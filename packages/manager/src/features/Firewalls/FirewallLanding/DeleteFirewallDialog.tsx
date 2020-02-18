@@ -62,10 +62,12 @@ const DeleteFirewallDialog: React.FC<CombinedProps> = props => {
       });
   };
 
+  const _label = label ? label : 'this Firewall';
+
   return (
     <Dialog
       open={open}
-      title={`Delete ${label ? label : 'this firewall'}?`}
+      title={`Delete ${_label}?`}
       onClose={props.closeDialog}
       error={errors ? errors[0].reason : ''}
       actions={
@@ -76,7 +78,7 @@ const DeleteFirewallDialog: React.FC<CombinedProps> = props => {
         />
       }
     >
-      Are you sure you want to delete this firewall?
+      Are you sure you want to delete {label}?
     </Dialog>
   );
 };

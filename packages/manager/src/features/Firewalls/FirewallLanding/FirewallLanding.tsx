@@ -28,12 +28,16 @@ type CombinedProps = RouteComponentProps<{}> & FireProps;
 
 const FirewallLanding: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const { disableFirewall, enableFirewall } = props;
 
   const [addFirewallDrawerOpen, toggleAddFirewallDrawer] = React.useState<
     boolean
   >(false);
   const [deleteModalOpen, toggleDeleteModal] = React.useState<boolean>(false);
   const [disableModalOpen, toggleDisableModal] = React.useState<boolean>(false);
+  const [dialogMode, setDialogMode] = React.useState<'enable' | 'disable'>(
+    'enable'
+  );
   const [selectedFirewallID, setSelectedFirewallID] = React.useState<
     number | undefined
   >(undefined);
@@ -47,7 +51,15 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
     toggleDeleteModal(true);
   };
 
+  const handleOpenEnableFirewallModal = (id: number, label: string) => {
+    setDialogMode('enable');
+    setSelectedFirewallID(id);
+    setSelectedFirewallLabel(label);
+    toggleDisableModal(true);
+  };
+
   const handleOpenDisableFirewallModal = (id: number, label: string) => {
+    setDialogMode('disable');
     setSelectedFirewallID(id);
     setSelectedFirewallLabel(label);
     toggleDisableModal(true);
@@ -94,7 +106,7 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
         triggerDeleteFirewall={handleOpenDeleteFirewallModal}
         triggerDisableFirewall={handleOpenDisableFirewallModal}
         triggerEditFirewall={(id, label) => null}
-        triggerEnableFirewall={(id, label) => null}
+        triggerEnableFirewall={handleOpenEnableFirewallModal}
         createFirewall={props.createFirewall}
       />
       <AddFirewallDrawer
@@ -110,6 +122,9 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
       />
       <DisableDialog
         open={disableModalOpen}
+        mode={dialogMode}
+        enableFirewall={enableFirewall}
+        disableFirewall={disableFirewall}
         selectedFirewallID={selectedFirewallID}
         selectedFirewallLabel={selectedFirewallLabel}
         closeDialog={() => toggleDisableModal(false)}
