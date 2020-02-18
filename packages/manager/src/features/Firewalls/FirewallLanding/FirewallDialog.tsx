@@ -1,28 +1,41 @@
+import { Firewall } from 'linode-js-sdk/lib/firewalls/types';
 import * as React from 'react';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
+import { capitalize } from 'src/utilities/capitalize';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+export type Mode = 'enable' | 'disable' | 'delete';
 interface Props {
   open: boolean;
+  mode: Mode;
   closeDialog: () => void;
+  enableFirewall: (firewallID: number) => Promise<Firewall>;
+  disableFirewall: (firewallID: number) => Promise<Firewall>;
+  deleteFirewall: (firewallID: number) => Promise<{}>;
   selectedFirewallID?: number;
   selectedFirewallLabel: string;
-  deleteFirewall: (firewallID: number) => Promise<{}>;
 }
 
 type CombinedProps = Props;
 
-const DeleteFirewallDialog: React.FC<CombinedProps> = props => {
-  const [isDeleting, setDeleting] = React.useState<boolean>(false);
+const toContinuousTense = (s: string) => {
+  return s.replace(/e$/g, 'ing');
+};
+
+const FirewallDialog: React.FC<CombinedProps> = props => {
+  const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>(undefined);
 
   const {
     open,
     closeDialog,
     deleteFirewall,
+    disableFirewall,
+    enableFirewall,
+    mode,
     selectedFirewallID,
     selectedFirewallLabel: label
   } = props;
@@ -34,21 +47,36 @@ const DeleteFirewallDialog: React.FC<CombinedProps> = props => {
     }
   }, [open]);
 
-  const handleDelete = () => {
-    const defaultError = 'There was an error deleting this Firewall.';
+  const determineRequest = () => {
+    switch (mode) {
+      case 'enable':
+        return enableFirewall;
+      case 'disable':
+        return disableFirewall;
+      case 'delete':
+        return deleteFirewall;
+    }
+  };
+
+  const handleSubmit = () => {
+    const defaultError = `There was an issue ${toContinuousTense(
+      mode
+    )} this Firewall.`;
     if (!selectedFirewallID) {
       return setError(defaultError);
     }
 
-    setDeleting(true);
+    setSubmitting(true);
 
-    deleteFirewall(selectedFirewallID)
-      .then(response => {
-        setDeleting(false);
+    const request = determineRequest();
+
+    request(selectedFirewallID)
+      .then(_ => {
+        setSubmitting(false);
         closeDialog();
       })
       .catch(e => {
-        setDeleting(false);
+        setSubmitting(false);
         setError(getAPIErrorOrDefault(e, defaultError)[0].reason);
       });
   };
@@ -58,18 +86,19 @@ const DeleteFirewallDialog: React.FC<CombinedProps> = props => {
   return (
     <Dialog
       open={open}
-      title={`Delete ${_label}?`}
+      title={`${capitalize(mode)} ${_label}?`}
       onClose={props.closeDialog}
       error={error}
       actions={
         <Actions
           onClose={props.closeDialog}
-          isDeleting={isDeleting}
-          onSubmit={handleDelete}
+          isSubmitting={isSubmitting}
+          onSubmit={handleSubmit}
+          mode={mode}
         />
       }
     >
-      Are you sure you want to delete {label}?
+      Are you sure you want to {mode} {label}?
     </Dialog>
   );
 };
@@ -77,7 +106,8 @@ const DeleteFirewallDialog: React.FC<CombinedProps> = props => {
 interface ActionsProps {
   onClose: () => void;
   onSubmit: () => void;
-  isDeleting: boolean;
+  isSubmitting: boolean;
+  mode: Mode;
 }
 
 const Actions: React.FC<ActionsProps> = props => {
@@ -88,14 +118,14 @@ const Actions: React.FC<ActionsProps> = props => {
       </Button>
       <Button
         onClick={props.onSubmit}
-        loading={props.isDeleting}
-        destructive
+        loading={props.isSubmitting}
+        destructive={props.mode === 'delete'}
         buttonType="secondary"
       >
-        Delete
+        {capitalize(props.mode)}
       </Button>
     </ActionsPanel>
   );
 };
 
-export default React.memo(DeleteFirewallDialog);
+export default React.memo(FirewallDialog);

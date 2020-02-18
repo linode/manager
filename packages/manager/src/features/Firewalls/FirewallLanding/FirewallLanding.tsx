@@ -13,8 +13,7 @@ import withFirewalls, {
   Props as FireProps
 } from 'src/containers/firewalls.container';
 import AddFirewallDrawer from './AddFirewallDrawer';
-import DeleteDialog from './DeleteFirewallDialog';
-import DisableDialog from './DisableFirewallDialog';
+import FirewallDialog, { Mode } from './FirewallDialog';
 import FirewallTable from './FirewallTable';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -33,11 +32,8 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
   const [addFirewallDrawerOpen, toggleAddFirewallDrawer] = React.useState<
     boolean
   >(false);
-  const [deleteModalOpen, toggleDeleteModal] = React.useState<boolean>(false);
-  const [disableModalOpen, toggleDisableModal] = React.useState<boolean>(false);
-  const [dialogMode, setDialogMode] = React.useState<'enable' | 'disable'>(
-    'enable'
-  );
+  const [modalOpen, toggleModal] = React.useState<boolean>(false);
+  const [dialogMode, setDialogMode] = React.useState<Mode>('enable');
   const [selectedFirewallID, setSelectedFirewallID] = React.useState<
     number | undefined
   >(undefined);
@@ -48,21 +44,22 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
   const handleOpenDeleteFirewallModal = (id: number, label: string) => {
     setSelectedFirewallID(id);
     setSelectedFirewallLabel(label);
-    toggleDeleteModal(true);
+    setDialogMode('delete');
+    toggleModal(true);
   };
 
   const handleOpenEnableFirewallModal = (id: number, label: string) => {
     setDialogMode('enable');
     setSelectedFirewallID(id);
     setSelectedFirewallLabel(label);
-    toggleDisableModal(true);
+    toggleModal(true);
   };
 
   const handleOpenDisableFirewallModal = (id: number, label: string) => {
     setDialogMode('disable');
     setSelectedFirewallID(id);
     setSelectedFirewallLabel(label);
-    toggleDisableModal(true);
+    toggleModal(true);
   };
 
   const {
@@ -114,21 +111,15 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
         onClose={() => toggleAddFirewallDrawer(false)}
         title="Add a Firewall"
       />
-      <DeleteDialog
-        open={deleteModalOpen}
-        selectedFirewallID={selectedFirewallID}
-        selectedFirewallLabel={selectedFirewallLabel}
-        closeDialog={() => toggleDeleteModal(false)}
-        deleteFirewall={deleteFirewall}
-      />
-      <DisableDialog
-        open={disableModalOpen}
+      <FirewallDialog
+        open={modalOpen}
         mode={dialogMode}
         enableFirewall={enableFirewall}
         disableFirewall={disableFirewall}
+        deleteFirewall={deleteFirewall}
         selectedFirewallID={selectedFirewallID}
         selectedFirewallLabel={selectedFirewallLabel}
-        closeDialog={() => toggleDisableModal(false)}
+        closeDialog={() => toggleModal(false)}
       />
     </React.Fragment>
   );
