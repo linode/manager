@@ -40,7 +40,11 @@ const styles = (theme: Theme) =>
       flexDirection: 'row'
     },
     copyTooltip: {
-      padding: 0
+      padding: 0,
+      marginTop: 2,
+      '& :hover': {
+        color: theme.color.grey6
+      }
     },
     link: {
       '&:hover': {
@@ -81,6 +85,7 @@ export const BucketTableRow: React.StatelessComponent<CombinedProps> = props => 
               <CopyTooltip
                 className={classes.copyTooltip}
                 standAlone
+                muiIcon
                 text={`https://${hostname}`}
               />
             </div>

@@ -1,3 +1,4 @@
+import MUIFileCopy from '@material-ui/icons/FileCopy';
 import * as classNames from 'classnames';
 import * as copy from 'copy-to-clipboard';
 import * as React from 'react';
@@ -14,6 +15,7 @@ interface Props {
   className?: string;
   standAlone?: boolean;
   ariaLabel?: string;
+  muiIcon?: boolean;
 }
 
 interface State {
@@ -92,7 +94,7 @@ class CopyTooltip extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, text, className, standAlone } = this.props;
+    const { classes, text, className, standAlone, muiIcon } = this.props;
     const { copied } = this.state;
 
     return (
@@ -111,7 +113,7 @@ class CopyTooltip extends React.Component<CombinedProps, State> {
             copied
           </span>
         )}
-        <FileCopy />
+        {muiIcon ? <MUIFileCopy /> : <FileCopy />}
       </button>
     );
   }
