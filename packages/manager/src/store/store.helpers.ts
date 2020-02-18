@@ -177,3 +177,4 @@ export const apiResponseToMappedState = <T extends Entity>(data: T[]) => {
     acc[thisEntity.id] = thisEntity;
     return acc;
   }, {});
+};
