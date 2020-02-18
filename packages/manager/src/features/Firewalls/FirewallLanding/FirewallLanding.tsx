@@ -28,7 +28,7 @@ type CombinedProps = RouteComponentProps<{}> & FireProps;
 
 const FirewallLanding: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const { disableFirewall, enableFirewall } = props;
+  const { deleteFirewall, disableFirewall, enableFirewall } = props;
 
   const [addFirewallDrawerOpen, toggleAddFirewallDrawer] = React.useState<
     boolean
@@ -119,6 +119,7 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
         selectedFirewallID={selectedFirewallID}
         selectedFirewallLabel={selectedFirewallLabel}
         closeDialog={() => toggleDeleteModal(false)}
+        deleteFirewall={deleteFirewall}
       />
       <DisableDialog
         open={disableModalOpen}

@@ -1,5 +1,4 @@
 import { Firewall } from 'linode-js-sdk/lib/firewalls/types';
-import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -22,7 +21,7 @@ type CombinedProps = Props;
 
 const EnableDisableFirewallDialog: React.FC<CombinedProps> = props => {
   const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
-  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
+  const [error, setError] = React.useState<string | undefined>(undefined);
 
   const {
     open,
@@ -34,20 +33,19 @@ const EnableDisableFirewallDialog: React.FC<CombinedProps> = props => {
     selectedFirewallLabel: label
   } = props;
 
-  /** reset errors on open */
+  /** reset error on open */
   React.useEffect(() => {
     if (open) {
-      setErrors(undefined);
+      setError(undefined);
     }
   }, [open]);
 
   const handleSubmit = () => {
+    const defaultError = `There was an issue ${
+      mode === 'disable' ? 'disabling' : 'enabling'
+    } this firewall.`;
     if (!selectedFirewallID) {
-      return setErrors([
-        {
-          reason: 'There was an issue deleting this firewall.'
-        }
-      ]);
+      return setError(defaultError);
     }
 
     setSubmitting(true);
@@ -61,9 +59,7 @@ const EnableDisableFirewallDialog: React.FC<CombinedProps> = props => {
       })
       .catch(e => {
         setSubmitting(false);
-        setErrors(
-          getAPIErrorOrDefault(e, 'There was an error deleting this Firewall.')
-        );
+        setError(getAPIErrorOrDefault(e, defaultError)[0].reason);
       });
   };
 
@@ -74,7 +70,7 @@ const EnableDisableFirewallDialog: React.FC<CombinedProps> = props => {
       open={open}
       title={`Disable ${_label}?`}
       onClose={props.closeDialog}
-      error={errors ? errors[0]?.reason : ''}
+      error={error}
       actions={
         <Actions
           onClose={props.closeDialog}

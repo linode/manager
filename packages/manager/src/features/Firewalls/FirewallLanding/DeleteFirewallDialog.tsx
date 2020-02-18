@@ -1,64 +1,55 @@
-import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface Props {
   open: boolean;
   closeDialog: () => void;
   selectedFirewallID?: number;
   selectedFirewallLabel: string;
+  deleteFirewall: (firewallID: number) => Promise<{}>;
 }
 
 type CombinedProps = Props;
 
 const DeleteFirewallDialog: React.FC<CombinedProps> = props => {
   const [isDeleting, setDeleting] = React.useState<boolean>(false);
-  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
+  const [error, setError] = React.useState<string | undefined>(undefined);
 
   const {
     open,
     closeDialog,
+    deleteFirewall,
     selectedFirewallID,
     selectedFirewallLabel: label
   } = props;
 
-  /** reset errors on open */
+  /** reset error on open */
   React.useEffect(() => {
     if (open) {
-      setErrors(undefined);
+      setError(undefined);
     }
   }, [open]);
 
   const handleDelete = () => {
+    const defaultError = 'There was an error deleting this Firewall.';
     if (!selectedFirewallID) {
-      return setErrors([
-        {
-          reason: 'There was an issue deleting this firewall.'
-        }
-      ]);
+      return setError(defaultError);
     }
 
     setDeleting(true);
 
-    new Promise((resolve, reject) => {
-      return setTimeout(() => {
-        return reject([
-          {
-            reason: `This action faaaaaaaaaiiiled. You're a failure!`
-          }
-        ]);
-      }, 1000);
-    })
+    deleteFirewall(selectedFirewallID)
       .then(response => {
         setDeleting(false);
         closeDialog();
       })
       .catch(e => {
         setDeleting(false);
-        setErrors(e);
+        setError(getAPIErrorOrDefault(e, defaultError)[0].reason);
       });
   };
 
@@ -69,7 +60,7 @@ const DeleteFirewallDialog: React.FC<CombinedProps> = props => {
       open={open}
       title={`Delete ${_label}?`}
       onClose={props.closeDialog}
-      error={errors ? errors[0].reason : ''}
+      error={error}
       actions={
         <Actions
           onClose={props.closeDialog}
