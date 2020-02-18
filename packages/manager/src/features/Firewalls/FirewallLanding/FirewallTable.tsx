@@ -109,7 +109,7 @@ const FirewallTable: React.FC<CombinedProps> = props => {
                       <FirewallRows
                         data={paginatedAndOrderedData}
                         loading={firewallsLoading}
-                        error={firewallsError}
+                        error={firewallsError.read}
                         lastUpdated={firewallsLastUpdated}
                         {...actionMenuHandlers}
                       />

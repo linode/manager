@@ -63,12 +63,6 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       draft.error.create = error;
     }
 
-    if (isType(action, createFirewallActions.failed)) {
-      const { error } = action.payload;
-
-      draft.error.create = error;
-    }
-
     if (isType(action, updateFirewallActions.started)) {
       draft.error.update = undefined;
     }

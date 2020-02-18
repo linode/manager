@@ -16,7 +16,7 @@ const addEntities = () =>
     defaultState,
     getFirewalls.done({
       params: {},
-      result: { data: baseFirewall, results: 2 }
+      result: { data: baseFirewall, results: 3 }
     })
   );
 
@@ -42,7 +42,7 @@ describe('Cloud Firewalls Reducer', () => {
       { ...defaultState, loading: true },
       getFirewalls.done({
         params: {},
-        result: { data: baseFirewall, results: 2 }
+        result: { data: baseFirewall, results: 3 }
       })
     );
     expect(Object.values(newState.data)).toEqual(baseFirewall);
