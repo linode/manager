@@ -22,7 +22,7 @@ interface Props {
 type CombinedProps = Props;
 
 const toContinuousTense = (s: string) => {
-  return s.replace(/e$/g, 'ing');
+  return s.replace(/e$/, 'ing');
 };
 
 const FirewallDialog: React.FC<CombinedProps> = props => {

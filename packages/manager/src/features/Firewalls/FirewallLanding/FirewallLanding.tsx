@@ -41,25 +41,23 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
     string
   >('');
 
-  const handleOpenDeleteFirewallModal = (id: number, label: string) => {
+  const openModal = (mode: Mode, id: number, label: string) => {
     setSelectedFirewallID(id);
     setSelectedFirewallLabel(label);
-    setDialogMode('delete');
+    setDialogMode(mode);
     toggleModal(true);
+  };
+
+  const handleOpenDeleteFirewallModal = (id: number, label: string) => {
+    openModal('delete', id, label);
   };
 
   const handleOpenEnableFirewallModal = (id: number, label: string) => {
-    setDialogMode('enable');
-    setSelectedFirewallID(id);
-    setSelectedFirewallLabel(label);
-    toggleModal(true);
+    openModal('enable', id, label);
   };
 
   const handleOpenDisableFirewallModal = (id: number, label: string) => {
-    setDialogMode('disable');
-    setSelectedFirewallID(id);
-    setSelectedFirewallLabel(label);
-    toggleModal(true);
+    openModal('disable', id, label);
   };
 
   const {
