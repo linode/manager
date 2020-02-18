@@ -57,19 +57,8 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
     data: firewalls,
     loading: firewallsLoading,
     error: firewallsError,
-    lastUpdated: firewallsLastUpdated,
-    listOfIDsInOriginalOrder: firewallsKeys
+    lastUpdated: firewallsLastUpdated
   } = props;
-
-  React.useEffect(() => {
-    if (
-      firewallsKeys.length === 0 &&
-      firewallsLastUpdated === 0 &&
-      !firewallsLoading
-    ) {
-      props.getFirewalls();
-    }
-  }, [firewallsLastUpdated, firewallsLoading, firewallsKeys]);
 
   return (
     <React.Fragment>
@@ -101,12 +90,12 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
         loading={firewallsLoading}
         error={firewallsError}
         lastUpdated={firewallsLastUpdated}
-        listOfIDsInOriginalOrder={firewallsKeys}
         results={props.results}
         triggerDeleteFirewall={handleOpenDeleteFirewallModal}
         triggerDisableFirewall={handleOpenDisableFirewallModal}
         triggerEditFirewall={(id, label) => null}
         triggerEnableFirewall={(id, label) => null}
+        createFirewall={props.createFirewall}
       />
       <AddFirewallDrawer
         open={addFirewallDrawerOpen}
