@@ -16,7 +16,7 @@ describe('BucketTableRow', () => {
       label="test-bucket-001"
       created="2019-02-24 18:46:15.516813"
       hostname="test-bucket-001.alpha.linodeobjects.com"
-      cluster="us-east"
+      cluster="us-east-1"
       onRemove={mockOnRemove}
     />
   );
