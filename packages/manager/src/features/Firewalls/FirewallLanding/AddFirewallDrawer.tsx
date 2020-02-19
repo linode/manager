@@ -29,14 +29,40 @@ type CombinedProps = Props & LinodeProps;
 
 const initialValues: CreateFirewallPayload = {
   label: '',
-  rules: [],
+  rules: {},
   devices: {
     linodes: []
   }
 };
 
-const getValueFromItem = (value: string, options: Item<any>[]) => {
-  return options.find(thisOption => thisOption.value === value);
+/**
+ *
+ * We need to generate a single "rules" payload to store in Formik state,
+ * which will become the payload passed to createFirewall.
+ *
+ * To do this, we iterate over the selected rules, which is a list of Items.
+ * We attempt to match each selected rule with a value in predefinedFirewalls.
+ *
+ * Each predefined rule has an array with a single entry for both inbound and outbound.
+ * We accumulate these together and return the result.
+ */
+export const mergeRules = (selectedRules: Item<string>[]) => {
+  return selectedRules.reduce(
+    (acc, currentRule) => {
+      const rule = predefinedFirewalls[currentRule.value];
+      if (!rule) {
+        return acc;
+      }
+      return {
+        inbound: [...acc.inbound, ...rule.inbound],
+        outbound: [...acc.outbound, ...rule.outbound]
+      };
+    },
+    {
+      inbound: [],
+      outbound: []
+    }
+  );
 };
 
 const AddFirewallDrawer: React.FC<CombinedProps> = props => {
@@ -52,18 +78,25 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
     ...restOfDrawerProps
   } = props;
 
+  const [selectedRules, setRules] = React.useState<Item<string>[]>([]);
+  const [selectAll, toggleSelectAll] = React.useState<boolean>(false);
+
   const handleSelectLinodes = (selectedLinodes: Item<number>[]) => {
-    return userSelectedAllLinodes(selectedLinodes)
+    const hasSelectedAll = userSelectedAllLinodes(selectedLinodes);
+    toggleSelectAll(hasSelectedAll);
+    return hasSelectedAll
       ? linodesData.map(eachLinode => eachLinode.id)
       : selectedLinodes.map(eachValue => eachValue.value);
   };
 
-  const handleSelectRules = (a: any) => {
-    console.log(a);
+  const handleSelectRules = (selected: Item<string>[], cb: Function) => {
+    setRules(selected);
+    const payload = mergeRules(selected);
+    cb('rules', payload);
   };
 
   const submitForm = (values: any) => {
-    console.log(values);
+    // console.log(values);
     /**
      * if user selected _ALL_, create an array of Linode IDs for every Linode
      * otherwise use the values from the react-select input value
@@ -81,7 +114,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
         validationSchema={CreateFirewallSchema}
         validateOnChange={false}
         validateOnBlur={false}
-        onSubmit={onSubmit}
+        onSubmit={submitForm}
       >
         {({
           values,
@@ -93,10 +126,11 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
           isSubmitting,
           setFieldValue
         }) => (
-          <>
+          <form onSubmit={handleSubmit}>
             <TextField
-              aria-label="Name of your new firewall"
-              label="Name"
+              aria-label="Label for your new Firewall"
+              label="Label"
+              name="label"
               value={values.label}
               onChange={handleChange}
               required
@@ -109,28 +143,28 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
               options={firewallOptionItems}
               isMulti
               aria-label="Select predefined rules for your firewall."
-              value={values.rules}
+              value={selectedRules}
               textFieldProps={{
                 required: true,
                 helperText: `Add one or more predefined rules to this firewall. You can edit the
               default parameters for these rules after you create the firewall.`,
                 helperTextPosition: 'top'
               }}
-              onChange={(items: Item<number>[]) =>
-                setFieldValue('rules', handleSelectRules(items))
+              onChange={(items: Item<string>[]) =>
+                handleSelectRules(items, setFieldValue)
               }
             />
             <Select
               label="Linodes"
               isLoading={linodesLoading}
               errorText={linodesError && linodesError[0]?.reason}
-              value={getValueFromItem('', [])}
               isMulti
-              options={generateOptions(
-                false, // allLinodesAreSelected,
-                linodesData,
-                linodesError
-              )}
+              options={generateOptions(selectAll, linodesData, linodesError)}
+              noOptionsMessage={({ inputValue }) =>
+                linodesData.length === 0 || selectAll
+                  ? 'No Linodes available.'
+                  : 'No results.'
+              }
               onChange={(selected: Item<number>[]) =>
                 setFieldValue('devices.linodes', handleSelectLinodes(selected))
               }
@@ -143,23 +177,26 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
               }}
               hideSelectedOptions={true}
             />
-          </>
+            <ActionsPanel>
+              <Button
+                buttonType="primary"
+                onClick={() => handleSubmit()}
+                data-qa-submit
+                loading={isSubmitting}
+              >
+                Create
+              </Button>
+              <Button
+                onClick={handleCloseDrawer}
+                buttonType="cancel"
+                data-qa-cancel
+              >
+                Cancel
+              </Button>
+            </ActionsPanel>
+          </form>
         )}
       </Formik>
-
-      <ActionsPanel>
-        <Button
-          buttonType="primary"
-          onClick={submitForm}
-          data-qa-submit
-          loading={false}
-        >
-          Create
-        </Button>
-        <Button onClick={handleCloseDrawer} buttonType="cancel" data-qa-cancel>
-          Cancel
-        </Button>
-      </ActionsPanel>
     </Drawer>
   );
 };
