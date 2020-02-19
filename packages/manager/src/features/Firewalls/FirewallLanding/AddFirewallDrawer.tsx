@@ -11,6 +11,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer, { DrawerProps } from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect';
+import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 
 import withLinodes, {
@@ -107,6 +108,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
   ) => {
     // Clear drawer error state
     setStatus(undefined);
+    setErrors({});
 
     if (values.label === '') {
       values.label = undefined;
@@ -144,9 +146,18 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
           handleBlur,
           handleSubmit,
           isSubmitting,
-          setFieldValue
+          setFieldValue,
+          validateField
         }) => (
           <form onSubmit={handleSubmit}>
+            {status && (
+              <Notice
+                key={status}
+                text={status.generalError}
+                error
+                data-qa-error
+              />
+            )}
             <TextField
               aria-label="Label for your new Firewall"
               label="Label"
@@ -154,6 +165,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
               value={values.label}
               onChange={handleChange}
               errorText={errors.label}
+              onBlur={handleBlur}
               required
               inputProps={{
                 autoFocus: true
@@ -166,7 +178,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
               errorText={
                 errors['rules.inbound'] ||
                 errors['rules.outbound'] ||
-                errors.rules // errors.rules is where Yup validation errors will be placed
+                errors.rules // errors.rules is where Yup validation errors will end up
                   ? 'Please select at least one rule.'
                   : undefined
               } // API errors such as "Inbound is required" not helpful with a pre-defined list
@@ -181,6 +193,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
               onChange={(items: Item<string>[]) =>
                 handleSelectRules(items, setFieldValue)
               }
+              onBlur={handleBlur}
             />
             <Select
               label="Linodes"
@@ -205,6 +218,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
               add Linodes later if you want to customize your rules first.`
               }}
               hideSelectedOptions={true}
+              onBlur={handleBlur}
             />
             <ActionsPanel>
               <Button
