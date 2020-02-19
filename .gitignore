@@ -118,3 +118,4 @@ packages/manager/test-report.xml
 **/manager/cypress/screenshots/
 
 nohup.out
+packages/manager/bundle_analyzer_report.html
