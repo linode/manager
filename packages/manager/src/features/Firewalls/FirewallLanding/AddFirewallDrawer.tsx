@@ -84,6 +84,8 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
     ...restOfDrawerProps
   } = props;
 
+  const linodeError = linodesError && linodesError[0]?.reason;
+
   const [selectAll, toggleSelectAll] = React.useState<boolean>(false);
 
   const handleSelectLinodes = (selectedLinodes: Item<number>[]) => {
@@ -184,7 +186,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
               label="Linodes"
               name="linodes"
               isLoading={linodesLoading}
-              errorText={linodesError && linodesError[0]?.reason}
+              errorText={linodeError || errors['devices.linodes']}
               isMulti
               options={generateOptions(selectAll, linodesData, linodesError)}
               noOptionsMessage={({ inputValue }) =>

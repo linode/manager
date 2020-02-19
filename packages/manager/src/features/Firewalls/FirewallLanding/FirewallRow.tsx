@@ -13,8 +13,6 @@ import TableCell from 'src/components/TableCell';
 
 import ActionMenu, { ActionHandlers } from './FirewallActionMenu';
 
-import { devices as mockDevices } from 'src/__data__/firewallDevices';
-
 interface Props extends ActionHandlers {
   firewallID: number;
   firewallLabel: string;
@@ -42,7 +40,7 @@ const FirewallRow: React.FC<CombinedProps> = props => {
   const getFirewallDevices = () => {
     setDevicesLoading(true);
 
-    _getDevices(1, mockDevices)
+    _getDevices(firewallID)
       .then(({ data }) => {
         setDevices(data);
         setDevicesLoading(false);
