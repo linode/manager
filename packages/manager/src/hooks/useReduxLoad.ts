@@ -1,6 +1,7 @@
 import * as Bluebird from 'bluebird';
 import { useEffect, useState } from 'react';
-import store from 'src/store';
+import { useDispatch, useStore } from 'react-redux';
+import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import { getAllBuckets } from 'src/store/bucket/bucket.requests';
@@ -68,25 +69,22 @@ export const useReduxLoad = <T>(
   refreshInterval: number = 60000
 ): UseReduxPreload => {
   const [_loading, setLoading] = useState<boolean>(false);
-  const state = store.getState();
-  const { dispatch } = store;
+  const dispatch = useDispatch();
+  const state = useStore<ApplicationState>().getState();
 
   useEffect(() => {
     let i = 0;
     let needsToLoad = false;
     const requests = [];
     for (i; i < deps.length; i++) {
-      // This is hacky, but necessary until we have either retired
-      // __resources or moved everything into it.
-      const lastUpdated = Math.max(
-        state.__resources[deps[i]]?.lastUpdated ?? 0,
-        state[deps[i]]?.lastUpdated ?? 0
-      );
-      if (lastUpdated === 0) {
-        needsToLoad = true;
-        requests.push(requestMap[deps[i]]);
-      } else if (Date.now() - lastUpdated > refreshInterval) {
-        requests.push(requestMap[deps[i]]);
+      const currentResource = state.__resources[deps[i]] || state[deps[i]];
+      if (currentResource) {
+        if (currentResource.lastUpdated === 0 && !currentResource.loading) {
+          needsToLoad = true;
+          requests.push(requestMap[deps[i]]);
+        } else if (Date.now() - currentResource.lastUpdated > refreshInterval) {
+          requests.push(requestMap[deps[i]]);
+        }
       }
     }
 
@@ -104,7 +102,7 @@ export const useReduxLoad = <T>(
     })
       .then(_ => setLoading(false))
       .catch(_ => setLoading(false));
-  }, [deps, dispatch, refreshInterval, state]);
+  }, []);
 
   return { _loading };
 };
