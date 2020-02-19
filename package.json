@@ -26,6 +26,7 @@
     "up": "yarn install:all && yarn start:all",
     "postinstall": "yarn workspaces run postinstall",
     "build": "yarn workspaces run build",
+    "build:analyze": "yarn build --bundle-analyze",
     "up:manager": "yarn install:all && yarn start:manager",
     "start:manager": "yarn workspace linode-js-sdk build && yarn workspace linode-manager start --color",
     "start:docker": "yarn workspace linode-js-sdk build && yarn start:all",
