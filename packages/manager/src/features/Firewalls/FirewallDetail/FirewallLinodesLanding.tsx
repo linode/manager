@@ -14,7 +14,7 @@ type CombinedProps = RouteComponentProps;
 const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
   // const classes = useStyles();
 
-  return <div>hello world</div>;
+  return <h2>Firewall Linodes Landing</h2>;
 };
 
 export default compose<CombinedProps, {}>(React.memo)(FirewallLinodesLanding);

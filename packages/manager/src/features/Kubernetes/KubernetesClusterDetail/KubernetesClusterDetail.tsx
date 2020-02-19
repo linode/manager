@@ -1,7 +1,7 @@
 import { getKubernetesClusterEndpoint } from 'linode-js-sdk/lib/kubernetes';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import Breadcrumb from 'src/components/Breadcrumb';
@@ -94,9 +94,7 @@ type CombinedProps = WithTypesProps &
   DispatchProps &
   WithStyles<ClassNames>;
 
-export const KubernetesClusterDetail: React.FunctionComponent<
-  CombinedProps
-> = props => {
+export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = props => {
   const {
     classes,
     cluster,
@@ -272,11 +270,10 @@ const withCluster = KubeContainer<
   }
 );
 
-const enhanced = compose<CombinedProps, {}>(
+const enhanced = compose<CombinedProps, RouteComponentProps>(
   styled,
   withTypes,
-  withCluster,
-  withRouter
+  withCluster
 );
 
 export default enhanced(KubernetesClusterDetail);

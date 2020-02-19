@@ -26,6 +26,8 @@ describe('CPUMetrics', () => {
         yellow: '',
         blue: 'blue',
         green: '',
+        lightGreen: '',
+        darkGreen: '',
         text: '',
         tableHeadInner: '',
         simpleLegendRoot: '',

@@ -1,6 +1,7 @@
 import { Image } from 'linode-js-sdk/lib/images';
 import { Config } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
+import { compose } from 'recompose';
 import Grid from 'src/components/Grid';
 import { PaginationProps } from 'src/components/Paginate';
 import withImages from 'src/containers/withImages.container';
@@ -62,7 +63,11 @@ interface WithImagesProps {
   imagesData: Record<string, Image>;
 }
 
-export default withImages((ownProps, imagesData) => ({
-  ...ownProps,
-  imagesData
-}))(CardView);
+const enhanced = compose<CombinedProps, Props>(
+  withImages((ownProps, imagesData) => ({
+    ...ownProps,
+    imagesData
+  }))
+);
+
+export default enhanced(CardView);

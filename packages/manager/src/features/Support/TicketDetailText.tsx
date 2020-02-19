@@ -14,7 +14,7 @@ import IconButton from 'src/components/IconButton';
 
 import truncateText from 'src/utilities/truncateText';
 
-import './formatted-text.css';
+import 'src/formatted-text.css';
 
 type ClassNames = 'root' | 'expButton' | 'toggle' | 'buttonText';
 

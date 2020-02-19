@@ -5,10 +5,11 @@ export const pool1: ExtendedNodePool = {
   id: 1,
   count: 1,
   type: 'g5-standard-1',
-  linodes: [
+  nodes: [
     {
       status: 'ready',
-      id: 1
+      id: 'id-1',
+      instance_id: 1
     }
   ],
   clusterID: 10
@@ -18,14 +19,16 @@ export const pool2: ExtendedNodePool = {
   id: 2,
   count: 5,
   type: 'g5-standard-2',
-  linodes: [
+  nodes: [
     {
       status: 'ready',
-      id: 1
+      id: 'id-1',
+      instance_id: 1
     },
     {
       status: 'ready',
-      id: 2
+      id: 'id-2',
+      instance_id: 2
     }
   ],
   clusterID: 10
@@ -35,10 +38,11 @@ export const pool3: ExtendedNodePool = {
   id: 3,
   count: 1,
   type: 'g5-standard-1',
-  linodes: [
+  nodes: [
     {
       status: 'ready',
-      id: 1
+      id: 'id-1',
+      instance_id: 1
     }
   ],
   clusterID: 10

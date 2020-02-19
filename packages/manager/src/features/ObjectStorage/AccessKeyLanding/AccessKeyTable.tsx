@@ -11,11 +11,11 @@ import {
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
+import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import { PaginationProps } from 'src/components/Pagey';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
@@ -56,9 +56,7 @@ export type CombinedProps = Props &
   WithStyles<ClassNames> &
   PaginationProps<ObjectStorageKey>;
 
-export const AccessKeyTable: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const AccessKeyTable: React.StatelessComponent<CombinedProps> = props => {
   const {
     classes,
     data,
@@ -126,9 +124,13 @@ export const AccessKeyTable: React.StatelessComponent<
   return (
     <React.Fragment>
       <Paper className={classes.paper}>
-        <Table aria-label="List of Object Storage Access Keys">
+        <Table
+          aria-label="List of Object Storage Access Keys"
+          rowCount={data && data.length}
+          colCount={2}
+        >
           <TableHead>
-            <TableRow data-qa-table-head>
+            <TableRow data-qa-table-head role="rowgroup">
               <TableCell className={classes.labelCell} data-qa-header-label>
                 Label
               </TableCell>

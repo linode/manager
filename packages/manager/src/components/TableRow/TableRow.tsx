@@ -2,6 +2,7 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+import Hidden from 'src/components/core/Hidden';
 import {
   createStyles,
   Theme,
@@ -12,28 +13,20 @@ import _TableRow, {
   TableRowProps as _TableRowProps
 } from 'src/components/core/TableRow';
 
-import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
-
-import ActiveCaret from 'src/assets/icons/activeRowCaret.svg';
-
-type ClassNames = 'root' | 'selected' | 'withForcedIndex' | 'activeCaret';
+type ClassNames =
+  | 'root'
+  | 'selected'
+  | 'withForcedIndex'
+  | 'activeCaret'
+  | 'activeCaretOverlay'
+  | 'selectedOuter';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      transition: theme.transitions.create(['background-color']),
+      transition: theme.transitions.create(['box-shadow']),
       [theme.breakpoints.up('md')]: {
-        '&:before': {
-          content: "''",
-          display: 'table-cell',
-          width: '0.01%',
-          height: '100%',
-          backgroundColor: 'transparent',
-          borderTop: `1px solid ${theme.palette.divider}`,
-          borderBottom: `1px solid ${theme.palette.divider}`,
-          transition: theme.transitions.create(['background-color']),
-          paddingLeft: 5
-        }
+        boxShadow: `inset 3px 0 0 transparent`
       }
     },
     withForcedIndex: {
@@ -58,25 +51,68 @@ const styles = (theme: Theme) =>
     selected: {
       backgroundColor: theme.bg.lightBlue,
       transform: 'scale(1)',
+      boxShadow: `inset 3px 0 0 ${theme.bg.lightBlue}`,
       '&:before': {
         transition: 'none',
         backgroundColor: theme.bg.lightBlue,
-        borderColor: theme.palette.primary.light,
-        borderRight: 0
+        borderColor: theme.palette.primary.light
       },
       '& td': {
         borderTopColor: theme.palette.primary.light,
         borderBottomColor: theme.palette.primary.light,
-        position: 'relative'
+        position: 'relative',
+        '&:first-child': {
+          borderLeft: `1px solid ${theme.palette.primary.light}`
+        },
+        [theme.breakpoints.down('md')]: {
+          '&:last-child': {
+            borderRight: `1px solid ${theme.palette.primary.light}`
+          }
+        }
       }
     },
+    selectedOuter: {
+      padding: 0
+    },
     activeCaret: {
-      color: theme.bg.lightBlue,
-      position: 'absolute',
-      top: 0,
-      right: theme.spacing() === COMPACT_SPACING_UNIT ? -12 : -14,
-      transform: 'translate(-.5px, -.5px)',
-      height: theme.spacing() === COMPACT_SPACING_UNIT ? 34 : 42
+      '&:before': {
+        content: '""',
+        width: 15,
+        height: '50%',
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        background: `linear-gradient(to right top, ${theme.palette.primary.light} 0%, ${theme.palette.primary.light} 49%, transparent 50.1%)`
+      },
+      '&:after': {
+        content: '""',
+        width: 15,
+        height: '50%',
+        position: 'absolute',
+        left: 0,
+        top: '50%',
+        background: `linear-gradient(to right bottom, ${theme.palette.primary.light} 0%, ${theme.palette.primary.light} 49%, transparent 50.1%)`
+      }
+    },
+    activeCaretOverlay: {
+      '&:before': {
+        content: '""',
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        width: 15,
+        height: '50%',
+        background: `linear-gradient(to right top, ${theme.bg.lightBlue} 0%, ${theme.bg.lightBlue} 45%, transparent 46.1%)`
+      },
+      '&:after': {
+        content: '""',
+        position: 'absolute',
+        left: 0,
+        bottom: 0,
+        width: 15,
+        height: '50%',
+        background: `linear-gradient(to right bottom, ${theme.bg.lightBlue} 0%, ${theme.bg.lightBlue} 45%, transparent 46.1%)`
+      }
     }
   });
 
@@ -174,9 +210,12 @@ class TableRow extends React.Component<CombinedProps> {
       >
         {this.props.children}
         {selected && (
-          <td colSpan={0}>
-            <ActiveCaret className={classes.activeCaret} />
-          </td>
+          <Hidden mdDown>
+            <td colSpan={0} className={classes.selectedOuter}>
+              <span className={classes.activeCaret} />
+              <span className={classes.activeCaretOverlay} />
+            </td>
+          </Hidden>
         )}
       </_TableRow>
     );
@@ -185,9 +224,6 @@ class TableRow extends React.Component<CombinedProps> {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(
-  withRouter,
-  styled
-)(TableRow);
+const enhanced = compose<CombinedProps, Props>(withRouter, styled)(TableRow);
 
 export default enhanced;

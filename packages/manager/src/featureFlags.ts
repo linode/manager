@@ -10,12 +10,9 @@ type OneClickApp = Record<string, string>;
 interface Flags {
   promos: boolean;
   vatBanner: TaxBanner;
-  oneClickLocation: 'sidenav' | 'createmenu';
   lkeHideButtons: boolean;
   firewalls: boolean;
   oneClickApps: OneClickApp;
-  longview: boolean;
-  longviewTabs: boolean;
 }
 
 /**

@@ -16,8 +16,8 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 import DomainTableRow from 'src/features/Domains/DomainTableRow';
+import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { Handlers } from './DomainActionMenu';
-
 type ClassNames = 'root' | 'label';
 
 const styles = (theme: Theme) =>
@@ -39,8 +39,15 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const ListDomains: React.StatelessComponent<CombinedProps> = props => {
   const { data, orderBy, order, handleOrderChange, classes } = props;
+
+  const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
+
   return (
-    <Paginate data={data} pageSize={25}>
+    <Paginate
+      data={data}
+      pageSize={infinitePageSize}
+      pageSizeSetter={setInfinitePageSize}
+    >
       {({
         data: paginatedData,
         count,
@@ -51,7 +58,12 @@ const ListDomains: React.StatelessComponent<CombinedProps> = props => {
       }) => (
         <React.Fragment>
           <Paper>
-            <Table removeLabelonMobile aria-label="List of your Domains">
+            <Table
+              removeLabelonMobile
+              aria-label="List of your Domains"
+              rowCount={data.length}
+              colCount={3}
+            >
               <TableHead>
                 <TableRow>
                   <TableSortCell
@@ -103,6 +115,7 @@ const ListDomains: React.StatelessComponent<CombinedProps> = props => {
             handlePageChange={handlePageChange}
             handleSizeChange={handlePageSizeChange}
             eventCategory="domains landing"
+            showAll
           />
         </React.Fragment>
       )}

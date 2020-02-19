@@ -40,25 +40,17 @@ export const LoadGraph: React.FC<CombinedProps> = props => {
       loading={loading}
       showToday={isToday}
       timezone={timezone}
+      nativeLegend
       data={[
         {
           label: 'Load',
-          borderColor: theme.graphs.lightGoldBorder,
-          backgroundColor: theme.graphs.lightGold,
-          data: _convertData(data.Load || [], start, end, formatLoad)
+          borderColor: 'transparent',
+          backgroundColor: theme.graphs.load,
+          data: _convertData(data.Load || [], start, end)
         }
       ]}
     />
   );
-};
-
-const formatLoad = (value: number | null) => {
-  if (value === null) {
-    return value;
-  }
-
-  // Round to 2 decimal places.
-  return Math.round(value * 100) / 100;
 };
 
 export default withTheme(LoadGraph);

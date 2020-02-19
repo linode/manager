@@ -10,8 +10,12 @@ import {
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import LineGraph from 'src/components/LineGraph';
-import SimpleLegend from 'src/components/LineGraph/SimpleLegend';
 import TabbedPanel from 'src/components/TabbedPanel';
+import {
+  convertNetworkToUnit,
+  formatNetworkTooltip,
+  generateNetworkUnits
+} from 'src/features/Longview/shared/utilities';
 import useTimezone from 'src/utilities/useTimezone';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -82,6 +86,9 @@ const chartHeight = 300;
 const formatData = (value: DataSeries[]): [number, number][] =>
   value.map(thisPoint => [thisPoint.x, thisPoint.y]);
 
+const _formatTooltip = (valueInBytes: number) =>
+  formatNetworkTooltip(valueInBytes / 8);
+
 const createTabs = (
   data: ManagedStatsData | null,
   timezone: string,
@@ -96,6 +103,21 @@ const createTabs = (
   if (!data) {
     return [];
   }
+
+  const formattedNetIn = data.net_in.map(dataPoint => dataPoint.y);
+  const formattedNetOut = data.net_out.map(dataPoint => dataPoint.y);
+  const netInMax = Math.max(...formattedNetIn);
+  const netOutMax = Math.max(...formattedNetOut);
+
+  // Find the max and convert to bytes, which is what generateNetworkUnits
+  // expects.
+  const maxNetworkInBytes = Math.max(netInMax, netOutMax) / 8;
+  const unit = generateNetworkUnits(maxNetworkInBytes);
+
+  const convertNetworkData = (value: number) => {
+    return convertNetworkToUnit(value, unit as any);
+  };
+
   return [
     {
       render: () => {
@@ -109,8 +131,8 @@ const createTabs = (
                 showToday={true}
                 data={[
                   {
-                    borderColor: theme.graphs.blueBorder,
-                    backgroundColor: theme.graphs.blue,
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.cpu.percent,
                     data: formatData(data.cpu),
                     label: 'CPU %'
                   }
@@ -127,27 +149,25 @@ const createTabs = (
         return (
           <div className={classes.root}>
             <div>{summaryCopy}</div>
-            <SimpleLegend
-              rows={[
-                { legendTitle: 'Network Traffic In', legendColor: 'blue' },
-                { legendTitle: 'Network Traffic Out', legendColor: 'green' }
-              ]}
-            />
             <div className={classes.canvasContainer}>
               <LineGraph
                 timezone={timezone}
                 chartHeight={chartHeight}
                 showToday={true}
+                nativeLegend
+                unit="/s"
+                formatData={convertNetworkData}
+                formatTooltip={_formatTooltip}
                 data={[
                   {
-                    borderColor: theme.graphs.blueBorder,
-                    backgroundColor: theme.graphs.blue,
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.network.inbound,
                     data: formatData(data.net_in),
                     label: 'Network Traffic In'
                   },
                   {
-                    borderColor: theme.graphs.greenBorder,
-                    backgroundColor: theme.graphs.green,
+                    borderColor: 'transparent',
+                    backgroundColor: theme.graphs.network.outbound,
                     data: formatData(data.net_out),
                     label: 'Network Traffic Out'
                   }
@@ -157,7 +177,7 @@ const createTabs = (
           </div>
         );
       },
-      title: 'Network Transfer (bits/s)'
+      title: `Network Transfer (${unit}/s)`
     },
     {
       render: () => {
@@ -171,7 +191,7 @@ const createTabs = (
                 showToday={true}
                 data={[
                   {
-                    borderColor: theme.graphs.yellowBorder,
+                    borderColor: 'transparent',
                     backgroundColor: theme.graphs.yellow,
                     data: formatData(data.disk),
                     label: 'Disk I/O'

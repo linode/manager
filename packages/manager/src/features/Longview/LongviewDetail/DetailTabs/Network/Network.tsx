@@ -2,16 +2,15 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
-import get from 'src/features/Longview/request';
-import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import { isToday as _isToday } from 'src/utilities/isToday';
 import {
   LongviewNetworkInterface,
   WithStartAndEnd
 } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
+import { useGraphs } from '../OverviewGraphs/useGraphs';
 import NetworkGraphs from './NetworkGraphs';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -21,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  clientAPIKey?: string;
+  clientAPIKey: string;
   lastUpdated?: number;
   lastUpdatedError?: APIError[];
   timezone: string;
@@ -36,23 +35,24 @@ export const NetworkLanding: React.FC<Props> = props => {
     end: 0
   });
 
-  // @todo would useGraphs be better here?
-  const network = useAPIRequest<LongviewNetworkInterface | undefined>(
-    clientAPIKey && lastUpdated
-      ? () =>
-          get(clientAPIKey, 'getValues', { fields: ['processes'] }).then(
-            response => response.DATA?.Network?.Interface
-          )
-      : null,
-    {},
-    [clientAPIKey, lastUpdated]
+  const { data, loading, error, request } = useGraphs(
+    ['network'],
+    clientAPIKey,
+    time.start,
+    time.end
   );
+
+  React.useEffect(() => {
+    request();
+  }, [clientAPIKey, lastUpdated, lastUpdatedError, time]);
 
   const handleStatsChange = (start: number, end: number) => {
     setTimeBox({ start, end });
   };
 
-  const isToday = time.end - time.start < 60 * 60 * 25;
+  const interfaces: LongviewNetworkInterface = data?.Network?.Interface ?? {};
+
+  const isToday = _isToday(time.start, time.end);
 
   return (
     <Grid
@@ -67,10 +67,9 @@ export const NetworkLanding: React.FC<Props> = props => {
         <Box
           display="flex"
           flexDirection="row"
-          justifyContent="space-between"
+          justifyContent="flex-end"
           alignItems="center"
         >
-          <Typography variant="h2">Resource Allocation History</Typography>
           <TimeRangeSelect
             small
             className={classes.root}
@@ -83,11 +82,13 @@ export const NetworkLanding: React.FC<Props> = props => {
       </Grid>
       <Grid item xs={12} className="py0">
         <NetworkGraphs
-          networkData={network.data || {}}
+          networkData={interfaces}
           isToday={isToday}
-          loading={network.loading}
-          error={lastUpdatedError || network.error}
+          loading={loading}
+          error={lastUpdatedError?.[0]?.reason || error}
           timezone={timezone}
+          start={time.start}
+          end={time.end}
         />
       </Grid>
     </Grid>

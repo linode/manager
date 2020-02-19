@@ -110,3 +110,11 @@ localStorage.json
 .scannerwork
 .sonar
 packages/manager/test-report.xml
+
+# cypress files/folders
+**/manager/config/development.json
+**/manager/config/staging.json
+**/manager/cypress/videos/
+**/manager/cypress/screenshots/
+
+nohup.out

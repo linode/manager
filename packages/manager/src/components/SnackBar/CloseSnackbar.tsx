@@ -1,5 +1,4 @@
 import Close from '@material-ui/icons/Close';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import {
   createStyles,
@@ -12,7 +11,7 @@ import IconButton from 'src/components/IconButton';
 type ClassNames = 'icon';
 
 interface Props {
-  uuid: string;
+  onClick: () => void;
   text: string;
 }
 
@@ -27,15 +26,10 @@ const styles = (theme: Theme) =>
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const CloseSnackbar: React.FC<CombinedProps> = props => {
-  const { classes, text } = props;
-  const { closeSnackbar } = useSnackbar();
-
-  const handleClose = () => {
-    closeSnackbar(props.uuid);
-  };
+  const { classes, text, onClick } = props;
 
   return (
-    <IconButton onClick={handleClose} title={text} className={classes.icon}>
+    <IconButton onClick={onClick} title={text} className={classes.icon}>
       <Close />
     </IconButton>
   );

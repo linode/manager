@@ -88,7 +88,12 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
             <CircleProgress />
           ) : (
             <Grid item xs={12}>
-              <StackScriptPanel publicImages={imagesData} />
+              <StackScriptPanel
+                publicImages={imagesData}
+                queryString={this.props.location.search}
+                history={this.props.history}
+                location={this.props.location}
+              />
             </Grid>
           )}
         </Grid>

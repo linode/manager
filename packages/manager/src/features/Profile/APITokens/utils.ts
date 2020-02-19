@@ -47,7 +47,10 @@ const defaultScopeMap = (perms: string[]): Record<string, 0> =>
 
 /**
  * This function accepts scopes strings as given by the API, which have the following format:
+ * Either:
  * "linodes:delete,domains:modify,nodebalancers:modify,images:create,events:view,clients:view"
+ * Or:
+ * "linodes:delete domains:modify nodebalancers:modify images:create"
  *
  * It returns an array of 2-tuples in alphabetical order by scope name.
  *
@@ -67,7 +70,7 @@ const defaultScopeMap = (perms: string[]): Record<string, 0> =>
  *
  * Each permission level gives a user access to all lower permission levels.
  */
-
+const permRegex = new RegExp(/[, ]/);
 export const scopeStringToPermTuples = (
   scopes: string,
   perms: string[]
@@ -76,7 +79,7 @@ export const scopeStringToPermTuples = (
     return perms.map(perm => [perm, 2] as Permission);
   }
 
-  const scopeMap = scopes.split(',').reduce((map, scopeStr) => {
+  const scopeMap = scopes.split(permRegex).reduce((map, scopeStr) => {
     const [perm, level] = scopeStr.split(':');
     return {
       ...map,
@@ -160,5 +163,5 @@ export const permTuplesToScopeString = (
     }
     return [...acc];
   }, []);
-  return joinedTups.join(',');
+  return joinedTups.join(' ');
 };

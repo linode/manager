@@ -92,12 +92,12 @@ class CopyTooltip extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, text, className, standAlone, ariaLabel } = this.props;
+    const { classes, text, className, standAlone } = this.props;
     const { copied } = this.state;
 
     return (
       <button
-        aria-label={ariaLabel ? ariaLabel : text}
+        aria-label={`Copy ${text} to clipboard`}
         name={text}
         type="button"
         onClick={this.clickIcon}

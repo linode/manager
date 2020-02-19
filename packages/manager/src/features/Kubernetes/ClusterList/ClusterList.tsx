@@ -160,7 +160,11 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
             }) => (
               <>
                 <Paper>
-                  <Table aria-label="List of Your Kubernetes Clusters">
+                  <Table
+                    aria-label="List of Your Kubernetes Clusters"
+                    rowCount={data.length}
+                    colCount={6}
+                  >
                     <TableHead>
                       <TableRow>
                         <TableSortCell
@@ -260,9 +264,6 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(
-  styled,
-  withTypes
-);
+const enhanced = compose<CombinedProps, Props>(styled, withTypes);
 
 export default enhanced(ClusterList);

@@ -289,7 +289,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
                 data-qa-submit
                 disabled={disabled}
               >
-                Submit
+                Reboot into Rescue Mode
               </Button>
             </ActionsPanel>
           </Paper>
@@ -309,12 +309,11 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   permissions: linode._permissions
 }));
 
-const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
-  diskError: pathOr(
-    undefined,
-    ['__resources', 'linodeDisks', 'error', 'read'],
-    state
-  )
+const mapStateToProps: MapState<StateProps, CombinedProps> = (
+  state,
+  ownProps
+) => ({
+  diskError: state.__resources.linodeDisks[ownProps.linodeId]?.error?.read
 });
 
 const connected = connect(mapStateToProps);

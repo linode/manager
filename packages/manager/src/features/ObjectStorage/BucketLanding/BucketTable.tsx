@@ -10,11 +10,11 @@ import {
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
+import TableRow from 'src/components/core/TableRow';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 import BucketTableRow from './BucketTableRow';
 
@@ -60,9 +60,14 @@ export const BucketTable: React.StatelessComponent<CombinedProps> = props => {
       }) => (
         <React.Fragment>
           <Paper>
-            <Table removeLabelonMobile aria-label="List of your Buckets">
+            <Table
+              removeLabelonMobile
+              aria-label="List of your Buckets"
+              rowCount={data.length}
+              colCount={3}
+            >
               <TableHead>
-                <TableRow>
+                <TableRow role="rowgroup">
                   <TableSortCell
                     active={orderBy === 'label'}
                     label="label"

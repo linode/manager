@@ -166,7 +166,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           return;
         }
         this.setState({ isSubmitting: false });
-        history.push('/stackscripts', {
+        history.push('/stackscripts?type=account', {
           successMessage: `${stackScript.label} successfully created`
         });
       })
@@ -277,6 +277,12 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
               pathname={location.pathname}
               labelTitle="Create New StackScript"
               className={classes.createTitle}
+              crumbOverrides={[
+                {
+                  position: 1,
+                  label: 'StackScripts'
+                }
+              ]}
               data-qa-create-stackscript-breadcrumb
             />
           </Grid>

@@ -41,9 +41,7 @@ interface BucketTableRowProps extends ObjectStorageBucket {
 
 type CombinedProps = BucketTableRowProps & WithStyles<ClassNames>;
 
-export const BucketTableRow: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const BucketTableRow: React.StatelessComponent<CombinedProps> = props => {
   const { classes, label, cluster, hostname, created, onRemove } = props;
 
   return (
@@ -79,7 +77,7 @@ export const BucketTableRow: React.StatelessComponent<
       </TableCell>
       <TableCell parentColumn="Region">
         <Typography variant="body2" data-qa-region>
-          {formatObjectStorageCluster(cluster)}
+          {formatObjectStorageCluster(cluster) || cluster}
         </Typography>
       </TableCell>
       <TableCell parentColumn="Created">

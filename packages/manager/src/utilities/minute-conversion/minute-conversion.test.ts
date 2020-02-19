@@ -41,9 +41,9 @@ describe('Human-Readable Minute Conversion', () => {
 
 describe('Event seconds conversion', () => {
   it('should format event seconds correctly', () => {
-    expect(formatEventSeconds(null)).toBe('Unknown');
-    expect(formatEventSeconds(undefined as any)).toBe('Unknown');
-    expect(formatEventSeconds(0)).toBe('Unknown');
+    expect(formatEventSeconds(null)).toBe('');
+    expect(formatEventSeconds(undefined as any)).toBe('');
+    expect(formatEventSeconds(0)).toBe('');
 
     expect(formatEventSeconds(3600)).toBe('1 hour');
     expect(formatEventSeconds(3660)).toBe('1 hour, 1 minute');

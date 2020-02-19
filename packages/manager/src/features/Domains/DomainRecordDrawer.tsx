@@ -22,6 +22,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button, { ButtonProps } from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import MultipleIPInput from 'src/components/MultipleIPInput';
 import Notice from 'src/components/Notice';
 import {
   default as _TextField,
@@ -34,7 +35,12 @@ import {
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { isValidCNAME, isValidDomainRecord } from './domainUtils';
+import {
+  getInitialIPs,
+  isValidCNAME,
+  isValidDomainRecord,
+  transferHelperText as helperText
+} from './domainUtils';
 
 const TextField: React.StatelessComponent<TextFieldProps> = props => (
   <_TextField {...props} />
@@ -75,8 +81,6 @@ interface EditableDomainFields extends EditableSharedFields {
   description?: string;
   domain?: string;
   expire_sec?: number;
-  group?: string;
-  master_ips?: string[];
   refresh_sec?: number;
   retry_sec?: number;
   soa_email?: string;
@@ -121,7 +125,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     weight: pathOr(5, ['weight'], props),
     domain: pathOr(undefined, ['domain'], props),
     soa_email: pathOr('', ['soa_email'], props),
-    axfr_ips: pathOr(0, ['axfr_ips'], props),
+    axfr_ips: getInitialIPs(props.axfr_ips),
     refresh_sec: pathOr(0, ['refresh_sec'], props),
     retry_sec: pathOr(0, ['retry_sec'], props),
     expire_sec: pathOr(0, ['expire_sec'], props)
@@ -162,16 +166,9 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     expire_sec: 'expire rate'
   };
 
-  handleTransferUpdate = (e: React.ChangeEvent<HTMLInputElement>) => {
-    /**
-     * This is a textarea input type, and users
-     * are expected to input a comma-separated list of IPs.
-     * However, the API is expecting an array
-     * of strings. If the user clears the input, set axfr_ips to [].
-     * Otherwise, split the list into an array.
-     */
-    const transferIPs = e.target.value === '' ? [] : e.target.value.split(',');
-    this.updateField('axfr_ips')(transferIPs);
+  handleTransferUpdate = (transferIPs: string[]) => {
+    const axfr_ips = transferIPs.length > 0 ? transferIPs : [''];
+    this.updateField('axfr_ips')(axfr_ips);
   };
 
   TextField = ({ label, field }: _TextFieldProps) => (
@@ -402,22 +399,14 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   };
 
   DomainTransferField = () => (
-    <TextField
-      multiline
-      label="Domain Transfers"
-      placeholder="192.0.2.0,192.0.2.1"
-      errorText={getAPIErrorsFor(
+    <MultipleIPInput
+      title="Domain Transfer IPs"
+      helperText={helperText}
+      error={getAPIErrorsFor(
         DomainRecordDrawer.errorFields,
         this.state.errors
       )('axfr_ips')}
-      // Include some warnings and info from the API docs.
-      helperText={`Comma-separated list of IPs that may perform a zone transfer for this Domain.
-        This is potentially dangerous, and should be left empty unless you intend to use it.`}
-      rows="3"
-      value={defaultTo(
-        DomainRecordDrawer.defaultFieldsState(this.props).axfr_ips,
-        (this.state.fields as EditableDomainFields).axfr_ips
-      )}
+      ips={(this.state.fields as EditableDomainFields).axfr_ips ?? ['']}
       onChange={this.handleTransferUpdate}
     />
   );
