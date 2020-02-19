@@ -1,20 +1,20 @@
-import { Firewall } from 'linode-js-sdk/lib/firewalls/types';
 import * as React from 'react';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
+import { DispatchProps } from 'src/containers/firewalls.container';
 import { capitalize } from 'src/utilities/capitalize';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 export type Mode = 'enable' | 'disable' | 'delete';
-interface Props {
+interface Props
+  extends Pick<
+    DispatchProps,
+    'enableFirewall' | 'disableFirewall' | 'deleteFirewall'
+  > {
   open: boolean;
   mode: Mode;
   closeDialog: () => void;
-  enableFirewall: (firewallID: number) => Promise<Firewall>;
-  disableFirewall: (firewallID: number) => Promise<Firewall>;
-  deleteFirewall: (firewallID: number) => Promise<{}>;
   selectedFirewallID?: number;
   selectedFirewallLabel: string;
 }
@@ -67,6 +67,7 @@ const FirewallDialog: React.FC<CombinedProps> = props => {
     }
 
     setSubmitting(true);
+    setError(undefined);
 
     const request = determineRequest();
 
