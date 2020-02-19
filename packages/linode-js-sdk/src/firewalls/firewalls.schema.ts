@@ -5,10 +5,18 @@ export const CreateFirewallDeviceSchema = object({
   nodebalancers: array().of(number())
 });
 
-export const CreateFirewallSchema = object({
-  label: string(),
+export const FirewallRuleSchema = object().shape({
+  inbound: array().required('You must provide a set of Firewall rules.'),
+  outbound: array().required('You must provide a set of Firewall rules.')
+});
+
+export const CreateFirewallSchema = object().shape({
+  label: string()
+    .min(3, 'Label must be between 3 and 32 characters.')
+    .max(32, 'Label must be between 3 and 32 characters.'),
+  // Label validation on the back end is more complicated, we only do basic checks here.
   tags: array().of(string()),
-  rules: object().required('You must provide a set of Firewall rules.')
+  rules: FirewallRuleSchema
 });
 
 export const UpdateFirewallSchema = object().shape({

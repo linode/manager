@@ -1,4 +1,4 @@
-import { Formik } from 'formik';
+import { Formik, FormikBag } from 'formik';
 import {
   CreateFirewallPayload,
   CreateFirewallSchema,
@@ -16,6 +16,10 @@ import TextField from 'src/components/TextField';
 import withLinodes, {
   Props as LinodeProps
 } from 'src/containers/withLinodes.container';
+import {
+  handleFieldErrors,
+  handleGeneralErrors
+} from 'src/utilities/formikErrorUtils';
 
 import { firewallOptionItems, predefinedFirewalls } from '../shared';
 
@@ -24,6 +28,8 @@ interface Props extends Omit<DrawerProps, 'onClose' | 'onSubmit'> {
   onClose: () => void;
   onSubmit: (payload: CreateFirewallPayload) => Promise<Firewall>;
 }
+
+export type FormikProps = FormikBag<CombinedProps, CreateFirewallPayload>;
 
 type CombinedProps = Props & LinodeProps;
 
@@ -78,7 +84,6 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
     ...restOfDrawerProps
   } = props;
 
-  const [selectedRules, setRules] = React.useState<Item<string>[]>([]);
   const [selectAll, toggleSelectAll] = React.useState<boolean>(false);
 
   const handleSelectLinodes = (selectedLinodes: Item<number>[]) => {
@@ -90,25 +95,38 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
   };
 
   const handleSelectRules = (selected: Item<string>[], cb: Function) => {
-    setRules(selected);
     const payload = mergeRules(selected);
     cb('rules', payload);
   };
 
-  const submitForm = (values: any) => {
-    // console.log(values);
-    /**
-     * if user selected _ALL_, create an array of Linode IDs for every Linode
-     * otherwise use the values from the react-select input value
-     */
-  };
+  const submitForm = (
+    values: CreateFirewallPayload,
+    { setSubmitting, setErrors, setStatus }: FormikProps
+  ) => {
+    // Clear drawer error state
+    setStatus(undefined);
 
-  const handleCloseDrawer = () => {
-    props.onClose();
+    if (values.label === '') {
+      values.label = undefined;
+    }
+
+    onSubmit(values)
+      .then(() => {
+        setSubmitting(false);
+        onClose();
+      })
+      .catch(err => {
+        const mapErrorToStatus = (generalError: string) =>
+          setStatus({ generalError });
+
+        setSubmitting(false);
+        handleFieldErrors(setErrors, err);
+        handleGeneralErrors(mapErrorToStatus, err, 'Error creating Firewall.');
+      });
   };
 
   return (
-    <Drawer {...restOfDrawerProps} onClose={handleCloseDrawer}>
+    <Drawer {...restOfDrawerProps} onClose={onClose}>
       <Formik
         initialValues={initialValues}
         validationSchema={CreateFirewallSchema}
@@ -133,6 +151,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
               name="label"
               value={values.label}
               onChange={handleChange}
+              errorText={errors.label}
               required
               inputProps={{
                 autoFocus: true
@@ -140,10 +159,17 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
             />
             <Select
               label="Rules"
+              name="rules"
               options={firewallOptionItems}
+              errorText={
+                errors['rules.inbound'] ||
+                errors['rules.outbound'] ||
+                errors.rules // errors.rules is where Yup validation errors will be placed
+                  ? 'Please select at least one rule.'
+                  : undefined
+              } // API errors such as "Inbound is required" not helpful with a pre-defined list
               isMulti
               aria-label="Select predefined rules for your firewall."
-              value={selectedRules}
               textFieldProps={{
                 required: true,
                 helperText: `Add one or more predefined rules to this firewall. You can edit the
@@ -156,6 +182,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
             />
             <Select
               label="Linodes"
+              name="linodes"
               isLoading={linodesLoading}
               errorText={linodesError && linodesError[0]?.reason}
               isMulti
@@ -186,11 +213,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
               >
                 Create
               </Button>
-              <Button
-                onClick={handleCloseDrawer}
-                buttonType="cancel"
-                data-qa-cancel
-              >
+              <Button onClick={onClose} buttonType="cancel" data-qa-cancel>
                 Cancel
               </Button>
             </ActionsPanel>
