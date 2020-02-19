@@ -1,7 +1,7 @@
 import { cleanup } from '@testing-library/react';
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import Graphs, { formatINodes, formatSpace, Props } from './Graphs';
+import Graphs, { Props } from './Graphs';
 
 afterEach(cleanup);
 
@@ -12,6 +12,7 @@ afterAll(async done => {
 const baseProps: Props = {
   isSwap: false,
   childOf: false,
+  loading: false,
   timezone: 'GMT',
   sysInfoType: 'helloworld',
   iFree: [],
@@ -25,18 +26,6 @@ const baseProps: Props = {
   reads: [],
   writes: []
 };
-
-describe('Utility Functions', () => {
-  it('formats INodes correctly', () => {
-    const result = formatINodes([{ x: 2, y: 3 }], [{ x: 2, y: 5 }]);
-    expect(result).toEqual([[2000, 2]]);
-  });
-
-  it('formats Space correctly', () => {
-    const result = formatSpace([{ x: 2, y: 1000 }], [{ x: 2, y: 68719477736 }]);
-    expect(result).toEqual([[2000, 64]]);
-  });
-});
 
 describe('UI', () => {
   it('should render graphs normally', () => {

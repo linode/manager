@@ -27,12 +27,17 @@ import withGlobalErrors, {
   Props as GlobalErrorProps
 } from 'src/containers/globalErrors.container';
 
-type ClassNames = 'title';
+type ClassNames = 'title' | 'openTicketButton';
 
 const styles = (theme: Theme) =>
   createStyles({
     title: {
       marginBottom: theme.spacing(2)
+    },
+    openTicketButton: {
+      minWidth: 150,
+      paddingLeft: theme.spacing(1) + 4,
+      paddingRight: theme.spacing(1) + 4
     }
   });
 
@@ -190,6 +195,7 @@ export class SupportTicketsLanding extends React.PureComponent<
                     buttonType="primary"
                     onClick={this.openDrawer}
                     data-qa-open-ticket-link
+                    className={classes.openTicketButton}
                   >
                     Open New Ticket
                   </Button>

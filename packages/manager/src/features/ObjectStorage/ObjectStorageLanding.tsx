@@ -40,9 +40,7 @@ const AccessKeyLanding = DefaultLoader({
 
 type CombinedProps = StateProps & DispatchProps & RouteComponentProps<{}>;
 
-export const ObjectStorageLanding: React.FunctionComponent<
-  CombinedProps
-> = props => {
+export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = props => {
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     {
@@ -192,10 +190,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-export const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+export const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const enhanced = compose<CombinedProps, {}>(connected);
 export default enhanced(ObjectStorageLanding);

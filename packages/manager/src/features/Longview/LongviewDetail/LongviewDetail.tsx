@@ -14,6 +14,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import AppBar from 'src/components/core/AppBar';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import DefaultLoader from 'src/components/DefaultLoader';
@@ -36,11 +37,18 @@ import {
   LongviewTopProcesses
 } from 'src/features/Longview/request.types';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
-import useFlags from 'src/hooks/useFlags';
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
-import FeatureComingSoon from './DetailTabs/FeatureComingSoon';
+import Apache from './DetailTabs/Apache';
+import MySQLLanding from './DetailTabs/MySQL';
 import NetworkLanding from './DetailTabs/Network';
+import NGINX from './DetailTabs/NGINX';
 import ProcessesLanding from './DetailTabs/Processes/ProcessesLanding';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  tabList: {
+    marginBottom: theme.spacing(3) + 6
+  }
+}));
 
 const topProcessesEmptyDataSet: LongviewTopProcesses = { Processes: {} };
 
@@ -78,6 +86,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     longviewClientData,
     timezone
   } = props;
+  const classes = useStyles();
 
   React.useEffect(() => {
     /** request clients if they haven't already been requested */
@@ -86,8 +95,6 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     }
   }, []);
   const clientAPIKey = client && client.api_key;
-  const flags = useFlags();
-  const showAllTabs = Boolean(flags.longviewTabs);
 
   const { lastUpdated, lastUpdatedError, notifications } = useClientLastUpdated(
     clientAPIKey,
@@ -238,6 +245,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           textColor="primary"
           variant="scrollable"
           scrollButtons="on"
+          className={classes.tabList}
         >
           {tabs.map(tab => (
             <Tab
@@ -261,20 +269,13 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           strict
           path={`${url}/processes`}
           render={() => {
-            if (!showAllTabs) {
-              return (
-                <FeatureComingSoon
-                  title="Processes"
-                  clientLabel={client.label}
-                />
-              );
-            }
-
             return (
               <ProcessesLanding
+                clientID={client.id}
                 clientAPIKey={client.api_key}
                 lastUpdated={lastUpdated}
                 lastUpdatedError={lastUpdatedError}
+                timezone={timezone}
               />
             );
           }}
@@ -296,21 +297,30 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           exact
           strict
           path={`${url}/disks`}
-          render={routerProps => {
-            if (!showAllTabs) {
-              return (
-                <FeatureComingSoon title="Disks" clientLabel={client.label} />
-              );
-            }
-
+          render={routerProps => (
+            <Disks
+              clientID={client.id}
+              clientAPIKey={client.api_key}
+              lastUpdated={lastUpdated}
+              clientLastUpdated={lastUpdated}
+              lastUpdatedError={lastUpdatedError}
+              timezone={props.timezone}
+              {...routerProps}
+            />
+          )}
+        />
+        )}
+        <Route
+          exact
+          strict
+          path={`${url}/apache`}
+          render={() => {
             return (
-              <Disks
-                clientID={client.id}
-                clientAPIKey={client.api_key}
-                clientLastUpdated={lastUpdated}
+              <Apache
+                timezone={timezone}
+                clientAPIKey={clientAPIKey}
+                lastUpdated={lastUpdated}
                 lastUpdatedError={lastUpdatedError}
-                timezone={props.timezone}
-                {...routerProps}
               />
             );
           }}
@@ -319,28 +329,33 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
         <Route
           exact
           strict
-          path={`${url}/apache`}
-          render={() => (
-            <FeatureComingSoon title="Apache" clientLabel={client.label} />
-          )}
-        />
-        )}
-        <Route
-          exact
-          strict
           path={`${url}/nginx`}
-          render={() => (
-            <FeatureComingSoon title="Nginx" clientLabel={client.label} />
-          )}
+          render={() => {
+            return (
+              <NGINX
+                timezone={timezone}
+                clientAPIKey={clientAPIKey}
+                lastUpdated={lastUpdated}
+                lastUpdatedError={lastUpdatedError}
+              />
+            );
+          }}
         />
         )}
         <Route
           exact
           strict
           path={`${url}/mysql`}
-          render={() => (
-            <FeatureComingSoon title="MySQL" clientLabel={client.label} />
-          )}
+          render={() => {
+            return (
+              <MySQLLanding
+                timezone={timezone}
+                clientAPIKey={clientAPIKey}
+                lastUpdated={lastUpdated}
+                lastUpdatedError={lastUpdatedError}
+              />
+            );
+          }}
         />
         )}
         <Route

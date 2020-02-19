@@ -6,6 +6,9 @@ import Select, {
   Item
 } from 'src/components/EnhancedSelect/Select';
 import withAccountSettings from 'src/containers/accountSettings.container';
+import withPreferences, {
+  Props as PreferencesProps
+} from 'src/containers/preferences.container';
 
 interface Props extends Omit<BaseSelectProps, 'onChange' | 'defaultValue'> {
   handleStatsChange?: (start: number, end: number) => void;
@@ -24,23 +27,35 @@ export type Labels =
   | 'Past 30 Days'
   | 'Past Year';
 
-type CombinedProps = Props & ReduxStateProps;
+type CombinedProps = Props & ReduxStateProps & PreferencesProps;
 
 const TimeRangeSelect: React.FC<CombinedProps> = props => {
   const {
     defaultValue,
     isLongviewPro,
     handleStatsChange,
+    preferences,
+    getUserPreferences,
+    updateUserPreferences,
     ...restOfSelectProps
   } = props;
 
   /*
     the time range is the label instead of the value because it's a lot harder
     to keep Date.now() consistent with this state. We can get the actual
-    values when it comes time to make the request
+    values when it comes time to make the request.
+
+    Use the value from user preferences if available, then fall back to
+    the default that was passed to the component, and use Past 30 Minutes
+    if all else fails.
+
+    @todo Validation here to make sure that the value from user preferences
+    is a valid time window.
   */
   const [selectedTimeRange, setTimeRange] = React.useState<Labels>(
-    defaultValue || 'Past 30 Minutes'
+    (preferences?.longviewTimeRange as Labels) ||
+      defaultValue ||
+      'Past 30 Minutes'
   );
 
   /*
@@ -78,6 +93,15 @@ const TimeRangeSelect: React.FC<CombinedProps> = props => {
   const handleChange = (item: Item<Labels, Labels>) => {
     setTimeRange(item.value);
 
+    getUserPreferences()
+      .then(response => {
+        updateUserPreferences({
+          ...response,
+          longviewTimeRange: item.value
+        });
+      })
+      .catch(_ => null); // swallow the error, it's nbd if the choice isn't saved
+
     if (!!handleStatsChange) {
       handleStatsChange(
         Math.round(
@@ -114,7 +138,8 @@ export default compose<CombinedProps, Props>(
         isLongviewPro
       };
     }
-  )
+  ),
+  withPreferences()
 )(TimeRangeSelect);
 
 /**

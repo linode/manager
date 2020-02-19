@@ -31,6 +31,11 @@ export const ALGOLIA_SEARCH_KEY =
 export const LAUNCH_DARKLY_API_KEY =
   process.env.REACT_APP_LAUNCH_DARKLY_ID || '';
 
+// Maximum page size allowed by the API. Used in the `getAll()` helper function
+// to request as many items at once as possible.
+export const API_MAX_PAGE_SIZE =
+  Number(process.env.REACT_APP_API_MAX_PAGE_SIZE) || 100;
+
 // Sets Paypal Environment, valid values: 'sandbox|production'
 export const PAYPAL_CLIENT_ENV =
   process.env.REACT_APP_PAYPAL_ENV || 'production';
@@ -171,13 +176,13 @@ export const dcDisplayCountry = {
   'ap-southeast': 'AU'
 };
 
+// Map OBJ Cluster IDs to their display country.
 export const objectStorageClusterDisplay: Record<
-  ObjectStorageClusterID | 'philadelphia',
+  ObjectStorageClusterID,
   string
 > = {
   'us-east-1': 'Newark, NJ',
-  'us-east': 'Newark, NJ',
-  philadelphia: 'Philadelphia, PA'
+  'eu-central-1': 'Frankfurt, DE'
 };
 
 export type ContinentKey = 'NA' | 'EU' | 'AS';
@@ -239,7 +244,7 @@ export const allowedHTMLTags = [
   'tr'
 ];
 
-export const allowedHTMLAttr = ['href', 'lang', 'title', 'align', 'target'];
+export const allowedHTMLAttr = ['href', 'lang', 'title', 'align'];
 
 // List of country codes in the European Union; used for VAT display
 export const EU_COUNTRIES = [
@@ -286,7 +291,7 @@ export const LINODE_ARN_TAX_ID = '3000 1606 0612';
 export const MBpsIntraDC = 75;
 
 /**
- * MBps rate for intra DC migrations (AKA Cross-Datacenter migrations )
+ * MBps rate for inter DC migrations (AKA Cross-Datacenter migrations )
  */
 export const MBpsInterDC = 1.5;
 

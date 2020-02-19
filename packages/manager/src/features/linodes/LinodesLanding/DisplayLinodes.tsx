@@ -5,10 +5,9 @@ import Grid from 'src/components/Grid';
 import { OrderByProps } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
-import TableWrapper from './TableWrapper';
-
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-import { storage } from 'src/utilities/storage';
+import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
+import TableWrapper from './TableWrapper';
 
 interface Props {
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
@@ -37,13 +36,13 @@ const DisplayLinodes: React.StatelessComponent<CombinedProps> = props => {
     ...rest
   } = props;
 
-  const storedPageSize = React.useMemo(storage.linodePageSize.get, []);
+  const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
 
   return (
     <Paginate
       data={data}
-      pageSize={storedPageSize}
-      pageSizeSetter={storage.linodePageSize.set}
+      pageSize={infinitePageSize}
+      pageSizeSetter={setInfinitePageSize}
     >
       {({
         data: paginatedData,
@@ -64,7 +63,8 @@ const DisplayLinodes: React.StatelessComponent<CombinedProps> = props => {
           handleOrderChange,
           order,
           orderBy,
-          someLinodesHaveMaintenance: props.someLinodesHaveMaintenance
+          someLinodesHaveMaintenance: props.someLinodesHaveMaintenance,
+          dataLength: paginatedData.length
         };
         return (
           <React.Fragment>

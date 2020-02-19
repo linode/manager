@@ -592,6 +592,7 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default recompose<CombinedProps, Props>(styled, SectionErrorBoundary)(
-  SupportTicketDrawer
-);
+export default recompose<CombinedProps, Props>(
+  styled,
+  SectionErrorBoundary
+)(SupportTicketDrawer);

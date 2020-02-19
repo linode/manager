@@ -16,7 +16,7 @@ export interface ExtendedPoolNode {
   count: number;
   type: string;
   clusterID?: number;
-  linodes?: PoolNodeResponse[];
+  nodes?: PoolNodeResponse[];
 }
 export interface ExtendedCluster extends KubernetesCluster {
   node_pools: PoolNodeWithPrice[];

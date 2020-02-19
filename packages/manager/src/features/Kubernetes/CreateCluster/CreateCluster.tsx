@@ -87,7 +87,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
   state: State = {
     selectedRegion: undefined,
     selectedType: undefined,
-    numberOfLinodes: 1,
+    numberOfLinodes: 3,
     nodePools: [],
     label: undefined,
     version: undefined,
@@ -99,11 +99,20 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
   componentDidMount() {
     getAllVersions()
       .then(response => {
-        this.setState({
-          versionOptions: response.data.map(eachVersion => ({
+        /**
+         * 1. Convert versions to Items
+         * 2. Sort descending (so newest version is at top)
+         * 3. Pre-select the newest version
+         */
+        const versionOptions = response.data
+          .map(eachVersion => ({
             value: eachVersion.id,
             label: eachVersion.id
           }))
+          .sort(sortByLabelDescending);
+        this.setState({
+          versionOptions,
+          version: versionOptions[0]
         });
       })
       .catch(error => {
@@ -354,6 +363,15 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
     );
   }
 }
+
+const sortByLabelDescending = (a: Item, b: Item) => {
+  if (a.value > b.value) {
+    return -1;
+  } else if (a.value < b.value) {
+    return 1;
+  }
+  return 0;
+};
 
 const styled = withStyles(styles);
 

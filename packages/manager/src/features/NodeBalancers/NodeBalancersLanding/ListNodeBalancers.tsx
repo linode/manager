@@ -10,6 +10,7 @@ import {
 import TableBody from 'src/components/core/TableBody';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
+import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import NodeBalancersLandingTableRows from './NodeBalancersLandingTableRows';
 import NodeBalancersTableWrapper from './NodeBalancersTableWrapper';
 
@@ -49,10 +50,19 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const ListNodeBalancers: React.StatelessComponent<CombinedProps> = props => {
   const { data, orderBy, order, handleOrderChange, toggleDialog } = props;
-  const tableWrapperProps = { handleOrderChange, order, orderBy };
+
+  const dataLength = data.length;
+
+  const tableWrapperProps = { handleOrderChange, order, orderBy, dataLength };
+
+  const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
 
   return (
-    <Paginate data={data}>
+    <Paginate
+      data={data}
+      pageSize={infinitePageSize}
+      pageSizeSetter={setInfinitePageSize}
+    >
       {({
         count,
         data: paginatedData,
@@ -79,6 +89,7 @@ const ListNodeBalancers: React.StatelessComponent<CombinedProps> = props => {
             handlePageChange={handlePageChange}
             handleSizeChange={handlePageSizeChange}
             eventCategory="nodebalancers landing"
+            showAll
           />
         </>
       )}

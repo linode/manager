@@ -21,16 +21,26 @@ const styles = (theme: Theme) =>
     }
   });
 
-type CombinedProps = Omit<OrderByProps, 'data'> & WithStyles<ClassNames>;
+interface Props {
+  dataLength: number;
+}
+
+type CombinedProps = Omit<OrderByProps, 'data'> &
+  WithStyles<ClassNames> &
+  Props;
 
 const TableWrapper: React.StatelessComponent<CombinedProps> = props => {
-  const { order, orderBy, handleOrderChange, classes } = props;
+  const { order, orderBy, handleOrderChange, dataLength, classes } = props;
 
   return (
     <Paper className={classes.paperWrapper}>
       <Grid container className="my0">
         <Grid item xs={12} className="py0">
-          <Table aria-label="List of Linodes">
+          <Table
+            aria-label="List of Linodes"
+            rowCount={dataLength}
+            colCount={5}
+          >
             <SortableTableHead
               order={order}
               orderBy={orderBy}

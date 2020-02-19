@@ -128,6 +128,7 @@ module.exports = {
           // assets smaller than specified size as data URLs to avoid requests.
           {
             test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
+            exclude: [/__image_snapshots__/],
             loader: require.resolve('url-loader'),
             options: {
               limit: 10000,
@@ -143,12 +144,14 @@ module.exports = {
           {
             test: /\.(ts|tsx)$/,
             include: paths.appSrc,
+            exclude:[/(stories|test)\.(ts|tsx)$/, /__data__/],
             use: [
               {
                 loader: require.resolve('ts-loader'),
                 options: {
                   // disable type checker - we will use it in fork plugin
-                  transpileOnly: true
+                  transpileOnly: true,
+                  onlyCompileBundledFiles:true
                 }
               }
             ]

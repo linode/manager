@@ -39,7 +39,7 @@ yarn test linode
 To run a test in debug mode, add a `debugger` breakpoint inside one of the test cases, then run
 
 ```
-npx lerna run test:debug --stream --scope linode-manager
+yarn workspace linode-manager run test:debug
 ```
 
 Test execution will stop at the debugger statement, and you will be able to use Chrome's normal debugger to step through
@@ -209,10 +209,44 @@ The axe-core accessibility testing script has been integrated into the webdriver
 ```
 # Starts the local development environment
 
-yarn && npx lerna bootstrap --scope linode-manager && npx lerna run start --stream --scope linode-manager
-
-
-npx lerna run axe --stream --scope linode-manager
+yarn install:all && yarn up
+yarn workspace linode-manager run axe
 ```
 
 The test results will be saved as a JSON file with Critical accessibility violations appearing at the top of the list.
+
+
+### Run Cypress e2e tests
+
+#### dependencies
+Run `yarn install:all && npx cypress verify`.
+#### How to run locally without docker
+Run:
+- `yarn up` in one terminal
+- In a **new terminal** `npx wait-on http://localhost:3000 && yarn cy:e2e`
+
+`npx wait-on` will simply wait for the website on 3000 to be ready.
+
+#### How to run with docker
+Check docker is installed.
+Run `yarn docker:cy` or `docker build -t cloudcy -f Dockerfile-e2e . && docker run --rm cloudcy`
+
+
+### Run Storybook UI Components e2e tests
+
+#### dependencies
+Run `yarn install:all && yarn selenium:install`.
+When running `yarn selenium:install` will check that selenium is installed.
+We do not need to take care of Selenium more after this, storybook will take care of launching it.
+
+#### How to run locally without docker
+Run:
+- `yarn storybook` in one terminal
+- In a **new terminal** `npx wait-on http://localhost:6006 && yarn storybook:e2e`
+
+`npx wait-on` will simply wait for the storybook server on 6006 to be ready.
+
+#### How to run with docker
+Check docker is installed.
+Run `yarn docker:sb` or `docker build -t cloudsb -f Dockerfile-storybook . && docker run --rm cloudsb`
+

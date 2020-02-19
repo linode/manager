@@ -80,6 +80,44 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/csgo_color.svg'
   },
   {
+    name: 'Django',
+    description: `Django is a web development framework for the Python programing language. It enables rapid development, while favoring pragmatic and clean design.`,
+    summary: `A framework for simplifying the process of building your web applications more quickly and with less code.`,
+    related_info: [
+      {
+        title: 'https://www.djangoproject.com/',
+        href: 'https://www.djangoproject.com/'
+      }
+    ],
+    tips: [
+      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:8000</em> in a browser to visit the default web page.`,
+      `You can also visit <em>https://[your-Linode's-IP-address]:8000/admin</em> to view the Djanogo admin panel.`
+    ],
+    logo_url: 'assets/django_color.svg'
+  },
+  {
+    name: 'Flask',
+    description: `Flask is a lightweight WSGI web application framework written in Python. It is designed to make getting started quick and easy, with the ability to scale up to complex applications.`,
+    summary: `A quick light-weight web framework for Python that includes several utilities and libraries you can use to create a web application.`,
+    related_guides: [
+      {
+        title: 'Deploy a Flask Application on Ubuntu',
+        href:
+          'https://www.linode.com/docs/development/python/flask-and-gunicorn-on-ubuntu/'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://www.palletsprojects.com/p/flask/',
+        href: 'https://www.palletsprojects.com/p/flask/'
+      }
+    ],
+    tips: [
+      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]</em> in a browser.`
+    ],
+    logo_url: 'assets/flask_color.svg'
+  },
+  {
     name: 'Docker',
     description: `Docker is a tool that enables you to create, deploy, and manage lightweight, stand-alone packages that contain everything needed to run an application (code, libraries, runtime, system settings, and dependencies).`,
     summary: `Securely build, share and run modern applications anywhere.`,
@@ -180,8 +218,8 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Grafana',
-    description: `Grafana allows you to query, visualize, alert on and understand your metrics no matter where they are stored. Create, explore, and share dashboards with your team and foster a data driven culture.`,
-    summary: `Grafana is the open source analytics & monitoring solution for every database.`,
+    description: `Grafana gives you the ability to create, monitor, store, and share metrics with your team to keep tabs on your infrastructure.`,
+    summary: `An open source analytics and monitoring solution with a focus on accessibility for metric visualization.`,
     related_info: [
       {
         title: 'https://grafana.com/',
@@ -195,8 +233,8 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Jenkins',
-    description: `Jenkins is a self-contained, open source automation server which can be used to automate all sorts of tasks related to building, testing, and delivering or deploying software.`,
-    summary: `Jenkins provides hundreds of plugins to support building, deploying and automating any project.`,
+    description: `Jenkins is an open source automation tool which can build, test, and deploy your infrastructure.`,
+    summary: `A tool that gives you access to a massive library of plugins to support automation in your project's lifecycle.`,
     related_guides: [
       {
         title: 'Using LISH to SSH into your Linode',
@@ -242,6 +280,47 @@ export const oneClickApps: OCA[] = [
     ],
     logo_url: 'assets/lamp_flame_color.svg'
     // href: 'https://www.ibm.com/cloud/learn/lamp-stack-explained' Not sure this is kosher.
+  },
+  {
+    name: 'MongoDB',
+    description: `MongoDB provides an alternative to traditional relational database management systems (RDBMS). In addition to its schema-free design and scalable architecture, MongoDB provides JSON output and specialized language-specific bindings that make it particularly attractive for use in custom application development and rapid prototyping.`,
+    summary: `MongoDB is a database engine that provides access to non-relational, document-oriented databases.`,
+    related_guides: [
+      {
+        title: 'Create a MongoDB Replica Set',
+        href:
+          'https://www.linode.com/docs/databases/mongodb/create-a-mongodb-replica-set/'
+      },
+      {
+        title: 'Build Database Clusters with MongoDB',
+        href:
+          'https://www.linode.com/docs/databases/mongodb/build-database-clusters-with-mongodb/'
+      },
+      {
+        title: 'Install MongoDB on Ubuntu 16.04',
+        href:
+          'https://www.linode.com/docs/databases/mongodb/install-mongodb-on-ubuntu-16-04/'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://www.mongodb.com/',
+        href: 'https://www.mongodb.com/'
+      }
+    ],
+    logo_url: 'assets/mongodb_color.svg'
+  },
+  {
+    name: 'MEAN',
+    description: `MEAN is a full-stack JavaScript-based framework which accelerates web application development much faster than other frameworks.  All involved technologies are well-established, offer robust feature sets, and are well-supported by their maintaining organizations. These characteristics make them a great choice for your applications.`,
+    summary: `A MEAN (MongoDB, Express, Angular, Node.js) stack is a free and open-source web software bundle used to build modern web applications:`,
+    related_info: [
+      {
+        title: 'http://meanjs.org/',
+        href: 'http://meanjs.org/'
+      }
+    ],
+    logo_url: 'assets/mean_color.svg'
   },
   {
     name: 'LEMP',
@@ -304,10 +383,99 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/plesk_color.svg'
   },
   {
-    name: 'Prometheus',
-    description: `Prometheus is a an open-source monitoring system with a dimensional data model, flexible query language, efficient time series database and modern alerting approach.`,
+    name: 'Redis',
+    description: `Redis is an open-source, in-memory, data-structure store, with the optional ability to write and persist data to a disk, which can be used as a key-value database, cache, and message broker. Redis features
+ built-in transactions, replication, and support for a variety of data structures such as strings, hashes, lists, sets, and others.`,
     summary:
-      'Power your metrics with a leading open-source monitoring solution.',
+      'Flexible, in-memory, NoSQL database service supported in many different coding languages.',
+    related_guides: [
+      {
+        title: 'How to Install a Redis Server on Ubuntu or Debian 8',
+        href:
+          'https://www.linode.com/docs/databases/redis/how-to-install-a-redis-server-on-ubuntu-or-debian8/'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://redis.io/',
+        href: 'https://redis.io/'
+      }
+    ],
+    logo_url: 'assets/redis_color.svg'
+  },
+  {
+    name: 'Ruby on Rails',
+    description: `Rails is a web application development framework written in the Ruby programming language. It is designed to make programming web applications easier by giving every developer a number of common tools they need to get started. Ruby on Rails empowers you to accomplish more with less code.`,
+    summary: `Ruby on Rails is a web framework that allows web designers and developers to implement dynamic, fully featured web applications. `,
+    related_guides: [
+      {
+        title: 'Ruby on Rails with NGINX On Debian 9',
+        href:
+          'https://www.linode.com/docs/development/ror/ruby-on-rails-nginx-debian/'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://rubyonrails.org/',
+        href: 'https://rubyonrails.org/'
+      }
+    ],
+    tips: [
+      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:3000</em> in a browser.`
+    ],
+    logo_url: 'assets/rubyonrails_color.svg'
+  },
+  {
+    name: 'PostgreSQL',
+    description: `PostgreSQL is a popular open source relational database system that provides many advanced configuration options that can help optimize your database’s performance in a production environment.`,
+    summary: `The PostgreSQL relational database system is a powerful, scalable, and standards-compliant open-source database platform.`,
+    related_guides: [
+      {
+        title: 'Configure PostgreSQL',
+        href:
+          'https://www.linode.com/docs/databases/postgresql/configure-postgresql/'
+      },
+      {
+        title: 'How to Install PostgreSQL on Ubuntu 16.04',
+        href:
+          'https://www.linode.com/docs/databases/postgresql/how-to-install-postgresql-on-ubuntu-16-04/'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://www.postgresql.org/',
+        href: 'https://www.postgresql.org/'
+      }
+    ],
+    logo_url: 'assets/postgresql_color.svg'
+  },
+  {
+    name: 'phpMyAdmin',
+    description: `phpMyAdmin is a web application that provides a GUI to aid in MySQL and MariaDB database administration. It supports multiple database servers and is a robust and easy alternative to using the MySQL command line client.`,
+    summary: `An easy to use web application that simplifies the management of your MySQL and MariaDB databases.`,
+    related_guides: [
+      {
+        title: 'How to Install and Configure phpMyAdmin on Debian 8',
+        href:
+          'https://www.linode.com/docs/databases/mysql/install-and-configure-phpmyadmin-on-debian-8/'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://www.phpmyadmin.net/',
+        href: 'https://www.phpmyadmin.net/'
+      }
+    ],
+    tips: [
+      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]/phpmyadmin</em> in a browser.`
+    ],
+    logo_url: 'assets/phpmyadmin_color.svg'
+  },
+  {
+    name: 'Prometheus',
+    description: `Prometheus is a powerful monitoring software tool that collects metrics from configurable data points at given intervals, evaluates rule expressions, and can trigger alerts if some condition is observed.`,
+    summary:
+      'Gain metrics and receive alerts with this open-source monitoring tool.',
     related_info: [
       {
         title: 'https://prometheus.io/',
@@ -343,7 +511,7 @@ export const oneClickApps: OCA[] = [
   {
     name: 'Shadowsocks',
     description:
-      'Shadowsocks is a lightweight SOCKS5 web proxy tool primarily utilized to bypass network censorship and blocking on certain websites and web protocols. A full setup requires a Linode server to host the Shadowsocks daemon, and a client installed on PC, Mac, Linux, or a mobile device. Unlike other proxy software, Shadowsocks traffic is designed to be both indiscernible from other traffic to third-party monitoring tools, and also able to disguise itself as a normal direct connection. Data passing through Shadowsocks is encrypted for additional security and privacy.',
+      'Shadowsocks is a lightweight SOCKS5 web proxy tool. A full setup requires a Linode server to host the Shadowsocks daemon, and a client installed on PC, Mac, Linux, or a mobile device. Unlike other proxy software, Shadowsocks traffic is designed to be both indiscernible from other traffic to third-party monitoring tools, and also able to disguise itself as a normal direct connection. Data passing through Shadowsocks is encrypted for additional security and privacy.',
     summary:
       'A secure socks5 proxy, designed to protect your Internet traffic.',
     related_info: [
