@@ -1,5 +1,10 @@
 import { array, number, object, string } from 'yup';
 
+export const CreateFirewallDeviceSchema = object({
+  linodes: array().of(number()),
+  nodebalancers: array().of(number())
+});
+
 export const CreateFirewallSchema = object({
   label: string(),
   tags: array().of(string()),

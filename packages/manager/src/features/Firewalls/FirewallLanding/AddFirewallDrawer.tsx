@@ -1,3 +1,9 @@
+import { Formik } from 'formik';
+import {
+  CreateFirewallPayload,
+  CreateFirewallSchema,
+  Firewall
+} from 'linode-js-sdk/lib/firewalls';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -11,12 +17,27 @@ import withLinodes, {
   Props as LinodeProps
 } from 'src/containers/withLinodes.container';
 
+import { firewallOptionItems, predefinedFirewalls } from '../shared';
+
 /* tslint:disable-next-line */
-interface Props extends Omit<DrawerProps, 'onClose'> {
+interface Props extends Omit<DrawerProps, 'onClose' | 'onSubmit'> {
   onClose: () => void;
+  onSubmit: (payload: CreateFirewallPayload) => Promise<Firewall>;
 }
 
 type CombinedProps = Props & LinodeProps;
+
+const initialValues: CreateFirewallPayload = {
+  label: '',
+  rules: [],
+  devices: {
+    linodes: []
+  }
+};
+
+const getValueFromItem = (value: string, options: Item<any>[]) => {
+  return options.find(thisOption => thisOption.value === value);
+};
 
 const AddFirewallDrawer: React.FC<CombinedProps> = props => {
   const {
@@ -26,90 +47,106 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
     linodesResults,
     linodesData,
     linodesLastUpdated,
+    onClose,
+    onSubmit,
     ...restOfDrawerProps
   } = props;
 
-  const [selectedLinodes, handleSelectLinodes] = React.useState<
-    Item<number | string>[]
-  >([]);
+  const handleSelectLinodes = (selectedLinodes: Item<number>[]) => {
+    return userSelectedAllLinodes(selectedLinodes)
+      ? linodesData.map(eachLinode => eachLinode.id)
+      : selectedLinodes.map(eachValue => eachValue.value);
+  };
 
-  const submitForm = () => {
+  const handleSelectRules = (a: any) => {
+    console.log(a);
+  };
+
+  const submitForm = (values: any) => {
+    console.log(values);
     /**
      * if user selected _ALL_, create an array of Linode IDs for every Linode
      * otherwise use the values from the react-select input value
      */
-    const payloadAsArrayOfLinodeIDs = userSelectedAllLinodes(selectedLinodes)
-      ? linodesData.map(eachLinode => eachLinode.id)
-      : selectedLinodes.map(eachValue => eachValue.value);
-
-    return payloadAsArrayOfLinodeIDs;
   };
 
   const handleCloseDrawer = () => {
-    handleSelectLinodes([]);
     props.onClose();
   };
 
-  const allLinodesAreSelected = userSelectedAllLinodes(selectedLinodes);
-
   return (
     <Drawer {...restOfDrawerProps} onClose={handleCloseDrawer}>
-      <TextField
-        aria-label="Name of your new firewall"
-        label="Name"
-        required
-        // inputRef={inputRef}
-        inputProps={{
-          autoFocus: true
-        }}
-      />
-      <Select
-        label="Rules"
-        aria-label="Select predefined rules for your firewall."
-        textFieldProps={{
-          required: true,
-          helperText: `Add one or more predefined rules to this firewall. You can edit the
-          default parameters for these rules after you create the firewall.`,
-          helperTextPosition: 'top'
-        }}
-        onChange={() => null}
-      />
-      <Select
-        label="Linodes"
-        isLoading={linodesLoading}
-        errorText={linodesError ? linodesError[0].reason : ''}
-        value={
-          /*
-            if the user selected _ALL_, that's the only chip
-            we want appearing in the actual text field.
-           */
-          allLinodesAreSelected
-            ? [
-                {
-                  value: 'ALL',
-                  label: 'All Linodes'
-                }
-              ]
-            : selectedLinodes
-        }
-        isMulti
-        options={generateOptions(
-          allLinodesAreSelected,
-          linodesData,
-          linodesError
+      <Formik
+        initialValues={initialValues}
+        validationSchema={CreateFirewallSchema}
+        validateOnChange={false}
+        validateOnBlur={false}
+        onSubmit={onSubmit}
+      >
+        {({
+          values,
+          errors,
+          status,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          isSubmitting,
+          setFieldValue
+        }) => (
+          <>
+            <TextField
+              aria-label="Name of your new firewall"
+              label="Name"
+              value={values.label}
+              onChange={handleChange}
+              required
+              inputProps={{
+                autoFocus: true
+              }}
+            />
+            <Select
+              label="Rules"
+              options={firewallOptionItems}
+              isMulti
+              aria-label="Select predefined rules for your firewall."
+              value={values.rules}
+              textFieldProps={{
+                required: true,
+                helperText: `Add one or more predefined rules to this firewall. You can edit the
+              default parameters for these rules after you create the firewall.`,
+                helperTextPosition: 'top'
+              }}
+              onChange={(items: Item<number>[]) =>
+                setFieldValue('rules', handleSelectRules(items))
+              }
+            />
+            <Select
+              label="Linodes"
+              isLoading={linodesLoading}
+              errorText={linodesError && linodesError[0]?.reason}
+              value={getValueFromItem('', [])}
+              isMulti
+              options={generateOptions(
+                false, // allLinodesAreSelected,
+                linodesData,
+                linodesError
+              )}
+              onChange={(selected: Item<number>[]) =>
+                setFieldValue('devices.linodes', handleSelectLinodes(selected))
+              }
+              placeholder="Select a Linode or type to search..."
+              aria-label="Select which Linodes to which you want to apply this new firewall"
+              textFieldProps={{
+                helperTextPosition: 'top',
+                helperText: `Assign one or more Linodes to this firewall. You can
+              add Linodes later if you want to customize your rules first.`
+              }}
+              hideSelectedOptions={true}
+            />
+          </>
         )}
-        onChange={(values: Item<number | string>[]) =>
-          handleSelectLinodes(values)
-        }
-        placeholder="Select a Linode or type to search..."
-        aria-label="Select which Linodes to which you want to apply this new firewall"
-        textFieldProps={{
-          helperTextPosition: 'top',
-          helperText: `Assign one or more Linodes to this firewall. You can
-          add Linodes later if you want to customize your rules first.`
-        }}
-        hideSelectedOptions={true}
-      />
+      </Formik>
+
       <ActionsPanel>
         <Button
           buttonType="primary"

@@ -35,9 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-type FirewallProps = FireProps &
-  Pick<DispatchProps, 'createFirewall'> &
-  ActionHandlers;
+type FirewallProps = FireProps & ActionHandlers;
 
 type CombinedProps = FirewallProps;
 
