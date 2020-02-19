@@ -19,7 +19,6 @@ import LoginAsCustomerCallback from 'src/layouts/LoginAsCustomerCallback';
 import Logout from 'src/layouts/Logout';
 import 'src/request';
 import store from 'src/store';
-import 'src/utilities/createImageBitmap';
 import './index.css';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
 
