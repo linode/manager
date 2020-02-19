@@ -50,7 +50,10 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const ListNodeBalancers: React.StatelessComponent<CombinedProps> = props => {
   const { data, orderBy, order, handleOrderChange, toggleDialog } = props;
-  const tableWrapperProps = { handleOrderChange, order, orderBy };
+
+  const dataLength = data.length;
+
+  const tableWrapperProps = { handleOrderChange, order, orderBy, dataLength };
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
 

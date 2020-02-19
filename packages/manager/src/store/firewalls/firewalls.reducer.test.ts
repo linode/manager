@@ -1,32 +1,24 @@
-import { Firewall } from 'linode-js-sdk/lib/firewalls';
-import { getFirewalls } from './firewalls.actions';
+import { firewallFactory, firewallRulesFactory } from 'src/factories/firewalls';
+import {
+  createFirewallActions,
+  deleteFirewallActions,
+  getFirewalls
+  // updateFirewallActions
+} from './firewalls.actions';
 import reducer, { defaultState } from './firewalls.reducer';
 
 const mockError = [{ reason: 'no reason' }];
 
-const baseFirewall: Firewall[] = [
-  {
-    id: 1,
-    rules: {
-      inbound: [],
-      outbound: [
-        {
-          protocol: 'ALL',
-          start_port: 443
-        },
-        {
-          protocol: 'ALL',
-          start_port: 80
-        }
-      ]
-    },
-    status: 'disabled',
-    label: 'zzz',
-    created_dt: '2019-12-11T19:44:38.526Z',
-    updated_dt: '2019-12-11T19:44:38.526Z',
-    tags: []
-  }
-];
+const baseFirewall = firewallFactory.buildList(3);
+
+const addEntities = () =>
+  reducer(
+    defaultState,
+    getFirewalls.done({
+      params: {},
+      result: { data: baseFirewall, results: 3 }
+    })
+  );
 
 describe('Cloud Firewalls Reducer', () => {
   it('should handle an initiated request for services', () => {
@@ -50,36 +42,89 @@ describe('Cloud Firewalls Reducer', () => {
       { ...defaultState, loading: true },
       getFirewalls.done({
         params: {},
-        result: { data: baseFirewall, results: 2 }
+        result: { data: baseFirewall, results: 3 }
       })
     );
-    expect(newState).toHaveProperty('data', {
-      1: {
-        id: 1,
-        rules: {
-          inbound: [],
-          outbound: [
-            {
-              protocol: 'ALL',
-              start_port: 443,
-              sequence: 1
-            },
-            {
-              protocol: 'ALL',
-              start_port: 80,
-              sequence: 2
-            }
-          ]
-        },
-        status: 'disabled',
-        label: 'zzz',
-        created_dt: '2019-12-11T19:44:38.526Z',
-        updated_dt: '2019-12-11T19:44:38.526Z',
-        tags: []
-      }
-    });
+    expect(Object.values(newState.data)).toEqual(baseFirewall);
     expect(newState).toHaveProperty('loading', false);
     expect(newState.error!.read).toBeUndefined();
-    expect(newState.results).toBe(2);
+    expect(newState.results).toBe(3);
+  });
+
+  it('should handle a successful GET with an empty response', () => {
+    const newState = reducer(
+      { ...defaultState, loading: true },
+      getFirewalls.done({
+        params: {},
+        result: { data: [], results: 0 }
+      })
+    );
+    expect(newState.data).toEqual({});
+    expect(newState).toHaveProperty('loading', false);
+    expect(newState.error!.read).toBeUndefined();
+    expect(newState.results).toBe(0);
+  });
+
+  it('should handle a successful Create action', () => {
+    const params = {
+      rules: firewallRulesFactory.build()
+    };
+    const newFirewall = firewallFactory.build();
+    const newState = reducer(
+      defaultState,
+      createFirewallActions.done({ params, result: newFirewall })
+    );
+
+    expect(newState.error.create).toBeUndefined();
+    expect(newState.data).toHaveProperty(String(newFirewall.id), newFirewall);
+  });
+
+  it('should handle a failed Create action', () => {
+    const params = {
+      rules: firewallRulesFactory.build()
+    };
+    const newState = reducer(
+      defaultState,
+      createFirewallActions.failed({ params, error: mockError })
+    );
+    expect(newState.error).toHaveProperty('create', mockError);
+  });
+
+  it('delete.started should clear the error state for deletion', () => {
+    const newState = reducer(
+      { ...defaultState, error: { delete: mockError } },
+      deleteFirewallActions.started({ firewallID: 1 })
+    );
+    expect(newState.error).toHaveProperty('delete', undefined);
+  });
+
+  it('should handle a successful deletion', () => {
+    const stateWithFirewalls = addEntities();
+    const firewallToDelete = stateWithFirewalls.data[baseFirewall[1].id];
+    const newState = reducer(
+      stateWithFirewalls,
+      deleteFirewallActions.done({
+        params: { firewallID: firewallToDelete.id },
+        result: {}
+      })
+    );
+    expect(newState.results).toBe(stateWithFirewalls.results - 1);
+    expect(newState.results).not.toHaveProperty(String(firewallToDelete.id));
+  });
+
+  it('should handle a failed deletion', () => {
+    const stateWithFirewalls = addEntities();
+    const firewallIDToDelete = baseFirewall[1].id;
+    const newState = reducer(
+      stateWithFirewalls,
+      deleteFirewallActions.failed({
+        params: { firewallID: firewallIDToDelete },
+        error: mockError
+      })
+    );
+    expect(newState.results).toBe(stateWithFirewalls.results);
+    expect(newState.data).toHaveProperty(String(firewallIDToDelete));
+    expect(newState.lastUpdated).toBe(stateWithFirewalls.lastUpdated);
+    expect(newState.error).toHaveProperty('delete', mockError);
   });
 });

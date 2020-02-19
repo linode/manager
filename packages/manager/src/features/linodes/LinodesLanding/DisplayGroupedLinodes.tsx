@@ -93,12 +93,15 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = props => 
     ...rest
   } = props;
 
+  const dataLength = data.length;
+
   const orderedGroupedLinodes = compose(sortGroups, groupByTags)(data);
   const tableWrapperProps = {
     handleOrderChange,
     order,
     orderBy,
-    someLinodesHaveMaintenance: props.someLinodesHaveMaintenance
+    someLinodesHaveMaintenance: props.someLinodesHaveMaintenance,
+    dataLength
   };
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
@@ -210,7 +213,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = props => 
                         className={classes.groupContainer}
                         data-qa-tag-header={tag}
                       >
-                        <TableRow className={classes.tagHeaderRow}>
+                        <TableRow className={classes.tagHeaderRow} role="cell">
                           <TableCell colSpan={7}>
                             <Typography
                               variant="h2"

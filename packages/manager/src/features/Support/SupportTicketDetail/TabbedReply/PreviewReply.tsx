@@ -12,6 +12,8 @@ import {
 import Typography from 'src/components/core/Typography';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
+import 'src/formatted-text.css';
+
 type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
@@ -43,6 +45,7 @@ const PreviewReply: React.FC<CombinedProps> = props => {
   return (
     <Paper className={classes.root} error={error}>
       <Typography
+        className="formatted-text"
         dangerouslySetInnerHTML={{
           __html: sanitizeHTML(markupToMarkdown)
         }}
@@ -53,7 +56,4 @@ const PreviewReply: React.FC<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-export default compose<CombinedProps, Props>(
-  React.memo,
-  styled
-)(PreviewReply);
+export default compose<CombinedProps, Props>(React.memo, styled)(PreviewReply);

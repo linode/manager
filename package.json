@@ -11,7 +11,8 @@
     "tslint-react": "^4.1.0",
     "tslint-react-a11y": "^1.1.0",
     "tslint-react-hooks": "^2.2.1",
-    "typescript": "~3.7.3"
+    "typescript": "~3.7.3",
+    "wait-on": "^4.0.0"
   },
   "husky": {
     "hooks": {
@@ -32,6 +33,7 @@
     "clean": "rm -rf node_modules && rm -rf packages/linode-js-sdk/node_modules && rm -rf packages/manager/node_modules",
     "test": "yarn workspace linode-manager test",
     "selenium": "yarn workspace linode-manager selenium",
+    "selenium:install": "yarn workspace linode-manager selenium:install",
     "storybook": "yarn workspace linode-manager storybook",
     "storybook:e2e": "yarn workspace linode-manager run storybook:e2e",
     "storybook:debug": "yarn workspace linode-manager storybook:e2e --color --debug",
@@ -42,6 +44,8 @@
     "cy:stagedebug": "yarn workspace linode-manager cy:stagedebug",
     "cy:e2e": "yarn workspace linode-manager cy:e2e",
     "cy:debug": "yarn workspace linode-manager cy:debug",
+    "docker:cy": "docker build -t cloudcy -f Dockerfile-e2e . && docker run --rm cloudcy",
+    "docker:sb": "docker build -t cloudsb -f Dockerfile-storybook . && docker run --rm cloudsb",
     "docker:e2e": "docker-compose -f integration-test.yml up --exit-code-from manager-e2e",
     "docker:test": "docker build -f Dockerfile . -t 'manager' && docker run -it cloud --rm -v $(pwd)/packages/manager/src:/home/node/app/packages/manager/src -v $(pwd)/packages/linode-js-sdk/src:/home/node/app/packages/linode-js-sdk/src manager test",
     "docker:local": "docker build -f Dockerfile . -t 'manager' -t 'dev' && docker run -it --rm -p 3000:3000 -v $(pwd)/packages/manager/src:/home/node/app/packages/manager/src -v $(pwd)/packages/linode-js-sdk/src:/home/node/app/packages/linode-js-sdk/src manager start:docker",

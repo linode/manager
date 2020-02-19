@@ -23,6 +23,7 @@ const styles = (theme: Theme) =>
 
 interface VolumeTableWrapperProps {
   isVolumesLanding: boolean;
+  dataLength: number;
 }
 
 type CombinedProps = Omit<OrderByProps, 'data'> &
@@ -35,14 +36,19 @@ const DomainsTableWrapper: React.FC<CombinedProps> = props => {
     orderBy,
     handleOrderChange,
     classes,
-    isVolumesLanding
+    isVolumesLanding,
+    dataLength
   } = props;
 
   return (
     <Paper className={classes.paperWrapper}>
       <Grid container className="my0">
         <Grid item xs={12} className="py0">
-          <Table aria-label="List of Volumes">
+          <Table
+            aria-label="List of Volumes"
+            rowCount={dataLength}
+            colCount={5}
+          >
             <SortableVolumesTableHeader
               order={order}
               orderBy={orderBy}

@@ -4,7 +4,7 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import clustersContainer, {
   StateProps
 } from 'src/containers/clusters.container';
-import { formatObjectStorageCluster } from 'src/utilities/formatRegion';
+import { formatRegion } from 'src/utilities/formatRegion';
 
 interface Props {
   selectedCluster: string;
@@ -28,7 +28,7 @@ export const ClusterSelect: React.StatelessComponent<CombinedProps> = props => {
 
   const options: Item<string>[] = clustersData.map(eachCluster => ({
     value: eachCluster.id,
-    label: formatObjectStorageCluster(eachCluster.region)
+    label: formatRegion(eachCluster.region) || eachCluster.region
   }));
 
   React.useEffect(() => {

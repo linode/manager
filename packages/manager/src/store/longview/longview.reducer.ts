@@ -16,8 +16,7 @@ export const defaultState: State = {
   lastUpdated: 0,
   results: 0,
   data: {},
-  error: {},
-  listOfIDsInOriginalOrder: []
+  error: {}
 };
 
 const reducer = reducerWithInitialState(defaultState)
@@ -40,9 +39,6 @@ const reducer = reducerWithInitialState(defaultState)
       }, {}),
       loading: false,
       results: result.results,
-      listOfIDsInOriginalOrder: result.data.map(
-        eachFirewall => eachFirewall.id
-      ),
       lastUpdated: Date.now()
     })
   )
@@ -70,7 +66,6 @@ const reducer = reducerWithInitialState(defaultState)
         [result.id]: result
       },
       results: state.results + 1,
-      listOfIDsInOriginalOrder: [...state.listOfIDsInOriginalOrder, result.id],
       lastUpdated: Date.now()
     })
   )
@@ -103,10 +98,7 @@ const reducer = reducerWithInitialState(defaultState)
         ...state,
         data: dataCopy,
         results: state.results - 1,
-        lastUpdated: Date.now(),
-        listOfIDsInOriginalOrder: state.listOfIDsInOriginalOrder.filter(
-          e => e !== params.id
-        )
+        lastUpdated: Date.now()
       };
     }
   )

@@ -117,3 +117,4 @@ packages/manager/test-report.xml
 **/manager/cypress/videos/
 **/manager/cypress/screenshots/
 
+nohup.out
