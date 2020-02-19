@@ -2,8 +2,10 @@ import { Formik, FormikBag } from 'formik';
 import {
   CreateFirewallPayload,
   CreateFirewallSchema,
-  Firewall
+  Firewall,
+  FirewallRules
 } from 'linode-js-sdk/lib/firewalls';
+import { equals } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -53,10 +55,20 @@ const initialValues: CreateFirewallPayload = {
  * Each predefined rule has an array with a single entry for both inbound and outbound.
  * We accumulate these together and return the result.
  */
-export const mergeRules = (selectedRules: Item<string>[]) => {
-  return selectedRules.reduce(
+const defaultRules = {
+  inbound: [],
+  outbound: []
+};
+export const mergeRules = (
+  selectedRules: Item<string>[],
+  rules: Record<string, FirewallRules> = predefinedFirewalls
+) => {
+  if (selectedRules.length === 0) {
+    return {};
+  }
+  const mergedRules = selectedRules.reduce(
     (acc, currentRule) => {
-      const rule = predefinedFirewalls[currentRule.value];
+      const rule = rules[currentRule.value];
       if (!rule) {
         return acc;
       }
@@ -66,10 +78,13 @@ export const mergeRules = (selectedRules: Item<string>[]) => {
       };
     },
     {
-      inbound: [],
-      outbound: []
+      ...defaultRules
     }
   );
+  // We're using an empty object as our placeholder state, but the accumulator
+  // has to have the correct shape for the logic above to work.
+  // If nothing has changed, return the placeholder value {}.
+  return equals(mergedRules, defaultRules) ? {} : mergedRules;
 };
 
 const AddFirewallDrawer: React.FC<CombinedProps> = props => {
