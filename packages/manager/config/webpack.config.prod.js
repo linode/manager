@@ -319,8 +319,8 @@ module.exports = {
     // https://www.npmjs.com/package/webpack-bundle-analyzer
     // the file {reportFilename} is in the {output.path} of the bundle
     new BundleAnalyzerPlugin({
-      analyzerMode: "static",
-      reportFilename: "./bundle_analyzer_report.html",
+      analyzerMode: process.argv.includes('--bundle-analyze') ? "static" : 'disabled',
+      reportFilename: path.resolve(paths.appDirectory, "bundle_analyzer_report.html"),
       openAnalyzer: false
     })
   ],
