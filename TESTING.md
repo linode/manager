@@ -11,7 +11,7 @@ To run tests:
 **You must have built the JS SDK**
 
 ```
-yarn install:all && yarn workspace linode-js-sdk run build
+yarn install:all && yarn workspace linode-js-sdk build
 ```
 
 Then you can start the tests:
@@ -55,125 +55,69 @@ We have some older tests that still use the Enzyme framework, but for new tests 
 
 A simple test using this library will look something like this:
 
-    import { cleanup } from '@testing-library/react';
-    import { renderWithTheme } from 'src/utilities/testHelpers';
-    import Component from './wherever';
+```js
+import { cleanup } from "@testing-library/react";
+import { renderWithTheme } from "src/utilities/testHelpers";
+import Component from "./wherever";
 
-    afterEach(cleanup);
+afterEach(cleanup);
 
-    describe("My component", () => {
-    	it("should have some text", () => {
-    		const { getByText } = renderWithTheme(<Component />);
-    		expect(getByText("some text").toBeInTheDocument();
-    	});
-    });
+describe("My component", () => {
+  it("should have some text", () => {
+    const { getByText } = renderWithTheme(<Component />);
+    getByText("some text");
+  });
+});
+```
 
 Handling events such as clicks is a little more involved:
 
-    import { cleanup, fireEvent } from '@testing-library/react';
-    import { renderWithTheme } from 'src/utilities/testHelpers';
-    import Component from './wherever';
+```js
+import { cleanup, fireEvent } from "@testing-library/react";
+import { renderWithTheme } from "src/utilities/testHelpers";
+import Component from "./wherever";
 
-    afterEach(cleanup);
+afterEach(cleanup);
 
-    const props = { onClick: jest.fn() };
+const props = { onClick: jest.fn() };
 
-    describe("My component", () => {
-    	it("should have some text", () => {
-    		const { getByText } = renderWithTheme(<Component {...props} />);
-    		const button = getByText('Submit');
-    		fireEvent.click(button);
-    		expect(props.onClick).toHaveBeenCalled();
-    	});
-    });
+describe("My component", () => {
+  it("should have some text", () => {
+    const { getByText } = renderWithTheme(<Component {...props} />);
+    const button = getByText("Submit");
+    fireEvent.click(button);
+    expect(props.onClick).toHaveBeenCalled();
+  });
+});
+```
 
 If, while using the Testing Library, your tests trigger a warning in the console from React ("Warning: An update to Component inside a test was not wrapped in act(...)"), first check out the library author's [blog post](https://kentcdodds.com/blog/fix-the-not-wrapped-in-act-warning) about this. Depending on your situation, you probably will have to `wait` for something in your test:
 
-    import { fireEvent, wait } from '@testing-library/react';
+```js
+import { fireEvent, wait } from '@testing-library/react';
 
-    ...
-    await wait(() => fireEvent.click(getByText('Delete')));
-    ...
+...
+await wait(() => fireEvent.click(getByText('Delete')));
+...
+```
 
 ### Mocking
 
-Jest has substancial built-in mocking capabilities, and we use many of the available patterns. We generally use them to avoid making network requests in unit tests, but there are some other cases (mentioned below).
+Jest has substantial built-in mocking capabilities, and we use many of the available patterns. We generally use them to avoid making network requests in unit tests, but there are some other cases (mentioned below).
 
 In general, components that make network requests should take any request handlers as props. Then testing is as simple as passing `someProp: jest.fn()` and making assertions normally. When that isn't possible, you can do the following:
 
-    jest.mock('linode-js-sdk/lib/kubernetes', () => ({
-
-getKubeConfig: () => jest.fn()
+```js
+jest.mock("linode-js-sdk/lib/kubernetes", () => ({
+  getKubeConfig: () => jest.fn()
 }));
+```
+
 Some components, such as our ActionMenu, don't lend themselves well to unit testing (they often have complex DOM structures from MUI and it's hard to target). We have mocks for most of these components in a `__mocks__` directory adjacent to their respective components. To make use of these, just tell Jest to use the mock:
 
     jest.mock('src/components/ActionMenu/ActionMenu');
 
 Any `<ActionMenu>`s rendered by the test will be simplified versions that are easier to work with.
-
-### Testing Redux Functionality
-
-Most Redux artifacts are basic functions, so actions and reducers can be exported and tested functionally. Many reducers also include asynchronous actions with Thunk,
-which generally call API methods from the services library and dispatch multiple actions. Testing these requires more setup:
-
-1. Mock the services library module that is called by the Thunk in question:
-
-```js
-jest.mock('../../../services/instances', () => ({
-  getInstances: () => Promise.resolve('return value');
-}))
-```
-
-2. To verify that the Thunk called the correct method, you will have to mock that specific method (in the example above, the `getInstances` method can't be accessed
-   later in your tests).
-
-```js
-// Using requireMock makes it semantically clear that this import is not used, and avoids TypeScript issues.
-const requests = require.requireMock("../../../services/instances");
-
-// (In your tests somewhere)
-
-requests.getInstances = jest.fn(() => Promise.resolve("return something here"));
-
-it("calls the right method", () => {
-  expect(requests.getInstances).toHaveBeenCalled();
-});
-```
-
-3. To actually test the Thunk, you will need to dispatch it, which requires the creation of a mock store:
-
-```js
-import configureStore from "redux-mock-store";
-import ReduxThunk from "redux-thunk";
-
-const middlewares = [ReduxThunk];
-const createMockStore = configureStore(middlewares);
-const store = createMockStore({});
-```
-
-You can then dispatch your async actions normally:
-
-```js
-await store.dispatch(instances.getInstances() as any);
-```
-
-The mock store allows you to check the actions dispatched by Thunks:
-
-```js
-const actions = store.getActions();
-// [{ type: ACTION_1 }, { type: ACTION_2, payload: some_payload }]
-expect(actions).toEqual([instances.load(), instances.handleError(error)]);
-```
-
-It is also helpful to reset the mock store before each request, to keep the actions history clean:
-
-```js
-const store = createMockStore({});
-beforeEach(() => {
-  jest.resetAllMocks();
-  store.clearActions();
-});
-```
 
 ## End-to-End Tests
 
@@ -183,16 +127,16 @@ E2E tests use [Cypress](https://cypress.io).
 
 #### dependencies
 
-Run `yarn install:all && npx cypress verify`.
+Run `yarn install:all && yarn run cypress verify`.
 
 #### How to run locally without Docker
 
 Run:
 
 - `yarn up` in one terminal
-- In a **new terminal** `npx wait-on http://localhost:3000 && yarn cy:e2e`
+- In a **new terminal** `yarn run wait-on http://localhost:3000 && yarn cy:e2e`
 
-`npx wait-on` will simply wait for the website on 3000 to be ready.
+`yarn run wait-on` will simply wait for the website on 3000 to be ready.
 
 #### How to run with Docker
 
@@ -212,9 +156,9 @@ We do not need to take care of Selenium more after this, storybook will take car
 Run:
 
 - `yarn storybook` in one terminal
-- In a **new terminal** `npx wait-on http://localhost:6006 && yarn storybook:e2e`
+- In a **new terminal** `yarn run wait-on http://localhost:6006 && yarn storybook:e2e`
 
-`npx wait-on` will simply wait for the storybook server on 6006 to be ready.
+`yarn run wait-on` will simply wait for the storybook server on 6006 to be ready.
 
 #### How to run with docker
 
@@ -237,7 +181,7 @@ live in `src/components/ComponentName/ComponentName.spec.js`. The WDIO config li
 
 - Node.js 10 LTS
   brew install node@10
-- Google Chrome v60+
+- Google Chrome v80+
   brew cask install google-chrome
 - Yarn
 
