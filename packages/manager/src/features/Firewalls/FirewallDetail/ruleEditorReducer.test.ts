@@ -1,76 +1,82 @@
+import { firewallRuleFactory } from 'src/factories/firewalls';
 import reducer, {
-  FirewallRuleWithStatus,
-  RuleEditorState
+  initRuleEditorState,
+  initRuleWithStatus
 } from './ruleEditorReducer';
 
-const rule1: FirewallRuleWithStatus = {
-  status: 'NOT_MODIFIED',
-  ports: '22',
-  protocol: 'TCP',
-  addresses: {
-    ipv4: ['0.0.0.0/0'],
-    ipv6: ['::0/0']
-  }
-};
-
-const rule2: FirewallRuleWithStatus = {
-  status: 'MODIFIED',
-  ports: '23',
-  protocol: 'TCP',
-  addresses: {
-    ipv4: ['0.0.0.0/0'],
-    ipv6: ['::0/0']
-  }
-};
-
-const rule3: FirewallRuleWithStatus = {
-  status: 'NEW',
-  ports: '53',
-  protocol: 'TCP',
-  addresses: {
-    ipv4: ['0.0.0.0/0'],
-    ipv6: ['::0/0']
-  }
+const rules = {
+  inbound: firewallRuleFactory.buildList(2),
+  outbound: firewallRuleFactory.buildList(2)
 };
 
 describe('ruleEditorReducer', () => {
-  const baseState: RuleEditorState = {
-    mode: 'VIEWING',
-    revisions: {
-      inbound: [[rule1]],
-      outbound: [[rule2]]
-    }
-  };
+  const baseState = initRuleEditorState(rules);
 
-  it('adds a new rule', () => {
-    const newState = reducer(baseState, {
-      type: 'NEW_RULE',
-      ruleType: 'inbound',
-      rule: rule3
+  describe('initRuleEditorState', () => {
+    it('initializes mode as VIEWING', () => {
+      expect(baseState.mode).toBe('VIEWING');
     });
-    expect(newState.revisions.inbound).toHaveLength(2);
-    expect(newState.mode).toBe('EDITING');
+
+    it('initializes a revision array for each rule', () => {
+      baseState.revisions.inbound.forEach((rule, i) => {
+        expect(rule).toHaveLength(1);
+        expect(rule[0]).toHaveProperty('status', 'NOT_MODIFIED');
+        expect(rule[0]).toEqual({
+          ...rules.inbound[i],
+          status: 'NOT_MODIFIED'
+        });
+      });
+      baseState.revisions.outbound.forEach((rule, i) => {
+        expect(rule).toHaveLength(1);
+        expect(rule[0]).toHaveProperty('status', 'NOT_MODIFIED');
+        expect(rule[0]).toEqual({
+          ...rules.outbound[i],
+          status: 'NOT_MODIFIED'
+        });
+      });
+    });
   });
 
-  it('deletes a rule', () => {
-    let newState = reducer(baseState, {
-      type: 'NEW_RULE',
-      ruleType: 'inbound',
-      rule: rule3
-    });
-    newState = reducer(newState, {
-      type: 'DELETE_RULE',
-      ruleType: 'inbound',
-      idx: 1
+  describe('reducer', () => {
+    it('adds a new rule', () => {
+      const newState = reducer(baseState, {
+        type: 'NEW_RULE',
+        ruleType: 'inbound',
+        rule: initRuleWithStatus(firewallRuleFactory.build())
+      });
+      expect(newState.revisions.inbound).toHaveLength(3);
     });
 
-    const ruleRevisions = newState.revisions.inbound[1];
+    it('deletes a rule', () => {
+      const newState = reducer(baseState, {
+        type: 'DELETE_RULE',
+        ruleType: 'inbound',
+        idx: 1
+      });
 
-    expect(newState.revisions.inbound).toHaveLength(2);
-    expect(ruleRevisions[ruleRevisions.length - 1]).toHaveProperty(
-      'status',
-      'PENDING_DELETION'
-    );
-    expect(newState.mode).toBe('EDITING');
+      const ruleRevisions = newState.revisions.inbound[1];
+
+      expect(ruleRevisions[ruleRevisions.length - 1]).toHaveProperty(
+        'status',
+        'PENDING_DELETION'
+      );
+      expect(newState.mode).toBe('EDITING');
+    });
+
+    it('modifies a rule', () => {
+      const newState = reducer(baseState, {
+        type: 'MODIFY_RULE',
+        ruleType: 'inbound',
+        idx: 0,
+        modifiedRule: {
+          ports: '999'
+        }
+      });
+      expect(newState.revisions.inbound[0]).toHaveLength(2);
+      expect(newState.revisions.inbound[0][1]).toHaveProperty(
+        'status',
+        'MODIFIED'
+      );
+    });
   });
 });

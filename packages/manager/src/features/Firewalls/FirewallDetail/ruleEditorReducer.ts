@@ -1,5 +1,5 @@
 import produce from 'immer';
-import { FirewallRuleType } from 'linode-js-sdk/lib/firewalls';
+import { FirewallRules, FirewallRuleType } from 'linode-js-sdk/lib/firewalls';
 
 type RuleStatus = 'NOT_MODIFIED' | 'MODIFIED' | 'NEW' | 'PENDING_DELETION';
 
@@ -34,12 +34,6 @@ export type RuleEditorAction =
       idx: number;
       modifiedRule: Partial<FirewallRuleType>;
     };
-
-// Types of modifications:
-//
-// 1. New rule
-// 2. Delete rule
-// 3. Modify rule
 
 const ruleEditorReducer = (
   draft: RuleEditorState,
@@ -77,6 +71,35 @@ const ruleEditorReducer = (
       });
       break;
   }
+};
+
+export const initRuleEditorState = (rules: FirewallRules): RuleEditorState => {
+  return {
+    mode: 'VIEWING',
+    revisions: {
+      inbound:
+        rules.inbound?.map(thisRule => [initRuleWithStatus(thisRule)]) ?? [],
+      outbound:
+        rules.outbound?.map(thisRule => [initRuleWithStatus(thisRule)]) ?? []
+    }
+  };
+};
+
+export const initRuleWithStatus = (
+  rule: FirewallRuleType
+): FirewallRuleWithStatus => ({ ...rule, status: 'NOT_MODIFIED' });
+
+export const ruleEditorStateToRules = (state: RuleEditorState) => {
+  return {
+    inbound: state.revisions.inbound.map(ruleRevisions => {
+      const lastRevision = { ...ruleRevisions[ruleRevisions.length - 1] };
+      delete lastRevision.status;
+    }),
+    outbound: state.revisions.outbound.map(ruleRevisions => {
+      const lastRevision = { ...ruleRevisions[ruleRevisions.length - 1] };
+      delete lastRevision.status;
+    })
+  };
 };
 
 export default produce(ruleEditorReducer);
