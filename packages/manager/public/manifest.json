@@ -1,12 +1,7 @@
 {
   "short_name": "Linode",
   "name": "Linode Cloud Manager",
-  "categories": [
-    "cloud hosting",
-    "cloud",
-    "linode",
-    "compute"
-  ],
+  "categories": ["cloud hosting", "cloud", "linode", "compute"],
   "description": "Linode Cloud Manager interface",
   "icons": [
     {
@@ -26,7 +21,7 @@
     }
   ],
   "start_url": "/",
-  "display": "minimal-ui",
+  "display": "standalone",
   "theme_color": "#f4f4f4",
   "background_color": "#f4f4f4",
   "orientation": "portrait-primary"
