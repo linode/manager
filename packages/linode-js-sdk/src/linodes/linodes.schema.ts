@@ -72,8 +72,8 @@ export const CreateLinodeSchema = object({
 const alerts = object({
   cpu: number()
     .typeError('CPU Usage must be a number')
-    .min(0, 'Must be between 0 and 2000')
-    .max(2000, 'Must be between 0 and 2000'),
+    .min(0, 'Must be between 0 and 4800')
+    .max(4800, 'Must be between 0 and 4800'),
   network_in: number(),
   network_out: number(),
   transfer_quota: number(),
