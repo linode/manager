@@ -20,7 +20,6 @@ import H1Header from 'src/components/H1Header';
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import PromotionalOfferCard from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
 import TaxBanner from 'src/components/TaxBanner';
-import { promotionalOfferFactory } from 'src/factories/promotionalOffer';
 import TagImportDrawer from 'src/features/TagImport';
 import useFlags from 'src/hooks/useFlags';
 import { handleOpen } from 'src/store/backupDrawer';
@@ -93,24 +92,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
 
   const flags = useFlags();
 
-  // @todo BEFORE MERGE: Use feature flags instead of this hardcoded promo.
-  const promotionalOffers = promotionalOfferFactory.buildList(1, {
-    body:
-      "Linode's S3-compatible Object Storage is FREE* until April 30, 2020.",
-    footnote:
-      '*Offer includes list price and inbound network transfer. 1TB will be added to your network outbound transfer pool; regular overages apply. Offer valid through 4/30/2020.',
-    features: ['Object Storage'],
-    logo: 'heavenly-bucket.svg',
-    buttons: [
-      { text: 'Try it Now', href: '/object-storage/buckets' },
-      {
-        text: 'Cost Estimator',
-        href: 'https://www.linode.com/products/object-storage/'
-      }
-    ]
-  });
-
-  const dashboardPromos = promotionalOffers.filter(
+  const dashboardPromos = (flags.promotionalOffers ?? []).filter(
     promo => promo.displayOnDashboard
   );
 

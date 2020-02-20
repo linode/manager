@@ -25,7 +25,7 @@ import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import PromotionalOfferCard from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
 import TabLink from 'src/components/TabLink';
-import { promotionalOfferFactory } from 'src/factories/promotionalOffer';
+import useFlags from 'src/hooks/useFlags';
 import { ApplicationState } from 'src/store';
 import { getAllBuckets } from 'src/store/bucket/bucket.requests';
 import { requestClusters as _requestClusters } from 'src/store/clusters/clusters.actions';
@@ -102,26 +102,11 @@ export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = prop
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
 
-  // @todo BEFORE MERGE: Use feature flags instead of this hardcoded promo.
-  const promotionalOffers = promotionalOfferFactory.buildList(1, {
-    body:
-      "Linode's S3-compatible Object Storage is FREE* until April 30, 2020.",
-    footnote:
-      '*Offer includes list price and inbound network transfer. 1TB will be added to your network outbound transfer pool; regular overages apply. Offer valid through 4/30/2020.',
-    features: ['Object Storage'],
-    logo: 'heavenly-bucket.svg',
-    buttons: [
-      {
-        text: 'Try it Now',
-        href: '/object-storage/buckets'
-      },
-      {
-        text: 'Cost Estimator',
-        href: 'https://www.linode.com/products/object-storage/'
-      }
-    ]
-  });
-  const objPromotionalOffers = promotionalOffers.filter(promotionalOffer =>
+  const flags = useFlags();
+
+  const objPromotionalOffers = (
+    flags.promotionalOffers ?? []
+  ).filter(promotionalOffer =>
     promotionalOffer.features.includes('Object Storage')
   );
 
