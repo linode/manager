@@ -62,13 +62,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface Props extends PromotionalOffer {
+export interface Props extends PromotionalOffer {
   fullWidth?: boolean;
 }
 
 type CombinedProps = Props;
 
-const PromotionalOfferCard: React.FC<CombinedProps> = props => {
+export const PromotionalOfferCard: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const { fullWidth, ...promotionalOfferAttributes } = props;
@@ -155,7 +155,7 @@ export const promotionalOfferOrDefaults = (
   buttons: offer.buttons ?? []
 });
 
-const checkStringOrDefault = (maybeString: any, defaultVal?: string) => {
+export const checkStringOrDefault = (maybeString: any, defaultVal?: string) => {
   if (typeof maybeString === 'string') {
     return maybeString;
   } else if (defaultVal) {
