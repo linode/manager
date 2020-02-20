@@ -17,9 +17,6 @@ interface Flags {
 }
 
 type PromotionalOfferFeature =
-  // "None" is used to indicate this offer isn't specific to a feature, and should
-  // be displayed on the Dashboard only.
-  | 'None'
   | 'Linodes'
   | 'Volumes'
   | 'NodeBalancers'

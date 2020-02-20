@@ -106,7 +106,7 @@ const PromotionalOfferCard: React.FC<CombinedProps> = props => {
         {!props.fullWidth && offer.buttons && (
           <div className={classes.buttonSection}>
             {/* Only display the first two buttons. Any offer containing more
-            than three buttons is a mistake. */}
+            than two buttons is a mistake. */}
             {offer.buttons.slice(0, 2).map(button => (
               <Button
                 key={button.text}
