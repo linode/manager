@@ -129,6 +129,12 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
               `Linode ${label} has been resized successfully.`,
               `Error resizing Linode ${label}.`
             );
+          case 'firewall_enable':
+            return _toast(undefined, `Error enabling Firewall ${label}.`);
+          case 'firewall_disable':
+            return _toast(undefined, `Error disabling Firewall ${label}.`);
+          case 'firewall_delete':
+            return _toast(undefined, `Error deleting Firewall ${label}.`);
           default:
             return;
         }
