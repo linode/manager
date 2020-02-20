@@ -13,6 +13,7 @@ process.on('unhandledRejection', err => {
 
 // Ensure environment variables are read.
 require('../config/env');
+const buildRequests = require('../buildRequests');
 
 const path = require('path');
 const chalk = require('chalk');
@@ -26,7 +27,8 @@ const printHostingInstructions = require('react-dev-utils/printHostingInstructio
 const FileSizeReporter = require('react-dev-utils/FileSizeReporter');
 const printBuildError = require('react-dev-utils/printBuildError');
 
-const measureFileSizesBeforeBuild = FileSizeReporter.measureFileSizesBeforeBuild;
+const measureFileSizesBeforeBuild =
+  FileSizeReporter.measureFileSizesBeforeBuild;
 const printFileSizesAfterBuild = FileSizeReporter.printFileSizesAfterBuild;
 const useYarn = fs.existsSync(paths.yarnLockFile);
 
@@ -38,6 +40,14 @@ const WARN_AFTER_CHUNK_GZIP_SIZE = 1024 * 1024;
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
   process.exit(1);
 }
+
+/**
+ * Request /types and /regions and store the values
+ * as hard-coded JSON to save network requests on load
+ */
+console.log('Caching common requests');
+const success = buildRequests();
+console.log(success === 0 ? '...success\n' : '...failed\n');
 
 // First, read the current file sizes in build directory.
 // This lets us display how much they changed later.
@@ -135,7 +145,7 @@ function build(previousFileSizes) {
       return resolve({
         stats,
         previousFileSizes,
-        warnings: messages.warnings,
+        warnings: messages.warnings
       });
     });
   });
@@ -144,6 +154,6 @@ function build(previousFileSizes) {
 function copyPublicFolder() {
   fs.copySync(paths.appPublic, paths.appBuild, {
     dereference: true,
-    filter: file => file !== paths.appHtml,
+    filter: file => file !== paths.appHtml
   });
 }
