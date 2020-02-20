@@ -109,16 +109,13 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
      * to our list of master images supported by Linode and filter out the ones
      * that aren't compatible with our selected StackScript
      */
-    const compatibleImages = Object.keys(imagesData).reduce(
-      (acc, eachKey) => {
-        if (stackScriptImages.some(eachSSImage => eachSSImage === eachKey)) {
-          acc.push(imagesData[eachKey]);
-        }
+    const compatibleImages = Object.keys(imagesData).reduce((acc, eachKey) => {
+      if (stackScriptImages.some(eachSSImage => eachSSImage === eachKey)) {
+        acc.push(imagesData[eachKey]);
+      }
 
-        return acc;
-      },
-      [] as Image[]
-    );
+      return acc;
+    }, [] as Image[]);
 
     /**
      * if a UDF field comes back from the API with a "default"
