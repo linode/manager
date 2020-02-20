@@ -1,7 +1,6 @@
-import { cleanup, fireEvent, render } from '@testing-library/react';
+import { cleanup, render } from '@testing-library/react';
 import {} from 'history';
 import * as React from 'react';
-import { Route } from 'react-router-dom';
 import { firewalls } from 'src/__data__/firewalls';
 import { firewallFactory } from 'src/factories/firewalls';
 import { wrapWithTableBody } from 'src/utilities/testHelpers';
@@ -55,35 +54,6 @@ describe('FirewallRow', () => {
       getByText(firewall.label);
       getByText(firewall.status);
       getByText(getRuleString(getCountOfRules(firewall.rules)));
-    });
-
-    it('navigates to a Firewall Detail page when the row is clicked', () => {
-      let history: any;
-
-      const { getByTestId } = render(
-        wrapWithTableBody(
-          <>
-            <FirewallRow {...baseProps} />
-            {/* This bit of code changes the `history` object accessed by
-            consumers of the router. It allows us to make assertions on
-            `history`. Taken from the react-router documentation:
-            https://reacttraining.com/react-router/web/guides/testing */}
-            <Route
-              path="*"
-              render={routerProps => {
-                history = routerProps.history;
-                return null;
-              }}
-            />
-          </>
-        )
-      );
-
-      fireEvent.click(getByTestId('firewall-row-1'));
-      expect(history.entries[history.entries.length - 1]).toHaveProperty(
-        'pathname',
-        '/firewalls/1'
-      );
     });
   });
 });
