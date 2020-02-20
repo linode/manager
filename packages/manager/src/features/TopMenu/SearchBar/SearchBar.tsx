@@ -15,6 +15,7 @@ import withStoreSearch, {
   SearchProps
 } from 'src/features/Search/withStoreSearch';
 import { ApplicationState } from 'src/store';
+import { sendSearchBarUsedEvent } from 'src/utilities/ga.ts';
 import styled, { StyleProps } from './SearchBar.styles';
 import SearchSuggestion from './SearchSuggestion';
 
@@ -85,6 +86,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
 
   handleSearchChange = (searchText: string): void => {
     this.setState({ searchText });
+    // sendSearchBarUsedEvent('Search auto');
     this.props.search(searchText);
   };
 
@@ -123,8 +125,12 @@ class SearchBar extends React.Component<CombinedProps, State> {
         pathname: `/search`,
         search: `?query=${encodeURIComponent(searchText)}`
       });
+      // we are selecting the View all option sending the user to the landing,
+      // this is like key down enter
+      sendSearchBarUsedEvent('Search Landing');
       return;
     }
+    sendSearchBarUsedEvent('Search Select');
     history.push(item.data.path);
   };
 
@@ -137,6 +143,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
           pathname: `/search`,
           search: `?query=${encodeURIComponent(searchText)}`
         });
+        sendSearchBarUsedEvent('Search Landing');
         this.onClose();
       }
     }
