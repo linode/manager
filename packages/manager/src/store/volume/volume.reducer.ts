@@ -4,6 +4,7 @@ import { Reducer } from 'redux';
 import { MappedEntityState } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import {
+  addMany,
   createDefaultState,
   onCreateOrUpdate,
   onDeleteSuccess,
@@ -16,6 +17,7 @@ import {
   deleteVolumeActions,
   getAllVolumesActions,
   getOneVolumeActions,
+  getVolumesPageActions,
   updateVolumeActions
 } from './volume.actions';
 
@@ -117,6 +119,19 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       },
       state
     );
+  }
+
+  if (isType(action, getVolumesPageActions.started)) {
+    return state;
+  }
+
+  if (isType(action, getVolumesPageActions.done)) {
+    const { result } = action.payload;
+    return addMany(result, state);
+  }
+
+  if (isType(action, getVolumesPageActions.failed)) {
+    return state; // Probably shouldn't return an error state here.
   }
 
   return state;

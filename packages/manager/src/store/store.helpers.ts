@@ -48,7 +48,7 @@ export const createDefaultState = <
 ): MappedEntityState<E, O> => ({
   itemsById: {},
   items: [],
-  loading: true,
+  loading: false,
   lastUpdated: 0,
   error: undefined,
   ...override

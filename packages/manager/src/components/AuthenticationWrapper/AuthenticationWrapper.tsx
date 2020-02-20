@@ -73,7 +73,6 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       this.props.requestNotifications(),
       this.props.requestSettings(),
       this.props.requestTypes(),
-      this.props.requestVolumes(),
       this.props.requestRegions(),
       getAllNodeBalancersWithConfigs()
     ];

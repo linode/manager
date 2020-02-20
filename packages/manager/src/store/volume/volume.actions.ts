@@ -74,3 +74,13 @@ export const getAllVolumesActions = actionCreator.async<
   Volume[],
   APIError[]
 >('get-all');
+
+export interface Params {
+  params: any;
+  filters: any;
+}
+export const getVolumesPageActions = actionCreator.async<
+  Params,
+  Volume[],
+  APIError[]
+>('get-page');

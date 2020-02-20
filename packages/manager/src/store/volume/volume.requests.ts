@@ -24,6 +24,7 @@ import {
   detachVolumeActions,
   getAllVolumesActions,
   getOneVolumeActions,
+  getVolumesPageActions,
   resizeVolumeActions,
   ResizeVolumeParams,
   updateVolumeActions,
@@ -120,4 +121,13 @@ const getAllVolumesRequest = () => _getAll().then(({ data }) => data);
 export const getAllVolumes = createRequestThunk(
   getAllVolumesActions,
   getAllVolumesRequest
+);
+
+/**
+ * Single page of Volumes (for use on Dashboard etc.)
+ */
+export const getVolumesPage = createRequestThunk(
+  getVolumesPageActions,
+  ({ params, filters }) =>
+    getVolumes(params, filters).then(response => response.data)
 );

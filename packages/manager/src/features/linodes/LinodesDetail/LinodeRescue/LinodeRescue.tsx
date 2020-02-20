@@ -323,16 +323,27 @@ export default compose<CombinedProps, {}>(
   SectionErrorBoundary,
   styled,
   withSnackbar,
-  withVolumes((ownProps, volumesData, volumesLoading, volumesError) => {
-    const mappedData = volumesData.items.map(id => ({
-      ...volumesData.itemsById[id],
-      _id: `volume-${id}`
-    }));
-    return {
-      ...ownProps,
-      volumesData: mappedData,
+  withVolumes(
+    (
+      ownProps,
+      volumesData,
+      volumesLoading,
+      volumesLastUpdated,
       volumesError
-    };
-  }),
+    ) => {
+      const mappedData = volumesData.map(volume => ({
+        ...volume,
+        _id: `volume-${volume.id}`
+      }));
+      const _error = volumesError?.read
+        ? volumesError.read[0]?.reason
+        : undefined;
+      return {
+        ...ownProps,
+        volumesData: mappedData,
+        volumesError: _error
+      };
+    }
+  ),
   connected
 )(LinodeRescue);

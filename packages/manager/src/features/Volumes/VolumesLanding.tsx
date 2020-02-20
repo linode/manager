@@ -709,8 +709,7 @@ export default compose<CombinedProps, Props>(
   withLinodes(),
   withVolumes(
     (ownProps: CombinedProps, volumesData, volumesLoading, volumesError) => {
-      const mappedData = volumesData.items.map(id => volumesData.itemsById[id]);
-      const mappedVolumesDataWithLinodes = mappedData.map(volume => {
+      const mappedVolumesDataWithLinodes = volumesData.map(volume => {
         const volumeWithLinodeData = addAttachedLinodeInfoToVolume(
           volume,
           ownProps.linodesData

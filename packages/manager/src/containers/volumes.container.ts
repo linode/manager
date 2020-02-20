@@ -1,38 +1,60 @@
 import { Volume } from 'linode-js-sdk/lib/volumes';
-import { connect } from 'react-redux';
+import { connect, MapDispatchToProps } from 'react-redux';
+import { AnyAction } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 import { ApplicationState } from 'src/store';
 import { EntityError } from 'src/store/types';
+import { getVolumesPage as _getPage } from 'src/store/volume/volume.requests';
 
-interface VolumesData {
-  items: string[];
-  itemsById: Record<string, Volume>;
-}
-
-export interface Props {
-  volumesData: VolumesData;
+export interface StateProps {
+  volumesData: Volume[];
   volumesLoading: boolean;
-  volumesError?: EntityError;
+  volumesLastUpdated: number;
+  volumesError: EntityError;
 }
+
+export type Props = StateProps & DispatchProps;
+
+export interface DispatchProps {
+  getVolumesPage: () => Promise<Volume[]>;
+}
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+  dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
+) => ({
+  getVolumesPage: (params: any = {}, filters: any = {}) =>
+    dispatch(_getPage({ params, filters }))
+});
 
 export default <TInner extends {}, TOuter extends {}>(
-  mapVolumesToProps: (
+  mapVolumesToProps?: (
     ownProps: TOuter,
-    volumesData: VolumesData,
+    volumesData: Volume[],
     volumesLoading: boolean,
+    volumesLastUpdated: number,
     volumesError?: EntityError
   ) => TInner
 ) =>
   connect((state: ApplicationState, ownProps: TOuter) => {
-    const { items, itemsById } = state.__resources.volumes;
+    const { itemsById } = state.__resources.volumes;
 
-    const volumesData = { items, itemsById };
+    const volumesData = Object.values(itemsById);
     const volumesLoading = state.__resources.volumes.loading;
     const volumesError = state.__resources.volumes.error;
-
+    const volumesLastUpdated = state.__resources.volumes.lastUpdated;
+    if (!mapVolumesToProps) {
+      return {
+        volumesData,
+        volumesLoading,
+        volumesLastUpdated,
+        volumesError
+      };
+    }
     return mapVolumesToProps(
       ownProps,
       volumesData,
       volumesLoading,
+      volumesLastUpdated,
       volumesError
     );
-  });
+  }, mapDispatchToProps);
