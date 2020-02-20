@@ -332,11 +332,15 @@ export const sendObjectsQueuedForUploadEvent = (numObjects: number) => {
 };
 
 export const sendSearchBarUsedEvent = (
-  action: 'Search Landing' | 'Search Select'
+  category: 'Search Landing' | 'Search Select' | 'Search Auto',
+  searchText: string
 ) => {
+  if (searchText === '') {
+    return;
+  }
   sendEvent({
-    category: 'Search Bar',
-    action,
+    category,
+    action: searchText,
     label: window.location.pathname
   });
 };
