@@ -25,6 +25,19 @@ const handleRequest = async (endpoint, filename) => {
   return axios
     .get(API_ROOT + endpoint)
     .then(response => {
+      /**
+       * If this starts beeping, we need to update our
+       * request logic to retrieve all available pages.
+       */
+      if (response.data.pages > 1) {
+        console.error(
+          'Results over 100 will not be retrieved or cached. Aborting.'
+        );
+        exit(1);
+      }
+      return response;
+    })
+    .then(response => {
       fs.writeFile(
         `${DATA_DIR}${filename}`,
         JSON.stringify(response.data),
