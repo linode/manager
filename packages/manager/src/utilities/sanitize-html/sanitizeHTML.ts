@@ -59,8 +59,8 @@ export const sanitizeHTML = (text: string) =>
 export const isURLValid = (url: string) =>
   offSiteURL.test(url) || onSiteURL.test(url);
 
-const offSiteURL = /(?=.{1,2000}$)((\s)*((ht|f)tp(s?):\/\/|mailto:)[A-Za-z0-9]+[~a-zA-Z0-9-_\.@\#\$%&amp;;:,\?=/\+!\(\)]*(\s)*)/;
-const onSiteURL = /^([A-Za-z0-9/\.\?=&\-~]){1,2000}$/;
+export const offSiteURL = /(?=.{1,2000}$)((\s)*((ht|f)tp(s?):\/\/|mailto:)[A-Za-z0-9]+[~a-zA-Z0-9-_\.@\#\$%&amp;;:,\?=/\+!\(\)]*(\s)*)/;
+export const onSiteURL = /^([A-Za-z0-9/\.\?=&\-~]){1,2000}$/;
 
 // List of stylable highlight.js stylable classes. This list is from:
 // https://highlightjs.readthedocs.io/en/latest/css-classes-reference.html#stylable-classes
