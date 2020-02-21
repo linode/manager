@@ -54,6 +54,18 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
   );
 };
 
+// When wrapping a TableRow component to test, we'll get an invalid DOM nesting
+// error complaining that a <tr /> cannot appear as a child of a <div />. This
+// is a wrapper around `wrapWithTheme()` that renders the `ui` argument in a
+// <table /> and <tbody />.
+export const wrapWithTableBody = (ui: any, options: Options = {}) =>
+  wrapWithTheme(
+    <table>
+      <tbody>{ui}</tbody>
+    </table>,
+    options
+  );
+
 export const renderWithTheme = (ui: any, options: Options = {}) => {
   return render(wrapWithTheme(ui, options));
 };
