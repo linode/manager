@@ -1,6 +1,6 @@
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import * as classNames from 'classnames';
-import { clamp, equals } from 'ramda';
+import { clamp } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
@@ -143,7 +143,7 @@ interface State {
   value: string | number;
 }
 
-class LinodeTextField extends React.Component<CombinedProps> {
+class LinodeTextField extends React.PureComponent<CombinedProps> {
   state: State = {
     /** initialize the state with our passed value if we have one */
     value:
@@ -152,28 +152,6 @@ class LinodeTextField extends React.Component<CombinedProps> {
         ? this.props.value
         : ''
   };
-
-  shouldComponentUpdate(nextProps: CombinedProps, nextState: State) {
-    return (
-      nextProps.value !== this.props.value ||
-      nextState.value !== this.state.value ||
-      nextProps.error !== this.props.error ||
-      nextProps.errorText !== this.props.errorText ||
-      nextProps.affirmative !== this.props.affirmative ||
-      nextProps.select !== this.props.select ||
-      nextProps.type !== this.props.type ||
-      nextProps.disabled !== this.props.disabled ||
-      nextProps.helperText !== this.props.helperText ||
-      nextProps.classes !== this.props.classes ||
-      nextProps.loading !== this.props.loading ||
-      nextProps.label !== this.props.label ||
-      Boolean(
-        this.props.select && nextProps.children !== this.props.children
-      ) ||
-      !equals(nextProps.InputProps, this.props.InputProps) ||
-      nextProps.theme.name !== this.props.theme.name
-    );
-  }
 
   handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { type, min, max, onChange } = this.props;
