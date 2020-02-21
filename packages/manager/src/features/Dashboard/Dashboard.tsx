@@ -18,6 +18,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
+import PromotionalOfferCard from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
 import TaxBanner from 'src/components/TaxBanner';
 import TagImportDrawer from 'src/features/TagImport';
 import useFlags from 'src/hooks/useFlags';
@@ -34,6 +35,7 @@ import shouldDisplayGroupImport from 'src/utilities/shouldDisplayGroupImportCTA'
 import { storage } from 'src/utilities/storage';
 import BackupsDashboardCard from './BackupsDashboardCard';
 import BlogDashboardCard from './BlogDashboardCard';
+import DashboardCard from './DashboardCard';
 import DomainsDashboardCard from './DomainsDashboardCard';
 import ImportGroupsCard from './GroupImportCard';
 import LinodesDashboardCard from './LinodesDashboardCard';
@@ -90,6 +92,10 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
 
   const flags = useFlags();
 
+  const dashboardPromos = (flags.promotionalOffers ?? []).filter(
+    promo => promo.displayOnDashboard
+  );
+
   return (
     <React.Fragment>
       {props.someLinodesHaveScheduledMaintenance && (
@@ -126,6 +132,13 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
         </Grid>
         <Grid item xs={12} md={5}>
           <TransferDashboardCard />
+
+          {dashboardPromos.map(promotionalOffer => (
+            <DashboardCard key={promotionalOffer.name}>
+              <PromotionalOfferCard {...promotionalOffer} />
+            </DashboardCard>
+          ))}
+
           {!managed && !backupError && (
             <BackupsDashboardCard
               accountBackups={accountBackups}
