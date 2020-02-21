@@ -3,6 +3,7 @@
 interface TaxBanner {
   tax_name: string;
   date: string;
+  linode_tax_id?: string;
 }
 
 type OneClickApp = Record<string, string>;
@@ -15,6 +16,7 @@ interface Flags {
   oneClickApps: OneClickApp;
   longview: boolean;
   longviewTabs: boolean;
+  taxBanner: TaxBanner;
 }
 
 /**
