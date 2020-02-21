@@ -35,10 +35,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(2)
   },
   copy: {
-    width: '100%'
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+  },
+  capMaxWidth: {
+    maxWidth: 400
+  },
+  alignLeft: {
+    alignItems: 'flex-start'
   },
   footnote: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(1)
   },
   centerText: {
     textAlign: 'center'
@@ -93,11 +102,17 @@ export const PromotionalOfferCard: React.FC<CombinedProps> = props => {
       {Logo && (
         <Logo className={classes.logo} width={iconSize} height={iconSize} />
       )}
-      <div className={classes.copy}>
+      <div
+        className={classnames({
+          [classes.copy]: true,
+          [classes.alignLeft]: fullWidth
+        })}
+      >
         <Typography
           variant="subtitle2"
           className={classnames({
-            [classes.centerText]: !fullWidth
+            [classes.centerText]: !fullWidth,
+            [classes.capMaxWidth]: !fullWidth
           })}
         >
           {offer.body}
@@ -125,7 +140,8 @@ export const PromotionalOfferCard: React.FC<CombinedProps> = props => {
             variant="body2"
             className={classnames({
               [classes.footnote]: true,
-              [classes.centerText]: !fullWidth
+              [classes.centerText]: !fullWidth,
+              [classes.capMaxWidth]: !fullWidth
             })}
           >
             {offer.footnote}
