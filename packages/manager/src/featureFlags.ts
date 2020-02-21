@@ -36,7 +36,7 @@ export interface PromotionalOffer {
   alt: string;
   features: PromotionalOfferFeature[];
   displayOnDashboard: boolean;
-  buttons?: PromotionalOfferButton[];
+  buttons: PromotionalOfferButton[];
 }
 
 /**

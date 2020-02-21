@@ -1,13 +1,17 @@
 import * as classnames from 'classnames';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import HeavenlyBucketIcon from 'src/assets/icons/promotionalOffers/heavenly-bucket.svg';
-import Button from 'src/components/Button';
+import Button from 'src/components/core/Button';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { PromotionalOffer } from 'src/featureFlags';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
-import { isURLValid } from 'src/utilities/sanitize-html/sanitizeHTML';
+import {
+  offSiteURL,
+  onSiteURL
+} from 'src/utilities/sanitize-html/sanitizeHTML';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -118,7 +122,7 @@ export const PromotionalOfferCard: React.FC<CombinedProps> = props => {
           {offer.body}
         </Typography>
         {/* Don't display buttons on full-width promotional banners. */}
-        {!props.fullWidth && offer.buttons && (
+        {!props.fullWidth && offer.buttons.length >= 1 && (
           <div className={classes.buttonSection}>
             {/* Only display the first two buttons. Any offer containing more
             than two buttons is a mistake. */}
@@ -126,8 +130,7 @@ export const PromotionalOfferCard: React.FC<CombinedProps> = props => {
               <Button
                 key={button.text}
                 className={classes.button}
-                // Check URL validity first as a security measure.
-                href={isURLValid(button.href) ? button.href : undefined}
+                {...buttonProps(button.href)}
               >
                 {button.text}
               </Button>
@@ -182,4 +185,35 @@ export const checkStringOrDefault = (maybeString: any, defaultVal?: string) => {
 
 export const logoMap: Record<PromotionalOffer['logo'], any> = {
   'heavenly-bucket.svg': HeavenlyBucketIcon
+};
+
+/**
+ *
+ * Given a URL:
+ *
+ * If it is a valid onsite (relative) URL, use the React Router Link component
+ * so the app isn't reloaded.
+ *
+ * If it is a valid offsite (absolute) URL, use a regular anchor node with an
+ * href and open in a new tab.
+ *
+ * If neither of the above conditions match, the URL is not considered safe, so
+ * we don't include a link at all.
+ */
+const buttonProps = (url: string) => {
+  let linkProps;
+
+  if (onSiteURL.test(url)) {
+    linkProps = {
+      component: Link,
+      to: url
+    };
+  } else if (offSiteURL.test(url)) {
+    linkProps = {
+      href: url,
+      target: '_blank',
+      rel: 'noopener noreferrer'
+    };
+  }
+  return linkProps;
 };

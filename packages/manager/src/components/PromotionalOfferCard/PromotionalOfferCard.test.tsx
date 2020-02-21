@@ -22,7 +22,7 @@ describe('PromotionalOfferCard', () => {
     const { getByText, queryByText } = renderWithTheme(
       <PromotionalOfferCard {...promo} />
     );
-    promo.buttons?.forEach(button => {
+    promo.buttons.forEach(button => {
       getByText(button.text);
       const anchor = queryByText(button.text)?.closest('a');
       expect(anchor).toHaveAttribute('href', button.href);
