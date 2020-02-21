@@ -23,19 +23,12 @@ import TagImportDrawer from 'src/features/TagImport';
 import useFlags from 'src/hooks/useFlags';
 import { handleOpen } from 'src/store/backupDrawer';
 import { addNotificationsToLinodes } from 'src/store/linodes/linodes.helpers';
-import getEntitiesWithGroupsToImport, {
-  emptyGroupedEntities,
-  GroupedEntitiesForImport
-} from 'src/store/selectors/getEntitiesWithGroupsToImport';
 import { openDrawer as openGroupDrawer } from 'src/store/tagImportDrawer';
 import { MapState } from 'src/store/types';
 import { formatNotifications } from 'src/utilities/formatNotifications';
-import shouldDisplayGroupImport from 'src/utilities/shouldDisplayGroupImportCTA';
-import { storage } from 'src/utilities/storage';
 import BackupsDashboardCard from './BackupsDashboardCard';
 import BlogDashboardCard from './BlogDashboardCard';
 import DomainsDashboardCard from './DomainsDashboardCard';
-import ImportGroupsCard from './GroupImportCard';
 import LinodesDashboardCard from './LinodesDashboardCard';
 import ManagedDashboardCard from './ManagedDashboardCard';
 import NodeBalancersDashboardCard from './NodeBalancersDashboardCard';
@@ -55,7 +48,6 @@ interface StateProps {
   linodesWithoutBackups: Linode[];
   managed: boolean;
   backupError?: Error;
-  entitiesWithGroupsToImport: GroupedEntitiesForImport;
   notifications: Notification[];
   userTimezone: string;
   userTimezoneLoading: boolean;
@@ -79,12 +71,11 @@ type CombinedProps = StateProps &
 export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
   const {
     accountBackups,
-    actions: { openBackupDrawer, openImportDrawer },
+    actions: { openBackupDrawer },
     backupError,
     linodesWithoutBackups,
     managed,
     notifications,
-    entitiesWithGroupsToImport,
     location
   } = props;
 
@@ -133,14 +124,6 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
               openBackupDrawer={openBackupDrawer}
             />
           )}
-          {!storage.hideGroupImportCTA.get() &&
-            shouldDisplayGroupImport(entitiesWithGroupsToImport) && (
-              <ImportGroupsCard
-                theme={props.theme.name}
-                openImportDrawer={openImportDrawer}
-                dismiss={storage.hideGroupImportCTA.set}
-              />
-            )}
           <BlogDashboardCard />
         </Grid>
       </Grid>
@@ -179,11 +162,7 @@ const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
       ['__resources', 'accountSettings', 'data', 'managed'],
       state
     ),
-    backupError: pathOr(false, ['backups', 'error'], state),
-    entitiesWithGroupsToImport:
-      !storage.hideGroupImportCTA.get() && !storage.hasImportedGroups.get()
-        ? getEntitiesWithGroupsToImport(state)
-        : emptyGroupedEntities
+    backupError: pathOr(false, ['backups', 'error'], state)
   };
 };
 

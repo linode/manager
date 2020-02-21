@@ -15,11 +15,6 @@ export interface GroupImportProps {
   tags: string[];
 }
 
-export const emptyGroupedEntities = {
-  linodes: [],
-  domains: []
-};
-
 // Linodes and Domains are the only entities with Display Groups.
 type GroupedEntity = Linode | Domain;
 
@@ -63,15 +58,11 @@ export const entitiesWithGroupsToImport = createSelector<
   Linode[],
   Domain[],
   GroupedEntitiesForImport
->(
-  linodeSelector,
-  domainSelector,
-  (linodes, domains) => {
-    return {
-      linodes: linodes.filter(uniqueGroup).map(extractProps),
-      domains: domains.filter(uniqueGroup).map(extractProps)
-    };
-  }
-);
+>(linodeSelector, domainSelector, (linodes, domains) => {
+  return {
+    linodes: linodes.filter(uniqueGroup).map(extractProps),
+    domains: domains.filter(uniqueGroup).map(extractProps)
+  };
+});
 
 export default entitiesWithGroupsToImport;
