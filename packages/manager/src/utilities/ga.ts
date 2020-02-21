@@ -330,3 +330,17 @@ export const sendObjectsQueuedForUploadEvent = (numObjects: number) => {
     label: `${numObjects} objects`
   });
 };
+
+export const sendSearchBarUsedEvent = (
+  category: 'Search Landing' | 'Search Select' | 'Search Auto',
+  searchText: string
+) => {
+  if (searchText === '') {
+    return;
+  }
+  sendEvent({
+    category,
+    action: searchText,
+    label: window.location.pathname
+  });
+};
