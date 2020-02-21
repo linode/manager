@@ -194,6 +194,7 @@ export type EventAction =
   | 'firewall_disable'
   | 'firewall_enable'
   | 'firewall_update'
+  | 'host_reboot'
   | 'image_update'
   | 'image_delete'
   | 'lassie_reboot'
