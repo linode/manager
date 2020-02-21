@@ -15,6 +15,8 @@ import withStoreSearch, {
   SearchProps
 } from 'src/features/Search/withStoreSearch';
 import { ApplicationState } from 'src/store';
+import { sendSearchBarUsedEvent } from 'src/utilities/ga.ts';
+import { debounce } from 'throttle-debounce';
 import styled, { StyleProps } from './SearchBar.styles';
 import SearchSuggestion from './SearchSuggestion';
 
@@ -65,6 +67,9 @@ export const selectStyles = {
   menu: (base: any) => ({ ...base, maxWidth: '100% !important' })
 };
 
+// Timeout of 1sec in debounce to avoid sending too many events to GA
+const debouncedSearchAutoEvent = debounce(1000, false, sendSearchBarUsedEvent);
+
 class SearchBar extends React.Component<CombinedProps, State> {
   selectRef = React.createRef<HTMLInputElement>();
 
@@ -85,6 +90,11 @@ class SearchBar extends React.Component<CombinedProps, State> {
 
   handleSearchChange = (searchText: string): void => {
     this.setState({ searchText });
+
+    // do not trigger debounce for empty text
+    if (searchText !== '') {
+      debouncedSearchAutoEvent('Search Auto', searchText);
+    }
     this.props.search(searchText);
   };
 
@@ -123,8 +133,12 @@ class SearchBar extends React.Component<CombinedProps, State> {
         pathname: `/search`,
         search: `?query=${encodeURIComponent(searchText)}`
       });
+      // we are selecting the View all option sending the user to the landing,
+      // this is like key down enter
+      sendSearchBarUsedEvent('Search Landing', searchText);
       return;
     }
+    sendSearchBarUsedEvent('Search Select', searchText);
     history.push(item.data.path);
   };
 
@@ -137,6 +151,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
           pathname: `/search`,
           search: `?query=${encodeURIComponent(searchText)}`
         });
+        sendSearchBarUsedEvent('Search Landing', searchText);
         this.onClose();
       }
     }
