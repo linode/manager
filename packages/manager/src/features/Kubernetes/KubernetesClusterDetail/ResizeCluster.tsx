@@ -27,7 +27,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   cluster: ExtendedCluster;
   nodePoolsLoading: boolean;
-  nodePoolsError?: APIError[];
   clusterDeleteError?: APIError[];
 }
 

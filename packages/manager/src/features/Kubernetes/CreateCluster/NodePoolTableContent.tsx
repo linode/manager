@@ -1,11 +1,6 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { useTheme } from 'src/components/core/styles';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
@@ -13,26 +8,7 @@ import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel
 import { PoolNodeWithPrice } from '.././types';
 import NodePoolRow from './NodePoolRow';
 
-type ClassNames = 'root' | 'small';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      border: `1px solid ${theme.palette.divider}`,
-      borderBottom: 0,
-      '& .data': {
-        [theme.breakpoints.only('sm')]: {
-          marginLeft: theme.spacing(1),
-          textAlign: 'right'
-        }
-      }
-    },
-    small: {
-      maxWidth: '50%'
-    }
-  });
-
-interface Props {
+export interface Props {
   pools: PoolNodeWithPrice[];
   types: ExtendedType[];
   loading: boolean;
@@ -42,11 +18,10 @@ interface Props {
   error?: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 export const NodePoolDisplayTable: React.FC<CombinedProps> = props => {
   const {
-    classes,
     editable,
     error,
     handleDelete,
@@ -55,6 +30,10 @@ export const NodePoolDisplayTable: React.FC<CombinedProps> = props => {
     types,
     updatePool
   } = props;
+
+  // This component doesn't use the theme directly, but it needs to update when the theme changes
+  // (see updateFor below).
+  const theme = useTheme();
 
   if (error) {
     return <TableRowError colSpan={12} message={error} />;
@@ -65,7 +44,12 @@ export const NodePoolDisplayTable: React.FC<CombinedProps> = props => {
   }
 
   if (pools.length === 0) {
-    return <TableRowEmptyState colSpan={12} />;
+    return (
+      <TableRowEmptyState
+        colSpan={12}
+        message="You haven't added any Node Pools yet."
+      />
+    );
   }
 
   return (
@@ -76,14 +60,14 @@ export const NodePoolDisplayTable: React.FC<CombinedProps> = props => {
         );
         return (
           <NodePoolRow
-            key={`node-pool-row-${idx}`}
+            key={`node-pool-row-${thisPool.id}`}
             editable={Boolean(editable)}
             idx={idx}
             pool={thisPool}
             type={thisPoolType}
             deletePool={handleDelete ? () => handleDelete(idx) : undefined}
             updatePool={updatePool}
-            updateFor={[thisPool, thisPoolType, editable, classes, updatePool]}
+            updateFor={[thisPool, thisPoolType, editable, updatePool, theme]}
           />
         );
       })}
@@ -91,8 +75,6 @@ export const NodePoolDisplayTable: React.FC<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-
-const enhanced = compose<CombinedProps, Props>(React.memo, styled);
+const enhanced = compose<CombinedProps, Props>(React.memo);
 
 export default enhanced(NodePoolDisplayTable);

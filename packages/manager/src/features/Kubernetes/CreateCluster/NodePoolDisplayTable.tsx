@@ -12,9 +12,9 @@ import TableHead from 'src/components/core/TableHead';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-import { PoolNodeWithPrice } from '.././types';
-import NodePoolTableContent from './NodePoolTableContent';
+import NodePoolTableContent, {
+  Props as TableContentProps
+} from './NodePoolTableContent';
 
 type ClassNames = 'root' | 'small';
 
@@ -35,15 +35,8 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface Props {
-  pools: PoolNodeWithPrice[];
-  types: ExtendedType[];
-  loading: boolean;
-  handleDelete?: (poolIdx: number) => void;
-  updatePool?: (poolIdx: number, updatedPool: PoolNodeWithPrice) => void;
+interface Props extends TableContentProps {
   small?: boolean;
-  editable?: boolean;
-  error?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
