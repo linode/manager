@@ -130,7 +130,8 @@ export class Weblish extends React.Component<CombinedProps, State> {
     this.terminal = new Terminal({
       cols: 120,
       rows: 40,
-      fontFamily: '"Ubuntu Mono", monospace, sans-serif'
+      fontFamily: '"Ubuntu Mono", monospace, sans-serif',
+      screenReaderMode: true
     });
 
     this.terminal.onData((data: string) => this.socket.send(data));
