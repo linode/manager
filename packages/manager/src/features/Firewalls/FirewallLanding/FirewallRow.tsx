@@ -39,7 +39,7 @@ export const FirewallRow: React.FC<CombinedProps> = props => {
   const getFirewallDevices = () => {
     setDevicesLoading(true);
 
-    _getDevices(1, mockDevices)
+    _getDevices(firewallID)
       .then(({ data }) => {
         setDevices(data);
         setDevicesLoading(false);
