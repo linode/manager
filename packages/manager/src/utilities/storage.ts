@@ -39,8 +39,6 @@ export const setStorage = (key: string, value: string) => {
 
 const PAGE_SIZE = 'PAGE_SIZE';
 const INFINITE_PAGE_SIZE = 'INFINITE_PAGE_SIZE';
-const HIDE_DISPLAY_GROUPS_CTA = 'importDisplayGroupsCTA';
-const HAS_IMPORTED_GROUPS = 'hasImportedGroups';
 const BACKUPSCTA_DISMISSED = 'BackupsCtaDismissed';
 const TOKEN = 'authentication/token';
 const NONCE = 'authentication/nonce';
@@ -68,14 +66,6 @@ export interface Storage {
   infinitePageSize: {
     get: () => PageSize;
     set: (perPage: PageSize) => void;
-  };
-  hideGroupImportCTA: {
-    get: () => 'true' | 'false';
-    set: () => void;
-  };
-  hasImportedGroups: {
-    get: () => 'true' | 'false';
-    set: () => void;
   };
   BackupsCtaDismissed: {
     get: () => boolean;
@@ -120,14 +110,6 @@ export const storage: Storage = {
       return Number(getStorage(INFINITE_PAGE_SIZE, fallback));
     },
     set: v => setStorage(INFINITE_PAGE_SIZE, `${v}`)
-  },
-  hideGroupImportCTA: {
-    get: () => getStorage(HIDE_DISPLAY_GROUPS_CTA),
-    set: () => setStorage(HIDE_DISPLAY_GROUPS_CTA, 'true')
-  },
-  hasImportedGroups: {
-    get: () => getStorage(HAS_IMPORTED_GROUPS),
-    set: () => setStorage(HAS_IMPORTED_GROUPS, 'true')
   },
   BackupsCtaDismissed: {
     get: () => getStorage(BACKUPSCTA_DISMISSED),
