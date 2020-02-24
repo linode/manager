@@ -135,7 +135,7 @@ const createClickHandlerForNotification = (
     notification.label === `We've updated our policies.`
   ) {
     return (e: React.MouseEvent<HTMLElement>) => {
-      window.location.href = `https://manager.linode.com/account/policy`;
+      window.location.href = `https://login.linode.com/policies`;
     };
   }
 
@@ -161,9 +161,6 @@ const createClickHandlerForNotification = (
 
 const styled = withStyles(styles);
 
-const enhanced = compose<any, any, any>(
-  styled,
-  withRouter
-);
+const enhanced = compose<any, any, any>(styled, withRouter);
 
 export default enhanced(UserNotificationsList);

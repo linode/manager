@@ -16,7 +16,6 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import MenuItem from 'src/components/MenuItem';
-import GDPRNotification from 'src/GDPRNotification';
 import { MapState } from 'src/store/types';
 import UserAgentNotification from 'src/UserAgentNotification';
 import UserNotificationButton from './UserNotificationsButton';
@@ -57,7 +56,6 @@ const styles = (theme: Theme) =>
 
 interface State {
   anchorEl?: HTMLElement;
-  privacyPolicyModalOpen: boolean;
   UserAgentNotification: boolean;
   UserAgentNotificationWarning: any;
 }
@@ -104,7 +102,6 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
 
   state: State = {
     anchorEl: undefined,
-    privacyPolicyModalOpen: false,
     UserAgentNotification: true,
     UserAgentNotificationWarning: false
   };
@@ -121,22 +118,8 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
     if (notifications.length === 0) {
       return;
     }
-
-    const privacyPolicyModalOpen = Boolean(
-      notifications.find(isPrivacyPolicityNotification)
-    );
-
-    /**
-     * If the state differs, we know there was a change to notifications and we should display the
-     * modal.
-     */
-    if (prevState.privacyPolicyModalOpen !== privacyPolicyModalOpen) {
-      this.setState({ privacyPolicyModalOpen });
-    }
   }
 
-  closePrivacyPolicyModal = () =>
-    this.setState({ privacyPolicyModalOpen: false });
   closeUserAgentNotification = () =>
     this.setState({ UserAgentNotification: false });
 
@@ -174,10 +157,6 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
             closeMenu={this.closeMenu}
           />
         </Menu>
-        <GDPRNotification
-          open={this.state.privacyPolicyModalOpen}
-          onClose={this.closePrivacyPolicyModal}
-        />
         {UserAgentNotificationWarning && (
           <UserAgentNotification
             open={this.state.UserAgentNotification}
@@ -196,7 +175,7 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
     this.setState({ anchorEl: undefined });
 }
 
-const isPrivacyPolicityNotification = (n: Notification) =>
+const isPrivacyPolicyNotification = (n: Notification) =>
   n.type === `notice` && n.label === `We've updated our policies.`;
 
 const reduceSeverity = (
@@ -237,7 +216,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
       }
 
       /** Update the language of the privacy policy update for usagea in the UNM. */
-      if (isPrivacyPolicityNotification(notification)) {
+      if (isPrivacyPolicyNotification(notification)) {
         return [
           ...result,
           {
@@ -264,9 +243,6 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose<CombinedProps, {}>(
-  styled,
-  connected
-);
+const enhanced = compose<CombinedProps, {}>(styled, connected);
 
 export default enhanced(UserNotificationsMenu);
