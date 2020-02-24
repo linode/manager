@@ -253,7 +253,8 @@ const withCluster = KubeContainer<
     lastUpdated,
     clustersError,
     clustersData,
-    nodePoolsLoading
+    nodePoolsLoading,
+    nodePoolsError
   ) => {
     const cluster =
       clustersData.find(c => +c.id === +ownProps.match.params.clusterID) ||
@@ -265,7 +266,8 @@ const withCluster = KubeContainer<
       clustersLoading,
       clustersLoadError: clustersError.read,
       clusterDeleteError: clustersError.delete,
-      nodePoolsLoading
+      nodePoolsLoading,
+      nodePoolsError
     };
   }
 );

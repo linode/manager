@@ -12,11 +12,9 @@ import TableHead from 'src/components/core/TableHead';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableRowLoading from 'src/components/TableRowLoading';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { PoolNodeWithPrice } from '.././types';
-import NodePoolRow from './NodePoolRow';
+import NodePoolTableContent from './NodePoolTableContent';
 
 type ClassNames = 'root' | 'small';
 
@@ -45,21 +43,13 @@ interface Props {
   updatePool?: (poolIdx: number, updatedPool: PoolNodeWithPrice) => void;
   small?: boolean;
   editable?: boolean;
+  error?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const NodePoolDisplayTable: React.FunctionComponent<CombinedProps> = props => {
-  const {
-    classes,
-    editable,
-    handleDelete,
-    loading,
-    pools,
-    small,
-    types,
-    updatePool
-  } = props;
+  const { classes, small, ...rest } = props;
 
   return (
     <Table
@@ -78,38 +68,7 @@ export const NodePoolDisplayTable: React.FunctionComponent<CombinedProps> = prop
         </TableRow>
       </TableHead>
       <TableBody>
-        {loading ? (
-          <TableRowLoading colSpan={12} />
-        ) : pools.length === 0 ? (
-          <TableRowEmptyState
-            colSpan={12}
-            message={"You haven't added any node pools yet."}
-          />
-        ) : (
-          pools.map((thisPool, idx) => {
-            const thisPoolType = types.find(
-              thisType => thisType.id === thisPool.type
-            );
-            return (
-              <NodePoolRow
-                key={`node-pool-row-${idx}`}
-                editable={Boolean(editable)}
-                idx={idx}
-                pool={thisPool}
-                type={thisPoolType}
-                deletePool={handleDelete ? () => handleDelete(idx) : undefined}
-                updatePool={updatePool}
-                updateFor={[
-                  thisPool,
-                  thisPoolType,
-                  editable,
-                  classes,
-                  updatePool
-                ]}
-              />
-            );
-          })
-        )}
+        <NodePoolTableContent {...rest} />
       </TableBody>
     </Table>
   );
