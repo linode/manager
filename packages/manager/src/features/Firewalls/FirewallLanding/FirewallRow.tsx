@@ -7,7 +7,6 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import { take } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { devices as mockDevices } from 'src/__data__/firewallDevices';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import ActionMenu, { ActionHandlers } from './FirewallActionMenu';
