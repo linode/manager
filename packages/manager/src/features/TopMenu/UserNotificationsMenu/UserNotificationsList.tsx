@@ -126,19 +126,6 @@ const createClickHandlerForNotification = (
   notification: Notification,
   onClick: (path: string) => void
 ) => {
-  /**
-   * Privacy policy changes can only be made in CF manager for now, so we have to
-   * link externally.
-   */
-  if (
-    notification.type === 'notice' &&
-    notification.label === `We've updated our policies.`
-  ) {
-    return (e: React.MouseEvent<HTMLElement>) => {
-      window.location.href = `https://manager.linode.com/account/policy`;
-    };
-  }
-
   const type = path<string>(['entity', 'type'], notification);
   const id = path<number>(['entity', 'id'], notification);
 
@@ -161,9 +148,6 @@ const createClickHandlerForNotification = (
 
 const styled = withStyles(styles);
 
-const enhanced = compose<any, any, any>(
-  styled,
-  withRouter
-);
+const enhanced = compose<any, any, any>(styled, withRouter);
 
 export default enhanced(UserNotificationsList);
