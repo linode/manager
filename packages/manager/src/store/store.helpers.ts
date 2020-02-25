@@ -167,7 +167,7 @@ export const ensureInitializedNestedState = (
   id: number
 ) => {
   if (!state[id]) {
-    state[id] = createDefaultState();
+    state[id] = createDefaultState({ error: {} });
   }
   return state;
 };
