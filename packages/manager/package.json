@@ -21,6 +21,7 @@
     "@material-ui/lab": "^4.0.0-alpha.29",
     "@material-ui/styles": "^4.4.1",
     "@sentry/browser": "~5.10.2",
+    "@types/sanitize-html": "^1.20.2",
     "algoliasearch": "^3.30.0",
     "axios": "~0.19.0",
     "axios-mock-adapter": "^1.15.0",
@@ -71,7 +72,7 @@
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "rxjs": "^5.5.6",
-    "sanitize-html": "1.20.1",
+    "sanitize-html": "~1.21.0",
     "search-string": "^3.1.0",
     "showdown": "^1.9.1",
     "showdown-highlightjs-extension": "^0.1.2",
@@ -169,7 +170,6 @@
     "@types/react-test-renderer": "~16.9.1",
     "@types/recompose": "^0.30.0",
     "@types/redux-mock-store": "^1.0.1",
-    "@types/sanitize-html": "1.18.3",
     "@types/showdown": "^1.9.3",
     "@types/throttle-debounce": "^1.0.0",
     "@types/url-parse": "^1.4.1",
@@ -329,8 +329,6 @@
   },
   "workspaces": {
     "nohoist": [
-      "@types/sanitize-html",
-      "sanitize-html",
       "chart.js",
       "chartjs*",
       "wdio-jasmine-framework*",

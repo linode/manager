@@ -30,11 +30,7 @@ export const sanitizeHTML = (text: string) =>
         };
       }
     },
-    /**
-     * this option is not supported and was patched
-     * See: https://github.com/punkave/sanitize-html/pull/169
-     */
-    escapeDisallowedTags: true
+    disallowedTagsMode: 'escape'
     /** this is basically just converting script tags to text */
     // transformTags: {
     //   script: (tagName, attrs: Record<string, string>) => {
