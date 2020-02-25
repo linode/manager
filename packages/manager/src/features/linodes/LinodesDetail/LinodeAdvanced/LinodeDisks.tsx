@@ -297,7 +297,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
         actions={this.confirmDeleteActions}
       >
         {errors && <Notice error text={errors[0].reason} />}
-        <Typography>Are you sure you want to delete "{label}"</Typography>
+        <Typography>Are you sure you want to delete {label}?</Typography>
       </ConfirmationDialog>
     );
   };
