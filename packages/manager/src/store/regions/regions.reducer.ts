@@ -1,6 +1,7 @@
 import produce from 'immer';
 import { Region } from 'linode-js-sdk/lib/regions';
 import { Reducer } from 'redux';
+import regions from 'src/cachedData/regions.json';
 import { EntityState } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import { regionsRequestActions } from './regions.actions';
@@ -11,8 +12,8 @@ import { regionsRequestActions } from './regions.actions';
 export type State = EntityState<Region>;
 
 export const defaultState: State = {
-  results: [],
-  entities: [],
+  results: regions.data.map(r => r.id),
+  entities: regions.data as Region[],
   loading: true,
   lastUpdated: 0,
   error: undefined
