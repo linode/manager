@@ -12,8 +12,8 @@ import { regionsRequestActions } from './regions.actions';
 export type State = EntityState<Region>;
 
 export const defaultState: State = {
-  results: regions.data.map(r => r.id),
-  entities: regions.data as Region[],
+  results: regions?.data?.map(r => r.id) ?? [],
+  entities: (regions?.data as Region[]) ?? [],
   loading: true,
   lastUpdated: 0,
   error: undefined
