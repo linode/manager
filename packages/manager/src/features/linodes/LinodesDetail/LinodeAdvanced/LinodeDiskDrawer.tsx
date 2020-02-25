@@ -100,6 +100,13 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
     selectedMode: modes.EMPTY
   };
 
+  componentDidUpdate(prevProps: CombinedProps) {
+    if (!prevProps.open && this.props.open) {
+      // Drawer is opening, make sure mode is set to modes.EMPTY
+      this.setState({ selectedMode: modes.EMPTY });
+    }
+  }
+
   static getDerivedStateFromProps(props: CombinedProps, state: State) {
     return {
       hasErrorFor: getAPIErrorsFor(
@@ -121,18 +128,6 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
         return 'Resize Disk';
     }
   }
-
-  handleCloseDrawer = () => {
-    const { onClose } = this.props;
-    onClose();
-    this.setState({ selectedMode: modes.EMPTY });
-  };
-
-  handleSubmit = () => {
-    const { onSubmit } = this.props;
-    onSubmit();
-    this.setState({ selectedMode: modes.EMPTY });
-  };
 
   onLabelChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.props.onLabelChange(e.target.value);
@@ -237,7 +232,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
       <Drawer
         title={LinodeDiskDrawer.getTitle(mode)}
         open={open}
-        onClose={this.handleCloseDrawer}
+        onClose={this.props.onClose}
       >
         <Grid container direction="row">
           {mode === 'create' && (
@@ -278,7 +273,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
           <Grid item className={classes.section}>
             <ActionsPanel>
               <Button
-                onClick={this.handleSubmit}
+                onClick={this.props.onSubmit}
                 buttonType="primary"
                 loading={submitting}
                 data-qa-disk-submit
@@ -286,7 +281,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
                 {submitLabelMap[mode]}
               </Button>
               <Button
-                onClick={this.handleCloseDrawer}
+                onClick={this.props.onClose}
                 buttonType="secondary"
                 className="cancel"
                 data-qa-disk-cancel
