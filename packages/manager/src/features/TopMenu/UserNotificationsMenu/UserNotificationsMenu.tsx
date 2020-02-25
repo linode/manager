@@ -221,7 +221,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
           ...result,
           {
             ...notification,
-            message: `Click here to view the updated policies.`
+            message: `An account administrator must accept the policies at login.linode.com/policies.`
           }
         ];
       }
