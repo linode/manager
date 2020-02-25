@@ -22,7 +22,9 @@
   },
   "scripts": {
     "cost-of-modules": "yarn global add cost-of-modules && cost-of-modules --less --no-install --include-dev",
-    "install:all": "yarn install --frozen-lockfile",
+    "link:sdk": "yarn workspace linode-js-sdk link && yarn workspace linode-manager link linode-js-sdk",
+    "install:all": "yarn link:sdk && yarn install --frozen-lockfile",
+    "upgrade:sdk": "yarn workspace linode-js-sdk version --no-git-tag-version --no-commit-hooks && yarn workspace linode-manager upgrade linode-js-sdk",
     "up": "yarn install:all && yarn start:all",
     "postinstall": "yarn workspaces run postinstall",
     "build": "yarn workspaces run build",
