@@ -39,7 +39,7 @@ const collectLoadingState: MapState<InnerProps, OuterProps> = (
       isLoading(types) ||
       isLoading(volumes) ||
       isLoading(notifications) ||
-      isLoading(linodeConfigs) ||
+      (linodeConfigs[linodeId] && isLoading(linodeConfigs[linodeId])) ||
       (linodeDisks[linodeId] && isLoading(linodeDisks[linodeId]))
   };
 };

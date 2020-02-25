@@ -908,7 +908,7 @@ const enhanced = compose<CombinedProps, Props>(
     const { itemsById } = state.__resources.volumes;
 
     const config = linodeConfigId
-      ? state.__resources.linodeConfigs.itemsById[linodeConfigId]
+      ? state.__resources.linodeConfigs[linodeId].itemsById[linodeConfigId]
       : undefined;
 
     const volumes = Object.values(itemsById).reduce(

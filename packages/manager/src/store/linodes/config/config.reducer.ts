@@ -1,13 +1,13 @@
+import produce from 'immer';
 import { Reducer } from 'redux';
 import {
   addMany,
-  createDefaultState,
+  ensureInitializedNestedState,
   onCreateOrUpdate,
   onDeleteSuccess,
   onError,
   onGetAllSuccess,
-  onStart,
-  removeMany
+  onStart
 } from 'src/store/store.helpers';
 import { EntityError, MappedEntityState } from 'src/store/types';
 import { isType } from 'typescript-fsa';
@@ -22,89 +22,110 @@ import {
 } from './config.actions';
 import { Entity } from './config.types';
 
-export type State = MappedEntityState<Entity, EntityError>;
+export type State = Record<number, MappedEntityState<Entity, EntityError>>;
 
-export const defaultState: State = createDefaultState<Entity, EntityError>();
+export const defaultState: State = {};
 
-const reducer: Reducer<State> = (state = defaultState, action) => {
-  if (isType(action, deleteLinodeActions.done)) {
-    const {
-      params: { linodeId }
-    } = action.payload;
+const reducer: Reducer<State> = (state = defaultState, action) =>
+  produce(state, draft => {
+    // getLinodeConfigActions
+    // getAllLinodeConfigActions
+    if (
+      isType(action, getLinodeConfigActions.started) ||
+      isType(action, getLinodeConfigsActions.started) ||
+      isType(action, getAllLinodeConfigsActions.started)
+    ) {
+      const { linodeId } = action.payload;
+      draft = ensureInitializedNestedState(draft, linodeId);
 
-    const configIdsToRemove = Object.values(state.itemsById)
-      .filter(({ linode_id }) => linode_id === linodeId)
-      .map(({ id }) => String(id));
+      draft[linodeId] = onStart(draft[linodeId]);
+    }
 
-    return removeMany(configIdsToRemove, state);
-  }
+    if (isType(action, getLinodeConfigsActions.done)) {
+      const { result } = action.payload;
+      const { linodeId } = action.payload.params;
+      draft = ensureInitializedNestedState(draft, linodeId);
 
-  if (isType(action, deleteLinode)) {
-    const { payload } = action;
+      draft[linodeId].loading = false;
+      draft[linodeId] = addMany(result, draft[linodeId]);
+    }
 
-    const configIdsToRemove = Object.values(state.itemsById)
-      .filter(({ linode_id }) => linode_id === payload)
-      .map(({ id }) => String(id));
+    if (isType(action, getAllLinodeConfigsActions.done)) {
+      const { result } = action.payload;
+      const { linodeId } = action.payload.params;
+      draft = ensureInitializedNestedState(draft, linodeId);
 
-    return removeMany(configIdsToRemove, state);
-  }
+      draft[linodeId] = onGetAllSuccess(result, draft[linodeId]);
+    }
 
-  if (isType(action, getLinodeConfigsActions.done)) {
-    const { result } = action.payload;
-    return addMany(result, state);
-  }
+    if (isType(action, getAllLinodeConfigsActions.failed)) {
+      const { error } = action.payload;
+      const { linodeId } = action.payload.params;
 
-  if (isType(action, createLinodeConfigActions.done)) {
-    const { result } = action.payload;
-    return onCreateOrUpdate(result, state);
-  }
+      draft = ensureInitializedNestedState(draft, linodeId);
 
-  if (isType(action, getLinodeConfigActions.done)) {
-    const { result } = action.payload;
-    return onCreateOrUpdate(result, state);
-  }
+      draft[linodeId] = onError<
+        MappedEntityState<Entity, EntityError>,
+        EntityError
+      >(
+        {
+          read: error
+        },
+        draft[linodeId]
+      );
+    }
 
-  if (isType(action, updateLinodeConfigActions.done)) {
-    const { result } = action.payload;
-    return onCreateOrUpdate(result, state);
-  }
+    // createLinodeConfigActions
+    // getLinodeConfigActions
+    // updateLinodeConfigActions
+    if (
+      isType(action, createLinodeConfigActions.done) ||
+      isType(action, getLinodeConfigActions.done) ||
+      isType(action, updateLinodeConfigActions.done)
+    ) {
+      const { result } = action.payload;
+      const { linodeId } = action.payload.params;
+      draft = ensureInitializedNestedState(draft, linodeId);
 
-  if (isType(action, deleteLinodeConfigActions.done)) {
-    const {
-      params: { configId }
-    } = action.payload;
+      draft[linodeId].loading = false;
+      draft[linodeId] = onCreateOrUpdate(result, draft[linodeId]);
+    }
 
-    return onDeleteSuccess(configId, state);
-  }
+    // deleteLinodeConfigActions
+    if (isType(action, deleteLinodeConfigActions.started)) {
+      const { linodeId } = action.payload;
+      draft = ensureInitializedNestedState(draft, linodeId);
+      draft[linodeId].error = {
+        ...draft[linodeId].error,
+        delete: undefined
+      };
+    }
 
-  /**
-   * reset error state when our request to disks has started and
-   * or a request to get one config has started
-   */
-  if (
-    isType(action, getAllLinodeConfigsActions.started) ||
-    isType(action, getLinodeConfigsActions.started) ||
-    isType(action, getLinodeConfigActions.started)
-  ) {
-    return onStart(state);
-  }
+    if (isType(action, deleteLinodeConfigActions.done)) {
+      const {
+        params: { configId, linodeId }
+      } = action.payload;
+      draft = ensureInitializedNestedState(draft, linodeId);
+      draft[linodeId] = onDeleteSuccess(configId, draft[linodeId]);
+    }
 
-  if (isType(action, getAllLinodeConfigsActions.done)) {
-    const { result } = action.payload;
-    return onGetAllSuccess(result, state);
-  }
+    // deleteLinode (sync – used to respond to events)
+    // deleteLinodeActions (async – used when a delete Linode request is made)
+    //
+    // The reducer result is the same, but these need to be two code blocks
+    // because the linodeId is located in different places between the actions.
+    if (isType(action, deleteLinode)) {
+      const linodeId = action.payload;
+      delete draft[linodeId];
+    }
 
-  if (isType(action, getAllLinodeConfigsActions.failed)) {
-    const { error } = action.payload;
-    return onError<MappedEntityState<Entity, EntityError>, EntityError>(
-      {
-        read: error
-      },
-      state
-    );
-  }
+    if (isType(action, deleteLinodeActions.done)) {
+      const {
+        params: { linodeId }
+      } = action.payload;
 
-  return state;
-};
+      delete draft[linodeId];
+    }
+  });
 
 export default reducer;
