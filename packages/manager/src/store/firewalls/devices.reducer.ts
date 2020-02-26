@@ -1,61 +1,99 @@
-// import produce from 'immer';
-// import { Firewall, FirewallDevice } from 'linode-js-sdk/lib/firewalls';
-// import { Reducer } from 'redux';
-// import { isType } from 'typescript-fsa';
-// import {
-//   ensureInitializedNestedState,
-//   onCreateOrUpdate,
-//   onDeleteSuccess,
-//   onError,
-//   onGetAllSuccess,
-//   onStart
-// } from 'src/store/store.helpers';
-// import { Entity, EntityError, RelationalDataSet } from '../types';
-// import {
-//   addFirewallDeviceActions,
-//   getAllFirewallDevicesActions,
-//   removeFirewallDeviceActions
-// } from './devices.actions';
+import produce from 'immer';
+import { FirewallDevice } from 'linode-js-sdk/lib/firewalls';
+import { Reducer } from 'redux';
+import {
+  apiResponseToMappedState,
+  ensureInitializedNestedState,
+  onStart
+} from 'src/store/store.helpers';
+import { isType } from 'typescript-fsa';
+import { EntityError, RelationalMappedEntityState } from '../types';
+import {
+  addFirewallDeviceActions,
+  getAllFirewallDevicesActions,
+  removeFirewallDeviceActions
+} from './devices.actions';
 
-// export type State = RelationalDataSet<FirewallDevice[], EntityError>;
+export type State = RelationalMappedEntityState<FirewallDevice, EntityError>;
 
-// export const defaultState: State = {};
+export const defaultState: State = {};
 
-// /**
-//  * Reducer
-//  */
-// const reducer: Reducer<State> = (state = defaultState, action) => {
-//   return produce(state, draft => {
-//     if (isType(action, getAllFirewallDevicesActions.started)) {
-//       const { firewallID } = action.payload;
-//       draft = ensureInitializedNestedState(draft, firewallID);
+/**
+ * Reducer
+ */
+const reducer: Reducer<State> = (state = defaultState, action) => {
+  return produce(state, draft => {
+    if (isType(action, getAllFirewallDevicesActions.started)) {
+      const { firewallID } = action.payload;
+      draft = ensureInitializedNestedState(draft, firewallID);
 
-//       draft[firewallID] = onStart(draft[firewallID]);
-//     }
+      draft[firewallID] = onStart(draft[firewallID]);
+    }
 
-//     if (isType(action, getAllFirewallDevicesActions.done)) {
-//       const { result } = action.payload;
-//       const { firewallID } = action.payload.params;
-//       draft = ensureInitializedNestedState(draft, firewallID);
+    if (isType(action, getAllFirewallDevicesActions.done)) {
+      const { result } = action.payload;
+      const { firewallID } = action.payload.params;
+      draft = ensureInitializedNestedState(draft, firewallID);
 
-//       draft[firewallID].loading = false;
-//       draft[firewallID].data = result;
-//       draft[firewallID].lastUpdated = Date.now();
-//     }
+      draft[firewallID].loading = false;
+      draft[firewallID].itemsById = apiResponseToMappedState(result);
+      draft[firewallID].lastUpdated = Date.now();
+    }
 
-//     if (isType(action, getAllFirewallDevicesActions.failed)) {
-//       const { error } = action.payload;
-//       const { firewallID } = action.payload.params;
+    if (isType(action, getAllFirewallDevicesActions.failed)) {
+      const { error } = action.payload;
+      const { firewallID } = action.payload.params;
 
-//       draft = ensureInitializedNestedState(draft, firewallID);
+      draft = ensureInitializedNestedState(draft, firewallID);
 
-//       draft[firewallID].error.read = error;
-//     }
+      draft[firewallID].error.read = error;
+    }
 
-//     if (isType(action, addFirewallDeviceActions.done)) {
-//       const { result } = action.payload;
-//     }
-//   });
-// };
+    if (isType(action, addFirewallDeviceActions.started)) {
+      const { firewallID } = action.payload;
 
-// export default reducer;
+      draft = ensureInitializedNestedState(draft, firewallID);
+      draft[firewallID].error.create = undefined;
+    }
+
+    if (isType(action, addFirewallDeviceActions.done)) {
+      const { result } = action.payload;
+      const { firewallID } = action.payload.params;
+
+      draft = ensureInitializedNestedState(draft, firewallID);
+      draft[firewallID].lastUpdated = Date.now();
+      draft[firewallID].itemsById[result.id] = result;
+    }
+
+    if (isType(action, addFirewallDeviceActions.failed)) {
+      const { error } = action.payload;
+      const { firewallID } = action.payload.params;
+
+      draft = ensureInitializedNestedState(draft, firewallID);
+      draft[firewallID].error.create = error;
+    }
+
+    if (isType(action, removeFirewallDeviceActions.started)) {
+      const { firewallID } = action.payload;
+
+      draft = ensureInitializedNestedState(draft, firewallID);
+      draft[firewallID].error.delete = undefined;
+    }
+
+    if (isType(action, removeFirewallDeviceActions.done)) {
+      const { firewallID } = action.payload.params;
+
+      delete draft[firewallID];
+    }
+
+    if (isType(action, removeFirewallDeviceActions.failed)) {
+      const { error } = action.payload;
+      const { firewallID } = action.payload.params;
+
+      draft = ensureInitializedNestedState(draft, firewallID);
+      draft[firewallID].error.delete = error;
+    }
+  });
+};
+
+export default reducer;
