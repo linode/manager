@@ -1,6 +1,6 @@
 import { Event } from 'linode-js-sdk/lib/account';
 import { path } from 'ramda';
-import { isProduction } from 'src/constants';
+import { isProductionBuild } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 
 type EventMessageCreator = (e: Event) => string;
@@ -641,7 +641,7 @@ export default (e: Event): string => {
   /** we couldn't find the event in our list above */
   if (!fn) {
     /** log unknown events to the console */
-    if (!isProduction) {
+    if (!isProductionBuild) {
       /* tslint:disable */
       console.error('============================================');
       console.error('Unknown API Event Received');

@@ -4,7 +4,7 @@ import { ObjectStorageClusterID } from 'linode-js-sdk/lib/object-storage';
 const PRODUCTION = 'production';
 
 /** native to webpack build */
-export const isProduction = process.env.NODE_ENV === PRODUCTION;
+export const isProductionBuild = process.env.NODE_ENV === PRODUCTION;
 
 /** required for the app to function */
 export const APP_ROOT =
@@ -53,7 +53,8 @@ export const GTM_ID = process.env.REACT_APP_GTM_ID;
 export const ACCESS_TOKEN = process.env.REACT_APP_ACCESS_TOKEN;
 
 export const LOG_PERFORMANCE_METRICS =
-  !isProduction && process.env.REACT_APP_LOG_PERFORMANCE_METRICS === 'true';
+  !isProductionBuild &&
+  process.env.REACT_APP_LOG_PERFORMANCE_METRICS === 'true';
 
 // Features
 export const isObjectStorageEnabledForEnvironment =
