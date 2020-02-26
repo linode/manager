@@ -3,8 +3,7 @@ import { FirewallDevice } from 'linode-js-sdk/lib/firewalls';
 import { Reducer } from 'redux';
 import {
   apiResponseToMappedState,
-  ensureInitializedNestedState,
-  onStart
+  ensureInitializedNestedState
 } from 'src/store/store.helpers';
 import { isType } from 'typescript-fsa';
 import { EntityError, RelationalMappedEntityState } from '../types';
@@ -27,7 +26,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       const { firewallID } = action.payload;
       draft = ensureInitializedNestedState(draft, firewallID);
 
-      draft[firewallID] = onStart(draft[firewallID]);
+      draft[firewallID].loading = true;
     }
 
     if (isType(action, getAllFirewallDevicesActions.done)) {

@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
+
+import AddNewLink from 'src/components/AddNewLink';
 // import { makeStyles, Theme } from 'src/components/core/styles'
 
 // const useStyles = makeStyles((theme: Theme) => ({
@@ -8,6 +10,7 @@ import { compose } from 'recompose';
 // }))
 import Typography from 'src/components/core/Typography';
 import useFirewallDevices from 'src/hooks/useFirewallDevices';
+import FirewallDevicesTable from './FirewallDevicesTable';
 
 interface Props {
   firewallID: number;
@@ -20,7 +23,7 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
   // const classes = useStyles();
   const { devices, requestDevices } = useFirewallDevices(firewallID);
 
-  const deviceList = devices.itemsById ? Object.values(devices.itemsById) : [];
+  const deviceList = Object.values(devices.itemsById ?? {}); // Gives the devices as an array or [] if nothing is found
   React.useEffect(() => {
     if (devices.lastUpdated === 0 && !devices.loading) {
       requestDevices();
@@ -31,7 +34,18 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
       <Typography>
         The following Linodes have been assigned to this Firewall.
       </Typography>
-      <div>{deviceList.map((thisDevice: any) => thisDevice.entity.label)}</div>
+      <AddNewLink
+        onClick={() => null}
+        disabled={true}
+        label="Add Linodes to Firewall"
+      />
+      <FirewallDevicesTable
+        devices={deviceList}
+        error={devices.error.read}
+        lastUpdated={devices.lastUpdated}
+        loading={devices.loading}
+        triggerRemoveDevice={(deviceID: number, label: string) => null}
+      />
     </>
   );
 };
