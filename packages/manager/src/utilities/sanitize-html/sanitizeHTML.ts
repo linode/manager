@@ -30,6 +30,9 @@ export const sanitizeHTML = (text: string) =>
         };
       }
     },
+    // see doc for this value here:
+    // https://github.com/apostrophecms/sanitize-html#what-if-i-want-disallowed-tags-to-be-escaped-rather-than-discarded
+    // 'escape' : the disallowed tags are escaped rather than discarded. Any text or subtags is handled normally
     disallowedTagsMode: 'escape'
     /** this is basically just converting script tags to text */
     // transformTags: {
