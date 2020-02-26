@@ -1,5 +1,6 @@
 import { FirewallRuleType } from 'linode-js-sdk/lib/firewalls';
 import * as React from 'react';
+import ActionMenu from 'src/components/ActionMenu/ActionMenu';
 import AddNewLink from 'src/components/AddNewLink';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
@@ -12,8 +13,21 @@ import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 import { firewallRuleFactory } from 'src/factories/firewalls';
 import capitalize from 'src/utilities/capitalize';
+import {
+  generateAddressesLabel,
+  generateRuleLabel,
+  predefinedFirewallFromRule as ruleToPredefinedFirewall
+} from '../shared';
 
 const MOCK_RULES = firewallRuleFactory.buildList(4);
+
+// ALTER THESE VALUES TO TRY OUT DIFFERENT DISPLAYS.
+// @todo: remove before merge.
+MOCK_RULES[1].ports = '443';
+MOCK_RULES[2].protocol = 'UDP';
+MOCK_RULES[2].addresses = {
+  ipv4: ['1.1.1.1', '2.2.2.2', '3.3.3.3']
+};
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -25,6 +39,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type RuleType = 'inbound' | 'outbound';
 
+interface RuleRow {
+  type: string;
+  protocol: string;
+  ports: string;
+  addresses: string;
+}
+
 interface Props {
   ruleType: RuleType;
 }
@@ -34,6 +55,12 @@ type CombinedProps = Props;
 const FirewallRuleTable: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
+  const addressColumnLabel =
+    props.ruleType === 'inbound' ? 'sources' : 'destinations';
+
+  // @todo: Use real data.
+  const rowData = firewallRuleToRowData(MOCK_RULES);
+
   return (
     <>
       <div className={classes.header}>
@@ -41,13 +68,14 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
           props.ruleType
         )} Rules`}</Typography>
         <AddNewLink
-          onClick={() => null}
+          // @todo: Use real handlers.
+          onClick={() => alert("This doesn't do anything yet.")}
           label={`Add an ${capitalize(props.ruleType)} Rule`}
         />
       </div>
-      <OrderBy data={MOCK_RULES} orderBy={'type'} order={'asc'}>
+      <OrderBy data={rowData} orderBy={'type'} order={'asc'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-          <Table>
+          <Table isResponsive={false}>
             <TableHead>
               <TableRow>
                 <TableSortCell
@@ -68,34 +96,40 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
                 </TableSortCell>
                 <TableSortCell
                   active={orderBy === 'ports'}
-                  label="port range"
+                  label="ports"
                   direction={order}
                   handleClick={handleOrderChange}
                 >
                   Port Range
                 </TableSortCell>
                 <TableSortCell
-                  active={orderBy === 'sources'}
-                  label="sources"
+                  active={orderBy === 'addresses'}
+                  label="addresses"
                   direction={order}
                   handleClick={handleOrderChange}
                 >
-                  Sources
+                  {capitalize(addressColumnLabel)}
                 </TableSortCell>
                 <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>
-              {orderedData.map((rule: FirewallRuleType, idx) => {
+              {orderedData.map((ruleRow: RuleRow, idx) => {
+                const { type, protocol, ports, addresses } = ruleRow;
+
                 return (
                   <TableRow key={idx}>
-                    <TableCell>TYPE</TableCell>
-                    <TableCell>{rule.protocol}</TableCell>
-                    <TableCell>{rule.ports}</TableCell>
+                    <TableCell>{type}</TableCell>
+                    <TableCell>{protocol}</TableCell>
+                    <TableCell>{ports}</TableCell>
+                    <TableCell>{addresses}</TableCell>
                     <TableCell>
-                      {JSON.stringify(rule.addresses, null, 2)}
+                      {/* Mocked for now. */}
+                      <ActionMenu
+                        createActions={() => []}
+                        ariaLabel="Action menu for Firewall rule"
+                      />
                     </TableCell>
-                    <TableCell>(action menu)</TableCell>
                   </TableRow>
                 );
               })}
@@ -107,4 +141,24 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
   );
 };
 
-export default FirewallRuleTable;
+export default React.memo(FirewallRuleTable);
+
+/**
+ * Transforms a FirewallRuleType to the higher-level RuleRow. We do this so
+ * downstream components don't have worry about transforming individual pieces
+ * of data. This also allows us to sort each column of the RuleTable.
+ */
+export const firewallRuleToRowData = (
+  firewallRules: FirewallRuleType[]
+): RuleRow[] => {
+  return firewallRules.map(thisRule => {
+    const ruleType = ruleToPredefinedFirewall(thisRule);
+
+    return {
+      type: generateRuleLabel(ruleType),
+      protocol: thisRule.protocol,
+      addresses: generateAddressesLabel(thisRule.addresses),
+      ports: thisRule.ports
+    };
+  });
+};

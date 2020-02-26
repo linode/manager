@@ -6,7 +6,7 @@ import Typography from 'src/components/core/Typography';
 import FirewallRuleTable from './FirewallRuleTable';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  explainerCopy: {
+  copy: {
     fontSize: '1em',
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(1)
@@ -17,18 +17,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-// interface Props { }
-
 type CombinedProps = RouteComponentProps;
 
 const FirewallRulesLanding: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  // return <h2>Firewall Rules Landing</h2>;
-
   return (
     <>
-      <Typography variant="body1" className={classes.explainerCopy}>
+      <Typography variant="body1" className={classes.copy}>
         Firewall rules act as a whitelist, allowing network traffic that meets
         the rules’ parameters to pass through. Any traffic not explicitly
         permitted by a rule is blocked.
