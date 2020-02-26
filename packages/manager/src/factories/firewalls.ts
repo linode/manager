@@ -30,6 +30,8 @@ export const firewallFactory = Factory.Sync.makeFactory<Firewall>({
 
 export const firewallDeviceFactory = Factory.Sync.makeFactory<FirewallDevice>({
   id: Factory.each(i => i),
+  created: '2020-01-01',
+  updated: '2020-01-01',
   entity: {
     type: 'linode' as FirewallDeviceEntityType,
     label: Factory.each(i => `factory-device-${i}`) as any,
