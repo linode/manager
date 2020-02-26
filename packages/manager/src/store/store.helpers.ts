@@ -164,10 +164,11 @@ export const updateInPlace = <E extends Entity>(
 // If it doesn't exist, initialize the state with `createDefaultState()`.
 export const ensureInitializedNestedState = (
   state: Record<number, any>,
-  id: number
+  id: number,
+  override: any = {}
 ) => {
   if (!state[id]) {
-    state[id] = createDefaultState({ error: {} });
+    state[id] = createDefaultState({ ...override, error: {} });
   }
   return state;
 };

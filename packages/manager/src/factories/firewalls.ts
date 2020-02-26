@@ -1,6 +1,8 @@
 import * as Factory from 'factory.ts';
 import {
   Firewall,
+  FirewallDevice,
+  FirewallDeviceEntityType,
   FirewallRules,
   FirewallRuleType
 } from 'linode-js-sdk/lib/firewalls/types';
@@ -24,4 +26,14 @@ export const firewallFactory = Factory.Sync.makeFactory<Firewall>({
   updated_dt: '2020-01-01 00:00:00',
   tags: [],
   status: 'enabled'
+});
+
+export const firewallDeviceFactory = Factory.Sync.makeFactory<FirewallDevice>({
+  id: Factory.each(i => i),
+  entity: {
+    type: 'linode' as FirewallDeviceEntityType,
+    label: Factory.each(i => `factory-device-${i}`) as any,
+    id: Factory.each(i => i) as any,
+    url: '/linodes/1'
+  }
 });

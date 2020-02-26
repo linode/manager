@@ -39,7 +39,10 @@ export const useFirewallDevices = (firewallID: number): UseDevicesProps => {
     (state: ApplicationState) =>
       state.firewallDevices[firewallID] ?? { ...defaultState }
   );
-  const requestDevices = () => dispatch(getAllFirewallDevices({ firewallID }));
+  const requestDevices = () =>
+    dispatch(getAllFirewallDevices({ firewallID })).then(
+      response => response.data
+    );
   const addDevice = (newDevice: FirewallDevicePayload) =>
     dispatch(addFirewallDevice({ firewallID, ...newDevice }));
   const removeDevice = (deviceID: number) =>
