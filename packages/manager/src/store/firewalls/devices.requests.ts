@@ -18,7 +18,7 @@ const requestAll = (payload: GetDevicesPayload) =>
     _get(firewallID, passedParams, passedFilter)
   )(payload.params, payload.filters).then(response => response.data);
 
-export const getAllFirewalls = createRequestThunk(
+export const getAllFirewallDevices = createRequestThunk(
   getAllFirewallDevicesActions,
   requestAll
 );

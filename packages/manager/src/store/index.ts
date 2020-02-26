@@ -49,6 +49,10 @@ import firewalls, {
   defaultState as defaultFirewallState,
   State as FirewallState
 } from 'src/store/firewalls/firewalls.reducer';
+import firewallDevices, {
+  defaultState as defaultFirewallDevicesState,
+  State as FirewallDevicesState
+} from 'src/store/firewalls/firewalls.reducer';
 import globalErrors, {
   defaultState as defaultGlobalErrorState,
   State as GlobalErrorState
@@ -222,6 +226,7 @@ export interface ApplicationState {
   preferences: PreferencesState;
   initialLoad: InitialLoadState;
   firewalls: FirewallState;
+  firewallDevices: FirewallDevicesState;
   globalErrors: GlobalErrorState;
   longviewClients: LongviewState;
   longviewStats: LongviewStatsState;
@@ -242,6 +247,7 @@ const defaultState: ApplicationState = {
   preferences: preferencesState,
   initialLoad: initialLoadState,
   firewalls: defaultFirewallState,
+  firewallDevices: defaultFirewallDevicesState,
   globalErrors: defaultGlobalErrorState,
   longviewClients: defaultLongviewState,
   longviewStats: defaultLongviewStatsState
@@ -288,6 +294,7 @@ const reducers = combineReducers<ApplicationState>({
   preferences,
   initialLoad,
   firewalls,
+  firewallDevices,
   globalErrors,
   longviewClients: longview,
   longviewStats
