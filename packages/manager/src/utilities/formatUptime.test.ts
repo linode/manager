@@ -39,4 +39,21 @@ describe('Formatting uptime', () => {
       )
     ).toMatch('438d 10h 15m');
   });
+
+  it('should ignore seconds for longer durations', () => {
+    expect(
+      formatUptime(
+        moment
+          .duration({
+            years: 1,
+            months: 2,
+            days: 12,
+            hours: 8,
+            minutes: 15,
+            seconds: 54
+          })
+          .asSeconds()
+      )
+    ).toMatch('438d 8h 15m');
+  });
 });
