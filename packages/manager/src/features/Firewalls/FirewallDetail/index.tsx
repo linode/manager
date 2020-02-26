@@ -1,3 +1,4 @@
+import { getFirewallDevices } from 'linode-js-sdk/lib/firewalls';
 import * as React from 'react';
 import {
   matchPath,

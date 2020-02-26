@@ -111,10 +111,10 @@ export interface EntitiesAsObjectState<T> {
  */
 export type RelationalDataSet<T extends {}, E = EntityError> = Record<
   string,
-  Partial<{
+  {
     data: T;
     loading: boolean;
     error: E;
     lastUpdated: number;
-  }>
+  }
 >;

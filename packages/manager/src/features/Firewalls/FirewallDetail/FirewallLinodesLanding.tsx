@@ -6,6 +6,7 @@ import { compose } from 'recompose';
 // const useStyles = makeStyles((theme: Theme) => ({
 //   root: {}
 // }))
+import Typography from 'src/components/core/Typography';
 
 // interface Props { }
 
@@ -14,7 +15,13 @@ type CombinedProps = RouteComponentProps;
 const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
   // const classes = useStyles();
 
-  return <h2>Firewall Linodes Landing</h2>;
+  return (
+    <>
+      <Typography>
+        The following Linodes have been assigned to this Firewall.
+      </Typography>
+    </>
+  );
 };
 
 export default compose<CombinedProps, {}>(React.memo)(FirewallLinodesLanding);
