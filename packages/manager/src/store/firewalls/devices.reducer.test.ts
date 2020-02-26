@@ -165,7 +165,9 @@ describe('Firewall devices reducer', () => {
         result: {}
       })
     );
-
-    expect(newState).toEqual(oldState);
+    // Can't just compare states because of lastUpdated variance
+    expect(newState['1'].itemsById).toEqual(oldState['1'].itemsById);
+    expect(newState['1'].results).toEqual(oldState['1'].results);
+    expect(newState['1'].error).toEqual(oldState['1'].error);
   });
 });
