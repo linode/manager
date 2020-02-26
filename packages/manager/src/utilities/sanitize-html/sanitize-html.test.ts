@@ -51,20 +51,20 @@ describe('should escape unwanted blacklisted tags', () => {
   it('Form escaped + not self closing', () => {
     expect(sanitizeHTML('<form></form>')).toBe(ecapedForm);
   });
-  const escapedForm2 = `&lt;form&gt;Username:&lt;input&gt;test&lt;/input&gt;&lt;/form&gt;`;
+  const escapedForm2 = `&lt;form&gt;Username:&lt;input&gt;&lt;/form&gt;`;
 
   xit('form and input should pass', () => {
     // Here currently with an open issue on sanitize html
     // https://github.com/apostrophecms/sanitize-html/issues/334
     const form = `<form>Username:
-    <input type="username" name="username">test</input></form>`;
+    <input type="username" name="username"></form>`;
     expect(sanitizeHTML(form)).toBe(escapedForm2);
   });
 
   it('form and input passes', () => {
     const form = `<form action="http://192.168.149.128">Username:
-    <input type="username" name="username">test</input></form>`;
-    expect(sanitizeHTML(form)).toBe('test&lt;/form&gt;');
+    <input type="username" name="username"></form>`;
+    expect(sanitizeHTML(form)).toBe('&lt;/form&gt;');
   });
 
   /** AC change to sanitizehtml 1.21 instead of patch
