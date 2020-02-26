@@ -80,7 +80,7 @@
     "typescript-fsa-reducers": "^1.2.0",
     "xml2js": "^0.4.19",
     "xterm": "^4.2.0",
-    "yup": "^0.26.3"
+    "yup": "^0.27.0"
   },
   "scripts": {
     "postinstall": "patch-package",
