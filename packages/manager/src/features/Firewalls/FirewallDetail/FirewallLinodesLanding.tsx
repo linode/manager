@@ -3,6 +3,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import AddNewLink from 'src/components/AddNewLink';
+import Box from 'src/components/core/Box';
 // import { makeStyles, Theme } from 'src/components/core/styles'
 
 // const useStyles = makeStyles((theme: Theme) => ({
@@ -34,11 +35,18 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
       <Typography>
         The following Linodes have been assigned to this Firewall.
       </Typography>
-      <AddNewLink
-        onClick={() => null}
-        disabled={true}
-        label="Add Linodes to Firewall"
-      />
+      <Box
+        display="flex"
+        flexDirection="row"
+        alignItems="flex-end"
+        justifyContent="flex-end"
+      >
+        <AddNewLink
+          onClick={() => null}
+          disabled={true}
+          label="Add Linodes to Firewall"
+        />
+      </Box>
       <FirewallDevicesTable
         devices={deviceList}
         error={devices.error.read}

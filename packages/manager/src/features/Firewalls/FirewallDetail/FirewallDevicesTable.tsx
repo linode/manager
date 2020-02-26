@@ -3,7 +3,6 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
@@ -14,21 +13,6 @@ import Table from 'src/components/Table';
 import TableContentWrapper from 'src/components/TableContentWrapper.tsx';
 import TableSortCell from 'src/components/TableSortCell';
 import FirewallDeviceRow from './FirewallDeviceRow';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  labelCell: {
-    width: '25%'
-  },
-  statusCell: {
-    width: '15%'
-  },
-  ruleCell: {
-    width: '25%'
-  },
-  linodeCell: {
-    width: '25%'
-  }
-}));
 
 interface Props {
   devices: FirewallDevice[];
@@ -42,7 +26,6 @@ type CombinedProps = Props;
 
 const FirewallTable: React.FC<CombinedProps> = props => {
   const { devices, error, lastUpdated, loading, triggerRemoveDevice } = props;
-  const classes = useStyles();
 
   return (
     <React.Fragment>
@@ -68,7 +51,6 @@ const FirewallTable: React.FC<CombinedProps> = props => {
                           direction={order}
                           handleClick={handleOrderChange}
                           data-qa-firewall-device-linode-header
-                          className={classes.labelCell}
                         >
                           Linode
                         </TableSortCell>
