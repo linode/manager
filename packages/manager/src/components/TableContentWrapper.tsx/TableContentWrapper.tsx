@@ -11,12 +11,13 @@ interface Props {
   loading: boolean;
   lastUpdated: number;
   error?: APIError[];
+  emptyMessage?: string;
 }
 
 type CombinedProps = Props;
 
 const TableContentWrapper: React.FC<CombinedProps> = props => {
-  const { length, loading, error, lastUpdated } = props;
+  const { length, loading, emptyMessage, error, lastUpdated } = props;
 
   if (loading && lastUpdated === 0) {
     return <TableRowLoading colSpan={6} firstColWidth={25} oneLine />;
@@ -31,7 +32,10 @@ const TableContentWrapper: React.FC<CombinedProps> = props => {
 
   if (lastUpdated !== 0 && length === 0) {
     return (
-      <TableRowEmpty colSpan={6} message="You do not have any Firewalls" />
+      <TableRowEmpty
+        colSpan={6}
+        message={emptyMessage ?? 'No data to display.'}
+      />
     );
   }
 
