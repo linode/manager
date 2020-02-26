@@ -102,7 +102,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
         /**
          * 1. Convert versions to Items
          * 2. Sort descending (so newest version is at top)
-         * 3. Pre-select the newest version
+         * // 3. Pre-select the newest version <--- do this someday, but not now
          */
         const versionOptions = response.data
           .map(eachVersion => ({
@@ -111,8 +111,8 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
           }))
           .sort(sortByLabelDescending);
         this.setState({
-          versionOptions,
-          version: versionOptions[0]
+          versionOptions
+          // version: versionOptions[0]
         });
       })
       .catch(error => {

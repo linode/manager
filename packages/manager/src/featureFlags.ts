@@ -13,6 +13,30 @@ interface Flags {
   lkeHideButtons: boolean;
   firewalls: boolean;
   oneClickApps: OneClickApp;
+  promotionalOffers: PromotionalOffer[];
+}
+
+type PromotionalOfferFeature =
+  | 'Linodes'
+  | 'Volumes'
+  | 'NodeBalancers'
+  | 'Object Storage'
+  | 'Kubernetes';
+
+interface PromotionalOfferButton {
+  text: string;
+  href: string;
+}
+
+export interface PromotionalOffer {
+  name: string;
+  body: string;
+  footnote: string;
+  logo: string;
+  alt: string;
+  features: PromotionalOfferFeature[];
+  displayOnDashboard: boolean;
+  buttons: PromotionalOfferButton[];
 }
 
 /**

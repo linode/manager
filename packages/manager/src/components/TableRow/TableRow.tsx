@@ -129,12 +129,12 @@ interface Props {
   forceIndex?: boolean;
 }
 
-type CombinedProps = Props &
+export type CombinedProps = Props &
   _TableRowProps &
   RouteComponentProps<{}> &
   WithStyles<ClassNames>;
 
-class TableRow extends React.Component<CombinedProps> {
+export class TableRow extends React.Component<CombinedProps> {
   rowClick = (
     e: React.ChangeEvent<HTMLTableRowElement>,
     ev: React.MouseEvent<HTMLElement>, // added a second event for the purpose of capturing keyDown (open in new tab)
