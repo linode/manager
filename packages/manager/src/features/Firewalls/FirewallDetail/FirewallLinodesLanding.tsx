@@ -7,21 +7,35 @@ import { compose } from 'recompose';
 //   root: {}
 // }))
 import Typography from 'src/components/core/Typography';
+import useFirewallDevices from 'src/hooks/useFirewallDevices';
 
-// interface Props { }
+interface Props {
+  firewallID: number;
+}
 
-type CombinedProps = RouteComponentProps;
+type CombinedProps = RouteComponentProps & Props;
 
 const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
+  const { firewallID } = props;
   // const classes = useStyles();
+  const { devices, requestDevices } = useFirewallDevices(firewallID);
 
+  const deviceList = devices.itemsById ? Object.values(devices.itemsById) : [];
+  React.useEffect(() => {
+    if (devices.lastUpdated === 0 && !devices.loading) {
+      requestDevices();
+    }
+  }, [firewallID]);
   return (
     <>
       <Typography>
         The following Linodes have been assigned to this Firewall.
       </Typography>
+      <div>{deviceList.map((thisDevice: any) => thisDevice.entity.label)}</div>
     </>
   );
 };
 
-export default compose<CombinedProps, {}>(React.memo)(FirewallLinodesLanding);
+export default compose<CombinedProps, Props>(React.memo)(
+  FirewallLinodesLanding
+);

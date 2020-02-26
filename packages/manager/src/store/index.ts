@@ -45,13 +45,13 @@ import events, {
   defaultState as eventsDefaultState,
   State as EventsState
 } from 'src/store/events/event.reducer';
-import firewalls, {
-  defaultState as defaultFirewallState,
-  State as FirewallState
-} from 'src/store/firewalls/firewalls.reducer';
 import firewallDevices, {
   defaultState as defaultFirewallDevicesState,
   State as FirewallDevicesState
+} from 'src/store/firewalls/devices.reducer';
+import firewalls, {
+  defaultState as defaultFirewallState,
+  State as FirewallState
 } from 'src/store/firewalls/firewalls.reducer';
 import globalErrors, {
   defaultState as defaultGlobalErrorState,

@@ -1,4 +1,7 @@
-import { FirewallDevicePayload } from 'linode-js-sdk/lib/firewalls/types';
+import {
+  FirewallDevice,
+  FirewallDevicePayload
+} from 'linode-js-sdk/lib/firewalls/types';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
@@ -7,14 +10,34 @@ import {
   getAllFirewallDevices,
   removeFirewallDevice
 } from 'src/store/firewalls/devices.requests';
+import {
+  EntityError,
+  MappedEntityState2,
+  ThunkDispatch
+} from 'src/store/types';
+
+export interface UseDevicesProps {
+  devices: MappedEntityState2<FirewallDevice, EntityError>;
+  addDevice: (newDevice: FirewallDevicePayload) => Promise<FirewallDevice>;
+  removeDevice: (deviceID: number) => Promise<{}>;
+  requestDevices: () => Promise<FirewallDevice[]>;
+}
+
+const defaultState = {
+  loading: false,
+  lastUpdated: 0,
+  itemsByID: {},
+  error: {}
+};
 
 /**
  * Hook for viewing and working with Firewall devices
  */
-export const useFirewallDevices = (firewallID: number) => {
-  const dispatch = useDispatch();
+export const useFirewallDevices = (firewallID: number): UseDevicesProps => {
+  const dispatch: ThunkDispatch = useDispatch();
   const devices = useSelector(
-    (state: ApplicationState) => state.firewallDevices[firewallID]
+    (state: ApplicationState) =>
+      state.firewallDevices[firewallID] ?? { ...defaultState }
   );
   const requestDevices = () => dispatch(getAllFirewallDevices({ firewallID }));
   const addDevice = (newDevice: FirewallDevicePayload) =>

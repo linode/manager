@@ -6,7 +6,9 @@ import { APIError } from 'linode-js-sdk/lib/types';
 
 import actionCreatorFactory from 'typescript-fsa';
 
-export const actionCreator = actionCreatorFactory(`@@manager/firewalls`);
+export const actionCreator = actionCreatorFactory(
+  `@@manager/firewalls/devices`
+);
 
 export interface GetDevicesPayload {
   firewallID: number;

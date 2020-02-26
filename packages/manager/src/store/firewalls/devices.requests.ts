@@ -14,8 +14,8 @@ import {
 } from './devices.actions';
 
 const requestAll = (payload: GetDevicesPayload) =>
-  getAll<FirewallDevice>(({ firewallID, passedParams, passedFilter }) =>
-    _get(firewallID, passedParams, passedFilter)
+  getAll<FirewallDevice>(({ passedParams, passedFilter }) =>
+    _get(payload.firewallID, passedParams, passedFilter)
   )(payload.params, payload.filters).then(response => response.data);
 
 export const getAllFirewallDevices = createRequestThunk(
