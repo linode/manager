@@ -9389,7 +9389,7 @@ html-to-text@3.3.0:
     underscore "^1.8.3"
     underscore.string "^3.2.3"
 
-html-webpack-plugin@^4.0.0-beta.11, html-webpack-plugin@^4.0.0-beta.2:
+html-webpack-plugin@^4.0.0-beta.2, html-webpack-plugin@^4.0.0-beta.5:
   version "4.0.0-beta.11"
   resolved "https://registry.yarnpkg.com/html-webpack-plugin/-/html-webpack-plugin-4.0.0-beta.11.tgz#3059a69144b5aecef97708196ca32f9e68677715"
   integrity sha512-4Xzepf0qWxf8CGg7/WQM5qBB2Lc/NFI7MhU59eUDTkuQp3skZczH4UA1d6oQyDEIoMDgERVhRyTdtUPZ5s5HBg==
