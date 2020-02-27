@@ -147,11 +147,9 @@ export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = prop
         </Tabs>
       </AppBar>
       {objPromotionalOffers.map(promotionalOffer => (
-        <PromotionalOfferCard
-          key={promotionalOffer.name}
-          {...promotionalOffer}
-          fullWidth
-        />
+        <div style={{ marginBottom: 4 }} key={promotionalOffer.name}>
+          <PromotionalOfferCard {...promotionalOffer} fullWidth />
+        </div>
       ))}
       <Switch>
         <Route
