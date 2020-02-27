@@ -79,15 +79,6 @@ class SearchBar extends React.Component<CombinedProps, State> {
     menuOpen: false
   };
 
-  dataAvailable() {
-    return (
-      this.state.linodes ||
-      this.state.volumes ||
-      this.state.nodebalancers ||
-      this.state.domains
-    );
-  }
-
   handleSearchChange = (searchText: string): void => {
     this.setState({ searchText });
 
