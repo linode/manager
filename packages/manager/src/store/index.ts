@@ -69,6 +69,7 @@ import linodeCreateReducer, {
   defaultState as linodeCreateDefaultState,
   State as LinodeCreateState
 } from 'src/store/linodeCreate/linodeCreate.reducer';
+import linodeConfigEvents from 'src/store/linodes/config/config.events';
 import linodeConfigs, {
   defaultState as defaultLinodeConfigsState,
   State as LinodeConfigsState
@@ -304,7 +305,8 @@ const enhancers = compose(
       nodeBalancerEvents,
       nodeBalancerConfigEvents,
       volumeEvents,
-      diskEvents
+      diskEvents,
+      linodeConfigEvents
     )
   ),
   reduxDevTools ? reduxDevTools() : (f: any) => f
