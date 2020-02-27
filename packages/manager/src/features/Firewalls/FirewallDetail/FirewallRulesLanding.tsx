@@ -30,10 +30,10 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         permitted by a rule is blocked.
       </Typography>
       <div className={classes.table}>
-        <FirewallRuleTable ruleType="inbound" />
+        <FirewallRuleTable category="inbound" />
       </div>
       <div className={classes.table}>
-        <FirewallRuleTable ruleType="outbound" />
+        <FirewallRuleTable category="outbound" />
       </div>
     </>
   );

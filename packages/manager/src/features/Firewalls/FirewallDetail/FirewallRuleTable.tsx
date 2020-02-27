@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-type RuleType = 'inbound' | 'outbound';
+type Category = 'inbound' | 'outbound';
 
 interface RuleRow {
   type: string;
@@ -47,7 +47,7 @@ interface RuleRow {
 }
 
 interface Props {
-  ruleType: RuleType;
+  category: Category;
 }
 
 type CombinedProps = Props;
@@ -56,7 +56,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const addressColumnLabel =
-    props.ruleType === 'inbound' ? 'sources' : 'destinations';
+    props.category === 'inbound' ? 'sources' : 'destinations';
 
   // @todo: Use real data.
   const rowData = firewallRuleToRowData(MOCK_RULES);
@@ -65,12 +65,12 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
     <>
       <div className={classes.header}>
         <Typography variant="h2">{`${capitalize(
-          props.ruleType
+          props.category
         )} Rules`}</Typography>
         <AddNewLink
           // @todo: Use real handlers.
           onClick={() => alert("This doesn't do anything yet.")}
-          label={`Add an ${capitalize(props.ruleType)} Rule`}
+          label={`Add an ${capitalize(props.category)} Rule`}
         />
       </div>
       <OrderBy data={rowData} orderBy={'type'} order={'asc'}>

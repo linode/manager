@@ -152,19 +152,20 @@ export const predefinedFirewallFromRule = (
     return undefined;
   }
 
-  if (ports === portPresets.ssh) {
-    return 'ssh';
-  } else if (ports === portPresets.http) {
-    return 'http';
-  } else if (ports === portPresets.https) {
-    return 'https';
-  } else if (ports === portPresets.mysql) {
-    return 'mysql';
-  } else if (ports === portPresets.dns) {
-    return 'dns';
+  switch (ports) {
+    case portPresets.ssh:
+      return 'ssh';
+    case portPresets.http:
+      return 'http';
+    case portPresets.https:
+      return 'https';
+    case portPresets.mysql:
+      return 'mysql';
+    case portPresets.dns:
+      return 'dns';
+    default:
+      return undefined;
   }
-
-  return undefined;
 };
 
 export const allowsAllIPs = (addresses: FirewallRuleType['addresses']) =>

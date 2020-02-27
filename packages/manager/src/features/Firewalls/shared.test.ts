@@ -77,6 +77,9 @@ describe('predefinedFirewallFromRule', () => {
 describe('generateAddressLabel', () => {
   it('includes the All IPv4 label if appropriate', () => {
     expect(generateAddressesLabel(addresses).includes('All IPv4')).toBe(true);
+    expect(generateAddressesLabel(limitedAddresses).includes('All IPv4')).toBe(
+      false
+    );
   });
 
   it("doesn't include other IPv4 addresses if ALL are also specified", () => {
