@@ -14,6 +14,7 @@ import {
   CreateVolumeRequest,
   deleteVolume,
   detachVolume,
+  getAllVolumes,
   resizeVolume,
   updateVolume
 } from 'src/store/volume/volume.requests';
@@ -26,17 +27,16 @@ export interface VolumesRequests {
   detachVolume: (volumeId: VolumeId) => Promise<{}>;
   cloneVolume: (params: CloneVolumeParams) => Promise<Volume>;
   resizeVolume: (params: ResizeVolumeParams) => Promise<Volume>;
+  getAllVolumes: () => Promise<Volume[]>;
 }
 
-export default connect(
-  undefined,
-  {
-    createVolume,
-    updateVolume,
-    deleteVolume,
-    attachVolume,
-    detachVolume,
-    cloneVolume,
-    resizeVolume
-  }
-);
+export default connect(undefined, {
+  createVolume,
+  updateVolume,
+  deleteVolume,
+  attachVolume,
+  detachVolume,
+  cloneVolume,
+  resizeVolume,
+  getAllVolumes
+});

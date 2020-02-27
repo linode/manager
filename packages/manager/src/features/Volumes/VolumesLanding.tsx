@@ -239,7 +239,12 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   ];
 
   componentDidMount() {
+    const { getAllVolumes, volumesLastUpdated } = this.props;
     this.mounted = true;
+    // If we haven't requested Volumes, or it's been a while, request them
+    if (Date.now() - volumesLastUpdated > 60000) {
+      getAllVolumes();
+    }
   }
 
   componentWillUnmount() {
@@ -708,7 +713,13 @@ export default compose<CombinedProps, Props>(
   })),
   withLinodes(),
   withVolumes(
-    (ownProps: CombinedProps, volumesData, volumesLoading, volumesError) => {
+    (
+      ownProps: CombinedProps,
+      volumesData,
+      volumesLoading,
+      volumesLastUpdated,
+      volumesError
+    ) => {
       const mappedVolumesDataWithLinodes = volumesData.map(volume => {
         const volumeWithLinodeData = addAttachedLinodeInfoToVolume(
           volume,
@@ -724,6 +735,7 @@ export default compose<CombinedProps, Props>(
         volumesData,
         mappedVolumesDataWithLinodes,
         volumesLoading,
+        volumesLastUpdated,
         volumesError
       };
     }
