@@ -5,6 +5,7 @@ import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import { getAllBuckets } from 'src/store/bucket/bucket.requests';
+import { requestDomains } from 'src/store/domains/domains.requests';
 import { getEvents } from 'src/store/events/event.request';
 import { getAllFirewalls } from 'src/store/firewalls/firewalls.requests';
 import { requestImages } from 'src/store/image/image.requests';
@@ -29,6 +30,7 @@ export type ReduxEntity =
   | 'volumes'
   | 'account'
   | 'accountSettings'
+  | 'domains'
   | 'images'
   | 'kubernetes'
   | 'managed'
@@ -49,6 +51,7 @@ const requestMap: RequestMap = {
   volumes: getAllVolumes,
   account: requestAccount,
   accountSettings: requestAccountSettings,
+  domains: requestDomains,
   nodeBalancers: getAllNodeBalancers,
   images: requestImages,
   events: getEvents,
