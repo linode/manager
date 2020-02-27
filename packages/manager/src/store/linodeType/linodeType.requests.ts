@@ -5,7 +5,7 @@ import {
 } from 'linode-js-sdk/lib/linodes';
 import cachedTypes from 'src/cachedData/types.json';
 import cachedDeprecatedTypes from 'src/cachedData/typesLegacy.json';
-import { isProduction } from 'src/constants';
+import { isProdAPI } from 'src/constants';
 import { ThunkActionCreator } from 'src/store/types';
 import { getAll } from 'src/utilities/getAll';
 import { getLinodeTypesActions } from './linodeType.actions';
@@ -19,7 +19,7 @@ export const requestTypes: RequestTypesThunk = () => dispatch => {
    * NOTE: We don't rely on cached data in non-production environments,
    * since it may not match dev/staging API data.
    */
-  if (isProduction && cachedTypes.data && cachedDeprecatedTypes.data) {
+  if (isProdAPI && cachedTypes.data && cachedDeprecatedTypes.data) {
     return dispatch(
       getLinodeTypesActions.done({
         result: [...cachedTypes.data, ...cachedDeprecatedTypes.data]
