@@ -139,7 +139,8 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
       lastUpdated,
       clustersError,
       clusters,
-      nodePoolsLoading
+      nodePoolsLoading,
+      nodePoolsError
     };
   }, mapDispatchToProps);
 
