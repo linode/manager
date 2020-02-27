@@ -19,14 +19,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column',
-    padding: theme.spacing(2),
+    paddingBottom: 4,
     backgroundColor: theme.bg.main
   },
   fullWidth: {
     flexDirection: 'row',
     alignContent: 'center',
     justifyContent: 'flex-start',
-    padding: theme.spacing(1),
     '& svg': {
       marginRight: theme.spacing(2),
       marginBottom: theme.spacing(1) - 2
