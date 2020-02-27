@@ -76,6 +76,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export interface Props extends PromotionalOffer {
   fullWidth?: boolean;
+  className?: string;
 }
 
 type CombinedProps = Props;
@@ -99,7 +100,9 @@ export const PromotionalOfferCard: React.FC<CombinedProps> = props => {
     <Paper
       className={classnames({
         [classes.root]: true,
-        [classes.fullWidth]: props.fullWidth
+        [classes.fullWidth]: props.fullWidth,
+        // Inject the className if given as as prop.
+        [props.className ?? '']: Boolean(props.className)
       })}
     >
       {Logo && (
