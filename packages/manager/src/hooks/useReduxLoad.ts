@@ -89,7 +89,6 @@ export const useReduxLoad = <T>(
     }
 
     if (requests.length === 0) {
-      setLoading(false);
       return;
     }
 
