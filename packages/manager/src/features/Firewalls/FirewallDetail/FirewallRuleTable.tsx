@@ -19,10 +19,9 @@ import {
   predefinedFirewallFromRule as ruleToPredefinedFirewall
 } from '../shared';
 
+// Use mock data for now.
+// @todo: use real data.
 const MOCK_RULES = firewallRuleFactory.buildList(4);
-
-// ALTER THESE VALUES TO TRY OUT DIFFERENT DISPLAYS.
-// @todo: remove before merge.
 MOCK_RULES[1].ports = '443';
 MOCK_RULES[2].protocol = 'UDP';
 MOCK_RULES[2].addresses = {
