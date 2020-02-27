@@ -12,6 +12,7 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableContentWrapper from 'src/components/TableContentWrapper.tsx';
 import TableSortCell from 'src/components/TableSortCell';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import FirewallDeviceRow from './FirewallDeviceRow';
 
 interface Props {
@@ -26,6 +27,12 @@ type CombinedProps = Props;
 
 const FirewallTable: React.FC<CombinedProps> = props => {
   const { devices, error, lastUpdated, loading, triggerRemoveDevice } = props;
+
+  const _error =
+    error && lastUpdated === 0
+      ? // @todo change to Devices or make dynamic when NBs are possible as Devices
+        getAPIErrorOrDefault(error, 'Unable to retrieve Linodes')
+      : undefined;
 
   return (
     <React.Fragment>
@@ -60,7 +67,7 @@ const FirewallTable: React.FC<CombinedProps> = props => {
                       <TableContentWrapper
                         length={paginatedAndOrderedData.length}
                         loading={loading && lastUpdated === 0}
-                        error={error && lastUpdated === 0 ? error : undefined}
+                        error={_error}
                         lastUpdated={lastUpdated}
                       >
                         {paginatedAndOrderedData.map(thisDevice => (

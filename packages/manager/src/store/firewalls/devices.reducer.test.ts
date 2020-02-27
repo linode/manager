@@ -68,6 +68,7 @@ describe('Firewall devices reducer', () => {
     );
 
     expect(newState['1'].error).toHaveProperty('read', mockError);
+    expect(newState['1']).toHaveProperty('loading', false);
   });
 
   it('should handle an add.started action', () => {

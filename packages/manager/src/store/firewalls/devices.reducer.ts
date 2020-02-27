@@ -47,6 +47,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       draft = ensureInitializedNestedState(draft, firewallID, { results: 0 });
 
       draft[firewallID].error.read = error;
+      draft[firewallID].loading = false;
     }
 
     if (isType(action, addFirewallDeviceActions.started)) {
