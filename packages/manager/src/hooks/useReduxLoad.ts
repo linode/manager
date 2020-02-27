@@ -1,6 +1,7 @@
 import * as Bluebird from 'bluebird';
 import { useEffect, useState } from 'react';
 import { useDispatch, useStore } from 'react-redux';
+import { STALE_DATA_LIMIT } from 'src/constants';
 import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
@@ -66,7 +67,7 @@ const requestMap: RequestMap = {
 
 export const useReduxLoad = <T>(
   deps: ReduxEntity[] = [],
-  refreshInterval: number = 60000
+  refreshInterval: number = STALE_DATA_LIMIT
 ): UseReduxPreload => {
   const [_loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();

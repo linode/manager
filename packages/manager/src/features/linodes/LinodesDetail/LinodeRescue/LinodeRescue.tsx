@@ -20,7 +20,11 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
+import { STALE_DATA_LIMIT } from 'src/constants';
 import withVolumes from 'src/containers/volumes.container';
+import withVolumesRequests, {
+  VolumesRequests
+} from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { MapState } from 'src/store/types';
@@ -69,6 +73,7 @@ interface StateProps {
 interface VolumesProps {
   volumesData: ExtendedVolume[];
   volumesError?: string;
+  volumesLastUpdated: number;
 }
 
 interface State {
@@ -86,6 +91,7 @@ type CombinedProps = VolumesProps &
   StateProps &
   ContextProps &
   WithStyles<ClassNames> &
+  VolumesRequests &
   WithSnackbarProps;
 
 interface DeviceMap {
@@ -158,6 +164,13 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
       counter: initialCounter,
       rescueDevices: deviceMap
     };
+  }
+
+  componentDidMount() {
+    const { getAllVolumes, volumesLastUpdated } = this.props;
+    if (Date.now() - volumesLastUpdated > STALE_DATA_LIMIT) {
+      getAllVolumes();
+    }
   }
 
   onSubmit = () => {
@@ -323,6 +336,7 @@ export default compose<CombinedProps, {}>(
   SectionErrorBoundary,
   styled,
   withSnackbar,
+  withVolumesRequests,
   withVolumes(
     (
       ownProps,
@@ -341,7 +355,8 @@ export default compose<CombinedProps, {}>(
       return {
         ...ownProps,
         volumesData: mappedData,
-        volumesError: _error
+        volumesError: _error,
+        volumesLastUpdated
       };
     }
   ),

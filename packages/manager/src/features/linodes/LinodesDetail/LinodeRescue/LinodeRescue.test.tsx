@@ -26,6 +26,14 @@ describe('LinodeRescue', () => {
       <LinodeRescue
         closeSnackbar={jest.fn()}
         enqueueSnackbar={jest.fn()}
+        createVolume={jest.fn()}
+        attachVolume={jest.fn()}
+        detachVolume={jest.fn()}
+        deleteVolume={jest.fn()}
+        cloneVolume={jest.fn()}
+        updateVolume={jest.fn()}
+        resizeVolume={jest.fn()}
+        getAllVolumes={jest.fn()}
         classes={{
           root: '',
           title: '',
@@ -35,6 +43,7 @@ describe('LinodeRescue', () => {
         linodeId={7843027}
         linodeRegion="us-east"
         volumesData={extendedVolumes}
+        volumesLastUpdated={1}
         linodeLabel=""
         permissions="read_write"
       />

@@ -93,8 +93,7 @@ export const addMany = <E extends Entity, O = APIError[] | undefined>(
   return {
     ...state,
     itemsById,
-    items: keys(itemsById),
-    lastUpdated: Date.now()
+    items: keys(itemsById)
   };
 };
 

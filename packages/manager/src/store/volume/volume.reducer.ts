@@ -128,6 +128,16 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   if (isType(action, getVolumesPageActions.done)) {
     const { result } = action.payload;
     return addMany(result, state);
+    /**
+     * NOTE: getPage actions shouldn't update lastUpdated,
+     * since they don't constitute a full update to the store.
+     *
+     * We rely on this quirk to determine if we have full data
+     * for this entity type in the store or if we should request it.
+     *
+     * Alternatively, we could add a _cached or similar to the state
+     * and rely on that.
+     */
   }
 
   if (isType(action, getVolumesPageActions.failed)) {
