@@ -16,6 +16,6 @@
 export const truncateAndJoinList = (strList: string[], max = 100) => {
   const count = strList.length;
   return count > max
-    ? strList.slice(0, max).join(', ') + `...and ${count - max} more`
+    ? strList.slice(0, max).join(', ') + `, plus ${count - max} more`
     : strList.join(', ');
 };

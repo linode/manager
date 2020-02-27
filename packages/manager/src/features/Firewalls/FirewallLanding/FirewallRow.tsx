@@ -4,11 +4,11 @@ import {
   getFirewallDevices as _getDevices
 } from 'linode-js-sdk/lib/firewalls';
 import { APIError } from 'linode-js-sdk/lib/types';
-import { take } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import { truncateAndJoinList } from 'src/utilities/stringUtils';
 import ActionMenu, { ActionHandlers } from './FirewallActionMenu';
 
 interface Props extends ActionHandlers {
@@ -125,15 +125,8 @@ const getLinodesCellString = (
     return 'None assigned';
   }
 
-  const howManyDevicesMinusThree = data.length - 3;
-
-  const firstThreeLabels = take(3, data).map(
-    (e: FirewallDevice) => e.entity.label
-  );
-
-  return howManyDevicesMinusThree > 0
-    ? `${firstThreeLabels.join(', ')}, plus ${howManyDevicesMinusThree} more`
-    : firstThreeLabels.join(', ');
+  const deviceLabels = data.map(thisDevice => thisDevice.entity.label);
+  return truncateAndJoinList(deviceLabels, 3);
 };
 
 export default compose<CombinedProps, Props>(React.memo)(FirewallRow);

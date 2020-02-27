@@ -8,7 +8,10 @@ import {
 export const firewallRuleFactory = Factory.Sync.makeFactory<FirewallRuleType>({
   ports: '22',
   protocol: 'TCP',
-  addresses: {}
+  addresses: {
+    ipv4: ['0.0.0.0/0'],
+    ipv6: ['::0/0']
+  }
 });
 
 export const firewallRulesFactory = Factory.Sync.makeFactory<FirewallRules>({

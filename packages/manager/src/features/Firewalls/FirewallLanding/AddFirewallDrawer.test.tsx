@@ -8,7 +8,7 @@ const rule2 = firewallRulesFactory.build();
 const sampleRulesMap = {
   a: rule1,
   b: rule2
-};
+} as any;
 
 const makeItems = (items: string[]) => {
   return items.map(thisItem => ({

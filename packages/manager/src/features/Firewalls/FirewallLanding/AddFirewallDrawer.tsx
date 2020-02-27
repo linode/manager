@@ -2,20 +2,17 @@ import { Formik, FormikBag } from 'formik';
 import {
   CreateFirewallPayload,
   CreateFirewallSchema,
-  Firewall,
-  FirewallRules
+  Firewall
 } from 'linode-js-sdk/lib/firewalls';
 import { equals } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer, { DrawerProps } from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-
 import withLinodes, {
   Props as LinodeProps
 } from 'src/containers/withLinodes.container';
@@ -23,8 +20,11 @@ import {
   handleFieldErrors,
   handleGeneralErrors
 } from 'src/utilities/formikErrorUtils';
-
-import { firewallOptionItems, predefinedFirewalls } from '../shared';
+import {
+  firewallOptionItems,
+  PredefinedFirewall,
+  predefinedFirewalls
+} from '../shared';
 
 /* tslint:disable-next-line */
 interface Props extends Omit<DrawerProps, 'onClose' | 'onSubmit'> {
@@ -61,7 +61,7 @@ const defaultRules = {
 };
 export const mergeRules = (
   selectedRules: Item<string>[],
-  rules: Record<string, FirewallRules> = predefinedFirewalls
+  rules: Record<string, PredefinedFirewall> = predefinedFirewalls
 ) => {
   if (selectedRules.length === 0) {
     return {};
