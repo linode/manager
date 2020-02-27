@@ -59,8 +59,8 @@ const FirewallTable: React.FC<CombinedProps> = props => {
                     <TableBody>
                       <TableContentWrapper
                         length={paginatedAndOrderedData.length}
-                        loading={loading}
-                        error={error}
+                        loading={loading && lastUpdated === 0}
+                        error={error && lastUpdated === 0 ? error : undefined}
                         lastUpdated={lastUpdated}
                       >
                         {paginatedAndOrderedData.map(thisDevice => (

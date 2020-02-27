@@ -19,14 +19,11 @@ type CombinedProps = Props;
 const TableContentWrapper: React.FC<CombinedProps> = props => {
   const { length, loading, emptyMessage, error, lastUpdated } = props;
 
-  if (loading && lastUpdated === 0) {
+  if (loading) {
     return <TableRowLoading colSpan={6} firstColWidth={25} oneLine />;
   }
 
-  /**
-   * only display error if we don't already have data
-   */
-  if (error && lastUpdated === 0) {
+  if (error) {
     return <TableRowError colSpan={6} message={error[0].reason} />;
   }
 
