@@ -132,7 +132,7 @@ const RenderData: React.StatelessComponent<RenderDataProps> = props => {
       {data.map(bucket => (
         <BucketTableRow
           {...bucket}
-          key={bucket.label}
+          key={`${bucket.label}-${bucket.cluster}`}
           onRemove={() => onRemove(bucket)}
         />
       ))}
