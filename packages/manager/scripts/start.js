@@ -64,7 +64,6 @@ choosePort(HOST, DEFAULT_PORT)
     // This config proxies the request to API
     // the goal is to make Cypress believe we are not changing domain
     const alternateProxyConfigForCypress= {
-        // '/api/**':{target:'https://api.linode.com', secure:false}
         '/api/v4':{
           target: 'https://api.linode.com', // target host
           changeOrigin: true, // needed for virtual hosted sites
