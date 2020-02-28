@@ -1,7 +1,7 @@
 import strings from '../support/cypresshelpers';
-import '@testing-library/cypress/add-commands'
+import '@testing-library/cypress/add-commands';
 
-const testLinodeNamePreffix = 'cy-test-'
+const testLinodeNamePreffix = 'cy-test-';
 
 
 describe('cypress e2e poc', () => {
@@ -44,7 +44,6 @@ describe('cypress e2e poc', () => {
       }
     ).as('deleteLinode');
 
-
       cy.visit('/linodes');
       /** Here we cannot factorixe the result of the selector
        *  in a variable as this is a chain of action and not an element
@@ -74,6 +73,8 @@ describe('cypress e2e poc', () => {
         // Thanks to this we can use cy.server, cy.route and cy.wait
         cy.wait('@deleteLinode').its('status').should('be',200);
         cy.url().should('contain','/linodes');
+        cy.go('back');
+        cy.findByText('Not found');
       });
     
   });
