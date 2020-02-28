@@ -18,10 +18,7 @@ import withFeatureFlagConsumer, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container';
 import { MapState } from 'src/store/types';
-import {
-  isKubernetesEnabled,
-  isObjectStorageEnabled
-} from 'src/utilities/accountCapabilities';
+import { isKubernetesEnabled } from 'src/utilities/accountCapabilities';
 import { sendOneClickNavigationEvent } from 'src/utilities/ga';
 import AdditionalMenuItems from './AdditionalMenuItems';
 import styled, { StyleProps } from './PrimaryNav.styles';
@@ -145,20 +142,6 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
 
     return [
       {
-        conditionToAdd: () => isObjectStorageEnabled(accountCapabilities),
-        insertAfter: 'Volumes',
-        link: {
-          display: 'Object Storage',
-          href: '/object-storage/buckets',
-          activeLinks: [
-            '/object-storage/buckets',
-            '/object-storage/access-keys'
-          ],
-          key: 'object-storage',
-          icon: <Storage />
-        }
-      },
-      {
         conditionToAdd: () => isManagedAccount,
         insertAfter: 'Longview',
         link: {
@@ -226,6 +209,13 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
         href: '/volumes',
         key: 'volumes',
         icon: <Volume />
+      },
+      {
+        display: 'Object Storage',
+        href: '/object-storage/buckets',
+        activeLinks: ['/object-storage/buckets', '/object-storage/access-keys'],
+        key: 'object-storage',
+        icon: <Storage />
       },
       {
         display: 'NodeBalancers',
