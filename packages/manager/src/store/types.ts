@@ -62,7 +62,7 @@ export interface MappedEntityState2<T extends Entity, E = APIError[]> {
   error: E;
   lastUpdated: number;
   loading: boolean;
-  itemsById: EntityMap<T>;
+  itemsById: Record<string, T>;
   results: number;
 }
 

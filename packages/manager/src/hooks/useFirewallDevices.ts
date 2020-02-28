@@ -23,11 +23,12 @@ export interface UseDevicesProps {
   requestDevices: () => Promise<FirewallDevice[]>;
 }
 
-const defaultState = {
+const defaultState: MappedEntityState2<FirewallDevice, EntityError> = {
   loading: false,
   lastUpdated: 0,
-  itemsByID: {},
-  error: {}
+  itemsById: {},
+  error: {},
+  results: 0
 };
 
 /**
