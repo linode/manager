@@ -116,6 +116,7 @@ packages/manager/test-report.xml
 **/manager/config/staging.json
 **/manager/cypress/videos/
 **/manager/cypress/screenshots/
+packages/manager/cypress/fixtures/example.json
 
 nohup.out
 packages/manager/bundle_analyzer_report.html
