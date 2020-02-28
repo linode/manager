@@ -123,6 +123,30 @@ Any `<ActionMenu>`s rendered by the test will be simplified versions that are ea
 
 E2E tests use [Cypress](https://cypress.io).
 
+### Setup
+
+Cypress uses a configuration file in `packages/manager/config/`
+The file can be `development.json` when running `cy:e2e`
+
+This file should look like this:
+```
+{
+    "env": {
+    "clientId": "xxxx",
+    "oauthtoken": "xxxx",
+    "apiroot": "https://api.linode.com/v4",
+    "loginUrl": "https://login.linode.com/login",
+    "loginRoot": "https://login.linode.com"
+    }
+}
+```
+
+To get your OAuth token and Client ID, check [see the _Getting Started_ documentation.](GETTING_STARTED.md) in the `.env` section.
+
+This file is read by Cypress, and used to configure environment setting for the execution.
+See cypress documentation on how to check this in the UI: https://docs.cypress.io/guides/references/configuration.html#Browser
+
+
 ### Run Cypress e2e tests
 
 #### dependencies

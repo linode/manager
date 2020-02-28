@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "engines": {
     "node": ">= 10.16.0"
@@ -199,7 +199,7 @@
     "coveralls": "^3.0.2",
     "css-loader": "^2.1.0",
     "csstype": "^2.5.5",
-    "cypress": "3.8.2",
+    "cypress": "^4.0.2",
     "dotenv": "^6.2.0",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
