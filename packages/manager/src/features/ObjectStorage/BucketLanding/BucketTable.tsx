@@ -79,8 +79,8 @@ export const BucketTable: React.StatelessComponent<CombinedProps> = props => {
                     Name
                   </TableSortCell>
                   <TableSortCell
-                    active={orderBy === 'region'}
-                    label="region"
+                    active={orderBy === 'cluster'}
+                    label="cluster"
                     direction={order}
                     handleClick={handleOrderChange}
                     data-qa-region
