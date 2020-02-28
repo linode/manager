@@ -18,6 +18,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import Breadcrumb from 'src/components/Breadcrumb';
 import AppBar from 'src/components/core/AppBar';
 import Box from 'src/components/core/Box';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import DefaultLoader from 'src/components/DefaultLoader';
@@ -40,9 +41,17 @@ const AccessKeyLanding = DefaultLoader({
   loader: () => import('./AccessKeyLanding/AccessKeyLanding')
 });
 
+const useStyles = makeStyles((theme: Theme) => ({
+  promo: {
+    marginBottom: theme.spacing() / 2
+  }
+}));
+
 type CombinedProps = StateProps & DispatchProps & RouteComponentProps<{}>;
 
 export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = props => {
+  const classes = useStyles();
+
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     {
@@ -151,6 +160,7 @@ export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = prop
           key={promotionalOffer.name}
           {...promotionalOffer}
           fullWidth
+          className={classes.promo}
         />
       ))}
       <Switch>

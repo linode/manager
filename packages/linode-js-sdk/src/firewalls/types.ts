@@ -37,6 +37,8 @@ export interface FirewallDeviceEntity {
 
 export interface FirewallDevice {
   id: number;
+  created: string;
+  updated: string;
   entity: FirewallDeviceEntity;
 }
 

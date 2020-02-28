@@ -36,7 +36,21 @@ export const baseApps = {
   '401719': 'OpenVPN - Latest One-Click',
   '401697': 'WordPress - Latest One-Click',
   '595742': 'cPanel One-Click',
-  '593835': 'Plesk One-Click'
+  '593835': 'Plesk One-Click',
+  '604068': 'Shadowsocks - Latest One-Click',
+  '606691': 'LEMP - Latest One-Click',
+  '607026': 'MySQL - Latest One-Click',
+  '607034': 'Prometheus - Latest One-Click',
+  '607256': 'Grafana - Latest One-Click',
+  '607401': 'Jenkins - Latest One-Click',
+  '607433': 'Docker - Latest One-Click',
+  '607488': 'Redis One-Click',
+  '609048': 'Ruby on Rails One-Click',
+  '609175': 'Django One-Click',
+  '609195': 'MongoDB One-Click',
+  '609392': 'Flask One-Click',
+  '611376': 'PostgreSQL One-Click',
+  '611895': 'MEAN One-Click'
 };
 
 const oneClickFilter = [
