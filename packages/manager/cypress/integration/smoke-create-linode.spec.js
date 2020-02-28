@@ -36,7 +36,14 @@ describe('cypress e2e poc', () => {
 
   it('deletes test nanode',()=>{
 
-      
+    cy.server()
+    cy.route(
+      {
+        method:"DELETE",
+        url: '*/linode/instances/*'
+      }
+    ).as('deleteLinode');
+
 
       cy.visit('/linodes');
       /** Here we cannot factorixe the result of the selector
@@ -61,10 +68,11 @@ describe('cypress e2e poc', () => {
         // there is now 2 delete on the page so i use the attribute selector
         // cy.findByText('Delete').debug()
         cy.get('[data-qa-confirm-delete]').click();
-        // Here if the request was agains a local route we could spy on it wit cy.server, cy.route and cy.wait
-        // But the delete request is against api.linode.com so we just we wait for the request to succeed.
-        // Not waiting would cancel the request before it actually calls the server and deletes the linode
-        cy.wait(2000)
+        // Here if the request is against a local route 
+        // this is because we use a proxy in webpack config
+        // this redirects localhost:3000/api to api.linode.com/api
+        // Thanks to this we can use cy.server, cy.route and cy.wait
+        cy.wait('@deleteLinode').its('status').should('be',200);
         cy.url().should('contain','/linodes');
       });
     
