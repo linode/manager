@@ -19,14 +19,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column',
-    padding: theme.spacing(2),
+    paddingBottom: 4,
     backgroundColor: theme.bg.main
   },
   fullWidth: {
     flexDirection: 'row',
     alignContent: 'center',
     justifyContent: 'flex-start',
-    padding: theme.spacing(1),
     '& svg': {
       marginRight: theme.spacing(2),
       marginBottom: theme.spacing(1) - 2
@@ -77,6 +76,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export interface Props extends PromotionalOffer {
   fullWidth?: boolean;
+  className?: string;
 }
 
 type CombinedProps = Props;
@@ -100,7 +100,9 @@ export const PromotionalOfferCard: React.FC<CombinedProps> = props => {
     <Paper
       className={classnames({
         [classes.root]: true,
-        [classes.fullWidth]: props.fullWidth
+        [classes.fullWidth]: props.fullWidth,
+        // Inject the className if given as as prop.
+        [props.className ?? '']: Boolean(props.className)
       })}
     >
       {Logo && (
