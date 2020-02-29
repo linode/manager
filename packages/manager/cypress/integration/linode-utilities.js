@@ -33,7 +33,7 @@ export const makeLinodeCreateReq = (linode) =>{
         url:Cypress.env('apiroot')+'/linode/instances',
         body:linodeData,
         auth:{
-            bearer:Cypress.env("apiToken")
+            bearer:Cypress.env("apitoken")
         }
     });
 };

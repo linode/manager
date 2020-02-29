@@ -134,6 +134,7 @@ This file should look like this:
     "env": {
     "clientId": "xxxx",
     "oauthtoken": "xxxx",
+    "apitoken":"xxxx",
     "apiroot": "https://api.linode.com/v4",
     "loginUrl": "https://login.linode.com/login",
     "loginRoot": "https://login.linode.com"
