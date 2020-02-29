@@ -18,3 +18,8 @@ import './commands';
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+import {deleteTestLinodes} from '../integration/linode-utilities';
+//to delete all test linodes before all tests
+it('clean all test linodes first',()=>{
+    deleteTestLinodes();
+});

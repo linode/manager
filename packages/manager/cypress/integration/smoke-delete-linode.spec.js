@@ -1,5 +1,5 @@
 import '@testing-library/cypress/add-commands';
-import {testLinodeNamePreffix, makeLinodeCreateReq, apiCheckErrors} from './linode-utilities';
+import {getTestLinode, createLinode} from './linode-utilities';
 
 
 describe('delete linode', () => {
@@ -9,10 +9,7 @@ describe('delete linode', () => {
   });
   it('deletes test nanode',()=>{
     cy.visit('/linodes');
-    makeLinodeCreateReq().then(resp=>{
-      apiCheckErrors(resp);
-      console.log(`Created Linode ${resp.body.label} successfully`, resp);
-    });
+    createLinode();
     cy.server()
     cy.route(
       {
@@ -25,9 +22,8 @@ describe('delete linode', () => {
        *  in a variable as this is a chain of action and not an element
        *  Solution is to write the selector as a function if we want to factorize code
        */
-      const testLinode = ()=>cy.findAllByText(testLinodeNamePreffix,{exact:false}).first();
-      testLinode().invoke('text').then($linodeName =>{
-        testLinode().click();
+      getTestLinode().invoke('text').then($linodeName =>{
+        getTestLinode().click();
 
         cy.url().should('contain','/summary');
         cy.findByText($linodeName).should('exist');
