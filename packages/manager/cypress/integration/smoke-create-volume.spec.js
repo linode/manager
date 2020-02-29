@@ -1,6 +1,6 @@
 import strings from '../support/cypresshelpers';
 
-describe('cypress e2e poc', () => {
+describe('create volume', () => {
   beforeEach(() => {
     cy.login2();
   });
