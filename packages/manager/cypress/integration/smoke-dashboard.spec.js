@@ -1,6 +1,6 @@
 
 
-describe('cypress e2e poc', () => {
+describe('dashboard', () => {
   beforeEach(() => {
     cy.login2();
   });
