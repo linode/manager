@@ -47,6 +47,7 @@ interface RuleRow {
 
 interface Props {
   category: Category;
+  openDrawerForCreating: (category: 'inbound' | 'outbound') => void;
 }
 
 type CombinedProps = Props;
@@ -60,6 +61,10 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
   // @todo: Use real data.
   const rowData = firewallRuleToRowData(MOCK_RULES);
 
+  const _openDrawerForCreating = React.useCallback(() => {
+    props.openDrawerForCreating(props.category);
+  }, []);
+
   return (
     <>
       <div className={classes.header}>
@@ -67,8 +72,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
           props.category
         )} Rules`}</Typography>
         <AddNewLink
-          // @todo: Use real handlers.
-          onClick={() => alert("This doesn't do anything yet.")}
+          onClick={_openDrawerForCreating}
           label={`Add an ${capitalize(props.category)} Rule`}
         />
       </div>

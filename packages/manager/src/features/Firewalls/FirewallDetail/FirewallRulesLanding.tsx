@@ -4,6 +4,7 @@ import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import FirewallRuleTable from './FirewallRuleTable';
+import RuleDrawer from './RuleDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
@@ -22,6 +23,24 @@ type CombinedProps = RouteComponentProps;
 const FirewallRulesLanding: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
+  const [ruleCategory, setRuleCategory] = React.useState<
+    'inbound' | 'outbound'
+  >('inbound');
+
+  const [mode, setMode] = React.useState<'create' | 'edit'>('create');
+
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
+
+  const openDrawerForCreating = React.useCallback(
+    (category: 'inbound' | 'outbound') => {
+      setRuleCategory(category);
+      setIsOpen(true);
+    },
+    []
+  );
+
+  const closeDrawer = React.useCallback(() => setIsOpen(false), []);
+
   return (
     <>
       <Typography variant="body1" className={classes.copy}>
@@ -30,11 +49,23 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         permitted by a rule is blocked.
       </Typography>
       <div className={classes.table}>
-        <FirewallRuleTable category="inbound" />
+        <FirewallRuleTable
+          category="inbound"
+          openDrawerForCreating={openDrawerForCreating}
+        />
       </div>
       <div className={classes.table}>
-        <FirewallRuleTable category="outbound" />
+        <FirewallRuleTable
+          category="outbound"
+          openDrawerForCreating={openDrawerForCreating}
+        />
       </div>
+      <RuleDrawer
+        isOpen={isOpen}
+        mode={mode}
+        category={ruleCategory}
+        onClose={closeDrawer}
+      />
     </>
   );
 };

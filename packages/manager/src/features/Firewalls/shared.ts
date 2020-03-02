@@ -29,6 +29,29 @@ export const firewallOptionItems = [
   }
 ];
 
+export const firewallOptionItemsShort = [
+  {
+    label: 'SSH',
+    value: 'ssh'
+  },
+  {
+    label: 'HTTP',
+    value: 'http'
+  },
+  {
+    label: 'HTTPS',
+    value: 'https'
+  },
+  {
+    label: 'MySQL',
+    value: 'mysql'
+  },
+  {
+    label: 'DNS',
+    value: 'dns'
+  }
+];
+
 export const portPresets: Record<FirewallPreset, string> = {
   ssh: '22',
   http: '80',
