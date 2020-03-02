@@ -11,11 +11,9 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer, { DrawerProps } from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect';
+import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import withLinodes, {
-  Props as LinodeProps
-} from 'src/containers/withLinodes.container';
 import {
   handleFieldErrors,
   handleGeneralErrors
@@ -34,7 +32,7 @@ interface Props extends Omit<DrawerProps, 'onClose' | 'onSubmit'> {
 
 export type FormikProps = FormikBag<CombinedProps, CreateFirewallPayload>;
 
-type CombinedProps = Props & LinodeProps;
+type CombinedProps = Props;
 
 const initialValues: CreateFirewallPayload = {
   label: '',
@@ -88,29 +86,7 @@ export const mergeRules = (
 };
 
 const AddFirewallDrawer: React.FC<CombinedProps> = props => {
-  const {
-    getLinodes,
-    linodesLoading,
-    linodesError,
-    linodesResults,
-    linodesData,
-    linodesLastUpdated,
-    onClose,
-    onSubmit,
-    ...restOfDrawerProps
-  } = props;
-
-  const linodeError = linodesError && linodesError[0]?.reason;
-
-  const [selectAll, toggleSelectAll] = React.useState<boolean>(false);
-
-  const handleSelectLinodes = (selectedLinodes: Item<number>[]) => {
-    const hasSelectedAll = userSelectedAllLinodes(selectedLinodes);
-    toggleSelectAll(hasSelectedAll);
-    return hasSelectedAll
-      ? linodesData.map(eachLinode => eachLinode.id)
-      : selectedLinodes.map(eachValue => eachValue.value);
-  };
+  const { onClose, onSubmit, ...restOfDrawerProps } = props;
 
   const handleSelectRules = (selected: Item<string>[], cb: Function) => {
     const payload = mergeRules(selected);
@@ -210,29 +186,14 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
               }
               onBlur={handleBlur}
             />
-            <Select
-              label="Linodes"
-              name="linodes"
-              isLoading={linodesLoading}
-              errorText={linodeError || errors['devices.linodes']}
-              isMulti
-              options={generateOptions(selectAll, linodesData, linodesError)}
-              noOptionsMessage={({ inputValue }) =>
-                linodesData.length === 0 || selectAll
-                  ? 'No Linodes available.'
-                  : 'No results.'
+            <LinodeMultiSelect
+              showAllOption
+              helperText="Add one or more predefined rules to this firewall. You can edit the
+              default parameters for these rules after you create the firewall."
+              errorText={errors['devices.linodes']}
+              handleChange={(selected: number[]) =>
+                setFieldValue('devices.linodes', selected)
               }
-              onChange={(selected: Item<number>[]) =>
-                setFieldValue('devices.linodes', handleSelectLinodes(selected))
-              }
-              placeholder="Select a Linode or type to search..."
-              aria-label="Select which Linodes to which you want to apply this new firewall"
-              textFieldProps={{
-                helperTextPosition: 'top',
-                helperText: `Assign one or more Linodes to this firewall. You can
-              add Linodes later if you want to customize your rules first.`
-              }}
-              hideSelectedOptions={true}
               onBlur={handleBlur}
             />
             <ActionsPanel>
@@ -255,39 +216,4 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
   );
 };
 
-const generateOptions = (
-  allLinodesAreSelected: boolean,
-  linodesData: LinodeProps['linodesData'],
-  linodeError: LinodeProps['linodesError']
-): Item<any>[] => {
-  /** if there's an error, don't show any options */
-  if (linodeError) {
-    return [];
-  }
-
-  return allLinodesAreSelected
-    ? [
-        {
-          value: 'ALL',
-          label: 'All Linodes'
-        }
-      ]
-    : [
-        {
-          value: 'ALL',
-          label: 'All Linodes'
-        },
-        ...linodesData.map(eachLinode => ({
-          value: eachLinode.id,
-          label: eachLinode.label
-        }))
-      ];
-};
-
-const userSelectedAllLinodes = (values: Item<string | number>[]) =>
-  values.some(eachValue => eachValue.value === 'ALL');
-
-export default compose<CombinedProps, Props>(
-  React.memo,
-  withLinodes()
-)(AddFirewallDrawer);
+export default compose<CombinedProps, Props>(React.memo)(AddFirewallDrawer);
