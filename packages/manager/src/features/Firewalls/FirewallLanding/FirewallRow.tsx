@@ -4,16 +4,12 @@ import {
   getFirewallDevices as _getDevices
 } from 'linode-js-sdk/lib/firewalls';
 import { APIError } from 'linode-js-sdk/lib/types';
-import { take } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-
-import TableRow from 'src/components/core/TableRow';
 import TableCell from 'src/components/TableCell';
-
+import TableRow from 'src/components/TableRow';
+import { truncateAndJoinList } from 'src/utilities/stringUtils';
 import ActionMenu, { ActionHandlers } from './FirewallActionMenu';
-
-import { devices as mockDevices } from 'src/__data__/firewallDevices';
 
 interface Props extends ActionHandlers {
   firewallID: number;
@@ -22,9 +18,9 @@ interface Props extends ActionHandlers {
   firewallRules: Firewall['rules'];
 }
 
-type CombinedProps = Props;
+export type CombinedProps = Props;
 
-const FirewallRow: React.FC<CombinedProps> = props => {
+export const FirewallRow: React.FC<CombinedProps> = props => {
   const {
     firewallID,
     firewallLabel,
@@ -42,7 +38,7 @@ const FirewallRow: React.FC<CombinedProps> = props => {
   const getFirewallDevices = () => {
     setDevicesLoading(true);
 
-    _getDevices(1, mockDevices)
+    _getDevices(firewallID)
       .then(({ data }) => {
         setDevices(data);
         setDevicesLoading(false);
@@ -60,7 +56,11 @@ const FirewallRow: React.FC<CombinedProps> = props => {
   const count = getCountOfRules(firewallRules);
 
   return (
-    <TableRow key={`firewall-row-${firewallID}`}>
+    <TableRow
+      key={`firewall-row-${firewallID}`}
+      rowLink={`/firewalls/${firewallID}`}
+      data-testid={`firewall-row-${firewallID}`}
+    >
       <TableCell>{firewallLabel}</TableCell>
       <TableCell>{firewallStatus}</TableCell>
       <TableCell>{getRuleString(count)}</TableCell>
@@ -125,15 +125,8 @@ const getLinodesCellString = (
     return 'None assigned';
   }
 
-  const howManyDevicesMinusThree = data.length - 3;
-
-  const firstThreeLabels = take(3, data).map(
-    (e: FirewallDevice) => e.entity.label
-  );
-
-  return howManyDevicesMinusThree > 0
-    ? `${firstThreeLabels.join(', ')}, plus ${howManyDevicesMinusThree} more`
-    : firstThreeLabels.join(', ');
+  const deviceLabels = data.map(thisDevice => thisDevice.entity.label);
+  return truncateAndJoinList(deviceLabels, 3);
 };
 
 export default compose<CombinedProps, Props>(React.memo)(FirewallRow);

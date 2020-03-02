@@ -4,7 +4,14 @@ import Grid from 'src/components/Grid';
 import styled, { StyleProps } from './MetricDisplay.styles';
 
 interface SwatchProps {
-  legendColor: 'yellow' | 'red' | 'blue' | 'green' | 'purple';
+  legendColor:
+    | 'yellow'
+    | 'red'
+    | 'blue'
+    | 'green'
+    | 'purple'
+    | 'lightGreen'
+    | 'darkGreen';
   legendTitle: string;
 }
 

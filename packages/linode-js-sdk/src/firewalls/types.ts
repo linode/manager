@@ -2,6 +2,8 @@ export type FirewallStatus = 'enabled' | 'disabled' | 'deleted';
 
 export type FirewallRuleProtocol = 'ALL' | 'TCP' | 'UDP' | 'ICMP';
 
+export type FirewallDeviceEntityType = 'linode' | 'nodebalancer';
+
 export interface Firewall {
   id: number;
   status: FirewallStatus;
@@ -19,8 +21,7 @@ export interface FirewallRules {
 
 export interface FirewallRuleType {
   protocol: FirewallRuleProtocol;
-  start_port: number;
-  end_port?: null | number;
+  ports: string;
   addresses?: null | {
     ipv4?: null | string[];
     ipv6?: null | string[];
@@ -29,12 +30,35 @@ export interface FirewallRuleType {
 
 export interface FirewallDeviceEntity {
   id: number;
-  type: 'linode' | 'nodebalancer';
+  type: FirewallDeviceEntityType;
   label: string;
   url: string;
 }
 
 export interface FirewallDevice {
   id: number;
+  created: string;
+  updated: string;
   entity: FirewallDeviceEntity;
+}
+
+export interface CreateFirewallPayload {
+  label?: string;
+  tags?: string[];
+  rules: FirewallRules;
+  devices?: {
+    linodes?: number[];
+    nodebalancers?: number[];
+  };
+}
+
+export interface UpdateFirewallPayload {
+  label?: string;
+  tags?: string[];
+  status?: Omit<FirewallStatus, 'deleted'>;
+}
+
+export interface FirewallDevicePayload {
+  id: number;
+  type: FirewallDeviceEntityType;
 }

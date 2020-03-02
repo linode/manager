@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { clearDocs, setDocs } from 'src/store/documentation';
+import { compose } from 'recompose';
+import {
+  clearDocs as _clearDocs,
+  setDocs as _setDocs
+} from 'src/store/documentation';
 
 export type SetDocsProps = DispatchProps;
 
@@ -26,7 +29,7 @@ const setDocsHOC = (
       }
     }
 
-    componentDidUpdate(prevProps: any) {
+    componentDidUpdate(prevProps: OriginalProps & DispatchProps) {
       if (!!updateCond && updateCond(prevProps, this.props) === true) {
         if (typeof docs === 'function') {
           this.props.setDocs(docs(this.props));
@@ -45,22 +48,24 @@ const setDocsHOC = (
     }
   }
 
-  const connected = connect(
-    undefined,
-    mapDispatchToProps
+  const mapDispatchToProps: MapDispatchToProps<
+    DispatchProps,
+    OriginalProps
+  > = dispatch => ({
+    setDocs: (d: Linode.Doc[]) => dispatch(_setDocs(d)),
+    clearDocs: () => dispatch(_clearDocs())
+  });
+
+  const connected = compose<DispatchProps & OriginalProps, OriginalProps>(
+    connect(undefined, mapDispatchToProps)
   );
 
   return connected(SetDocumentation);
 };
 
 interface DispatchProps {
-  setDocs: typeof setDocs;
-  clearDocs: typeof clearDocs;
+  setDocs: (d: Linode.Doc[]) => void;
+  clearDocs: () => void;
 }
-
-const mapDispatchToProps: MapDispatchToProps<
-  DispatchProps,
-  SetDocsProps
-> = dispatch => bindActionCreators({ setDocs, clearDocs }, dispatch);
 
 export default setDocsHOC;

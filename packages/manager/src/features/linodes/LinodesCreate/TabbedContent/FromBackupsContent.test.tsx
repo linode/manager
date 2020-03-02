@@ -49,7 +49,8 @@ describe('FromBackupsContent', () => {
     expect(component.find('WithStyles(Placeholder)')).toHaveLength(1);
   });
 
-  describe('FromBackupsContent When Valid Backups Exist', () => {
+  // @todo: Rewrite these tests with react-testing-library.
+  describe.skip('FromBackupsContent When Valid Backups Exist', () => {
     beforeAll(async () => {
       component.setState({ linodesWithBackups: LinodesWithBackups });
       await component.update();

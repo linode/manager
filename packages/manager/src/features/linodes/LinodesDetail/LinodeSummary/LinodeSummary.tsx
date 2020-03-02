@@ -333,8 +333,8 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             showToday={rangeSelection === '24'}
             data={[
               {
-                borderColor: theme.graphs.blueBorder,
-                backgroundColor: theme.graphs.blue,
+                borderColor: 'transparent',
+                backgroundColor: theme.graphs.cpu.percent,
                 data,
                 label: 'CPU %'
               }
@@ -373,14 +373,14 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             showToday={rangeSelection === '24'}
             data={[
               {
-                borderColor: theme.graphs.yellowBorder,
-                backgroundColor: theme.graphs.yellow,
+                borderColor: 'transparent',
+                backgroundColor: theme.graphs.diskIO.read,
                 data: data.io,
                 label: 'I/O Rate'
               },
               {
-                borderColor: theme.graphs.redBorder,
-                backgroundColor: theme.graphs.red,
+                borderColor: 'transparent',
+                backgroundColor: theme.graphs.diskIO.swap,
                 data: data.swap,
                 label: 'Swap Rate'
               }

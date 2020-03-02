@@ -112,17 +112,14 @@ const tooltipText = (
   </Typography>
 );
 
-export const getStatusString = (
-  count: number,
-  linodes?: PoolNodeResponse[]
-) => {
+export const getStatusString = (count: number, nodes?: PoolNodeResponse[]) => {
   if (!count) {
     return '';
   }
-  if (!linodes || linodes.length === 0) {
+  if (!nodes || nodes.length === 0) {
     return <Typography>{`${count} (0 up, ${count} down)`}</Typography>;
   }
-  const status = getNodeStatus(linodes);
+  const status = getNodeStatus(nodes);
 
   if (status.ready + status.not_ready !== count) {
     // The API hasn't registered/created all of the nodes
@@ -201,7 +198,7 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
             }
           />
         ) : (
-          getStatusString(pool.count, pool.linodes)
+          getStatusString(pool.count, pool.nodes)
         )}
       </TableCell>
       <TableCell parentColumn="Pricing" className={classes.priceTableCell}>

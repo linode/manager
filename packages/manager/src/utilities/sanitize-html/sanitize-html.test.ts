@@ -1,4 +1,4 @@
-import { sanitizeHTML } from './sanitizeHTML';
+import { isURLValid, sanitizeHTML } from './sanitizeHTML';
 
 /** not allowed */
 const script = '<script src=""></script>';
@@ -40,7 +40,7 @@ it('should escape unwanted blacklisted tags', () => {
   expect(sanitizeHTML(login)).toBe(
     '<form>Username:<br />&lt;input /&gt;<br />Password:<br />&lt;input /&gt;<br /><br />&lt;input /&gt;<br /></form>'
   );
-  expect(sanitizeHTML(aScript)).toBe(`<a>Click me</a>`);
+  expect(sanitizeHTML(aScript)).toBe(`<span>Click me</span>`);
 });
 
 it('should not allow CSS attacks by escaping the style tag', () => {
@@ -60,4 +60,24 @@ it('should only allow whitelisted HTML attributes', () => {
   expect(sanitizeHTML(aLang)).toBe(aLang);
   expect(sanitizeHTML(aClickLang)).toBe(aLang);
   expect(sanitizeHTML(a)).toBe(a);
+});
+
+describe('isURLValid', () => {
+  it('returns `false` for long URLS', () => {
+    let url = 'https://';
+    for (let i = 0; i < 2001; i++) {
+      url += 'a';
+    }
+    url += '.com';
+    expect(isURLValid(url)).toBe(false);
+  });
+  it('returns `false` for javascript URLs', () => {
+    expect(isURLValid('javascript:void')).toBe(false);
+  });
+  it('returns `true` for OK urls', () => {
+    expect(isURLValid('https://linode.com')).toBe(true);
+    expect(isURLValid('https://linode.com?q1=1&q2=2')).toBe(true);
+    expect(isURLValid('linode.com')).toBe(true);
+    expect(isURLValid('mailto:linode@linode.com')).toBe(true);
+  });
 });
