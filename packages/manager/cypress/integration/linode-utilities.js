@@ -37,7 +37,7 @@ const makeLinodeCreateReq = (linode) =>{
         url:Cypress.env('apiroot')+'/linode/instances',
         body:linodeData,
         auth:{
-            bearer:Cypress.env("apitoken")
+            bearer:Cypress.env("oauthtoken")
         }
     });
 };
@@ -57,7 +57,7 @@ export const getLinodes=()=>{
         method:'GET',
         url:Cypress.env('apiroot')+'/linode/instances',
         auth:{
-            bearer:Cypress.env("apitoken")
+            bearer:Cypress.env("oauthtoken")
         }
     });
 };
@@ -66,7 +66,7 @@ const deleteLinode=(linodeId)=>{
         method:'DELETE',
         url:`${Cypress.env('apiroot')}/linode/instances/${linodeId}`,
         auth:{
-            bearer:Cypress.env("apitoken")
+            bearer:Cypress.env("oauthtoken")
         }
     })
 };
