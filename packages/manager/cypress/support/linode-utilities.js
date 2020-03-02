@@ -1,4 +1,4 @@
-import strings from '../support/cypresshelpers';
+import strings from './cypresshelpers';
 export const testLinodeTag = 'cy-test';
 export const testLinodeNamePreffix = 'cy-test-';
 
@@ -34,7 +34,7 @@ const makeLinodeCreateReq = (linode) =>{
 
     return cy.request({
         method:'POST',
-        url:Cypress.env('apiroot')+'/linode/instances',
+        url:Cypress.env('apiroot')+'/v4/linode/instances',
         body:linodeData,
         auth:{
             bearer:Cypress.env("oauthtoken")
@@ -55,7 +55,7 @@ export const createLinode= (linode=undefined)=>{
 export const getLinodes=()=>{
     return cy.request({
         method:'GET',
-        url:Cypress.env('apiroot')+'/linode/instances',
+        url:Cypress.env('apiroot')+'/v4/linode/instances',
         auth:{
             bearer:Cypress.env("oauthtoken")
         }
@@ -64,7 +64,7 @@ export const getLinodes=()=>{
 const deleteLinode=(linodeId)=>{
     return cy.request({
         method:'DELETE',
-        url:`${Cypress.env('apiroot')}/linode/instances/${linodeId}`,
+        url:`${Cypress.env('apiroot')}/v4/linode/instances/${linodeId}`,
         auth:{
             bearer:Cypress.env("oauthtoken")
         }

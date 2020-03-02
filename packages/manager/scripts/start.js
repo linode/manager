@@ -11,9 +11,6 @@ process.on('unhandledRejection', err => {
   throw err;
 });
 
-// Ensure environment variables are read.
-require('../config/env');
-
 const fs = require('fs');
 const chalk = require('chalk');
 const webpack = require('webpack');
@@ -26,6 +23,10 @@ const {
   prepareUrls,
 } = require('react-dev-utils/WebpackDevServerUtils');
 const paths = require('../config/paths');
+
+const cypressProxyApiUrl = require('../config/development.json').env.apiroot;
+
+
 const config = require('../config/webpack.config.dev');
 const createDevServerConfig = require('../config/webpackDevServer.config');
 
@@ -64,8 +65,9 @@ choosePort(HOST, DEFAULT_PORT)
     // the goal is to make Cypress believe we are not changing domain
     const alternateProxyConfigForCypress= {
         '/api/v4':{
-          target: 'https://api.linode.com', // target host
-          changeOrigin: true, // needed for virtual hosted sites
+          // target: 'https://api.linode.com', // target host
+          target: cypressProxyApiUrl,
+          changeOrigin: true // needed for virtual hosted sites
         }
     };
 
@@ -83,7 +85,7 @@ choosePort(HOST, DEFAULT_PORT)
         return console.log(err);
       }
       if (isInteractive) {
-        clearConsole();
+        // clearConsole();
       }
       console.log(chalk.cyan('Starting the development server...\n'));
       // Don't attempt to open a browser because it always opens the wrong one

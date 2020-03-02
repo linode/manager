@@ -1,6 +1,6 @@
 import strings from '../support/cypresshelpers';
 import '@testing-library/cypress/add-commands';
-import {testLinodeNamePreffix} from './linode-utilities';
+import {testLinodeNamePreffix} from '../support/linode-utilities';
 
 
 describe('create linode', () => {

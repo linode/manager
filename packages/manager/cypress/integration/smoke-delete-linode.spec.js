@@ -1,5 +1,5 @@
 import '@testing-library/cypress/add-commands';
-import {getTestLinode, createLinode} from './linode-utilities';
+import {getTestLinode, createLinode} from '../support/linode-utilities';
 
 
 describe('delete linode', () => {

@@ -133,7 +133,7 @@ This file should look like this:
 {
     "env": {
       "oauthtoken": "xxxx",
-      "apiroot": "https://api.linode.com/v4",
+      "apiroot": "https://api.linode.com",
       "loginUrl": "https://login.linode.com/login",
       "loginRoot": "https://login.linode.com"
     }

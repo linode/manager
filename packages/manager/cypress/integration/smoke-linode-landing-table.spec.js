@@ -1,5 +1,5 @@
 import '@testing-library/cypress/add-commands';
-import {createLinode, getTestLinode, deleteTestLinodes} from './linode-utilities';
+import {createLinode, getTestLinode, deleteTestLinodes} from '../support/linode-utilities';
 
 describe('linode landing', () => {
   beforeEach(() => {
