@@ -1,13 +1,10 @@
-import {
-  Firewall,
-  FirewallDevice,
-  getFirewallDevices as _getDevices
-} from 'linode-js-sdk/lib/firewalls';
+import { Firewall, FirewallDevice } from 'linode-js-sdk/lib/firewalls';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import useFirewallDevices from 'src/hooks/useFirewallDevices';
 import { truncateAndJoinList } from 'src/utilities/stringUtils';
 import ActionMenu, { ActionHandlers } from './FirewallActionMenu';
 
@@ -29,28 +26,16 @@ export const FirewallRow: React.FC<CombinedProps> = props => {
     ...actionHandlers
   } = props;
 
-  const [devicesLoading, setDevicesLoading] = React.useState<boolean>(false);
-  const [devicesError, setDevicesError] = React.useState<
-    APIError[] | undefined
-  >(undefined);
-  const [devices, setDevices] = React.useState<FirewallDevice[]>([]);
-
-  const getFirewallDevices = () => {
-    setDevicesLoading(true);
-
-    _getDevices(firewallID)
-      .then(({ data }) => {
-        setDevices(data);
-        setDevicesLoading(false);
-      })
-      .catch((e: APIError[]) => {
-        setDevicesError(e);
-        setDevicesLoading(false);
-      });
-  };
+  const {
+    devices: { itemsById, error, loading, lastUpdated },
+    requestDevices
+  } = useFirewallDevices(firewallID);
+  const devices = Object.values(itemsById);
 
   React.useEffect(() => {
-    getFirewallDevices();
+    if (lastUpdated === 0 && !loading) {
+      requestDevices();
+    }
   }, []);
 
   const count = getCountOfRules(firewallRules);
@@ -65,7 +50,7 @@ export const FirewallRow: React.FC<CombinedProps> = props => {
       <TableCell>{firewallStatus}</TableCell>
       <TableCell>{getRuleString(count)}</TableCell>
       <TableCell>
-        {getLinodesCellString(devices, devicesLoading, devicesError)}
+        {getLinodesCellString(devices, loading, error.read)}
       </TableCell>
       <TableCell>
         <ActionMenu
