@@ -1,3 +1,4 @@
+import * as moment from 'moment';
 import { formatUptime } from './formatUptime';
 
 describe('Formatting uptime', () => {
@@ -27,5 +28,32 @@ describe('Formatting uptime', () => {
     expect(
       formatUptime(60 * 60 * 24 * 9 + 60 * 60 * 19 + 60 * 45 + 45)
     ).toMatch('9d 19h 45m');
+  });
+
+  it('should handle durations longer than a month', () => {
+    expect(
+      formatUptime(
+        moment
+          .duration({ years: 1, months: 2, days: 12, hours: 10, minutes: 15 })
+          .asSeconds()
+      )
+    ).toMatch('438d 10h 15m');
+  });
+
+  it('should ignore seconds for longer durations', () => {
+    expect(
+      formatUptime(
+        moment
+          .duration({
+            years: 1,
+            months: 2,
+            days: 12,
+            hours: 8,
+            minutes: 15,
+            seconds: 54
+          })
+          .asSeconds()
+      )
+    ).toMatch('438d 8h 15m');
   });
 });
