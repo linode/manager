@@ -71,6 +71,18 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: '#3f8a4e',
       color: 'white'
     }
+  },
+  buttonSecondary: {
+    backgroundColor: 'inherit',
+    color: '#4FAD62',
+    border: '1px solid transparent',
+    transition: theme.transitions.create(['color', 'border-color']),
+    borderColor: '#4FAD62',
+    '&:hover, &:focus': {
+      backgroundColor: 'inherit',
+      color: '#72BD81',
+      borderColor: '#72BD81'
+    }
   }
 }));
 
@@ -131,7 +143,12 @@ export const PromotionalOfferCard: React.FC<CombinedProps> = props => {
             {offer.buttons.slice(0, 2).map(button => (
               <Button
                 key={button.text}
-                className={classes.button}
+                className={classnames({
+                  [classes.button]: true,
+                  [classes.buttonSecondary]: Boolean(
+                    button.type === 'secondary'
+                  )
+                })}
                 {...buttonProps(button.href)}
               >
                 {button.text}
