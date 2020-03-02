@@ -24,9 +24,7 @@ import withFirewalls, {
 
 const FirewallRulesLanding = React.lazy(() => import('./FirewallRulesLanding'));
 
-const FirewallLinodesLanding = React.lazy(() =>
-  import('./FirewallLinodesLanding')
-);
+const FirewallLinodesLanding = React.lazy(() => import('./Devices'));
 
 type CombinedProps = RouteComponentProps<{ id: string }> & WithFirewallsProps;
 
