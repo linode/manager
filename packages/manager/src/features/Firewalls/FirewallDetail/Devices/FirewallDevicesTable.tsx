@@ -20,12 +20,7 @@ interface Props {
   error?: APIError[];
   loading: boolean;
   lastUpdated: number;
-  triggerRemoveDevice: (
-    deviceID: number,
-    deviceLabel: string,
-    firewallID: number,
-    firewallLabel: string
-  ) => void;
+  triggerRemoveDevice: (deviceID: number, deviceLabel: string) => void;
 }
 
 type CombinedProps = Props;
@@ -79,7 +74,8 @@ const FirewallTable: React.FC<CombinedProps> = props => {
                           <FirewallDeviceRow
                             key={`device-row-${thisDevice.id}`}
                             deviceLabel={thisDevice.entity.label}
-                            deviceID={thisDevice.entity.id}
+                            deviceID={thisDevice.id}
+                            entityID={thisDevice.entity.id}
                             triggerRemoveDevice={triggerRemoveDevice}
                           />
                         ))}

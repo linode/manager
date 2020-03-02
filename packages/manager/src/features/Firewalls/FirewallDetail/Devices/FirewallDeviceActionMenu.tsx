@@ -2,13 +2,6 @@ import * as React from 'react';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
-export type RemoveDevice = (
-  deviceID: number,
-  deviceLabel: string,
-  firewallID: number,
-  firewallLabel: string
-) => void;
-
 export interface ActionHandlers {
   triggerRemoveDevice: (deviceID: number, label: string) => void;
 }
