@@ -20,7 +20,7 @@ export interface UseDevicesProps {
   devices: MappedEntityState2<FirewallDevice, EntityError>;
   addDevice: (newDevice: FirewallDevicePayload) => Promise<FirewallDevice>;
   removeDevice: (deviceID: number) => Promise<{}>;
-  requestDevices: () => Promise<FirewallDevice[]>;
+  requestDevices: () => Promise<FirewallDevice[] | null>;
 }
 
 const defaultState: MappedEntityState2<FirewallDevice, EntityError> = {
@@ -41,9 +41,9 @@ export const useFirewallDevices = (firewallID: number): UseDevicesProps => {
       state.firewallDevices[firewallID] ?? { ...defaultState }
   );
   const requestDevices = () =>
-    dispatch(getAllFirewallDevices({ firewallID })).then(
-      response => response.data
-    );
+    dispatch(getAllFirewallDevices({ firewallID }))
+      .then(response => response.data)
+      .catch(_ => null); // Handle errors through Redux
   const addDevice = (newDevice: FirewallDevicePayload) =>
     dispatch(addFirewallDevice({ firewallID, ...newDevice }));
   const removeDevice = (deviceID: number) =>
