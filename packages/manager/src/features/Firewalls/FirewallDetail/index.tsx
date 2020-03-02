@@ -127,7 +127,12 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
           exact
           strict
           path={`${URL}/linodes`}
-          render={() => <FirewallLinodesLanding firewallID={+thisFirewallId} />}
+          render={() => (
+            <FirewallLinodesLanding
+              firewallID={+thisFirewallId}
+              firewallLabel={thisFirewall.label}
+            />
+          )}
         />
         <Redirect to={`${URL}/rules`} />
       </Switch>

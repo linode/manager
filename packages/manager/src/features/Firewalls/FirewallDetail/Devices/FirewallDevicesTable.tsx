@@ -20,7 +20,12 @@ interface Props {
   error?: APIError[];
   loading: boolean;
   lastUpdated: number;
-  triggerRemoveDevice: (deviceID: number, label: string) => void;
+  triggerRemoveDevice: (
+    deviceID: number,
+    deviceLabel: string,
+    firewallID: number,
+    firewallLabel: string
+  ) => void;
 }
 
 type CombinedProps = Props;
