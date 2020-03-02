@@ -32,7 +32,7 @@ export const LAUNCH_DARKLY_API_KEY =
   process.env.REACT_APP_LAUNCH_DARKLY_ID || '';
 
 /** If it's hitting the prod API */
-export const isProdAPI = API_ROOT === 'https://api.linode.com/v4';
+export const isProdAPI = API_ROOT.match('https://api.linode.com/v4');
 
 // Maximum page size allowed by the API. Used in the `getAll()` helper function
 // to request as many items at once as possible.
