@@ -56,12 +56,14 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
 
   makeInitialRequests = async () => {
     // When loading lish we avoid all this extra data loading
-    if (window.location?.pathname?.includes('/lish/')) { return; }
-    
+    if (window.location?.pathname?.includes('/lish/')) {
+      return;
+    }
+
     const {
       nodeBalancerActions: { getAllNodeBalancersWithConfigs }
     } = this.props;
-
+    // Initial Requests
     const dataFetchingPromises: Promise<any>[] = [
       this.props.requestAccount(),
       this.props.requestDomains(),
@@ -71,8 +73,8 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       this.props.requestNotifications(),
       this.props.requestSettings(),
       this.props.requestTypes(),
-      this.props.requestRegions(),
       this.props.requestVolumes(),
+      this.props.requestRegions(),
       getAllNodeBalancersWithConfigs()
     ];
 
