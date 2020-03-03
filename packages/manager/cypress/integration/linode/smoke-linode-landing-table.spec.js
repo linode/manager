@@ -1,7 +1,7 @@
 import '@testing-library/cypress/add-commands';
-import { createLinode, deleteLinodeById } from '../../support/linode-utilities';
+import { createLinode, deleteLinodeById } from '../../support/api/linodes';
+import { getLinodeLandingRow } from '../../support/ui/linodes';
 
-const getLinodeLandingRow = label => cy.get(`[aria-label=${label}`);
 
 describe('linode landing', () => {
   beforeEach(() => {

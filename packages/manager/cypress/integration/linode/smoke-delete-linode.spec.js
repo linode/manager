@@ -1,9 +1,6 @@
 import '@testing-library/cypress/add-commands';
-import {
-  createLinode,
-  getLinodeRow,
-  deleteLinodeById
-} from '../../support/linode-utilities';
+import { createLinode } from '../../support/api/linodes';
+import { getLinodeLandingRow } from '../../support/ui/linodes';
 
 describe('delete linode', () => {
   beforeEach(() => {
@@ -22,7 +19,7 @@ describe('delete linode', () => {
        *  in a variable as this is a chain of action and not an element
        *  Solution is to write the selector as a function if we want to factorize code
        */
-      getLinodeRow(linode.label).click();
+      getLinodeLandingRow(linode.label).click();
 
       cy.url().should('contain', '/summary');
       cy.findByText(linode.label).should('exist');

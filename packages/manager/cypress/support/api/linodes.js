@@ -1,10 +1,9 @@
-import strings from './cypresshelpers';
-export const testLinodeTag = 'cy-test';
+import strings from '../cypresshelpers';
+const testLinodeTag = 'cy-test';
 const testLinodeNamePreffix = 'cy-test-';
 
 export const makeLinodeLabel = () =>
   testLinodeNamePreffix + strings.randomTitle(10);
-
 export const apiCheckErrors = (resp, failOnError = true) => {
   let errs = undefined;
   if (resp.body && resp.body.ERRORARRAY && resp.body.ERRORARRAY.length > 0) {
@@ -89,4 +88,3 @@ export const deleteAllTestLinodes = () => {
     });
   });
 };
-export const getLinodeRow = label => cy.findByText(label);

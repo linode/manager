@@ -1,9 +1,7 @@
 import strings from '../../support/cypresshelpers';
 import '@testing-library/cypress/add-commands';
-import {
-  makeLinodeLabel,
-  deleteLinodeByLabel
-} from '../../support/linode-utilities';
+
+import {deleteLinodeByLabel, makeLinodeLabel} from '../../support/api/linodes';
 
 describe('create linode', () => {
   beforeEach(() => {
