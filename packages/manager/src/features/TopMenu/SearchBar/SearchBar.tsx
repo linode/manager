@@ -1,31 +1,22 @@
 import Close from '@material-ui/icons/Close';
 import Search from '@material-ui/icons/Search';
-import { LinodeType } from 'linode-js-sdk/lib/linodes';
 import { take } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import _Control from 'react-select/lib/components/Control';
 import _Option from 'react-select/lib/components/Option';
 import { compose } from 'recompose';
 import IconButton from 'src/components/core/IconButton';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
+import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import withStoreSearch, {
   SearchProps
 } from 'src/features/Search/withStoreSearch';
-import { ApplicationState } from 'src/store';
 import { sendSearchBarUsedEvent } from 'src/utilities/ga.ts';
 import { debounce } from 'throttle-debounce';
 import styled, { StyleProps } from './SearchBar.styles';
 import SearchSuggestion from './SearchSuggestion';
-
-interface State {
-  searchText: string;
-  searchActive: boolean;
-  [resource: string]: any;
-  menuOpen: boolean;
-}
 
 type CombinedProps = WithTypesProps &
   WithImages &
@@ -70,85 +61,73 @@ export const selectStyles = {
 // Timeout of 1sec in debounce to avoid sending too many events to GA
 const debouncedSearchAutoEvent = debounce(1000, false, sendSearchBarUsedEvent);
 
-class SearchBar extends React.Component<CombinedProps, State> {
-  selectRef = React.createRef<HTMLInputElement>();
+export const SearchBar: React.FC<CombinedProps> = props => {
+  const [searchText, setSearchText] = React.useState<string>('');
+  const [searchActive, setSearchActive] = React.useState<boolean>(false);
+  const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
 
-  state: State = {
-    searchText: '',
-    searchActive: false,
-    menuOpen: false
-  };
+  const { classes, combinedResults, entitiesLoading } = props;
 
-  handleSearchChange = (searchText: string): void => {
-    this.setState({ searchText });
-
+  const handleSearchChange = (_searchText: string): void => {
+    setSearchText(_searchText);
     // do not trigger debounce for empty text
     if (searchText !== '') {
       debouncedSearchAutoEvent('Search Auto', searchText);
     }
-    this.props.search(searchText);
+    props.search(searchText);
   };
 
-  toggleSearch = () => {
-    this.setState({
-      searchActive: !this.state.searchActive,
-      menuOpen: !this.state.menuOpen
-    });
+  const toggleSearch = () => {
+    setSearchActive(!searchActive);
+    setMenuOpen(!menuOpen);
   };
 
-  onClose = () => {
+  const onClose = () => {
     document.body.classList.remove('searchOverlay');
-    this.setState({
-      searchActive: false,
-      menuOpen: false
-    });
+    setSearchActive(false);
+    setMenuOpen(false);
   };
 
-  onOpen = () => {
+  const onOpen = () => {
     document.body.classList.add('searchOverlay');
-    this.setState({
-      searchActive: true,
-      menuOpen: true
-    });
+    setSearchActive(true);
+    setMenuOpen(true);
   };
 
-  onSelect = (item: Item) => {
+  const onSelect = (item: Item) => {
     if (!item || item.label === '') {
       return;
     }
-    const { history } = this.props;
-    const { searchText } = item.data;
+    const text = item.data.searchText;
 
     if (item.value === 'redirect') {
-      history.push({
+      props.history.push({
         pathname: `/search`,
-        search: `?query=${encodeURIComponent(searchText)}`
+        search: `?query=${encodeURIComponent(text)}`
       });
       // we are selecting the View all option sending the user to the landing,
       // this is like key down enter
-      sendSearchBarUsedEvent('Search Landing', searchText);
+      sendSearchBarUsedEvent('Search Landing', text);
       return;
     }
-    sendSearchBarUsedEvent('Search Select', searchText);
-    history.push(item.data.path);
+    sendSearchBarUsedEvent('Search Select', text);
+    props.history.push(item.data.path);
   };
 
-  onKeyDown = (e: any) => {
-    const { searchText } = this.state;
+  const onKeyDown = (e: any) => {
     if (e.keyCode === 13 && searchText !== '') {
-      const { combinedResults, history } = this.props;
       if (!combinedResults || combinedResults.length < 1) {
-        history.push({
+        props.history.push({
           pathname: `/search`,
           search: `?query=${encodeURIComponent(searchText)}`
         });
         sendSearchBarUsedEvent('Search Landing', searchText);
-        this.onClose();
+        onClose();
       }
     }
   };
 
-  guidanceText = () => {
+  const guidanceText = () => {
     return (
       <>
         <b>By field:</b> “tag:my-app” “label:my-linode” &nbsp;&nbsp;
@@ -160,84 +139,71 @@ class SearchBar extends React.Component<CombinedProps, State> {
   /* Need to override the default RS filtering; otherwise entities whose label
    * doesn't match the search term will be automatically filtered, meaning that
    * searching by tag won't work. */
-  filterResults = (option: Item, inputValue: string) => {
+  const filterResults = (option: Item, inputValue: string) => {
     return true;
   };
 
-  render() {
-    const { classes, combinedResults, entitiesLoading } = this.props;
-    const { searchActive, searchText, menuOpen } = this.state;
+  const finalOptions = createFinalOptions(combinedResults, searchText);
 
-    const finalOptions = createFinalOptions(combinedResults, searchText);
-
-    return (
-      <React.Fragment>
-        <IconButton
-          color="inherit"
-          aria-label="open menu"
-          onClick={this.toggleSearch}
-          className={classes.navIconHide}
-        >
-          <Search />
-        </IconButton>
-        <div
-          className={`
+  return (
+    <React.Fragment>
+      <IconButton
+        color="inherit"
+        aria-label="open menu"
+        onClick={toggleSearch}
+        className={classes.navIconHide}
+      >
+        <Search />
+      </IconButton>
+      <div
+        className={`
           ${classes.root}
           ${searchActive ? 'active' : ''}
         `}
+      >
+        <Search className={classes.icon} data-qa-search-icon />
+        <label htmlFor="main-search" className="visually-hidden">
+          Main search
+        </label>
+        <EnhancedSelect
+          label="Main search"
+          hideLabel
+          blurInputOnSelect
+          options={finalOptions}
+          onChange={onSelect}
+          onInputChange={handleSearchChange}
+          onKeyDown={onKeyDown}
+          placeholder={
+            searchActive
+              ? 'Search'
+              : 'Search for Linodes, Volumes, NodeBalancers, Domains, Tags...'
+          }
+          components={{ Control, Option }}
+          styles={selectStyles}
+          openMenuOnFocus={false}
+          openMenuOnClick={false}
+          filterOption={filterResults}
+          isLoading={entitiesLoading}
+          isClearable={false}
+          isMulti={false}
+          onMenuClose={onClose}
+          onMenuOpen={onOpen}
+          value={false}
+          menuIsOpen={menuOpen}
+          guidance={guidanceText()}
+        />
+        <IconButton
+          color="inherit"
+          aria-label="close menu"
+          onClick={toggleSearch}
+          className={classes.navIconHide}
         >
-          <Search className={classes.icon} data-qa-search-icon />
-          <label htmlFor="main-search" className="visually-hidden">
-            Main search
-          </label>
-          <EnhancedSelect
-            label="Main search"
-            hideLabel
-            blurInputOnSelect
-            options={finalOptions}
-            onChange={this.onSelect}
-            onInputChange={this.handleSearchChange}
-            onKeyDown={this.onKeyDown}
-            placeholder={
-              searchActive
-                ? 'Search'
-                : 'Search for Linodes, Volumes, NodeBalancers, Domains, Tags...'
-            }
-            components={{ Control, Option }}
-            styles={selectStyles}
-            openMenuOnFocus={false}
-            openMenuOnClick={false}
-            filterOption={this.filterResults}
-            isLoading={entitiesLoading}
-            isClearable={false}
-            isMulti={false}
-            onMenuClose={this.onClose}
-            onMenuOpen={this.onOpen}
-            value={false}
-            menuIsOpen={menuOpen}
-            guidance={this.guidanceText()}
-          />
-          <IconButton
-            color="inherit"
-            aria-label="close menu"
-            onClick={this.toggleSearch}
-            className={classes.navIconHide}
-          >
-            <Close className={classes.close} />
-          </IconButton>
-        </div>
-      </React.Fragment>
-    );
-  }
-}
-
-interface WithTypesProps {
-  typesData: LinodeType[];
-}
-
-const withTypes = connect((state: ApplicationState, ownProps) => ({
-  typesData: state.__resources.types.entities
-}));
+          <Close className={classes.close} />
+        </IconButton>
+      </div>
+    </React.Fragment>
+  );
+};
 
 export default compose<CombinedProps, {}>(
   withTypes,
