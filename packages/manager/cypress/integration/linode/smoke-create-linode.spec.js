@@ -1,6 +1,5 @@
 import strings from '../../support/cypresshelpers';
 import '@testing-library/cypress/add-commands';
-
 import {deleteLinodeByLabel, makeLinodeLabel} from '../../support/api/linodes';
 
 describe('create linode', () => {

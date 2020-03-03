@@ -35,6 +35,7 @@ describe('delete linode', () => {
       // there is now 2 delete on the page so i use the attribute selector
       // cy.findByText('Delete').debug()
       cy.get('[data-qa-confirm-delete]').click();
+      
       // Here if the request is against a local route
       // this is because we use a proxy in webpack config
       // this redirects localhost:3000/api to api.linode.com/api

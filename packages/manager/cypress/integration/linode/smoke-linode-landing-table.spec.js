@@ -22,7 +22,6 @@ describe('linode landing', () => {
       getLinodeLandingRow(linode.label).within($el => {
         cy.get(`[data-qa-action-menu]`).should('exist');
       });
-
       deleteLinodeById(linode.id);
     });
   });
