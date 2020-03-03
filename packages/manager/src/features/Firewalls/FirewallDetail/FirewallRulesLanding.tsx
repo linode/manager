@@ -27,7 +27,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
     'inbound' | 'outbound'
   >('inbound');
 
-  const [mode, setMode] = React.useState<'create' | 'edit'>('create');
+  const [mode] = React.useState<'create' | 'edit'>('create');
 
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
