@@ -1,6 +1,7 @@
 import * as Bluebird from 'bluebird';
 import { useEffect, useState } from 'react';
 import { useDispatch, useStore } from 'react-redux';
+import { Dispatch } from 'redux';
 import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
@@ -76,37 +77,47 @@ export const useReduxLoad = <T>(
   const state = useStore<ApplicationState>().getState();
 
   useEffect(() => {
-    let i = 0;
-    let needsToLoad = false;
-    const requests = [];
-    for (i; i < deps.length; i++) {
-      const currentResource = state.__resources[deps[i]] || state[deps[i]];
-      if (currentResource) {
-        if (currentResource.lastUpdated === 0 && !currentResource.loading) {
-          needsToLoad = true;
-          requests.push(requestMap[deps[i]]);
-        } else if (Date.now() - currentResource.lastUpdated > refreshInterval) {
-          requests.push(requestMap[deps[i]]);
-        }
-      }
-    }
-
-    if (requests.length === 0) {
-      return;
-    }
-
-    if (needsToLoad) {
-      setLoading(true);
-    }
-
-    Bluebird.map(requests, thisRequest => {
-      return dispatch(thisRequest());
-    })
-      .then(_ => setLoading(false))
-      .catch(_ => setLoading(false));
+    requestDeps(state, dispatch, deps, refreshInterval, setLoading);
   }, []);
 
   return { _loading };
+};
+
+export const requestDeps = (
+  state: ApplicationState,
+  dispatch: Dispatch<any>,
+  deps: ReduxEntity[],
+  refreshInterval: number = 60000,
+  loadingCb: (l: boolean) => void = _ => null
+) => {
+  let i = 0;
+  let needsToLoad = false;
+  const requests = [];
+  for (i; i < deps.length; i++) {
+    const currentResource = state.__resources[deps[i]] || state[deps[i]];
+    if (currentResource) {
+      if (currentResource.lastUpdated === 0 && !currentResource.loading) {
+        needsToLoad = true;
+        requests.push(requestMap[deps[i]]);
+      } else if (Date.now() - currentResource.lastUpdated > refreshInterval) {
+        requests.push(requestMap[deps[i]]);
+      }
+    }
+  }
+
+  if (requests.length === 0) {
+    return;
+  }
+
+  if (needsToLoad) {
+    loadingCb(true);
+  }
+
+  return Bluebird.map(requests, thisRequest => {
+    return dispatch(thisRequest());
+  })
+    .then(_ => loadingCb(false))
+    .catch(_ => loadingCb(false));
 };
 
 export default useReduxLoad;
