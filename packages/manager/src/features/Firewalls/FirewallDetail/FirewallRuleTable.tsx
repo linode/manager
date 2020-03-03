@@ -13,6 +13,7 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableSortCell from 'src/components/TableSortCell';
 import capitalize from 'src/utilities/capitalize';
+import { v4 } from 'uuid';
 import {
   generateAddressesLabel,
   generateRuleLabel,
@@ -34,6 +35,7 @@ interface RuleRow {
   protocol: string;
   ports: string;
   addresses: string;
+  id: string;
 }
 
 interface Props {
@@ -108,10 +110,10 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
                 <TableRowEmptyState colSpan={5} />
               ) : (
                 orderedData.map((ruleRow: RuleRow, idx) => {
-                  const { type, protocol, ports, addresses } = ruleRow;
+                  const { id, type, protocol, ports, addresses } = ruleRow;
 
                   return (
-                    <TableRow key={idx}>
+                    <TableRow key={id}>
                       <TableCell>{type}</TableCell>
                       <TableCell>{protocol}</TableCell>
                       <TableCell>{ports}</TableCell>
@@ -152,7 +154,8 @@ export const firewallRuleToRowData = (
       type: generateRuleLabel(ruleType),
       protocol: thisRule.protocol,
       addresses: generateAddressesLabel(thisRule.addresses),
-      ports: thisRule.ports
+      ports: thisRule.ports,
+      id: v4()
     };
   });
 };
