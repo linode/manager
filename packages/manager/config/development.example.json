@@ -1,8 +1,8 @@
 {
     "env": {
-    "oauthtoken": "xxxxx",
-    "apiroot": "https://api.linode.com",
-    "loginUrl": "https://login.linode.com/login",
-    "loginRoot": "https://login.linode.com"
+        "oauthtoken": "xxxxx",
+        "apiroot": "https://api.linode.com",
+        "loginUrl": "https://login.linode.com/login",
+        "loginRoot": "https://login.linode.com"
     }
 }
