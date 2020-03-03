@@ -16,7 +16,7 @@ describe('dashboard', () => {
       'NodeBalancers'
     );
   });
-  it.only('checks load time and nb of GET', ()=>{
+  it.only('checks load time and number of GET', ()=>{
     let xhrData = []
     cy.wrap(xhrData).as('xhrData');
     cy.server({
