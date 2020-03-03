@@ -47,8 +47,12 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
     submitDialog
   } = useDialog<number>(removeDevice);
 
+  const _openDialog = React.useCallback(openDialog, [dialog, openDialog]);
+  const _closeDialog = React.useCallback(closeDialog, [dialog, closeDialog]);
+  const _submitDialog = React.useCallback(submitDialog, [dialog, submitDialog]);
+
   const handleRemoveDevice = () => {
-    submitDialog(dialog.entityID).catch(e =>
+    _submitDialog(dialog.entityID).catch(e =>
       handleError(getAPIErrorOrDefault(e, 'Error removing Device')[0].reason)
     );
   };
@@ -75,13 +79,13 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
         error={devices.error.read}
         lastUpdated={devices.lastUpdated}
         loading={devices.loading}
-        triggerRemoveDevice={openDialog}
+        triggerRemoveDevice={_openDialog}
       />
       <RemoveDeviceDialog
         open={dialog.isOpen}
         loading={dialog.isLoading}
         error={dialog.error}
-        onClose={closeDialog}
+        onClose={_closeDialog}
         onRemove={handleRemoveDevice}
         deviceLabel={dialog.entityLabel ?? 'this device'}
         firewallLabel={firewallLabel}

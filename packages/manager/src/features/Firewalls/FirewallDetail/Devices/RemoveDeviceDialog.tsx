@@ -27,7 +27,7 @@ export const RemoveDeviceDialog: React.FC<Props> = props => {
   } = props;
   return (
     <ConfirmationDialog
-      title={`Remove ${deviceLabel} from ${firewallLabel}`}
+      title={`Remove ${deviceLabel} from ${firewallLabel}?`}
       open={open}
       onClose={onClose}
       actions={renderActions(loading, onClose, onRemove)}
