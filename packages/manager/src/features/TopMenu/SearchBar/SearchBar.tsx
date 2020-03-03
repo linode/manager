@@ -94,7 +94,7 @@ export const SearchBar: React.FC<CombinedProps> = props => {
     if (searchText !== '') {
       debouncedSearchAutoEvent('Search Auto', searchText);
     }
-    props.search(searchText);
+    props.search(_searchText);
   };
 
   const toggleSearch = () => {
