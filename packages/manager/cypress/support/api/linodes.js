@@ -1,9 +1,10 @@
 import strings from '../cypresshelpers';
 const testLinodeTag = 'cy-test';
-const testLinodeNamePreffix = 'cy-test-';
+const testLinodeNamePrefix = 'cy-test-';
 
 export const makeLinodeLabel = () =>
-  testLinodeNamePreffix + strings.randomTitle(10);
+  testLinodeNamePrefix + strings.randomTitle(10);
+
 export const apiCheckErrors = (resp, failOnError = true) => {
   let errs = undefined;
   if (resp.body && resp.body.ERRORARRAY && resp.body.ERRORARRAY.length > 0) {
@@ -18,6 +19,7 @@ export const apiCheckErrors = (resp, failOnError = true) => {
   }
   return errs;
 };
+
 const makeLinodeCreateReq = linode => {
   const linodeData = linode
     ? linode
