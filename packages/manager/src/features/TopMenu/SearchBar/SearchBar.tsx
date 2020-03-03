@@ -2,6 +2,7 @@ import Close from '@material-ui/icons/Close';
 import Search from '@material-ui/icons/Search';
 import { take } from 'ramda';
 import * as React from 'react';
+import { useDispatch, useStore } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import _Control from 'react-select/lib/components/Control';
 import _Option from 'react-select/lib/components/Option';
@@ -13,6 +14,7 @@ import withImages, { WithImages } from 'src/containers/withImages.container';
 import withStoreSearch, {
   SearchProps
 } from 'src/features/Search/withStoreSearch';
+import { requestDeps } from 'src/hooks/useReduxLoad';
 import { sendSearchBarUsedEvent } from 'src/utilities/ga.ts';
 import { debounce } from 'throttle-debounce';
 import styled, { StyleProps } from './SearchBar.styles';
@@ -30,7 +32,7 @@ const Control = (props: any) => <_Control {...props} />;
  * This doesn't share the same shape as the rest of the results, so should use
  * the default styling. */
 const Option = (props: any) => {
-  return props.value === 'redirect' ? (
+  return ['redirect', 'info'].includes(props.value) ? (
     <_Option {...props} />
   ) : (
     <SearchSuggestion {...props} />
@@ -65,6 +67,24 @@ export const SearchBar: React.FC<CombinedProps> = props => {
   const [searchText, setSearchText] = React.useState<string>('');
   const [searchActive, setSearchActive] = React.useState<boolean>(false);
   const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
+
+  const store = useStore();
+  const state = store.getState();
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    if (searchActive) {
+      // We're searching, need to make sure we have all the data
+      requestDeps(
+        state,
+        dispatch,
+        ['linodes', 'nodeBalancers', 'volumes', 'domains', 'images', 'managed'],
+        60000,
+        setLoading
+      );
+    }
+  }, [searchActive]);
 
   const { classes, combinedResults, entitiesLoading } = props;
 
@@ -99,6 +119,10 @@ export const SearchBar: React.FC<CombinedProps> = props => {
       return;
     }
     const text = item.data.searchText;
+
+    if (item.value === 'info') {
+      return;
+    }
 
     if (item.value === 'redirect') {
       props.history.push({
@@ -143,7 +167,7 @@ export const SearchBar: React.FC<CombinedProps> = props => {
     return true;
   };
 
-  const finalOptions = createFinalOptions(combinedResults, searchText);
+  const finalOptions = createFinalOptions(combinedResults, searchText, loading);
 
   return (
     <React.Fragment>
@@ -215,14 +239,10 @@ export default compose<CombinedProps, {}>(
 
 export const createFinalOptions = (
   results: Item[],
-  searchText: string = ''
+  searchText: string = '',
+  loading: boolean = false
 ) => {
-  // NO RESULTS:
-  if (!results || results.length === 0) {
-    return [];
-  }
-
-  const firstOption = {
+  const redirectOption = {
     value: 'redirect',
     data: {
       searchText
@@ -230,9 +250,25 @@ export const createFinalOptions = (
     label: `View search results page for "${searchText}"`
   };
 
+  const loadingResults = {
+    value: 'info',
+    label: 'Loading results...'
+  };
+
+  // Results aren't final as we're loading data
+
+  if (loading) {
+    return [redirectOption, loadingResults];
+  }
+
+  // NO RESULTS:
+  if (!results || results.length === 0) {
+    return [];
+  }
+
   // LESS THAN 20 RESULTS:
   if (results.length <= 20) {
-    return [firstOption, ...results];
+    return [redirectOption, ...results];
   }
 
   // MORE THAN 20 RESULTS:
@@ -245,5 +281,5 @@ export const createFinalOptions = (
   };
 
   const first20Results = take(20, results);
-  return [firstOption, ...first20Results, lastOption];
+  return [redirectOption, ...first20Results, lastOption];
 };
