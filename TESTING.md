@@ -140,7 +140,7 @@ This file should look like this:
 }
 ```
 
-To get your oauthtoken, check https://cloud.linode.com/profile/tokens and create a Personal access token.
+To get your OAuth token, go to https://cloud.linode.com/profile/tokens and click "Add a Personal Access Token.
 
 This file is read by Cypress, and used to configure environment setting for the execution.
 See cypress documentation on how to check this in the UI: https://docs.cypress.io/guides/references/configuration.html#Browser
