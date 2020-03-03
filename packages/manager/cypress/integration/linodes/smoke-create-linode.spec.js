@@ -1,6 +1,11 @@
 import strings from '../../support/cypresshelpers';
-import '@testing-library/cypress/add-commands';
-import {deleteLinodeByLabel, makeLinodeLabel} from '../../support/api/linodes';
+import {
+  deleteLinodeByLabel,
+  makeLinodeLabel
+} from '../../support/api/linodes';
+import { stubEvent } from '../../support/api/events';
+
+import { checkToast } from '../../support/ui/events';
 
 describe('create linode', () => {
   beforeEach(() => {
@@ -23,7 +28,14 @@ describe('create linode', () => {
       .type(linodeLabel);
     cy.get('#root-password').type(rootpass);
     cy.get('[data-qa-deploy-linode]').click();
-    cy.get('[data-qa-power-control="Busy"]').should('be.visible');
+    cy.server();
+
+    checkToast(`Your Linode ${linodeLabel} is being created.`);
+
+    cy.get('[data-qa-power-control="Busy"]', { timeout: 6000 }).should(
+      'be.visible'
+    );
+
     deleteLinodeByLabel(linodeLabel);
   });
 });

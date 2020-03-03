@@ -1,7 +1,5 @@
-import '@testing-library/cypress/add-commands';
 import { createLinode, deleteLinodeById } from '../../support/api/linodes';
 import { getLinodeLandingRow } from '../../support/ui/linodes';
-
 
 describe('linode landing', () => {
   beforeEach(() => {
