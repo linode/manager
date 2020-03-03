@@ -145,9 +145,7 @@ export const PromotionalOfferCard: React.FC<CombinedProps> = props => {
                 key={button.text}
                 className={classnames({
                   [classes.button]: true,
-                  [classes.buttonSecondary]: Boolean(
-                    button.type === 'secondary'
-                  )
+                  [classes.buttonSecondary]: button.type === 'secondary'
                 })}
                 {...buttonProps(button.href)}
               >
