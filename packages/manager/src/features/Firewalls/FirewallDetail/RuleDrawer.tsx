@@ -1,19 +1,33 @@
 import { Formik } from 'formik';
-import { FirewallRuleType } from 'linode-js-sdk/lib/firewalls/types';
+import { parse as parseIP } from 'ipaddr.js';
+import { FirewallRuleProtocol } from 'linode-js-sdk/lib/firewalls';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
-// import { makeStyles, Theme } from 'src/components/core/styles';
 import Select from 'src/components/EnhancedSelect';
+import { Item } from 'src/components/EnhancedSelect/Select';
+import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import capitalize from 'src/utilities/capitalize';
-import { firewallOptionItemsShort } from '../shared';
+import {
+  addressOptions,
+  allIPs,
+  allIPv4,
+  allIPv6,
+  firewallOptionItemsShort,
+  portPresets,
+  predefinedFirewallFromRule,
+  protocolOptions
+} from '../shared';
 
-// const useStyles = makeStyles((theme: Theme) => ({
-//   root: {}
-// }));
+const useStyles = makeStyles((theme: Theme) => ({
+  ipSelect: {
+    marginTop: theme.spacing(2)
+  }
+}));
 
 interface Props {
   category: 'inbound' | 'outbound';
@@ -22,21 +36,41 @@ interface Props {
   onClose: () => void;
 }
 
-const initialValues: FirewallRuleType = {
+interface Form {
+  type: string;
+  ports: string;
+  addresses: string;
+  protocol: string;
+}
+
+const initialValues: Form = {
+  type: '',
   ports: '',
-  addresses: { ipv4: [], ipv6: [] },
-  protocol: 'TCP'
+  addresses: '',
+  protocol: ''
 };
+
+const typeOptions = [
+  ...firewallOptionItemsShort,
+  { label: 'Custom', value: 'custom' }
+];
 
 export type CombinedProps = Props;
 
 const RuleDrawer: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+
   const { isOpen, onClose, category, mode } = props;
 
-  // const classes = useStyles();
+  // Custom IPs are tracked separately from the form. The <MultipleIPs />
+  // component consumes this state. We also use this on form submission if the
+  // `addresses` form value is "ip/netmask".
+  const [ips, setIPs] = React.useState<string[]>(['']);
 
   const title =
     mode === 'create' ? `Add an ${capitalize(category)} Rule` : 'Edit Rule';
+
+  const addressesLabel = category === 'inbound' ? 'source' : 'destination';
 
   return (
     <Drawer title={title} open={isOpen} onClose={onClose}>
@@ -44,7 +78,20 @@ const RuleDrawer: React.FC<CombinedProps> = props => {
         initialValues={initialValues}
         validateOnChange={false}
         validateOnBlur={false}
-        onSubmit={values => console.log(values)}
+        // @todo: submit the form for real.
+        onSubmit={values =>
+          alert(
+            JSON.stringify(
+              {
+                port: values.ports,
+                protocol: values.protocol,
+                addresses: formValueToIPs(values.addresses, ips)
+              },
+              null,
+              2
+            )
+          )
+        }
       >
         {({
           values,
@@ -57,6 +104,28 @@ const RuleDrawer: React.FC<CombinedProps> = props => {
           setFieldValue,
           validateField
         }) => {
+          const handleTypeChange = (item: Item | null) => {
+            const selectedType = item ? item.value : null;
+
+            setFieldValue('type', selectedType);
+
+            if (!selectedType) {
+              return;
+            }
+
+            // All predefined FW types use the TCP protocol.
+            setFieldValue('protocol', 'TCP');
+            // All predefined FW types use all IPv4 and IPv6.
+            setFieldValue('addresses', 'all');
+            // Use the port for the selected type.
+            setFieldValue('ports', portPresets[selectedType]);
+          };
+
+          const _handleChange = (field: string, item: Item) =>
+            setFieldValue(field, item?.value ?? null);
+
+          const _type = deriveTypeFromValuesAndIPs(values, ips);
+
           return (
             <form onSubmit={handleSubmit}>
               {status && (
@@ -70,63 +139,72 @@ const RuleDrawer: React.FC<CombinedProps> = props => {
               <Select
                 label="Type"
                 name="type"
-                options={firewallOptionItemsShort}
+                placeholder="Select a rule type..."
                 aria-label="Select rule type."
-                textFieldProps={{ required: true }}
-                onChange={() => null}
+                options={typeOptions}
+                value={
+                  typeOptions.find(thisOption => thisOption.value === _type) ||
+                  null
+                }
+                onChange={(item: Item) => handleTypeChange(item)}
+                isClearable={false}
                 onBlur={handleBlur}
               />
               <Select
                 label="Protocol"
                 name="protocol"
-                options={[]}
+                placeholder="Select a protocol..."
                 aria-label="Select rule protocol."
-                textFieldProps={{ required: true }}
-                onChange={() => null}
+                value={
+                  values.protocol
+                    ? { label: values.protocol, value: values.protocol }
+                    : null
+                }
+                options={protocolOptions}
+                onChange={(item: Item) => _handleChange('protocol', item)}
                 onBlur={handleBlur}
               />
               <TextField
-                aria-label="Port range for firewall rule"
                 label="Port Range"
-                name="port range"
+                name="ports"
+                placeholder="Enter a port range..."
+                aria-label="Port range for firewall rule"
                 value={values.ports}
                 onChange={handleChange}
                 errorText={errors.ports}
                 onBlur={handleBlur}
-                required
-                // inputProps={{
-                //   autoFocus: true
-                // }}
               />
               <Select
-                label="Sources"
-                name="sources"
-                options={[]}
-                aria-label="Select rule sources."
-                textFieldProps={{ required: true }}
-                onChange={() => null}
+                label={`${capitalize(addressesLabel)}s`}
+                name="addresses"
+                placeholder={`Select ${addressesLabel}s...`}
+                aria-label={`Select rule ${addressesLabel}s.`}
+                options={addressOptions}
+                value={
+                  addressOptions.find(
+                    thisOption => thisOption.value === values.addresses
+                  ) || null
+                }
+                onChange={(item: Item) => _handleChange('addresses', item)}
                 onBlur={handleBlur}
               />
-              <TextField
-                aria-label="IP / Netmask for firewall rule"
-                label="IP / Netmask"
-                name="ip netmask"
-                value={values.ports}
-                onChange={handleChange}
-                // errorText={errors.ports}
-                onBlur={handleBlur}
-                required
-                // inputProps={{
-                //   autoFocus: true
-                // }}
-              />
+              {/* Show this field only if "IP / Netmask has been selected." */}
+              {values.addresses === 'ip/netmask' && (
+                <MultipleIPInput
+                  title="IP / Netmask"
+                  aria-label="IP / Netmask for firewall rule"
+                  className={classes.ipSelect}
+                  ips={ips}
+                  onChange={(_ips: string[]) => setIPs(_ips)}
+                  inputProps={{ autoFocus: true }}
+                />
+              )}
               <ActionsPanel>
                 <Button
                   buttonType="primary"
-                  // onClick={() => handleSubmit()}
-                  onClick={() => null}
+                  onClick={() => handleSubmit()}
                   data-qa-submit
-                  loading={isSubmitting}
+                  // loading={isSubmitting}
                 >
                   Add Rule
                 </Button>
@@ -139,4 +217,74 @@ const RuleDrawer: React.FC<CombinedProps> = props => {
   );
 };
 
-export default RuleDrawer;
+export default React.memo(RuleDrawer);
+
+/**
+ * Derive the appropriate value of the "Type" field based on selected form
+ * values and IP addresses.
+ *
+ * Example: A user selects the "HTTPS" type. The appropriate value is "HTTPS".
+ * Next, the user modifies the allowed IP addresses. Now the appropriate value
+ * is "custom", since the form no longer matches the predefined "HTTPS" type.
+ * Finally, the user changes their mind and removes the custom IP selection.
+ * The form again matches the "HTTPS" type, so the correct value is "HTTPS".
+ */
+const deriveTypeFromValuesAndIPs = (values: Form, _ips: string[]) => {
+  const protocol = values.protocol as FirewallRuleProtocol;
+
+  const ips = formValueToIPs(values.addresses, _ips);
+
+  const predefinedFirewall = predefinedFirewallFromRule({
+    ports: values.ports,
+    protocol,
+    addresses: ips
+  });
+
+  if (predefinedFirewall) {
+    return predefinedFirewall;
+  } else if (
+    values.protocol?.length > 0 ||
+    values.ports?.length > 0 ||
+    values.addresses?.length > 0
+  ) {
+    return 'custom';
+  }
+  return null;
+};
+
+/**
+ * Matches potential form values to the correct "addresses" payload.
+ */
+const formValueToIPs = (formValue: string, ips: string[]) => {
+  switch (formValue) {
+    case 'all':
+      return allIPs;
+    case 'allIPv4':
+      return { ipv4: [allIPv4], ipv6: [] };
+    case 'allIPv6':
+      return { ipv4: [], ipv6: [allIPv6] };
+    default:
+      // The user has selected "IP / Netmask" and entered custom IPs, so we need
+      // to separate those into v4 and v6 addresses.
+      return categorizeIPAddresses(ips);
+  }
+};
+
+/**
+ * Given an array of IP addresses, filter out invalid addresses and categorize
+ * them by "ipv4" and "ipv6."
+ */
+const categorizeIPAddresses = (ips: string[]) =>
+  ips.reduce<{ ipv4: string[]; ipv6: string[] }>(
+    (acc, ip) => {
+      try {
+        const parsed = parseIP(ip);
+        const type = parsed.kind();
+        acc[type].push(ip);
+      } catch {
+        // IP wasn't valid. No need to do anything; just continue.
+      }
+      return acc;
+    },
+    { ipv4: [], ipv6: [] }
+  );
