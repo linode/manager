@@ -31,6 +31,9 @@ export const ALGOLIA_SEARCH_KEY =
 export const LAUNCH_DARKLY_API_KEY =
   process.env.REACT_APP_LAUNCH_DARKLY_ID || '';
 
+/** If it's hitting the prod API */
+export const isProdAPI = RegExp('api.linode.com/v4').test(API_ROOT);
+
 // Maximum page size allowed by the API. Used in the `getAll()` helper function
 // to request as many items at once as possible.
 export const API_MAX_PAGE_SIZE =
