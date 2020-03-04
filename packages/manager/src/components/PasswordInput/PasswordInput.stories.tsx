@@ -1,6 +1,6 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import PasswordInput from './PasswordInput';
+const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
 
 storiesOf('Password Input', module).add('Example', () => (
   <div>
