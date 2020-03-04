@@ -8,7 +8,6 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import UserSSHKeyPanel from './UserSSHKeyPanel';
@@ -128,24 +127,20 @@ class AccessPanel extends React.Component<CombinedProps> {
       >
         <div className={!noPadding ? classes.inner : ''}>
           {error && <Notice text={error} error />}
-          <React.Suspense
-            fallback={<Typography variant="body1">Still Loading...</Typography>}
-          >
-            <PasswordInput
-              data-qa-password-input
-              className={classes.passwordInputOuter}
-              required={required}
-              disabled={disabled}
-              disabledReason={disabledReason || ''}
-              autoComplete="new-password"
-              value={this.props.password || ''}
-              label={label || 'Root Password'}
-              placeholder={placeholder || 'Enter a password.'}
-              onChange={this.handleChange}
-              hideStrengthLabel={hideStrengthLabel}
-              hideHelperText={hideHelperText}
-            />
-          </React.Suspense>
+          <PasswordInput
+            data-qa-password-input
+            className={classes.passwordInputOuter}
+            required={required}
+            disabled={disabled}
+            disabledReason={disabledReason || ''}
+            autoComplete="new-password"
+            value={this.props.password || ''}
+            label={label || 'Root Password'}
+            placeholder={placeholder || 'Enter a password.'}
+            onChange={this.handleChange}
+            hideStrengthLabel={hideStrengthLabel}
+            hideHelperText={hideHelperText}
+          />
           {users && (
             <UserSSHKeyPanel
               users={users}
