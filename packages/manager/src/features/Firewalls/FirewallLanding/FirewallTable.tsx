@@ -12,10 +12,12 @@ import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import TableContentWrapper from 'src/components/TableContentWrapper';
 import TableSortCell from 'src/components/TableSortCell';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { ActionHandlers } from './FirewallActionMenu';
-import FirewallRows from './FirewallTableRows';
+import FirewallRow from './FirewallRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
   labelCell: {
@@ -46,6 +48,15 @@ const FirewallTable: React.FC<CombinedProps> = props => {
     lastUpdated: firewallsLastUpdated,
     ...actionMenuHandlers
   } = props;
+
+  const _error =
+    firewallsError.read && firewallsLastUpdated === 0
+      ? // @todo change to Devices or make dynamic when NBs are possible as Devices
+        getAPIErrorOrDefault(
+          firewallsError.read,
+          'Unable to retrieve Firewalls'
+        )
+      : undefined;
 
   return (
     <React.Fragment>
@@ -101,13 +112,25 @@ const FirewallTable: React.FC<CombinedProps> = props => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      <FirewallRows
-                        data={paginatedAndOrderedData}
-                        loading={firewallsLoading}
-                        error={firewallsError.read}
+                      <TableContentWrapper
+                        loading={firewallsLoading && firewallsLastUpdated === 0}
                         lastUpdated={firewallsLastUpdated}
-                        {...actionMenuHandlers}
-                      />
+                        length={paginatedAndOrderedData.length}
+                        error={_error}
+                      >
+                        {paginatedAndOrderedData.map(eachFirewall => {
+                          return (
+                            <FirewallRow
+                              key={`firewall-row-${eachFirewall.id}`}
+                              firewallID={eachFirewall.id}
+                              firewallLabel={eachFirewall.label}
+                              firewallRules={eachFirewall.rules}
+                              firewallStatus={eachFirewall.status}
+                              {...actionMenuHandlers}
+                            />
+                          );
+                        })}
+                      </TableContentWrapper>
                     </TableBody>
                   </Table>
                 </Paper>
