@@ -1,7 +1,13 @@
 import { cleanup } from '@testing-library/react';
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import RuleDrawer, { CombinedProps } from './RuleDrawer';
+import { allIPs } from '../shared';
+import RuleDrawer, {
+  classifyIPs,
+  CombinedProps,
+  deriveTypeFromValuesAndIPs,
+  formValueToIPs
+} from './RuleDrawer';
 
 const mockOnClose = jest.fn();
 
@@ -20,5 +26,68 @@ describe('AddRuleDrawer', () => {
       <RuleDrawer {...props} mode="create" category="inbound" />
     );
     getByText('Add an Inbound Rule');
+  });
+});
+
+describe('utilities', () => {
+  describe('formValueToIPs', () => {
+    it('returns a complete set of IPs given a string form value', () => {
+      expect(formValueToIPs('all', [''])).toEqual(allIPs);
+      expect(formValueToIPs('allIPv4', [''])).toEqual({
+        ipv4: ['0.0.0.0/0'],
+        ipv6: []
+      });
+      expect(formValueToIPs('allIPv6', [''])).toEqual({
+        ipv4: [],
+        ipv6: ['::0/0']
+      });
+      expect(formValueToIPs('ip/netmask', ['1.1.1.1'])).toEqual({
+        ipv4: ['1.1.1.1'],
+        ipv6: []
+      });
+    });
+  });
+
+  describe('classifyIPs', () => {
+    it('classifies v4 and v6', () => {
+      expect(classifyIPs(['1.1.1.1', '0::0'])).toEqual({
+        ipv4: ['1.1.1.1'],
+        ipv6: ['0::0']
+      });
+    });
+    it('ignores bad input', () => {
+      expect(classifyIPs(['1.1.1.1', 'hello-world'])).toEqual({
+        ipv4: ['1.1.1.1'],
+        ipv6: []
+      });
+    });
+  });
+
+  describe('deriveTypeFromValuesAndIPs', () => {
+    const formValues = {
+      addresses: 'all',
+      ports: '443',
+      protocol: 'TCP',
+      type: ''
+    };
+
+    it('correctly matches values to their representative type', () => {
+      const result = deriveTypeFromValuesAndIPs(formValues, []);
+      expect(result).toBe('https');
+    });
+    it('takes into account custom IPS', () => {
+      const result = deriveTypeFromValuesAndIPs(formValues, [
+        '0.0.0.0/0',
+        '::0/0'
+      ]);
+      expect(result).toBe('https');
+    });
+    it('returns "custom" if there\'s no match', () => {
+      const result = deriveTypeFromValuesAndIPs(
+        { ...formValues, ports: '22-23' },
+        []
+      );
+      expect(result).toBe('custom');
+    });
   });
 });
