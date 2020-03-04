@@ -1,0 +1,71 @@
+# Commands available in this repo
+
+## yarn
+We use Yarn for this repository, v1.21 and above, on NodeJs v8 and above (tested and working on NodeJs v12).
+For NodeJs we recommend using `nvm`, See https://github.com/nvm-sh/nvm
+
+### yarn.lock
+There is one yarn lock in this repo, This is like `package-lock.json` for npm users.
+
+**This file is commited** it ensures we use the same exact version of the packages in CI.
+
+**DO NOT USE `yarn`** to install dependencies, this will modify the `yarn.lock`.
+=> Use `yarn install:all`.
+
+
+**We use workspaces** as explained in our [GETTING STARTED](./GETTING_STARTED.md) guide.
+
+
+#### Change a dependency version, and the `yarn.lock`
+
+The best way is usually to modify manually the `package.json` in the correct workspace (root, linode-manager or linode-js-sdk).
+Then runing `yarn`.
+this should update the lockfile with only the required changes.
+
+Although if `yarn` noticed other dependancy it could fix warnings on it will do it implicitly.
+While this is a good behaviour from yarn, we want to keep the diff on a PR as focused and short as possible to facilitate review.
+So consider that if you have a lot of changes in your `yarn.lock` you may want to seperate things in different PR.
+
+**Any time you change the yarn lock** review if there is added dependancy that do not make sense.
+Try to manually dedupe versions if possible in the yarn lock (remove the different paragraph in the `yarn.lock` and re run `yarn`)
+
+**If you see that 1 new dependency you added added a lot of dependency, with older versions of the dependencies we already have, check that the new package is not outdated**
+
+### running commands
+
+#### In general
+
+Foreword: Prefer `yarn run` over `npx`
+
+`yarn run <command>` will execute a command in the root workspace.
+`yarn run workspace <workspace> run <command>` to execute it in a specific folder
+
+Built-in command do not require `run`
+
+In the case of `yarn add` running it in the root directory will issue a warning, this is normal and just to make sure that you want to install the dependancy there and not in one of the workspaces. (you need to add `-W` to ignore it)
+
+#### package.json commands
+
+`yarn install:all`: installs dependencies, without touching the lock.
+`yarn postinstall`: is called automatically after any `yarn install`, applyes patches to the packages installed.
+`yarn clean`: removes all dependencies installed.
+
+`yarn build` builds the sdk and the production build of the manager, add `--analyze` to produce a report of the bundle chunks size and content in `packages/manager/bundle_analyzer_report.html`.
+`yarn build:sdk`: builds the SDK.
+
+
+`yarn start:all`: starts the development server on `localhost:3000` with watch on the code (both SDK and Manager).
+`yarn up` installs everything, builds the sdk, runs `yarn start:all`
+
+### cheat sheet
+
+first use `yarn up`
+To run the unit tests `yarn test` [you must at least have ran `yarn build:sdk` before]
+To run the e2e tests: `yarn cy:e2e` [you must have the app served on `localhost:3000`, maybe with `yarn up`]
+To run the storybook tests `yarn storybook:e2e` [you must have the storybook server started with `yarn storybook`]
+
+
+If the `yarn.lock` changed: re-run `yarn install:all`
+If you changed Node version `yarn clean`
+
+
