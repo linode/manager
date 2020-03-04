@@ -70,15 +70,18 @@ const requestMap: RequestMap = {
 
 export const useReduxLoad = <T>(
   deps: ReduxEntity[] = [],
-  refreshInterval: number = 60000
+  refreshInterval: number = 60000,
+  predicate: boolean = true
 ): UseReduxPreload => {
   const [_loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
   const state = useStore<ApplicationState>().getState();
 
   useEffect(() => {
-    requestDeps(state, dispatch, deps, refreshInterval, setLoading);
-  }, []);
+    if (predicate) {
+      requestDeps(state, dispatch, deps, refreshInterval, setLoading);
+    }
+  }, [predicate]);
 
   return { _loading };
 };

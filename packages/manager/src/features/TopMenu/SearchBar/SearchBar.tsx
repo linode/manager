@@ -2,7 +2,6 @@ import Close from '@material-ui/icons/Close';
 import Search from '@material-ui/icons/Search';
 import { take } from 'ramda';
 import * as React from 'react';
-import { useDispatch, useStore } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import _Control from 'react-select/lib/components/Control';
 import _Option from 'react-select/lib/components/Option';
@@ -14,7 +13,7 @@ import withImages, { WithImages } from 'src/containers/withImages.container';
 import withStoreSearch, {
   SearchProps
 } from 'src/features/Search/withStoreSearch';
-import { requestDeps } from 'src/hooks/useReduxLoad';
+import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { sendSearchBarUsedEvent } from 'src/utilities/ga.ts';
 import { debounce } from 'throttle-debounce';
 import styled, { StyleProps } from './SearchBar.styles';
@@ -67,24 +66,12 @@ export const SearchBar: React.FC<CombinedProps> = props => {
   const [searchText, setSearchText] = React.useState<string>('');
   const [searchActive, setSearchActive] = React.useState<boolean>(false);
   const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
-  const [loading, setLoading] = React.useState<boolean>(false);
 
-  const store = useStore();
-  const state = store.getState();
-  const dispatch = useDispatch();
-
-  React.useEffect(() => {
-    if (searchActive) {
-      // We're searching, need to make sure we have all the data
-      requestDeps(
-        state,
-        dispatch,
-        ['linodes', 'nodeBalancers', 'volumes', 'domains', 'images', 'managed'],
-        60000,
-        setLoading
-      );
-    }
-  }, [searchActive]);
+  const { _loading } = useReduxLoad(
+    ['linodes', 'nodeBalancers', 'images', 'domains', 'managed'],
+    60000,
+    searchActive // Only request things if the search bar is open/active.
+  );
 
   const { classes, combinedResults, entitiesLoading } = props;
 
@@ -167,7 +154,11 @@ export const SearchBar: React.FC<CombinedProps> = props => {
     return true;
   };
 
-  const finalOptions = createFinalOptions(combinedResults, searchText, loading);
+  const finalOptions = createFinalOptions(
+    combinedResults,
+    searchText,
+    _loading
+  );
 
   return (
     <React.Fragment>
