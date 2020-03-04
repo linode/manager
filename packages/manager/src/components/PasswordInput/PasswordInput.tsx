@@ -1,5 +1,6 @@
 import { isEmpty } from 'ramda';
 import * as React from 'react';
+
 import {
   createStyles,
   Theme,
@@ -10,10 +11,9 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import { debounce } from 'throttle-debounce';
+import * as zxcvbn from 'zxcvbn';
 import StrengthIndicator from '../PasswordInput/StrengthIndicator';
 import HideShowText from './HideShowText';
-
-declare var zxcvbn: (s: string) => any;
 
 type Props = TextFieldProps & {
   value?: string;

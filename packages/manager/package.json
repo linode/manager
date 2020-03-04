@@ -80,7 +80,8 @@
     "typescript-fsa-reducers": "^1.2.0",
     "xml2js": "^0.4.19",
     "xterm": "^4.2.0",
-    "yup": "^0.27.0"
+    "yup": "^0.27.0",
+    "zxcvbn": "^4.4.2"
   },
   "scripts": {
     "postinstall": "patch-package",
@@ -177,6 +178,7 @@
     "@types/uuid": "^3.4.3",
     "@types/xml2js": "^0.4.3",
     "@types/yup": "^0.24.9",
+    "@types/zxcvbn": "^4.4.0",
     "@wdio/cli": "^5.18.6",
     "@wdio/dot-reporter": "^5.18.6",
     "@wdio/jasmine-framework": "^5.18.6",
