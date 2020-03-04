@@ -9,9 +9,11 @@ import {
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { Props as TextFieldProps } from 'src/components/TextField';
+import { debounce } from 'throttle-debounce';
 import StrengthIndicator from '../PasswordInput/StrengthIndicator';
 import HideShowText from './HideShowText';
-declare var zxcvbn : (s:string)=>any;
+
+declare var zxcvbn: (s: string) => any;
 
 type Props = TextFieldProps & {
   value?: string;
@@ -58,7 +60,10 @@ class PasswordInput extends React.Component<CombinedProps, State> {
 
   UNSAFE_componentWillReceiveProps(nextProps: CombinedProps) {
     const { value } = nextProps;
-    this.setState({ strength: maybeStrength(value) });
+    const debouncedStateUpdate = debounce(400, false, _value =>
+      this.setState({ strength: maybeStrength(_value) })
+    );
+    debouncedStateUpdate(value);
   }
 
   onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
