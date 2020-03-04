@@ -3,7 +3,6 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
-import Typography from 'src/components/core/Typography';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import useFirewallDevices from 'src/hooks/useFirewallDevices';
@@ -130,9 +129,9 @@ export const getDeviceLinks = (data: FirewallDevice[]): JSX.Element => {
         </Link>
       ))}
       {data.length > 3 && (
-        <Typography>
-          {` `}plus {data.length - 3} more.
-        </Typography>
+        <span>
+          {`, `}plus {data.length - 3} more.
+        </span>
       )}
     </>
   );
