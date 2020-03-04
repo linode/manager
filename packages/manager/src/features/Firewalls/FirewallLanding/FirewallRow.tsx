@@ -123,6 +123,7 @@ export const getDeviceLinks = (data: FirewallDevice[]): JSX.Element => {
           className="link secondaryLink"
           key={thisDevice.id}
           to={`/linodes/${thisDevice.entity.id}`}
+          data-testid="firewall-row-link"
         >
           {idx > 0 && `, `}
           {thisDevice.entity.label}
