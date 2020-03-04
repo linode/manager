@@ -75,14 +75,7 @@ describe('utilities', () => {
       const result = deriveTypeFromValuesAndIPs(formValues, []);
       expect(result).toBe('https');
     });
-    it('takes into account custom IPS', () => {
-      const result = deriveTypeFromValuesAndIPs(formValues, [
-        '0.0.0.0/0',
-        '::0/0'
-      ]);
-      expect(result).toBe('https');
-    });
-    it('returns "custom" if there\'s no match', () => {
+    it('returns "custom" if there is no match', () => {
       const result = deriveTypeFromValuesAndIPs(
         { ...formValues, ports: '22-23' },
         []
