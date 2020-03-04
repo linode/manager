@@ -1,13 +1,13 @@
 import { cleanup } from '@testing-library/react';
 import * as React from 'react';
+import { allIPs } from 'src/features/Firewalls/shared';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { allIPs } from '../shared';
 import RuleDrawer, {
   classifyIPs,
   CombinedProps,
   deriveTypeFromValuesAndIPs,
   formValueToIPs
-} from './RuleDrawer';
+} from './FirewallRuleDrawer';
 
 const mockOnClose = jest.fn();
 

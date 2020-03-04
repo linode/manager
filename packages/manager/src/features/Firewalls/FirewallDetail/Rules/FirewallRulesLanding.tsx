@@ -3,8 +3,8 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import FirewallRuleDrawer from './FirewallRuleDrawer';
 import FirewallRuleTable from './FirewallRuleTable';
-import RuleDrawer from './RuleDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
@@ -60,7 +60,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
           openDrawerForCreating={openDrawerForCreating}
         />
       </div>
-      <RuleDrawer
+      <FirewallRuleDrawer
         isOpen={isOpen}
         mode={mode}
         category={ruleCategory}

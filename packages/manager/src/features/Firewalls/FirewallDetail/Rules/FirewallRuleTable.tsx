@@ -12,12 +12,12 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 import { firewallRuleFactory } from 'src/factories/firewalls';
-import capitalize from 'src/utilities/capitalize';
 import {
   generateAddressesLabel,
   generateRuleLabel,
   predefinedFirewallFromRule as ruleToPredefinedFirewall
-} from '../shared';
+} from 'src/features/Firewalls/shared';
+import capitalize from 'src/utilities/capitalize';
 
 // Use mock data for now.
 // @todo: use real data.

@@ -22,7 +22,9 @@ import withFirewalls, {
   Props as WithFirewallsProps
 } from 'src/containers/firewalls.container';
 
-const FirewallRulesLanding = React.lazy(() => import('./FirewallRulesLanding'));
+const FirewallRulesLanding = React.lazy(() =>
+  import('./Rules/FirewallRulesLanding')
+);
 
 const FirewallLinodesLanding = React.lazy(() =>
   import('./FirewallLinodesLanding')

@@ -12,7 +12,6 @@ import { Item } from 'src/components/EnhancedSelect/Select';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import capitalize from 'src/utilities/capitalize';
 import {
   addressOptions,
   allIPs,
@@ -22,10 +21,11 @@ import {
   portPresets,
   predefinedFirewallFromRule,
   protocolOptions
-} from '../shared';
+} from 'src/features/Firewalls/shared';
+import capitalize from 'src/utilities/capitalize';
 
 // =============================================================================
-// <RuleDrawer />
+// <FirewallRuleDrawer />
 // =============================================================================
 interface Props {
   category: 'inbound' | 'outbound';
@@ -50,7 +50,7 @@ const initialValues: Form = {
 
 export type CombinedProps = Props;
 
-const RuleDrawer: React.FC<CombinedProps> = props => {
+const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
   const { isOpen, onClose, category, mode } = props;
 
   // Custom IPs are tracked separately from the form. The <MultipleIPs />
@@ -87,7 +87,7 @@ const RuleDrawer: React.FC<CombinedProps> = props => {
       >
         {formikProps => {
           return (
-            <RuleForm
+            <FirewallRuleForm
               addressesLabel={addressesLabel}
               ips={ips}
               setIPs={setIPs}
@@ -104,10 +104,10 @@ const RuleDrawer: React.FC<CombinedProps> = props => {
   );
 };
 
-export default React.memo(RuleDrawer);
+export default React.memo(FirewallRuleDrawer);
 
 // =============================================================================
-// <RuleForm />
+// <FirewallRuleForm />
 // =============================================================================
 const useStyles = makeStyles((theme: Theme) => ({
   ipSelect: {
@@ -115,7 +115,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface RuleFormProps extends FormikProps<Form> {
+interface FirewallRuleFormProps extends FormikProps<Form> {
   ips: string[];
   setIPs: (ips: string[]) => void;
   addressesLabel: string;
@@ -126,7 +126,7 @@ const typeOptions = [
   { label: 'Custom', value: 'custom' }
 ];
 
-const RuleForm: React.FC<RuleFormProps> = React.memo(props => {
+const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
   const classes = useStyles();
 
   const {
