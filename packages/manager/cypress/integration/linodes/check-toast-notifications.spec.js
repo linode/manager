@@ -1,7 +1,7 @@
 import { stubEvent } from '../../support/api/events';
 import { checkToast } from '../../support/ui/events';
 
-describe('Event - create a linode', () => {
+describe('Toast Notifications', () => {
   beforeEach(() => {
     cy.login2();
     cy.visit('/linodes');
