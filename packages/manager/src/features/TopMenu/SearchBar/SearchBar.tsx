@@ -68,7 +68,7 @@ export const SearchBar: React.FC<CombinedProps> = props => {
   const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
 
   const { _loading } = useReduxLoad(
-    ['linodes', 'nodeBalancers', 'images', 'domains', 'managed'],
+    ['linodes', 'nodeBalancers', 'images', 'domains'],
     60000,
     searchActive // Only request things if the search bar is open/active.
   );
