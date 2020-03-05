@@ -125,7 +125,7 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
           exact
           strict
           path={`${URL}/rules`}
-          component={FirewallRulesLanding}
+          render={() => <FirewallRulesLanding rules={thisFirewall.rules} />}
         />
         <Route
           exact

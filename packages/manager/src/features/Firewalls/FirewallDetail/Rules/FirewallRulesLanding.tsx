@@ -1,3 +1,4 @@
+import { FirewallRules } from 'linode-js-sdk/lib/firewalls';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -18,9 +19,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-type CombinedProps = RouteComponentProps;
+interface Props {
+  rules: FirewallRules;
+}
+
+type CombinedProps = Props & RouteComponentProps;
 
 const FirewallRulesLanding: React.FC<CombinedProps> = props => {
+  const { rules } = props;
+
   const classes = useStyles();
 
   const [ruleCategory, setRuleCategory] = React.useState<
@@ -51,12 +58,14 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
       <div className={classes.table}>
         <FirewallRuleTable
           category="inbound"
+          rules={rules.inbound ?? []}
           openDrawerForCreating={openDrawerForCreating}
         />
       </div>
       <div className={classes.table}>
         <FirewallRuleTable
           category="outbound"
+          rules={rules.outbound ?? []}
           openDrawerForCreating={openDrawerForCreating}
         />
       </div>
@@ -70,4 +79,4 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, {}>(React.memo)(FirewallRulesLanding);
+export default compose<CombinedProps, Props>(React.memo)(FirewallRulesLanding);
