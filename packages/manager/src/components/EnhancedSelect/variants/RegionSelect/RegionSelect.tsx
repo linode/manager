@@ -93,7 +93,7 @@ export const getRegionOptions = (regions: ExtendedRegion[]) => {
               label: thisRegion.display,
               value: thisRegion.id,
               flag:
-                flags?.[thisRegion.country.toLocaleLowerCase()] ?? (() => null),
+                flags[thisRegion.country.toLocaleLowerCase()] ?? (() => null),
               country: thisRegion.country
             }))
             .sort(sortRegions)
