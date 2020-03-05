@@ -19,7 +19,8 @@ type ClassNames =
   | 'withForcedIndex'
   | 'activeCaret'
   | 'activeCaretOverlay'
-  | 'selectedOuter';
+  | 'selectedOuter'
+  | 'highlight';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -113,6 +114,11 @@ const styles = (theme: Theme) =>
         height: '50%',
         background: `linear-gradient(to right bottom, ${theme.bg.lightBlue} 0%, ${theme.bg.lightBlue} 45%, transparent 46.1%)`
       }
+    },
+    highlight: {
+      borderColor: '#99c8ff',
+      borderStyle: 'solid',
+      borderWidth: '2px'
     }
   });
 
@@ -127,6 +133,7 @@ interface Props {
   htmlFor?: string;
   selected?: boolean;
   forceIndex?: boolean;
+  highlight?: boolean;
 }
 
 export type CombinedProps = Props &
@@ -176,6 +183,7 @@ export class TableRow extends React.Component<CombinedProps> {
       staticContext,
       selected,
       forceIndex,
+      highlight,
       ...rest
     } = this.props;
 
@@ -203,7 +211,8 @@ export class TableRow extends React.Component<CombinedProps> {
         className={classNames(className, {
           [classes.root]: true,
           [classes.selected]: selected,
-          [classes.withForcedIndex]: forceIndex
+          [classes.withForcedIndex]: forceIndex,
+          [classes.highlight]: highlight
         })}
         {...rest}
         tabIndex={rowLink || forceIndex ? 0 : -1}
