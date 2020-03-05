@@ -107,7 +107,7 @@ const iconMap = {
 };
 
 const getIcon = (variant: Variant) => {
-  return iconMap?.[variant] ?? LinodeIcon;
+  return iconMap[variant] ?? LinodeIcon;
 };
 
 const EntityIcon: React.StatelessComponent<CombinedProps> = props => {
