@@ -25,7 +25,11 @@ import produce from 'immer';
 import { FirewallRuleType } from 'linode-js-sdk/lib/firewalls';
 import { last } from 'ramda';
 
-type RuleStatus = 'NOT_MODIFIED' | 'MODIFIED' | 'NEW' | 'PENDING_DELETION';
+export type RuleStatus =
+  | 'NOT_MODIFIED'
+  | 'MODIFIED'
+  | 'NEW'
+  | 'PENDING_DELETION';
 
 export interface FirewallRuleWithStatus extends FirewallRuleType {
   status: RuleStatus;
@@ -50,6 +54,13 @@ export type RuleEditorAction =
   | {
       type: 'UNDO';
       idx: number;
+    }
+  | {
+      type: 'DISCARD_CHANGES';
+    }
+  | {
+      type: 'RESET';
+      rules: FirewallRuleType[];
     };
 
 const ruleEditorReducer = (
@@ -59,7 +70,7 @@ const ruleEditorReducer = (
   switch (action.type) {
     case 'NEW_RULE':
       draft.push([{ ...action.rule, status: 'NEW' }]);
-      break;
+      return;
 
     case 'DELETE_RULE':
       let lastRevision = last(draft[action.idx]);
@@ -72,7 +83,7 @@ const ruleEditorReducer = (
         ...lastRevision,
         status: 'PENDING_DELETION'
       });
-      break;
+      return;
 
     case 'MODIFY_RULE':
       lastRevision = last(draft[action.idx]);
@@ -86,7 +97,7 @@ const ruleEditorReducer = (
         ...action.modifiedRule,
         status: 'MODIFIED'
       });
-      break;
+      return;
 
     case 'UNDO':
       lastRevision = last(draft[action.idx]);
@@ -97,7 +108,20 @@ const ruleEditorReducer = (
       }
 
       draft[action.idx].pop();
-      break;
+      return;
+
+    case 'DISCARD_CHANGES':
+      const original: RuleEditorState = [];
+      draft.forEach(revisionList => {
+        const head = revisionList[0];
+        if (head.status === 'NOT_MODIFIED') {
+          original.push([head]);
+        }
+      });
+      return original;
+
+    case 'RESET':
+      return initRuleEditorState(action.rules);
   }
 };
 
@@ -106,24 +130,33 @@ export const initRuleEditorState = (
 ): RuleEditorState =>
   rules.map(thisRule => [{ ...thisRule, status: 'NOT_MODIFIED' }]) ?? [];
 
-export const editorStateToRules = (state: RuleEditorState) =>
-  state
-    .map(revisionList => {
-      const lastRevision = last(revisionList);
+export const editorStateToRules = (
+  state: RuleEditorState,
+  withStatus = true
+): FirewallRuleWithStatus[] => {
+  const res: FirewallRuleWithStatus[] = [];
+  state.forEach(revisionList => {
+    const lastRevision = last(revisionList);
 
-      // If a new rule has been added, then the action has been undone, the
-      // revisionList will be empty. We return undefined here and filter next.
-      if (!lastRevision) {
-        return;
-      }
+    if (!lastRevision) {
+      return;
+    }
 
-      // IMPORTANT: Make a copy here so the state is not modified.
-      const lastRevisionCopy = { ...lastRevision };
+    // IMPORTANT: Make a copy here so the state is not modified.
+    const lastRevisionCopy = { ...lastRevision };
+
+    if (!withStatus) {
       delete lastRevisionCopy.status;
+    }
 
-      return lastRevisionCopy;
-    })
-    // Filter out possible undefined values from the situation outlined above.
-    .filter(rule => Boolean(rule));
+    res.push(lastRevisionCopy);
+  });
+  return res;
+};
+
+export const hasModified = (editorState: RuleEditorState) => {
+  const rules = editorStateToRules(editorState);
+  return rules.find(thisRule => thisRule.status !== 'NOT_MODIFIED');
+};
 
 export default produce(ruleEditorReducer);

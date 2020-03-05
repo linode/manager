@@ -1,4 +1,3 @@
-import { FirewallRuleType } from 'linode-js-sdk/lib/firewalls';
 import * as React from 'react';
 import ActionMenu from 'src/components/ActionMenu/ActionMenu';
 import AddNewLink from 'src/components/AddNewLink';
@@ -19,16 +18,21 @@ import {
 } from 'src/features/Firewalls/shared';
 import capitalize from 'src/utilities/capitalize';
 import { v4 } from 'uuid';
+import { Mode } from './FirewallRuleDrawer';
+import { FirewallRuleWithStatus, RuleStatus } from './firewallRuleEditor';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
     display: 'flex',
     justifyContent: 'space-between',
     flexDirection: 'row'
+  },
+  table: {
+    borderCollapse: 'collapse'
   }
 }));
 
-type Category = 'inbound' | 'outbound';
+export type Category = 'inbound' | 'outbound';
 
 interface RuleRow {
   type: string;
@@ -36,28 +40,29 @@ interface RuleRow {
   ports: string;
   addresses: string;
   id: string;
+  status: RuleStatus;
 }
 
 interface Props {
   category: Category;
-  openDrawerForCreating: (category: 'inbound' | 'outbound') => void;
-  rules: FirewallRuleType[];
+  openDrawer: (category: Category, mode: Mode) => void;
+  rulesWithStatus: FirewallRuleWithStatus[];
 }
 
 type CombinedProps = Props;
 
 const FirewallRuleTable: React.FC<CombinedProps> = props => {
-  const { category, rules } = props;
+  const { category, rulesWithStatus } = props;
 
   const classes = useStyles();
 
   const addressColumnLabel =
     category === 'inbound' ? 'sources' : 'destinations';
 
-  const rowData = firewallRuleToRowData(rules);
+  const rowData = firewallRuleToRowData(rulesWithStatus);
 
-  const _openDrawerForCreating = React.useCallback(() => {
-    props.openDrawerForCreating(props.category);
+  const openDrawerForCreating = React.useCallback(() => {
+    props.openDrawer(props.category, 'create');
   }, []);
 
   return (
@@ -65,13 +70,13 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
       <div className={classes.header}>
         <Typography variant="h2">{`${capitalize(category)} Rules`}</Typography>
         <AddNewLink
-          onClick={_openDrawerForCreating}
+          onClick={openDrawerForCreating}
           label={`Add an ${capitalize(category)} Rule`}
         />
       </div>
       <OrderBy data={rowData} orderBy={'type'} order={'asc'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-          <Table isResponsive={false}>
+          <Table isResponsive={false} tableClass={classes.table}>
             <TableHead>
               <TableRow>
                 <TableSortCell
@@ -114,10 +119,20 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
                 <TableRowEmptyState colSpan={5} />
               ) : (
                 orderedData.map((ruleRow: RuleRow, idx) => {
-                  const { id, type, protocol, ports, addresses } = ruleRow;
+                  const {
+                    id,
+                    type,
+                    protocol,
+                    ports,
+                    addresses,
+                    status
+                  } = ruleRow;
 
                   return (
-                    <TableRow key={id}>
+                    <TableRow
+                      key={id}
+                      highlight={status === 'MODIFIED' || status === 'NEW'}
+                    >
                       <TableCell>{type}</TableCell>
                       <TableCell>{protocol}</TableCell>
                       <TableCell>{ports}</TableCell>
@@ -149,7 +164,7 @@ export default React.memo(FirewallRuleTable);
  * of data. This also allows us to sort each column of the RuleTable.
  */
 export const firewallRuleToRowData = (
-  firewallRules: FirewallRuleType[]
+  firewallRules: FirewallRuleWithStatus[]
 ): RuleRow[] => {
   return firewallRules.map(thisRule => {
     const ruleType = ruleToPredefinedFirewall(thisRule);
@@ -159,6 +174,7 @@ export const firewallRuleToRowData = (
       protocol: thisRule.protocol,
       addresses: generateAddressesLabel(thisRule.addresses),
       ports: thisRule.ports,
+      status: thisRule.status,
       id: v4()
     };
   });

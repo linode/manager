@@ -10,12 +10,14 @@ import RuleDrawer, {
 } from './FirewallRuleDrawer';
 
 const mockOnClose = jest.fn();
+const mockOnSubmit = jest.fn();
 
 const props: CombinedProps = {
   category: 'inbound',
   mode: 'create',
   isOpen: true,
-  onClose: mockOnClose
+  onClose: mockOnClose,
+  onSubmit: mockOnSubmit
 };
 
 afterEach(cleanup);

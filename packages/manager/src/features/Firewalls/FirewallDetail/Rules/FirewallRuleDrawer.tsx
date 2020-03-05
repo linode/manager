@@ -1,6 +1,9 @@
 import { Formik, FormikProps } from 'formik';
 import { parse as parseIP } from 'ipaddr.js';
-import { FirewallRuleProtocol } from 'linode-js-sdk/lib/firewalls';
+import {
+  FirewallRuleProtocol,
+  FirewallRuleType
+} from 'linode-js-sdk/lib/firewalls';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -24,14 +27,17 @@ import {
 } from 'src/features/Firewalls/shared';
 import capitalize from 'src/utilities/capitalize';
 
+export type Mode = 'create' | 'edit';
+
 // =============================================================================
 // <FirewallRuleDrawer />
 // =============================================================================
 interface Props {
   category: 'inbound' | 'outbound';
-  mode: 'create' | 'edit';
+  mode: Mode;
   isOpen: boolean;
   onClose: () => void;
+  onSubmit: (rule: FirewallRuleType, category: 'inbound' | 'outbound') => void;
 }
 
 interface Form {
@@ -64,6 +70,19 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
 
   const addressesLabel = category === 'inbound' ? 'source' : 'destination';
 
+  const _onSubmit = (values: Form) => {
+    const protocol = values.protocol as FirewallRuleProtocol;
+    props.onSubmit(
+      {
+        ports: values.ports,
+        protocol,
+        addresses: formValueToIPs(values.addresses, ips)
+      },
+      category
+    );
+    onClose();
+  };
+
   return (
     <Drawer title={title} open={isOpen} onClose={onClose}>
       <Formik
@@ -71,19 +90,7 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
         validateOnChange={false}
         validateOnBlur={false}
         // @todo: submit the form for real.
-        onSubmit={values =>
-          alert(
-            JSON.stringify(
-              {
-                port: values.ports,
-                protocol: values.protocol,
-                addresses: formValueToIPs(values.addresses, ips)
-              },
-              null,
-              2
-            )
-          )
-        }
+        onSubmit={_onSubmit}
       >
         {formikProps => {
           return (
