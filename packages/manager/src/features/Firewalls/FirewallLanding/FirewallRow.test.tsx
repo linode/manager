@@ -2,12 +2,16 @@ import { cleanup, render } from '@testing-library/react';
 import {} from 'history';
 import * as React from 'react';
 import { firewalls } from 'src/__data__/firewalls';
-import { firewallFactory } from 'src/factories/firewalls';
-import { wrapWithTableBody } from 'src/utilities/testHelpers';
+import {
+  firewallDeviceFactory,
+  firewallFactory
+} from 'src/factories/firewalls';
+import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 import {
   CombinedProps,
   FirewallRow,
   getCountOfRules,
+  getDeviceLinks,
   getRuleString
 } from './FirewallRow';
 
@@ -54,6 +58,30 @@ describe('FirewallRow', () => {
       getByText(firewall.label);
       getByText(firewall.status);
       getByText(getRuleString(getCountOfRules(firewall.rules)));
+    });
+  });
+
+  describe('getDeviceLinks', () => {
+    it('should return a single Link if one Device is attached', () => {
+      const device = firewallDeviceFactory.build();
+      const links = getDeviceLinks([device]);
+      const { getByText } = renderWithTheme(links);
+      expect(getByText(device.entity.label));
+    });
+
+    it('should render up to three comma-separated links', () => {
+      const devices = firewallDeviceFactory.buildList(3);
+      const links = getDeviceLinks(devices);
+      const { queryAllByTestId } = renderWithTheme(links);
+      expect(queryAllByTestId('firewall-row-link')).toHaveLength(3);
+    });
+
+    it('should render "plus N more" text for any devices over three', () => {
+      const devices = firewallDeviceFactory.buildList(13);
+      const links = getDeviceLinks(devices);
+      const { getByText, queryAllByTestId } = renderWithTheme(links);
+      expect(queryAllByTestId('firewall-row-link')).toHaveLength(3);
+      expect(getByText(/10 more/));
     });
   });
 });
