@@ -7,7 +7,7 @@ import JP from 'flag-icon-css/flags/4x3/jp.svg';
 import SG from 'flag-icon-css/flags/4x3/sg.svg';
 import US from 'flag-icon-css/flags/4x3/us.svg';
 import { Region } from 'linode-js-sdk/lib/regions';
-import { groupBy, pathOr } from 'ramda';
+import { groupBy } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -92,11 +92,8 @@ export const getRegionOptions = (regions: ExtendedRegion[]) => {
             .map(thisRegion => ({
               label: thisRegion.display,
               value: thisRegion.id,
-              flag: pathOr(
-                () => null,
-                [thisRegion.country.toLocaleLowerCase()],
-                flags
-              ),
+              flag:
+                flags[thisRegion.country.toLocaleLowerCase()] ?? (() => null),
               country: thisRegion.country
             }))
             .sort(sortRegions)
