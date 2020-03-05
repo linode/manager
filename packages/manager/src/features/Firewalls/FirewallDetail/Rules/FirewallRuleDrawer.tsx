@@ -98,7 +98,7 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
       </Formik>
       <Typography variant="body1">
         Rule changes don't take effect immediately. You can add or delete rules
-        before saving all your changes to this firewall.
+        before saving all your changes to this Firewall.
       </Typography>
     </Drawer>
   );
@@ -152,21 +152,29 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
       return;
     }
 
-    // All predefined FW types use the TCP protocol.
-    setFieldValue('protocol', 'TCP');
-    // All predefined FW types use all IPv4 and IPv6.
-    setFieldValue('addresses', 'all');
-    // Use the port for the selected type.
-    setFieldValue('ports', portPresets[selectedType]);
+    // Pre-populate other form values if selecting a pre-defined type.
+    if (selectedType !== 'custom') {
+      // All predefined FW types use the TCP protocol.
+      setFieldValue('protocol', 'TCP');
+      // All predefined FW types use all IPv4 and IPv6.
+      setFieldValue('addresses', 'all');
+      // Use the port for the selected type.
+      setFieldValue('ports', portPresets[selectedType]);
+    }
   }, []);
 
   const handleProtocolChange = React.useCallback((item: Item | null) => {
     setFieldValue('protocol', item?.value);
   }, []);
 
-  const handleAddressesChange = React.useCallback((item: Item | null) => {
-    setFieldValue('addresses', item?.value);
-  }, []);
+  const handleAddressesChange = React.useCallback(
+    (item: Item | null) => {
+      setFieldValue('addresses', item?.value);
+      // Reset custom IPs that may have been entered.
+      setIPs(['']);
+    },
+    [ips]
+  );
 
   const addressesValue = React.useMemo(() => {
     return (
@@ -272,6 +280,10 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
  * The form again matches the "HTTPS" type, so the correct value is "HTTPS".
  */
 export const deriveTypeFromValuesAndIPs = (values: Form, _ips: string[]) => {
+  if (values.type === 'custom') {
+    return 'custom';
+  }
+
   const protocol = values.protocol as FirewallRuleProtocol;
 
   const ips = formValueToIPs(values.addresses, _ips);
