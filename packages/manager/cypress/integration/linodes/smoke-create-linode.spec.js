@@ -3,7 +3,6 @@ import {
   deleteLinodeByLabel,
   makeLinodeLabel
 } from '../../support/api/linodes';
-import { stubEvent } from '../../support/api/events';
 
 import { checkToast } from '../../support/ui/events';
 
