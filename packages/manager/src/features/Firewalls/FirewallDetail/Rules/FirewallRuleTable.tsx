@@ -12,13 +12,13 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableSortCell from 'src/components/TableSortCell';
-import capitalize from 'src/utilities/capitalize';
-import { v4 } from 'uuid';
 import {
   generateAddressesLabel,
   generateRuleLabel,
   predefinedFirewallFromRule as ruleToPredefinedFirewall
-} from '../shared';
+} from 'src/features/Firewalls/shared';
+import capitalize from 'src/utilities/capitalize';
+import { v4 } from 'uuid';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -40,6 +40,7 @@ interface RuleRow {
 
 interface Props {
   category: Category;
+  openDrawerForCreating: (category: 'inbound' | 'outbound') => void;
   rules: FirewallRuleType[];
 }
 
@@ -55,13 +56,16 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
 
   const rowData = firewallRuleToRowData(rules);
 
+  const _openDrawerForCreating = React.useCallback(() => {
+    props.openDrawerForCreating(props.category);
+  }, []);
+
   return (
     <>
       <div className={classes.header}>
         <Typography variant="h2">{`${capitalize(category)} Rules`}</Typography>
         <AddNewLink
-          // @todo: Use real handlers.
-          onClick={() => alert("This doesn't do anything yet.")}
+          onClick={_openDrawerForCreating}
           label={`Add an ${capitalize(category)} Rule`}
         />
       </div>
