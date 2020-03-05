@@ -1,5 +1,4 @@
 import * as classNames from 'classnames';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
@@ -108,7 +107,7 @@ const iconMap = {
 };
 
 const getIcon = (variant: Variant) => {
-  return pathOr(LinodeIcon, [variant], iconMap);
+  return iconMap[variant] ?? LinodeIcon;
 };
 
 const EntityIcon: React.StatelessComponent<CombinedProps> = props => {
@@ -192,9 +191,6 @@ const EntityIcon: React.StatelessComponent<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(
-  styled,
-  withTheme
-);
+const enhanced = compose<CombinedProps, Props>(styled, withTheme);
 
 export default enhanced(EntityIcon);
