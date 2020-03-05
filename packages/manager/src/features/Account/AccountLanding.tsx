@@ -1,4 +1,3 @@
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import {
   matchPath,
@@ -140,6 +139,6 @@ interface StateProps {
 
 export default compose<Props, {}>(
   withProfile<StateProps, {}>((ownProps, { profileData: data }) => ({
-    isRestrictedUser: pathOr(false, ['restricted'], data)
+    isRestrictedUser: data?.restricted ?? false
   }))
 )(AccountLanding);
