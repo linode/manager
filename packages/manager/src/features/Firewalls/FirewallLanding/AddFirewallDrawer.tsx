@@ -21,7 +21,7 @@ import {
   handleGeneralErrors
 } from 'src/utilities/formikErrorUtils';
 import {
-  firewallOptionItems,
+  firewallOptionItemsLong,
   PredefinedFirewall,
   predefinedFirewalls
 } from '../shared';
@@ -189,7 +189,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
             <Select
               label="Rules"
               name="rules"
-              options={firewallOptionItems}
+              options={firewallOptionItemsLong}
               errorText={
                 errors['rules.inbound'] ||
                 errors['rules.outbound'] ||
