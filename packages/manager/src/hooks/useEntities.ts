@@ -5,6 +5,12 @@ import useLinodes from './useLinodes';
 import useNodeBalancers from './useNodeBalancers';
 import useVolumes from './useVolumes';
 
+export interface Entity<T> {
+  data: T[];
+  request: () => Promise<T[]>;
+  lastUpdated: number;
+}
+
 /**
  * Returns data for each entity type in array format,
  * along with the request thunk for each of the entity types.
@@ -29,8 +35,8 @@ export const useEntities = () => {
     requestKubernetesClusters
   } = useKubernetesClusters();
 
-  const linodes = _linodes.entities;
-  const domains = _domains.data;
+  const linodes = _linodes.entities ?? [];
+  const domains = _domains.data ?? [];
   const images = (Object.values(_images.data) ?? []).filter(
     thisImage => thisImage.is_public
   );

@@ -10,12 +10,13 @@ export interface LinodesProps {
   requestLinodes: () => Promise<Linode[]>;
 }
 
-export const useLinodes = () => {
+export const useLinodes = (): LinodesProps => {
   const dispatch: Dispatch = useDispatch();
   const linodes = useSelector(
     (state: ApplicationState) => state.__resources.linodes
   );
-  const requestLinodes = () => dispatch(_requestLinodes({}));
+  const requestLinodes = () =>
+    dispatch(_requestLinodes({})).then(response => response.data);
 
   return { linodes, requestLinodes };
 };

@@ -10,7 +10,7 @@ export interface DomainsProps {
   requestDomains: () => Promise<Domain[]>;
 }
 
-export const useDomains = () => {
+export const useDomains = (): DomainsProps => {
   const dispatch: Dispatch = useDispatch();
   const domains = useSelector(
     (state: ApplicationState) => state.__resources.domains

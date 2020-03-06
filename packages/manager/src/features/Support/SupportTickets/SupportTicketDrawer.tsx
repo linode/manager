@@ -18,7 +18,7 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
-import useEntities from 'src/hooks/useEntities';
+import useEntities, { Entity } from 'src/hooks/useEntities';
 import {
   getAPIErrorOrDefault,
   getErrorMap,
@@ -146,6 +146,19 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
     }
   }, [open]);
 
+  const handleSetOrRequestEntities = (
+    _entity: Entity<any>,
+    entityType: string
+  ) => {
+    if (_entity.lastUpdated === 0) {
+      _entity
+        .request()
+        .then(response => setData(entitiesToItems(entityType, response)));
+    } else {
+      setData(entitiesToItems(entityType, _entity.data));
+    }
+  };
+
   /**
    * When a new entity type is selected,
    * 1. check to see if we have data for that type.
@@ -156,53 +169,22 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
     const entity = ticket.entity_type;
     switch (entity) {
       case 'linode_id': {
-        if (entities.linodes.lastUpdated === 0) {
-          entities.linodes
-            .request()
-            .then(response => setData(entitiesToItems(entity, response)));
-        } else {
-          setData(entitiesToItems(entity, entities.linodes.data));
-        }
-        return;
+        handleSetOrRequestEntities(entities.linodes, entity);
       }
       case 'volume_id': {
-        if (entities.volumes.lastUpdated === 0) {
-          entities.volumes
-            .request()
-            .then(response => setData(entitiesToItems(entity, response)));
-        } else {
-          setData(entitiesToItems(entity, entities.volumes.data));
-        }
+        handleSetOrRequestEntities(entities.volumes, entity);
         return;
       }
       case 'domain_id': {
-        if (entities.domains.lastUpdated === 0) {
-          entities.domains
-            .request()
-            .then(response => setData(entitiesToItems(entity, response)));
-        } else {
-          setData(entitiesToItems(entity, entities.domains.data));
-        }
+        handleSetOrRequestEntities(entities.domains, entity);
         return;
       }
       case 'nodebalancer_id': {
-        if (entities.nodeBalancers.lastUpdated === 0) {
-          entities.nodeBalancers
-            .request()
-            .then(response => setData(entitiesToItems(entity, response)));
-        } else {
-          setData(entitiesToItems(entity, entities.nodeBalancers.data));
-        }
+        handleSetOrRequestEntities(entities.nodeBalancers, entity);
         return;
       }
       case 'cluster_id': {
-        if (entities.kubernetesClusters.lastUpdated === 0) {
-          entities.kubernetesClusters
-            .request()
-            .then(response => setData(entitiesToItems(entity, response)));
-        } else {
-          setData(entitiesToItems(entity, entities.kubernetesClusters.data));
-        }
+        handleSetOrRequestEntities(entities.kubernetesClusters, entity);
         return;
       }
       default: {
@@ -296,13 +278,6 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
             oldFiles
           )
         );
-        //   compose(
-        //     /* null out an uploaded file after upload */
-        //     set(lensPath(['files', idx, 'file']), null),
-        //     set(lensPath(['files', idx, 'uploading']), false),
-        //     set(lensPath(['files', idx, 'uploaded']), true) as () => boolean
-        //   )
-        // );
         return accumulator;
       })
       .catch(attachmentErrors => {
