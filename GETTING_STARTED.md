@@ -34,7 +34,6 @@ To learn more about all commands read [COMMANDS]](./COMMANDS.md)
 
 Please see our [contributing](./CONTRIBUTING.md) and [code conventions](./CODE_CONVENTIONS.md) guides for instructions on how to get started with contributing to this project.
 
-
 ## Just serving the built app
 ### legacy solution
 You can use the command `yarn docker:local` which will build a container based on the `Dockerfile` and starts the manager server. *this operation is slow*

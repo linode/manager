@@ -2,7 +2,7 @@
 
 ## yarn
 We use Yarn for this repository, v1.21 and above, on NodeJs v8 and above (tested and working on NodeJs v12).
-For NodeJs we recommend using `nvm`, See https://github.com/nvm-sh/nvm
+For NodeJs we recommend using [`nvm`](https://github.com/nvm-sh/nvm)
 
 ### yarn.lock
 There is one yarn lock in this repo, This is like `package-lock.json` for npm users.
@@ -12,9 +12,7 @@ There is one yarn lock in this repo, This is like `package-lock.json` for npm us
 **DO NOT USE `yarn`** to install dependencies, this will modify the `yarn.lock`.
 => Use `yarn install:all`.
 
-
 **We use workspaces** as explained in our [GETTING STARTED](./GETTING_STARTED.md) guide.
-
 
 #### Change a dependency version, and the `yarn.lock`
 
@@ -53,19 +51,12 @@ In the case of `yarn add` running it in the root directory will issue a warning,
 `yarn build` builds the sdk and the production build of the manager, add `--analyze` to produce a report of the bundle chunks size and content in `packages/manager/bundle_analyzer_report.html`.
 `yarn build:sdk`: builds the SDK.
 
-
 `yarn start:all`: starts the development server on `localhost:3000` with watch on the code (both SDK and Manager).
 `yarn up` installs everything, builds the sdk, runs `yarn start:all`
 
-### cheat sheet
+`yarn test`: runs the unit tests [you must at least have ran `yarn build:sdk` before]
+`yarn cy:e2e`: runs the e2e tests [you must have the app served on `localhost:3000`, maybe with `yarn up`]
+`yarn storybook:e2e`: runs the storybook tests [you must have the storybook server started with `yarn storybook`]
 
-first use `yarn up`
-To run the unit tests `yarn test` [you must at least have ran `yarn build:sdk` before]
-To run the e2e tests: `yarn cy:e2e` [you must have the app served on `localhost:3000`, maybe with `yarn up`]
-To run the storybook tests `yarn storybook:e2e` [you must have the storybook server started with `yarn storybook`]
-
-
-If the `yarn.lock` changed: re-run `yarn install:all`
-If you changed Node version `yarn clean`
-
+More on testing commands in [testing docs](./TESTING.md)
 
