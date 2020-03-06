@@ -1,6 +1,9 @@
 import { last } from 'ramda';
 import { firewallRuleFactory } from 'src/factories/firewalls';
-import reducer, { editorStateToRules, initRuleEditorState } from './ruleEditor';
+import reducer, {
+  editorStateToRules,
+  initRuleEditorState
+} from './firewallRuleEditor';
 
 const INITIAL_RULE_LENGTH = 2;
 const rules = firewallRuleFactory.buildList(INITIAL_RULE_LENGTH);

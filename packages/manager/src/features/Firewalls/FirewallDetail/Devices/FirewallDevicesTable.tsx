@@ -4,6 +4,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';
+import TableCell from 'src/components/core/TableCell';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import OrderBy from 'src/components/OrderBy';
@@ -20,7 +21,7 @@ interface Props {
   error?: APIError[];
   loading: boolean;
   lastUpdated: number;
-  triggerRemoveDevice: (deviceID: number, label: string) => void;
+  triggerRemoveDevice: (deviceID: number, deviceLabel: string) => void;
 }
 
 type CombinedProps = Props;
@@ -61,6 +62,7 @@ const FirewallTable: React.FC<CombinedProps> = props => {
                         >
                           Linode
                         </TableSortCell>
+                        <TableCell />
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -74,7 +76,8 @@ const FirewallTable: React.FC<CombinedProps> = props => {
                           <FirewallDeviceRow
                             key={`device-row-${thisDevice.id}`}
                             deviceLabel={thisDevice.entity.label}
-                            deviceID={thisDevice.entity.id}
+                            deviceID={thisDevice.id}
+                            entityID={thisDevice.entity.id}
                             triggerRemoveDevice={triggerRemoveDevice}
                           />
                         ))}
