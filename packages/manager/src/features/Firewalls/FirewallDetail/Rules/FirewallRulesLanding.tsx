@@ -8,9 +8,11 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import FixedToolBar from 'src/components/FixedToolbar/FixedToolbar';
+import Notice from 'src/components/Notice';
 import withFirewalls, {
   DispatchProps
 } from 'src/containers/firewalls.container';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import FirewallRuleDrawer, { Mode } from './FirewallRuleDrawer';
 import curriedFirewallRuleEditorReducer, {
   editorStateToRules,
@@ -58,6 +60,8 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
     category: 'inbound',
     isOpen: false
   });
+
+  const [error, setError] = React.useState<string | undefined>();
 
   const [discardChangesDialog, setDiscardChangesDialog] = React.useState<
     boolean
@@ -113,6 +117,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
 
   const applyChanges = () => {
     setSubmitting(true);
+    setError(undefined);
 
     // Gather rules from state for submission to the API.
     const finalRules: FirewallRules = {
@@ -126,12 +131,20 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
       })
     };
 
-    props.updateFirewallRules({ firewallID, ...finalRules }).then(_rules => {
-      setSubmitting(false);
-      // Reset editor state.
-      inboundDispatch({ type: 'RESET', rules: _rules.inbound ?? [] });
-      outboundDispatch({ type: 'RESET', rules: _rules.outbound ?? [] });
-    });
+    props
+      .updateFirewallRules({ firewallID, ...finalRules })
+      .then(_rules => {
+        setSubmitting(false);
+        // Reset editor state.
+        inboundDispatch({ type: 'RESET', rules: _rules.inbound ?? [] });
+        outboundDispatch({ type: 'RESET', rules: _rules.outbound ?? [] });
+      })
+      .catch(err => {
+        const _err = getAPIErrorOrDefault(err);
+
+        setSubmitting(false);
+        setError(_err[0].reason);
+      });
   };
 
   const hasModified = React.useMemo(
@@ -167,7 +180,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
     setDrawer({
       mode: 'edit',
       ruleIdx: idx,
-      category: 'inbound',
+      category: 'outbound',
       isOpen: true
     });
   };
@@ -177,7 +190,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
   };
 
   const handleUndoDeleteOutboundFirewallRule = (idx: number) => {
-    inboundDispatch({ type: 'UNDO', idx });
+    outboundDispatch({ type: 'UNDO', idx });
   };
 
   const ruleToModify =
@@ -194,6 +207,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         the rules’ parameters to pass through. Any traffic not explicitly
         permitted by a rule is blocked.
       </Typography>
+      {error && <Notice spacingTop={8} error text={error} />}
       <div className={classes.table}>
         <FirewallRuleTable
           category="inbound"
@@ -274,7 +288,7 @@ export const DiscardChangesDialog: React.FC<DiscardChangesDialogProps> = React.m
           Discard changes
         </Button>
 
-        <Button buttonType="secondary" destructive onClick={handleClose}>
+        <Button buttonType="primary" onClick={handleClose}>
           Go back and review changes
         </Button>
       </ActionsPanel>
