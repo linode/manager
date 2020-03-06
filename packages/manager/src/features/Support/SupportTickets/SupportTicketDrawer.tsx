@@ -119,7 +119,6 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
   // Entities for populating dropdown
   const [data, setData] = React.useState<Item<any>[]>([]);
 
-  const [inputValue, setInputValue] = React.useState<string>('');
   const [files, setFiles] = React.useState<FileAttachment[]>([]);
 
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
@@ -193,6 +192,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
   const resetDrawer = () => {
     setData([]);
     resetTicket();
+    setFiles([]);
   };
 
   const handleSummaryInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -212,7 +212,6 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
     setEntityType(e.value);
     setEntityID('');
     setErrors(undefined);
-    setInputValue('');
     setData([]);
 
     loadSelectedEntities(e.value);
@@ -237,10 +236,6 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
   const close = () => {
     props.onClose();
     resetDrawer();
-  };
-
-  const onInputValueChange = (newInputValue: string) => {
-    setInputValue(newInputValue);
   };
 
   const updateFiles = (newFiles: FileAttachment[]) => {
@@ -430,9 +425,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
                     errorText={inputError}
                     placeholder={`Select a ${entityIdtoNameMap[entityType]}`}
                     label={entityIdtoNameMap[entityType] ?? 'Entity Select'}
-                    inputValue={inputValue}
                     onChange={handleEntityIDChange}
-                    onInputChange={onInputValueChange}
                     data-qa-ticket-entity-id
                     isLoading={false}
                     isClearable={false}
