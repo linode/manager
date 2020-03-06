@@ -59,4 +59,3 @@ In the case of `yarn add` running it in the root directory will issue a warning,
 `yarn storybook:e2e`: runs the storybook tests (you must have the storybook server started with `yarn storybook`)
 
 More on testing commands in [testing docs](./TESTING.md)
-
