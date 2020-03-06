@@ -260,7 +260,9 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         handleClose={() => setDiscardChangesDialog(false)}
         handleDiscard={() => {
           setDiscardChangesDialog(false);
+          setError(undefined);
           inboundDispatch({ type: 'DISCARD_CHANGES' });
+          outboundDispatch({ type: 'DISCARD_CHANGES' });
         }}
       />
     </>
