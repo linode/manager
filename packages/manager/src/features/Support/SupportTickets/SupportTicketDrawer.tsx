@@ -178,12 +178,37 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
    * 1. check to see if we have data for that type.
    * 2. If we don't, request it and assign the result to the selectedEntities state
    * 3. If we do, directly assign the data from Redux to the selectedEntities state
+   *
+   * NOTE: Using a switch here rather than the entities[entityIdToTypeMap] logic
+   * used for error handling below; it's more explicit and safer.
    */
-  const loadSelectedEntities = (_entityType: EntityType) => {
-    handleSetOrRequestEntities(
-      entities[entityIdToTypeMap[_entityType]],
-      _entityType
-    );
+  const loadSelectedEntities = (_entityType: string) => {
+    switch (_entityType) {
+      case 'linode_id': {
+        handleSetOrRequestEntities(entities.linodes, _entityType);
+        return;
+      }
+      case 'volume_id': {
+        handleSetOrRequestEntities(entities.volumes, _entityType);
+        return;
+      }
+      case 'domain_id': {
+        handleSetOrRequestEntities(entities.domains, _entityType);
+        return;
+      }
+      case 'nodebalancer_id': {
+        handleSetOrRequestEntities(entities.nodeBalancers, _entityType);
+        return;
+      }
+      case 'cluster_id': {
+        handleSetOrRequestEntities(entities.kubernetesClusters, _entityType);
+        return;
+      }
+      default: {
+        setData([]);
+        return;
+      }
+    }
   };
 
   const resetTicket = () => {
