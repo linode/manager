@@ -219,7 +219,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
   };
 
   const handleEntityIDChange = (selected: Item | null) => {
-    setEntityID(selected?.value ? String(selected?.value) : '');
+    setEntityID(String(selected?.value) ?? '');
   };
 
   const getHasNoEntitiesMessage = (): string => {
@@ -387,7 +387,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
   });
 
   const selectedEntity =
-    data.find(thisEntity => thisEntity.value === entityID) || null;
+    data.find(thisEntity => String(thisEntity.value) === entityID) || null;
 
   return (
     <Drawer open={open} onClose={onClose} title="Open a Support Ticket">
