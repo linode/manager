@@ -66,12 +66,14 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface Props {
+export interface Props {
   createActions: (closeMenu: Function) => Action[];
   toggleOpenCallback?: () => void;
   // we want to require using aria label for these buttons
   // as they don't have text (just an icon)
   ariaLabel: string;
+  className?: string;
+  disabled?: boolean;
 }
 
 interface State {
@@ -115,7 +117,7 @@ export class ActionMenu extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, ariaLabel } = this.props;
+    const { classes, ariaLabel, disabled } = this.props;
     const { actions, anchorEl } = this.state;
 
     if (typeof actions === 'undefined') {
@@ -123,8 +125,9 @@ export class ActionMenu extends React.Component<CombinedProps, State> {
     }
 
     return (
-      <div className={`${classes.root} action-menu`}>
+      <div className={`${classes.root} action-menu ${this.props.className}`}>
         <IconButton
+          disabled={disabled}
           aria-owns={anchorEl ? 'action-menu' : undefined}
           aria-expanded={anchorEl ? true : undefined}
           aria-haspopup="true"

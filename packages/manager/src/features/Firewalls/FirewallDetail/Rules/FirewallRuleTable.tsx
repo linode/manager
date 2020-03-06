@@ -1,3 +1,4 @@
+import * as classnames from 'classnames';
 import * as React from 'react';
 import Undo from 'src/assets/icons/undo.svg';
 import AddNewLink from 'src/components/AddNewLink';
@@ -20,6 +21,7 @@ import capitalize from 'src/utilities/capitalize';
 import FirewallRuleActionMenu from './FirewallRuleActionMenu';
 import { Mode } from './FirewallRuleDrawer';
 import { FirewallRuleWithStatus, RuleStatus } from './firewallRuleEditor';
+import { Category } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -31,20 +33,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderCollapse: 'collapse'
   },
   undoButtonContainer: {
-    marginTop: 4,
-    marginBottom: 3,
     display: 'flex',
-    alignItems: 'flex-end',
-    flexDirection: 'column'
+    justifyContent: 'flex-end',
+    alignContent: 'center',
+    flexDirection: 'row'
   },
   undoButton: {
     cursor: 'pointer',
     backgroundColor: '#F7F7F7',
     border: 'none'
+  },
+  highlight: {
+    backgroundColor: theme.bg.lightBlue
   }
 }));
-
-export type Category = 'inbound' | 'outbound';
 
 interface RuleRow {
   type: string;
@@ -60,8 +62,8 @@ interface Props {
   openDrawer: (category: Category, mode: Mode) => void;
   rulesWithStatus: FirewallRuleWithStatus[];
   triggerDeleteFirewallRule: (idx: number) => void;
-  triggerEditFirewallRule: (idx: number) => void;
-  triggerUndoDeleteFirewallRule: (idx: number) => void;
+  triggerOpenRuleDrawerForEditing: (idx: number) => void;
+  triggerUndo: (idx: number) => void;
 }
 
 type CombinedProps = Props;
@@ -71,8 +73,8 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
     category,
     rulesWithStatus,
     triggerDeleteFirewallRule,
-    triggerEditFirewallRule,
-    triggerUndoDeleteFirewallRule
+    triggerOpenRuleDrawerForEditing,
+    triggerUndo
   } = props;
 
   const classes = useStyles();
@@ -149,6 +151,12 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
                     status
                   } = ruleRow;
 
+                  const actionMenuProps = {
+                    idx: ruleRow.id,
+                    triggerDeleteFirewallRule,
+                    triggerOpenRuleDrawerForEditing
+                  };
+
                   return (
                     <TableRow
                       key={id}
@@ -160,24 +168,26 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
                       <TableCell>{ports}</TableCell>
                       <TableCell>{addresses}</TableCell>
                       <TableCell style={{ width: '10%' }}>
-                        {status === 'PENDING_DELETION' ? (
+                        {status !== 'NOT_MODIFIED' ? (
                           <div className={classes.undoButtonContainer}>
                             <button
-                              className={classes.undoButton}
-                              onClick={() => triggerUndoDeleteFirewallRule(id)}
+                              className={classnames({
+                                [classes.undoButton]: true,
+                                [classes.highlight]:
+                                  status !== 'PENDING_DELETION'
+                              })}
+                              onClick={() => triggerUndo(id)}
                               role="button"
                             >
                               <Undo />
                             </button>
+                            <FirewallRuleActionMenu
+                              {...actionMenuProps}
+                              disabled
+                            />
                           </div>
                         ) : (
-                          <FirewallRuleActionMenu
-                            idx={ruleRow.id}
-                            triggerDeleteFirewallRule={
-                              triggerDeleteFirewallRule
-                            }
-                            triggerEditFirewallRule={triggerEditFirewallRule}
-                          />
+                          <FirewallRuleActionMenu {...actionMenuProps} />
                         )}
                       </TableCell>
                     </TableRow>

@@ -23,7 +23,7 @@
 
 import produce from 'immer';
 import { FirewallRuleType } from 'linode-js-sdk/lib/firewalls';
-import { last } from 'ramda';
+import { compose, last } from 'ramda';
 
 export type RuleStatus =
   | 'NOT_MODIFIED'
@@ -102,12 +102,14 @@ const ruleEditorReducer = (
     case 'UNDO':
       lastRevision = last(draft[action.idx]);
 
-      // You can't "undo" on a rule that hasn't been modified.
-      if (lastRevision?.status === 'NOT_MODIFIED') {
-        return;
+      draft[action.idx].pop();
+
+      // If there's nothing left on the stack, we need to actually this revisionList.
+      // This will only happen if a user performing UNDO on a NEW rule.
+      if (draft[action.idx].length === 0) {
+        draft.splice(action.idx, 1);
       }
 
-      draft[action.idx].pop();
       return;
 
     case 'DISCARD_CHANGES':
@@ -130,38 +132,24 @@ export const initRuleEditorState = (
 ): RuleEditorState =>
   rules.map(thisRule => [{ ...thisRule, status: 'NOT_MODIFIED' }]) ?? [];
 
-interface EditorStateToRulesOptions {
-  withStatus: boolean;
-  withDeleted: boolean;
-}
 export const editorStateToRules = (
-  state: RuleEditorState,
-  options?: EditorStateToRulesOptions
-): FirewallRuleWithStatus[] => {
-  const withStatus = options?.withStatus ?? true;
-  const withDeleted = options?.withDeleted ?? true;
+  state: RuleEditorState
+): FirewallRuleWithStatus[] =>
+  state.map(revisionList => revisionList[revisionList.length - 1]);
 
-  const res: FirewallRuleWithStatus[] = [];
-  state.forEach(revisionList => {
-    const lastRevision = last(revisionList);
+export const removeStatus = (
+  rules: FirewallRuleWithStatus[]
+): FirewallRuleType[] =>
+  rules.map(thisRule => ({ ...thisRule, status: undefined }));
 
-    if (!lastRevision) {
-      return;
-    }
+export const filterRulesPendingDeletion = (rules: FirewallRuleWithStatus[]) =>
+  rules.filter(thisRule => thisRule.status !== 'PENDING_DELETION');
 
-    // IMPORTANT: Make a copy here so the state is not modified.
-    const lastRevisionCopy = { ...lastRevision };
-
-    if (!withStatus) {
-      delete lastRevisionCopy.status;
-    }
-
-    if (withDeleted || lastRevision.status !== 'PENDING_DELETION') {
-      res.push(lastRevisionCopy);
-    }
-  });
-  return res;
-};
+export const prepareRules = compose(
+  removeStatus,
+  filterRulesPendingDeletion,
+  editorStateToRules
+);
 
 export const hasModified = (editorState: RuleEditorState) => {
   const rules = editorStateToRules(editorState);

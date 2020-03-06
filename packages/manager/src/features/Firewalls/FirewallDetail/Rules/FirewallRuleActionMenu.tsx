@@ -1,16 +1,21 @@
 import * as React from 'react';
-import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import ActionMenu, { Action, ActionMenuProps } from 'src/components/ActionMenu';
 
-interface Props {
+interface Props extends Partial<ActionMenuProps> {
   idx: number;
   triggerDeleteFirewallRule: (idx: number) => void;
-  triggerEditFirewallRule: (idx: number) => void;
+  triggerOpenRuleDrawerForEditing: (idx: number) => void;
 }
 
 type CombinedProps = Props;
 
 const FirewallRuleActionMenu: React.FC<CombinedProps> = props => {
-  const { idx, triggerDeleteFirewallRule, triggerEditFirewallRule } = props;
+  const {
+    idx,
+    triggerDeleteFirewallRule,
+    triggerOpenRuleDrawerForEditing,
+    ...actionMenuProps
+  } = props;
 
   const createActions = () => {
     return (closeMenu: Function): Action[] => [
@@ -18,7 +23,7 @@ const FirewallRuleActionMenu: React.FC<CombinedProps> = props => {
         title: 'Edit',
         onClick: () => {
           closeMenu();
-          triggerEditFirewallRule(idx);
+          triggerOpenRuleDrawerForEditing(idx);
         }
       },
       {
@@ -35,6 +40,7 @@ const FirewallRuleActionMenu: React.FC<CombinedProps> = props => {
     <ActionMenu
       createActions={createActions()}
       ariaLabel={`Action menu for Firewall Rule`}
+      {...actionMenuProps}
     />
   );
 };

@@ -41,7 +41,7 @@ interface Props {
   mode: Mode;
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (rule: FirewallRuleType, category: 'inbound' | 'outbound') => void;
+  onSubmit: (category: 'inbound' | 'outbound', rule: FirewallRuleType) => void;
   ruleToModify?: FirewallRuleWithStatus;
 }
 
@@ -82,14 +82,11 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
 
   const _onSubmit = (values: Form) => {
     const protocol = values.protocol as FirewallRuleProtocol;
-    props.onSubmit(
-      {
-        ports: values.ports,
-        protocol,
-        addresses: formValueToIPs(values.addresses, ips)
-      },
-      category
-    );
+    props.onSubmit(category, {
+      ports: values.ports,
+      protocol,
+      addresses: formValueToIPs(values.addresses, ips)
+    });
     onClose();
   };
 
