@@ -54,9 +54,9 @@ In the case of `yarn add` running it in the root directory will issue a warning,
 `yarn start:all`: starts the development server on `localhost:3000` with watch on the code (both SDK and Manager).
 `yarn up` installs everything, builds the sdk, runs `yarn start:all`
 
-`yarn test`: runs the unit tests [you must at least have ran `yarn build:sdk` before]
-`yarn cy:e2e`: runs the e2e tests [you must have the app served on `localhost:3000`, maybe with `yarn up`]
-`yarn storybook:e2e`: runs the storybook tests [you must have the storybook server started with `yarn storybook`]
+`yarn test`: runs the unit tests (you must at least have ran `yarn build:sdk` before)
+`yarn cy:e2e`: runs the e2e tests (you must have the app served on `localhost:3000`, maybe with `yarn up`)
+`yarn storybook:e2e`: runs the storybook tests (you must have the storybook server started with `yarn storybook`)
 
 More on testing commands in [testing docs](./TESTING.md)
 
