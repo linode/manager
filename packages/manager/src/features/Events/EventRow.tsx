@@ -140,9 +140,12 @@ export const Row: React.StatelessComponent<RowProps> = props => {
         </Typography>
       </TableCell>
       <TableCell parentColumn="Duration">
-        <Typography variant="body1">{`${formatEventSeconds(
-          duration
-        )}`}</Typography>
+        <Typography variant="body1">
+          {/* There is currently an API bug where host_reboot event durations are
+          not reported correctly. This patch simply hides the duration. @todo
+          remove this // check when the API bug is fixed. */}
+          {action === 'host_reboot' ? '' : formatEventSeconds(duration)}
+        </Typography>
       </TableCell>
       <TableCell parentColumn={'When'} data-qa-event-created-cell compact>
         <DateTimeDisplay value={created} />

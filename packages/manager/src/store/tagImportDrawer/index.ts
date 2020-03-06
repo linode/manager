@@ -13,7 +13,6 @@ import getEntitiesWithGroupsToImport, {
 } from 'src/store/selectors/getEntitiesWithGroupsToImport';
 import { ThunkActionCreator } from 'src/store/types';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { storage } from 'src/utilities/storage';
 import actionCreatorFactory from 'typescript-fsa';
 
 import { isType } from 'typescript-fsa';
@@ -196,27 +195,21 @@ export const addTagsToEntities: ImportGroupsAsTagsThunk = () => (
     }),
     dispatch,
     handleAccumulatedResponsesAndErrors
-  )
-    .then((totalErrors: TagError[]) => {
-      if (isEmpty(totalErrors)) {
-        storage.hasImportedGroups.set();
-      }
-    })
-    .catch(() =>
-      dispatch(
-        // Errors from individual requests will be accumulated and passed to .then(); hitting
-        // this block indicates something went wrong with .reduce() or .join().
-        // It's unclear under what circumstances this could ever actually fire.
-        importTagsActions.failed({
-          error: [
-            {
-              entityId: 0,
-              reason: 'There was an error importing your display groups.'
-            }
-          ]
-        })
-      )
-    );
+  ).catch(() =>
+    dispatch(
+      // Errors from individual requests will be accumulated and passed to .then(); hitting
+      // this block indicates something went wrong with .reduce() or .join().
+      // It's unclear under what circumstances this could ever actually fire.
+      importTagsActions.failed({
+        error: [
+          {
+            entityId: 0,
+            reason: 'There was an error importing your display groups.'
+          }
+        ]
+      })
+    )
+  );
 };
 
 export default tagImportDrawer;

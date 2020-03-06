@@ -20,14 +20,12 @@ import {
 } from 'src/store/accountSettings/accountSettings.requests';
 import { handleOpen } from 'src/store/backupDrawer';
 import getEntitiesWithGroupsToImport, {
-  emptyGroupedEntities,
   GroupedEntitiesForImport
 } from 'src/store/selectors/getEntitiesWithGroupsToImport';
 import { openDrawer as openGroupDrawer } from 'src/store/tagImportDrawer';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import shouldDisplayGroupImport from 'src/utilities/shouldDisplayGroupImportCTA';
-import { storage } from 'src/utilities/storage';
 import AutoBackups from './AutoBackups';
 import EnableManaged from './EnableManaged';
 import EnableObjectStorage from './EnableObjectStorage';
@@ -180,9 +178,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
     ['__resources', 'accountSettings', 'data', 'network_helper'],
     state
   ),
-  entitiesWithGroupsToImport: !storage.hasImportedGroups.get()
-    ? getEntitiesWithGroupsToImport(state)
-    : emptyGroupedEntities,
+  entitiesWithGroupsToImport: getEntitiesWithGroupsToImport(state),
   isManaged: pathOr(
     false,
     ['__resources', 'accountSettings', 'data', 'managed'],
@@ -210,10 +206,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const enhanced = compose<CombinedProps, {}>(
   connected,

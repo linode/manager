@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import { Props as FireProps } from 'src/containers/firewalls.container';
+import { StateProps as FireProps } from 'src/containers/firewalls.container';
 
 import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';
@@ -12,10 +12,12 @@ import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import TableContentWrapper from 'src/components/TableContentWrapper';
 import TableSortCell from 'src/components/TableSortCell';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { ActionHandlers } from './FirewallActionMenu';
-import FirewallRows from './FirewallTableRows';
+import FirewallRow from './FirewallRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
   labelCell: {
@@ -32,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-type FirewallProps = Omit<FireProps, 'getFirewalls'> & ActionHandlers;
+type FirewallProps = FireProps & ActionHandlers;
 
 type CombinedProps = FirewallProps;
 
@@ -44,9 +46,17 @@ const FirewallTable: React.FC<CombinedProps> = props => {
     loading: firewallsLoading,
     error: firewallsError,
     lastUpdated: firewallsLastUpdated,
-    listOfIDsInOriginalOrder: firewallsKeys,
     ...actionMenuHandlers
   } = props;
+
+  const _error =
+    firewallsError.read && firewallsLastUpdated === 0
+      ? // @todo change to Devices or make dynamic when NBs are possible as Devices
+        getAPIErrorOrDefault(
+          firewallsError.read,
+          'Unable to retrieve Firewalls'
+        )
+      : undefined;
 
   return (
     <React.Fragment>
@@ -102,14 +112,25 @@ const FirewallTable: React.FC<CombinedProps> = props => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      <FirewallRows
-                        data={paginatedAndOrderedData}
-                        loading={firewallsLoading}
-                        error={firewallsError}
-                        listOfIDsInOriginalOrder={firewallsKeys}
+                      <TableContentWrapper
+                        loading={firewallsLoading && firewallsLastUpdated === 0}
                         lastUpdated={firewallsLastUpdated}
-                        {...actionMenuHandlers}
-                      />
+                        length={paginatedAndOrderedData.length}
+                        error={_error}
+                      >
+                        {paginatedAndOrderedData.map(eachFirewall => {
+                          return (
+                            <FirewallRow
+                              key={`firewall-row-${eachFirewall.id}`}
+                              firewallID={eachFirewall.id}
+                              firewallLabel={eachFirewall.label}
+                              firewallRules={eachFirewall.rules}
+                              firewallStatus={eachFirewall.status}
+                              {...actionMenuHandlers}
+                            />
+                          );
+                        })}
+                      </TableContentWrapper>
                     </TableBody>
                   </Table>
                 </Paper>

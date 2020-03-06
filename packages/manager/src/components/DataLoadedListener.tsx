@@ -96,7 +96,7 @@ const shouldMarkAppAsDone = (
     linodesLoadedOrErrorExists &&
     volumesLoadedOrErrorExists &&
     nodeBalancersLoadedOrErrorExists &&
-    // accountLoadedOrErrorExists &&
+    accountLoadedOrErrorExists &&
     profileLoadedOrErrorExists &&
     domainsLoadedOrErrorExists
     /** not checking bucket data here for now */
@@ -117,7 +117,7 @@ const shouldMarkAppAsDone = (
   }
 
   if (pathname.match(/domain/i) && !!domainsLoadedOrErrorExists) {
-    return true;
+    return true; // This doesn't do anything as there's no action to request Domains
   }
 
   // Object Storage endpoints will typically be a bit slower, so for these

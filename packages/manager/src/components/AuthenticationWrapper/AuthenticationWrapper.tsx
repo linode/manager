@@ -31,7 +31,7 @@ import { requestAccount } from 'src/store/account/account.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import { getAllBuckets } from 'src/store/bucket/bucket.requests';
 import { requestClusters } from 'src/store/clusters/clusters.actions';
-import { requestDomains } from 'src/store/domains/domains.actions';
+import { requestDomains } from 'src/store/domains/domains.requests';
 import { requestImages } from 'src/store/image/image.requests';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
 import { requestTypes } from 'src/store/linodeType/linodeType.requests';
@@ -77,6 +77,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     this.props.requestSettings();
     this.props.requestAccount();
     this.props.requestNotifications();
+
   };
 
   componentDidMount() {

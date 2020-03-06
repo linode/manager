@@ -109,23 +109,25 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
     )
   );
 
-  const v4Unit = generateNetworkUnits(
+  // Convert to bytes, which is what generateNetworkUnits expects.
+  const maxV4InBytes =
     Math.max(
       v4Metrics.publicIn.max,
       v4Metrics.publicOut.max,
       v4Metrics.privateIn.max,
       v4Metrics.privateOut.max
-    )
-  );
+    ) / 8;
+  const v4Unit = generateNetworkUnits(maxV4InBytes);
 
-  const v6Unit = generateNetworkUnits(
+  // Convert to bytes, which is what generateNetworkUnits expects.
+  const maxV6InBytes =
     Math.max(
       v6Metrics.publicIn.max,
       v6Metrics.publicOut.max,
       v6Metrics.privateIn.max,
       v6Metrics.privateOut.max
-    )
-  );
+    ) / 8;
+  const v6Unit = generateNetworkUnits(maxV6InBytes);
 
   const commonGraphProps = {
     timezone: props.timezone,
@@ -224,25 +226,25 @@ const Graph: React.FC<GraphProps> = props => {
           showToday={rangeSelection === '24'}
           data={[
             {
-              borderColor: theme.graphs.blueBorder,
-              backgroundColor: theme.graphs.blue,
+              borderColor: 'transparent',
+              backgroundColor: theme.graphs.network.inbound,
               data: convertedPublicIn,
               label: 'Public Inbound'
             },
             {
-              borderColor: theme.graphs.greenBorder,
-              backgroundColor: theme.graphs.green,
+              borderColor: 'transparent',
+              backgroundColor: theme.graphs.network.outbound,
               data: convertedPublicOut,
               label: 'Public Outbound'
             },
             {
-              borderColor: theme.graphs.purpleBorder,
+              borderColor: 'transparent',
               backgroundColor: theme.graphs.purple,
               data: convertedPrivateIn,
               label: 'Private Inbound'
             },
             {
-              borderColor: theme.graphs.yellowBorder,
+              borderColor: 'transparent',
               backgroundColor: theme.graphs.yellow,
               data: convertedPrivateOut,
               label: 'Private Outbound'

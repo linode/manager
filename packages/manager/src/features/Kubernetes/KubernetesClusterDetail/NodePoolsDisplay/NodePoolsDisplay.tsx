@@ -1,5 +1,6 @@
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
+import { useSelector } from 'react-redux';
 import { compose } from 'recompose';
 
 import Button from 'src/components/Button';
@@ -17,7 +18,8 @@ import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-import { getErrorMap } from 'src/utilities/errorUtils';
+import { ApplicationState } from 'src/store';
+import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
 import NodePoolDisplayTable from '../../CreateCluster/NodePoolDisplayTable';
 import { getTotalClusterPrice, nodeWarning } from '../../kubeUtils';
@@ -121,6 +123,25 @@ export const NodePoolsDisplay: React.FunctionComponent<CombinedProps> = props =>
     updatePool
   } = props;
 
+  /**
+   * If the API returns an error when fetching node pools,
+   * we want to display this error to the user from the
+   * NodePoolDisplayTable.
+   *
+   * Only do this if we haven't yet successfully retrieved this
+   * data, so a random error in our subsequent polling doesn't
+   * break the view.
+   */
+  const poolsError = useSelector((state: ApplicationState) => {
+    const error = state.__resources.nodePools?.error?.read;
+    const lastUpdated = state.__resources.nodePools.lastUpdated;
+    if (error && lastUpdated === 0) {
+      return getAPIErrorOrDefault(error, 'Unable to load Node Pools.')[0]
+        .reason;
+    }
+    return undefined;
+  });
+
   const TooltipText = () => {
     return (
       <>
@@ -199,12 +220,14 @@ export const NodePoolsDisplay: React.FunctionComponent<CombinedProps> = props =>
               types={types}
               handleDelete={deletePool}
               updatePool={updatePool}
+              error={poolsError}
             />
           ) : (
             <NodePoolDisplayTable
               pools={pools}
               types={types}
               loading={loading}
+              error={poolsError}
             />
           )}
         </Grid>

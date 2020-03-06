@@ -24,19 +24,9 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      transition: theme.transitions.create(['background-color']),
+      transition: theme.transitions.create(['box-shadow']),
       [theme.breakpoints.up('md')]: {
-        '&:before': {
-          content: "''",
-          display: 'table-cell',
-          width: '0.01%',
-          height: '100%',
-          backgroundColor: 'transparent',
-          borderTop: `1px solid ${theme.palette.divider}`,
-          borderBottom: `1px solid ${theme.palette.divider}`,
-          transition: theme.transitions.create(['background-color']),
-          paddingLeft: 5
-        }
+        boxShadow: `inset 3px 0 0 transparent`
       }
     },
     withForcedIndex: {
@@ -61,6 +51,7 @@ const styles = (theme: Theme) =>
     selected: {
       backgroundColor: theme.bg.lightBlue,
       transform: 'scale(1)',
+      boxShadow: `inset 3px 0 0 ${theme.bg.lightBlue}`,
       '&:before': {
         transition: 'none',
         backgroundColor: theme.bg.lightBlue,
@@ -70,10 +61,8 @@ const styles = (theme: Theme) =>
         borderTopColor: theme.palette.primary.light,
         borderBottomColor: theme.palette.primary.light,
         position: 'relative',
-        [theme.breakpoints.down('sm')]: {
-          '&:first-child': {
-            borderLeft: `1px solid ${theme.palette.primary.light}`
-          }
+        '&:first-child': {
+          borderLeft: `1px solid ${theme.palette.primary.light}`
         },
         [theme.breakpoints.down('md')]: {
           '&:last-child': {
@@ -140,12 +129,12 @@ interface Props {
   forceIndex?: boolean;
 }
 
-type CombinedProps = Props &
+export type CombinedProps = Props &
   _TableRowProps &
   RouteComponentProps<{}> &
   WithStyles<ClassNames>;
 
-class TableRow extends React.Component<CombinedProps> {
+export class TableRow extends React.Component<CombinedProps> {
   rowClick = (
     e: React.ChangeEvent<HTMLTableRowElement>,
     ev: React.MouseEvent<HTMLElement>, // added a second event for the purpose of capturing keyDown (open in new tab)
@@ -223,8 +212,8 @@ class TableRow extends React.Component<CombinedProps> {
         {selected && (
           <Hidden mdDown>
             <td colSpan={0} className={classes.selectedOuter}>
-              <span className={classes.activeCaret}></span>
-              <span className={classes.activeCaretOverlay}></span>
+              <span className={classes.activeCaret} />
+              <span className={classes.activeCaretOverlay} />
             </td>
           </Hidden>
         )}

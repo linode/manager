@@ -11,6 +11,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 interface OuterProps {
   configsError?: APIError[];
   typesError?: APIError[];
+  linodeId: number;
 }
 
 interface InnerProps {
@@ -19,7 +20,7 @@ interface InnerProps {
 
 const collectErrors: MapState<InnerProps, OuterProps> = (
   state,
-  { configsError, typesError }
+  { configsError, typesError, linodeId }
 ) => {
   const {
     linodes,
@@ -36,17 +37,17 @@ const collectErrors: MapState<InnerProps, OuterProps> = (
       path(['error', 'read'], linodes) ||
       types.error ||
       notifications.error ||
-      path(['error', 'read'], linodeConfigs) ||
-      path(['error', 'read'], linodeDisks)
+      linodeConfigs[linodeId]?.error?.read ||
+      linodeDisks[linodeId]?.error?.read
   };
 };
 
 /*
   Collect possible errors from Redux, configs request, and disks requests.
   If any are defined, render the ErrorComponent. (early return)
-  
+
   IMPORTANT NOTE: The errors we're collecting here should only be the errors that
-  dictate when the Linode detail page should bomb. You'll notice that we're not 
+  dictate when the Linode detail page should bomb. You'll notice that we're not
   collecting volumes errors here, and it's because we don't want to crash the entire
   page if there was an issue loading the volumes.
  */

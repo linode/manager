@@ -25,7 +25,7 @@ import Notice from 'src/components/Notice';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import { resetEventsPolling } from 'src/eventsPolling';
-import ImagesDrawer, { modes } from 'src/features/Images/ImagesDrawer';
+import ImagesDrawer, { DrawerMode } from 'src/features/Images/ImagesDrawer';
 import {
   CreateLinodeDisk,
   DeleteLinodeDisk,
@@ -297,7 +297,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
         actions={this.confirmDeleteActions}
       >
         {errors && <Notice error text={errors[0].reason} />}
-        <Typography>Are you sure you want to delete "{label}"</Typography>
+        <Typography>Are you sure you want to delete {label}?</Typography>
       </ConfirmationDialog>
     );
   };
@@ -355,7 +355,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     const { open, description, label, disk } = this.state.imagizeDrawer;
     return (
       <ImagesDrawer
-        mode={modes.IMAGIZING}
+        mode={'imagize' as DrawerMode}
         open={open}
         description={description}
         label={label}

@@ -4,10 +4,94 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v1.1.1] - 2020-02-28
+
+### Fixed:
+
+- Ensure Object Storage is displayed for restricted users.
+
+## [v1.1.0] - 2020-02-25
+
+### Added:
+- Cloud Firewalls:
+  - Add Firewalls endpoints to SDK
+  - Allow enable/disable/delete Firewall actions
+  - Enable Firewall creation
+- LKE:
+  - Warn users before creating/resizing a cluster to a single node
+  - Handling for LKE events (lke_node_create)
+- Accessibility improvements:
+  - Add aria attributes on Linodes, Images, and Kubernetes Landing pages
+  - Add aria attributes to Action Menu items
+  - Improve accuracy of column header count
+  - Add title to ADA chat bot
+
+### Changed:
+- Update CPU threshold alert validation
+- Use display: standalone in manifest.json for IOS support
+- Update event toasts and add new toasts for clone/resize events
+- Increase line height of rendered Markdown for readability
+- Remove Import Tags CTA on the Dashboard
+- Remove obsolete GDPR Modal
+- Close all active Lish sessions when logging out
+- Unify IP address input patterns for Domains
+- Allow direct links to OCA details drawers
+- Always allow TCP Connection as a health check for NodeBalancers
+- Hide duration for host_reboot events
+
+### Fixed:
+- Mode persistence in Linode Disk drawer
+- Formatting/highlighting in kubeconfig preview drawer
+- Incorrect disks sometimes displayed in different tabs
+- Regression from Notistack update
+- fixing selected table row for rows with active caret variant
+- Remove plural for hour on DNS manager
+- Use appropriate button text when restoring from an Image
+
+## [v1.0.1] - 2020-02-13
+
+### Added:
+- Support for Object Storage in Frankfurt, DE
+
+### Fixed:
+- Removed feature flag logic preventing some users from accessing Longview
+
+## [v1.0.0] - 2020-02-10
+
+### Added:
+- New One-Click Apps:
+	- MEAN
+	- MongoDB
+	- Flask
+	- Django
+	- Redis
+	- Ruby on Rails
+	- PostgreSQL
+
+### Changed:
+- Change default distro to Debian 10
+- Fix changelog to match GitHub release
+- Update graph units on Linode Details page
+- Fetch backups after selecting Linode in Linode Create
+- Toast notifications for Image related events
+- Unify graph colors across the app
+- LKE: Warn users before allowing a single-node cluster
+- LKE: Update typings for node pools
+- Show Domains Import Zone Drawer button when a user has no Domains
+- Improve compile time
+- Cleanup axios version management and aligning
+- Prevent unneeded requests when loading Lish window
+
+### Fixed:
+- Updating a Linode causes in-progress events to stop being displayed
+- Safari: Open ticket button issue
+- Remove plural for hour on DNS manager
+- 'Show More' tooltip accessibility fix
+
 ## [0.84.1] - 2020-02-04
 
 ### Fixed:
-- Fix images pagination issue (#6074)
+- Fix issue where only 100 Images were displayed
 
 
 ## [v0.84.0] - 2020-01-28

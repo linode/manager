@@ -90,7 +90,7 @@ const SortableTableHeader: React.FC<CombinedProps> = props => {
         isVolumesLanding ? classes.volumesWrapper : classes.linodeVolumesWrapper
       }
     >
-      <TableRow>
+      <TableRow role="rowgroup">
         <TableSortCell
           className={classes.labelCol}
           active={isActive('label')}
@@ -123,9 +123,13 @@ const SortableTableHeader: React.FC<CombinedProps> = props => {
         >
           Size
         </TableSortCell>
-        <TableCell className={classes.pathCol}>File System Path</TableCell>
+        <TableCell className={classes.pathCol} role="columnheader">
+          File System Path
+        </TableCell>
         {isVolumesLanding && (
-          <TableCell className={classes.attachmentCol}>Attached To</TableCell>
+          <TableCell className={classes.attachmentCol} role="columnheader">
+            Attached To
+          </TableCell>
         )}
         <TableCell />
       </TableRow>
