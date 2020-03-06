@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import useDomains from './useDomains';
 import useImages from './useImages';
 import useKubernetesClusters from './useKubernetesClusters';
@@ -9,6 +10,7 @@ export interface Entity<T> {
   data: T[];
   request: () => Promise<T[]>;
   lastUpdated: number;
+  error?: APIError[];
 }
 
 /**
@@ -48,32 +50,38 @@ export const useEntities = () => {
     domains: {
       data: domains,
       request: requestDomains,
-      lastUpdated: _domains.lastUpdated
+      lastUpdated: _domains.lastUpdated,
+      error: _domains.error.read
     },
     images: {
       data: images,
       request: requestImages,
-      lastUpdated: _images.lastUpdated
+      lastUpdated: _images.lastUpdated,
+      error: _images.error.read
     },
     kubernetesClusters: {
       data: kubernetesClusters,
       request: requestKubernetesClusters,
-      lastUpdated: _kubernetesClusters.lastUpdated
+      lastUpdated: _kubernetesClusters.lastUpdated,
+      error: _kubernetesClusters.error?.read
     },
     linodes: {
       data: linodes,
       request: requestLinodes,
-      lastUpdated: _linodes.lastUpdated
+      lastUpdated: _linodes.lastUpdated,
+      error: _linodes.error?.read
     },
     nodeBalancers: {
       data: nodeBalancers,
       request: requestNodeBalancers,
-      lastUpdated: _nodeBalancers.lastUpdated
+      lastUpdated: _nodeBalancers.lastUpdated,
+      error: _nodeBalancers.error?.read
     },
     volumes: {
       data: volumes,
       request: requestVolumes,
-      lastUpdated: _volumes.lastUpdated
+      lastUpdated: _volumes.lastUpdated,
+      error: _volumes.error?.read
     }
   };
 };

@@ -90,12 +90,20 @@ const entityMap = {
   Kubernetes: 'cluster_id'
 };
 
-const entityIdtoNameMap = {
+const entityIdToNameMap = {
   linode_id: 'Linode',
   volume_id: 'Volume',
   domain_id: 'Domain',
   nodebalancer_id: 'NodeBalancer',
   cluster_id: 'Kubernetes Cluster'
+};
+
+const entityIdToTypeMap = {
+  linode_id: 'linodes',
+  volume_id: 'volumes',
+  domain_id: 'domains',
+  nodebalancer_id: 'nodeBalancers',
+  cluster_id: 'kubernetesClusters'
 };
 
 export const entitiesToItems = (type: string, entities: any) => {
@@ -118,6 +126,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
 
   // Entities for populating dropdown
   const [data, setData] = React.useState<Item<any>[]>([]);
+  const [entitiesLoading, setLoading] = React.useState<boolean>(false);
 
   const [files, setFiles] = React.useState<FileAttachment[]>([]);
 
@@ -139,9 +148,15 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
     _entityType: string
   ) => {
     if (_entity.lastUpdated === 0) {
+      setLoading(true);
+      setErrors(undefined);
       _entity
         .request()
-        .then(response => setData(entitiesToItems(_entityType, response)));
+        .then(response => {
+          setLoading(false);
+          setData(entitiesToItems(_entityType, response));
+        })
+        .catch(_ => setLoading(false)); // Errors through Redux
     } else {
       setData(entitiesToItems(_entityType, _entity.data));
     }
@@ -224,9 +239,9 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
   const getHasNoEntitiesMessage = (): string => {
     if (['none', 'general'].includes(entityType)) {
       return '';
-    } else if (data.length === 0) {
+    } else if (data.length === 0 && !entityError) {
       // User has selected a type from the drop-down but the entity list is empty.
-      return `You don't have any ${entityIdtoNameMap[entityType]}s on your account.`;
+      return `You don't have any ${entityIdToNameMap[entityType]}s on your account.`;
     } else {
       // Default case
       return '';
@@ -312,7 +327,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
       setErrors([
         {
           field: 'input',
-          reason: `Please select a ${entityIdtoNameMap[entityType]}.`
+          reason: `Please select a ${entityIdToNameMap[entityType]}.`
         }
       ]);
       return;
@@ -370,6 +385,10 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
   const generalError = hasErrorFor.none;
   const inputError = hasErrorFor.input;
 
+  const entityError = Boolean(entities[entityIdToTypeMap[entityType]]?.error)
+    ? `Error loading ${entityIdToNameMap[entityType]}s`
+    : undefined;
+
   const hasNoEntitiesMessage = getHasNoEntitiesMessage();
 
   const topicOptions = [
@@ -422,12 +441,12 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
                     options={data}
                     value={selectedEntity}
                     disabled={data.length === 0}
-                    errorText={inputError}
-                    placeholder={`Select a ${entityIdtoNameMap[entityType]}`}
-                    label={entityIdtoNameMap[entityType] ?? 'Entity Select'}
+                    errorText={entityError || inputError}
+                    placeholder={`Select a ${entityIdToNameMap[entityType]}`}
+                    label={entityIdToNameMap[entityType] ?? 'Entity Select'}
                     onChange={handleEntityIDChange}
                     data-qa-ticket-entity-id
-                    isLoading={false}
+                    isLoading={entitiesLoading}
                     isClearable={false}
                   />
                   {hasNoEntitiesMessage && (
