@@ -18,7 +18,7 @@ COPY --chown=seluser:seluser package.json tslint.json run_storybook_docker.sh ya
 COPY --chown=seluser:seluser packages/linode-js-sdk  ./packages/linode-js-sdk/
 COPY --chown=seluser:seluser packages/manager ./packages/manager
 # Runs "yarn install" for all child packages
-RUN yarn install:all && yarn run selenium-standalone install --config=./packages/manager/e2e/config/selenium-config.js && yarn workspace linode-js-sdk build
+RUN yarn install:all && yarn selenium:install && yarn workspace linode-js-sdk build
 
 ENTRYPOINT ["sh","run_storybook_docker.sh"]
 
