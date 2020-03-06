@@ -11,7 +11,7 @@ const gaInit = (i: any, s: any, o: any, g: any, r: any, a: any, m: any) => {
     }),
     (i[r].l = 1 * currdate);
   (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
-  a.async = true;
+  a.async = 1;
   a.src = g;
   m.parentNode.insertBefore(a, m);
 };
