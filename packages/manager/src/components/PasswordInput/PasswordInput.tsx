@@ -135,15 +135,17 @@ class PasswordInput extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Grid container alignItems="flex-end" className={classes.container}>
           <Grid item xs={12}>
-            <HideShowText
-              {...rest}
-              tooltipText={disabledReason}
-              value={value}
-              onChange={this.onChange}
-              fullWidth
-              required={required}
-              onBlur={this.onBlur}
-            />
+            <form>
+              <HideShowText
+                {...rest}
+                tooltipText={disabledReason}
+                value={value}
+                onChange={this.onChange}
+                fullWidth
+                required={required}
+                onBlur={this.onBlur}
+              />
+            </form>
           </Grid>
           {!hideHelperText && (
             <Grid item xs={12}>
