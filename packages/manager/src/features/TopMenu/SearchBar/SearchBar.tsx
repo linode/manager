@@ -8,6 +8,7 @@ import _Option from 'react-select/lib/components/Option';
 import { compose } from 'recompose';
 import IconButton from 'src/components/core/IconButton';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
+import { REFRESH_INTERVAL } from 'src/constants';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import withStoreSearch, {
@@ -69,7 +70,7 @@ export const SearchBar: React.FC<CombinedProps> = props => {
 
   const { _loading } = useReduxLoad(
     ['linodes', 'nodeBalancers', 'images', 'domains'],
-    60000,
+    REFRESH_INTERVAL,
     searchActive // Only request things if the search bar is open/active.
   );
 

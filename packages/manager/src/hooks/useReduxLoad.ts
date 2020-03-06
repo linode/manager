@@ -2,6 +2,7 @@ import * as Bluebird from 'bluebird';
 import { useEffect, useState } from 'react';
 import { useDispatch, useStore } from 'react-redux';
 import { Dispatch } from 'redux';
+import { REFRESH_INTERVAL } from 'src/constants';
 import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
@@ -68,9 +69,9 @@ const requestMap: RequestMap = {
   firewalls: getAllFirewalls
 };
 
-export const useReduxLoad = <T>(
+export const useReduxLoad = (
   deps: ReduxEntity[] = [],
-  refreshInterval: number = 60000,
+  refreshInterval: number = REFRESH_INTERVAL,
   predicate: boolean = true
 ): UseReduxPreload => {
   const [_loading, setLoading] = useState<boolean>(false);

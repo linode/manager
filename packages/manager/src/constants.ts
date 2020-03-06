@@ -80,6 +80,11 @@ export const MAX_VOLUME_SIZE = 10240;
 export const INTERVAL = 1000;
 
 /**
+ * Time after which data from the API is considered stale
+ */
+export const REFRESH_INTERVAL = 60000;
+
+/**
  * Used by e.g. LISH to determine the websocket connection address.
  * Whenever updating this, also update the corresponding name in resolvers.ts
  */
