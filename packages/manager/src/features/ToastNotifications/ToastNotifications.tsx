@@ -135,6 +135,16 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
             return _toast(undefined, `Error disabling Firewall ${label}.`);
           case 'firewall_delete':
             return _toast(undefined, `Error deleting Firewall ${label}.`);
+          case 'firewall_device_add':
+            return _toast(
+              undefined,
+              `Error adding ${secondaryLabel} to Firewall ${label}.`
+            );
+          case 'firewall_device_remove':
+            return _toast(
+              undefined,
+              `Error removing ${secondaryLabel} from Firewall ${label}.`
+            );
           default:
             return;
         }

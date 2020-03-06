@@ -26,9 +26,7 @@ const FirewallRulesLanding = React.lazy(() =>
   import('./Rules/FirewallRulesLanding')
 );
 
-const FirewallLinodesLanding = React.lazy(() =>
-  import('./FirewallLinodesLanding')
-);
+const FirewallLinodesLanding = React.lazy(() => import('./Devices'));
 
 type CombinedProps = RouteComponentProps<{ id: string }> & WithFirewallsProps;
 
@@ -131,7 +129,12 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
           exact
           strict
           path={`${URL}/linodes`}
-          render={() => <FirewallLinodesLanding firewallID={+thisFirewallId} />}
+          render={() => (
+            <FirewallLinodesLanding
+              firewallID={+thisFirewallId}
+              firewallLabel={thisFirewall.label}
+            />
+          )}
         />
         <Redirect to={`${URL}/rules`} />
       </Switch>
