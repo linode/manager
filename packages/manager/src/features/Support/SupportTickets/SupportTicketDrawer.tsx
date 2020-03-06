@@ -80,13 +80,6 @@ export interface Props {
   hideProductSelection?: boolean;
 }
 
-interface Ticket {
-  description: string;
-  entity_id: string;
-  entity_type: string;
-  summary: string;
-}
-
 export type CombinedProps = Props;
 
 const entityMap = {
@@ -117,18 +110,14 @@ export const entitiesToItems = (type: string, entities: any) => {
 export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
   const { open, onClose } = props;
 
-  const defaultTicket: Ticket = {
-    summary: props.prefilledTitle || '',
-    description: props.prefilledDescription || '',
-    entity_type: 'none',
-    entity_id: ''
-  };
-
-  const [ticket, setTicket] = React.useState<Ticket>(defaultTicket);
-  const [data, setData] = React.useState<Item<any>[]>([]);
-
+  // Ticket information
   const [summary, setSummary] = React.useState<string>('');
   const [description, setDescription] = React.useState<string>('');
+  const [entityType, setEntityType] = React.useState<string>('none');
+  const [entityID, setEntityID] = React.useState<string>('');
+
+  // Entities for populating dropdown
+  const [data, setData] = React.useState<Item<any>[]>([]);
 
   const [inputValue, setInputValue] = React.useState<string>('');
   const [files, setFiles] = React.useState<FileAttachment[]>([]);
@@ -148,14 +137,14 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
 
   const handleSetOrRequestEntities = (
     _entity: Entity<any>,
-    entityType: string
+    _entityType: string
   ) => {
     if (_entity.lastUpdated === 0) {
       _entity
         .request()
-        .then(response => setData(entitiesToItems(entityType, response)));
+        .then(response => setData(entitiesToItems(_entityType, response)));
     } else {
-      setData(entitiesToItems(entityType, _entity.data));
+      setData(entitiesToItems(_entityType, _entity.data));
     }
   };
 
@@ -165,26 +154,26 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
    * 2. If we don't, request it and assign the result to the selectedEntities state
    * 3. If we do, directly assign the data from Redux to the selectedEntities state
    */
-  const loadSelectedEntities = async () => {
-    const entity = ticket.entity_type;
-    switch (entity) {
+  const loadSelectedEntities = (_entityType: string) => {
+    switch (_entityType) {
       case 'linode_id': {
-        handleSetOrRequestEntities(entities.linodes, entity);
+        handleSetOrRequestEntities(entities.linodes, _entityType);
+        return;
       }
       case 'volume_id': {
-        handleSetOrRequestEntities(entities.volumes, entity);
+        handleSetOrRequestEntities(entities.volumes, _entityType);
         return;
       }
       case 'domain_id': {
-        handleSetOrRequestEntities(entities.domains, entity);
+        handleSetOrRequestEntities(entities.domains, _entityType);
         return;
       }
       case 'nodebalancer_id': {
-        handleSetOrRequestEntities(entities.nodeBalancers, entity);
+        handleSetOrRequestEntities(entities.nodeBalancers, _entityType);
         return;
       }
       case 'cluster_id': {
-        handleSetOrRequestEntities(entities.kubernetesClusters, entity);
+        handleSetOrRequestEntities(entities.kubernetesClusters, _entityType);
         return;
       }
       default: {
@@ -194,10 +183,16 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
     }
   };
 
-  const resetDrawer = () => {
-    setData([]);
+  const resetTicket = () => {
     setSummary('');
     setDescription('');
+    setEntityID('');
+    setEntityType('none');
+  };
+
+  const resetDrawer = () => {
+    setData([]);
+    resetTicket();
   };
 
   const handleSummaryInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -205,42 +200,34 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
   };
 
   const handleDescriptionInputChange = (value: string) => {
-    setDescription('');
+    setDescription(value);
     // setErrors?
   };
 
   const handleEntityTypeChange = (e: Item<string>) => {
     // Don't reset things if the type hasn't changed
-    if (ticket.entity_type === e.value) {
+    if (entityType === e.value) {
       return;
     }
-    setTicket({
-      ...ticket,
-      entity_type: e.value,
-      entity_id: ''
-    });
+    setEntityType(e.value);
+    setEntityID('');
     setErrors(undefined);
     setInputValue('');
     setData([]);
 
-    loadSelectedEntities();
+    loadSelectedEntities(e.value);
   };
 
   const handleEntityIDChange = (selected: Item | null) => {
-    setTicket({
-      ...ticket,
-      entity_id: selected?.value ? String(selected?.value) : ''
-    });
+    setEntityID(selected?.value ? String(selected?.value) : '');
   };
 
   const getHasNoEntitiesMessage = (): string => {
-    if (['none', 'general'].includes(ticket.entity_type)) {
+    if (['none', 'general'].includes(entityType)) {
       return '';
     } else if (data.length === 0) {
       // User has selected a type from the drop-down but the entity list is empty.
-      return `You don't have any ${
-        entityIdtoNameMap[ticket.entity_type]
-      }s on your account.`;
+      return `You don't have any ${entityIdtoNameMap[entityType]}s on your account.`;
     } else {
       // Default case
       return '';
@@ -326,14 +313,11 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
 
   const onSubmit = () => {
     const { onSuccess } = props;
-    if (
-      !['none', 'general'].includes(ticket.entity_type) &&
-      !ticket.entity_id
-    ) {
+    if (!['none', 'general'].includes(entityType) && !entityID) {
       setErrors([
         {
           field: 'input',
-          reason: `Please select a ${entityIdtoNameMap[ticket.entity_type]}.`
+          reason: `Please select a ${entityIdtoNameMap[entityType]}.`
         }
       ]);
       return;
@@ -349,12 +333,12 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
     createSupportTicket({
       description: updatedDescription,
       summary,
-      [ticket.entity_type]: Number(ticket.entity_id)
+      [entityType]: Number(entityID)
     })
       .then(response => {
         setErrors(undefined);
         setSubmitting(false);
-        setTicket(defaultTicket);
+        resetTicket();
         return response;
       })
       .then(response => {
@@ -383,8 +367,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
     });
   };
 
-  const requirementsMet =
-    ticket.description.length > 0 && ticket.summary.length > 0;
+  const requirementsMet = description.length > 0 && summary.length > 0;
 
   const hasErrorFor = getErrorMap(['summary', 'description', 'input'], errors);
   const summaryError = hasErrorFor.summary;
@@ -400,11 +383,11 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
   ];
 
   const selectedTopic = topicOptions.find(eachTopic => {
-    return eachTopic.value === ticket.entity_type;
+    return eachTopic.value === entityType;
   });
 
   const selectedEntity =
-    data.find(thisEntity => thisEntity.value === ticket.entity_id) || null;
+    data.find(thisEntity => thisEntity.value === entityID) || null;
 
   return (
     <Drawer open={open} onClose={onClose} title="Open a Support Ticket">
@@ -438,17 +421,15 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
                 placeholder="Choose a Product"
                 isClearable={false}
               />
-              {!['none', 'general'].includes(ticket.entity_type) && (
+              {!['none', 'general'].includes(entityType) && (
                 <>
                   <Select
                     options={data}
                     value={selectedEntity}
                     disabled={data.length === 0}
                     errorText={inputError}
-                    placeholder={`Select a ${
-                      entityIdtoNameMap[ticket.entity_type]
-                    }`}
-                    label={entityIdtoNameMap[ticket.entity_type]}
+                    placeholder={`Select a ${entityIdtoNameMap[entityType]}`}
+                    label={entityIdtoNameMap[entityType] ?? 'Entity Select'}
                     inputValue={inputValue}
                     onChange={handleEntityIDChange}
                     onInputChange={onInputValueChange}
@@ -467,7 +448,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
             label="Title"
             placeholder="Enter a title for your ticket."
             required
-            value={ticket.summary}
+            value={summary}
             onChange={handleSummaryInputChange}
             errorText={summaryError}
             data-qa-ticket-summary
@@ -476,7 +457,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
             required
             error={descriptionError}
             handleChange={handleDescriptionInputChange}
-            value={ticket.description}
+            value={description}
             innerClass={classes.innerReply}
             rootClass={classes.rootReply}
             placeholder={
