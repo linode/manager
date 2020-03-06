@@ -70,6 +70,15 @@ interface AttachmentWithTarget {
   ticketId: number;
 }
 
+export type EntityType =
+  | 'linode_id'
+  | 'volume_id'
+  | 'domain_id'
+  | 'nodebalancer_id'
+  | 'cluster_id'
+  | 'none'
+  | 'general';
+
 export interface Props {
   open: boolean;
   prefilledTitle?: string;
@@ -82,7 +91,7 @@ export interface Props {
 
 export type CombinedProps = Props;
 
-const entityMap = {
+const entityMap: Record<string, EntityType> = {
   Linodes: 'linode_id',
   Volumes: 'volume_id',
   Domains: 'domain_id',
@@ -90,7 +99,7 @@ const entityMap = {
   Kubernetes: 'cluster_id'
 };
 
-const entityIdToNameMap = {
+const entityIdToNameMap: Partial<Record<EntityType, string>> = {
   linode_id: 'Linode',
   volume_id: 'Volume',
   domain_id: 'Domain',
@@ -98,12 +107,14 @@ const entityIdToNameMap = {
   cluster_id: 'Kubernetes Cluster'
 };
 
-const entityIdToTypeMap = {
+const entityIdToTypeMap: Record<EntityType, string> = {
   linode_id: 'linodes',
   volume_id: 'volumes',
   domain_id: 'domains',
   nodebalancer_id: 'nodeBalancers',
-  cluster_id: 'kubernetesClusters'
+  cluster_id: 'kubernetesClusters',
+  none: 'linodes',
+  general: 'linodes'
 };
 
 export const entitiesToItems = (type: string, entities: any) => {
@@ -121,7 +132,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
   // Ticket information
   const [summary, setSummary] = React.useState<string>('');
   const [description, setDescription] = React.useState<string>('');
-  const [entityType, setEntityType] = React.useState<string>('none');
+  const [entityType, setEntityType] = React.useState<EntityType>('none');
   const [entityID, setEntityID] = React.useState<string>('');
 
   // Entities for populating dropdown
@@ -168,33 +179,11 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
    * 2. If we don't, request it and assign the result to the selectedEntities state
    * 3. If we do, directly assign the data from Redux to the selectedEntities state
    */
-  const loadSelectedEntities = (_entityType: string) => {
-    switch (_entityType) {
-      case 'linode_id': {
-        handleSetOrRequestEntities(entities.linodes, _entityType);
-        return;
-      }
-      case 'volume_id': {
-        handleSetOrRequestEntities(entities.volumes, _entityType);
-        return;
-      }
-      case 'domain_id': {
-        handleSetOrRequestEntities(entities.domains, _entityType);
-        return;
-      }
-      case 'nodebalancer_id': {
-        handleSetOrRequestEntities(entities.nodeBalancers, _entityType);
-        return;
-      }
-      case 'cluster_id': {
-        handleSetOrRequestEntities(entities.kubernetesClusters, _entityType);
-        return;
-      }
-      default: {
-        setData([]);
-        return;
-      }
-    }
+  const loadSelectedEntities = (_entityType: EntityType) => {
+    handleSetOrRequestEntities(
+      entities[entityIdToTypeMap[_entityType]],
+      _entityType
+    );
   };
 
   const resetTicket = () => {
@@ -224,12 +213,12 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
     if (entityType === e.value) {
       return;
     }
-    setEntityType(e.value);
+    setEntityType(e.value as EntityType);
     setEntityID('');
     setErrors(undefined);
     setData([]);
 
-    loadSelectedEntities(e.value);
+    loadSelectedEntities(e.value as EntityType);
   };
 
   const handleEntityIDChange = (selected: Item | null) => {
