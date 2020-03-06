@@ -52,20 +52,14 @@ interface Form {
   protocol: string;
 }
 
-const initialValues: Form = {
-  type: '',
-  ports: '',
-  addresses: '',
-  protocol: ''
-};
-
 export type CombinedProps = Props;
 
 const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
   const { isOpen, onClose, category, mode, ruleToModify } = props;
 
+  // If we're in edit mode, we need to pre-set IP state with the IPs of the rule we're modifying.
   const initialIPs =
-    ruleToModify !== undefined
+    mode === 'edit' && ruleToModify !== undefined
       ? [...ruleToModify.addresses?.ipv4, ...ruleToModify.addresses?.ipv6]
       : [''];
 
@@ -90,26 +84,7 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
     onClose();
   };
 
-  let initialAddresses = '';
-  if (ruleToModify !== undefined) {
-    initialAddresses = allowsAllIPs(ruleToModify.addresses)
-      ? 'all'
-      : allowAllIPv4(ruleToModify.addresses)
-      ? 'allIPv4'
-      : allowAllIPv6(ruleToModify.addresses)
-      ? 'allIPv6'
-      : 'ip/netmask';
-  }
-
-  const defaultValues: Form =
-    ruleToModify !== undefined
-      ? {
-          ports: ruleToModify.ports,
-          protocol: ruleToModify.protocol,
-          addresses: initialAddresses,
-          type: predefinedFirewallFromRule(ruleToModify) || ''
-        }
-      : initialValues;
+  const defaultValues = getInitialFormValues(ruleToModify);
 
   return (
     <Drawer title={title} open={isOpen} onClose={onClose}>
@@ -379,3 +354,41 @@ export const classifyIPs = (ips: string[]) =>
     },
     { ipv4: [], ipv6: [] }
   );
+
+const initialValues: Form = {
+  type: '',
+  ports: '',
+  addresses: '',
+  protocol: ''
+};
+
+const getInitialFormValues = (ruleToModify?: FirewallRuleWithStatus): Form => {
+  if (!ruleToModify) {
+    return initialValues;
+  }
+
+  return {
+    ports: ruleToModify.ports,
+    protocol: ruleToModify.protocol,
+    addresses: getInitialAddressFormValue(ruleToModify.addresses),
+    type: predefinedFirewallFromRule(ruleToModify) || ''
+  };
+};
+
+export const getInitialAddressFormValue = (
+  addresses: FirewallRuleWithStatus['addresses']
+): string => {
+  if (allowsAllIPs(addresses)) {
+    return 'all';
+  }
+
+  if (allowAllIPv4(addresses)) {
+    return 'allIPv4';
+  }
+
+  if (allowAllIPv6(addresses)) {
+    return 'allIPv6';
+  }
+
+  return 'ip/netmask';
+};

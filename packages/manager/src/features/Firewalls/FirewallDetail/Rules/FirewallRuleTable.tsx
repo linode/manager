@@ -183,7 +183,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
                             </button>
                             <FirewallRuleActionMenu
                               {...actionMenuProps}
-                              disabled
+                              disabled={status === 'PENDING_DELETION'}
                             />
                           </div>
                         ) : (
