@@ -69,7 +69,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       this.props.requestDomains(),
       this.props.requestImages(),
       this.props.requestProfile(),
-      // this.props.requestLinodes(),
+      this.props.requestLinodes(),
       this.props.requestNotifications(),
       this.props.requestSettings(),
       this.props.requestTypes(),

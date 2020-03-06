@@ -1,9 +1,11 @@
-import { shallow, ShallowWrapper } from 'enzyme';
+import { cleanup, fireEvent, wait } from '@testing-library/react';
 import { SupportTicket } from 'linode-js-sdk/lib/account';
-// import { createSupportTicket } from 'linode-js-sdk/lib/support';
 import * as React from 'react';
-// import { getVersionString } from 'src/utilities/getVersionString';
-import { SupportTicketDrawer } from './SupportTicketDrawer';
+import { getVersionString } from 'src/utilities/getVersionString';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+import SupportTicketDrawer, { Props } from './SupportTicketDrawer';
+
+const support = require.requireMock('linode-js-sdk/lib/support');
 
 const supportTicket: SupportTicket = {
   updated_by: 'test-account',
@@ -22,10 +24,21 @@ const supportTicket: SupportTicket = {
   gravatarUrl: 'not found'
 };
 
+const props: Props = {
+  open: true,
+  onClose: jest.fn(),
+  onSuccess: jest.fn()
+};
+
 // Mock support services library
 jest.mock('linode-js-sdk/lib/support', () => ({
   createSupportTicket: jest.fn().mockResolvedValue(supportTicket)
 }));
+
+support.createSupportTicket = jest.fn().mockResolvedValue(supportTicket);
+
+// Mock React-Select
+jest.mock('src/components/EnhancedSelect/Select');
 
 // Mock getVersionsString utility function
 jest.mock('src/utilities/getVersionString', () => ({
@@ -33,67 +46,58 @@ jest.mock('src/utilities/getVersionString', () => ({
 }));
 
 // So TypeScript won't complain...
-// const mockedGetVersionString = getVersionString as jest.Mock<string, any>;
+const mockedGetVersionString = getVersionString as jest.Mock<string, any>;
 
-let wrapper: ShallowWrapper;
-
-beforeEach(() => {
-  wrapper = shallow(
-    <SupportTicketDrawer
-      open={true}
-      onClose={jest.fn()}
-      onSuccess={jest.fn()}
-    />
-  );
-});
+afterEach(cleanup);
 
 describe('Support Ticket Drawer', () => {
   it('should render', () => {
-    expect(wrapper).toBeDefined();
+    const { getByText } = renderWithTheme(<SupportTicketDrawer {...props} />);
+    expect(getByText('Open a Support Ticket'));
   });
 
-  // it('it should append version string if it is defined', () => {
-  //   // We'll mock that process.env.VERSION is equal to 0.00.0
-  //   mockedGetVersionString.mockImplementation(
-  //     () => 'Cloud Manager Version: 0.00.0'
-  //   );
+  it('it should append version string if it is defined', async () => {
+    // We'll mock that process.env.VERSION is equal to 0.00.0
+    mockedGetVersionString.mockImplementation(
+      () => 'Cloud Manager Version: 0.00.0'
+    );
+    const { getByText } = renderWithTheme(
+      <SupportTicketDrawer
+        {...props}
+        prefilledDescription="hello world"
+        prefilledTitle="A ticket"
+      />
+    );
 
-  //   // The user has typed "hello world" in the description
-  //   wrapper.setState({
-  //     ticket: { ...wrapper.state().ticket, description: 'hello world' }
-  //   });
+    const submit = getByText(/open ticket/i);
+    await wait(() => fireEvent.click(submit));
 
-  //   // Simulate pressing "Open Ticket"
-  //   const button = wrapper.find('[data-qa-submit]');
-  //   button.simulate('click');
+    expect(support.createSupportTicket).toBeCalledWith(
+      expect.objectContaining({
+        description: 'hello world\n\nCloud Manager Version: 0.00.0'
+      })
+    );
+  });
 
-  //   // We'd expect the version string to be appended to the description
-  //   expect(createSupportTicket).toBeCalledWith(
-  //     expect.objectContaining({
-  //       description: 'hello world\n\nCloud Manager Version: 0.00.0'
-  //     })
-  //   );
-  // });
+  it('it should not append version string if it is not defined', async () => {
+    // We'll mock that process.env.VERSION is undefined. In this case,
+    // the utility function would return an empty string
+    mockedGetVersionString.mockImplementation(() => '');
+    const { getByText } = renderWithTheme(
+      <SupportTicketDrawer
+        {...props}
+        prefilledDescription="hello world"
+        prefilledTitle="A ticket"
+      />
+    );
 
-  // it('it should not append version string if it is not defined', () => {
-  //   // We'll mock that process.env.VERSION is undefined. In this case,
-  //   // the utility function would return an empty string
-  //   mockedGetVersionString.mockImplementation(() => '');
+    const submit = getByText(/open ticket/i);
+    await wait(() => fireEvent.click(submit));
 
-  //   // The user has typed "hello world" in the description
-  //   wrapper.setState({
-  //     ticket: { ...wrapper.state().ticket, description: 'hello world' }
-  //   });
-
-  //   // Simulate pressing "Open Ticket"
-  //   const button = wrapper.find('[data-qa-submit]');
-  //   button.simulate('click');
-
-  //   // We would not expect to find anything appended to the description
-  //   expect(createSupportTicket).toBeCalledWith(
-  //     expect.objectContaining({
-  //       description: 'hello world'
-  //     })
-  //   );
-  // });
+    expect(support.createSupportTicket).toBeCalledWith(
+      expect.objectContaining({
+        description: 'hello world'
+      })
+    );
+  });
 });

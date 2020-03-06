@@ -127,11 +127,13 @@ export const entitiesToItems = (type: string, entities: any) => {
 };
 
 export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
-  const { open, onClose } = props;
+  const { open, onClose, prefilledDescription, prefilledTitle } = props;
 
   // Ticket information
-  const [summary, setSummary] = React.useState<string>('');
-  const [description, setDescription] = React.useState<string>('');
+  const [summary, setSummary] = React.useState<string>(prefilledTitle ?? '');
+  const [description, setDescription] = React.useState<string>(
+    prefilledDescription ?? ''
+  );
   const [entityType, setEntityType] = React.useState<EntityType>('none');
   const [entityID, setEntityID] = React.useState<string>('');
 
@@ -212,8 +214,8 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
   };
 
   const resetTicket = () => {
-    setSummary('');
-    setDescription('');
+    setSummary(prefilledTitle ?? '');
+    setDescription(prefilledDescription ?? '');
     setEntityID('');
     setEntityType('none');
   };
@@ -509,6 +511,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
               loading={submitting}
               buttonType="primary"
               data-qa-submit
+              data-testid="submit"
             >
               Open Ticket
             </Button>
@@ -517,6 +520,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
               buttonType="secondary"
               className="cancel"
               data-qa-cancel
+              data-testid="cancel"
             >
               Cancel
             </Button>
