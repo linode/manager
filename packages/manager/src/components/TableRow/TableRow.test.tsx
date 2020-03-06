@@ -17,7 +17,8 @@ const props: CombinedProps = {
     selected: '',
     selectedOuter: '',
     withForcedIndex: '',
-    highlight: ''
+    highlight: '',
+    disabled: ''
   },
   ...reactRouterProps,
   history: {

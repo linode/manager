@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ActionMenu from 'src/components/ActionMenu/ActionMenu';
+import Undo from 'src/assets/icons/undo.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
@@ -17,7 +17,7 @@ import {
   predefinedFirewallFromRule as ruleToPredefinedFirewall
 } from 'src/features/Firewalls/shared';
 import capitalize from 'src/utilities/capitalize';
-import { v4 } from 'uuid';
+import FirewallRuleActionMenu from './FirewallRuleActionMenu';
 import { Mode } from './FirewallRuleDrawer';
 import { FirewallRuleWithStatus, RuleStatus } from './firewallRuleEditor';
 
@@ -29,6 +29,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   table: {
     borderCollapse: 'collapse'
+  },
+  undoButtonContainer: {
+    marginTop: 4,
+    marginBottom: 3,
+    display: 'flex',
+    alignItems: 'flex-end',
+    flexDirection: 'column'
+  },
+  undoButton: {
+    cursor: 'pointer',
+    backgroundColor: '#F7F7F7',
+    border: 'none'
   }
 }));
 
@@ -39,7 +51,7 @@ interface RuleRow {
   protocol: string;
   ports: string;
   addresses: string;
-  id: string;
+  id: number;
   status: RuleStatus;
 }
 
@@ -47,12 +59,21 @@ interface Props {
   category: Category;
   openDrawer: (category: Category, mode: Mode) => void;
   rulesWithStatus: FirewallRuleWithStatus[];
+  triggerDeleteFirewallRule: (idx: number) => void;
+  triggerEditFirewallRule: (idx: number) => void;
+  triggerUndoDeleteFirewallRule: (idx: number) => void;
 }
 
 type CombinedProps = Props;
 
 const FirewallRuleTable: React.FC<CombinedProps> = props => {
-  const { category, rulesWithStatus } = props;
+  const {
+    category,
+    rulesWithStatus,
+    triggerDeleteFirewallRule,
+    triggerEditFirewallRule,
+    triggerUndoDeleteFirewallRule
+  } = props;
 
   const classes = useStyles();
 
@@ -118,7 +139,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
               {orderedData.length === 0 ? (
                 <TableRowEmptyState colSpan={5} />
               ) : (
-                orderedData.map((ruleRow: RuleRow, idx) => {
+                orderedData.map((ruleRow: RuleRow) => {
                   const {
                     id,
                     type,
@@ -132,17 +153,32 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
                     <TableRow
                       key={id}
                       highlight={status === 'MODIFIED' || status === 'NEW'}
+                      disabled={status === 'PENDING_DELETION'}
                     >
                       <TableCell>{type}</TableCell>
                       <TableCell>{protocol}</TableCell>
                       <TableCell>{ports}</TableCell>
                       <TableCell>{addresses}</TableCell>
-                      <TableCell>
-                        {/* Mocked for now. */}
-                        <ActionMenu
-                          createActions={() => []}
-                          ariaLabel="Action menu for Firewall rule"
-                        />
+                      <TableCell style={{ width: '10%' }}>
+                        {status === 'PENDING_DELETION' ? (
+                          <div className={classes.undoButtonContainer}>
+                            <button
+                              className={classes.undoButton}
+                              onClick={() => triggerUndoDeleteFirewallRule(id)}
+                              role="button"
+                            >
+                              <Undo />
+                            </button>
+                          </div>
+                        ) : (
+                          <FirewallRuleActionMenu
+                            idx={ruleRow.id}
+                            triggerDeleteFirewallRule={
+                              triggerDeleteFirewallRule
+                            }
+                            triggerEditFirewallRule={triggerEditFirewallRule}
+                          />
+                        )}
                       </TableCell>
                     </TableRow>
                   );
@@ -166,7 +202,7 @@ export default React.memo(FirewallRuleTable);
 export const firewallRuleToRowData = (
   firewallRules: FirewallRuleWithStatus[]
 ): RuleRow[] => {
-  return firewallRules.map(thisRule => {
+  return firewallRules.map((thisRule, idx) => {
     const ruleType = ruleToPredefinedFirewall(thisRule);
 
     return {
@@ -175,7 +211,7 @@ export const firewallRuleToRowData = (
       addresses: generateAddressesLabel(thisRule.addresses),
       ports: thisRule.ports,
       status: thisRule.status,
-      id: v4()
+      id: idx
     };
   });
 };

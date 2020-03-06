@@ -43,6 +43,7 @@ interface Drawer {
   mode: Mode;
   category: Category;
   isOpen: boolean;
+  ruleIdx?: number;
 }
 
 type CombinedProps = Props & RouteComponentProps & DispatchProps;
@@ -94,6 +95,20 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
     dispatch({ type: 'NEW_RULE', rule });
   };
 
+  const handleEditRule = (
+    rule: Partial<FirewallRuleType>,
+    category: Category
+  ) => {
+    if (drawer.ruleIdx === undefined) {
+      return;
+    }
+
+    const dispatch =
+      category === 'inbound' ? inboundDispatch : outboundDispatch;
+
+    dispatch({ type: 'MODIFY_RULE', modifiedRule: rule, idx: drawer.ruleIdx });
+  };
+
   // @todo: handleEditRule
 
   const applyChanges = () => {
@@ -101,8 +116,14 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
 
     // Gather rules from state for submission to the API.
     const finalRules: FirewallRules = {
-      inbound: editorStateToRules(inboundState, false),
-      outbound: editorStateToRules(outboundState, false)
+      inbound: editorStateToRules(inboundState, {
+        withDeleted: false,
+        withStatus: false
+      }),
+      outbound: editorStateToRules(outboundState, {
+        withDeleted: false,
+        withStatus: false
+      })
     };
 
     props.updateFirewallRules({ firewallID, ...finalRules }).then(_rules => {
@@ -125,6 +146,47 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
     outboundState
   ]);
 
+  const handleDeleteInboundFirewallRule = (idx: number) => {
+    inboundDispatch({ type: 'DELETE_RULE', idx });
+  };
+
+  const handleDeleteOutboundFirewallRule = (idx: number) => {
+    outboundDispatch({ type: 'DELETE_RULE', idx });
+  };
+
+  const handleEditInboundFirewallRule = (idx: number) => {
+    setDrawer({
+      mode: 'edit',
+      ruleIdx: idx,
+      category: 'inbound',
+      isOpen: true
+    });
+  };
+
+  const handleEditOutboundFirewallRule = (idx: number) => {
+    setDrawer({
+      mode: 'edit',
+      ruleIdx: idx,
+      category: 'inbound',
+      isOpen: true
+    });
+  };
+
+  const handleUndoDeleteInboundFirewallRule = (idx: number) => {
+    inboundDispatch({ type: 'UNDO', idx });
+  };
+
+  const handleUndoDeleteOutboundFirewallRule = (idx: number) => {
+    inboundDispatch({ type: 'UNDO', idx });
+  };
+
+  const ruleToModify =
+    drawer.ruleIdx !== undefined
+      ? drawer.category === 'inbound'
+        ? inboundRules[drawer.ruleIdx]
+        : outboundRules[drawer.ruleIdx]
+      : undefined;
+
   return (
     <>
       <Typography variant="body1" className={classes.copy}>
@@ -137,6 +199,9 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
           category="inbound"
           rulesWithStatus={inboundRules}
           openDrawer={openDrawer}
+          triggerDeleteFirewallRule={handleDeleteInboundFirewallRule}
+          triggerEditFirewallRule={handleEditInboundFirewallRule}
+          triggerUndoDeleteFirewallRule={handleUndoDeleteInboundFirewallRule}
         />
       </div>
       <div className={classes.table}>
@@ -144,6 +209,9 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
           category="outbound"
           rulesWithStatus={outboundRules}
           openDrawer={openDrawer}
+          triggerDeleteFirewallRule={handleDeleteOutboundFirewallRule}
+          triggerEditFirewallRule={handleEditOutboundFirewallRule}
+          triggerUndoDeleteFirewallRule={handleUndoDeleteOutboundFirewallRule}
         />
       </div>
       <FirewallRuleDrawer
@@ -151,7 +219,8 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         mode={drawer.mode}
         category={drawer.category}
         onClose={closeDrawer}
-        onSubmit={handleAddRule}
+        onSubmit={drawer.mode === 'create' ? handleAddRule : handleEditRule}
+        ruleToModify={ruleToModify}
       />
       {hasModified && (
         <FixedToolBar>

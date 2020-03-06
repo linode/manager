@@ -20,12 +20,16 @@ import {
   allIPs,
   allIPv4,
   allIPv6,
+  allowAllIPv4,
+  allowAllIPv6,
+  allowsAllIPs,
   firewallOptionItemsShort,
   portPresets,
   predefinedFirewallFromRule,
   protocolOptions
 } from 'src/features/Firewalls/shared';
 import capitalize from 'src/utilities/capitalize';
+import { FirewallRuleWithStatus } from './firewallRuleEditor';
 
 export type Mode = 'create' | 'edit';
 
@@ -38,6 +42,7 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (rule: FirewallRuleType, category: 'inbound' | 'outbound') => void;
+  ruleToModify?: FirewallRuleWithStatus;
 }
 
 interface Form {
@@ -57,13 +62,18 @@ const initialValues: Form = {
 export type CombinedProps = Props;
 
 const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
-  const { isOpen, onClose, category, mode } = props;
+  const { isOpen, onClose, category, mode, ruleToModify } = props;
+
+  const initialIPs =
+    ruleToModify !== undefined
+      ? [...ruleToModify.addresses?.ipv4, ...ruleToModify.addresses?.ipv6]
+      : [''];
 
   // Custom IPs are tracked separately from the form. The <MultipleIPs />
   // component consumes this state. We use this on form submission if the
   // `addresses` form value is "ip/netmask", which indicates the user has
   // intended to specify custom IPs.
-  const [ips, setIPs] = React.useState<string[]>(['']);
+  const [ips, setIPs] = React.useState<string[]>(initialIPs);
 
   const title =
     mode === 'create' ? `Add an ${capitalize(category)} Rule` : 'Edit Rule';
@@ -83,13 +93,33 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
     onClose();
   };
 
+  let initialAddresses = '';
+  if (ruleToModify !== undefined) {
+    initialAddresses = allowsAllIPs(ruleToModify.addresses)
+      ? 'all'
+      : allowAllIPv4(ruleToModify.addresses)
+      ? 'allIPv4'
+      : allowAllIPv6(ruleToModify.addresses)
+      ? 'allIPv6'
+      : 'ip/netmask';
+  }
+
+  const defaultValues: Form =
+    ruleToModify !== undefined
+      ? {
+          ports: ruleToModify.ports,
+          protocol: ruleToModify.protocol,
+          addresses: initialAddresses,
+          type: predefinedFirewallFromRule(ruleToModify) || ''
+        }
+      : initialValues;
+
   return (
     <Drawer title={title} open={isOpen} onClose={onClose}>
       <Formik
-        initialValues={initialValues}
+        initialValues={defaultValues}
         validateOnChange={false}
         validateOnBlur={false}
-        // @todo: submit the form for real.
         onSubmit={_onSubmit}
       >
         {formikProps => {
@@ -98,6 +128,7 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
               addressesLabel={addressesLabel}
               ips={ips}
               setIPs={setIPs}
+              mode={mode}
               {...formikProps}
             />
           );
@@ -126,6 +157,7 @@ interface FirewallRuleFormProps extends FormikProps<Form> {
   ips: string[];
   setIPs: (ips: string[]) => void;
   addressesLabel: string;
+  mode: Mode;
 }
 
 const typeOptions = [
@@ -147,7 +179,8 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
     setFieldValue,
     addressesLabel,
     setIPs,
-    ips
+    ips,
+    mode
   } = props;
 
   // These handlers are all memoized because the form was laggy when I tried them inline.
@@ -266,7 +299,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
           data-qa-submit
           // loading={isSubmitting}
         >
-          Add Rule
+          {mode === 'create' ? 'Add Rule' : 'Edit rule'}
         </Button>
       </ActionsPanel>
     </form>

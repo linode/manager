@@ -20,7 +20,8 @@ type ClassNames =
   | 'activeCaret'
   | 'activeCaretOverlay'
   | 'selectedOuter'
-  | 'highlight';
+  | 'highlight'
+  | 'disabled';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -116,9 +117,16 @@ const styles = (theme: Theme) =>
       }
     },
     highlight: {
-      borderColor: '#99c8ff',
-      borderStyle: 'solid',
-      borderWidth: '2px'
+      backgroundColor: theme.bg.lightBlue
+    },
+    disabled: {
+      // Ideally this would be `opacity: 0.25`. The problem is that opacity applies to all children,
+      // so for example the "undo" icon in Firewall Rules is transparent as well. These colors
+      // simulate opacity 0.25 but it's awful. @todo @WilkinsKa1 help.
+      backgroundColor: '#F7F7F7',
+      '& td': {
+        color: '#D2D3D4'
+      }
     }
   });
 
@@ -134,6 +142,7 @@ interface Props {
   selected?: boolean;
   forceIndex?: boolean;
   highlight?: boolean;
+  disabled?: boolean;
 }
 
 export type CombinedProps = Props &
@@ -184,6 +193,7 @@ export class TableRow extends React.Component<CombinedProps> {
       selected,
       forceIndex,
       highlight,
+      disabled,
       ...rest
     } = this.props;
 
@@ -212,7 +222,8 @@ export class TableRow extends React.Component<CombinedProps> {
           [classes.root]: true,
           [classes.selected]: selected,
           [classes.withForcedIndex]: forceIndex,
-          [classes.highlight]: highlight
+          [classes.highlight]: highlight,
+          [classes.disabled]: disabled
         })}
         {...rest}
         tabIndex={rowLink || forceIndex ? 0 : -1}

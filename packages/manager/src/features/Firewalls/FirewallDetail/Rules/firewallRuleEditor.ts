@@ -130,10 +130,17 @@ export const initRuleEditorState = (
 ): RuleEditorState =>
   rules.map(thisRule => [{ ...thisRule, status: 'NOT_MODIFIED' }]) ?? [];
 
+interface EditorStateToRulesOptions {
+  withStatus: boolean;
+  withDeleted: boolean;
+}
 export const editorStateToRules = (
   state: RuleEditorState,
-  withStatus = true
+  options?: EditorStateToRulesOptions
 ): FirewallRuleWithStatus[] => {
+  const withStatus = options?.withStatus ?? true;
+  const withDeleted = options?.withDeleted ?? true;
+
   const res: FirewallRuleWithStatus[] = [];
   state.forEach(revisionList => {
     const lastRevision = last(revisionList);
@@ -149,7 +156,9 @@ export const editorStateToRules = (
       delete lastRevisionCopy.status;
     }
 
-    res.push(lastRevisionCopy);
+    if (withDeleted || lastRevision.status !== 'PENDING_DELETION') {
+      res.push(lastRevisionCopy);
+    }
   });
   return res;
 };
