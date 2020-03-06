@@ -18,6 +18,7 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
+import useEntities from 'src/hooks/useEntities';
 import {
   getAPIErrorOrDefault,
   getErrorMap,
@@ -135,6 +136,8 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
 
+  const entities = useEntities();
+
   const classes = useStyles();
 
   React.useEffect(() => {
@@ -143,30 +146,71 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
     }
   }, [open]);
 
-  // const loadSelectedEntities = () => {
-  //   const entity = ticket.entity_type;
-  //   switch (entity) {
-  //     case 'linode_id': {
-  //       return;
-  //     }
-  //     case 'volume_id': {
-  //       return;
-  //     }
-  //     case 'domain_id': {
-  //       return;
-  //     }
-  //     case 'nodebalancer_id': {
-  //       return;
-  //     }
-  //     case 'cluster_id': {
-  //       return;
-  //     }
-  //     default: {
-  //       setData([]);
-  //       return;
-  //     }
-  //   }
-  // };
+  /**
+   * When a new entity type is selected,
+   * 1. check to see if we have data for that type.
+   * 2. If we don't, request it and assign the result to the selectedEntities state
+   * 3. If we do, directly assign the data from Redux to the selectedEntities state
+   */
+  const loadSelectedEntities = async () => {
+    const entity = ticket.entity_type;
+    switch (entity) {
+      case 'linode_id': {
+        if (entities.linodes.lastUpdated === 0) {
+          entities.linodes
+            .request()
+            .then(response => setData(entitiesToItems(entity, response)));
+        } else {
+          setData(entitiesToItems(entity, entities.linodes.data));
+        }
+        return;
+      }
+      case 'volume_id': {
+        if (entities.volumes.lastUpdated === 0) {
+          entities.volumes
+            .request()
+            .then(response => setData(entitiesToItems(entity, response)));
+        } else {
+          setData(entitiesToItems(entity, entities.volumes.data));
+        }
+        return;
+      }
+      case 'domain_id': {
+        if (entities.domains.lastUpdated === 0) {
+          entities.domains
+            .request()
+            .then(response => setData(entitiesToItems(entity, response)));
+        } else {
+          setData(entitiesToItems(entity, entities.domains.data));
+        }
+        return;
+      }
+      case 'nodebalancer_id': {
+        if (entities.nodeBalancers.lastUpdated === 0) {
+          entities.nodeBalancers
+            .request()
+            .then(response => setData(entitiesToItems(entity, response)));
+        } else {
+          setData(entitiesToItems(entity, entities.nodeBalancers.data));
+        }
+        return;
+      }
+      case 'cluster_id': {
+        if (entities.kubernetesClusters.lastUpdated === 0) {
+          entities.kubernetesClusters
+            .request()
+            .then(response => setData(entitiesToItems(entity, response)));
+        } else {
+          setData(entitiesToItems(entity, entities.kubernetesClusters.data));
+        }
+        return;
+      }
+      default: {
+        setData([]);
+        return;
+      }
+    }
+  };
 
   const resetDrawer = () => {
     setData([]);
@@ -196,6 +240,8 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
     setErrors(undefined);
     setInputValue('');
     setData([]);
+
+    loadSelectedEntities();
   };
 
   const handleEntityIDChange = (selected: Item | null) => {

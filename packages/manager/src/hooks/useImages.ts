@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { State } from 'src/store/image/image.reducer';
 import { requestImages as _request } from 'src/store/image/image.requests';
+import { Dispatch } from './types';
 
 export interface ImagesProps {
   images: State;
@@ -10,11 +11,11 @@ export interface ImagesProps {
 }
 
 export const useImages = () => {
-  const dispatch = useDispatch();
+  const dispatch: Dispatch = useDispatch();
   const images = useSelector(
     (state: ApplicationState) => state.__resources.images
   );
-  const requestImages = dispatch(_request());
+  const requestImages = () => dispatch(_request());
 
   return { images, requestImages };
 };

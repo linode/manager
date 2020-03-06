@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { State } from 'src/store/kubernetes/kubernetes.reducer';
 import { requestKubernetesClusters as _request } from 'src/store/kubernetes/kubernetes.requests';
+import { Dispatch } from './types';
 
 export interface DomainsProps {
   kubernetesClusters: State;
@@ -10,11 +11,11 @@ export interface DomainsProps {
 }
 
 export const useDomains = () => {
-  const dispatch = useDispatch();
+  const dispatch: Dispatch = useDispatch();
   const kubernetesClusters = useSelector(
     (state: ApplicationState) => state.__resources.kubernetes
   );
-  const requestKubernetesClusters = dispatch(_request());
+  const requestKubernetesClusters = () => dispatch(_request());
 
   return { kubernetesClusters, requestKubernetesClusters };
 };

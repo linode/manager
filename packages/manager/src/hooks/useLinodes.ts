@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { requestLinodes as _requestLinodes } from 'src/store/linodes/linode.requests';
 import { State } from 'src/store/linodes/linodes.reducer';
+import { Dispatch } from './types';
 
 export interface LinodesProps {
   linodes: State;
@@ -10,11 +11,11 @@ export interface LinodesProps {
 }
 
 export const useLinodes = () => {
-  const dispatch = useDispatch();
+  const dispatch: Dispatch = useDispatch();
   const linodes = useSelector(
     (state: ApplicationState) => state.__resources.linodes
   );
-  const requestLinodes = dispatch(_requestLinodes({}));
+  const requestLinodes = () => dispatch(_requestLinodes({}));
 
   return { linodes, requestLinodes };
 };

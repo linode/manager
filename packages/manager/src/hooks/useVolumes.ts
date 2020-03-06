@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { State } from 'src/store/volume/volume.reducer';
 import { getAllVolumes } from 'src/store/volume/volume.requests';
+import { Dispatch } from './types';
 
 export interface VolumesProps {
   volumes: State;
@@ -10,11 +11,11 @@ export interface VolumesProps {
 }
 
 export const useVolumes = () => {
-  const dispatch = useDispatch();
+  const dispatch: Dispatch = useDispatch();
   const volumes = useSelector(
     (state: ApplicationState) => state.__resources.volumes
   );
-  const requestVolumes = dispatch(getAllVolumes());
+  const requestVolumes = () => dispatch(getAllVolumes());
 
   return { volumes, requestVolumes };
 };
