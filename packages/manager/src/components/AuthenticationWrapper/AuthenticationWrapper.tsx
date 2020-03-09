@@ -26,7 +26,7 @@ import { handleInitTokens } from 'src/store/authentication/authentication.action
 import { MapState } from 'src/store/types';
 
 import { initAnalytics, initTagManager } from 'src/analytics';
-import { GA_ID, GTM_ID, isProduction } from 'src/constants';
+import { GA_ID, GTM_ID, isProductionBuild } from 'src/constants';
 import { requestAccount } from 'src/store/account/account.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import { getAllBuckets } from 'src/store/bucket/bucket.requests';
@@ -77,7 +77,6 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     this.props.requestSettings();
     this.props.requestAccount();
     this.props.requestNotifications();
-
   };
 
   componentDidMount() {
@@ -100,7 +99,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       /*
        * Initialize Analytic and Google Tag Manager
        */
-      initAnalytics(isProduction, GA_ID);
+      initAnalytics(isProductionBuild, GA_ID);
       initTagManager(GTM_ID);
       startEventsInterval();
     }

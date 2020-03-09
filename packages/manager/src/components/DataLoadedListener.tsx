@@ -23,7 +23,7 @@ interface Props {
 
 const DataLoadedListener: React.FC<Props> = props => {
   React.useEffect(() => {
-    const smaad = shouldMarkAppAsDone(
+    const shouldMarkAppAsLoaded = shouldMarkAppAsDone(
       props.profileLoadedOrErrorExists,
       props.accountLoadedOrErrorExists,
       props.linodesLoadedOrErrorExists,
@@ -34,20 +34,7 @@ const DataLoadedListener: React.FC<Props> = props => {
       props.accountSettingsLoadedOrErrorExists,
       props.flagsHaveLoaded
     );
-    // Uncomment this to see what is loaded along the time of the app load
-    // const d =new Date();
-    // console.log('should mark app as done ',d.getSeconds(), d.getMilliseconds(), smaad, {
-    //   "profileLoadedOrErrorExists":props.profileLoadedOrErrorExists,
-    //   "accountLoadedOrErrorExists":props.accountLoadedOrErrorExists,
-    //   "linodesLoadedOrErrorExists":props.linodesLoadedOrErrorExists,
-    //   "volumesLoadedOrErrorExists":props.volumesLoadedOrErrorExists,
-    //   "nodeBalancersLoadedOrErrorExists":props.nodeBalancersLoadedOrErrorExists,
-    //   "bucketsLoadedOrErrorExists":props.bucketsLoadedOrErrorExists,
-    //   "domainsLoadedOrErrorExists":props.domainsLoadedOrErrorExists,
-    //   "accountSettingsLoadedOrErrorExists":props.accountSettingsLoadedOrErrorExists,
-    //   "flagsHaveLoaded":props.flagsHaveLoaded
-    // });
-    if (smaad) {
+    if (shouldMarkAppAsLoaded) {
       props.markAppAsLoaded();
     }
   });
