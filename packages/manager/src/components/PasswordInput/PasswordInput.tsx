@@ -136,6 +136,15 @@ class PasswordInput extends React.Component<CombinedProps, State> {
         <Grid container alignItems="flex-end" className={classes.container}>
           <Grid item xs={12}>
             <form>
+              <input
+                readOnly
+                type="text"
+                name="name"
+                autoComplete="username"
+                aria-hidden="true"
+                style={{ display: 'none' }}
+                value="root"
+              />
               <HideShowText
                 {...rest}
                 tooltipText={disabledReason}
