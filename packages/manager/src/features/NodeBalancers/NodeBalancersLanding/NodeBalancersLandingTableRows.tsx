@@ -52,9 +52,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const NodeBalancersLandingTableRows: React.StatelessComponent<
-  CombinedProps
-> = props => {
+const NodeBalancersLandingTableRows: React.StatelessComponent<CombinedProps> = props => {
   const { classes, data, toggleDialog } = props;
 
   return (
@@ -84,7 +82,7 @@ const NodeBalancersLandingTableRows: React.StatelessComponent<
                   <EntityIcon variant="nodebalancer" marginTop={1} />
                 </Grid>
                 <Grid item>
-                  <Link to={`/nodebalancers/${nodeBalancer.id}`} tabIndex={-1}>
+                  <Link to={`/nodebalancers/${nodeBalancer.id}`} tabIndex={0}>
                     <Typography variant="h3">{nodeBalancer.label}</Typography>
                   </Link>
                 </Grid>
@@ -101,9 +99,7 @@ const NodeBalancersLandingTableRows: React.StatelessComponent<
               {configs.map(({ port, id }, i) => (
                 <React.Fragment key={id}>
                   <Link
-                    to={`/nodebalancers/${
-                      nodeBalancer.id
-                    }/configurations/${id}`}
+                    to={`/nodebalancers/${nodeBalancer.id}/configurations/${id}`}
                     className="secondaryLink"
                   >
                     {port}
