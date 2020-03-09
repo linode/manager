@@ -4,19 +4,24 @@ import {
   FirewallDevice,
   getFirewallDevices as _get
 } from 'linode-js-sdk/lib/firewalls';
-import { getAll } from 'src/utilities/getAll';
+import { getAllWithArguments } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import {
   addFirewallDeviceActions,
   getAllFirewallDevicesActions,
-  GetDevicesPayload,
   removeFirewallDeviceActions
 } from './devices.actions';
 
-const requestAll = (payload: GetDevicesPayload) =>
-  getAll<FirewallDevice>(({ passedParams, passedFilter }) =>
-    _get(payload.firewallID, passedParams, passedFilter)
-  )(payload.params, payload.filters);
+const requestAll = (payload: {
+  firewallID: number;
+  params?: any;
+  filter?: any;
+}) =>
+  getAllWithArguments<FirewallDevice>(_get)(
+    [payload.firewallID],
+    payload.params,
+    payload.filter
+  );
 
 export const getAllFirewallDevices = createRequestThunk(
   getAllFirewallDevicesActions,

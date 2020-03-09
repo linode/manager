@@ -4,14 +4,18 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import ActionMenu, { Props as ActionProps } from './FirewallDeviceActionMenu';
 
-export type CombinedProps = ActionProps;
+interface Props {
+  entityID: number;
+}
+
+export type CombinedProps = Props & ActionProps;
 
 export const FirewallDeviceRow: React.FC<CombinedProps> = props => {
-  const { deviceLabel, deviceID } = props;
+  const { deviceLabel, deviceID, entityID } = props;
 
   return (
     <TableRow
-      rowLink={`/linodes/${deviceID}`}
+      rowLink={`/linodes/${entityID}`}
       data-testid={`firewall-device-row-${deviceID}`}
     >
       <TableCell>{deviceLabel}</TableCell>
@@ -22,6 +26,6 @@ export const FirewallDeviceRow: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, ActionProps>(React.memo)(
+export default compose<CombinedProps, CombinedProps>(React.memo)(
   FirewallDeviceRow
 );
