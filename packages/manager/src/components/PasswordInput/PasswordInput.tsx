@@ -1,16 +1,10 @@
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { Props as TextFieldProps } from 'src/components/TextField';
-import { debounce } from 'throttle-debounce';
 import * as zxcvbn from 'zxcvbn';
 import StrengthIndicator from '../PasswordInput/StrengthIndicator';
 import HideShowText from './HideShowText';
@@ -24,103 +18,81 @@ type Props = TextFieldProps & {
   hideValidation?: boolean;
 };
 
-interface State {
-  strength: null | 0 | 1 | 2 | 3;
-}
-
-type ClassNames = 'container' | 'strengthIndicator' | 'infoText';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    container: {
-      position: 'relative',
-      marginBottom: theme.spacing(1),
-      paddingBottom: theme.spacing(1) / 2
-    },
-    strengthIndicator: {
-      position: 'relative',
-      top: -5,
-      width: '100%',
-      [theme.breakpoints.down('xs')]: {
-        maxWidth: '100%'
-      }
-    },
-    infoText: {
-      fontSize: '0.85rem',
-      marginTop: 12
+const useStyles = makeStyles((theme: Theme) => ({
+  container: {
+    position: 'relative',
+    marginBottom: theme.spacing(1),
+    paddingBottom: theme.spacing(1) / 2
+  },
+  strengthIndicator: {
+    position: 'relative',
+    top: -5,
+    width: '100%',
+    [theme.breakpoints.down('xs')]: {
+      maxWidth: '100%'
     }
-  });
-
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-class PasswordInput extends React.Component<CombinedProps, State> {
-  state: State = {
-    strength: maybeStrength(this.props.value)
-  };
-
-  UNSAFE_componentWillReceiveProps(nextProps: CombinedProps) {
-    const { value } = nextProps;
-    const debouncedStateUpdate = debounce(400, false, _value =>
-      this.setState({ strength: maybeStrength(_value) })
-    );
-    debouncedStateUpdate(value);
+  },
+  infoText: {
+    fontSize: '0.85rem',
+    marginTop: 12
   }
+}));
 
-  onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value: string = e.currentTarget.value;
+type CombinedProps = Props;
 
-    if (this.props.onChange) {
-      this.props.onChange(e);
+const PasswordInput: React.FC<CombinedProps> = props => {
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (props.onChange) {
+      props.onChange(e);
     }
-    this.setState({ strength: maybeStrength(value) });
   };
 
-  render() {
-    const { strength } = this.state;
-    const {
-      classes,
-      value,
-      required,
-      disabledReason,
-      hideStrengthLabel,
-      hideHelperText,
-      hideValidation,
-      ...rest
-    } = this.props;
+  const {
+    value,
+    required,
+    disabledReason,
+    hideStrengthLabel,
+    hideHelperText,
+    hideValidation,
+    ...rest
+  } = props;
 
-    return (
-      <React.Fragment>
-        <Grid container className={classes.container}>
-          <Grid item xs={12}>
-            <HideShowText
-              {...rest}
-              tooltipText={disabledReason}
-              value={value}
-              onChange={this.onChange}
-              fullWidth
-              required={required}
+  const classes = useStyles();
+
+  const strength = React.useMemo(() => maybeStrength(value), [value]);
+
+  return (
+    <React.Fragment>
+      <Grid container className={classes.container}>
+        <Grid item xs={12}>
+          <HideShowText
+            {...rest}
+            tooltipText={disabledReason}
+            value={value}
+            onChange={onChange}
+            fullWidth
+            required={required}
+          />
+        </Grid>
+        {!hideValidation && (
+          <Grid item xs={12} className={`${classes.strengthIndicator} py0`}>
+            <StrengthIndicator
+              strength={strength}
+              hideStrengthLabel={hideStrengthLabel}
             />
           </Grid>
-          {!hideValidation && (
-            <Grid item xs={12} className={`${classes.strengthIndicator} py0`}>
-              <StrengthIndicator
-                strength={strength}
-                hideStrengthLabel={hideStrengthLabel}
-              />
-            </Grid>
-          )}
-        </Grid>
-        {!hideHelperText && (
-          <Typography variant="body1" className={classes.infoText}>
-            Password must be at least 6 characters and contain at least two of
-            the following character classes: uppercase letters, lowercase
-            letters, numbers, and punctuation.
-          </Typography>
         )}
-      </React.Fragment>
-    );
-  }
-}
+      </Grid>
+      {!hideHelperText && (
+        <Typography variant="body1" className={classes.infoText}>
+          Password must be at least 6 characters and contain at least two of the
+          following character classes: uppercase letters, lowercase letters,
+          numbers, and punctuation.
+        </Typography>
+      )}
+    </React.Fragment>
+  );
+};
 
 const maybeStrength = (value?: string) => {
   if (!value || isEmpty(value)) {
@@ -134,6 +106,4 @@ const maybeStrength = (value?: string) => {
   }
 };
 
-const styled = withStyles(styles);
-
-export default styled(PasswordInput);
+export default React.memo(PasswordInput);

@@ -151,9 +151,9 @@ class LinodeSettingsPasswordPanel extends React.Component<
           this.handleDiskSelection(disks[0]);
         }
       })
-      .catch(error =>
+      .catch(_ =>
         this.setState({
-          disksError: 'An error occured while searching for disks.',
+          disksError: 'An error occurred while searching for disks.',
           disksLoading: false
         })
       );
