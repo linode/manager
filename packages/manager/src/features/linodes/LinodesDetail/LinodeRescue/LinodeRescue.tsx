@@ -20,7 +20,7 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
-import { STALE_DATA_LIMIT } from 'src/constants';
+import { REFRESH_INTERVAL } from 'src/constants';
 import withVolumes from 'src/containers/volumes.container';
 import withVolumesRequests, {
   VolumesRequests
@@ -168,7 +168,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     const { getAllVolumes, volumesLastUpdated } = this.props;
-    if (Date.now() - volumesLastUpdated > STALE_DATA_LIMIT) {
+    if (Date.now() - volumesLastUpdated > REFRESH_INTERVAL) {
       getAllVolumes();
     }
   }

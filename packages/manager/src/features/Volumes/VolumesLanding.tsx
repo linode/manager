@@ -25,7 +25,7 @@ import OrderBy from 'src/components/OrderBy';
 import { PaginationProps } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
 import Toggle from 'src/components/Toggle';
-import { STALE_DATA_LIMIT } from 'src/constants';
+import { REFRESH_INTERVAL } from 'src/constants';
 import _withEvents, { EventsProps } from 'src/containers/events.container';
 import withVolumes, {
   Props as WithVolumesProps
@@ -243,7 +243,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     const { getAllVolumes, volumesLastUpdated } = this.props;
     this.mounted = true;
     // If we haven't requested Volumes, or it's been a while, request them
-    if (Date.now() - volumesLastUpdated > STALE_DATA_LIMIT) {
+    if (Date.now() - volumesLastUpdated > REFRESH_INTERVAL) {
       getAllVolumes();
     }
   }
