@@ -160,7 +160,7 @@ export class Footer extends React.PureComponent<CombinedProps> {
     return (
       <a
         className={className}
-        href={`https://github.com/linode/manager/releases/tag/v${VERSION}`}
+        href={`https://github.com/linode/manager/releases/tag/linode-manager@v${VERSION}`}
         target="_blank"
         aria-describedby="external-site"
         rel="noopener noreferrer"
