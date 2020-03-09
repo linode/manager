@@ -23,7 +23,7 @@ interface Props {
 
 const DataLoadedListener: React.FC<Props> = props => {
   React.useEffect(() => {
-    const shouldMarkAppAsLoaded = shouldMarkAppAsDone(
+    const shouldMarkAppAsLoaded = _shouldMarkAppAsDone(
       props.profileLoadedOrErrorExists,
       props.accountLoadedOrErrorExists,
       props.linodesLoadedOrErrorExists,
@@ -44,7 +44,7 @@ const DataLoadedListener: React.FC<Props> = props => {
 
 export default compose<Props, Props>(React.memo)(DataLoadedListener);
 
-const shouldMarkAppAsDone = (
+const _shouldMarkAppAsDone = (
   profileLoadedOrErrorExists: boolean,
   accountLoadedOrErrorExists: boolean,
   linodesLoadedOrErrorExists: boolean,
