@@ -2,7 +2,10 @@ const { navigateToStory } = require('../../../e2e/utils/storybook');
 
 describe('Password Input Suite', () => {
   const component = 'Password Input';
-  const childStories = ['Example'];
+  const childStories = [
+    'Example',
+  ]
+  const strengthIndicator = '[data-qa-strength]';
   const passwordInput = '[data-qa-hide] input';
 
   function hideShow(show) {
@@ -28,7 +31,30 @@ describe('Password Input Suite', () => {
   }
 
   beforeAll(() => {
-    navigateToStory(component, childStories[0]);
+      navigateToStory(component, childStories[0]);
+  });
+
+  it('should display password input with strength indicator', () => {
+    $(passwordInput).waitForDisplayed();
+
+    const input = $(passwordInput);
+
+    expect(input.isExisting())
+      .withContext(`Input field does not exist`).toBe(true);
+  });
+
+  it('should update the strength when complexity of password increases', () => {
+    const testPasswords = ['weak', 'stronger1233', 'Stronger123#!'];
+    testPasswords.forEach((pass, index) => {
+      $(passwordInput).setValue(pass);
+      const strengthDisplays = $(strengthIndicator).isDisplayed();
+      const strength = $(strengthIndicator).getAttribute('data-qa-strength');
+
+      expect(strengthDisplays)
+        .withContext(`Password strength should be displayed`).toBe(true);
+      expect(parseInt(strength))
+        .withContext(`Incorrect strength indicator value`).toBe(index + 1);
+    });
   });
 
   it('should display password when click show', () => {
