@@ -1,4 +1,5 @@
 const attempt = (fn, attemptsRemaining, delayBetweenAttemptsMs) => {
+  cy.log(`Attempts remaining: ${attemptsRemaining}`);
   if (attemptsRemaining <= 1) {
     return fn(); // last attempt
   }
@@ -16,9 +17,9 @@ const attempt = (fn, attemptsRemaining, delayBetweenAttemptsMs) => {
 /// Tries Multiple Time, wiats before, and between attempts
 export const defensiveDo = (
   getFunction,
-  attemptsNumber = 3,
-  waitBeforeTryMs = 200,
-  delayBetweenAttemptsMs = 200
+  attemptsNumber = 5,
+  waitBeforeTryMs = 300,
+  delayBetweenAttemptsMs = 300
 ) => {
   // wait purpusefully here
   /* eslint-disable-next-line cypress/no-unnecessary-waiting*/
