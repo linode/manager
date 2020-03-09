@@ -5,6 +5,8 @@ const attempt = (fn, attemptsRemaining, delayBetweenAttemptsMs) => {
   try {
     return fn();
   } catch (err) {
+    // wait purpusefully here
+    /* eslint-disable-next-line cypress/no-unnecessary-waiting*/
     cy.wait(delayBetweenAttemptsMs);
     return attempt(fn, attemptsRemaining - 1, delayBetweenAttemptsMs);
   }
@@ -18,6 +20,8 @@ export const defensiveDo = (
   waitBeforeTryMs = 200,
   delayBetweenAttemptsMs = 200
 ) => {
+  // wait purpusefully here
+  /* eslint-disable-next-line cypress/no-unnecessary-waiting*/
   cy.wait(waitBeforeTryMs);
   attempt(getFunction, attemptsNumber, delayBetweenAttemptsMs);
 };
