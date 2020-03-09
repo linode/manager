@@ -1,6 +1,4 @@
-import Tab, { TabProps as _TabProps } from '@material-ui/core/Tab';
-
-/* tslint:disable-next-line:no-empty-interface */
-export interface TabProps extends _TabProps {}
+import { Tab } from '@reach/tabs';
+import '@reach/tabs/styles.css';
 
 export default Tab;

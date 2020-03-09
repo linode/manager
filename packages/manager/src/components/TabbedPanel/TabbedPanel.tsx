@@ -1,6 +1,5 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import AppBar from 'src/components/core/AppBar';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -10,8 +9,10 @@ import {
 } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
+import TabList from 'src/components/core/TabList';
+import TabPanel from 'src/components/core/TabPanel';
+import TabPanels from 'src/components/core/TabPanels';
 import Typography from 'src/components/core/Typography';
-import { convertForAria } from 'src/components/TabLink/TabLink';
 import { safeGetTabRender } from 'src/utilities/safeGetTabRender';
 import Notice from '../Notice';
 
@@ -93,26 +94,6 @@ class TabbedPanel extends React.Component<CombinedProps> {
     // if this bombs the app shouldn't crash
     const render = safeGetTabRender(tabs, value);
 
-    const tabA11yProps = (idName: string) => {
-      const ariaVal = convertForAria(idName);
-
-      return {
-        id: `tab-${ariaVal}`,
-        role: 'tab',
-        'aria-controls': `tabpanel-${ariaVal}`
-      };
-    };
-
-    const tabPanelA11yProps = (idName: string) => {
-      const ariaVal = convertForAria(idName);
-
-      return {
-        id: `tabpanel-${ariaVal}`,
-        role: 'tabpanel',
-        'aria-labelledby': `tab-${ariaVal}`
-      };
-    };
-
     return (
       <Paper className={`${classes.root} ${rootClass}`} data-qa-tp={header}>
         <div className={`${classes.inner} ${innerClass}`}>
@@ -131,39 +112,19 @@ class TabbedPanel extends React.Component<CombinedProps> {
               {copy}
             </Typography>
           )}
-          <AppBar position="static" color="default" role="tablist">
-            <Tabs
-              value={value}
-              onChange={this.handleChange}
-              indicatorColor="primary"
-              textColor="primary"
-              className={`${classes.tabs}`}
-              variant="scrollable"
-              scrollButtons="on"
-            >
-              {tabs.map((tab, idx) => (
-                <Tab
-                  key={idx}
-                  label={tab.title}
-                  data-qa-tab={tab.title}
-                  {...tabA11yProps(tab.title)}
-                />
-              ))}
-            </Tabs>
-          </AppBar>
 
-          <div
-            className={classNames(
-              {
-                [classes.panelBody]: !noPadding
-              },
-              shrinkTabContent
-            )}
-            {...tabPanelA11yProps(tabs[value].title)}
-            data-qa-tab-body
-          >
-            {render(rest)}
-          </div>
+          <Tabs defaultIndex={value}>
+            <TabList>
+              {tabs.map((tab, index) => (
+                <Tab key={index}>{tab.title}</Tab>
+              ))}
+            </TabList>
+            <TabPanels>
+              {tabs.map((tab, index) => (
+                <TabPanel key={index}>{tab.render(rest.children)}</TabPanel>
+              ))}
+            </TabPanels>
+          </Tabs>
         </div>
       </Paper>
     );

@@ -7,6 +7,7 @@ import {
   WithTheme,
   withTheme
 } from 'src/components/core/styles';
+import TabPanel from 'src/components/core/TabPanel';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import LineGraph from 'src/components/LineGraph';
@@ -238,7 +239,6 @@ export const ManagedChartPanel: React.FC<CombinedProps> = props => {
           header={''}
           copy={''}
           tabs={tabs}
-          initTab={initialTab}
         />
       </div>
     </React.Fragment>

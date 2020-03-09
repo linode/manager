@@ -21,6 +21,7 @@ import {
   WithTheme,
   withTheme
 } from 'src/components/core/styles';
+import TabPanel from 'src/components/core/TabPanel';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -437,15 +438,10 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     );
 
     return (
-      <React.Fragment>
+      <TabPanel>
         <DocumentTitleSegment segment={`${linode.label} - Summary`} />
 
-        <Grid
-          container
-          id="tabpanel-summary"
-          role="tabpanel"
-          aria-labelledby="tab-summary"
-        >
+        <Grid container>
           <Grid item xs={12} md={8} lg={9} className={classes.main}>
             <Grid
               container
@@ -529,7 +525,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             <SummaryPanel />
           </Grid>
         </Grid>
-      </React.Fragment>
+      </TabPanel>
     );
   }
 }
