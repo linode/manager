@@ -86,7 +86,8 @@ export const deleteLinodeByLabel = (label = undefined) => {
 export const deleteAllTestLinodes = () => {
   getLinodes().then(resp => {
     resp.body.data.forEach(linode => {
-      if (linode.tags.includes(testLinodeTag)) deleteLinodeById(linode.id);
+      const isTestLinode = linode.tags.includes(testLinodeTag) || linode.label.startsWith(testLinodeNamePrefix);
+      if (isTestLinode) deleteLinodeById(linode.id);
     });
   });
 };
