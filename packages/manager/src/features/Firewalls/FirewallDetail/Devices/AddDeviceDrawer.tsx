@@ -35,17 +35,23 @@ export const AddDeviceDrawer: React.FC<Props> = props => {
     addDevice(selectedLinodes);
   };
 
+  // @todo title and error messaging will update to "Device" once NodeBalancers are allowed
   const errorMessage = error
-    ? getAPIErrorOrDefault(error, 'Error adding Device')[0].reason
+    ? getAPIErrorOrDefault(error, 'Error adding Linode')[0].reason
     : undefined;
 
   return (
     <Drawer
-      title={`Add Device to Firewall: ${firewallLabel}`}
+      title={`Add Linode to Firewall: ${firewallLabel}`}
       open={open}
       onClose={onClose}
     >
-      <form onSubmit={() => handleSubmit()}>
+      <form
+        onSubmit={(e: React.ChangeEvent<HTMLFormElement>) => {
+          e.preventDefault();
+          handleSubmit();
+        }}
+      >
         {errorMessage && <Notice error text={errorMessage} />}
         <LinodeMultiSelect
           handleChange={selected => setSelectedLinodes(selected)}
@@ -55,7 +61,8 @@ export const AddDeviceDrawer: React.FC<Props> = props => {
         <ActionsPanel>
           <Button
             buttonType="primary"
-            onClick={() => handleSubmit()}
+            disabled={selectedLinodes.length === 0}
+            onClick={handleSubmit}
             data-qa-submit
             loading={isSubmitting}
           >
