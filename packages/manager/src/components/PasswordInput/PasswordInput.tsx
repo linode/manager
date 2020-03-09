@@ -33,6 +33,7 @@ interface State {
 type ClassNames =
   | 'container'
   | 'listItem'
+  | 'reqListOuter'
   | 'reqList'
   | 'valid'
   | 'check'
@@ -44,8 +45,7 @@ const styles = (theme: Theme) =>
       position: 'relative',
       paddingBottom: theme.spacing(1) / 2
     },
-    reqList: {
-      listStyleType: 'none',
+    reqListOuter: {
       margin: 0,
       width: '100%',
       padding: `${theme.spacing(1)}px ${theme.spacing(2) - 2}px `,
@@ -54,6 +54,11 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.up('sm')]: {
         width: 415
       }
+    },
+    reqList: {
+      listStyleType: 'none',
+      margin: 0,
+      padding: 0
     },
     check: {
       color: theme.color.grey1,
@@ -147,54 +152,56 @@ class PasswordInput extends React.Component<CombinedProps, State> {
           </Grid>
           {!hideHelperText && (
             <Grid item xs={12}>
-              <ul className={classes.reqList}>
+              <div className={classes.reqListOuter}>
                 <Typography>Password must:</Typography>
-                <li
-                  className={classes.listItem}
-                  aria-label={
-                    lengthRequirement
-                      ? 'Password contains enough characters'
-                      : 'Password should be at least 6 chars'
-                  }
-                >
-                  <span
-                    className={classNames({
-                      [classes.check]: true,
-                      [classes.active]: active,
-                      [classes.valid]: lengthRequirement
-                    })}
+                <ul className={classes.reqList}>
+                  <li
+                    className={classes.listItem}
+                    aria-label={
+                      lengthRequirement
+                        ? 'Password contains enough characters'
+                        : 'Password should be at least 6 chars'
+                    }
                   >
-                    {active && !lengthRequirement ? <Alert /> : <Check />}
-                  </span>{' '}
-                  <Typography component={'span'}>
-                    Be at least <strong>6 characters</strong>
-                  </Typography>
-                </li>
-                <li
-                  className={classes.listItem}
-                  aria-label={
-                    isValidPassword
-                      ? "Password's strength is valid"
-                      : "Increase password's strength by adding uppercase letters, lowercase letters, numbers, or punctuation"
-                  }
-                >
-                  <span
-                    className={classNames({
-                      [classes.check]: true,
-                      [classes.active]: active,
-                      [classes.valid]: isValidPassword
-                    })}
+                    <span
+                      className={classNames({
+                        [classes.check]: true,
+                        [classes.active]: active,
+                        [classes.valid]: lengthRequirement
+                      })}
+                    >
+                      {active && !lengthRequirement ? <Alert /> : <Check />}
+                    </span>{' '}
+                    <Typography component={'span'}>
+                      Be at least <strong>6 characters</strong>
+                    </Typography>
+                  </li>
+                  <li
+                    className={classes.listItem}
+                    aria-label={
+                      isValidPassword
+                        ? "Password's strength is valid"
+                        : "Increase password's strength by adding uppercase letters, lowercase letters, numbers, or punctuation"
+                    }
                   >
-                    {active && !isValidPassword ? <Alert /> : <Check />}
-                  </span>{' '}
-                  <Typography component={'span'}>
-                    Contain at least{' '}
-                    <strong>two of the following character classes</strong>:
-                    uppercase letters, lowercase letters, numbers, and
-                    punctuation.
-                  </Typography>
-                </li>
-              </ul>
+                    <span
+                      className={classNames({
+                        [classes.check]: true,
+                        [classes.active]: active,
+                        [classes.valid]: isValidPassword
+                      })}
+                    >
+                      {active && !isValidPassword ? <Alert /> : <Check />}
+                    </span>{' '}
+                    <Typography component={'span'}>
+                      Contain at least{' '}
+                      <strong>two of the following character classes</strong>:
+                      uppercase letters, lowercase letters, numbers, and
+                      punctuation.
+                    </Typography>
+                  </li>
+                </ul>
+              </div>
             </Grid>
           )}
         </Grid>
