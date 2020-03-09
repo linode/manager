@@ -80,10 +80,9 @@ export const MAX_VOLUME_SIZE = 10240;
 export const INTERVAL = 1000;
 
 /**
- * If lastUpdated in a Redux entity is greater than this,
- * we should re-request.
+ * Time after which data from the API is considered stale
  */
-export const STALE_DATA_LIMIT = 60000;
+export const REFRESH_INTERVAL = 60000;
 
 /**
  * Used by e.g. LISH to determine the websocket connection address.
