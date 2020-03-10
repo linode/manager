@@ -26,6 +26,7 @@ type PromotionalOfferFeature =
 interface PromotionalOfferButton {
   text: string;
   href: string;
+  type: 'primary' | 'secondary';
 }
 
 export interface PromotionalOffer {

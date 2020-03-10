@@ -36,7 +36,7 @@ const H1Header: React.FC<Props> = props => {
       variant="h1"
       className={`${classes.root} ${className}`}
       ref={h1Header}
-      tabIndex={-1}
+      tabIndex={0}
       data-qa-header={dataQaEl ? dataQaEl : ''}
     >
       {title}

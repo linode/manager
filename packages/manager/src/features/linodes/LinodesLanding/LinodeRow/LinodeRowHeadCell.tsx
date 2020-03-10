@@ -194,7 +194,7 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
               />
             )}
             <div className={classes.labelStatusWrapper}>
-              <Link to={`/linodes/${id}`} tabIndex={-1}>
+              <Link to={`/linodes/${id}`} tabIndex={0}>
                 <Typography
                   variant="h3"
                   className={classes.wrapHeader}

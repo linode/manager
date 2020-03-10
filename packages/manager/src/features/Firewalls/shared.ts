@@ -1,12 +1,15 @@
 import {
+  FirewallRuleProtocol,
   FirewallRules,
   FirewallRuleType
 } from 'linode-js-sdk/lib/firewalls/types';
+import { Item } from 'src/components/EnhancedSelect/Select';
 import { truncateAndJoinList } from 'src/utilities/stringUtils';
 
 export type FirewallPreset = 'ssh' | 'http' | 'https' | 'mysql' | 'dns';
 
-export const firewallOptionItems = [
+// Predefined Firewall options for Select components (long-form).
+export const firewallOptionItemsLong = [
   {
     label: 'SSH (TCP 22 - All IPv4, All IPv6)',
     value: 'ssh'
@@ -29,6 +32,44 @@ export const firewallOptionItems = [
   }
 ];
 
+// Predefined Firewall options for Select components (short-form).
+export const firewallOptionItemsShort = [
+  {
+    label: 'SSH',
+    value: 'ssh'
+  },
+  {
+    label: 'HTTP',
+    value: 'http'
+  },
+  {
+    label: 'HTTPS',
+    value: 'https'
+  },
+  {
+    label: 'MySQL',
+    value: 'mysql'
+  },
+  {
+    label: 'DNS',
+    value: 'dns'
+  }
+];
+
+export const protocolOptions: Item<FirewallRuleProtocol>[] = [
+  { label: 'ALL', value: 'ALL' },
+  { label: 'TCP', value: 'TCP' },
+  { label: 'ICMP', value: 'ICMP' },
+  { label: 'UDP', value: 'UDP' }
+];
+
+export const addressOptions = [
+  { label: 'All', value: 'all' },
+  { label: 'All IPv4', value: 'allIPv4' },
+  { label: 'All IPv6', value: 'allIPv6' },
+  { label: 'IP / Netmask', value: 'ip/netmask' }
+];
+
 export const portPresets: Record<FirewallPreset, string> = {
   ssh: '22',
   http: '80',
@@ -40,7 +81,7 @@ export const portPresets: Record<FirewallPreset, string> = {
 export const allIPv4 = '0.0.0.0/0';
 export const allIPv6 = '::0/0';
 
-const allIPs = {
+export const allIPs = {
   ipv4: [allIPv4],
   ipv6: [allIPv6]
 };
