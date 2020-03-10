@@ -163,7 +163,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
             }
           })
         )
-        .catch(); // Error state through Redux
+        .catch(_ => null); // Error state through Redux
     }
   }
 
