@@ -13,12 +13,9 @@ import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import DrawerContent from 'src/components/DrawerContent';
 
-import { Converter } from 'showdown';
-import 'showdown-highlightjs-extension';
 import { downloadFile } from 'src/utilities/downloadFile';
-import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
-import 'src/formatted-text.css';
+import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
 
 type ClassNames = 'root' | 'icon' | 'tooltip' | 'iconLink';
 
@@ -64,11 +61,6 @@ export const KubeConfigDrawer: React.FC<CombinedProps> = props => {
     closeDrawer,
     open
   } = props;
-  const html = new Converter({
-    extensions: ['highlightjs'],
-    simplifiedAutoLink: true,
-    openLinksInNewWindow: true
-  }).makeHtml('```\n' + kubeConfig + '\n```');
 
   return (
     <Drawer title={'View Kubeconfig'} open={open} onClose={closeDrawer} wide>
@@ -94,12 +86,7 @@ export const KubeConfigDrawer: React.FC<CombinedProps> = props => {
             <CopyTooltip className={classes.tooltip} text={kubeConfig} />
           </Grid>
         </Grid>
-        <div>
-          <div
-            className="formatted-text"
-            dangerouslySetInnerHTML={{ __html: sanitizeHTML(html) }}
-          />
-        </div>
+        <HighlightedMarkdown textOrMarkdown={'```\n' + kubeConfig + '\n```'} />
       </DrawerContent>
     </Drawer>
   );
