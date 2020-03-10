@@ -1,4 +1,3 @@
-import * as classNames from 'classnames';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import {
@@ -16,7 +15,15 @@ import Typography from 'src/components/core/Typography';
 import { safeGetTabRender } from 'src/utilities/safeGetTabRender';
 import Notice from '../Notice';
 
-type ClassNames = 'root' | 'inner' | 'copy' | 'tabs' | 'panelBody';
+type ClassNames =
+  | 'root'
+  | 'inner'
+  | 'copy'
+  | 'panelBody'
+  | 'tab'
+  | 'tabList'
+  | 'tabPanelOuter'
+  | 'tabPanel';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -34,12 +41,52 @@ const styles = (theme: Theme) =>
       fontSize: '0.875rem',
       marginTop: theme.spacing(1)
     },
-    tabs: {
-      margin: `${theme.spacing(1)}px 0`
-    },
     panelBody: {
       padding: `${theme.spacing(2)}px 0 0`
-    }
+    },
+    tab: {
+      '&[data-reach-tab]': {
+        // This was copied over from our MuiTab styling in themeFactory. Some of this could probably be cleaned up.
+        color: 'rgba(0, 0, 0, 0.54)',
+        minWidth: 50,
+        textTransform: 'inherit',
+        fontSize: '0.93rem',
+        padding: '6px 16px',
+        position: 'relative',
+        overflow: 'hidden',
+        maxWidth: 264,
+        boxSizing: 'border-box',
+        borderBottom: '2px solid transparent',
+        minHeight: theme.spacing(1) * 6,
+        flexShrink: 0,
+        display: 'inline-flex',
+        alignItems: 'center',
+        verticalAlign: 'middle',
+        justifyContent: 'center',
+        appearance: 'none',
+        lineHeight: 1.3,
+        [theme.breakpoints.up('md')]: {
+          minWidth: 75
+        },
+        '&:hover': {
+          color: theme.color.blue
+        }
+      },
+      '&[data-reach-tab][data-selected]': {
+        fontFamily: theme.font.bold,
+        color: theme.color.headline,
+        borderBottom: `2px solid ${theme.color.blue}`
+      }
+    },
+    tabList: {
+      '&[data-reach-tab-list]': {
+        background: 'none !important',
+        boxShadow: `inset 0 -1px 0 ${theme.color.border2}`,
+        marginBottom: theme.spacing(3)
+      }
+    },
+    tabPanelOuter: {},
+    tabPanel: {}
   });
 
 export interface Tab {
@@ -114,14 +161,18 @@ class TabbedPanel extends React.Component<CombinedProps> {
           )}
 
           <Tabs defaultIndex={value}>
-            <TabList>
+            <TabList className={classes.tabList}>
               {tabs.map((tab, index) => (
-                <Tab key={index}>{tab.title}</Tab>
+                <Tab className={classes.tab} key={index}>
+                  {tab.title}
+                </Tab>
               ))}
             </TabList>
-            <TabPanels>
+            <TabPanels className={classes.tabPanelOuter}>
               {tabs.map((tab, index) => (
-                <TabPanel key={index}>{tab.render(rest.children)}</TabPanel>
+                <TabPanel className={classes.tabPanel} key={index}>
+                  {tab.render(rest.children)}
+                </TabPanel>
               ))}
             </TabPanels>
           </Tabs>
