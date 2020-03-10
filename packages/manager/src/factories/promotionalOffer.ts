@@ -13,10 +13,11 @@ export const promotionalOfferFactory = Factory.Sync.makeFactory<
   alt: 'Promotional Offer',
   displayOnDashboard: true,
   buttons: [
-    { text: 'Try it Now', href: '/object-storage/buckets' },
+    { text: 'Try it Now', href: '/object-storage/buckets', type: 'primary' },
     {
       text: 'Cost Estimator',
-      href: 'https://www.linode.com/products/object-storage/'
+      href: 'https://www.linode.com/products/object-storage/',
+      type: 'secondary'
     }
   ]
 });

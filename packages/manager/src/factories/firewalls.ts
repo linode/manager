@@ -37,8 +37,8 @@ export const firewallDeviceFactory = Factory.Sync.makeFactory<FirewallDevice>({
   updated: '2020-01-01',
   entity: {
     type: 'linode' as FirewallDeviceEntityType,
-    label: Factory.each(i => `factory-device-${i}`) as any,
-    id: Factory.each(i => i) as any,
+    label: 'entity',
+    id: 10,
     url: '/linodes/1'
   }
 });

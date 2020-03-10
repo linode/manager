@@ -33,7 +33,9 @@ describe('PromotionalOfferCard', () => {
     const { queryByText } = renderWithTheme(
       <PromotionalOfferCard
         {...promo}
-        buttons={[{ text: 'Button Text', href: 'javascript:alert(1' }]}
+        buttons={[
+          { text: 'Button Text', href: 'javascript:alert(1)', type: 'primary' }
+        ]}
       />
     );
     const anchor = queryByText('Button Text')?.closest('a');

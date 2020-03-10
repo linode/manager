@@ -85,9 +85,7 @@ interface NodeBalancerProps {
 
 type CombinedProps = NodeBalancerProps & WithStyles<ClassNames>;
 
-const NodeBalancersDashboardCard: React.FunctionComponent<
-  CombinedProps
-> = props => {
+const NodeBalancersDashboardCard: React.FunctionComponent<CombinedProps> = props => {
   const {
     classes,
     nodeBalancersError,
@@ -141,7 +139,7 @@ const NodeBalancersDashboardCard: React.FunctionComponent<
               <EntityIcon variant="nodebalancer" />
             </Grid>
             <Grid item className={classes.labelGridWrapper}>
-              <Link to={`/nodebalancers/${id}`} tabIndex={-1}>
+              <Link to={`/nodebalancers/${id}`} tabIndex={0}>
                 <Typography
                   variant="h3"
                   className={classes.wrapHeader}
@@ -190,9 +188,6 @@ const withNodeBalancers = NodeBalancerContainer(
     nodeBalancersError
   })
 );
-const enhanced = compose<CombinedProps, {}>(
-  withNodeBalancers,
-  styled
-);
+const enhanced = compose<CombinedProps, {}>(withNodeBalancers, styled);
 
 export default enhanced(NodeBalancersDashboardCard);

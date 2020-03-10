@@ -22,7 +22,7 @@ const _DialogTitle: React.FC<Props> = props => {
   return (
     <DialogTitle
       title={title}
-      tabIndex={-1}
+      tabIndex={0}
       className={className}
       ref={dialogTitle}
     >

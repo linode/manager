@@ -1,8 +1,12 @@
+// @todo: this import?
+import { InputBaseProps } from '@material-ui/core/InputBase';
 import Close from '@material-ui/icons/Close';
+import * as classnames from 'classnames';
 import { update } from 'ramda';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
+import InputLabel from 'src/components/core/InputLabel';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -48,6 +52,8 @@ export interface Props {
   error?: string;
   ips: string[];
   onChange: (ips: string[]) => void;
+  inputProps?: InputBaseProps;
+  className?: string;
 }
 
 export const MultipleIPInput: React.FC<Props> = props => {
@@ -77,8 +83,14 @@ export const MultipleIPInput: React.FC<Props> = props => {
   }
 
   return (
-    <div className={classes.root}>
-      <Typography variant="h3">{title}</Typography>
+    <div
+      className={classnames({
+        [classes.root]: true,
+        // Inject the className if given as as prop.
+        [props.className ?? '']: Boolean(props.className)
+      })}
+    >
+      <InputLabel>{title}</InputLabel>
       {helperText && (
         <Typography className={classes.helperText}>{helperText}</Typography>
       )}
@@ -97,7 +109,10 @@ export const MultipleIPInput: React.FC<Props> = props => {
               className={classes.input}
               // Prevent unique ID errors, since TextField sets the input element's ID to the label
               label={`domain-transfer-ip-${idx}`}
-              InputProps={{ 'aria-label': `${title} ip-address-${idx}` }}
+              InputProps={{
+                'aria-label': `${title} ip-address-${idx}`,
+                ...props.inputProps
+              }}
               value={thisIP}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 handleChange(e, idx)

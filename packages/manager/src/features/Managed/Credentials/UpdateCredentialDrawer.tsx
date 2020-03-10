@@ -6,9 +6,9 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
-import PasswordInput from 'src/components/PasswordInput';
+const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
+import SuspenseLoader from 'src/components/SuspenseLoader';
 import TextField from 'src/components/TextField';
-
 import { updateLabelSchema, updatePasswordSchema } from './credential.schema';
 
 export interface Props {
@@ -144,21 +144,22 @@ const CredentialDrawer: React.FC<CombinedProps> = props => {
                 onBlur={handleBlur}
               />
 
-              <PasswordInput
-                name="password"
-                label="Password / Passphrase"
-                type="password"
-                data-qa-add-password
-                value={values.password}
-                error={!!errors.password}
-                errorText={errors.password}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                // This credential could be anything so might be counterproductive to validate strength
-                hideHelperText
-                hideValidation
-              />
-
+              <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+                <PasswordInput
+                  name="password"
+                  label="Password / Passphrase"
+                  type="password"
+                  data-qa-add-password
+                  value={values.password}
+                  error={!!errors.password}
+                  errorText={errors.password}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  // This credential could be anything so might be counterproductive to validate strength
+                  hideHelperText
+                  hideValidation
+                />
+              </React.Suspense>
               <ActionsPanel>
                 <Button
                   buttonType="primary"

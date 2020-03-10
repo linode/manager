@@ -1,11 +1,11 @@
 import { Firewall, FirewallDevice } from 'linode-js-sdk/lib/firewalls';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import useFirewallDevices from 'src/hooks/useFirewallDevices';
-import { truncateAndJoinList } from 'src/utilities/stringUtils';
 import ActionMenu, { ActionHandlers } from './FirewallActionMenu';
 
 interface Props extends ActionHandlers {
@@ -97,7 +97,7 @@ const getLinodesCellString = (
   data: FirewallDevice[],
   loading: boolean,
   error?: APIError[]
-): string => {
+): string | JSX.Element => {
   if (loading) {
     return 'Loading...';
   }
@@ -110,8 +110,31 @@ const getLinodesCellString = (
     return 'None assigned';
   }
 
-  const deviceLabels = data.map(thisDevice => thisDevice.entity.label);
-  return truncateAndJoinList(deviceLabels, 3);
+  return getDeviceLinks(data);
+};
+
+export const getDeviceLinks = (data: FirewallDevice[]): JSX.Element => {
+  const firstThree = data.slice(0, 3);
+  return (
+    <>
+      {firstThree.map((thisDevice, idx) => (
+        <Link
+          className="link secondaryLink"
+          key={thisDevice.id}
+          to={`/linodes/${thisDevice.entity.id}`}
+          data-testid="firewall-row-link"
+        >
+          {idx > 0 && `, `}
+          {thisDevice.entity.label}
+        </Link>
+      ))}
+      {data.length > 3 && (
+        <span>
+          {`, `}plus {data.length - 3} more.
+        </span>
+      )}
+    </>
+  );
 };
 
 export default compose<CombinedProps, Props>(React.memo)(FirewallRow);

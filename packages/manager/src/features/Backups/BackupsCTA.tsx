@@ -1,5 +1,5 @@
 import { Linode } from 'linode-js-sdk/lib/linodes';
-import { isEmpty, pathOr } from 'ramda';
+import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
@@ -132,11 +132,7 @@ const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => ({
   linodesWithoutBackups: state.__resources.linodes.entities.filter(
     l => !l.backups.enabled
   ),
-  managed: pathOr(
-    false,
-    ['__resources', 'accountSettings', 'data', 'managed'],
-    state
-  )
+  managed: state?.__resources?.accountSettings?.data?.managed ?? false
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (

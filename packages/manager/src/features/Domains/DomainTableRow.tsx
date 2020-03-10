@@ -101,7 +101,7 @@ class DomainTableRow extends React.Component<CombinedProps> {
             <Grid item className={classes.domainCellContainer}>
               <div className={classes.labelStatusWrapper}>
                 {type !== 'slave' ? (
-                  <Link to={`/domains/${id}`} tabIndex={-1}>
+                  <Link to={`/domains/${id}`} tabIndex={0}>
                     <Typography variant="h3" data-qa-label>
                       {domain}
                     </Typography>
