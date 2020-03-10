@@ -61,6 +61,12 @@ describe('utilities', () => {
         ipv6: []
       });
     });
+    it('accepts ranges', () => {
+      expect(classifyIPs(['1.1.1.1/16'])).toEqual({
+        ipv4: ['1.1.1.1/16'],
+        ipv6: []
+      });
+    });
   });
 
   describe('deriveTypeFromValuesAndIPs', () => {
