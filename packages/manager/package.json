@@ -119,7 +119,7 @@
     "typecheck": "tsc --noEmit"
   },
   "lint-staged": {
-    "*.{ts,tsx,js}": [
+    "*.{ts,tsx}": [
       "prettier --write",
       "tslint",
       "git add",
