@@ -158,7 +158,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
       });
   };
 
-  const hasModified = React.useMemo(
+  const shouldDisplayFixedToolbar = React.useMemo(
     () => _hasModified(inboundState) || _hasModified(outboundState),
     [inboundState, outboundState]
   );
@@ -171,7 +171,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
   ]);
 
   // This is for the Rule Drawer. If there is a rule to modify,
-  // we need to pass it to the drawer so that the pre-populate form fields.
+  // we need to pass it to the drawer to pre-populate the form fields.
   const ruleToModify =
     ruleDrawer.ruleIdx !== undefined
       ? ruleDrawer.category === 'inbound'
@@ -193,7 +193,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         <FirewallRuleTable
           category="inbound"
           rulesWithStatus={inboundRules}
-          openDrawer={openRuleDrawer}
+          openRuleDrawer={openRuleDrawer}
           triggerOpenRuleDrawerForEditing={(idx: number) =>
             openRuleDrawer('inbound', 'edit', idx)
           }
@@ -205,7 +205,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         <FirewallRuleTable
           category="outbound"
           rulesWithStatus={outboundRules}
-          openDrawer={openRuleDrawer}
+          openRuleDrawer={openRuleDrawer}
           triggerOpenRuleDrawerForEditing={(idx: number) =>
             openRuleDrawer('outbound', 'edit', idx)
           }
@@ -221,7 +221,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         onSubmit={ruleDrawer.mode === 'create' ? handleAddRule : handleEditRule}
         ruleToModify={ruleToModify}
       />
-      {hasModified && (
+      {shouldDisplayFixedToolbar && (
         <FixedToolBar>
           <ActionsPanel className={classes.actions}>
             <Button

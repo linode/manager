@@ -104,7 +104,7 @@ const ruleEditorReducer = (
 
       draft[action.idx].pop();
 
-      // If there's nothing left on the stack, we need to actually this revisionList.
+      // If there's nothing left on the stack, we need to actually remove this revisionList.
       // This will only happen if a user performing UNDO on a NEW rule.
       if (draft[action.idx].length === 0) {
         draft.splice(action.idx, 1);

@@ -17,7 +17,7 @@ const FirewallRuleActionMenu: React.FC<CombinedProps> = props => {
     ...actionMenuProps
   } = props;
 
-  const createActions = () => {
+  const createActions = React.useCallback(() => {
     return (closeMenu: Function): Action[] => [
       {
         title: 'Edit',
@@ -34,7 +34,7 @@ const FirewallRuleActionMenu: React.FC<CombinedProps> = props => {
         }
       }
     ];
-  };
+  }, []);
 
   return (
     <ActionMenu

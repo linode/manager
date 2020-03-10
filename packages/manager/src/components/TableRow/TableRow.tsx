@@ -121,8 +121,8 @@ const styles = (theme: Theme) =>
     },
     disabled: {
       // Ideally this would be `opacity: 0.25`. The problem is that opacity applies to all children,
-      // so for example the "undo" icon in Firewall Rules is transparent as well. These colors
-      // simulate opacity 0.25 but it's awful. @todo @WilkinsKa1 help.
+      // so e.g. the "undo" icon in the Firewall Rules Table Row is transparent as well. These
+      // colors simulate opacity 0.25, but this solution is brittle.
       backgroundColor: '#F7F7F7',
       '& td': {
         color: '#D2D3D4'

@@ -57,9 +57,12 @@ interface RuleRow {
   status: RuleStatus;
 }
 
+// =============================================================================
+// <FirewallRuleTable />
+// =============================================================================
 interface Props {
   category: Category;
-  openDrawer: (category: Category, mode: Mode) => void;
+  openRuleDrawer: (category: Category, mode: Mode) => void;
   rulesWithStatus: FirewallRuleWithStatus[];
   triggerDeleteFirewallRule: (idx: number) => void;
   triggerOpenRuleDrawerForEditing: (idx: number) => void;
@@ -85,7 +88,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
   const rowData = firewallRuleToRowData(rulesWithStatus);
 
   const openDrawerForCreating = React.useCallback(() => {
-    props.openDrawer(props.category, 'create');
+    props.openRuleDrawer(props.category, 'create');
   }, []);
 
   return (
@@ -141,58 +144,17 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
               {orderedData.length === 0 ? (
                 <TableRowEmptyState colSpan={5} />
               ) : (
-                orderedData.map((ruleRow: RuleRow) => {
-                  const {
-                    id,
-                    type,
-                    protocol,
-                    ports,
-                    addresses,
-                    status
-                  } = ruleRow;
-
-                  const actionMenuProps = {
-                    idx: ruleRow.id,
-                    triggerDeleteFirewallRule,
-                    triggerOpenRuleDrawerForEditing
-                  };
-
-                  return (
-                    <TableRow
-                      key={id}
-                      highlight={status === 'MODIFIED' || status === 'NEW'}
-                      disabled={status === 'PENDING_DELETION'}
-                    >
-                      <TableCell>{type}</TableCell>
-                      <TableCell>{protocol}</TableCell>
-                      <TableCell>{ports}</TableCell>
-                      <TableCell>{addresses}</TableCell>
-                      <TableCell style={{ width: '10%' }}>
-                        {status !== 'NOT_MODIFIED' ? (
-                          <div className={classes.undoButtonContainer}>
-                            <button
-                              className={classnames({
-                                [classes.undoButton]: true,
-                                [classes.highlight]:
-                                  status !== 'PENDING_DELETION'
-                              })}
-                              onClick={() => triggerUndo(id)}
-                              role="button"
-                            >
-                              <Undo />
-                            </button>
-                            <FirewallRuleActionMenu
-                              {...actionMenuProps}
-                              disabled={status === 'PENDING_DELETION'}
-                            />
-                          </div>
-                        ) : (
-                          <FirewallRuleActionMenu {...actionMenuProps} />
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })
+                orderedData.map((thisRuleRow: RuleRow) => (
+                  <FirewallRuleTableRow
+                    key={thisRuleRow.id}
+                    {...thisRuleRow}
+                    triggerDeleteFirewallRule={triggerDeleteFirewallRule}
+                    triggerOpenRuleDrawerForEditing={
+                      triggerOpenRuleDrawerForEditing
+                    }
+                    triggerUndo={triggerUndo}
+                  />
+                ))
               )}
             </TableBody>
           </Table>
@@ -204,6 +166,77 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
 
 export default React.memo(FirewallRuleTable);
 
+// =============================================================================
+// <FirewallRuleTableRow />
+// =============================================================================
+interface FirewallRuleTableRowProps extends RuleRow {
+  triggerDeleteFirewallRule: (idx: number) => void;
+  triggerOpenRuleDrawerForEditing: (idx: number) => void;
+  triggerUndo: (idx: number) => void;
+}
+
+const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
+  props => {
+    const classes = useStyles();
+
+    const {
+      id,
+      type,
+      protocol,
+      ports,
+      addresses,
+      status,
+      triggerDeleteFirewallRule,
+      triggerOpenRuleDrawerForEditing,
+      triggerUndo
+    } = props;
+
+    const actionMenuProps = {
+      idx: id,
+      triggerDeleteFirewallRule,
+      triggerOpenRuleDrawerForEditing
+    };
+
+    return (
+      <TableRow
+        key={id}
+        highlight={status === 'MODIFIED' || status === 'NEW'}
+        disabled={status === 'PENDING_DELETION'}
+      >
+        <TableCell>{type}</TableCell>
+        <TableCell>{protocol}</TableCell>
+        <TableCell>{ports}</TableCell>
+        <TableCell>{addresses}</TableCell>
+        <TableCell style={{ width: '10%' }}>
+          {status !== 'NOT_MODIFIED' ? (
+            <div className={classes.undoButtonContainer}>
+              <button
+                className={classnames({
+                  [classes.undoButton]: true,
+                  [classes.highlight]: status !== 'PENDING_DELETION'
+                })}
+                onClick={() => triggerUndo(id)}
+                role="button"
+              >
+                <Undo />
+              </button>
+              <FirewallRuleActionMenu
+                {...actionMenuProps}
+                disabled={status === 'PENDING_DELETION'}
+              />
+            </div>
+          ) : (
+            <FirewallRuleActionMenu {...actionMenuProps} />
+          )}
+        </TableCell>
+      </TableRow>
+    );
+  }
+);
+
+// =============================================================================
+// Utilities
+// =============================================================================
 /**
  * Transforms a FirewallRuleType to the higher-level RuleRow. We do this so
  * downstream components don't have worry about transforming individual pieces
