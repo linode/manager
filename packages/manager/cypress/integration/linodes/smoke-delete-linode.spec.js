@@ -1,6 +1,4 @@
 import { createLinode } from '../../support/api/linodes';
-import { getLinodeLandingRow } from '../../support/ui/linodes';
-import { defensiveDo } from '../../support/ui/common';
 
 describe('delete linode', () => {
   beforeEach(() => {
@@ -15,30 +13,8 @@ describe('delete linode', () => {
         url: '*/linode/instances/*'
       }).as('deleteLinode');
 
-      /** Here we cannot factorize the result of the selector
-       *  in a variable as this is a chain of action and not an element
-       *  Solution is to write the selector as a function if we want to factorize code
-       */
-      getLinodeLandingRow(linode.label).click();
-
-      cy.url().should('contain', '/summary');
-      cy.findByText(linode.label).should('exist');
-
-      // it looks like there is 4 ReRender of 'Settings'
-      // This code makes it more reliable
-      // I tested this with
-      //    * attempts 2, initial wait 0, between run wait 0: [0,0 + dt] fails
-      //    * attempts 1, initial wait 300, between run wait 0: [300] ok
-      //    * attempts 2, initial wait 0, between run wait 100: [0, 100 + dt] fails
-      //    * attempts 2, initial wait 0, between run wait 300: [0, 300 + dt] fails
-      //    * attempts 3, initial wait 0, between run wait 300: [0, 300 + dt, 600 + 2*dt] ok
-      //Default: attempts 3, initial wait 200, between run wait 200: [0, 200 + dt, 400 + 2*dt]
-      defensiveDo(() =>
-        cy
-          .findByText('Settings')
-          .should('be.visible')
-          .click()
-      );
+      cy.visit(`/linodes/${linode.id}/settings`);
+      
 
       cy.findByText('Delete Linode').click();
 
