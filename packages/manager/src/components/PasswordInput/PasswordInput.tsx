@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
     paddingBottom: theme.spacing(1) / 2
   },
-  reqListOuter: {
+  requirementsListOuter: {
     margin: 0,
     width: '100%',
     padding: `${theme.spacing(1)}px ${theme.spacing(2) - 2}px `,
@@ -34,10 +34,17 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: 415
     }
   },
-  reqList: {
+  requirementsList: {
     listStyleType: 'none',
     margin: 0,
-    padding: 0
+    padding: 0,
+    '& li': {
+      display: 'flex',
+      margin: `${theme.spacing(1)}px 0`,
+      '& > span': {
+        display: 'block'
+      }
+    }
   },
   check: {
     color: theme.color.grey1,
@@ -51,14 +58,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: theme.color.green
     }
   },
-  valid: {},
-  listItem: {
-    display: 'flex',
-    margin: `${theme.spacing(1)}px 0`,
-    '& > span': {
-      display: 'block'
-    }
-  }
+  valid: {}
 }));
 
 type CombinedProps = Props;
@@ -107,30 +107,16 @@ const PasswordInput: React.FC<CombinedProps> = props => {
         )}
         {!hideHelperText && (
           <Grid item xs={12}>
-            <div className={classes.reqListOuter}>
+            <div className={classes.requirementsListOuter}>
               <Typography>Password must:</Typography>
-              <ul className={classes.reqList}>
-                <li
-                  className={classes.listItem}
-                  /*aria-label={
-                      lengthRequirement
-                        ? 'Password contains enough characters'
-                        : 'Password should be at least 6 chars'
-                    }*/
-                >
+              <ul className={classes.requirementsList}>
+                <li>
                   <span className={classes.check}>{<Check />}</span>{' '}
                   <Typography component={'span'}>
                     Be at least <strong>6 characters</strong>
                   </Typography>
                 </li>
-                <li
-                  className={classes.listItem}
-                  /*aria-label={
-                      isValidPassword
-                        ? "Password's strength is valid"
-                        : "Increase password's strength by adding uppercase letters, lowercase letters, numbers, or punctuation"
-                    }*/
-                >
+                <li>
                   <span className={classes.check}>{<Check />}</span>{' '}
                   <Typography component={'span'}>
                     Contain at least{' '}
