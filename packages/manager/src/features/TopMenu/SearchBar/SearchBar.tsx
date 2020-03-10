@@ -74,6 +74,10 @@ export const SearchBar: React.FC<CombinedProps> = props => {
     searchActive // Only request things if the search bar is open/active.
   );
 
+  React.useEffect(() => {
+    props.search(searchText);
+  }, [_loading]);
+
   const { classes, combinedResults, entitiesLoading } = props;
 
   const handleSearchChange = (_searchText: string): void => {
