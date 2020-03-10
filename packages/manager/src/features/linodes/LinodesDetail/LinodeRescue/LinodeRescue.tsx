@@ -140,22 +140,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
     const [deviceMap, initialCounter] = getDefaultDeviceMapAndCounter(
       props.linodeDisks || []
     );
-    const filteredVolumes = props.volumesData
-      ? props.volumesData.filter(volume => {
-          // whether volume is not attached to any Linode
-          const volumeIsUnattached = volume.linode_id === null;
-          // whether volume is attached to the current Linode we're viewing
-          const volumeIsAttachedToCurrentLinode =
-            volume.linode_id === props.linodeId;
-          // whether volume is in the same region as the current Linode we're viewing
-          const volumeAndLinodeRegionMatch =
-            props.linodeRegion === volume.region;
-          return (
-            (volumeIsAttachedToCurrentLinode || volumeIsUnattached) &&
-            volumeAndLinodeRegionMatch
-          );
-        })
-      : [];
+    const filteredVolumes = this.getFilteredVolumes();
     this.state = {
       devices: {
         disks: props.linodeDisks || [],
@@ -169,9 +154,36 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
   componentDidMount() {
     const { getAllVolumes, volumesLastUpdated } = this.props;
     if (Date.now() - volumesLastUpdated > REFRESH_INTERVAL) {
-      getAllVolumes();
+      getAllVolumes()
+        .then(_ =>
+          this.setState({
+            devices: {
+              ...this.state.devices,
+              volumes: this.getFilteredVolumes()
+            }
+          })
+        )
+        .catch(); // Error state through Redux
     }
   }
+
+  getFilteredVolumes = () => {
+    const { linodeId, linodeRegion, volumesData } = this.props;
+    return volumesData
+      ? volumesData.filter(volume => {
+          // whether volume is not attached to any Linode
+          const volumeIsUnattached = volume.linode_id === null;
+          // whether volume is attached to the current Linode we're viewing
+          const volumeIsAttachedToCurrentLinode = volume.linode_id === linodeId;
+          // whether volume is in the same region as the current Linode we're viewing
+          const volumeAndLinodeRegionMatch = linodeRegion === volume.region;
+          return (
+            (volumeIsAttachedToCurrentLinode || volumeIsUnattached) &&
+            volumeAndLinodeRegionMatch
+          );
+        })
+      : [];
+  };
 
   onSubmit = () => {
     const { linodeId, enqueueSnackbar } = this.props;
@@ -236,7 +248,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
             aria-labelledby="tab-linode-detail-rescue"
           >
             <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
-            <ErrorState errorText="There was an error retrieving disks information." />
+            <ErrorState errorText="There was an error retrieving Disks information." />
           </div>
         </React.Fragment>
       );
@@ -251,7 +263,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
             aria-labelledby="tab-linode-detail-rescue"
           >
             <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
-            <ErrorState errorText="There was an error retrieving volumes information." />
+            <ErrorState errorText="There was an error retrieving Volumes information." />
           </div>
         </React.Fragment>
       );

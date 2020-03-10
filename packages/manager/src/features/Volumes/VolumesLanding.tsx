@@ -244,7 +244,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     this.mounted = true;
     // If we haven't requested Volumes, or it's been a while, request them
     if (Date.now() - volumesLastUpdated > REFRESH_INTERVAL) {
-      getAllVolumes();
+      getAllVolumes().catch(); // Errors through Redux
     }
   }
 

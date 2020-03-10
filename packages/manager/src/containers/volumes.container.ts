@@ -16,7 +16,7 @@ export interface StateProps {
 export type Props = StateProps & DispatchProps;
 
 export interface DispatchProps {
-  getVolumesPage: () => Promise<Volume[]>;
+  getVolumesPage: (params?: any, filters?: any) => Promise<Volume[]>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
