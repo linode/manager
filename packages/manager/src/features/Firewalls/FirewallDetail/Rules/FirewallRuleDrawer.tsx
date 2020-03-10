@@ -344,7 +344,11 @@ export const classifyIPs = (ips: string[]) =>
   ips.reduce<{ ipv4: string[]; ipv6: string[] }>(
     (acc, ip) => {
       try {
-        const parsed = parseIP(ip);
+        // It's possible to enter a range, e.g. 1.2.3.4/16. The API accepts this,
+        // but ipaddr.js does not, so we just look at the base address for classification.
+        const [base] = ip.split('/');
+
+        const parsed = parseIP(base);
         const type = parsed.kind();
         acc[type].push(ip);
       } catch {
