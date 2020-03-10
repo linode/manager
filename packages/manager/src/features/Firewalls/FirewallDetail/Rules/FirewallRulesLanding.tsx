@@ -269,16 +269,19 @@ export const DiscardChangesDialog: React.FC<DiscardChangesDialogProps> = React.m
   props => {
     const { isOpen, handleClose, handleDiscard } = props;
 
-    const actions = () => (
-      <ActionsPanel>
-        <Button buttonType="cancel" onClick={handleDiscard}>
-          Discard changes
-        </Button>
+    const actions = React.useCallback(
+      () => (
+        <ActionsPanel>
+          <Button buttonType="cancel" onClick={handleDiscard}>
+            Discard changes
+          </Button>
 
-        <Button buttonType="primary" onClick={handleClose}>
-          Go back and review changes
-        </Button>
-      </ActionsPanel>
+          <Button buttonType="primary" onClick={handleClose}>
+            Go back and review changes
+          </Button>
+        </ActionsPanel>
+      ),
+      []
     );
 
     return (

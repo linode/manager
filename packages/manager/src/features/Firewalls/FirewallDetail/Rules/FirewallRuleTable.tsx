@@ -217,6 +217,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
                 })}
                 onClick={() => triggerUndo(id)}
                 role="button"
+                aria-label="Undo change to Firewall Rule"
               >
                 <Undo />
               </button>

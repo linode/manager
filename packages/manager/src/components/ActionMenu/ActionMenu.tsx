@@ -125,7 +125,9 @@ export class ActionMenu extends React.Component<CombinedProps, State> {
     }
 
     return (
-      <div className={`${classes.root} action-menu ${this.props.className}`}>
+      <div
+        className={`${classes.root} action-menu ${this.props.className ?? ''}`}
+      >
         <IconButton
           disabled={disabled}
           aria-owns={anchorEl ? 'action-menu' : undefined}
