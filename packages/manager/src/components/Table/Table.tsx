@@ -33,7 +33,10 @@ const styles = (theme: Theme) =>
           display: 'none'
         },
         '& thead': {
-          display: 'none'
+          display: 'block'
+        },
+        '& tbody': {
+          display: 'block'
         },
         '& tbody > tr': {
           marginBottom: 0,
@@ -46,8 +49,17 @@ const styles = (theme: Theme) =>
         },
         '& tr': {
           display: 'block',
-          marginBottom: 20,
+          float: 'left',
+          // marginBottom: 20,
           height: 'auto'
+        },
+        '& tr > th:first-child': {
+          height: '1.625rem',
+          width: '25px',
+          visibility: 'hidden'
+        },
+        '& tr > th': {
+          display: 'block'
         },
         '& td': {
           display: 'flex',
@@ -61,7 +73,7 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.down('sm')]: {
         '& tbody > tr > td:first-child': {
           '& > span:first-child': {
-            display: 'none'
+            // display: 'none'
           }
         },
         '& .data': {
