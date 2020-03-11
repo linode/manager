@@ -3,6 +3,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
 import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
+import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
 import FolderIcon from 'src/assets/icons/entityIcons/folder.svg';
 import KubeIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
 import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
@@ -79,6 +80,7 @@ export type Variant =
   | 'stackscript'
   | 'kube'
   | 'bucket'
+  | 'firewall'
   | 'object'
   | 'folder';
 
@@ -102,6 +104,7 @@ const iconMap = {
   stackscript: StackScriptIcon,
   kube: KubeIcon,
   bucket: BucketIcon,
+  firewll: FirewallIcon,
   object: ObjectIcon,
   folder: FolderIcon
 };
