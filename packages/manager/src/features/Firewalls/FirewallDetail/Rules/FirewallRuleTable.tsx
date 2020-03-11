@@ -21,7 +21,7 @@ import capitalize from 'src/utilities/capitalize';
 import FirewallRuleActionMenu from './FirewallRuleActionMenu';
 import { Mode } from './FirewallRuleDrawer';
 import { FirewallRuleWithStatus, RuleStatus } from './firewallRuleEditor';
-import { Category } from './types';
+import { Category } from './shared';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {

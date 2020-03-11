@@ -1,4 +1,5 @@
 import { FirewallRules, FirewallRuleType } from 'linode-js-sdk/lib/firewalls';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -21,7 +22,7 @@ import curriedFirewallRuleEditorReducer, {
   prepareRules
 } from './firewallRuleEditor';
 import FirewallRuleTable from './FirewallRuleTable';
-import { Category } from './types';
+import { Category, parseFirewallRuleError } from './shared';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
@@ -67,7 +68,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
   });
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   // @todo fine-grained error handling.
-  const [error, setError] = React.useState<string | undefined>();
+  const [error, setError] = React.useState<APIError[] | undefined>();
   const [discardChangesModalOpen, setDiscardChangesModalOpen] = React.useState<
     boolean
   >(false);
@@ -154,7 +155,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         const _err = getAPIErrorOrDefault(err);
 
         setSubmitting(false);
-        setError(_err[0].reason);
+        setError(_err);
       });
   };
 
@@ -179,6 +180,9 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         : outboundRules[ruleDrawer.ruleIdx]
       : undefined;
 
+  const parsedError = error && parseFirewallRuleError(error[0]);
+  console.log(parsedError);
+
   return (
     <>
       <Typography variant="body1" className={classes.copy}>
@@ -187,7 +191,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         permitted by a rule is blocked.
       </Typography>
 
-      {error && <Notice spacingTop={8} error text={error} />}
+      {error && <Notice spacingTop={8} error text={error[0].reason} />}
 
       <div className={classes.table}>
         <FirewallRuleTable

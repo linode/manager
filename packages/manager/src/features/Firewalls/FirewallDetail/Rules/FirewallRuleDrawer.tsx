@@ -30,6 +30,7 @@ import {
 } from 'src/features/Firewalls/shared';
 import capitalize from 'src/utilities/capitalize';
 import { FirewallRuleWithStatus } from './firewallRuleEditor';
+import { Category } from './shared';
 
 export type Mode = 'create' | 'edit';
 
@@ -37,7 +38,7 @@ export type Mode = 'create' | 'edit';
 // <FirewallRuleDrawer />
 // =============================================================================
 interface Props {
-  category: 'inbound' | 'outbound';
+  category: Category;
   mode: Mode;
   isOpen: boolean;
   onClose: () => void;
