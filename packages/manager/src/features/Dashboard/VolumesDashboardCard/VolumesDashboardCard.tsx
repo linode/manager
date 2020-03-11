@@ -11,13 +11,16 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import ViewAllLink from 'src/components/ViewAllLink';
 import withVolumes, {
-  Props as VolumesProps
+  StateProps as VolumesProps
 } from 'src/containers/volumes.container';
+import withVolumesRequests, {
+  VolumesRequests
+} from 'src/containers/volumesRequests.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import DashboardCard from '../DashboardCard';
 import VolumeDashboardRow from './VolumeDashboardRow';
 
-type CombinedProps = VolumesProps;
+type CombinedProps = VolumesProps & VolumesRequests;
 
 export const VolumesDashboardCard: React.FunctionComponent<CombinedProps> = props => {
   const {
@@ -98,6 +101,6 @@ export const VolumesDashboardCard: React.FunctionComponent<CombinedProps> = prop
   );
 };
 
-const enhanced = compose<CombinedProps, {}>(withVolumes());
+const enhanced = compose<CombinedProps, {}>(withVolumes(), withVolumesRequests);
 
 export default enhanced(VolumesDashboardCard);

@@ -28,7 +28,7 @@ import Toggle from 'src/components/Toggle';
 import { REFRESH_INTERVAL } from 'src/constants';
 import _withEvents, { EventsProps } from 'src/containers/events.container';
 import withVolumes, {
-  Props as WithVolumesProps
+  StateProps as WithVolumesProps
 } from 'src/containers/volumes.container';
 import withVolumesRequests, {
   VolumesRequests

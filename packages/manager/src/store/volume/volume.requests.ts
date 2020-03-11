@@ -13,7 +13,7 @@ import {
   VolumeRequestPayload as _VolumeRequestPayload
 } from 'linode-js-sdk/lib/volumes';
 import { getAll } from 'src/utilities/getAll';
-import { createRequestThunk } from '../store.helpers';
+import { createRequestThunk } from '../store.helpers.tmp';
 import {
   attachVolumeActions,
   AttachVolumeParams,

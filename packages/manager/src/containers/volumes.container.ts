@@ -1,7 +1,5 @@
 import { Volume } from 'linode-js-sdk/lib/volumes';
-import { connect, MapDispatchToProps } from 'react-redux';
-import { AnyAction } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
+import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { EntityError } from 'src/store/types';
 import { getVolumesPage as _getPage } from 'src/store/volume/volume.requests';
@@ -13,19 +11,6 @@ export interface StateProps {
   volumesError: EntityError;
   volumesResults: number;
 }
-
-export type Props = StateProps & DispatchProps;
-
-export interface DispatchProps {
-  getVolumesPage: (params?: any, filters?: any) => Promise<Volume[]>;
-}
-
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
-  dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
-) => ({
-  getVolumesPage: (params: any = {}, filters: any = {}) =>
-    dispatch(_getPage({ params, filters })).then(response => response.data)
-});
 
 export default <TInner extends {}, TOuter extends {}>(
   mapVolumesToProps?: (
@@ -61,4 +46,4 @@ export default <TInner extends {}, TOuter extends {}>(
       results,
       volumesError
     );
-  }, mapDispatchToProps);
+  });
