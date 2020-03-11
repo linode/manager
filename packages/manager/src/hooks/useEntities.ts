@@ -37,6 +37,15 @@ export const useEntities = () => {
     requestKubernetesClusters
   } = useKubernetesClusters();
 
+  /** Our Redux store is currently inconsistent about
+   * the data shape for different entity types.
+   * The purpose of this meta-container is to expose
+   * a single, consistent interface so that consumers
+   * can map through different entity types without
+   * worrying about whether they should use data.entities
+   * or Object.value(data.itemsById).
+   */
+
   const linodes = _linodes.entities ?? [];
   const domains = _domains.data ?? [];
   const images = (Object.values(_images.data) ?? []).filter(
