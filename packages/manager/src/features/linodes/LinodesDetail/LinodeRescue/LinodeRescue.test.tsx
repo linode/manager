@@ -26,14 +26,6 @@ describe('LinodeRescue', () => {
       <LinodeRescue
         closeSnackbar={jest.fn()}
         enqueueSnackbar={jest.fn()}
-        createVolume={jest.fn()}
-        attachVolume={jest.fn()}
-        detachVolume={jest.fn()}
-        deleteVolume={jest.fn()}
-        cloneVolume={jest.fn()}
-        updateVolume={jest.fn()}
-        resizeVolume={jest.fn()}
-        getAllVolumes={jest.fn()}
         classes={{
           root: '',
           title: '',

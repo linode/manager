@@ -1,7 +1,5 @@
-import * as React from 'react';
 import { connect } from 'react-redux';
-import { branch, compose, renderComponent } from 'recompose';
-import CircleProgress from 'src/components/CircleProgress';
+import { compose } from 'recompose';
 import { MapState } from 'src/store/types';
 
 const isLoading = (state: { loading: boolean; lastUpdated: number }) =>
@@ -24,7 +22,6 @@ const collectLoadingState: MapState<InnerProps, OuterProps> = (
   const {
     linodes,
     types,
-    volumes,
     notifications,
     linodeConfigs,
     linodeDisks
@@ -37,7 +34,6 @@ const collectLoadingState: MapState<InnerProps, OuterProps> = (
       disksLoading ||
       isLoading(linodes) ||
       isLoading(types) ||
-      isLoading(volumes) ||
       isLoading(notifications) ||
       (linodeConfigs[linodeId] && isLoading(linodeConfigs[linodeId])) ||
       (linodeDisks[linodeId] && isLoading(linodeDisks[linodeId]))
@@ -49,10 +45,4 @@ const collectLoadingState: MapState<InnerProps, OuterProps> = (
  *
  * If any are true, render the loading component. (early return)
  */
-export default compose(
-  connect(collectLoadingState),
-  branch(
-    ({ loading }) => loading,
-    renderComponent(() => <CircleProgress />)
-  )
-);
+export default compose(connect(collectLoadingState));

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Route, RouteComponentProps, Switch } from 'react-router-dom';
 import { compose, withProps } from 'recompose';
+import CircleProgress from 'src/components/CircleProgress';
 import {
   createStyles,
   Theme,
@@ -8,6 +9,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import DefaultLoader from 'src/components/DefaultLoader';
+import useReduxLoad from 'src/hooks/useReduxLoad';
 import { WithTypes } from 'src/store/linodeType/linodeType.containers';
 import { ThunkDispatch } from 'src/store/types';
 import {
@@ -67,6 +69,12 @@ const LinodeDetail: React.StatelessComponent<CombinedProps> = props => {
   } = props;
 
   const ctx: LinodeDetailContext = createLinodeDetailContext(linode, dispatch);
+
+  const { _loading } = useReduxLoad(['volumes']); // Loading state handled by maybeRenderLoading
+
+  if (props.loading || _loading) {
+    return <CircleProgress />;
+  }
 
   return (
     <LinodeDetailContextProvider value={ctx}>

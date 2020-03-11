@@ -20,11 +20,7 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
-import { REFRESH_INTERVAL } from 'src/constants';
 import withVolumes from 'src/containers/volumes.container';
-import withVolumesRequests, {
-  VolumesRequests
-} from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { MapState } from 'src/store/types';
@@ -91,7 +87,6 @@ type CombinedProps = VolumesProps &
   StateProps &
   ContextProps &
   WithStyles<ClassNames> &
-  VolumesRequests &
   WithSnackbarProps;
 
 interface DeviceMap {
@@ -149,22 +144,6 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
       counter: initialCounter,
       rescueDevices: deviceMap
     };
-  }
-
-  componentDidMount() {
-    const { getAllVolumes, volumesLastUpdated } = this.props;
-    if (Date.now() - volumesLastUpdated > REFRESH_INTERVAL) {
-      getAllVolumes()
-        .then(_ =>
-          this.setState({
-            devices: {
-              ...this.state.devices,
-              volumes: this.getFilteredVolumes()
-            }
-          })
-        )
-        .catch(_ => null); // Error state through Redux
-    }
   }
 
   getFilteredVolumes = () => {
@@ -348,7 +327,6 @@ export default compose<CombinedProps, {}>(
   SectionErrorBoundary,
   styled,
   withSnackbar,
-  withVolumesRequests,
   withVolumes(
     (
       ownProps,
