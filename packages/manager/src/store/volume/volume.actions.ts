@@ -71,7 +71,7 @@ export interface GetAllVolumesOptions {
 }
 export const getAllVolumesActions = actionCreator.async<
   GetAllVolumesOptions | void,
-  Volume[],
+  ResourcePage<Volume>,
   APIError[]
 >('get-all');
 

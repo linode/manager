@@ -25,7 +25,8 @@ export const VolumesDashboardCard: React.FunctionComponent<CombinedProps> = prop
     volumesData,
     volumesLastUpdated,
     volumesLoading,
-    volumesError
+    volumesError,
+    volumesResults
   } = props;
 
   const [error, setError] = React.useState<APIError[] | undefined>(undefined);
@@ -41,12 +42,8 @@ export const VolumesDashboardCard: React.FunctionComponent<CombinedProps> = prop
   const _combinedErrors = volumesError?.read || error;
 
   const renderAction = () =>
-    volumesData && volumesData.length > 5 ? (
-      <ViewAllLink
-        text="View All"
-        link={'/volumes'}
-        count={volumesData.length}
-      />
+    volumesResults > 5 ? (
+      <ViewAllLink text="View All" link={'/volumes'} count={volumesResults} />
     ) : null;
 
   const renderContent = () => {

@@ -116,7 +116,7 @@ export const cloneVolume = createRequestThunk<
 */
 const _getAll = getAll<Volume>(getVolumes);
 
-const getAllVolumesRequest = () => _getAll().then(({ data }) => data);
+const getAllVolumesRequest = () => _getAll();
 
 export const getAllVolumes = createRequestThunk(
   getAllVolumesActions,

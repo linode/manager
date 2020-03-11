@@ -333,6 +333,7 @@ export default compose<CombinedProps, {}>(
       volumesData,
       volumesLoading,
       volumesLastUpdated,
+      volumesResults,
       volumesError
     ) => {
       const mappedData = volumesData.map(volume => ({

@@ -719,6 +719,7 @@ export default compose<CombinedProps, Props>(
       volumesData,
       volumesLoading,
       volumesLastUpdated,
+      volumesResults,
       volumesError
     ) => {
       const mappedVolumesDataWithLinodes = volumesData.map(volume => {

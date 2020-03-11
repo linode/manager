@@ -1,7 +1,7 @@
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import { pathOr } from 'ramda';
 import { Reducer } from 'redux';
-import { MappedEntityState } from 'src/store/types';
+import { MappedEntityState2 as MappedEntityState } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import {
   addMany,
@@ -11,7 +11,7 @@ import {
   onError,
   onGetAllSuccess,
   onStart
-} from '../store.helpers';
+} from '../store.helpers.tmp';
 import {
   createVolumeActions,
   deleteVolumeActions,
@@ -107,8 +107,9 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   if (isType(action, getAllVolumesActions.done)) {
     const { result } = action.payload;
     return onGetAllSuccess<Volume, MappedEntityState<Volume, EntityError>>(
-      result,
-      state
+      result.data,
+      state,
+      result.results
     );
   }
   if (isType(action, getAllVolumesActions.failed)) {

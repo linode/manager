@@ -11,6 +11,7 @@ export interface StateProps {
   volumesLoading: boolean;
   volumesLastUpdated: number;
   volumesError: EntityError;
+  volumesResults: number;
 }
 
 export type Props = StateProps & DispatchProps;
@@ -32,11 +33,12 @@ export default <TInner extends {}, TOuter extends {}>(
     volumesData: Volume[],
     volumesLoading: boolean,
     volumesLastUpdated: number,
+    volumesResults: number,
     volumesError?: EntityError
   ) => TInner
 ) =>
   connect((state: ApplicationState, ownProps: TOuter) => {
-    const { itemsById } = state.__resources.volumes;
+    const { itemsById, results } = state.__resources.volumes;
 
     const volumesData = Object.values(itemsById);
     const volumesLoading = state.__resources.volumes.loading;
@@ -47,6 +49,7 @@ export default <TInner extends {}, TOuter extends {}>(
         volumesData,
         volumesLoading,
         volumesLastUpdated,
+        volumesResults: results,
         volumesError
       };
     }
@@ -55,6 +58,7 @@ export default <TInner extends {}, TOuter extends {}>(
       volumesData,
       volumesLoading,
       volumesLastUpdated,
+      results,
       volumesError
     );
   }, mapDispatchToProps);
