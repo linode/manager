@@ -220,6 +220,9 @@ export const dcContinent: Record<string, ContinentKey> = {
 // Default error message for non-API errors
 export const DEFAULT_ERROR_MESSAGE = 'An unexpected error occurred.';
 
+// Default size limit for Images (some users have custom limits)
+export const IMAGE_DEFAULT_LIMIT = 6144;
+
 export const allowedHTMLTags = [
   'a',
   'abbr',
