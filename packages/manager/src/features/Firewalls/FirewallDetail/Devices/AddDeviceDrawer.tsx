@@ -35,10 +35,16 @@ export const AddDeviceDrawer: React.FC<Props> = props => {
   // the LinodeMultiSelect manages its state internally.
   const [key, setKey] = React.useState<string>(v4());
 
+  React.useEffect(() => {
+    // If we have a new error, clear out the select values
+    if (error && error.length > 0) {
+      setKey(v4());
+    }
+  }, [error]);
+
   const handleSubmit = () => {
     // @todo handling will have to be added here when we support Firewalls for NodeBalancers
     addDevice(selectedLinodes);
-    setKey(v4());
   };
 
   // @todo title and error messaging will update to "Device" once NodeBalancers are allowed
