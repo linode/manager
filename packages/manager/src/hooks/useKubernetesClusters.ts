@@ -5,12 +5,12 @@ import { State } from 'src/store/kubernetes/kubernetes.reducer';
 import { requestKubernetesClusters as _request } from 'src/store/kubernetes/kubernetes.requests';
 import { Dispatch } from './types';
 
-export interface DomainsProps {
+export interface KubernetesProps {
   kubernetesClusters: State;
   requestKubernetesClusters: () => Promise<KubernetesCluster[]>;
 }
 
-export const useDomains = () => {
+export const useKubernetesClusters = () => {
   const dispatch: Dispatch = useDispatch();
   const kubernetesClusters = useSelector(
     (state: ApplicationState) => state.__resources.kubernetes
@@ -20,4 +20,4 @@ export const useDomains = () => {
   return { kubernetesClusters, requestKubernetesClusters };
 };
 
-export default useDomains;
+export default useKubernetesClusters;
