@@ -1,4 +1,4 @@
-import strings from '../support/cypresshelpers';
+import { makeVolumeLabel } from '../support/api/volumes';
 
 describe('create volume', () => {
   beforeEach(() => {
@@ -6,7 +6,7 @@ describe('create volume', () => {
   });
 
   it('creates a volume', () => {
-    const title = strings.randomTitle(30);
+    const title = makeVolumeLabel();
 
     cy.visit('/volumes/create');
     cy.url().should('contain', '/volumes/create');

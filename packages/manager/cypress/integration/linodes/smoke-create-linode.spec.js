@@ -3,17 +3,17 @@ import {
   deleteLinodeByLabel,
   makeLinodeLabel
 } from '../../support/api/linodes';
-
 import { checkToast } from '../../support/ui/events';
 
 describe('create linode', () => {
   beforeEach(() => {
     cy.login2();
+    cy.visit('/linodes/create');
+    cy.get('[data-qa-deploy-linode]');
   });
   it('creates a nanode', () => {
     const rootpass = strings.randomPass();
     const linodeLabel = makeLinodeLabel();
-    cy.visit('/linodes/create');
     cy.get('[data-testid="link-text"]').should('have.text', 'linodes');
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
     cy.contains('Regions')
@@ -30,7 +30,6 @@ describe('create linode', () => {
     cy.server();
 
     checkToast(`Your Linode ${linodeLabel} is being created.`);
-
     cy.get('[data-qa-power-control="Busy"]', { timeout: 6000 }).should(
       'be.visible'
     );

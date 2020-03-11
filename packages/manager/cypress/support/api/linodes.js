@@ -1,24 +1,15 @@
 import strings from '../cypresshelpers';
-const testLinodeTag = 'cy-test';
-const testLinodeNamePrefix = 'cy-test-';
-
-export const makeLinodeLabel = () =>
-  testLinodeNamePrefix + strings.randomTitle(10);
-
-export const apiCheckErrors = (resp, failOnError = true) => {
-  let errs = undefined;
-  if (resp.body && resp.body.ERRORARRAY && resp.body.ERRORARRAY.length > 0) {
-    errs = resp.body.ERRORARRAY;
-  }
-  if (failOnError) {
-    if (errs) {
-      expect(errs[0].ERRORMESSAGE).not.to.be.exist;
-    } else {
-      expect(!!errs).to.be.false;
-    }
-  }
-  return errs;
-};
+import {
+  apiCheckErrors,
+  testTag,
+  getAll,
+  deleteById,
+  isTestEntity,
+  makeTestLabel
+} from './common';
+const testLinodeTag = testTag;
+export const makeLinodeLabel = makeTestLabel;
+const isTestLinode = isTestEntity;
 
 const makeLinodeCreateReq = linode => {
   const linodeData = linode
@@ -57,24 +48,10 @@ export const createLinode = (linode = undefined) => {
   });
 };
 
-export const getLinodes = () => {
-  return cy.request({
-    method: 'GET',
-    url: Cypress.env('apiroot') + '/v4/linode/instances',
-    auth: {
-      bearer: Cypress.env('oauthtoken')
-    }
-  });
-};
-export const deleteLinodeById = linodeId => {
-  return cy.request({
-    method: 'DELETE',
-    url: `${Cypress.env('apiroot')}/v4/linode/instances/${linodeId}`,
-    auth: {
-      bearer: Cypress.env('oauthtoken')
-    }
-  });
-};
+export const getLinodes = () => getAll('linode/instances');
+
+export const deleteLinodeById = linodeId =>
+  deleteById('linode/instances', linodeId);
 
 export const deleteLinodeByLabel = (label = undefined) => {
   getLinodes().then(resp => {
@@ -86,7 +63,6 @@ export const deleteLinodeByLabel = (label = undefined) => {
 export const deleteAllTestLinodes = () => {
   getLinodes().then(resp => {
     resp.body.data.forEach(linode => {
-      const isTestLinode = linode.tags.includes(testLinodeTag) || linode.label.startsWith(testLinodeNamePrefix);
       if (isTestLinode) deleteLinodeById(linode.id);
     });
   });

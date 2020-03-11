@@ -14,7 +14,6 @@ describe('delete linode', () => {
       }).as('deleteLinode');
 
       cy.visit(`/linodes/${linode.id}/settings`);
-      
 
       cy.findByText('Delete Linode').click();
 

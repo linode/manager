@@ -16,6 +16,8 @@
 // Import commands.js using ES2015 syntax:
 import './commands';
 import { deleteAllTestLinodes } from './api/linodes';
-it('Delete All Test Linodes before anything happens', () => {
+import { deleteAllTestVolumes } from './api/volumes';
+it('Delete All Test Entities before anything happens', () => {
   deleteAllTestLinodes();
+  deleteAllTestVolumes();
 });
