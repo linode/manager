@@ -35,6 +35,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   infoText: {
     fontSize: '0.85rem',
     marginTop: 12
+  },
+  usernameInput: {
+    display: 'none'
   }
 }));
 
@@ -65,6 +68,15 @@ const PasswordInput: React.FC<CombinedProps> = props => {
     <React.Fragment>
       <Grid container className={classes.container}>
         <Grid item xs={12}>
+          <input
+            type="text"
+            name="name"
+            aria-hidden="true"
+            autoComplete="username"
+            className={classes.usernameInput}
+            value="root"
+            readOnly
+          />
           <HideShowText
             {...rest}
             tooltipText={disabledReason}
