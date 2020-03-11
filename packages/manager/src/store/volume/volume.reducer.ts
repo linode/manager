@@ -127,7 +127,6 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
   if (isType(action, getVolumesPageActions.done)) {
     const { result } = action.payload;
-    return addMany(result, state);
     /**
      * NOTE: getPage actions shouldn't update lastUpdated,
      * since they don't constitute a full update to the store.
@@ -135,9 +134,16 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
      * We rely on this quirk to determine if we have full data
      * for this entity type in the store or if we should request it.
      *
-     * Alternatively, we could add a _cached or similar to the state
-     * and rely on that.
+     * However, if a single request with page_size 25 is enough to
+     * return all the Volumes data, then there is no need to getAll()
+     * anywhere else, so long as the data is not stale. In other words,
+     * if result.results === result.data.length, we *do* want to update
+     * lastUpdated so that additional requests aren't made.
+     *
      */
+    const isFullRequest = result.results === result.data.length;
+    const newState = addMany(result.data, state);
+    return isFullRequest ? { ...newState, lastUpdated: Date.now() } : newState;
   }
 
   if (isType(action, getVolumesPageActions.failed)) {

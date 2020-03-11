@@ -128,6 +128,5 @@ export const getAllVolumes = createRequestThunk(
  */
 export const getVolumesPage = createRequestThunk(
   getVolumesPageActions,
-  ({ params, filters }) =>
-    getVolumes(params, filters).then(response => response.data)
+  ({ params, filters }) => getVolumes(params, filters)
 );

@@ -1,4 +1,4 @@
-import { APIError } from 'linode-js-sdk/lib/types';
+import { APIError, ResourcePage } from 'linode-js-sdk/lib/types';
 import {
   AttachVolumePayload,
   CloneVolumePayload,
@@ -81,6 +81,6 @@ export interface Params {
 }
 export const getVolumesPageActions = actionCreator.async<
   Params,
-  Volume[],
+  ResourcePage<Volume>,
   APIError[]
 >('get-page');

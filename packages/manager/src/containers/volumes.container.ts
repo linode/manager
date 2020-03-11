@@ -23,7 +23,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
 ) => ({
   getVolumesPage: (params: any = {}, filters: any = {}) =>
-    dispatch(_getPage({ params, filters }))
+    dispatch(_getPage({ params, filters })).then(response => response.data)
 });
 
 export default <TInner extends {}, TOuter extends {}>(
