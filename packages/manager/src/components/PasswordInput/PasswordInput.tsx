@@ -1,7 +1,6 @@
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 
-import Check from 'src/assets/icons/check.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -35,22 +34,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   requirementsList: {
-    listStyleType: 'none',
     margin: 0,
-    padding: 0,
+    padding: '0 20px',
     '& li': {
-      display: 'flex',
       margin: `${theme.spacing(1)}px 0`,
       '& > span': {
         display: 'block'
       }
     }
-  },
-  check: {
-    color: theme.color.grey1,
-    marginRight: theme.spacing(1),
-    position: 'relative',
-    top: -1
   },
   active: {
     color: theme.color.red,
@@ -111,13 +102,11 @@ const PasswordInput: React.FC<CombinedProps> = props => {
               <Typography>Password must:</Typography>
               <ul className={classes.requirementsList}>
                 <li>
-                  <span className={classes.check}>{<Check />}</span>{' '}
                   <Typography component={'span'}>
                     Be at least <strong>6 characters</strong>
                   </Typography>
                 </li>
                 <li>
-                  <span className={classes.check}>{<Check />}</span>{' '}
                   <Typography component={'span'}>
                     Contain at least{' '}
                     <strong>two of the following character classes</strong>:
