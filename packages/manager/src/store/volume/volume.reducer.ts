@@ -143,7 +143,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
      *
      */
     const isFullRequest = result.results === result.data.length;
-    const newState = addMany(result.data, state);
+    const newState = addMany(result.data, state, result.results);
     return isFullRequest ? { ...newState, lastUpdated: Date.now() } : newState;
   }
 

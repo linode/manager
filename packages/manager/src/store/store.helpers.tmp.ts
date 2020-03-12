@@ -80,7 +80,8 @@ export const removeMany = <E extends Entity, O = APIError[] | undefined>(
 
 export const addMany = <E extends Entity, O = APIError[] | undefined>(
   list: E[],
-  state: MappedEntityState<E, O>
+  state: MappedEntityState<E, O>,
+  results?: number
 ): MappedEntityState<E, O> => {
   const itemsById = list.reduce(
     (map, item) => ({ ...map, [item.id]: item }),
@@ -90,7 +91,7 @@ export const addMany = <E extends Entity, O = APIError[] | undefined>(
   return {
     ...state,
     itemsById,
-    results: Object.keys(itemsById).length
+    results: results ?? Object.keys(itemsById).length
   };
 };
 

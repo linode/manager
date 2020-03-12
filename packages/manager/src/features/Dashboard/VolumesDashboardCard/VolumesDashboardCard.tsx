@@ -36,7 +36,7 @@ export const VolumesDashboardCard: React.FunctionComponent<CombinedProps> = prop
 
   React.useEffect(() => {
     if (volumesLastUpdated === 0 && !volumesLoading) {
-      getVolumesPage({ page_size: 25, page: 1 }).catch(setError);
+      getVolumesPage({ params: { page_size: 25, page: 1 } }).catch(setError);
     }
   }, []);
 
