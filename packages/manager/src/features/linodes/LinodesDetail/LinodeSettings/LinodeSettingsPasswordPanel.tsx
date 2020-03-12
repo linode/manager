@@ -206,13 +206,13 @@ class LinodeSettingsPasswordPanel extends React.Component<
     const generalError = hasErrorFor('none');
 
     return (
-      <form>
-        <ExpansionPanel
-          heading="Reset Root Password"
-          success={this.state.success}
-          actions={this.renderExpansionActions}
-          onChange={this.handlePanelChange}
-        >
+      <ExpansionPanel
+        heading="Reset Root Password"
+        success={this.state.success}
+        actions={this.renderExpansionActions}
+        onChange={this.handlePanelChange}
+      >
+        <form>
           {generalError && <Notice text={generalError} error />}
           <EnhancedSelect
             label="Disk"
@@ -245,8 +245,8 @@ class LinodeSettingsPasswordPanel extends React.Component<
               }
             />
           </React.Suspense>
-        </ExpansionPanel>
-      </form>
+        </form>
+      </ExpansionPanel>
     );
   }
 }

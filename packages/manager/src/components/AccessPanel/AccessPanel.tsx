@@ -129,22 +129,20 @@ class AccessPanel extends React.Component<CombinedProps> {
         <div className={!noPadding ? classes.inner : ''}>
           {error && <Notice text={error} error />}
           <React.Suspense fallback={<SuspenseLoader delay={300} />}>
-            <form>
-              <PasswordInput
-                data-qa-password-input
-                className={classes.passwordInputOuter}
-                required={required}
-                disabled={disabled}
-                disabledReason={disabledReason || ''}
-                autoComplete="new-password"
-                value={this.props.password || ''}
-                label={label || 'Root Password'}
-                placeholder={placeholder || 'Enter a password.'}
-                onChange={this.handleChange}
-                hideStrengthLabel={hideStrengthLabel}
-                hideHelperText={hideHelperText}
-              />
-            </form>
+            <PasswordInput
+              data-qa-password-input
+              className={classes.passwordInputOuter}
+              required={required}
+              disabled={disabled}
+              disabledReason={disabledReason || ''}
+              autoComplete="new-password"
+              value={this.props.password || ''}
+              label={label || 'Root Password'}
+              placeholder={placeholder || 'Enter a password.'}
+              onChange={this.handleChange}
+              hideStrengthLabel={hideStrengthLabel}
+              hideHelperText={hideHelperText}
+            />
           </React.Suspense>
           {users && (
             <UserSSHKeyPanel
