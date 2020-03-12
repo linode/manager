@@ -82,7 +82,7 @@ export const LinodeMultiSelect: React.FC<CombinedProps> = props => {
         linodesError
       )}
       noOptionsMessage={({ inputValue }) =>
-        linodesData.length === 0 || selectAll
+        filteredLinodesData.length === 0 || selectAll
           ? 'No Linodes available.'
           : 'No results.'
       }
