@@ -47,6 +47,7 @@ export const FirewallRow: React.FC<CombinedProps> = props => {
       key={`firewall-row-${firewallID}`}
       rowLink={`/firewalls/${firewallID}`}
       data-testid={`firewall-row-${firewallID}`}
+      aria-label={firewallLabel}
     >
       <TableCell>
         <Grid container wrap="nowrap" alignItems="center">
