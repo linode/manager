@@ -2,8 +2,10 @@ import {
   CreateNodeBalancerPayload,
   NodeBalancer
 } from 'linode-js-sdk/lib/nodebalancers';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { APIError, ResourcePage } from 'linode-js-sdk/lib/types';
 import { actionCreatorFactory } from 'typescript-fsa';
+
+import { GetAllData } from 'src/utilities/getAll';
 
 const actionCreator = actionCreatorFactory(`@@manager/nodeBalancer`);
 
@@ -15,7 +17,7 @@ type Entity = NodeBalancer;
 
 export const getAllNodeBalancersActions = actionCreator.async<
   void,
-  NodeBalancer[],
+  GetAllData<NodeBalancer[]>,
   APIError[]
 >(`get-all`);
 
@@ -51,3 +53,14 @@ export const getNodeBalancerWithConfigsActions = actionCreator.async<
   NodeBalancer,
   APIError[]
 >(`get`);
+
+/**
+ * Request a single page of NBs (for Dashboard and similar).
+ * Does *not* include requests for the configs attached to these
+ * NBs
+ */
+export const getNodeBalancersPageActions = actionCreator.async<
+  { params?: any; filters?: any },
+  ResourcePage<NodeBalancer>,
+  APIError[]
+>('get-page');
