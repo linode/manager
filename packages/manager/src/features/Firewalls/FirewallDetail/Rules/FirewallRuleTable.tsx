@@ -91,6 +91,14 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
     props.openRuleDrawer(props.category, 'create');
   }, []);
 
+  // Modified rows will be unsorted and will appear at the bottom of the table.
+  const unmodifiedRows = rowData.filter(
+    thisRow => thisRow.status === 'NOT_MODIFIED'
+  );
+  const modifiedRows = rowData.filter(
+    thisRow => thisRow.status !== 'NOT_MODIFIED'
+  );
+
   return (
     <>
       <div className={classes.header}>
@@ -100,65 +108,74 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
           label={`Add an ${capitalize(category)} Rule`}
         />
       </div>
-      <OrderBy data={rowData} orderBy={'type'} order={'asc'}>
-        {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-          <Table isResponsive={false} tableClass={classes.table}>
-            <TableHead>
-              <TableRow>
-                <TableSortCell
-                  active={orderBy === 'type'}
-                  label="type"
-                  direction={order}
-                  handleClick={handleOrderChange}
-                >
-                  Type
-                </TableSortCell>
-                <TableSortCell
-                  active={orderBy === 'protocol'}
-                  label="protocol"
-                  direction={order}
-                  handleClick={handleOrderChange}
-                >
-                  Protocol
-                </TableSortCell>
-                <TableSortCell
-                  active={orderBy === 'ports'}
-                  label="ports"
-                  direction={order}
-                  handleClick={handleOrderChange}
-                >
-                  Port Range
-                </TableSortCell>
-                <TableSortCell
-                  active={orderBy === 'addresses'}
-                  label="addresses"
-                  direction={order}
-                  handleClick={handleOrderChange}
-                >
-                  {capitalize(addressColumnLabel)}
-                </TableSortCell>
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {orderedData.length === 0 ? (
-                <TableRowEmptyState colSpan={5} />
-              ) : (
-                orderedData.map((thisRuleRow: RuleRow) => (
-                  <FirewallRuleTableRow
-                    key={thisRuleRow.id}
-                    {...thisRuleRow}
-                    triggerDeleteFirewallRule={triggerDeleteFirewallRule}
-                    triggerOpenRuleDrawerForEditing={
-                      triggerOpenRuleDrawerForEditing
-                    }
-                    triggerUndo={triggerUndo}
-                  />
-                ))
-              )}
-            </TableBody>
-          </Table>
-        )}
+      <OrderBy data={unmodifiedRows} orderBy={'type'} order={'asc'}>
+        {({
+          data: sortedUnmodifiedRows,
+          handleOrderChange,
+          order,
+          orderBy
+        }) => {
+          const allRows = [...sortedUnmodifiedRows, ...modifiedRows];
+
+          return (
+            <Table isResponsive={false} tableClass={classes.table}>
+              <TableHead>
+                <TableRow>
+                  <TableSortCell
+                    active={orderBy === 'type'}
+                    label="type"
+                    direction={order}
+                    handleClick={handleOrderChange}
+                  >
+                    Type
+                  </TableSortCell>
+                  <TableSortCell
+                    active={orderBy === 'protocol'}
+                    label="protocol"
+                    direction={order}
+                    handleClick={handleOrderChange}
+                  >
+                    Protocol
+                  </TableSortCell>
+                  <TableSortCell
+                    active={orderBy === 'ports'}
+                    label="ports"
+                    direction={order}
+                    handleClick={handleOrderChange}
+                  >
+                    Port Range
+                  </TableSortCell>
+                  <TableSortCell
+                    active={orderBy === 'addresses'}
+                    label="addresses"
+                    direction={order}
+                    handleClick={handleOrderChange}
+                  >
+                    {capitalize(addressColumnLabel)}
+                  </TableSortCell>
+                  <TableCell />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {allRows.length === 0 ? (
+                  <TableRowEmptyState colSpan={5} />
+                ) : (
+                  allRows.map((thisRuleRow: RuleRow) => (
+                    <FirewallRuleTableRow
+                      key={thisRuleRow.id}
+                      {...thisRuleRow}
+                      triggerDeleteFirewallRule={triggerDeleteFirewallRule}
+                      triggerOpenRuleDrawerForEditing={
+                        triggerOpenRuleDrawerForEditing
+                      }
+                      triggerUndo={triggerUndo}
+                    />
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          );
+        }}
       </OrderBy>
     </>
   );
