@@ -5,7 +5,7 @@ import bash from 'highlight.js/lib/languages/bash';
 import javascript from 'highlight.js/lib/languages/javascript';
 import nginx from 'highlight.js/lib/languages/nginx';
 import yaml from 'highlight.js/lib/languages/yaml';
-import 'highlight.js/styles/googlecode.css';
+import 'highlight.js/styles/an-old-hope.css';
 import React from 'react';
 import { Converter } from 'showdown';
 
