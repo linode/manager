@@ -59,20 +59,46 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
   /** Create */
 
+  if (isType(action, createNodeBalancersActions.started)) {
+    return onError({ create: undefined }, state);
+  }
+
   if (isType(action, createNodeBalancersActions.done)) {
     const { result } = action.payload;
 
     return onCreateOrUpdate(result, state);
   }
 
+  if (isType(action, createNodeBalancersActions.failed)) {
+    const { error } = action.payload;
+
+    return onError({ create: error }, state);
+  }
+
   /** Update */
+
+  if (isType(action, updateNodeBalancersActions.started)) {
+    return onError({ update: undefined }, state);
+  }
+
   if (isType(action, updateNodeBalancersActions.done)) {
     const { result } = action.payload;
 
     return onCreateOrUpdate(result, state);
   }
 
+  if (isType(action, updateNodeBalancersActions.failed)) {
+    const { error } = action.payload;
+
+    return onError({ update: error }, state);
+  }
+
   /** Delete */
+
+  if (isType(action, deleteNodeBalancerActions.started)) {
+    return onError({ delete: undefined }, state);
+  }
+
   if (isType(action, deleteNodeBalancerActions.done)) {
     const {
       params: { nodeBalancerId }
@@ -81,12 +107,20 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     return onDeleteSuccess(nodeBalancerId, state);
   }
 
+  if (isType(action, deleteNodeBalancerActions.failed)) {
+    const { error } = action.payload;
+
+    return onError({ delete: error }, state);
+  }
+
   /** Add */
   if (isType(action, getNodeBalancerWithConfigsActions.done)) {
     const { result } = action.payload;
 
     return onCreateOrUpdate(result, state);
   }
+
+  /** Get single page */
 
   if (isType(action, getNodeBalancersPageActions.started)) {
     return onStart(state);
@@ -107,7 +141,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   if (isType(action, getNodeBalancersPageActions.failed)) {
     const { error } = action.payload;
 
-    return onError(error, state);
+    return onError({ read: error }, state);
   }
 
   return state;

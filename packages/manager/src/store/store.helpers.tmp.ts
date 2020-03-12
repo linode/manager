@@ -36,9 +36,8 @@ export const onGetAllSuccess = <E extends Entity, S>(
 
 export const onError = <S = {}, E = APIError[] | undefined>(
   error: E,
-  state: S,
-  field: string = 'read'
-) => Object.assign({}, state, { error: { [field]: error }, loading: false });
+  state: S
+) => Object.assign({}, state, { error, loading: false });
 
 export const createDefaultState = <E extends Entity, O extends EntityError>(
   override: Partial<MappedEntityState<E, O>>,
