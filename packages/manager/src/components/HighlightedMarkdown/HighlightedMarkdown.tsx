@@ -10,6 +10,7 @@ import * as React from 'react';
 import { Converter } from 'showdown';
 
 import Typography from 'src/components/core/Typography';
+import 'src/formatted-text.css';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
 // Register all languages we intend to use
@@ -66,6 +67,7 @@ export const HighlightedMarkdown: React.FC<HighlightedMarkdownProps> = props => 
 
   return (
     <Typography
+      className="formatted-text"
       ref={rootRef}
       dangerouslySetInnerHTML={{
         __html: sanitizedHtml
