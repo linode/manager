@@ -104,7 +104,7 @@ const iconMap = {
   stackscript: StackScriptIcon,
   kube: KubeIcon,
   bucket: BucketIcon,
-  firewll: FirewallIcon,
+  firewall: FirewallIcon,
   object: ObjectIcon,
   folder: FolderIcon
 };
