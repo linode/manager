@@ -13,6 +13,6 @@ describe('HighlightedMarkdown component', () => {
     const { asFragment } = render(
       <HighlightedMarkdown textOrMarkdown={sampleMarkdown} />
     );
-    expect(asFragment).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
   });
 });
