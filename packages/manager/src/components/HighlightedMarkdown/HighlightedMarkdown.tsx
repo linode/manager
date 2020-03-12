@@ -6,7 +6,7 @@ import javascript from 'highlight.js/lib/languages/javascript';
 import nginx from 'highlight.js/lib/languages/nginx';
 import yaml from 'highlight.js/lib/languages/yaml';
 import 'highlight.js/styles/an-old-hope.css';
-import React from 'react';
+import * as React from 'react';
 import { Converter } from 'showdown';
 
 import Typography from 'src/components/core/Typography';
