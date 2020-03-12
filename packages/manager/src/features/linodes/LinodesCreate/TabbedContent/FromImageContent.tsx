@@ -211,33 +211,35 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
             }}
             updateFor={[this.props.tags, this.props.label, errors]}
           />
-          <AccessPanel
-            /* disable the password field if we haven't selected an image */
-            data-qa-access-panel
-            disabled={!this.props.selectedImageID}
-            disabledReason={
-              !this.props.selectedImageID
-                ? 'You must select an image to set a root password'
-                : ''
-            }
-            error={hasErrorFor.root_pass}
-            sshKeyError={sshError}
-            password={this.props.password}
-            handleChange={this.props.updatePassword}
-            updateFor={[
-              this.props.password,
-              errors,
-              sshError,
-              userSSHKeys,
-              this.props.selectedImageID
-            ]}
-            users={
-              userSSHKeys.length > 0 && this.props.selectedImageID
-                ? userSSHKeys
-                : []
-            }
-            requestKeys={requestKeys}
-          />
+          <form>
+            <AccessPanel
+              /* disable the password field if we haven't selected an image */
+              data-qa-access-panel
+              disabled={!this.props.selectedImageID}
+              disabledReason={
+                !this.props.selectedImageID
+                  ? 'You must select an image to set a root password'
+                  : ''
+              }
+              error={hasErrorFor.root_pass}
+              sshKeyError={sshError}
+              password={this.props.password}
+              handleChange={this.props.updatePassword}
+              updateFor={[
+                this.props.password,
+                errors,
+                sshError,
+                userSSHKeys,
+                this.props.selectedImageID
+              ]}
+              users={
+                userSSHKeys.length > 0 && this.props.selectedImageID
+                  ? userSSHKeys
+                  : []
+              }
+              requestKeys={requestKeys}
+            />
+          </form>
           <AddonsPanel
             data-qa-addons-panel
             backups={this.props.backupsEnabled}

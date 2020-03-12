@@ -107,16 +107,13 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
      * to our list of master images supported by Linode and filter out the ones
      * that aren't compatible with our selected StackScript
      */
-    const compatibleImages = Object.keys(imagesData).reduce(
-      (acc, eachKey) => {
-        if (stackScriptImages.some(eachSSImage => eachSSImage === eachKey)) {
-          acc.push(imagesData[eachKey]);
-        }
+    const compatibleImages = Object.keys(imagesData).reduce((acc, eachKey) => {
+      if (stackScriptImages.some(eachSSImage => eachSSImage === eachKey)) {
+        acc.push(imagesData[eachKey]);
+      }
 
-        return acc;
-      },
-      [] as Image[]
-    );
+      return acc;
+    }, [] as Image[]);
 
     /**
      * if a UDF field comes back from the API with a "default"
@@ -325,28 +322,32 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
             }}
             updateFor={[tags, label, errors]}
           />
-          <AccessPanel
-            /* disable the password field if we haven't selected an image */
-            disabled={!this.props.selectedImageID}
-            disabledReason={
-              !this.props.selectedImageID
-                ? 'You must select an image to set a root password'
-                : ''
-            }
-            error={hasErrorFor('root_pass')}
-            sshKeyError={sshError}
-            updateFor={[
-              password,
-              errors,
-              userSSHKeys,
-              selectedImageID,
-              sshError
-            ]}
-            password={password}
-            handleChange={updatePassword}
-            users={userSSHKeys.length > 0 && selectedImageID ? userSSHKeys : []}
-            requestKeys={requestKeys}
-          />
+          <form>
+            <AccessPanel
+              /* disable the password field if we haven't selected an image */
+              disabled={!this.props.selectedImageID}
+              disabledReason={
+                !this.props.selectedImageID
+                  ? 'You must select an image to set a root password'
+                  : ''
+              }
+              error={hasErrorFor('root_pass')}
+              sshKeyError={sshError}
+              updateFor={[
+                password,
+                errors,
+                userSSHKeys,
+                selectedImageID,
+                sshError
+              ]}
+              password={password}
+              handleChange={updatePassword}
+              users={
+                userSSHKeys.length > 0 && selectedImageID ? userSSHKeys : []
+              }
+              requestKeys={requestKeys}
+            />
+          </form>
           <AddonsPanel
             backups={backupsEnabled}
             accountBackups={accountBackupsEnabled}
