@@ -290,7 +290,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     );
 
     return (
-      <div id="tabpanel-resize" role="tabpanel" aria-labelledby="tab-resize">
+      <>
         <DocumentTitleSegment segment={`${linodeLabel} - Resize`} />
         <Paper className={classes.root}>
           {disabled && <LinodePermissionsError />}
@@ -306,7 +306,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           <Typography data-qa-description>
             If you're expecting a temporary burst of traffic to your website, or
             if you're not using your Linode as much as you thought, you can
-            temporarily or permanently resize your Linode to a different plan.{' '} 
+            temporarily or permanently resize your Linode to a different plan.{' '}
             <ExternalLink
               fixedIcon
               text="Learn more."
@@ -379,7 +379,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           onClose={this.closeConfirmationModal}
           onResize={this.onSubmit}
         />
-      </div>
+      </>
     );
   }
 }

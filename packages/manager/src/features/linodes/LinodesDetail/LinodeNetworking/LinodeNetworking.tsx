@@ -533,11 +533,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         : [];
 
     return (
-      <div
-        id="tabpanel-networking"
-        role="tabpanel"
-        aria-labelledby="tab-networking"
-      >
+      <>
         <DocumentTitleSegment segment={`${linodeLabel} - Networking`} />
         {readOnly && <LinodePermissionsError />}
         <LinodeNetworkingSummaryPanel
@@ -615,7 +611,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             ipRemoveSuccess={this.handleRemoveIPSuccess}
           />
         )}
-      </div>
+      </>
     );
   }
 

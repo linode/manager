@@ -51,7 +51,7 @@ const LinodeRebuild: React.StatelessComponent<CombinedProps> = props => {
   const [mode, setMode] = React.useState<MODES>('fromImage');
 
   return (
-    <div id="tabpanel-rebuild" role="tabpanel" aria-labelledby="tab-rebuild">
+    <>
       <DocumentTitleSegment segment={`${linodeLabel} - Rebuild`} />
       <Paper className={classes.root}>
         {disabled && <LinodePermissionsError />}
@@ -87,7 +87,7 @@ const LinodeRebuild: React.StatelessComponent<CombinedProps> = props => {
       {mode === 'fromAccountStackScript' && (
         <RebuildFromStackScript type="account" />
       )}
-    </div>
+    </>
   );
 };
 
@@ -98,7 +98,4 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 
 const styled = withStyles(styles);
 
-export default compose<CombinedProps, {}>(
-  linodeContext,
-  styled
-)(LinodeRebuild);
+export default compose<CombinedProps, {}>(linodeContext, styled)(LinodeRebuild);

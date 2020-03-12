@@ -9,8 +9,11 @@ import {
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import AppBar from 'src/components/core/AppBar';
-import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
+import TabList from 'src/components/core/TabList';
+import TabPanels from 'src/components/core/TabPanels';
+import TabPanel from 'src/components/core/TabPanel';
+import Tab from 'src/components/core/Tab';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import TabLink from 'src/components/TabLink';
 
@@ -81,15 +84,15 @@ class AccountLanding extends React.Component<Props> {
           removeCrumbX={1}
           data-qa-profile-header
         />
-        <AppBar position="static" color="default" role="tablist">
-          <Tabs
-            value={this.tabs.findIndex(tab => matches(tab.routeName))}
-            onChange={this.handleTabChange}
-            indicatorColor="primary"
-            textColor="primary"
-            variant="scrollable"
-            scrollButtons="on"
-          >
+        <Tabs
+        // value={this.tabs.findIndex(tab => matches(tab.routeName))}
+        // onChange={this.handleTabChange}
+        // indicatorColor="primary"
+        // textColor="primary"
+        // variant="scrollable"
+        // scrollButtons="on"
+        >
+          <TabList>
             {this.tabs.map(tab => (
               <Tab
                 key={tab.title}
@@ -104,30 +107,20 @@ class AccountLanding extends React.Component<Props> {
                 ))}
               />
             ))}
-          </Tabs>
-        </AppBar>
-        <Switch>
-          <Route exact strict path={`${url}/billing`} component={Billing} />
-          <Route
-            exact
-            strict
-            path={`${url}/users`}
-            render={props => (
-              <Users
-                {...props}
-                isRestrictedUser={this.props.isRestrictedUser}
-              />
-            )}
-          />
-          <Route
-            exact
-            strict
-            path={`${url}/settings`}
-            component={GlobalSettings}
-          />
-          <Route exact strict path={`${url}`} component={Billing} />
-          <Redirect to={`${url}/billing`} />
-        </Switch>
+          </TabList>
+
+          <TabPanels>
+            <TabPanel>
+              <Users isRestrictedUser={this.props.isRestrictedUser} />
+            </TabPanel>
+            <TabPanel>
+              <GlobalSettings />
+            </TabPanel>
+            <TabPanel>
+              <Billing />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
       </React.Fragment>
     );
   }

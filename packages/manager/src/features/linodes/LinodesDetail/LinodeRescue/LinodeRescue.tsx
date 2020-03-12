@@ -217,14 +217,8 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
     if (diskError) {
       return (
         <React.Fragment>
-          <div
-            id="tabpanel-linode-detail-rescue"
-            role="tabpanel"
-            aria-labelledby="tab-linode-detail-rescue"
-          >
-            <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
-            <ErrorState errorText="There was an error retrieving disks information." />
-          </div>
+          <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
+          <ErrorState errorText="There was an error retrieving disks information." />
         </React.Fragment>
       );
     }
@@ -232,68 +226,60 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
     if (volumesError) {
       return (
         <React.Fragment>
-          <div
-            id="tabpanel-linode-detail-rescue"
-            role="tabpanel"
-            aria-labelledby="tab-linode-detail-rescue"
-          >
-            <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
-            <ErrorState errorText="There was an error retrieving volumes information." />
-          </div>
+          <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
+          <ErrorState errorText="There was an error retrieving volumes information." />
         </React.Fragment>
       );
     }
 
     return (
       <React.Fragment>
-        <div id="tabpanel-rescue" role="tabpanel" aria-labelledby="tab-rescue">
-          <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
-          <Paper className={classes.root}>
-            {disabled && <LinodePermissionsError />}
-            <Typography
-              role="heading"
-              aria-level={2}
-              variant="h2"
-              className={classes.title}
-              data-qa-title
-            >
-              Rescue
-            </Typography>
-            <Typography className={classes.intro}>
-              If you suspect that your primary filesystem is corrupt, use the
-              Linode Manager to boot your Linode into Rescue Mode. This is a
-              safe environment for performing many system recovery and disk
-              management tasks.
-            </Typography>
-            <DeviceSelection
-              slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}
-              devices={devices}
-              onChange={this.onChange}
-              getSelected={slot =>
-                pathOr('', ['rescueDevices', slot], this.state)
-              }
-              counter={this.state.counter}
-              rescue
+        <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
+        <Paper className={classes.root}>
+          {disabled && <LinodePermissionsError />}
+          <Typography
+            role="heading"
+            aria-level={2}
+            variant="h2"
+            className={classes.title}
+            data-qa-title
+          >
+            Rescue
+          </Typography>
+          <Typography className={classes.intro}>
+            If you suspect that your primary filesystem is corrupt, use the
+            Linode Manager to boot your Linode into Rescue Mode. This is a safe
+            environment for performing many system recovery and disk management
+            tasks.
+          </Typography>
+          <DeviceSelection
+            slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}
+            devices={devices}
+            onChange={this.onChange}
+            getSelected={slot =>
+              pathOr('', ['rescueDevices', slot], this.state)
+            }
+            counter={this.state.counter}
+            rescue
+            disabled={disabled}
+          />
+          <AddNewLink
+            onClick={this.incrementCounter}
+            label="Add Disk"
+            disabled={disabled || this.state.counter >= 6}
+            left
+          />
+          <ActionsPanel>
+            <Button
+              onClick={this.onSubmit}
+              buttonType="primary"
+              data-qa-submit
               disabled={disabled}
-            />
-            <AddNewLink
-              onClick={this.incrementCounter}
-              label="Add Disk"
-              disabled={disabled || this.state.counter >= 6}
-              left
-            />
-            <ActionsPanel>
-              <Button
-                onClick={this.onSubmit}
-                buttonType="primary"
-                data-qa-submit
-                disabled={disabled}
-              >
-                Reboot into Rescue Mode
-              </Button>
-            </ActionsPanel>
-          </Paper>
-        </div>
+            >
+              Reboot into Rescue Mode
+            </Button>
+          </ActionsPanel>
+        </Paper>
       </React.Fragment>
     );
   }

@@ -6,7 +6,6 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Tab from 'src/components/core/Tab';
 
 type ClassNames = 'root' | 'selected';
 
@@ -42,22 +41,16 @@ class TabLink extends React.Component<CombinedProps> {
     const pathName = document.location.pathname;
 
     return (
-      <Tab
-        as={Link}
+      <Link
         to={to}
         className={classNames({
           [classes.root]: true,
           [classes.selected]: pathName === to
         })}
-        // role="tab"
-        // id={`tab-${convertForAria(title)}`}
-        // aria-controls={`tabpanel-${convertForAria(title)}`}
-        // tabIndex={0}
-        // aria-selected={pathName === to}
         data-qa-tab={title}
       >
         {title}
-      </Tab>
+      </Link>
     );
   }
 }

@@ -1,17 +1,12 @@
 import { Config } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
-import {
-  matchPath,
-  Redirect,
-  Route,
-  RouteComponentProps,
-  Switch,
-  withRouter
-} from 'react-router-dom';
+import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Tabs from 'src/components/core/Tabs';
+import TabList from 'src/components/core/TabList';
 import TabPanels from 'src/components/core/TabPanels';
 import TabPanel from 'src/components/core/TabPanel';
+import Tab from 'src/components/core/Tab';
 import TabLink from 'src/components/TabLink';
 import VolumesLanding from 'src/features/Volumes/VolumesLanding';
 import { withLinodeDetailContext } from './linodeDetailContext';
@@ -113,119 +108,63 @@ const LinodesDetailNavigation: React.StatelessComponent<CombinedProps> = props =
     }
   ];
 
-  // const handleTabChange = (
-  //   event: React.ChangeEvent<HTMLDivElement>,
-  //   value: number
-  // ) => {
-  //   const { history } = props;
-  //   const routeName = tabs[value].routeName;
-  //   history.push(`${routeName}`);
-  // };
-
   return (
     <>
-      <Tabs
-        value={tabs.findIndex(tab => matches(tab.routeName))}
-        // onChange={handleTabChange}
-        // indicatorColor="primary"
-        // textColor="primary"
-        // variant="scrollable"
-        // scrollButtons="on"
-      >
-        {tabs.map(tab => (
-          <TabLink to={tab.routeName} title={tab.title} />
-        ))}
+      <Tabs value={tabs.findIndex(tab => matches(tab.routeName))}>
+        <TabList>
+          {tabs.map(tab => (
+            <Tab>
+              <TabLink to={tab.routeName} title={tab.title} />
+            </Tab>
+          ))}
+        </TabList>
 
         <TabPanels>
-          <Switch>
-            <Route
-              exact
-              path={`/linodes/:linodeId/summary`}
-              component={LinodeSummary}
-            />
+          <TabPanel>
+            <LinodeSummary />
+          </TabPanel>
 
-            <Route
-              exact
-              path={`/linodes/:linodeId/volumes`}
-              render={routeProps => (
-                <div
-                  id="tabpanel-volumes"
-                  role="tabpanel"
-                  aria-labelledby="tab-volumes"
-                >
-                  <VolumesLanding
-                    linodeId={linodeId}
-                    linodeLabel={linodeLabel}
-                    linodeRegion={linodeRegion}
-                    linodeConfigs={linodeConfigs}
-                    readOnly={readOnly}
-                    fromLinodes
-                    removeBreadCrumb
-                    {...routeProps}
-                  />
-                </div>
-              )}
+          <TabPanel>
+            <VolumesLanding
+              linodeId={linodeId}
+              linodeLabel={linodeLabel}
+              linodeRegion={linodeRegion}
+              linodeConfigs={linodeConfigs}
+              readOnly={readOnly}
+              fromLinodes
+              removeBreadCrumb
             />
+          </TabPanel>
 
-            <Route
-              as={Route}
-              exact
-              path={`/linodes/:linodeId/networking`}
-              component={LinodeNetworking}
-            />
+          <TabPanel>
+            <LinodeNetworking />
+          </TabPanel>
 
-            <Route
-              as={Route}
-              exact
-              path={`/linodes/:linodeId/resize`}
-              component={LinodeResize}
-            />
+          <TabPanel>
+            <LinodeResize />
+          </TabPanel>
 
-            <Route
-              as={Route}
-              exact
-              path={`/linodes/:linodeId/rescue`}
-              component={LinodeRescue}
-            />
+          <TabPanel>
+            <LinodeRescue />
+          </TabPanel>
 
-            <Route
-              as={Route}
-              exact
-              path={`/linodes/:linodeId/rebuild`}
-              component={LinodeRebuild}
-            />
+          <TabPanel>
+            <LinodeRebuild />
+          </TabPanel>
 
-            <Route
-              as={Route}
-              exact
-              path={`/linodes/:linodeId/backup`}
-              component={LinodeBackup}
-            />
+          <TabPanel>
+            <LinodeBackup />
+          </TabPanel>
+          <TabPanel>
+            <LinodeActivity />
+          </TabPanel>
+          <TabPanel>
+            <LinodeSettings />
+          </TabPanel>
 
-            <Route
-              as={Route}
-              exact
-              path={`/linodes/:linodeId/activity`}
-              component={LinodeActivity}
-            />
-
-            <Route
-              as={Route}
-              exact
-              path={`/linodes/:linodeId/settings`}
-              component={LinodeSettings}
-            />
-
-            <Route
-              as={Route}
-              exact
-              path={`/linodes/:linodeId/advanced`}
-              component={LinodeAdvanced}
-            />
-
-            {/* 404 */}
-            <Redirect to={`${url}/summary`} />
-          </Switch>
+          <TabPanel>
+            <LinodeAdvanced />
+          </TabPanel>
         </TabPanels>
       </Tabs>
     </>

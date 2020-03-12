@@ -6,12 +6,12 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Tab from 'src/components/core/Tab';
-import Tabs from 'src/components/core/Tabs';
 import TabList from 'src/components/core/TabList';
+import Tabs from 'src/components/core/Tabs';
 import TabPanel from 'src/components/core/TabPanel';
 import TabPanels from 'src/components/core/TabPanels';
 import Typography from 'src/components/core/Typography';
+import Tab from 'src/components/core/Tab';
 import { safeGetTabRender } from 'src/utilities/safeGetTabRender';
 import Notice from '../Notice';
 
@@ -47,7 +47,7 @@ const styles = (theme: Theme) =>
     tab: {
       '&[data-reach-tab]': {
         // This was copied over from our MuiTab styling in themeFactory. Some of this could probably be cleaned up.
-        color: 'rgba(0, 0, 0, 0.54)',
+        color: theme.color.tableHeaderText,
         minWidth: 50,
         textTransform: 'inherit',
         fontSize: '0.93rem',
@@ -139,7 +139,7 @@ class TabbedPanel extends React.Component<CombinedProps> {
     const value = this.props.value ?? this.state.value;
 
     // if this bombs the app shouldn't crash
-    const render = safeGetTabRender(tabs, value);
+    // const render = safeGetTabRender(tabs, value);
 
     return (
       <Paper className={`${classes.root} ${rootClass}`} data-qa-tp={header}>

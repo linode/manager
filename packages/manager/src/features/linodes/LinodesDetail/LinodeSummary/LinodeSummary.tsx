@@ -438,7 +438,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     );
 
     return (
-      <TabPanel>
+      <>
         <DocumentTitleSegment segment={`${linode.label} - Summary`} />
 
         <Grid container>
@@ -525,7 +525,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             <SummaryPanel />
           </Grid>
         </Grid>
-      </TabPanel>
+      </>
     );
   }
 }

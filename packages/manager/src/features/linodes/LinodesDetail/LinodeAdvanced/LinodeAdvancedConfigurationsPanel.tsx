@@ -59,12 +59,7 @@ class LinodeAdvancedConfigurationsPanel extends React.PureComponent<
     const { classes, disks, linodeTotalDisk, linodeID } = this.props;
 
     return (
-      <Grid
-        container
-        id="tabpanel-advanced"
-        role="tabpanel"
-        aria-labelledby="tab-advanced"
-      >
+      <Grid container>
         <Grid item xs={12} md={7} lg={9}>
           <Typography variant="h2" className={classes.title}>
             Linode Disks and Configurations
@@ -115,9 +110,6 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, {}>(
-  styled,
-  linodeContext
-);
+const enhanced = compose<CombinedProps, {}>(styled, linodeContext);
 
 export default enhanced(LinodeAdvancedConfigurationsPanel);
