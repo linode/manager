@@ -57,17 +57,20 @@ export type CombinedProps = Props;
 const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
   const { isOpen, onClose, category, mode, ruleToModify } = props;
 
-  // If we're in edit mode, we need to pre-set IP state with the IPs of the rule we're modifying.
-  const initialIPs =
-    mode === 'edit' && ruleToModify !== undefined
-      ? [...ruleToModify.addresses?.ipv4, ...ruleToModify.addresses?.ipv6]
-      : [''];
-
   // Custom IPs are tracked separately from the form. The <MultipleIPs />
   // component consumes this state. We use this on form submission if the
   // `addresses` form value is "ip/netmask", which indicates the user has
   // intended to specify custom IPs.
-  const [ips, setIPs] = React.useState<string[]>(initialIPs);
+  const [ips, setIPs] = React.useState<string[]>(['']);
+
+  React.useEffect(() => {
+    // If we're in edit mode, we need to pre-set IP state with the IPs of the rule we're modifying.
+    const initialIPs =
+      mode === 'edit' && ruleToModify !== undefined
+        ? [...ruleToModify.addresses?.ipv4, ...ruleToModify.addresses?.ipv6]
+        : [''];
+    setIPs(initialIPs);
+  }, [mode, ruleToModify]);
 
   const title =
     mode === 'create' ? `Add an ${capitalize(category)} Rule` : 'Edit Rule';
@@ -140,6 +143,10 @@ const typeOptions = [
 const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
   const classes = useStyles();
 
+  // This will be set to `true` once a form field has been touched. This is used to disable the
+  // "Submit" button unless there have been changes to the form.
+  const [formTouched, setFormTouched] = React.useState<boolean>(false);
+
   const {
     values,
     errors,
@@ -147,7 +154,6 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
     handleChange,
     handleBlur,
     handleSubmit,
-    // isSubmitting,
     setFieldValue,
     addressesLabel,
     setIPs,
@@ -164,6 +170,10 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
       return;
     }
 
+    if (!formTouched) {
+      setFormTouched(true);
+    }
+
     // Pre-populate other form values if selecting a pre-defined type.
     if (selectedType !== 'custom') {
       // All predefined FW types use the TCP protocol.
@@ -175,17 +185,48 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
     }
   }, []);
 
-  const handleProtocolChange = React.useCallback((item: Item | null) => {
-    setFieldValue('protocol', item?.value);
-  }, []);
+  const handleProtocolChange = React.useCallback(
+    (item: Item | null) => {
+      if (!formTouched) {
+        setFormTouched(true);
+      }
+
+      setFieldValue('protocol', item?.value);
+    },
+    [formTouched]
+  );
 
   const handleAddressesChange = React.useCallback(
     (item: Item | null) => {
+      if (!formTouched) {
+        setFormTouched(true);
+      }
+
       setFieldValue('addresses', item?.value);
       // Reset custom IPs that may have been entered.
       setIPs(['']);
     },
-    [ips]
+    [ips, formTouched]
+  );
+
+  const handlePortsChange = React.useCallback(
+    (e: React.ChangeEvent) => {
+      if (!formTouched) {
+        setFormTouched(true);
+      }
+      handleChange(e);
+    },
+    [formTouched]
+  );
+
+  const handleIPChange = React.useCallback(
+    (_ips: string[]) => {
+      if (!formTouched) {
+        setFormTouched(true);
+      }
+      setIPs(_ips);
+    },
+    [formTouched]
   );
 
   const addressesValue = React.useMemo(() => {
@@ -239,7 +280,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
         placeholder="Enter a port range..."
         aria-label="Port range for firewall rule"
         value={values.ports}
-        onChange={handleChange}
+        onChange={handlePortsChange}
         errorText={errors.ports}
         onBlur={handleBlur}
       />
@@ -260,7 +301,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
           aria-label="IP / Netmask for firewall rule"
           className={classes.ipSelect}
           ips={ips}
-          onChange={(_ips: string[]) => setIPs(_ips)}
+          onChange={handleIPChange}
           inputProps={{ autoFocus: true }}
         />
       )}
@@ -268,10 +309,10 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
         <Button
           buttonType="primary"
           onClick={() => handleSubmit()}
+          disabled={!formTouched}
           data-qa-submit
-          // loading={isSubmitting}
         >
-          {mode === 'create' ? 'Add Rule' : 'Edit rule'}
+          {mode === 'create' ? 'Add Rule' : 'Edit Rule'}
         </Button>
       </ActionsPanel>
     </form>
