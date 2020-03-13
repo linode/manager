@@ -9,7 +9,7 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import FixedToolBar from 'src/components/FixedToolbar/FixedToolbar';
-import Notice from 'src/components/Notice';
+// import Notice from 'src/components/Notice';
 import withFirewalls, {
   DispatchProps
 } from 'src/containers/firewalls.container';
@@ -22,7 +22,7 @@ import curriedFirewallRuleEditorReducer, {
   prepareRules
 } from './firewallRuleEditor';
 import FirewallRuleTable from './FirewallRuleTable';
-import { Category, parseFirewallRuleError } from './shared';
+import { Category, parseFirewallRuleErrors } from './shared';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
@@ -68,7 +68,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
   });
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   // @todo fine-grained error handling.
-  const [error, setError] = React.useState<APIError[] | undefined>();
+  const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [discardChangesModalOpen, setDiscardChangesModalOpen] = React.useState<
     boolean
   >(false);
@@ -135,7 +135,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
 
   const applyChanges = () => {
     setSubmitting(true);
-    setError(undefined);
+    setErrors(undefined);
 
     // Gather rules from state for submission to the API.
     const finalRules: FirewallRules = {
@@ -155,7 +155,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         const _err = getAPIErrorOrDefault(err);
 
         setSubmitting(false);
-        setError(_err);
+        setErrors(_err);
       });
   };
 
@@ -180,8 +180,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         : outboundRules[ruleDrawer.ruleIdx]
       : undefined;
 
-  const parsedError = error && parseFirewallRuleError(error[0]);
-  console.log(parsedError);
+  const parsedErrors = parseFirewallRuleErrors(errors);
 
   return (
     <>
@@ -191,7 +190,9 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         permitted by a rule is blocked.
       </Typography>
 
-      {error && <Notice spacingTop={8} error text={error[0].reason} />}
+      {/* {errors?.length === 1 && (
+        <Notice spacingTop={8} error text={errors[0].reason} />
+      )} */}
 
       <div className={classes.table}>
         <FirewallRuleTable
@@ -203,6 +204,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
           }
           triggerDeleteFirewallRule={idx => handleDeleteRule('inbound', idx)}
           triggerUndo={idx => handleUndo('inbound', idx)}
+          errors={parsedErrors.inbound}
         />
       </div>
       <div className={classes.table}>
@@ -215,6 +217,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
           }
           triggerDeleteFirewallRule={idx => handleDeleteRule('outbound', idx)}
           triggerUndo={idx => handleUndo('outbound', idx)}
+          errors={parsedErrors.outbound}
         />
       </div>
       <FirewallRuleDrawer
@@ -249,7 +252,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         handleClose={() => setDiscardChangesModalOpen(false)}
         handleDiscard={() => {
           setDiscardChangesModalOpen(false);
-          setError(undefined);
+          setErrors(undefined);
           inboundDispatch({ type: 'DISCARD_CHANGES' });
           outboundDispatch({ type: 'DISCARD_CHANGES' });
         }}

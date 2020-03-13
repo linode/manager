@@ -13,7 +13,30 @@ export interface FirewallRuleError {
   };
 }
 
-export const parseFirewallRuleError = (error: APIError) => {
+/**
+ * Given an array of API errors, parse them and put them into `inbound` and `outbound buckets.
+ */
+export const parseFirewallRuleErrors = (errors: APIError[] = []) => {
+  return errors?.reduce<{
+    inbound: FirewallRuleError[];
+    outbound: FirewallRuleError[];
+  }>(
+    (acc, thisError) => {
+      const parsedError = parseFirewallRuleError(thisError);
+
+      if (parsedError !== null) {
+        acc[parsedError.category].push(parsedError);
+      }
+
+      return acc;
+    },
+    { inbound: [], outbound: [] }
+  );
+};
+
+export const parseFirewallRuleError = (
+  error: APIError
+): FirewallRuleError | null => {
   const { reason, field } = error;
 
   if (!field) {
@@ -26,11 +49,11 @@ export const parseFirewallRuleError = (error: APIError) => {
   const ipType = field.match(/ipv4|ipv6/)?.[0];
   const ipIdx = field.match(/(ipv4|ipv6)\[(\d+)\]/)?.[2];
 
-  if (!category || !idx) {
+  if (!category || !idx || !formField) {
     return null;
   }
 
-  const result: Partial<FirewallRuleError> = {
+  const result: FirewallRuleError = {
     reason,
     category,
     idx: +idx,

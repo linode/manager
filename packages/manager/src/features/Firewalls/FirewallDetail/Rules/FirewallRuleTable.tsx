@@ -21,7 +21,7 @@ import capitalize from 'src/utilities/capitalize';
 import FirewallRuleActionMenu from './FirewallRuleActionMenu';
 import { Mode } from './FirewallRuleDrawer';
 import { FirewallRuleWithStatus, RuleStatus } from './firewallRuleEditor';
-import { Category } from './shared';
+import { Category, FirewallRuleError } from './shared';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -45,6 +45,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   highlight: {
     backgroundColor: theme.bg.lightBlue
+  },
+  error: {
+    '& p': { color: theme.color.red }
   }
 }));
 
@@ -67,6 +70,7 @@ interface Props {
   triggerDeleteFirewallRule: (idx: number) => void;
   triggerOpenRuleDrawerForEditing: (idx: number) => void;
   triggerUndo: (idx: number) => void;
+  errors: FirewallRuleError[];
 }
 
 type CombinedProps = Props;
@@ -77,7 +81,8 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
     rulesWithStatus,
     triggerDeleteFirewallRule,
     triggerOpenRuleDrawerForEditing,
-    triggerUndo
+    triggerUndo,
+    errors
   } = props;
 
   const classes = useStyles();
@@ -190,6 +195,7 @@ interface FirewallRuleTableRowProps extends RuleRow {
   triggerDeleteFirewallRule: (idx: number) => void;
   triggerOpenRuleDrawerForEditing: (idx: number) => void;
   triggerUndo: (idx: number) => void;
+  error?: FirewallRuleError;
 }
 
 const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
@@ -205,13 +211,19 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
       status,
       triggerDeleteFirewallRule,
       triggerOpenRuleDrawerForEditing,
-      triggerUndo
+      triggerUndo,
+      error
     } = props;
 
     const actionMenuProps = {
       idx: id,
       triggerDeleteFirewallRule,
       triggerOpenRuleDrawerForEditing
+    };
+
+    const conditionalErrorProps = {
+      errorFormField: error?.formField,
+      errorReason: error?.reason
     };
 
     return (
@@ -221,9 +233,18 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
         disabled={status === 'PENDING_DELETION'}
       >
         <TableCell>{type}</TableCell>
-        <TableCell>{protocol}</TableCell>
-        <TableCell>{ports}</TableCell>
-        <TableCell>{addresses}</TableCell>
+        <TableCell>
+          {protocol}
+          <ConditionalError {...conditionalErrorProps} formField="protocol" />
+        </TableCell>
+        <TableCell>
+          {ports}
+          <ConditionalError {...conditionalErrorProps} formField="ports" />
+        </TableCell>
+        <TableCell>
+          {addresses}{' '}
+          <ConditionalError {...conditionalErrorProps} formField="addresses" />
+        </TableCell>
         <TableCell style={{ width: '10%' }}>
           {status !== 'NOT_MODIFIED' ? (
             <div className={classes.undoButtonContainer}>
@@ -248,6 +269,30 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
           )}
         </TableCell>
       </TableRow>
+    );
+  }
+);
+
+interface ConditionalErrorProps {
+  formField: string;
+  errorFormField?: string;
+  errorReason?: string;
+}
+
+export const ConditionalError: React.FC<ConditionalErrorProps> = React.memo(
+  props => {
+    const classes = useStyles();
+
+    const { formField, errorFormField, errorReason } = props;
+
+    if (formField !== errorFormField || !errorReason) {
+      return null;
+    }
+
+    return (
+      <div className={classes.error}>
+        <Typography variant="body2">{errorReason}</Typography>
+      </div>
     );
   }
 );
