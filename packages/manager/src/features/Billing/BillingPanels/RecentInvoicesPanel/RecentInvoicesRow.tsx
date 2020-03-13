@@ -76,7 +76,7 @@ const RecentInvoicesRow: React.FC<CombinedProps> = props => {
           thisAccount,
           thisItem,
           invoiceItems,
-          flags.vatBanner
+          flags.taxBanner
         );
         setGeneratingPDF(false);
 

@@ -129,8 +129,8 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
   }
 
   printInvoice(account: Account, invoice: Invoice, items: InvoiceItem[]) {
-    const vatBannerFlag = this.props.flags.vatBanner;
-    const result = printInvoice(account, invoice, items, vatBannerFlag);
+    const taxBanner = this.props.flags.taxBanner;
+    const result = printInvoice(account, invoice, items, taxBanner);
     this.setState({
       pdfGenerationError: result.status === 'error' ? result.error : undefined
     });
