@@ -81,12 +81,31 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
 
   const addressesLabel = category === 'inbound' ? 'source' : 'destination';
 
+  const _onValidate = (values: Form) => {
+    const protocol = values.protocol as FirewallRuleProtocol;
+    const addresses = formValueToIPs(values.addresses, ips);
+
+    const _ipErrors = {};
+    addresses.errors?.forEach(thisError => {
+      _ipErrors[thisError] = 'Must be a valid IPv4 or IPv6 address or range.';
+    });
+    if (Object.keys(_ipErrors).length > 1) {
+      setIPErrors(_ipErrors);
+    }
+
+    return { ...validateForm(protocol, values.ports), ..._ipErrors };
+  };
+
   const _onSubmit = (values: Form) => {
     const protocol = values.protocol as FirewallRuleProtocol;
+    const addresses = formValueToIPs(values.addresses, ips);
+
+    delete addresses.errors;
+
     props.onSubmit(category, {
       ports: values.ports,
       protocol,
-      addresses: formValueToIPs(values.addresses, ips)
+      addresses
     });
     onClose();
   };
@@ -100,6 +119,7 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
         validateOnChange={false}
         validateOnBlur={false}
         onSubmit={_onSubmit}
+        validate={_onValidate}
       >
         {formikProps => {
           return (
@@ -293,6 +313,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
             ? { label: values.protocol, value: values.protocol }
             : undefined
         }
+        errorText={errors.protocol}
         options={protocolOptions}
         onChange={handleProtocolChange}
         onBlur={handleBlur}
@@ -303,8 +324,8 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
         placeholder="Enter a port range..."
         aria-label="Port range for firewall rule"
         value={values.ports}
-        onChange={handlePortsChange}
         errorText={errors.ports}
+        onChange={handlePortsChange}
         onBlur={handleBlur}
       />
       <Select
@@ -383,10 +404,19 @@ export const deriveTypeFromValuesAndIPs = (values: Form, _ips: string[]) => {
   return null;
 };
 
+interface IPsWithError {
+  ipv4: string[];
+  ipv6: string[];
+  errors?: number[];
+}
+
 /**
  * Matches potential form values to the correct "addresses" payload.
  */
-export const formValueToIPs = (formValue: string, ips: string[]) => {
+export const formValueToIPs = (
+  formValue: string,
+  ips: string[]
+): IPsWithError => {
   switch (formValue) {
     case 'all':
       return allIPs;
@@ -406,22 +436,25 @@ export const formValueToIPs = (formValue: string, ips: string[]) => {
  * them by "ipv4" and "ipv6."
  */
 export const classifyIPs = (ips: string[]) =>
-  ips.reduce<{ ipv4: string[]; ipv6: string[] }>(
-    (acc, ip) => {
+  ips.reduce<Required<IPsWithError>>(
+    (acc, ip, idx) => {
+      // It's possible to enter a subnet, e.g. 1.0.0.0/16. Ipaddr.js does not parse this
+      // correctly, so we split out the range before doing the classification.
+      const [base, range] = ip.split('/');
       try {
-        // It's possible to enter a subnet, e.g. 1.0.0.0/16. Ipaddr.js does not parse this
-        // correctly, so we split out the range before doing the classification.
-        const [base] = ip.split('/');
-
         const parsed = parseIP(base);
         const type = parsed.kind();
         acc[type].push(ip);
       } catch {
-        // IP wasn't valid. No need to do anything; just continue.
+        // If the IP couldn't be parsed, push it to the `errors` array, unless there is a range,
+        // in which case we can't trust the failure.
+        if (!range) {
+          acc.errors.push(idx);
+        }
       }
       return acc;
     },
-    { ipv4: [], ipv6: [] }
+    { ipv4: [], ipv6: [], errors: [] }
   );
 
 const initialValues: Form = {
@@ -486,4 +519,29 @@ export const getInitialIPErrors = (
     }
     return acc;
   }, {});
+};
+
+export const validateForm = (protocol?: string, ports?: string) => {
+  const errors: Partial<Form> = {};
+
+  if (!protocol) {
+    errors.protocol = 'Protocol is required.';
+  }
+
+  if (protocol === 'ICMP' && ports) {
+    errors.ports = 'Ports are not allowed for ICMP protocols.';
+    return errors;
+  }
+
+  if ((protocol === 'TCP' || protocol === 'UDP') && !ports) {
+    errors.ports = 'Ports required for TCP and UDP protocols.';
+    return errors;
+  }
+
+  if (ports && !ports.match(/^[0-9,-]+$/)) {
+    errors.ports =
+      'Ports be an integer, range of integers, or a comma-separated list of integers.';
+  }
+
+  return errors;
 };
