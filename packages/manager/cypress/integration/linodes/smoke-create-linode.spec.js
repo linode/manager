@@ -3,7 +3,7 @@ import {
   deleteLinodeByLabel,
   makeLinodeLabel
 } from '../../support/api/linodes';
-import { checkToast } from '../../support/ui/events';
+import { assertToast } from '../../support/ui/events';
 
 describe('create linode', () => {
   beforeEach(() => {
@@ -29,7 +29,7 @@ describe('create linode', () => {
     cy.get('[data-qa-deploy-linode]').click();
     cy.server();
 
-    checkToast(`Your Linode ${linodeLabel} is being created.`);
+    assertToast(`Your Linode ${linodeLabel} is being created.`);
     cy.get('[data-qa-power-control="Busy"]', { timeout: 6000 }).should(
       'be.visible'
     );
