@@ -64,16 +64,17 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
   // intended to specify custom IPs.
   const [ips, setIPs] = React.useState<string[]>(['']);
 
-  React.useEffect(() => {
-    // If we're in edit mode, we need to pre-set IP state with the IPs of the rule we're modifying.
-    const initialIPs =
-      mode === 'edit' && ruleToModify !== undefined
-        ? [...ruleToModify.addresses?.ipv4, ...ruleToModify.addresses?.ipv6]
-        : [''];
-    setIPs(initialIPs);
-  }, [mode, ruleToModify]);
-
+  // Errors for the IPs tracked above.
   const [ipErrors, setIPErrors] = React.useState<Record<number, string>>({});
+
+  // Reset IP and IP Error state. If we're in EDIT mode:
+  //   1. Set IPs to the addresses of the rule we're modifying.
+  //   2. Set IP Errors if we have any.
+  // If we're NOT in EDIT mode, this state is reset.
+  React.useEffect(() => {
+    setIPs(getInitialIPs(mode, ruleToModify));
+    setIPErrors(getInitialIPErrors(mode, ruleToModify));
+  }, [mode, ruleToModify]);
 
   const title =
     mode === 'create' ? `Add an ${capitalize(category)} Rule` : 'Edit Rule';
@@ -167,24 +168,20 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
     addressesLabel,
     ips,
     setIPs,
-    ipErrors,
     setIPErrors,
+    ipErrors,
     mode,
     ruleErrors,
     setFieldError
   } = props;
 
+  // Set form field errors for each error we have (except "addresses" errors, which are handled
+  // by IP Error state).
   React.useEffect(() => {
     ruleErrors?.forEach(thisError => {
-      if (thisError.formField === 'addresses' && thisError.ip) {
-        setIPErrors((prevIPErrors: Record<number, string>) => ({
-          ...prevIPErrors,
-          [thisError.ip!.idx]: thisError.reason
-        }));
-        return;
+      if (thisError.formField !== 'addresses') {
+        setFieldError(thisError.formField, thisError.reason);
       }
-
-      setFieldError(thisError.formField, thisError.reason);
     });
   }, [ruleErrors]);
 
@@ -230,8 +227,9 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
       }
 
       setFieldValue('addresses', item?.value);
-      // Reset custom IPs that may have been entered.
+      // Reset custom IPs and IP errors.
       setIPs(['']);
+      setIPErrors({});
     },
     [ips, formTouched]
   );
@@ -264,10 +262,10 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
     );
   }, [values]);
 
-  const _type = React.useMemo(() => deriveTypeFromValuesAndIPs(values, ips), [
-    values,
-    ips
-  ]);
+  const typeValue = React.useMemo(() => {
+    const _type = deriveTypeFromValuesAndIPs(values, ips);
+    return typeOptions.find(thisOption => thisOption.value === _type) || null;
+  }, [values, ips, typeOptions]);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -280,9 +278,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
         placeholder="Select a rule type..."
         aria-label="Select rule type."
         options={typeOptions}
-        value={
-          typeOptions.find(thisOption => thisOption.value === _type) || null
-        }
+        value={typeValue}
         onChange={handleTypeChange}
         isClearable={false}
         onBlur={handleBlur}
@@ -464,4 +460,30 @@ export const getInitialAddressFormValue = (
   }
 
   return 'ip/netmask';
+};
+
+export const getInitialIPs = (
+  mode: Mode,
+  ruleToModify?: FirewallRuleWithStatus
+) => {
+  return mode === 'edit' && ruleToModify !== undefined
+    ? [...ruleToModify.addresses?.ipv4, ...ruleToModify.addresses?.ipv6]
+    : [''];
+};
+
+export const getInitialIPErrors = (
+  mode: Mode,
+  ruleToModify?: FirewallRuleWithStatus
+) => {
+  if (mode !== 'edit' || !ruleToModify?.errors) {
+    return {};
+  }
+
+  return ruleToModify.errors.reduce((acc, thisError) => {
+    const { formField, ip, reason } = thisError;
+    if (formField === 'addresses' && ip) {
+      return { ...acc, [ip.idx]: reason };
+    }
+    return acc;
+  }, {});
 };

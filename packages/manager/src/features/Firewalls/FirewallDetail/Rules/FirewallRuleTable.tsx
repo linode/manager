@@ -127,6 +127,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
               <TableHead>
                 <TableRow>
                   <TableSortCell
+                    style={{ width: '15%' }}
                     active={orderBy === 'type'}
                     label="type"
                     direction={order}
@@ -135,6 +136,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
                     Type
                   </TableSortCell>
                   <TableSortCell
+                    style={{ width: '15%' }}
                     active={orderBy === 'protocol'}
                     label="protocol"
                     direction={order}
@@ -143,6 +145,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
                     Protocol
                   </TableSortCell>
                   <TableSortCell
+                    style={{ width: '20%' }}
                     active={orderBy === 'ports'}
                     label="ports"
                     direction={order}
@@ -151,6 +154,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
                     Port Range
                   </TableSortCell>
                   <TableSortCell
+                    style={{ width: '40%' }}
                     active={orderBy === 'addresses'}
                     label="addresses"
                     direction={order}
@@ -158,7 +162,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
                   >
                     {capitalize(addressColumnLabel)}
                   </TableSortCell>
-                  <TableCell />
+                  <TableCell style={{ width: '10%' }} />
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -238,7 +242,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
         <TableCell>
           {addresses} <ConditionalError errors={errors} formField="addresses" />
         </TableCell>
-        <TableCell style={{ width: '10%' }}>
+        <TableCell>
           {status !== 'NOT_MODIFIED' ? (
             <div className={classes.undoButtonContainer}>
               <button

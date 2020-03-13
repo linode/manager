@@ -162,6 +162,11 @@ export const editorStateToRules = (
 ): FirewallRuleWithStatus[] =>
   state.map(revisionList => revisionList[revisionList.length - 1]);
 
+export const removeErrors = (
+  rules: FirewallRuleWithStatus[]
+): FirewallRuleType[] =>
+  rules.map(thisRule => ({ ...thisRule, errors: undefined }));
+
 export const removeStatus = (
   rules: FirewallRuleWithStatus[]
 ): FirewallRuleType[] =>
@@ -171,6 +176,7 @@ export const filterRulesPendingDeletion = (rules: FirewallRuleWithStatus[]) =>
   rules.filter(thisRule => thisRule.status !== 'PENDING_DELETION');
 
 export const prepareRules = compose(
+  removeErrors,
   removeStatus,
   filterRulesPendingDeletion,
   editorStateToRules
