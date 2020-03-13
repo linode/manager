@@ -95,9 +95,7 @@ const initialValues: RebuildFromStackScriptForm = {
   stackscript_id: ''
 };
 
-export const RebuildFromStackScript: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const RebuildFromStackScript: React.StatelessComponent<CombinedProps> = props => {
   const {
     classes,
     imagesData,
@@ -166,8 +164,28 @@ export const RebuildFromStackScript: React.StatelessComponent<
 
         setSubmitting(false);
 
-        handleFieldErrors(setErrors, errorResponse);
-        handleGeneralErrors(mapErrorToStatus, errorResponse, defaultMessage);
+        const modifiedErrors = APIErrors.map(thisError => {
+          /**
+           * Errors returned for attempting to rebuild from an invalid
+           * StackScript will have a field of 'script' (and an unhelpful
+           * error message). Since nothing in our form is listening to this
+           * field, the error will slip through without being shown to the user.
+           *
+           * If we have one of those, change the field to stackscriptId, which
+           * we're listening for in Formik, and use a more helpful message.
+           */
+          if (thisError.field === 'script') {
+            const reason = thisError.reason.match(/invalid stackscript/i)
+              ? 'The selected StackScript is invalid.'
+              : thisError.reason;
+            return { field: 'stackscript_id', reason };
+          } else {
+            return thisError;
+          }
+        });
+
+        handleFieldErrors(setErrors, modifiedErrors);
+        handleGeneralErrors(mapErrorToStatus, modifiedErrors, defaultMessage);
 
         setIsDialogOpen(false);
         scrollErrorIntoView();

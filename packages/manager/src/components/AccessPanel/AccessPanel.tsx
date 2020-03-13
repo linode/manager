@@ -9,10 +9,10 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
-import PasswordInput from 'src/components/PasswordInput';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-
 import UserSSHKeyPanel from './UserSSHKeyPanel';
+const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
+import SuspenseLoader from 'src/components/SuspenseLoader';
 
 type ClassNames =
   | 'root'
@@ -126,21 +126,24 @@ class AccessPanel extends React.Component<CombinedProps> {
           className
         )}
       >
-        <div className={!noPadding ? classes.inner : ''} data-qa-password-input>
+        <div className={!noPadding ? classes.inner : ''}>
           {error && <Notice text={error} error />}
-          <PasswordInput
-            className={classes.passwordInputOuter}
-            required={required}
-            disabled={disabled}
-            disabledReason={disabledReason || ''}
-            autoComplete="new-password"
-            value={this.props.password || ''}
-            label={label || 'Root Password'}
-            placeholder={placeholder || 'Enter a password.'}
-            onChange={this.handleChange}
-            hideStrengthLabel={hideStrengthLabel}
-            hideHelperText={hideHelperText}
-          />
+          <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+            <PasswordInput
+              data-qa-password-input
+              className={classes.passwordInputOuter}
+              required={required}
+              disabled={disabled}
+              disabledReason={disabledReason || ''}
+              autoComplete="new-password"
+              value={this.props.password || ''}
+              label={label || 'Root Password'}
+              placeholder={placeholder || 'Enter a password.'}
+              onChange={this.handleChange}
+              hideStrengthLabel={hideStrengthLabel}
+              hideHelperText={hideHelperText}
+            />
+          </React.Suspense>
           {users && (
             <UserSSHKeyPanel
               users={users}

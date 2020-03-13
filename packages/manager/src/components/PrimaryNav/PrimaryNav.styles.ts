@@ -145,9 +145,7 @@ const styles = (theme: Theme) =>
           ${theme.spacing(1) + 11}px 
           0
         `,
-        borderColor: `transparent ${
-          theme.bg.primaryNavActive
-        } transparent transparent`,
+        borderColor: `transparent ${theme.bg.primaryNavActive} transparent transparent`,
         position: 'absolute',
         right: 0,
         top: theme.spacing(1) === 8 ? 2 : 0
@@ -155,9 +153,7 @@ const styles = (theme: Theme) =>
       '&:hover': {
         '&:before': {
           content: "''",
-          borderColor: `transparent ${
-            theme.bg.primaryNavActive
-          } transparent transparent`
+          borderColor: `transparent ${theme.bg.primaryNavActive} transparent transparent`
         }
       },
       [theme.breakpoints.down('sm')]: {

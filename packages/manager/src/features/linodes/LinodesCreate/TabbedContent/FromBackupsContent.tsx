@@ -1,4 +1,3 @@
-import * as Promise from 'bluebird';
 import {
   getLinodeBackups,
   Linode,
@@ -9,7 +8,6 @@ import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import CheckoutBar from 'src/components/CheckoutBar';
-import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -21,6 +19,7 @@ import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Placeholder from 'src/components/Placeholder';
+import { reportException } from 'src/exceptionReporting';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import AddonsPanel from '../AddonsPanel';
 import SelectBackupPanel from '../SelectBackupPanel';
@@ -35,8 +34,6 @@ import {
 } from '../types';
 import { extendLinodes, getRegionIDFromLinodeID } from '../utilities';
 import { renderBackupsDisplaySection } from './utils';
-
-import { reportException } from 'src/exceptionReporting';
 
 export interface LinodeWithBackups extends Linode {
   currentBackups: LinodeBackupsResponse;
@@ -60,12 +57,10 @@ interface Props {
 }
 
 interface State {
-  linodesWithBackups: LinodeWithBackups[] | null;
-  userHasBackups: boolean;
-  backups: boolean;
-  selectedBackupInfo: Info;
   backupInfo: Info;
   isGettingBackups: boolean;
+  selectedLinodeWithBackups?: LinodeWithBackups;
+  backupsError?: string;
 }
 
 export type CombinedProps = Props &
@@ -83,66 +78,56 @@ const errorResources = {
   tags: 'Tags for this Linode'
 };
 
-const filterLinodesWithBackups = (linodes: LinodeWithBackups[]) => {
-  return linodes.filter(linode => {
-    const hasAutomaticBackups = !!linode.currentBackups.automatic.length;
-    const hasSnapshotBackup = !!linode.currentBackups.snapshot.current;
-    // backups both need to be enabled and some backups need to exist
-    // for the panel to show the Linode
-    return linode.backups.enabled && (hasAutomaticBackups || hasSnapshotBackup);
-  });
-};
+const filterLinodesWithBackups = (linodes: Linode[]) =>
+  linodes.filter(linode => linode.backups.enabled);
 
 export class FromBackupsContent extends React.Component<CombinedProps, State> {
   state: State = {
-    linodesWithBackups: [],
-    userHasBackups: false,
-    backups: false,
-    selectedBackupInfo: undefined,
     backupInfo: undefined,
     isGettingBackups: false
   };
 
   mounted: boolean = false;
 
-  getLinodesWithBackups = (linodes: Linode[]) => {
-    this.setState({ isGettingBackups: true });
-    return Promise.map(
-      linodes.filter(l => l.backups.enabled),
-      (linode: Linode) => {
-        return getLinodeBackups(linode.id).then(backups => {
-          return {
-            ...linode,
-            currentBackups: {
-              ...backups
-            }
-          };
-        });
-      }
-    )
-      .then(data => {
-        if (!this.mounted) {
-          return;
-        }
-        this.setState({ linodesWithBackups: data, isGettingBackups: false });
-      })
-      .catch(err => this.setState({ isGettingBackups: false }));
-  };
-
-  userHasBackups = () => {
-    const { linodesWithBackups } = this.state;
-    return linodesWithBackups!.some((linode: LinodeWithBackups) => {
-      // automatic backups is an array, but snapshots are either null or an object
-      // user can have up to 3 automatic backups, but one one snapshot
-      return (
-        !!linode.currentBackups.automatic.length ||
-        !!linode.currentBackups.snapshot.current
-      );
-    });
-  };
-
   handleSelectBackupInfo = (info: Info) => {
     this.setState({ backupInfo: info });
+  };
+
+  getBackupsForLinode = (linodeId: number) => {
+    const { linodesData } = this.props;
+
+    if (!linodeId) {
+      return;
+    }
+
+    this.setState({
+      isGettingBackups: true,
+      backupsError: undefined
+    });
+
+    getLinodeBackups(linodeId)
+      .then(backups => {
+        const selectedLinode = linodesData.find(
+          thisLinode => thisLinode.id === linodeId
+        );
+
+        if (!selectedLinode) {
+          return this.setState({ isGettingBackups: false });
+        }
+
+        const selectedLinodeWithBackups: LinodeWithBackups = {
+          ...selectedLinode,
+          currentBackups: { ...backups }
+        };
+
+        this.setState({ selectedLinodeWithBackups, isGettingBackups: false });
+      })
+      .catch(err => {
+        this.setState({
+          isGettingBackups: false,
+          backupsError: 'Error retrieving backups for this Linode.'
+        });
+      });
   };
 
   createLinode = () => {
@@ -195,28 +180,28 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
-    this.getLinodesWithBackups(this.props.linodesData);
     // If there is a selected Linode ID (from props), make sure its information
     // is set to state as if it had been selected manually.
     if (this.props.selectedLinodeID) {
       this.updateRegion(this.props.selectedLinodeID);
+      this.getBackupsForLinode(this.props.selectedLinodeID);
     }
   }
 
-  componentDidUpdate(prevProps: CombinedProps) {
-    const { selectedLinodeID } = this.props;
-    if (!!selectedLinodeID && prevProps.selectedLinodeID !== selectedLinodeID) {
-      this.updateRegion(selectedLinodeID);
-    }
-  }
+  handleLinodeSelect = (linodeId: number, diskSize?: number) => {
+    this.props.updateLinodeID(linodeId, diskSize);
+    this.updateRegion(linodeId);
+    this.getBackupsForLinode(linodeId);
+  };
 
   render() {
-    const { backups, linodesWithBackups, selectedBackupInfo } = this.state;
+    const { isGettingBackups, selectedLinodeWithBackups } = this.state;
     const {
       accountBackupsEnabled,
       classes,
       errors,
       imagesData,
+      linodesData,
       privateIPEnabled,
       selectedBackupID,
       selectedDiskSize,
@@ -231,7 +216,6 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       label,
       tags,
       typesData,
-      updateLinodeID,
       updateTypeID,
       updateTags,
       backupsMonthlyPrice,
@@ -240,9 +224,11 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     } = this.props;
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
 
-    const imageInfo = selectedBackupInfo;
+    const userHasBackups = linodesData.some(
+      thisLinode => thisLinode.backups.enabled
+    );
 
-    const hasBackups = backups || accountBackupsEnabled;
+    const hasBackups = Boolean(backupsEnabled || accountBackupsEnabled);
 
     return (
       <React.Fragment>
@@ -253,17 +239,11 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
           role="tabpanel"
           aria-labelledby="tab-backup-create"
         >
-          {this.state.isGettingBackups ? (
-            <Paper>
-              <CircleProgress noTopMargin />
-            </Paper>
-          ) : !this.userHasBackups() ? (
+          {!userHasBackups ? (
             <Paper>
               <Placeholder
                 icon={VolumeIcon}
-                copy="You either do not have backups enabled for any Linode
-                or your Linodes have not been backed up. Please visit the 'Backups'
-                panel in the Linode Settings view"
+                copy="You do not have backups enabled for your Linodes. Please visit the Backups panel in the Linode Details view."
                 title="Create from Backup"
               />
             </Paper>
@@ -273,12 +253,12 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
               <SelectLinodePanel
                 error={hasErrorFor('linode_id')}
                 linodes={ramdaCompose(
-                  (linodes: LinodeWithBackups[]) =>
+                  (linodes: Linode[]) =>
                     extendLinodes(linodes, imagesData, typesData),
                   filterLinodesWithBackups
-                )(linodesWithBackups!)}
+                )(linodesData)}
                 selectedLinodeID={selectedLinodeID}
-                handleSelection={updateLinodeID}
+                handleSelection={this.handleLinodeSelect}
                 updateFor={[selectedLinodeID, errors]}
                 disabled={disabled}
                 notice={{
@@ -290,17 +270,20 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                 }}
               />
               <SelectBackupPanel
-                error={hasErrorFor('backup_id')}
-                backups={linodesWithBackups!.filter(
-                  (linode: LinodeWithBackups) => {
-                    return linode.id === +selectedLinodeID!;
-                  }
-                )}
+                error={hasErrorFor('backup_id') || this.state.backupsError}
+                selectedLinodeWithBackups={selectedLinodeWithBackups}
                 selectedLinodeID={selectedLinodeID}
                 selectedBackupID={selectedBackupID}
                 handleChangeBackup={setBackupID}
                 handleChangeBackupInfo={this.handleSelectBackupInfo}
-                updateFor={[selectedLinodeID, selectedBackupID, errors]}
+                updateFor={[
+                  selectedLinodeID,
+                  selectedBackupID,
+                  errors,
+                  selectedLinodeWithBackups,
+                  isGettingBackups
+                ]}
+                loading={isGettingBackups}
               />
               <SelectPlanPanel
                 error={hasErrorFor('type')}
@@ -340,16 +323,13 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
             </React.Fragment>
           )}
         </Grid>
-        {!this.userHasBackups() ? (
+        {!userHasBackups ? (
           <React.Fragment />
         ) : (
           <Grid item className={`${classes.sidebar} mlSidebar`}>
             <Sticky topOffset={-24} disableCompensation>
               {(props: StickyProps) => {
                 const displaySections = [];
-                if (imageInfo) {
-                  displaySections.push(imageInfo);
-                }
 
                 if (regionDisplayInfo) {
                   displaySections.push({

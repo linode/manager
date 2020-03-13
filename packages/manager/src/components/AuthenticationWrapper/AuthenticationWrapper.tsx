@@ -29,7 +29,7 @@ import { requestAccount } from 'src/store/account/account.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import { getAllBuckets } from 'src/store/bucket/bucket.requests';
 import { requestClusters } from 'src/store/clusters/clusters.actions';
-import { requestDomains } from 'src/store/domains/domains.actions';
+import { requestDomains } from 'src/store/domains/domains.requests';
 import { requestImages } from 'src/store/image/image.requests';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
 import { requestTypes } from 'src/store/linodeType/linodeType.requests';
@@ -55,10 +55,15 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
   };
 
   makeInitialRequests = async () => {
+    // When loading lish we avoid all this extra data loading
+    if (window.location?.pathname?.includes('/lish/')) {
+      return;
+    }
+
     const {
       nodeBalancerActions: { getAllNodeBalancersWithConfigs }
     } = this.props;
-
+    // Initial Requests
     const dataFetchingPromises: Promise<any>[] = [
       this.props.requestAccount(),
       this.props.requestDomains(),
@@ -68,8 +73,8 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       this.props.requestNotifications(),
       this.props.requestSettings(),
       this.props.requestTypes(),
-      this.props.requestRegions(),
       this.props.requestVolumes(),
+      this.props.requestRegions(),
       getAllNodeBalancersWithConfigs()
     ];
 
@@ -96,6 +101,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
      */
     if (this.props.isAuthenticated) {
       this.setState({ showChildren: true });
+
       this.makeInitialRequests();
       startEventsInterval();
     }
@@ -114,6 +120,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     ) {
       this.makeInitialRequests();
       startEventsInterval();
+
       return this.setState({ showChildren: true });
     }
 
@@ -172,10 +179,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   requestClusters: () => dispatch(requestClusters())
 });
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose<CombinedProps, {}>(
   connected,

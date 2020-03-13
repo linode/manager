@@ -88,7 +88,8 @@ const ListGroupedVolumes: React.FC<CombinedProps> = props => {
     handleOrderChange,
     order,
     orderBy,
-    isVolumesLanding: renderProps.isVolumesLanding
+    isVolumesLanding: renderProps.isVolumesLanding,
+    dataLength: data.length
   };
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
@@ -117,7 +118,7 @@ const ListGroupedVolumes: React.FC<CombinedProps> = props => {
                       className={classes.groupContainer}
                       data-qa-tag-header={tag}
                     >
-                      <TableRow className={classes.tagHeaderRow}>
+                      <TableRow className={classes.tagHeaderRow} role="cell">
                         <TableCell colSpan={7}>
                           <Typography
                             variant="h2"

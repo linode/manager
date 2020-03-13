@@ -23,24 +23,11 @@ describe('Top Processes', () => {
       getByText('Top Processes');
     });
 
-    it('renders the View Details link when the feature flag is enabled', () => {
-      jest.mock('src/hooks/useFlags', () => ({
-        default: () => ({ longviewTabs: true })
-      }));
+    it('renders the View Details link', () => {
       const { queryByText } = render(
         wrapWithTheme(<TopProcesses {...props} />)
       );
       expect(queryByText('View Details')).toBeDefined();
-    });
-
-    it('does not render the View Details link when the feature flag is disabled', () => {
-      jest.mock('src/hooks/useFlags', () => ({
-        default: () => ({ longviewTabs: false })
-      }));
-      const { queryByText } = render(
-        wrapWithTheme(<TopProcesses {...props} />)
-      );
-      expect(queryByText('View Details')).toBeNull();
     });
 
     it('renders rows for each process', () => {

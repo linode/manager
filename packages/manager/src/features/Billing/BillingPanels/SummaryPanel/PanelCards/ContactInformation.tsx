@@ -85,7 +85,7 @@ const ContactInformation: React.FC<CombinedProps> = props => {
             {!(address1 || address2 || city || state || zip) && 'None'}
             <span>{address1}</span>
             <div>{address2}</div>
-            <div>{`${city} ${city && state && ', '} ${state} ${zip}`}</div>
+            <div>{`${city}${city && state && ','} ${state} ${zip}`}</div>
           </div>
         </div>
         <div className={classes.section} data-qa-contact-email>

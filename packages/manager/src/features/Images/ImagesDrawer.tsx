@@ -1,9 +1,9 @@
-import { createImage, updateImage } from 'linode-js-sdk/lib/images';
 import { Disk, getLinodeDisks } from 'linode-js-sdk/lib/linodes';
 import { APIError } from 'linode-js-sdk/lib/types';
-import { compose, equals } from 'ramda';
+import { equals } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import {
@@ -17,6 +17,10 @@ import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
+import { IMAGE_DEFAULT_LIMIT } from 'src/constants';
+import withImages, {
+  ImagesDispatch
+} from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/linodes/DiskSelect';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
@@ -41,7 +45,7 @@ const styles = (theme: Theme) =>
   });
 
 export interface Props {
-  mode: string;
+  mode: DrawerMode;
   open: boolean;
   description?: string;
   imageID?: string;
@@ -52,7 +56,6 @@ export interface Props {
   onClose: () => void;
   changeDisk: (disk: string | null) => void;
   selectedLinode: number | null;
-  onSuccess: () => void;
   changeLinode: (linodeId: number) => void;
   changeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
   changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -62,24 +65,30 @@ interface State {
   disks: Disk[];
   notice?: string;
   errors?: APIError[];
+  submitting: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps = Props &
+  WithStyles<ClassNames> &
+  RouteComponentProps<{}> &
+  ImagesDispatch;
 
-export const modes = {
-  CLOSED: 'closed',
-  CREATING: 'create',
-  IMAGIZING: 'imagize',
-  RESTORING: 'restore',
-  EDITING: 'edit'
+export type DrawerMode = 'closed' | 'create' | 'imagize' | 'restore' | 'edit';
+
+const titleMap: Record<DrawerMode, string> = {
+  closed: '',
+  create: 'Create an Image',
+  imagize: 'Create an Image',
+  edit: 'Edit an Image',
+  restore: 'Restore from an Image'
 };
 
-const titleMap = {
-  [modes.CLOSED]: '',
-  [modes.CREATING]: 'Create an Image',
-  [modes.RESTORING]: 'Restore from an Image',
-  [modes.EDITING]: 'Edit an Image',
-  [modes.IMAGIZING]: 'Create an Image'
+const buttonTextMap: Record<DrawerMode, string> = {
+  closed: '',
+  create: 'Create',
+  restore: 'Restore',
+  edit: 'Update',
+  imagize: 'Create'
 };
 
 class ImageDrawer extends React.Component<CombinedProps, State> {
@@ -87,7 +96,8 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
   state = {
     disks: [],
     errors: undefined,
-    notice: undefined
+    notice: undefined,
+    submitting: false
   };
 
   componentDidMount() {
@@ -149,39 +159,57 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
     }
   }
 
+  handleLinodeChange = (linodeID: number) => {
+    // Clear any errors
+    this.setState({ errors: undefined });
+    this.props.changeLinode(linodeID);
+  };
+
+  handleDiskChange = (diskID: string | null) => {
+    // Clear any errors
+    this.setState({ errors: undefined });
+    this.props.changeDisk(diskID);
+  };
+
   close = () => {
     this.props.onClose();
-    this.setState({ errors: undefined, notice: undefined });
+    if (this.mounted) {
+      this.setState({
+        errors: undefined,
+        notice: undefined,
+        submitting: false
+      });
+    }
   };
 
   onSubmit = () => {
     const {
       mode,
       imageID,
-      onSuccess,
       label,
       description,
       history,
       selectedDisk,
-      selectedLinode
+      selectedLinode,
+      updateImage,
+      createImage
     } = this.props;
 
-    this.setState({ errors: undefined, notice: undefined });
+    this.setState({ errors: undefined, notice: undefined, submitting: true });
     const safeDescription = description ? description : ' ';
-
     switch (mode) {
-      case modes.EDITING:
+      case 'edit':
         if (!imageID) {
+          this.setState({ submitting: false });
           return;
         }
 
-        updateImage(imageID, label, safeDescription)
+        updateImage({ imageID, label, description: safeDescription })
           .then(() => {
             if (!this.mounted) {
               return;
             }
 
-            onSuccess();
             this.close();
           })
           .catch(errorResponse => {
@@ -190,17 +218,22 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             }
 
             this.setState({
+              submitting: false,
               errors: getAPIErrorOrDefault(
                 errorResponse,
-                'Unable to edit image'
+                'Unable to edit Image'
               )
             });
           });
         return;
 
-      case modes.CREATING:
-      case modes.IMAGIZING:
-        createImage(Number(selectedDisk), label, safeDescription)
+      case 'create':
+      case 'imagize':
+        createImage({
+          diskID: Number(selectedDisk),
+          label,
+          description: safeDescription
+        })
           .then(_ => {
             if (!this.mounted) {
               return;
@@ -208,6 +241,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
             resetEventsPolling();
             this.setState({
+              submitting: false,
               notice: 'Image scheduled for creation.'
             });
             setTimeout(this.close, 4000);
@@ -218,6 +252,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             }
 
             this.setState({
+              submitting: false,
               errors: getAPIErrorOrDefault(
                 errorResponse,
                 'There was an error creating the image.'
@@ -226,9 +261,10 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           });
         return;
 
-      case modes.RESTORING:
+      case 'restore':
         if (!selectedLinode) {
           this.setState({
+            submitting: false,
             errors: [{ field: 'linode_id', reason: 'Choose a Linode.' }]
           });
           return;
@@ -244,19 +280,19 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
   };
 
   checkRequirements = () => {
-    // When creating an image, disable the submit button until a Linode,
-    // disk, and label are selected. When editing, only a label is required.
-    // When restoring to an existing Linode, the Linode select is the only field.
+    // When creating an image, disable the submit button until a Linode and
+    // disk are selected. When restoring to an existing Linode, the Linode select is the only field.
+    // When imagizing, the Linode is selected already so only check for a disk selection.
     const { mode, selectedDisk, selectedLinode } = this.props;
 
     const isDiskSelected = Boolean(selectedDisk);
 
     switch (mode) {
-      case modes.CREATING:
+      case 'create':
         return !(isDiskSelected && selectedLinode);
-      case modes.IMAGIZING:
+      case 'imagize':
         return !isDiskSelected;
-      case modes.RESTORING:
+      case 'restore':
         return !selectedLinode;
       default:
         return false;
@@ -270,14 +306,11 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       selectedDisk,
       selectedLinode,
       mode,
-      changeDisk,
-      changeLinode,
       changeLabel,
       changeDescription,
       classes
     } = this.props;
-    const { disks, notice } = this.state;
-    const { errors } = this.state;
+    const { disks, errors, notice, submitting } = this.state;
 
     const requirementsMet = this.checkRequirements();
 
@@ -307,37 +340,38 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
         {notice && <Notice success text={notice} data-qa-notice />}
 
-        {[modes.CREATING, modes.RESTORING].includes(mode) && (
+        {['create', 'restore'].includes(mode) && (
           <LinodeSelect
             selectedLinode={selectedLinode}
             linodeError={linodeError}
-            handleChange={linode => changeLinode(linode.id)}
+            handleChange={linode => this.handleLinodeChange(linode.id)}
             updateFor={[selectedLinode, linodeError, classes]}
           />
         )}
 
-        {[modes.CREATING, modes.IMAGIZING].includes(mode) && (
+        {['create', 'imagize'].includes(mode) && (
           <>
             <DiskSelect
               selectedDisk={selectedDisk}
               disks={disks}
               diskError={diskError}
-              handleChange={changeDisk}
+              handleChange={this.handleDiskChange}
               updateFor={[disks, selectedDisk, diskError, classes]}
-              disabled={mode === modes.IMAGIZING}
+              disabled={mode === 'imagize'}
               data-qa-disk-select
             />
             <Typography className={classes.helperText} variant="body1">
-              Linode Images are limited to 2048MB of data per disk. You will
-              need to ensure that your disk content does not exceed this size
-              limit. Additionally, Linode Images cannot be created if you are
-              using raw disks or disks that have been formatted using custom
+              Linode Images are limited to {IMAGE_DEFAULT_LIMIT}MB of data per
+              disk by default. Please ensure that your disk content does not
+              exceed this size limit, or open a Support ticket to request a
+              higher limit. Additionally, Linode Images cannot be created if you
+              are using raw disks or disks that have been formatted using custom
               filesystems.
             </Typography>
           </>
         )}
 
-        {[modes.CREATING, modes.EDITING, modes.IMAGIZING].includes(mode) && (
+        {['create', 'edit', 'imagizing'].includes(mode) && (
           <React.Fragment>
             <TextField
               label="Label"
@@ -363,15 +397,16 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
         <ActionsPanel
           style={{ marginTop: 16 }}
-          updateFor={[requirementsMet, classes]}
+          updateFor={[requirementsMet, classes, submitting, mode]}
         >
           <Button
             onClick={this.onSubmit}
             disabled={requirementsMet}
+            loading={submitting}
             buttonType="primary"
             data-qa-submit
           >
-            {mode === modes.EDITING ? 'Update' : 'Create'}
+            {buttonTextMap[mode] ?? 'Submit'}
           </Button>
           <Button
             onClick={this.close}
@@ -389,8 +424,9 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default compose<any, any, any, any>(
+export default compose<CombinedProps, Props>(
   styled,
   withRouter,
+  withImages(),
   SectionErrorBoundary
 )(ImageDrawer);

@@ -302,22 +302,24 @@ export const sumRelatedProcessesAcrossAllUsers = (
     return accum;
   }, {} as ProcessStats);
 
-export type NetworkUnit = 'b' | 'Kb' | 'Mb';
+export type NetworkUnit = 'b' | 'Kibit' | 'Mibit';
 /**
  * converts bytes to either Kb (Kilobits) or Mb (Megabits)
  * depending on if the Kilobit conversion exceeds 1000.
  *
- * @param networkUsed inbound and outbound traffic in bytes
+ * @param networkUsedInBytes inbound and outbound traffic in bytes
  */
-export const generateNetworkUnits = (networkUsed: number): NetworkUnit => {
+export const generateNetworkUnits = (
+  networkUsedInBytes: number
+): NetworkUnit => {
   /** Thanks to http://www.matisse.net/bitcalc/ */
-  const networkUsedToKilobits = (networkUsed * 8) / 1024;
+  const networkUsedToKilobits = (networkUsedInBytes * 8) / 1024;
   if (networkUsedToKilobits <= 1) {
     return 'b';
   } else if (networkUsedToKilobits <= 1000) {
-    return 'Kb';
+    return 'Kibit';
   } else {
-    return 'Mb';
+    return 'Mibit';
   }
 };
 
@@ -325,11 +327,11 @@ export const convertNetworkToUnit = (
   valueInBits: number,
   maxUnit: NetworkUnit
 ) => {
-  if (maxUnit === 'Mb') {
+  if (maxUnit === 'Mibit') {
     // If the unit we're using for the graph is Mb, return the output in Mb.
     const valueInMegabits = valueInBits / 1024 / 1024;
     return valueInMegabits;
-  } else if (maxUnit === 'Kb') {
+  } else if (maxUnit === 'Kibit') {
     // If the unit we're using for the graph is Kb, return the output in Kb.
     const valueInKilobits = valueInBits / 1024;
     return valueInKilobits;
@@ -364,3 +366,12 @@ export const getMaxUnit = (stats: Stat[][]) => {
   const max = Math.max(...stats.map(statMax));
   return readableBytes(max * 1024).unit; // LV always returns in KB, need bytes here
 };
+
+export const formatNetworkTooltip = (valueInBytes: number) => {
+  const _unit = generateNetworkUnits(valueInBytes);
+  const converted = convertNetworkToUnit(valueInBytes * 8, _unit);
+  return `${Math.round(converted * 100) / 100} ${_unit}`;
+};
+
+export const formatBitsPerSecond = (valueInBits: number) =>
+  formatNetworkTooltip(valueInBits / 8) + '/s';

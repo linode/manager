@@ -88,11 +88,19 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
         matchedApp.images,
         matchedApp.user_defined_fields
       );
+
+      // If the URL also included &showInfo, open the Info drawer as well
+      const showInfo = getParamFromUrl(location.search, 'showInfo');
+      if (showInfo) {
+        this.props.openDrawer(matchedApp.label);
+      }
     }
   };
+
   componentDidMount() {
     this.clickAppIfQueryParamExists();
   }
+
   componentDidUpdate(prevProps: CombinedProps) {
     if (
       typeof prevProps.appInstances === 'undefined' &&

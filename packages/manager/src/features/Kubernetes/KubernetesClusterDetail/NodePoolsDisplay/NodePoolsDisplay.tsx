@@ -1,5 +1,6 @@
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
+import { useSelector } from 'react-redux';
 import { compose } from 'recompose';
 
 import Button from 'src/components/Button';
@@ -17,10 +18,11 @@ import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-import { getErrorMap } from 'src/utilities/errorUtils';
+import { ApplicationState } from 'src/store';
+import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
 import NodePoolDisplayTable from '../../CreateCluster/NodePoolDisplayTable';
-import { getTotalClusterPrice } from '../../kubeUtils';
+import { getTotalClusterPrice, nodeWarning } from '../../kubeUtils';
 import { PoolNodeWithPrice } from '../../types';
 
 type ClassNames =
@@ -103,9 +105,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const command = 'kubectl get nodes -o wide';
 
-export const NodePoolsDisplay: React.FunctionComponent<
-  CombinedProps
-> = props => {
+export const NodePoolsDisplay: React.FunctionComponent<CombinedProps> = props => {
   const {
     classes,
     deletePool,
@@ -123,6 +123,25 @@ export const NodePoolsDisplay: React.FunctionComponent<
     updatePool
   } = props;
 
+  /**
+   * If the API returns an error when fetching node pools,
+   * we want to display this error to the user from the
+   * NodePoolDisplayTable.
+   *
+   * Only do this if we haven't yet successfully retrieved this
+   * data, so a random error in our subsequent polling doesn't
+   * break the view.
+   */
+  const poolsError = useSelector((state: ApplicationState) => {
+    const error = state.__resources.nodePools?.error?.read;
+    const lastUpdated = state.__resources.nodePools.lastUpdated;
+    if (error && lastUpdated === 0) {
+      return getAPIErrorOrDefault(error, 'Unable to load Node Pools.')[0]
+        .reason;
+    }
+    return undefined;
+  });
+
   const TooltipText = () => {
     return (
       <>
@@ -136,6 +155,17 @@ export const NodePoolsDisplay: React.FunctionComponent<
     );
   };
   const errorMap = getErrorMap(['count'], submissionError);
+
+  // If a user is about to put their cluster in a state where it will
+  // only have a single node, we want to show a warning.
+  const hasSingleNode =
+    !submitDisabled &&
+    poolsForEdit.reduce((acc, thisPool) => {
+      if (thisPool.queuedForDeletion) {
+        return acc;
+      }
+      return acc + thisPool.count;
+    }, 0) === 1;
 
   return (
     <Paper className={classes.root}>
@@ -161,6 +191,11 @@ export const NodePoolsDisplay: React.FunctionComponent<
             />
           </Grid>
         </Grid>
+        {hasSingleNode && (
+          <Grid item xs={12}>
+            <Notice warning text={nodeWarning} />
+          </Grid>
+        )}
         {submissionSuccess && (
           <Grid item xs={12}>
             <Notice success text={'Your node pools are being updated.'} />
@@ -185,12 +220,14 @@ export const NodePoolsDisplay: React.FunctionComponent<
               types={types}
               handleDelete={deletePool}
               updatePool={updatePool}
+              error={poolsError}
             />
           ) : (
             <NodePoolDisplayTable
               pools={pools}
               types={types}
               loading={loading}
+              error={poolsError}
             />
           )}
         </Grid>
@@ -230,9 +267,6 @@ export const NodePoolsDisplay: React.FunctionComponent<
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(
-  React.memo,
-  styled
-);
+const enhanced = compose<CombinedProps, Props>(React.memo, styled);
 
 export default enhanced(NodePoolsDisplay);

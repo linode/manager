@@ -77,10 +77,10 @@ const styles = (theme: Theme) =>
     },
     inner: {
       padding: theme.spacing(2),
-      paddingTop: 0,
+      paddingTop: theme.spacing(),
       [theme.breakpoints.up('sm')]: {
         padding: theme.spacing(3),
-        paddingTop: 0
+        paddingTop: theme.spacing()
       }
     },
     header: {}
@@ -211,7 +211,9 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
     return (
       <Paper className={classes.panel}>
         <div className={classes.inner}>
-          {error && <Notice text={error} error />}
+          {error && (
+            <Notice text={error} error spacingTop={8} spacingBottom={0} />
+          )}
           {stackScriptError && (
             <Typography variant="body2">
               An error occurred while loading the selected StackScript.

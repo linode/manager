@@ -1,10 +1,10 @@
 import { Domain } from 'linode-js-sdk/lib/domains';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { pathOr } from 'ramda';
+import { equals, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -25,8 +25,10 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import OrderBy from 'src/components/OrderBy';
 import Placeholder from 'src/components/Placeholder';
+import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import Toggle from 'src/components/Toggle';
 import domainsContainer, {
   Props as DomainProps,
@@ -35,6 +37,7 @@ import domainsContainer, {
 import { Domains } from 'src/documentation';
 import ListDomains from 'src/features/Domains/ListDomains';
 import ListGroupedDomains from 'src/features/Domains/ListGroupedDomains';
+import { ApplicationState } from 'src/store';
 import {
   openForCloning,
   openForCreating,
@@ -45,10 +48,6 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
 import DisableDomainDialog from './DisableDomainDialog';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
-
-import Notice from 'src/components/Notice';
-import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
-import { ApplicationState } from 'src/store';
 
 type ClassNames =
   | 'root'
@@ -108,6 +107,12 @@ interface State {
 interface Props {
   /** purely so we can force a preference to get the unit tests to pass */
   shouldGroupDomains?: boolean;
+  // Since Slave Domains do not have a Detail page, we allow the consumer to
+  // render this component with the "Edit Domain" drawer already opened.
+  domainForEditing?: {
+    domainId: number;
+    domainLabel: string;
+  };
 }
 
 export type CombinedProps = DomainProps &
@@ -122,6 +127,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
   state: State = {
     importDrawerOpen: false,
     importDrawerSubmitting: false,
+    importDrawerErrors: undefined,
     remote_nameserver: '',
     createDrawerMode: 'create',
     createDrawerOpen: false,
@@ -131,6 +137,28 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
   };
 
   static docs: Linode.Doc[] = [Domains];
+
+  componentDidMount = () => {
+    // Open the "Edit Domain" drawer if so specified by this component's props.
+    if (this.props.domainForEditing) {
+      const { domainId, domainLabel } = this.props.domainForEditing;
+      this.props.openForEditing(domainLabel, domainId);
+    }
+  };
+
+  componentDidUpdate = (prevProps: CombinedProps) => {
+    // Open the "Edit Domain" drawer if so specified by this component's props.
+    const { domainForEditing } = this.props;
+    if (
+      !equals(prevProps.domainForEditing, domainForEditing) &&
+      domainForEditing
+    ) {
+      this.props.openForEditing(
+        domainForEditing.domainLabel,
+        domainForEditing.domainId
+      );
+    }
+  };
 
   cancelRequest: Function;
 
@@ -241,10 +269,8 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     });
   };
 
-  openCreateDomainDrawer = (e: React.MouseEvent<HTMLElement>) => {
+  openCreateDomainDrawer = () => {
     this.props.openForCreating('Created from Domain Landing');
-
-    e.preventDefault();
   };
 
   render() {
@@ -267,7 +293,19 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     }
 
     if (!domainsData || domainsData.length === 0) {
-      return <RenderEmpty onClick={this.openCreateDomainDrawer} />;
+      return (
+        <React.Fragment>
+          <RenderEmpty
+            onCreateDomain={this.openCreateDomainDrawer}
+            onImportZone={this.openImportZoneDrawer}
+          />
+          <DomainZoneImportDrawer
+            open={this.state.importDrawerOpen}
+            onClose={this.closeImportZoneDrawer}
+            onSuccess={this.handleSuccess}
+          />
+        </React.Fragment>
+      );
     }
 
     /**
@@ -312,7 +350,11 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                 >
                   <Grid item className={classes.titleWrapper}>
                     <Breadcrumb
-                      pathname={this.props.location.pathname}
+                      // This component can be rendered with the URL
+                      // /domains/:domainId, which would result in a double
+                      // breadcrumb. Thus we give the <Breadcrumb /> an explicit
+                      // pathname.
+                      pathname="Domains"
                       labelTitle="Domains"
                       className={classes.breadcrumbs}
                     />
@@ -473,7 +515,8 @@ const EmptyCopy = () => (
 );
 
 const RenderEmpty: React.StatelessComponent<{
-  onClick: (e: React.MouseEvent<HTMLElement>) => void;
+  onCreateDomain: () => void;
+  onImportZone: () => void;
 }> = props => {
   return (
     <React.Fragment>
@@ -484,8 +527,12 @@ const RenderEmpty: React.StatelessComponent<{
         icon={DomainIcon}
         buttonProps={[
           {
-            onClick: props.onClick,
+            onClick: props.onCreateDomain,
             children: 'Add a Domain'
+          },
+          {
+            onClick: props.onImportZone,
+            children: 'Import a Zone'
           }
         ]}
       />
@@ -530,10 +577,11 @@ const mapStateToProps: MapStateToProps<
   )
 });
 
-export const connected = connect(
-  mapStateToProps,
-  { openForCreating, openForCloning, openForEditing }
-);
+export const connected = connect(mapStateToProps, {
+  openForCreating,
+  openForCloning,
+  openForEditing
+});
 
 export default compose<CombinedProps, Props>(
   setDocs(DomainsLanding.docs),
@@ -544,7 +592,6 @@ export default compose<CombinedProps, Props>(
       domainsLoading
     })
   ),
-  withRouter,
   connected,
   withSnackbar,
   styled

@@ -4,7 +4,7 @@ import { ObjectStorageClusterID } from 'linode-js-sdk/lib/object-storage';
 const PRODUCTION = 'production';
 
 /** native to webpack build */
-export const isProduction = process.env.NODE_ENV === PRODUCTION;
+export const isProductionBuild = process.env.NODE_ENV === PRODUCTION;
 
 /** required for the app to function */
 export const APP_ROOT =
@@ -31,6 +31,9 @@ export const ALGOLIA_SEARCH_KEY =
 export const LAUNCH_DARKLY_API_KEY =
   process.env.REACT_APP_LAUNCH_DARKLY_ID || '';
 
+/** If it's hitting the prod API */
+export const isProdAPI = RegExp('api.linode.com/v4').test(API_ROOT);
+
 // Maximum page size allowed by the API. Used in the `getAll()` helper function
 // to request as many items at once as possible.
 export const API_MAX_PAGE_SIZE =
@@ -53,7 +56,8 @@ export const GTM_ID = process.env.REACT_APP_GTM_ID;
 export const ACCESS_TOKEN = process.env.REACT_APP_ACCESS_TOKEN;
 
 export const LOG_PERFORMANCE_METRICS =
-  !isProduction && process.env.REACT_APP_LOG_PERFORMANCE_METRICS === 'true';
+  !isProductionBuild &&
+  process.env.REACT_APP_LOG_PERFORMANCE_METRICS === 'true';
 
 // Features
 export const isObjectStorageEnabledForEnvironment =
@@ -74,6 +78,11 @@ export const MAX_VOLUME_SIZE = 10240;
  * to get the actual interval.
  */
 export const INTERVAL = 1000;
+
+/**
+ * Time after which data from the API is considered stale
+ */
+export const REFRESH_INTERVAL = 60000;
 
 /**
  * Used by e.g. LISH to determine the websocket connection address.
@@ -176,13 +185,13 @@ export const dcDisplayCountry = {
   'ap-southeast': 'AU'
 };
 
+// Map OBJ Cluster IDs to their display country.
 export const objectStorageClusterDisplay: Record<
-  ObjectStorageClusterID | 'philadelphia',
+  ObjectStorageClusterID,
   string
 > = {
   'us-east-1': 'Newark, NJ',
-  'us-east': 'Newark, NJ',
-  philadelphia: 'Philadelphia, PA'
+  'eu-central-1': 'Frankfurt, DE'
 };
 
 export type ContinentKey = 'NA' | 'EU' | 'AS';
@@ -210,6 +219,9 @@ export const dcContinent: Record<string, ContinentKey> = {
 
 // Default error message for non-API errors
 export const DEFAULT_ERROR_MESSAGE = 'An unexpected error occurred.';
+
+// Default size limit for Images (some users have custom limits)
+export const IMAGE_DEFAULT_LIMIT = 6144;
 
 export const allowedHTMLTags = [
   'a',
@@ -244,7 +256,7 @@ export const allowedHTMLTags = [
   'tr'
 ];
 
-export const allowedHTMLAttr = ['href', 'lang', 'title', 'align', 'target'];
+export const allowedHTMLAttr = ['href', 'lang', 'title', 'align'];
 
 // List of country codes in the European Union; used for VAT display
 export const EU_COUNTRIES = [
@@ -291,7 +303,7 @@ export const LINODE_ARN_TAX_ID = '3000 1606 0612';
 export const MBpsIntraDC = 75;
 
 /**
- * MBps rate for intra DC migrations (AKA Cross-Datacenter migrations )
+ * MBps rate for inter DC migrations (AKA Cross-Datacenter migrations )
  */
 export const MBpsInterDC = 1.5;
 

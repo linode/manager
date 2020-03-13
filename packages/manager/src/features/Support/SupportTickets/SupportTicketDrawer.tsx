@@ -1,24 +1,16 @@
 import * as Bluebird from 'bluebird';
-import { getDomains } from 'linode-js-sdk/lib/domains';
-import { getLinodes } from 'linode-js-sdk/lib/linodes';
 import {
   createSupportTicket,
   uploadAttachment
 } from 'linode-js-sdk/lib/support';
-import { APIError, ResourcePage } from 'linode-js-sdk/lib/types';
-import { getVolumes } from 'linode-js-sdk/lib/volumes';
-import { compose, lensPath, set } from 'ramda';
+import { APIError } from 'linode-js-sdk/lib/types';
+import { update } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormHelperText from 'src/components/core/FormHelperText';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -26,14 +18,12 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
-import { getNodeBalancers } from 'src/services/nodebalancers';
-import composeState from 'src/utilities/composeState';
+import useEntities, { Entity } from 'src/hooks/useEntities';
 import {
   getAPIErrorOrDefault,
   getErrorMap,
   getErrorStringOrDefault
 } from 'src/utilities/errorUtils';
-import { getAll } from 'src/utilities/getAll';
 import { getVersionString } from 'src/utilities/getVersionString';
 import AttachFileForm from '../AttachFileForm';
 import { FileAttachment } from '../index';
@@ -43,42 +33,32 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import Reference from '../SupportTicketDetail/TabbedReply/MarkdownReference';
 import TabbedReply from '../SupportTicketDetail/TabbedReply/TabbedReply';
 
-type ClassNames =
-  | 'root'
-  | 'suffix'
-  | 'actionPanel'
-  | 'expPanelSummary'
-  | 'innerReply'
-  | 'rootReply'
-  | 'reference';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    suffix: {
-      fontSize: '.9rem',
-      marginRight: theme.spacing(1)
-    },
-    actionPanel: {
-      marginTop: theme.spacing(2)
-    },
-    expPanelSummary: {
-      backgroundColor: theme.bg.offWhite,
-      borderTop: `1px solid ${theme.bg.main}`
-    },
-    innerReply: {
-      padding: 0
-    },
-    rootReply: {
-      padding: 0,
-      marginBottom: theme.spacing(2)
-    },
-    reference: {
-      '& > p': {
-        marginBottom: theme.spacing(1)
-      }
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {},
+  suffix: {
+    fontSize: '.9rem',
+    marginRight: theme.spacing(1)
+  },
+  actionPanel: {
+    marginTop: theme.spacing(2)
+  },
+  expPanelSummary: {
+    backgroundColor: theme.bg.offWhite,
+    borderTop: `1px solid ${theme.bg.main}`
+  },
+  innerReply: {
+    padding: 0
+  },
+  rootReply: {
+    padding: 0,
+    marginBottom: theme.spacing(2)
+  },
+  reference: {
+    '& > p': {
+      marginBottom: theme.spacing(1)
     }
-  });
+  }
+}));
 
 interface Accumulator {
   success: string[];
@@ -90,6 +70,15 @@ interface AttachmentWithTarget {
   ticketId: number;
 }
 
+export type EntityType =
+  | 'linode_id'
+  | 'volume_id'
+  | 'domain_id'
+  | 'nodebalancer_id'
+  | 'cluster_id'
+  | 'none'
+  | 'general';
+
 export interface Props {
   open: boolean;
   prefilledTitle?: string;
@@ -100,226 +89,206 @@ export interface Props {
   hideProductSelection?: boolean;
 }
 
-export interface State {
-  data: Item[];
-  inputValue: string;
-  loading: boolean;
-  submitting: boolean;
-  ticket: Ticket;
-  errors?: APIError[];
-  files: FileAttachment[];
-}
+export type CombinedProps = Props;
 
-interface Ticket {
-  description: string;
-  entity_id: string;
-  entity_type: string;
-  summary: string;
-}
-
-export type CombinedProps = Props & WithStyles<ClassNames>;
-
-const L = {
-  open: lensPath(['ticket', 'open']),
-  summary: lensPath(['ticket', 'summary']),
-  description: lensPath(['ticket', 'description']),
-  entity_type: lensPath(['ticket', 'entity_type']),
-  entity_id: lensPath(['ticket', 'entity_id']),
-  inputValue: lensPath(['inputValue']),
-  data: lensPath(['data']),
-  errors: lensPath(['errors']),
-  files: lensPath(['files'])
-};
-
-const entityMap = {
+const entityMap: Record<string, EntityType> = {
   Linodes: 'linode_id',
   Volumes: 'volume_id',
   Domains: 'domain_id',
-  NodeBalancers: 'nodebalancer_id'
+  NodeBalancers: 'nodebalancer_id',
+  Kubernetes: 'cluster_id'
 };
 
-const entityIdtoNameMap = {
+const entityIdToNameMap: Partial<Record<EntityType, string>> = {
   linode_id: 'Linode',
   volume_id: 'Volume',
   domain_id: 'Domain',
-  nodebalancer_id: 'NodeBalancer'
+  nodebalancer_id: 'NodeBalancer',
+  cluster_id: 'Kubernetes Cluster'
 };
 
-export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
-  mounted: boolean = false;
-  composeState = composeState;
-  defaultTicket: Ticket = {
-    summary: this.props.prefilledTitle || '',
-    description: this.props.prefilledDescription || '',
-    entity_type: 'none',
-    entity_id: ''
-  };
+const entityIdToTypeMap: Record<EntityType, string> = {
+  linode_id: 'linodes',
+  volume_id: 'volumes',
+  domain_id: 'domains',
+  nodebalancer_id: 'nodeBalancers',
+  cluster_id: 'kubernetesClusters',
+  none: 'linodes',
+  general: 'linodes'
+};
 
-  state: State = {
-    data: [],
-    files: [],
-    errors: undefined,
-    inputValue: '',
-    loading: false,
-    submitting: false,
-    ticket: this.defaultTicket
-  };
+export const entitiesToItems = (type: string, entities: any) => {
+  return entities.map((entity: any) => {
+    return type === 'domain_id'
+      ? // Domains don't have labels
+        { value: entity.id, label: entity.domain }
+      : { value: entity.id, label: entity.label };
+  });
+};
 
-  componentDidMount() {
-    this.mounted = true;
-  }
+export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
+  const { open, onClose, prefilledDescription, prefilledTitle } = props;
 
-  componentWillUnmount() {
-    this.mounted = false;
-  }
+  // Ticket information
+  const [summary, setSummary] = React.useState<string>(prefilledTitle ?? '');
+  const [description, setDescription] = React.useState<string>(
+    prefilledDescription ?? ''
+  );
+  const [entityType, setEntityType] = React.useState<EntityType>('none');
+  const [entityID, setEntityID] = React.useState<string>('');
 
-  componentDidUpdate(prevProps: CombinedProps, prevState: State) {
-    if (prevState.ticket.entity_type !== this.state.ticket.entity_type) {
-      this.loadSelectedEntities();
+  // Entities for populating dropdown
+  const [data, setData] = React.useState<Item<any>[]>([]);
+  const [entitiesLoading, setLoading] = React.useState<boolean>(false);
+
+  const [files, setFiles] = React.useState<FileAttachment[]>([]);
+
+  const [errors, setErrors] = React.useState<APIError[] | undefined>();
+  const [submitting, setSubmitting] = React.useState<boolean>(false);
+
+  const entities = useEntities();
+
+  const classes = useStyles();
+
+  React.useEffect(() => {
+    if (open) {
+      resetDrawer();
     }
-    if (prevProps.open !== this.props.open) {
-      this.resetDrawer();
+  }, [open]);
+
+  const handleSetOrRequestEntities = (
+    _entity: Entity<any>,
+    _entityType: string
+  ) => {
+    if (_entity.lastUpdated === 0) {
+      setLoading(true);
+      setErrors(undefined);
+      _entity
+        .request()
+        .then(response => {
+          setLoading(false);
+          setData(entitiesToItems(_entityType, response));
+        })
+        .catch(_ => setLoading(false)); // Errors through Redux
+    } else {
+      setData(entitiesToItems(_entityType, _entity.data));
     }
-  }
-
-  handleThen = (response: ResourcePage<any>) => {
-    const type = this.state.ticket.entity_type;
-    const entityItems = response.data.map(entity => {
-      return type === 'domain_id'
-        ? // Domains don't have labels
-          { value: entity.id, label: entity.domain }
-        : { value: entity.id, label: entity.label };
-    });
-    this.setState({ data: entityItems, loading: false });
   };
 
-  handleCatch = (errors: APIError[]) => {
-    this.setState({
-      errors,
-      loading: false
-    });
-  };
-
-  loadSelectedEntities = () => {
-    this.setState({ loading: true });
-    const entity = this.state.ticket.entity_type;
-    // This is awkward but TypeScript does not like promises
-    // that have different signatures.
-    switch (entity) {
+  /**
+   * When a new entity type is selected,
+   * 1. check to see if we have data for that type.
+   * 2. If we don't, request it and assign the result to the selectedEntities state
+   * 3. If we do, directly assign the data from Redux to the selectedEntities state
+   *
+   * NOTE: Using a switch here rather than the entities[entityIdToTypeMap] logic
+   * used for error handling below; it's more explicit and safer.
+   */
+  const loadSelectedEntities = (_entityType: string) => {
+    switch (_entityType) {
       case 'linode_id': {
-        getAll(getLinodes)()
-          .then(this.handleThen)
-          .catch(this.handleCatch);
+        handleSetOrRequestEntities(entities.linodes, _entityType);
         return;
       }
       case 'volume_id': {
-        getAll(getVolumes)()
-          .then(this.handleThen)
-          .catch(this.handleCatch);
+        handleSetOrRequestEntities(entities.volumes, _entityType);
         return;
       }
       case 'domain_id': {
-        getAll(getDomains)()
-          .then(this.handleThen)
-          .catch(this.handleCatch);
+        handleSetOrRequestEntities(entities.domains, _entityType);
         return;
       }
       case 'nodebalancer_id': {
-        getAll(getNodeBalancers)()
-          .then(this.handleThen)
-          .catch(this.handleCatch);
+        handleSetOrRequestEntities(entities.nodeBalancers, _entityType);
+        return;
+      }
+      case 'cluster_id': {
+        handleSetOrRequestEntities(entities.kubernetesClusters, _entityType);
         return;
       }
       default: {
-        this.setState({ data: [], loading: false });
+        setData([]);
         return;
       }
     }
   };
 
-  resetDrawer = () => {
-    if (this.mounted) {
-      this.setState({
-        errors: undefined,
-        data: [],
-        inputValue: '',
-        ticket: this.defaultTicket
-      });
-    }
+  const resetTicket = () => {
+    setSummary(prefilledTitle ?? '');
+    setDescription(prefilledDescription ?? '');
+    setEntityID('');
+    setEntityType('none');
   };
 
-  handleSummaryInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState(set(L.summary, e.target.value));
+  const resetDrawer = () => {
+    setData([]);
+    resetTicket();
+    setFiles([]);
   };
 
-  handleDescriptionInputChange = (value: string) => {
-    this.composeState([set(L.description, value), set(L.errors, undefined)]);
+  const handleSummaryInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSummary(e.target.value);
   };
 
-  handleEntityTypeChange = (e: Item<string>) => {
+  const handleDescriptionInputChange = (value: string) => {
+    setDescription(value);
+    // setErrors?
+  };
+
+  const handleEntityTypeChange = (e: Item<string>) => {
     // Don't reset things if the type hasn't changed
-    if (this.state.ticket.entity_type === e.value) {
+    if (entityType === e.value) {
       return;
     }
-    this.composeState([
-      set(L.entity_type, e.value),
-      set(L.entity_id, null),
-      set(L.inputValue, ''),
-      set(L.data, []),
-      set(L.errors, undefined)
-    ]);
+    setEntityType(e.value as EntityType);
+    setEntityID('');
+    setErrors(undefined);
+    setData([]);
+
+    loadSelectedEntities(e.value as EntityType);
   };
 
-  handleEntityIDChange = (selected: Item | null) => {
-    this.setState(set(L.entity_id, selected ? selected.value : null));
+  const handleEntityIDChange = (selected: Item | null) => {
+    setEntityID(String(selected?.value) ?? '');
   };
 
-  getHasNoEntitiesMessage = (): string => {
-    const { data, ticket, loading } = this.state;
-    if (['none', 'general'].includes(ticket.entity_type) || loading) {
+  const getHasNoEntitiesMessage = (): string => {
+    if (['none', 'general'].includes(entityType)) {
       return '';
-    } else if (data.length === 0) {
+    } else if (data.length === 0 && !entityError) {
       // User has selected a type from the drop-down but the entity list is empty.
-      return `You don't have any ${
-        entityIdtoNameMap[ticket.entity_type]
-      }s on your account.`;
+      return `You don't have any ${entityIdToNameMap[entityType]}s on your account.`;
     } else {
       // Default case
       return '';
     }
   };
 
-  close = () => {
-    this.props.onClose();
-    if (this.mounted) {
-      this.resetDrawer();
-    }
+  const close = () => {
+    props.onClose();
+    resetDrawer();
   };
 
-  onInputValueChange = (inputValue: string) => {
-    this.setState({ inputValue });
-  };
-
-  updateFiles = (files: FileAttachment[]) => {
-    this.setState(set(L.files, files));
+  const updateFiles = (newFiles: FileAttachment[]) => {
+    setFiles(newFiles);
   };
 
   /* Reducer passed into Bluebird.reduce() below.
    * Unfortunately, this reducer has side effects. Uploads each file and accumulates a list of
    * any upload errors. Also tracks loading state of each individual file. */
-  attachFileReducer = (
+  const attachFileReducer = (
     accumulator: Accumulator,
     attachment: AttachmentWithTarget,
     idx: number
   ) => {
     return uploadAttachment(attachment.ticketId, attachment.file)
       .then(() => {
-        this.setState(
-          compose(
-            /* null out an uploaded file after upload */
-            set(lensPath(['files', idx, 'file']), null),
-            set(lensPath(['files', idx, 'uploading']), false),
-            set(lensPath(['files', idx, 'uploaded']), true) as () => boolean
+        /* null out an uploaded file after upload */
+        setFiles((oldFiles: FileAttachment[]) =>
+          update(
+            idx,
+            { file: null, uploading: false, uploaded: true, name: '' },
+            oldFiles
           )
         );
         return accumulator;
@@ -329,7 +298,9 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
          * Note! We want the first few uploads to succeed even if the last few
          * fail! Don't try to aggregate errors!
          */
-        this.setState(set(lensPath(['files', idx, 'uploading']), false));
+        setFiles(oldFiles =>
+          update(idx, { ...oldFiles[idx], uploading: false }, oldFiles)
+        );
         const newError = getErrorStringOrDefault(
           attachmentErrors,
           'There was an error attaching this file. Please try again.'
@@ -345,44 +316,40 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
   };
 
   /* Called after the ticket is successfully completed. */
-  attachFiles = (ticketId: number) => {
-    const { files } = this.state;
+  const attachFiles = (ticketId: number) => {
     const filesWithTarget: AttachmentWithTarget[] = files
       .filter(file => !file.uploaded)
       .map((file, idx) => {
-        this.setState(set(lensPath(['files', idx, 'uploading']), true));
+        setFiles(oldFiles =>
+          update(idx, { ...oldFiles[idx], uploading: true }, oldFiles)
+        );
         const formData = new FormData();
-        formData.append('file', file.file);
+        formData.append('file', file.file ?? ''); // Safety check for TS only
         formData.append('name', file.name);
         return { file: formData, ticketId };
       });
 
     /* Upload each file as an attachment, and return a Promise that will resolve to
      *  an array of aggregated errors that may have occurred for individual uploads. */
-    return Bluebird.reduce(filesWithTarget, this.attachFileReducer, {
+    return Bluebird.reduce(filesWithTarget, attachFileReducer, {
       success: [],
       errors: []
     });
   };
 
-  onSubmit = () => {
-    const { description, entity_type, entity_id, summary } = this.state.ticket;
-    const { onSuccess } = this.props;
-    if (!['none', 'general'].includes(entity_type) && !entity_id) {
-      this.setState({
-        errors: [
-          {
-            field: 'input',
-            reason: `Please select a ${entityIdtoNameMap[entity_type]}.`
-          }
-        ]
-      });
+  const onSubmit = () => {
+    const { onSuccess } = props;
+    if (!['none', 'general'].includes(entityType) && !entityID) {
+      setErrors([
+        {
+          field: 'input',
+          reason: `Please select a ${entityIdToNameMap[entityType]}.`
+        }
+      ]);
       return;
     }
-    this.setState({
-      errors: undefined,
-      submitting: true
-    });
+    setErrors(undefined);
+    setSubmitting(true);
 
     const versionString = getVersionString();
     const updatedDescription = versionString
@@ -392,207 +359,178 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
     createSupportTicket({
       description: updatedDescription,
       summary,
-      [entity_type]: Number(entity_id)
+      [entityType]: Number(entityID)
     })
       .then(response => {
-        if (!this.mounted) {
-          return;
-        }
-        this.setState({
-          errors: undefined,
-          submitting: false,
-          ticket: this.defaultTicket
-        });
+        setErrors(undefined);
+        setSubmitting(false);
+        resetTicket();
         return response;
       })
       .then(response => {
-        this.attachFiles(response!.id).then(
-          ({ success, errors }: Accumulator) => {
-            if (!this.props.keepOpenOnSuccess) {
-              this.close();
+        attachFiles(response!.id).then(
+          ({ success, errors: _errors }: Accumulator) => {
+            if (!props.keepOpenOnSuccess) {
+              close();
             }
             /* Errors will be an array of errors, or empty if all attachments succeeded. */
-            onSuccess(response!.id, errors);
+            onSuccess(response!.id, _errors);
           }
         );
       })
-      .catch(errors => {
+      .catch(errResponse => {
         /* This block will only handle errors in creating the actual ticket; attachment
          * errors are handled above. */
-        if (!this.mounted) {
-          return;
-        }
-        this.setState(
-          {
-            errors: getAPIErrorOrDefault(errors),
-            submitting: false
-          },
-          () => scrollErrorIntoView()
-        );
+        setErrors(getAPIErrorOrDefault(errResponse));
+        setSubmitting(false);
+        scrollErrorIntoView();
       });
   };
 
-  renderEntityTypes = () => {
+  const renderEntityTypes = () => {
     return Object.keys(entityMap).map((key: string) => {
       return { label: key, value: entityMap[key] };
     });
   };
 
-  render() {
-    const { classes } = this.props;
-    const { data, errors, files, inputValue, submitting, ticket } = this.state;
-    const requirementsMet =
-      ticket.description.length > 0 && ticket.summary.length > 0;
+  const requirementsMet = description.length > 0 && summary.length > 0;
 
-    const hasErrorFor = getErrorMap(
-      ['summary', 'description', 'input'],
-      errors
-    );
-    const summaryError = hasErrorFor.summary;
-    const descriptionError = hasErrorFor.description;
-    const generalError = hasErrorFor.none;
-    const inputError = hasErrorFor.input;
+  const hasErrorFor = getErrorMap(['summary', 'description', 'input'], errors);
+  const summaryError = hasErrorFor.summary;
+  const descriptionError = hasErrorFor.description;
+  const generalError = hasErrorFor.none;
+  const inputError = hasErrorFor.input;
 
-    const hasNoEntitiesMessage = this.getHasNoEntitiesMessage();
+  const entityError = Boolean(entities[entityIdToTypeMap[entityType]]?.error)
+    ? `Error loading ${entityIdToNameMap[entityType]}s`
+    : undefined;
 
-    const topicOptions = [
-      ...this.renderEntityTypes(),
-      { label: 'None/General', value: 'general' }
-    ];
+  const hasNoEntitiesMessage = getHasNoEntitiesMessage();
 
-    const selectedTopic = topicOptions.find(eachTopic => {
-      return eachTopic.value === ticket.entity_type;
-    });
+  const topicOptions = [
+    ...renderEntityTypes(),
+    { label: 'None/General', value: 'general' }
+  ];
 
-    const selectedEntity =
-      data.find(
-        thisEntity => thisEntity.value === this.state.ticket.entity_id
-      ) || null;
+  const selectedTopic = topicOptions.find(eachTopic => {
+    return eachTopic.value === entityType;
+  });
 
-    return (
-      <Drawer
-        open={this.props.open}
-        onClose={this.props.onClose}
-        title="Open a Support Ticket"
-      >
-        {this.props.children || (
-          <React.Fragment>
-            {generalError && (
-              <Notice error text={generalError} data-qa-notice />
-            )}
+  const selectedEntity =
+    data.find(thisEntity => String(thisEntity.value) === entityID) || null;
 
-            <Typography data-qa-support-ticket-helper-text>
-              {`We love our customers, and we're here to help if you need us.
+  return (
+    <Drawer open={open} onClose={onClose} title="Open a Support Ticket">
+      {props.children || (
+        <React.Fragment>
+          {generalError && <Notice error text={generalError} data-qa-notice />}
+
+          <Typography data-qa-support-ticket-helper-text>
+            {`We love our customers, and we're here to help if you need us.
           Please keep in mind that not all topics are within the scope of our support.
           For overall system status, please see `}
-              <a
-                href="https://status.linode.com"
-                target="_blank"
-                aria-describedby="external-site"
-                rel="noopener noreferrer"
-              >
-                status.linode.com
-              </a>
-              .
-            </Typography>
-
-            {this.props.hideProductSelection ? null : (
-              <React.Fragment>
-                <Select
-                  options={topicOptions}
-                  label="What is this regarding?"
-                  value={selectedTopic}
-                  onChange={this.handleEntityTypeChange}
-                  data-qa-ticket-entity-type
-                  placeholder="Choose a Product"
-                  isClearable={false}
-                />
-                {!['none', 'general'].includes(ticket.entity_type) && (
-                  <>
-                    <Select
-                      options={data}
-                      value={selectedEntity}
-                      disabled={data.length === 0}
-                      errorText={inputError}
-                      placeholder={`Select a ${
-                        entityIdtoNameMap[ticket.entity_type]
-                      }`}
-                      label={entityIdtoNameMap[ticket.entity_type]}
-                      inputValue={inputValue}
-                      onChange={this.handleEntityIDChange}
-                      onInputChange={this.onInputValueChange}
-                      data-qa-ticket-entity-id
-                      isLoading={this.state.loading}
-                      isClearable={false}
-                    />
-                    {hasNoEntitiesMessage && (
-                      <FormHelperText>{hasNoEntitiesMessage}</FormHelperText>
-                    )}
-                  </>
-                )}
-              </React.Fragment>
-            )}
-            <TextField
-              label="Title"
-              placeholder="Enter a title for your ticket."
-              required
-              value={ticket.summary}
-              onChange={this.handleSummaryInputChange}
-              errorText={summaryError}
-              data-qa-ticket-summary
-            />
-            <TabbedReply
-              required
-              error={descriptionError}
-              handleChange={this.handleDescriptionInputChange}
-              value={ticket.description}
-              innerClass={this.props.classes.innerReply}
-              rootClass={this.props.classes.rootReply}
-              placeholder={
-                "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
-              }
-            />
-            {/* <TicketAttachmentList attachments={attachments} /> */}
-            <ExpansionPanel
-              heading="Formatting Tips"
-              detailProps={{ className: classes.expPanelSummary }}
+            <a
+              href="https://status.linode.com"
+              target="_blank"
+              aria-describedby="external-site"
+              rel="noopener noreferrer"
             >
-              <Reference rootClass={this.props.classes.reference} />
-            </ExpansionPanel>
-            <AttachFileForm
-              inlineDisplay
-              files={files}
-              updateFiles={this.updateFiles}
-            />
-            <ActionsPanel style={{ marginTop: 16 }}>
-              <Button
-                onClick={this.onSubmit}
-                disabled={!requirementsMet}
-                loading={submitting}
-                buttonType="primary"
-                data-qa-submit
-              >
-                Open Ticket
-              </Button>
-              <Button
-                onClick={this.close}
-                buttonType="secondary"
-                className="cancel"
-                data-qa-cancel
-              >
-                Cancel
-              </Button>
-            </ActionsPanel>
-          </React.Fragment>
-        )}
-      </Drawer>
-    );
-  }
-}
+              status.linode.com
+            </a>
+            .
+          </Typography>
 
-const styled = withStyles(styles);
+          {props.hideProductSelection ? null : (
+            <React.Fragment>
+              <Select
+                options={topicOptions}
+                label="What is this regarding?"
+                value={selectedTopic}
+                onChange={handleEntityTypeChange}
+                data-qa-ticket-entity-type
+                placeholder="Choose a Product"
+                isClearable={false}
+              />
+              {!['none', 'general'].includes(entityType) && (
+                <>
+                  <Select
+                    options={data}
+                    value={selectedEntity}
+                    disabled={data.length === 0}
+                    errorText={entityError || inputError}
+                    placeholder={`Select a ${entityIdToNameMap[entityType]}`}
+                    label={entityIdToNameMap[entityType] ?? 'Entity Select'}
+                    onChange={handleEntityIDChange}
+                    data-qa-ticket-entity-id
+                    isLoading={entitiesLoading}
+                    isClearable={false}
+                  />
+                  {hasNoEntitiesMessage && (
+                    <FormHelperText>{hasNoEntitiesMessage}</FormHelperText>
+                  )}
+                </>
+              )}
+            </React.Fragment>
+          )}
+          <TextField
+            label="Title"
+            placeholder="Enter a title for your ticket."
+            required
+            value={summary}
+            onChange={handleSummaryInputChange}
+            errorText={summaryError}
+            data-qa-ticket-summary
+          />
+          <TabbedReply
+            required
+            error={descriptionError}
+            handleChange={handleDescriptionInputChange}
+            value={description}
+            innerClass={classes.innerReply}
+            rootClass={classes.rootReply}
+            placeholder={
+              "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
+            }
+          />
+          {/* <TicketAttachmentList attachments={attachments} /> */}
+          <ExpansionPanel
+            heading="Formatting Tips"
+            detailProps={{ className: classes.expPanelSummary }}
+          >
+            <Reference rootClass={classes.reference} />
+          </ExpansionPanel>
+          <AttachFileForm
+            inlineDisplay
+            files={files}
+            updateFiles={updateFiles}
+          />
+          <ActionsPanel style={{ marginTop: 16 }}>
+            <Button
+              onClick={onSubmit}
+              disabled={!requirementsMet}
+              loading={submitting}
+              buttonType="primary"
+              data-qa-submit
+              data-testid="submit"
+            >
+              Open Ticket
+            </Button>
+            <Button
+              onClick={close}
+              buttonType="secondary"
+              className="cancel"
+              data-qa-cancel
+              data-testid="cancel"
+            >
+              Cancel
+            </Button>
+          </ActionsPanel>
+        </React.Fragment>
+      )}
+    </Drawer>
+  );
+};
 
-export default recompose<CombinedProps, Props>(
-  styled,
-  SectionErrorBoundary
-)(SupportTicketDrawer);
+export default recompose<CombinedProps, Props>(SectionErrorBoundary)(
+  SupportTicketDrawer
+);

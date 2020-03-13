@@ -21,9 +21,7 @@ import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 
 import DefaultLoader from 'src/components/DefaultLoader';
-import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import LandingLoading from 'src/components/LandingLoading';
 import NotFound from 'src/components/NotFound';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import SideMenu from 'src/components/SideMenu';
@@ -38,10 +36,7 @@ import withFeatureFlags, {
 
 import Logo from 'src/assets/logo/logo-text.svg';
 
-import {
-  isKubernetesEnabled as _isKubernetesEnabled,
-  isObjectStorageEnabled
-} from './utilities/accountCapabilities';
+import { isKubernetesEnabled as _isKubernetesEnabled } from './utilities/accountCapabilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appFrame: {
@@ -330,11 +325,10 @@ const MainContent: React.FC<CombinedProps> = props => {
                         <Route exact strict path="/images" component={Images} />
                         <Redirect path="/images*" to="/images" />
                         <Route path="/stackscripts" component={StackScripts} />
-                        {getObjectStorageRoute(
-                          props.accountLoading,
-                          props.accountCapabilities,
-                          props.accountError
-                        )}
+                        <Route
+                          path="/object-storage"
+                          component={ObjectStorage}
+                        />
                         {isKubernetesEnabled && (
                           <Route path="/kubernetes" component={Kubernetes} />
                         )}
@@ -384,34 +378,6 @@ const MainContent: React.FC<CombinedProps> = props => {
       }}
     </PreferenceToggle>
   );
-};
-
-// Render the correct <Route /> component for Object Storage,
-// depending on whether /account is loading or has errors, and
-// whether or not the feature is enabled for this account.
-const getObjectStorageRoute = (
-  accountLoading: boolean,
-  accountCapabilities: AccountCapability[],
-  accountError?: Error | APIError[]
-) => {
-  let component;
-  if (accountLoading) {
-    component = () => <LandingLoading delayInMS={1000} />;
-  } else if (accountError) {
-    component = () => (
-      <ErrorState errorText="An error has occurred. Please reload and try again." />
-    );
-  } else if (isObjectStorageEnabled(accountCapabilities)) {
-    component = ObjectStorage;
-  }
-
-  // If Object Storage is not enabled for this account, return `null`,
-  // which will appear as a 404
-  if (!component) {
-    return null;
-  }
-
-  return <Route path="/object-storage" component={component} />;
 };
 
 export default compose<CombinedProps, Props>(

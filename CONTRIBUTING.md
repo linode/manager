@@ -20,12 +20,6 @@ In order to contribute to Linode UI, we recommend the following minimum version 
 2. Node v10.16.0
 3. Yarn 1.16.0
 
-You must also have [Lerna](https://lerna.js.org/) installed globally, so please run the following to install the package to your local machine:
-
-```
-yarn global add lerna
-```
-
 ## Development
 
 ### Coding Style

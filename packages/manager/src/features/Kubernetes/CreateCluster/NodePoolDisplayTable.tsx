@@ -12,11 +12,9 @@ import TableHead from 'src/components/core/TableHead';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableRowLoading from 'src/components/TableRowLoading';
-import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-import { PoolNodeWithPrice } from '.././types';
-import NodePoolRow from './NodePoolRow';
+import NodePoolTableContent, {
+  Props as TableContentProps
+} from './NodePoolTableContent';
 
 type ClassNames = 'root' | 'small';
 
@@ -37,31 +35,14 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface Props {
-  pools: PoolNodeWithPrice[];
-  types: ExtendedType[];
-  loading: boolean;
-  handleDelete?: (poolIdx: number) => void;
-  updatePool?: (poolIdx: number, updatedPool: PoolNodeWithPrice) => void;
+interface Props extends TableContentProps {
   small?: boolean;
-  editable?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const NodePoolDisplayTable: React.FunctionComponent<
-  CombinedProps
-> = props => {
-  const {
-    classes,
-    editable,
-    handleDelete,
-    loading,
-    pools,
-    small,
-    types,
-    updatePool
-  } = props;
+export const NodePoolDisplayTable: React.FunctionComponent<CombinedProps> = props => {
+  const { classes, small, ...rest } = props;
 
   return (
     <Table
@@ -80,38 +61,7 @@ export const NodePoolDisplayTable: React.FunctionComponent<
         </TableRow>
       </TableHead>
       <TableBody>
-        {loading ? (
-          <TableRowLoading colSpan={12} />
-        ) : pools.length === 0 ? (
-          <TableRowEmptyState
-            colSpan={12}
-            message={"You haven't added any node pools yet."}
-          />
-        ) : (
-          pools.map((thisPool, idx) => {
-            const thisPoolType = types.find(
-              thisType => thisType.id === thisPool.type
-            );
-            return (
-              <NodePoolRow
-                key={`node-pool-row-${idx}`}
-                editable={Boolean(editable)}
-                idx={idx}
-                pool={thisPool}
-                type={thisPoolType}
-                deletePool={handleDelete ? () => handleDelete(idx) : undefined}
-                updatePool={updatePool}
-                updateFor={[
-                  thisPool,
-                  thisPoolType,
-                  editable,
-                  classes,
-                  updatePool
-                ]}
-              />
-            );
-          })
-        )}
+        <NodePoolTableContent {...rest} />
       </TableBody>
     </Table>
   );
@@ -119,9 +69,6 @@ export const NodePoolDisplayTable: React.FunctionComponent<
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(
-  React.memo,
-  styled
-);
+const enhanced = compose<CombinedProps, Props>(React.memo, styled);
 
 export default enhanced(NodePoolDisplayTable);

@@ -22,7 +22,7 @@ describe('ObjectStorageLanding', () => {
   });
 
   it('renders an "OrderBy" component, ordered by label', () => {
-    expect(wrapper.find('OrderBy').prop('orderBy')).toBe('label');
+    expect(wrapper.find('Connect(OrderBy)').prop('orderBy')).toBe('label');
   });
 
   it('renders a loading state when the data is loading', () => {

@@ -8,7 +8,10 @@ import {
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
-import { getMaxUnitAndFormatNetwork } from 'src/features/Longview/shared/utilities';
+import {
+  formatNetworkTooltip,
+  getMaxUnitAndFormatNetwork
+} from 'src/features/Longview/shared/utilities';
 import { LongviewProcesses, MySQLResponse } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import ProcessGraphs from '../ProcessGraphs';
@@ -71,7 +74,7 @@ export const MySQLGraphs: React.FC<CombinedProps> = props => {
   const inbound = data?.Bytes_received ?? [];
   const outbound = data?.Bytes_sent ?? [];
 
-  const { maxUnit: netMaxUnit, formatNetwork } = getMaxUnitAndFormatNetwork(
+  const { maxUnit, formatNetwork } = getMaxUnitAndFormatNetwork(
     inbound,
     outbound
   );
@@ -121,7 +124,10 @@ export const MySQLGraphs: React.FC<CombinedProps> = props => {
             <Grid item xs={12} sm={6} className={classes.smallGraph}>
               <LongviewLineGraph
                 title="Throughput"
-                subtitle={`${netMaxUnit}/s`}
+                subtitle={`${maxUnit}/s`}
+                unit={'/s'}
+                formatData={formatNetwork}
+                formatTooltip={formatNetworkTooltip}
                 nativeLegend
                 error={error}
                 loading={loading}
@@ -132,13 +138,13 @@ export const MySQLGraphs: React.FC<CombinedProps> = props => {
                     label: 'Inbound',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.inbound,
-                    data: _convertData(inbound, start, end, formatNetwork)
+                    data: _convertData(inbound, start, end)
                   },
                   {
                     label: 'Outbound',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.outbound,
-                    data: _convertData(outbound, start, end, formatNetwork)
+                    data: _convertData(outbound, start, end)
                   }
                 ]}
               />
@@ -147,6 +153,7 @@ export const MySQLGraphs: React.FC<CombinedProps> = props => {
               <LongviewLineGraph
                 title="Connections"
                 subtitle="connections/s"
+                unit={' connections/s'}
                 nativeLegend
                 error={error}
                 loading={loading}

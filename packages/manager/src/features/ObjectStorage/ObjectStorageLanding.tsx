@@ -18,12 +18,15 @@ import { ThunkDispatch } from 'redux-thunk';
 import Breadcrumb from 'src/components/Breadcrumb';
 import AppBar from 'src/components/core/AppBar';
 import Box from 'src/components/core/Box';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import DefaultLoader from 'src/components/DefaultLoader';
 import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import PromotionalOfferCard from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
 import TabLink from 'src/components/TabLink';
+import useFlags from 'src/hooks/useFlags';
 import { ApplicationState } from 'src/store';
 import { getAllBuckets } from 'src/store/bucket/bucket.requests';
 import { requestClusters as _requestClusters } from 'src/store/clusters/clusters.actions';
@@ -38,9 +41,17 @@ const AccessKeyLanding = DefaultLoader({
   loader: () => import('./AccessKeyLanding/AccessKeyLanding')
 });
 
+const useStyles = makeStyles((theme: Theme) => ({
+  promo: {
+    marginBottom: theme.spacing() / 2
+  }
+}));
+
 type CombinedProps = StateProps & DispatchProps & RouteComponentProps<{}>;
 
 export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = props => {
+  const classes = useStyles();
+
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     {
@@ -100,6 +111,14 @@ export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = prop
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
 
+  const flags = useFlags();
+
+  const objPromotionalOffers = (
+    flags.promotionalOffers ?? []
+  ).filter(promotionalOffer =>
+    promotionalOffer.features.includes('Object Storage')
+  );
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Object Storage" />
@@ -136,6 +155,14 @@ export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = prop
           ))}
         </Tabs>
       </AppBar>
+      {objPromotionalOffers.map(promotionalOffer => (
+        <PromotionalOfferCard
+          key={promotionalOffer.name}
+          {...promotionalOffer}
+          fullWidth
+          className={classes.promo}
+        />
+      ))}
       <Switch>
         <Route
           exact

@@ -108,18 +108,6 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
     );
   }
 
-  handleRowClick = (
-    e: React.ChangeEvent<HTMLTableRowElement>,
-    id: number,
-    domain: string,
-    type: string
-  ) => {
-    if (type === 'slave') {
-      e.preventDefault();
-      this.props.openForEditing(domain, id);
-    }
-  };
-
   renderAction = () =>
     this.props.domainCount > 5 ? (
       <ViewAllLink
@@ -160,14 +148,7 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
 
     return data.map(({ id, domain, type, status }) => (
-      <TableRow
-        key={domain}
-        rowLink={
-          type === 'slave'
-            ? e => this.handleRowClick(e, id, domain, type)
-            : `/domains/${id}`
-        }
-      >
+      <TableRow key={domain} rowLink={`/domains/${id}`}>
         <TableCell className={classes.labelCol}>
           <Grid container wrap="nowrap" alignItems="center">
             <Grid item className="py0">
@@ -181,7 +162,7 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
             <Grid item className={classes.labelGridWrapper}>
               <div className={classes.labelStatusWrapper}>
                 {type !== 'slave' ? (
-                  <Link to={`/domains/${id}`} tabIndex={-1}>
+                  <Link to={`/domains/${id}`} tabIndex={0}>
                     <Typography
                       variant="h3"
                       className={classes.wrapHeader}
@@ -263,10 +244,7 @@ interface DispatchProps {
   openForEditing: (domain: string, id: number) => void;
 }
 
-const connected = connect(
-  undefined,
-  { openForEditing }
-);
+const connected = connect(undefined, { openForEditing });
 
 const enhanced = recompose<CombinedProps, {}>(
   connected,

@@ -140,15 +140,28 @@ export class TicketList extends React.Component<CombinedProps, {}> {
           <Table aria-label="List of Tickets">
             <TableHead>
               <TableRow>
-                <TableCell
+                <TableSortCell
+                  label="summary"
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  active={isActive('summary')}
                   data-qa-support-subject-header
+                  noWrap
                   className={classes.cellSubject}
                 >
                   Subject
-                </TableCell>
-                <TableCell data-qa-support-id-header className={classes.cellId}>
+                </TableSortCell>
+                <TableSortCell
+                  label="id"
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  active={isActive('id')}
+                  data-qa-support-id-header
+                  noWrap
+                  className={classes.cellId}
+                >
                   Ticket ID
-                </TableCell>
+                </TableSortCell>
                 <TableCell
                   data-qa-support-regarding-header
                   className={classes.cellRegarding}
@@ -177,13 +190,17 @@ export class TicketList extends React.Component<CombinedProps, {}> {
                 >
                   Last Updated
                 </TableSortCell>
-                <TableCell
+                <TableSortCell
+                  label="updated_by"
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  active={isActive('updated_by')}
                   data-qa-support-updated-by-header
                   noWrap
                   className={classes.cellUpdatedBy}
                 >
                   Updated By
-                </TableCell>
+                </TableSortCell>
               </TableRow>
             </TableHead>
             <TableBody>{this.renderContent()}</TableBody>
@@ -213,7 +230,4 @@ const updatedRequest = (ownProps: Props, params: any, filters: any) => {
 
 const paginated = Pagey(updatedRequest);
 
-export default compose(
-  paginated,
-  styled
-)(TicketList);
+export default compose(paginated, styled)(TicketList);

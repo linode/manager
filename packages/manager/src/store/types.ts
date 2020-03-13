@@ -57,6 +57,20 @@ export interface MappedEntityState<
   loading: boolean;
 }
 
+// NOTE: These 2 interfaces are as of 2/26/2020 what we intend to consolidate around
+export interface MappedEntityState2<T extends Entity, E = APIError[]> {
+  error: E;
+  lastUpdated: number;
+  loading: boolean;
+  itemsById: Record<string, T>;
+  results: number;
+}
+
+export type RelationalMappedEntityState<T extends Entity, E> = Record<
+  string | number,
+  MappedEntityState2<T, E>
+>;
+
 export interface EntityState<T extends Entity, E = APIError[] | undefined> {
   results: TypeOfID<T>[];
   entities: T[];
@@ -92,12 +106,11 @@ export type EventHandler = (
 ) => void;
 
 export interface EntitiesAsObjectState<T> {
-  error: Partial<EntityError>;
+  error: EntityError;
   data: Record<string, T>;
   results: number;
   lastUpdated: number;
   loading: boolean;
-  listOfIDsInOriginalOrder: (string | number)[];
 }
 
 /**
