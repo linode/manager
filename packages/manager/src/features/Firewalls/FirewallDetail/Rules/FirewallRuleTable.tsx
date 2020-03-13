@@ -1,4 +1,5 @@
 import * as classnames from 'classnames';
+import { prop, uniqBy } from 'ramda';
 import * as React from 'react';
 import Undo from 'src/assets/icons/undo.svg';
 import AddNewLink from 'src/components/AddNewLink';
@@ -58,6 +59,7 @@ interface RuleRow {
   addresses: string;
   id: number;
   status: RuleStatus;
+  errors?: FirewallRuleError[];
 }
 
 // =============================================================================
@@ -70,7 +72,6 @@ interface Props {
   triggerDeleteFirewallRule: (idx: number) => void;
   triggerOpenRuleDrawerForEditing: (idx: number) => void;
   triggerUndo: (idx: number) => void;
-  errors: FirewallRuleError[];
 }
 
 type CombinedProps = Props;
@@ -81,8 +82,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
     rulesWithStatus,
     triggerDeleteFirewallRule,
     triggerOpenRuleDrawerForEditing,
-    triggerUndo,
-    errors
+    triggerUndo
   } = props;
 
   const classes = useStyles();
@@ -195,7 +195,6 @@ interface FirewallRuleTableRowProps extends RuleRow {
   triggerDeleteFirewallRule: (idx: number) => void;
   triggerOpenRuleDrawerForEditing: (idx: number) => void;
   triggerUndo: (idx: number) => void;
-  error?: FirewallRuleError;
 }
 
 const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
@@ -212,18 +211,13 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
       triggerDeleteFirewallRule,
       triggerOpenRuleDrawerForEditing,
       triggerUndo,
-      error
+      errors
     } = props;
 
     const actionMenuProps = {
       idx: id,
       triggerDeleteFirewallRule,
       triggerOpenRuleDrawerForEditing
-    };
-
-    const conditionalErrorProps = {
-      errorFormField: error?.formField,
-      errorReason: error?.reason
     };
 
     return (
@@ -235,15 +229,14 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
         <TableCell>{type}</TableCell>
         <TableCell>
           {protocol}
-          <ConditionalError {...conditionalErrorProps} formField="protocol" />
+          <ConditionalError errors={errors} formField="protocol" />
         </TableCell>
         <TableCell>
           {ports}
-          <ConditionalError {...conditionalErrorProps} formField="ports" />
+          <ConditionalError errors={errors} formField="ports" />
         </TableCell>
         <TableCell>
-          {addresses}{' '}
-          <ConditionalError {...conditionalErrorProps} formField="addresses" />
+          {addresses} <ConditionalError errors={errors} formField="addresses" />
         </TableCell>
         <TableCell style={{ width: '10%' }}>
           {status !== 'NOT_MODIFIED' ? (
@@ -275,24 +268,31 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
 
 interface ConditionalErrorProps {
   formField: string;
-  errorFormField?: string;
-  errorReason?: string;
+  errors?: FirewallRuleError[];
 }
 
 export const ConditionalError: React.FC<ConditionalErrorProps> = React.memo(
   props => {
     const classes = useStyles();
 
-    const { formField, errorFormField, errorReason } = props;
+    const { formField, errors } = props;
 
-    if (formField !== errorFormField || !errorReason) {
-      return null;
-    }
+    // It's possible to have multiple IP errors, but we only want to display ONE in the table row.
+    const uniqueByFormField = uniqBy(prop('formField'), errors ?? []);
 
     return (
-      <div className={classes.error}>
-        <Typography variant="body2">{errorReason}</Typography>
-      </div>
+      <>
+        {uniqueByFormField.map(thisError => {
+          if (formField !== thisError.formField || !thisError.reason) {
+            return null;
+          }
+          return (
+            <div key={thisError.idx} className={classes.error}>
+              <Typography variant="body2">{thisError.reason}</Typography>
+            </div>
+          );
+        })}
+      </>
     );
   }
 );
@@ -312,11 +312,9 @@ export const firewallRuleToRowData = (
     const ruleType = ruleToPredefinedFirewall(thisRule);
 
     return {
+      ...thisRule,
       type: generateRuleLabel(ruleType),
-      protocol: thisRule.protocol,
       addresses: generateAddressesLabel(thisRule.addresses),
-      ports: thisRule.ports,
-      status: thisRule.status,
       id: idx
     };
   });

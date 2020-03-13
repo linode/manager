@@ -51,13 +51,14 @@ export interface Props {
   helperText?: string;
   error?: string;
   ips: string[];
+  ipErrors?: Record<number, string>;
   onChange: (ips: string[]) => void;
   inputProps?: InputBaseProps;
   className?: string;
 }
 
 export const MultipleIPInput: React.FC<Props> = props => {
-  const { error, onChange, ips, title, helperText } = props;
+  const { error, onChange, ips, title, helperText, ipErrors } = props;
   const classes = useStyles();
 
   const handleChange = (
@@ -117,6 +118,8 @@ export const MultipleIPInput: React.FC<Props> = props => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 handleChange(e, idx)
               }
+              error={Boolean(ipErrors?.[idx])}
+              errorText={ipErrors?.[idx]}
               hideLabel
             />
           </Grid>

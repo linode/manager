@@ -9,7 +9,7 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import FixedToolBar from 'src/components/FixedToolbar/FixedToolbar';
-// import Notice from 'src/components/Notice';
+import Notice from 'src/components/Notice';
 import withFirewalls, {
   DispatchProps
 } from 'src/containers/firewalls.container';
@@ -22,7 +22,7 @@ import curriedFirewallRuleEditorReducer, {
   prepareRules
 } from './firewallRuleEditor';
 import FirewallRuleTable from './FirewallRuleTable';
-import { Category, parseFirewallRuleErrors } from './shared';
+import { Category, parseFirewallRuleError } from './shared';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
@@ -68,7 +68,9 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
   });
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   // @todo fine-grained error handling.
-  const [errors, setErrors] = React.useState<APIError[] | undefined>();
+  const [generalErrors, setGeneralErrors] = React.useState<
+    APIError[] | undefined
+  >();
   const [discardChangesModalOpen, setDiscardChangesModalOpen] = React.useState<
     boolean
   >(false);
@@ -130,12 +132,13 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
 
   const handleUndo = (category: Category, idx: number) => {
     const dispatch = dispatchFromCategory(category);
+
     dispatch({ type: 'UNDO', idx });
   };
 
   const applyChanges = () => {
     setSubmitting(true);
-    setErrors(undefined);
+    setGeneralErrors(undefined);
 
     // Gather rules from state for submission to the API.
     const finalRules: FirewallRules = {
@@ -152,10 +155,31 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         outboundDispatch({ type: 'RESET', rules: _rules.outbound ?? [] });
       })
       .catch(err => {
+        setSubmitting(false);
+
         const _err = getAPIErrorOrDefault(err);
 
-        setSubmitting(false);
-        setErrors(_err);
+        for (const thisError of _err) {
+          const parsedError = parseFirewallRuleError(thisError);
+
+          // If we are unable to parse this error as a FirewallRuleError,
+          // consider it a general error.
+          if (parsedError === null) {
+            setGeneralErrors(prevGeneralErrors => [
+              ...(prevGeneralErrors ?? []),
+              thisError
+            ]);
+          } else {
+            const dispatch = dispatchFromCategory(
+              parsedError.category as Category
+            );
+            dispatch({
+              type: 'SET_ERROR',
+              idx: parsedError.idx,
+              error: parsedError
+            });
+          }
+        }
       });
   };
 
@@ -180,8 +204,6 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         : outboundRules[ruleDrawer.ruleIdx]
       : undefined;
 
-  const parsedErrors = parseFirewallRuleErrors(errors);
-
   return (
     <>
       <Typography variant="body1" className={classes.copy}>
@@ -190,9 +212,9 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         permitted by a rule is blocked.
       </Typography>
 
-      {/* {errors?.length === 1 && (
-        <Notice spacingTop={8} error text={errors[0].reason} />
-      )} */}
+      {generalErrors?.length === 1 && (
+        <Notice spacingTop={8} error text={generalErrors[0].reason} />
+      )}
 
       <div className={classes.table}>
         <FirewallRuleTable
@@ -204,7 +226,6 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
           }
           triggerDeleteFirewallRule={idx => handleDeleteRule('inbound', idx)}
           triggerUndo={idx => handleUndo('inbound', idx)}
-          errors={parsedErrors.inbound}
         />
       </div>
       <div className={classes.table}>
@@ -217,7 +238,6 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
           }
           triggerDeleteFirewallRule={idx => handleDeleteRule('outbound', idx)}
           triggerUndo={idx => handleUndo('outbound', idx)}
-          errors={parsedErrors.outbound}
         />
       </div>
       <FirewallRuleDrawer
@@ -252,7 +272,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         handleClose={() => setDiscardChangesModalOpen(false)}
         handleDiscard={() => {
           setDiscardChangesModalOpen(false);
-          setErrors(undefined);
+          setGeneralErrors(undefined);
           inboundDispatch({ type: 'DISCARD_CHANGES' });
           outboundDispatch({ type: 'DISCARD_CHANGES' });
         }}

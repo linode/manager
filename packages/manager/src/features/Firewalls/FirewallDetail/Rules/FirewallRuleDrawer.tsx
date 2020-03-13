@@ -30,7 +30,7 @@ import {
 } from 'src/features/Firewalls/shared';
 import capitalize from 'src/utilities/capitalize';
 import { FirewallRuleWithStatus } from './firewallRuleEditor';
-import { Category } from './shared';
+import { Category, FirewallRuleError } from './shared';
 
 export type Mode = 'create' | 'edit';
 
@@ -73,6 +73,8 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
     setIPs(initialIPs);
   }, [mode, ruleToModify]);
 
+  const [ipErrors, setIPErrors] = React.useState<Record<number, string>>({});
+
   const title =
     mode === 'create' ? `Add an ${capitalize(category)} Rule` : 'Edit Rule';
 
@@ -104,7 +106,10 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
               addressesLabel={addressesLabel}
               ips={ips}
               setIPs={setIPs}
+              ipErrors={ipErrors}
+              setIPErrors={setIPErrors}
               mode={mode}
+              ruleErrors={ruleToModify?.errors}
               {...formikProps}
             />
           );
@@ -132,8 +137,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface FirewallRuleFormProps extends FormikProps<Form> {
   ips: string[];
   setIPs: (ips: string[]) => void;
+  ipErrors: Record<number, string>;
+  setIPErrors: React.Dispatch<React.SetStateAction<Record<number, string>>>;
   addressesLabel: string;
   mode: Mode;
+  ruleErrors?: FirewallRuleError[];
 }
 
 const typeOptions = [
@@ -157,10 +165,28 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
     handleSubmit,
     setFieldValue,
     addressesLabel,
-    setIPs,
     ips,
-    mode
+    setIPs,
+    ipErrors,
+    setIPErrors,
+    mode,
+    ruleErrors,
+    setFieldError
   } = props;
+
+  React.useEffect(() => {
+    ruleErrors?.forEach(thisError => {
+      if (thisError.formField === 'addresses' && thisError.ip) {
+        setIPErrors((prevIPErrors: Record<number, string>) => ({
+          ...prevIPErrors,
+          [thisError.ip!.idx]: thisError.reason
+        }));
+        return;
+      }
+
+      setFieldError(thisError.formField, thisError.reason);
+    });
+  }, [ruleErrors]);
 
   // These handlers are all memoized because the form was laggy when I tried them inline.
   const handleTypeChange = React.useCallback((item: Item | null) => {
@@ -302,7 +328,8 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
           aria-label="IP / Netmask for firewall rule"
           className={classes.ipSelect}
           ips={ips}
-          onChange={handleIPChange}
+          ipErrors={ipErrors}
+          onChange={(_ips: string[]) => setIPs(_ips)}
           inputProps={{ autoFocus: true }}
         />
       )}

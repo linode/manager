@@ -24,6 +24,7 @@
 import produce from 'immer';
 import { FirewallRuleType } from 'linode-js-sdk/lib/firewalls';
 import { compose, last } from 'ramda';
+import { FirewallRuleError } from './shared';
 
 export type RuleStatus =
   | 'NOT_MODIFIED'
@@ -33,6 +34,7 @@ export type RuleStatus =
 
 export interface FirewallRuleWithStatus extends FirewallRuleType {
   status: RuleStatus;
+  errors?: FirewallRuleError[];
 }
 
 export type RuleEditorState = FirewallRuleWithStatus[][];
@@ -61,6 +63,11 @@ export type RuleEditorAction =
   | {
       type: 'RESET';
       rules: FirewallRuleType[];
+    }
+  | {
+      type: 'SET_ERROR';
+      idx: number;
+      error: FirewallRuleError;
     };
 
 const ruleEditorReducer = (
@@ -79,6 +86,8 @@ const ruleEditorReducer = (
         return;
       }
 
+      delete lastRevision.errors;
+
       draft[action.idx].push({
         ...lastRevision,
         status: 'PENDING_DELETION'
@@ -91,6 +100,8 @@ const ruleEditorReducer = (
       if (!lastRevision) {
         return;
       }
+
+      delete lastRevision.errors;
 
       draft[action.idx].push({
         ...lastRevision,
@@ -124,6 +135,20 @@ const ruleEditorReducer = (
 
     case 'RESET':
       return initRuleEditorState(action.rules);
+
+    case 'SET_ERROR':
+      lastRevision = last(draft[action.idx]);
+
+      if (!lastRevision) {
+        return;
+      }
+
+      if (!lastRevision.errors) {
+        lastRevision.errors = [];
+      }
+
+      lastRevision.errors.push(action.error);
+      return;
   }
 };
 
