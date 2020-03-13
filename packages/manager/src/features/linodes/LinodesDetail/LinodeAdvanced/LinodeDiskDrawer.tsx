@@ -255,20 +255,22 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
             )}
           </Grid>
           <Grid item xs={12} className={classes.section}>
-            <this.labelField />
-            {selectedMode === modes.EMPTY && <this.filesystemField />}
-            {selectedMode === modes.IMAGE && (
-              <ImageAndPassword
-                onImageChange={this.onImageChange}
-                imageFieldError={imageFieldError}
-                password={password || ''}
-                passwordError={passwordError}
-                onPasswordChange={this.props.onPasswordChange}
-                userSSHKeys={userSSHKeys || []}
-                requestKeys={requestKeys || (() => null)}
-              />
-            )}
-            <this.sizeField />
+            <form>
+              <this.labelField />
+              {selectedMode === modes.EMPTY && <this.filesystemField />}
+              {selectedMode === modes.IMAGE && (
+                <ImageAndPassword
+                  onImageChange={this.onImageChange}
+                  imageFieldError={imageFieldError}
+                  password={password || ''}
+                  passwordError={passwordError}
+                  onPasswordChange={this.props.onPasswordChange}
+                  userSSHKeys={userSSHKeys || []}
+                  requestKeys={requestKeys || (() => null)}
+                />
+              )}
+              <this.sizeField />
+            </form>
           </Grid>
           <Grid item className={classes.section}>
             <ActionsPanel>

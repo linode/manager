@@ -161,57 +161,57 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
           id={`tabpanel-${determineIDName}`}
           aria-labelledby={`tab-${determineIDName}`}
         >
-          {hasErrorFor.none && !!showGeneralError && (
-            <Notice error spacingTop={8} text={hasErrorFor.none} />
-          )}
-          <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
-          <ImageSelect
-            title={imagePanelTitle || 'Choose an Image'}
-            images={Object.keys(images).map(eachKey => images[eachKey])}
-            handleSelectImage={this.props.updateImageID}
-            selectedImageID={this.props.selectedImageID}
-            error={hasErrorFor.image}
-            variant={variant}
-            disabled={userCannotCreateLinode}
-            data-qa-select-image-panel
-          />
-          <SelectRegionPanel
-            error={hasErrorFor.region}
-            regions={regions}
-            data-qa-select-region-panel
-            handleSelection={this.props.updateRegionID}
-            selectedID={this.props.selectedRegionID}
-            copy="Determine the best location for your Linode."
-            updateFor={[this.props.selectedRegionID, errors]}
-            disabled={userCannotCreateLinode}
-          />
-          <SelectPlanPanel
-            error={hasErrorFor.type}
-            types={types}
-            data-qa-select-plan-panel
-            onSelect={this.props.updateTypeID}
-            selectedID={this.props.selectedTypeID}
-            updateFor={[this.props.selectedTypeID, errors]}
-            disabled={userCannotCreateLinode}
-          />
-          <LabelAndTagsPanel
-            data-qa-label-and-tags-panel
-            labelFieldProps={{
-              label: 'Linode Label',
-              value: this.props.label || '',
-              onChange: this.props.updateLabel,
-              errorText: hasErrorFor.label,
-              disabled: userCannotCreateLinode
-            }}
-            tagsInputProps={{
-              value: this.props.tags || [],
-              onChange: this.props.updateTags,
-              tagError: hasErrorFor.tags,
-              disabled: userCannotCreateLinode
-            }}
-            updateFor={[this.props.tags, this.props.label, errors]}
-          />
           <form>
+            {hasErrorFor.none && !!showGeneralError && (
+              <Notice error spacingTop={8} text={hasErrorFor.none} />
+            )}
+            <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
+            <ImageSelect
+              title={imagePanelTitle || 'Choose an Image'}
+              images={Object.keys(images).map(eachKey => images[eachKey])}
+              handleSelectImage={this.props.updateImageID}
+              selectedImageID={this.props.selectedImageID}
+              error={hasErrorFor.image}
+              variant={variant}
+              disabled={userCannotCreateLinode}
+              data-qa-select-image-panel
+            />
+            <SelectRegionPanel
+              error={hasErrorFor.region}
+              regions={regions}
+              data-qa-select-region-panel
+              handleSelection={this.props.updateRegionID}
+              selectedID={this.props.selectedRegionID}
+              copy="Determine the best location for your Linode."
+              updateFor={[this.props.selectedRegionID, errors]}
+              disabled={userCannotCreateLinode}
+            />
+            <SelectPlanPanel
+              error={hasErrorFor.type}
+              types={types}
+              data-qa-select-plan-panel
+              onSelect={this.props.updateTypeID}
+              selectedID={this.props.selectedTypeID}
+              updateFor={[this.props.selectedTypeID, errors]}
+              disabled={userCannotCreateLinode}
+            />
+            <LabelAndTagsPanel
+              data-qa-label-and-tags-panel
+              labelFieldProps={{
+                label: 'Linode Label',
+                value: this.props.label || '',
+                onChange: this.props.updateLabel,
+                errorText: hasErrorFor.label,
+                disabled: userCannotCreateLinode
+              }}
+              tagsInputProps={{
+                value: this.props.tags || [],
+                onChange: this.props.updateTags,
+                tagError: hasErrorFor.tags,
+                disabled: userCannotCreateLinode
+              }}
+              updateFor={[this.props.tags, this.props.label, errors]}
+            />
             <AccessPanel
               /* disable the password field if we haven't selected an image */
               data-qa-access-panel
@@ -239,22 +239,22 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
               }
               requestKeys={requestKeys}
             />
+            <AddonsPanel
+              data-qa-addons-panel
+              backups={this.props.backupsEnabled}
+              accountBackups={this.props.accountBackupsEnabled}
+              backupsMonthly={backupsMonthlyPrice}
+              privateIP={this.props.privateIPEnabled}
+              changeBackups={this.props.toggleBackupsEnabled}
+              changePrivateIP={this.props.togglePrivateIPEnabled}
+              updateFor={[
+                this.props.privateIPEnabled,
+                this.props.backupsEnabled,
+                this.props.selectedTypeID
+              ]}
+              disabled={userCannotCreateLinode}
+            />
           </form>
-          <AddonsPanel
-            data-qa-addons-panel
-            backups={this.props.backupsEnabled}
-            accountBackups={this.props.accountBackupsEnabled}
-            backupsMonthly={backupsMonthlyPrice}
-            privateIP={this.props.privateIPEnabled}
-            changeBackups={this.props.toggleBackupsEnabled}
-            changePrivateIP={this.props.togglePrivateIPEnabled}
-            updateFor={[
-              this.props.privateIPEnabled,
-              this.props.backupsEnabled,
-              this.props.selectedTypeID
-            ]}
-            disabled={userCannotCreateLinode}
-          />
         </Grid>
         <Grid
           item
