@@ -415,29 +415,27 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     } = this.state.drawer;
 
     return (
-      <form>
-        <LinodeDiskDrawer
-          submitting={submitting}
-          mode={mode}
-          open={open}
-          errors={errors}
-          label={label}
-          filesystem={filesystem}
-          size={size}
-          password={password}
-          maximumSize={maximumSize}
-          onLabelChange={this.onLabelChange}
-          onSizeChange={this.onSizeChange}
-          onFilesystemChange={this.onFilesystemChange}
-          onClose={this.closeDrawer}
-          onSubmit={this.onDrawerSubmit}
-          onImageChange={this.onImageChange}
-          onPasswordChange={this.onPasswordChange}
-          onResetImageMode={this.onResetImageMode}
-          userSSHKeys={this.props.userSSHKeys}
-          requestKeys={this.props.requestKeys}
-        />
-      </form>
+      <LinodeDiskDrawer
+        submitting={submitting}
+        mode={mode}
+        open={open}
+        errors={errors}
+        label={label}
+        filesystem={filesystem}
+        size={size}
+        password={password}
+        maximumSize={maximumSize}
+        onLabelChange={this.onLabelChange}
+        onSizeChange={this.onSizeChange}
+        onFilesystemChange={this.onFilesystemChange}
+        onClose={this.closeDrawer}
+        onSubmit={this.onDrawerSubmit}
+        onImageChange={this.onImageChange}
+        onPasswordChange={this.onPasswordChange}
+        onResetImageMode={this.onResetImageMode}
+        userSSHKeys={this.props.userSSHKeys}
+        requestKeys={this.props.requestKeys}
+      />
     );
   };
 
