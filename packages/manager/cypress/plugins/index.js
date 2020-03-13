@@ -19,7 +19,11 @@ function getConfigurationByFile(file) {
   return fs.readJson(pathToConfigFile);
 }
 
+const registerVisualRegTasks = require('./visualRegPlugin');
+
 module.exports = (on, config) => {
+  registerVisualRegTasks(on);
+
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
   // accept a configFile value or use development by default

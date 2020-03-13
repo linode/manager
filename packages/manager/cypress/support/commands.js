@@ -25,6 +25,7 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 import 'cypress-axe';
 import '@testing-library/cypress/add-commands';
+import './visualRegCommands';
 
 Cypress.Commands.add('login', () => {
   Cypress.on('uncaught:exception', (err, runnable) => {

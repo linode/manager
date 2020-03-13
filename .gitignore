@@ -115,7 +115,8 @@ packages/manager/test-report.xml
 **/manager/config/development.json
 **/manager/config/staging.json
 **/manager/cypress/videos/
-**/manager/cypress/screenshots/
+**/manager/cypress/screenshots/**/diff*.png
+**/manager/cypress/screenshots/**/actual*.png
 packages/manager/cypress/fixtures/example.json
 
 nohup.out
