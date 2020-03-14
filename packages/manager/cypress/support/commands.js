@@ -92,7 +92,7 @@ Cypress.Commands.add('login2', () => {
   const expireDate = Cypress.moment().add(30, 'days');
   const isoExpire = expireDate.toISOString();
   cy.log(isoExpire);
-  window.localStorage.setItem('authentication/expires', isoExpire);\
+  window.localStorage.setItem('authentication/expires', isoExpire);
 
   window.localStorage.setItem(
     'authentication/expire-datetime',
