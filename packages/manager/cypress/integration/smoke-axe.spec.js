@@ -1,4 +1,4 @@
-describe('smoke - axe', () => {
+describe.skip('smoke - axe', () => {
   const routes = {
     linodes: [
       // {route:'/linodes',

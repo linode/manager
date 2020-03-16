@@ -319,9 +319,6 @@
       "@babel/preset-typescript"
     ]
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "resolutions": {
     "csv-parse": "^4.6.3",
     "mixin-deep": "^2.0.1",
