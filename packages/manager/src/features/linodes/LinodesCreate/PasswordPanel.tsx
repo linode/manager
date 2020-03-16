@@ -7,8 +7,9 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
-import PasswordInput from 'src/components/PasswordInput';
+const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
 import RenderGuard from 'src/components/RenderGuard';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 
 type ClassNames = 'root' | 'inner' | 'panelBody';
 
@@ -62,13 +63,15 @@ class PasswordPanel extends React.Component<CombinedProps> {
       <Paper className={classes.root}>
         <div className={!noPadding ? classes.inner : ''} data-qa-password-input>
           {error && <Notice text={error} error />}
-          <PasswordInput
-            required={required}
-            value={this.props.password || ''}
-            label={label || 'Root Password'}
-            placeholder={placeholder || 'Enter a password.'}
-            onChange={this.handleChange}
-          />
+          <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+            <PasswordInput
+              required={required}
+              value={this.props.password || ''}
+              label={label || 'Root Password'}
+              placeholder={placeholder || 'Enter a password.'}
+              onChange={this.handleChange}
+            />
+          </React.Suspense>
         </div>
       </Paper>
     );

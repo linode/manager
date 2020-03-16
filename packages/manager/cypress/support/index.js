@@ -15,6 +15,9 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands';
-
-// Alternatively you can use CommonJS syntax:
-// require('./commands')
+import { deleteAllTestLinodes } from './api/linodes';
+import { deleteAllTestVolumes } from './api/volumes';
+it('Delete All Test Entities before anything happens', () => {
+  deleteAllTestLinodes();
+  deleteAllTestVolumes();
+});

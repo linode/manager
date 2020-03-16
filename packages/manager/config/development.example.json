@@ -1,11 +1,8 @@
 {
     "env": {
-    "username": "jsmith",
-    "password": "xxxxx",
-    "clientId": "xxxxx",
-    "oauthtoken": "xxxxx",
-    "apiroot": "https://api.linode.com/v4",
-    "loginUrl": "https://login.linode.com/login",
-    "loginRoot": "https://login.linode.com"
+        "oauthtoken": "xxxxxx",
+        "apiroot": "https://api.linode.com",
+        "loginUrl": "https://login.linode.com/login",
+        "loginRoot": "https://login.linode.com"
     }
 }
