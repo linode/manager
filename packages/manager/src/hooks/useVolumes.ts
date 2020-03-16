@@ -15,8 +15,7 @@ export const useVolumes = () => {
   const volumes = useSelector(
     (state: ApplicationState) => state.__resources.volumes
   );
-  const requestVolumes = () =>
-    dispatch(getAllVolumes()).then(response => response.data);
+  const requestVolumes = () => dispatch(getAllVolumes());
 
   return { volumes, requestVolumes };
 };

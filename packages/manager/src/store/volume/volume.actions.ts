@@ -7,6 +7,7 @@ import {
   Volume,
   VolumeRequestPayload
 } from 'linode-js-sdk/lib/volumes';
+import { GetAllData } from 'src/utilities/getAll';
 import { actionCreatorFactory } from 'typescript-fsa';
 
 export interface VolumeId {
@@ -71,7 +72,7 @@ export interface GetAllVolumesOptions {
 }
 export const getAllVolumesActions = actionCreator.async<
   GetAllVolumesOptions | void,
-  ResourcePage<Volume>,
+  GetAllData<Volume[]>,
   APIError[]
 >('get-all');
 
