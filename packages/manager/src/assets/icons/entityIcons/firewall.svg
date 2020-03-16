@@ -4,7 +4,7 @@
             <g id="list" transform="translate(252.000000, 277.000000)">
                 <g id="row" transform="translate(0.000000, 158.000000)">
                     <g id="firewall" transform="translate(15.000000, 9.000000)">
-                        <circle id="Oval" stroke="#E3E5E8" stroke-width="1.5" cx="20" cy="20" r="19.25"></circle>
+                        <circle id="Oval" stroke="currentColor" class="outerCircle" stroke-width="1.5" cx="20" cy="20" r="19.25"></circle>
                         <polygon id="Path" stroke="#939598" stroke-linecap="round" stroke-linejoin="round" points="8.75 20.25 31.25 20.25 31.25 29.25 8.75 29.25"></polygon>
                         <line x1="8.75" y1="24.75" x2="31.25" y2="24.75" id="Path" stroke="#939598" stroke-linecap="round" stroke-linejoin="round"></line>
                         <line x1="23.75" y1="20.25" x2="23.75" y2="24.75" id="Path" stroke="#939598" stroke-linecap="round" stroke-linejoin="round"></line>

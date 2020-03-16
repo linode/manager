@@ -3,6 +3,8 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
+import EntityIcon from 'src/components/EntityIcon';
+import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import useFirewallDevices from 'src/hooks/useFirewallDevices';
@@ -45,8 +47,16 @@ export const FirewallRow: React.FC<CombinedProps> = props => {
       key={`firewall-row-${firewallID}`}
       rowLink={`/firewalls/${firewallID}`}
       data-testid={`firewall-row-${firewallID}`}
+      aria-label={firewallLabel}
     >
-      <TableCell>{firewallLabel}</TableCell>
+      <TableCell>
+        <Grid container wrap="nowrap" alignItems="center">
+          <Grid item className="py0">
+            <EntityIcon variant="firewall" status={firewallStatus} />
+          </Grid>
+          <Grid item>{firewallLabel}</Grid>
+        </Grid>
+      </TableCell>
       <TableCell>{firewallStatus}</TableCell>
       <TableCell>{getRuleString(count)}</TableCell>
       <TableCell>
