@@ -100,7 +100,6 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
         results={props.results}
         triggerDeleteFirewall={handleOpenDeleteFirewallModal}
         triggerDisableFirewall={handleOpenDisableFirewallModal}
-        triggerEditFirewall={(id, label) => null}
         triggerEnableFirewall={handleOpenEnableFirewallModal}
       />
       <AddFirewallDrawer
