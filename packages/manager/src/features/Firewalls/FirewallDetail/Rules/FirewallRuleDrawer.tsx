@@ -325,7 +325,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
           className={classes.ipSelect}
           ips={ips}
           ipErrors={ipErrors}
-          onChange={(_ips: string[]) => setIPs(_ips)}
+          onChange={handleIPChange}
           inputProps={{ autoFocus: true }}
         />
       )}
