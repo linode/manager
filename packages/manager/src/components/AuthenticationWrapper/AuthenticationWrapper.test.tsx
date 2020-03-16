@@ -13,6 +13,7 @@ const component = shallow<AuthenticationWrapper>(
   <AuthenticationWrapper
     isAuthenticated={false}
     initSession={jest.fn()}
+    refreshSession={jest.fn()}
     requestAccount={jest.fn()}
     requestTypes={jest.fn()}
     requestBuckets={jest.fn()}

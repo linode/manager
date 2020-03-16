@@ -1,5 +1,12 @@
 import { stringify } from 'querystring';
-import { APP_ROOT, CLIENT_ID, LOGIN_ROOT } from 'src/constants';
+import { Dispatch } from 'redux';
+import {
+  APP_ROOT,
+  CLIENT_ID,
+  LOGIN_ROOT,
+  OAUTH_TOKEN_REFRESH_TIMEOUT
+} from 'src/constants';
+import { handleRefreshTokens } from 'src/store/authentication/authentication.actions';
 import { authentication } from 'src/utilities/storage';
 import { v4 } from 'uuid';
 
@@ -54,4 +61,27 @@ export const redirectToLogin = (
 ) => {
   const redirectUri = `${returnToPath}${queryString}`;
   window.location.assign(prepareOAuthEndpoint(redirectUri));
+};
+
+export const refreshOAuthToken = (dispatch: Dispatch) => {
+  /**
+   * Open an iframe for two purposes
+   * 1. Hits the login service (extends the lifetime of login session)
+   * 2. Refreshes our OAuth token in localStorage
+   */
+  const iframe = document.createElement('iframe');
+  iframe.src = prepareOAuthEndpoint('/null');
+  iframe.style.display = 'none';
+  const iframeContainer = document.getElementById('session-iframe');
+  if (!iframeContainer) {
+    return null;
+  }
+  iframeContainer.appendChild(iframe);
+  // Remove the iframe once it refreshes OAuth token in localStorage
+  setTimeout(() => iframeContainer.removeChild(iframe), 5000);
+  // Move the OAuth token from localStorage into Redux
+  dispatch(handleRefreshTokens);
+  // Do this again in a little while
+  setTimeout(() => refreshOAuthToken(dispatch), OAUTH_TOKEN_REFRESH_TIMEOUT);
+  return null;
 };

@@ -20,7 +20,7 @@ import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import { startEventsInterval } from 'src/events';
-import { redirectToLogin } from 'src/session';
+import { redirectToLogin, refreshOAuthToken } from 'src/session';
 import { ApplicationState } from 'src/store';
 import { handleInitTokens } from 'src/store/authentication/authentication.actions';
 import { MapState } from 'src/store/types';
@@ -86,14 +86,23 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
   };
 
   componentDidMount() {
-    const { initSession } = this.props;
+    const { initSession, refreshSession } = this.props;
     /**
      * set redux state to what's in local storage
      * or expire the tokens if the expiry time is in the past
      *
-     * if nothing exist in local storage, we get shot off to login
+     * if nothing exists in local storage, we get shot off to login
      */
     initSession();
+
+    /**
+     * Set a timeout that will request a new token from Login
+     * before the current session expires. This request is made
+     * from an iframe which loads the "null" route for the app.
+     *
+     * @todo: remove this logic once PKCE is supported
+     */
+    refreshSession();
 
     /**
      * this is the case where we've just come back from login and need
@@ -147,6 +156,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 
 interface DispatchProps {
   initSession: () => void;
+  refreshSession: () => null;
   requestAccount: () => Promise<Account>;
   requestDomains: () => Promise<Domain[]>;
   requestImages: () => Promise<Image[]>;
@@ -165,6 +175,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
 ) => ({
   initSession: () => dispatch(handleInitTokens()),
+  refreshSession: () => refreshOAuthToken(dispatch),
   requestAccount: () => dispatch(requestAccount()),
   requestDomains: () => dispatch(requestDomains()),
   requestImages: () => dispatch(requestImages()),
