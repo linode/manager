@@ -15,6 +15,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import createMailto from 'src/features/Footer/createMailto';
+import useFlags from 'src/hooks/useFlags';
 import { getAll } from 'src/utilities/getAll';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -50,6 +51,7 @@ type CombinedProps = Props;
 const RecentInvoicesRow: React.FC<CombinedProps> = props => {
   const { account, invoice } = props;
   const classes = useStyles();
+  const flags = useFlags();
 
   const [pdfError, setPDFError] = React.useState<Error | undefined>(undefined);
   const [isGeneratingPDF, setGeneratingPDF] = React.useState<boolean>(false);
@@ -70,7 +72,12 @@ const RecentInvoicesRow: React.FC<CombinedProps> = props => {
     )()
       .then(response => {
         const invoiceItems = response.data;
-        const result = printInvoice(thisAccount, thisItem, invoiceItems);
+        const result = printInvoice(
+          thisAccount,
+          thisItem,
+          invoiceItems,
+          flags.taxBanner
+        );
         setGeneratingPDF(false);
 
         if (result.status === 'error') {
