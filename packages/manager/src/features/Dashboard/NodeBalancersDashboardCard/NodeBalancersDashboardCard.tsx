@@ -25,6 +25,11 @@ import TableRowLoading from 'src/components/TableRowLoading';
 import ViewAllLink from 'src/components/ViewAllLink';
 import NodeBalancerContainer from 'src/containers/withNodeBalancers.container';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
+import {
+  withNodeBalancerActions,
+  WithNodeBalancerActions
+} from 'src/store/nodeBalancer/nodeBalancer.containers';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import DashboardCard from '../DashboardCard';
 
 type ClassNames =
@@ -83,15 +88,22 @@ interface NodeBalancerProps {
   nodeBalancersError?: APIError[];
 }
 
-type CombinedProps = NodeBalancerProps & WithStyles<ClassNames>;
+type CombinedProps = NodeBalancerProps &
+  WithNodeBalancerActions &
+  WithStyles<ClassNames>;
 
 const NodeBalancersDashboardCard: React.FunctionComponent<CombinedProps> = props => {
   const {
     classes,
+    nodeBalancerActions: { getNodeBalancerPage },
     nodeBalancersError,
     nodeBalancersLoading,
     nodeBalancersData
   } = props;
+
+  React.useEffect(() => {
+    getNodeBalancerPage({ page_size: 25, page: 1 });
+  }, []);
 
   const data = take(5, nodeBalancersData);
 
@@ -125,7 +137,12 @@ const NodeBalancersDashboardCard: React.FunctionComponent<CombinedProps> = props
   };
 
   const renderErrors = (errors: APIError[]) => (
-    <TableRowError colSpan={2} message={`Unable to load NodeBalancers.`} />
+    <TableRowError
+      colSpan={2}
+      message={
+        getAPIErrorOrDefault(errors, 'Unable to load NodeBalancers.')[0].reason
+      }
+    />
   );
 
   const renderEmpty = () => <TableRowEmptyState colSpan={2} />;
@@ -188,6 +205,10 @@ const withNodeBalancers = NodeBalancerContainer(
     nodeBalancersError
   })
 );
-const enhanced = compose<CombinedProps, {}>(withNodeBalancers, styled);
+const enhanced = compose<CombinedProps, {}>(
+  withNodeBalancers,
+  withNodeBalancerActions,
+  styled
+);
 
 export default enhanced(NodeBalancersDashboardCard);

@@ -27,14 +27,12 @@ export default <TInner extends {}, TOuter extends {}>(
      *
      * NodeBalancer[]
      */
-    const nodeBalancers = Object.keys(itemsById).map(
-      eachKey => itemsById[eachKey]
-    );
+    const nodeBalancers = Object.values(itemsById);
 
     return mapToProps(
       ownProps,
       nodeBalancers,
       loading,
-      error ? error.read : undefined
+      error?.read ?? undefined
     );
   });
