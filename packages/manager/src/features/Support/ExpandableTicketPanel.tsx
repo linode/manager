@@ -1,9 +1,7 @@
-import { SupportReply, SupportTicket } from "linode-js-sdk/lib/account";
+import { SupportReply, SupportTicket } from 'linode-js-sdk/lib/account';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { Converter } from 'showdown';
-import 'showdown-highlightjs-extension';
 import UserIcon from 'src/assets/icons/user.svg';
 import {
   createStyles,
@@ -15,7 +13,6 @@ import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 
-import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import { Hively, shouldRenderHively } from './Hively';
 import TicketDetailBody from './TicketDetailText';
 
@@ -147,39 +144,25 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
       return;
     }
     if (ticket) {
-      /** convert markdown to mark up */
-      const convertedMarkdown = new Converter({
-        extensions: ['highlightjs'],
-        simplifiedAutoLink: true,
-        openLinksInNewWindow: true
-      }).makeHtml(ticket.description);
-
       return setData({
         ticket_id: String(ticket.id),
         reply_id: '',
         gravatar_id: ticket.gravatar_id,
         gravatarUrl: pathOr('not found', ['gravatarUrl'], ticket),
         date: ticket.opened,
-        description: sanitizeHTML(convertedMarkdown),
+        description: ticket.description,
         username: ticket.opened_by,
         from_linode: false,
         updated: ticket.updated
       });
     } else if (reply) {
-      /** convert markdown to markup */
-      const convertedMarkdown = new Converter({
-        extensions: ['highlightjs'],
-        simplifiedAutoLink: true,
-        openLinksInNewWindow: true
-      }).makeHtml(reply.description);
-
       return setData({
         ticket_id: parentTicket ? String(parentTicket) : '',
         reply_id: String(reply.id),
         gravatar_id: reply.gravatar_id,
         gravatarUrl: pathOr('not found', ['gravatarUrl'], reply),
         date: reply.created,
-        description: sanitizeHTML(convertedMarkdown),
+        description: reply.description,
         username: reply.created_by,
         from_linode: reply.from_linode,
         updated: ticketUpdated!
@@ -242,12 +225,7 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
                   </Typography>
                 </Grid>
               </Grid>
-              <TicketDetailBody
-                open={open}
-                dangerouslySetInnerHTML={{
-                  __html: data.description
-                }}
-              />
+              <TicketDetailBody open={open} text={data.description} />
               {shouldRenderHively(
                 data.from_linode,
                 data.updated,

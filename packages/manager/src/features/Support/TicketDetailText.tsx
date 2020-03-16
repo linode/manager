@@ -10,11 +10,10 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
 import IconButton from 'src/components/IconButton';
 
 import truncateText from 'src/utilities/truncateText';
-
-import 'src/formatted-text.css';
 
 type ClassNames = 'root' | 'expButton' | 'toggle' | 'buttonText';
 
@@ -26,22 +25,6 @@ const styles = (theme: Theme) =>
       position: 'relative',
       '& pre': {
         backgroundColor: theme.bg.tableHeader
-      },
-      [`& span.hljs-number,
-        & span.hljs-string,
-        & span.hljs-symbol,
-        & span.hljs-bullet
-      `]: {
-        color: theme.palette.text.primary
-      },
-      [`& span.hljs-deletion,
-        & span.hljs-addition
-      `]: {
-        color: theme.color.black
-      },
-      '& span.hljs': {
-        background: theme.color.grey2,
-        color: theme.color.label
       }
     },
     expButton: {
@@ -73,10 +56,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  text?: string;
-  dangerouslySetInnerHTML?: {
-    __html: string;
-  };
+  text: string;
   open?: boolean;
 }
 
@@ -84,43 +64,17 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const TicketDetailText: React.FC<CombinedProps> = props => {
   const [panelOpen, togglePanel] = React.useState<boolean>(props.open || true);
-  const { text, classes, dangerouslySetInnerHTML } = props;
+  const { text, classes } = props;
 
-  if (!!text && !!dangerouslySetInnerHTML) {
-    throw new Error(
-      'The "text" and "html" props are mutually exclusive. Please choose only one'
-    );
-  }
-
-  const ticketBody =
-    !text && !dangerouslySetInnerHTML
-      ? ''
-      : !!text
-      ? text
-      : /** at this point we've handled for the cases where dangerouslySetInnerHTML doesn't exist */
-        dangerouslySetInnerHTML!.__html;
-
-  const truncatedText = truncateText(ticketBody, 175);
-  const ticketReplyBody = panelOpen ? ticketBody : truncatedText;
+  const truncatedText = truncateText(text, 175);
+  const ticketReplyBody = panelOpen ? text : truncatedText;
 
   return (
     <Grid container className={classes.root}>
       <Grid item style={{ width: '100%' }}>
-        {props.text ? (
-          <Typography className="formatted-text" component="div">
-            {ticketReplyBody}
-          </Typography>
-        ) : (
-          <Typography
-            className="formatted-text"
-            component="div"
-            dangerouslySetInnerHTML={{
-              __html: ticketReplyBody
-            }}
-          />
-        )}
+        <HighlightedMarkdown textOrMarkdown={ticketReplyBody} />
       </Grid>
-      {truncatedText !== ticketBody && (
+      {truncatedText !== text && (
         <IconButton
           className={classes.expButton}
           aria-label="Expand full answer"

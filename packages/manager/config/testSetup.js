@@ -63,12 +63,10 @@ jest.mock('react-chartjs-2', () => ({
   }
 }));
 
-// c/f https://github.com/mui-org/material-ui/issues/15726
-window.document.createRange = () => ({
-  setStart: () => {},
-  setEnd: () => {},
-  commonAncestorContainer: {
-    nodeName: 'BODY',
-    ownerDocument: document
+jest.mock('highlight.js/lib/highlight', () => ({
+  default: {
+    configure: jest.fn(),
+    registerLanguage: jest.fn(),
+    highlightBlock: jest.fn()
   }
-});
+}));
