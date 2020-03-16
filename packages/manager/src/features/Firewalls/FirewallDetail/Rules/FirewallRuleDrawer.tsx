@@ -1,6 +1,9 @@
 import { Formik, FormikProps } from 'formik';
 import { parse as parseIP } from 'ipaddr.js';
-import { FirewallRuleProtocol } from 'linode-js-sdk/lib/firewalls';
+import {
+  FirewallRuleProtocol,
+  FirewallRuleType
+} from 'linode-js-sdk/lib/firewalls';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -17,21 +20,29 @@ import {
   allIPs,
   allIPv4,
   allIPv6,
+  allowAllIPv4,
+  allowAllIPv6,
+  allowsAllIPs,
   firewallOptionItemsShort,
   portPresets,
   predefinedFirewallFromRule,
   protocolOptions
 } from 'src/features/Firewalls/shared';
 import capitalize from 'src/utilities/capitalize';
+import { FirewallRuleWithStatus } from './firewallRuleEditor';
+
+export type Mode = 'create' | 'edit';
 
 // =============================================================================
 // <FirewallRuleDrawer />
 // =============================================================================
 interface Props {
   category: 'inbound' | 'outbound';
-  mode: 'create' | 'edit';
+  mode: Mode;
   isOpen: boolean;
   onClose: () => void;
+  onSubmit: (category: 'inbound' | 'outbound', rule: FirewallRuleType) => void;
+  ruleToModify?: FirewallRuleWithStatus;
 }
 
 interface Form {
@@ -41,17 +52,10 @@ interface Form {
   protocol: string;
 }
 
-const initialValues: Form = {
-  type: '',
-  ports: '',
-  addresses: '',
-  protocol: ''
-};
-
 export type CombinedProps = Props;
 
 const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
-  const { isOpen, onClose, category, mode } = props;
+  const { isOpen, onClose, category, mode, ruleToModify } = props;
 
   // Custom IPs are tracked separately from the form. The <MultipleIPs />
   // component consumes this state. We use this on form submission if the
@@ -59,31 +63,39 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
   // intended to specify custom IPs.
   const [ips, setIPs] = React.useState<string[]>(['']);
 
+  React.useEffect(() => {
+    // If we're in edit mode, we need to pre-set IP state with the IPs of the rule we're modifying.
+    const initialIPs =
+      mode === 'edit' && ruleToModify !== undefined
+        ? [...ruleToModify.addresses?.ipv4, ...ruleToModify.addresses?.ipv6]
+        : [''];
+    setIPs(initialIPs);
+  }, [mode, ruleToModify]);
+
   const title =
     mode === 'create' ? `Add an ${capitalize(category)} Rule` : 'Edit Rule';
 
   const addressesLabel = category === 'inbound' ? 'source' : 'destination';
 
+  const _onSubmit = (values: Form) => {
+    const protocol = values.protocol as FirewallRuleProtocol;
+    props.onSubmit(category, {
+      ports: values.ports,
+      protocol,
+      addresses: formValueToIPs(values.addresses, ips)
+    });
+    onClose();
+  };
+
+  const defaultValues = getInitialFormValues(ruleToModify);
+
   return (
     <Drawer title={title} open={isOpen} onClose={onClose}>
       <Formik
-        initialValues={initialValues}
+        initialValues={defaultValues}
         validateOnChange={false}
         validateOnBlur={false}
-        // @todo: submit the form for real.
-        onSubmit={values =>
-          alert(
-            JSON.stringify(
-              {
-                port: values.ports,
-                protocol: values.protocol,
-                addresses: formValueToIPs(values.addresses, ips)
-              },
-              null,
-              2
-            )
-          )
-        }
+        onSubmit={_onSubmit}
       >
         {formikProps => {
           return (
@@ -91,6 +103,7 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
               addressesLabel={addressesLabel}
               ips={ips}
               setIPs={setIPs}
+              mode={mode}
               {...formikProps}
             />
           );
@@ -119,6 +132,7 @@ interface FirewallRuleFormProps extends FormikProps<Form> {
   ips: string[];
   setIPs: (ips: string[]) => void;
   addressesLabel: string;
+  mode: Mode;
 }
 
 const typeOptions = [
@@ -129,6 +143,10 @@ const typeOptions = [
 const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
   const classes = useStyles();
 
+  // This will be set to `true` once a form field has been touched. This is used to disable the
+  // "Submit" button unless there have been changes to the form.
+  const [formTouched, setFormTouched] = React.useState<boolean>(false);
+
   const {
     values,
     errors,
@@ -136,11 +154,11 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
     handleChange,
     handleBlur,
     handleSubmit,
-    // isSubmitting,
     setFieldValue,
     addressesLabel,
     setIPs,
-    ips
+    ips,
+    mode
   } = props;
 
   // These handlers are all memoized because the form was laggy when I tried them inline.
@@ -150,6 +168,10 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
 
     if (!selectedType) {
       return;
+    }
+
+    if (!formTouched) {
+      setFormTouched(true);
     }
 
     // Pre-populate other form values if selecting a pre-defined type.
@@ -163,17 +185,48 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
     }
   }, []);
 
-  const handleProtocolChange = React.useCallback((item: Item | null) => {
-    setFieldValue('protocol', item?.value);
-  }, []);
+  const handleProtocolChange = React.useCallback(
+    (item: Item | null) => {
+      if (!formTouched) {
+        setFormTouched(true);
+      }
+
+      setFieldValue('protocol', item?.value);
+    },
+    [formTouched]
+  );
 
   const handleAddressesChange = React.useCallback(
     (item: Item | null) => {
+      if (!formTouched) {
+        setFormTouched(true);
+      }
+
       setFieldValue('addresses', item?.value);
       // Reset custom IPs that may have been entered.
       setIPs(['']);
     },
-    [ips]
+    [ips, formTouched]
+  );
+
+  const handlePortsChange = React.useCallback(
+    (e: React.ChangeEvent) => {
+      if (!formTouched) {
+        setFormTouched(true);
+      }
+      handleChange(e);
+    },
+    [formTouched]
+  );
+
+  const handleIPChange = React.useCallback(
+    (_ips: string[]) => {
+      if (!formTouched) {
+        setFormTouched(true);
+      }
+      setIPs(_ips);
+    },
+    [formTouched]
   );
 
   const addressesValue = React.useMemo(() => {
@@ -227,7 +280,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
         placeholder="Enter a port range..."
         aria-label="Port range for firewall rule"
         value={values.ports}
-        onChange={handleChange}
+        onChange={handlePortsChange}
         errorText={errors.ports}
         onBlur={handleBlur}
       />
@@ -248,7 +301,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
           aria-label="IP / Netmask for firewall rule"
           className={classes.ipSelect}
           ips={ips}
-          onChange={(_ips: string[]) => setIPs(_ips)}
+          onChange={handleIPChange}
           inputProps={{ autoFocus: true }}
         />
       )}
@@ -256,10 +309,10 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
         <Button
           buttonType="primary"
           onClick={() => handleSubmit()}
+          disabled={!formTouched}
           data-qa-submit
-          // loading={isSubmitting}
         >
-          Add Rule
+          {mode === 'create' ? 'Add Rule' : 'Edit Rule'}
         </Button>
       </ActionsPanel>
     </form>
@@ -332,7 +385,11 @@ export const classifyIPs = (ips: string[]) =>
   ips.reduce<{ ipv4: string[]; ipv6: string[] }>(
     (acc, ip) => {
       try {
-        const parsed = parseIP(ip);
+        // It's possible to enter a subnet, e.g. 1.0.0.0/16. Ipaddr.js does not parse this
+        // correctly, so we split out the range before doing the classification.
+        const [base] = ip.split('/');
+
+        const parsed = parseIP(base);
         const type = parsed.kind();
         acc[type].push(ip);
       } catch {
@@ -342,3 +399,41 @@ export const classifyIPs = (ips: string[]) =>
     },
     { ipv4: [], ipv6: [] }
   );
+
+const initialValues: Form = {
+  type: '',
+  ports: '',
+  addresses: '',
+  protocol: ''
+};
+
+const getInitialFormValues = (ruleToModify?: FirewallRuleWithStatus): Form => {
+  if (!ruleToModify) {
+    return initialValues;
+  }
+
+  return {
+    ports: ruleToModify.ports,
+    protocol: ruleToModify.protocol,
+    addresses: getInitialAddressFormValue(ruleToModify.addresses),
+    type: predefinedFirewallFromRule(ruleToModify) || ''
+  };
+};
+
+export const getInitialAddressFormValue = (
+  addresses: FirewallRuleWithStatus['addresses']
+): string => {
+  if (allowsAllIPs(addresses)) {
+    return 'all';
+  }
+
+  if (allowAllIPv4(addresses)) {
+    return 'allIPv4';
+  }
+
+  if (allowAllIPv6(addresses)) {
+    return 'allIPv6';
+  }
+
+  return 'ip/netmask';
+};

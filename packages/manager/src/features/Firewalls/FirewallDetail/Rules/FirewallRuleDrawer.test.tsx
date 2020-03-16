@@ -10,12 +10,14 @@ import RuleDrawer, {
 } from './FirewallRuleDrawer';
 
 const mockOnClose = jest.fn();
+const mockOnSubmit = jest.fn();
 
 const props: CombinedProps = {
   category: 'inbound',
   mode: 'create',
   isOpen: true,
-  onClose: mockOnClose
+  onClose: mockOnClose,
+  onSubmit: mockOnSubmit
 };
 
 afterEach(cleanup);
@@ -58,6 +60,12 @@ describe('utilities', () => {
     it('ignores bad input', () => {
       expect(classifyIPs(['1.1.1.1', 'hello-world'])).toEqual({
         ipv4: ['1.1.1.1'],
+        ipv6: []
+      });
+    });
+    it('accepts ranges', () => {
+      expect(classifyIPs(['1.1.1.1/16'])).toEqual({
+        ipv4: ['1.1.1.1/16'],
         ipv6: []
       });
     });

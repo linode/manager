@@ -57,7 +57,6 @@ export const firewallOptionItemsShort = [
 ];
 
 export const protocolOptions: Item<FirewallRuleProtocol>[] = [
-  { label: 'ALL', value: 'ALL' },
   { label: 'TCP', value: 'TCP' },
   { label: 'ICMP', value: 'ICMP' },
   { label: 'UDP', value: 'UDP' }

@@ -8,7 +8,8 @@ import {
   createFirewallActions,
   deleteFirewallActions,
   getFirewalls,
-  updateFirewallActions
+  updateFirewallActions,
+  updateFirewallRulesActions
 } from './firewalls.actions';
 
 export type State = EntitiesAsObjectState<Firewall>;
@@ -63,7 +64,10 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       draft.error.create = error;
     }
 
-    if (isType(action, updateFirewallActions.started)) {
+    if (
+      isType(action, updateFirewallActions.started) ||
+      isType(action, updateFirewallRulesActions.started)
+    ) {
       draft.error.update = undefined;
     }
 
@@ -73,7 +77,17 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       draft.lastUpdated = Date.now();
     }
 
-    if (isType(action, updateFirewallActions.failed)) {
+    if (isType(action, updateFirewallRulesActions.done)) {
+      const { result, params } = action.payload;
+      let firewall = draft.data[params.firewallID];
+      firewall = { ...firewall, rules: result };
+      draft.lastUpdated = Date.now();
+    }
+
+    if (
+      isType(action, updateFirewallActions.failed) ||
+      isType(action, updateFirewallRulesActions.failed)
+    ) {
       const { error } = action.payload;
 
       draft.error.update = error;
