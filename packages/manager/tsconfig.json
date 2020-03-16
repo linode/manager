@@ -24,11 +24,13 @@
     "paths": {
       "src/*": ["src/*"]
     }
+
   },
   "exclude": [
     "node_modules",
     "config",
     "build",
+    "cypress",
     "e2e",
     "scripts",
     "acceptance-tests",
