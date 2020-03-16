@@ -148,8 +148,16 @@ const EntityIcon: React.StatelessComponent<CombinedProps> = props => {
         return 'offline';
     }
   };
+
+  const getStatusForFirewall = (fStatus: string) =>
+    fStatus === 'enabled' ? 'running' : 'offline';
+
   const finalStatus =
-    variant === 'domain' ? status && getStatusForDomain(status) : status;
+    variant === 'domain'
+      ? status && getStatusForDomain(status)
+      : variant === 'firewall'
+      ? status && getStatusForFirewall(status)
+      : status;
 
   return (
     <div

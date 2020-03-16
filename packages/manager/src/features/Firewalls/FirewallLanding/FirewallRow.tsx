@@ -52,7 +52,7 @@ export const FirewallRow: React.FC<CombinedProps> = props => {
       <TableCell>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item className="py0">
-            <EntityIcon variant="firewall" />
+            <EntityIcon variant="firewall" status={firewallStatus} />
           </Grid>
           <Grid item>{firewallLabel}</Grid>
         </Grid>
