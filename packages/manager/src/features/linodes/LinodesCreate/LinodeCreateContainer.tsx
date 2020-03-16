@@ -636,12 +636,21 @@ const withRegions = regionsContainer(({ data, loading, error }) => ({
   regionsError: error
 }));
 
+/**
+ * If we're coming from another part of the app, for example someone has
+ * clicked "Deploy New Linode" from Images Landing, we want to reload
+ * here so that the updated state is parsed from the url and reflected in the form.
+ *
+ * If we are navigating between tabs within the create flow, we definitely do NOT
+ * want to reload the app, since this will re-mount this component and make
+ * an additional request for StackScripts.
+ */
+const shouldReload = (oldProps: CombinedProps, newProps: CombinedProps) =>
+  oldProps.location.search !== newProps.location.search &&
+  !Boolean(oldProps.location.pathname.match(/linodes\/create/));
+
 export default recompose<CombinedProps, {}>(
-  deepCheckRouter(
-    (oldProps, newProps) =>
-      oldProps.location.search !== newProps.location.search,
-    true
-  ),
+  deepCheckRouter(shouldReload, true),
   withImages(),
   withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
     linodesData,
