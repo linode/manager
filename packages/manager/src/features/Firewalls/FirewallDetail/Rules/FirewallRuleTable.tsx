@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   undoButton: {
     cursor: 'pointer',
-    backgroundColor: '#F7F7F7',
+    backgroundColor: 'transparent',
     border: 'none'
   },
   highlight: {
