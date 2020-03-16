@@ -31,7 +31,7 @@ describe('AddRuleDrawer', () => {
   });
 });
 
-describe.skip('utilities', () => {
+describe('utilities', () => {
   describe('formValueToIPs', () => {
     it('returns a complete set of IPs given a string form value', () => {
       expect(formValueToIPs('all', [''])).toEqual(allIPs);
@@ -45,7 +45,8 @@ describe.skip('utilities', () => {
       });
       expect(formValueToIPs('ip/netmask', ['1.1.1.1'])).toEqual({
         ipv4: ['1.1.1.1'],
-        ipv6: []
+        ipv6: [],
+        errors: []
       });
     });
   });
@@ -54,19 +55,22 @@ describe.skip('utilities', () => {
     it('classifies v4 and v6', () => {
       expect(classifyIPs(['1.1.1.1', '0::0'])).toEqual({
         ipv4: ['1.1.1.1'],
-        ipv6: ['0::0']
+        ipv6: ['0::0'],
+        errors: []
       });
     });
-    it('ignores bad input', () => {
+    it('classifies bad input', () => {
       expect(classifyIPs(['1.1.1.1', 'hello-world'])).toEqual({
         ipv4: ['1.1.1.1'],
-        ipv6: []
+        ipv6: [],
+        errors: [1]
       });
     });
     it('accepts ranges', () => {
-      expect(classifyIPs(['1.1.1.1/16'])).toEqual({
-        ipv4: ['1.1.1.1/16'],
-        ipv6: []
+      expect(classifyIPs(['1.1.0.0/16'])).toEqual({
+        ipv4: ['1.1.0.0/16'],
+        ipv6: [],
+        errors: []
       });
     });
   });
