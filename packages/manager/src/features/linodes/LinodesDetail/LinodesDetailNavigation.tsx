@@ -189,10 +189,9 @@ const LinodesDetailNavigation: React.StatelessComponent<CombinedProps> = props =
           component={LinodeResize}
         />
         <Route
-          key={linodeId}
           exact
           path={`/linodes/:linodeId/rescue`}
-          render={() => <LinodeRescue key={linodeId} />}
+          component={LinodeRescue}
         />
         <Route
           exact

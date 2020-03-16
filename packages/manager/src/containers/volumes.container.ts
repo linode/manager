@@ -23,12 +23,18 @@ export default <TInner extends {}, TOuter extends {}>(
   ) => TInner
 ) =>
   connect((state: ApplicationState, ownProps: TOuter) => {
-    const { itemsById, results } = state.__resources.volumes;
+    const {
+      error,
+      itemsById,
+      lastUpdated,
+      loading,
+      results
+    } = state.__resources.volumes;
 
     const volumesData = Object.values(itemsById);
-    const volumesLoading = state.__resources.volumes.loading;
-    const volumesError = state.__resources.volumes.error;
-    const volumesLastUpdated = state.__resources.volumes.lastUpdated;
+    const volumesLoading = loading;
+    const volumesError = error;
+    const volumesLastUpdated = lastUpdated;
     if (!mapVolumesToProps) {
       return {
         volumesData,

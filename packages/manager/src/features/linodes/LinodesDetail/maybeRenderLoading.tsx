@@ -1,5 +1,4 @@
 import { connect } from 'react-redux';
-import { compose } from 'recompose';
 import { MapState } from 'src/store/types';
 
 const isLoading = (state: { loading: boolean; lastUpdated: number }) =>
@@ -42,7 +41,5 @@ const collectLoadingState: MapState<InnerProps, OuterProps> = (
 
 /**
  * Collect relevant loading states from Redux, configs request, and disks requests.
- *
- * If any are true, render the loading component. (early return)
  */
-export default compose(connect(collectLoadingState));
+export default connect(collectLoadingState);

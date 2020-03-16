@@ -70,7 +70,11 @@ const LinodeDetail: React.StatelessComponent<CombinedProps> = props => {
 
   const ctx: LinodeDetailContext = createLinodeDetailContext(linode, dispatch);
 
-  const { _loading } = useReduxLoad(['volumes']); // Loading state handled by maybeRenderLoading
+  /**
+   * Other portions of loading state handled by maybeRenderLoading
+   * (Linode info, configs, disks, etc.)
+   */
+  const { _loading } = useReduxLoad(['volumes']);
 
   if (props.loading || _loading) {
     return <CircleProgress />;
