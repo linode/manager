@@ -52,7 +52,8 @@ describe('Password Input Suite', () => {
       expect(strengthDisplays)
         .withContext(`Password strength should be displayed`)
         .toBe(true);
-      expect(parseInt(strength))
+
+      expect(parseInt(strength, 10))
         .withContext(`Incorrect strength indicator value`)
         .toBe(index + 1);
     });

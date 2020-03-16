@@ -34,6 +34,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   return produce(state, draft => {
     if (isType(action, requestClustersActions.started)) {
       draft.loading = true;
+      draft.error!.read = undefined;
     }
 
     if (isType(action, requestClustersActions.done)) {

@@ -2,7 +2,7 @@ import { APIError } from 'linode-js-sdk/lib/types';
 
 export interface FileAttachment {
   name: string;
-  file: File;
+  file: File | null;
   /* Used to keep track of initial upload status */
   uploading: boolean;
   /* Used to ensure that the file doesn't get uploaded again */

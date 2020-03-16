@@ -21,17 +21,35 @@ type Props = TextFieldProps & {
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
     position: 'relative',
-    marginBottom: theme.spacing(1),
     paddingBottom: theme.spacing(1) / 2
   },
-  strengthIndicator: {
-    position: 'relative',
-    top: -5,
+  requirementsListOuter: {
+    margin: 0,
     width: '100%',
-    [theme.breakpoints.down('xs')]: {
-      maxWidth: '100%'
+    padding: `${theme.spacing(1)}px ${theme.spacing(2) - 2}px `,
+    backgroundColor: theme.bg.offWhiteDT,
+    border: `1px solid ${theme.palette.divider}`,
+    [theme.breakpoints.up('sm')]: {
+      width: 415
     }
   },
+  requirementsList: {
+    margin: 0,
+    padding: '0 20px',
+    '& li': {
+      margin: `${theme.spacing(1)}px 0`,
+      '& > span': {
+        display: 'block'
+      }
+    }
+  },
+  active: {
+    color: theme.color.red,
+    '&$valid': {
+      color: theme.color.green
+    }
+  },
+  valid: {},
   infoText: {
     fontSize: '0.85rem',
     marginTop: 12
@@ -87,21 +105,36 @@ const PasswordInput: React.FC<CombinedProps> = props => {
           />
         </Grid>
         {!hideValidation && (
-          <Grid item xs={12} className={`${classes.strengthIndicator} py0`}>
+          <Grid item xs={12}>
             <StrengthIndicator
               strength={strength}
               hideStrengthLabel={hideStrengthLabel}
             />
           </Grid>
         )}
+        {!hideHelperText && (
+          <Grid item xs={12}>
+            <div className={classes.requirementsListOuter}>
+              <Typography>Password must:</Typography>
+              <ul className={classes.requirementsList}>
+                <li>
+                  <Typography component={'span'}>
+                    Be at least <strong>6 characters</strong>
+                  </Typography>
+                </li>
+                <li>
+                  <Typography component={'span'}>
+                    Contain at least{' '}
+                    <strong>two of the following character classes</strong>:
+                    uppercase letters, lowercase letters, numbers, and
+                    punctuation.
+                  </Typography>
+                </li>
+              </ul>
+            </div>
+          </Grid>
+        )}
       </Grid>
-      {!hideHelperText && (
-        <Typography variant="body1" className={classes.infoText}>
-          Password must be at least 6 characters and contain at least two of the
-          following character classes: uppercase letters, lowercase letters,
-          numbers, and punctuation.
-        </Typography>
-      )}
     </React.Fragment>
   );
 };
