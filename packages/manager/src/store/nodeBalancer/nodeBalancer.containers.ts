@@ -10,7 +10,8 @@ import {
 import {
   getAllNodeBalancers,
   getAllNodeBalancersWithConfigs,
-  getNodeBalancersPage
+  getNodeBalancersPage,
+  getNodeBalancerWithConfigs
 } from 'src/store/nodeBalancer/nodeBalancer.requests';
 import { UpdateNodeBalancerParams } from './nodeBalancer.actions';
 import {
@@ -22,6 +23,7 @@ import {
 export interface WithNodeBalancerActions {
   nodeBalancerActions: {
     getAllNodeBalancersWithConfigs: () => Promise<void>;
+    getNodeBalancerWithConfigs: (nodeBalancerID: number) => Promise<void>;
     getNodeBalancerPage: (params?: any, filters?: any) => Promise<void>;
     getAllNodeBalancers: () => Promise<NodeBalancer[]>;
     createNodeBalancer: (
@@ -49,7 +51,9 @@ export const withNodeBalancerActions = connect(
         dispatch
       ),
       getNodeBalancerPage: (params: any = {}, filters: any = {}) =>
-        dispatch(getNodeBalancersPage({ params, filters }))
+        dispatch(getNodeBalancersPage({ params, filters })),
+      getNodeBalancerWithConfigs: (nodeBalancerId: number) =>
+        dispatch(getNodeBalancerWithConfigs({ nodeBalancerId }))
     }
   })
 );
