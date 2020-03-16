@@ -106,7 +106,7 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
           setFiles(set(lensPath([idx, 'uploading']), true));
 
           const formData = new FormData();
-          formData.append('file', file.file);
+          formData.append('file', file.file ?? '');
 
           uploadAttachment(props.ticketId, formData)
             .then(() => {

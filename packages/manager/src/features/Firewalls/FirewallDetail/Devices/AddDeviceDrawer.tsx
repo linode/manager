@@ -6,6 +6,7 @@ import Drawer from 'src/components/Drawer';
 import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import v4 from 'uuid';
 
 interface Props {
   open: boolean;
@@ -30,24 +31,42 @@ export const AddDeviceDrawer: React.FC<Props> = props => {
 
   const [selectedLinodes, setSelectedLinodes] = React.useState<number[]>([]);
 
+  // Used to reset the selected form values on form submit, since
+  // the LinodeMultiSelect manages its state internally.
+  const [key, setKey] = React.useState<string>(v4());
+
+  React.useEffect(() => {
+    // If we have a new error, clear out the select values
+    if (error && error.length > 0) {
+      setKey(v4());
+    }
+  }, [error]);
+
   const handleSubmit = () => {
     // @todo handling will have to be added here when we support Firewalls for NodeBalancers
     addDevice(selectedLinodes);
   };
 
+  // @todo title and error messaging will update to "Device" once NodeBalancers are allowed
   const errorMessage = error
-    ? getAPIErrorOrDefault(error, 'Error adding Device')[0].reason
+    ? getAPIErrorOrDefault(error, 'Error adding Linode')[0].reason
     : undefined;
 
   return (
     <Drawer
-      title={`Add Device to Firewall: ${firewallLabel}`}
+      title={`Add Linode to Firewall: ${firewallLabel}`}
       open={open}
       onClose={onClose}
     >
-      <form onSubmit={() => handleSubmit()}>
+      <form
+        onSubmit={(e: React.ChangeEvent<HTMLFormElement>) => {
+          e.preventDefault();
+          handleSubmit();
+        }}
+      >
         {errorMessage && <Notice error text={errorMessage} />}
         <LinodeMultiSelect
+          key={key}
           handleChange={selected => setSelectedLinodes(selected)}
           helperText="You can assign one or more Linodes to this Firewall."
           filteredLinodes={currentDevices}
@@ -55,7 +74,8 @@ export const AddDeviceDrawer: React.FC<Props> = props => {
         <ActionsPanel>
           <Button
             buttonType="primary"
-            onClick={() => handleSubmit()}
+            disabled={selectedLinodes.length === 0}
+            onClick={handleSubmit}
             data-qa-submit
             loading={isSubmitting}
           >

@@ -40,7 +40,8 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   if (isType(action, getLinodesActions.started)) {
     return {
       ...state,
-      loading: true
+      loading: true,
+      error: { ...state.error, read: undefined }
     };
   }
 

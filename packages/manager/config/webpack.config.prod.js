@@ -332,5 +332,19 @@ module.exports = {
     net: 'empty',
     tls: 'empty',
     child_process: 'empty'
+  },
+
+  // Utilize webpack performance budgets that will fail the build if the assets
+  // exceed the configured size.
+  // See https://webpack.js.org/configuration/performance/
+  performance: {
+    hints: 'error',
+    maxEntrypointSize: 1180000, // ~1.12 MiB
+    maxAssetSize: 1180000, // ~1.12 MiB
+    assetFilter: function(assetFilename) {
+      return !(
+        assetFilename.endsWith('.chunk.js') || assetFilename.endsWith('.map')
+      );
+    }
   }
 };

@@ -3,6 +3,7 @@ import * as moment from 'moment';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+import { IMAGE_DEFAULT_LIMIT } from 'src/constants';
 import eventMessageGenerator from 'src/eventMessageGenerator';
 import { ExtendedEvent } from 'src/store/events/event.types';
 import createLinkHandlerForNotification from 'src/utilities/getEventsActionLinkStrings';
@@ -17,9 +18,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<void>;
 
-export const UserEventsList: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const UserEventsList: React.StatelessComponent<CombinedProps> = props => {
   const { events, closeMenu } = props;
 
   return (
@@ -39,7 +38,7 @@ export const UserEventsList: React.StatelessComponent<
             event.action === 'disk_imagize' && event.status === 'failed';
 
           const helperText = failedImage
-            ? 'This likely happened because your disk content was larger than the 2048 MB limit, or you attempted to imagize a raw or custom formatted disk.'
+            ? `This likely happened because your disk content was larger than the ${IMAGE_DEFAULT_LIMIT} MB limit, or you attempted to imagize a raw or custom formatted disk.`
             : '';
 
           const linkPath = createLinkHandlerForNotification(
