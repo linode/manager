@@ -113,7 +113,7 @@ const LinodesDetailNavigation: React.StatelessComponent<CombinedProps> = props =
       <Tabs value={tabs.findIndex(tab => matches(tab.routeName))}>
         <TabList>
           {tabs.map(tab => (
-            <Tab>
+            <Tab key={tab.title}>
               <TabLink to={tab.routeName} title={tab.title} />
             </Tab>
           ))}

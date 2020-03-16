@@ -4,27 +4,23 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import { clone, compose, path as pathRamda } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import {
-  matchPath,
-  Redirect,
-  Route,
-  RouteComponentProps,
-  Switch
-} from 'react-router-dom';
+import { matchPath, RouteComponentProps } from 'react-router-dom';
 import UserIcon from 'src/assets/icons/user.svg';
 import Breadcrumb from 'src/components/Breadcrumb';
-import AppBar from 'src/components/core/AppBar';
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Tab from 'src/components/core/Tab';
-import Tabs from 'src/components/core/Tabs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import Tabs from 'src/components/core/Tabs';
+import TabList from 'src/components/core/TabList';
+import TabPanels from 'src/components/core/TabPanels';
+import TabPanel from 'src/components/core/TabPanel';
+import Tab from 'src/components/core/Tab';
 import TabLink from 'src/components/TabLink';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { requestProfile } from 'src/store/profile/profile.requests';
@@ -398,50 +394,29 @@ class UserDetail extends React.Component<CombinedProps> {
             />
           </Grid>
         </Grid>
-        <AppBar position="static" color="default" role="tablist">
-          <Tabs
-            value={this.clampTabChoice()}
-            onChange={this.handleTabChange}
-            indicatorColor="primary"
-            textColor="primary"
-            variant="scrollable"
-            scrollButtons="on"
-          >
+        <Tabs>
+          <TabList>
             {this.tabs.map(tab => (
-              <Tab
-                key={tab.title}
-                data-qa-tab={tab.title}
-                component={React.forwardRef((props, ref) => (
-                  <TabLink
-                    to={tab.routeName}
-                    title={tab.title}
-                    {...props}
-                    ref={ref}
-                  />
-                ))}
-              />
+              <Tab key={tab.title} data-qa-tab={tab.title}>
+                <TabLink to={tab.routeName} title={tab.title} />
+              </Tab>
             ))}
-          </Tabs>
-        </AppBar>
-        {createdUsername && (
-          <Notice
-            success
-            text={`User ${createdUsername} created successfully`}
-          />
-        )}
-        <Switch>
-          <Route
-            exact
-            path={`${url}/permissions`}
-            component={this.renderUserPermissions}
-          />
-          <Route
-            path={`${url}/profile`}
-            render={this.renderUserProfile}
-            exact
-          />
-          <Redirect to={`${url}/profile`} />
-        </Switch>
+          </TabList>
+
+          {createdUsername && (
+            <Notice
+              success
+              text={`User ${createdUsername} created successfully`}
+            />
+          )}
+
+          {/* TODO these are not rendering as expected */}
+          <TabPanels>
+            <TabPanel>{this.renderUserPermissions}</TabPanel>
+
+            <TabPanel>{this.renderUserProfile}</TabPanel>
+          </TabPanels>
+        </Tabs>
       </React.Fragment>
     );
   }
@@ -474,10 +449,7 @@ const reloadable = reloadableWithRouter<CombinedProps, MatchProps>(
 
 const styled = withStyles(styles);
 
-export const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+export const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose<any, any, any, any>(
   connected,

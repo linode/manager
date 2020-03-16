@@ -147,7 +147,7 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
         <EnableManaged
           isManaged={isManaged}
           update={this.props.actions.updateAccountSettingsInStore}
-          push={this.props.history.push}
+          //push={this.props.history.push}
         />
         {shouldDisplayGroupImport(entitiesWithGroupsToImport) && (
           <ImportGroupsAsTags openDrawer={openImportDrawer} />

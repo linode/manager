@@ -21,7 +21,6 @@ import {
   WithTheme,
   withTheme
 } from 'src/components/core/styles';
-import TabPanel from 'src/components/core/TabPanel';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';

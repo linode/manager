@@ -6,13 +6,12 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import Tab from 'src/components/core/Tab';
 import TabList from 'src/components/core/TabList';
-import Tabs from 'src/components/core/Tabs';
 import TabPanel from 'src/components/core/TabPanel';
 import TabPanels from 'src/components/core/TabPanels';
+import Tabs from 'src/components/core/Tabs';
 import Typography from 'src/components/core/Typography';
-import Tab from 'src/components/core/Tab';
-import { safeGetTabRender } from 'src/utilities/safeGetTabRender';
 import Notice from '../Notice';
 
 type ClassNames =

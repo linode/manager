@@ -1,14 +1,7 @@
 import * as React from 'react';
-import {
-  matchPath,
-  Redirect,
-  Route,
-  RouteComponentProps,
-  Switch
-} from 'react-router-dom';
+import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
-import AppBar from 'src/components/core/AppBar';
 import Tabs from 'src/components/core/Tabs';
 import TabList from 'src/components/core/TabList';
 import TabPanels from 'src/components/core/TabPanels';
@@ -84,40 +77,24 @@ class AccountLanding extends React.Component<Props> {
           removeCrumbX={1}
           data-qa-profile-header
         />
-        <Tabs
-        // value={this.tabs.findIndex(tab => matches(tab.routeName))}
-        // onChange={this.handleTabChange}
-        // indicatorColor="primary"
-        // textColor="primary"
-        // variant="scrollable"
-        // scrollButtons="on"
-        >
+        <Tabs>
           <TabList>
             {this.tabs.map(tab => (
-              <Tab
-                key={tab.title}
-                data-qa-tab={tab.title}
-                component={React.forwardRef((props, ref) => (
-                  <TabLink
-                    to={tab.routeName}
-                    title={tab.title}
-                    {...props}
-                    ref={ref}
-                  />
-                ))}
-              />
+              <Tab key={tab.title} data-qa-tab={tab.title}>
+                <TabLink to={tab.routeName} title={tab.title} />
+              </Tab>
             ))}
           </TabList>
 
           <TabPanels>
             <TabPanel>
+              <Billing />
+            </TabPanel>
+            <TabPanel>
               <Users isRestrictedUser={this.props.isRestrictedUser} />
             </TabPanel>
             <TabPanel>
               <GlobalSettings />
-            </TabPanel>
-            <TabPanel>
-              <Billing />
             </TabPanel>
           </TabPanels>
         </Tabs>
