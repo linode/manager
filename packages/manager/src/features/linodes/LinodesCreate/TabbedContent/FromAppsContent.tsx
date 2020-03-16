@@ -331,28 +331,32 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
             }}
             updateFor={[tags, label, errors]}
           />
-          <AccessPanel
-            /* disable the password field if we haven't selected an image */
-            disabled={!selectedImageID}
-            disabledReason={
-              !selectedImageID
-                ? 'You must select an image to set a root password'
-                : ''
-            }
-            error={hasErrorFor('root_pass')}
-            sshKeyError={sshError}
-            updateFor={[
-              password,
-              errors,
-              userSSHKeys,
-              selectedImageID,
-              sshError
-            ]}
-            password={password}
-            handleChange={updatePassword}
-            users={userSSHKeys.length > 0 && selectedImageID ? userSSHKeys : []}
-            requestKeys={requestKeys}
-          />
+          <form>
+            <AccessPanel
+              /* disable the password field if we haven't selected an image */
+              disabled={!selectedImageID}
+              disabledReason={
+                !selectedImageID
+                  ? 'You must select an image to set a root password'
+                  : ''
+              }
+              error={hasErrorFor('root_pass')}
+              sshKeyError={sshError}
+              updateFor={[
+                password,
+                errors,
+                userSSHKeys,
+                selectedImageID,
+                sshError
+              ]}
+              password={password}
+              handleChange={updatePassword}
+              users={
+                userSSHKeys.length > 0 && selectedImageID ? userSSHKeys : []
+              }
+              requestKeys={requestKeys}
+            />
+          </form>
           <AddonsPanel
             backups={backupsEnabled}
             accountBackups={accountBackupsEnabled}
