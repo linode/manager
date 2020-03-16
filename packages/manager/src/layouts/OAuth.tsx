@@ -33,7 +33,7 @@ export class OAuthCallbackPage extends Component<CombinedProps> {
     /**
      * If this URL doesn't have a fragment, or doesn't have enough entries, we know we don't have
      * the data we need and should bounce.
-     * location.hash is a string which starts with # and is followed by a basic query params stype string.
+     * location.hash is a string which starts with # and is followed by a basic query params type string.
      *
      * 'location.hash = `#access_token=something&token_type=something˙&expires_in=something&scope=something&state=something&return=the-url-we-are-now-at?returnTo=where-to-redirect-when-done`
      *
@@ -42,7 +42,7 @@ export class OAuthCallbackPage extends Component<CombinedProps> {
     const { location, history } = this.props;
 
     /**
-     * If the hash doesn't contain a string after the #, there's no point continuing as we dont have
+     * If the hash doesn't contain a string after the #, there's no point continuing as we don't have
      * the query params we need.
      */
 
@@ -87,7 +87,7 @@ export class OAuthCallbackPage extends Component<CombinedProps> {
     this.checkNonce(nonce);
 
     /**
-     * We multiply the expiration time by 1000 ms because JavaSript returns time in ms, while
+     * We multiply the expiration time by 1000 ms because JavaScript returns time in ms, while
      * the API returns the expiry time in seconds
      */
     const expireDate = new Date();
@@ -104,7 +104,7 @@ export class OAuthCallbackPage extends Component<CombinedProps> {
     );
 
     /**
-     * All done, redirect this bad-boy to the returnTo URL we generated earlier.
+     * All done, redirect this bad boy to the returnTo URL we generated earlier.
      */
     history.push(returnTo);
   }
@@ -138,10 +138,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => {
   };
 };
 
-const connected = connect(
-  undefined,
-  mapDispatchToProps
-);
+const connected = connect(undefined, mapDispatchToProps);
 
 export default compose<CombinedProps, {}>(
   connected,
