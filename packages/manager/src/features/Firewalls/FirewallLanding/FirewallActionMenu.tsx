@@ -1,12 +1,12 @@
 import { FirewallStatus } from 'linode-js-sdk/lib/firewalls';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 export interface ActionHandlers {
   triggerEnableFirewall: (firewallID: number, firewallLabel: string) => void;
   triggerDisableFirewall: (firewallID: number, firewallLabel: string) => void;
-  triggerEditFirewall: (firewallID: number, firewallLabel: string) => void;
   triggerDeleteFirewall: (firewallID: number, firewallLabel: string) => void;
 }
 
@@ -25,9 +25,9 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
     firewallStatus,
     triggerEnableFirewall,
     triggerDisableFirewall,
-    triggerDeleteFirewall,
-    triggerEditFirewall
+    triggerDeleteFirewall
   } = props;
+  const history = useHistory();
 
   const createActions = () => {
     return (closeMenu: Function): Action[] => [
@@ -46,9 +46,11 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
       },
       {
         title: 'Edit',
-        onClick: () => {
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
           closeMenu();
-          triggerEditFirewall(firewallID, firewallLabel);
+          history.push(`/firewalls/${firewallID}/rules`);
+          e.preventDefault();
+          e.stopPropagation();
         }
       },
       {
