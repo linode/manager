@@ -107,16 +107,13 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
      * to our list of master images supported by Linode and filter out the ones
      * that aren't compatible with our selected StackScript
      */
-    const compatibleImages = Object.keys(imagesData).reduce(
-      (acc, eachKey) => {
-        if (stackScriptImages.some(eachSSImage => eachSSImage === eachKey)) {
-          acc.push(imagesData[eachKey]);
-        }
+    const compatibleImages = Object.keys(imagesData).reduce((acc, eachKey) => {
+      if (stackScriptImages.some(eachSSImage => eachSSImage === eachKey)) {
+        acc.push(imagesData[eachKey]);
+      }
 
-        return acc;
-      },
-      [] as Image[]
-    );
+      return acc;
+    }, [] as Image[]);
 
     /**
      * if a UDF field comes back from the API with a "default"
@@ -239,124 +236,128 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
           id={`tabpanel-${determineIDName}`}
           aria-labelledby={`tab-${determineIDName}`}
         >
-          <CreateLinodeDisabled isDisabled={disabled} />
-          <SelectStackScriptPanel
-            error={hasErrorFor('stackscript_id')}
-            header={header}
-            selectedId={selectedStackScriptID}
-            selectedUsername={selectedStackScriptUsername}
-            updateFor={[selectedStackScriptID, errors]}
-            onSelect={this.handleSelectStackScript}
-            publicImages={filterImagesByType(imagesData, 'public')}
-            resetSelectedStackScript={() => null}
-            disabled={disabled}
-            request={request}
-            category={this.props.category}
-          />
-          {!disabled && userDefinedFields && userDefinedFields.length > 0 && (
-            <UserDefinedFieldsPanel
-              errors={filterUDFErrors(errorResources, this.props.errors)}
-              selectedLabel={selectedStackScriptLabel || ''}
-              selectedUsername={selectedStackScriptUsername || ''}
-              handleChange={this.handleChangeUDF}
-              userDefinedFields={userDefinedFields}
-              updateFor={[userDefinedFields, udf_data, errors]}
-              udf_data={udf_data || {}}
+          <form>
+            <CreateLinodeDisabled isDisabled={disabled} />
+            <SelectStackScriptPanel
+              error={hasErrorFor('stackscript_id')}
+              header={header}
+              selectedId={selectedStackScriptID}
+              selectedUsername={selectedStackScriptUsername}
+              updateFor={[selectedStackScriptID, errors]}
+              onSelect={this.handleSelectStackScript}
+              publicImages={filterImagesByType(imagesData, 'public')}
+              resetSelectedStackScript={() => null}
+              disabled={disabled}
+              request={request}
+              category={this.props.category}
             />
-          )}
-          {!disabled && compatibleImages && compatibleImages.length > 0 ? (
-            <ImageSelect
-              data-qa-select-image-panel
-              title="Select an Image"
-              images={compatibleImages}
-              handleSelectImage={updateImageID}
-              selectedImageID={selectedImageID}
-              error={hasErrorFor('image')}
-              variant="public"
+            {!disabled && userDefinedFields && userDefinedFields.length > 0 && (
+              <UserDefinedFieldsPanel
+                errors={filterUDFErrors(errorResources, this.props.errors)}
+                selectedLabel={selectedStackScriptLabel || ''}
+                selectedUsername={selectedStackScriptUsername || ''}
+                handleChange={this.handleChangeUDF}
+                userDefinedFields={userDefinedFields}
+                updateFor={[userDefinedFields, udf_data, errors]}
+                udf_data={udf_data || {}}
+              />
+            )}
+            {!disabled && compatibleImages && compatibleImages.length > 0 ? (
+              <ImageSelect
+                data-qa-select-image-panel
+                title="Select an Image"
+                images={compatibleImages}
+                handleSelectImage={updateImageID}
+                selectedImageID={selectedImageID}
+                error={hasErrorFor('image')}
+                variant="public"
+              />
+            ) : (
+              <Paper className={classes.emptyImagePanel}>
+                {/* empty state for images */}
+                {hasErrorFor('image') && (
+                  <Notice error={true} text={hasErrorFor('image')} />
+                )}
+                <Typography variant="h2" data-qa-tp="Select Image">
+                  Select Image
+                </Typography>
+                <Typography
+                  variant="body1"
+                  className={classes.emptyImagePanelText}
+                  data-qa-no-compatible-images
+                >
+                  No Compatible Images Available
+                </Typography>
+              </Paper>
+            )}
+            <SelectRegionPanel
+              error={hasErrorFor('region')}
+              regions={regionsData}
+              handleSelection={updateRegionID}
+              selectedID={selectedRegionID}
+              updateFor={[selectedRegionID, errors]}
+              copy="Determine the best location for your Linode."
+              disabled={disabled}
             />
-          ) : (
-            <Paper className={classes.emptyImagePanel}>
-              {/* empty state for images */}
-              {hasErrorFor('image') && (
-                <Notice error={true} text={hasErrorFor('image')} />
-              )}
-              <Typography variant="h2" data-qa-tp="Select Image">
-                Select Image
-              </Typography>
-              <Typography
-                variant="body1"
-                className={classes.emptyImagePanelText}
-                data-qa-no-compatible-images
-              >
-                No Compatible Images Available
-              </Typography>
-            </Paper>
-          )}
-          <SelectRegionPanel
-            error={hasErrorFor('region')}
-            regions={regionsData}
-            handleSelection={updateRegionID}
-            selectedID={selectedRegionID}
-            updateFor={[selectedRegionID, errors]}
-            copy="Determine the best location for your Linode."
-            disabled={disabled}
-          />
-          <SelectPlanPanel
-            error={hasErrorFor('type')}
-            types={typesData}
-            onSelect={updateTypeID}
-            updateFor={[selectedTypeID, errors]}
-            selectedID={selectedTypeID}
-            disabled={disabled}
-          />
-          <LabelAndTagsPanel
-            labelFieldProps={{
-              label: 'Linode Label',
-              value: label || '',
-              onChange: this.props.updateLabel,
-              errorText: hasErrorFor('label'),
-              disabled
-            }}
-            tagsInputProps={{
-              value: tags || [],
-              onChange: updateTags,
-              tagError: hasErrorFor('tags'),
-              disabled
-            }}
-            updateFor={[tags, label, errors]}
-          />
-          <AccessPanel
-            /* disable the password field if we haven't selected an image */
-            disabled={!this.props.selectedImageID}
-            disabledReason={
-              !this.props.selectedImageID
-                ? 'You must select an image to set a root password'
-                : ''
-            }
-            error={hasErrorFor('root_pass')}
-            sshKeyError={sshError}
-            updateFor={[
-              password,
-              errors,
-              userSSHKeys,
-              selectedImageID,
-              sshError
-            ]}
-            password={password}
-            handleChange={updatePassword}
-            users={userSSHKeys.length > 0 && selectedImageID ? userSSHKeys : []}
-            requestKeys={requestKeys}
-          />
-          <AddonsPanel
-            backups={backupsEnabled}
-            accountBackups={accountBackupsEnabled}
-            backupsMonthly={backupsMonthlyPrice}
-            privateIP={privateIPEnabled}
-            changeBackups={toggleBackupsEnabled}
-            changePrivateIP={togglePrivateIPEnabled}
-            updateFor={[privateIPEnabled, backupsEnabled, selectedTypeID]}
-            disabled={disabled}
-          />
+            <SelectPlanPanel
+              error={hasErrorFor('type')}
+              types={typesData}
+              onSelect={updateTypeID}
+              updateFor={[selectedTypeID, errors]}
+              selectedID={selectedTypeID}
+              disabled={disabled}
+            />
+            <LabelAndTagsPanel
+              labelFieldProps={{
+                label: 'Linode Label',
+                value: label || '',
+                onChange: this.props.updateLabel,
+                errorText: hasErrorFor('label'),
+                disabled
+              }}
+              tagsInputProps={{
+                value: tags || [],
+                onChange: updateTags,
+                tagError: hasErrorFor('tags'),
+                disabled
+              }}
+              updateFor={[tags, label, errors]}
+            />
+            <AccessPanel
+              /* disable the password field if we haven't selected an image */
+              disabled={!this.props.selectedImageID}
+              disabledReason={
+                !this.props.selectedImageID
+                  ? 'You must select an image to set a root password'
+                  : ''
+              }
+              error={hasErrorFor('root_pass')}
+              sshKeyError={sshError}
+              updateFor={[
+                password,
+                errors,
+                userSSHKeys,
+                selectedImageID,
+                sshError
+              ]}
+              password={password}
+              handleChange={updatePassword}
+              users={
+                userSSHKeys.length > 0 && selectedImageID ? userSSHKeys : []
+              }
+              requestKeys={requestKeys}
+            />
+            <AddonsPanel
+              backups={backupsEnabled}
+              accountBackups={accountBackupsEnabled}
+              backupsMonthly={backupsMonthlyPrice}
+              privateIP={privateIPEnabled}
+              changeBackups={toggleBackupsEnabled}
+              changePrivateIP={togglePrivateIPEnabled}
+              updateFor={[privateIPEnabled, backupsEnabled, selectedTypeID]}
+              disabled={disabled}
+            />
+          </form>
         </Grid>
         <Grid item className={`${classes.sidebar} mlSidebar`}>
           <Sticky topOffset={-24} disableCompensation>

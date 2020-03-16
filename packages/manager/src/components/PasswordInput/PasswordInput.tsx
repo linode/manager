@@ -49,7 +49,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: theme.color.green
     }
   },
-  valid: {}
+  valid: {},
+  infoText: {
+    fontSize: '0.85rem',
+    marginTop: 12
+  },
+  usernameInput: {
+    display: 'none'
+  }
 }));
 
 type CombinedProps = Props;
@@ -79,6 +86,15 @@ const PasswordInput: React.FC<CombinedProps> = props => {
     <React.Fragment>
       <Grid container className={classes.container}>
         <Grid item xs={12}>
+          <input
+            type="text"
+            name="name"
+            aria-hidden="true"
+            autoComplete="username"
+            className={classes.usernameInput}
+            value="root"
+            readOnly
+          />
           <HideShowText
             {...rest}
             tooltipText={disabledReason}
