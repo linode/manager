@@ -9,6 +9,27 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { UserEventsMenu } from './UserEventsMenu';
 
+const _createRange = window.document.createRange;
+
+beforeAll(() => {
+  // c/f https://github.com/mui-org/material-ui/issues/15726
+  /* tslint:disable */
+  window.document.createRange = () =>
+    ({
+      setStart: () => {},
+      setEnd: () => {},
+      commonAncestorContainer: {
+        nodeName: 'BODY',
+        ownerDocument: document
+      }
+    } as any);
+  /* tslint:enable */
+});
+
+afterAll(() => {
+  window.document.createRange = _createRange;
+});
+
 const props = {
   classes: {
     root: '',

@@ -19,7 +19,7 @@
     "noUnusedLocals": true,
     "resolveJsonModule": true,
     "rootDir": "src",
-    "skipLibCheck":true,
+    "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
       "src/*": ["src/*"]
@@ -27,6 +27,7 @@
   },
   "exclude": [
     "node_modules",
+    "config",
     "build",
     "e2e",
     "scripts",
