@@ -12,6 +12,7 @@ import {
   updateDomain
 } from 'src/store/domains/domains.requests';
 import { EntityError, ThunkDispatch } from 'src/store/types';
+import { Action } from 'typescript-fsa';
 
 export interface StateProps {
   domainsData?: Domain[];
@@ -23,7 +24,7 @@ export interface DomainActionsProps {
   createDomain: (payload: CreateDomainPayload) => Promise<Domain>;
   updateDomain: (params: UpdateDomainParams & DomainId) => Promise<Domain>;
   deleteDomain: (domainId: DomainId) => Promise<{}>;
-  upsertDomain: (domain: Domain) => Promise<Domain>;
+  upsertDomain: (domain: Domain) => Action<Domain>;
 }
 
 export type Props = StateProps & DomainActionsProps;
