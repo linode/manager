@@ -13,8 +13,11 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
+import TabList from 'src/components/core/TabList';
+import TabPanels from 'src/components/core/TabPanels';
+import TabPanel from 'src/components/core/TabPanel';
+import Tab from 'src/components/core/Tab';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -205,39 +208,34 @@ export class SupportTicketsLanding extends React.PureComponent<
           )}
         </Grid>
         {notice && <Notice success text={notice} />}
-        <AppBar position="static" color="default" role="tablist">
-          <Tabs
-            value={value}
-            onChange={this.handleChange}
-            indicatorColor="primary"
-            textColor="primary"
-            variant="scrollable"
-            scrollButtons="on"
-          >
-            <Tab
-              data-qa-tab="Open Tickets"
-              key={0}
-              label="Open Tickets"
-              id="tab-open-tickets"
-              role="tab"
-              aria-controls="tabpanel-open-tickets"
-            />
-            <Tab
-              data-qa-tab="Closed Tickets"
-              key={1}
-              label="Closed Tickets"
-              id="tab-closed-tickets"
-              role="tab"
-              aria-controls="tabpanel-closed-tickets"
-            />
-          </Tabs>
-        </AppBar>
-        {/* NB: 0 is the index of the open tickets tab, which evaluates to false */}
-        <TicketList
-          newTicket={newTicket}
-          filterStatus={value ? 'closed' : 'open'}
-        />
-        {this.renderTicketDrawer()}
+        <Tabs
+        // value={value}
+        // onChange={this.handleChange}
+        // indicatorColor="primary"
+        // textColor="primary"
+        // variant="scrollable"
+        // scrollButtons="on"
+        >
+          <TabList>
+            <Tab data-qa-tab="Open Tickets" key={0}>
+              Open Tickets
+            </Tab>
+            <Tab data-qa-tab="Closed Tickets" key={1}>
+              Closed Tickets
+            </Tab>
+          </TabList>
+          <TabPanels>
+            <TabPanel>
+              <TicketList newTicket={newTicket} filterStatus={'open'} />
+            </TabPanel>
+            <TabPanel>
+              <TicketList newTicket={newTicket} filterStatus={'closed'} />
+            </TabPanel>
+          </TabPanels>
+          {/* NB: 0 is the index of the open tickets tab, which evaluates to false */}
+
+          {this.renderTicketDrawer()}
+        </Tabs>
       </React.Fragment>
     );
   }

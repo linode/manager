@@ -1,18 +1,15 @@
 import * as React from 'react';
-import {
-  matchPath,
-  Redirect,
-  Route,
-  RouteComponentProps,
-  Switch
-} from 'react-router-dom';
+import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
-import AppBar from 'src/components/core/AppBar';
+
 import Box from 'src/components/core/Box';
-import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
+import TabList from 'src/components/core/TabList';
+import TabPanels from 'src/components/core/TabPanels';
+import TabPanel from 'src/components/core/TabPanel';
+import Tab from 'src/components/core/Tab';
 import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
@@ -93,51 +90,28 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
         {/* @todo: Insert real link when the doc is written. */}
         <DocumentationButton href="https://www.linode.com/docs/platform" />
       </Box>
-      <AppBar position="static" color="default" role="tablist">
-        <Tabs
-          value={tabs.findIndex(tab => matches(tab.routeName))}
-          onChange={handleTabChange}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="scrollable"
-          scrollButtons="on"
-        >
+      <Tabs>
+        <TabList>
           {tabs.map(tab => (
-            <Tab
-              key={tab.title}
-              data-qa-tab={tab.title}
-              component={React.forwardRef((forwardedProps, ref) => (
-                <TabLink
-                  to={tab.routeName}
-                  title={tab.title}
-                  {...forwardedProps}
-                  ref={ref}
-                />
-              ))}
-            />
+            <Tab key={tab.title} data-qa-tab={tab.title}>
+              <TabLink to={tab.routeName} title={tab.title} />
+            </Tab>
           ))}
-        </Tabs>
-      </AppBar>
-      <Switch>
-        <Route
-          exact
-          strict
-          path={`${URL}/rules`}
-          render={() => <FirewallRulesLanding rules={thisFirewall.rules} />}
-        />
-        <Route
-          exact
-          strict
-          path={`${URL}/linodes`}
-          render={() => (
+        </TabList>
+
+        <TabPanels>
+          <TabPanel>
+            <FirewallRulesLanding rules={thisFirewall.rules} />
+          </TabPanel>
+
+          <TabPanel>
             <FirewallLinodesLanding
               firewallID={+thisFirewallId}
               firewallLabel={thisFirewall.label}
             />
-          )}
-        />
-        <Redirect to={`${URL}/rules`} />
-      </Switch>
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </React.Fragment>
   );
 };

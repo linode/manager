@@ -18,14 +18,18 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
+import TabList from 'src/components/core/TabList';
+import TabPanels from 'src/components/core/TabPanels';
+import TabPanel from 'src/components/core/TabPanel';
+import Tab from 'src/components/core/Tab';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import NotFound from 'src/components/NotFound';
 import { convertForAria } from 'src/components/TabLink/TabLink';
 import Glish from './Glish';
 import Weblish from './Weblish';
+import TablesPanel from 'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerSummary/TablesPanel';
 
 type ClassNames = 'tabs' | 'tabRoot' | 'progress' | 'notFound';
 
@@ -262,15 +266,15 @@ class Lish extends React.Component<CombinedProps, State> {
     };
 
     return (
-      <React.Fragment>
-        <Tabs
-          value={this.tabs.findIndex(tab => this.matches(tab.routeName))}
-          onChange={this.handleTabChange}
-          className={classes.tabs}
-          indicatorColor="primary"
-          textColor="primary"
-          scrollButtons="off"
-        >
+      <Tabs
+      // value={this.tabs.findIndex(tab => this.matches(tab.routeName))}
+      // onChange={this.handleTabChange}
+      // className={classes.tabs}
+      // indicatorColor="primary"
+      // textColor="primary"
+      // scrollButtons="off"
+      >
+        <TabList>
           {this.tabs.map(tab => (
             <Tab
               classes={{
@@ -279,22 +283,22 @@ class Lish extends React.Component<CombinedProps, State> {
               key={tab.title}
               label={tab.title}
               data-qa-tab={tab.title}
-              {...tabA11yProps(tab.title)}
             />
           ))}
-        </Tabs>
+        </TabList>
+
         {loading && <CircleProgress noInner className={classes.progress} />}
         {/* Only show 404 component if we are missing _both_ linode and token */}
         {!loading && !linode && !token && (
           <NotFound className={classes.notFound} />
         )}
         {!loading && token && linode && (
-          <Switch>
-            <Route exact path={`${path}/weblish`} render={this.renderWeblish} />
-            <Route exact path={`${path}/glish`} render={this.renderGlish} />
-          </Switch>
+          <TabPanels>
+            <TabPanel>{this.renderWeblish}</TabPanel>
+            <TabPanel>{this.renderGlish}</TabPanel>
+          </TabPanels>
         )}
-      </React.Fragment>
+      </Tabs>
     );
   }
 }

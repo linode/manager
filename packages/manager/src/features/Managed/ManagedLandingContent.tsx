@@ -5,18 +5,14 @@ import {
   ManagedCredential
 } from 'linode-js-sdk/lib/managed';
 import * as React from 'react';
-import {
-  matchPath,
-  Redirect,
-  Route,
-  RouteComponentProps,
-  Switch
-} from 'react-router-dom';
+import { matchPath, RouteComponentProps } from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';
-import AppBar from 'src/components/core/AppBar';
 import Box from 'src/components/core/Box';
-import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
+import TabList from 'src/components/core/TabList';
+import TabPanels from 'src/components/core/TabPanels';
+import TabPanel from 'src/components/core/TabPanel';
+import Tab from 'src/components/core/Tab';
 import DefaultLoader from 'src/components/DefaultLoader';
 import DocumentationButton from 'src/components/DocumentationButton';
 import Grid from 'src/components/Grid';
@@ -135,37 +131,24 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
           </Grid>
         </Grid>
       </Box>
-      <AppBar position="static" color="default" role="tablist">
-        <Tabs
-          value={tabs.findIndex(tab => matches(tab.routeName))}
-          onChange={handleTabChange}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="scrollable"
-          scrollButtons="on"
-        >
+      <Tabs
+      // value={tabs.findIndex(tab => matches(tab.routeName))}
+      // onChange={handleTabChange}
+      // indicatorColor="primary"
+      // textColor="primary"
+      // variant="scrollable"
+      // scrollButtons="on"
+      >
+        <TabList>
           {tabs.map(tab => (
-            <Tab
-              key={tab.title}
-              data-qa-tab={tab.title}
-              component={React.forwardRef((forwardedProps, ref) => (
-                <TabLink
-                  to={tab.routeName}
-                  title={tab.title}
-                  {...forwardedProps}
-                  ref={ref}
-                />
-              ))}
-            />
+            <Tab key={tab.title} data-qa-tab={tab.title}>
+              <TabLink to={tab.routeName} title={tab.title} />
+            </Tab>
           ))}
-        </Tabs>
-      </AppBar>
-      <Switch>
-        <Route
-          exact
-          strict
-          path={`${props.match.path}/monitors`}
-          render={() => (
+        </TabList>
+
+        <TabPanels>
+          <TabPanel>
             <Monitors
               credentials={credentials.data}
               loading={
@@ -175,32 +158,20 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
               groups={groups}
               errorFromProps={credentials.error || contacts.error || undefined}
             />
-          )}
-        />
-        <Route
-          exact
-          strict
-          path={`${props.match.path}/ssh-access`}
-          component={SSHAccess}
-        />
-        <Route
-          exact
-          strict
-          path={`${props.match.path}/credentials`}
-          render={() => (
+          </TabPanel>
+          <TabPanel>
+            <SSHAccess />
+          </TabPanel>
+          <TabPanel>
             <Credentials
               loading={credentials.loading && credentials.lastUpdated === 0}
               error={credentialsError}
               credentials={credentials.data}
               update={credentials.update}
             />
-          )}
-        />
-        <Route
-          exact
-          strict
-          path={`${props.match.path}/contacts`}
-          render={() => (
+          </TabPanel>
+
+          <TabPanel>
             <Contacts
               contacts={contacts.data}
               loading={contacts.loading && contacts.lastUpdated === 0}
@@ -209,10 +180,9 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
               transformData={contacts.transformData}
               update={contacts.update}
             />
-          )}
-        />
-        <Redirect to={`${props.match.path}/monitors`} />
-      </Switch>
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </React.Fragment>
   );
 };

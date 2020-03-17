@@ -5,22 +5,19 @@ import {
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import {
-  matchPath,
-  Redirect,
-  Route,
-  RouteComponentProps,
-  Switch
-} from 'react-router-dom';
+import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import Breadcrumb from 'src/components/Breadcrumb';
-import AppBar from 'src/components/core/AppBar';
+
 import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
+import TabList from 'src/components/core/TabList';
+import TabPanels from 'src/components/core/TabPanels';
+import TabPanel from 'src/components/core/TabPanel';
+import Tab from 'src/components/core/Tab';
 import DefaultLoader from 'src/components/DefaultLoader';
 import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -130,15 +127,15 @@ export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = prop
         />
         <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/" />
       </Box>
-      <AppBar position="static" color="default" role="tablist">
-        <Tabs
-          value={tabs.findIndex(tab => matches(tab.routeName))}
-          onChange={handleTabChange}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="scrollable"
-          scrollButtons="on"
-        >
+      <Tabs
+      // value={tabs.findIndex(tab => matches(tab.routeName))}
+      // onChange={handleTabChange}
+      // indicatorColor="primary"
+      // textColor="primary"
+      // variant="scrollable"
+      // scrollButtons="on"
+      >
+        <TabList>
           {tabs.map(tab => (
             <Tab
               key={tab.title}
@@ -153,36 +150,26 @@ export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = prop
               ))}
             />
           ))}
-        </Tabs>
-      </AppBar>
-      {objPromotionalOffers.map(promotionalOffer => (
-        <PromotionalOfferCard
-          key={promotionalOffer.name}
-          {...promotionalOffer}
-          fullWidth
-          className={classes.promo}
-        />
-      ))}
-      <Switch>
-        <Route
-          exact
-          strict
-          path={`${url}/buckets`}
-          render={() => (
+        </TabList>
+
+        {objPromotionalOffers.map(promotionalOffer => (
+          <PromotionalOfferCard
+            key={promotionalOffer.name}
+            {...promotionalOffer}
+            fullWidth
+            className={classes.promo}
+          />
+        ))}
+        <TabPanels>
+          <TabPanel>
             <BucketLanding isRestrictedUser={props.isRestrictedUser} />
-          )}
-        />
-        <Route
-          exact
-          strict
-          path={`${url}/access-keys`}
-          render={() => (
+          </TabPanel>
+          <TabPanel>
             <AccessKeyLanding isRestrictedUser={props.isRestrictedUser} />
-          )}
-        />
-        <Redirect to={`${url}/buckets`} />
-      </Switch>
-      <BucketDrawer isRestrictedUser={props.isRestrictedUser} />
+          </TabPanel>
+        </TabPanels>
+        <BucketDrawer isRestrictedUser={props.isRestrictedUser} />
+      </Tabs>
     </React.Fragment>
   );
 };

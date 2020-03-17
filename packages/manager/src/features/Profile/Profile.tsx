@@ -7,8 +7,11 @@ import {
   withRouter
 } from 'react-router-dom';
 import AppBar from 'src/components/core/AppBar';
-import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
+import TabList from 'src/components/core/TabList';
+import TabPanels from 'src/components/core/TabPanels';
+import TabPanel from 'src/components/core/TabPanel';
+import Tab from 'src/components/core/Tab';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import H1Header from 'src/components/H1Header';
 import TabLink from 'src/components/TabLink';
@@ -107,46 +110,50 @@ class Profile extends React.Component<Props> {
       <React.Fragment>
         <DocumentTitleSegment segment="My Profile" />
         <H1Header title="My Profile" data-qa-profile-header />
-        <AppBar position="static" color="default" role="tablist">
-          <Tabs
-            value={this.tabs.findIndex(tab => matches(tab.routeName))}
-            onChange={this.handleTabChange}
-            indicatorColor="primary"
-            textColor="primary"
-            variant="scrollable"
-            scrollButtons="on"
-            data-qa-tabs
-          >
+        <Tabs
+        // value={this.tabs.findIndex(tab => matches(tab.routeName))}
+        // onChange={this.handleTabChange}
+        // indicatorColor="primary"
+        // textColor="primary"
+        // variant="scrollable"
+        // scrollButtons="on"
+        // data-qa-tabs
+        >
+          <TabList>
             {this.tabs.map(tab => (
-              <Tab
-                key={tab.title}
-                data-qa-tab={tab.title}
-                component={React.forwardRef((props, ref) => (
-                  <TabLink
-                    to={tab.routeName}
-                    title={tab.title}
-                    {...props}
-                    ref={ref}
-                  />
-                ))}
-              />
+              <Tab key={tab.title} data-qa-tab={tab.title}>
+                <TabLink to={tab.routeName} title={tab.title} />
+              </Tab>
             ))}
-          </Tabs>
-        </AppBar>
-        <Switch>
-          <Route exact path={`${url}/settings`} component={Settings} />
-          <Route
-            exact
-            path={`${url}/auth`}
-            component={AuthenticationSettings}
-          />
-          <Route exact path={`${url}/tokens`} component={APITokens} />
-          <Route exact path={`${url}/clients`} component={OAuthClients} />
-          <Route exact path={`${url}/lish`} component={LishSettings} />
-          <Route exact path={`${url}/referrals`} component={Referrals} />
-          <Route exact path={`${url}/keys`} component={SSHKeys} />
-          <Route path={`${url}`} component={DisplaySettings} />
-        </Switch>
+          </TabList>
+
+          <TabPanels>
+            <TabPanel>
+              <DisplaySettings />
+            </TabPanel>
+            <TabPanel>
+              <AuthenticationSettings />
+            </TabPanel>
+            <TabPanel>
+              <SSHKeys />
+            </TabPanel>
+            <TabPanel>
+              <LishSettings />
+            </TabPanel>
+            <TabPanel>
+              <APITokens />
+            </TabPanel>
+            <TabPanel>
+              <OAuthClients />
+            </TabPanel>
+            <TabPanel>
+              <Referrals />
+            </TabPanel>
+            <TabPanel>
+              <Settings />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
       </React.Fragment>
     );
   }

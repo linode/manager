@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { matchPath, Redirect, Route, Switch } from 'react-router-dom';
-import AppBar from 'src/components/core/AppBar';
+import { matchPath } from 'react-router-dom';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
+import TabList from 'src/components/core/TabList';
+import TabPanels from 'src/components/core/TabPanels';
+import TabPanel from 'src/components/core/TabPanel';
+import Tab from 'src/components/core/Tab';
 import DefaultLoader from 'src/components/DefaultLoader';
 import TabLink from 'src/components/TabLink';
 import { ResizeProps } from './ResizeCluster';
@@ -47,48 +49,33 @@ export const DetailNavigation: React.FC<ResizeProps> = props => {
   };
 
   return (
-    <>
-      <AppBar position="static" color="default" role="tablist">
-        <Tabs
-          value={tabs.findIndex(tab => matches(tab.routeName)) || 0}
-          onChange={handleTabChange}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="scrollable"
-          scrollButtons="on"
-          className={classes.tabBar}
-        >
-          {tabs.map(tab => (
-            <Tab
-              key={tab.title}
-              label={tab.title}
-              data-qa-tab={tab.title}
-              component={React.forwardRef((tabProps, ref) => (
-                <TabLink
-                  to={tab.routeName}
-                  title={tab.title}
-                  {...tabProps}
-                  ref={ref}
-                />
-              ))}
-            />
-          ))}
-        </Tabs>
-      </AppBar>
-      <Switch>
-        <Route
-          exact
-          path={`${url}/resize`}
-          render={() => <Resize {...props} />}
-        />
-        <Route
-          exact
-          path={`${url}/details`}
-          render={() => <Details {...props} />}
-        />
-        <Redirect to={`${url}/details`} />
-      </Switch>
-    </>
+    <Tabs
+    // value={tabs.findIndex(tab => matches(tab.routeName)) || 0}
+    // onChange={handleTabChange}
+    // indicatorColor="primary"
+    // textColor="primary"
+    // variant="scrollable"
+    // scrollButtons="on"
+    // className={classes.tabBar}
+    >
+      <TabList>
+        {tabs.map(tab => (
+          <Tab key={tab.title} label={tab.title} data-qa-tab={tab.title}>
+            <TabLink to={tab.routeName} title={tab.title} />
+          </Tab>
+        ))}
+      </TabList>
+
+      <TabPanels>
+        <TabPanel>
+          <Resize {...props} />
+        </TabPanel>
+
+        <TabPanel>
+          <Details {...props} />
+        </TabPanel>
+      </TabPanels>
+    </Tabs>
   );
 };
 

@@ -13,7 +13,6 @@ import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import {
   matchPath,
-  Route,
   RouteComponentProps,
   Switch,
   withRouter
@@ -21,11 +20,13 @@ import {
 import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import AppBar from 'src/components/core/AppBar';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
+import TabList from 'src/components/core/TabList';
+import TabPanels from 'src/components/core/TabPanels';
+import TabPanel from 'src/components/core/TabPanel';
+import Tab from 'src/components/core/Tab';
 import Typography from 'src/components/core/Typography';
 import DefaultLoader from 'src/components/DefaultLoader';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -347,66 +348,61 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
             >
               Clone
             </Typography>
-            <AppBar
-              className={classes.appBar}
-              position="static"
-              color="default"
-              role="tablist"
+
+            <Tabs
+            // value={tabs.findIndex(tab => matches(tab.routeName))}
+            // onChange={handleTabChange}
+            // indicatorColor="primary"
+            // textColor="primary"
+            // variant="scrollable"
+            // scrollButtons="on"
             >
-              <Tabs
-                value={tabs.findIndex(tab => matches(tab.routeName))}
-                onChange={handleTabChange}
-                indicatorColor="primary"
-                textColor="primary"
-                variant="scrollable"
-                scrollButtons="on"
-              >
+              <TabList>
                 {tabs.map(tab => (
-                  <Tab
-                    key={tab.title}
-                    data-qa-tab={tab.title}
-                    component={React.forwardRef((forwardedProps, ref) => (
-                      <TabLink to={tab.routeName} title={tab.title} />
-                    ))}
-                  />
+                  <Tab key={tab.title} data-qa-tab={tab.title}>
+                    <TabLink to={tab.routeName} title={tab.title} />
+                  </Tab>
                 ))}
-              </Tabs>
-            </AppBar>
-            <Route
-              exact
-              path={`${url}(/configs)?`}
-              render={() => (
-                <div className={classes.outerContainer}>
-                  <Configs
-                    configs={configsInState}
-                    configSelection={state.configSelection}
-                    handleSelect={toggleConfig}
-                  />
-                </div>
-              )}
-            />
-            <Route
-              exact
-              path={`${url}/disks`}
-              render={() => (
-                <div className={classes.outerContainer}>
-                  <Typography>
-                    You can make a copy of a disk to the same or different
-                    Linode. We recommend you power off your Linode first, and
-                    keep it powered off until the disk has finished being
-                    cloned.
-                  </Typography>
-                  <div className={classes.diskContainer}>
-                    <Disks
-                      disks={disksInState}
-                      diskSelection={state.diskSelection}
-                      selectedConfigIds={selectedConfigIds}
-                      handleSelect={toggleDisk}
+              </TabList>
+              <TabPanels>
+                <TabPanel>
+                  <div className={classes.outerContainer}>
+                    <Configs
+                      configs={configsInState}
+                      configSelection={state.configSelection}
+                      handleSelect={toggleConfig}
                     />
                   </div>
-                </div>
-              )}
-            />
+                </TabPanel>
+                <TabPanel>
+                  <div className={classes.outerContainer}>
+                    <Configs
+                      configs={configsInState}
+                      configSelection={state.configSelection}
+                      handleSelect={toggleConfig}
+                    />
+                  </div>
+                </TabPanel>
+                <TabPanel>
+                  <div className={classes.outerContainer}>
+                    <Typography>
+                      You can make a copy of a disk to the same or different
+                      Linode. We recommend you power off your Linode first, and
+                      keep it powered off until the disk has finished being
+                      cloned.
+                    </Typography>
+                    <div className={classes.diskContainer}>
+                      <Disks
+                        disks={disksInState}
+                        diskSelection={state.diskSelection}
+                        selectedConfigIds={selectedConfigIds}
+                        handleSelect={toggleDisk}
+                      />
+                    </div>
+                  </div>
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
           </Paper>
         </Grid>
         <Grid item xs={12} md={4} lg={3}>
@@ -484,10 +480,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-const connected = connect(
-  undefined,
-  mapDispatchToProps
-);
+const connected = connect(undefined, mapDispatchToProps);
 
 const enhanced = compose<CombinedProps, {}>(
   connected,

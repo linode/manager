@@ -1,22 +1,18 @@
 import { LongviewClient } from 'linode-js-sdk/lib/longview';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import {
-  matchPath,
-  Redirect,
-  Route,
-  RouteComponentProps,
-  Switch
-} from 'react-router-dom';
+import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
-import AppBar from 'src/components/core/AppBar';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
+import TabList from 'src/components/core/TabList';
+import TabPanels from 'src/components/core/TabPanels';
+import TabPanel from 'src/components/core/TabPanel';
+import Tab from 'src/components/core/Tab';
 import DefaultLoader from 'src/components/DefaultLoader';
 import DocumentationButton from 'src/components/DocumentationButton';
 import ErrorState from 'src/components/ErrorState';
@@ -237,151 +233,32 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           text={thisNotification.TEXT}
         />
       ))}
-      <AppBar position="static" color="default" role="tablist">
-        <Tabs
-          value={tabs.findIndex(tab => matches(tab.routeName)) || 0}
-          onChange={handleTabChange}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="scrollable"
-          scrollButtons="on"
-          className={classes.tabList}
-        >
+      <Tabs
+      // value={tabs.findIndex(tab => matches(tab.routeName)) || 0}
+      // onChange={handleTabChange}
+      // indicatorColor="primary"
+      // textColor="primary"
+      // variant="scrollable"
+      // scrollButtons="on"
+      // className={classes.tabList}
+      >
+        <TabList>
           {tabs.map(tab => (
-            <Tab
-              key={tab.title}
-              data-qa-tab={tab.title}
-              component={React.forwardRef((forwardedProps, ref) => (
-                <TabLink
-                  to={tab.routeName}
-                  title={tab.title}
-                  {...forwardedProps}
-                  ref={ref}
-                />
-              ))}
-            />
+            <Tab key={tab.title} data-qa-tab={tab.title}>
+              <TabLink to={tab.routeName} title={tab.title} />
+            </Tab>
           ))}
-        </Tabs>
-      </AppBar>
-      <Switch>
-        <Route
-          exact
-          strict
-          path={`${url}/processes`}
-          render={() => {
-            return (
-              <ProcessesLanding
-                clientID={client.id}
-                clientAPIKey={client.api_key}
-                lastUpdated={lastUpdated}
-                lastUpdatedError={lastUpdatedError}
-                timezone={timezone}
-              />
-            );
-          }}
-        />
-        <Route
-          exact
-          strict
-          path={`${url}/network`}
-          render={() => (
-            <NetworkLanding
-              clientAPIKey={client.api_key}
-              lastUpdated={lastUpdated}
-              lastUpdatedError={lastUpdatedError}
-              timezone={timezone}
-            />
-          )}
-        />
-        <Route
-          exact
-          strict
-          path={`${url}/disks`}
-          render={routerProps => (
-            <Disks
-              clientID={client.id}
-              clientAPIKey={client.api_key}
-              lastUpdated={lastUpdated}
-              clientLastUpdated={lastUpdated}
-              lastUpdatedError={lastUpdatedError}
-              timezone={props.timezone}
-              {...routerProps}
-            />
-          )}
-        />
-        )}
-        <Route
-          exact
-          strict
-          path={`${url}/apache`}
-          render={() => {
-            return (
-              <Apache
-                timezone={timezone}
-                clientAPIKey={clientAPIKey}
-                lastUpdated={lastUpdated}
-                lastUpdatedError={lastUpdatedError}
-              />
-            );
-          }}
-        />
-        )}
-        <Route
-          exact
-          strict
-          path={`${url}/nginx`}
-          render={() => {
-            return (
-              <NGINX
-                timezone={timezone}
-                clientAPIKey={clientAPIKey}
-                lastUpdated={lastUpdated}
-                lastUpdatedError={lastUpdatedError}
-              />
-            );
-          }}
-        />
-        )}
-        <Route
-          exact
-          strict
-          path={`${url}/mysql`}
-          render={() => {
-            return (
-              <MySQLLanding
-                timezone={timezone}
-                clientAPIKey={clientAPIKey}
-                lastUpdated={lastUpdated}
-                lastUpdatedError={lastUpdatedError}
-              />
-            );
-          }}
-        />
-        )}
-        <Route
-          exact
-          strict
-          path={`${url}/installation`}
-          render={routerProps => (
-            <Installation
-              clientInstallationKey={client.install_code}
-              clientAPIKey={client.api_key}
-              {...routerProps}
-            />
-          )}
-        />
-        <Route
-          strict
-          exact
-          path={`${url}/overview`}
-          render={routerProps => (
+        </TabList>
+
+        <TabPanels>
+          <TabPanel>
             <Overview
               client={client.label}
               clientID={client.id}
               clientAPIKey={client.api_key}
               longviewClientData={longviewClientData}
               timezone={timezone}
-              {...routerProps}
+              //{...routerProps}
               topProcessesData={topProcesses.data}
               topProcessesLoading={topProcesses.loading}
               topProcessesError={topProcesses.error}
@@ -391,10 +268,71 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
               lastUpdatedError={lastUpdatedError}
               lastUpdated={lastUpdated}
             />
-          )}
-        />
-        <Redirect to={`${url}/overview`} />
-      </Switch>
+          </TabPanel>
+          <TabPanel>
+            <ProcessesLanding
+              clientID={client.id}
+              clientAPIKey={client.api_key}
+              lastUpdated={lastUpdated}
+              lastUpdatedError={lastUpdatedError}
+              timezone={timezone}
+            />
+          </TabPanel>
+
+          <TabPanel>
+            <NetworkLanding
+              clientAPIKey={client.api_key}
+              lastUpdated={lastUpdated}
+              lastUpdatedError={lastUpdatedError}
+              timezone={timezone}
+            />
+          </TabPanel>
+          <TabPanel>
+            <Disks
+              clientID={client.id}
+              clientAPIKey={client.api_key}
+              lastUpdated={lastUpdated}
+              clientLastUpdated={lastUpdated}
+              lastUpdatedError={lastUpdatedError}
+              timezone={props.timezone}
+              //{...routerProps}
+            />
+          </TabPanel>
+
+          <TabPanel>
+            <Apache
+              timezone={timezone}
+              clientAPIKey={clientAPIKey}
+              lastUpdated={lastUpdated}
+              lastUpdatedError={lastUpdatedError}
+            />
+          </TabPanel>
+
+          <TabPanel>
+            <NGINX
+              timezone={timezone}
+              clientAPIKey={clientAPIKey}
+              lastUpdated={lastUpdated}
+              lastUpdatedError={lastUpdatedError}
+            />
+          </TabPanel>
+          <TabPanel>
+            <MySQLLanding
+              timezone={timezone}
+              clientAPIKey={clientAPIKey}
+              lastUpdated={lastUpdated}
+              lastUpdatedError={lastUpdatedError}
+            />
+          </TabPanel>
+          <TabPanel>
+            <Installation
+              clientInstallationKey={client.install_code}
+              clientAPIKey={client.api_key}
+              //{...routerProps}
+            />
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </React.Fragment>
   );
 };
