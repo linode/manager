@@ -29,8 +29,12 @@ import {
   protocolOptions
 } from 'src/features/Firewalls/shared';
 import capitalize from 'src/utilities/capitalize';
+import {
+  ExtendedIP,
+  extendedIPToString,
+  stringToExtendedIP
+} from 'src/utilities/ipUtils';
 import { FirewallRuleWithStatus } from './firewallRuleEditor';
-import { Category, FirewallRuleError } from './shared';
 
 export type Mode = 'create' | 'edit';
 
@@ -38,7 +42,7 @@ export type Mode = 'create' | 'edit';
 // <FirewallRuleDrawer />
 // =============================================================================
 interface Props {
-  category: Category;
+  category: 'inbound' | 'outbound';
   mode: Mode;
   isOpen: boolean;
   onClose: () => void;
@@ -64,16 +68,13 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
   // intended to specify custom IPs.
   const [ips, setIPs] = React.useState<string[]>(['']);
 
-  // Errors for the IPs tracked above.
-  const [ipErrors, setIPErrors] = React.useState<Record<number, string>>({});
-
-  // Reset IP and IP Error state. If we're in EDIT mode:
-  //   1. Set IPs to the addresses of the rule we're modifying.
-  //   2. Set IP Errors if we have any.
-  // If we're NOT in EDIT mode, this state is reset.
   React.useEffect(() => {
-    setIPs(getInitialIPs(mode, ruleToModify));
-    setIPErrors(getInitialIPErrors(mode, ruleToModify));
+    // If we're in edit mode, we need to pre-set IP state with the IPs of the rule we're modifying.
+    const initialIPs =
+      mode === 'edit' && ruleToModify !== undefined
+        ? [...ruleToModify.addresses?.ipv4, ...ruleToModify.addresses?.ipv6]
+        : [''];
+    setIPs(initialIPs);
   }, [mode, ruleToModify]);
 
   const title =
@@ -81,31 +82,12 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
 
   const addressesLabel = category === 'inbound' ? 'source' : 'destination';
 
-  const _onValidate = (values: Form) => {
-    const protocol = values.protocol as FirewallRuleProtocol;
-    const addresses = formValueToIPs(values.addresses, ips);
-
-    const _ipErrors = {};
-    addresses.errors?.forEach(thisError => {
-      _ipErrors[thisError] = 'Must be a valid IPv4 or IPv6 address or range.';
-    });
-    if (Object.keys(_ipErrors).length > 1) {
-      setIPErrors(_ipErrors);
-    }
-
-    return { ...validateForm(protocol, values.ports), ..._ipErrors };
-  };
-
   const _onSubmit = (values: Form) => {
     const protocol = values.protocol as FirewallRuleProtocol;
-    const addresses = formValueToIPs(values.addresses, ips);
-
-    delete addresses.errors;
-
     props.onSubmit(category, {
       ports: values.ports,
       protocol,
-      addresses
+      addresses: formValueToIPs(values.addresses, ips)
     });
     onClose();
   };
@@ -119,7 +101,6 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
         validateOnChange={false}
         validateOnBlur={false}
         onSubmit={_onSubmit}
-        validate={_onValidate}
       >
         {formikProps => {
           return (
@@ -127,10 +108,7 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
               addressesLabel={addressesLabel}
               ips={ips}
               setIPs={setIPs}
-              ipErrors={ipErrors}
-              setIPErrors={setIPErrors}
               mode={mode}
-              ruleErrors={ruleToModify?.errors}
               {...formikProps}
             />
           );
@@ -158,11 +136,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface FirewallRuleFormProps extends FormikProps<Form> {
   ips: string[];
   setIPs: (ips: string[]) => void;
-  ipErrors: Record<number, string>;
-  setIPErrors: React.Dispatch<React.SetStateAction<Record<number, string>>>;
   addressesLabel: string;
   mode: Mode;
-  ruleErrors?: FirewallRuleError[];
 }
 
 const typeOptions = [
@@ -186,24 +161,10 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
     handleSubmit,
     setFieldValue,
     addressesLabel,
-    ips,
     setIPs,
-    setIPErrors,
-    ipErrors,
-    mode,
-    ruleErrors,
-    setFieldError
+    ips,
+    mode
   } = props;
-
-  // Set form field errors for each error we have (except "addresses" errors, which are handled
-  // by IP Error state).
-  React.useEffect(() => {
-    ruleErrors?.forEach(thisError => {
-      if (thisError.formField !== 'addresses') {
-        setFieldError(thisError.formField, thisError.reason);
-      }
-    });
-  }, [ruleErrors]);
 
   // These handlers are all memoized because the form was laggy when I tried them inline.
   const handleTypeChange = React.useCallback((item: Item | null) => {
@@ -247,9 +208,8 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
       }
 
       setFieldValue('addresses', item?.value);
-      // Reset custom IPs and IP errors.
+      // Reset custom IPs that may have been entered.
       setIPs(['']);
-      setIPErrors({});
     },
     [ips, formTouched]
   );
@@ -265,11 +225,11 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
   );
 
   const handleIPChange = React.useCallback(
-    (_ips: string[]) => {
+    (_ips: ExtendedIP[]) => {
       if (!formTouched) {
         setFormTouched(true);
       }
-      setIPs(_ips);
+      setIPs(_ips.map(extendedIPToString));
     },
     [formTouched]
   );
@@ -282,10 +242,10 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
     );
   }, [values]);
 
-  const typeValue = React.useMemo(() => {
-    const _type = deriveTypeFromValuesAndIPs(values, ips);
-    return typeOptions.find(thisOption => thisOption.value === _type) || null;
-  }, [values, ips, typeOptions]);
+  const _type = React.useMemo(() => deriveTypeFromValuesAndIPs(values, ips), [
+    values,
+    ips
+  ]);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -298,7 +258,9 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
         placeholder="Select a rule type..."
         aria-label="Select rule type."
         options={typeOptions}
-        value={typeValue}
+        value={
+          typeOptions.find(thisOption => thisOption.value === _type) || null
+        }
         onChange={handleTypeChange}
         isClearable={false}
         onBlur={handleBlur}
@@ -313,7 +275,6 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
             ? { label: values.protocol, value: values.protocol }
             : undefined
         }
-        errorText={errors.protocol}
         options={protocolOptions}
         onChange={handleProtocolChange}
         onBlur={handleBlur}
@@ -324,8 +285,8 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
         placeholder="Enter a port range..."
         aria-label="Port range for firewall rule"
         value={values.ports}
-        errorText={errors.ports}
         onChange={handlePortsChange}
+        errorText={errors.ports}
         onBlur={handleBlur}
       />
       <Select
@@ -344,8 +305,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
           title="IP / Netmask"
           aria-label="IP / Netmask for firewall rule"
           className={classes.ipSelect}
-          ips={ips}
-          ipErrors={ipErrors}
+          ips={ips.map(stringToExtendedIP)}
           onChange={handleIPChange}
           inputProps={{ autoFocus: true }}
         />
@@ -404,19 +364,10 @@ export const deriveTypeFromValuesAndIPs = (values: Form, _ips: string[]) => {
   return null;
 };
 
-interface IPsWithError {
-  ipv4: string[];
-  ipv6: string[];
-  errors?: number[];
-}
-
 /**
  * Matches potential form values to the correct "addresses" payload.
  */
-export const formValueToIPs = (
-  formValue: string,
-  ips: string[]
-): IPsWithError => {
+export const formValueToIPs = (formValue: string, ips: string[]) => {
   switch (formValue) {
     case 'all':
       return allIPs;
@@ -436,25 +387,22 @@ export const formValueToIPs = (
  * them by "ipv4" and "ipv6."
  */
 export const classifyIPs = (ips: string[]) =>
-  ips.reduce<Required<IPsWithError>>(
-    (acc, ip, idx) => {
-      // It's possible to enter a subnet, e.g. 1.0.0.0/16. Ipaddr.js does not parse this
-      // correctly, so we split out the range before doing the classification.
-      const [base, range] = ip.split('/');
+  ips.reduce<{ ipv4: string[]; ipv6: string[] }>(
+    (acc, ip) => {
       try {
+        // It's possible to enter a subnet, e.g. 1.0.0.0/16. Ipaddr.js does not parse this
+        // correctly, so we split out the range before doing the classification.
+        const [base] = ip.split('/');
+
         const parsed = parseIP(base);
         const type = parsed.kind();
         acc[type].push(ip);
       } catch {
-        // If the IP couldn't be parsed, push it to the `errors` array, unless there is a range,
-        // in which case we can't trust the failure.
-        if (!range) {
-          acc.errors.push(idx);
-        }
+        // IP wasn't valid. No need to do anything; just continue.
       }
       return acc;
     },
-    { ipv4: [], ipv6: [], errors: [] }
+    { ipv4: [], ipv6: [] }
   );
 
 const initialValues: Form = {
@@ -493,55 +441,4 @@ export const getInitialAddressFormValue = (
   }
 
   return 'ip/netmask';
-};
-
-export const getInitialIPs = (
-  mode: Mode,
-  ruleToModify?: FirewallRuleWithStatus
-) => {
-  return mode === 'edit' && ruleToModify !== undefined
-    ? [...ruleToModify.addresses?.ipv4, ...ruleToModify.addresses?.ipv6]
-    : [''];
-};
-
-export const getInitialIPErrors = (
-  mode: Mode,
-  ruleToModify?: FirewallRuleWithStatus
-) => {
-  if (mode !== 'edit' || !ruleToModify?.errors) {
-    return {};
-  }
-
-  return ruleToModify.errors.reduce((acc, thisError) => {
-    const { formField, ip, reason } = thisError;
-    if (formField === 'addresses' && ip) {
-      return { ...acc, [ip.idx]: reason };
-    }
-    return acc;
-  }, {});
-};
-
-export const validateForm = (protocol?: string, ports?: string) => {
-  const errors: Partial<Form> = {};
-
-  if (!protocol) {
-    errors.protocol = 'Protocol is required.';
-  }
-
-  if (protocol === 'ICMP' && ports) {
-    errors.ports = 'Ports are not allowed for ICMP protocols.';
-    return errors;
-  }
-
-  if ((protocol === 'TCP' || protocol === 'UDP') && !ports) {
-    errors.ports = 'Ports required for TCP and UDP protocols.';
-    return errors;
-  }
-
-  if (ports && !ports.match(/^[0-9,-]+$/)) {
-    errors.ports =
-      'Ports be an integer, range of integers, or a comma-separated list of integers.';
-  }
-
-  return errors;
 };
