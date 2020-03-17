@@ -182,6 +182,8 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
     const isBusy = linodeInTransition(status, firstEventWithPercent);
     const isRunning = !isBusy && status === 'running';
     const isOffline = !isBusy && status === 'offline';
+    const isUnknown = isRunning || isOffline ? false : true;
+
     const buttonText = () => {
       if (isBusy) {
         return 'Busy';
@@ -199,7 +201,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Button
-          disabled={isBusy}
+          disabled={isBusy || isUnknown}
           onClick={this.openMenu}
           aria-owns={anchorEl ? 'power' : undefined}
           aria-haspopup="true"
