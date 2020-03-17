@@ -53,6 +53,11 @@ import {
 } from 'src/store/domains/domains.container';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { sendCreateDomainEvent } from 'src/utilities/ga';
+import {
+  ExtendedIP,
+  extendedIPToString,
+  stringToExtendedIP
+} from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import DeleteDomain from './DeleteDomain';
 import { getInitialIPs, transferHelperText as helperText } from './domainUtils';
@@ -330,7 +335,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
           <React.Fragment>
             <MultipleIPInput
               title="Master Nameserver IP Address"
-              ips={this.state.master_ips}
+              ips={this.state.master_ips.map(stringToExtendedIP)}
               onChange={this.updateMasterIPAddress}
               error={masterIPsError}
             />
@@ -339,7 +344,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               <MultipleIPInput
                 title="Domain Transfer IPs"
                 helperText={helperText}
-                ips={this.state.axfr_ips}
+                ips={this.state.axfr_ips.map(stringToExtendedIP)}
                 onChange={this.handleTransferInput}
                 error={errorMap.axfr_ips}
               />
@@ -464,8 +469,8 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     );
   }
 
-  handleTransferInput = (newIPs: string[]) => {
-    const axfr_ips = newIPs.length > 0 ? newIPs : [''];
+  handleTransferInput = (newIPs: ExtendedIP[]) => {
+    const axfr_ips = newIPs.length > 0 ? newIPs.map(extendedIPToString) : [''];
     if (this.mounted) {
       this.setState({ axfr_ips });
     }
@@ -794,8 +799,9 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     value: 'master' | 'slave'
   ) => this.setState({ type: value });
 
-  updateMasterIPAddress = (newIPs: string[]) => {
-    const master_ips = newIPs.length > 0 ? newIPs : [''];
+  updateMasterIPAddress = (newIPs: ExtendedIP[]) => {
+    const master_ips =
+      newIPs.length > 0 ? newIPs.map(extendedIPToString) : [''];
     if (this.mounted) {
       this.setState({ master_ips });
     }

@@ -34,6 +34,11 @@ import {
 } from 'src/store/domains/domains.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import {
+  ExtendedIP,
+  extendedIPToString,
+  stringToExtendedIP
+} from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import {
   getInitialIPs,
@@ -166,8 +171,9 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     expire_sec: 'expire rate'
   };
 
-  handleTransferUpdate = (transferIPs: string[]) => {
-    const axfr_ips = transferIPs.length > 0 ? transferIPs : [''];
+  handleTransferUpdate = (transferIPs: ExtendedIP[]) => {
+    const axfr_ips =
+      transferIPs.length > 0 ? transferIPs.map(extendedIPToString) : [''];
     this.updateField('axfr_ips')(axfr_ips);
   };
 
@@ -398,18 +404,23 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     );
   };
 
-  DomainTransferField = () => (
-    <MultipleIPInput
-      title="Domain Transfer IPs"
-      helperText={helperText}
-      error={getAPIErrorsFor(
-        DomainRecordDrawer.errorFields,
-        this.state.errors
-      )('axfr_ips')}
-      ips={(this.state.fields as EditableDomainFields).axfr_ips ?? ['']}
-      onChange={this.handleTransferUpdate}
-    />
-  );
+  DomainTransferField = () => {
+    const finalIPs = (
+      (this.state.fields as EditableDomainFields).axfr_ips ?? ['']
+    ).map(stringToExtendedIP);
+    return (
+      <MultipleIPInput
+        title="Domain Transfer IPs"
+        helperText={helperText}
+        error={getAPIErrorsFor(
+          DomainRecordDrawer.errorFields,
+          this.state.errors
+        )('axfr_ips')}
+        ips={finalIPs}
+        onChange={this.handleTransferUpdate}
+      />
+    );
+  };
 
   handleSubmissionErrors = (errorResponse: any) => {
     const errors = getAPIErrorOrDefault(errorResponse);
