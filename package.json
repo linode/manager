@@ -57,7 +57,8 @@
     "start:nginx": "docker run --rm --name www -p 3000:80 -v $(pwd)/packages/manager/build:/usr/share/nginx/html -v $(pwd)/nginx-e2e.conf:/etc/nginx/conf.d/default.conf:ro -d nginx"
   },
   "resolutions": {
-    "handlebars": "^4.4.3"
+    "handlebars": "^4.4.3",
+    "minimist": "^1.2.3"
   },
   "workspaces": {
     "packages": [
