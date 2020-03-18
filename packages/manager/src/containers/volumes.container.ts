@@ -2,37 +2,54 @@ import { Volume } from 'linode-js-sdk/lib/volumes';
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { EntityError } from 'src/store/types';
+import { getVolumesPage as _getPage } from 'src/store/volume/volume.requests';
 
-interface VolumesData {
-  items: string[];
-  itemsById: Record<string, Volume>;
-}
-
-export interface Props {
-  volumesData: VolumesData;
+export interface StateProps {
+  volumesData: Volume[];
   volumesLoading: boolean;
-  volumesError?: EntityError;
+  volumesLastUpdated: number;
+  volumesError: EntityError;
+  volumesResults: number;
 }
 
 export default <TInner extends {}, TOuter extends {}>(
-  mapVolumesToProps: (
+  mapVolumesToProps?: (
     ownProps: TOuter,
-    volumesData: VolumesData,
+    volumesData: Volume[],
     volumesLoading: boolean,
+    volumesLastUpdated: number,
+    volumesResults: number,
     volumesError?: EntityError
   ) => TInner
 ) =>
   connect((state: ApplicationState, ownProps: TOuter) => {
-    const { items, itemsById } = state.__resources.volumes;
+    const {
+      error,
+      itemsById,
+      lastUpdated,
+      loading,
+      results
+    } = state.__resources.volumes;
 
-    const volumesData = { items, itemsById };
-    const volumesLoading = state.__resources.volumes.loading;
-    const volumesError = state.__resources.volumes.error;
-
+    const volumesData = Object.values(itemsById);
+    const volumesLoading = loading;
+    const volumesError = error;
+    const volumesLastUpdated = lastUpdated;
+    if (!mapVolumesToProps) {
+      return {
+        volumesData,
+        volumesLoading,
+        volumesLastUpdated,
+        volumesResults: results,
+        volumesError
+      };
+    }
     return mapVolumesToProps(
       ownProps,
       volumesData,
       volumesLoading,
+      volumesLastUpdated,
+      results,
       volumesError
     );
   });
