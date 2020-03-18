@@ -92,7 +92,13 @@ export const SearchLanding: React.FC<CombinedProps> = props => {
 
   const classes = useStyles();
 
-  const query = getQueryParam(props.location.search, 'query');
+  let query = '';
+  let queryError = false;
+  try {
+    query = getQueryParam(props.location.search, 'query');
+  } catch {
+    queryError = true;
+  }
 
   const { _loading } = useReduxLoad([
     'linodes',
@@ -123,8 +129,13 @@ export const SearchLanding: React.FC<CombinedProps> = props => {
           <Notice error text={getErrorMessage(errors)} />
         </Grid>
       )}
+      {queryError && (
+        <Grid item>
+          <Notice error text="Invalid query" />
+        </Grid>
+      )}
       {_loading && (
-        <Grid item data-qa-search-loading>
+        <Grid item data-qa-search-loading data-testid="loading">
           <CircleProgress />
         </Grid>
       )}
