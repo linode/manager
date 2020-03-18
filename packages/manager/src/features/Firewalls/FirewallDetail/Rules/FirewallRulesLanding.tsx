@@ -182,7 +182,34 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      <Prompt when={hasUnsavedChanges} />
+      <Prompt when={hasUnsavedChanges}>
+        {({ isModalOpen, handleCancel, handleConfirm }) => {
+          return (
+            <ConfirmationDialog
+              open={isModalOpen}
+              onClose={handleCancel}
+              title="Discard Firewall changes?"
+              actions={() => (
+                <ActionsPanel>
+                  <Button buttonType="cancel" onClick={handleConfirm}>
+                    Leave and discard changes
+                  </Button>
+
+                  <Button buttonType="primary" onClick={handleCancel}>
+                    Go back and review changes
+                  </Button>
+                </ActionsPanel>
+              )}
+            >
+              <Typography variant="subtitle1">
+                The changes you made to this Firewall haven't been applied. If
+                you navigate away from this page, your changes will be
+                discarded.
+              </Typography>
+            </ConfirmationDialog>
+          );
+        }}
+      </Prompt>
 
       <Typography variant="body1" className={classes.copy}>
         Firewall rules act as a whitelist, allowing network traffic that meets
