@@ -78,7 +78,7 @@ describe('dashboard', () => {
     // here we want to block the XHR get Linodes from returning,
     // but i have not found how to do this
     // https://github.com/cypress-io/cypress/issues/235
-    it(`"${ERR_AN_UNEXPECTED_ERROR}" on 503`, () => {
+    it.skip(`"${ERR_AN_UNEXPECTED_ERROR}" on 503`, () => {
       Route.getLinodes();
       cy.visit('/');
       cy.findByText(ERR_AN_UNEXPECTED_ERROR).should('be.visible');
