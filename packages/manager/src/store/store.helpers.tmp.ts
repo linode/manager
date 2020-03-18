@@ -1,16 +1,14 @@
+// @todo rename this file to store.helpers when all reducers are using MappedEntityState2
 import { APIError } from 'linode-js-sdk/lib/types';
 import { assoc, omit } from 'ramda';
 import {
   Entity,
+  EntityError,
   EntityMap,
-  MappedEntityState,
+  MappedEntityState2 as MappedEntityState,
   ThunkActionCreator
 } from 'src/store/types';
 import { AsyncActionCreators } from 'typescript-fsa';
-
-/** ID's are all mapped to string. */
-export const mapIDs = (e: { id: number | string }) => String(e.id);
-const keys = Object.keys;
 
 export const addEntityRecord = <T extends Entity>(
   result: EntityMap<T>,
@@ -23,12 +21,13 @@ export const onStart = <S>(state: S) =>
 export const onGetAllSuccess = <E extends Entity, S>(
   items: E[],
   state: S,
+  results: number,
   update: (e: E) => E = i => i
 ): S =>
   Object.assign({}, state, {
     loading: false,
     lastUpdated: Date.now(),
-    items: items.map(mapIDs),
+    results,
     itemsById: items.reduce(
       (itemsById, item) => ({ ...itemsById, [item.id]: update(item) }),
       {}
@@ -40,17 +39,15 @@ export const onError = <S = {}, E = APIError[] | undefined>(
   state: S
 ) => Object.assign({}, state, { error, loading: false });
 
-export const createDefaultState = <
-  E extends Entity,
-  O = APIError[] | undefined
->(
-  override: Partial<MappedEntityState<E, O>> = {}
+export const createDefaultState = <E extends Entity, O extends EntityError>(
+  override: Partial<MappedEntityState<E, O>>,
+  defaultError?: O
 ): MappedEntityState<E, O> => ({
   itemsById: {},
-  items: [],
   loading: false,
   lastUpdated: 0,
-  error: undefined,
+  error: defaultError as O, // @todo decide on better approach to error typing
+  results: 0,
   ...override
 });
 
@@ -77,13 +74,14 @@ export const removeMany = <E extends Entity, O = APIError[] | undefined>(
   return {
     ...state,
     itemsById,
-    items: keys(itemsById)
+    results: Object.keys(itemsById).length
   };
 };
 
 export const addMany = <E extends Entity, O = APIError[] | undefined>(
   list: E[],
-  state: MappedEntityState<E, O>
+  state: MappedEntityState<E, O>,
+  results?: number
 ): MappedEntityState<E, O> => {
   const itemsById = list.reduce(
     (map, item) => ({ ...map, [item.id]: item }),
@@ -93,7 +91,7 @@ export const addMany = <E extends Entity, O = APIError[] | undefined>(
   return {
     ...state,
     itemsById,
-    items: keys(itemsById)
+    results: results ?? Object.keys(itemsById).length
   };
 };
 
@@ -114,10 +112,10 @@ export const getAddRemoved = <E extends Entity>(
   return [added, removed];
 };
 
-export const createRequestThunk = <Req extends any, Res, Err>(
+export const createRequestThunk = <Req extends any, Res extends any, Err>(
   actions: AsyncActionCreators<Req, Res, Err>,
-  request: (params: Req) => Promise<Res>
-): ThunkActionCreator<Promise<Res>, Req> => {
+  request: (params: Req) => Promise<any>
+): ThunkActionCreator<Promise<Res[]>, Req> => {
   return (params: Req) => async dispatch => {
     const { started, done, failed } = actions;
 
@@ -127,7 +125,7 @@ export const createRequestThunk = <Req extends any, Res, Err>(
       const result = await request(params);
       const doneAction = done({ result, params });
       dispatch(doneAction);
-      return result;
+      return result.data;
     } catch (error) {
       const failAction = failed({ error, params });
       dispatch(failAction);

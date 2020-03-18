@@ -166,7 +166,7 @@
     "@types/react-dom": "~16.9.4",
     "@types/react-loadable": "^5.3.3",
     "@types/react-redux": "~7.1.7",
-    "@types/react-router-dom": "^5.1.0",
+    "@types/react-router-dom": "~5.1.2",
     "@types/react-select": "^2.0.2",
     "@types/react-sticky": "^5.0.6",
     "@types/react-test-renderer": "~16.9.1",

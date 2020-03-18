@@ -13,6 +13,7 @@ interface OuterProps {
 
 export interface InnerProps {
   linode: ExtendedLinode;
+  loading: boolean;
 }
 
 export default compose<InnerProps, OuterProps>(

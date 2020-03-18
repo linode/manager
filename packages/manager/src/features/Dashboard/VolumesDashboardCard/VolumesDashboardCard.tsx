@@ -1,5 +1,4 @@
 import { APIError } from 'linode-js-sdk/lib/types';
-import { Volume } from 'linode-js-sdk/lib/volumes';
 import { take } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -11,32 +10,43 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import ViewAllLink from 'src/components/ViewAllLink';
-import VolumesContainer from 'src/containers/volumes.container';
+import withVolumes, {
+  StateProps as VolumesProps
+} from 'src/containers/volumes.container';
+import withVolumesRequests, {
+  VolumesRequests
+} from 'src/containers/volumesRequests.container';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import DashboardCard from '../DashboardCard';
 import VolumeDashboardRow from './VolumeDashboardRow';
 
-interface VolumeProps {
-  volumesLoading: boolean;
-  volumesError?: APIError[];
-  volumesData: Volume[];
-}
+type CombinedProps = VolumesProps & VolumesRequests;
 
-type CombinedProps = VolumeProps;
+export const VolumesDashboardCard: React.FunctionComponent<CombinedProps> = props => {
+  const {
+    getVolumesPage,
+    volumesData,
+    volumesLastUpdated,
+    volumesLoading,
+    volumesError,
+    volumesResults
+  } = props;
 
-export const VolumesDashboardCard: React.FunctionComponent<
-  CombinedProps
-> = props => {
-  const { volumesData, volumesLoading, volumesError } = props;
+  const [error, setError] = React.useState<APIError[] | undefined>(undefined);
+
+  React.useEffect(() => {
+    if (volumesLastUpdated === 0 && !volumesLoading) {
+      getVolumesPage({ params: { page_size: 25, page: 1 } }).catch(setError);
+    }
+  }, []);
 
   const volumes = take(5, volumesData);
 
+  const _combinedErrors = volumesError?.read || error;
+
   const renderAction = () =>
-    volumesData && volumesData.length > 5 ? (
-      <ViewAllLink
-        text="View All"
-        link={'/volumes'}
-        count={volumesData.length}
-      />
+    volumesResults > 5 ? (
+      <ViewAllLink text="View All" link={'/volumes'} count={volumesResults} />
     ) : null;
 
   const renderContent = () => {
@@ -44,8 +54,8 @@ export const VolumesDashboardCard: React.FunctionComponent<
       return renderLoading();
     }
 
-    if (volumesError) {
-      return renderErrors(volumesError);
+    if (_combinedErrors) {
+      return renderErrors(_combinedErrors);
     }
 
     if (volumesData && volumesData.length > 0) {
@@ -65,7 +75,12 @@ export const VolumesDashboardCard: React.FunctionComponent<
   };
 
   const renderErrors = (errors: APIError[]) => (
-    <TableRowError colSpan={3} message={`Unable to load Volumes.`} />
+    <TableRowError
+      colSpan={3}
+      message={
+        getAPIErrorOrDefault(errors, `Unable to load Volumes.`)[0].reason
+      }
+    />
   );
 
   const renderEmpty = () => <TableRowEmptyState colSpan={2} />;
@@ -86,20 +101,6 @@ export const VolumesDashboardCard: React.FunctionComponent<
   );
 };
 
-const withVolumes = VolumesContainer(
-  (ownProps, volumesData, volumesLoading, volumesError) => {
-    const mappedData = volumesData.items.map(id => ({
-      ...volumesData.itemsById[id]
-    }));
-    return {
-      ...ownProps,
-      volumesData: mappedData,
-      volumesLoading,
-      volumesError
-    };
-  }
-);
-
-const enhanced = compose<CombinedProps, {}>(withVolumes);
+const enhanced = compose<CombinedProps, {}>(withVolumes(), withVolumesRequests);
 
 export default enhanced(VolumesDashboardCard);

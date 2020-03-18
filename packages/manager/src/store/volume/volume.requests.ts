@@ -13,7 +13,7 @@ import {
   VolumeRequestPayload as _VolumeRequestPayload
 } from 'linode-js-sdk/lib/volumes';
 import { getAll } from 'src/utilities/getAll';
-import { createRequestThunk } from '../store.helpers';
+import { createRequestThunk } from '../store.helpers.tmp';
 import {
   attachVolumeActions,
   AttachVolumeParams,
@@ -24,6 +24,7 @@ import {
   detachVolumeActions,
   getAllVolumesActions,
   getOneVolumeActions,
+  getVolumesPageActions,
   resizeVolumeActions,
   ResizeVolumeParams,
   updateVolumeActions,
@@ -115,9 +116,17 @@ export const cloneVolume = createRequestThunk<
 */
 const _getAll = getAll<Volume>(getVolumes);
 
-const getAllVolumesRequest = () => _getAll().then(({ data }) => data);
+const getAllVolumesRequest = () => _getAll();
 
 export const getAllVolumes = createRequestThunk(
   getAllVolumesActions,
   getAllVolumesRequest
+);
+
+/**
+ * Single page of Volumes (for use on Dashboard etc.)
+ */
+export const getVolumesPage = createRequestThunk(
+  getVolumesPageActions,
+  ({ params, filters }) => getVolumes(params, filters)
 );

@@ -15,7 +15,6 @@ const component = shallow<AuthenticationWrapper>(
     initSession={jest.fn()}
     requestAccount={jest.fn()}
     requestTypes={jest.fn()}
-    requestBuckets={jest.fn()}
     requestClusters={jest.fn()}
     requestDomains={jest.fn()}
     requestImages={jest.fn()}
@@ -24,7 +23,6 @@ const component = shallow<AuthenticationWrapper>(
     requestProfile={jest.fn()}
     requestRegions={jest.fn()}
     requestSettings={jest.fn()}
-    requestVolumes={jest.fn()}
     nodeBalancerActions={{
       createNodeBalancer: jest.fn(),
       deleteNodeBalancer: jest.fn(),

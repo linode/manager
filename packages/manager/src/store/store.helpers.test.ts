@@ -26,7 +26,7 @@ describe('store.helpers', () => {
     const result = createDefaultState();
     it('should return the unmodified defaultState', () => {
       expect(result).toEqual({
-        loading: true,
+        loading: false,
         lastUpdated: 0,
         items: [],
         itemsById: {},
