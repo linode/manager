@@ -327,7 +327,8 @@
     "js-yaml": "^3.13.1",
     "braces": "^3.0.2",
     "https-proxy-agent": "^3.0.1",
-    "axe-core": "^3.4.0"
+    "axe-core": "^3.4.0",
+    "minimist": "^1.2.3"
   },
   "workspaces": {
     "nohoist": [
