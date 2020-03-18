@@ -24,12 +24,9 @@ describe.skip('smoke - axe', () => {
   };
   Object.keys(routes).forEach(routeGroup => {
     describe(routeGroup, () => {
-      beforeEach(() => {
-        cy.login2();
-      });
       routes[routeGroup].forEach(route => {
         it(route.url, () => {
-          cy.visit(route.url);
+          cy.visitWithLogin(route.url);
           cy.log(`looking for ${route.el}`);
           cy.findByText(route.el, { timeout: 5000 });
 
