@@ -81,14 +81,27 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
 
+  const handleLabelChange = async (newLabel: string) => {
+    props.updateFirewall({ firewallID: thisFirewall.id, label: newLabel });
+    return thisFirewall.label;
+  };
+
+  const resetEditableLabel = () => {
+    return thisFirewall.label;
+  };
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Firewalls" />
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Breadcrumb
           pathname={props.location.pathname}
-          labelTitle={thisFirewall.label}
           removeCrumbX={2}
+          onEditHandlers={{
+            editableTextTitle: thisFirewall.label,
+            onEdit: handleLabelChange,
+            onCancel: resetEditableLabel
+          }}
         />
         {/* @todo: Insert real link when the doc is written. */}
         <DocumentationButton href="https://www.linode.com/docs/platform" />
