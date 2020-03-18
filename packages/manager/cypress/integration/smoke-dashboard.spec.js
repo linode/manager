@@ -40,7 +40,7 @@ describe('dashboard', () => {
       .its('length')
       .should('be.lte', MAX_GET_REQ_TO_API);
   });
-  it.only('check Blog Feed', () => {
+  it('check Blog Feed', () => {
     cy.visit('/');
     cy.get('[data-qa-card="Blog"]').should('be.visible');
     cy.get('[data-qa-blog-post]')
@@ -78,7 +78,7 @@ describe('dashboard', () => {
     // here we want to block the XHR get Linodes from returning,
     // but i have not found how to do this
     // https://github.com/cypress-io/cypress/issues/235
-    it.only(`"${ERR_AN_UNEXPECTED_ERROR}" on 503`, () => {
+    it(`"${ERR_AN_UNEXPECTED_ERROR}" on 503`, () => {
       Route.getLinodes();
       cy.visit('/');
       cy.findByText(ERR_AN_UNEXPECTED_ERROR).should('be.visible');
