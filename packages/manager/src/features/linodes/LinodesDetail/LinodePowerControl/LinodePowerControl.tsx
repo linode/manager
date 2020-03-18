@@ -182,7 +182,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
     const isBusy = linodeInTransition(status, firstEventWithPercent);
     const isRunning = !isBusy && status === 'running';
     const isOffline = !isBusy && status === 'offline';
-    const isUnknown = isRunning || isOffline ? false : true;
+    const isUnknown = !isRunning && !isOffline;
 
     const buttonText = () => {
       if (isBusy) {
