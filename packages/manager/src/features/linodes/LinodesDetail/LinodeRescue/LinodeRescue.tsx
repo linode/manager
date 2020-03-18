@@ -69,6 +69,7 @@ interface StateProps {
 interface VolumesProps {
   volumesData: ExtendedVolume[];
   volumesError?: string;
+  volumesLastUpdated: number;
 }
 
 interface State {
@@ -134,22 +135,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
     const [deviceMap, initialCounter] = getDefaultDeviceMapAndCounter(
       props.linodeDisks || []
     );
-    const filteredVolumes = props.volumesData
-      ? props.volumesData.filter(volume => {
-          // whether volume is not attached to any Linode
-          const volumeIsUnattached = volume.linode_id === null;
-          // whether volume is attached to the current Linode we're viewing
-          const volumeIsAttachedToCurrentLinode =
-            volume.linode_id === props.linodeId;
-          // whether volume is in the same region as the current Linode we're viewing
-          const volumeAndLinodeRegionMatch =
-            props.linodeRegion === volume.region;
-          return (
-            (volumeIsAttachedToCurrentLinode || volumeIsUnattached) &&
-            volumeAndLinodeRegionMatch
-          );
-        })
-      : [];
+    const filteredVolumes = this.getFilteredVolumes();
     this.state = {
       devices: {
         disks: props.linodeDisks || [],
@@ -159,6 +145,24 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
       rescueDevices: deviceMap
     };
   }
+
+  getFilteredVolumes = () => {
+    const { linodeId, linodeRegion, volumesData } = this.props;
+    return volumesData
+      ? volumesData.filter(volume => {
+          // whether volume is not attached to any Linode
+          const volumeIsUnattached = volume.linode_id === null;
+          // whether volume is attached to the current Linode we're viewing
+          const volumeIsAttachedToCurrentLinode = volume.linode_id === linodeId;
+          // whether volume is in the same region as the current Linode we're viewing
+          const volumeAndLinodeRegionMatch = linodeRegion === volume.region;
+          return (
+            (volumeIsAttachedToCurrentLinode || volumeIsUnattached) &&
+            volumeAndLinodeRegionMatch
+          );
+        })
+      : [];
+  };
 
   onSubmit = () => {
     const { linodeId, enqueueSnackbar } = this.props;
@@ -223,7 +227,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
             aria-labelledby="tab-linode-detail-rescue"
           >
             <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
-            <ErrorState errorText="There was an error retrieving disks information." />
+            <ErrorState errorText="There was an error retrieving Disks information." />
           </div>
         </React.Fragment>
       );
@@ -238,7 +242,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
             aria-labelledby="tab-linode-detail-rescue"
           >
             <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
-            <ErrorState errorText="There was an error retrieving volumes information." />
+            <ErrorState errorText="There was an error retrieving Volumes information." />
           </div>
         </React.Fragment>
       );
@@ -323,16 +327,29 @@ export default compose<CombinedProps, {}>(
   SectionErrorBoundary,
   styled,
   withSnackbar,
-  withVolumes((ownProps, volumesData, volumesLoading, volumesError) => {
-    const mappedData = volumesData.items.map(id => ({
-      ...volumesData.itemsById[id],
-      _id: `volume-${id}`
-    }));
-    return {
-      ...ownProps,
-      volumesData: mappedData,
+  withVolumes(
+    (
+      ownProps,
+      volumesData,
+      volumesLoading,
+      volumesLastUpdated,
+      volumesResults,
       volumesError
-    };
-  }),
+    ) => {
+      const mappedData = volumesData.map(volume => ({
+        ...volume,
+        _id: `volume-${volume.id}`
+      }));
+      const _error = volumesError?.read
+        ? volumesError.read[0]?.reason
+        : undefined;
+      return {
+        ...ownProps,
+        volumesData: mappedData,
+        volumesError: _error,
+        volumesLastUpdated
+      };
+    }
+  ),
   connected
 )(LinodeRescue);
