@@ -1,3 +1,4 @@
+
 describe('dashboard', () => {
   beforeEach(() => {
     cy.login2();
@@ -14,7 +15,7 @@ describe('dashboard', () => {
       'NodeBalancers'
     );
   });
-  it.only('checks load time and number of GET', () => {
+  it('checks load time and number of GET', () => {
     let xhrData = [];
     cy.wrap(xhrData).as('xhrData');
     cy.server({
@@ -37,5 +38,46 @@ describe('dashboard', () => {
     cy.get('@xhrData')
       .its('length')
       .should('be.lte', MAX_GET_REQ_TO_API);
+  });
+  describe('check we display', () => {
+    const ERR_NO_ITEM_TO_DISPLAY = `No items to display.`;
+    it(`"${ERR_NO_ITEM_TO_DISPLAY}" on no data`, () => {
+      cy.server();
+      cy.route({
+        method: 'GET',
+        url: '/v4/linode/instances',
+        response: { data: [] }
+      });
+      cy.visit('/');
+      cy.get('[data-testid="table-row-empty"]').should(
+        'contain',
+        ERR_NO_ITEM_TO_DISPLAY
+      );
+    });
+    const ERR_UNABLE_TO_LOAD_LINODES = `Unable to load Linodes.`;
+    it(`"${ERR_UNABLE_TO_LOAD_LINODES}" on error from API`, () => {
+      cy.server();
+      cy.route({
+        method: 'GET',
+        url: '/v4/linode/instances/**',
+        response: { errors: [{ reason: 'BAD' }], data: null }
+      }).as('getLinodes');
+      cy.visit('/');
+      cy.findByText(ERR_UNABLE_TO_LOAD_LINODES).should('be.visible');
+    });
+
+    const ERR_AN_UNEXPECTED_ERROR = `An unexpected error occurred.`;
+    // here we want to block the XHR get Linodes from returning,
+    // but i have not found how to do this
+    // https://github.com/cypress-io/cypress/issues/235
+    it.skip(`"${ERR_AN_UNEXPECTED_ERROR}" on 503`, () => {
+      cy.server();
+      cy.route({
+        method: 'GET',
+        url: '/v4/linode/instances/**'
+      }).as('getLinodes');
+      cy.visit('/');
+      cy.findByText(ERR_AN_UNEXPECTED_ERROR).should('be.visible');
+    });
   });
 });
