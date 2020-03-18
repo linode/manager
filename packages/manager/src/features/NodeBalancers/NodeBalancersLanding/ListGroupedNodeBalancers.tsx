@@ -47,7 +47,7 @@ const styles = (theme: Theme) =>
     title: { marginBottom: theme.spacing(2) },
     transferred: { width: '10%', minWidth: 100 },
     groupContainer: {
-      '&:first-of-type': {
+      [theme.breakpoints.up('md')]: {
         '& $tagHeaderRow > td': {
           padding: '10px 0'
         }

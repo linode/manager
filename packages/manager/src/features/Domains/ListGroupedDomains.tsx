@@ -47,7 +47,7 @@ const styles = (theme: Theme) =>
       }
     },
     groupContainer: {
-      '&:first-of-type': {
+      [theme.breakpoints.up('md')]: {
         '& $tagHeaderRow > td': {
           padding: `${theme.spacing(1) + 2}px 0`
         }
