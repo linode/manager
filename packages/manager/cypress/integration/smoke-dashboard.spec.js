@@ -1,3 +1,4 @@
+import { Route } from '../support/api/routes';
 
 describe('dashboard', () => {
   beforeEach(() => {
@@ -39,13 +40,22 @@ describe('dashboard', () => {
       .its('length')
       .should('be.lte', MAX_GET_REQ_TO_API);
   });
+  it.only('check Blog Feed', () => {
+    cy.visit('/');
+    cy.get('[data-qa-card="Blog"]').should('be.visible');
+    cy.get('[data-qa-blog-post]')
+      .should('have.length.gte', 1)
+      .each($e => {
+        cy.wrap($e)
+          .invoke('attr', 'href')
+          .should('startWith', 'https://www.linode.com');
+      });
+  });
   describe('check we display', () => {
     const ERR_NO_ITEM_TO_DISPLAY = `No items to display.`;
     it(`"${ERR_NO_ITEM_TO_DISPLAY}" on no data`, () => {
       cy.server();
-      cy.route({
-        method: 'GET',
-        url: '/v4/linode/instances',
+      Route.getLinodes({
         response: { data: [] }
       });
       cy.visit('/');
@@ -57,11 +67,9 @@ describe('dashboard', () => {
     const ERR_UNABLE_TO_LOAD_LINODES = `Unable to load Linodes.`;
     it(`"${ERR_UNABLE_TO_LOAD_LINODES}" on error from API`, () => {
       cy.server();
-      cy.route({
-        method: 'GET',
-        url: '/v4/linode/instances/**',
+      Route.getLinodes({
         response: { errors: [{ reason: 'BAD' }], data: null }
-      }).as('getLinodes');
+      });
       cy.visit('/');
       cy.findByText(ERR_UNABLE_TO_LOAD_LINODES).should('be.visible');
     });
@@ -70,12 +78,8 @@ describe('dashboard', () => {
     // here we want to block the XHR get Linodes from returning,
     // but i have not found how to do this
     // https://github.com/cypress-io/cypress/issues/235
-    it.skip(`"${ERR_AN_UNEXPECTED_ERROR}" on 503`, () => {
-      cy.server();
-      cy.route({
-        method: 'GET',
-        url: '/v4/linode/instances/**'
-      }).as('getLinodes');
+    it.only(`"${ERR_AN_UNEXPECTED_ERROR}" on 503`, () => {
+      Route.getLinodes();
       cy.visit('/');
       cy.findByText(ERR_AN_UNEXPECTED_ERROR).should('be.visible');
     });
