@@ -15,15 +15,7 @@ import Typography from 'src/components/core/Typography';
 import { CombinedProps as Props, SearchLanding } from './SearchLanding';
 import { emptyResults } from './utils';
 
-const classes = {
-  emptyResultWrapper: '',
-  emptyResult: '',
-  errorIcon: '',
-  headline: ''
-};
-
 const props: Props = {
-  classes,
   entities: [],
   entitiesLoading: false,
   searchResultsByEntity: emptyResults,
