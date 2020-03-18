@@ -34,6 +34,7 @@
     "font-logos": "^0.10.0",
     "formik": "^1.3.2",
     "he": "^1.2.0",
+    "highlight.js": "^9.18.1",
     "ipaddr.js": "^1.9.1",
     "jspdf": "^1.5.3",
     "jspdf-autotable": "^3.2.4",
@@ -74,7 +75,6 @@
     "sanitize-html": "1.20.1",
     "search-string": "^3.1.0",
     "showdown": "^1.9.1",
-    "showdown-highlightjs-extension": "^0.1.2",
     "throttle-debounce": "^2.0.0",
     "typescript-fsa": "^3.0.0",
     "typescript-fsa-reducers": "^1.2.0",
@@ -148,6 +148,7 @@
     "@types/classnames": "^2.2.3",
     "@types/enzyme": "^3.9.3",
     "@types/he": "^1.1.0",
+    "@types/highlight.js": "^9.12.3",
     "@types/inert": "^5.1.1",
     "@types/jest": "^24.0.23",
     "@types/jest-axe": "^3.2.1",
@@ -318,9 +319,6 @@
       "@babel/preset-typescript"
     ]
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "resolutions": {
     "csv-parse": "^4.6.3",
     "mixin-deep": "^2.0.1",
@@ -329,7 +327,8 @@
     "js-yaml": "^3.13.1",
     "braces": "^3.0.2",
     "https-proxy-agent": "^3.0.1",
-    "axe-core": "^3.4.0"
+    "axe-core": "^3.4.0",
+    "minimist": "^1.2.3"
   },
   "workspaces": {
     "nohoist": [
