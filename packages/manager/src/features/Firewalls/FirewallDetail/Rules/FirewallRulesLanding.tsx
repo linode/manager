@@ -9,6 +9,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import FixedToolBar from 'src/components/FixedToolbar/FixedToolbar';
 import Notice from 'src/components/Notice';
+import Prompt from 'src/components/Prompt';
 import withFirewalls, {
   DispatchProps
 } from 'src/containers/firewalls.container';
@@ -158,8 +159,8 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
       });
   };
 
-  const shouldDisplayFixedToolbar = React.useMemo(
-    () => _hasModified(inboundState) || _hasModified(outboundState),
+  const hasUnsavedChanges = React.useMemo(
+    () => Boolean(_hasModified(inboundState) || _hasModified(outboundState)),
     [inboundState, outboundState]
   );
 
@@ -181,6 +182,8 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
 
   return (
     <>
+      <Prompt when={hasUnsavedChanges} />
+
       <Typography variant="body1" className={classes.copy}>
         Firewall rules act as a whitelist, allowing network traffic that meets
         the rules’ parameters to pass through. Any traffic not explicitly
@@ -221,7 +224,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         onSubmit={ruleDrawer.mode === 'create' ? handleAddRule : handleEditRule}
         ruleToModify={ruleToModify}
       />
-      {shouldDisplayFixedToolbar && (
+      {hasUnsavedChanges && (
         <FixedToolBar>
           <ActionsPanel className={classes.actions}>
             <Button
