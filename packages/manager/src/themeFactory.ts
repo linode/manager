@@ -1230,8 +1230,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           borderTop: `1px solid ${primaryColors.divider}`,
           borderBottom: `1px solid ${primaryColors.divider}`,
           '&:first-child': {
-            paddingLeft: 15,
-            borderLeft: `1px solid ${primaryColors.divider}`
+            paddingLeft: 15
           },
           '&:last-child': {
             paddingRight: spacingUnit + 2

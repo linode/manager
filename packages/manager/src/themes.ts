@@ -482,8 +482,7 @@ export const dark = (options: ThemeOverrides) =>
           borderTop: `1px solid ${primaryColors.divider}`,
           borderBottom: `1px solid ${primaryColors.divider}`,
           '&:first-child': {
-            paddingLeft: 15,
-            borderLeft: '1px solid #2f3236'
+            paddingLeft: 15
           }
         },
         head: {
