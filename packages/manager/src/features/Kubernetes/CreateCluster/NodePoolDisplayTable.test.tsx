@@ -2,14 +2,14 @@ import { cleanup, fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 
 import { extendedTypes } from 'src/__data__/ExtendedType';
-import { nodePoolRequests } from 'src/__data__/nodePools';
+import { nodePoolFactory } from 'src/factories/kubernetesCluster';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import NodePoolDisplayTable from './NodePoolDisplayTable';
 
 const props = {
   types: extendedTypes,
-  pools: nodePoolRequests,
+  pools: nodePoolFactory.buildList(5),
   editable: true,
   loading: false,
   handleDelete: jest.fn(),

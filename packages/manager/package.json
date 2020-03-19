@@ -34,6 +34,7 @@
     "font-logos": "^0.10.0",
     "formik": "^1.3.2",
     "he": "^1.2.0",
+    "highlight.js": "^9.18.1",
     "ipaddr.js": "^1.9.1",
     "jspdf": "^1.5.3",
     "jspdf-autotable": "^3.2.4",
@@ -74,7 +75,6 @@
     "sanitize-html": "1.20.1",
     "search-string": "^3.1.0",
     "showdown": "^1.9.1",
-    "showdown-highlightjs-extension": "^0.1.2",
     "throttle-debounce": "^2.0.0",
     "typescript-fsa": "^3.0.0",
     "typescript-fsa-reducers": "^1.2.0",
@@ -96,9 +96,9 @@
     "mock": "./scripts/mb.js",
     "test": "jest --color",
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
-    "storybook": "start-storybook -p 6006 --ci",
+    "storybook": "yarn run start-storybook -p 6006 --ci",
     "storybook-static": "build-storybook -c .storybook -o .out",
-    "storybook:e2e": "npx wdio ./e2e/config/wdio.storybook.conf.js",
+    "storybook:e2e": "yarn run wdio ./e2e/config/wdio.storybook.conf.js",
     "storyshots": "docker-compose -f storyshots.yml up --build --exit-code-from manager-storyshots && docker-compose -f storyshots.yml down -v",
     "storyshots:update": "export UPDATE=-u && docker-compose -f storyshots.yml up --build --exit-code-from manager-storyshots && unset UPDATE && docker-compose -f storyshots.yml down -v",
     "storyshots:test": "npx jest --config ./.storybook/storyshots.jest.config.js src/components/Storyshots.test.tsx --env=jsdom",
@@ -108,7 +108,7 @@
     "cy:e2e": "cypress run",
     "cy:debug": "cypress open",
     "serve": "node testServer.js",
-    "selenium:install": "npx selenium-standalone install --config=./e2e/config/selenium-config.js",
+    "selenium:install": "yarn run selenium-standalone install --config=./e2e/config/selenium-config.js",
     "selenium": "yarn selenium:install && ./node_modules/.bin/selenium-standalone start --config=./e2e/config/selenium-config.js",
     "e2e": "npx wdio ./e2e/config/wdio.conf.js",
     "e2e:all": "npx wdio ./e2e/config/wdio.conf.js; ./node_modules/.bin/wdio ./e2e/config/wdio.storybook.conf.js",
@@ -119,7 +119,7 @@
     "typecheck": "tsc --noEmit"
   },
   "lint-staged": {
-    "*.{ts,tsx,js}": [
+    "*.{ts,tsx}": [
       "prettier --write",
       "tslint",
       "git add",
@@ -148,6 +148,7 @@
     "@types/classnames": "^2.2.3",
     "@types/enzyme": "^3.9.3",
     "@types/he": "^1.1.0",
+    "@types/highlight.js": "^9.12.3",
     "@types/inert": "^5.1.1",
     "@types/jest": "^24.0.23",
     "@types/jest-axe": "^3.2.1",
@@ -165,7 +166,7 @@
     "@types/react-dom": "~16.9.4",
     "@types/react-loadable": "^5.3.3",
     "@types/react-redux": "~7.1.7",
-    "@types/react-router-dom": "^5.1.0",
+    "@types/react-router-dom": "~5.1.2",
     "@types/react-select": "^2.0.2",
     "@types/react-sticky": "^5.0.6",
     "@types/react-test-renderer": "~16.9.1",
@@ -318,9 +319,6 @@
       "@babel/preset-typescript"
     ]
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "resolutions": {
     "csv-parse": "^4.6.3",
     "mixin-deep": "^2.0.1",
@@ -329,7 +327,8 @@
     "js-yaml": "^3.13.1",
     "braces": "^3.0.2",
     "https-proxy-agent": "^3.0.1",
-    "axe-core": "^3.4.0"
+    "axe-core": "^3.4.0",
+    "minimist": "^1.2.3"
   },
   "workspaces": {
     "nohoist": [

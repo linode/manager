@@ -7,6 +7,7 @@ import {
 import { APIError } from 'linode-js-sdk/lib/types';
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
+
 import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -211,38 +212,40 @@ class LinodeSettingsPasswordPanel extends React.Component<
         actions={this.renderExpansionActions}
         onChange={this.handlePanelChange}
       >
-        {generalError && <Notice text={generalError} error />}
-        <EnhancedSelect
-          label="Disk"
-          placeholder="Find a Disk"
-          isLoading={disksLoading}
-          errorText={disksError || diskIdError}
-          options={disks}
-          onChange={this.handleDiskSelection}
-          onInputChange={this.onInputChange}
-          value={selectedDisk}
-          data-qa-select-linode
-          disabled={disabled}
-          isClearable={false}
-        />
-        <React.Suspense fallback={<SuspenseLoader delay={300} />}>
-          <PasswordInput
-            autoComplete="new-password"
-            label="Password"
-            value={this.state.value}
-            onChange={this.handlePasswordChange}
-            errorText={passwordError}
-            errorGroup="linode-settings-password"
-            error={Boolean(passwordError)}
-            data-qa-password-input
+        <form>
+          {generalError && <Notice text={generalError} error />}
+          <EnhancedSelect
+            label="Disk"
+            placeholder="Find a Disk"
+            isLoading={disksLoading}
+            errorText={disksError || diskIdError}
+            options={disks}
+            onChange={this.handleDiskSelection}
+            onInputChange={this.onInputChange}
+            value={selectedDisk}
+            data-qa-select-linode
             disabled={disabled}
-            disabledReason={
-              disabled
-                ? "You don't have permissions to modify this Linode"
-                : undefined
-            }
+            isClearable={false}
           />
-        </React.Suspense>
+          <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+            <PasswordInput
+              autoComplete="new-password"
+              label="Password"
+              value={this.state.value}
+              onChange={this.handlePasswordChange}
+              errorText={passwordError}
+              errorGroup="linode-settings-password"
+              error={Boolean(passwordError)}
+              data-qa-password-input
+              disabled={disabled}
+              disabledReason={
+                disabled
+                  ? "You don't have permissions to modify this Linode"
+                  : undefined
+              }
+            />
+          </React.Suspense>
+        </form>
       </ExpansionPanel>
     );
   }

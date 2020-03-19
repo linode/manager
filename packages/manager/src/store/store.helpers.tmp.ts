@@ -114,8 +114,8 @@ export const getAddRemoved = <E extends Entity>(
 
 export const createRequestThunk = <Req extends any, Res extends any, Err>(
   actions: AsyncActionCreators<Req, Res, Err>,
-  request: (params: Req) => Promise<Res>
-): ThunkActionCreator<Promise<Res>, Req> => {
+  request: (params: Req) => Promise<any>
+): ThunkActionCreator<Promise<Res[]>, Req> => {
   return (params: Req) => async dispatch => {
     const { started, done, failed } = actions;
 
