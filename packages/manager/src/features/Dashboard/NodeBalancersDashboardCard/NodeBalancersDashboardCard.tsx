@@ -85,6 +85,8 @@ const styles = (theme: Theme) =>
 interface NodeBalancerProps {
   nodeBalancersData: NodeBalancer[];
   nodeBalancersLoading: boolean;
+  nodeBalancersLastUpdated: number;
+  nodeBalancersResults: number;
   nodeBalancersError?: APIError[];
 }
 
@@ -97,6 +99,7 @@ const NodeBalancersDashboardCard: React.FunctionComponent<CombinedProps> = props
     classes,
     nodeBalancerActions: { getNodeBalancerPage },
     nodeBalancersError,
+    nodeBalancersLastUpdated,
     nodeBalancersLoading,
     nodeBalancersData
   } = props;
@@ -117,7 +120,7 @@ const NodeBalancersDashboardCard: React.FunctionComponent<CombinedProps> = props
     ) : null;
 
   const renderContent = () => {
-    if (nodeBalancersLoading && nodeBalancersData.length === 0) {
+    if (nodeBalancersLoading && nodeBalancersLastUpdated === 0) {
       return renderLoading();
     }
 
@@ -198,10 +201,18 @@ const NodeBalancersDashboardCard: React.FunctionComponent<CombinedProps> = props
 const styled = withStyles(styles);
 
 const withNodeBalancers = NodeBalancerContainer(
-  (ownProps, nodeBalancersData, nodeBalancersLoading, nodeBalancersError) => ({
+  (
+    ownProps,
+    nodeBalancersData,
+    nodeBalancersLoading,
+    nodeBalancersResults,
+    nodeBalancersLastUpdated,
+    nodeBalancersError
+  ) => ({
     ...ownProps,
     nodeBalancersData,
     nodeBalancersLoading,
+    nodeBalancersLastUpdated,
     nodeBalancersError
   })
 );
