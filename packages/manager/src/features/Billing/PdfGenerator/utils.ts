@@ -148,6 +148,7 @@ export const createInvoiceTotalsTable = (doc: JSPDF, invoice: Invoice) => {
         }
       }
     },
+    pageBreak: 'avoid',
     body: [
       ['Subtotal (USD)', `$${Number(invoice.subtotal).toFixed(2)}`],
       ['Tax (USD)', `$${Number(invoice.tax).toFixed(2)}`],
