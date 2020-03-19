@@ -135,6 +135,19 @@ export const createInvoiceTotalsTable = (doc: JSPDF, invoice: Invoice) => {
     headStyles: {
       fillColor: '#444444'
     },
+    columnStyles: {
+      0: {
+        cellPadding: {
+          right: 12
+        }
+      },
+      1: {
+        cellWidth: 16,
+        cellPadding: {
+          right: 2
+        }
+      }
+    },
     body: [
       ['Subtotal (USD)', `$${Number(invoice.subtotal).toFixed(2)}`],
       ['Tax (USD)', `$${Number(invoice.tax).toFixed(2)}`],
