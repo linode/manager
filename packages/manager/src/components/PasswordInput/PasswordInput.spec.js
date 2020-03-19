@@ -1,4 +1,5 @@
 const { navigateToStory } = require('../../../e2e/utils/storybook');
+const zxcvbn = require('zxcvbn');
 
 describe('Password Input Suite', () => {
   const component = 'Password Input';
@@ -42,9 +43,9 @@ describe('Password Input Suite', () => {
       .toBe(true);
   });
 
-  it('should update the strength when complexity of password increases', () => {
-    const testPasswords = ['weak', 'stronger1233', 'Stronger123#!'];
-    testPasswords.forEach((pass, index) => {
+  fit('should update the strength when complexity of password increases', () => {
+    const testPasswords = ['weak','stronger1233','Stronger123#!'];
+    testPasswords.forEach((pass) => {
       $(passwordInput).setValue(pass);
       const strengthDisplays = $(strengthIndicator).isDisplayed();
       const strength = $(strengthIndicator).getAttribute('data-qa-strength');
@@ -54,8 +55,8 @@ describe('Password Input Suite', () => {
         .toBe(true);
 
       expect(parseInt(strength, 10))
-        .withContext(`Incorrect strength indicator value`)
-        .toBe(index + 1);
+        .withContext(`Incorrect strength indicator value for ${pass}, ${zxcvbn(pass).score}`)
+        .toBe(zxcvbn(pass).score);
     });
   });
 
