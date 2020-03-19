@@ -26,9 +26,6 @@ Although if `yarn` noticed other dependency it could fix warnings on it will do 
 While this is a good behavior from yarn, we want to keep the diff on a PR as focused and short as possible to facilitate review.
 So consider that if you have a lot of changes in your `yarn.lock` you may want to separate things in different PR.
 
-**Any time you change the yarn lock** review if there is added dependency that does not make sense.
-Try to manually dedupe versions if possible in the yarn lock (remove the different paragraph in the `yarn.lock` and re run `yarn`)
-
 **If you see that 1 new dependency you added included a lot of subdependencies, with older versions of the dependencies we already have, check that the new package is not outdated**
 
 ### running commands
