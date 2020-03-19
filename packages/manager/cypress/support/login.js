@@ -68,21 +68,6 @@ const _loginWithToken = win => {
   win.localStorage.setItem('authentication/expire', isoExpire);
 };
 
-Cypress.Commands.add('loginWithToken', () => {
-  Cypress.on('uncaught:exception', (err, runnable) => {
-    // returning false here prevents Cypress from
-    // failing the test with newrelic errors
-    return false;
-  });
-  const options = {
-    onBeforeLoad: win => {
-      _loginWithToken(win);
-    }
-  };
-  console.log('executing visit');
-  return cy.visit('/null', options);
-});
-
 Cypress.Commands.add('visitWithLogin', (url, opt) => {
   Cypress.on('uncaught:exception', (err, runnable) => {
     // returning false here prevents Cypress from
