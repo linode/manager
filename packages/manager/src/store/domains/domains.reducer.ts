@@ -13,7 +13,8 @@ import {
   onError,
   onGetAllSuccess,
   onGetPageSuccess,
-  onStart
+  onStart,
+  setError
 } from '../store.helpers.tmp';
 import {
   createDomainActions,
@@ -72,9 +73,27 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     onDeleteSuccess(payload, state);
   }
 
+  if (isType(action, createDomainActions.started)) {
+    return setError('create', undefined, state);
+  }
+
   if (isType(action, createDomainActions.done)) {
     const { result } = action.payload;
     return onCreateOrUpdate(result, state);
+  }
+
+  if (isType(action, createDomainActions.failed)) {
+    const { error } = action.payload;
+    return onError(
+      {
+        create: error
+      },
+      state
+    );
+  }
+
+  if (isType(action, updateDomainActions.started)) {
+    return setError('update', undefined, state);
   }
 
   if (isType(action, updateDomainActions.done)) {
@@ -82,8 +101,32 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     return onCreateOrUpdate(result, state);
   }
 
+  if (isType(action, updateDomainActions.failed)) {
+    const { error } = action.payload;
+    return onError(
+      {
+        update: error
+      },
+      state
+    );
+  }
+
+  if (isType(action, deleteDomainActions.started)) {
+    return setError('delete', undefined, state);
+  }
+
   if (isType(action, deleteDomainActions.done)) {
-    onDeleteSuccess(action.payload.params.domainId, state);
+    return onDeleteSuccess(action.payload.params.domainId, state);
+  }
+
+  if (isType(action, deleteDomainActions.failed)) {
+    const { error } = action.payload;
+    return onError(
+      {
+        delete: error
+      },
+      state
+    );
   }
 
   if (isType(action, getDomainsPageActions.started)) {

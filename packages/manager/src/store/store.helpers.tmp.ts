@@ -34,6 +34,14 @@ export const onGetAllSuccess = <E extends Entity, S>(
     )
   });
 
+export const setError = <E extends Entity>(
+  type: string,
+  error: APIError[] | undefined,
+  state: MappedEntityState<E, EntityError>
+) => {
+  return Object.assign({}, state, { error: { [type]: error } });
+};
+
 export const onError = <S = {}, E = APIError[] | undefined>(
   error: E,
   state: S

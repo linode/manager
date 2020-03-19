@@ -43,8 +43,8 @@ export const getDomainsActions = actionCreator.async<
 >('get-all');
 
 export interface PageParams {
-  params: any;
-  filters: any;
+  params?: any;
+  filters?: any;
 }
 export const getDomainsPageActions = actionCreator.async<
   PageParams,
