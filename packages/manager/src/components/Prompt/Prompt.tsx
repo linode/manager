@@ -44,14 +44,16 @@ const Prompt: React.FC<CombinedProps> = props => {
   const history = useHistory();
 
   React.useEffect(() => {
+    if (!props.when || !props.confirmWhenLeaving) {
+      return;
+    }
+
     // See: https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (props.when && props.confirmWhenLeaving) {
-        // Prevent the unload event.
-        e.preventDefault();
-        // Chrome requires returnValue to be set to a string.
-        e.returnValue = '';
-      }
+      // Prevent the unload event.
+      e.preventDefault();
+      // Chrome requires returnValue to be set to a string.
+      e.returnValue = '';
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
