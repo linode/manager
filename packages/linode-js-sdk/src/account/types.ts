@@ -75,7 +75,7 @@ export interface InvoiceItem {
   label: string;
   quantity: null | number;
   type: 'hourly' | 'prepay' | 'misc';
-  unit_price: null | number;
+  unit_price: null | string;
   tax: number;
   total: number;
 }
