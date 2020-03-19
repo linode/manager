@@ -60,7 +60,6 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     // Initial Requests
     const dataFetchingPromises: Promise<any>[] = [
       this.props.requestAccount(),
-      this.props.requestDomains(),
       this.props.requestImages(),
       this.props.requestProfile(),
       this.props.requestLinodes(),

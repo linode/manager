@@ -24,7 +24,10 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import ViewAllLink from 'src/components/ViewAllLink';
-import { ApplicationState } from 'src/store';
+import withDomains, {
+  DomainActionsProps
+} from 'src/containers/domains.container';
+import withEvents, { EventsProps } from 'src/containers/events.container';
 import { openForEditing } from 'src/store/domainDrawer';
 import {
   isEntityEvent,
@@ -72,13 +75,6 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface State {
-  loading: boolean;
-  errors?: APIError[];
-  data?: Domain[];
-  results?: number;
-}
-
 interface Props {
   domain: string;
   id: number;
@@ -89,63 +85,52 @@ interface Props {
 type CombinedProps = Props &
   WithStyles<ClassNames> &
   WithUpdatingDomainsProps &
+  DomainActionsProps &
   DispatchProps;
 
-class DomainsDashboardCard extends React.Component<CombinedProps, State> {
-  render() {
-    return (
-      <DashboardCard
-        title="Domains"
-        headerAction={this.renderAction}
-        alignHeader="flex-start"
-      >
-        <Paper>
-          <Table>
-            <TableBody>{this.renderContent()}</TableBody>
-          </Table>
-        </Paper>
-      </DashboardCard>
-    );
-  }
+const DomainsDashboardCard: React.FC<CombinedProps> = props => {
+  React.useEffect(() => {
+    props.getDomainsPage({ page: 1, page_size: 25 });
+  }, []);
 
-  renderAction = () =>
-    this.props.domainCount > 5 ? (
+  const renderAction = () =>
+    props.domainCount > 5 ? (
       <ViewAllLink
         text="View All"
         link={'/domains'}
-        count={this.props.domainCount}
+        count={props.domainCount}
       />
     ) : null;
 
-  renderContent = () => {
-    const { loading, domains, error } = this.props;
-    if (loading && domains.length === 0) {
-      return this.renderLoading();
-    }
-
-    if (error) {
-      return this.renderErrors(error);
-    }
-
-    if (domains.length > 0) {
-      return this.renderData(domains);
-    }
-
-    return this.renderEmpty();
-  };
-
-  renderLoading = () => {
+  const renderLoading = () => {
     return <TableRowLoading colSpan={2} />;
   };
 
-  renderErrors = (errors: APIError[]) => (
+  const renderErrors = (errors: APIError[]) => (
     <TableRowError colSpan={3} message={`Unable to load domains.`} />
   );
 
-  renderEmpty = () => <TableRowEmptyState colSpan={2} />;
+  const renderEmpty = () => <TableRowEmptyState colSpan={2} />;
 
-  renderData = (data: Domain[]) => {
-    const { classes } = this.props;
+  const renderContent = () => {
+    const { loading, domains, error } = props;
+    if (loading && domains.length === 0) {
+      return renderLoading();
+    }
+
+    if (error) {
+      return renderErrors(error);
+    }
+
+    if (domains.length > 0) {
+      return renderData(domains);
+    }
+
+    return renderEmpty();
+  };
+
+  const renderData = (data: Domain[]) => {
+    const { classes } = props;
 
     return data.map(({ id, domain, type, status }) => (
       <TableRow key={domain} rowLink={`/domains/${id}`}>
@@ -189,7 +174,21 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
       </TableRow>
     ));
   };
-}
+
+  return (
+    <DashboardCard
+      title="Domains"
+      headerAction={renderAction}
+      alignHeader="flex-start"
+    >
+      <Paper>
+        <Table>
+          <TableBody>{renderContent()}</TableBody>
+        </Table>
+      </Paper>
+    </DashboardCard>
+  );
+};
 
 const styled = withStyles(styles);
 interface WithUpdatingDomainsProps {
@@ -199,18 +198,23 @@ interface WithUpdatingDomainsProps {
   error?: APIError[];
 }
 
-const withUpdatingDomains = connect(
-  (state: ApplicationState, ownProps: {}): WithUpdatingDomainsProps => {
-    const domainState = state.__resources.domains;
+const withUpdatingDomains = withDomains<WithUpdatingDomainsProps, EventsProps>(
+  (
+    ownProps,
+    domainsData,
+    domainsLoading,
+    domainsError,
+    domainsResults
+  ): WithUpdatingDomainsProps => {
     return {
       domains: compose(
-        mergeEvents(state.events.events),
+        mergeEvents(ownProps.eventsData),
         take(5),
         sortBy(prop('domain'))
-      )(Object.values(domainState.itemsById)),
-      loading: domainState.loading,
-      domainCount: domainState.results || 0,
-      error: domainState.error.read
+      )(domainsData),
+      loading: domainsLoading,
+      domainCount: domainsResults,
+      error: domainsError.read
     };
   }
 );
@@ -248,6 +252,7 @@ const connected = connect(undefined, { openForEditing });
 
 const enhanced = recompose<CombinedProps, {}>(
   connected,
+  withEvents(),
   withUpdatingDomains,
   styled
 );
