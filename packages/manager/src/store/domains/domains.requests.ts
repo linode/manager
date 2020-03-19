@@ -51,7 +51,7 @@ export const requestDomains: ThunkActionCreator<Promise<Domain[]>> = () => (
   return getAll<Domain>(getDomains)()
     .then(domains => {
       dispatch(getDomainsActions.done({ result: domains }));
-      return domains;
+      return domains.data;
     })
     .catch(err => {
       const errors = getAPIErrorOrDefault(
