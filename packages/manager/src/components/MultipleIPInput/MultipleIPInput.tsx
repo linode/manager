@@ -2,7 +2,6 @@
 import { InputBaseProps } from '@material-ui/core/InputBase';
 import Close from '@material-ui/icons/Close';
 import * as classnames from 'classnames';
-import { update } from 'ramda';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
@@ -12,6 +11,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
+import { ExtendedIP } from 'src/utilities/ipUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   addIP: {
@@ -50,8 +50,8 @@ export interface Props {
   title: string;
   helperText?: string;
   error?: string;
-  ips: string[];
-  onChange: (ips: string[]) => void;
+  ips: ExtendedIP[];
+  onChange: (ips: ExtendedIP[]) => void;
   inputProps?: InputBaseProps;
   className?: string;
 }
@@ -64,12 +64,13 @@ export const MultipleIPInput: React.FC<Props> = props => {
     e: React.ChangeEvent<HTMLInputElement>,
     idx: number
   ) => {
-    const transferIPs = update(idx, e.target.value, ips);
-    onChange(transferIPs);
+    const newIPs = [...ips];
+    newIPs[idx].address = e.target.value;
+    onChange(newIPs);
   };
 
   const addNewInput = () => {
-    onChange([...ips, '']);
+    onChange([...ips, { address: '' }]);
   };
 
   const removeInput = (idx: number) => {
@@ -113,10 +114,11 @@ export const MultipleIPInput: React.FC<Props> = props => {
                 'aria-label': `${title} ip-address-${idx}`,
                 ...props.inputProps
               }}
-              value={thisIP}
+              value={thisIP.address}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 handleChange(e, idx)
               }
+              errorText={thisIP.error}
               hideLabel
             />
           </Grid>

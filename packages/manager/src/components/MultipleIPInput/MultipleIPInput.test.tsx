@@ -9,7 +9,7 @@ afterEach(cleanup);
 
 const baseProps: Props = {
   title: 'My Input',
-  ips: ['ip1', 'ip2', 'ip3'],
+  ips: [{ address: 'ip1' }, { address: 'ip2' }, { address: 'ip3' }],
   onChange: jest.fn()
 };
 
@@ -28,7 +28,12 @@ describe('MultipleIPInput', () => {
     const { getByText } = renderWithTheme(<MultipleIPInput {...baseProps} />);
     const addButton = getByText(/add/i);
     fireEvent.click(addButton);
-    expect(baseProps.onChange).toHaveBeenCalledWith(['ip1', 'ip2', 'ip3', '']);
+    expect(baseProps.onChange).toHaveBeenCalledWith([
+      { address: 'ip1' },
+      { address: 'ip2' },
+      { address: 'ip3' },
+      { address: '' }
+    ]);
   });
 
   it('all inputs after the first should have a close button (X)', () => {
@@ -44,6 +49,9 @@ describe('MultipleIPInput', () => {
     const { getByTestId } = renderWithTheme(<MultipleIPInput {...baseProps} />);
     const closeButton = getByTestId('delete-ip-1');
     fireEvent.click(closeButton);
-    expect(baseProps.onChange).toHaveBeenCalledWith(['ip1', 'ip3']);
+    expect(baseProps.onChange).toHaveBeenCalledWith([
+      { address: 'ip1' },
+      { address: 'ip3' }
+    ]);
   });
 });

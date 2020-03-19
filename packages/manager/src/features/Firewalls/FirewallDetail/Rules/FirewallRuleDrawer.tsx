@@ -29,6 +29,11 @@ import {
   protocolOptions
 } from 'src/features/Firewalls/shared';
 import capitalize from 'src/utilities/capitalize';
+import {
+  ExtendedIP,
+  extendedIPToString,
+  stringToExtendedIP
+} from 'src/utilities/ipUtils';
 import { FirewallRuleWithStatus } from './firewallRuleEditor';
 
 export type Mode = 'create' | 'edit';
@@ -220,11 +225,11 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
   );
 
   const handleIPChange = React.useCallback(
-    (_ips: string[]) => {
+    (_ips: ExtendedIP[]) => {
       if (!formTouched) {
         setFormTouched(true);
       }
-      setIPs(_ips);
+      setIPs(_ips.map(extendedIPToString));
     },
     [formTouched]
   );
@@ -300,7 +305,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
           title="IP / Netmask"
           aria-label="IP / Netmask for firewall rule"
           className={classes.ipSelect}
-          ips={ips}
+          ips={ips.map(stringToExtendedIP)}
           onChange={handleIPChange}
           inputProps={{ autoFocus: true }}
         />
