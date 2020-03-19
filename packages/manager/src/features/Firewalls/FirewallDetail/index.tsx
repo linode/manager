@@ -34,6 +34,8 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
   // Source the Firewall's ID from the /:id path param.
   const thisFirewallId = props.match.params.id;
 
+  const [updateError, setUpdateError] = React.useState<string | undefined>();
+
   // Find the Firewall in the store.
   const thisFirewall = props.data[thisFirewallId];
 
@@ -81,12 +83,18 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
 
-  const handleLabelChange = async (newLabel: string) => {
-    props.updateFirewall({ firewallID: thisFirewall.id, label: newLabel });
-    return thisFirewall.label;
+  const handleLabelChange = (newLabel: string) => {
+    setUpdateError(undefined);
+
+    return props
+      .updateFirewall({ firewallID: thisFirewall.id, label: newLabel })
+      .catch(e => {
+        setUpdateError(e[0].reason);
+      });
   };
 
   const resetEditableLabel = () => {
+    setUpdateError(undefined);
     return thisFirewall.label;
   };
 
@@ -100,7 +108,8 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
           onEditHandlers={{
             editableTextTitle: thisFirewall.label,
             onEdit: handleLabelChange,
-            onCancel: resetEditableLabel
+            onCancel: resetEditableLabel,
+            errorText: updateError
           }}
         />
         {/* @todo: Insert real link when the doc is written. */}
