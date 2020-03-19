@@ -164,6 +164,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: e =>
       `A domain record has been deleted from ${e.entity!.label}`
   },
+  domain_import: {
+    notification: e => `Domain ${e.entity?.label ?? ''} has been imported.`
+  },
   firewall_enable: {
     notification: e => `Firewall ${e.entity?.label ?? ''} has been enabled.`
   },
