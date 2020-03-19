@@ -13,6 +13,16 @@ export interface FirewallRuleError {
   };
 }
 
+/**
+ * The API returns very good Firewall error messages that look like this:
+ *
+ *   {
+ *     "reason": "Must contain only valid IPv4 addresses or networks",
+ *     "field": "rules.inbound[0].addresses.ipv4[0]"
+ *   }
+ *
+ * This function parses the "field" into a data structure usable by downstream components.
+ */
 export const parseFirewallRuleError = (
   error: APIError
 ): FirewallRuleError | null => {

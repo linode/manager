@@ -30,12 +30,13 @@ import {
 } from 'src/features/Firewalls/shared';
 import capitalize from 'src/utilities/capitalize';
 import { ExtendedIP, stringToExtendedIP } from 'src/utilities/ipUtils';
-import { FirewallRuleWithStatus } from './firewallRuleEditor';
+import { ExtendedFirewallRule } from './firewallRuleEditor';
 import { Category, FirewallRuleError } from './shared';
 
 export type Mode = 'create' | 'edit';
 
-const IP_ERROR_MESSAGE = 'Must be a valid IPv4 or IPv6 address or range.';
+export const IP_ERROR_MESSAGE =
+  'Must be a valid IPv4 or IPv6 address or range.';
 
 // =============================================================================
 // <FirewallRuleDrawer />
@@ -46,7 +47,7 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (category: 'inbound' | 'outbound', rule: FirewallRuleType) => void;
-  ruleToModify?: FirewallRuleWithStatus;
+  ruleToModify?: ExtendedFirewallRule;
 }
 
 interface Form {
@@ -67,12 +68,14 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
   // intended to specify custom IPs.
   const [ips, setIPs] = React.useState<ExtendedIP[]>([{ address: '' }]);
 
-  // Reset IP and IP Error state. If we're in EDIT mode:
-  //   1. Set IPs to the addresses of the rule we're modifying.
-  //   2. Set IP Errors if we have any.
-  // If we're NOT in EDIT mode, this state is reset.
+  // Reset state. If we're in EDIT mode, set IPs to the addresses of the rule we're modifying
+  // (along with any errors we may have).
   React.useEffect(() => {
-    setIPs(getInitialIPs(mode, ruleToModify));
+    if (mode === 'edit' && ruleToModify) {
+      setIPs(getInitialIPs(ruleToModify));
+    } else {
+      setIPs([{ address: '' }]);
+    }
   }, [mode, ruleToModify]);
 
   const title =
@@ -80,15 +83,17 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
 
   const addressesLabel = category === 'inbound' ? 'source' : 'destination';
 
-  const onValidate = ({ addresses, ports, protocol }: Form) => {
+  const onValidate = ({ ports, protocol }: Form) => {
+    // The validated IPs may have errors, so set them to state so we see the errors.
     const validatedIPs = validateIPs(ips);
     setIPs(validatedIPs);
 
-    const errors = validatedIPs.filter(thisIP => Boolean(thisIP.error));
-
     return {
       ...validateForm(protocol, ports),
-      ...errors
+      // This is a bit of a trick. If this function DOES NOT return an empty object, Formik will call
+      // `onSubmit()`. If there are IP errors, we add them to the return object so Formik knows there
+      // is an issue with the form.
+      ...validatedIPs.filter(thisIP => Boolean(thisIP.error))
     };
   };
 
@@ -103,7 +108,8 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
       addresses
     };
 
-    // The API will return an error if a `ports` attribute is present on a payload for an ICMP rule.
+    // The API will return an error if a `ports` attribute is present on a payload for an ICMP rule,
+    // so we do a bit of trickery here and delete it if necessary.
     if (protocol === 'ICMP' && ports === '') {
       delete payload.ports;
     }
@@ -335,7 +341,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
       {values.addresses === 'ip/netmask' && (
         <MultipleIPInput
           title="IP / Netmask"
-          aria-label="IP / Netmask for firewall rule"
+          aria-label="IP / Netmask for Firewall rule"
           className={classes.ipSelect}
           ips={ips}
           onChange={handleIPChange}
@@ -415,8 +421,11 @@ export const formValueToIPs = (
   }
 };
 
+// Adds an `error` message to each invalid IP in the list.
 export const validateIPs = (ips: ExtendedIP[]): ExtendedIP[] => {
   return ips.map(({ address }) => {
+    // We accept plain IPs as well as ranges (i.e. CIDR notation). Ipaddr.js has separate parsing
+    // methods for each, so we check for a netmask to decide the method to use.
     const [, mask] = address.split('/');
     try {
       if (mask) {
@@ -425,6 +434,7 @@ export const validateIPs = (ips: ExtendedIP[]): ExtendedIP[] => {
         parseIP(address);
       }
     } catch (err) {
+      // Empty addresses are OK for the sake of validating the form.
       if (address !== '') {
         return { address, error: IP_ERROR_MESSAGE };
       }
@@ -440,8 +450,8 @@ export const validateIPs = (ips: ExtendedIP[]): ExtendedIP[] => {
 export const classifyIPs = (ips: ExtendedIP[]) => {
   return ips.reduce<{ ipv4: string[]; ipv6: string[] }>(
     (acc, { address }) => {
-      // It's possible to enter a subnet, e.g. 1.0.0.0/16. Ipaddr.js does not parse this
-      // correctly, so we split out the range before doing the classification.
+      // Unfortunately ipaddr.js can't determine the "type" of an IPv6 address with a mask, so we
+      // need to parse the base address only and THEN determine the type.
       const [base] = address.split('/');
       try {
         const parsed = parseIP(base);
@@ -463,7 +473,7 @@ const initialValues: Form = {
   protocol: ''
 };
 
-const getInitialFormValues = (ruleToModify?: FirewallRuleWithStatus): Form => {
+const getInitialFormValues = (ruleToModify?: ExtendedFirewallRule): Form => {
   if (!ruleToModify) {
     return initialValues;
   }
@@ -477,7 +487,7 @@ const getInitialFormValues = (ruleToModify?: FirewallRuleWithStatus): Form => {
 };
 
 export const getInitialAddressFormValue = (
-  addresses: FirewallRuleWithStatus['addresses']
+  addresses: ExtendedFirewallRule['addresses']
 ): string => {
   if (allowsAllIPs(addresses)) {
     return 'all';
@@ -494,14 +504,11 @@ export const getInitialAddressFormValue = (
   return 'ip/netmask';
 };
 
+// Get a list of Extended IP from an existing Firewall rule. This is necessary when opening the
+// drawer/form to modify an existing rule.
 export const getInitialIPs = (
-  mode: Mode,
-  ruleToModify?: FirewallRuleWithStatus
+  ruleToModify: ExtendedFirewallRule
 ): ExtendedIP[] => {
-  if (mode !== 'edit' || !ruleToModify) {
-    return [{ address: '' }];
-  }
-
   const { addresses } = ruleToModify;
 
   const ips: ExtendedIP[] = [
@@ -515,6 +522,21 @@ export const getInitialIPs = (
     if (formField !== 'addresses' || !ip) {
       return;
     }
+
+    /**
+     * This is a trip, but we may have to offset the IP index. An example: The IPs we give to the
+     * API might look like:
+     *
+     *  {
+     *    ipv4: ['1.2.3.4'],
+     *    ipv6: ['INVALID_IP']
+     *  }
+     *
+     * The API will return an error explaining that `ipv6[0]` is invalid. In this form, our list of
+     * IPs looks like: ['1.2.3.4', 'INVALID_IP'], so we can't rely solely on the index from the
+     * API... we've got to offset it by the length of the v4 IPs. This works because we place v4 IPs
+     * first in the list when modifying an existing rule.
+     */
     const index =
       ip.type === 'ipv4' ? ip.idx : addresses?.ipv4?.length ?? 0 + ip.idx;
 
@@ -522,32 +544,6 @@ export const getInitialIPs = (
   });
 
   return ips;
-};
-
-export const getInitialIPErrors = (
-  mode: Mode,
-  ruleToModify?: FirewallRuleWithStatus
-): Record<number, string> => {
-  if (mode !== 'edit' || !ruleToModify?.errors) {
-    return [];
-  }
-
-  return ruleToModify.errors.reduce<Record<number, string>>(
-    (acc, thisError) => {
-      const { formField, ip } = thisError;
-      if (formField !== 'addresses' || !ip) {
-        return acc;
-      }
-
-      const { type, idx } = ip;
-      const ipv4 = ruleToModify?.addresses?.ipv4;
-      const index = type === 'ipv4' ? idx : ipv4?.length ?? 0 + idx;
-      acc[index] = IP_ERROR_MESSAGE;
-
-      return acc;
-    },
-    {}
-  );
 };
 
 export const validateForm = (protocol?: string, ports?: string) => {
@@ -563,7 +559,7 @@ export const validateForm = (protocol?: string, ports?: string) => {
   }
 
   if ((protocol === 'TCP' || protocol === 'UDP') && !ports) {
-    errors.ports = 'Ports required for TCP and UDP protocols.';
+    errors.ports = 'Ports are required for TCP and UDP protocols.';
     return errors;
   }
 

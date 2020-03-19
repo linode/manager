@@ -21,7 +21,7 @@ import {
 import capitalize from 'src/utilities/capitalize';
 import FirewallRuleActionMenu from './FirewallRuleActionMenu';
 import { Mode } from './FirewallRuleDrawer';
-import { FirewallRuleWithStatus, RuleStatus } from './firewallRuleEditor';
+import { ExtendedFirewallRule, RuleStatus } from './firewallRuleEditor';
 import { Category, FirewallRuleError } from './shared';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -68,7 +68,7 @@ interface RuleRow {
 interface Props {
   category: Category;
   openRuleDrawer: (category: Category, mode: Mode) => void;
-  rulesWithStatus: FirewallRuleWithStatus[];
+  rulesWithStatus: ExtendedFirewallRule[];
   triggerDeleteFirewallRule: (idx: number) => void;
   triggerOpenRuleDrawerForEditing: (idx: number) => void;
   triggerUndo: (idx: number) => void;
@@ -305,12 +305,12 @@ export const ConditionalError: React.FC<ConditionalErrorProps> = React.memo(
 // Utilities
 // =============================================================================
 /**
- * Transforms a FirewallRuleType to the higher-level RuleRow. We do this so
+ * Transforms Extended Firewall Rules to the higher-level RuleRow. We do this so
  * downstream components don't have worry about transforming individual pieces
  * of data. This also allows us to sort each column of the RuleTable.
  */
 export const firewallRuleToRowData = (
-  firewallRules: FirewallRuleWithStatus[]
+  firewallRules: ExtendedFirewallRule[]
 ): RuleRow[] => {
   return firewallRules.map((thisRule, idx) => {
     const ruleType = ruleToPredefinedFirewall(thisRule);
