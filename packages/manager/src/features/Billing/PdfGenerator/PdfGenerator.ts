@@ -201,7 +201,6 @@ export const printInvoice = (
       }
     });
 
-    doc.addPage();
     createInvoiceTotalsTable(doc, invoice);
     createFooter(doc, baseFont);
 
