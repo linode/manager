@@ -174,6 +174,8 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     });
 
   handleSuccess = (domain: Domain) => {
+    this.props.upsertDomain(domain);
+
     if (domain.id) {
       return this.props.history.push(`/domains/${domain.id}`);
     }
