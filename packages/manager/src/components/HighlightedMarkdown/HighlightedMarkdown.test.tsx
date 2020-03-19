@@ -1,6 +1,7 @@
-import { cleanup, render } from '@testing-library/react';
+import { cleanup } from '@testing-library/react';
 import * as React from 'react';
 
+import { renderWithTheme } from 'src/utilities/testHelpers';
 import HighlightedMarkdown from './HighlightedMarkdown';
 
 const sampleMarkdown =
@@ -10,7 +11,7 @@ afterEach(cleanup);
 
 describe('HighlightedMarkdown component', () => {
   it('should highlight text consistently', () => {
-    const { asFragment } = render(
+    const { asFragment } = renderWithTheme(
       <HighlightedMarkdown textOrMarkdown={sampleMarkdown} />
     );
     expect(asFragment()).toMatchSnapshot();
