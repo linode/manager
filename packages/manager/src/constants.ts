@@ -80,6 +80,11 @@ export const MAX_VOLUME_SIZE = 10240;
 export const INTERVAL = 1000;
 
 /**
+ * Time after which data from the API is considered stale
+ */
+export const REFRESH_INTERVAL = 60000;
+
+/**
  * Used by e.g. LISH to determine the websocket connection address.
  * Whenever updating this, also update the corresponding name in resolvers.ts
  */
@@ -215,6 +220,9 @@ export const dcContinent: Record<string, ContinentKey> = {
 // Default error message for non-API errors
 export const DEFAULT_ERROR_MESSAGE = 'An unexpected error occurred.';
 
+// Default size limit for Images (some users have custom limits)
+export const IMAGE_DEFAULT_LIMIT = 6144;
+
 export const allowedHTMLTags = [
   'a',
   'abbr',
@@ -249,45 +257,6 @@ export const allowedHTMLTags = [
 ];
 
 export const allowedHTMLAttr = ['href', 'lang', 'title', 'align'];
-
-// List of country codes in the European Union; used for VAT display
-export const EU_COUNTRIES = [
-  'AT', // Austria
-  'BE', // Belgium
-  'BG', // Bulgaria
-  'CY', // Cyprus
-  'CZ', // Czech Republic
-  'DE', // Germany
-  'DK', // Denmark
-  'EE', // Estonia
-  'ES', // Spain
-  'FI', // Finland
-  'FR', // France
-  'GR', // Greece
-  'HR', // Croatia
-  'HU', // Hungary
-  'IE', // Ireland
-  'IT', // Italy
-  'LT', // Lithuania
-  'LU', // Luxembourg
-  'LV', // Latvia
-  'MT', // Malta
-  'NL', // Netherlands
-  'PL', // Poland
-  'PT', // Portugal
-  'RO', // Romania
-  'SE', // Sweden
-  'SI', // Slovenia
-  'SK', // Slovakia
-  'GB' // United Kingdom
-];
-
-// Australia's country code; used for ARN display on invoices
-export const AU_COUNTRY = 'AU';
-
-export const LINODE_EU_TAX_ID = 'EU372008859';
-
-export const LINODE_ARN_TAX_ID = '3000 1606 0612';
 
 /**
  * MBps rate for intra DC migrations (AKA Mutations)

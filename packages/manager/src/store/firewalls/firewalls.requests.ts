@@ -5,7 +5,8 @@ import {
   enableFirewall as _enable,
   Firewall,
   getFirewalls,
-  updateFirewall as _update
+  updateFirewall as _update,
+  updateFirewallRules as _updateRules
 } from 'linode-js-sdk/lib/firewalls';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
@@ -13,7 +14,8 @@ import {
   createFirewallActions,
   deleteFirewallActions,
   getFirewalls as _getFirewallsAction,
-  updateFirewallActions
+  updateFirewallActions,
+  updateFirewallRulesActions
 } from './firewalls.actions';
 
 const getAllFirewallsRequest = (payload: { params?: any; filter?: any }) =>
@@ -34,6 +36,11 @@ export const createFirewall = createRequestThunk(
 export const updateFirewall = createRequestThunk(
   updateFirewallActions,
   ({ firewallID, ...data }) => _update(firewallID, data)
+);
+
+export const updateFirewallRules = createRequestThunk(
+  updateFirewallRulesActions,
+  ({ firewallID, ...data }) => _updateRules(firewallID, data)
 );
 
 export const enableFirewall = createRequestThunk(

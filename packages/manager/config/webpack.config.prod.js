@@ -13,7 +13,8 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin;
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -144,14 +145,14 @@ module.exports = {
           {
             test: /\.(ts|tsx)$/,
             include: paths.appSrc,
-            exclude:[/(stories|test)\.(ts|tsx)$/, /__data__/],
+            exclude: [/(stories|test)\.(ts|tsx)$/, /__data__/],
             use: [
               {
                 loader: require.resolve('ts-loader'),
                 options: {
                   // disable type checker - we will use it in fork plugin
                   transpileOnly: true,
-                  onlyCompileBundledFiles:true
+                  onlyCompileBundledFiles: true
                 }
               }
             ]
@@ -319,8 +320,13 @@ module.exports = {
     // https://www.npmjs.com/package/webpack-bundle-analyzer
     // the file {reportFilename} is in the {output.path} of the bundle
     new BundleAnalyzerPlugin({
-      analyzerMode: process.argv.includes('--bundle-analyze') ? "static" : 'disabled',
-      reportFilename: path.resolve(paths.appDirectory, "bundle_analyzer_report.html"),
+      analyzerMode: process.argv.includes('--bundle-analyze')
+        ? 'static'
+        : 'disabled',
+      reportFilename: path.resolve(
+        paths.appDirectory,
+        'bundle_analyzer_report.html'
+      ),
       openAnalyzer: false
     })
   ],
@@ -332,5 +338,19 @@ module.exports = {
     net: 'empty',
     tls: 'empty',
     child_process: 'empty'
+  },
+
+  // Utilize webpack performance budgets that will fail the build if the assets
+  // exceed the configured size.
+  // See https://webpack.js.org/configuration/performance/
+  performance: {
+    hints: 'error',
+    maxEntrypointSize: 1180000, // ~1.12 MiB
+    maxAssetSize: 1180000, // ~1.12 MiB
+    assetFilter: function(assetFilename) {
+      return !(
+        assetFilename.endsWith('.chunk.js') || assetFilename.endsWith('.map')
+      );
+    }
   }
 };

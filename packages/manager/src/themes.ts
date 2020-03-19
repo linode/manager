@@ -480,7 +480,10 @@ export const dark = (options: ThemeOverrides) =>
       MuiTableCell: {
         root: {
           borderTop: `1px solid ${primaryColors.divider}`,
-          borderBottom: `1px solid ${primaryColors.divider}`
+          borderBottom: `1px solid ${primaryColors.divider}`,
+          '&:first-child': {
+            paddingLeft: 15
+          }
         },
         head: {
           color: primaryColors.text,

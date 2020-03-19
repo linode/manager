@@ -19,7 +19,17 @@ function getConfigurationByFile(file) {
   return fs.readJson(pathToConfigFile);
 }
 
+function checkNodeVersionRequiredByLinode(){
+  const v = process.version.substr(1, process.version.length-1).split('.');
+  if (![12,10].includes(v[0])){
+    console.error("We recomend Node version 10 or 12 to run this tests");
+  }
+}
+
 module.exports = (on, config) => {
+  checkNodeVersionRequiredByLinode();
+
+
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
   // accept a configFile value or use development by default

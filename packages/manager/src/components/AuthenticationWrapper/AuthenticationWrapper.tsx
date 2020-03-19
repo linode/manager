@@ -6,13 +6,9 @@ import {
 import { Domain } from 'linode-js-sdk/lib/domains';
 import { Image } from 'linode-js-sdk/lib/images';
 import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes';
-import {
-  ObjectStorageBucket,
-  ObjectStorageCluster
-} from 'linode-js-sdk/lib/object-storage';
+import { ObjectStorageCluster } from 'linode-js-sdk/lib/object-storage';
 import { Profile } from 'linode-js-sdk/lib/profile';
 import { Region } from 'linode-js-sdk/lib/regions';
-import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
@@ -27,9 +23,8 @@ import { MapState } from 'src/store/types';
 
 import { requestAccount } from 'src/store/account/account.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
-import { getAllBuckets } from 'src/store/bucket/bucket.requests';
 import { requestClusters } from 'src/store/clusters/clusters.actions';
-import { requestDomains } from 'src/store/domains/domains.actions';
+import { requestDomains } from 'src/store/domains/domains.requests';
 import { requestImages } from 'src/store/image/image.requests';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
 import { requestTypes } from 'src/store/linodeType/linodeType.requests';
@@ -40,7 +35,6 @@ import {
 import { requestNotifications } from 'src/store/notification/notification.requests';
 import { requestProfile } from 'src/store/profile/profile.requests';
 import { requestRegions } from 'src/store/regions/regions.actions';
-import { getAllVolumes } from 'src/store/volume/volume.requests';
 import { GetAllData } from 'src/utilities/getAll';
 
 type CombinedProps = DispatchProps & StateProps & WithNodeBalancerActions;
@@ -73,7 +67,6 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       this.props.requestNotifications(),
       this.props.requestSettings(),
       this.props.requestTypes(),
-      this.props.requestVolumes(),
       this.props.requestRegions(),
       getAllNodeBalancersWithConfigs()
     ];
@@ -155,9 +148,7 @@ interface DispatchProps {
   requestSettings: () => Promise<AccountSettings>;
   requestTypes: () => Promise<LinodeType[]>;
   requestRegions: () => Promise<Region[]>;
-  requestVolumes: () => Promise<Volume[]>;
   requestProfile: () => Promise<Profile>;
-  requestBuckets: () => Promise<ObjectStorageBucket[]>;
   requestClusters: () => Promise<ObjectStorageCluster[]>;
 }
 
@@ -173,9 +164,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   requestSettings: () => dispatch(requestAccountSettings()),
   requestTypes: () => dispatch(requestTypes()),
   requestRegions: () => dispatch(requestRegions()),
-  requestVolumes: () => dispatch(getAllVolumes()),
   requestProfile: () => dispatch(requestProfile()),
-  requestBuckets: () => dispatch(getAllBuckets()),
   requestClusters: () => dispatch(requestClusters())
 });
 
