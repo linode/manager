@@ -144,7 +144,7 @@ export const createInvoiceTotalsTable = (doc: JSPDF, invoice: Invoice) => {
       1: {
         cellWidth: 16,
         cellPadding: {
-          right: 2
+          right: 6
         }
       }
     },
