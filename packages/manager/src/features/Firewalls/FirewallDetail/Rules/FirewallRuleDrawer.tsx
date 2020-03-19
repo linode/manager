@@ -258,13 +258,11 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
   );
 
   const handleIPChange = React.useCallback(
-    (newIPs: ExtendedIP[]) => {
+    (_ips: ExtendedIP[]) => {
       if (!formTouched) {
         setFormTouched(true);
       }
-      setIPs(newIPs);
-
-      // @todo: maybe validate here
+      setIPs(_ips);
     },
     [formTouched, ips]
   );

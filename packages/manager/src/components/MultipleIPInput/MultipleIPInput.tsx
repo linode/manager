@@ -118,7 +118,6 @@ export const MultipleIPInput: React.FC<Props> = props => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 handleChange(e, idx)
               }
-              error={Boolean(thisIP.error)}
               errorText={thisIP.error}
               hideLabel
             />

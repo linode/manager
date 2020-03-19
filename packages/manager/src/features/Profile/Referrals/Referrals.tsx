@@ -65,7 +65,7 @@ class Referrals extends React.Component<CombinedProps, {}> {
               Referrals reward you when you refer people to Linode. If someone
               signs up using your referral code, you'll receive a credit of
               $20.00, so long as the person you referred remains an active
-              customer for 90 days.
+              customer for 90 days and spends a minimum of $15.
             </Typography>
           </Grid>
           {profileLoading ? (
@@ -128,9 +128,6 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose<CombinedProps, {}>(
-  styled,
-  connected
-);
+const enhanced = compose<CombinedProps, {}>(styled, connected);
 
 export default enhanced(Referrals);

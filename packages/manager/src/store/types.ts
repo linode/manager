@@ -58,7 +58,7 @@ export interface MappedEntityState<
 }
 
 // NOTE: These 2 interfaces are as of 2/26/2020 what we intend to consolidate around
-export interface MappedEntityState2<T extends Entity, E = APIError[]> {
+export interface MappedEntityState2<T extends Entity, E = EntityError> {
   error: E;
   lastUpdated: number;
   loading: boolean;
