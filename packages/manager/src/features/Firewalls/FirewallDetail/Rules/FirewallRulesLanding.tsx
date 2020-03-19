@@ -182,7 +182,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      <Prompt when={hasUnsavedChanges}>
+      <Prompt when={hasUnsavedChanges} confirmWhenLeaving={true}>
         {({ isModalOpen, handleCancel, handleConfirm }) => {
           return (
             <ConfirmationDialog
