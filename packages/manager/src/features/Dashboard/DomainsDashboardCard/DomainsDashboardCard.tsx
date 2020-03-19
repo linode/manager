@@ -207,7 +207,7 @@ const withUpdatingDomains = connect(
         mergeEvents(state.events.events),
         take(5),
         sortBy(prop('domain'))
-      )(domainState.data),
+      )(Object.values(domainState.itemsById)),
       loading: domainState.loading,
       domainCount: domainState.results || 0,
       error: domainState.error.read

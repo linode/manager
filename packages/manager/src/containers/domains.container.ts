@@ -41,14 +41,14 @@ export default <InnerStateProps extends {}, TOuter extends {}>(
           ownProps,
           state.__resources.domains.loading,
           state.__resources.domains.error,
-          state.__resources.domains.data
+          Object.values(state.__resources.domains.itemsById)
         );
       }
 
       return {
         domainsLoading: state.__resources.domains.loading,
         domainsError: state.__resources.domains.error,
-        domainsData: state.__resources.domains.data
+        domainsData: Object.values(state.__resources.domains.itemsById)
       };
     },
     (dispatch: ThunkDispatch) => ({

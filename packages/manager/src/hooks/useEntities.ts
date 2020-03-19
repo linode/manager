@@ -47,7 +47,7 @@ export const useEntities = () => {
    */
 
   const linodes = _linodes.entities ?? [];
-  const domains = _domains.data ?? [];
+  const domains = Object.values(_domains.itemsById) ?? [];
   const images = (Object.values(_images.data) ?? []).filter(
     thisImage => !thisImage.is_public
   );

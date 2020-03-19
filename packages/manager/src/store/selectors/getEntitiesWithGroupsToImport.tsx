@@ -49,7 +49,7 @@ export const extractProps = (entity: GroupedEntity) => ({
 const linodeSelector = (state: ApplicationState) =>
   state.__resources.linodes.entities;
 const domainSelector = (state: ApplicationState) =>
-  state.__resources.domains.data || [];
+  Object.values(state.__resources.domains.itemsById) || [];
 
 // Selector that returns Linodes and Domains that have a GROUP without
 // corresponding TAG.

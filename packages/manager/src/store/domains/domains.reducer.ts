@@ -1,129 +1,103 @@
 import { Domain } from 'linode-js-sdk/lib/domains';
 import { Reducer } from 'redux';
-import { RequestableDataWithEntityError } from 'src/store/types';
-import updateOrAdd from 'src/utilities/updateOrAdd';
+import {
+  EntityError,
+  MappedEntityState2 as MappedEntityState
+} from 'src/store/types';
 import { isType } from 'typescript-fsa';
+import {
+  addEntityRecord,
+  createDefaultState,
+  onCreateOrUpdate,
+  onDeleteSuccess,
+  onError,
+  onGetAllSuccess,
+  onGetPageSuccess,
+  onStart
+} from '../store.helpers.tmp';
 import {
   createDomainActions,
   deleteDomain,
   deleteDomainActions,
   getDomainsActions,
+  getDomainsPageActions,
   updateDomainActions,
   upsertDomain
 } from './domains.actions';
-import { entitiesFromPayload } from './domains.helpers';
 
 /**
  * State
  */
 
-export type State = RequestableDataWithEntityError<Domain[]>;
+export type State = MappedEntityState<Domain, EntityError>;
 
-export const defaultState: State = {
-  data: [],
-  loading: true,
-  lastUpdated: 0,
-  error: {}
-};
+export const defaultState: State = createDefaultState({}, {});
 
 /**
  * Reducer
  */
 const reducer: Reducer<State> = (state = defaultState, action) => {
   if (isType(action, getDomainsActions.started)) {
-    return {
-      ...state,
-      loading: true
-    };
+    return onStart(state);
   }
 
   if (isType(action, getDomainsActions.done)) {
     const { result } = action.payload;
-    return {
-      ...state,
-      data: entitiesFromPayload(result.data),
-      results: result.results,
-      lastUpdated: Date.now(),
-      loading: false
-    };
+    return onGetAllSuccess(result.data, state, result.results);
   }
 
   if (isType(action, getDomainsActions.failed)) {
     const { error } = action.payload;
-    return {
-      ...state,
-      error: {
+    return onError(
+      {
         read: error
       },
-      loading: false
-    };
+      state
+    );
   }
 
   if (isType(action, upsertDomain)) {
     const { payload } = action;
-    const updated = updateOrAdd(payload, state.data);
+    const updated = addEntityRecord(state.itemsById, payload);
 
     return {
       ...state,
-      data: updated,
-      results: updated.length
+      itemsById: updated,
+      results: Object.keys(updated).length
     };
   }
 
   if (isType(action, deleteDomain)) {
     const { payload } = action;
-    const { data } = state;
-
-    if (!data) {
-      return state;
-    }
-
-    const filteredData = data.filter(domain => domain.id !== payload);
-
-    return {
-      ...state,
-      data: filteredData,
-      results: filteredData.length
-    };
+    onDeleteSuccess(payload, state);
   }
 
   if (isType(action, createDomainActions.done)) {
     const { result } = action.payload;
-    const updated = updateOrAdd(result, state.data);
-
-    return {
-      ...state,
-      data: updated,
-      results: updated.length
-    };
+    return onCreateOrUpdate(result, state);
   }
 
   if (isType(action, updateDomainActions.done)) {
     const { result } = action.payload;
-    const updated = updateOrAdd(result, state.data);
-
-    return {
-      ...state,
-      data: updated,
-      results: updated.length
-    };
+    return onCreateOrUpdate(result, state);
   }
 
   if (isType(action, deleteDomainActions.done)) {
-    const { domainId } = action.payload.params;
-    const { data } = state;
+    onDeleteSuccess(action.payload.params.domainId, state);
+  }
 
-    if (!data) {
-      return state;
-    }
+  if (isType(action, getDomainsPageActions.started)) {
+    return state;
+  }
 
-    const filteredData = data.filter(domain => domain.id !== domainId);
+  if (isType(action, getDomainsPageActions.done)) {
+    const { result } = action.payload;
 
-    return {
-      ...state,
-      data: filteredData,
-      results: filteredData.length
-    };
+    return onGetPageSuccess(result.data, state, result.results);
+  }
+
+  if (isType(action, getDomainsPageActions.failed)) {
+    return state;
   }
 
   return state;
