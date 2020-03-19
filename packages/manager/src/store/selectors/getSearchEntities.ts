@@ -146,7 +146,7 @@ export default createSelector<
   nodebalSelector,
   typesSelector,
   (linodes, volumes, images, domains, nodebalancers, types) => {
-    const arrOfImages = Object.keys(images).map(eachKey => images[eachKey]);
+    const arrOfImages = Object.values(images);
     const searchableLinodes = linodes.map(linode =>
       formatLinode(linode, types, images)
     );

@@ -7,12 +7,13 @@ import {
   types,
   volumes
 } from 'src/__data__';
+import { apiResponseToMappedState } from 'src/store/store.helpers.tmp';
 import getSearchEntities from './getSearchEntities';
 
 describe('getSearchEntities selector', () => {
   const mockState: any = {
     linodes: { entities: linodes },
-    domains: { entities: domains },
+    domains: { itemsById: apiResponseToMappedState(domains) },
     images: { entities: images },
     types: { entities: types },
     volumes: {
