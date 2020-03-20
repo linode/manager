@@ -22,10 +22,7 @@ describe('TagsInput', () => {
 
   const { getByTestId, queryAllByTestId } = renderWithTheme(
     <TagsInput
-      value={['someTag', 'someOtherTag'].map(tag => ({
-        value: tag,
-        label: tag
-      }))}
+      value={'mockvalue' as any} // We're mocking this component so ignore the Props typing
       onChange={onChange}
     />
   );

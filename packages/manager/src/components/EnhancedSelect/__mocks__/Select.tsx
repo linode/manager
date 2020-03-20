@@ -26,7 +26,6 @@ export default ({ options, value, onChange, errorText, isMulti }: any) => {
   return (
     <>
       <select
-        multiple={isMulti}
         data-testid="select"
         value={value ?? ''}
         onBlur={handleChange}
