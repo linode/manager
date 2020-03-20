@@ -101,21 +101,29 @@ const NodeBalancersDashboardCard: React.FunctionComponent<CombinedProps> = props
     nodeBalancersError,
     nodeBalancersLastUpdated,
     nodeBalancersLoading,
+    nodeBalancersResults,
     nodeBalancersData
   } = props;
 
   React.useEffect(() => {
-    getNodeBalancerPage({ page_size: 25, page: 1 });
+    if (
+      nodeBalancersLastUpdated === 0 &&
+      nodeBalancersResults === 0 &&
+      !nodeBalancersLoading
+    ) {
+      // We don't have any data available and we aren't currently requesting it, so ask the API for what we need
+      getNodeBalancerPage({ page_size: 25, page: 1 });
+    }
   }, []);
 
   const data = take(5, nodeBalancersData);
 
   const renderAction = () =>
-    nodeBalancersData.length > 5 ? (
+    nodeBalancersResults > 5 ? (
       <ViewAllLink
         text="View All"
         link={'/nodebalancers'}
-        count={nodeBalancersData.length}
+        count={nodeBalancersResults}
       />
     ) : null;
 
@@ -213,7 +221,8 @@ const withNodeBalancers = NodeBalancerContainer(
     nodeBalancersData,
     nodeBalancersLoading,
     nodeBalancersLastUpdated,
-    nodeBalancersError
+    nodeBalancersError,
+    nodeBalancersResults
   })
 );
 const enhanced = compose<CombinedProps, {}>(
