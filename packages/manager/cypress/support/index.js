@@ -14,6 +14,12 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
+import chaiString from 'chai-string';
+
+// chai is a global exposed by Cypress which means
+// we can just simply extend it
+chai.use(chaiString);
+
 import './commands';
 import { deleteAllTestLinodes } from './api/linodes';
 import { deleteAllTestVolumes } from './api/volumes';

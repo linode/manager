@@ -1,4 +1,3 @@
-
 Cypress.Commands.add('login', () => {
   Cypress.on('uncaught:exception', (err, runnable) => {
     // returning false here prevents Cypress from
@@ -67,16 +66,10 @@ Cypress.Commands.add('login2', () => {
   cy.log(isoExpire);
   window.localStorage.setItem('authentication/expires', isoExpire);
 
-  window.localStorage.setItem(
-    'authentication/expire-datetime',
-    isoExpire
-  );
+  window.localStorage.setItem('authentication/expire-datetime', isoExpire);
   window.localStorage.setItem(
     'authentication/token',
     'Bearer ' + Cypress.env('oauthtoken')
   );
-  window.localStorage.setItem(
-    'authentication/expire',
-    isoExpire
-  );
+  window.localStorage.setItem('authentication/expire', isoExpire);
 });
