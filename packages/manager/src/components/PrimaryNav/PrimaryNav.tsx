@@ -230,7 +230,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
         icon: <Domain style={{ transform: 'scale(1.5)' }} />
       },
       {
-        display: 'One-Click Apps',
+        display: 'Marketplace',
         href: '/linodes/create?type=One-Click',
         key: 'one-click',
         attr: { 'data-qa-one-click-nav-btn': true },

@@ -372,7 +372,7 @@ export class LinodeCreate extends React.PureComponent<
           One-Click Apps{' '}
           <Chip
             color="primary"
-            label="beta"
+            
             style={{ marginLeft: 8, cursor: 'pointer' }}
           />
         </div>

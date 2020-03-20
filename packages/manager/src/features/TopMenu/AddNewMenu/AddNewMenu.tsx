@@ -144,7 +144,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
         ItemIcon: DomainIcon
       },
       {
-        title: 'One-Click App',
+        title: 'Marketplace',
         onClick: e => {
           sendOneClickNavigationEvent('Add New Menu');
           this.handleClose();
