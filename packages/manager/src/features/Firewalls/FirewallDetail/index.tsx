@@ -90,6 +90,7 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
       .updateFirewall({ firewallID: thisFirewall.id, label: newLabel })
       .catch(e => {
         setUpdateError(e[0].reason);
+        return Promise.reject(e);
       });
   };
 
