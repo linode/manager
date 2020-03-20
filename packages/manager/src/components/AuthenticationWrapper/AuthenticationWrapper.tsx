@@ -143,7 +143,7 @@ interface DispatchProps {
   requestAccount: () => Promise<Account>;
   requestDomains: () => Promise<Domain[]>;
   requestImages: () => Promise<Image[]>;
-  requestLinodes: () => Promise<GetAllData<Linode[]>>;
+  requestLinodes: () => Promise<GetAllData<Linode>>;
   requestNotifications: () => Promise<Notification[]>;
   requestSettings: () => Promise<AccountSettings>;
   requestTypes: () => Promise<LinodeType[]>;

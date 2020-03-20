@@ -82,13 +82,13 @@ export const useEntities = () => {
     },
     nodeBalancers: {
       data: nodeBalancers,
-      request: requestNodeBalancers,
+      request: () => requestNodeBalancers().then(response => response.data),
       lastUpdated: _nodeBalancers.lastUpdated,
       error: _nodeBalancers.error?.read
     },
     volumes: {
       data: volumes,
-      request: requestVolumes,
+      request: () => requestVolumes().then(response => response.data),
       lastUpdated: _volumes.lastUpdated,
       error: _volumes.error?.read
     }
