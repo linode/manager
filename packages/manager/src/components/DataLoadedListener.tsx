@@ -88,7 +88,6 @@ const shouldMarkAppAsDone = (
   if (
     pathname.match(/dashboard/i) &&
     linodesLoadedOrErrorExists &&
-    nodeBalancersLoadedOrErrorExists &&
     accountLoadedOrErrorExists &&
     profileLoadedOrErrorExists &&
     domainsLoadedOrErrorExists
