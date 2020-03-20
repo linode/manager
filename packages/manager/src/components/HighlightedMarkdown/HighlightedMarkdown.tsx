@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import hljs from 'highlight.js/lib/highlight';
 // Import languages as we need them to keep bundle size down
 import apache from 'highlight.js/lib/languages/apache';
@@ -5,10 +6,10 @@ import bash from 'highlight.js/lib/languages/bash';
 import javascript from 'highlight.js/lib/languages/javascript';
 import nginx from 'highlight.js/lib/languages/nginx';
 import yaml from 'highlight.js/lib/languages/yaml';
-import 'highlight.js/styles/an-old-hope.css';
+import 'highlight.js/styles/lightfair.css';
 import * as React from 'react';
 import { Converter } from 'showdown';
-
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import 'src/formatted-text.css';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
@@ -19,6 +20,14 @@ hljs.registerLanguage('bash', bash);
 hljs.registerLanguage('javascript', javascript);
 hljs.registerLanguage('nginx', nginx);
 hljs.registerLanguage('yaml', yaml);
+
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    '& .hljs': {
+      color: theme.color.offBlack
+    }
+  }
+}));
 
 export type SupportedLanguage =
   | 'plaintext'
@@ -34,6 +43,7 @@ export interface HighlightedMarkdownProps {
 }
 
 export const HighlightedMarkdown: React.FC<HighlightedMarkdownProps> = props => {
+  const classes = useStyles();
   const { language, textOrMarkdown } = props;
   const rootRef = React.useRef<HTMLDivElement>(null);
 
@@ -67,7 +77,10 @@ export const HighlightedMarkdown: React.FC<HighlightedMarkdownProps> = props => 
 
   return (
     <Typography
-      className="formatted-text"
+      className={classNames({
+        [classes.root]: true,
+        'formatted-text': true
+      })}
       ref={rootRef}
       dangerouslySetInnerHTML={{
         __html: sanitizedHtml
