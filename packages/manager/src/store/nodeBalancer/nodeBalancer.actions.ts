@@ -17,7 +17,7 @@ type Entity = NodeBalancer;
 
 export const getAllNodeBalancersActions = actionCreator.async<
   void,
-  GetAllData<NodeBalancer[]>,
+  GetAllData<NodeBalancer>,
   APIError[]
 >(`get-all`);
 
