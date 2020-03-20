@@ -19,7 +19,7 @@ import {
   createPaymentsTotalsTable
 } from './utils';
 
-const leftMargin = 15; // space that needs to be applied to every parent element
+const leftMargin = 30; // space that needs to be applied to every parent element
 const baseFont = 'helvetica';
 
 const addLeftHeader = (
@@ -201,7 +201,6 @@ export const printInvoice = (
       }
     });
 
-    doc.addPage();
     createInvoiceTotalsTable(doc, invoice);
     createFooter(doc, baseFont);
 

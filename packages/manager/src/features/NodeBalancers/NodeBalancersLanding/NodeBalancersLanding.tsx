@@ -390,13 +390,13 @@ export const enhanced = compose<CombinedProps, {}>(
     const { nodeBalancers } = __resources;
     const {
       error,
-      items,
+      results,
       loading: nodeBalancersLoading,
       lastUpdated
     } = nodeBalancers;
 
     return {
-      nodeBalancersCount: items.length,
+      nodeBalancersCount: results,
       nodeBalancersData: nodeBalancersWithConfigs(__resources),
       nodeBalancersError: path(['read'], error),
       // In this component we only want to show loading state on initial load

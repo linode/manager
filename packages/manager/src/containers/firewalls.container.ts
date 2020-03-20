@@ -23,10 +23,7 @@ import { ThunkDispatch } from 'src/store/types';
 import { GetAllData } from 'src/utilities/getAll';
 
 export interface DispatchProps {
-  getFirewalls: (
-    params?: any,
-    filters?: any
-  ) => Promise<GetAllData<Firewall[]>>;
+  getFirewalls: (params?: any, filters?: any) => Promise<GetAllData<Firewall>>;
   createFirewall: (payload: CreateFirewallPayload) => Promise<Firewall>;
   deleteFirewall: (firewallID: number) => Promise<{}>;
   disableFirewall: (firewallID: number) => Promise<Firewall>;
