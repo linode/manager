@@ -98,7 +98,7 @@
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
     "storybook": "yarn run start-storybook -p 6006 --ci",
     "storybook-static": "build-storybook -c .storybook -o .out",
-    "storybook:e2e": "yarn run wdio ./e2e/config/wdio.storybook.conf.js",
+    "storybook:e2e": "yarn run wait-on http://localhost:6006 && yarn run wdio ./e2e/config/wdio.storybook.conf.js",
     "storyshots": "docker-compose -f storyshots.yml up --build --exit-code-from manager-storyshots && docker-compose -f storyshots.yml down -v",
     "storyshots:update": "export UPDATE=-u && docker-compose -f storyshots.yml up --build --exit-code-from manager-storyshots && unset UPDATE && docker-compose -f storyshots.yml down -v",
     "storyshots:test": "npx jest --config ./.storybook/storyshots.jest.config.js src/components/Storyshots.test.tsx --env=jsdom",
