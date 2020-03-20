@@ -29,6 +29,22 @@ export const pages = [
       {
         name: 'Tab',
         go: () => goToByTabText(routes.createLinode, 'One-Click')
+      },
+      {
+        name: 'Create Button',
+        go: () => {
+          cy.visit('/');
+          //   cy.get
+          cy.get('[data-qa-add-new-menu-button="true"]').click();
+          cy.get('[data-qa-one-click-add-new="true"').click();
+        }
+      },
+      {
+        name: 'Nav',
+        go: () => {
+          cy.visit('/');
+          cy.get('[data-qa-one-click-nav-btn="true"]').click();
+        }
       }
     ]
   },
