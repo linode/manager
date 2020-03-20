@@ -11,9 +11,6 @@ interface Props {
   profileLoadedOrErrorExists: boolean;
   accountLoadedOrErrorExists: boolean;
   linodesLoadedOrErrorExists: boolean;
-  volumesLoadedOrErrorExists: boolean;
-  nodeBalancersLoadedOrErrorExists: boolean;
-  bucketsLoadedOrErrorExists: boolean;
   domainsLoadedOrErrorExists: boolean;
   accountSettingsLoadedOrErrorExists: boolean;
   markAppAsLoaded: () => void;
