@@ -11,24 +11,22 @@ There is one yarn lock in this repo at the root level, this is like `package-loc
 
 **This file is committed** it ensures we use the same exact version of the packages in CI.
 
-**DO NOT USE `yarn`** to install dependencies, this will modify the `yarn.lock`.
-=> Use `yarn install:all`, which includes the `--frozen-lockfile` flag to prevent unnecessary changes to yarn.lock.
+**DO NOT USE `yarn`** to install dependencies, as this will modify the `yarn.lock`.
+=> Use `yarn install:all`, which includes the `--frozen-lockfile` flag to prevent unnecessary changes to `yarn.lock`.
 
 **We use Workspaces** as explained in our [GETTING STARTED](./GETTING_STARTED.md) guide.
 
 #### Change a dependency version, and the `yarn.lock`
 
-The best way is usually to modify manually the `package.json` in the correct workspace (root, linode-manager or linode-js-sdk).
-Then runing `yarn`.
-this should update the lockfile with only the required changes.
+The best way is usually to manually modify the `package.json` in the correct workspace (root, linode-manager or linode-js-sdk),
+then run `yarn`. This should update the lockfile with only the required changes.
 
-Although if `yarn` noticed other dependency it could fix warnings on it will do it implicitly.
-While this is a good behavior from yarn, we want to keep the diff on a PR as focused and short as possible to facilitate review.
-So consider that if you have a lot of changes in your `yarn.lock` you may want to separate things in different PR.
+If the resulting changes to `yarn.lock` are extensive (which can be the case if Yarn detects that it can resolve warnings in
+subdependencies), consider pushing a separate PR with these changes so that individual PRs are kept small and manageable.
 
 **If you see that 1 new dependency you added included a lot of subdependencies, with older versions of the dependencies we already have, check that the new package is not outdated**
 
-### running commands
+### Running Commands
 
 #### In general
 
