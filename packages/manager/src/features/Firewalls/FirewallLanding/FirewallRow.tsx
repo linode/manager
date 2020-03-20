@@ -3,6 +3,7 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
+import Typography from 'src/components/core/Typography';
 import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
@@ -54,7 +55,9 @@ export const FirewallRow: React.FC<CombinedProps> = props => {
           <Grid item className="py0">
             <EntityIcon variant="firewall" status={firewallStatus} />
           </Grid>
-          <Grid item>{firewallLabel}</Grid>
+          <Grid item>
+            <Typography variant="h3">{firewallLabel}</Typography>
+          </Grid>
         </Grid>
       </TableCell>
       <TableCell>{firewallStatus}</TableCell>
