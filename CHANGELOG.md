@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   - Add icon to table rows
 
 ### Changed:
+- Change StackScripts “Active Deploys” to “Total Deploys”
 - Update customer referral criteria text
 - Improve syntax highlighting
 - Include LKE clusters in Support tickets dropdown
