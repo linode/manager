@@ -49,7 +49,7 @@ export type ReduxEntity =
 
 type RequestMap = Record<ReduxEntity, any>;
 const requestMap: RequestMap = {
-  linodes: requestLinodes,
+  linodes: () => requestLinodes({}),
   volumes: getAllVolumes,
   account: requestAccount,
   accountSettings: requestAccountSettings,
