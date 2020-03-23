@@ -46,8 +46,7 @@ export const parseFirewallRuleError = (
     reason,
     category,
     idx: +idx,
-    formField,
-    ip: undefined
+    formField
   };
 
   if (ipType && ipIdx) {

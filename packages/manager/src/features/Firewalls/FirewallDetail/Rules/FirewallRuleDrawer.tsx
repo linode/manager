@@ -316,6 +316,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
         options={protocolOptions}
         onChange={handleProtocolChange}
         onBlur={handleBlur}
+        isClearable={false}
       />
       <TextField
         label="Port Range"
