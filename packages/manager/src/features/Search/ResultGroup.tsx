@@ -88,7 +88,6 @@ export const ResultGroup: React.StatelessComponent<CombinedProps> = props => {
         <Table aria-label="Search Results">
           <TableHead>
             <TableRow>
-              <TableCell className={classes.emptyCell} />
               <Hidden smDown>
                 <TableCell className={classes.emptyCell} />
               </Hidden>
@@ -139,9 +138,6 @@ const handlers = withStateHandlers(
   }
 );
 
-const enhanced = compose<CombinedProps, Props>(
-  styled,
-  handlers
-)(ResultGroup);
+const enhanced = compose<CombinedProps, Props>(styled, handlers)(ResultGroup);
 
 export default enhanced;
