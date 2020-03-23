@@ -115,7 +115,6 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
       sortOrder: 'asc',
       currentFilterType: null,
       currentFilter: {
-        ['+order_by']: 'deployments_active',
         ['+order']: 'desc'
       },
       currentSearchFilter: {},
