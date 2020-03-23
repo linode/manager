@@ -107,6 +107,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
 
     state: State = {
       currentPage: 1,
+      currentFilter: {},
       loading: true,
       gettingMoreStackScripts: false,
       listOfStackScripts: [],

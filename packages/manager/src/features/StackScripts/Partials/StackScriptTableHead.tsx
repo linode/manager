@@ -130,16 +130,15 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
             StackScript
           </Cell>
           {!isSelecting && (
-            <Cell
+            <TableCell
               className={classNames({
                 [classes.tableHead]: true,
                 [classes.deploys]: true
               })}
               data-qa-stackscript-active-deploy-header
-              {...maybeAddSortingProps('deploys')}
             >
               Active Deploys
-            </Cell>
+            </TableCell>
           )}
           {!isSelecting && (
             <Cell
