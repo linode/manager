@@ -9,6 +9,7 @@ import Select, { GroupType, Item } from 'src/components/EnhancedSelect';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import { BaseSelectProps } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
+import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { arePropsEqual } from 'src/utilities/arePropsEqual';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import { distroIcons } from './icons';
@@ -123,6 +124,8 @@ export const ImageSelect: React.FC<Props> = props => {
   } = props;
   const classes = useStyles();
 
+  const { _loading } = useReduxLoad(['images']);
+
   const filteredImages = images.filter(thisImage => {
     switch (variant) {
       case 'public':
@@ -158,6 +161,7 @@ export const ImageSelect: React.FC<Props> = props => {
                 <Select
                   disabled={disabled}
                   label="Images"
+                  isLoading={_loading}
                   placeholder="Choose an image"
                   options={options}
                   onChange={onChange}
