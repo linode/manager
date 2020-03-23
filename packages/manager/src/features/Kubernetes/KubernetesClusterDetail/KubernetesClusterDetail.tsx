@@ -111,6 +111,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
   );
   const [endpointLoading, setEndpointLoading] = React.useState<boolean>(false);
 
+  const [updateError, setUpdateError] = React.useState<string | undefined>();
+
   React.useEffect(() => {
     const clusterID = +props.match.params.clusterID;
     if (clusterID) {
@@ -163,12 +165,19 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
     return null;
   }
 
-  const handleLabelChange = async (newLabel: string) => {
-    props.updateCluster({ clusterID: cluster.id, label: newLabel });
-    return cluster.label;
+  const handleLabelChange = (newLabel: string) => {
+    setUpdateError(undefined);
+
+    return props
+      .updateCluster({ clusterID: cluster.id, label: newLabel })
+      .catch(e => {
+        setUpdateError(e[0].reason);
+        return Promise.reject(e);
+      });
   };
 
   const resetEditableLabel = () => {
+    setUpdateError(undefined);
     return cluster.label;
   };
 
@@ -187,7 +196,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
             onEditHandlers={{
               editableTextTitle: cluster.label,
               onEdit: handleLabelChange,
-              onCancel: resetEditableLabel
+              onCancel: resetEditableLabel,
+              errorText: updateError
             }}
             firstAndLastOnly
             pathname={location.pathname}
