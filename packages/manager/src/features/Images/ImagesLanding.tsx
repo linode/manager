@@ -99,11 +99,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
   };
 
   componentDidMount() {
-    if (
-      this.props.imagesData.length === 0 &&
-      this.props.imagesLastUpdated === 0 &&
-      !this.props.imagesLoading
-    ) {
+    if (this.props.imagesLastUpdated === 0 && !this.props.imagesLoading) {
       this.props.requestImages();
     }
   }
