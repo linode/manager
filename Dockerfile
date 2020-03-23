@@ -4,6 +4,7 @@ FROM node:10-alpine
 #
 # See https://github.com/nodejs/docker-node/blob/d094c98a48659ff9f8d59db8dafb7020e181446a/docs/BestPractices.md
 # and https://github.com/nodejs/docker-node/issues/1
+RUN apk --no-cache add git
 WORKDIR /home/node/app
 RUN chown -R node:node /home/node/app
 USER node
