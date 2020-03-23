@@ -18,7 +18,7 @@ export interface Props {
   label: string;
   description: string;
   images: string[];
-  deploymentsActive: number;
+  deploymentsTotal: number;
   updated: string;
   stackScriptID: number;
   stackScriptUsername: string;
@@ -43,7 +43,7 @@ export class StackScriptRow extends React.Component<CombinedProps, {}> {
       label,
       description,
       images,
-      deploymentsActive,
+      deploymentsTotal,
       updated,
       stackScriptID,
       stackScriptUsername,
@@ -62,9 +62,7 @@ export class StackScriptRow extends React.Component<CombinedProps, {}> {
             <Typography variant="h3" className={classes.libTitle}>
               {stackScriptUsername && (
                 <span
-                  className={`${classes.libRadioLabel} ${
-                    classes.stackScriptUsername
-                  }`}
+                  className={`${classes.libRadioLabel} ${classes.stackScriptUsername}`}
                 >
                   {stackScriptUsername} /&nbsp;
                 </span>
@@ -87,9 +85,9 @@ export class StackScriptRow extends React.Component<CombinedProps, {}> {
           <TableCell data-qa-stackscript-title parentColumn="StackScript">
             {renderLabel()}
           </TableCell>
-          <TableCell parentColumn="Active Deploys">
+          <TableCell parentColumn="Total Deploys">
             <Typography data-qa-stackscript-deploys>
-              {deploymentsActive}
+              {deploymentsTotal}
             </Typography>
           </TableCell>
           <TableCell parentColumn="Last Revision">
