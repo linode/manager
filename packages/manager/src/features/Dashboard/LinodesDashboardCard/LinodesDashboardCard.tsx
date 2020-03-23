@@ -142,8 +142,6 @@ const LinodesDashboardCard: React.FC<CombinedProps> = props => {
   const renderEmpty = () => <TableRowEmptyState colSpan={3} />;
 
   const renderData = (data: ExtendedLinode[]) => {
-    const { classes } = props;
-
     return data.map(linode => {
       const { id, label, region } = linode;
       return (
