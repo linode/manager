@@ -114,9 +114,6 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
       getMoreStackScriptsFailed: false,
       sortOrder: 'asc',
       currentFilterType: null,
-      currentFilter: {
-        ['+order']: 'desc'
-      },
       currentSearchFilter: {},
       isSorting: false,
       error: undefined,
