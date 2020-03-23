@@ -138,7 +138,7 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
               data-qa-stackscript-active-deploy-header
               {...maybeAddSortingProps('deploys')}
             >
-              Active Deploys
+              Total Deploys
             </Cell>
           )}
           {!isSelecting && (

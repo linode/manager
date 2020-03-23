@@ -77,7 +77,7 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = props => {
       description={truncateText(s.description, 100)}
       isPublic={s.is_public}
       images={stripImageName(s.images)}
-      deploymentsActive={s.deployments_active}
+      deploymentsTotal={s.deployments_total}
       updated={formatDate(s.updated, false)}
       stackScriptID={s.id}
       triggerDelete={triggerDelete}
@@ -128,9 +128,6 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose<CombinedProps, Props>(
-  connected,
-  styled
-);
+const enhanced = compose<CombinedProps, Props>(connected, styled);
 
 export default enhanced(StackScriptsSection);
