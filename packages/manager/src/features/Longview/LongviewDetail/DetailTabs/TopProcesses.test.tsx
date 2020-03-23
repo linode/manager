@@ -15,7 +15,7 @@ const props: Props = {
 describe('Top Processes', () => {
   describe('TopProcesses Component', () => {
     beforeEach(() => {
-      jest.resetAllMocks();
+      jest.clearAllMocks();
     });
 
     it('renders the title', () => {

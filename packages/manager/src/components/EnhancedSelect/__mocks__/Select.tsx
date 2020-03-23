@@ -36,6 +36,7 @@ export default ({ options, value, onChange, errorText, isMulti }: any) => {
             key={thisOption.value ?? ''}
             value={thisOption.value ?? ''}
             aria-selected={thisOption.value === value}
+            data-testid={`mock-option`}
           >
             {thisOption.label}
           </option>

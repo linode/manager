@@ -16,6 +16,7 @@ import {
 afterEach(cleanup);
 
 jest.mock('../request');
+jest.mock('./LongviewClientRow');
 
 const clients = longviewClientFactory.buildList(5);
 

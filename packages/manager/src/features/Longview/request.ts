@@ -151,25 +151,3 @@ export const getTopProcesses = curry((token: string, options?: Options) => {
 });
 
 export default get;
-
-/*
- * getTopProcesses
- * lastUpdated
- * batch
- *  - api
- * getValues and getLatestValue
- *  - keys:
- *    - SysInfo.(os.distSysInfo|client)
- *    - Processes.*.(cpu|ioreadkbytes|iowritekbytes)
- *    - Disk.*.(reads|writes|read_bytes|write_bytes)
- *    - CPU.*.(wait|system|user)
- *    - Network.Linode.v[46].(rx|tx|ip6_rx|ip6_tx)(_private)_bytes
- *    - Network.Interface.*.(tx_bytes|rx_bytes)
- *    - Applications.{application}.status
- *    - Applications.{application}.status_message
- *    - Applications.Apache.Total
- *    - Applications.Nginx.(accepted_cons|handled_cons|requests)
- *    - Applications.MySQL.(Com|Slow_queries|Bytes|Connections|Max_used|Aborted|
- *    -                     Qcache_hits|Qcache_inserts)
- *    - Packages (?)
- **/

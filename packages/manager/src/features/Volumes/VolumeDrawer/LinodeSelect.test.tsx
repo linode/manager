@@ -4,6 +4,14 @@ import { regions } from 'src/__data__/regionsData';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { LinodeSelect } from './LinodeSelect';
 
+const requests = require.requireMock('linode-js-sdk/lib/linodes');
+
+jest.mock('linode-js-sdk/lib/linodes', () => ({
+  getLinodes: () => jest.fn()
+}));
+
+requests.getLinodes = jest.fn().mockResolvedValue([]);
+
 const linodes: Item[] = [
   {
     label: 'test-linode-001',

@@ -1,43 +1,42 @@
-import { shallow } from 'enzyme';
-import { baseRequest } from 'linode-js-sdk/lib/request';
+import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
+import { renderWithTheme } from 'src/utilities/testHelpers';
 import TagsInput from './TagsInput';
 
-import MockAdapter from 'axios-mock-adapter';
+const request = require.requireMock('linode-js-sdk/lib/tags');
 
-const mockApi = new MockAdapter(baseRequest);
+jest.mock('linode-js-sdk/lib/tags', () => ({
+  getTags: jest.fn()
+}));
+jest.mock('src/components/EnhancedSelect/Select');
 
 const mockTags = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'];
 
-mockApi.onGet('/tags').reply(200, {
-  data: mockTags.map(tag => ({ label: tag }))
-});
+request.getTags = jest
+  .fn()
+  .mockResolvedValue({ data: mockTags.map(tag => ({ label: tag })) });
 
 describe('TagsInput', () => {
   const onChange = jest.fn();
 
-  const component = shallow(
+  const { getByTestId, queryAllByTestId } = renderWithTheme(
     <TagsInput
-      value={['someTag', 'someOtherTag'].map(tag => ({
-        value: tag,
-        label: tag
-      }))}
+      value={'mockvalue' as any} // We're mocking this component so ignore the Props typing
       onChange={onChange}
     />
   );
 
   it('sets account tags based on API request', () => {
-    expect(component.state('accountTags')).toHaveLength(mockTags.length);
+    fireEvent.click(getByTestId('select'));
+    expect(queryAllByTestId('mock-option')).toHaveLength(mockTags.length);
+    expect(request.getTags).toHaveBeenCalledTimes(1);
   });
 
   it('calls onChange handler when the value is updated', () => {
-    const newValue = ['someTag', 'anotherTag', 'onMoreTag'].map(tag => ({
-      value: tag,
-      label: tag
-    }));
-
-    component.simulate('change', newValue);
-    expect(onChange).toHaveBeenCalledWith(newValue);
+    fireEvent.change(getByTestId('select'), {
+      target: { value: 'tag2' }
+    });
+    expect(onChange).toHaveBeenCalledWith([{ label: 'tag2', value: 'tag2' }]);
   });
 });
