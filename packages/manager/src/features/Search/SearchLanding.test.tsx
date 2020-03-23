@@ -1,9 +1,3 @@
-/*
- * IMPORTANT NOTE:
- * These tests have been skipped for now to address a cyclic dependency issue. Once services/linodes and
- * services/domains no longer require src/store, we should restore these tests.
- */
-
 import { cleanup, render } from '@testing-library/react';
 import { assocPath } from 'ramda';
 import * as React from 'react';
@@ -38,7 +32,6 @@ const propsWithResults: Props = {
   searchResultsByEntity: { ...emptyResults, linodes: [searchbarResult1] }
 };
 
-jest.mock('linode-js-sdk');
 jest.mock('src/hooks/useReduxLoad', () => ({
   useReduxLoad: () => jest.fn().mockReturnValue({ _loading: false })
 }));
@@ -63,7 +56,7 @@ describe('Component', () => {
   });
 
   it('should search when the entity list (from Redux) changes', () => {
-    jest.resetAllMocks();
+    jest.clearAllMocks();
     const { rerender } = render(wrapWithTheme(<SearchLanding {...props} />));
     expect(props.search).toHaveBeenCalledTimes(1);
 
