@@ -9,7 +9,6 @@ import {
 } from './common';
 const testLinodeTag = testTag;
 export const makeLinodeLabel = makeTestLabel;
-const isTestLinode = isTestEntity;
 
 const makeLinodeCreateReq = linode => {
   const linodeData = linode
@@ -63,7 +62,7 @@ export const deleteLinodeByLabel = (label = undefined) => {
 export const deleteAllTestLinodes = () => {
   getLinodes().then(resp => {
     resp.body.data.forEach(linode => {
-      if (isTestLinode) deleteLinodeById(linode.id);
+      if (isTestEntity(linode)) deleteLinodeById(linode.id);
     });
   });
 };
