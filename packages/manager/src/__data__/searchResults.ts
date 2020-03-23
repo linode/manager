@@ -33,6 +33,7 @@ export const docs_result = {
 export const searchbarResult1 = {
   label: 'result1',
   value: '111111',
+  entityType: 'linode' as any,
   data: {
     icon: 'LinodeIcon',
     tags: [],
