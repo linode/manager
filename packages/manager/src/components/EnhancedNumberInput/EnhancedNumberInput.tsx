@@ -1,8 +1,9 @@
 import * as classnames from 'classnames';
 import * as React from 'react';
+import Minus from 'src/assets/icons/minusSign.svg';
+import Plus from 'src/assets/icons/plusSign.svg';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import { TextFieldProps } from 'src/components/core/TextField';
 import TextField from 'src/components/TextField';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -36,6 +37,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       '-moz-appearance': 'textfield'
     }
   },
+  plusIcon: {
+    width: 17
+  },
+  minusIcon: {
+    width: 14
+  },
   inputGroup: {
     display: 'flex',
     position: 'relative'
@@ -51,56 +58,59 @@ const useStyles = makeStyles((theme: Theme) => ({
       minWidth: 40,
       height: 30,
       minHeight: 30
+    },
+    '& $plusIcon': {
+      width: 14
+    },
+    '& $minusIcon': {
+      width: 14
     }
   }
 }));
 
 interface Props {
-  // onEdit: () => void;
-  // openForEdit: () => void;
-  // cancelEdit: () => void;
-  // onInputChange: (text: string) => void;
-  // text: string;
+  inputLabel?: string;
   small?: boolean;
-  // typeVariant: EditableTextVariant;
-  // className?: string;
-  // inputText: string;
-  // isEditing: boolean;
-  // loading: boolean;
+  inputValue: number;
+  disabled?: boolean;
 }
 
-type PassThroughProps = Props & TextFieldProps;
-
-type FinalProps = PassThroughProps;
+type FinalProps = Props;
 
 export const EnhancedNumberInput: React.FC<FinalProps> = props => {
+  // const [inputValue, setInputValue] = React.useState(props.inputValue);
+  const [inputValue, setInputValue] = React.useState(0);
+  const [isDisabled, setIsDisabled] = React.useState(Boolean(props.disabled));
+
   const {
     small,
-    // onEdit,
-    // openForEdit,
-    // cancelEdit,
-    // isEditing,
-    // onInputChange,
-    // text,
-    // typeVariant,
-    // className,
-    // inputText,
-    // loading,
+    inputLabel,
+    inputValue: propInputValue,
+    disabled: propIsDisabled,
     ...rest
   } = props;
 
-  /** confirm or cancel edits if the enter or escape keys are pressed, respectively */
-  // const handleKeyPress = (e: React.KeyboardEvent) => {
-  //   if (e.key === 'Enter') {
-  //     onEdit();
-  //   }
-  //   if (e.key === 'Escape' || e.key === 'Esc') {
-  //     cancelEdit();
-  //   }
-  // };
+  React.useEffect(() => {
+    inputValue !== 0 ? setIsDisabled(false) : setIsDisabled(true);
+  }, [inputValue]);
+
+  React.useEffect(() => {
+    setInputValue(inputValue);
+  }, [inputValue]);
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(parseInt(e.target.value, 10));
+  };
+
+  const incrementValue = () => setInputValue(inputValue + 1);
+
+  const decrementValue = () => {
+    if (inputValue > 0) {
+      setInputValue(inputValue - 1);
+    }
+  };
 
   const classes = useStyles();
-
   return (
     <React.Fragment>
       <div
@@ -111,34 +121,27 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
       >
         <Button
           buttonType="primary"
-          value="-"
           className={classes.button}
           data-qa-button="primary"
           compact
           aria-label="Subtract 1"
+          name="Subtract 1"
+          onClick={decrementValue}
+          disabled={isDisabled}
         >
-          -
+          <Minus className={classes.minusIcon} />
         </Button>
-        {/* <input
-          type="number"
-          step="1"
-          max=""
-          value="1"
-          name="quantity"
-          className={classes.input}
-        /> */}
         <TextField
           {...rest}
           className={classes.textField}
           type="number"
-          label="Edit Quantity"
+          min={0}
+          label={inputLabel ? inputLabel : 'Edit Quantity'}
+          name="Quantity"
           hideLabel
           small={small}
-          // onChange={(e: any) => onInputChange(e.target.value)}
-          // onKeyDown={handleKeyPress}
-          // value={inputText}
-          // errorText={errorText}
-          // InputProps={{ className: classes.inputRoot }}
+          value={inputValue}
+          onChange={onChange}
           inputProps={{
             className: classnames({
               [classes.input]: true
@@ -148,13 +151,14 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
         />
         <Button
           buttonType="primary"
-          value="+"
           compact
           className={classes.button}
           data-qa-button="primary"
           aria-label="Add 1"
+          name="Add 1"
+          onClick={incrementValue}
         >
-          +
+          <Plus className={classes.plusIcon} />
         </Button>
       </div>
     </React.Fragment>

@@ -8,14 +8,14 @@ storiesOf('EnhancedNumberInput', module)
   .add('Default', () => {
     return (
       <Grid container style={{ padding: '2em' }}>
-        <EnhancedNumberInput />
+        <EnhancedNumberInput inputValue={0} />
       </Grid>
     );
   })
   .add('Small Variant', () => {
     return (
       <Grid container style={{ padding: '2em' }}>
-        <EnhancedNumberInput small />
+        <EnhancedNumberInput inputValue={0} small />
       </Grid>
     );
   });
