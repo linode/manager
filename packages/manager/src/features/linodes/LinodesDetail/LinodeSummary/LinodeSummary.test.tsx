@@ -4,6 +4,10 @@ import { linodes } from 'src/__data__/linodes';
 import { light } from 'src/themes';
 import { LinodeSummary } from './LinodeSummary';
 
+const request = require.requireMock('linode-js-sdk/lib/linodes');
+jest.mock('linode-js-sdk/lib/linodes');
+request.getLinodeStats = jest.fn().mockResolvedValue([]);
+
 describe('LinodeSummary', () => {
   const wrapper = shallow(
     <LinodeSummary
