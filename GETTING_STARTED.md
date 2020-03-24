@@ -24,7 +24,7 @@ If your intention is to start a development server for all projects, you have a 
 To start all projects run `yarn up`.
 
 You can also use Docker without building any image:
-`docker run --rm -v $(pwd):/usr/src/ -w /usr/src/ -p 3000:3000 node:10-alpine yarn up`
+`docker run --rm -v $(pwd):/usr/src/ -w /usr/src/ -p 3000:3000 node:10-slim yarn up`
 
 ## Testing
 See [this document](./TESTING.md)
