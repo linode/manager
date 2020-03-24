@@ -4,7 +4,9 @@ import { entitiesWithGroupsToImport } from './getEntitiesWithGroupsToImport';
 
 const state = {
   __resources: {
-    linodes: { entities: linodes },
+    linodes: {
+      itemsById: linodes.reduce((result, c) => ({ ...result, [c.id]: c }), {})
+    },
     domains: { data: domains }
   }
 };
@@ -73,7 +75,7 @@ describe('Entities that have groups to import', () => {
 
       const newState = {
         __resources: {
-          linodes: { entities: linodes },
+          linodes: { ...state.__resources.linodes },
           domains: { entities: [domain] }
         }
       };

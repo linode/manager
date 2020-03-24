@@ -38,13 +38,21 @@ describe('getSearchEntities selector', () => {
   });
   it('should recompute objects if the list of entities changes.', () => {
     getSearchEntities.resetRecomputations();
-    getSearchEntities({ ...mockState, linodes: { entities: [] } });
+    getSearchEntities({ ...mockState, linodes: { itemsById: {} } });
     expect(getSearchEntities.recomputations()).toEqual(1);
   });
   it('should recompute if an entry in entities is updated', () => {
     getSearchEntities.resetRecomputations();
     const updatedLinodes = assocPath([0, 'label'], 'newlabel', linodes);
-    getSearchEntities({ ...mockState, linodes: { entities: updatedLinodes } });
+    getSearchEntities({
+      ...mockState,
+      linodes: {
+        itemsById: updatedLinodes.reduce(
+          (result, c) => ({ ...result, [c.id]: c }),
+          {}
+        )
+      }
+    });
     expect(getSearchEntities.recomputations()).toEqual(1);
   });
 });
