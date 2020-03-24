@@ -11,7 +11,6 @@ interface Props {
   profileLoadedOrErrorExists: boolean;
   accountLoadedOrErrorExists: boolean;
   linodesLoadedOrErrorExists: boolean;
-  domainsLoadedOrErrorExists: boolean;
   accountSettingsLoadedOrErrorExists: boolean;
   markAppAsLoaded: () => void;
   appIsLoaded: boolean;
@@ -25,7 +24,6 @@ const DataLoadedListener: React.FC<Props> = props => {
         props.profileLoadedOrErrorExists,
         props.accountLoadedOrErrorExists,
         props.linodesLoadedOrErrorExists,
-        props.domainsLoadedOrErrorExists,
         props.accountSettingsLoadedOrErrorExists,
         props.flagsHaveLoaded
       ) &&
@@ -44,7 +42,6 @@ const shouldMarkAppAsDone = (
   profileLoadedOrErrorExists: boolean,
   accountLoadedOrErrorExists: boolean,
   linodesLoadedOrErrorExists: boolean,
-  domainsLoadedOrErrorExists: boolean,
   accountSettingsLoadedOrErrorExists: boolean,
   flagsHaveLoaded: boolean
 ): boolean => {
@@ -80,9 +77,7 @@ const shouldMarkAppAsDone = (
     pathname.match(/dashboard/i) &&
     linodesLoadedOrErrorExists &&
     accountLoadedOrErrorExists &&
-    profileLoadedOrErrorExists &&
-    domainsLoadedOrErrorExists
-    /** not checking bucket data here for now */
+    profileLoadedOrErrorExists
   ) {
     return true;
   }
@@ -99,8 +94,8 @@ const shouldMarkAppAsDone = (
     return true;
   }
 
-  if (pathname.match(/domain/i) && !!domainsLoadedOrErrorExists) {
-    return true; // This doesn't do anything as there's no action to request Domains
+  if (pathname.match(/domain/i)) {
+    return true;
   }
 
   // Object Storage endpoints will typically be a bit slower, so for these

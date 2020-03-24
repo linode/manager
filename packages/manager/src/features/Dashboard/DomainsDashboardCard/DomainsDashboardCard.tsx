@@ -24,6 +24,7 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import ViewAllLink from 'src/components/ViewAllLink';
+import { REFRESH_INTERVAL } from 'src/constants';
 import withDomains, {
   DomainActionsProps
 } from 'src/containers/domains.container';
@@ -90,7 +91,9 @@ type CombinedProps = Props &
 
 const DomainsDashboardCard: React.FC<CombinedProps> = props => {
   React.useEffect(() => {
-    props.getDomainsPage({ page: 1, page_size: 25 });
+    if (Date.now() - props.lastUpdated > REFRESH_INTERVAL) {
+      props.getDomainsPage({ page: 1, page_size: 25 });
+    }
   }, []);
 
   const renderAction = () =>
@@ -195,6 +198,7 @@ interface WithUpdatingDomainsProps {
   domains: Domain[];
   domainCount: number;
   loading: boolean;
+  lastUpdated: number;
   error?: APIError[];
 }
 
@@ -204,7 +208,8 @@ const withUpdatingDomains = withDomains<WithUpdatingDomainsProps, EventsProps>(
     domainsData,
     domainsLoading,
     domainsError,
-    domainsResults
+    domainsResults,
+    domainLastUpdated
   ): WithUpdatingDomainsProps => {
     return {
       domains: compose(
@@ -214,7 +219,8 @@ const withUpdatingDomains = withDomains<WithUpdatingDomainsProps, EventsProps>(
       )(domainsData),
       loading: domainsLoading,
       domainCount: domainsResults,
-      error: domainsError.read
+      error: domainsError.read,
+      lastUpdated: domainLastUpdated
     };
   }
 );

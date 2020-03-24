@@ -3,10 +3,8 @@ import {
   AccountSettings,
   Notification
 } from 'linode-js-sdk/lib/account';
-import { Domain } from 'linode-js-sdk/lib/domains';
 import { Image } from 'linode-js-sdk/lib/images';
 import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes';
-import { ObjectStorageCluster } from 'linode-js-sdk/lib/object-storage';
 import { Profile } from 'linode-js-sdk/lib/profile';
 import { Region } from 'linode-js-sdk/lib/regions';
 import * as React from 'react';
@@ -22,8 +20,6 @@ import { MapState } from 'src/store/types';
 
 import { requestAccount } from 'src/store/account/account.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
-import { requestClusters } from 'src/store/clusters/clusters.actions';
-import { requestDomains } from 'src/store/domains/domains.requests';
 import { requestImages } from 'src/store/image/image.requests';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
 import { requestTypes } from 'src/store/linodeType/linodeType.requests';
@@ -131,7 +127,6 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 interface DispatchProps {
   initSession: () => void;
   requestAccount: () => Promise<Account>;
-  requestDomains: () => Promise<Domain[]>;
   requestImages: () => Promise<Image[]>;
   requestLinodes: () => Promise<GetAllData<Linode>>;
   requestNotifications: () => Promise<Notification[]>;
@@ -139,7 +134,6 @@ interface DispatchProps {
   requestTypes: () => Promise<LinodeType[]>;
   requestRegions: () => Promise<Region[]>;
   requestProfile: () => Promise<Profile>;
-  requestClusters: () => Promise<ObjectStorageCluster[]>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
@@ -147,15 +141,13 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 ) => ({
   initSession: () => dispatch(handleInitTokens()),
   requestAccount: () => dispatch(requestAccount()),
-  requestDomains: () => dispatch(requestDomains()),
   requestImages: () => dispatch(requestImages()),
   requestLinodes: () => dispatch(requestLinodes({})),
   requestNotifications: () => dispatch(requestNotifications()),
   requestSettings: () => dispatch(requestAccountSettings()),
   requestTypes: () => dispatch(requestTypes()),
   requestRegions: () => dispatch(requestRegions()),
-  requestProfile: () => dispatch(requestProfile()),
-  requestClusters: () => dispatch(requestClusters())
+  requestProfile: () => dispatch(requestProfile())
 });
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
