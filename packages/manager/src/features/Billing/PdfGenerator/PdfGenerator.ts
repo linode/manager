@@ -19,7 +19,7 @@ import {
   createPaymentsTotalsTable
 } from './utils';
 
-const leftMargin = 15; // space that needs to be applied to every parent element
+const leftMargin = 30; // space that needs to be applied to every parent element
 const baseFont = 'helvetica';
 
 const addLeftHeader = (
@@ -56,6 +56,8 @@ const addLeftHeader = (
   if (taxID) {
     addLine(`Linode Tax ID: ${taxID}`);
   }
+
+  return currentLine;
 };
 
 const addRightHeader = (doc: jsPDF, account: Account) => {
@@ -96,18 +98,20 @@ const addRightHeader = (doc: jsPDF, account: Account) => {
   }
   addLine(`${city}, ${state}, ${zip}`);
   addLine(`${country}`);
+
+  return currentLine;
 };
 
 interface Title {
   text: string;
   leftMargin?: number;
 }
-
-const addTitle = (doc: jsPDF, ...textStrings: Title[]) => {
+// The `y` argument is the position (in pixels) in which the first text string should be added to the doc.
+const addTitle = (doc: jsPDF, y: number, ...textStrings: Title[]) => {
   doc.setFontSize(12);
   doc.setFontStyle('bold');
   textStrings.forEach(eachString => {
-    doc.text(eachString.text, eachString.leftMargin || leftMargin, 130, {
+    doc.text(eachString.text, eachString.leftMargin || leftMargin, y, {
       charSpace: 0.75,
       maxWidth: 100
     });
@@ -171,8 +175,16 @@ export const printInvoice = (
     // Create a separate page for each set of invoice items
     itemsChunks.forEach((itemsChunk, index) => {
       doc.addImage(LinodeLogo, 'JPEG', 150, 5, 120, 50);
-      addLeftHeader(doc, index + 1, itemsChunks.length, date, 'Invoice', taxID);
-      addRightHeader(doc, account);
+
+      const leftHeaderYPosition = addLeftHeader(
+        doc,
+        index + 1,
+        itemsChunks.length,
+        date,
+        'Invoice',
+        taxID
+      );
+      const rightHeaderYPosition = addRightHeader(doc, account);
 
       /** only show tax ID if there is one provided */
       const strings =
@@ -192,7 +204,11 @@ export const printInvoice = (
             ]
           : [{ text: `Invoice: #${invoiceId}` }];
 
-      addTitle(doc, ...strings);
+      addTitle(
+        doc,
+        Math.max(leftHeaderYPosition, rightHeaderYPosition) + 4,
+        ...strings
+      );
 
       createInvoiceItemsTable(doc, itemsChunk);
       createFooter(doc, baseFont);
@@ -201,7 +217,6 @@ export const printInvoice = (
       }
     });
 
-    doc.addPage();
     createInvoiceTotalsTable(doc, invoice);
     createFooter(doc, baseFont);
 
@@ -235,10 +250,18 @@ export const printPayment = (
     doc.setFontStyle('bold');
 
     doc.addImage(LinodeLogo, 'JPEG', 150, 5, 120, 50);
-    addLeftHeader(doc, 1, 1, date, 'Payment', taxID);
-
-    addRightHeader(doc, account);
-    addTitle(doc, { text: `Receipt for Payment #${payment.id}` });
+    const leftHeaderYPosition = addLeftHeader(
+      doc,
+      1,
+      1,
+      date,
+      'Payment',
+      taxID
+    );
+    const rightHeaderYPosition = addRightHeader(doc, account);
+    addTitle(doc, Math.max(leftHeaderYPosition, rightHeaderYPosition) + 4, {
+      text: `Receipt for Payment #${payment.id}`
+    });
 
     createPaymentsTable(doc, payment);
     createFooter(doc, baseFont);

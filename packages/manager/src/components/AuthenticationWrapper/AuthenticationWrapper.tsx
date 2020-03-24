@@ -11,7 +11,6 @@ import { Profile } from 'linode-js-sdk/lib/profile';
 import { Region } from 'linode-js-sdk/lib/regions';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import { compose } from 'recompose';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
@@ -28,16 +27,12 @@ import { requestDomains } from 'src/store/domains/domains.requests';
 import { requestImages } from 'src/store/image/image.requests';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
 import { requestTypes } from 'src/store/linodeType/linodeType.requests';
-import {
-  withNodeBalancerActions,
-  WithNodeBalancerActions
-} from 'src/store/nodeBalancer/nodeBalancer.containers';
 import { requestNotifications } from 'src/store/notification/notification.requests';
 import { requestProfile } from 'src/store/profile/profile.requests';
 import { requestRegions } from 'src/store/regions/regions.actions';
 import { GetAllData } from 'src/utilities/getAll';
 
-type CombinedProps = DispatchProps & StateProps & WithNodeBalancerActions;
+type CombinedProps = DispatchProps & StateProps;
 
 export class AuthenticationWrapper extends React.Component<CombinedProps> {
   state = {
@@ -54,9 +49,6 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       return;
     }
 
-    const {
-      nodeBalancerActions: { getAllNodeBalancersWithConfigs }
-    } = this.props;
     // Initial Requests
     const dataFetchingPromises: Promise<any>[] = [
       this.props.requestAccount(),
@@ -67,8 +59,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       this.props.requestNotifications(),
       this.props.requestSettings(),
       this.props.requestTypes(),
-      this.props.requestRegions(),
-      getAllNodeBalancersWithConfigs()
+      this.props.requestRegions()
     ];
 
     try {
@@ -143,7 +134,7 @@ interface DispatchProps {
   requestAccount: () => Promise<Account>;
   requestDomains: () => Promise<Domain[]>;
   requestImages: () => Promise<Image[]>;
-  requestLinodes: () => Promise<GetAllData<Linode[]>>;
+  requestLinodes: () => Promise<GetAllData<Linode>>;
   requestNotifications: () => Promise<Notification[]>;
   requestSettings: () => Promise<AccountSettings>;
   requestTypes: () => Promise<LinodeType[]>;
@@ -170,7 +161,4 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose<CombinedProps, {}>(
-  connected,
-  withNodeBalancerActions
-)(AuthenticationWrapper);
+export default connected(AuthenticationWrapper);

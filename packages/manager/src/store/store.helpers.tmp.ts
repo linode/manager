@@ -16,7 +16,7 @@ export const addEntityRecord = <T extends Entity>(
 ): EntityMap<T> => assoc(String(current.id), current, result);
 
 export const onStart = <S>(state: S) =>
-  Object.assign({}, state, { loading: true, error: undefined });
+  Object.assign({}, state, { loading: true, error: {} });
 
 export const onGetAllSuccess = <E extends Entity, S>(
   items: E[],
@@ -115,7 +115,7 @@ export const getAddRemoved = <E extends Entity>(
 export const createRequestThunk = <Req extends any, Res extends any, Err>(
   actions: AsyncActionCreators<Req, Res, Err>,
   request: (params: Req) => Promise<any>
-): ThunkActionCreator<Promise<Res[]>, Req> => {
+): ThunkActionCreator<Promise<Res>, Req> => {
   return (params: Req) => async dispatch => {
     const { started, done, failed } = actions;
 
@@ -125,7 +125,7 @@ export const createRequestThunk = <Req extends any, Res extends any, Err>(
       const result = await request(params);
       const doneAction = done({ result, params });
       dispatch(doneAction);
-      return result.data;
+      return result;
     } catch (error) {
       const failAction = failed({ error, params });
       dispatch(failAction);

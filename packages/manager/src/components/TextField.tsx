@@ -85,7 +85,10 @@ const styles = (theme: Theme) =>
       width: '3.6em'
     },
     errorText: {
-      color: theme.color.red
+      color: theme.color.red,
+      '&$editable': {
+        position: 'absolute'
+      }
     },
     editable: {
       wordBreak: 'keep-all',

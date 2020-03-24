@@ -15,7 +15,7 @@ COPY --chown=node:node packages/linode-js-sdk  ./packages/linode-js-sdk/
 COPY --chown=node:node packages/manager ./packages/manager
 
 # Runs "yarn install" for all child packages
-RUN yarn install:all && yarn run cypress verify && yarn workspace linode-js-sdk build
+RUN yarn install:all && yarn run cypress verify && yarn build:sdk
 
 ENTRYPOINT ["sh","run_cypress_docker.sh"]
 
