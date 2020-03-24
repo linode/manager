@@ -132,6 +132,7 @@
     "@babel/preset-typescript": "^7.6.0",
     "@babel/register": "^7.0.0",
     "@hapi/hapi": "^18.4.0",
+    "@hapi/inert": "^6.0.1",
     "@storybook/addon-actions": "~5.3.7",
     "@storybook/addon-knobs": "~5.3.7",
     "@storybook/addon-links": "~5.3.7",
@@ -149,7 +150,6 @@
     "@types/enzyme": "^3.9.3",
     "@types/he": "^1.1.0",
     "@types/highlight.js": "^9.12.3",
-    "@types/inert": "^5.1.1",
     "@types/jest": "^24.0.23",
     "@types/jest-axe": "^3.2.1",
     "@types/js-cookie": "^2.2.0",
@@ -213,7 +213,6 @@
     "fork-ts-checker-webpack-plugin": "^0.5.2",
     "fs-extra": "^8.0.1",
     "html-webpack-plugin": "^4.0.0-beta.5",
-    "inert": "^5.1.0",
     "inquirer": "^6.2.0",
     "jest": "^24.9.0",
     "jest-axe": "^3.3.0",
@@ -323,7 +322,6 @@
   "resolutions": {
     "csv-parse": "^4.6.3",
     "mixin-deep": "^2.0.1",
-
     "handlebars": "^4.4.3",
     "js-yaml": "^3.13.1",
     "braces": "^3.0.2",
