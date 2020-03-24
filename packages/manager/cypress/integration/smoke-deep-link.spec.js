@@ -7,7 +7,7 @@ describe('smoke - deep link', () => {
     if (!page.goWithUI) {
       return;
     }
-    describe(`Got to ${page.name}`, () => {
+    describe.skip(`Got to ${page.name}`, () => {
       beforeEach(() => {
         cy.login2();
       });

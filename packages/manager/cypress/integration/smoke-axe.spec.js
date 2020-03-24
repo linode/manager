@@ -5,7 +5,7 @@ describe.skip('smoke - axe', () => {
     cy.login2();
   });
   pages.forEach(page => {
-    it(`${page.name}`, () => {
+    (page.first ? it.only : page.skip ? it.skip : it)(`${page.name}`, () => {
       cy.visit(page.url);
       page.assertIsLoaded();
 

@@ -1,14 +1,15 @@
 export const routes = {
   createLinode: '/linodes/create',
   support: '/support',
+  account: '/account',
   supportTickets: '/support/tickets',
   profile: '/profile'
 };
 
-const goToByTabText = (url, text, isSelector=false) => {
+const goToByTabText = (url, text, isSelector = false) => {
   cy.visit(url);
-  
-  (isSelector?cy.get:cy.findByText)(text)
+
+  (isSelector ? cy.get : cy.findByText)(text)
     .should('be.visible')
     .click();
 };
@@ -77,7 +78,6 @@ export const pages = [
     assertIsLoaded: () => cy.findByText('My Profile').should('be.visible')
   },
   {
-
     name: 'Profile/Display',
     url: `${routes.profile}/display`,
     assertIsLoaded: () => cy.findByText('Username').should('be.visible'),
@@ -85,7 +85,11 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          goToByTabText(`${routes.profile}/auth`, '[data-qa-tab="Display"]',true);
+          goToByTabText(
+            `${routes.profile}/auth`,
+            '[data-qa-tab="Display"]',
+            true
+          );
         }
       },
       {
@@ -99,7 +103,6 @@ export const pages = [
     ]
   },
   {
-    skip:true,
     name: 'Profile/Password',
     url: `${routes.profile}/auth`,
     assertIsLoaded: () =>
@@ -109,7 +112,11 @@ export const pages = [
         name: 'Tab',
         go: () => {
           // goToByTabText(routes.profile, 'Password & Authentication');
-          goToByTabText(routes.profile, '[data-qa-tab="Password & Authentication"]',true);
+          goToByTabText(
+            routes.profile,
+            '[data-qa-tab="Password & Authentication"]',
+            true
+          );
         }
       }
     ]
@@ -124,7 +131,7 @@ export const pages = [
         go: () => {
           // goToByTabText(routes.profile, 'SSH Keys');
 
-          goToByTabText(routes.profile, '[data-qa-tab="SSH Keys"]',true);
+          goToByTabText(routes.profile, '[data-qa-tab="SSH Keys"]', true);
         }
       }
     ]
@@ -139,7 +146,7 @@ export const pages = [
         name: 'Tab',
         go: () => {
           // goToByTabText(routes.profile, 'LISH');
-          goToByTabText(routes.profile, '[data-qa-tab="LISH"]',true);
+          goToByTabText(routes.profile, '[data-qa-tab="LISH"]', true);
         }
       }
     ]
@@ -154,7 +161,7 @@ export const pages = [
         name: 'Tab',
         go: () => {
           // goToByTabText(routes.profile, 'API Tokens');
-          goToByTabText(routes.profile, '[data-qa-tab="API Tokens"]',true);
+          goToByTabText(routes.profile, '[data-qa-tab="API Tokens"]', true);
         }
       }
     ]
@@ -193,6 +200,56 @@ export const pages = [
         name: 'Create Button',
         go: () => {
           goToByTabText(routes.supportTickets, 'Closed Tickets');
+        }
+      }
+    ]
+  },
+  {
+    name: 'Account',
+    url: `${routes.account}`,
+    assertIsLoaded: () => cy.findByText('Billing Info').should('be.visible')
+  },
+  {
+    name: 'Account/Billing',
+    url: `${routes.account}/billing`,
+    assertIsLoaded: () =>
+      cy.findByText('Update Contact Information').should('be.visible'),
+    goWithUI: [
+      {
+        name: 'Tab',
+        go: () => {
+          goToByTabText(
+            `${routes.account}/users`,
+            '[data-qa-tab="Billing Info"]',
+            true
+          );
+        }
+      }
+    ]
+  },
+  {
+    name: 'account/Users',
+    url: `${routes.account}/users`,
+    assertIsLoaded: () => cy.findByText('Add a User').should('be.visible'),
+    goWithUI: [
+      {
+        name: 'Tab',
+        go: () => {
+          goToByTabText(routes.account, '[data-qa-tab="Users"]', true);
+        }
+      }
+    ]
+  },
+  {
+    name: 'account/Settings',
+    url: `${routes.account}/settings`,
+    assertIsLoaded: () =>
+      cy.findByText('Backup Auto Enrollment').should('be.visible'),
+    goWithUI: [
+      {
+        name: 'Tab',
+        go: () => {
+          goToByTabText(routes.account, '[data-qa-tab="Settings"]', true);
         }
       }
     ]
