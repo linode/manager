@@ -133,7 +133,7 @@ export const onGetPageSuccess = <E extends Entity>(
 export const createRequestThunk = <Req extends any, Res extends any, Err>(
   actions: AsyncActionCreators<Req, Res, Err>,
   request: (params: Req) => Promise<any>
-): ThunkActionCreator<Promise<Res[]>, Req> => {
+): ThunkActionCreator<Promise<Res>, Req> => {
   return (params: Req) => async dispatch => {
     const { started, done, failed } = actions;
 
@@ -143,7 +143,7 @@ export const createRequestThunk = <Req extends any, Res extends any, Err>(
       const result = await request(params);
       const doneAction = done({ result, params });
       dispatch(doneAction);
-      return result.data;
+      return result;
     } catch (error) {
       const failAction = failed({ error, params });
       dispatch(failAction);

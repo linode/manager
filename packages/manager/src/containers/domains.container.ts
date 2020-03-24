@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import {
   DomainId,
-  UpdateDomainParams
+  UpdateDomainParams,
+  upsertDomain
 } from 'src/store/domains/domains.actions';
 import {
   createDomain,
@@ -13,6 +14,7 @@ import {
   updateDomain
 } from 'src/store/domains/domains.requests';
 import { EntityError, ThunkDispatch } from 'src/store/types';
+import { Action } from 'typescript-fsa';
 
 export interface StateProps {
   domainsData?: Domain[];
@@ -28,6 +30,7 @@ export interface DomainActionsProps {
   deleteDomain: (domainId: DomainId) => Promise<{}>;
   getAllDomains: () => Promise<Domain[]>;
   getDomainsPage: (params?: any, filters?: any) => Promise<Domain[]>;
+  upsertDomain: (domain: Domain) => Action<Domain>;
 }
 
 export type Props = StateProps & DomainActionsProps;
@@ -72,6 +75,7 @@ export default <InnerStateProps extends {}, TOuter extends {}>(
       deleteDomain: (domainId: DomainId) => dispatch(deleteDomain(domainId)),
       getDomainsPage: (params?: any, filters?: any) =>
         dispatch(getPage({ params, filters })),
-      getAllDomains: () => dispatch(getAll())
+      getAllDomains: () => dispatch(getAll()),
+      upsertDomain: (domain: Domain) => dispatch(upsertDomain(domain))
     })
   );

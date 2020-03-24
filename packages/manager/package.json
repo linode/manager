@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "private": true,
   "engines": {
     "node": ">= 10.16.0"
@@ -39,7 +39,7 @@
     "jspdf": "^1.5.3",
     "jspdf-autotable": "^3.2.4",
     "launchdarkly-react-client-sdk": "2.11.0",
-    "linode-js-sdk": "^0.21.0-alpha.0",
+    "linode-js-sdk": "^0.22.0-alpha.0",
     "logic-query-parser": "^0.0.5",
     "md5": "^2.2.1",
     "memoizee": "^0.4.14",
@@ -63,7 +63,7 @@
     "react-loadable": "^5.3.1",
     "react-number-format": "^3.5.0",
     "react-redux": "~7.1.3",
-    "react-router-dom": "^5.1.0",
+    "react-router-dom": "~5.1.2",
     "react-select": "^2.0.0",
     "react-sticky": "^6.0.3",
     "react-waypoint": "~9.0.2",
@@ -98,7 +98,7 @@
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
     "storybook": "yarn run start-storybook -p 6006 --ci",
     "storybook-static": "build-storybook -c .storybook -o .out",
-    "storybook:e2e": "yarn run wdio ./e2e/config/wdio.storybook.conf.js",
+    "storybook:e2e": "yarn run wait-on http://localhost:6006 && yarn run wdio ./e2e/config/wdio.storybook.conf.js",
     "storyshots": "docker-compose -f storyshots.yml up --build --exit-code-from manager-storyshots && docker-compose -f storyshots.yml down -v",
     "storyshots:update": "export UPDATE=-u && docker-compose -f storyshots.yml up --build --exit-code-from manager-storyshots && unset UPDATE && docker-compose -f storyshots.yml down -v",
     "storyshots:test": "npx jest --config ./.storybook/storyshots.jest.config.js src/components/Storyshots.test.tsx --env=jsdom",
@@ -196,6 +196,7 @@
     "babel-preset-react-app": "^7.0.0",
     "browserslist": "~4.8.5",
     "case-sensitive-paths-webpack-plugin": "^2.2.0",
+    "chai-string": "^1.5.0",
     "chalk": "^2.4.2",
     "circular-dependency-plugin": "^5.2.0",
     "core-js": "^2.6.5",
@@ -322,13 +323,12 @@
   "resolutions": {
     "csv-parse": "^4.6.3",
     "mixin-deep": "^2.0.1",
-    "set-value": "^3.0.1",
+
     "handlebars": "^4.4.3",
     "js-yaml": "^3.13.1",
     "braces": "^3.0.2",
     "https-proxy-agent": "^3.0.1",
-    "axe-core": "^3.4.0",
-    "minimist": "^1.2.3"
+    "axe-core": "^3.4.0"
   },
   "workspaces": {
     "nohoist": [

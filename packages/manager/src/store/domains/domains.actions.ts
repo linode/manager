@@ -38,7 +38,7 @@ export const deleteDomainActions = actionCreator.async<
 
 export const getDomainsActions = actionCreator.async<
   void,
-  GetAllData<Domain[]>,
+  GetAllData<Domain>,
   APIError[]
 >('get-all');
 

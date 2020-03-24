@@ -19,6 +19,7 @@ const props: CombinedProps = {
   deleteDomain: jest.fn(),
   getAllDomains: jest.fn(),
   getDomainsPage: jest.fn(),
+  upsertDomain: jest.fn(),
   linodesLoading: false,
   openForCloning: jest.fn(),
   openForCreating: jest.fn(),

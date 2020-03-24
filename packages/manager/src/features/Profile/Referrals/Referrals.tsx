@@ -128,9 +128,6 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose<CombinedProps, {}>(
-  styled,
-  connected
-);
+const enhanced = compose<CombinedProps, {}>(styled, connected);
 
 export default enhanced(Referrals);

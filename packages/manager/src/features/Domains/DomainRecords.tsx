@@ -344,7 +344,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
            * cannot make changes to Linode's nameservers.
            */
           render: ({ id, name, target, ttl_sec }: DomainRecord) =>
-            /linode.com/.test(target) ? null : (
+            /ns([1-5]).linode.com/.test(target) ? null : (
               <ActionMenu
                 editPayload={{
                   id,
