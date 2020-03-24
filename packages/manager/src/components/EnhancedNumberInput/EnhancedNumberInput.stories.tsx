@@ -18,4 +18,11 @@ storiesOf('EnhancedNumberInput', module)
         <EnhancedNumberInput inputValue={0} small />
       </Grid>
     );
+  })
+  .add('Disabled', () => {
+    return (
+      <Grid container style={{ padding: '2em' }}>
+        <EnhancedNumberInput inputValue={0} disabled />
+      </Grid>
+    );
   });

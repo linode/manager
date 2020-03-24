@@ -73,26 +73,34 @@ interface Props {
   small?: boolean;
   inputValue: number;
   disabled?: boolean;
+  minusDisabled?: boolean;
 }
 
 type FinalProps = Props;
 
 export const EnhancedNumberInput: React.FC<FinalProps> = props => {
-  // const [inputValue, setInputValue] = React.useState(props.inputValue);
   const [inputValue, setInputValue] = React.useState(0);
   const [isDisabled, setIsDisabled] = React.useState(Boolean(props.disabled));
+  const [minusIsDisabled, setMinusIsDisabled] = React.useState(
+    Boolean(props.minusDisabled)
+  );
 
   const {
     small,
     inputLabel,
     inputValue: propInputValue,
     disabled: propIsDisabled,
+    minusDisabled: propMinusIsDisabled,
     ...rest
   } = props;
 
   React.useEffect(() => {
-    inputValue !== 0 ? setIsDisabled(false) : setIsDisabled(true);
+    inputValue !== 0 ? setMinusIsDisabled(false) : setMinusIsDisabled(true);
   }, [inputValue]);
+
+  React.useEffect(() => {
+    setIsDisabled(isDisabled);
+  }, [isDisabled]);
 
   React.useEffect(() => {
     setInputValue(inputValue);
@@ -127,7 +135,7 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
           aria-label="Subtract 1"
           name="Subtract 1"
           onClick={decrementValue}
-          disabled={isDisabled}
+          disabled={isDisabled || minusIsDisabled}
         >
           <Minus className={classes.minusIcon} />
         </Button>
@@ -148,6 +156,7 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
             })
           }}
           autoFocus={true}
+          disabled={isDisabled}
         />
         <Button
           buttonType="primary"
@@ -157,6 +166,7 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
           aria-label="Add 1"
           name="Add 1"
           onClick={incrementValue}
+          disabled={isDisabled}
         >
           <Plus className={classes.plusIcon} />
         </Button>
