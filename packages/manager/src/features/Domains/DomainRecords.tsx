@@ -130,6 +130,8 @@ const createLink = (title: string, handler: () => void) => (
   <AddNewLink onClick={handler} label={title} />
 );
 
+const nameServerRegex = /ns([1-5]).linode.com/;
+
 class DomainRecords extends React.Component<CombinedProps, State> {
   eventsSubscription$: Subscription;
 
@@ -344,7 +346,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
            * cannot make changes to Linode's nameservers.
            */
           render: ({ id, name, target, ttl_sec }: DomainRecord) =>
-            /ns([1-5]).linode.com/.test(target) ? null : (
+            nameServerRegex.test(target) ? null : (
               <ActionMenu
                 editPayload={{
                   id,

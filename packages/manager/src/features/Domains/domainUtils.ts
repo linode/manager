@@ -30,3 +30,9 @@ export const getInitialIPs = (ipsFromProps?: string[]): string[] => {
   const ips = ipsFromProps ?? [''];
   return ips.length > 0 ? ips : [''];
 };
+
+export const isEditableNameServer = (nameServer: string) => {
+  const nameServerRegex = /ns([1-5]).linode.com/;
+
+  return nameServerRegex.test(nameServer) ? false : true;
+};
