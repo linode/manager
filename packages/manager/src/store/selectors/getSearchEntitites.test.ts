@@ -11,7 +11,9 @@ import getSearchEntities from './getSearchEntities';
 
 describe('getSearchEntities selector', () => {
   const mockState: any = {
-    linodes: { entities: linodes },
+    linodes: {
+      itemsById: linodes.reduce((result, c) => ({ ...result, [c.id]: c }), {})
+    },
     domains: { entities: domains },
     images: { entities: images },
     types: { entities: types },
