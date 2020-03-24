@@ -100,6 +100,13 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
     selectedMode: modes.EMPTY
   };
 
+  componentDidUpdate(prevProps: CombinedProps) {
+    if (!prevProps.open && this.props.open) {
+      // Drawer is opening, make sure mode is set to modes.EMPTY
+      this.setState({ selectedMode: modes.EMPTY });
+    }
+  }
+
   static getDerivedStateFromProps(props: CombinedProps, state: State) {
     return {
       hasErrorFor: getAPIErrorsFor(
@@ -209,9 +216,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
     const {
       open,
       mode,
-      onSubmit,
       submitting,
-      onClose,
       classes,
       password,
       userSSHKeys,
@@ -227,7 +232,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
       <Drawer
         title={LinodeDiskDrawer.getTitle(mode)}
         open={open}
-        onClose={onClose}
+        onClose={this.props.onClose}
       >
         <Grid container direction="row">
           {mode === 'create' && (
@@ -250,25 +255,27 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
             )}
           </Grid>
           <Grid item xs={12} className={classes.section}>
-            <this.labelField />
-            {selectedMode === modes.EMPTY && <this.filesystemField />}
-            {selectedMode === modes.IMAGE && (
-              <ImageAndPassword
-                onImageChange={this.onImageChange}
-                imageFieldError={imageFieldError}
-                password={password || ''}
-                passwordError={passwordError}
-                onPasswordChange={this.props.onPasswordChange}
-                userSSHKeys={userSSHKeys || []}
-                requestKeys={requestKeys || (() => null)}
-              />
-            )}
-            <this.sizeField />
+            <form>
+              <this.labelField />
+              {selectedMode === modes.EMPTY && <this.filesystemField />}
+              {selectedMode === modes.IMAGE && (
+                <ImageAndPassword
+                  onImageChange={this.onImageChange}
+                  imageFieldError={imageFieldError}
+                  password={password || ''}
+                  passwordError={passwordError}
+                  onPasswordChange={this.props.onPasswordChange}
+                  userSSHKeys={userSSHKeys || []}
+                  requestKeys={requestKeys || (() => null)}
+                />
+              )}
+              <this.sizeField />
+            </form>
           </Grid>
           <Grid item className={classes.section}>
             <ActionsPanel>
               <Button
-                onClick={onSubmit}
+                onClick={this.props.onSubmit}
                 buttonType="primary"
                 loading={submitting}
                 data-qa-disk-submit
@@ -276,7 +283,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
                 {submitLabelMap[mode]}
               </Button>
               <Button
-                onClick={onClose}
+                onClick={this.props.onClose}
                 buttonType="secondary"
                 className="cancel"
                 data-qa-disk-cancel

@@ -17,6 +17,7 @@ import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
+import { IMAGE_DEFAULT_LIMIT } from 'src/constants';
 import withImages, {
   ImagesDispatch
 } from 'src/containers/withImages.container';
@@ -360,10 +361,11 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
               data-qa-disk-select
             />
             <Typography className={classes.helperText} variant="body1">
-              Linode Images are limited to 2048MB of data per disk. You will
-              need to ensure that your disk content does not exceed this size
-              limit. Additionally, Linode Images cannot be created if you are
-              using raw disks or disks that have been formatted using custom
+              Linode Images are limited to {IMAGE_DEFAULT_LIMIT}MB of data per
+              disk by default. Please ensure that your disk content does not
+              exceed this size limit, or open a Support ticket to request a
+              higher limit. Additionally, Linode Images cannot be created if you
+              are using raw disks or disks that have been formatted using custom
               filesystems.
             </Typography>
           </>

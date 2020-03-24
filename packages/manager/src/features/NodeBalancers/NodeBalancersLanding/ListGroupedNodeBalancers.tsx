@@ -47,7 +47,7 @@ const styles = (theme: Theme) =>
     title: { marginBottom: theme.spacing(2) },
     transferred: { width: '10%', minWidth: 100 },
     groupContainer: {
-      '&:first-of-type': {
+      [theme.breakpoints.up('md')]: {
         '& $tagHeaderRow > td': {
           padding: '10px 0'
         }
@@ -92,8 +92,10 @@ const ListGroupedNodeBalancers: React.StatelessComponent<CombinedProps> = props 
     toggleDialog
   } = props;
 
+  const dataLength = data.length;
+
   const groupedNodeBalancers = compose(sortGroups, groupByTags)(data);
-  const tableWrapperProps = { handleOrderChange, order, orderBy };
+  const tableWrapperProps = { handleOrderChange, order, orderBy, dataLength };
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
 

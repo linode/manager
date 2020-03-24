@@ -14,16 +14,16 @@ describe('truncateAndJoinList', () => {
 
   it('truncates lists greater than max', () => {
     const result = truncateAndJoinList(strList, 2);
-    expect(result).toBe('a, b...and 1 more');
+    expect(result).toBe('a, b, plus 1 more');
   });
 
   it('works with large lists ', () => {
     const result = truncateAndJoinList(bigStrList, 3);
-    expect(result).toBe('a, a, a...and 997 more');
+    expect(result).toBe('a, a, a, plus 997 more');
   });
 
   it('defaults to a max of 100', () => {
     const result = truncateAndJoinList(bigStrList);
-    expect(result).toMatch(/...and 900 more/);
+    expect(result).toMatch(/, plus 900 more/);
   });
 });

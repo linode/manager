@@ -35,6 +35,7 @@ describe('LinodeRescue', () => {
         linodeId={7843027}
         linodeRegion="us-east"
         volumesData={extendedVolumes}
+        volumesLastUpdated={1}
         linodeLabel=""
         permissions="read_write"
       />

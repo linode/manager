@@ -108,6 +108,9 @@ export interface Props extends TableProps {
   spacingBottom?: 0 | 8 | 16 | 24;
   stickyHeader?: boolean;
   removeLabelonMobile?: boolean; // only for table instances where we want to hide the cell label for small screens
+  tableCaption?: string;
+  colCount?: number;
+  rowCount?: number;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -125,6 +128,9 @@ class WrappedTable extends React.Component<CombinedProps> {
       spacingBottom,
       removeLabelonMobile,
       stickyHeader,
+      tableCaption,
+      colCount,
+      rowCount,
       ...rest
     } = this.props;
 
@@ -146,7 +152,13 @@ class WrappedTable extends React.Component<CombinedProps> {
           marginBottom: spacingBottom !== undefined ? spacingBottom : 0
         }}
       >
-        <Table className={tableClass} {...rest}>
+        <Table
+          className={tableClass}
+          {...rest}
+          aria-colcount={colCount}
+          aria-rowcount={rowCount}
+          role="table"
+        >
           {this.props.children}
         </Table>
       </div>

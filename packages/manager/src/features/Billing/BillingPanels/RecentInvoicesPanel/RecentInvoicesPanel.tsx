@@ -133,9 +133,6 @@ const updatedRequest = (ownProps: any, params: any, filters: any) =>
 
 const paginated = paginate(updatedRequest);
 
-const enhanced = compose(
-  connected,
-  paginated
-);
+const enhanced = compose(connected, paginated);
 
 export default enhanced(RecentInvoicesPanel);

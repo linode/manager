@@ -1,13 +1,17 @@
+// @todo: this import?
+import { InputBaseProps } from '@material-ui/core/InputBase';
 import Close from '@material-ui/icons/Close';
-import { update } from 'ramda';
+import * as classnames from 'classnames';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
+import InputLabel from 'src/components/core/InputLabel';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
+import { ExtendedIP } from 'src/utilities/ipUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   addIP: {
@@ -46,8 +50,10 @@ export interface Props {
   title: string;
   helperText?: string;
   error?: string;
-  ips: string[];
-  onChange: (ips: string[]) => void;
+  ips: ExtendedIP[];
+  onChange: (ips: ExtendedIP[]) => void;
+  inputProps?: InputBaseProps;
+  className?: string;
 }
 
 export const MultipleIPInput: React.FC<Props> = props => {
@@ -58,12 +64,13 @@ export const MultipleIPInput: React.FC<Props> = props => {
     e: React.ChangeEvent<HTMLInputElement>,
     idx: number
   ) => {
-    const transferIPs = update(idx, e.target.value, ips);
-    onChange(transferIPs);
+    const newIPs = [...ips];
+    newIPs[idx].address = e.target.value;
+    onChange(newIPs);
   };
 
   const addNewInput = () => {
-    onChange([...ips, '']);
+    onChange([...ips, { address: '' }]);
   };
 
   const removeInput = (idx: number) => {
@@ -77,8 +84,14 @@ export const MultipleIPInput: React.FC<Props> = props => {
   }
 
   return (
-    <div className={classes.root}>
-      <Typography variant="h3">{title}</Typography>
+    <div
+      className={classnames({
+        [classes.root]: true,
+        // Inject the className if given as as prop.
+        [props.className ?? '']: Boolean(props.className)
+      })}
+    >
+      <InputLabel>{title}</InputLabel>
       {helperText && (
         <Typography className={classes.helperText}>{helperText}</Typography>
       )}
@@ -97,11 +110,15 @@ export const MultipleIPInput: React.FC<Props> = props => {
               className={classes.input}
               // Prevent unique ID errors, since TextField sets the input element's ID to the label
               label={`domain-transfer-ip-${idx}`}
-              InputProps={{ 'aria-label': `${title} ip-address-${idx}` }}
-              value={thisIP}
+              InputProps={{
+                'aria-label': `${title} ip-address-${idx}`,
+                ...props.inputProps
+              }}
+              value={thisIP.address}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 handleChange(e, idx)
               }
+              errorText={thisIP.error}
               hideLabel
             />
           </Grid>

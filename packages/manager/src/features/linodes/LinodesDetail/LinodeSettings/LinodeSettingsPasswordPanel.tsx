@@ -7,6 +7,7 @@ import {
 import { APIError } from 'linode-js-sdk/lib/types';
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
+
 import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -14,7 +15,8 @@ import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
-import PasswordInput from 'src/components/PasswordInput';
+const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
+import SuspenseLoader from 'src/components/SuspenseLoader';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { debounce } from 'throttle-debounce';
@@ -150,9 +152,9 @@ class LinodeSettingsPasswordPanel extends React.Component<
           this.handleDiskSelection(disks[0]);
         }
       })
-      .catch(error =>
+      .catch(_ =>
         this.setState({
-          disksError: 'An error occured while searching for disks.',
+          disksError: 'An error occurred while searching for disks.',
           disksLoading: false
         })
       );
@@ -210,36 +212,40 @@ class LinodeSettingsPasswordPanel extends React.Component<
         actions={this.renderExpansionActions}
         onChange={this.handlePanelChange}
       >
-        {generalError && <Notice text={generalError} error />}
-        <EnhancedSelect
-          label="Disk"
-          placeholder="Find a Disk"
-          isLoading={disksLoading}
-          errorText={disksError || diskIdError}
-          options={disks}
-          onChange={this.handleDiskSelection}
-          onInputChange={this.onInputChange}
-          value={selectedDisk}
-          data-qa-select-linode
-          disabled={disabled}
-          isClearable={false}
-        />
-        <PasswordInput
-          autoComplete="new-password"
-          label="Password"
-          value={this.state.value}
-          onChange={this.handlePasswordChange}
-          errorText={passwordError}
-          errorGroup="linode-settings-password"
-          error={Boolean(passwordError)}
-          data-qa-password-input
-          disabled={disabled}
-          disabledReason={
-            disabled
-              ? "You don't have permissions to modify this Linode"
-              : undefined
-          }
-        />
+        <form>
+          {generalError && <Notice text={generalError} error />}
+          <EnhancedSelect
+            label="Disk"
+            placeholder="Find a Disk"
+            isLoading={disksLoading}
+            errorText={disksError || diskIdError}
+            options={disks}
+            onChange={this.handleDiskSelection}
+            onInputChange={this.onInputChange}
+            value={selectedDisk}
+            data-qa-select-linode
+            disabled={disabled}
+            isClearable={false}
+          />
+          <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+            <PasswordInput
+              autoComplete="new-password"
+              label="Password"
+              value={this.state.value}
+              onChange={this.handlePasswordChange}
+              errorText={passwordError}
+              errorGroup="linode-settings-password"
+              error={Boolean(passwordError)}
+              data-qa-password-input
+              disabled={disabled}
+              disabledReason={
+                disabled
+                  ? "You don't have permissions to modify this Linode"
+                  : undefined
+              }
+            />
+          </React.Suspense>
+        </form>
       </ExpansionPanel>
     );
   }
@@ -251,6 +257,7 @@ const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Reset Root Password' });
 
-export default recompose<CombinedProps, Props>(errorBoundary, linodeContext)(
-  LinodeSettingsPasswordPanel
-) as React.ComponentType<Props>;
+export default recompose<CombinedProps, Props>(
+  errorBoundary,
+  linodeContext
+)(LinodeSettingsPasswordPanel) as React.ComponentType<Props>;

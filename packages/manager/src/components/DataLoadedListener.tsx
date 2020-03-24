@@ -11,9 +11,6 @@ interface Props {
   profileLoadedOrErrorExists: boolean;
   accountLoadedOrErrorExists: boolean;
   linodesLoadedOrErrorExists: boolean;
-  volumesLoadedOrErrorExists: boolean;
-  nodeBalancersLoadedOrErrorExists: boolean;
-  bucketsLoadedOrErrorExists: boolean;
   domainsLoadedOrErrorExists: boolean;
   accountSettingsLoadedOrErrorExists: boolean;
   markAppAsLoaded: () => void;
@@ -28,9 +25,6 @@ const DataLoadedListener: React.FC<Props> = props => {
         props.profileLoadedOrErrorExists,
         props.accountLoadedOrErrorExists,
         props.linodesLoadedOrErrorExists,
-        props.volumesLoadedOrErrorExists,
-        props.nodeBalancersLoadedOrErrorExists,
-        props.bucketsLoadedOrErrorExists,
         props.domainsLoadedOrErrorExists,
         props.accountSettingsLoadedOrErrorExists,
         props.flagsHaveLoaded
@@ -50,9 +44,6 @@ const shouldMarkAppAsDone = (
   profileLoadedOrErrorExists: boolean,
   accountLoadedOrErrorExists: boolean,
   linodesLoadedOrErrorExists: boolean,
-  volumesLoadedOrErrorExists: boolean,
-  nodeBalancersLoadedOrErrorExists: boolean,
-  bucketsLoadedOrErrorExists: boolean,
   domainsLoadedOrErrorExists: boolean,
   accountSettingsLoadedOrErrorExists: boolean,
   flagsHaveLoaded: boolean
@@ -87,12 +78,10 @@ const shouldMarkAppAsDone = (
 
   if (
     pathname.match(/dashboard/i) &&
-    (linodesLoadedOrErrorExists &&
-      volumesLoadedOrErrorExists &&
-      nodeBalancersLoadedOrErrorExists &&
-      accountLoadedOrErrorExists &&
-      profileLoadedOrErrorExists &&
-      domainsLoadedOrErrorExists)
+    linodesLoadedOrErrorExists &&
+    accountLoadedOrErrorExists &&
+    profileLoadedOrErrorExists &&
+    domainsLoadedOrErrorExists
     /** not checking bucket data here for now */
   ) {
     return true;
@@ -102,16 +91,16 @@ const shouldMarkAppAsDone = (
     return true;
   }
 
-  if (pathname.match(/volume/i) && !!volumesLoadedOrErrorExists) {
+  if (pathname.match(/volume/i)) {
     return true;
   }
 
-  if (pathname.match(/nodebalancer/i) && !!nodeBalancersLoadedOrErrorExists) {
+  if (pathname.match(/nodebalancer/i)) {
     return true;
   }
 
   if (pathname.match(/domain/i) && !!domainsLoadedOrErrorExists) {
-    return true;
+    return true; // This doesn't do anything as there's no action to request Domains
   }
 
   // Object Storage endpoints will typically be a bit slower, so for these

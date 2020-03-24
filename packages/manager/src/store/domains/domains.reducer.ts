@@ -7,9 +7,7 @@ import {
   createDomainActions,
   deleteDomain,
   deleteDomainActions,
-  getDomainsFailure,
-  getDomainsRequest,
-  getDomainsSuccess,
+  getDomainsActions,
   updateDomainActions,
   upsertDomain
 } from './domains.actions';
@@ -32,32 +30,30 @@ export const defaultState: State = {
  * Reducer
  */
 const reducer: Reducer<State> = (state = defaultState, action) => {
-  if (isType(action, getDomainsRequest)) {
+  if (isType(action, getDomainsActions.started)) {
     return {
       ...state,
       loading: true
     };
   }
 
-  if (isType(action, getDomainsSuccess)) {
-    const {
-      payload: { data, results }
-    } = action;
+  if (isType(action, getDomainsActions.done)) {
+    const { result } = action.payload;
     return {
       ...state,
-      data: entitiesFromPayload(data),
-      results,
+      data: entitiesFromPayload(result.data),
+      results: result.results,
       lastUpdated: Date.now(),
       loading: false
     };
   }
 
-  if (isType(action, getDomainsFailure)) {
-    const { payload } = action;
+  if (isType(action, getDomainsActions.failed)) {
+    const { error } = action.payload;
     return {
       ...state,
       error: {
-        read: payload
+        read: error
       },
       loading: false
     };

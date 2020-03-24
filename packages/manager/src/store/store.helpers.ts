@@ -48,7 +48,7 @@ export const createDefaultState = <
 ): MappedEntityState<E, O> => ({
   itemsById: {},
   items: [],
-  loading: true,
+  loading: false,
   lastUpdated: 0,
   error: undefined,
   ...override
@@ -157,4 +157,25 @@ export const updateInPlace = <E extends Entity>(
       [id]: updated
     }
   };
+};
+
+// Given a nested state and an ID, ensures that MappedEntityState exists at the
+// provided key. If the nested state already exists, return the state untouched.
+// If it doesn't exist, initialize the state with `createDefaultState()`.
+export const ensureInitializedNestedState = (
+  state: Record<number, any>,
+  id: number,
+  override: any = {}
+) => {
+  if (!state[id]) {
+    state[id] = createDefaultState({ ...override, error: {} });
+  }
+  return state;
+};
+
+export const apiResponseToMappedState = <T extends Entity>(data: T[]) => {
+  return data.reduce((acc, thisEntity) => {
+    acc[thisEntity.id] = thisEntity;
+    return acc;
+  }, {});
 };

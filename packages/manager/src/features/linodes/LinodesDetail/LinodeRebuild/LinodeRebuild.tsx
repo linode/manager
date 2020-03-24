@@ -68,7 +68,7 @@ const LinodeRebuild: React.StatelessComponent<CombinedProps> = props => {
           If you can't rescue an existing disk, it's time to rebuild your
           Linode. There are a couple of different ways you can do this: either
           restore from a backup or start over with a fresh Linux distribution.
-          Rebuilding will destroy all data.
+          Rebuilding will destroy all data on all existing disks on this Linode.
         </Typography>
         <EnhancedSelect
           options={options}
@@ -98,7 +98,4 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 
 const styled = withStyles(styles);
 
-export default compose<CombinedProps, {}>(
-  linodeContext,
-  styled
-)(LinodeRebuild);
+export default compose<CombinedProps, {}>(linodeContext, styled)(LinodeRebuild);

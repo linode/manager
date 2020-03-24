@@ -21,9 +21,9 @@ import { requestNodePoolsForCluster } from './nodePools.requests';
 
 const getAllClusters = getAll<KubernetesCluster>(getKubernetesClusters);
 
-export const requestKubernetesClusters: ThunkActionCreator<
-  Promise<KubernetesCluster[]>
-> = () => dispatch => {
+export const requestKubernetesClusters: ThunkActionCreator<Promise<
+  KubernetesCluster[]
+>> = () => dispatch => {
   dispatch(requestClustersActions.started());
 
   return getAllClusters()
@@ -32,11 +32,12 @@ export const requestKubernetesClusters: ThunkActionCreator<
       for (; i < data.length; i++) {
         dispatch(requestNodePoolsForCluster({ clusterID: data[i].id }));
       }
-      return dispatch(
+      dispatch(
         requestClustersActions.done({
           result: data
         })
       );
+      return data;
     })
     .catch(error => {
       dispatch(requestClustersActions.failed({ error }));

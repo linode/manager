@@ -13,8 +13,7 @@ import withFirewalls, {
   Props as FireProps
 } from 'src/containers/firewalls.container';
 import AddFirewallDrawer from './AddFirewallDrawer';
-import DeleteDialog from './DeleteFirewallDialog';
-import DisableDialog from './DisableFirewallDialog';
+import FirewallDialog, { Mode } from './FirewallDialog';
 import FirewallTable from './FirewallTable';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -28,12 +27,13 @@ type CombinedProps = RouteComponentProps<{}> & FireProps;
 
 const FirewallLanding: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const { deleteFirewall, disableFirewall, enableFirewall } = props;
 
   const [addFirewallDrawerOpen, toggleAddFirewallDrawer] = React.useState<
     boolean
   >(false);
-  const [deleteModalOpen, toggleDeleteModal] = React.useState<boolean>(false);
-  const [disableModalOpen, toggleDisableModal] = React.useState<boolean>(false);
+  const [modalOpen, toggleModal] = React.useState<boolean>(false);
+  const [dialogMode, setDialogMode] = React.useState<Mode>('enable');
   const [selectedFirewallID, setSelectedFirewallID] = React.useState<
     number | undefined
   >(undefined);
@@ -41,35 +41,31 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
     string
   >('');
 
-  const handleOpenDeleteFirewallModal = (id: number, label: string) => {
+  const openModal = (mode: Mode, id: number, label: string) => {
     setSelectedFirewallID(id);
     setSelectedFirewallLabel(label);
-    toggleDeleteModal(true);
+    setDialogMode(mode);
+    toggleModal(true);
+  };
+
+  const handleOpenDeleteFirewallModal = (id: number, label: string) => {
+    openModal('delete', id, label);
+  };
+
+  const handleOpenEnableFirewallModal = (id: number, label: string) => {
+    openModal('enable', id, label);
   };
 
   const handleOpenDisableFirewallModal = (id: number, label: string) => {
-    setSelectedFirewallID(id);
-    setSelectedFirewallLabel(label);
-    toggleDisableModal(true);
+    openModal('disable', id, label);
   };
 
   const {
     data: firewalls,
     loading: firewallsLoading,
     error: firewallsError,
-    lastUpdated: firewallsLastUpdated,
-    listOfIDsInOriginalOrder: firewallsKeys
+    lastUpdated: firewallsLastUpdated
   } = props;
-
-  React.useEffect(() => {
-    if (
-      firewallsKeys.length === 0 &&
-      firewallsLastUpdated === 0 &&
-      !firewallsLoading
-    ) {
-      props.getFirewalls({ hello: 'hello' }, { world: 'world' });
-    }
-  }, [firewallsLastUpdated, firewallsLoading, firewallsKeys]);
 
   return (
     <React.Fragment>
@@ -101,29 +97,26 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
         loading={firewallsLoading}
         error={firewallsError}
         lastUpdated={firewallsLastUpdated}
-        listOfIDsInOriginalOrder={firewallsKeys}
         results={props.results}
         triggerDeleteFirewall={handleOpenDeleteFirewallModal}
         triggerDisableFirewall={handleOpenDisableFirewallModal}
-        triggerEditFirewall={(id, label) => null}
-        triggerEnableFirewall={(id, label) => null}
+        triggerEnableFirewall={handleOpenEnableFirewallModal}
       />
       <AddFirewallDrawer
         open={addFirewallDrawerOpen}
         onClose={() => toggleAddFirewallDrawer(false)}
+        onSubmit={props.createFirewall}
         title="Add a Firewall"
       />
-      <DeleteDialog
-        open={deleteModalOpen}
+      <FirewallDialog
+        open={modalOpen}
+        mode={dialogMode}
+        enableFirewall={enableFirewall}
+        disableFirewall={disableFirewall}
+        deleteFirewall={deleteFirewall}
         selectedFirewallID={selectedFirewallID}
         selectedFirewallLabel={selectedFirewallLabel}
-        closeDialog={() => toggleDeleteModal(false)}
-      />
-      <DisableDialog
-        open={disableModalOpen}
-        selectedFirewallID={selectedFirewallID}
-        selectedFirewallLabel={selectedFirewallLabel}
-        closeDialog={() => toggleDisableModal(false)}
+        closeDialog={() => toggleModal(false)}
       />
     </React.Fragment>
   );

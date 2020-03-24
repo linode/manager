@@ -46,6 +46,10 @@ import events, {
   defaultState as eventsDefaultState,
   State as EventsState
 } from 'src/store/events/event.reducer';
+import firewallDevices, {
+  defaultState as defaultFirewallDevicesState,
+  State as FirewallDevicesState
+} from 'src/store/firewalls/devices.reducer';
 import firewalls, {
   defaultState as defaultFirewallState,
   State as FirewallState
@@ -70,6 +74,7 @@ import linodeCreateReducer, {
   defaultState as linodeCreateDefaultState,
   State as LinodeCreateState
 } from 'src/store/linodeCreate/linodeCreate.reducer';
+import linodeConfigEvents from 'src/store/linodes/config/config.events';
 import linodeConfigs, {
   defaultState as defaultLinodeConfigsState,
   State as LinodeConfigsState
@@ -224,6 +229,7 @@ export interface ApplicationState {
   preferences: PreferencesState;
   initialLoad: InitialLoadState;
   firewalls: FirewallState;
+  firewallDevices: FirewallDevicesState;
   globalErrors: GlobalErrorState;
   longviewClients: LongviewState;
   longviewStats: LongviewStatsState;
@@ -245,6 +251,7 @@ const normalDefaultState = {
   preferences: preferencesState,
   initialLoad: initialLoadState,
   firewalls: defaultFirewallState,
+  firewallDevices: defaultFirewallDevicesState,
   globalErrors: defaultGlobalErrorState,
   longviewClients: defaultLongviewState,
   longviewStats: defaultLongviewStatsState
@@ -304,6 +311,7 @@ const reducers = combineReducers<ApplicationState>({
   preferences,
   initialLoad,
   firewalls,
+  firewallDevices,
   globalErrors,
   longviewClients: longview,
   longviewStats
@@ -320,7 +328,8 @@ const enhancers = compose(
       nodeBalancerEvents,
       nodeBalancerConfigEvents,
       volumeEvents,
-      diskEvents
+      diskEvents,
+      linodeConfigEvents
     )
   ),
   reduxDevTools ? reduxDevTools() : (f: any) => f

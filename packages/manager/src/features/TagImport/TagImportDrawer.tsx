@@ -20,7 +20,6 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import { ApplicationState } from 'src/store';
 import getEntitiesWithGroupsToImport, {
-  emptyGroupedEntities,
   GroupedEntitiesForImport,
   GroupImportProps
 } from 'src/store/selectors/getEntitiesWithGroupsToImport';
@@ -33,7 +32,6 @@ import {
 import { ThunkDispatch } from 'src/store/types';
 import { sendImportDisplayGroupSubmitEvent } from 'src/utilities/ga';
 import { sortAlphabetically } from 'src/utilities/sort-by';
-import { storage } from 'src/utilities/storage';
 import DisplayGroupList from './DisplayGroupList';
 
 interface StateProps {
@@ -63,9 +61,7 @@ export const getGroupImportList = (entities: GroupImportProps[]) => {
   return importList;
 };
 
-export const TagImportDrawer: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const TagImportDrawer: React.StatelessComponent<CombinedProps> = props => {
   const {
     actions: { close, update },
     entitiesWithGroupsToImport: { linodes, domains },
@@ -145,9 +141,7 @@ const mapStateToProps = (state: ApplicationState, ownProps: CombinedProps) => {
     loading: pathOr(false, ['tagImportDrawer', 'loading'], state),
     errors: pathOr([], ['tagImportDrawer', 'errors'], state),
     success: pathOr(false, ['tagImportDrawer', 'success'], state),
-    entitiesWithGroupsToImport: !storage.hasImportedGroups.get()
-      ? getEntitiesWithGroupsToImport(state)
-      : emptyGroupedEntities
+    entitiesWithGroupsToImport: getEntitiesWithGroupsToImport(state)
   };
 };
 
@@ -163,10 +157,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 // Create Label for GA event. Contains the number of Linodes and Domains
 // with groups that have been imported. Example: "Linodes: 3; Domains: 0"

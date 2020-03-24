@@ -136,7 +136,6 @@ export class App extends React.Component<CombinedProps, State> {
       toggleTheme,
       linodesError,
       linodes,
-      volumesData,
       domainsData,
       domainsError,
       typesError,
@@ -157,10 +156,7 @@ export class App extends React.Component<CombinedProps, State> {
       accountSettingsError,
       accountSettingsLoading,
       userId,
-      username,
-      volumesLoading,
-      bucketsLoading,
-      nodeBalancersLoading
+      username
     } = this.props;
 
     if (hasError) {
@@ -218,17 +214,8 @@ export class App extends React.Component<CombinedProps, State> {
           linodesLoadedOrErrorExists={
             linodesLoading === false || linodes?.length > 0 || !!linodesError
           }
-          volumesLoadedOrErrorExists={
-            volumesLoading === false || volumesData.length > 0 || !!volumesError
-          }
           domainsLoadedOrErrorExists={
             domainsLoading === false || domainsData.length > 0 || !!domainsError
-          }
-          bucketsLoadedOrErrorExists={
-            bucketsLoading === false || !!bucketsError
-          }
-          nodeBalancersLoadedOrErrorExists={
-            nodeBalancersLoading === false || !!nodeBalancersError
           }
           profileLoadedOrErrorExists={!!this.props.userId || !!profileError}
           accountLoadedOrErrorExists={
@@ -272,7 +259,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
 interface StateProps {
   /** Profile */
   linodes: Linode[];
-  volumesData: string[];
   domainsData: Domain[];
   images?: Image[];
   types?: string[];
@@ -345,7 +331,6 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
   ),
   linodesLoading: state.__resources.linodes.loading,
   volumesLoading: state.__resources.volumes.loading,
-  volumesData: state.__resources.volumes.items || [],
   domainsLoading: state.__resources.domains.loading,
   domainsData: state.__resources.domains.data || [],
   bucketsLoading: state.__resources.buckets.loading,

@@ -1,4 +1,5 @@
 import { KubernetesCluster } from 'linode-js-sdk/lib/kubernetes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import {
   connect,
   InferableComponentEnhancerWithProps,
@@ -81,7 +82,8 @@ type MapProps<ReduxStateProps, OwnProps> = (
   lastUpdated: number,
   clustersError: EntityError,
   clusters: KubernetesCluster[],
-  nodePoolsLoading: boolean
+  nodePoolsLoading: boolean,
+  nodePoolsError?: APIError[]
 ) => ReduxStateProps & Partial<KubernetesProps>;
 
 export type Props = DispatchProps & KubernetesProps;
@@ -102,43 +104,44 @@ interface Connected {
 const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
   mapKubernetesToProps?: MapProps<ReduxState, OwnProps>
 ) =>
-  connect(
-    (state: ApplicationState, ownProps: OwnProps) => {
-      const _clusters = state.__resources.kubernetes.entities;
-      // Add node pool and pricing data to clusters
-      const nodePools = state.__resources.nodePools.entities;
-      const types = state.__resources.types.entities;
-      const clusters = _clusters.map(thisCluster =>
-        extendCluster(thisCluster, nodePools, types)
-      );
+  connect((state: ApplicationState, ownProps: OwnProps) => {
+    const _clusters = state.__resources.kubernetes.entities;
+    // Add node pool and pricing data to clusters
+    const nodePools = state.__resources.nodePools.entities;
+    const types = state.__resources.types.entities;
+    const clusters = _clusters.map(thisCluster =>
+      extendCluster(thisCluster, nodePools, types)
+    );
 
-      const clustersLoading = state.__resources.kubernetes.loading;
-      const clustersError = state.__resources.kubernetes.error || {};
-      const lastUpdated = state.__resources.kubernetes.lastUpdated;
-      const nodePoolsLoading =
-        state.__resources.nodePools.loading &&
-        state.__resources.nodePools.lastUpdated === 0;
+    const clustersLoading = state.__resources.kubernetes.loading;
+    const clustersError = state.__resources.kubernetes.error || {};
+    const lastUpdated = state.__resources.kubernetes.lastUpdated;
+    const nodePoolsError = state.__resources.nodePools.error?.read;
+    const nodePoolsLoading =
+      state.__resources.nodePools.loading &&
+      state.__resources.nodePools.lastUpdated === 0 &&
+      !nodePoolsError;
 
-      if (mapKubernetesToProps) {
-        return mapKubernetesToProps(
-          ownProps,
-          clustersLoading,
-          lastUpdated,
-          clustersError,
-          clusters,
-          nodePoolsLoading
-        );
-      }
-
-      return {
+    if (mapKubernetesToProps) {
+      return mapKubernetesToProps(
+        ownProps,
         clustersLoading,
         lastUpdated,
         clustersError,
         clusters,
-        nodePoolsLoading
-      };
-    },
-    mapDispatchToProps
-  );
+        nodePoolsLoading,
+        nodePoolsError
+      );
+    }
+
+    return {
+      clustersLoading,
+      lastUpdated,
+      clustersError,
+      clusters,
+      nodePoolsLoading,
+      nodePoolsError
+    };
+  }, mapDispatchToProps);
 
 export default connected;

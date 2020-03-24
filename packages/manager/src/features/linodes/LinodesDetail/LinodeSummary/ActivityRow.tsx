@@ -36,7 +36,12 @@ export const ActivityRow: React.StatelessComponent<CombinedProps> = props => {
   const { classes, event } = props;
 
   const message = eventMessageGenerator(event);
-  const duration = formatEventSeconds(event.duration);
+
+  // There is currently an API bug where host_reboot event durations are not
+  // reported correctly. This patch simply hides the duration. @todo remove this
+  // check when the API bug is fixed.
+  const duration =
+    event.action === 'host_reboot' ? '' : formatEventSeconds(event.duration);
 
   if (!message) {
     return null;

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
 import TableBody from 'src/components/core/TableBody';
@@ -181,4 +182,6 @@ const UserSSHKeyPanel: React.FunctionComponent<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-export default styled(UserSSHKeyPanel);
+const enhanced = compose<CombinedProps, Props>(styled, React.memo);
+
+export default enhanced(UserSSHKeyPanel);

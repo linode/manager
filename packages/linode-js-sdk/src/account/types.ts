@@ -75,7 +75,7 @@ export interface InvoiceItem {
   label: string;
   quantity: null | number;
   type: 'hourly' | 'prepay' | 'misc';
-  unit_price: null | number;
+  unit_price: null | string;
   tax: number;
   total: number;
 }
@@ -187,6 +187,14 @@ export type EventAction =
   | 'domain_record_create'
   | 'domain_record_updated'
   | 'domain_record_delete'
+  | 'firewall_create'
+  | 'firewall_delete'
+  | 'firewall_device_add'
+  | 'firewall_device_remove'
+  | 'firewall_disable'
+  | 'firewall_enable'
+  | 'firewall_update'
+  | 'host_reboot'
   | 'image_update'
   | 'image_delete'
   | 'lassie_reboot'
@@ -211,6 +219,7 @@ export type EventAction =
   | 'linode_config_create'
   | 'linode_config_update'
   | 'linode_config_delete'
+  | 'lke_node_create'
   | 'longviewclient_create'
   | 'longviewclient_delete'
   | 'longviewclient_update'

@@ -13,13 +13,12 @@ import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
 import CookieWarning from 'src/components/CookieWarning';
 import DefaultLoader from 'src/components/DefaultLoader';
 import SnackBar from 'src/components/SnackBar';
-import { GA_ID, GTM_ID, isProduction } from 'src/constants';
+import { GA_ID, GTM_ID, isProductionBuild } from 'src/constants';
 import 'src/exceptionReporting';
 import LoginAsCustomerCallback from 'src/layouts/LoginAsCustomerCallback';
 import Logout from 'src/layouts/Logout';
 import 'src/request';
 import store from 'src/store';
-import 'src/utilities/createImageBitmap';
 import { saveState } from 'src/utilities/subscribeStore';
 import './index.css';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
@@ -54,7 +53,7 @@ store.subscribe(() => {
 /*
  * Initialize Analytic and Google Tag Manager
  */
-initAnalytics(isProduction, GA_ID);
+initAnalytics(isProductionBuild, GA_ID);
 
 initTagManager(GTM_ID);
 
@@ -132,6 +131,6 @@ ReactDOM.render(
   document.getElementById('root') as HTMLElement
 );
 
-if (module.hot && !isProduction) {
+if (module.hot && !isProductionBuild) {
   module.hot.accept();
 }
