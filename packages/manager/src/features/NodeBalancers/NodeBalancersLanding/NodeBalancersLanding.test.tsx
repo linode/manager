@@ -24,7 +24,9 @@ describe.skip('NodeBalancers', () => {
               createNodeBalancer: jest.fn(),
               deleteNodeBalancer: jest.fn(),
               getAllNodeBalancers: jest.fn(),
-              getAllNodeBalancersWithConfigs: jest.fn()
+              getAllNodeBalancersWithConfigs: jest.fn(),
+              getNodeBalancerPage: jest.fn(),
+              getNodeBalancerWithConfigs: jest.fn()
             }}
             setDocs={jest.fn()}
             clearDocs={jest.fn()}
