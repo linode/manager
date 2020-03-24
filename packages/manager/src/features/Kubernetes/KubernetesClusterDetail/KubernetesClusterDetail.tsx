@@ -3,9 +3,9 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
+import AppBar from 'src/components/core/AppBar';
 import Grid from 'src/components/core/Grid';
 import {
   createStyles,
@@ -13,41 +13,35 @@ import {
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
+import Tab from 'src/components/core/Tab';
+import Tabs from 'src/components/core/Tabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import KubeContainer, {
   DispatchProps
 } from 'src/containers/kubernetes.container';
-
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
-
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedCluster } from '.././types';
-import KubeConfigPanel from './KubeConfigPanel';
 import KubeSummaryPanel from './KubeSummaryPanel';
-
-import Navigation from './DetailNavigation';
+import NodePoolsDisplay from './NodePoolsDisplay';
 
 type ClassNames =
   | 'root'
   | 'title'
-  | 'titleWrapper'
+  | 'tabBar'
   | 'backButton'
   | 'section'
-  | 'panelItem'
   | 'button'
   | 'titleGridWrapper'
-  | 'tagHeading'
-  | 'sectionMain'
-  | 'sectionSideBar';
+  | 'tagHeading';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {},
     title: {},
-    titleWrapper: {
-      display: 'flex',
-      alignItems: 'center'
+    tabBar: {
+      marginTop: theme.spacing(3)
     },
     backButton: {
       margin: '-6px 0 0 -16px',
@@ -60,7 +54,6 @@ const styles = (theme: Theme) =>
     section: {
       alignItems: 'flex-start'
     },
-    panelItem: {},
     button: {
       marginBottom: theme.spacing(3),
       [theme.breakpoints.down('sm')]: {
@@ -101,8 +94,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
     clustersLoadError,
     clustersLoading,
     lastUpdated,
-    location,
-    ...rest
+    location
   } = props;
 
   const [endpoint, setEndpoint] = React.useState<string | null>(null);
@@ -184,14 +176,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
   return (
     <React.Fragment>
       <DocumentTitleSegment segment={`Kubernetes Cluster ${cluster.label}`} />
-      <Grid
-        container
-        justify="space-between"
-        alignItems="flex-end"
-        spacing={3}
-        className={classes.titleGridWrapper}
-      >
-        <Grid item xs={12} className={classes.titleWrapper}>
+      <Grid container className={classes.titleGridWrapper}>
+        <Grid item xs={12}>
           <Breadcrumb
             onEditHandlers={{
               editableTextTitle: cluster.label,
@@ -204,47 +190,34 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
             data-qa-breadcrumb
           />
         </Grid>
-      </Grid>
-
-      <Grid container direction="row" className={classes.section} spacing={3}>
-        <Grid
-          container
-          item
-          direction="row"
-          xs={12}
-          md={9}
-          className={classes.sectionMain}
-        >
-          <Navigation
-            location={location}
+        <AppBar position="static" color="default" role="tablist">
+          <Tabs
+            value={0}
+            indicatorColor="primary"
+            textColor="primary"
+            variant="scrollable"
+            scrollButtons="on"
+            className={classes.tabBar}
+          >
+            <Tab key="Summary" label="Summary" data-qa-tab="Summary" />}
+          </Tabs>
+        </AppBar>
+        <Grid item xs={12} className={classes.section}>
+          <KubeSummaryPanel
             cluster={cluster}
-            updateCluster={props.updateCluster}
-            updateNodePool={props.updateNodePool}
-            {...rest}
+            endpoint={endpoint}
+            endpointError={endpointError}
+            endpointLoading={endpointLoading}
           />
         </Grid>
-        <Grid
-          container
-          item
-          direction="row"
-          className={classes.sectionSideBar}
-          xs={12}
-          md={3}
-        >
-          <Grid item xs={12} className={classes.button}>
-            <KubeConfigPanel
-              clusterID={cluster.id}
-              clusterLabel={cluster.label}
-            />
-          </Grid>
-          <Grid item xs={12} className={classes.section}>
-            <KubeSummaryPanel
-              cluster={cluster}
-              endpoint={endpoint}
-              endpointError={endpointError}
-              endpointLoading={endpointLoading}
-            />
-          </Grid>
+        <Grid item xs={12}>
+          <NodePoolsDisplay
+            editing={false}
+            pools={cluster.node_pools}
+            poolsForEdit={[]}
+            types={props.typesData || []}
+            loading={props.nodePoolsLoading}
+          />
         </Grid>
       </Grid>
     </React.Fragment>
