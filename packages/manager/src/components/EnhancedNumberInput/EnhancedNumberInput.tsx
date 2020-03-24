@@ -11,7 +11,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 40,
     height: 40,
     minWidth: 40,
-    fontSize: '2rem',
     padding: 0
   },
   textField: {
@@ -60,9 +59,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       minHeight: 30
     },
     '& $plusIcon': {
-      width: 14
-    },
-    '& $minusIcon': {
       width: 14
     }
   }
