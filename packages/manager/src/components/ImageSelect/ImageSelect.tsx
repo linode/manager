@@ -161,7 +161,6 @@ export const ImageSelect: React.FC<Props> = props => {
                   placeholder="Choose an image"
                   options={options}
                   onChange={onChange}
-                  onFocus={onChange}
                   value={getSelectedOptionFromGroupedOptions(
                     selectedImageID || '',
                     options
