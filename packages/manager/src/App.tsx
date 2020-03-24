@@ -153,10 +153,7 @@ export class App extends React.Component<CombinedProps, State> {
       accountSettingsError,
       accountSettingsLoading,
       userId,
-      username,
-      volumesLoading,
-      bucketsLoading,
-      nodeBalancersLoading
+      username
     } = this.props;
 
     if (hasError) {
@@ -214,17 +211,8 @@ export class App extends React.Component<CombinedProps, State> {
           linodesLoadedOrErrorExists={
             linodesLoading === false || !!linodesError
           }
-          volumesLoadedOrErrorExists={
-            volumesLoading === false || !!volumesError
-          }
           domainsLoadedOrErrorExists={
             domainsLoading === false || !!domainsError
-          }
-          bucketsLoadedOrErrorExists={
-            bucketsLoading === false || !!bucketsError
-          }
-          nodeBalancersLoadedOrErrorExists={
-            nodeBalancersLoading === false || !!nodeBalancersError
           }
           profileLoadedOrErrorExists={!!this.props.userId || !!profileError}
           accountLoadedOrErrorExists={

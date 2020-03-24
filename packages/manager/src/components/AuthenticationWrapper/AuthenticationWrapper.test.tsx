@@ -23,13 +23,6 @@ const component = shallow<AuthenticationWrapper>(
     requestProfile={jest.fn()}
     requestRegions={jest.fn()}
     requestSettings={jest.fn()}
-    nodeBalancerActions={{
-      createNodeBalancer: jest.fn(),
-      deleteNodeBalancer: jest.fn(),
-      getAllNodeBalancers: jest.fn(),
-      getAllNodeBalancersWithConfigs: jest.fn(),
-      updateNodeBalancer: jest.fn()
-    }}
   >
     <div />
   </AuthenticationWrapper>

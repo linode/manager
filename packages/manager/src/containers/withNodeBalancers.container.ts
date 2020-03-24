@@ -7,6 +7,8 @@ type MapProps<TOuter, TInner> = (
   ownProps: TOuter,
   nodeBalancers: NodeBalancer[],
   loading: boolean,
+  results: number,
+  lastUpdated: number,
   error?: APIError[]
 ) => TInner;
 
@@ -14,7 +16,13 @@ export default <TInner extends {}, TOuter extends {}>(
   mapToProps: MapProps<TOuter, TInner>
 ) =>
   connect((state: ApplicationState, ownProps: TOuter) => {
-    const { loading, error, itemsById } = state.__resources.nodeBalancers;
+    const {
+      lastUpdated,
+      loading,
+      error,
+      itemsById,
+      results
+    } = state.__resources.nodeBalancers;
 
     /** itemsById looks like this
      *
@@ -27,14 +35,14 @@ export default <TInner extends {}, TOuter extends {}>(
      *
      * NodeBalancer[]
      */
-    const nodeBalancers = Object.keys(itemsById).map(
-      eachKey => itemsById[eachKey]
-    );
+    const nodeBalancers = Object.values(itemsById);
 
     return mapToProps(
       ownProps,
       nodeBalancers,
       loading,
-      error ? error.read : undefined
+      results,
+      lastUpdated,
+      error?.read ?? undefined
     );
   });
