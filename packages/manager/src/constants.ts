@@ -80,9 +80,9 @@ export const MAX_VOLUME_SIZE = 10240;
 export const INTERVAL = 1000;
 
 /**
- * Time after which data from the API is considered stale
+ * Time after which data from the API is considered stale (half an hour)
  */
-export const REFRESH_INTERVAL = 60000;
+export const REFRESH_INTERVAL = 60 * 30 * 1000;
 
 /**
  * Used by e.g. LISH to determine the websocket connection address.

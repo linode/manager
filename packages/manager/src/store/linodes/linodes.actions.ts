@@ -30,7 +30,7 @@ export const getLinodesActions = actionCreator.async<
     params?: any;
     filter?: any;
   },
-  GetAllData<Linode[]>,
+  GetAllData<Linode>,
   APIError[]
 >('get-all');
 

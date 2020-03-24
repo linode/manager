@@ -8,7 +8,13 @@ export interface State {
 }
 
 export const getInitialType = (): CreateTypes => {
-  const queryParams = parse(location.search.replace('?', '').toLowerCase());
+  let queryParams;
+  try {
+    queryParams = parse(location.search.replace('?', '').toLowerCase());
+  } catch {
+    // Broken query params shouldn't break the app, just default to fromImage
+    return 'fromImage';
+  }
 
   if (queryParams.type) {
     if (queryParams.subtype) {
