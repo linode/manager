@@ -59,7 +59,6 @@ const _loginWithToken = win => {
   const isoExpire = expireDate.toISOString();
   // cy.log(isoExpire);
   win.localStorage.setItem('authentication/expires', isoExpire);
-
   win.localStorage.setItem('authentication/expire-datetime', isoExpire);
   win.localStorage.setItem(
     'authentication/token',
