@@ -31,10 +31,10 @@ describe('Domain-related utilities', () => {
   });
 
   describe('Ability to edit and delete records', () => {
-    it('should allow user to edit NS Records with Name Servers containing "linode.com" substring, except for ns1 through ns5, with no restrictions for records without "linode.com" substring', () => {
-      expect(isEditableNameServer('ns3.linode.com')).toBe(false);
-      expect(isEditableNameServer('ns9.linode.com')).toBe(true);
-      expect(isEditableNameServer('randomtesturl.com')).toBe(true);
+    it('should allow user to edit NS Records except the 5 we prepend', () => {
+      expect(isEditableNameServer(-1)).toBe(false);
+      expect(isEditableNameServer(10)).toBe(true);
+      expect(isEditableNameServer(9999)).toBe(true);
     });
   });
 });

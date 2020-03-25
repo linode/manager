@@ -31,8 +31,8 @@ export const getInitialIPs = (ipsFromProps?: string[]): string[] => {
   return ips.length > 0 ? ips : [''];
 };
 
-export const isEditableNameServer = (nameServer: string) => {
-  const nameServerRegex = /ns([1-5]).linode.com/;
+export const isEditableNameServer = (nameServerId: number) => {
+  const nameServerDummyId = -1;
 
-  return nameServerRegex.test(nameServer) ? false : true;
+  return nameServerDummyId !== nameServerId ? true : false;
 };
