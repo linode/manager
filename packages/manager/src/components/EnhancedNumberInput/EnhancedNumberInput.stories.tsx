@@ -6,23 +6,29 @@ import EnhancedNumberInput from './EnhancedNumberInput';
 
 storiesOf('EnhancedNumberInput', module)
   .add('Default', () => {
+    const [value, setValue] = React.useState<number>(0);
+
     return (
       <Grid container style={{ padding: '2em' }}>
-        <EnhancedNumberInput inputValue={0} />
+        <EnhancedNumberInput value={value} setValue={setValue} />
       </Grid>
     );
   })
   .add('Small Variant', () => {
+    const [value, setValue] = React.useState<number>(0);
+
     return (
       <Grid container style={{ padding: '2em' }}>
-        <EnhancedNumberInput inputValue={0} small />
+        <EnhancedNumberInput value={value} setValue={setValue} small />
       </Grid>
     );
   })
   .add('Disabled', () => {
+    const [value, setValue] = React.useState<number>(0);
+
     return (
       <Grid container style={{ padding: '2em' }}>
-        <EnhancedNumberInput inputValue={0} disabled />
+        <EnhancedNumberInput value={value} setValue={setValue} disabled />
       </Grid>
     );
   });

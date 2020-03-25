@@ -67,50 +67,25 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   inputLabel?: string;
   small?: boolean;
-  inputValue: number;
+  value: number;
+  setValue: (value: number) => void;
   disabled?: boolean;
-  minusDisabled?: boolean;
 }
 
 type FinalProps = Props;
 
 export const EnhancedNumberInput: React.FC<FinalProps> = props => {
-  const [inputValue, setInputValue] = React.useState(0);
-  const [isDisabled, setIsDisabled] = React.useState(Boolean(props.disabled));
-  const [minusIsDisabled, setMinusIsDisabled] = React.useState(
-    Boolean(props.minusDisabled)
-  );
-
-  const {
-    small,
-    inputLabel,
-    inputValue: propInputValue,
-    disabled: propIsDisabled,
-    minusDisabled: propMinusIsDisabled,
-    ...rest
-  } = props;
-
-  React.useEffect(() => {
-    inputValue !== 0 ? setMinusIsDisabled(false) : setMinusIsDisabled(true);
-  }, [inputValue]);
-
-  React.useEffect(() => {
-    setIsDisabled(isDisabled);
-  }, [isDisabled]);
-
-  React.useEffect(() => {
-    setInputValue(inputValue);
-  }, [inputValue]);
+  const { inputLabel, small, value, setValue, disabled, ...rest } = props;
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(parseInt(e.target.value, 10));
+    setValue(parseInt(e.target.value, 10));
   };
 
-  const incrementValue = () => setInputValue(inputValue + 1);
+  const incrementValue = () => setValue(value + 1);
 
   const decrementValue = () => {
-    if (inputValue > 0) {
-      setInputValue(inputValue - 1);
+    if (value > 0) {
+      setValue(value - 1);
     }
   };
 
@@ -131,7 +106,7 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
           aria-label="Subtract 1"
           name="Subtract 1"
           onClick={decrementValue}
-          disabled={isDisabled || minusIsDisabled}
+          disabled={disabled || value === 0 ? true : false}
         >
           <Minus className={classes.minusIcon} />
         </Button>
@@ -144,7 +119,7 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
           name="Quantity"
           hideLabel
           small={small}
-          value={inputValue}
+          value={value}
           onChange={onChange}
           inputProps={{
             className: classnames({
@@ -152,7 +127,7 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
             })
           }}
           autoFocus={true}
-          disabled={isDisabled}
+          disabled={disabled}
         />
         <Button
           buttonType="primary"
@@ -162,7 +137,7 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
           aria-label="Add 1"
           name="Add 1"
           onClick={incrementValue}
-          disabled={isDisabled}
+          disabled={disabled}
         >
           <Plus className={classes.plusIcon} />
         </Button>
