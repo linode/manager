@@ -12,11 +12,12 @@ interface Props {
   isMakingRequest?: boolean;
   priceHelperText?: string;
   submitText?: string;
+  children?: JSX.Element;
 }
 
 type CombinedProps = Props;
 
-const CheckoutBar: React.FC<CombinedProps> = props => {
+const CheckoutBar = React.forwardRef<any, CombinedProps>((props, ref) => {
   const classes = useStyles();
 
   const {
@@ -32,7 +33,7 @@ const CheckoutBar: React.FC<CombinedProps> = props => {
   const price = calculatedPrice ?? 0;
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} ref={ref}>
       <Typography
         variant="h2"
         className={classes.sidebarTitle}
@@ -67,6 +68,6 @@ const CheckoutBar: React.FC<CombinedProps> = props => {
       </div>
     </div>
   );
-};
+});
 
 export default CheckoutBar;
