@@ -80,9 +80,15 @@ export const useReduxLoad = (
 
   const mountedRef = useRef<boolean>(true);
 
+  const _setLoading = (val: boolean) => {
+    if (mountedRef.current) {
+      setLoading(val);
+    }
+  };
+
   useEffect(() => {
     if (predicate && mountedRef.current) {
-      requestDeps(state, dispatch, deps, refreshInterval, setLoading);
+      requestDeps(state, dispatch, deps, refreshInterval, _setLoading);
     }
   }, [predicate, mountedRef.current]);
 
