@@ -6,7 +6,7 @@ import { connect, MapStateToProps } from 'react-redux';
 import { Sticky, StickyProps } from 'react-sticky';
 import { compose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
-import CheckoutBar from 'src/components/CheckoutBar';
+import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -424,8 +424,9 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
                     isMakingRequest={formIsSubmitting}
                     disabled={formIsSubmitting || userCannotCreateLinode}
                     onDeploy={this.handleCreateLinode}
-                    displaySections={displaySections}
-                  />
+                  >
+                    <DisplaySectionList displaySections={displaySections} />
+                  </CheckoutBar>
                   {this.props.documentation.length > 0 && (
                     <DocsSidebar docs={this.props.documentation} />
                   )}
