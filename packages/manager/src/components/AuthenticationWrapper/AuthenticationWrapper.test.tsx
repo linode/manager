@@ -15,7 +15,6 @@ const component = shallow<AuthenticationWrapper>(
     initSession={jest.fn()}
     requestAccount={jest.fn()}
     requestTypes={jest.fn()}
-    requestImages={jest.fn()}
     requestLinodes={jest.fn()}
     requestNotifications={jest.fn()}
     requestProfile={jest.fn()}

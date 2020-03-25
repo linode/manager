@@ -17,7 +17,7 @@ import { EntitiesAsObjectState } from '../types';
 export type State = EntitiesAsObjectState<Image>;
 
 export const defaultState: State = {
-  loading: true,
+  loading: false,
   lastUpdated: 0,
   results: 0,
   data: {},

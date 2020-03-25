@@ -3,7 +3,6 @@ import {
   AccountSettings,
   Notification
 } from 'linode-js-sdk/lib/account';
-import { Image } from 'linode-js-sdk/lib/images';
 import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes';
 import { Profile } from 'linode-js-sdk/lib/profile';
 import { Region } from 'linode-js-sdk/lib/regions';
@@ -20,7 +19,6 @@ import { MapState } from 'src/store/types';
 
 import { requestAccount } from 'src/store/account/account.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
-import { requestImages } from 'src/store/image/image.requests';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
 import { requestTypes } from 'src/store/linodeType/linodeType.requests';
 import { requestNotifications } from 'src/store/notification/notification.requests';
@@ -48,7 +46,6 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     // Initial Requests
     const dataFetchingPromises: Promise<any>[] = [
       this.props.requestAccount(),
-      this.props.requestImages(),
       this.props.requestProfile(),
       this.props.requestLinodes(),
       this.props.requestNotifications(),
@@ -127,7 +124,6 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 interface DispatchProps {
   initSession: () => void;
   requestAccount: () => Promise<Account>;
-  requestImages: () => Promise<Image[]>;
   requestLinodes: () => Promise<GetAllData<Linode>>;
   requestNotifications: () => Promise<Notification[]>;
   requestSettings: () => Promise<AccountSettings>;
@@ -141,7 +137,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 ) => ({
   initSession: () => dispatch(handleInitTokens()),
   requestAccount: () => dispatch(requestAccount()),
-  requestImages: () => dispatch(requestImages()),
   requestLinodes: () => dispatch(requestLinodes({})),
   requestNotifications: () => dispatch(requestNotifications()),
   requestSettings: () => dispatch(requestAccountSettings()),
