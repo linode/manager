@@ -77,6 +77,7 @@ type FinalProps = Props;
 export const EnhancedNumberInput: React.FC<FinalProps> = props => {
   const { inputLabel, small, value, setValue, disabled, ...rest } = props;
 
+  // TODO need to prevent negative numbers (from keyboard only)
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(parseInt(e.target.value, 10));
   };
@@ -116,6 +117,7 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
           type="number"
           min={0}
           label={inputLabel ? inputLabel : 'Edit Quantity'}
+          aria-live="polite"
           name="Quantity"
           hideLabel
           small={small}
