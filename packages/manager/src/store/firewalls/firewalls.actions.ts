@@ -1,11 +1,11 @@
 import {
   CreateFirewallPayload,
   Firewall,
+  FirewallRules,
   UpdateFirewallPayload
 } from 'linode-js-sdk/lib/firewalls';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { GetAllData } from 'src/utilities/getAll';
-
 import actionCreatorFactory from 'typescript-fsa';
 
 export const actionCreator = actionCreatorFactory(`@@manager/firewalls`);
@@ -15,7 +15,7 @@ export const getFirewalls = actionCreator.async<
     params?: any;
     filter?: any;
   },
-  GetAllData<Firewall[]>,
+  GetAllData<Firewall>,
   APIError[]
 >(`get-all`);
 
@@ -33,6 +33,15 @@ export const updateFirewallActions = actionCreator.async<
   Firewall,
   APIError[]
 >(`update`);
+
+export type UpdateFirewallRulesPayloadWithID = FirewallRules & {
+  firewallID: number;
+};
+export const updateFirewallRulesActions = actionCreator.async<
+  UpdateFirewallRulesPayloadWithID,
+  FirewallRules,
+  APIError[]
+>(`update-rules`);
 
 export const deleteFirewallActions = actionCreator.async<
   { firewallID: number },

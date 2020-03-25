@@ -1,5 +1,5 @@
 const Hapi = require('@hapi/hapi');
-const Inert = require('inert');
+const Inert = require('@hapi/inert');
 const path = require('path');
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;

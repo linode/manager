@@ -4,18 +4,12 @@ import {
   Notification
 } from 'linode-js-sdk/lib/account';
 import { Domain } from 'linode-js-sdk/lib/domains';
-import { Image } from 'linode-js-sdk/lib/images';
 import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes';
-import {
-  ObjectStorageBucket,
-  ObjectStorageCluster
-} from 'linode-js-sdk/lib/object-storage';
+import { ObjectStorageCluster } from 'linode-js-sdk/lib/object-storage';
 import { Profile } from 'linode-js-sdk/lib/profile';
 import { Region } from 'linode-js-sdk/lib/regions';
-import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import { compose } from 'recompose';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
@@ -27,23 +21,16 @@ import { MapState } from 'src/store/types';
 
 import { requestAccount } from 'src/store/account/account.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
-import { getAllBuckets } from 'src/store/bucket/bucket.requests';
 import { requestClusters } from 'src/store/clusters/clusters.actions';
 import { requestDomains } from 'src/store/domains/domains.requests';
-import { requestImages } from 'src/store/image/image.requests';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
 import { requestTypes } from 'src/store/linodeType/linodeType.requests';
-import {
-  withNodeBalancerActions,
-  WithNodeBalancerActions
-} from 'src/store/nodeBalancer/nodeBalancer.containers';
 import { requestNotifications } from 'src/store/notification/notification.requests';
 import { requestProfile } from 'src/store/profile/profile.requests';
 import { requestRegions } from 'src/store/regions/regions.actions';
-import { getAllVolumes } from 'src/store/volume/volume.requests';
 import { GetAllData } from 'src/utilities/getAll';
 
-type CombinedProps = DispatchProps & StateProps & WithNodeBalancerActions;
+type CombinedProps = DispatchProps & StateProps;
 
 export class AuthenticationWrapper extends React.Component<CombinedProps> {
   state = {
@@ -60,22 +47,16 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       return;
     }
 
-    const {
-      nodeBalancerActions: { getAllNodeBalancersWithConfigs }
-    } = this.props;
     // Initial Requests
     const dataFetchingPromises: Promise<any>[] = [
       this.props.requestAccount(),
       this.props.requestDomains(),
-      this.props.requestImages(),
       this.props.requestProfile(),
       this.props.requestLinodes(),
       this.props.requestNotifications(),
       this.props.requestSettings(),
       this.props.requestTypes(),
-      this.props.requestVolumes(),
-      this.props.requestRegions(),
-      getAllNodeBalancersWithConfigs()
+      this.props.requestRegions()
     ];
 
     try {
@@ -149,15 +130,12 @@ interface DispatchProps {
   initSession: () => void;
   requestAccount: () => Promise<Account>;
   requestDomains: () => Promise<Domain[]>;
-  requestImages: () => Promise<Image[]>;
-  requestLinodes: () => Promise<GetAllData<Linode[]>>;
+  requestLinodes: () => Promise<GetAllData<Linode>>;
   requestNotifications: () => Promise<Notification[]>;
   requestSettings: () => Promise<AccountSettings>;
   requestTypes: () => Promise<LinodeType[]>;
   requestRegions: () => Promise<Region[]>;
-  requestVolumes: () => Promise<Volume[]>;
   requestProfile: () => Promise<Profile>;
-  requestBuckets: () => Promise<ObjectStorageBucket[]>;
   requestClusters: () => Promise<ObjectStorageCluster[]>;
 }
 
@@ -167,21 +145,15 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   initSession: () => dispatch(handleInitTokens()),
   requestAccount: () => dispatch(requestAccount()),
   requestDomains: () => dispatch(requestDomains()),
-  requestImages: () => dispatch(requestImages()),
   requestLinodes: () => dispatch(requestLinodes({})),
   requestNotifications: () => dispatch(requestNotifications()),
   requestSettings: () => dispatch(requestAccountSettings()),
   requestTypes: () => dispatch(requestTypes()),
   requestRegions: () => dispatch(requestRegions()),
-  requestVolumes: () => dispatch(getAllVolumes()),
   requestProfile: () => dispatch(requestProfile()),
-  requestBuckets: () => dispatch(getAllBuckets()),
   requestClusters: () => dispatch(requestClusters())
 });
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose<CombinedProps, {}>(
-  connected,
-  withNodeBalancerActions
-)(AuthenticationWrapper);
+export default connected(AuthenticationWrapper);

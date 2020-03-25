@@ -14,7 +14,16 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands';
+import chaiString from 'chai-string';
 
-// Alternatively you can use CommonJS syntax:
-// require('./commands')
+// chai is a global exposed by Cypress which means
+// we can just simply extend it
+chai.use(chaiString);
+
+import './commands';
+import { deleteAllTestLinodes } from './api/linodes';
+import { deleteAllTestVolumes } from './api/volumes';
+it('Delete All Test Entities before anything happens', () => {
+  deleteAllTestLinodes();
+  deleteAllTestVolumes();
+});

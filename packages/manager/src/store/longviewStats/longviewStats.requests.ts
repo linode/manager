@@ -18,7 +18,7 @@ export const getClientStats = createRequestThunk(
     let packages: LongviewPackage[];
     try {
       const result = await get(api_key, 'getValues', { fields: ['packages'] });
-      packages = result.DATA.Packages || [];
+      packages = result?.DATA?.Packages || [];
     } catch {
       packages = [];
     }
@@ -34,7 +34,6 @@ export const getClientStats = createRequestThunk(
     if (lastUpdated && Date.now() / 1000 - lastUpdated > 60 * 30) {
       return Promise.resolve({ Packages: [...packages] });
     }
-
     return get(api_key, 'getLatestValue', {
       fields: ['cpu', 'disk', 'load', 'memory', 'network', 'sysinfo', 'uptime']
     }).then(response => ({

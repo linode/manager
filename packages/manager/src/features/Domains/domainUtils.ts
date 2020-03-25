@@ -30,3 +30,9 @@ export const getInitialIPs = (ipsFromProps?: string[]): string[] => {
   const ips = ipsFromProps ?? [''];
   return ips.length > 0 ? ips : [''];
 };
+
+export const isEditableNameServer = (nameServerId: number) => {
+  const nameServerDummyId = -1;
+
+  return nameServerDummyId !== nameServerId ? true : false;
+};
