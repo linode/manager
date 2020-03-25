@@ -12,7 +12,10 @@ import { CombinedProps, RebuildFromImage } from './RebuildFromImage';
 
 jest.mock('src/utilities/scrollErrorIntoView');
 jest.mock('src/components/EnhancedSelect/Select');
-jest.mock('src/hooks/useImages');
+jest.mock('src/hooks/useImages', () => ({
+  images: jest.fn()
+}));
+
 afterEach(cleanup);
 
 const props: CombinedProps = {
