@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   input: {
     textAlign: 'right',
+    '-moz-appearance': 'textfield',
     '&::-webkit-inner-spin-button': {
       '-webkit-appearance': 'none',
       margin: 0
@@ -30,10 +31,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&::-webkit-outer-spin-button': {
       '-webkit-appearance': 'none',
       margin: 0
-    },
-    // Firefox
-    '& input[type=number]': {
-      '-moz-appearance': 'textfield'
     }
   },
   plusIcon: {
@@ -77,7 +74,6 @@ type FinalProps = Props;
 export const EnhancedNumberInput: React.FC<FinalProps> = props => {
   const { inputLabel, small, value, setValue, disabled, ...rest } = props;
 
-  // TODO need to prevent negative numbers (from keyboard only)
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(parseInt(e.target.value, 10));
   };
@@ -115,7 +111,6 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
           {...rest}
           className={classes.textField}
           type="number"
-          min={0}
           label={inputLabel ? inputLabel : 'Edit Quantity'}
           aria-live="polite"
           name="Quantity"
@@ -126,7 +121,8 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
           inputProps={{
             className: classnames({
               [classes.input]: true
-            })
+            }),
+            min: 0
           }}
           autoFocus={true}
           disabled={disabled}
