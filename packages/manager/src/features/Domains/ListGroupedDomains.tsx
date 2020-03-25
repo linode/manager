@@ -47,7 +47,7 @@ const styles = (theme: Theme) =>
       }
     },
     groupContainer: {
-      '&:first-of-type': {
+      [theme.breakpoints.up('md')]: {
         '& $tagHeaderRow > td': {
           padding: `${theme.spacing(1) + 2}px 0`
         }
@@ -85,8 +85,10 @@ const ListGroupedDomains: React.StatelessComponent<CombinedProps> = props => {
     classes
   } = props;
 
+  const dataLength = data.length;
+
   const groupedDomains = compose(sortGroups, groupByTags)(data);
-  const tableWrapperProps = { handleOrderChange, order, orderBy };
+  const tableWrapperProps = { handleOrderChange, order, orderBy, dataLength };
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
 
@@ -114,7 +116,7 @@ const ListGroupedDomains: React.StatelessComponent<CombinedProps> = props => {
                       className={classes.groupContainer}
                       data-qa-tag-header={tag}
                     >
-                      <TableRow className={classes.tagHeaderRow}>
+                      <TableRow className={classes.tagHeaderRow} role="cell">
                         <TableCell colSpan={7}>
                           <Typography
                             variant="h2"

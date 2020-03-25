@@ -279,17 +279,12 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         clients: `rgba(214, 0, 0, ${graphTransparency})`
       },
       processCount: `rgba(113, 86, 245, ${graphTransparency})`,
-      blue: '#64ADF6',
-      blueBorder: '#3F99F0',
-      green: '#5BD765',
-      greenBorder: '#18B523',
+      blue: `rgba(100, 173, 246, ${graphTransparency})`,
+      green: `rgba(91, 215, 101, ${graphTransparency})`,
       orange: `rgba(255, 179, 77, ${graphTransparency})`,
-      purple: '#d9b0d9',
-      purpleBorder: '#d9b0d9',
-      red: '#FF633C',
-      redBorder: '#F13A0A',
-      yellow: '#FFDC7D',
-      yellowBorder: '#DCB64E'
+      purple: `rgba(217, 176, 217, ${graphTransparency})`,
+      red: `rgba(255, 99, 60, ${graphTransparency})`,
+      yellow: `rgba(255, 220, 125, ${graphTransparency})`
     },
     font: {
       normal: primaryFonts.normal,
@@ -1234,6 +1229,9 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           padding: spacingUnit + 2,
           borderTop: `1px solid ${primaryColors.divider}`,
           borderBottom: `1px solid ${primaryColors.divider}`,
+          '&:first-child': {
+            paddingLeft: 15
+          },
           '&:last-child': {
             paddingRight: spacingUnit + 2
           },
@@ -1245,7 +1243,12 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         },
         head: {
           fontSize: '.9rem',
-          lineHeight: 1.1
+          lineHeight: 1.1,
+          '&.emptyCell': {
+            display: 'inline-block',
+            width: '100%',
+            height: 48
+          }
         },
         body: {
           fontSize: '.9rem'
@@ -1302,24 +1305,18 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           position: 'relative',
           zIndex: 1,
           height: spacingUnit * 5 + 1,
-          '&:before': {
-            borderLeftColor: 'white'
-          },
           '&:hover, &:focus': {
             '&$hover': {
               backgroundColor: '#fbfbfb',
-              '&:before': {
-                backgroundColor: primaryColors.main
+              [breakpoints.up('md')]: {
+                boxShadow: `inset 5px 0 0 ${primaryColors.main}`
               }
             }
           }
         },
         head: {
           height: 'auto',
-          backgroundColor: '#fbfbfb',
-          '&:before': {
-            borderLeftColor: '#fbfbfb'
-          }
+          backgroundColor: '#fbfbfb'
         },
         hover: {
           cursor: 'pointer',

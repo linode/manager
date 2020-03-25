@@ -17,47 +17,25 @@ Note the workspace names are defined in the root `package.json`
 - linode-js-sdk: /packages/linode-js-sdk
 - linode-js-sdk: /packages/linode-manager
 
-## Starting All Projects
+## Starting the App locally
 
 If your intention is to start a development server for all projects, you have a few different options. First, we recommend checking out the [creating an OAuth client](./CREATE_CLIENT.md) and [creating an .env file for Cloud Manager](./CLOUD.md) docs, as you'll most likely need an OAuth Client and `.env` file for projects such as the Cloud Manager.
 
-To start all projects:
+To start all projects run `yarn up`.
 
-While in the root...
-1. Run `yarn install:all` to install all dependencies
-2. Run `yarn start:all` to start a development server for all projects
-
-Alternatively, you can run `yarn up` which runs all previous commands.
-
-## Starting a Single Project
-
-Starting a single project is similar to the previous instructions with the exception of adding a `--scope` flag to to the command. So for example, starting the Cloud Manager project looks like:
-
-1. Run `yarn install:all` to install all dependencies
-2. Run `yarn workspace linode-js-sdk start` to start a development server for the JavaScript SDK
-   * `linode-js-sdk` is the name located in `packages/linode-js-sdk/package.json`
-
-### To do the same thing with Yarn
-
-You can write a command like this:
-`yarn workspace linode-js-sdk run start`
-
-Or in the case of the manager
-`yarn workspace linode-manager run start`
+You can also use Docker without building any image:
+`docker run --rm -v $(pwd):/usr/src/ -w /usr/src/ -p 3000:3000 node:10-slim yarn up`
 
 ## Testing
 See [this document](./TESTING.md)
 
-## Helper Scripts
+## Helper Scripts and other commands
 
-* `yarn clean` is an alias that will remove both top-level and package-level `node_modules`.
-* `yarn test` is an alias that will run a test suite in the Cloud Manager project
-  * `yarn test packages/manager/src/App.test.tsx` for example
+To learn more about all commands read [COMMANDS]](./COMMANDS.md) 
 
 ## Okay. I've got my development server running. So how do I contribute?
 
 Please see our [contributing](./CONTRIBUTING.md) and [code conventions](./CODE_CONVENTIONS.md) guides for instructions on how to get started with contributing to this project.
-
 
 ## Just serving the built app
 ### legacy solution

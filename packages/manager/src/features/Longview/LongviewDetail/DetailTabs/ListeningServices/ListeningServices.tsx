@@ -59,7 +59,12 @@ export const ServicesTable: React.FC<TableProps> = props => {
   const classes = useStyles();
 
   return (
-    <OrderBy data={services} orderBy={'process'} order={'asc'}>
+    <OrderBy
+      data={services}
+      orderBy={'process'}
+      order={'asc'}
+      preferenceKey={'listening-services'}
+    >
       {({ data: orderedData, handleOrderChange, order, orderBy }) => (
         <Paginate data={orderedData} pageSize={25}>
           {({

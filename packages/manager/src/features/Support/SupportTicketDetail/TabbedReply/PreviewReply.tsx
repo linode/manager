@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import { Converter } from 'showdown';
-import 'showdown-highlightjs-extension';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -9,8 +7,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
-import { sanitizeHTML } from 'src/utilities/sanitize-html';
+import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
 
 type ClassNames = 'root';
 
@@ -34,26 +31,13 @@ type CombinedProps = WithStyles<ClassNames> & Props;
 const PreviewReply: React.FC<CombinedProps> = props => {
   const { classes, value, error } = props;
 
-  const markupToMarkdown = new Converter({
-    extensions: ['highlightjs'],
-    simplifiedAutoLink: true,
-    openLinksInNewWindow: true
-  }).makeHtml(value);
-
   return (
     <Paper className={classes.root} error={error}>
-      <Typography
-        dangerouslySetInnerHTML={{
-          __html: sanitizeHTML(markupToMarkdown)
-        }}
-      />
+      <HighlightedMarkdown textOrMarkdown={value} />
     </Paper>
   );
 };
 
 const styled = withStyles(styles);
 
-export default compose<CombinedProps, Props>(
-  React.memo,
-  styled
-)(PreviewReply);
+export default compose<CombinedProps, Props>(React.memo, styled)(PreviewReply);

@@ -3,6 +3,7 @@
 interface TaxBanner {
   tax_name: string;
   date: string;
+  linode_tax_id?: string;
 }
 
 type OneClickApp = Record<string, string>;
@@ -10,11 +11,35 @@ type OneClickApp = Record<string, string>;
 interface Flags {
   promos: boolean;
   vatBanner: TaxBanner;
+  taxBanner: TaxBanner;
   lkeHideButtons: boolean;
   firewalls: boolean;
   oneClickApps: OneClickApp;
-  longview: boolean;
-  longviewTabs: boolean;
+  promotionalOffers: PromotionalOffer[];
+}
+
+type PromotionalOfferFeature =
+  | 'Linodes'
+  | 'Volumes'
+  | 'NodeBalancers'
+  | 'Object Storage'
+  | 'Kubernetes';
+
+interface PromotionalOfferButton {
+  text: string;
+  href: string;
+  type: 'primary' | 'secondary';
+}
+
+export interface PromotionalOffer {
+  name: string;
+  body: string;
+  footnote: string;
+  logo: string;
+  alt: string;
+  features: PromotionalOfferFeature[];
+  displayOnDashboard: boolean;
+  buttons: PromotionalOfferButton[];
 }
 
 /**

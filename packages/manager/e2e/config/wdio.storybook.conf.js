@@ -2,13 +2,12 @@ const { merge } = require('ramda');
 const { argv } = require('yargs');
 const { browserCommands } = require('./custom-commands');
 const wdioMaster = require('./wdio.conf.js');
-const { constants } = require('../constants');
 const { browserConf } = require('./browser-config');
 const selectedBrowser = () => {
     if (argv.browser) {
         return browserConf[argv.browser];
     }
-    if (process.env.DOCKER || argv.debug) {
+    if (argv.debug) {
      return browserConf['chrome'];
     }
     return browserConf['headlessChrome'];
@@ -16,13 +15,13 @@ const selectedBrowser = () => {
 
 const seleniumSettings = require('./selenium-config');
 const specsToRun = argv.story ? [ `./src/components/${argv.story}/${argv.story}.spec.js` ] : ['./src/components/**/*.spec.js'];
-const servicesToStart = process.env.DOCKER || argv.debug ? [] : ['selenium-standalone'];
+const servicesToStart = ['selenium-standalone'];
 
 exports.config = merge(wdioMaster.config, {
     specs: specsToRun,
-    baseUrl: process.env.DOCKER ? 'http://manager-storybook:6006' : 'http://localhost:6006',
+    baseUrl: 'http://localhost:6006',
     capabilities: [selectedBrowser()],
-    maxInstances: process.env.DOCKER || argv.debug ?  1 : 4,
+    maxInstances: argv.debug ? 1: 2,
     reporterOptions: {
         junit: {
             outputDir: './storybook-test-results'

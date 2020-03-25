@@ -1,9 +1,9 @@
 import * as classNames from 'classnames';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
 import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
+import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
 import FolderIcon from 'src/assets/icons/entityIcons/folder.svg';
 import KubeIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
 import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
@@ -80,6 +80,7 @@ export type Variant =
   | 'stackscript'
   | 'kube'
   | 'bucket'
+  | 'firewall'
   | 'object'
   | 'folder';
 
@@ -103,12 +104,13 @@ const iconMap = {
   stackscript: StackScriptIcon,
   kube: KubeIcon,
   bucket: BucketIcon,
+  firewall: FirewallIcon,
   object: ObjectIcon,
   folder: FolderIcon
 };
 
 const getIcon = (variant: Variant) => {
-  return pathOr(LinodeIcon, [variant], iconMap);
+  return iconMap[variant] ?? LinodeIcon;
 };
 
 const EntityIcon: React.StatelessComponent<CombinedProps> = props => {
@@ -146,8 +148,16 @@ const EntityIcon: React.StatelessComponent<CombinedProps> = props => {
         return 'offline';
     }
   };
+
+  const getStatusForFirewall = (fStatus: string) =>
+    fStatus === 'enabled' ? 'running' : 'offline';
+
   const finalStatus =
-    variant === 'domain' ? status && getStatusForDomain(status) : status;
+    variant === 'domain'
+      ? status && getStatusForDomain(status)
+      : variant === 'firewall'
+      ? status && getStatusForFirewall(status)
+      : status;
 
   return (
     <div
@@ -192,9 +202,6 @@ const EntityIcon: React.StatelessComponent<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(
-  styled,
-  withTheme
-);
+const enhanced = compose<CombinedProps, Props>(styled, withTheme);
 
 export default enhanced(EntityIcon);

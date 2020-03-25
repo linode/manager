@@ -1,3 +1,5 @@
+TESTING.md
+
 # Testing Linode Manager
 
 ## Unit Tests
@@ -6,12 +8,14 @@ The unit tests for Linode Cloud Manager are written in Typescript using the [Jes
 
 To run tests:
 
-**You must have built the Js SDK**
+**You must have built the JS SDK**
+
 ```
-yarn install:all && yarn workspace linode-js-sdk run build 
+yarn install:all && yarn workspace linode-js-sdk build
 ```
 
-Then yu can start the tests:
+Then you can start the tests:
+
 ```
 yarn test
 ```
@@ -45,164 +49,204 @@ yarn workspace linode-manager run test:debug
 Test execution will stop at the debugger statement, and you will be able to use Chrome's normal debugger to step through
 the tests (open `chrome://inspect/#devices` in Chrome).
 
+### React Testing Library
+
+We have some older tests that still use the Enzyme framework, but for new tests we generally use [React Testing Library](https://testing-library.com/docs/react-testing-library/intro). This library provides a set of tools to render React components from within the Jest environment. The library's philosophy is that components should be tested as closely as possible to how they are used.
+
+A simple test using this library will look something like this:
+
+```js
+import { cleanup } from "@testing-library/react";
+import { renderWithTheme } from "src/utilities/testHelpers";
+import Component from "./wherever";
+
+afterEach(cleanup);
+
+describe("My component", () => {
+  it("should have some text", () => {
+    const { getByText } = renderWithTheme(<Component />);
+    getByText("some text");
+  });
+});
+```
+
+Handling events such as clicks is a little more involved:
+
+```js
+import { cleanup, fireEvent } from "@testing-library/react";
+import { renderWithTheme } from "src/utilities/testHelpers";
+import Component from "./wherever";
+
+afterEach(cleanup);
+
+const props = { onClick: jest.fn() };
+
+describe("My component", () => {
+  it("should have some text", () => {
+    const { getByText } = renderWithTheme(<Component {...props} />);
+    const button = getByText("Submit");
+    fireEvent.click(button);
+    expect(props.onClick).toHaveBeenCalled();
+  });
+});
+```
+
+If, while using the Testing Library, your tests trigger a warning in the console from React ("Warning: An update to Component inside a test was not wrapped in act(...)"), first check out the library author's [blog post](https://kentcdodds.com/blog/fix-the-not-wrapped-in-act-warning) about this. Depending on your situation, you probably will have to `wait` for something in your test:
+
+```js
+import { fireEvent, wait } from '@testing-library/react';
+
+...
+await wait(() => fireEvent.click(getByText('Delete')));
+...
+```
+
+### Mocking
+
+Jest has substantial built-in mocking capabilities, and we use many of the available patterns. We generally use them to avoid making network requests in unit tests, but there are some other cases (mentioned below).
+
+In general, components that make network requests should take any request handlers as props. Then testing is as simple as passing `someProp: jest.fn()` and making assertions normally. When that isn't possible, you can do the following:
+
+```js
+jest.mock("linode-js-sdk/lib/kubernetes", () => ({
+  getKubeConfig: () => jest.fn()
+}));
+```
+
+Some components, such as our ActionMenu, don't lend themselves well to unit testing (they often have complex DOM structures from MUI and it's hard to target). We have mocks for most of these components in a `__mocks__` directory adjacent to their respective components. To make use of these, just tell Jest to use the mock:
+
+    jest.mock('src/components/ActionMenu/ActionMenu');
+
+Any `<ActionMenu>`s rendered by the test will be simplified versions that are easier to work with.
+
 ## End-to-End Tests
 
-End-to-end Testing of the Linode Cloud Manager can be done locally by running Selenium & WebdriverIO tests
-alongside the local development environment, or by running multiple containers via docker-compose.
+E2E tests use [Cypress](https://cypress.io).
 
-The Cloud Manager application has a suite of automated browser tests that live in the `packages/manager/e2e/specs`
-directory. These browser tests are written in Node.js using the [WebdriverIO](https://webdriver.io)
-selenium framework. The configuration files for the WDIO test runner can be found in `packages/manager/e2e/config`.
+### Setup
 
-Prior to running the tests, you must set `MANAGER_USER=` and `MANAGER_PASS` env variables in your
-`packages/manager/.env` file. These credentials will be used to login prior to each test.
+Cypress uses a configuration file in `packages/manager/config/`
+The file can be `development.json` when running `cy:e2e`
 
-
-##### Dependencies
-
-* Java JDK 12
-```bash
-brew cask uninstall java
-brew tap caskroom/versions
-brew cask install java
+This file should look like this:
 ```
-* Node.js 10 LTS (`brew install node@10`)
-* Google Chrome v60+ (`brew cask install google-chrome`)
-* Yarn  (`brew install yarn`)
-
-#### Run Suite
-```
-## Starts the local development environment
-
-yarn up
-
-## New shell
-## Starts selenium (Must be running to execute tests)
-
-yarn selenium
-
-## New shell
-## Executes specs matching e2e/specs/**/*.spec.js
-
-yarn e2e
-
-# or to run only the smoke tests
-
-yarn e2e --smoke 
+{
+    "env": {
+      "oauthtoken": "xxxx",
+      "apiroot": "https://api.linode.com",
+      "loginUrl": "https://login.linode.com/login",
+      "loginRoot": "https://login.linode.com"
+    }
+}
 ```
 
-### Command Line Arguments
+To get your OAuth token, go to https://cloud.linode.com/profile/tokens and click "Add a Personal Access Token.
 
-The `yarn e2e` command accepts a number of helpful command line arguments that facilitate
-writing and running tests locally.
-
-Running an individual spec file:
-
-```
-yarn e2e --file [/path/to/test.spec.js]
-```
-
-Running E2E suite in a non-default browser
-
-```
-yarn e2e --browser [chrome,firefox,headlessChrome,safari]
-```
-
-#### Run Suite in Docker Local Dev Environment
-
-##### Dependencies
-
-* Docker v18+
-* Docker-Compose v1.20.1+
-
-##### Prerequisites
-
-In order to run the tests via docker-compose, you will need to update your OAuth Client Redirect URL
-to: `https://manager-local:3000/oauth/callback`. The recommendation is to generate a new OAuth
-client in the [Manager](https://cloud.linode.com), set the redirect url to the above, and set the
-`REACT_APP_CLIENT_ID=` to the new OAuth Client ID in the `packages/manager/.env` file. You must also set
-`MANAGER_USER=` and `MANAGER_PASS` env variables in your `packages/manager/.env` file. These credentials will be used
-to login prior to each test.
-
-##### Running the Suite
-
-**NOT WORKING ANYMORE**
-```
-docker-compose -f integration-test.yml up --build --exit-code-from manager-e2e
-
-# OR if Yarn is installed:
-
-yarn docker:e2e
-```
+This file is read by Cypress, and used to configure environment setting for the execution.
+See cypress documentation on how to check this in the UI: https://docs.cypress.io/guides/references/configuration.html#Browser
 
 
-# Testing React Storybook Components
+### Run Cypress e2e tests
+
+#### dependencies
+
+Run `yarn install:all && yarn run cypress verify`.
+
+#### How to run locally without Docker
+
+Run:
+
+- `yarn up` in one terminal
+- In a **new terminal** `yarn run wait-on http://localhost:3000 && yarn cy:e2e`
+
+`yarn run wait-on` will simply wait for the website on 3000 to be ready.
+
+#### How to run with Docker
+
+Check docker is installed.
+Run `yarn docker:cy` or `docker build -t cloudcy -f Dockerfile-e2e . && docker run --rm cloudcy`
+
+### Run Storybook UI Components e2e tests
+
+#### dependencies
+
+Run `yarn install:all && yarn selenium:install`.
+When running `yarn selenium:install` will check that selenium is installed.
+We do not need to take care of Selenium more after this, storybook will take care of launching it.
+
+#### How to run locally without docker
+
+Run:
+
+- `yarn storybook` in one terminal
+- In a **new terminal** `yarn run wait-on http://localhost:6006 && yarn storybook:e2e`
+
+`yarn run wait-on` will simply wait for the storybook server on 6006 to be ready.
+
+#### How to run with docker
+
+Check docker is installed.
+Run `yarn docker:sb` or `docker build -t cloudsb -f Dockerfile-storybook . && docker run --rm cloudsb`
+
+### Testing React Storybook Components
 
 In addition to the Linode Manager E2E tests, there are also UI tests for the ReactJS components.
 The components are tested via [Storybook](https://github.com/storybooks/storybook) and the test specs
 live in `src/components/ComponentName/ComponentName.spec.js`. The WDIO config lives in `e2e/config/wdio.storybook.conf.js`
 
-##### Dependencies
+#### Dependencies
 
-* Same as Testing Manager
+- Java JDK 12
+
+      		brew cask uninstall java
+      		brew tap caskroom/versions
+      		brew cask install java
+
+- Node.js 10 LTS
+  brew install node@10
+- Google Chrome v80+
+  brew cask install google-chrome
+- Yarn
+
+  brew install yarn
 
 #### Run Suite
 
-```
-# Starts storybook
+    # Starts storybook
 
-yarn storybook
+    yarn storybook
 
-# you do not need to start selenium for this, this will be started by wdio automatically
+    # you do not need to start selenium for this, this will be started by wdio automatically
 
-## New shell
-## Executes specs matching src/components/**/*.spec.js
+    ## New shell
+    ## Executes specs matching src/components/**/*.spec.js
 
-yarn storybook:e2e
-```
+    yarn storybook:e2e
 
 #### Run a Single Test
-```
-# Executes spec matching src/components/StoryName/StoryName.spec.js
 
-yarn storybook:e2e --story StoryName
-```
+    # Executes spec matching src/components/StoryName/StoryName.spec.js
+
+    yarn storybook:e2e --story StoryName
 
 #### Run a Test in Non-Headless Chrome
 
-```
 yarn selenium
 
-## New Shell
-## The --debug flag spawns a visible chrome session
+    ## New Shell
+    ## The --debug flag spawns a visible chrome session
 
-yarn storybook:e2e --debug --story StoryName
-```
+    yarn storybook:e2e --debug --story StoryName
 
-#### Run Suite in Docker Environment
+## Accessibility Testing
 
-##### Dependencies
-
-* Same as Testing Manager
-
-##### Running the Suite
-**NOT WORKING ANYMORE**
-```
-docker-compose -f integration-test.yml up --build --exit-code-from manager-e2e
-
-# OR if Yarn is installed:
-
-yarn docker:e2e
-```
-
-# Accessibility Testing
-**probably not working anymore**
+**broken, needs chromedriver update**
 
 The axe-core accessibility testing script has been integrated into the webdriverIO-based testing framework to enable automated accessibility testing. At present, the script merely navigates to all routes described in `packages/managere2e/constants.js`, loads the page and runs the accessibility tests.
 
 ##### Dependencies
 
-* Same as E2E Manager tests
+- Same as E2E Manager tests
 
 #### Run Suite
 

@@ -1,13 +1,37 @@
-import { Firewall } from 'linode-js-sdk/lib/firewalls';
+import {
+  CreateFirewallPayload,
+  Firewall,
+  FirewallRules
+} from 'linode-js-sdk/lib/firewalls';
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
+import {
+  UpdateFirewallPayloadWithID,
+  UpdateFirewallRulesPayloadWithID
+} from 'src/store/firewalls/firewalls.actions';
 import { State } from 'src/store/firewalls/firewalls.reducer';
-import { getAllFirewalls as _getFirewalls } from 'src/store/firewalls/firewalls.requests';
+import {
+  createFirewall as _create,
+  deleteFirewall as _delete,
+  disableFirewall as _disable,
+  enableFirewall as _enable,
+  getAllFirewalls as _getFirewalls,
+  updateFirewall as _update,
+  updateFirewallRules as _updateFirewallRules
+} from 'src/store/firewalls/firewalls.requests';
 import { ThunkDispatch } from 'src/store/types';
 import { GetAllData } from 'src/utilities/getAll';
 
-interface DispatchProps {
-  getFirewalls: (params: any, filters: any) => Promise<GetAllData<Firewall[]>>;
+export interface DispatchProps {
+  getFirewalls: (params?: any, filters?: any) => Promise<GetAllData<Firewall>>;
+  createFirewall: (payload: CreateFirewallPayload) => Promise<Firewall>;
+  deleteFirewall: (firewallID: number) => Promise<{}>;
+  disableFirewall: (firewallID: number) => Promise<Firewall>;
+  enableFirewall: (firewallID: number) => Promise<Firewall>;
+  updateFirewall: (payload: UpdateFirewallPayloadWithID) => Promise<Firewall>;
+  updateFirewallRules: (
+    payload: UpdateFirewallRulesPayloadWithID
+  ) => Promise<FirewallRules>;
 }
 
 /* tslint:disable-next-line */
@@ -36,7 +60,14 @@ const connected = <ReduxStateProps extends {}, OwnProps extends {}>(
     },
     (dispatch: ThunkDispatch) => ({
       getFirewalls: (params, filter) =>
-        dispatch(_getFirewalls({ params, filter }))
+        dispatch(_getFirewalls({ params, filter })),
+      createFirewall: payload => dispatch(_create(payload)),
+      deleteFirewall: (firewallID: number) => dispatch(_delete({ firewallID })),
+      disableFirewall: (firewallID: number) =>
+        dispatch(_disable({ firewallID })),
+      enableFirewall: (firewallID: number) => dispatch(_enable({ firewallID })),
+      updateFirewall: payload => dispatch(_update(payload)),
+      updateFirewallRules: payload => dispatch(_updateFirewallRules(payload))
     })
   );
 

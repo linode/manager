@@ -17,12 +17,11 @@ import { EntitiesAsObjectState } from '../types';
 export type State = EntitiesAsObjectState<Image>;
 
 export const defaultState: State = {
-  loading: true,
+  loading: false,
   lastUpdated: 0,
   results: 0,
   data: {},
-  error: {},
-  listOfIDsInOriginalOrder: []
+  error: {}
 };
 
 /**
@@ -39,7 +38,6 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
       draft.loading = false;
       draft.lastUpdated = Date.now();
-      draft.listOfIDsInOriginalOrder = result.map(eachImage => eachImage.id);
       draft.data = result.reduce((acc, eachImage) => {
         if (eachImage.label.match(/kube/i)) {
           // NOTE: Temporarily hide public Kubernetes images until ImageSelect redesign.
@@ -68,10 +66,6 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       draft.loading = false;
       draft.data[result.id] = result;
       draft.results = Object.keys(draft.data).length;
-      draft.listOfIDsInOriginalOrder = [
-        ...state.listOfIDsInOriginalOrder,
-        result.id
-      ];
     }
 
     if (isType(action, requestImageForStoreActions.failed)) {
@@ -107,10 +101,6 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       draft.lastUpdated = Date.now();
       draft.data[result.id] = result;
       draft.results = Object.keys(draft.data).length;
-      draft.listOfIDsInOriginalOrder = [
-        ...state.listOfIDsInOriginalOrder,
-        result.id
-      ];
     }
 
     if (isType(action, createImageActions.failed)) {
@@ -132,9 +122,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       delete dataClone[id];
 
       draft.data = dataClone;
-      draft.listOfIDsInOriginalOrder = state.listOfIDsInOriginalOrder.filter(
-        eachID => eachID !== id
-      );
+
       draft.results = Object.keys(dataClone).length;
       if (draft.results !== state.results) {
         // something was actually updated
@@ -149,13 +137,6 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       dataClone[image.id] = image;
 
       draft.data = dataClone;
-      /**
-       * in the case of updating and adding, we're just going to add the new ID to the
-       * end of the list. Set() will make sure to get rid of the dupes in the list
-       */
-      draft.listOfIDsInOriginalOrder = [
-        ...new Set([...state.listOfIDsInOriginalOrder, image.id])
-      ];
       draft.results = Object.keys(dataClone).length;
       draft.lastUpdated = Date.now();
     }

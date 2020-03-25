@@ -344,7 +344,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
            * cannot make changes to Linode's nameservers.
            */
           render: ({ id, name, target, ttl_sec }: DomainRecord) =>
-            /linode.com/.test(target) ? null : (
+            id === -1 ? null : (
               <ActionMenu
                 editPayload={{
                   id,
@@ -817,7 +817,7 @@ const msToReadable = (v: number): null | string =>
   pathOr(null, [v], {
     0: 'Default',
     300: '5 minutes',
-    3600: '1 hours',
+    3600: '1 hour',
     7200: '2 hours',
     14400: '4 hours',
     28800: '8 hours',
@@ -841,7 +841,7 @@ const prependLinodeNS = compose<any, any, DomainRecord[]>(
       priority: 0,
       type: 'NS',
       name: '',
-      id: 9999,
+      id: -1,
       protocol: null,
       weight: 0,
       tag: null,
@@ -854,7 +854,7 @@ const prependLinodeNS = compose<any, any, DomainRecord[]>(
       priority: 0,
       type: 'NS',
       name: '',
-      id: 9999,
+      id: -1,
       protocol: null,
       weight: 0,
       tag: null,
@@ -867,7 +867,7 @@ const prependLinodeNS = compose<any, any, DomainRecord[]>(
       priority: 0,
       type: 'NS',
       name: '',
-      id: 9999,
+      id: -1,
       protocol: null,
       weight: 0,
       tag: null,
@@ -880,7 +880,7 @@ const prependLinodeNS = compose<any, any, DomainRecord[]>(
       priority: 0,
       type: 'NS',
       name: '',
-      id: 9999,
+      id: -1,
       protocol: null,
       weight: 0,
       tag: null,
@@ -893,7 +893,7 @@ const prependLinodeNS = compose<any, any, DomainRecord[]>(
       priority: 0,
       type: 'NS',
       name: '',
-      id: 9999,
+      id: -1,
       protocol: null,
       weight: 0,
       tag: null,

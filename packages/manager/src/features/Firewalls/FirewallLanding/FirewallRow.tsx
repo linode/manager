@@ -1,19 +1,15 @@
-import {
-  Firewall,
-  FirewallDevice,
-  getFirewallDevices as _getDevices
-} from 'linode-js-sdk/lib/firewalls';
+import { Firewall, FirewallDevice } from 'linode-js-sdk/lib/firewalls';
 import { APIError } from 'linode-js-sdk/lib/types';
-import { take } from 'ramda';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
-
-import TableRow from 'src/components/core/TableRow';
+import Typography from 'src/components/core/Typography';
+import EntityIcon from 'src/components/EntityIcon';
+import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
-
+import TableRow from 'src/components/TableRow';
+import useFirewallDevices from 'src/hooks/useFirewallDevices';
 import ActionMenu, { ActionHandlers } from './FirewallActionMenu';
-
-import { devices as mockDevices } from 'src/__data__/firewallDevices';
 
 interface Props extends ActionHandlers {
   firewallID: number;
@@ -22,9 +18,9 @@ interface Props extends ActionHandlers {
   firewallRules: Firewall['rules'];
 }
 
-type CombinedProps = Props;
+export type CombinedProps = Props;
 
-const FirewallRow: React.FC<CombinedProps> = props => {
+export const FirewallRow: React.FC<CombinedProps> = props => {
   const {
     firewallID,
     firewallLabel,
@@ -33,39 +29,41 @@ const FirewallRow: React.FC<CombinedProps> = props => {
     ...actionHandlers
   } = props;
 
-  const [devicesLoading, setDevicesLoading] = React.useState<boolean>(false);
-  const [devicesError, setDevicesError] = React.useState<
-    APIError[] | undefined
-  >(undefined);
-  const [devices, setDevices] = React.useState<FirewallDevice[]>([]);
-
-  const getFirewallDevices = () => {
-    setDevicesLoading(true);
-
-    _getDevices(1, mockDevices)
-      .then(({ data }) => {
-        setDevices(data);
-        setDevicesLoading(false);
-      })
-      .catch((e: APIError[]) => {
-        setDevicesError(e);
-        setDevicesLoading(false);
-      });
-  };
+  const {
+    devices: { itemsById, error, loading, lastUpdated },
+    requestDevices
+  } = useFirewallDevices(firewallID);
+  const devices = Object.values(itemsById);
 
   React.useEffect(() => {
-    getFirewallDevices();
+    if (lastUpdated === 0 && !loading) {
+      requestDevices();
+    }
   }, []);
 
   const count = getCountOfRules(firewallRules);
 
   return (
-    <TableRow key={`firewall-row-${firewallID}`}>
-      <TableCell>{firewallLabel}</TableCell>
+    <TableRow
+      key={`firewall-row-${firewallID}`}
+      rowLink={`/firewalls/${firewallID}`}
+      data-testid={`firewall-row-${firewallID}`}
+      aria-label={firewallLabel}
+    >
+      <TableCell>
+        <Grid container wrap="nowrap" alignItems="center">
+          <Grid item className="py0">
+            <EntityIcon variant="firewall" status={firewallStatus} />
+          </Grid>
+          <Grid item>
+            <Typography variant="h3">{firewallLabel}</Typography>
+          </Grid>
+        </Grid>
+      </TableCell>
       <TableCell>{firewallStatus}</TableCell>
       <TableCell>{getRuleString(count)}</TableCell>
       <TableCell>
-        {getLinodesCellString(devices, devicesLoading, devicesError)}
+        {getLinodesCellString(devices, loading, error.read)}
       </TableCell>
       <TableCell>
         <ActionMenu
@@ -112,7 +110,7 @@ const getLinodesCellString = (
   data: FirewallDevice[],
   loading: boolean,
   error?: APIError[]
-): string => {
+): string | JSX.Element => {
   if (loading) {
     return 'Loading...';
   }
@@ -125,15 +123,31 @@ const getLinodesCellString = (
     return 'None assigned';
   }
 
-  const howManyDevicesMinusThree = data.length - 3;
+  return getDeviceLinks(data);
+};
 
-  const firstThreeLabels = take(3, data).map(
-    (e: FirewallDevice) => e.entity.label
+export const getDeviceLinks = (data: FirewallDevice[]): JSX.Element => {
+  const firstThree = data.slice(0, 3);
+  return (
+    <>
+      {firstThree.map((thisDevice, idx) => (
+        <Link
+          className="link secondaryLink"
+          key={thisDevice.id}
+          to={`/linodes/${thisDevice.entity.id}`}
+          data-testid="firewall-row-link"
+        >
+          {idx > 0 && `, `}
+          {thisDevice.entity.label}
+        </Link>
+      ))}
+      {data.length > 3 && (
+        <span>
+          {`, `}plus {data.length - 3} more.
+        </span>
+      )}
+    </>
   );
-
-  return howManyDevicesMinusThree > 0
-    ? `${firstThreeLabels.join(', ')}, plus ${howManyDevicesMinusThree} more`
-    : firstThreeLabels.join(', ');
 };
 
 export default compose<CombinedProps, Props>(React.memo)(FirewallRow);

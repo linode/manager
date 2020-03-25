@@ -28,9 +28,7 @@ const LongviewPlans = DefaultLoader({
 
 type CombinedProps = RouteComponentProps<{}>;
 
-export const LongviewLanding: React.FunctionComponent<
-  CombinedProps
-> = props => {
+export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => {
   const subscriptionRequestHook = useAPIRequest<LongviewSubscription[]>(
     () => getLongviewSubscriptions().then(response => response.data),
     []
@@ -70,7 +68,6 @@ export const LongviewLanding: React.FunctionComponent<
           removeCrumbX={1}
         />
         <DocumentationButton
-          /** This URL points to the old guide until the update is live */
           href={'https://www.linode.com/docs/platform/longview/longview/'}
         />
       </Box>

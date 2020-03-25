@@ -1,7 +1,4 @@
-import * as React from 'react';
 import { connect } from 'react-redux';
-import { branch, compose, renderComponent } from 'recompose';
-import CircleProgress from 'src/components/CircleProgress';
 import { MapState } from 'src/store/types';
 
 const isLoading = (state: { loading: boolean; lastUpdated: number }) =>
@@ -10,6 +7,7 @@ const isLoading = (state: { loading: boolean; lastUpdated: number }) =>
 interface OuterProps {
   configsLoading: boolean;
   disksLoading: boolean;
+  linodeId: number;
 }
 
 interface InnerProps {
@@ -23,12 +21,11 @@ const collectLoadingState: MapState<InnerProps, OuterProps> = (
   const {
     linodes,
     types,
-    volumes,
     notifications,
     linodeConfigs,
     linodeDisks
   } = state.__resources;
-  const { configsLoading, disksLoading } = ownProps;
+  const { configsLoading, disksLoading, linodeId } = ownProps;
 
   return {
     loading:
@@ -36,19 +33,13 @@ const collectLoadingState: MapState<InnerProps, OuterProps> = (
       disksLoading ||
       isLoading(linodes) ||
       isLoading(types) ||
-      isLoading(volumes) ||
       isLoading(notifications) ||
-      isLoading(linodeConfigs) ||
-      isLoading(linodeDisks)
+      (linodeConfigs[linodeId] && isLoading(linodeConfigs[linodeId])) ||
+      (linodeDisks[linodeId] && isLoading(linodeDisks[linodeId]))
   };
 };
 
 /**
  * Collect relevant loading states from Redux, configs request, and disks requests.
- *
- * If any are true, render the loading component. (early return)
  */
-export default compose(
-  connect(collectLoadingState),
-  branch(({ loading }) => loading, renderComponent(() => <CircleProgress />))
-);
+export default connect(collectLoadingState);

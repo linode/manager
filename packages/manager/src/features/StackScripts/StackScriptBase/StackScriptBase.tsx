@@ -40,7 +40,7 @@ type CurrentFilter = 'label' | 'deploys' | 'revision';
 
 type SortOrder = 'asc' | 'desc';
 
-type APIFilters = 'label' | 'deployments_active' | 'updated';
+type APIFilters = 'label' | 'deployments_total' | 'updated';
 
 interface FilterInfo {
   apiFilter: APIFilters | null;
@@ -115,7 +115,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
       sortOrder: 'asc',
       currentFilterType: null,
       currentFilter: {
-        ['+order_by']: 'deployments_active',
+        ['+order_by']: 'deployments_total',
         ['+order']: 'desc'
       },
       currentSearchFilter: {},
@@ -260,7 +260,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
           };
         case 'deploys':
           return {
-            apiFilter: 'deployments_active',
+            apiFilter: 'deployments_total',
             currentFilter: 'deploys'
           };
         case 'revision':
@@ -528,6 +528,8 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
               <Table
                 isResponsive={!isSelecting}
                 aria-label="List of StackScripts"
+                rowCount={listOfStackScripts.length}
+                colCount={isSelecting ? 1 : 4}
                 noOverflow={true}
                 tableClass={classes.table}
                 removeLabelonMobile={!isSelecting}

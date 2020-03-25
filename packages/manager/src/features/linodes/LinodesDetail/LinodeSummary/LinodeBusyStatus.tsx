@@ -22,7 +22,6 @@ const styles = (theme: Theme) =>
       marginTop: theme.spacing(2)
     },
     status: {
-      textTransform: 'capitalize',
       marginBottom: theme.spacing(1)
     }
   });
@@ -30,12 +29,13 @@ const styles = (theme: Theme) =>
 interface LinodeDetailContextProps {
   status: string;
   linodeEvents?: Event[];
+  linodeId: number;
 }
 
 type CombinedProps = LinodeDetailContextProps & WithStyles<ClassNames>;
 
 const LinodeBusyStatus: React.StatelessComponent<CombinedProps> = props => {
-  const { classes, status, linodeEvents } = props;
+  const { classes, status, linodeEvents, linodeId } = props;
 
   const firstEventWithProgress = (linodeEvents || []).find(
     eachEvent => typeof eachEvent.percent_complete === 'number'
@@ -49,7 +49,7 @@ const LinodeBusyStatus: React.StatelessComponent<CombinedProps> = props => {
     <Paper className={classes.root}>
       <div className={classes.status}>
         <Typography>
-          {transitionText(status, firstEventWithProgress)}: {value}%
+          {transitionText(status, linodeId, firstEventWithProgress)}: {value}%
         </Typography>
       </div>
       <LinearProgress value={value} />
@@ -63,7 +63,8 @@ const enhanced = compose<CombinedProps, {}>(
   styled,
   withLinodeDetailContext(({ linode }) => ({
     status: linode.status,
-    linodeEvents: linode._events
+    linodeEvents: linode._events,
+    linodeId: linode.id
   }))
 );
 

@@ -13,28 +13,38 @@ const groupsToItems = (groups: any[]) => {
   }, []);
 };
 
-export default ({ options, value, onChange, errorText }: any) => {
+export default ({
+  options,
+  value,
+  label,
+  onChange,
+  errorText,
+  isMulti
+}: any) => {
   const handleChange = (event: any) => {
     const option = _options.find(
-      (thisOption: any) => thisOption.value === event.currentTarget.value
+      /* tslint:disable-next-line */
+      (thisOption: any) => thisOption.value == event.currentTarget.value
     );
-    onChange(option);
+    isMulti ? onChange([option]) : onChange(option);
   };
 
   const _options = groupsToItems(options);
   return (
     <>
+      <div>{label}</div>
       <select
         data-testid="select"
-        value={value || ''}
+        value={value ?? ''}
         onBlur={handleChange}
-        onChange={() => null}
+        onChange={handleChange}
       >
         {_options.map((thisOption: any) => (
           <option
-            key={thisOption.value || ''}
-            value={thisOption.value || ''}
+            key={thisOption.value ?? ''}
+            value={thisOption.value ?? ''}
             aria-selected={thisOption.value === value}
+            data-testid={`mock-option`}
           >
             {thisOption.label}
           </option>

@@ -127,6 +127,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
   state: State = {
     importDrawerOpen: false,
     importDrawerSubmitting: false,
+    importDrawerErrors: undefined,
     remote_nameserver: '',
     createDrawerMode: 'create',
     createDrawerOpen: false,
@@ -173,6 +174,8 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     });
 
   handleSuccess = (domain: Domain) => {
+    this.props.upsertDomain(domain);
+
     if (domain.id) {
       return this.props.history.push(`/domains/${domain.id}`);
     }
@@ -268,10 +271,8 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     });
   };
 
-  openCreateDomainDrawer = (e: React.MouseEvent<HTMLElement>) => {
+  openCreateDomainDrawer = () => {
     this.props.openForCreating('Created from Domain Landing');
-
-    e.preventDefault();
   };
 
   render() {
@@ -294,7 +295,19 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     }
 
     if (!domainsData || domainsData.length === 0) {
-      return <RenderEmpty onClick={this.openCreateDomainDrawer} />;
+      return (
+        <React.Fragment>
+          <RenderEmpty
+            onCreateDomain={this.openCreateDomainDrawer}
+            onImportZone={this.openImportZoneDrawer}
+          />
+          <DomainZoneImportDrawer
+            open={this.state.importDrawerOpen}
+            onClose={this.closeImportZoneDrawer}
+            onSuccess={this.handleSuccess}
+          />
+        </React.Fragment>
+      );
     }
 
     /**
@@ -504,7 +517,8 @@ const EmptyCopy = () => (
 );
 
 const RenderEmpty: React.StatelessComponent<{
-  onClick: (e: React.MouseEvent<HTMLElement>) => void;
+  onCreateDomain: () => void;
+  onImportZone: () => void;
 }> = props => {
   return (
     <React.Fragment>
@@ -515,8 +529,12 @@ const RenderEmpty: React.StatelessComponent<{
         icon={DomainIcon}
         buttonProps={[
           {
-            onClick: props.onClick,
+            onClick: props.onCreateDomain,
             children: 'Add a Domain'
+          },
+          {
+            onClick: props.onImportZone,
+            children: 'Import a Zone'
           }
         ]}
       />

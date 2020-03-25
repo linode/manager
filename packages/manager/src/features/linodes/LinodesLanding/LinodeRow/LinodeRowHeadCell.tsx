@@ -189,12 +189,12 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
             {recentEvent && linodeInTransition(status, recentEvent) && (
               <ProgressDisplay
                 className={classes.loadingStatus}
-                text={transitionText(status, recentEvent)}
+                text={transitionText(status, id, recentEvent)}
                 progress={recentEvent.percent_complete}
               />
             )}
             <div className={classes.labelStatusWrapper}>
-              <Link to={`/linodes/${id}`} tabIndex={-1}>
+              <Link to={`/linodes/${id}`} tabIndex={0}>
                 <Typography
                   variant="h3"
                   className={classes.wrapHeader}

@@ -20,12 +20,16 @@ import {
 } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
+import Typography from 'src/components/core/Typography';
+import ErrorState from 'src/components/ErrorState';
 import NotFound from 'src/components/NotFound';
 import { convertForAria } from 'src/components/TabLink/TabLink';
 import Glish from './Glish';
 import Weblish from './Weblish';
 
 type ClassNames = 'tabs' | 'tabRoot' | 'progress' | 'notFound';
+
+const AUTH_POLLING_INTERVAL = 2000;
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -59,6 +63,7 @@ const styles = (theme: Theme) =>
 
 interface State {
   loading: boolean;
+  authenticated: boolean;
   linode?: Linode;
   token?: string;
 }
@@ -68,9 +73,11 @@ type CombinedProps = WithStyles<ClassNames> &
 
 class Lish extends React.Component<CombinedProps, State> {
   state: State = {
-    loading: true
+    loading: true,
+    authenticated: true
   };
 
+  interval: number;
   mounted: boolean;
 
   componentDidMount() {
@@ -109,11 +116,44 @@ class Lish extends React.Component<CombinedProps, State> {
       });
 
     this.refreshToken();
+    /**
+     * If the user signs out in another window, we want to close this session.
+     * We're using window.localStorage directly here because of closures, and
+     * because using Redux state won't work since a Lish window will have its
+     * independent store that will be unaffected by logouts in other tabs/windows.
+     */
+
+    this.interval = window.setInterval(
+      this.checkAuthentication,
+      AUTH_POLLING_INTERVAL
+    );
   }
 
   componentWillUnmount() {
     this.mounted = false;
+    window.clearInterval(this.interval);
   }
+
+  checkAuthentication = () => {
+    const token = window.localStorage.getItem('authentication/token');
+    if (!token && !!this.state.authenticated) {
+      try {
+        window.close();
+      } catch (e) {
+        /**
+         * window.close() will only work if the window was opened
+         * with window.open() or similar. If a user bookmarks a
+         * Lish url and navigates there directly, this will fail.
+         * Failure is ok here--there's no real way we can close a
+         * tab if a user opened it directly.
+         */
+      }
+      if (this.mounted) {
+        // In case the above didn't work, we'll render an error state based on this flag.
+        this.setState({ authenticated: false });
+      }
+    }
+  };
 
   refreshToken = () => {
     const {
@@ -195,7 +235,21 @@ class Lish extends React.Component<CombinedProps, State> {
       classes,
       match: { path }
     } = this.props;
-    const { loading, linode, token } = this.state;
+    const { authenticated, loading, linode, token } = this.state;
+
+    // If the window.close() logic above fails, we render an error state as a fallback
+    if (!authenticated) {
+      return (
+        <ErrorState
+          errorText={
+            <Typography style={{ color: 'white' }}>
+              You have been logged out in another window. Please log in again to
+              continue using Lish.
+            </Typography>
+          }
+        />
+      );
+    }
 
     const tabA11yProps = (idName: string) => {
       const ariaVal = convertForAria(idName);

@@ -3,10 +3,10 @@ import { Config, Linode } from 'linode-js-sdk/lib/linodes';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, Dispatch } from 'redux';
 import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import Breadcrumb from 'src/components/Breadcrumb';
@@ -25,9 +25,10 @@ import OrderBy from 'src/components/OrderBy';
 import { PaginationProps } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
 import Toggle from 'src/components/Toggle';
+import { REFRESH_INTERVAL } from 'src/constants';
 import _withEvents, { EventsProps } from 'src/containers/events.container';
 import withVolumes, {
-  Props as WithVolumesProps
+  StateProps as WithVolumesProps
 } from 'src/containers/volumes.container';
 import withVolumesRequests, {
   VolumesRequests
@@ -239,7 +240,12 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   ];
 
   componentDidMount() {
+    const { getAllVolumes, volumesLastUpdated } = this.props;
     this.mounted = true;
+    // If we haven't requested Volumes, or it's been a while, request them
+    if (Date.now() - volumesLastUpdated > REFRESH_INTERVAL) {
+      getAllVolumes().catch(_ => null); // Errors through Redux
+    }
   }
 
   componentWillUnmount() {
@@ -644,7 +650,7 @@ const EmptyCopy = () => (
   </>
 );
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) =>
+const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
     {
       openForEdit,
@@ -708,9 +714,15 @@ export default compose<CombinedProps, Props>(
   })),
   withLinodes(),
   withVolumes(
-    (ownProps: CombinedProps, volumesData, volumesLoading, volumesError) => {
-      const mappedData = volumesData.items.map(id => volumesData.itemsById[id]);
-      const mappedVolumesDataWithLinodes = mappedData.map(volume => {
+    (
+      ownProps: CombinedProps,
+      volumesData,
+      volumesLoading,
+      volumesLastUpdated,
+      volumesResults,
+      volumesError
+    ) => {
+      const mappedVolumesDataWithLinodes = volumesData.map(volume => {
         const volumeWithLinodeData = addAttachedLinodeInfoToVolume(
           volume,
           ownProps.linodesData
@@ -725,6 +737,7 @@ export default compose<CombinedProps, Props>(
         volumesData,
         mappedVolumesDataWithLinodes,
         volumesLoading,
+        volumesLastUpdated,
         volumesError
       };
     }

@@ -7,8 +7,8 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import TableHead from 'src/components/core/TableHead';
+import TableRow from 'src/components/core/TableRow';
 import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 
 type ClassNames =
@@ -109,7 +109,7 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
 
     return (
       <TableHead>
-        <TableRow className={classes.tr}>
+        <TableRow className={classes.tr} role="rowgroup">
           {!!isSelecting && (
             <TableCell
               className={classNames({
@@ -138,7 +138,7 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
               data-qa-stackscript-active-deploy-header
               {...maybeAddSortingProps('deploys')}
             >
-              Active Deploys
+              Total Deploys
             </Cell>
           )}
           {!isSelecting && (

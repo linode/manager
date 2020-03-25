@@ -1,36 +1,29 @@
 import { Image } from 'linode-js-sdk/lib/images';
-import * as React from 'react';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
-
 import { always, cond, groupBy, propOr } from 'ramda';
-
+import * as React from 'react';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
+import { useImages } from 'src/hooks/useImages';
+import { useReduxLoad } from 'src/hooks/useReduxLoad';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-type ClassNames = 'root' | 'selectContainer' | 'icon';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    width: '100%'
+  },
+  icon: {
+    marginTop: theme.spacing(2) + 14,
+    marginLeft: -theme.spacing(1)
+  },
+  selectContainer: {
+    width: 415 + theme.spacing(2),
+    [theme.breakpoints.down('xs')]: {
       width: '100%'
-    },
-    icon: {
-      marginTop: theme.spacing(2) + 14,
-      marginLeft: -theme.spacing(1)
-    },
-    selectContainer: {
-      width: 415 + theme.spacing(2),
-      [theme.breakpoints.down('xs')]: {
-        width: '100%'
-      }
     }
-  });
+  }
+}));
 
 interface Props {
   images: Image[];
@@ -45,89 +38,75 @@ interface Props {
   required?: boolean;
 }
 
-interface State {
-  renderedImages: GroupType<string>[];
-}
+type CombinedProps = Props;
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+export const ImageSelect: React.FC<CombinedProps> = props => {
+  const {
+    helperText,
+    images,
+    imageError,
+    imageFieldError,
+    isMulti,
+    label,
+    onSelect,
+    value,
+    disabled,
+    required
+  } = props;
 
-export class ImageSelect extends React.Component<CombinedProps, State> {
-  mounted: boolean = false;
-  state: State = {
-    renderedImages: getImagesOptions(this.props.images) as GroupType<string>[]
-  };
+  const classes = useStyles();
 
-  componentDidMount() {
-    this.mounted = true;
-  }
+  const { _loading } = useReduxLoad(['images']);
 
-  componentWillUnmount() {
-    this.mounted = false;
-  }
+  // Check for request errors in Redux
+  const {
+    images: { error }
+  } = useImages();
+  const reduxError = error?.read
+    ? getAPIErrorOrDefault(error.read, 'Unable to load Images')[0].reason
+    : undefined;
 
-  componentDidUpdate(prevProps: CombinedProps) {
-    if (!this.mounted) {
-      return;
-    }
-    if (prevProps.images !== this.props.images) {
-      this.setState({
-        renderedImages: getImagesOptions(this.props.images) as GroupType<
-          string
-        >[]
-      });
-    }
-  }
+  const renderedImages = React.useMemo(() => getImagesOptions(images), [
+    images
+  ]);
 
-  render() {
-    const {
-      classes,
-      helperText,
-      imageError,
-      imageFieldError,
-      isMulti,
-      onSelect,
-      value,
-      disabled,
-      required
-    } = this.props;
-    const { renderedImages } = this.state;
-    return (
-      <React.Fragment>
-        <Grid
-          className={classes.root}
-          container
-          wrap="nowrap"
-          direction="row"
-          justify="flex-start"
-          alignItems="flex-start"
-        >
-          <Grid item className={classes.selectContainer}>
-            <Select
-              id={'image-select'}
-              value={value}
-              isMulti={Boolean(isMulti)}
-              errorText={imageError || imageFieldError}
-              disabled={disabled || Boolean(imageError)}
-              onChange={onSelect}
-              options={renderedImages as any}
-              placeholder="Select an Image"
-              textFieldProps={{
-                required
-              }}
-              label={this.props.label || 'Image'}
-            />
-          </Grid>
-          <Grid item xs={1}>
-            <HelpIcon
-              className={classes.icon}
-              text={helperText || 'Choosing a 64-bit distro is recommended.'}
-            />
-          </Grid>
+  return (
+    <React.Fragment>
+      <Grid
+        className={classes.root}
+        container
+        wrap="nowrap"
+        direction="row"
+        justify="flex-start"
+        alignItems="flex-start"
+      >
+        <Grid item className={classes.selectContainer}>
+          <Select
+            id={'image-select'}
+            isLoading={_loading}
+            value={value}
+            isMulti={Boolean(isMulti)}
+            errorText={imageError || imageFieldError || reduxError}
+            disabled={disabled || Boolean(imageError)}
+            onChange={onSelect}
+            options={renderedImages as any}
+            placeholder="Select an Image"
+            textFieldProps={{
+              required
+            }}
+            label={label || 'Image'}
+          />
         </Grid>
-      </React.Fragment>
-    );
-  }
-}
+        <Grid item xs={1}>
+          <HelpIcon
+            className={classes.icon}
+            text={helperText || 'Choosing a 64-bit distro is recommended.'}
+          />
+        </Grid>
+      </Grid>
+    </React.Fragment>
+  );
+};
 
 export const getImagesOptions = (images: Image[]) => {
   const groupedImages = groupImages(images);
@@ -187,6 +166,4 @@ export const groupNameMap = {
 const getDisplayNameForGroup = (key: string) =>
   propOr('Other', key, groupNameMap);
 
-const styled = withStyles(styles);
-
-export default styled(ImageSelect);
+export default ImageSelect;

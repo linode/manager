@@ -1,7 +1,7 @@
 import { Account, getPayments, Payment } from 'linode-js-sdk/lib/account';
-import { compose } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { compose } from 'recompose';
 import {
   createStyles,
   Theme,
@@ -22,6 +22,9 @@ import TableCell from 'src/components/TableCell';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
+import withFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container';
 import { printPayment } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import createMailto from 'src/features/Footer/createMailto';
 import { ApplicationState } from 'src/store';
@@ -47,7 +50,10 @@ const styles = (theme: Theme) =>
 
 interface Props extends PaginationProps<Payment> {}
 
-type CombinedProps = Props & StateProps & WithStyles<ClassNames>;
+type CombinedProps = Props &
+  StateProps &
+  FeatureFlagConsumerProps &
+  WithStyles<ClassNames>;
 
 interface PdfGenerationError {
   itemId: number | undefined;
@@ -57,6 +63,19 @@ interface PdfGenerationError {
 interface State {
   pdfGenerationError: PdfGenerationError;
 }
+
+export const getTaxID = (
+  invoiceItemDate: string,
+  taxDate?: string,
+  taxID?: string
+) => {
+  if (!taxID || !taxDate) {
+    return undefined;
+  }
+  const taxStartedBeforeThisInvoiceItem =
+    Date.parse(invoiceItemDate) > Date.parse(taxDate);
+  return taxStartedBeforeThisInvoiceItem ? taxID : undefined;
+};
 
 class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
@@ -139,7 +158,10 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
         itemId: undefined
       }
     });
-    const result = printPayment(account, item);
+
+    const banner = this.props.flags.taxBanner;
+    const taxID = getTaxID(item.date, banner?.date, banner?.linode_tax_id);
+    const result = printPayment(account, item, taxID);
 
     if (result.status === 'error') {
       this.setState({
@@ -220,9 +242,10 @@ const paginated = paginate(updatedRequest);
 
 const styled = withStyles(styles);
 
-const enhanced = compose(
+const enhanced = compose<CombinedProps, {}>(
   connected,
   paginated,
+  withFlags,
   styled
 );
 

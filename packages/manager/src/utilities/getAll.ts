@@ -29,7 +29,7 @@ export type GetFromEntity = (
 ) => Promise<APIResponsePage<any>>;
 
 export interface GetAllData<T> {
-  data: T;
+  data: T[];
   results: number;
 }
 
@@ -53,7 +53,7 @@ export interface GetAllData<T> {
 export const getAll: <T>(
   getter: GetFunction,
   pageSize?: number
-) => (params?: any, filter?: any) => Promise<GetAllData<T[]>> = (
+) => (params?: any, filter?: any) => Promise<GetAllData<T>> = (
   getter,
   pageSize = API_MAX_PAGE_SIZE
 ) => (params?: any, filter?: any) => {
@@ -78,7 +78,7 @@ export const getAll: <T>(
             response => response.data
           )
         )
-          /** We're given NodeBalancer[][], so we flatten that, and append the first page response. */
+          /** We're given data[][], so we flatten that, and append the first page response. */
           .then(resultPages => {
             const combinedData = resultPages.reduce((result, nextPage) => {
               return [...result, ...nextPage];
@@ -96,7 +96,7 @@ export const getAll: <T>(
 export const getAllWithArguments: <T>(
   getter: GetFunction,
   pageSize?: number
-) => (args: any[], params?: any, filter?: any) => Promise<GetAllData<T[]>> = (
+) => (args: any[], params?: any, filter?: any) => Promise<GetAllData<T>> = (
   getter,
   pageSize = API_MAX_PAGE_SIZE
 ) => (args = [], params, filter) => {

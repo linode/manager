@@ -15,7 +15,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import { getNumUnseenEvents } from 'src/store/events/event.helpers';
-import { markAllSeen } from 'src/store/events/event.request';
+import { markAllSeen as _markAllSeen } from 'src/store/events/event.request';
 import { MapState, ThunkDispatch } from 'src/store/types';
 import { removeBlacklistedEvents } from 'src/utilities/eventUtils';
 import UserEventsButton from './UserEventsButton';
@@ -149,8 +149,8 @@ export class UserEventsMenu extends React.Component<CombinedProps, State> {
   };
 
   closeMenu = (e: React.MouseEvent<HTMLElement>) => {
-    const { actions } = this.props;
-    actions.markAllSeen();
+    const { markAllSeen } = this.props;
+    markAllSeen();
     this.setState({ anchorEl: undefined });
   };
 }
@@ -158,17 +158,13 @@ export class UserEventsMenu extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles);
 
 interface DispatchProps {
-  actions: {
-    markAllSeen: () => Promise<any>;
-  };
+  markAllSeen: () => Promise<any>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch
 ) => ({
-  actions: {
-    markAllSeen: () => dispatch(markAllSeen())
-  }
+  markAllSeen: () => dispatch(_markAllSeen())
 });
 
 interface StateProps {
@@ -180,9 +176,6 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
   };
 };
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export default styled(withRouter(connected(UserEventsMenu)));

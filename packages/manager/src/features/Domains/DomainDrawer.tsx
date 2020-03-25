@@ -7,14 +7,13 @@ import { Linode } from 'linode-js-sdk/lib/linodes';
 import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { Lens, lensPath, over, path, pathOr, set, view } from 'ramda';
+import { path, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, Dispatch } from 'redux';
 import ActionsPanel from 'src/components/ActionsPanel';
-import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
@@ -28,6 +27,7 @@ import {
 } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import MultipleIPInput from 'src/components/MultipleIPInput';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TagsInput, { Tag } from 'src/components/TagsInput';
@@ -53,18 +53,20 @@ import {
 } from 'src/store/domains/domains.container';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { sendCreateDomainEvent } from 'src/utilities/ga';
+import {
+  ExtendedIP,
+  extendedIPToString,
+  stringToExtendedIP
+} from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import DeleteDomain from './DeleteDomain';
-import DomainTransferInput from './DomainTransferInput';
+import { getInitialIPs, transferHelperText as helperText } from './domainUtils';
 
-type ClassNames = 'root' | 'masterIPErrorNotice' | 'addIP' | 'divider';
+type ClassNames = 'root' | 'addIP' | 'divider';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {},
-    masterIPErrorNotice: {
-      marginTop: theme.spacing(2)
-    },
     addIP: {
       left: -theme.spacing(2) + 3
     },
@@ -86,7 +88,6 @@ interface State {
   submitting: boolean;
   master_ips: string[];
   axfr_ips: string[];
-  masterIPsCount: number;
   defaultRecordsSetting: DefaultRecordsType;
   selectedDefaultLinode?: Linode;
   selectedDefaultNodeBalancer?: NodeBalancer;
@@ -162,18 +163,6 @@ const generateDefaultDomainRecords = (
   );
 };
 
-const masterIPsLens = lensPath(['master_ips']);
-const masterIPLens = (idx: number) =>
-  compose(masterIPsLens, lensPath([idx])) as Lens;
-const viewMasterIP = (idx: number, obj: any) =>
-  view<any, string | undefined>(masterIPLens(idx), obj);
-const setMasterIP = (idx: number, value: string) =>
-  set(masterIPLens(idx), value);
-
-const masterIPsCountLens = lensPath(['masterIPsCount']);
-const updateMasterIPsCount = (fn: (s: any) => any) => (obj: any) =>
-  over(masterIPsCountLens, fn, obj);
-
 class DomainDrawer extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
   defaultState: State = {
@@ -184,9 +173,8 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     tags: [],
     submitting: false,
     errors: [],
-    master_ips: [],
-    axfr_ips: [],
-    masterIPsCount: 1,
+    master_ips: [''],
+    axfr_ips: [''],
     defaultRecordsSetting: 'none',
     selectedDefaultLinode: undefined,
     selectedDefaultNodeBalancer: undefined
@@ -230,11 +218,10 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
       } = this.props.domainProps;
       this.setState({
         tags: tags.map(tag => ({ label: tag, value: tag })),
-        masterIPsCount: master_ips.length,
         type,
         domain,
-        master_ips,
-        axfr_ips,
+        master_ips: getInitialIPs(master_ips),
+        axfr_ips: getInitialIPs(axfr_ips),
         soaEmail: soa_email
       });
     }
@@ -288,7 +275,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
             text={
               "You don't have permissions to create a new Domain. Please contact an account administrator for details."
             }
-            error={true}
+            error
             important
           />
         )}
@@ -346,39 +333,22 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         )}
         {(isCreatingSlaveDomain || isEditingSlaveDomain) && (
           <React.Fragment>
+            <MultipleIPInput
+              title="Master Nameserver IP Address"
+              ips={this.state.master_ips.map(stringToExtendedIP)}
+              onChange={this.updateMasterIPAddress}
+              error={masterIPsError}
+            />
             {isEditingSlaveDomain && (
               // Only when editing
-              <DomainTransferInput
-                value={this.state.axfr_ips.join(',')}
+              <MultipleIPInput
+                title="Domain Transfer IPs"
+                helperText={helperText}
+                ips={this.state.axfr_ips.map(stringToExtendedIP)}
                 onChange={this.handleTransferInput}
                 error={errorMap.axfr_ips}
               />
             )}
-            {masterIPsError && (
-              <Notice
-                className={classes.masterIPErrorNotice}
-                error
-                text={`Master IP addresses must be valid IPv4 addresses.`}
-              />
-            )}
-            {Array.from(Array(this.state.masterIPsCount)).map((slave, idx) => (
-              <TextField
-                key={idx}
-                label="Master Nameserver IP Address"
-                InputProps={{ 'aria-label': `ip-address-${idx}` }}
-                value={viewMasterIP(idx, this.state) || ''}
-                onChange={this.updateMasterIPAddress(idx)}
-                data-qa-master-ip={idx}
-                disabled={disabled}
-              />
-            ))}
-            <AddNewLink
-              onClick={this.addIPField}
-              className={classes.addIP}
-              label="Add IP"
-              data-qa-add-master-ip-field
-              disabled={disabled}
-            />
           </React.Fragment>
         )}
         {this.props.mode !== CLONING && (
@@ -499,7 +469,8 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     );
   }
 
-  handleTransferInput = (axfr_ips: string[]) => {
+  handleTransferInput = (newIPs: ExtendedIP[]) => {
+    const axfr_ips = newIPs.length > 0 ? newIPs.map(extendedIPToString) : [''];
     if (this.mounted) {
       this.setState({ axfr_ips });
     }
@@ -732,6 +703,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     }
 
     const finalMasterIPs = master_ips.filter(v => v !== '');
+    const finalTransferIPs = axfr_ips.filter(v => v !== '');
 
     if (type === 'slave' && finalMasterIPs.length === 0) {
       this.setState({
@@ -756,7 +728,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
             tags,
             master_ips: finalMasterIPs,
             domainId: id,
-            axfr_ips
+            axfr_ips: finalTransferIPs
           };
 
     this.setState({ submitting: true });
@@ -827,11 +799,13 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     value: 'master' | 'slave'
   ) => this.setState({ type: value });
 
-  updateMasterIPAddress = (idx: number) => (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => this.setState(setMasterIP(idx, e.target.value));
-
-  addIPField = () => this.setState(updateMasterIPsCount(v => v + 1));
+  updateMasterIPAddress = (newIPs: ExtendedIP[]) => {
+    const master_ips =
+      newIPs.length > 0 ? newIPs.map(extendedIPToString) : [''];
+    if (this.mounted) {
+      this.setState({ master_ips });
+    }
+  };
 }
 
 const styled = withStyles(styles);
@@ -840,7 +814,7 @@ interface DispatchProps {
   resetDrawer: () => void;
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) =>
+const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators({ resetDrawer }, dispatch);
 
 interface StateProps {

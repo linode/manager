@@ -11,7 +11,7 @@ export const getLongviewClients = actionCreator.async<
     params?: any;
     filter?: any;
   },
-  GetAllData<LongviewClient[]>,
+  GetAllData<LongviewClient>,
   APIError[]
 >(`get`);
 

@@ -1,4 +1,4 @@
-import { APIError } from 'linode-js-sdk/lib/types';
+import { APIError, ResourcePage } from 'linode-js-sdk/lib/types';
 import {
   AttachVolumePayload,
   CloneVolumePayload,
@@ -7,6 +7,7 @@ import {
   Volume,
   VolumeRequestPayload
 } from 'linode-js-sdk/lib/volumes';
+import { GetAllData } from 'src/utilities/getAll';
 import { actionCreatorFactory } from 'typescript-fsa';
 
 export interface VolumeId {
@@ -71,6 +72,16 @@ export interface GetAllVolumesOptions {
 }
 export const getAllVolumesActions = actionCreator.async<
   GetAllVolumesOptions | void,
-  Volume[],
+  GetAllData<Volume>,
   APIError[]
 >('get-all');
+
+export interface Params {
+  params: any;
+  filters: any;
+}
+export const getVolumesPageActions = actionCreator.async<
+  Params,
+  ResourcePage<Volume>,
+  APIError[]
+>('get-page');
