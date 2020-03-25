@@ -140,7 +140,8 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   }
 
   if (isType(action, getDomainsPageActions.failed)) {
-    return state;
+    const { error } = action.payload;
+    return onError({ read: error }, state);
   }
 
   return state;

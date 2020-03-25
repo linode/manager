@@ -34,6 +34,7 @@ import {
   isEntityEvent,
   isInProgressEvent
 } from 'src/store/events/event.helpers';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import DashboardCard from '../DashboardCard';
 
 interface EntityEvent extends Omit<Event, 'entity'> {
@@ -110,7 +111,12 @@ const DomainsDashboardCard: React.FC<CombinedProps> = props => {
   };
 
   const renderErrors = (errors: APIError[]) => (
-    <TableRowError colSpan={3} message={`Unable to load domains.`} />
+    <TableRowError
+      colSpan={3}
+      message={
+        getAPIErrorOrDefault(errors, `Unable to load Domains.`)[0].reason
+      }
+    />
   );
 
   const renderEmpty = () => <TableRowEmptyState colSpan={2} />;

@@ -125,17 +125,17 @@ describe('Domains Redux store', () => {
     });
 
     it('should handle a createDomain.done action', () => {
-      const newBalancer = domainFactory.build();
+      const newDomain = domainFactory.build();
       const newState = reducer(
         defaultState,
         actions.createDomainActions.done({
-          result: newBalancer,
+          result: newDomain,
           params: {}
         })
       );
       expect(newState.itemsById).toHaveProperty(
-        String(newBalancer.id),
-        newBalancer
+        String(newDomain.id),
+        newDomain
       );
       expect(newState.error.create).toBeUndefined();
     });
@@ -161,20 +161,20 @@ describe('Domains Redux store', () => {
 
     it('should handle an updateDomain.done action', () => {
       const withEntities = addEntities();
-      const updatedBalancer = {
+      const updatedDomain = {
         ...mockDomains[1],
         label: 'updated-label'
       };
       const newState = reducer(
         withEntities,
         actions.updateDomainActions.done({
-          result: updatedBalancer,
-          params: { domainId: updatedBalancer.id }
+          result: updatedDomain,
+          params: { domainId: updatedDomain.id }
         })
       );
       expect(newState.itemsById).toHaveProperty(
-        String(updatedBalancer.id),
-        updatedBalancer
+        String(updatedDomain.id),
+        updatedDomain
       );
       expect(newState.error.update).toBeUndefined();
     });

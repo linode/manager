@@ -39,7 +39,7 @@ export const setError = <E extends Entity>(
   error: APIError[] | undefined,
   state: MappedEntityState<E, EntityError>
 ) => {
-  return Object.assign({}, state, { error: { [type]: error } });
+  return Object.assign({}, state, { error: { ...state.error, [type]: error } });
 };
 
 export const onError = <S = {}, E = APIError[] | undefined>(
@@ -127,7 +127,13 @@ export const onGetPageSuccess = <E extends Entity>(
 ): MappedEntityState<E, EntityError> => {
   const isFullRequest = results === items.length;
   const newState = addMany(items, state, results);
-  return isFullRequest ? { ...newState, lastUpdated: Date.now() } : newState;
+  return isFullRequest
+    ? {
+        ...newState,
+        lastUpdated: Date.now(),
+        error: { ...newState.error, read: undefined }
+      }
+    : newState;
 };
 
 export const createRequestThunk = <Req extends any, Res extends any, Err>(
