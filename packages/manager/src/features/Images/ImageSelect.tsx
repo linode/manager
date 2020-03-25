@@ -62,7 +62,7 @@ export const ImageSelect: React.FC<CombinedProps> = props => {
   const {
     images: { error }
   } = useImages();
-  const reduxError = error.read
+  const reduxError = error?.read
     ? getAPIErrorOrDefault(error.read, 'Unable to load Images')[0].reason
     : undefined;
 

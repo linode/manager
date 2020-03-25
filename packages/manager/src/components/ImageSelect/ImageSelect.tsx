@@ -130,7 +130,7 @@ export const ImageSelect: React.FC<Props> = props => {
 
   // Check for request errors in Redux
   const { images: _images } = useImages();
-  const imageError = _images.error.read
+  const imageError = _images?.error?.read
     ? getAPIErrorOrDefault(_images.error.read, 'Unable to load Images')[0]
         .reason
     : undefined;
