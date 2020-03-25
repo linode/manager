@@ -79,7 +79,7 @@ describe('Domains Redux store', () => {
           error: mockError
         })
       );
-      expect(newState).toEqual(defaultState);
+      expect(newState.error).toHaveProperty('read', mockError);
     });
 
     it('should handle a getAllDomains.start action', () => {

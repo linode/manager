@@ -130,8 +130,7 @@ export const onGetPageSuccess = <E extends Entity>(
   return isFullRequest
     ? {
         ...newState,
-        lastUpdated: Date.now(),
-        error: { ...newState.error, read: undefined }
+        lastUpdated: Date.now()
       }
     : newState;
 };

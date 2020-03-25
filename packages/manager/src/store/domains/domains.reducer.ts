@@ -130,7 +130,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   }
 
   if (isType(action, getDomainsPageActions.started)) {
-    return state;
+    return setError('read', undefined, state);
   }
 
   if (isType(action, getDomainsPageActions.done)) {
