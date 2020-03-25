@@ -9,8 +9,8 @@ describe('sanitizeHTML', () => {
     expect(sanitizeHTML('<a onmouseover>')).not.toContain('onmouseover');
   });
 
-  it('should transform <a /> tags to spans if the href is invalid', () => {
-    expect(sanitizeHTML('<a href="javascript:void"/>')).toContain('<span>');
+  it('should strip invalid href values', () => {
+    expect(sanitizeHTML('<a href="javascript:void"/>')).not.toContain('href');
   });
 });
 
