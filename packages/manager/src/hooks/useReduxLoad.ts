@@ -1,5 +1,5 @@
 import * as Bluebird from 'bluebird';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useStore } from 'react-redux';
 import { Dispatch } from 'redux';
 import { REFRESH_INTERVAL } from 'src/constants';
@@ -78,11 +78,19 @@ export const useReduxLoad = (
   const dispatch = useDispatch();
   const state = useStore<ApplicationState>().getState();
 
+  const mountedRef = useRef<boolean>(true);
+
   useEffect(() => {
-    if (predicate) {
+    if (predicate && mountedRef.current) {
       requestDeps(state, dispatch, deps, refreshInterval, setLoading);
     }
-  }, [predicate]);
+  }, [predicate, mountedRef.current]);
+
+  useEffect(() => {
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   return { _loading };
 };
