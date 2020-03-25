@@ -1,13 +1,17 @@
 import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { Action, bindActionCreators } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
+import { ApplicationState } from 'src/store';
 import {
   CreateNodeBalancerParams,
   DeleteNodeBalancerParams
 } from 'src/store/nodeBalancer/nodeBalancer.actions';
 import {
   getAllNodeBalancers,
-  getAllNodeBalancersWithConfigs
+  getAllNodeBalancersWithConfigs,
+  getNodeBalancersPage,
+  getNodeBalancerWithConfigs
 } from 'src/store/nodeBalancer/nodeBalancer.requests';
 import { UpdateNodeBalancerParams } from './nodeBalancer.actions';
 import {
@@ -19,6 +23,8 @@ import {
 export interface WithNodeBalancerActions {
   nodeBalancerActions: {
     getAllNodeBalancersWithConfigs: () => Promise<void>;
+    getNodeBalancerWithConfigs: (nodeBalancerID: number) => Promise<void>;
+    getNodeBalancerPage: (params?: any, filters?: any) => Promise<void>;
     getAllNodeBalancers: () => Promise<NodeBalancer[]>;
     createNodeBalancer: (
       params: CreateNodeBalancerParams
@@ -32,16 +38,22 @@ export interface WithNodeBalancerActions {
 
 export const withNodeBalancerActions = connect(
   undefined,
-  dispatch => ({
-    nodeBalancerActions: bindActionCreators(
-      {
-        getAllNodeBalancersWithConfigs,
-        getAllNodeBalancers,
-        createNodeBalancer,
-        deleteNodeBalancer,
-        updateNodeBalancer
-      },
-      dispatch
-    )
+  (dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>) => ({
+    nodeBalancerActions: {
+      ...bindActionCreators(
+        {
+          getAllNodeBalancersWithConfigs,
+          getAllNodeBalancers,
+          createNodeBalancer,
+          deleteNodeBalancer,
+          updateNodeBalancer
+        },
+        dispatch
+      ),
+      getNodeBalancerPage: (params: any = {}, filters: any = {}) =>
+        dispatch(getNodeBalancersPage({ params, filters })),
+      getNodeBalancerWithConfigs: (nodeBalancerId: number) =>
+        dispatch(getNodeBalancerWithConfigs({ nodeBalancerId }))
+    }
   })
 );

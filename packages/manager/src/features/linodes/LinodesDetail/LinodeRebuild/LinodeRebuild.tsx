@@ -98,7 +98,4 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 
 const styled = withStyles(styles);
 
-export default compose<CombinedProps, {}>(
-  linodeContext,
-  styled
-)(LinodeRebuild);
+export default compose<CombinedProps, {}>(linodeContext, styled)(LinodeRebuild);

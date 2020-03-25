@@ -9,7 +9,10 @@ import Select, { GroupType, Item } from 'src/components/EnhancedSelect';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import { BaseSelectProps } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
+import { useImages } from 'src/hooks/useImages';
+import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { arePropsEqual } from 'src/utilities/arePropsEqual';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import { distroIcons } from './icons';
 import ImageOption from './ImageOption';
@@ -123,6 +126,15 @@ export const ImageSelect: React.FC<Props> = props => {
   } = props;
   const classes = useStyles();
 
+  const { _loading } = useReduxLoad(['images']);
+
+  // Check for request errors in Redux
+  const { images: _images } = useImages();
+  const imageError = _images?.error?.read
+    ? getAPIErrorOrDefault(_images.error.read, 'Unable to load Images')[0]
+        .reason
+    : undefined;
+
   const filteredImages = images.filter(thisImage => {
     switch (variant) {
       case 'public':
@@ -158,15 +170,15 @@ export const ImageSelect: React.FC<Props> = props => {
                 <Select
                   disabled={disabled}
                   label="Images"
+                  isLoading={_loading}
                   placeholder="Choose an image"
                   options={options}
                   onChange={onChange}
-                  onFocus={onChange}
                   value={getSelectedOptionFromGroupedOptions(
                     selectedImageID || '',
                     options
                   )}
-                  errorText={error}
+                  errorText={error || imageError}
                   components={{ Option: ImageOption, SingleValue }}
                   {...reactSelectProps}
                   className={classNames}

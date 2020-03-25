@@ -34,6 +34,8 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
   // Source the Firewall's ID from the /:id path param.
   const thisFirewallId = props.match.params.id;
 
+  const [updateError, setUpdateError] = React.useState<string | undefined>();
+
   // Find the Firewall in the store.
   const thisFirewall = props.data[thisFirewallId];
 
@@ -81,14 +83,35 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
 
+  const handleLabelChange = (newLabel: string) => {
+    setUpdateError(undefined);
+
+    return props
+      .updateFirewall({ firewallID: thisFirewall.id, label: newLabel })
+      .catch(e => {
+        setUpdateError(e[0].reason);
+        return Promise.reject(e);
+      });
+  };
+
+  const resetEditableLabel = () => {
+    setUpdateError(undefined);
+    return thisFirewall.label;
+  };
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Firewalls" />
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Breadcrumb
           pathname={props.location.pathname}
-          labelTitle={thisFirewall.label}
           removeCrumbX={2}
+          onEditHandlers={{
+            editableTextTitle: thisFirewall.label,
+            onEdit: handleLabelChange,
+            onCancel: resetEditableLabel,
+            errorText: updateError
+          }}
         />
         {/* @todo: Insert real link when the doc is written. */}
         <DocumentationButton href="https://www.linode.com/docs/platform" />
@@ -123,7 +146,12 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
           exact
           strict
           path={`${URL}/rules`}
-          render={() => <FirewallRulesLanding rules={thisFirewall.rules} />}
+          render={() => (
+            <FirewallRulesLanding
+              firewallID={+thisFirewallId}
+              rules={thisFirewall.rules}
+            />
+          )}
         />
         <Route
           exact

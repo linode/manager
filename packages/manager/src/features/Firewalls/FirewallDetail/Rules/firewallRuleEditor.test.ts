@@ -83,18 +83,55 @@ describe('Rule Editor', () => {
         expect(newState[idx]).toHaveLength(1);
         expect(last(newState[idx])).toHaveProperty('status', 'NOT_MODIFIED');
       });
+
+      it('discards all changes', () => {
+        // First, add and modify rules.
+        let newState = reducer(baseState, {
+          type: 'MODIFY_RULE',
+          idx: 0,
+          modifiedRule: {
+            ports: '999'
+          }
+        });
+        newState = reducer(newState, {
+          type: 'NEW_RULE',
+          rule: firewallRuleFactory.build()
+        });
+
+        const finalState = reducer(newState, {
+          type: 'DISCARD_CHANGES'
+        });
+        expect(finalState).toHaveLength(baseState.length);
+        expect(finalState[0]).toHaveLength(1);
+        expect(finalState[0][0]).toEqual(baseState[0][0]);
+      });
+
+      it('resets the reducer state', () => {
+        // First, add and modify rules.
+        let newState = reducer(baseState, {
+          type: 'MODIFY_RULE',
+          idx: 0,
+          modifiedRule: {
+            ports: '999'
+          }
+        });
+        newState = reducer(newState, {
+          type: 'NEW_RULE',
+          rule: firewallRuleFactory.build()
+        });
+
+        const finalState = reducer(newState, {
+          type: 'RESET',
+          rules
+        });
+        finalState.forEach(revisionList => {
+          expect(revisionList).toHaveLength(1);
+        });
+      });
     });
   });
 
   describe('editorStateToRules', () => {
-    it('returns rules without a status', () => {
-      const rulesWithoutStatus = editorStateToRules(baseState);
-      expect(rulesWithoutStatus.length).toEqual(baseState.length);
-      rulesWithoutStatus.forEach(thisRule => {
-        expect(thisRule).not.toHaveProperty('status');
-      });
-    });
-
     it('does not include rules that have been added and then undone', () => {
       // First. add a rule.
       let newState = reducer(baseState, {

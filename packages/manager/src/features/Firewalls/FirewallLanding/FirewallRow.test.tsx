@@ -17,6 +17,8 @@ import {
 
 afterEach(cleanup);
 
+jest.mock('linode-js-sdk/lib/firewalls');
+
 describe('FirewallRow', () => {
   describe('Utility functions', () => {
     it('should return correct number of inbound and outbound rules', () => {
@@ -36,7 +38,6 @@ describe('FirewallRow', () => {
 
     const mockTriggerDeleteFirewall = jest.fn();
     const mockTriggerDisableFirewall = jest.fn();
-    const mockTriggerEditFirewall = jest.fn();
     const mockTriggerEnableFirewall = jest.fn();
 
     const baseProps: CombinedProps = {
@@ -46,7 +47,6 @@ describe('FirewallRow', () => {
       firewallStatus: firewall.status,
       triggerDeleteFirewall: mockTriggerDeleteFirewall,
       triggerDisableFirewall: mockTriggerDisableFirewall,
-      triggerEditFirewall: mockTriggerEditFirewall,
       triggerEnableFirewall: mockTriggerEnableFirewall
     };
 

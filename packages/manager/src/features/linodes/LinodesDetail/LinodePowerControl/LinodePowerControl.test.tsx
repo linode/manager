@@ -68,4 +68,15 @@ describe('Linode Power Control Dialogs', () => {
       renderedComponent.find('[data-qa-set-power="reboot"]').exists()
     ).toBeFalsy();
   });
+
+  it('button should be disabled if status is not Running or Offline', () => {
+    const renderedComponent = shallow(component);
+
+    // Set status to a transition status such as "cloning."
+    renderedComponent.setProps({ status: 'cloning' });
+
+    expect(
+      renderedComponent.find('WithStyles(wrappedButton)').prop('disabled')
+    ).toEqual(true);
+  });
 });
