@@ -539,7 +539,7 @@ const withPrivateImages = connect(
     return {
       imagesData: privateImagesWithEvents,
       imagesLoading: loading,
-      imagesError: error ? error.read : undefined,
+      imagesError: error?.read,
       imagesLastUpdated: lastUpdated
     };
   },

@@ -5,7 +5,9 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
+import { useImages } from 'src/hooks/useImages';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -56,6 +58,14 @@ export const ImageSelect: React.FC<CombinedProps> = props => {
 
   const { _loading } = useReduxLoad(['images']);
 
+  // Check for request errors in Redux
+  const {
+    images: { error }
+  } = useImages();
+  const reduxError = error.read
+    ? getAPIErrorOrDefault(error.read, 'Unable to load Images')[0].reason
+    : undefined;
+
   const renderedImages = React.useMemo(() => getImagesOptions(images), [
     images
   ]);
@@ -76,7 +86,7 @@ export const ImageSelect: React.FC<CombinedProps> = props => {
             isLoading={_loading}
             value={value}
             isMulti={Boolean(isMulti)}
-            errorText={imageError || imageFieldError}
+            errorText={imageError || imageFieldError || reduxError}
             disabled={disabled || Boolean(imageError)}
             onChange={onSelect}
             options={renderedImages as any}
