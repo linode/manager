@@ -4,9 +4,11 @@ import { deleteImage, Image } from 'linode-js-sdk/lib/images';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+import { AnyAction } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 import 'rxjs/add/operator/filter';
 import { Subscription } from 'rxjs/Subscription';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -38,6 +40,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
 import { ApplicationState } from 'src/store';
+import { requestImages as _requestImages } from 'src/store/image/image.requests';
 import imageEvents from 'src/store/selectors/imageEvents';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ImageRow from './ImageRow';
@@ -73,6 +76,7 @@ interface State {
 }
 
 type CombinedProps = WithPrivateImages &
+  ImageDispatch &
   WithStyles<ClassNames> &
   RouteComponentProps<{}> &
   WithSnackbarProps;
@@ -93,6 +97,12 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
       submitting: false
     }
   };
+
+  componentDidMount() {
+    if (this.props.imagesLastUpdated === 0 && !this.props.imagesLoading) {
+      this.props.requestImages();
+    }
+  }
 
   openForCreate = () => {
     this.setState({
@@ -490,11 +500,22 @@ interface WithPrivateImages {
   imagesData: ImageWithEvent[];
   imagesLoading: boolean;
   imagesError?: APIError[];
+  imagesLastUpdated: number;
 }
+
+interface ImageDispatch {
+  requestImages: () => Promise<Image[]>;
+}
+
+const mapDispatchToProps: MapDispatchToProps<ImageDispatch, {}> = (
+  dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
+) => ({
+  requestImages: () => dispatch(_requestImages())
+});
 
 const withPrivateImages = connect(
   (state: ApplicationState): WithPrivateImages => {
-    const { error, data, loading } = state.__resources.images;
+    const { error, data, lastUpdated, loading } = state.__resources.images;
     const events = imageEvents(state.events);
     const privateImagesWithEvents = Object.values(data).reduce(
       (accum, thisImage) =>
@@ -518,9 +539,11 @@ const withPrivateImages = connect(
     return {
       imagesData: privateImagesWithEvents,
       imagesLoading: loading,
-      imagesError: error ? error.read : undefined
+      imagesError: error?.read,
+      imagesLastUpdated: lastUpdated
     };
-  }
+  },
+  mapDispatchToProps
 );
 
 const styled = withStyles(styles);
