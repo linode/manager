@@ -1,108 +1,90 @@
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import withImagesContainer, {
   WithImages
 } from 'src/containers/withImages.container';
+import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import StackScriptPanel from './StackScriptPanel';
 
 import { filterImagesByType } from 'src/store/image/image.helpers';
 
-type ClassNames = 'root' | 'title';
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {},
+  title: {
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(1) + theme.spacing(1) / 2
+  }
+}));
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    title: {
-      marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(1) + theme.spacing(1) / 2
-    }
-  });
+type CombinedProps = WithImages & RouteComponentProps<{}>;
 
-type CombinedProps = WithImages &
-  WithStyles<ClassNames> &
-  RouteComponentProps<{}>;
+export const StackScriptsLanding: React.FC<CombinedProps> = props => {
+  const { history, imagesData, location } = props;
+  const classes = useStyles();
 
-export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
-  goToCreateStackScript = () => {
-    const { history } = this.props;
+  const goToCreateStackScript = () => {
     history.push('/stackscripts/create');
   };
 
-  render() {
-    const {
-      classes,
-      history,
-      imagesData,
-      imagesLoading,
-      location
-    } = this.props;
+  const { _loading } = useReduxLoad(['images']);
 
-    return (
-      <React.Fragment>
-        <DocumentTitleSegment segment="StackScripts" />
-        {!!history.location.state &&
-          !!history.location.state.successMessage && (
-            <Notice success text={history.location.state.successMessage} />
-          )}
-        <Grid
-          container
-          justify="space-between"
-          alignItems="flex-end"
-          style={{ paddingBottom: 0 }}
-        >
-          <Grid item className="py0">
-            <Breadcrumb
-              pathname={location.pathname}
-              labelTitle="StackScripts"
-              data-qa-title
-              className={classes.title}
-            />
-          </Grid>
-          <Grid item className="py0">
-            <Grid container alignItems="flex-end">
-              <Grid item className="pt0">
-                <AddNewLink
-                  onClick={this.goToCreateStackScript}
-                  label="Create New StackScript"
-                  data-qa-create-new-stackscript
-                />
-              </Grid>
-            </Grid>
-          </Grid>
+  return (
+    <React.Fragment>
+      <DocumentTitleSegment segment="StackScripts" />
+      {!!history.location.state && !!history.location.state.successMessage && (
+        <Notice success text={history.location.state.successMessage} />
+      )}
+      <Grid
+        container
+        justify="space-between"
+        alignItems="flex-end"
+        style={{ paddingBottom: 0 }}
+      >
+        <Grid item className="py0">
+          <Breadcrumb
+            pathname={location.pathname}
+            labelTitle="StackScripts"
+            data-qa-title
+            className={classes.title}
+          />
         </Grid>
-        <Grid container>
-          {imagesLoading ? (
-            <CircleProgress />
-          ) : (
-            <Grid item xs={12}>
-              <StackScriptPanel
-                publicImages={imagesData}
-                queryString={this.props.location.search}
-                history={this.props.history}
-                location={this.props.location}
+        <Grid item className="py0">
+          <Grid container alignItems="flex-end">
+            <Grid item className="pt0">
+              <AddNewLink
+                onClick={goToCreateStackScript}
+                label="Create New StackScript"
+                data-qa-create-new-stackscript
               />
             </Grid>
-          )}
+          </Grid>
         </Grid>
-      </React.Fragment>
-    );
-  }
-}
-
-const styled = withStyles(styles);
+      </Grid>
+      <Grid container>
+        {_loading ? (
+          <CircleProgress />
+        ) : (
+          <Grid item xs={12}>
+            <StackScriptPanel
+              publicImages={imagesData}
+              queryString={props.location.search}
+              history={props.history}
+              location={props.location}
+            />
+          </Grid>
+        )}
+      </Grid>
+    </React.Fragment>
+  );
+};
 
 export default compose<CombinedProps, {}>(
   withImagesContainer((ownProps, imagesData, imagesLoading, imagesError) => ({
@@ -110,7 +92,5 @@ export default compose<CombinedProps, {}>(
     imagesData: filterImagesByType(imagesData, 'public'),
     imagesLoading,
     imagesError
-  })),
-  withRouter,
-  styled
+  }))
 )(StackScriptsLanding);

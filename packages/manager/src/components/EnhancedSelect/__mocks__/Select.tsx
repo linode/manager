@@ -13,7 +13,14 @@ const groupsToItems = (groups: any[]) => {
   }, []);
 };
 
-export default ({ options, value, onChange, errorText, isMulti }: any) => {
+export default ({
+  options,
+  value,
+  label,
+  onChange,
+  errorText,
+  isMulti
+}: any) => {
   const handleChange = (event: any) => {
     const option = _options.find(
       /* tslint:disable-next-line */
@@ -25,6 +32,7 @@ export default ({ options, value, onChange, errorText, isMulti }: any) => {
   const _options = groupsToItems(options);
   return (
     <>
+      <div>{label}</div>
       <select
         data-testid="select"
         value={value ?? ''}

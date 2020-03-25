@@ -1,8 +1,12 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { images } from 'src/__data__/images';
-import Select from 'src/components/EnhancedSelect/Select';
+
+jest.mock('src/hooks/useReduxLoad', () => ({
+  useReduxLoad: () => jest.fn().mockReturnValue({ _loading: false })
+}));
+jest.mock('src/components/EnhancedSelect/Select');
 
 import {
   getImagesOptions,
@@ -12,12 +16,9 @@ import {
 } from './ImageSelect';
 
 const props = {
-  classes: { root: '', icon: '', selectContainer: '' },
   images,
   onSelect: jest.fn()
 };
-
-const component = shallow(<ImageSelect {...props} />);
 
 const privateImage1 = {
   deprecated: false,
@@ -209,21 +210,19 @@ describe('ImageSelect', () => {
       expect(getImagesOptions([])).toEqual([]);
     });
   });
+
   describe('ImageSelect component', () => {
     it('should render', () => {
-      expect(component).toBeDefined();
+      const { getByText } = renderWithTheme(<ImageSelect {...props} />);
+      getByText(/image/i);
     });
     it('should display an error', () => {
-      component.setProps({ imageError: 'An error' });
-      expect(
-        component.containsMatchingElement(
-          <Select
-            onChange={props.onSelect}
-            errorText={'An error'}
-            label="Image"
-          />
-        )
-      ).toBeTruthy();
+      const imageError = 'An error';
+      const { getByText } = renderWithTheme(
+        <ImageSelect {...props} imageError={imageError} />
+      );
+
+      getByText(imageError);
     });
   });
 });
