@@ -7,7 +7,7 @@ import { Linode } from 'linode-js-sdk/lib/linodes';
 import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { path, pathOr } from 'ramda';
+import { path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -828,14 +828,12 @@ interface StateProps {
 }
 
 const mapStateToProps = (state: ApplicationState) => {
-  const id = path(['domainDrawer', 'id'], state);
-  const domainEntities = pathOr([], ['__resources', 'domains', 'data'], state);
-  const domainProps = domainEntities.find(
-    (domain: Domain) => domain.id === path(['domainDrawer', 'id'], state)
-  );
+  const id = state.domainDrawer?.id ?? '0';
+  const domainEntities = state.__resources.domains.itemsById;
+  const domainProps = domainEntities[String(id)];
   return {
-    mode: pathOr(CREATING, ['domainDrawer', 'mode'], state),
-    open: pathOr(false, ['domainDrawer', 'open'], state),
+    mode: state.domainDrawer?.mode ?? CREATING,
+    open: state.domainDrawer?.open ?? false,
     domain: path(['domainDrawer', 'domain'], state),
     domainProps,
     id,
