@@ -328,12 +328,9 @@ import { Observable } from "rxjs/Observable";
 
 ### Error Handling
 
-Our application has to work with different types of errors: JavaScript `Error` objects, `AxiosErrors`, and field errors
-from the Linode API. To simplify working with these and maintain consistency, we have created several helper methods in `src/utilities/errorUtils`.
-
 #### API Error arrays
 
-In most cases, we want components to work with an array of Linode API errors. These have the shape:
+Components making API requests generally want to work with an array of Linode API errors. These have the shape:
 
 `{ field: 'field-name', reason: 'why this error occurred' }`
 
@@ -348,10 +345,10 @@ a situation-specific fallback message otherwise. We have a helper in our utiliti
 for this called `getAPIErrorOrDefault`.
 
 ```js
-import { getApiErrorOrDefault } from "src/utilities/errorUtils";
+import { getAPIErrorOrDefault } from "src/utilities/errorUtils";
 
 apiRequest().catch(error => {
-  const apiError = getApiErrorOrDefault(
+  const apiError = getAPIErrorOrDefault(
     error, // If this is an array of API field errors, it will be returned unchanged.
     "Your Linode is hopelessly broken.", // If no field errors are present, an array consisting of an error with this reason is returned.
     "linode-id" // Optional. If you want the default field error to have a `field` property, this argument will be used.
