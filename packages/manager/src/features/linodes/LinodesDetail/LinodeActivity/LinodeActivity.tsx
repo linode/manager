@@ -23,9 +23,7 @@ const styles = (theme: Theme) =>
 
 type CombinedProps = WithStyles<ClassNames> & StateProps;
 
-export const LinodeActivity: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const LinodeActivity: React.FC<CombinedProps> = props => {
   const { classes, linodeID } = props;
 
   return (
@@ -43,6 +41,7 @@ export const LinodeActivity: React.StatelessComponent<
           getEventsForEntity(params, 'linode', props.linodeID)
         }
         errorMessage="There was an error retrieving activity for this Linode."
+        emptyMessage="No recent activity for this Linode."
         data-qa-events-landing-for-linode
       />
     </div>
@@ -58,9 +57,6 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, {}>(
-  linodeContext,
-  styled
-);
+const enhanced = compose<CombinedProps, {}>(linodeContext, styled);
 
 export default enhanced(LinodeActivity);
