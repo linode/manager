@@ -1,5 +1,9 @@
 import { domainRecords as records } from 'src/__data__/domains';
-import { isValidCNAME, isValidDomainRecord } from './domainUtils';
+import {
+  isEditableNameServer,
+  isValidCNAME,
+  isValidDomainRecord
+} from './domainUtils';
 
 describe('Domain-related utilities', () => {
   describe('Validating CNAME records', () => {
@@ -23,6 +27,14 @@ describe('Domain-related utilities', () => {
 
     it('should allow valid records', () => {
       expect(isValidDomainRecord('api', records)).toBe(true);
+    });
+  });
+
+  describe('Ability to edit and delete records', () => {
+    it('should allow user to edit NS Records except the 5 we prepend', () => {
+      expect(isEditableNameServer(-1)).toBe(false);
+      expect(isEditableNameServer(10)).toBe(true);
+      expect(isEditableNameServer(9999)).toBe(true);
     });
   });
 });
