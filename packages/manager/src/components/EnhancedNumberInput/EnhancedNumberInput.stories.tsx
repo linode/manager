@@ -4,7 +4,7 @@ import * as React from 'react';
 import Grid from 'src/components/Grid';
 import EnhancedNumberInput from './EnhancedNumberInput';
 
-storiesOf('EnhancedNumberInput', module)
+storiesOf('Enhanced Number Input', module)
   .add('Default', () => {
     const [value, setValue] = React.useState<number>(0);
 

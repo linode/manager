@@ -72,10 +72,10 @@ interface Props {
 type FinalProps = Props;
 
 export const EnhancedNumberInput: React.FC<FinalProps> = props => {
-  const { inputLabel, small, value, setValue, disabled, ...rest } = props;
+  const { inputLabel, small, value, setValue, disabled } = props;
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(parseInt(e.target.value, 10));
+    setValue(+e.target.value);
   };
 
   const incrementValue = () => setValue(value + 1);
@@ -91,14 +91,14 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
     <React.Fragment>
       <div
         className={classnames({
-          [classes.small]: small === true,
+          [classes.small]: small,
           [classes.inputGroup]: true
         })}
       >
         <Button
           buttonType="primary"
           className={classes.button}
-          data-qa-button="primary"
+          data-qa-decrement-button
           compact
           aria-label="Subtract 1"
           name="Subtract 1"
@@ -108,7 +108,6 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
           <Minus className={classes.minusIcon} />
         </Button>
         <TextField
-          {...rest}
           className={classes.textField}
           type="number"
           label={inputLabel ? inputLabel : 'Edit Quantity'}
@@ -126,12 +125,13 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
           }}
           autoFocus={true}
           disabled={disabled}
+          data-qa-quantity-input
         />
         <Button
           buttonType="primary"
           compact
           className={classes.button}
-          data-qa-button="primary"
+          data-qa-increment-button
           aria-label="Add 1"
           name="Add 1"
           onClick={incrementValue}
