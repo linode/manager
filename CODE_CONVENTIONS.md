@@ -12,7 +12,7 @@ and it is still fine to write a class component if that works better for your si
 
 ```typescript
 export const Component: React.FC<Props> = props => {
-  const [count, setCount] = React.useState < number > 0;
+  const [count, setCount] = React.useState<number>(0);
 
   return <div>{count}</div>;
 };
