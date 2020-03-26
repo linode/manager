@@ -98,12 +98,12 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
         <Button
           buttonType="primary"
           className={classes.button}
-          data-qa-decrement-button
           compact
           aria-label="Subtract 1"
           name="Subtract 1"
           onClick={decrementValue}
           disabled={disabled || value === 0 ? true : false}
+          data-testid={'decrement-button'}
         >
           <Minus className={classes.minusIcon} />
         </Button>
@@ -125,17 +125,17 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
           }}
           autoFocus={true}
           disabled={disabled}
-          data-qa-quantity-input
+          data-testid={'quantity-input'}
         />
         <Button
           buttonType="primary"
           compact
           className={classes.button}
-          data-qa-increment-button
           aria-label="Add 1"
           name="Add 1"
           onClick={incrementValue}
           disabled={disabled}
+          data-testid={'increment-button'}
         >
           <Plus className={classes.plusIcon} />
         </Button>
