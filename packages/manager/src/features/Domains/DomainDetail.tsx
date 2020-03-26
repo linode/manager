@@ -85,19 +85,16 @@ const DomainDetail: React.FC<CombinedProps> = props => {
     });
   };
 
-  const [recordsLoading, setRecordsLoading] = React.useState<boolean>(false);
   const refreshDomainRecords = () => {
-    setRecordsLoading(true);
     getAllWithArguments<DomainRecord>(getDomainRecords)([+domainId!])
       .then(({ data }) => {
         updateRecords(data);
-        setRecordsLoading(false);
       })
       /** silently fail if DNS records couldn't be updated. No harm here */
-      .catch(() => setRecordsLoading(false));
+      .catch(() => null);
   };
 
-  if (domainsLoading || recordsLoading) {
+  if (domainsLoading) {
     return <Loading shouldDelay />;
   }
 
