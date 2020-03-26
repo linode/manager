@@ -37,4 +37,4 @@ export const DisplaySection: React.FC<Props> = props => {
   );
 };
 
-export default DisplaySection;
+export default React.memo(DisplaySection);
