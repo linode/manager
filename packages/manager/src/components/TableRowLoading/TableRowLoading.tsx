@@ -25,9 +25,12 @@ const styles = (theme: Theme) =>
     }
   });
 
+type Columns = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+
 export interface Props {
-  colSpan: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+  colSpan: Columns;
   numberOfRows?: number;
+  numberOfColumns?: Columns;
   firstColWidth?: number;
   transparent?: any;
   oneLine?: boolean;
@@ -46,8 +49,22 @@ const tableRowLoading: React.FC<CombinedProps> = props => {
     oneLine,
     numberOfRows,
     hasEntityIcon,
-    compact
+    compact,
+    numberOfColumns
   } = props;
+
+  // Default number of columns for the <Skeleton />.
+  let numColumns: Columns = 8;
+
+  // If the consumer has explicitly specified the number of columns to use, go with that.
+  // This may be different than colSpan... for example, if one column contains an Icon,
+  // we'd like colSpan to be numberOfColumns + 1.
+  if (numberOfColumns) {
+    numColumns = numberOfColumns;
+    // Otherwise if they've specified a colSpan, use that, since it's a pretty good guess.
+  } else if (colSpan) {
+    numColumns = colSpan;
+  }
 
   const ifRows = numberOfRows ?? 1;
   const rowBuilder = () => {
@@ -72,7 +89,7 @@ const tableRowLoading: React.FC<CombinedProps> = props => {
           >
             <Skeleton
               table
-              numColumns={colSpan ? colSpan : 8}
+              numColumns={numColumns}
               firstColWidth={firstColWidth ? firstColWidth : undefined}
               oneLine={oneLine}
               compact={compact}

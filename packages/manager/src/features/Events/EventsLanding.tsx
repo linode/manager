@@ -339,11 +339,12 @@ export const renderTableBody = (
   if (loading) {
     return (
       <TableRowLoading
-        colSpan={3}
+        colSpan={4}
         numberOfRows={10}
+        numberOfColumns={3}
         oneLine
         data-qa-events-table-loading
-        firstColWidth={70}
+        firstColWidth={60}
         compact
       />
     );
@@ -373,7 +374,17 @@ export const renderTableBody = (
             event={thisEvent}
           />
         ))}
-        {isRequesting && <TableRowLoading colSpan={12} transparent />}
+        {isRequesting && (
+          <TableRowLoading
+            colSpan={4}
+            numberOfColumns={3}
+            numberOfRows={4}
+            oneLine
+            compact
+            firstColWidth={60}
+            transparent
+          />
+        )}
       </>
     );
   }
