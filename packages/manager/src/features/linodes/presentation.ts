@@ -46,15 +46,27 @@ export const displayType = (
   return 'Unknown Plan';
 };
 
+export const displayClass = (category: string) => {
+  const formattedCategory = category === 'highmem' ? 'High Memory' : category;
+  return titlecase(formattedCategory);
+};
+
+export const displaySize = (memory: number) => {
+  const memG = memory / 1024;
+  return `${memG}GB`;
+};
+
+export const displayClassAndSize = (category: string, memory: number) => {
+  return `${displayClass(category)} ${displaySize(memory)}`;
+};
+
 export const displayTypeForKubePoolNode = (
   category: string,
   memory: number,
   vcpus: number
 ) => {
-  const formattedCategory = category === 'highmem' ? 'High Memory' : category;
-  const label = titlecase(formattedCategory);
-  const memG = memory / 1024;
-  const size = `${memG}GB`;
+  const label = displayClass(category);
+  const size = displaySize(memory);
   const cpus = `${vcpus} CPU${vcpus !== 1 ? 's' : ''}`;
   return `${label} ${size}, ${cpus}`;
 };
