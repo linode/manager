@@ -23,7 +23,7 @@ const styles = (theme: Theme) =>
 
 type CombinedProps = WithStyles<ClassNames> & StateProps;
 
-export const LinodeActivity: React.StatelessComponent<CombinedProps> = props => {
+export const LinodeActivity: React.FC<CombinedProps> = props => {
   const { classes, linodeID } = props;
 
   return (
