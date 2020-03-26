@@ -97,6 +97,11 @@ const handleLinodeRebuild = (
         // event doesn't come through.
         dispatch(getAllLinodeDisks({ linodeId: id }));
         dispatch(getAllLinodeConfigs({ linodeId: id }));
+        // There seems to be a race condition here where the final event
+        // doesn't come through and the Linode's status is not updated
+        // for >5 seconds, so we show an infinite spinner/busy Linode.
+        // This is not the most elegant solution but it works.
+        setTimeout(() => dispatch(requestLinodeForStore(id)), 10000);
       }
       return dispatch(requestLinodeForStore(id));
     case 'finished':
@@ -104,6 +109,8 @@ const handleLinodeRebuild = (
       // Get the new disks and update the store.
       dispatch(getAllLinodeDisks({ linodeId: id }));
       dispatch(getAllLinodeConfigs({ linodeId: id }));
+      // See above; this should never matter but it doesn't hurt to be thorough.
+      setTimeout(() => dispatch(requestLinodeForStore(id)), 10000);
       return dispatch(requestLinodeForStore(id));
     default:
       return;
