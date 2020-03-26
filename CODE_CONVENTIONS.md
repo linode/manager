@@ -10,9 +10,9 @@ and it is still fine to write a class component if that works better for your si
 
 ### Function Component
 
-```typescript
+```js
 export const Component: React.FC<Props> = props => {
-  const [count, setCount] = React.useState<number>(0);
+  const [count, setCount] = React.useState <number>(0);
 
   return <div>{count}</div>;
 };
@@ -27,13 +27,13 @@ test the containers, wrappers, HOCs, or whatever that the base component is usin
 
 When using the component in the app, use the default export:
 
-```typescript
+```js
 import Component from "./src/Component";
 ```
 
 ### Class Component
 
-```typescript
+```js
 export class Component extends React.Component<CombinedProps, State> {
   state: State = {
     count: 0
@@ -50,7 +50,7 @@ export default Component;
 Default and raw exports are the same as in function components. If you want the equivalent
 of `React.memo`, use a PureComponent:
 
-```typescript
+```js
 export class Component extends React.PureComponent<CombinedProps, State> {
   ...
 ```
@@ -62,7 +62,7 @@ To combine multiple HOCs into a single wrapper, we use a helper called `compose`
 the `recompose` library. (This is a functional programming concept called function
 composition, hence the name).
 
-```typescript
+```js
 import { compose } from 'recompose';
 
 interface Props {...}
@@ -98,7 +98,7 @@ As with everything else in React-world, MUI's styling solution now supports hook
 We prefer this pattern as it is terser, makes testing easier, and avoids cluttering up the component
 tree with `withStyles(Component)`.
 
-```typescript
+```js
 import { makeStyles, Theme } from "src/components/core/styles";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -111,7 +111,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 Inside the component, access these classes by calling `useStyles()`:
 
-```typescript
+```js
 const Component: React.FC<{}> = props => {
   const classes = useStyles();
 
@@ -129,7 +129,7 @@ passing the props as necessary.
 
 Before
 
-```typescript
+```js
 class MyComponent extends Component {
   renderContent = () => {
     const { error, loading, data } = this.props;
@@ -157,7 +157,7 @@ class MyComponent extends Component {
 
 After
 
-```typescript
+```js
 const MyComponent = (props) => {
   const { loading, error, data } = props;
 
@@ -217,7 +217,7 @@ Abstracting code is a great way to not repeat yourself and keep the code DRY. It
 
 Bad
 
-```typescript
+```js
 class MyComponent extends React.PureComponent<MyProps> {
   /** no reason for this to be attached to the Class */
   filterOutNumbers = (arrayOfNumbers: number[]) => {
@@ -230,7 +230,7 @@ class MyComponent extends React.PureComponent<MyProps> {
 
 Good
 
-```typescript
+```js
 class MyComponent extends React.PureComponent<MyProps> {
   return <div />
 }
@@ -245,7 +245,7 @@ const filterOutNumbers = (arrayOfNumbers: number[]) => {
 
 Bad
 
-```typescript
+```js
 class MyComponent extends React.PureComponent<MyProps> {
   return (
     <h1>
@@ -270,7 +270,7 @@ class MyComponent extends React.PureComponent<MyProps> {
 
 Good
 
-```typescript
+```js
 import { capitalizeAllWords } from 'src/utilities/word-formatting-utils'
 
 class MyComponent extends React.PureComponent<MyProps> {
@@ -296,13 +296,13 @@ reasons;
 
 As a rule, always use absolute paths for module imports. Something that looks similar to
 
-```typescript
+```js
 import MyComponent from "src/components/MyComponent";
 ```
 
 is much better than
 
-```typescript
+```js
 import MyComponent from "../../../MyComponent";
 ```
 
@@ -313,13 +313,13 @@ size down substantially.
 
 Bad
 
-```typescript
+```js
 import { Observable } from "rxjs/Rx";
 ```
 
 Good
 
-```typescript
+```js
 import "rxjs/add/observable/of";
 import { Observable } from "rxjs/Observable";
 ```
@@ -347,7 +347,7 @@ Often, what we want is to use a real error message from the API if it is availab
 a situation-specific fallback message otherwise. We have a helper in our utilities directory
 for this called `getAPIErrorOrDefault`.
 
-```typescript
+```js
 import { getApiErrorOrDefault } from "src/utilities/errorUtils";
 
 apiRequest().catch(error => {
@@ -363,7 +363,7 @@ A common pattern is to wrap an API response in this method, then use the first r
 message. This isn't ideal since it's possible multiple errors could be returned from the same
 request, but it is used in many places throughout the app.
 
-```typescript
+```js
 makeApiRequest()
   .then(doSomethingOnSuccess)
   .catch(errorResponse => {
@@ -383,7 +383,7 @@ a form might have an input for `region`, and that element will display any error
 some cases, however, we either aren't checking for every possible error field, or we aren't entirely sure what all of the possible fields the
 API is considering are. To make sure that we catch these and show them to the user, use the `getErrorMap` helper:
 
-```typescript
+```js
 import { getErrorMap } from "src/utilities/errorUtils";
 
 apiRequest().catch(error => {
@@ -400,7 +400,7 @@ apiRequest().catch(error => {
 `errorMap` will be an object with one key for each of the fields we specified, and a `none` key that captures any errors (the first
 one it finds) that don't match the provided fields:
 
-```typescript
+```js
 console.log(errorMap);
 {
   label: 'a label error',
@@ -421,7 +421,7 @@ If your data is being sourced from Redux state, it's safe to assume that the dat
 
 The first step in paginating things from Redux is to source the data
 
-```typescript
+```js
 import { APIError } from "linode-js-sdk/lib/types";
 import { Volume } from "linode-js-sdk/lib/volumes";
 import { connect } from "react-redux";
@@ -454,7 +454,7 @@ export default connected(mapStateToProps)(MyComponent);
 
 Next, we need to leverage the `<Paginate />` render props Component, which has built-in pagination logic, so you don't have to worry about the heavy lifting
 
-```typescript
+```js
 const MyComponent: React.FC<ReduxStateProps> = props => {
   return (
     <Paginate data={data} pageSize={25}>
@@ -475,7 +475,7 @@ Now we see that we have access to all the data, the current page, the page size,
 
 Finally, lets put it all together now with our `<PaginationFooter />` component
 
-```typescript
+```js
 const MyComponent: React.FC<ReduxStateProps> = props => {
   return (
     <Paginate data={data} pageSize={25}>
@@ -521,7 +521,7 @@ Paginating data this way is similar to the last approach with some differences. 
 
 The first step is to wrap your base component in the HOC and tell Pagey what request you want to fire when the page changes:
 
-```typescript
+```js
 import { Pagey, PaginationProps } from "src/components/Pagey";
 import { getInvoices } from "linode-js-sdk/lib/account";
 
@@ -542,7 +542,7 @@ export default paginated(MyComponent);
 
 Now we have access to the same props as before. Lets add in the rest of our markup
 
-```typescript
+```js
 const MyComponent: React.FC<PaginationProps & OtherProps> = props => {
   const {
     data: myInvoices,
@@ -603,7 +603,7 @@ an abstracted HOC built upon material-ui's Snackbar. All [MUI's props](https://m
 
 An example of how to use a Toast is as follows:
 
-```typescript
+```js
 import React from "react";
 
 import { InjectedNotistackProps, withSnackbar } from "notistack";
