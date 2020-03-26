@@ -7,6 +7,7 @@ import {
   withRouter
 } from 'react-router-dom';
 import { compose } from 'recompose';
+import CircleProgress from 'src/components/CircleProgress';
 import DefaultLoader from 'src/components/DefaultLoader';
 import NotFound from 'src/components/NotFound';
 import withDomains, {
@@ -24,10 +25,23 @@ const DomainDetail = DefaultLoader({
 type CombinedProps = RouteComponentProps<{ domainId?: string }> & DomainProps;
 
 class DomainsRoutes extends React.Component<CombinedProps> {
+  componentDidMount() {
+    const { domainsLastUpdated, getAllDomains } = this.props;
+    if (domainsLastUpdated === 0) {
+      getAllDomains();
+    }
+  }
+
   render() {
     const {
+      domainsLastUpdated,
+      domainsLoading,
       match: { path }
     } = this.props;
+
+    if (domainsLastUpdated === 0 && domainsLoading) {
+      return <CircleProgress />;
+    }
 
     return (
       <Switch>
