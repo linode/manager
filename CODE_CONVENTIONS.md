@@ -12,7 +12,7 @@ and it is still fine to write a class component if that works better for your si
 
 ```js
 export const Component: React.FC<Props> = props => {
-  const [count, setCount] = React.useState <number>(0);
+  const [count, setCount] = React.useState < number > 0;
 
   return <div>{count}</div>;
 };
@@ -25,7 +25,7 @@ in larger layouts where frequent re-renders are common. Note also that we genera
 the "raw" component (`export const Component...`) as well as the "wrapped" component (`export default React.memo(Component)`). This is often helpful for testing, when you don't want to
 test the containers, wrappers, HOCs, or whatever that the base component is using.
 
-When using the component in the app, use the default export:
+When using the component in the app, import the default export:
 
 ```js
 import Component from "./src/Component";
@@ -306,7 +306,7 @@ is much better than
 import MyComponent from "../../../MyComponent";
 ```
 
-This project relies on a number of third-party dependencies. It us important that when importing those
+This project relies on a number of third-party dependencies. It is important that when importing those
 dependencies you import only the necessary files. For example, if I needed to create an Observable
 using RxJS I would import only Observable and the type of Observable I want to create. This keeps bundle
 size down substantially.
