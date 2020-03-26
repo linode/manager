@@ -7,8 +7,7 @@ import { assertToast } from '../../support/ui/events';
 
 describe('create linode', () => {
   beforeEach(() => {
-    cy.login2();
-    cy.visit('/linodes/create');
+    cy.visitWithLogin('/linodes/create');
     cy.get('[data-qa-deploy-linode]');
   });
   it('creates a nanode', () => {

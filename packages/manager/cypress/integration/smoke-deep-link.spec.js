@@ -8,8 +8,10 @@ describe('smoke - deep link', () => {
       return;
     }
     describe.skip(`Got to ${page.name}`, () => {
+      // Here we use login to /null here 
+      // so this is independant from what is coded in constants and which path are skipped
       beforeEach(() => {
-        cy.login2();
+        cy.visitWithLogin('/null');
       });
 
       page.goWithUI.forEach(uiPath => {

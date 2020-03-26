@@ -1,11 +1,8 @@
 import { createLinode } from '../../support/api/linodes';
 
 describe('delete linode', () => {
-  beforeEach(() => {
-    cy.login2();
-  });
   it('deletes test nanode', () => {
-    cy.visit('/linodes');
+    cy.visitWithLogin('/linodes');
     createLinode().then(linode => {
       cy.server();
       cy.route({

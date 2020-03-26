@@ -1,12 +1,9 @@
 import { pages } from '../support/ui/constants';
 
 describe.skip('smoke - axe', () => {
-  beforeEach(() => {
-    cy.login2();
-  });
   pages.forEach(page => {
     (page.first ? it.only : page.skip ? it.skip : it)(`${page.name}`, () => {
-      cy.visit(page.url);
+      cy.visitWithLogin(page.url);
       page.assertIsLoaded();
 
       cy.injectAxe();
