@@ -10,6 +10,8 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { StickyContainer } from 'react-sticky';
 import { compose } from 'recompose';
+import Breadcrumb from 'src/components/Breadcrumb';
+// import Box from 'src/components/core/Box';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import {
@@ -18,12 +20,13 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
-import H1Header from 'src/components/H1Header';
-import Notice from 'src/components/Notice';
-import SelectRegionPanel from 'src/components/SelectRegionPanel';
+// import H1Header from 'src/components/H1Header';
+import MinimalRegionPanel from 'src/components/MinimalRegionPanel';
+// import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { dcDisplayNames } from 'src/constants';
 import regionsContainer from 'src/containers/regions.container';
@@ -36,25 +39,48 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import KubeCheckoutBar from '.././KubeCheckoutBar';
 import { getMonthlyPrice } from '.././kubeUtils';
 import { PoolNodeWithPrice } from '.././types';
-import NodePoolPanel from './NodePoolPanel';
+// import NodePoolPanel from './NodePoolPanel';
 
-type ClassNames = 'root' | 'title' | 'sidebar' | 'inner';
+type ClassNames =
+  | 'root'
+  | 'title'
+  | 'main'
+  | 'sidebar'
+  | 'inner'
+  | 'inputWidth';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {},
     title: {
       marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1)
+      marginBottom: theme.spacing(3)
+    },
+    main: {
+      maxWidth: '890px !important'
     },
     sidebar: {
       [theme.breakpoints.up('md')]: {
-        marginTop: '45px !important'
+        // marginTop: '45px !important'
       }
     },
     inner: {
       padding: theme.spacing(3),
-      paddingTop: `${theme.spacing(1)}px !important`
+      paddingTop: theme.spacing(2),
+      '& > div': {
+        marginBottom: theme.spacing(2)
+      },
+      '& label': {
+        color: theme.color.headline,
+        fontSize: '12px',
+        fontWeight: 600,
+        lineHeight: '1.33rem',
+        letterSpacing: '0.25px',
+        margin: 0
+      }
+    },
+    inputWidth: {
+      maxWidth: 440
     }
   });
 
@@ -209,7 +235,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
       classes,
       regionsData,
       typesData,
-      typesLoading,
+      // typesLoading,
       typesError,
       regionsError
     } = this.props;
@@ -218,8 +244,8 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
       errors,
       label,
       selectedRegion,
-      selectedType,
-      numberOfLinodes,
+      // selectedType,
+      // numberOfLinodes,
       nodePools,
       submitting,
       version,
@@ -255,90 +281,79 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
 
     return (
       <StickyContainer>
-        <Grid container spacing={2}>
+        <Grid container>
           <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
+          <Grid
+            container
+            justify="space-between"
+            alignItems="flex-end"
+            className={classes.title}
+          >
+            <Grid item>
+              <Breadcrumb
+                pathname={location.pathname}
+                labelTitle="Create a Cluster"
+                labelOptions={{ noCap: true }}
+              />
+            </Grid>
+            <Grid item>
+              <Grid container alignItems="flex-end">
+                <Grid item className="pt0">
+                  <DocumentationButton href="https://www.linode.com/docs/platform" />
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+
           <Grid item className={`mlMain py0`}>
-            <H1Header
-              title="Create a Kubernetes Cluster"
-              data-qa-title
-              className={classes.title}
-            />
-            {errorMap.none && <Notice text={errorMap.none} error />}
-            <SelectRegionPanel
-              error={errorMap.region}
-              copy={'Determine the best location for your cluster.'}
-              regions={filteredRegions}
-              selectedID={selectedRegion}
-              handleSelection={(regionID: string) =>
-                this.setState({ selectedRegion: regionID })
-              }
-              updateFor={[
-                errorMap.region,
-                filteredRegions,
-                selectedRegion,
-                classes
-              ]}
-            />
-
-            <NodePoolPanel
-              pools={nodePools}
-              types={typesData || []}
-              apiError={errorMap.node_pools}
-              typesLoading={typesLoading}
-              typesError={
-                typesError
-                  ? getAPIErrorOrDefault(
-                      typesError,
-                      'Error loading Linode type information.'
-                    )[0].reason
-                  : undefined
-              }
-              nodeCount={numberOfLinodes}
-              selectedType={selectedType}
-              addNodePool={(pool: PoolNodeWithPrice) => this.addPool(pool)}
-              deleteNodePool={(poolIdx: number) => this.removePool(poolIdx)}
-              handleTypeSelect={(newType: string) => {
-                this.setState({ selectedType: newType });
-              }}
-              updateNodeCount={(newCount: number) => {
-                this.setState({ numberOfLinodes: newCount });
-              }}
-              updatePool={this.updatePool}
-              updateFor={[
-                nodePools,
-                typesData,
-                errorMap,
-                typesLoading,
-                numberOfLinodes,
-                selectedType,
-                classes
-              ]}
-            />
-
-            <Paper data-qa-label-header>
-              <div className={classes.inner}>
-                <TextField
-                  data-qa-label-input
-                  errorText={errorMap.label}
-                  label="Cluster Label"
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    this.updateLabel(e.target.value)
-                  }
-                  value={label || ''}
-                />
-                <Select
-                  label="Version"
-                  value={version || null}
-                  errorText={errorMap.version}
-                  options={versionOptions}
-                  placeholder={'Select a Kubernetes version'}
-                  onChange={(selected: Item<string>) =>
-                    this.setState({ version: selected })
-                  }
-                  isClearable={false}
-                />
-              </div>
-            </Paper>
+            <div className={classes.main}>
+              <Paper data-qa-label-header>
+                <div className={classes.inner}>
+                  <Grid item>
+                    <TextField
+                      className={classes.inputWidth}
+                      data-qa-label-input
+                      errorText={errorMap.label}
+                      label="Cluster Label"
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        this.updateLabel(e.target.value)
+                      }
+                      value={label || ''}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <MinimalRegionPanel
+                      error={errorMap.region}
+                      regions={filteredRegions}
+                      selectedID={selectedRegion}
+                      handleSelection={(regionID: string) =>
+                        this.setState({ selectedRegion: regionID })
+                      }
+                      // updateFor={[
+                      //   errorMap.region,
+                      //   filteredRegions,
+                      //   selectedRegion,
+                      //   classes
+                      // ]}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Select
+                      className={classes.inputWidth}
+                      label="Kubernetes Version"
+                      value={version || null}
+                      errorText={errorMap.version}
+                      options={versionOptions}
+                      placeholder={' '}
+                      onChange={(selected: Item<string>) =>
+                        this.setState({ version: selected })
+                      }
+                      isClearable={false}
+                    />
+                  </Grid>
+                </div>
+              </Paper>
+            </div>
           </Grid>
           <Grid item className={`${classes.sidebar} mlSidebar`}>
             <KubeCheckoutBar
