@@ -1,13 +1,12 @@
-// import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
-// import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 import {
-  Menu,
   MenuButton,
-  MenuLink,
-  // MenuList
   MenuItem,
   MenuItems,
-  MenuPopover
+  MenuLink,
+  MenuPopover,
+  Menu
 } from '@reach/menu-button';
 import { Link } from 'react-router-dom';
 import '@reach/menu-button/styles.css';
@@ -17,14 +16,12 @@ import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
-// import DomainIcon from 'src/assets/addnewmenu/domain.svg';
-// import KubernetesIcon from 'src/assets/addnewmenu/kubernetes.svg';
+import DomainIcon from 'src/assets/addnewmenu/domain.svg';
+import KubernetesIcon from 'src/assets/addnewmenu/kubernetes.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
-// import NodebalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
-// import OneClickIcon from 'src/assets/addnewmenu/oneclick.svg';
-// import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
-// import Button from 'src/components/Button';
-// import Menu from 'src/components/core/Menu';
+import NodebalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
+import OneClickIcon from 'src/assets/addnewmenu/oneclick.svg';
+import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import {
   createStyles,
   Theme,
@@ -33,10 +30,10 @@ import {
 } from 'src/components/core/styles';
 import { openForCreating as openDomainDrawerForCreating } from 'src/store/domainDrawer';
 import { MapState } from 'src/store/types';
-// import { isKubernetesEnabled } from 'src/utilities/accountCapabilities';
+import { isKubernetesEnabled } from 'src/utilities/accountCapabilities';
 import AddNewMenuItem from './AddNewMenuItem';
 
-// import { sendOneClickNavigationEvent } from 'src/utilities/ga';
+import { sendOneClickNavigationEvent } from 'src/utilities/ga';
 
 type CSSClasses =
   | 'wrapper'
@@ -45,7 +42,9 @@ type CSSClasses =
   | 'button'
   | 'caret'
   | 'mobileCreate'
-  | 'mobileButton';
+  | 'mobileButton'
+  | 'menuItemLink'
+  | 'menuItemList';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -67,11 +66,13 @@ const styles = (theme: Theme) =>
       boxShadow: `0 0 5px ${theme.color.boxShadow}`
     },
     button: {
-      position: 'relative',
-      minHeight: `${theme.spacing(2) + 34}px`,
-      paddingRight: `calc(${theme.spacing(3)}px + 24px)`,
-      [theme.breakpoints.down('sm')]: {
-        padding: '6px 34px 7px 11px'
+      '& [data-reach-menu-button]': {
+        position: 'relative',
+        minHeight: `${theme.spacing(2) + 34}px`,
+        paddingRight: `calc(${theme.spacing(3)}px + 24px)`,
+        [theme.breakpoints.down('sm')]: {
+          padding: '6px 34px 7px 11px'
+        }
       }
     },
     caret: {
@@ -86,6 +87,23 @@ const styles = (theme: Theme) =>
     mobileCreate: {
       width: 32,
       height: 32
+    },
+    menuItemLink: {
+      '&[data-reach-menu-item]': {
+        padding: 0
+      },
+      '&[data-reach-menu-item][data-selected]': {
+        background: theme.bg.offWhiteDT
+      }
+    },
+    menuItemList: {
+      '&[data-reach-menu-items]': {
+        padding: 0,
+        border: 'none',
+        whiteSpace: 'normal',
+        boxShadow: `0 0 5px ${theme.color.boxShadow}`,
+        backgroundColor: theme.bg.white
+      }
     }
   });
 
@@ -111,79 +129,6 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
     anchorEl: undefined
   };
 
-  // getItems = () => {
-  //   const items: MenuItems[] = [
-  //     {
-  //       title: 'Linode',
-  //       onClick: e => {
-  //         this.handleClose();
-  //         e.preventDefault();
-  //       },
-  //       linkTo: '/linodes/create',
-  //       body: `High performance SSD Linux servers for all of your infrastructure needs`,
-  //       ItemIcon: LinodeIcon
-  //     },
-  //     {
-  //       title: 'Volume',
-  //       onClick: e => {
-  //         // this.props.openVolumeDrawerForCreating('Created from Add New Menu');
-  //         this.handleClose();
-  //         // e.preventDefault();
-  //       },
-  //       linkTo: '/volumes/create',
-  //       body: `Block Storage service allows you to attach additional storage to your Linode`,
-  //       ItemIcon: VolumeIcon
-  //     },
-  //     {
-  //       title: 'NodeBalancer',
-  //       onClick: e => {
-  //         this.handleClose();
-  //         // e.preventDefault();
-  //       },
-  //       linkTo: '/nodebalancers/create',
-  //       body: `Ensure your valuable applications and services are highly-available`,
-  //       ItemIcon: NodebalancerIcon
-  //     },
-  //     {
-  //       title: 'Domain',
-  //       onClick: e => {
-  //         this.props.openDomainDrawerForCreating('Created from Add New Menu');
-  //         this.handleClose();
-  //         // e.preventDefault();
-  //       },
-  //       body: `Manage your DNS records using Linode’s high-availability name servers`,
-  //       ItemIcon: DomainIcon
-  //     },
-  //     {
-  //       title: 'One-Click App',
-  //       onClick: e => {
-  //         sendOneClickNavigationEvent('Add New Menu');
-  //         this.handleClose();
-  //         // e.preventDefault();
-  //       },
-  //       linkTo: '/linodes/create?type=One-Click',
-  //       body: 'Deploy blogs, game servers, and other web apps with ease.',
-  //       ItemIcon: OneClickIcon,
-  //       attr: { 'data-qa-one-click-add-new': true }
-  //     }
-  //   ];
-
-  //   if (isKubernetesEnabled(this.props.accountCapabilities)) {
-  //     items.push({
-  //       title: 'Kubernetes',
-  //       onClick: e => {
-  //         this.handleClose();
-  //         // e.preventDefault();
-  //       },
-  //       linkTo: '/kubernetes/create',
-  //       body: `Create and manage Kubernetes Clusters for highly available container workloads`,
-  //       ItemIcon: KubernetesIcon
-  //     });
-  //   }
-
-  //   return items;
-  // };
-
   handleClick = (event: React.MouseEvent<HTMLElement>) => {
     this.setState({ anchorEl: event.currentTarget });
   };
@@ -193,11 +138,8 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    // const { anchorEl } = this.state;
+    const { anchorEl } = this.state;
     const { classes } = this.props;
-
-    // const items = this.getItems();
-    // const itemsLen = items.length;
 
     return (
       <div className={classes.wrapper}>
@@ -217,58 +159,94 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
         </Button> */}
         <Menu>
           <MenuButton
-          // onClick={this.handleClick}
-          // className={classes.button}
-          // data-qa-add-new-menu-button
-          // aria-label="Linode Create"
+            className={classes.button}
+            data-qa-add-new-menu-button
+            aria-label="Linode Create"
           >
             Create{' '}
-            {/* {anchorEl ? (
+            {anchorEl ? (
               <KeyboardArrowUp className={classes.caret} />
             ) : (
               <KeyboardArrowDown className={classes.caret} />
-            )} */}
+            )}
           </MenuButton>
           <MenuPopover style={{ zIndex: 3000 }}>
-            <MenuItems>
+            <MenuItems className={classes.menuItemList}>
               <MenuLink
                 as={Link}
                 to="/linodes/create"
-                // title="Linode"
-                // body="High performance SSD Linux servers for all of your infrastructure needs"
-                // ItemIcon={LinodeIcon}
-                // onClick={(e: any) => {
-                //   this.handleClose();
-                //   e.preventDefault();
-                // }}
-                // index={1}
-                // count={1}
+                className={classes.menuItemLink}
               >
-                Linode
+                <AddNewMenuItem
+                  title="Linode"
+                  body="High performance SSD Linux servers for all of your infrastructure needs"
+                  ItemIcon={LinodeIcon}
+                />
               </MenuLink>
-              <MenuLink as={Link} to="/volumes/create">
-                Volume
+              <MenuLink
+                as={Link}
+                to="/volumes/create"
+                className={classes.menuItemLink}
+              >
+                <AddNewMenuItem
+                  title="Volume"
+                  body="Block Storage service allows you to attach additional storage to your Linode"
+                  ItemIcon={VolumeIcon}
+                />
               </MenuLink>
-              <MenuLink as={Link} to="/nodebalancers/create">
-                NodeBalancer
+              <MenuLink
+                as={Link}
+                to="/nodebalancers/create"
+                className={classes.menuItemLink}
+              >
+                <AddNewMenuItem
+                  title="NodeBalancer"
+                  body="Ensure your valuable applications and services are highly-available"
+                  ItemIcon={NodebalancerIcon}
+                />
               </MenuLink>
               <MenuItem
-                onSelect={(e: any) => {
+                onSelect={() => {
                   this.props.openDomainDrawerForCreating(
                     'Created from Add New Menu'
                   );
-                  // this.handleClose();
-                  // e.preventDefault();
                 }}
+                className={classes.menuItemLink}
               >
-                Domain
+                <AddNewMenuItem
+                  title="Domain"
+                  body="Manage your DNS records using Linode’s high-availability name servers"
+                  ItemIcon={DomainIcon}
+                />
               </MenuItem>
-              <MenuLink as={Link} to="/linodes/create?type=One-Click">
-                One-Click App
+              <MenuLink
+                as={Link}
+                to="/linodes/create?type=One-Click"
+                onClick={() => {
+                  sendOneClickNavigationEvent('Add New Menu');
+                }}
+                className={classes.menuItemLink}
+              >
+                <AddNewMenuItem
+                  title="One-Click App"
+                  body="Deploy blogs, game servers, and other web apps with ease."
+                  ItemIcon={OneClickIcon}
+                  // attr={ 'data-qa-one-click-add-new': true }
+                />
               </MenuLink>
-              <MenuLink as={Link} to="/kubernetes/create">
-                Kubernetes
-              </MenuLink>
+              {isKubernetesEnabled(this.props.accountCapabilities) && (
+                <MenuLink
+                  as={Link}
+                  to="/kubernetes/create"
+                  className={classes.menuItemLink}
+                >
+                  <AddNewMenuItem
+                    title="Kubernetes"
+                    body="Create and manage Kubernetes Clusters for highly available container workloads"
+                    ItemIcon={KubernetesIcon}
+                  />
+                </MenuLink>
+              )}
             </MenuItems>
           </MenuPopover>
         </Menu>
