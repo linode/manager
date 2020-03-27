@@ -11,9 +11,9 @@ import {
   Menu
 } from '@reach/menu-button';
 import '@reach/menu-button/styles.css';
-import { Link } from 'react-router-dom';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
@@ -39,17 +39,15 @@ import { sendOneClickNavigationEvent } from 'src/utilities/ga';
 type CSSClasses =
   | 'wrapper'
   | 'menu'
-  | 'paper'
   | 'button'
   | 'caret'
-  | 'mobileCreate'
-  | 'mobileButton'
   | 'menuItemLink'
   | 'menuItemList';
 
 const styles = (theme: Theme) =>
   createStyles({
     wrapper: {
+      position: 'relative',
       order: 3,
       marginRight: theme.spacing(1),
       [theme.breakpoints.down('sm')]: {
@@ -60,11 +58,6 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.up('md')]: {
         marginTop: 20
       }
-    },
-    paper: {
-      maxWidth: 450,
-      position: 'absolute',
-      boxShadow: `0 0 5px ${theme.color.boxShadow}`
     },
     button: {
       '&[data-reach-menu-button]': {
@@ -84,7 +77,9 @@ const styles = (theme: Theme) =>
         paddingRight: `calc(${theme.spacing(3)}px + 24px)`,
         cursor: 'pointer',
         [theme.breakpoints.down('sm')]: {
-          padding: '6px 34px 7px 11px'
+          padding: '6px 34px 7px 11px',
+          maxHeight: 50,
+          minWidth: 105
         },
         '&:hover': {
           backgroundColor: theme.palette.primary.light
@@ -101,14 +96,10 @@ const styles = (theme: Theme) =>
       position: 'absolute',
       right: 18,
       top: 13,
-      marginLeft: theme.spacing(1) / 2
-    },
-    mobileButton: {
-      marginLeft: -theme.spacing(1)
-    },
-    mobileCreate: {
-      width: 32,
-      height: 32
+      marginLeft: theme.spacing(1) / 2,
+      [theme.breakpoints.down('sm')]: {
+        right: 5
+      }
     },
     menuItemLink: {
       '&[data-reach-menu-item]': {
@@ -126,6 +117,12 @@ const styles = (theme: Theme) =>
         whiteSpace: 'normal',
         boxShadow: `0 0 5px ${theme.color.boxShadow}`,
         backgroundColor: theme.bg.white
+      },
+      '&[data-reach-menu], &[data-reach-menu-popover]': {
+        width: 350,
+        [theme.breakpoints.up('md')]: {
+          right: 0
+        }
       }
     }
   });
@@ -166,20 +163,6 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
 
     return (
       <div className={classes.wrapper}>
-        {/* <Button
-          buttonType="primary"
-          onClick={this.handleClick}
-          className={classes.button}
-          data-qa-add-new-menu-button
-          aria-label="Linode Create"
-        >
-          Create{' '}
-          {anchorEl ? (
-            <KeyboardArrowUp className={classes.caret} />
-          ) : (
-            <KeyboardArrowDown className={classes.caret} />
-          )}
-        </Button> */}
         <Menu>
           <MenuButton
             className={classes.button}
@@ -273,22 +256,6 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
             </MenuItems>
           </MenuPopover>
         </Menu>
-        {/* <Menu
-          id="add-new-menu"
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          aria-expanded={Boolean(anchorEl)}
-          onClose={this.handleClose}
-          getContentAnchorEl={undefined}
-          PaperProps={{ square: true, className: classes.paper }}
-          anchorOrigin={{ vertical: 45, horizontal: 'right' }}
-          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-          className={classes.menu}
-        >
-          {items.map((i, idx) => (
-            <AddNewMenuItem key={idx} index={idx} count={itemsLen} {...i} />
-          ))}
-        </Menu> */}
       </div>
     );
   }
