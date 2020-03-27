@@ -1,5 +1,7 @@
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
+import { AccountCapability } from 'linode-js-sdk/lib/account';
+
 import {
   MenuButton,
   MenuItem,
@@ -8,9 +10,8 @@ import {
   MenuPopover,
   Menu
 } from '@reach/menu-button';
-import { Link } from 'react-router-dom';
 import '@reach/menu-button/styles.css';
-import { AccountCapability } from 'linode-js-sdk/lib/account';
+import { Link } from 'react-router-dom';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -66,19 +67,40 @@ const styles = (theme: Theme) =>
       boxShadow: `0 0 5px ${theme.color.boxShadow}`
     },
     button: {
-      '& [data-reach-menu-button]': {
+      '&[data-reach-menu-button]': {
+        textTransform: 'inherit',
+        borderRadius: 0,
+        fontSize: '1rem',
+        lineHeight: 1,
+        fontFamily: theme.spacing() === 4 ? theme.font.normal : theme.font.bold,
+        backgroundColor: theme.palette.primary.main,
+        color: '#fff',
+        fill: '#fff',
+        padding: `${theme.spacing() * 2}px ${theme.spacing() * 3 +
+          theme.spacing() / 2}px ${theme.spacing() * 2}px`,
+        maxHeight: 48,
         position: 'relative',
         minHeight: `${theme.spacing(2) + 34}px`,
         paddingRight: `calc(${theme.spacing(3)}px + 24px)`,
+        cursor: 'pointer',
         [theme.breakpoints.down('sm')]: {
           padding: '6px 34px 7px 11px'
+        },
+        '&:hover': {
+          backgroundColor: theme.palette.primary.light
+        },
+        '&:focus': {
+          backgroundColor: theme.palette.primary.light
+        },
+        '&[aria-expanded="true"]': {
+          backgroundColor: theme.palette.primary.light
         }
       }
     },
     caret: {
       position: 'absolute',
-      right: -30,
-      top: -3,
+      right: 18,
+      top: 13,
       marginLeft: theme.spacing(1) / 2
     },
     mobileButton: {
@@ -98,6 +120,7 @@ const styles = (theme: Theme) =>
     },
     menuItemList: {
       '&[data-reach-menu-items]': {
+        zIndex: 3000,
         padding: 0,
         border: 'none',
         whiteSpace: 'normal',
@@ -170,7 +193,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
               <KeyboardArrowDown className={classes.caret} />
             )}
           </MenuButton>
-          <MenuPopover style={{ zIndex: 3000 }}>
+          <MenuPopover className={classes.menuItemList} portal={false}>
             <MenuItems className={classes.menuItemList}>
               <MenuLink
                 as={Link}
