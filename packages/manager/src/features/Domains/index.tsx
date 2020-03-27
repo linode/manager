@@ -10,6 +10,7 @@ import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import DefaultLoader from 'src/components/DefaultLoader';
 import NotFound from 'src/components/NotFound';
+import { REFRESH_INTERVAL } from 'src/constants';
 import withDomains, {
   Props as DomainProps
 } from 'src/containers/domains.container';
@@ -26,8 +27,8 @@ type CombinedProps = RouteComponentProps<{ domainId?: string }> & DomainProps;
 
 class DomainsRoutes extends React.Component<CombinedProps> {
   componentDidMount() {
-    const { domainsLastUpdated, getAllDomains } = this.props;
-    if (domainsLastUpdated === 0) {
+    const { domainsLastUpdated, domainsLoading, getAllDomains } = this.props;
+    if (Date.now() - domainsLastUpdated > REFRESH_INTERVAL && !domainsLoading) {
       getAllDomains();
     }
   }
@@ -35,13 +36,8 @@ class DomainsRoutes extends React.Component<CombinedProps> {
   render() {
     const {
       domainsLastUpdated,
-      domainsLoading,
       match: { path }
     } = this.props;
-
-    if (domainsLastUpdated === 0 && domainsLoading) {
-      return <CircleProgress />;
-    }
 
     return (
       <Switch>
@@ -78,7 +74,12 @@ class DomainsRoutes extends React.Component<CombinedProps> {
             );
 
             if (!foundDomain) {
-              return <NotFound />;
+              // Did we complete a request for Domains yet? If so, this Domain doesn't exist.
+              if (domainsLastUpdated > 0) {
+                return <NotFound />;
+              }
+              // If not, we don't know if the Domain exists yet so we have to stall
+              return <CircleProgress />;
             }
 
             // Master Domains have a Detail page.

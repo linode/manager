@@ -30,7 +30,6 @@ import OrderBy from 'src/components/OrderBy';
 import Placeholder from 'src/components/Placeholder';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import Toggle from 'src/components/Toggle';
-import { REFRESH_INTERVAL } from 'src/constants';
 import domainsContainer, {
   Props as DomainProps
 } from 'src/containers/domains.container';
@@ -139,21 +138,11 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
   static docs: Linode.Doc[] = [Domains];
 
   componentDidMount = () => {
-    const {
-      domainForEditing,
-      domainsLastUpdated,
-      getAllDomains,
-      openForEditing
-    } = this.props;
+    const { domainForEditing, openForEditing } = this.props;
     // Open the "Edit Domain" drawer if so specified by this component's props.
     if (domainForEditing) {
       const { domainId, domainLabel } = domainForEditing;
       openForEditing(domainLabel, domainId);
-    }
-
-    // If we don't have Domains data or it's stale, request all Domains
-    if (Date.now() - domainsLastUpdated > REFRESH_INTERVAL) {
-      getAllDomains();
     }
   };
 

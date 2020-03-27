@@ -101,7 +101,7 @@ const DomainDetail: React.FC<CombinedProps> = props => {
   /** Error State */
   if (domainsError.read) {
     return (
-      <ErrorState errorText="There was an error retrieving your domain. Please reload and try again." />
+      <ErrorState errorText="There was an error retrieving your Domain. Please reload and try again." />
     );
   }
 
