@@ -545,7 +545,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
           <React.Fragment>
             {!paypalSubmitEnabled && (
               <Tooltip
-                title={'Amount to charge must be between $5 and $500'}
+                title={'Amount to charge must be between $5 and $10000'}
                 data-qa-help-tooltip
                 enterTouchDelay={0}
                 leaveTouchDelay={5000}
@@ -604,7 +604,7 @@ export default compose<CombinedProps, {}>(
 )(MakeAPaymentPanel);
 
 export const isAllowedUSDAmount = (usd: number) => {
-  return !!(usd >= 5 && usd <= 500);
+  return !!(usd >= 5 && usd <= 10000);
 };
 
 export const shouldEnablePaypalButton = (value: number | undefined) => {
