@@ -10,7 +10,7 @@ export const getStorage = (key: string, fallback?: any) => {
    * Basically, if localstorage doesn't exist,
    * return whatever we set as a fallback
    */
-  if (item === null && !!fallback) {
+  if ((item === null || item === undefined) && !!fallback) {
     return fallback;
   }
 
@@ -126,7 +126,7 @@ export const storage: Storage = {
     set: () => setStorage(BACKUPSCTA_DISMISSED, 'true')
   },
   supportText: {
-    get: () => getStorage(SUPPORT),
+    get: () => getStorage(SUPPORT, { title: '', description: '' }),
     set: v => setStorage(SUPPORT, JSON.stringify(v))
   }
 };
