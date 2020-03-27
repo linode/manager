@@ -230,18 +230,26 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
     }
   };
 
-  const resetTicket = () => {
-    setSummary(getInitialValue(prefilledTitle, valuesFromStorage.title));
-    setDescription(
-      getInitialValue(prefilledDescription, valuesFromStorage.description)
-    );
+  const resetTicket = (clearValues: boolean = false) => {
+    /**
+     * Clear the drawer completely if clearValues is passed (as in when closing the drawer)
+     * or reset to the default values (from props or localStorage) otherwise.
+     */
+    const _summary = clearValues
+      ? ''
+      : getInitialValue(prefilledTitle, valuesFromStorage.title);
+    const _description = clearValues
+      ? ''
+      : getInitialValue(prefilledDescription, valuesFromStorage.description);
+    setSummary(_summary);
+    setDescription(_description);
     setEntityID('');
     setEntityType('none');
   };
 
-  const resetDrawer = () => {
+  const resetDrawer = (clearValues: boolean = false) => {
     setData([]);
-    resetTicket();
+    resetTicket(clearValues);
     setFiles([]);
   };
 
@@ -284,9 +292,8 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
   };
 
   const close = () => {
-    storage.supportText.set({ title: '', description: '' });
     props.onClose();
-    resetDrawer();
+    resetDrawer(true);
   };
 
   const updateFiles = (newFiles: FileAttachment[]) => {
