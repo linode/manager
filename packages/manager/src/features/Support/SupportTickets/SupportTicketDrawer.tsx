@@ -170,9 +170,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
 
   React.useEffect(() => {
     // Store in-progress work to localStorage
-    if (summary || description) {
-      storage.supportText.set({ title: summary, description });
-    }
+    storage.supportText.set({ title: summary, description });
   }, [summary, description]);
 
   const handleSetOrRequestEntities = (
@@ -233,7 +231,6 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
   };
 
   const resetTicket = () => {
-    const valuesFromStorage = storage.supportText.get();
     setSummary(getInitialValue(prefilledTitle, valuesFromStorage.title));
     setDescription(
       getInitialValue(prefilledDescription, valuesFromStorage.description)

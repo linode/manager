@@ -131,4 +131,4 @@ export const storage: Storage = {
   }
 };
 
-export const { authentication, BackupsCtaDismissed } = storage;
+export const { authentication, BackupsCtaDismissed, supportText } = storage;
