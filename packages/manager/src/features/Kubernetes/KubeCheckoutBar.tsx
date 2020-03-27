@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 
-import CheckoutBar from 'src/components/CheckoutBar';
+import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import renderGuard from 'src/components/RenderGuard';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { getTotalClusterMemoryAndCPU, getTotalClusterPrice } from './kubeUtils';
@@ -40,9 +40,11 @@ export const KubeCheckoutBar: React.FunctionComponent<Props> = props => {
               isMakingRequest={submitting}
               disabled={false}
               onDeploy={createCluster}
-              displaySections={displaySections}
               priceHelperText={priceHelperText}
-            />
+              submitText={'Create Cluster'}
+            >
+              <DisplaySectionList displaySections={displaySections} />
+            </CheckoutBar>
             {/* {this.props.documentation.length > 0 && (
               <DocsSidebar docs={this.props.documentation} />
             )} */}
