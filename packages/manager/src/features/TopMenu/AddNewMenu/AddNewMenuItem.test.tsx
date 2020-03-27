@@ -9,7 +9,7 @@ import AddNewMenuItem from './AddNewMenuItem';
 import { Provider } from 'react-redux';
 import store from 'src/store';
 
-describe.skip('AddNewMenuItem', () => {
+describe('AddNewMenuItem', () => {
   it('should render without error', () => {
     shallow(
       <Provider store={store}>

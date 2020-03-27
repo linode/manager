@@ -76,6 +76,7 @@ const styles = (theme: Theme) =>
         minHeight: `${theme.spacing(2) + 34}px`,
         paddingRight: `calc(${theme.spacing(3)}px + 24px)`,
         cursor: 'pointer',
+        border: 'none',
         [theme.breakpoints.down('sm')]: {
           padding: '6px 34px 7px 11px',
           maxHeight: 50,
