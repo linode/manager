@@ -1,19 +1,30 @@
-import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
+// import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
+// import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
+import {
+  Menu,
+  MenuButton,
+  MenuLink,
+  // MenuList
+  MenuItem,
+  MenuItems,
+  MenuPopover
+} from '@reach/menu-button';
+import { Link } from 'react-router-dom';
+import '@reach/menu-button/styles.css';
 import { AccountCapability } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
-import DomainIcon from 'src/assets/addnewmenu/domain.svg';
-import KubernetesIcon from 'src/assets/addnewmenu/kubernetes.svg';
+// import DomainIcon from 'src/assets/addnewmenu/domain.svg';
+// import KubernetesIcon from 'src/assets/addnewmenu/kubernetes.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
-import NodebalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
-import OneClickIcon from 'src/assets/addnewmenu/oneclick.svg';
-import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
-import Button from 'src/components/Button';
-import Menu from 'src/components/core/Menu';
+// import NodebalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
+// import OneClickIcon from 'src/assets/addnewmenu/oneclick.svg';
+// import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
+// import Button from 'src/components/Button';
+// import Menu from 'src/components/core/Menu';
 import {
   createStyles,
   Theme,
@@ -22,10 +33,10 @@ import {
 } from 'src/components/core/styles';
 import { openForCreating as openDomainDrawerForCreating } from 'src/store/domainDrawer';
 import { MapState } from 'src/store/types';
-import { isKubernetesEnabled } from 'src/utilities/accountCapabilities';
-import AddNewMenuItem, { MenuItems } from './AddNewMenuItem';
+// import { isKubernetesEnabled } from 'src/utilities/accountCapabilities';
+import AddNewMenuItem from './AddNewMenuItem';
 
-import { sendOneClickNavigationEvent } from 'src/utilities/ga';
+// import { sendOneClickNavigationEvent } from 'src/utilities/ga';
 
 type CSSClasses =
   | 'wrapper'
@@ -100,78 +111,78 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
     anchorEl: undefined
   };
 
-  getItems = () => {
-    const items: MenuItems[] = [
-      {
-        title: 'Linode',
-        onClick: e => {
-          this.handleClose();
-          e.preventDefault();
-        },
-        linkTo: '/linodes/create',
-        body: `High performance SSD Linux servers for all of your infrastructure needs`,
-        ItemIcon: LinodeIcon
-      },
-      {
-        title: 'Volume',
-        onClick: e => {
-          // this.props.openVolumeDrawerForCreating('Created from Add New Menu');
-          this.handleClose();
-          e.preventDefault();
-        },
-        linkTo: '/volumes/create',
-        body: `Block Storage service allows you to attach additional storage to your Linode`,
-        ItemIcon: VolumeIcon
-      },
-      {
-        title: 'NodeBalancer',
-        onClick: e => {
-          this.handleClose();
-          e.preventDefault();
-        },
-        linkTo: '/nodebalancers/create',
-        body: `Ensure your valuable applications and services are highly-available`,
-        ItemIcon: NodebalancerIcon
-      },
-      {
-        title: 'Domain',
-        onClick: e => {
-          this.props.openDomainDrawerForCreating('Created from Add New Menu');
-          this.handleClose();
-          e.preventDefault();
-        },
-        body: `Manage your DNS records using Linode’s high-availability name servers`,
-        ItemIcon: DomainIcon
-      },
-      {
-        title: 'One-Click App',
-        onClick: e => {
-          sendOneClickNavigationEvent('Add New Menu');
-          this.handleClose();
-          e.preventDefault();
-        },
-        linkTo: '/linodes/create?type=One-Click',
-        body: 'Deploy blogs, game servers, and other web apps with ease.',
-        ItemIcon: OneClickIcon,
-        attr: { 'data-qa-one-click-add-new': true }
-      }
-    ];
+  // getItems = () => {
+  //   const items: MenuItems[] = [
+  //     {
+  //       title: 'Linode',
+  //       onClick: e => {
+  //         this.handleClose();
+  //         e.preventDefault();
+  //       },
+  //       linkTo: '/linodes/create',
+  //       body: `High performance SSD Linux servers for all of your infrastructure needs`,
+  //       ItemIcon: LinodeIcon
+  //     },
+  //     {
+  //       title: 'Volume',
+  //       onClick: e => {
+  //         // this.props.openVolumeDrawerForCreating('Created from Add New Menu');
+  //         this.handleClose();
+  //         // e.preventDefault();
+  //       },
+  //       linkTo: '/volumes/create',
+  //       body: `Block Storage service allows you to attach additional storage to your Linode`,
+  //       ItemIcon: VolumeIcon
+  //     },
+  //     {
+  //       title: 'NodeBalancer',
+  //       onClick: e => {
+  //         this.handleClose();
+  //         // e.preventDefault();
+  //       },
+  //       linkTo: '/nodebalancers/create',
+  //       body: `Ensure your valuable applications and services are highly-available`,
+  //       ItemIcon: NodebalancerIcon
+  //     },
+  //     {
+  //       title: 'Domain',
+  //       onClick: e => {
+  //         this.props.openDomainDrawerForCreating('Created from Add New Menu');
+  //         this.handleClose();
+  //         // e.preventDefault();
+  //       },
+  //       body: `Manage your DNS records using Linode’s high-availability name servers`,
+  //       ItemIcon: DomainIcon
+  //     },
+  //     {
+  //       title: 'One-Click App',
+  //       onClick: e => {
+  //         sendOneClickNavigationEvent('Add New Menu');
+  //         this.handleClose();
+  //         // e.preventDefault();
+  //       },
+  //       linkTo: '/linodes/create?type=One-Click',
+  //       body: 'Deploy blogs, game servers, and other web apps with ease.',
+  //       ItemIcon: OneClickIcon,
+  //       attr: { 'data-qa-one-click-add-new': true }
+  //     }
+  //   ];
 
-    if (isKubernetesEnabled(this.props.accountCapabilities)) {
-      items.push({
-        title: 'Kubernetes',
-        onClick: e => {
-          this.handleClose();
-          e.preventDefault();
-        },
-        linkTo: '/kubernetes/create',
-        body: `Create and manage Kubernetes Clusters for highly available container workloads`,
-        ItemIcon: KubernetesIcon
-      });
-    }
+  //   if (isKubernetesEnabled(this.props.accountCapabilities)) {
+  //     items.push({
+  //       title: 'Kubernetes',
+  //       onClick: e => {
+  //         this.handleClose();
+  //         // e.preventDefault();
+  //       },
+  //       linkTo: '/kubernetes/create',
+  //       body: `Create and manage Kubernetes Clusters for highly available container workloads`,
+  //       ItemIcon: KubernetesIcon
+  //     });
+  //   }
 
-    return items;
-  };
+  //   return items;
+  // };
 
   handleClick = (event: React.MouseEvent<HTMLElement>) => {
     this.setState({ anchorEl: event.currentTarget });
@@ -182,15 +193,15 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { anchorEl } = this.state;
+    // const { anchorEl } = this.state;
     const { classes } = this.props;
 
-    const items = this.getItems();
-    const itemsLen = items.length;
+    // const items = this.getItems();
+    // const itemsLen = items.length;
 
     return (
       <div className={classes.wrapper}>
-        <Button
+        {/* <Button
           buttonType="primary"
           onClick={this.handleClick}
           className={classes.button}
@@ -203,11 +214,69 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
           ) : (
             <KeyboardArrowDown className={classes.caret} />
           )}
-        </Button>
-        <Menu
+        </Button> */}
+        <Menu>
+          <MenuButton
+          // onClick={this.handleClick}
+          // className={classes.button}
+          // data-qa-add-new-menu-button
+          // aria-label="Linode Create"
+          >
+            Create{' '}
+            {/* {anchorEl ? (
+              <KeyboardArrowUp className={classes.caret} />
+            ) : (
+              <KeyboardArrowDown className={classes.caret} />
+            )} */}
+          </MenuButton>
+          <MenuPopover style={{ zIndex: 3000 }}>
+            <MenuItems>
+              <MenuLink
+                as={Link}
+                to="/linodes/create"
+                // title="Linode"
+                // body="High performance SSD Linux servers for all of your infrastructure needs"
+                // ItemIcon={LinodeIcon}
+                // onClick={(e: any) => {
+                //   this.handleClose();
+                //   e.preventDefault();
+                // }}
+                // index={1}
+                // count={1}
+              >
+                Linode
+              </MenuLink>
+              <MenuLink as={Link} to="/volumes/create">
+                Volume
+              </MenuLink>
+              <MenuLink as={Link} to="/nodebalancers/create">
+                NodeBalancer
+              </MenuLink>
+              <MenuItem
+                onSelect={(e: any) => {
+                  this.props.openDomainDrawerForCreating(
+                    'Created from Add New Menu'
+                  );
+                  // this.handleClose();
+                  // e.preventDefault();
+                }}
+              >
+                Domain
+              </MenuItem>
+              <MenuLink as={Link} to="/linodes/create?type=One-Click">
+                One-Click App
+              </MenuLink>
+              <MenuLink as={Link} to="/kubernetes/create">
+                Kubernetes
+              </MenuLink>
+            </MenuItems>
+          </MenuPopover>
+        </Menu>
+        {/* <Menu
           id="add-new-menu"
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
+          aria-expanded={Boolean(anchorEl)}
           onClose={this.handleClose}
           getContentAnchorEl={undefined}
           PaperProps={{ square: true, className: classes.paper }}
@@ -218,7 +287,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
           {items.map((i, idx) => (
             <AddNewMenuItem key={idx} index={idx} count={itemsLen} {...i} />
           ))}
-        </Menu>
+        </Menu> */}
       </div>
     );
   }

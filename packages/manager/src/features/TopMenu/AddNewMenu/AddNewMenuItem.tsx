@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@reach/router';
 import MenuItem from 'src/components/core/MenuItem';
 import {
   createStyles,
@@ -73,7 +73,7 @@ const styles = (theme: Theme) =>
 
 export interface MenuItems {
   title: string;
-  onClick: (e: React.MouseEvent<HTMLElement>) => void;
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
   linkTo?: string;
   body: string;
   ItemIcon: React.ComponentClass<any>;
