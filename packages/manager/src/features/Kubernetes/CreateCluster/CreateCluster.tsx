@@ -23,9 +23,9 @@ import {
 import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
 import ErrorState from 'src/components/ErrorState';
 // import H1Header from 'src/components/H1Header';
-import MinimalRegionPanel from 'src/components/MinimalRegionPanel';
 // import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { dcDisplayNames } from 'src/constants';
@@ -47,7 +47,8 @@ type ClassNames =
   | 'main'
   | 'sidebar'
   | 'inner'
-  | 'inputWidth';
+  | 'inputWidth'
+  | 'regionSubtitle';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -80,7 +81,25 @@ const styles = (theme: Theme) =>
       }
     },
     inputWidth: {
-      maxWidth: 440
+      maxWidth: 440,
+      '& .react-select__menu': {
+        maxWidth: 440
+      }
+    },
+    regionSubtitle: {
+      '& p': {
+        fontWeight: 500,
+        lineHeight: '1.43rem',
+        margin: 0,
+        marginBottom: 4,
+        maxWidth: '100%'
+      },
+      '& .MuiInput-root': {
+        maxWidth: 440
+      },
+      '& .react-select__menu': {
+        maxWidth: 440
+      }
     }
   });
 
@@ -108,6 +127,24 @@ type CombinedProps = RouteComponentProps<{}> &
  * our own convention.
  */
 const getAllVersions = getAll<KubernetesVersion>(getKubernetesVersions);
+
+const regionHelperText = (
+  <React.Fragment>
+    You can use
+    {` `}
+    <a
+      target="_blank"
+      aria-describedby="external-site"
+      rel="noopener noreferrer"
+      href="https://www.linode.com/speedtest"
+      style={{ fontWeight: 600 }}
+    >
+      our speedtest page
+    </a>
+    {` `}
+    to find the best region for your current location.
+  </React.Fragment>
+);
 
 export class CreateCluster extends React.Component<CombinedProps, State> {
   state: State = {
@@ -322,19 +359,20 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
                     />
                   </Grid>
                   <Grid item>
-                    <MinimalRegionPanel
-                      error={errorMap.region}
-                      regions={filteredRegions}
-                      selectedID={selectedRegion}
+                    <RegionSelect
+                      label={'Region'}
+                      placeholder={' '}
+                      className={classes.regionSubtitle}
+                      // error={errorMap.region}
                       handleSelection={(regionID: string) =>
                         this.setState({ selectedRegion: regionID })
                       }
-                      // updateFor={[
-                      //   errorMap.region,
-                      //   filteredRegions,
-                      //   selectedRegion,
-                      //   classes
-                      // ]}
+                      regions={filteredRegions}
+                      selectedID={selectedRegion || null}
+                      textFieldProps={{
+                        helperText: regionHelperText,
+                        helperTextPosition: 'top'
+                      }}
                     />
                   </Grid>
                   <Grid item>
