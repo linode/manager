@@ -25,6 +25,7 @@ import {
   getErrorStringOrDefault
 } from 'src/utilities/errorUtils';
 import { getVersionString } from 'src/utilities/getVersionString';
+import { storage } from 'src/utilities/storage';
 import AttachFileForm from '../AttachFileForm';
 import { FileAttachment } from '../index';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
@@ -126,13 +127,24 @@ export const entitiesToItems = (type: string, entities: any) => {
   });
 };
 
+export const getInitialValue = (
+  fromProps?: string,
+  fromStorage?: string
+): string => {
+  return fromProps || fromStorage || '';
+};
+
 export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
-  const { open, onClose, prefilledDescription, prefilledTitle } = props;
+  const { open, prefilledDescription, prefilledTitle } = props;
+
+  const valuesFromStorage = storage.supportText.get();
 
   // Ticket information
-  const [summary, setSummary] = React.useState<string>(prefilledTitle ?? '');
+  const [summary, setSummary] = React.useState<string>(
+    getInitialValue(prefilledTitle, valuesFromStorage.title)
+  );
   const [description, setDescription] = React.useState<string>(
-    prefilledDescription ?? ''
+    getInitialValue(prefilledDescription, valuesFromStorage.description)
   );
   const [entityType, setEntityType] = React.useState<EntityType>('none');
   const [entityID, setEntityID] = React.useState<string>('');
@@ -155,6 +167,13 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
       resetDrawer();
     }
   }, [open]);
+
+  React.useEffect(() => {
+    // Store in-progress work to localStorage
+    if (summary || description) {
+      storage.supportText.set({ title: summary, description });
+    }
+  }, [summary, description]);
 
   const handleSetOrRequestEntities = (
     _entity: Entity<any>,
@@ -214,8 +233,11 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
   };
 
   const resetTicket = () => {
-    setSummary(prefilledTitle ?? '');
-    setDescription(prefilledDescription ?? '');
+    const valuesFromStorage = storage.supportText.get();
+    setSummary(getInitialValue(prefilledTitle, valuesFromStorage.title));
+    setDescription(
+      getInitialValue(prefilledDescription, valuesFromStorage.description)
+    );
     setEntityID('');
     setEntityType('none');
   };
@@ -265,6 +287,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
   };
 
   const close = () => {
+    storage.supportText.set({ title: '', description: '' });
     props.onClose();
     resetDrawer();
   };
@@ -420,7 +443,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
     data.find(thisEntity => String(thisEntity.value) === entityID) || null;
 
   return (
-    <Drawer open={open} onClose={onClose} title="Open a Support Ticket">
+    <Drawer open={open} onClose={close} title="Open a Support Ticket">
       {props.children || (
         <React.Fragment>
           {generalError && <Notice error text={generalError} data-qa-notice />}

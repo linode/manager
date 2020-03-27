@@ -44,12 +44,18 @@ const TOKEN = 'authentication/token';
 const NONCE = 'authentication/nonce';
 const SCOPES = 'authentication/scopes';
 const EXPIRE = 'authentication/expire';
+const SUPPORT = 'support';
 
 export type PageSize = number;
 
 interface AuthGetAndSet {
   get: () => any;
   set: (value: string) => void;
+}
+
+interface SupportText {
+  title: string;
+  description: string;
 }
 
 export interface Storage {
@@ -70,6 +76,10 @@ export interface Storage {
   BackupsCtaDismissed: {
     get: () => boolean;
     set: (v: 'true' | 'false') => void;
+  };
+  supportText: {
+    get: () => SupportText;
+    set: (v: SupportText) => void;
   };
 }
 
@@ -114,6 +124,10 @@ export const storage: Storage = {
   BackupsCtaDismissed: {
     get: () => getStorage(BACKUPSCTA_DISMISSED),
     set: () => setStorage(BACKUPSCTA_DISMISSED, 'true')
+  },
+  supportText: {
+    get: () => getStorage(SUPPORT),
+    set: v => setStorage(SUPPORT, JSON.stringify(v))
   }
 };
 
