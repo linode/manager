@@ -19,6 +19,8 @@ const disabledProps = {
 
 afterEach(cleanup);
 
+beforeEach(jest.clearAllMocks);
+
 describe('EnhancedNumberInput', () => {
   it("should increment the input's value by 1 when the plus button is clicked", () => {
     const { getByTestId } = render(
@@ -28,8 +30,7 @@ describe('EnhancedNumberInput', () => {
     const addButton = getByTestId('increment-button');
 
     fireEvent.click(addButton);
-    expect(setValue).toHaveBeenCalled();
-    // expect(getByTestId('textfield-input')).toHaveValue(2);
+    expect(setValue).toHaveBeenCalledWith(2);
   });
 
   it("should decrement the input's value by 1 when the minus button is clicked", () => {
@@ -40,8 +41,27 @@ describe('EnhancedNumberInput', () => {
     const subtractButton = getByTestId('decrement-button');
 
     fireEvent.click(subtractButton);
-    expect(setValue).toHaveBeenCalled();
-    // expect(getByTestId('textfield-input')).toHaveValue(0);
+    expect(setValue).toHaveBeenCalledWith(0);
+  });
+
+  it('should update the input if the user manually adds numeric text', () => {
+    const { getByTestId } = render(
+      wrapWithTheme(<EnhancedNumberInput {...props} />)
+    );
+
+    const input = getByTestId('textfield-input');
+    fireEvent.change(input, { target: { value: '100' } });
+    expect(setValue).toHaveBeenCalledWith(100);
+  });
+
+  it('should set the value to 0 if the user inputs invalid data', () => {
+    const { getByTestId } = render(
+      wrapWithTheme(<EnhancedNumberInput {...props} />)
+    );
+
+    const input = getByTestId('textfield-input');
+    fireEvent.change(input, { target: { value: 'prestidigitation' } });
+    expect(setValue).toHaveBeenCalledWith(0);
   });
 
   it('should display buttons and input as disabled when given the corresponding prop', () => {
