@@ -1,12 +1,8 @@
 import { Route } from '../support/api/routes';
 
 describe('dashboard', () => {
-  beforeEach(() => {
-    cy.login2();
-  });
-
   it('checks the dashboard page', () => {
-    cy.visit('/');
+    cy.visitWithLogin('/');
     cy.get('[data-qa-header]').should('have.text', 'Dashboard');
     cy.get('[data-qa-card="Linodes"] h2').should('have.text', 'Linodes');
     cy.get('[data-qa-card="Volumes"] h2').should('have.text', 'Volumes');
@@ -31,7 +27,8 @@ describe('dashboard', () => {
     }).as('apiGet');
 
     const MAX_GET_REQ_TO_API = 8;
-    cy.visit('/');
+
+    cy.visitWithLogin('/');
     cy.get('[data-qa-header]').should('have.text', 'Dashboard');
     cy.get('[data-qa-card="Linodes"] h2').should('have.text', 'Linodes');
     cy.window().should('exist');
@@ -41,7 +38,7 @@ describe('dashboard', () => {
       .should('be.lte', MAX_GET_REQ_TO_API);
   });
   it('check Blog Feed', () => {
-    cy.visit('/');
+    cy.visitWithLogin('/');
     cy.get('[data-qa-card="Blog"]').should('be.visible');
     cy.get('[data-qa-blog-post]')
       .should('have.length.gte', 1)
@@ -58,7 +55,7 @@ describe('dashboard', () => {
       Route.getLinodes({
         response: { data: [] }
       });
-      cy.visit('/');
+      cy.visitWithLogin('/');
       cy.get('[data-testid="table-row-empty"]').should(
         'contain',
         ERR_NO_ITEM_TO_DISPLAY
@@ -70,7 +67,7 @@ describe('dashboard', () => {
       Route.getLinodes({
         response: { errors: [{ reason: 'BAD' }], data: null }
       });
-      cy.visit('/');
+      cy.visitWithLogin('/');
       cy.findByText(ERR_UNABLE_TO_LOAD_LINODES).should('be.visible');
     });
 
@@ -80,7 +77,7 @@ describe('dashboard', () => {
     // https://github.com/cypress-io/cypress/issues/235
     it.skip(`"${ERR_AN_UNEXPECTED_ERROR}" on 503`, () => {
       Route.getLinodes();
-      cy.visit('/');
+      cy.visitWithLogin('/');
       cy.findByText(ERR_AN_UNEXPECTED_ERROR).should('be.visible');
     });
   });

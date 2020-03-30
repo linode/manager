@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Sticky, StickyProps } from 'react-sticky';
 import AccessPanel from 'src/components/AccessPanel';
-import CheckoutBar from 'src/components/CheckoutBar';
+import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -322,9 +322,10 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
                     this.props.formIsSubmitting || userCannotCreateLinode
                   }
                   onDeploy={this.createLinode}
-                  displaySections={displaySections}
                   {...props}
-                />
+                >
+                  <DisplaySectionList displaySections={displaySections} />
+                </CheckoutBar>
               );
             }}
           </Sticky>
