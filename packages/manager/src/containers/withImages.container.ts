@@ -53,7 +53,7 @@ export default <TInner extends {}, TOuter extends {}>(
       return {
         ...ownProps,
         imagesData,
-        loading,
+        imagesLoading: loading,
         imagesError,
         imagesLastUpdated: lastUpdated
       };

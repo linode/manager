@@ -218,7 +218,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       });
 
     // If we haven't requested images yet (or in a while), request them
-    if (Date.now() - this.props.imagesLastUpdated > REFRESH_INTERVAL) {
+    if (
+      Date.now() - this.props.imagesLastUpdated > REFRESH_INTERVAL &&
+      !this.props.imagesLoading
+    ) {
       this.props.requestImages();
     }
   }
