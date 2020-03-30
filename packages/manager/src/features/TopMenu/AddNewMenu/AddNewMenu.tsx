@@ -1,14 +1,13 @@
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 import { AccountCapability } from 'linode-js-sdk/lib/account';
 
 import {
+  Menu,
   MenuButton,
   MenuItem,
   MenuItems,
   MenuLink,
-  MenuPopover,
-  Menu
+  MenuPopover
 } from '@reach/menu-button';
 import '@reach/menu-button/styles.css';
 import * as React from 'react';
@@ -38,7 +37,6 @@ import { sendOneClickNavigationEvent } from 'src/utilities/ga';
 
 type CSSClasses =
   | 'wrapper'
-  | 'menu'
   | 'button'
   | 'caret'
   | 'menuItemLink'
@@ -54,11 +52,6 @@ const styles = (theme: Theme) =>
         flex: 1
       }
     },
-    menu: {
-      [theme.breakpoints.up('md')]: {
-        marginTop: 20
-      }
-    },
     button: {
       '&[data-reach-menu-button]': {
         textTransform: 'inherit',
@@ -68,7 +61,6 @@ const styles = (theme: Theme) =>
         fontFamily: theme.spacing() === 4 ? theme.font.normal : theme.font.bold,
         backgroundColor: theme.palette.primary.main,
         color: '#fff',
-        fill: '#fff',
         padding: `${theme.spacing() * 2}px ${theme.spacing() * 3 +
           theme.spacing() / 2}px ${theme.spacing() * 2}px`,
         maxHeight: 48,
@@ -89,7 +81,10 @@ const styles = (theme: Theme) =>
           backgroundColor: theme.palette.primary.light
         },
         '&[aria-expanded="true"]': {
-          backgroundColor: theme.palette.primary.light
+          backgroundColor: theme.palette.primary.light,
+          '& $caret': {
+            transform: 'rotate(180deg)'
+          }
         }
       }
     },
@@ -133,9 +128,7 @@ interface Props {
   openDomainDrawerForCreating: typeof openDomainDrawerForCreating;
 }
 
-interface State {
-  anchorEl?: HTMLElement;
-}
+interface State {}
 
 type CombinedProps = Props &
   WithStyles<CSSClasses> &
@@ -146,20 +139,7 @@ type CombinedProps = Props &
 const styled = withStyles(styles);
 
 class AddNewMenu extends React.Component<CombinedProps, State> {
-  state = {
-    anchorEl: undefined
-  };
-
-  handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    this.setState({ anchorEl: event.currentTarget });
-  };
-
-  handleClose = () => {
-    this.setState({ anchorEl: undefined });
-  };
-
   render() {
-    const { anchorEl } = this.state;
     const { classes } = this.props;
 
     return (
@@ -170,12 +150,8 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
             data-qa-add-new-menu-button
             aria-label="Linode Create"
           >
-            Create{' '}
-            {anchorEl ? (
-              <KeyboardArrowUp className={classes.caret} />
-            ) : (
-              <KeyboardArrowDown className={classes.caret} />
-            )}
+            Create
+            <KeyboardArrowDown className={classes.caret} />
           </MenuButton>
           <MenuPopover className={classes.menuItemList} portal={false}>
             <MenuItems className={classes.menuItemList}>
@@ -238,7 +214,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
                   title="One-Click App"
                   body="Deploy blogs, game servers, and other web apps with ease."
                   ItemIcon={OneClickIcon}
-                  // attr={ 'data-qa-one-click-add-new': true }
+                  attr={{ 'data-qa-one-click-add-new': true }}
                 />
               </MenuLink>
               {isKubernetesEnabled(this.props.accountCapabilities) && (
