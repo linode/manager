@@ -13,6 +13,7 @@ describe('StackScripts Landing', () => {
         imagesData={normalizedImages}
         imagesLoading={false}
         imagesError={{}}
+        imagesLastUpdated={0}
         {...reactRouterProps}
       />
     )

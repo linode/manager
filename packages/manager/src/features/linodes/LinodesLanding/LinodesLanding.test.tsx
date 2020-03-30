@@ -23,6 +23,7 @@ describe('ListLinodes', () => {
           imagesLoading={false}
           imagesError={{}}
           imagesData={{}}
+          imagesLastUpdated={100}
           userTimezone="GMT"
           userTimezoneLoading={false}
           someLinodesHaveScheduledMaintenance={true}

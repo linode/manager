@@ -27,6 +27,7 @@ const props: CombinedProps = {
   imagesData: images,
   imagesError: {},
   imagesLoading: false,
+  imagesLastUpdated: 0,
   userSSHKeys: [],
   closeSnackbar: jest.fn(),
   enqueueSnackbar: jest.fn(),
