@@ -208,7 +208,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       .catch(_ => {
         this.setState({
           appInstancesLoading: false,
-          appInstancesError: 'There was an error loading One-Click Apps.'
+          appInstancesError: 'There was an error loading Marketplace Apps.'
         });
       });
   }
@@ -273,7 +273,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     defaultData?: any
   ) => {
     /**
-     * If we're switching from one cloud app to another,
+     * If we're switching from one Marketplace app to another,
      * usually the only compatible image will be Debian 9. If this
      * is the case, preselect that value.
      */
@@ -427,7 +427,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         () => ({
           errors: [
             {
-              reason: 'You must select a One-Click App.',
+              reason: 'You must select a Marketplace App.',
               field: 'stackscript_id'
             }
           ]

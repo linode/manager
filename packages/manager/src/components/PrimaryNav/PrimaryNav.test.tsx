@@ -92,7 +92,7 @@ describe('PrimaryNav', () => {
       expect(findLinkInPrimaryNav('stackscripts')).toHaveLength(1);
     });
 
-    it('should have a images link', () => {
+    it('should have an images link', () => {
       expect(findLinkInPrimaryNav('images')).toHaveLength(1);
     });
 

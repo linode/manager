@@ -41,7 +41,7 @@ import Volume from 'src/assets/icons/entityIcons/volume.svg';
 import Longview from 'src/assets/icons/longview.svg';
 import Managed from 'src/assets/icons/managednav.svg';
 
-type Entity =
+type NavEntity =
   | 'Linodes'
   | 'Volumes'
   | 'NodeBalancers'
@@ -50,7 +50,7 @@ type Entity =
   | 'Kubernetes'
   | 'Object Storage'
   | 'Managed'
-  | 'One-Click Apps'
+  | 'Marketplace'
   | 'Images'
   | 'Firewalls'
   | 'Account'
@@ -58,7 +58,7 @@ type Entity =
   | 'StackScripts';
 
 interface PrimaryLink {
-  display: Entity;
+  display: NavEntity;
   href: string;
   key: string;
   attr?: { [key: string]: any };
@@ -83,7 +83,7 @@ interface State {
 
 interface MenuItemReducer {
   link: PrimaryLink;
-  insertAfter: Entity;
+  insertAfter: NavEntity;
   conditionToAdd: () => boolean;
 }
 
@@ -230,7 +230,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
         icon: <Domain style={{ transform: 'scale(1.5)' }} />
       },
       {
-        display: 'One-Click Apps',
+        display: 'Marketplace',
         href: '/linodes/create?type=One-Click',
         key: 'one-click',
         attr: { 'data-qa-one-click-nav-btn': true },
