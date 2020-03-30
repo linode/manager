@@ -14,12 +14,16 @@ import { RouteComponentProps } from 'react-router-dom';
 import { StickyContainer } from 'react-sticky';
 import { compose as recompose } from 'recompose';
 
+import { REFRESH_INTERVAL } from 'src/constants';
 import regionsContainer from 'src/containers/regions.container';
 import withTypes from 'src/containers/types.container';
 import withFlags, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container';
-import withImages, { WithImages } from 'src/containers/withImages.container';
+import withImages, {
+  ImagesDispatch,
+  WithImages
+} from 'src/containers/withImages.container';
 import withLinodes from 'src/containers/withLinodes.container';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import {
@@ -103,6 +107,7 @@ type CombinedProps = WithSnackbarProps &
   CreateType &
   LinodeActionsProps &
   WithImages &
+  ImagesDispatch &
   WithTypesProps &
   WithLinodesProps &
   WithRegionsProps &
@@ -211,6 +216,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           appInstancesError: 'There was an error loading Marketplace Apps.'
         });
       });
+
+    // If we haven't requested images yet (or in a while), request them
+    if (Date.now() - this.props.imagesLastUpdated > REFRESH_INTERVAL) {
+      this.props.requestImages();
+    }
   }
 
   clearCreationState = () => {
