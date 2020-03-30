@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-03-30] - v.1.4.1
+
+### Fixed:
+
+- Images not available on Marketplace flow
+
 ## [2020-03-30] - v1.4.0
 
 ### Changed:
