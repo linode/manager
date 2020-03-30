@@ -297,7 +297,7 @@ export class SelectPlanPanel extends React.Component<
       <Grid container>
         <Hidden mdUp>{plans.map(this.renderSelection)}</Hidden>
         <Hidden smDown>
-          <Grid item xs={12}>
+          <Grid item xs={12} lg={inputIsIncluded ? 12 : 10}>
             <Table
               isResponsive={false}
               border
