@@ -187,26 +187,27 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
       });
   };
 
-  // const addPool = (pool: PoolNodeWithPrice) => {
-  //   setNodePools([...nodePools, pool]);
-  // };
+  /* TODO: uncomment for nodepool
+  const addPool = (pool: PoolNodeWithPrice) => {
+    setNodePools([...nodePools, pool]);
+  };
 
-  // const updatePool = (poolIdx: number, updatedPool: PoolNodeWithPrice) => {
-  //   const updatedPoolWithPrice = {
-  //     ...updatedPool,
-  //     totalMonthlyPrice: getMonthlyPrice(
-  //       updatedPool.type,
-  //       updatedPool.count,
-  //       props.typesData || []
-  //     )
-  //   };
-  //   setNodePools(update(poolIdx, updatedPoolWithPrice, nodePools));
-  // };
+  const updatePool = (poolIdx: number, updatedPool: PoolNodeWithPrice) => {
+    const updatedPoolWithPrice = {
+      ...updatedPool,
+      totalMonthlyPrice: getMonthlyPrice(
+        updatedPool.type,
+        updatedPool.count,
+        props.typesData || []
+      )
+    };
+    setNodePools(update(poolIdx, updatedPoolWithPrice, nodePools));
+  };
 
-  // const removePool = (poolIdx: number) => {
-  //   const updatedPools = remove(poolIdx, 1, nodePools);
-  //   setNodePools(updatedPools);
-  // };
+  const removePool = (poolIdx: number) => {
+    const updatedPools = remove(poolIdx, 1, nodePools);
+    setNodePools(updatedPools);
+  }; */
 
   const updateLabel = (newLabel: string) => {
     /**
