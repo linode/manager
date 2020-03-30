@@ -1,15 +1,14 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
+// import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-import TextField from 'src/components/TextField';
+// import TextField from 'src/components/TextField';
 
 import SelectPlanPanel, {
   ExtendedType
@@ -165,9 +164,14 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
           error={apiError || typeError}
           header="Add Node Pools"
           copy="Add groups of Linodes to your cluster with a chosen size."
+          nodeCount={nodeCount}
+          setInputValue={(e: any) =>
+            updateNodeCount(Math.max(+e.target.value, 0))
+          }
+          inputIsIncluded
         />
       </Grid>
-      <Grid item className={classes.gridItem}>
+      {/* <Grid item className={classes.gridItem}>
         <Typography variant="h3">Number of Linodes</Typography>
         <TextField
           tiny
@@ -187,7 +191,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
         <Button buttonType="secondary" onClick={submitForm}>
           Add Node Pool
         </Button>
-      </Grid>
+      </Grid> */}
       {!hideTable && (
         /* We checked for these props above so it's safe to assume they're defined. */
         <>

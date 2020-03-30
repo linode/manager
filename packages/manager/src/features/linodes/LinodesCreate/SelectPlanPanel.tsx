@@ -3,6 +3,7 @@ import { LinodeType, LinodeTypeClass } from 'linode-js-sdk/lib/linodes';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
+import Button from 'src/components/Button';
 import Chip from 'src/components/core/Chip';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Hidden from 'src/components/core/Hidden';
@@ -28,6 +29,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
+import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
 
 export interface ExtendedType extends LinodeType {
   heading: string;
@@ -86,6 +88,10 @@ interface Props {
   disabled?: boolean;
   header?: string;
   copy?: string;
+  nodeCount?: number;
+  setInputValue?: (e: any) => void;
+  inputIsIncluded?: boolean;
+  submitForm?: (e: any) => void;
 }
 
 const getNanodes = (types: ExtendedType[]) =>
@@ -109,7 +115,16 @@ export class SelectPlanPanel extends React.Component<
   onSelect = (id: string) => () => this.props.onSelect(id);
 
   renderSelection = (type: ExtendedType, idx: number) => {
-    const { selectedID, currentPlanHeading, disabled, classes } = this.props;
+    const {
+      selectedID,
+      currentPlanHeading,
+      disabled,
+      classes,
+      nodeCount,
+      setInputValue,
+      inputIsIncluded,
+      submitForm
+    } = this.props;
     const selectedDiskSize = this.props.selectedDiskSize
       ? this.props.selectedDiskSize
       : 0;
@@ -144,7 +159,11 @@ export class SelectPlanPanel extends React.Component<
               [classes.disabledRow]: isSamePlan || planTooSmall
             })}
           >
-            <TableCell className={classes.radioCell}>
+            <TableCell
+              className={
+                inputIsIncluded ? 'visually-hidden' : classes.radioCell
+              }
+            >
               {!isSamePlan && (
                 <FormControlLabel
                   label={type.heading}
@@ -196,6 +215,18 @@ export class SelectPlanPanel extends React.Component<
             <TableCell data-qa-ram>
               {convertMegabytesTo(type.memory, true)}
             </TableCell>
+            {inputIsIncluded && (
+              <TableCell>
+                <EnhancedNumberInput
+                  value={nodeCount ? nodeCount : 0}
+                  setValue={setInputValue}
+                  disabled={type.id !== String(selectedID)}
+                />
+                <Button buttonType="primary" onClick={submitForm}>
+                  Add
+                </Button>
+              </TableCell>
+            )}
           </TableRow>
         </Hidden>
         {/* Displays SelectionCard for small screens */}
@@ -216,16 +247,22 @@ export class SelectPlanPanel extends React.Component<
   };
 
   renderPlanContainer = (plans: ExtendedType[]) => {
+    const { inputIsIncluded } = this.props;
     const tableHeader = (
       <TableHead>
         <TableRow>
-          <TableCell />
+          <TableCell className={inputIsIncluded && 'visually-hidden'} />
           <TableCell data-qa-plan-header>Linode Plan</TableCell>
           <TableCell data-qa-monthly-header>Monthly</TableCell>
           <TableCell data-qa-hourly-header>Hourly</TableCell>
           <TableCell data-qa-cpu-header>CPUs</TableCell>
           <TableCell data-qa-storage-header>Storage</TableCell>
           <TableCell data-qa-ram-header>Ram</TableCell>
+          {inputIsIncluded && (
+            <TableCell>
+              <p className="visually-hidden">Quantity</p>
+            </TableCell>
+          )}
         </TableRow>
       </TableHead>
     );
