@@ -129,8 +129,8 @@ export const getNodeBalancerWithConfigs: ThunkActionCreator<
 
   try {
     const nodeBalancer = await _getNodeBalancer(nodeBalancerId);
-    const { data: nodeBalancerConfigs } = await getAll<NodeBalancerConfig>(
-      getNodeBalancerConfigs
+    const { data: nodeBalancerConfigs } = await getAll<NodeBalancerConfig>(() =>
+      getNodeBalancerConfigs(nodeBalancerId)
     )();
     dispatch(addNodeBalancerConfigs(nodeBalancerConfigs));
     dispatch(done({ params, result: nodeBalancer }));

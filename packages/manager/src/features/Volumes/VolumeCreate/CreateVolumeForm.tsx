@@ -6,7 +6,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import CheckoutBar from 'src/components/CheckoutBar';
+import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Paper from 'src/components/core/Paper';
 import {
@@ -324,8 +324,9 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
                   calculatedPrice={values.size / 10}
                   disabled={values.configId === -9999 || disabled}
                   isMakingRequest={isSubmitting}
-                  displaySections={displaySections && displaySections}
-                />
+                >
+                  <DisplaySectionList displaySections={displaySections} />
+                </CheckoutBar>
               </Grid>
             </Grid>
           </Form>
