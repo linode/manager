@@ -90,7 +90,8 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
   const [countError, setCountError] = React.useState<string | undefined>(
     undefined
   );
-  const classes = useStyles();
+  // const classes = useStyles();
+
   const {
     addNodePool,
     apiError,
@@ -99,10 +100,10 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
     hideTable,
     pools,
     selectedType,
-    nodeCount,
     updateNodeCount,
     updatePool,
-    types
+    types,
+    nodeCount
   } = props;
 
   if (!hideTable && !(pools && updatePool && deleteNodePool)) {
@@ -168,30 +169,9 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
           setInputValue={nodeCount => updateNodeCount(Math.max(+nodeCount, 0))}
           inputIsIncluded
           submitForm={submitForm}
-          // inputErrorText={countError}
+          inputErrorText={countError}
         />
       </Grid>
-      {/* <Grid item className={classes.gridItem}>
-        <Typography variant="h3">Number of Linodes</Typography>
-        <TextField
-          tiny
-          type="number"
-          min={0}
-          max={100}
-          label="Number of Linodes"
-          hideLabel
-          value={nodeCount}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            updateNodeCount(Math.max(+e.target.value, 0))
-          }
-          errorText={countError}
-        />
-      </Grid>
-      <Grid item className={classes.gridItem}>
-        <Button buttonType="secondary" onClick={submitForm}>
-          Add Node Pool
-        </Button>
-      </Grid> */}
       {/* {!hideTable && (
          We checked for these props above so it's safe to assume they're defined.
         <>
