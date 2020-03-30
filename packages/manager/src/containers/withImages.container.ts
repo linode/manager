@@ -15,6 +15,7 @@ export interface WithImages {
   imagesData: Record<string, Image>;
   imagesLoading: boolean;
   imagesError: EntityError;
+  imagesLastUpdated: number;
 }
 
 export interface ImagesDispatch {
@@ -36,24 +37,33 @@ export default <TInner extends {}, TOuter extends {}>(
     ownProps: TOuter,
     images: Record<string, Image>,
     imagesLoading: boolean,
-    imagesError: EntityError
+    imagesError: EntityError,
+    lastUpdated: number
   ) => TInner
 ) =>
   connect((state: ApplicationState, ownProps: TOuter) => {
     const {
       data: imagesData,
       error: imagesError,
-      loading
+      loading,
+      lastUpdated
     } = state.__resources.images;
 
     if (!mapImagesToProps) {
       return {
         ...ownProps,
         imagesData,
-        loading,
-        imagesError
+        imagesLoading: loading,
+        imagesError,
+        imagesLastUpdated: lastUpdated
       };
     }
 
-    return mapImagesToProps(ownProps, imagesData, loading, imagesError);
+    return mapImagesToProps(
+      ownProps,
+      imagesData,
+      loading,
+      imagesError,
+      lastUpdated
+    );
   }, mapDispatchToProps);
