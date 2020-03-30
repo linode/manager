@@ -5,27 +5,20 @@ import {
   PoolNodeRequest
 } from 'linode-js-sdk/lib/kubernetes';
 import { APIError } from 'linode-js-sdk/lib/types';
-import { pick, remove, update } from 'ramda';
+import { pick } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { StickyContainer } from 'react-sticky';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
-// import Box from 'src/components/core/Box';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
 import ErrorState from 'src/components/ErrorState';
-// import H1Header from 'src/components/H1Header';
 // import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { dcDisplayNames } from 'src/constants';
@@ -37,86 +30,61 @@ import { getAll } from 'src/utilities/getAll';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import KubeCheckoutBar from '.././KubeCheckoutBar';
-import { getMonthlyPrice } from '.././kubeUtils';
+// import { getMonthlyPrice } from '.././kubeUtils';
 import { PoolNodeWithPrice } from '.././types';
 // import NodePoolPanel from './NodePoolPanel';
 
-type ClassNames =
-  | 'root'
-  | 'title'
-  | 'main'
-  | 'sidebar'
-  | 'inner'
-  | 'inputWidth'
-  | 'regionSubtitle';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    title: {
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(3)
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {},
+  title: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(3)
+  },
+  main: {
+    maxWidth: '890px !important'
+  },
+  sidebar: {
+    [theme.breakpoints.up('md')]: {}
+  },
+  inner: {
+    padding: theme.spacing(3),
+    paddingTop: theme.spacing(2),
+    '& > div': {
+      marginBottom: theme.spacing(2)
     },
-    main: {
-      maxWidth: '890px !important'
-    },
-    sidebar: {
-      [theme.breakpoints.up('md')]: {
-        // marginTop: '45px !important'
-      }
-    },
-    inner: {
-      padding: theme.spacing(3),
-      paddingTop: theme.spacing(2),
-      '& > div': {
-        marginBottom: theme.spacing(2)
-      },
-      '& label': {
-        color: theme.color.headline,
-        fontSize: '12px',
-        fontWeight: 600,
-        lineHeight: '1.33rem',
-        letterSpacing: '0.25px',
-        margin: 0
-      }
-    },
-    inputWidth: {
-      maxWidth: 440,
-      '& .react-select__menu': {
-        maxWidth: 440
-      }
-    },
-    regionSubtitle: {
-      '& p': {
-        fontWeight: 500,
-        lineHeight: '1.43rem',
-        margin: 0,
-        marginBottom: 4,
-        maxWidth: '100%'
-      },
-      '& .MuiInput-root': {
-        maxWidth: 440
-      },
-      '& .react-select__menu': {
-        maxWidth: 440
-      }
+    '& label': {
+      color: theme.color.headline,
+      fontSize: '12px',
+      fontWeight: 600,
+      lineHeight: '1.33rem',
+      letterSpacing: '0.25px',
+      margin: 0
     }
-  });
-
-interface State {
-  selectedRegion?: string;
-  selectedType?: string;
-  numberOfLinodes: number;
-  nodePools: PoolNodeWithPrice[];
-  label?: string;
-  version?: Item<string>;
-  errors?: APIError[];
-  submitting: boolean;
-  versionOptions: Item<string>[];
-}
+  },
+  inputWidth: {
+    maxWidth: 440,
+    '& .react-select__menu': {
+      maxWidth: 440
+    }
+  },
+  regionSubtitle: {
+    '& p': {
+      fontWeight: 500,
+      lineHeight: '1.43rem',
+      margin: 0,
+      marginBottom: 4,
+      maxWidth: '100%'
+    },
+    '& .MuiInput-root': {
+      maxWidth: 440
+    },
+    '& .react-select__menu': {
+      maxWidth: 440
+    }
+  }
+}));
 
 type CombinedProps = RouteComponentProps<{}> &
-  WithStyles<ClassNames> &
   WithRegionsProps &
   WithTypesProps;
 
@@ -146,20 +114,20 @@ const regionHelperText = (
   </React.Fragment>
 );
 
-export class CreateCluster extends React.Component<CombinedProps, State> {
-  state: State = {
-    selectedRegion: undefined,
-    selectedType: undefined,
-    numberOfLinodes: 3,
-    nodePools: [],
-    label: undefined,
-    version: undefined,
-    errors: undefined,
-    submitting: false,
-    versionOptions: []
-  };
+export const CreateCluster: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
 
-  componentDidMount() {
+  const [selectedRegion, setSelectedRegion] = React.useState<string>('');
+  const [nodePools] = React.useState<PoolNodeWithPrice[]>([]);
+  const [label, setLabel] = React.useState<string | undefined>();
+  const [version, setVersion] = React.useState<Item<string> | undefined>();
+  const [errors, setErrors] = React.useState<APIError[] | undefined>();
+  const [submitting, setSubmitting] = React.useState<boolean>(false);
+  const [versionOptions, setVersionOptions] = React.useState<Item<string>[]>(
+    []
+  );
+
+  React.useEffect(() => {
     getAllVersions()
       .then(response => {
         /**
@@ -167,38 +135,32 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
          * 2. Sort descending (so newest version is at top)
          * // 3. Pre-select the newest version <--- do this someday, but not now
          */
-        const versionOptions = response.data
+        const _versionOptions = response.data
           .map(eachVersion => ({
             value: eachVersion.id,
             label: eachVersion.id
           }))
           .sort(sortByLabelDescending);
-        this.setState({
-          versionOptions
-          // version: versionOptions[0]
-        });
+        setVersionOptions(_versionOptions);
       })
       .catch(error => {
-        this.setState({
-          errors: getAPIErrorOrDefault(
+        setErrors(
+          getAPIErrorOrDefault(
             error,
             'Unable to load Kubernetes versions.',
             'versionLoad'
           )
-        });
+        );
       });
-  }
+  }, []);
 
-  createCluster = () => {
-    const { selectedRegion, nodePools, label, version } = this.state;
+  const createCluster = () => {
     const {
       history: { push }
-    } = this.props;
+    } = props;
 
-    this.setState({
-      errors: undefined,
-      submitting: true
-    });
+    setErrors(undefined);
+    setSubmitting(true);
 
     const _version = version ? version.value : undefined;
 
@@ -218,204 +180,174 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
 
     createKubernetesCluster(payload)
       .then(cluster => push(`/kubernetes/clusters/${cluster.id}`))
-      .catch(err =>
-        this.setState(
-          {
-            errors: getAPIErrorOrDefault(err, 'Error creating your cluster'),
-            submitting: false
-          },
-          scrollErrorIntoView
-        )
-      );
+      .catch(err => {
+        setErrors(getAPIErrorOrDefault(err, 'Error creating your cluster'));
+        setSubmitting(false);
+        scrollErrorIntoView();
+      });
   };
 
-  addPool = (pool: PoolNodeWithPrice) => {
-    const { nodePools } = this.state;
-    this.setState({
-      nodePools: [...nodePools, pool]
-    });
-  };
+  // const addPool = (pool: PoolNodeWithPrice) => {
+  //   setNodePools([...nodePools, pool]);
+  // };
 
-  updatePool = (poolIdx: number, updatedPool: PoolNodeWithPrice) => {
-    const { nodePools } = this.state;
-    const updatedPoolWithPrice = {
-      ...updatedPool,
-      totalMonthlyPrice: getMonthlyPrice(
-        updatedPool.type,
-        updatedPool.count,
-        this.props.typesData || []
-      )
-    };
-    this.setState({
-      nodePools: update(poolIdx, updatedPoolWithPrice, nodePools)
-    });
-  };
+  // const updatePool = (poolIdx: number, updatedPool: PoolNodeWithPrice) => {
+  //   const updatedPoolWithPrice = {
+  //     ...updatedPool,
+  //     totalMonthlyPrice: getMonthlyPrice(
+  //       updatedPool.type,
+  //       updatedPool.count,
+  //       props.typesData || []
+  //     )
+  //   };
+  //   setNodePools(update(poolIdx, updatedPoolWithPrice, nodePools));
+  // };
 
-  removePool = (poolIdx: number) => {
-    const { nodePools } = this.state;
-    const updatedPools = remove(poolIdx, 1, nodePools);
-    this.setState({
-      nodePools: updatedPools
-    });
-  };
+  // const removePool = (poolIdx: number) => {
+  //   const updatedPools = remove(poolIdx, 1, nodePools);
+  //   setNodePools(updatedPools);
+  // };
 
-  updateLabel = (newLabel: string) => {
+  const updateLabel = (newLabel: string) => {
     /**
      * If the new label is an empty string, use undefined.
      * This allows it to pass Yup validation.
      */
-    this.setState({ label: newLabel ? newLabel : undefined });
+    setLabel(newLabel ? newLabel : undefined);
   };
 
-  render() {
-    const {
-      classes,
-      regionsData,
-      typesData,
-      // typesLoading,
-      typesError,
-      regionsError
-    } = this.props;
+  const {
+    regionsData,
+    typesData,
+    // typesLoading,
+    typesError,
+    regionsError
+  } = props;
 
-    const {
-      errors,
-      label,
-      selectedRegion,
-      // selectedType,
-      // numberOfLinodes,
-      nodePools,
-      submitting,
-      version,
-      versionOptions
-    } = this.state;
+  const errorMap = getErrorMap(
+    ['region', 'node_pools', 'label', 'version', 'versionLoad'],
+    errors
+  );
 
-    const errorMap = getErrorMap(
-      ['region', 'node_pools', 'label', 'version', 'versionLoad'],
-      errors
-    );
+  // Only displaying regions that have LKE capability
+  const filteredRegions = regionsData
+    ? regionsData.filter(thisRegion =>
+        thisRegion.capabilities.includes('Kubernetes')
+      )
+    : [];
 
-    // Only displaying regions that have LKE capability
-    const filteredRegions = regionsData
-      ? regionsData.filter(thisRegion =>
-          thisRegion.capabilities.includes('Kubernetes')
-        )
-      : [];
+  const _region = filteredRegions.find(
+    thisRegion => thisRegion.id === selectedRegion
+  );
 
-    const _region = filteredRegions.find(
-      thisRegion => thisRegion.id === selectedRegion
-    );
+  const regionDisplay = _region ? _region.display : undefined;
 
-    const regionDisplay = _region ? _region.display : undefined;
+  if (typesError || regionsError || errorMap.versionLoad) {
+    /**
+     * This information is necessary to create a Cluster.
+     * Otherwise, show an error state.
+     */
 
-    if (typesError || regionsError || errorMap.versionLoad) {
-      /**
-       * This information is necessary to create a Cluster.
-       * Otherwise, show an error state.
-       */
+    return <ErrorState errorText={'An unexpected error occurred.'} />;
+  }
 
-      return <ErrorState errorText={'An unexpected error occurred.'} />;
-    }
-
-    return (
-      <StickyContainer>
-        <Grid container>
-          <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
-          <Grid
-            container
-            justify="space-between"
-            alignItems="flex-end"
-            className={classes.title}
-          >
-            <Grid item>
-              <Breadcrumb
-                pathname={location.pathname}
-                labelTitle="Create a Cluster"
-                labelOptions={{ noCap: true }}
-              />
-            </Grid>
-            <Grid item>
-              <Grid container alignItems="flex-end">
-                <Grid item className="pt0">
-                  <DocumentationButton href="https://www.linode.com/docs/platform" />
-                </Grid>
+  return (
+    <StickyContainer>
+      <Grid container>
+        <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
+        <Grid
+          container
+          justify="space-between"
+          alignItems="flex-end"
+          className={classes.title}
+        >
+          <Grid item>
+            <Breadcrumb
+              pathname={location.pathname}
+              labelTitle="Create a Cluster"
+              labelOptions={{ noCap: true }}
+            />
+          </Grid>
+          <Grid item>
+            <Grid container alignItems="flex-end">
+              <Grid item className="pt0">
+                <DocumentationButton href="https://www.linode.com/docs/platform" />
               </Grid>
             </Grid>
           </Grid>
-
-          <Grid item className={`mlMain py0`}>
-            <div className={classes.main}>
-              <Paper data-qa-label-header>
-                <div className={classes.inner}>
-                  <Grid item>
-                    <TextField
-                      className={classes.inputWidth}
-                      data-qa-label-input
-                      errorText={errorMap.label}
-                      label="Cluster Label"
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        this.updateLabel(e.target.value)
-                      }
-                      value={label || ''}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <RegionSelect
-                      label={'Region'}
-                      placeholder={' '}
-                      className={classes.regionSubtitle}
-                      // error={errorMap.region}
-                      handleSelection={(regionID: string) =>
-                        this.setState({ selectedRegion: regionID })
-                      }
-                      regions={filteredRegions}
-                      selectedID={selectedRegion || null}
-                      textFieldProps={{
-                        helperText: regionHelperText,
-                        helperTextPosition: 'top'
-                      }}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <Select
-                      className={classes.inputWidth}
-                      label="Kubernetes Version"
-                      value={version || null}
-                      errorText={errorMap.version}
-                      options={versionOptions}
-                      placeholder={' '}
-                      onChange={(selected: Item<string>) =>
-                        this.setState({ version: selected })
-                      }
-                      isClearable={false}
-                    />
-                  </Grid>
-                </div>
-              </Paper>
-            </div>
-          </Grid>
-          <Grid item className={`${classes.sidebar} mlSidebar`}>
-            <KubeCheckoutBar
-              label={label || ''}
-              region={regionDisplay}
-              pools={nodePools}
-              createCluster={this.createCluster}
-              submitting={submitting}
-              typesData={typesData || []}
-              updateFor={[
-                label,
-                selectedRegion,
-                nodePools,
-                submitting,
-                typesData,
-                classes
-              ]}
-            />
-          </Grid>
         </Grid>
-      </StickyContainer>
-    );
-  }
-}
+
+        <Grid item className={`mlMain py0`}>
+          <div className={classes.main}>
+            <Paper data-qa-label-header>
+              <div className={classes.inner}>
+                <Grid item>
+                  <TextField
+                    className={classes.inputWidth}
+                    data-qa-label-input
+                    errorText={errorMap.label}
+                    label="Cluster Label"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      updateLabel(e.target.value)
+                    }
+                    value={label || ''}
+                  />
+                </Grid>
+                <Grid item>
+                  <RegionSelect
+                    label={'Region'}
+                    placeholder={' '}
+                    className={classes.regionSubtitle}
+                    errorText={errorMap.region}
+                    handleSelection={(regionID: string) =>
+                      setSelectedRegion(regionID)
+                    }
+                    regions={filteredRegions}
+                    selectedID={selectedRegion || null}
+                    textFieldProps={{
+                      helperText: regionHelperText,
+                      helperTextPosition: 'top'
+                    }}
+                  />
+                </Grid>
+                <Grid item>
+                  <Select
+                    className={classes.inputWidth}
+                    label="Kubernetes Version"
+                    value={version || null}
+                    errorText={errorMap.version}
+                    options={versionOptions}
+                    placeholder={' '}
+                    onChange={(selected: Item<string>) => setVersion(selected)}
+                    isClearable={false}
+                  />
+                </Grid>
+              </div>
+            </Paper>
+          </div>
+        </Grid>
+        <Grid item className={`${classes.sidebar} mlSidebar`}>
+          <KubeCheckoutBar
+            label={label || ''}
+            region={regionDisplay}
+            pools={nodePools}
+            createCluster={createCluster}
+            submitting={submitting}
+            typesData={typesData || []}
+            updateFor={[
+              label,
+              selectedRegion,
+              nodePools,
+              submitting,
+              typesData,
+              classes
+            ]}
+          />
+        </Grid>
+      </Grid>
+    </StickyContainer>
+  );
+};
 
 const sortByLabelDescending = (a: Item, b: Item) => {
   if (a.value > b.value) {
@@ -426,19 +358,12 @@ const sortByLabelDescending = (a: Item, b: Item) => {
   return 0;
 };
 
-const styled = withStyles(styles);
-
 const withRegions = regionsContainer(({ data, loading, error }) => ({
   regionsData: data.map(r => ({ ...r, display: dcDisplayNames[r.id] })), // @todo DRY this up
   regionsLoading: loading,
   regionsError: error
 }));
 
-const enhanced = compose<CombinedProps, {}>(
-  styled,
-  withRouter,
-  withRegions,
-  withTypes
-);
+const enhanced = compose<CombinedProps, {}>(withRouter, withRegions, withTypes);
 
 export default enhanced(CreateCluster);
