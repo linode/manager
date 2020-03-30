@@ -4,7 +4,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import { handleStartSession } from 'src/store/authentication/authentication.actions';
-import { parseQueryParams, splitIntoTwo } from 'src/utilities/queryParams';
+import { parseQueryParams } from 'src/utilities/queryParams';
 import { authentication } from 'src/utilities/storage';
 
 type CombinedProps = DispatchProps & RouteComponentProps;
@@ -59,7 +59,6 @@ export class OAuthCallbackPage extends Component<CombinedProps> {
       scope: scopes,
       expires_in: expiresIn,
       state: nonce,
-      return: returnParam,
       token_type: tokenType
     } = hashParams;
 
@@ -70,14 +69,16 @@ export class OAuthCallbackPage extends Component<CombinedProps> {
 
     /**
      * Build the path we're going to redirect to after we're done (back to where the user was when they started authentication).
+     * This has to be handled specially; the hashParams object above already has a "return" property, but query parsers
+     * don't handle URLs as query params very well. Any query params in the returnTo URL will be parsed as if they were separate params.
      */
-    let returnTo = '/';
-    if (returnParam && returnParam.indexOf('?') > -1) {
-      const returnParams: any = parseQueryParams(
-        splitIntoTwo(returnParam, '?')[1]
-      );
-      returnTo = returnParams.returnTo;
-    }
+
+    // Find the returnTo= param directly
+    const returnIdx = location.hash.indexOf('returnTo');
+    // If it exists, take everything after its index (plus 9 to remove the returnTo=)
+    const returnPath = returnIdx ? location.hash.substr(returnIdx + 9) : null;
+    // If this worked, we have a return URL. If not, default to the root path.
+    const returnTo = returnPath ?? '/';
 
     /**
      * We need to validate that the nonce returned (comes from the location.hash as the state param)
@@ -138,10 +139,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => {
   };
 };
 
-const connected = connect(
-  undefined,
-  mapDispatchToProps
-);
+const connected = connect(undefined, mapDispatchToProps);
 
 export default compose<CombinedProps, {}>(
   connected,
