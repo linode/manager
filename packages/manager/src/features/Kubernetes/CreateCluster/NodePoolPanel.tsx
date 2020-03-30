@@ -6,7 +6,7 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 // import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
-import Notice from 'src/components/Notice';
+// import Notice from 'src/components/Notice';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 // import TextField from 'src/components/TextField';
 
@@ -16,7 +16,7 @@ import SelectPlanPanel, {
 
 import { getMonthlyPrice, nodeWarning } from '.././kubeUtils';
 import { PoolNodeWithPrice } from '.././types';
-import NodePoolDisplayTable from './NodePoolDisplayTable';
+// import NodePoolDisplayTable from './NodePoolDisplayTable';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -165,10 +165,10 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
           header="Add Node Pools"
           copy="Add groups of Linodes to your cluster with a chosen size."
           nodeCount={nodeCount}
-          setInputValue={(e: any) =>
-            updateNodeCount(Math.max(+e.target.value, 0))
-          }
+          setInputValue={nodeCount => updateNodeCount(Math.max(+nodeCount, 0))}
           inputIsIncluded
+          submitForm={submitForm}
+          // inputErrorText={countError}
         />
       </Grid>
       {/* <Grid item className={classes.gridItem}>
