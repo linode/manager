@@ -89,7 +89,7 @@ export const NetworkGraphs: React.FC<CombinedProps> = props => {
                 subtitle={maxUnit + '/s'}
                 unit={'/s'}
                 formatData={(value: number) =>
-                  convertNetworkToUnit(value, maxUnit)
+                  convertNetworkToUnit(value * 8, maxUnit)
                 }
                 formatTooltip={formatNetworkTooltip}
                 error={error}
