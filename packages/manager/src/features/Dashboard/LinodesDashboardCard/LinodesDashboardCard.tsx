@@ -24,6 +24,7 @@ import TableRowLoading from 'src/components/TableRowLoading';
 import ViewAllLink from 'src/components/ViewAllLink';
 import LinodeRowHeadCell from 'src/features/linodes/LinodesLanding/LinodeRow/LinodeRowHeadCell';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
+import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { ApplicationState } from 'src/store';
 import {
   isEntityEvent,
@@ -79,57 +80,43 @@ type CombinedProps = ConnectedProps &
   WithTypesProps &
   WithStyles<ClassNames>;
 
-class LinodesDashboardCard extends React.Component<CombinedProps> {
-  render() {
-    const { classes } = this.props;
-    return (
-      <DashboardCard
-        title="Linodes"
-        headerAction={this.renderAction}
-        className={classes.root}
-        alignHeader="flex-start"
-      >
-        <Paper>
-          <Table>
-            <TableBody>{this.renderContent()}</TableBody>
-          </Table>
-        </Paper>
-      </DashboardCard>
-    );
-  }
+const LinodesDashboardCard: React.FC<CombinedProps> = props => {
+  const { classes } = props;
 
-  renderAction = () => {
-    return this.props.linodeCount > 5 ? (
+  const { _loading } = useReduxLoad(['linodes', 'images']);
+
+  const renderAction = () => {
+    return props.linodeCount > 5 ? (
       <ViewAllLink
         text="View All"
         link={'/linodes'}
-        count={this.props.linodeCount}
+        count={props.linodeCount}
       />
     ) : null;
   };
 
-  renderContent = () => {
-    const { loading, linodes, error } = this.props;
-    if (loading) {
-      return this.renderLoading();
+  const renderContent = () => {
+    const { loading, linodes, error } = props;
+    if (loading || _loading) {
+      return renderLoading();
     }
 
     if (error) {
-      return this.renderErrors(error);
+      return renderErrors(error);
     }
 
     if (linodes.length > 0) {
-      return this.renderData(linodes);
+      return renderData(linodes);
     }
 
-    return this.renderEmpty();
+    return renderEmpty();
   };
 
-  renderLoading = () => {
+  const renderLoading = () => {
     return <TableRowLoading colSpan={3} />;
   };
 
-  renderErrors = (errors: APIError[]) => {
+  const renderErrors = (errors: APIError[]) => {
     let errorText: string | JSX.Element = pathOr(
       'Unable to load Linodes.',
       [0, 'reason'],
@@ -152,11 +139,9 @@ class LinodesDashboardCard extends React.Component<CombinedProps> {
     return <TableRowError colSpan={3} message={errorText} />;
   };
 
-  renderEmpty = () => <TableRowEmptyState colSpan={3} />;
+  const renderEmpty = () => <TableRowEmptyState colSpan={3} />;
 
-  renderData = (data: ExtendedLinode[]) => {
-    const { classes } = this.props;
-
+  const renderData = (data: ExtendedLinode[]) => {
     return data.map(linode => {
       const { id, label, region } = linode;
       return (
@@ -192,8 +177,22 @@ class LinodesDashboardCard extends React.Component<CombinedProps> {
       );
     });
   };
-}
 
+  return (
+    <DashboardCard
+      title="Linodes"
+      headerAction={renderAction}
+      className={classes.root}
+      alignHeader="flex-start"
+    >
+      <Paper>
+        <Table>
+          <TableBody>{renderContent()}</TableBody>
+        </Table>
+      </Paper>
+    </DashboardCard>
+  );
+};
 const styled = withStyles(styles);
 
 interface WithTypesProps {

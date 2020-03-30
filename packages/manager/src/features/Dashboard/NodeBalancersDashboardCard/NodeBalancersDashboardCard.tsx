@@ -25,6 +25,11 @@ import TableRowLoading from 'src/components/TableRowLoading';
 import ViewAllLink from 'src/components/ViewAllLink';
 import NodeBalancerContainer from 'src/containers/withNodeBalancers.container';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
+import {
+  withNodeBalancerActions,
+  WithNodeBalancerActions
+} from 'src/store/nodeBalancer/nodeBalancer.containers';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import DashboardCard from '../DashboardCard';
 
 type ClassNames =
@@ -80,32 +85,50 @@ const styles = (theme: Theme) =>
 interface NodeBalancerProps {
   nodeBalancersData: NodeBalancer[];
   nodeBalancersLoading: boolean;
+  nodeBalancersLastUpdated: number;
+  nodeBalancersResults: number;
   nodeBalancersError?: APIError[];
 }
 
-type CombinedProps = NodeBalancerProps & WithStyles<ClassNames>;
+type CombinedProps = NodeBalancerProps &
+  WithNodeBalancerActions &
+  WithStyles<ClassNames>;
 
 const NodeBalancersDashboardCard: React.FunctionComponent<CombinedProps> = props => {
   const {
     classes,
+    nodeBalancerActions: { getNodeBalancerPage },
     nodeBalancersError,
+    nodeBalancersLastUpdated,
     nodeBalancersLoading,
+    nodeBalancersResults,
     nodeBalancersData
   } = props;
+
+  React.useEffect(() => {
+    if (
+      nodeBalancersLastUpdated === 0 &&
+      nodeBalancersResults === 0 &&
+      !nodeBalancersLoading
+    ) {
+      // We don't have any data available and we aren't currently requesting it, so ask the API for what we need
+      getNodeBalancerPage({ page_size: 25, page: 1 });
+    }
+  }, []);
 
   const data = take(5, nodeBalancersData);
 
   const renderAction = () =>
-    nodeBalancersData.length > 5 ? (
+    nodeBalancersResults > 5 ? (
       <ViewAllLink
         text="View All"
         link={'/nodebalancers'}
-        count={nodeBalancersData.length}
+        count={nodeBalancersResults}
       />
     ) : null;
 
   const renderContent = () => {
-    if (nodeBalancersLoading && nodeBalancersData.length === 0) {
+    if (nodeBalancersLoading && nodeBalancersLastUpdated === 0) {
       return renderLoading();
     }
 
@@ -125,7 +148,12 @@ const NodeBalancersDashboardCard: React.FunctionComponent<CombinedProps> = props
   };
 
   const renderErrors = (errors: APIError[]) => (
-    <TableRowError colSpan={2} message={`Unable to load NodeBalancers.`} />
+    <TableRowError
+      colSpan={2}
+      message={
+        getAPIErrorOrDefault(errors, 'Unable to load NodeBalancers.')[0].reason
+      }
+    />
   );
 
   const renderEmpty = () => <TableRowEmptyState colSpan={2} />;
@@ -181,13 +209,26 @@ const NodeBalancersDashboardCard: React.FunctionComponent<CombinedProps> = props
 const styled = withStyles(styles);
 
 const withNodeBalancers = NodeBalancerContainer(
-  (ownProps, nodeBalancersData, nodeBalancersLoading, nodeBalancersError) => ({
+  (
+    ownProps,
+    nodeBalancersData,
+    nodeBalancersLoading,
+    nodeBalancersResults,
+    nodeBalancersLastUpdated,
+    nodeBalancersError
+  ) => ({
     ...ownProps,
     nodeBalancersData,
     nodeBalancersLoading,
-    nodeBalancersError
+    nodeBalancersLastUpdated,
+    nodeBalancersError,
+    nodeBalancersResults
   })
 );
-const enhanced = compose<CombinedProps, {}>(withNodeBalancers, styled);
+const enhanced = compose<CombinedProps, {}>(
+  withNodeBalancers,
+  withNodeBalancerActions,
+  styled
+);
 
 export default enhanced(NodeBalancersDashboardCard);

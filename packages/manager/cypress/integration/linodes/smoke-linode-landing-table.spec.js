@@ -2,12 +2,8 @@ import { createLinode, deleteLinodeById } from '../../support/api/linodes';
 import { getLinodeLandingRow } from '../../support/ui/linodes';
 
 describe('linode landing', () => {
-  beforeEach(() => {
-    cy.login2();
-  });
-
   it('show-all-linode', () => {
-    cy.visit('/linodes');
+    cy.visitWithLogin('/linodes');
     // Does not work because of MUI select
     //    cy.get('#number-of-items-to-show')
     // .select('Show All')
@@ -16,7 +12,7 @@ describe('linode landing', () => {
   });
   it.only('linode row menu', () => {
     createLinode().then(linode => {
-      cy.visit('/linodes');
+      cy.visitWithLogin('/linodes');
       getLinodeLandingRow(linode.label).within($el => {
         cy.get(`[data-qa-action-menu]`).should('exist');
       });
