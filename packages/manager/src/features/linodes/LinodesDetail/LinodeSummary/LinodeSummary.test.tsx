@@ -40,6 +40,7 @@ describe('LinodeSummary', () => {
       imagesData={{}}
       imagesError={{}}
       imagesLoading={false}
+      imagesLastUpdated={0}
     />
   );
 

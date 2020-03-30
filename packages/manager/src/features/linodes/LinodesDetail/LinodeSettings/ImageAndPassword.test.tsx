@@ -11,6 +11,7 @@ const props = {
   imagesLoading: false,
   imagesError: {},
   imagesData: {},
+  imagesLastUpdated: 0,
   onImageChange: jest.fn(),
   password: '',
   onPasswordChange: jest.fn(),
