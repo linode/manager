@@ -192,8 +192,8 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
           Add Node Pool
         </Button>
       </Grid> */}
-      {!hideTable && (
-        /* We checked for these props above so it's safe to assume they're defined. */
+      {/* {!hideTable && (
+         We checked for these props above so it's safe to assume they're defined.
         <>
           {showSingleNodeWarning && (
             <Grid item className={classes.notice}>
@@ -212,7 +212,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
             />
           </Grid>
         </>
-      )}
+      )} */}
     </Grid>
   );
 };

@@ -43,7 +43,9 @@ type ClassNames =
   | 'chip'
   | 'headingCellContainer'
   | 'currentPlanChipCell'
-  | 'radioCell';
+  | 'radioCell'
+  | 'enhancedInputOuter'
+  | 'enhancedInputButton';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -75,6 +77,17 @@ const styles = (theme: Theme) =>
     radioCell: {
       width: '5%',
       height: 55
+    },
+    enhancedInputOuter: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      alignItems: 'center'
+    },
+    enhancedInputButton: {
+      marginLeft: 10,
+      minWidth: 90,
+      paddingTop: 12,
+      paddingBottom: 12
     }
   });
 
@@ -217,14 +230,21 @@ export class SelectPlanPanel extends React.Component<
             </TableCell>
             {inputIsIncluded && (
               <TableCell>
-                <EnhancedNumberInput
-                  value={nodeCount ? nodeCount : 0}
-                  setValue={setInputValue}
-                  disabled={type.id !== String(selectedID)}
-                />
-                <Button buttonType="primary" onClick={submitForm}>
-                  Add
-                </Button>
+                <div className={classes.enhancedInputOuter}>
+                  <EnhancedNumberInput
+                    value={nodeCount ? nodeCount : 0}
+                    setValue={setInputValue}
+                    disabled={type.id !== String(selectedID)}
+                  />
+                  <Button
+                    buttonType="primary"
+                    onClick={submitForm}
+                    disabled={type.id !== String(selectedID)}
+                    className={classes.enhancedInputButton}
+                  >
+                    Add
+                  </Button>
+                </div>
               </TableCell>
             )}
           </TableRow>
@@ -251,7 +271,9 @@ export class SelectPlanPanel extends React.Component<
     const tableHeader = (
       <TableHead>
         <TableRow>
-          <TableCell className={inputIsIncluded && 'visually-hidden'} />
+          <TableCell
+            className={inputIsIncluded ? 'visually-hidden' : 'radioHead'}
+          />
           <TableCell data-qa-plan-header>Linode Plan</TableCell>
           <TableCell data-qa-monthly-header>Monthly</TableCell>
           <TableCell data-qa-hourly-header>Hourly</TableCell>
@@ -271,7 +293,7 @@ export class SelectPlanPanel extends React.Component<
       <Grid container>
         <Hidden mdUp>{plans.map(this.renderSelection)}</Hidden>
         <Hidden smDown>
-          <Grid item xs={12} lg={10}>
+          <Grid item xs={12}>
             <Table
               isResponsive={false}
               border
