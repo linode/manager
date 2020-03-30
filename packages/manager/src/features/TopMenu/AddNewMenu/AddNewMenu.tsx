@@ -211,7 +211,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
                 className={classes.menuItemLink}
               >
                 <AddNewMenuItem
-                  title="One-Click App"
+                  title="Marketplace"
                   body="Deploy blogs, game servers, and other web apps with ease."
                   ItemIcon={OneClickIcon}
                   attr={{ 'data-qa-one-click-add-new': true }}
