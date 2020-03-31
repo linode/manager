@@ -37,7 +37,7 @@ const resizeWarning = `Resizing to fewer nodes will delete random nodes from
 the pool. If you want to keep specific nodes, delete unneeded nodes manually from
 the pool's node list.`;
 
-export const AddDeviceDrawer: React.FC<Props> = props => {
+export const ResizeNodePoolDrawer: React.FC<Props> = props => {
   const { error, isSubmitting, nodePool, onClose, onSubmit, open } = props;
   const { types } = useTypes();
   const classes = useStyles();
@@ -122,4 +122,4 @@ export const AddDeviceDrawer: React.FC<Props> = props => {
   );
 };
 
-export default AddDeviceDrawer;
+export default ResizeNodePoolDrawer;
