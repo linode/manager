@@ -54,7 +54,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '& label': {
       color: theme.color.headline,
-      fontSize: '12px',
       fontWeight: 600,
       lineHeight: '1.33rem',
       letterSpacing: '0.25px',
@@ -272,6 +271,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
           <Grid item>
             <Grid container alignItems="flex-end">
               <Grid item className="pt0">
+                {/* @todo: Insert real link when the doc is written. */}
                 <DocumentationButton href="https://www.linode.com/docs/platform" />
               </Grid>
             </Grid>
