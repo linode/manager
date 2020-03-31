@@ -13,10 +13,20 @@ interface Props {
   submitting: boolean;
   typesData: ExtendedType[];
   createCluster: () => void;
+  updatePool: (poolIdx: number, updatedPool: PoolNodeWithPrice) => void;
+  removePool: (poolIdx: number) => void;
 }
 
 export const KubeCheckoutBar: React.FunctionComponent<Props> = props => {
-  const { pools, submitting, createCluster, typesData } = props;
+  const {
+    pools,
+    submitting,
+    createCluster,
+    removePool,
+    typesData,
+    updatePool
+  } = props;
+
   return (
     <Sticky topOffset={-24} disableCompensation>
       {(stickyProps: StickyProps) => {
@@ -36,8 +46,10 @@ export const KubeCheckoutBar: React.FunctionComponent<Props> = props => {
                   <NodePoolSummary
                     key={idx}
                     nodeCount={thisPool.count}
-                    updateNodeCount={() => null}
-                    onRemove={() => null}
+                    updateNodeCount={(updatedCount: number) =>
+                      updatePool(idx, { ...thisPool, count: updatedCount })
+                    }
+                    onRemove={() => removePool(idx)}
                     price={thisPool.totalMonthlyPrice}
                     poolType={
                       typesData.find(

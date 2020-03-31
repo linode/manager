@@ -339,6 +339,8 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
               pools={nodePools}
               createCluster={this.createCluster}
               submitting={submitting}
+              removePool={this.removePool}
+              updatePool={this.updatePool}
               typesData={typesData || []}
               updateFor={[nodePools, submitting, typesData, classes]}
             />
