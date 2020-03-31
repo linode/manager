@@ -72,7 +72,9 @@ export const withLabelGenerator = (Component: React.ComponentType<any>) => {
 
 // Connect to Redux state, so that we have access to existing Linode Labels (we may need to dedupe).
 const connected = connect((state: ApplicationState) => ({
-  linodeLabels: state.__resources.linodes.entities.map(l => l.label)
+  linodeLabels: Object.values(state.__resources.linodes.itemsById).map(
+    l => l.label
+  )
 }));
 
 // Regex taken from API documentation.

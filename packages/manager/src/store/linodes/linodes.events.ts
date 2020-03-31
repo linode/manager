@@ -168,7 +168,7 @@ const handleLinodeDelete = (
   id: number,
   state: ApplicationState
 ) => {
-  const found = state.__resources.linodes.results.find(i => i === id);
+  const found = state.__resources.linodes.itemsById[id];
 
   if (!found) {
     return;

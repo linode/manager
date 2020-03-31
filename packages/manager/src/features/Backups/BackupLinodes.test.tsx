@@ -5,7 +5,7 @@ import * as linodes from 'src/__data__/linodes';
 import * as types from 'src/__data__/types';
 import { displayPrice as _display } from 'src/components/DisplayPrice';
 
-import { ExtendedLinode } from './BackupDrawer';
+import { ExtendedLinode } from './types';
 
 const type = types.types[0];
 

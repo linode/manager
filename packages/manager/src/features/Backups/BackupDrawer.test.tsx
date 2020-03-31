@@ -12,9 +12,9 @@ import {
   addTypeInfo,
   BackupDrawer,
   enhanceLinodes,
-  ExtendedLinode,
   getTotalPrice
 } from './BackupDrawer';
+import { ExtendedLinode } from './types';
 
 const linodes = [linode1, linode3];
 

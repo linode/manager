@@ -292,7 +292,7 @@ interface StateProps {
 const mapStateToProps: MapState<StateProps, Props> = state => ({
   /** Profile */
   profileError: path(['read'], state.__resources.profile.error),
-  linodes: state.__resources.linodes.entities,
+  linodes: Object.values(state.__resources.linodes.itemsById),
   linodesError: path(['read'], state.__resources.linodes.error),
   domainsError: state.__resources.domains.error.read,
   imagesError: path(['read'], state.__resources.images.error),

@@ -20,7 +20,7 @@ const findInProgressEvent = (e: Event[]) => (id: number) => {
 };
 
 export default createSelector<ApplicationState, Linode[], Event[], Linode[]>(
-  state => state.__resources.linodes.entities,
+  state => Object.values(state.__resources.linodes.itemsById),
   inProgressEvents('linode'),
   (linodes, events) => {
     const eventFor = findInProgressEvent(events);

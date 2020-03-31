@@ -44,7 +44,7 @@ const _getEntityByIDFromStore = (
   } = _store.__resources;
   switch (entityType) {
     case 'linode':
-      return linodes.entities.find(linode => entityID === linode.id);
+      return linodes.itemsById[entityID];
     case 'image':
       return (images.data || {})[entityID];
     case 'nodebalancer':

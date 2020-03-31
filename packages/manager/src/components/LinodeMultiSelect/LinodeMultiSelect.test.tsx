@@ -21,7 +21,7 @@ const props: CombinedProps = {
   handleChange: jest.fn(),
   linodesLoading: false,
   linodesData: linodes,
-  linodesResults: linodes.map(i => i.id),
+  linodesResults: linodes.length,
   linodesLastUpdated: 1000,
   showAllOption: true,
   getLinodes: jest.fn()

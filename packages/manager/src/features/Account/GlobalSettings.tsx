@@ -22,6 +22,7 @@ import { handleOpen } from 'src/store/backupDrawer';
 import getEntitiesWithGroupsToImport, {
   GroupedEntitiesForImport
 } from 'src/store/selectors/getEntitiesWithGroupsToImport';
+import { getLinodesWithoutBackups } from 'src/store/selectors/getLinodesWithBackups';
 import { openDrawer as openGroupDrawer } from 'src/store/tagImportDrawer';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -170,9 +171,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
     ['__resources', 'accountSettings', 'error', 'update'],
     state
   ),
-  linodesWithoutBackups: state.__resources.linodes.entities.filter(
-    l => !l.backups.enabled
-  ),
+  linodesWithoutBackups: getLinodesWithoutBackups(state.__resources),
   networkHelperEnabled: pathOr(
     false,
     ['__resources', 'accountSettings', 'data', 'network_helper'],
