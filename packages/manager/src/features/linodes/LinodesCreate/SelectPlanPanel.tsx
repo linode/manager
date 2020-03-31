@@ -101,9 +101,10 @@ interface Props {
   disabled?: boolean;
   header?: string;
   copy?: string;
+  inputIsIncluded?: boolean;
+  // Below props only needed if inputIsIncluded === true
   nodeCount?: number;
   setInputValue?: (value: number) => void;
-  inputIsIncluded?: boolean;
   submitForm?: (e: any) => void;
   inputErrorText?: string;
 }

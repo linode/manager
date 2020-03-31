@@ -6,7 +6,7 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 // import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
-// import Notice from 'src/components/Notice';
+import Notice from 'src/components/Notice';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 // import TextField from 'src/components/TextField';
 
@@ -90,7 +90,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
   const [countError, setCountError] = React.useState<string | undefined>(
     undefined
   );
-  // const classes = useStyles();
+  const classes = useStyles();
 
   const {
     addNodePool,
@@ -157,6 +157,11 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
 
   return (
     <Grid container direction="column">
+      {showSingleNodeWarning && (
+        <Grid item className={classes.notice}>
+          <Notice warning text={nodeWarning} spacingBottom={0} />
+        </Grid>
+      )}
       <Grid item>
         <SelectPlanPanel
           types={types.filter(t => t.class !== 'nanode' && t.class !== 'gpu')} // No Nanodes or GPUs in clusters
