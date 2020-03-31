@@ -56,10 +56,6 @@ export const displaySize = (memory: number) => {
   return `${memG}GB`;
 };
 
-export const displayClassAndSize = (category: string, memory: number) => {
-  return `${displayClass(category)} ${displaySize(memory)}`;
-};
-
 export const displayTypeForKubePoolNode = (
   category: string,
   memory: number,

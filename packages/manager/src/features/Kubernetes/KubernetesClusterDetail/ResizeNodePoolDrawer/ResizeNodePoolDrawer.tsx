@@ -6,7 +6,6 @@ import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
 import Notice from 'src/components/Notice';
-import { displayClassAndSize } from 'src/features/linodes/presentation';
 import { useTypes } from 'src/hooks/useTypes';
 import { nodeWarning } from '../../kubeUtils';
 import { PoolNodeWithPrice } from '../../types';
@@ -64,10 +63,7 @@ export const AddDeviceDrawer: React.FC<Props> = props => {
 
   return (
     <Drawer
-      title={`Resize Pool: ${displayClassAndSize(
-        planType?.class ?? '',
-        planType?.memory ?? 0
-      )}`}
+      title={`Resize Pool: ${planType?.label ?? 'Unknown'} Plan`}
       open={open}
       onClose={onClose}
     >
