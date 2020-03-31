@@ -51,7 +51,6 @@ export const AddDeviceDrawer: React.FC<Props> = props => {
   };
 
   const handleSubmit = () => {
-    alert(`Called onSubmit with ${updatedCount}`);
     onSubmit(updatedCount);
   };
 

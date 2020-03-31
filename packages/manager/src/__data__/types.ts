@@ -9,7 +9,7 @@ export const types: LinodeType[] = [
       hourly: 0.015
     },
     id: 'g5-standard-1',
-    label: 'Linode 2048',
+    label: 'Linode 2GB',
     class: 'standard',
     addons: {
       backups: {
