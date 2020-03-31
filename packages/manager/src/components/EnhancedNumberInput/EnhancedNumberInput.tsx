@@ -123,7 +123,6 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
             }),
             min: 0
           }}
-          autoFocus={true}
           disabled={disabled}
           data-testid={'quantity-input'}
         />

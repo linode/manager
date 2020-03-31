@@ -17,6 +17,7 @@ import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
+import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
@@ -29,7 +30,6 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
-import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
 
 export interface ExtendedType extends LinodeType {
   heading: string;
@@ -231,13 +231,12 @@ export class SelectPlanPanel extends React.Component<
             <TableCell data-qa-ram>
               {convertMegabytesTo(type.memory, true)}
             </TableCell>
-            {inputIsIncluded && (
+            {inputIsIncluded && setInputValue && (
               <TableCell>
                 <div className={classes.enhancedInputOuter}>
                   <EnhancedNumberInput
                     value={nodeCount ? nodeCount : 0}
                     setValue={setInputValue}
-                    // disabled={type.id !== String(selectedID)}
                     // error={inputErrorText}
                   />
                   <Button
@@ -264,7 +263,11 @@ export class SelectPlanPanel extends React.Component<
             subheadings={type.subHeadings}
             disabled={planTooSmall || isSamePlan || disabled}
             tooltip={tooltip}
-            variant="check"
+            variant={inputIsIncluded ? 'quantityCheck' : 'check'}
+            inputValue={nodeCount ? nodeCount : 0}
+            setInputValue={setInputValue}
+            submitForm={submitForm}
+            buttonDisabled={type.id !== String(selectedID)}
           />
         </Hidden>
       </React.Fragment>
