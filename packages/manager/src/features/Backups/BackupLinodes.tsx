@@ -11,7 +11,7 @@ import Typography from 'src/components/core/Typography';
 import { displayPrice as _displayPrice } from 'src/components/DisplayPrice/DisplayPrice';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import { ExtendedLinode } from './BackupDrawer';
+import { ExtendedLinode } from './types';
 
 type ClassNames = 'root' | 'error';
 
