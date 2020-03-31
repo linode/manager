@@ -40,7 +40,8 @@ type CSSClasses =
   | 'button'
   | 'caret'
   | 'menuItemLink'
-  | 'menuItemList';
+  | 'menuItemList'
+  | 'menuPopover';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -90,9 +91,8 @@ const styles = (theme: Theme) =>
     },
     caret: {
       position: 'absolute',
-      right: 18,
-      top: 13,
-      marginLeft: theme.spacing(1) / 2,
+      right: theme.spacing(2) + 2,
+      top: theme.spacing(1) + 5,
       [theme.breakpoints.down('sm')]: {
         right: 5
       }
@@ -102,7 +102,12 @@ const styles = (theme: Theme) =>
         padding: 0
       },
       '&[data-reach-menu-item][data-selected]': {
-        background: theme.bg.offWhiteDT
+        background: theme.bg.main,
+        '& svg': {
+          ...theme.addCircleHoverEffect,
+          backgroundColor: theme.bg.main,
+          color: theme.palette.text.primary
+        }
       }
     },
     menuItemList: {
@@ -113,7 +118,9 @@ const styles = (theme: Theme) =>
         whiteSpace: 'normal',
         boxShadow: `0 0 5px ${theme.color.boxShadow}`,
         backgroundColor: theme.bg.white
-      },
+      }
+    },
+    menuPopover: {
       '&[data-reach-menu], &[data-reach-menu-popover]': {
         width: 350,
         [theme.breakpoints.up('md')]: {
@@ -145,15 +152,11 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
     return (
       <div className={classes.wrapper}>
         <Menu>
-          <MenuButton
-            className={classes.button}
-            data-qa-add-new-menu-button
-            aria-label="Linode Create"
-          >
+          <MenuButton className={classes.button} data-qa-add-new-menu-button>
             Create
             <KeyboardArrowDown className={classes.caret} />
           </MenuButton>
-          <MenuPopover className={classes.menuItemList} portal={false}>
+          <MenuPopover className={classes.menuPopover} portal={false}>
             <MenuItems className={classes.menuItemList}>
               <MenuLink
                 as={Link}

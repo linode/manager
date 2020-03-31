@@ -39,8 +39,8 @@ const styles = (theme: Theme) =>
         stroke: theme.bg.main
       },
       '&:hover, &:focus': {
-        ...theme.animateCircleIcon,
-        backgroundColor: theme.bg.offWhiteDT,
+        ...theme.addCircleHoverEffect,
+        backgroundColor: theme.bg.main,
         color: theme.palette.text.primary
       }
     },
@@ -76,11 +76,6 @@ interface Props {
   attr?: { [key: string]: any };
 }
 
-// interface Props extends MenuItems {
-//   index: number;
-//   count: number;
-// }
-
 interface State {
   anchorEl?: HTMLElement;
 }
@@ -91,8 +86,8 @@ class AddNewMenuItem extends React.Component<PropsWithStyles, State> {
   render() {
     const { classes, title, body, ItemIcon, attr } = this.props;
 
-    const menuItemContent = () => (
-      <>
+    return (
+      <div className={classes.root} data-qa-add-new-menu={title}>
         <div className={classes.iconWrapper} {...attr}>
           <ItemIcon />
         </div>
@@ -102,12 +97,6 @@ class AddNewMenuItem extends React.Component<PropsWithStyles, State> {
             {body}
           </Typography>
         </div>
-      </>
-    );
-
-    return (
-      <div className={classes.root} data-qa-add-new-menu={title}>
-        {menuItemContent()}
       </div>
     );
   }
