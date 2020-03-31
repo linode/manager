@@ -26,9 +26,6 @@ import { ExtendedCluster } from '.././types';
 import KubeSummaryPanel from './KubeSummaryPanel';
 import NodePoolsDisplay from './NodePoolsDisplay';
 
-// @todo delete/move this before merge
-import ResizeNodePoolDrawer from './ResizeNodePoolDrawer';
-
 type ClassNames =
   | 'root'
   | 'title'
@@ -107,9 +104,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
   const [endpointLoading, setEndpointLoading] = React.useState<boolean>(false);
 
   const [updateError, setUpdateError] = React.useState<string | undefined>();
-
-  // @todo delete before merge
-  const [open, setOpen] = React.useState<boolean>(true);
 
   React.useEffect(() => {
     const clusterID = +props.match.params.clusterID;
@@ -226,15 +220,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
           />
         </Grid>
       </Grid>
-      {/** Delete before merge */}
-      <ResizeNodePoolDrawer
-        open={open}
-        onClose={() => setOpen(false)}
-        onSubmit={() => null}
-        isSubmitting={false}
-        nodePool={cluster.node_pools[0]}
-        error="An error"
-      />
     </React.Fragment>
   );
 };
