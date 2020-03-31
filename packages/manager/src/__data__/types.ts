@@ -22,7 +22,7 @@ export const types: LinodeType[] = [
     successor: null,
     memory: 2048,
     vcpus: 1,
-    disk: 30720
+    disk: 50 * 1024
   },
   {
     transfer: 3000,

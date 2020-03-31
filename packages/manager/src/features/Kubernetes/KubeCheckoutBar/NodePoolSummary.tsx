@@ -3,6 +3,7 @@ import * as React from 'react';
 import Delete from 'src/assets/icons/trash.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import DisplayPrice from 'src/components/DisplayPrice';
 import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
 import Grid from 'src/components/Grid';
 import IconButton from 'src/components/IconButton';
@@ -21,11 +22,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   typeSubheader: {
     paddingLeft: theme.spacing(),
     fontSize: '14px'
-  },
-  unitPrice: {
-    fontSize: '16px',
-    fontWeight: 600,
-    color: theme.color.green
   }
 }));
 
@@ -73,7 +69,7 @@ export const NodePoolSummary: React.FC<Props> = props => {
           </Typography>
         </Grid>
         <Grid item>
-          <IconButton onClick={onRemove}>
+          <IconButton onClick={onRemove} data-testid="remove-pool-button">
             <Delete />
           </IconButton>
         </Grid>
@@ -82,7 +78,7 @@ export const NodePoolSummary: React.FC<Props> = props => {
         <EnhancedNumberInput value={nodeCount} setValue={updateNodeCount} />
       </Grid>
       <Grid item>
-        <Typography className={classes.unitPrice}>${price}/month</Typography>
+        <DisplayPrice price={price} fontSize="16px" interval="month" />
       </Grid>
     </Grid>
   );

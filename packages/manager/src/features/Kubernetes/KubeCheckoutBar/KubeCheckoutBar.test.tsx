@@ -46,4 +46,9 @@ describe('KubeCheckoutBar', () => {
     });
     getByText(/at least 3 nodes/i);
   });
+
+  it('should display the total price of the cluster', () => {
+    const { getByText } = renderComponent(props);
+    getByText(/\$5,000\.00/);
+  });
 });
