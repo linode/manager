@@ -3,22 +3,23 @@ import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
+import TableFooter from 'src/components/core/TableFooter';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
-import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
+import StatusIndicator from 'src/components/StatusIndicator';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import TableContentWrapper from 'src/components/TableContentWrapper';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 import useLinodes from 'src/hooks/useLinodes';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
   labelCell: {
     width: '35%'
   },
@@ -27,34 +28,29 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   ipCell: {
     width: '25%'
-  },
-  footer: {
-    margin: theme.spacing()
   }
 }));
 
-interface Props {
-  nodes?: PoolNodeResponse[];
+export interface Props {
+  nodes: PoolNodeResponse[];
   poolId: number;
 }
 
-type CombinedProps = Props;
-
-const NodeTable: React.FC<CombinedProps> = props => {
+export const NodeTable: React.FC<Props> = props => {
   const { nodes, poolId } = props;
 
   const classes = useStyles();
 
-  if (!nodes) {
-    return <>No nodes</>;
-  }
+  const { linodes, requestLinodes } = useLinodes();
 
-  // @todo: handle requesting Linodes if they haven't been already.
-  const {
-    linodes: { entities: allLinodes }
-  } = useLinodes();
+  React.useEffect(() => {
+    // Request Linodes if we haven't already.
+    if (linodes.lastUpdated === 0 && !linodes.loading) {
+      requestLinodes().catch(_ => null);
+    }
+  }, []);
 
-  const rowData = nodesToRowData(nodes, allLinodes);
+  const rowData = nodesToRowData(nodes, linodes.entities);
 
   return (
     <>
@@ -71,7 +67,10 @@ const NodeTable: React.FC<CombinedProps> = props => {
             }) => (
               <>
                 <Paper>
-                  <Table aria-label="List of Your Firewalls">
+                  <Table
+                    aria-label="List of Your Cluster Nodes"
+                    isResponsive={false}
+                  >
                     <TableHead>
                       <TableRow>
                         <TableSortCell
@@ -105,20 +104,33 @@ const NodeTable: React.FC<CombinedProps> = props => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {paginatedAndOrderedData.map(eachRow => {
-                        return (
-                          <NodeRow
-                            key={`node-row-${eachRow.id}`}
-                            nodeId={eachRow.nodeId}
-                            instanceId={eachRow.instanceId}
-                            label={eachRow.label}
-                            ip={eachRow.ip}
-                            instanceStatus={eachRow.instanceStatus}
-                            // {...actionMenuHandlers}
-                          />
-                        );
-                      })}
+                      <TableContentWrapper
+                        length={paginatedAndOrderedData.length}
+                        loading={linodes.loading}
+                        error={linodes.error?.read}
+                        lastUpdated={linodes.lastUpdated}
+                      >
+                        {paginatedAndOrderedData.map(eachRow => {
+                          return (
+                            <NodeRow
+                              key={`node-row-${eachRow.nodeId}`}
+                              nodeId={eachRow.nodeId}
+                              instanceId={eachRow.instanceId}
+                              label={eachRow.label}
+                              status={eachRow.status}
+                              ip={eachRow.ip}
+                            />
+                          );
+                        })}
+                      </TableContentWrapper>
                     </TableBody>
+                    <TableFooter>
+                      <TableRow>
+                        <TableCell colSpan={4}>
+                          <Typography>Pool ID {poolId}</Typography>
+                        </TableCell>
+                      </TableRow>
+                    </TableFooter>
                   </Table>
                 </Paper>
                 <PaginationFooter
@@ -127,76 +139,77 @@ const NodeTable: React.FC<CombinedProps> = props => {
                   handleSizeChange={handlePageSizeChange}
                   page={page}
                   pageSize={pageSize}
-                  eventCategory="Firewall Table"
+                  eventCategory="Node Table"
                 />
               </>
             )}
           </Paginate>
         )}
       </OrderBy>
-      <div className={classes.footer}>
-        <Typography>Pool ID {poolId}</Typography>
-      </div>
     </>
   );
 };
 
-export default NodeTable;
+export default React.memo(NodeTable);
 
 export const nodesToRowData = (
   nodes: PoolNodeResponse[],
   linodes: LinodeWithMaintenanceAndDisplayStatus[]
 ) => {
-  return nodes.map(thisNode => {
+  const rowData: NodeRow[] = [];
+
+  for (const thisNode of nodes) {
     const foundLinode = linodes.find(
       thisLinode => thisLinode.id === thisNode.instance_id
     );
 
-    const label = foundLinode?.label ?? '';
-    // @todo: display status
-    const instanceStatus = foundLinode?.status ?? '';
-    const ip = foundLinode?.ipv4?.[0] ?? '';
-
-    return {
-      label,
+    rowData.push({
       nodeId: thisNode.id,
-      instanceId: thisNode.instance_id,
-      ip,
-      instanceStatus
-    };
-  });
+      instanceId: foundLinode?.id,
+      label: foundLinode?.label,
+      status: thisNode.status,
+      ip: foundLinode?.ipv4[0]
+    });
+  }
+
+  return rowData;
 };
 
-interface NodeRowProps {
-  label: string;
-  ip: string;
-  nodeId: number;
-  instanceId: number;
-  instanceStatus: string;
+interface NodeRow {
+  nodeId: string;
+  instanceId?: number;
+  label?: string;
+  status: string;
+  ip?: string;
 }
 
-export const NodeRow: React.FC<NodeRowProps> = props => {
-  const { label, instanceStatus, ip, instanceId } = props;
+export const NodeRow: React.FC<NodeRow> = React.memo(props => {
+  const { instanceId, label, status, ip } = props;
+
+  const rowLink = instanceId ? `/linodes/${instanceId}` : undefined;
+  const statusIndicator = status === 'ready' ? 'active' : 'other';
+  const displayLabel = label ?? 'Not yet available';
+  const displayStatus = status === 'ready' ? 'Ready' : 'Not ready';
+  const displayIP = ip ?? 'Not yet available';
 
   return (
-    <TableRow rowLink={`/linodes/${instanceId}`} aria-label={label}>
+    <TableRow rowLink={rowLink} aria-label={label}>
       <TableCell>
         <Grid container wrap="nowrap" alignItems="center">
-          <Grid item className="py0">
-            {/* @todo: real icon  */}
-            <EntityIcon size={28} variant="linode" status={instanceStatus} />
+          <Grid item>
+            <StatusIndicator status={statusIndicator} />
           </Grid>
           <Grid item>
-            <Typography variant="h3">{label}</Typography>
+            <Typography variant="h3">{displayLabel}</Typography>
           </Grid>
         </Grid>
       </TableCell>
-      <TableCell>{instanceStatus}</TableCell>
-      <TableCell>{ip}</TableCell>
+      <TableCell>{displayStatus}</TableCell>
+      <TableCell>{displayIP}</TableCell>
       <TableCell>
         {/* @todo: action menu */}
         {/* <ActionMenu/> */}
       </TableCell>
     </TableRow>
   );
-};
+});

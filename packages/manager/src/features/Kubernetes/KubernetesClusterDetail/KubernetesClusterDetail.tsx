@@ -214,7 +214,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
           <NodePoolsDisplay
             pools={cluster.node_pools}
             types={props.typesData || []}
-            loading={props.nodePoolsLoading}
           />
         </Grid>
       </Grid>

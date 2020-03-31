@@ -1,15 +1,15 @@
 import * as React from 'react';
-// import { useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import ErrorState from 'src/components/ErrorState';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { displayTypeForKubePoolNode } from 'src/features/linodes/presentation';
-// import { ApplicationState } from 'src/store';
-// import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { ApplicationState } from 'src/store';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { PoolNodeWithPrice } from '../../types';
-// import NodePoolDisplayTable from '../../CreateCluster/NodePoolDisplayTable';
 import NodePool from './NodePool';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -28,10 +28,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface Props {
+export interface Props {
   pools: PoolNodeWithPrice[];
   types: ExtendedType[];
-  loading: boolean;
 }
 
 type CombinedProps = Props;
@@ -50,15 +49,15 @@ export const NodePoolsDisplay: React.FunctionComponent<CombinedProps> = props =>
    * data, so a random error in our subsequent polling doesn't
    * break the view.
    */
-  // const poolsError = useSelector((state: ApplicationState) => {
-  //   const error = state.__resources.nodePools?.error?.read;
-  //   const lastUpdated = state.__resources.nodePools.lastUpdated;
-  //   if (error && lastUpdated === 0) {
-  //     return getAPIErrorOrDefault(error, 'Unable to load Node Pools.')[0]
-  //       .reason;
-  //   }
-  //   return undefined;
-  // });
+  const poolsError = useSelector((state: ApplicationState) => {
+    const error = state.__resources.nodePools?.error?.read;
+    const lastUpdated = state.__resources.nodePools.lastUpdated;
+    if (error && lastUpdated === 0) {
+      return getAPIErrorOrDefault(error, 'Unable to load Node Pools.')[0]
+        .reason;
+    }
+    return undefined;
+  });
 
   return (
     <>
@@ -66,43 +65,42 @@ export const NodePoolsDisplay: React.FunctionComponent<CombinedProps> = props =>
         Node Pools
       </Typography>
       <Paper className={classes.root}>
-        <Grid container direction="column">
-          <Grid item xs={12} className={classes.displayTable}>
-            {/* <NodePoolDisplayTable
-            pools={pools}
-            types={types}
-            loading={loading}
-            error={poolsError}
-          /> */}
-            {pools.map(thisPool => {
-              const { id, nodes } = thisPool;
+        {poolsError ? (
+          <ErrorState errorText={poolsError} />
+        ) : (
+          <Grid container direction="column">
+            <Grid item xs={12} className={classes.displayTable}>
+              {pools.map(thisPool => {
+                const { id, nodes } = thisPool;
 
-              const thisPoolType = types.find(
-                thisType => thisType.id === thisPool.type
-              );
+                const thisPoolType = types.find(
+                  thisType => thisType.id === thisPool.type
+                );
 
-              const typeLabel = thisPoolType
-                ? displayTypeForKubePoolNode(
-                    thisPoolType.class,
-                    thisPoolType.memory,
-                    thisPoolType.vcpus
-                  )
-                : 'Unknown type'; // This should never happen, but better not to crash if it does.
+                const typeLabel = thisPoolType
+                  ? displayTypeForKubePoolNode(
+                      thisPoolType.class,
+                      thisPoolType.memory,
+                      thisPoolType.vcpus
+                    )
+                  : 'Unknown type'; // This should never happen, but better not to crash if it does.
 
-              return (
-                <NodePool
-                  key={id}
-                  nodes={nodes}
-                  poolId={thisPool.id}
-                  typeLabel={typeLabel}
-                  deletePool={() => null}
-                  handleClickResize={() => null}
-                />
-              );
-            })}
+                return (
+                  <NodePool
+                    key={id}
+                    poolId={thisPool.id}
+                    typeLabel={typeLabel}
+                    nodes={nodes ?? []}
+                    // @todo: real handlers
+                    deletePool={() => null}
+                    handleClickResize={() => null}
+                  />
+                );
+              })}
+            </Grid>
+            {/* NodePoolResizeDrawer goes here. */}
           </Grid>
-          {/* NodePoolResizeDrawer goes here. */}
-        </Grid>
+        )}
       </Paper>
     </>
   );

@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   typeLabel: string;
-  nodes?: PoolNodeResponse[];
+  nodes: PoolNodeResponse[];
   poolId: number;
   deletePool: (poolId: number) => void;
   handleClickResize: (poolId: number) => void;
@@ -39,6 +39,7 @@ const NodePool: React.FC<CombinedProps> = props => {
     <div className={classes.root}>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Typography variant="h2">{typeLabel}</Typography>
+        {/* @todo: Real buttons that do real things. */}
         <div>
           <span className={classes.button}>Resize Pool</span>
           <span className={classes.button}>Recycle All Nodes</span>
