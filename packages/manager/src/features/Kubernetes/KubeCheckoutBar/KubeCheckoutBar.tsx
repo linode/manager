@@ -8,7 +8,7 @@ import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
 import { PoolNodeWithPrice } from '../types';
 import NodePoolSummary from './NodePoolSummary';
 
-interface Props {
+export interface Props {
   pools: PoolNodeWithPrice[];
   submitting: boolean;
   typesData: ExtendedType[];

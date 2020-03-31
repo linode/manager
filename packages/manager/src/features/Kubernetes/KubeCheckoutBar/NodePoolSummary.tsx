@@ -54,6 +54,7 @@ export const NodePoolSummary: React.FC<Props> = props => {
       alignItems="flex-start"
       direction="column"
       className={classes.root}
+      data-testid="node-pool-summary"
     >
       <Grid
         container
