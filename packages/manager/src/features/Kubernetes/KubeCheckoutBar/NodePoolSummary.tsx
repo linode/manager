@@ -1,6 +1,6 @@
 import { LinodeType } from 'linode-js-sdk/lib/linodes/types';
 import * as React from 'react';
-import Delete from 'src/assets/icons/fileUpload.svg';
+import Delete from 'src/assets/icons/trash.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
