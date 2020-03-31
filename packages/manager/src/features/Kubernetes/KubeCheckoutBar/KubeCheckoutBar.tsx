@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
-
 import CheckoutBar from 'src/components/CheckoutBar';
+import Notice from 'src/components/Notice';
 import renderGuard from 'src/components/RenderGuard';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-import { getTotalClusterPrice } from '../kubeUtils';
+import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
 import { PoolNodeWithPrice } from '../types';
 import NodePoolSummary from './NodePoolSummary';
 
@@ -17,7 +17,7 @@ interface Props {
   removePool: (poolIdx: number) => void;
 }
 
-export const KubeCheckoutBar: React.FunctionComponent<Props> = props => {
+export const KubeCheckoutBar: React.FC<Props> = props => {
   const {
     pools,
     submitting,
@@ -26,6 +26,9 @@ export const KubeCheckoutBar: React.FunctionComponent<Props> = props => {
     typesData,
     updatePool
   } = props;
+
+  // Show a warning if any of the pools have fewer than 3 nodes
+  const showWarning = pools.some(thisPool => thisPool.count < 3);
 
   return (
     <Sticky topOffset={-24} disableCompensation>
@@ -58,6 +61,14 @@ export const KubeCheckoutBar: React.FunctionComponent<Props> = props => {
                     }
                   />
                 ))}
+                {showWarning && (
+                  <Notice
+                    warning
+                    important
+                    text={nodeWarning}
+                    spacingTop={16}
+                  />
+                )}
               </>
             </CheckoutBar>
           </div>
