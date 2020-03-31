@@ -238,12 +238,6 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
         )
       : [];
 
-    const _region = filteredRegions.find(
-      thisRegion => thisRegion.id === selectedRegion
-    );
-
-    const regionDisplay = _region ? _region.display : undefined;
-
     if (typesError || regionsError || errorMap.versionLoad) {
       /**
        * This information is necessary to create a Cluster.
@@ -342,20 +336,11 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
           </Grid>
           <Grid item className={`${classes.sidebar} mlSidebar`}>
             <KubeCheckoutBar
-              label={label || ''}
-              region={regionDisplay}
               pools={nodePools}
               createCluster={this.createCluster}
               submitting={submitting}
               typesData={typesData || []}
-              updateFor={[
-                label,
-                selectedRegion,
-                nodePools,
-                submitting,
-                typesData,
-                classes
-              ]}
+              updateFor={[nodePools, submitting, typesData, classes]}
             />
           </Grid>
         </Grid>
