@@ -7,6 +7,8 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import { update } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
+import { debounce } from 'throttle-debounce';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormHelperText from 'src/components/core/FormHelperText';
@@ -131,7 +133,7 @@ export const getInitialValue = (
   fromProps?: string,
   fromStorage?: string
 ): string => {
-  return fromProps || fromStorage || '';
+  return fromProps ?? fromStorage ?? '';
 };
 
 export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
@@ -168,9 +170,16 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
     }
   }, [open]);
 
+  const saveText = (_title: string, _description: string) => {
+    storage.supportText.set({ title: _title, description: _description });
+  };
+
+  // Has to be a ref or else the timeout is redone with each render
+  const debouncedSave = React.useRef(debounce(500, false, saveText)).current;
+
   React.useEffect(() => {
     // Store in-progress work to localStorage
-    storage.supportText.set({ title: summary, description });
+    debouncedSave(summary, description);
   }, [summary, description]);
 
   const handleSetOrRequestEntities = (
