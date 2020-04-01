@@ -86,6 +86,7 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
     }
   };
 
+  // TODO add error prop for error handling
   const classes = useStyles();
   return (
     <React.Fragment>

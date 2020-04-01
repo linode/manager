@@ -106,7 +106,6 @@ interface Props {
   nodeCount?: number;
   setInputValue?: (value: number) => void;
   submitForm?: (e: any) => void;
-  inputErrorText?: string;
 }
 
 const getNanodes = (types: ExtendedType[]) =>
@@ -138,8 +137,7 @@ export class SelectPlanPanel extends React.Component<
       nodeCount,
       setInputValue,
       inputIsIncluded,
-      submitForm,
-      inputErrorText
+      submitForm
     } = this.props;
     const selectedDiskSize = this.props.selectedDiskSize
       ? this.props.selectedDiskSize
@@ -237,7 +235,6 @@ export class SelectPlanPanel extends React.Component<
                   <EnhancedNumberInput
                     value={nodeCount ? nodeCount : 0}
                     setValue={setInputValue}
-                    // error={inputErrorText}
                   />
                   <Button
                     buttonType="primary"
@@ -247,7 +244,6 @@ export class SelectPlanPanel extends React.Component<
                   >
                     Add
                   </Button>
-                  {inputErrorText && { inputErrorText }}
                 </div>
               </TableCell>
             )}

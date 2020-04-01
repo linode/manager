@@ -4,11 +4,9 @@ import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
-// import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-// import TextField from 'src/components/TextField';
 
 import SelectPlanPanel, {
   ExtendedType
@@ -16,7 +14,6 @@ import SelectPlanPanel, {
 
 import { getMonthlyPrice, nodeWarning } from '.././kubeUtils';
 import { PoolNodeWithPrice } from '.././types';
-// import NodePoolDisplayTable from './NodePoolDisplayTable';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -171,33 +168,11 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
           header="Add Node Pools"
           copy="Add groups of Linodes to your cluster with a chosen size."
           nodeCount={nodeCount}
-          setInputValue={nodeCount => updateNodeCount(Math.max(+nodeCount, 0))}
+          setInputValue={nodeCount => updateNodeCount(Math.max(+nodeCount))}
           inputIsIncluded
           submitForm={submitForm}
-          inputErrorText={countError}
         />
       </Grid>
-      {/* {!hideTable && (
-         We checked for these props above so it's safe to assume they're defined.
-        <>
-          {showSingleNodeWarning && (
-            <Grid item className={classes.notice}>
-              <Notice warning text={nodeWarning} spacingBottom={0} />
-            </Grid>
-          )}
-          <Grid item className={classes.gridItem}>
-            <NodePoolDisplayTable
-              small
-              editable
-              loading={false} // When creating we never need to load node pools from the API
-              pools={pools || []}
-              types={types}
-              handleDelete={(poolIdx: number) => deleteNodePool!(poolIdx)}
-              updatePool={updatePool!}
-            />
-          </Grid>
-        </>
-      )} */}
     </Grid>
   );
 };
