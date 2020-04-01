@@ -99,7 +99,8 @@ const styles = (theme: Theme) =>
     },
     menuItemLink: {
       '&[data-reach-menu-item]': {
-        padding: 0
+        padding: 0,
+        cursor: 'pointer'
       },
       '&[data-reach-menu-item][data-selected]': {
         background: theme.bg.main,
