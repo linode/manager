@@ -12,7 +12,7 @@
                              <g id="path-1-link" fill="#F4F4F4">
                     <circle id="path-1" cx="24" cy="24" r="24" class="circle"></circle>
                 </g>
-                            <circle stroke="#F4F4F4" stroke-width="2" cx="24" cy="24" r="23" class="outerCircle"></circle>
+                            <circle stroke="#F4F4F4" stroke-width="2" cx="48" cy="48" r="47" class="outerCircle"></circle>
                         </g>
                         <g id="Group-14" transform="translate(12.500000, 8.500000), scale(.9)" class="insidePath">
                             <polygon id="Stroke-8932" points="25.5208333 34.2708333 0.729166667 34.2708333 0.729166667 0.729166667 16.7708333 0.729166667 25.5208333 9.47916667"></polygon>

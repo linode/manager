@@ -36,7 +36,8 @@ const styles = (theme: Theme) =>
         fill: theme.bg.offWhiteDT
       },
       '& .outerCircle': {
-        stroke: theme.bg.main
+        stroke: theme.bg.main,
+        transform: 'scale(0.5)'
       },
       '&:hover, &:focus': {
         ...theme.addCircleHoverEffect,

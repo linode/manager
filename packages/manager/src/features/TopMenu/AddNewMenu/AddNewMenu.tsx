@@ -135,8 +135,6 @@ interface Props {
   openDomainDrawerForCreating: typeof openDomainDrawerForCreating;
 }
 
-interface State {}
-
 type CombinedProps = Props &
   WithStyles<CSSClasses> &
   RouteComponentProps<{}> &
@@ -145,7 +143,7 @@ type CombinedProps = Props &
 
 const styled = withStyles(styles);
 
-class AddNewMenu extends React.Component<CombinedProps, State> {
+class AddNewMenu extends React.Component<CombinedProps> {
   render() {
     const { classes } = this.props;
 
