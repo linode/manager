@@ -12,7 +12,7 @@
                              <g id="path-1-link" fill="#F4F4F4">
                     <circle id="path-1" cx="24" cy="24" r="24" class="circle"></circle>
                 </g>
-                            <circle stroke="#F4F4F4" stroke-width="2" cx="48" cy="48" r="47" class="outerCircle"></circle>
+                            <circle stroke="#F4F4F4" stroke-width="2" cx="24" cy="24" r="23" class="outerCircle"></circle>
                         </g>
                         <g id="Group-14" transform="translate(12.000000, 15.000000)" class="insidePath">
                             <path d="M23.5,16.5 C23.5,17.6 22.601,18.5 21.5,18.5 L2.5,18.5 C1.4,18.5 0.5,17.6 0.5,16.5 L0.5,12.5 C0.5,11.4 1.4,10.5 2.5,10.5 L21.5,10.5 C22.601,10.5 23.5,11.4 23.5,12.5 L23.5,16.5 L23.5,16.5 Z" id="Stroke-2084" stroke="#939598" stroke-linecap="round" stroke-linejoin="round"></path>
