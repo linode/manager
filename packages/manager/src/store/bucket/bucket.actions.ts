@@ -18,7 +18,13 @@ export const getAllBucketsActions = actionCreator.async<
   void,
   ObjectStorageBucket[],
   APIError[]
->('get-all');
+>('get-all-buckets');
+
+export const getAllBucketsForAllClustersActions = actionCreator.async<
+  void,
+  ObjectStorageBucket[],
+  APIError[]
+>('get-all-buckets-for--all-clusters');
 
 export const deleteBucketActions = actionCreator.async<
   ObjectStorageDeleteBucketRequestPayload,

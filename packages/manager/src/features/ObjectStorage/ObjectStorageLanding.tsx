@@ -27,6 +27,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import PromotionalOfferCard from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
 import TabLink from 'src/components/TabLink';
 import useFlags from 'src/hooks/useFlags';
+import { useObjectStorage } from 'src/hooks/useObjectStorage';
 import { ApplicationState } from 'src/store';
 import { getAllBuckets } from 'src/store/bucket/bucket.requests';
 import { requestClusters as _requestClusters } from 'src/store/clusters/clusters.actions';
@@ -49,8 +50,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = StateProps & DispatchProps & RouteComponentProps<{}>;
 
-export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = props => {
+export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+
+  const { requestAllBucketsInAllClusters } = useObjectStorage();
 
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
@@ -77,7 +80,6 @@ export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = prop
       bucketsLastUpdated,
       clustersLastUpdated,
       isRestrictedUser,
-      requestBuckets,
       requestClusters
     } = props;
 
@@ -93,9 +95,10 @@ export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = prop
 
     // Request buckets if we haven't already
     if (bucketsLastUpdated === 0) {
-      requestBuckets().catch(err => {
-        /** We choose to do nothing, relying on the Redux error state. */
-      });
+      requestAllBucketsInAllClusters();
+      // requestBuckets().catch(err => {
+      /** We choose to do nothing, relying on the Redux error state. */
+      // });
     }
 
     // Request clusters if we haven't already

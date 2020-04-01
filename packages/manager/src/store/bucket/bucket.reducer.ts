@@ -6,7 +6,8 @@ import { onStart } from '../store.helpers';
 import {
   createBucketActions,
   deleteBucketActions,
-  getAllBucketsActions
+  getAllBucketsActions,
+  getAllBucketsForAllClustersActions
 } from './bucket.actions';
 
 /**
@@ -46,12 +47,18 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
    **/
 
   // START
-  if (isType(action, getAllBucketsActions.started)) {
+  if (
+    isType(action, getAllBucketsActions.started) ||
+    isType(action, getAllBucketsForAllClustersActions.started)
+  ) {
     return onStart(state);
   }
 
   // DONE
-  if (isType(action, getAllBucketsActions.done)) {
+  if (
+    isType(action, getAllBucketsActions.done) ||
+    isType(action, getAllBucketsForAllClustersActions.done)
+  ) {
     const { result } = action.payload;
     return {
       ...state,
@@ -68,6 +75,15 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       ...state,
       loading: false,
       error
+    };
+  }
+
+  if (isType(action, getAllBucketsForAllClustersActions.failed)) {
+    // @todo: set flag here to signal partial failure
+
+    return {
+      ...state,
+      loading: false
     };
   }
 

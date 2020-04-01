@@ -19,7 +19,7 @@ import {
 /**
  * getBuckets
  *
- * Gets a list of a user's Object Storage Buckets
+ * Gets a list of a user's Object Storage Buckets.
  */
 export const getBuckets = (params?: any, filters?: any) =>
   Request<Page<ObjectStorageBucket>>(
@@ -27,6 +27,23 @@ export const getBuckets = (params?: any, filters?: any) =>
     setParams(params),
     setXFilter(filters),
     setURL(`${API_ROOT}/object-storage/buckets`)
+  ).then(response => response.data);
+
+/**
+ * getBucketsForCluster
+ *
+ * Gets a list of a user's Object Storage Buckets in the specified cluster.
+ */
+export const getBucketsForCluster = (
+  clusterId: string,
+  params?: any,
+  filters?: any
+) =>
+  Request<Page<ObjectStorageBucket>>(
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
+    setURL(`${API_ROOT}/object-storage/buckets/${clusterId}`)
   ).then(response => response.data);
 
 /**

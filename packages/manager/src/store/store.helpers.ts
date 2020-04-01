@@ -1,3 +1,4 @@
+import * as Bluebird from 'bluebird';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { assoc, omit } from 'ramda';
 import {
@@ -178,4 +179,33 @@ export const apiResponseToMappedState = <T extends Entity>(data: T[]) => {
     acc[thisEntity.id] = thisEntity;
     return acc;
   }, {});
+};
+
+export const requestAndReduce = <T, R>(
+  iterable: T[],
+  requestFn: (arg: T) => Promise<R>
+) => {
+  const gatherSuccessesAndErrors = (
+    accumulator: { successes: R[]; errors: any[] },
+    arg: T
+  ) => {
+    return requestFn(arg)
+      .then(res => ({
+        ...accumulator,
+        successes: [...accumulator.successes, res]
+      }))
+      .catch(err => ({
+        ...accumulator,
+        errors: [...accumulator.errors, err]
+      }));
+  };
+
+  return Bluebird.reduce<T, { successes: R[]; errors: any[] }>(
+    iterable,
+    gatherSuccessesAndErrors,
+    {
+      successes: [],
+      errors: []
+    }
+  );
 };
