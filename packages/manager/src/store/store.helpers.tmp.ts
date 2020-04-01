@@ -16,7 +16,7 @@ export const addEntityRecord = <T extends Entity>(
 ): EntityMap<T> => assoc(String(current.id), current, result);
 
 export const onStart = <S>(state: S) =>
-  Object.assign({}, state, { loading: true, error: {} });
+  Object.assign({}, state, { loading: true, error: { read: undefined } });
 
 export const onGetAllSuccess = <E extends Entity, S>(
   items: E[],
@@ -33,6 +33,14 @@ export const onGetAllSuccess = <E extends Entity, S>(
       {}
     )
   });
+
+export const setError = <E extends Entity>(
+  type: string,
+  error: APIError[] | undefined,
+  state: MappedEntityState<E, EntityError>
+) => {
+  return Object.assign({}, state, { error: { ...state.error, [type]: error } });
+};
 
 export const onError = <S = {}, E = APIError[] | undefined>(
   error: E,
@@ -110,6 +118,21 @@ export const getAddRemoved = <E extends Entity>(
   const removed = existingList.filter(({ id }) => !newIds.includes(String(id)));
 
   return [added, removed];
+};
+
+export const onGetPageSuccess = <E extends Entity>(
+  items: E[],
+  state: MappedEntityState<E, EntityError>,
+  results: number
+): MappedEntityState<E, EntityError> => {
+  const isFullRequest = results === items.length;
+  const newState = addMany(items, state, results);
+  return isFullRequest
+    ? {
+        ...newState,
+        lastUpdated: Date.now()
+      }
+    : newState;
 };
 
 export const createRequestThunk = <Req extends any, Res extends any, Err>(

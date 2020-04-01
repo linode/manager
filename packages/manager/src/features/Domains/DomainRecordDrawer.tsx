@@ -682,8 +682,13 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     this.props.onClose();
   };
 
-  UNSAFE_componentWillReceiveProps(nextProps: CombinedProps) {
-    this.setState({ fields: DomainRecordDrawer.defaultFieldsState(nextProps) });
+  componentDidUpdate(prevProps: CombinedProps) {
+    if (this.props.open && !prevProps.open) {
+      // Drawer is opening, set the fields according to props
+      this.setState({
+        fields: DomainRecordDrawer.defaultFieldsState(this.props)
+      });
+    }
   }
 
   render() {
