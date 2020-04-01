@@ -10,13 +10,11 @@ export interface Props {
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
-    alignContent: 'center'
+    alignContent: 'center',
+    color: theme.color.grey5
   },
   active: {
-    color: '#0ac267'
-  },
-  other: {
-    color: theme.color.grey5
+    color: '#0AC267'
   }
 }));
 

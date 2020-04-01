@@ -33,9 +33,7 @@ export interface Props {
   types: ExtendedType[];
 }
 
-type CombinedProps = Props;
-
-export const NodePoolsDisplay: React.FunctionComponent<CombinedProps> = props => {
+export const NodePoolsDisplay: React.FC<Props> = props => {
   const { pools, types } = props;
 
   const classes = useStyles();
@@ -92,8 +90,8 @@ export const NodePoolsDisplay: React.FunctionComponent<CombinedProps> = props =>
                     typeLabel={typeLabel}
                     nodes={nodes ?? []}
                     // @todo: real handlers
-                    deletePool={() => null}
-                    handleClickResize={() => null}
+                    // deletePool={() => null}
+                    // handleClickResize={() => null}
                   />
                 );
               })}

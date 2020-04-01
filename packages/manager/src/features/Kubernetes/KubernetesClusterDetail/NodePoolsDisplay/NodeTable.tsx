@@ -31,9 +31,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
+// =============================================================================
+// NodeTable
+// =============================================================================
 export interface Props {
-  nodes: PoolNodeResponse[];
   poolId: number;
+  nodes: PoolNodeResponse[];
 }
 
 export const NodeTable: React.FC<Props> = props => {
@@ -46,11 +49,12 @@ export const NodeTable: React.FC<Props> = props => {
   React.useEffect(() => {
     // Request Linodes if we haven't already.
     if (linodes.lastUpdated === 0 && !linodes.loading) {
+      // OK to swallow the error here; we'll rely on Redux errors.
       requestLinodes().catch(_ => null);
     }
   }, []);
 
-  const rowData = nodesToRowData(nodes, linodes.entities);
+  const rowData = nodes.map(thisNode => nodeToRow(thisNode, linodes.entities));
 
   return (
     <>
@@ -105,16 +109,15 @@ export const NodeTable: React.FC<Props> = props => {
                     </TableHead>
                     <TableBody>
                       <TableContentWrapper
-                        length={paginatedAndOrderedData.length}
                         loading={linodes.loading}
                         error={linodes.error?.read}
                         lastUpdated={linodes.lastUpdated}
+                        length={paginatedAndOrderedData.length}
                       >
                         {paginatedAndOrderedData.map(eachRow => {
                           return (
                             <NodeRow
                               key={`node-row-${eachRow.nodeId}`}
-                              nodeId={eachRow.nodeId}
                               instanceId={eachRow.instanceId}
                               label={eachRow.label}
                               status={eachRow.status}
@@ -152,29 +155,9 @@ export const NodeTable: React.FC<Props> = props => {
 
 export default React.memo(NodeTable);
 
-export const nodesToRowData = (
-  nodes: PoolNodeResponse[],
-  linodes: LinodeWithMaintenanceAndDisplayStatus[]
-) => {
-  const rowData: NodeRow[] = [];
-
-  for (const thisNode of nodes) {
-    const foundLinode = linodes.find(
-      thisLinode => thisLinode.id === thisNode.instance_id
-    );
-
-    rowData.push({
-      nodeId: thisNode.id,
-      instanceId: foundLinode?.id,
-      label: foundLinode?.label,
-      status: thisNode.status,
-      ip: foundLinode?.ipv4[0]
-    });
-  }
-
-  return rowData;
-};
-
+// =============================================================================
+// NodeRow
+// =============================================================================
 interface NodeRow {
   nodeId: string;
   instanceId?: number;
@@ -183,7 +166,9 @@ interface NodeRow {
   ip?: string;
 }
 
-export const NodeRow: React.FC<NodeRow> = React.memo(props => {
+type NodeRowProps = Omit<NodeRow, 'nodeId'>;
+
+export const NodeRow: React.FC<NodeRowProps> = React.memo(props => {
   const { instanceId, label, status, ip } = props;
 
   const rowLink = instanceId ? `/linodes/${instanceId}` : undefined;
@@ -213,3 +198,27 @@ export const NodeRow: React.FC<NodeRow> = React.memo(props => {
     </TableRow>
   );
 });
+
+// =============================================================================
+// Utilities
+// =============================================================================
+
+/**
+ * Transforms an LKE Pool Node to a NodeRow.
+ */
+export const nodeToRow = (
+  node: PoolNodeResponse,
+  linodes: LinodeWithMaintenanceAndDisplayStatus[]
+): NodeRow => {
+  const foundLinode = linodes.find(
+    thisLinode => thisLinode.id === node.instance_id
+  );
+
+  return {
+    nodeId: node.id,
+    instanceId: foundLinode?.id,
+    label: foundLinode?.label,
+    status: node.status,
+    ip: foundLinode?.ipv4[0]
+  };
+};

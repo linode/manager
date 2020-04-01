@@ -19,18 +19,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
+  poolId: number;
   typeLabel: string;
   nodes: PoolNodeResponse[];
-  poolId: number;
-  deletePool: (poolId: number) => void;
-  handleClickResize: (poolId: number) => void;
+  // @todo: real handlers
+  // deletePool: (poolId: number) => void;
+  // handleClickResize: (poolId: number) => void;
   // Not yet supported by the API:
   // recycleNodes: (poolId: number) => void;
 }
 
-type CombinedProps = Props;
-
-const NodePool: React.FC<CombinedProps> = props => {
+const NodePool: React.FC<Props> = props => {
   const { nodes, typeLabel, poolId } = props;
 
   const classes = useStyles();
@@ -39,7 +38,7 @@ const NodePool: React.FC<CombinedProps> = props => {
     <div className={classes.root}>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Typography variant="h2">{typeLabel}</Typography>
-        {/* @todo: Real buttons that do real things. */}
+        {/* @todo: Real buttons that do real things. You can ignore this bit for now.*/}
         <div>
           <span className={classes.button}>Resize Pool</span>
           <span className={classes.button}>Recycle All Nodes</span>
@@ -47,7 +46,7 @@ const NodePool: React.FC<CombinedProps> = props => {
         </div>
       </Box>
       <div className={classes.nodeTable}>
-        <NodeTable nodes={nodes} poolId={poolId} />
+        <NodeTable poolId={poolId} nodes={nodes} />
       </div>
     </div>
   );
