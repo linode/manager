@@ -13,10 +13,10 @@ describe('Authentication settings profile tab', () => {
       twoFactor={true}
       username={'username'}
       updateProfile={update}
-      classes={{
-        root: '',
-        title: ''
-      }}
+      // classes={{
+      //   root: '',
+      //   title: ''
+      // }}
     />
   );
 
