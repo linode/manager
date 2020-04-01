@@ -96,6 +96,7 @@ interface Props {
   endpoint: string | null;
   endpointError?: string;
   endpointLoading: boolean;
+  kubeconfigAvailable: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames> & WithSnackbarProps;
@@ -103,9 +104,10 @@ type CombinedProps = Props & WithStyles<ClassNames> & WithSnackbarProps;
 const renderEndpoint = (
   endpoint: string | null,
   endpointLoading: boolean,
+  kubeconfigAvailable: boolean,
   endpointError?: string
 ) => {
-  if (endpointLoading) {
+  if (endpointLoading || !kubeconfigAvailable) {
     return 'Loading...';
   } else if (endpointError) {
     return endpointError;
@@ -120,7 +122,8 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
     endpoint,
     endpointError,
     endpointLoading,
-    enqueueSnackbar
+    enqueueSnackbar,
+    kubeconfigAvailable
   } = props;
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
   const [drawerError, setDrawerError] = React.useState<string | null>(null);
@@ -192,6 +195,63 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
     // Send the request (which updates the internal store.)
     await clusterActions.updateCluster({ cluster.id, tags });
   }; */
+
+  const setKubeconfigDisplay = () => {
+    if (!endpoint && kubeconfigAvailable === false) {
+      return (
+        <Grid item className={classes.linksGrid} xs={12} md={6}>
+          <Paper className={classes.item}>
+            <Typography>
+              This cluster is being provisioned. Upon completion, the Kubernetes
+              API Endpoint and Kubeconfig will appear here.
+            </Typography>
+          </Paper>
+        </Grid>
+      );
+    } else {
+      return (
+        <Grid item className={classes.linksGrid} xs={12} md={4}>
+          <Paper className={classes.item}>
+            <Typography className={classes.label}>
+              Kubernetes API Endpoint:
+            </Typography>
+            <Typography>
+              {renderEndpoint(
+                endpoint,
+                endpointLoading,
+                kubeconfigAvailable,
+                endpointError
+              )}
+            </Typography>
+          </Paper>
+
+          <Paper className={classes.item}>
+            <Typography className={classes.label}>Kubeconfig:</Typography>
+
+            <div className={classes.kubeconfigElements}>
+              <Typography
+                className={classes.kubeconfigFileText}
+                onClick={downloadKubeConfig}
+              >
+                {`${cluster.label}-kubeconfig.yaml`}
+              </Typography>
+
+              <div>
+                <DownloadIcon
+                  className={classes.kubeconfigIcons}
+                  onClick={downloadKubeConfig}
+                />
+                <DetailsIcon
+                  className={classes.kubeconfigIcons}
+                  onClick={handleOpenDrawer}
+                />
+              </div>
+            </div>
+          </Paper>
+        </Grid>
+      );
+    }
+  };
 
   return (
     <React.Fragment>
@@ -301,40 +361,7 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
             </Grid>
           </Grid>
 
-          <Grid item className={classes.linksGrid} xs={12} md={4}>
-            <Paper className={classes.item}>
-              <Typography className={classes.label}>
-                Kubernetes API Endpoint:
-              </Typography>
-              <Typography>
-                {renderEndpoint(endpoint, endpointLoading, endpointError)}
-              </Typography>
-            </Paper>
-
-            <Paper className={classes.item}>
-              <Typography className={classes.label}>Kubeconfig:</Typography>
-
-              <div className={classes.kubeconfigElements}>
-                <Typography
-                  className={classes.kubeconfigFileText}
-                  onClick={downloadKubeConfig}
-                >
-                  {`${cluster.label}-kubeconfig.yaml`}
-                </Typography>
-
-                <div>
-                  <DownloadIcon
-                    className={classes.kubeconfigIcons}
-                    onClick={downloadKubeConfig}
-                  />
-                  <DetailsIcon
-                    className={classes.kubeconfigIcons}
-                    onClick={handleOpenDrawer}
-                  />
-                </div>
-              </div>
-            </Paper>
-          </Grid>
+          {setKubeconfigDisplay()}
 
           <Grid item>
             <Paper className={classes.item}>
