@@ -3,7 +3,7 @@ import { nodePoolRequests } from 'src/__data__/nodePools';
 
 import {
   getMonthlyPrice,
-  getTotalClusterMemoryAndCPU,
+  getTotalClusterMemoryCPUAndStorage,
   getTotalClusterPrice
 } from './kubeUtils';
 
@@ -50,29 +50,37 @@ describe('helper functions', () => {
   describe('Get total cluster memory/CPUs', () => {
     it('should sum up the total CPU cores of all nodes', () => {
       expect(
-        getTotalClusterMemoryAndCPU(nodePoolRequests, extendedTypes)
+        getTotalClusterMemoryCPUAndStorage(nodePoolRequests, extendedTypes)
       ).toHaveProperty('CPU', 13);
     });
 
     it('should sum up the total RAM of all pools', () => {
       expect(
-        getTotalClusterMemoryAndCPU(nodePoolRequests, extendedTypes)
+        getTotalClusterMemoryCPUAndStorage(nodePoolRequests, extendedTypes)
       ).toHaveProperty('RAM', 26624);
     });
 
+    it('should sum up the total storage of all nodes', () => {
+      expect(
+        getTotalClusterMemoryCPUAndStorage(nodePoolRequests, extendedTypes)
+      ).toHaveProperty('Storage', 337920);
+    });
+
     it("should return 0 if it can't match the data", () => {
-      expect(getTotalClusterMemoryAndCPU([badNodePool], extendedTypes)).toEqual(
-        {
-          CPU: 0,
-          RAM: 0
-        }
-      );
+      expect(
+        getTotalClusterMemoryCPUAndStorage([badNodePool], extendedTypes)
+      ).toEqual({
+        CPU: 0,
+        RAM: 0,
+        Storage: 0
+      });
     });
 
     it('should return 0 if no pools are given', () => {
-      expect(getTotalClusterMemoryAndCPU([], extendedTypes)).toEqual({
+      expect(getTotalClusterMemoryCPUAndStorage([], extendedTypes)).toEqual({
         CPU: 0,
-        RAM: 0
+        RAM: 0,
+        Storage: 0
       });
     });
   });

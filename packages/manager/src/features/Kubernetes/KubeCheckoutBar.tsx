@@ -4,7 +4,10 @@ import { Sticky, StickyProps } from 'react-sticky';
 import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import renderGuard from 'src/components/RenderGuard';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-import { getTotalClusterMemoryAndCPU, getTotalClusterPrice } from './kubeUtils';
+import {
+  getTotalClusterMemoryCPUAndStorage,
+  getTotalClusterPrice
+} from './kubeUtils';
 import { PoolNodeWithPrice } from './types';
 
 interface Props {
@@ -63,7 +66,7 @@ export const getDisplaySections = (
 ) => {
   const displaySections = [];
 
-  const { RAM: totalRAM, CPU: totalCPU } = getTotalClusterMemoryAndCPU(
+  const { RAM: totalRAM, CPU: totalCPU } = getTotalClusterMemoryCPUAndStorage(
     pools,
     typesData
   );
