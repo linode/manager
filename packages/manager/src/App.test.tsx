@@ -38,11 +38,7 @@ it('renders without crashing.', () => {
             toggleSpacing={jest.fn()}
             accountCapabilities={[]}
             accountLoading={false}
-            nodeBalancersLoading={false}
             linodesLoading={false}
-            volumesLoading={false}
-            domainsLoading={false}
-            bucketsLoading={false}
             accountSettingsLoading={false}
           />
         </StaticRouter>
