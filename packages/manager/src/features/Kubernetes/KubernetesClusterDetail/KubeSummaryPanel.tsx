@@ -40,6 +40,7 @@ type ClassNames =
   | 'linksGrid'
   | 'iconsSharedStyling'
   | 'kubeconfigElements'
+  | 'kubeconfigFileText'
   | 'kubeconfigIcons';
 
 const styles = (theme: Theme) =>
@@ -50,7 +51,6 @@ const styles = (theme: Theme) =>
         1}px ${theme.spacing(2) - 3}px`
     },
     item: {
-      marginBottom: theme.spacing(2) - 2,
       '&:last-of-type': {
         marginBottom: 0
       },
@@ -77,6 +77,10 @@ const styles = (theme: Theme) =>
       color: theme.palette.primary.main,
       display: 'flex',
       alignItems: 'center'
+    },
+    kubeconfigFileText: {
+      cursor: 'pointer',
+      color: theme.palette.primary.main
     },
     kubeconfigIcons: {
       cursor: 'pointer',
@@ -297,7 +301,7 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
             </Grid>
           </Grid>
 
-          <Grid item className={classes.linksGrid} md={4}>
+          <Grid item className={classes.linksGrid} xs={12} md={4}>
             <Paper className={classes.item}>
               <Typography className={classes.label}>
                 Kubernetes API Endpoint:
@@ -311,7 +315,10 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
               <Typography className={classes.label}>Kubeconfig:</Typography>
 
               <div className={classes.kubeconfigElements}>
-                <Typography color="primary">
+                <Typography
+                  className={classes.kubeconfigFileText}
+                  onClick={downloadKubeConfig}
+                >
                   {`${cluster.label}-kubeconfig.yaml`}
                 </Typography>
 
