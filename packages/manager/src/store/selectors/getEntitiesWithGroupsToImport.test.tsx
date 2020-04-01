@@ -5,8 +5,10 @@ import { entitiesWithGroupsToImport } from './getEntitiesWithGroupsToImport';
 
 const state = {
   __resources: {
-    linodes: { entities: linodes },
-    domains: { itemsById: apiResponseToMappedState(domains) }
+    domains: { itemsById: apiResponseToMappedState(domains) },
+    linodes: {
+      itemsById: linodes.reduce((result, c) => ({ ...result, [c.id]: c }), {})
+    }
   }
 };
 
@@ -74,8 +76,8 @@ describe('Entities that have groups to import', () => {
 
       const newState = {
         __resources: {
-          linodes: { entities: linodes },
-          domains: { itemsById: { [domain.id]: domain } }
+          domains: { itemsById: { [domain.id]: domain } },
+          linodes: { ...state.__resources.linodes }
         }
       };
       const newEntities = entitiesWithGroupsToImport(newState as any);

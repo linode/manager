@@ -1,14 +1,10 @@
 import { makeVolumeLabel } from '../support/api/volumes';
 
 describe('create volume', () => {
-  beforeEach(() => {
-    cy.login2();
-  });
-
   it('creates a volume', () => {
     const title = makeVolumeLabel();
 
-    cy.visit('/volumes/create');
+    cy.visitWithLogin('/volumes/create');
     cy.url().should('contain', '/volumes/create');
     cy.get('[data-testid="link-text"]').should('have.text', 'volumes');
     cy.get('[data-qa-header]').should('have.text', 'Create');

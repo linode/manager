@@ -158,7 +158,7 @@ export const getCommunityStackscripts = (
       '+and': [
         { username: { '+neq': currentUser } },
         { username: { '+neq': 'linode' } },
-        // linode-stackscripts is the account name on dev for One-Click Apps
+        // linode-stackscripts is the account name on dev for Marketplace Apps
         { username: { '+neq': 'linode-stackscripts' } }
       ]
     });
@@ -171,7 +171,7 @@ export const getCommunityStackscripts = (
           (acc, user) => [...acc, { username: { '+neq': user.username } }],
           [
             { username: { '+neq': 'linode' } },
-            // linode-stackscripts is the account name on dev for One-Click Apps
+            // linode-stackscripts is the account name on dev for Marketplace Apps
             { username: { '+neq': 'linode-stackscripts' } }
           ]
         )
@@ -224,7 +224,7 @@ export const getStackScriptUrl = (
   let subtype;
   switch (username) {
     case 'linode':
-      // This is a One-Click App
+      // This is a Marketplace App
       type = 'One-Click';
       subtype = 'One-Click%20Apps';
       break;
