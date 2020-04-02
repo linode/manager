@@ -6,23 +6,29 @@ import { onStart } from '../store.helpers';
 import {
   createBucketActions,
   deleteBucketActions,
-  getAllBucketsActions,
   getAllBucketsForAllClustersActions
 } from './bucket.actions';
+import { BucketError } from './types';
 
 /**
  * State
  */
 
-// We are unable to use the "EntityState" pattern we've adopted, since IDs
-// do not exist on buckets.
-export type State = RequestableRequiredData<ObjectStorageBucket[]>;
+// BucketState is an unusual case for two reasons:
+// 1. Bucket IDs do not exist.
+// 2. Buckets are requested per-cluster, and their errors are handled individually.
+export type State = Omit<
+  RequestableRequiredData<ObjectStorageBucket[]>,
+  'error'
+> & {
+  bucketErrors?: BucketError[];
+};
 
 export const defaultState: State = {
   data: [],
   loading: true,
   lastUpdated: 0,
-  error: undefined
+  bucketErrors: undefined
 };
 
 /**
@@ -43,22 +49,16 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   }
 
   /*
-   * Get All Buckets
+   * Get All Buckets from All Clusters
    **/
 
   // START
-  if (
-    isType(action, getAllBucketsActions.started) ||
-    isType(action, getAllBucketsForAllClustersActions.started)
-  ) {
+  if (isType(action, getAllBucketsForAllClustersActions.started)) {
     return onStart(state);
   }
 
   // DONE
-  if (
-    isType(action, getAllBucketsActions.done) ||
-    isType(action, getAllBucketsForAllClustersActions.done)
-  ) {
+  if (isType(action, getAllBucketsForAllClustersActions.done)) {
     const { result } = action.payload;
     return {
       ...state,
@@ -69,21 +69,12 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   }
 
   // FAILED
-  if (isType(action, getAllBucketsActions.failed)) {
+  if (isType(action, getAllBucketsForAllClustersActions.failed)) {
     const { error } = action.payload;
     return {
       ...state,
       loading: false,
-      error
-    };
-  }
-
-  if (isType(action, getAllBucketsForAllClustersActions.failed)) {
-    // @todo: set flag here to signal partial failure
-
-    return {
-      ...state,
-      loading: false
+      bucketErrors: error
     };
   }
 

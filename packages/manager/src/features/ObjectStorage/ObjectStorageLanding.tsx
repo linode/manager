@@ -27,9 +27,8 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import PromotionalOfferCard from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
 import TabLink from 'src/components/TabLink';
 import useFlags from 'src/hooks/useFlags';
-import { useObjectStorage } from 'src/hooks/useObjectStorage';
 import { ApplicationState } from 'src/store';
-import { getAllBuckets } from 'src/store/bucket/bucket.requests';
+import { getAllBucketsFromAllClusters } from 'src/store/bucket/bucket.requests';
 import { requestClusters as _requestClusters } from 'src/store/clusters/clusters.actions';
 import { MapState } from 'src/store/types';
 import BucketDrawer from './BucketLanding/BucketDrawer';
@@ -52,8 +51,6 @@ type CombinedProps = StateProps & DispatchProps & RouteComponentProps<{}>;
 
 export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-
-  const { requestAllBucketsInAllClusters } = useObjectStorage();
 
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
@@ -80,6 +77,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
       bucketsLastUpdated,
       clustersLastUpdated,
       isRestrictedUser,
+      requestAllBucketsFromAllClusters,
       requestClusters
     } = props;
 
@@ -89,16 +87,12 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
       return;
     }
 
-    /**
-     * @todo: Move these requests to App.tsx like other entities when OBJ is generally available.
-     */
-
     // Request buckets if we haven't already
+    // @todo: use useReduxLoad for this.
     if (bucketsLastUpdated === 0) {
-      requestAllBucketsInAllClusters();
-      // requestBuckets().catch(err => {
-      /** We choose to do nothing, relying on the Redux error state. */
-      // });
+      requestAllBucketsFromAllClusters().catch(err => {
+        /** We choose to do nothing, relying on the Redux error state. */
+      });
     }
 
     // Request clusters if we haven't already
@@ -207,7 +201,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 });
 
 interface DispatchProps {
-  requestBuckets: () => Promise<ObjectStorageBucket[]>;
+  requestAllBucketsFromAllClusters: () => Promise<ObjectStorageBucket[]>;
   requestClusters: () => Promise<ObjectStorageCluster[]>;
 }
 
@@ -215,7 +209,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
 ) => {
   return {
-    requestBuckets: () => dispatch(getAllBuckets()),
+    requestAllBucketsFromAllClusters: () =>
+      dispatch(getAllBucketsFromAllClusters()),
     requestClusters: () => dispatch(_requestClusters())
   };
 };

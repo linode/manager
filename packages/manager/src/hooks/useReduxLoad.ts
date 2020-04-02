@@ -6,7 +6,6 @@ import { REFRESH_INTERVAL } from 'src/constants';
 import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
-import { getAllBuckets } from 'src/store/bucket/bucket.requests';
 import { requestDomains } from 'src/store/domains/domains.requests';
 import { getEvents } from 'src/store/events/event.request';
 import { getAllFirewalls } from 'src/store/firewalls/firewalls.requests';
@@ -42,7 +41,6 @@ export type ReduxEntity =
   | 'profile'
   | 'regions'
   | 'types'
-  | 'buckets'
   | 'events'
   | 'longview'
   | 'firewalls';
@@ -57,7 +55,6 @@ const requestMap: RequestMap = {
   nodeBalancers: getAllNodeBalancers,
   images: requestImages,
   events: getEvents,
-  buckets: getAllBuckets,
   profile: requestProfile,
   regions: requestRegions,
   types: requestTypes,
