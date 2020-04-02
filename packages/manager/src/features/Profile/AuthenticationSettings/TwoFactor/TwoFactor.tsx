@@ -39,8 +39,6 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      padding: theme.spacing(3),
-      paddingBottom: theme.spacing(2),
       marginBottom: theme.spacing(3)
     },
     container: {
@@ -48,7 +46,7 @@ const styles = (theme: Theme) =>
       flexFlow: 'row nowrap',
       alignItems: 'center',
       justifyContent: 'left',
-      marginTop: theme.spacing(3),
+      marginTop: theme.spacing(2),
       marginBottom: theme.spacing(3)
     },
     title: {
@@ -58,9 +56,9 @@ const styles = (theme: Theme) =>
       maxWidth: 900
     },
     visibility: {
+      border: 0,
       color: theme.palette.primary.main,
-      padding: 0,
-      border: 0
+      padding: 0
     },
     showHideText: {
       fontSize: '1rem',
@@ -260,7 +258,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
                   {success && <Notice success text={success} />}
                   {generalError && <Notice error text={generalError} />}
                   <Typography
-                    variant="h2"
+                    variant="h3"
                     className={classes.title}
                     data-qa-title
                   >
@@ -374,15 +372,9 @@ const mapDispatchToProps: MapDispatchToProps<
   refreshProfile: () => dispatch(requestProfile() as any)
 });
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose<CombinedProps, Props>(
-  styled,
-  connected
-)(TwoFactor);
+export default compose<CombinedProps, Props>(styled, connected)(TwoFactor);
 
 interface ToggleProps {
   toggleDisableDialog: () => void;

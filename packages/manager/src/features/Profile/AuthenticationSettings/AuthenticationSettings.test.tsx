@@ -9,14 +9,11 @@ describe('Authentication settings profile tab', () => {
   const component = shallow(
     <AuthenticationSettings
       loading={false}
+      thirdPartyAuth={false}
       ipWhitelisting={true}
       twoFactor={true}
       username={'username'}
       updateProfile={update}
-      // classes={{
-      //   root: '',
-      //   title: ''
-      // }}
     />
   );
 

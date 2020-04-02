@@ -1,75 +1,78 @@
 import { Profile } from 'linode-js-sdk/lib/profile';
 import { APIError } from 'linode-js-sdk/lib/types';
-import { lensPath, path, pathOr, set } from 'ramda';
+import { path } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
-// import { makeStyles, Theme } from 'src/components/core/styles';
+import Button from 'src/components/Button';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Notice from 'src/components/Notice';
-// import TabbedPanel from 'src/components/TabbedPanel';
-// import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
+import TabbedPanel from 'src/components/TabbedPanel';
 import { AccountsAndPasswords, SecurityControls } from 'src/documentation';
 import { updateProfile as _updateProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
 import ResetPassword from './ResetPassword';
 import SecuritySettings from './SecuritySettings';
+import ThirdPartyAuthentication from './ThirdPartyAuthentication';
 import TrustedDevices from './TrustedDevices';
 import TwoFactor from './TwoFactor';
 
-// const useStyles = makeStyles((theme: Theme) => ({
-//   root: {
-//     padding: theme.spacing(3),
-//     paddingBottom: theme.spacing(3),
-//     marginBottom: theme.spacing(3)
-//   },
-//   title: {
-//     marginBottom: theme.spacing(2)
-//   }
-// }));
+const useStyles = makeStyles((theme: Theme) => ({
+  inner: {
+    paddingTop: 0
+  },
+  title: {
+    marginBottom: theme.spacing(2)
+  },
+  copy: {
+    lineHeight: 1.43,
+    marginBottom: theme.spacing(3)
+  }
+}));
+
+// interface Props {
+//   thirdPartyAuth: boolean;
+// }
 
 type CombinedProps = StateProps & DispatchProps;
 
 export const AuthenticationSettings: React.FC<CombinedProps> = props => {
-  // const classes = useStyles();
-  const [success, setSuccess] = React.useState<string>('');
+  const classes = useStyles();
+
+  const [success, setSuccess] = React.useState<string | undefined>('');
+  // const [thirdPartyAuthEnabled, setThirdPartyAuthEnabled] = React.useState<
+  //   boolean
+  // >(true);
+
+  const { loading, ipWhitelisting, twoFactor, username, updateProfile } = props;
 
   // See above
   const clearState = () => {
-    setSuccess(set(lensPath(['success']), undefined));
+    setSuccess(undefined);
   };
 
   // See above
   const onWhitelistingDisable = () => {
-    setSuccess(
-      set(
-        lensPath(['success']),
-        'IP whitelisting disabled. This feature cannot be re-enabled.'
-      )
-    );
+    setSuccess('IP whitelisting disabled. This feature cannot be re-enabled.');
   };
 
-  const { loading, ipWhitelisting, twoFactor, username, updateProfile } = props;
+  // const toggleThirdPartyAuth = () => {
+  //   if (thirdPartyAuthEnabled) {
+  //   }
+  // };
 
-  return (
-    <div
-      id="tabpanel-passwordAuthentication"
-      role="tabpanel"
-      aria-labelledby="tab-passwordAuthentication"
-    >
-      <DocumentTitleSegment segment={`Password & Authentication`} />
-      {/* Remove when logic above is cleared */}
-      {success && <Notice success text={success} />}
-      {!loading && (
+  const tabs = [
+    {
+      title: 'Linode Credentials',
+      render: () => (
         <React.Fragment>
-          {/* <TabbedPanel>
-            rootClass={`${classes.root} tabbedPanel`}
-            error={error}
-            copy={copy}
-            tabs={tabs}
-            initTab={initialTab}
-          </TabbedPanel> */}
+          <ThirdPartyAuthentication
+            provider={'Github'}
+            thirdPartyAuthEnabled={true}
+          />
           <ResetPassword username={username} />
           <TwoFactor
             twoFactor={twoFactor}
@@ -88,6 +91,49 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
             />
           )}
         </React.Fragment>
+      )
+    },
+    {
+      title: 'Third-Party Authentication',
+      render: () => (
+        <React.Fragment>
+          <Typography className={classes.copy}>
+            Third-Party Authentication (TPA) allows you to log in to your Linode
+            account using another provider. All aspects of logging in, such as
+            passwords and Two-Factor Authentication (TFA), are managed through
+            this provider.
+          </Typography>
+          <Typography className={classes.copy}>
+            Select a provider below to go to their web site and set up access.
+            You may only use one provider at a time.
+          </Typography>
+          <Button buttonType="primary">Github</Button>
+        </React.Fragment>
+      )
+    }
+  ];
+
+  const initialTab = 0;
+
+  return (
+    <div
+      id="tabpanel-passwordAuthentication"
+      role="tabpanel"
+      aria-labelledby="tab-passwordAuthentication"
+    >
+      <DocumentTitleSegment segment={`Password & Authentication`} />
+      {/* Remove when logic above is cleared */}
+      {success && <Notice success text={success} />}
+      {!loading && (
+        <React.Fragment>
+          <TabbedPanel
+            rootClass={`tabbedPanel`}
+            innerClass={`${classes.inner}`}
+            header={''}
+            tabs={tabs}
+            initTab={initialTab}
+          />
+        </React.Fragment>
       )}
     </div>
   );
@@ -97,6 +143,7 @@ const docs = [AccountsAndPasswords, SecurityControls];
 
 interface StateProps {
   loading: boolean;
+  thirdPartyAuth: boolean;
   ipWhitelisting: boolean;
   twoFactor?: boolean;
   username?: string;
@@ -108,7 +155,8 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
 
   return {
     loading: profile.loading,
-    ipWhitelisting: pathOr(false, ['data', 'ip_whitelist_enabled'], profile),
+    thirdPartyAuth: false,
+    ipWhitelisting: profile?.data?.ip_whitelist_enabled ?? false,
     twoFactor: path(['data', 'two_factor_auth'], profile),
     username: path(['data', 'username'], profile),
     profileUpdateError: path<APIError[]>(['update'], profile.error)
