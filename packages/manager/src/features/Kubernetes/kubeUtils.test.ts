@@ -63,7 +63,7 @@ describe('helper functions', () => {
     it('should sum up the total storage of all nodes', () => {
       expect(
         getTotalClusterMemoryCPUAndStorage(nodePoolRequests, extendedTypes)
-      ).toHaveProperty('Storage', 337920);
+      ).toHaveProperty('Storage', 563200);
     });
 
     it("should return 0 if it can't match the data", () => {
