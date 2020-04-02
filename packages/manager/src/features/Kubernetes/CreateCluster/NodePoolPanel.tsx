@@ -16,10 +16,9 @@ import { PoolNodeWithPrice } from '.././types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(3),
     '& .tabbedPanel': {
-      marginTop: 0
+      marginTop: 0,
+      paddingTop: 0
     }
   },
   title: {
@@ -44,7 +43,6 @@ interface Props {
   apiError?: string;
   selectedType?: string;
   hideTable?: boolean;
-  // nodeCount?: number;
   addNodePool: (pool: PoolNodeWithPrice) => void;
   handleTypeSelect: (newType?: string) => void;
   updateNodeCount: (newCount: number) => void;
@@ -95,7 +93,6 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
     hideTable,
     pools,
     selectedType,
-    // nodeCount,
     updateNodeCount,
     updatePool,
     types
@@ -153,7 +150,6 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
           error={apiError || typeError}
           header="Add Node Pools"
           copy="Add groups of Linodes to your cluster with a chosen size."
-          // nodeCount={nodeCount}
           inputIsIncluded
           submitForm={submitForm}
         />

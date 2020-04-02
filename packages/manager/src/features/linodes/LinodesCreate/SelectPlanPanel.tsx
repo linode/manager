@@ -110,7 +110,6 @@ interface Props {
   copy?: string;
   inputIsIncluded?: boolean;
   // Below props only needed if inputIsIncluded === true
-  // nodeCount?: number;
   submitForm?: (key: string, value: number) => void;
 }
 
@@ -147,7 +146,6 @@ export class SelectPlanPanel extends React.Component<
       currentPlanHeading,
       disabled,
       classes,
-      // nodeCount,
       inputIsIncluded,
       submitForm
     } = this.props;

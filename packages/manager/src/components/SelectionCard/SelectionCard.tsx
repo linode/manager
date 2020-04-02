@@ -252,7 +252,7 @@ class SelectionCard extends React.PureComponent<CombinedProps, {}> {
       case 'quantityCheck':
         return (
           <Grid item xs={12}>
-            {inputValue && setInputValue && (
+            {typeof inputValue === 'number' && setInputValue && (
               <div className={classes.enhancedInputOuter}>
                 <EnhancedNumberInput
                   value={inputValue}

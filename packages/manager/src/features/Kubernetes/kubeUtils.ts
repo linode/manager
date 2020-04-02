@@ -2,8 +2,7 @@ import { KubernetesCluster } from 'linode-js-sdk/lib/kubernetes';
 import { LinodeType } from 'linode-js-sdk/lib/linodes';
 import { ExtendedCluster, ExtendedPoolNode, PoolNodeWithPrice } from './types';
 
-export const nodeWarning = `A single Node cluster may suffer downtime during Kubernetes upgrades. 
-For high availability, we suggest clusters with three or more Nodes.`;
+export const nodeWarning = `We recommend at least 3 nodes in each pool. Fewer nodes may affect availability.`;
 
 export const getMonthlyPrice = (
   type: string,
@@ -48,26 +47,31 @@ export const extendCluster = (
       ? [...accum, addPriceToNodePool(thisPool, types)]
       : accum;
   }, []);
-  const { CPU, RAM } = getTotalClusterMemoryAndCPU(_pools, types);
+  const { CPU, RAM, Storage } = getTotalClusterMemoryCPUAndStorage(
+    _pools,
+    types
+  );
   return {
     ...cluster,
     node_pools: _pools,
     totalMemory: RAM,
-    totalCPU: CPU
+    totalCPU: CPU,
+    totalStorage: Storage
   };
 };
 
 interface ClusterData {
   CPU: number;
   RAM: number;
+  Storage: number;
 }
 
-export const getTotalClusterMemoryAndCPU = (
+export const getTotalClusterMemoryCPUAndStorage = (
   pools: ExtendedPoolNode[],
   types: LinodeType[]
 ) => {
   if (!types || !pools) {
-    return { RAM: 0, CPU: 0 };
+    return { RAM: 0, CPU: 0, Storage: 0 };
   }
 
   return pools.reduce(
@@ -80,9 +84,15 @@ export const getTotalClusterMemoryAndCPU = (
       }
       return {
         RAM: accumulator.RAM + thisType.memory * thisPool.count,
-        CPU: accumulator.CPU + thisType.vcpus * thisPool.count
+        CPU: accumulator.CPU + thisType.vcpus * thisPool.count,
+        Storage: accumulator.Storage + thisType.disk * thisPool.count
       };
     },
-    { RAM: 0, CPU: 0 }
+    { RAM: 0, CPU: 0, Storage: 0 }
   );
 };
+
+export const getTotalNodesInCluster = (pools: PoolNodeWithPrice[]): number =>
+  pools.reduce((accum, thisPool) => {
+    return accum + thisPool.count;
+  }, 0);

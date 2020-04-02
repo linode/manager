@@ -25,6 +25,7 @@ export const extendedClusters = clusters.map(cluster => {
     ...cluster,
     node_pools: [pool1],
     totalMemory: 10,
-    totalCPU: 2
+    totalCPU: 2,
+    totalStorage: 10
   };
 });
