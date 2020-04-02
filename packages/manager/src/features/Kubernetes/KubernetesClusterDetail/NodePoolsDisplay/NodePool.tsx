@@ -6,10 +6,6 @@ import Typography from 'src/components/core/Typography';
 import NodeTable from './NodeTable';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginTop: theme.spacing(),
-    marginBottom: theme.spacing(4)
-  },
   button: {
     padding: theme.spacing()
   },
@@ -35,7 +31,7 @@ const NodePool: React.FC<Props> = props => {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Typography variant="h2">{typeLabel}</Typography>
         {/* @todo: Real buttons that do real things. You can ignore this bit for now.*/}
@@ -48,7 +44,7 @@ const NodePool: React.FC<Props> = props => {
       <div className={classes.nodeTable}>
         <NodeTable poolId={poolId} nodes={nodes} typeLabel={typeLabel} />
       </div>
-    </div>
+    </>
   );
 };
 

@@ -16,7 +16,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(3)
   },
   displayTable: {
-    width: '100%'
+    width: '100%',
+    '& > div': {
+      marginTop: theme.spacing(),
+      marginBottom: theme.spacing(4)
+    },
+    '& > div:last-child': {
+      marginBottom: 0
+    }
   },
   nodePoolHeader: {
     marginBottom: theme.spacing()
@@ -24,6 +31,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   nodePoolHeaderOuter: {
     display: 'flex',
     alignItems: 'center'
+  },
+  nodePool: {
+    marginTop: theme.spacing(),
+    marginBottom: theme.spacing(4)
   }
 }));
 
@@ -77,15 +88,16 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
                 const typeLabel = thisPoolType?.label ?? 'Unknown type';
 
                 return (
-                  <NodePool
-                    key={id}
-                    poolId={thisPool.id}
-                    typeLabel={typeLabel}
-                    nodes={nodes ?? []}
-                    // @todo: real handlers
-                    // deletePool={() => null}
-                    // handleClickResize={() => null}
-                  />
+                  <div key={id} className={classes.nodePool}>
+                    <NodePool
+                      poolId={thisPool.id}
+                      typeLabel={typeLabel}
+                      nodes={nodes ?? []}
+                      // @todo: real handlers
+                      // deletePool={() => null}
+                      // handleClickResize={() => null}
+                    />
+                  </div>
                 );
               })}
             </Grid>
