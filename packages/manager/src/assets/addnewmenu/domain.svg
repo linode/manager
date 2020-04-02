@@ -9,7 +9,9 @@
                 <g id="volume">
                     <g id="icon" transform="translate(16.000000, 20.000000)">
                         <g id="Oval-2">
-                            <use fill="#F4F4F4" fill-rule="evenodd" xlink:href="#path-1" class="circle"></use>
+                             <g id="path-1-link" fill="#F4F4F4">
+                                <circle id="path-1" cx="24" cy="24" r="24" class="circle"></circle>
+                            </g>
                             <circle stroke="#F4F4F4" stroke-width="2" cx="24" cy="24" r="23" class="outerCircle"></circle>
                         </g>
                         <g id="Group-14" transform="translate(7.000000, 7.500000)" class="insidePath" stroke="#939598">
