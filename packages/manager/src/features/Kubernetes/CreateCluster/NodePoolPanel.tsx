@@ -112,11 +112,11 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
     );
   }
 
-  const submitForm = (selectedType: string, nodeCount: number) => {
+  const submitForm = (selectedPlanType: string, nodeCount: number) => {
     /** Do simple client validation for the two input fields */
     setTypeError(undefined);
     setCountError(undefined);
-    if (!selectedType) {
+    if (!selectedPlanType) {
       setTypeError('Please select a type.');
       return;
     }
@@ -130,9 +130,9 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
      */
     addNodePool({
       id: Math.random(),
-      type: selectedType,
+      type: selectedPlanType,
       count: nodeCount,
-      totalMonthlyPrice: getMonthlyPrice(selectedType, nodeCount, types)
+      totalMonthlyPrice: getMonthlyPrice(selectedPlanType, nodeCount, types)
     });
     handleTypeSelect(undefined);
     updateNodeCount(3);
