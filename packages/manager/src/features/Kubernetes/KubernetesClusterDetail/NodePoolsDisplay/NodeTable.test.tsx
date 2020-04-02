@@ -22,7 +22,8 @@ request.getLinodes = jest.fn().mockResolvedValue({
 
 const props: Props = {
   nodes: mockKubeNodes,
-  poolId: 1
+  poolId: 1,
+  typeLabel: 'Linode 2G'
 };
 
 describe('NodeTable', () => {
