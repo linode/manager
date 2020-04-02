@@ -8,7 +8,7 @@ import {
   handleRefreshTokens,
   handleStartSession
 } from './authentication.actions';
-import { clearLocalStorage } from './authentication.helpers';
+import { clearLocalStorage, clearUserInput } from './authentication.helpers';
 import { State } from './index';
 
 export const defaultState: State = {
@@ -85,7 +85,7 @@ const reducer = reducerWithInitialState(defaultState)
       loggedInAsCustomer: isLoggedInAsCustomer
     };
   })
-  .cases([handleExpireTokens, handleLogout], state => {
+  .case(handleExpireTokens, state => {
     /** clear local storage and redux state - plain and simple */
     clearLocalStorage();
     return {
@@ -96,11 +96,25 @@ const reducer = reducerWithInitialState(defaultState)
       loggedInAsCustomer: false
     };
   })
+  .case(handleLogout, state => {
+    /** clear local storage and redux state */
+    clearLocalStorage();
+    /** since the user is explicitly logging out, clear user input from local storage */
+    clearUserInput();
+    return {
+      ...state,
+      scopes: null,
+      token: null,
+      expiration: null,
+      loggedInAsCustomer: false
+    };
+  })
   .case(handleRefreshTokens, state => {
     /** get local storage values and append to redux state */
-    const [localToken, localScopes, localExpiry] = (tokenInLocalStorage.get(),
-    scopesInLocalStorage.get(),
-    expiryInLocalStorage.get());
+    const [localToken, localScopes, localExpiry] =
+      (tokenInLocalStorage.get(),
+      scopesInLocalStorage.get(),
+      expiryInLocalStorage.get());
     return {
       ...state,
       token: localToken,
