@@ -91,6 +91,13 @@ const styles = (theme: Theme) =>
     }
   });
 
+interface ExtendedTypeWithCount extends ExtendedType {
+  count: number;
+}
+
+interface State {
+  types: ExtendedTypeWithCount[];
+}
 interface Props {
   types: ExtendedType[];
   error?: string;
@@ -103,9 +110,8 @@ interface Props {
   copy?: string;
   inputIsIncluded?: boolean;
   // Below props only needed if inputIsIncluded === true
-  nodeCount?: number;
-  setInputValue?: (value: number) => void;
-  submitForm?: (e: any) => void;
+  // nodeCount?: number;
+  submitForm?: (key: string, value: number) => void;
 }
 
 const getNanodes = (types: ExtendedType[]) =>
@@ -124,18 +130,24 @@ const getGPU = (types: ExtendedType[]) =>
   types.filter(t => /gpu/.test(t.class));
 
 export class SelectPlanPanel extends React.Component<
-  Props & WithStyles<ClassNames>
+  Props & WithStyles<ClassNames>,
+  State
 > {
+  state: State = {
+    types: this.props.types.map(thisType => ({
+      ...thisType,
+      count: 0
+    }))
+  };
   onSelect = (id: string) => () => this.props.onSelect(id);
 
-  renderSelection = (type: ExtendedType, idx: number) => {
+  renderSelection = (type: ExtendedTypeWithCount, idx: number) => {
     const {
       selectedID,
       currentPlanHeading,
       disabled,
       classes,
-      nodeCount,
-      setInputValue,
+      // nodeCount,
       inputIsIncluded,
       submitForm
     } = this.props;
@@ -229,16 +241,18 @@ export class SelectPlanPanel extends React.Component<
             <TableCell data-qa-ram>
               {convertMegabytesTo(type.memory, true)}
             </TableCell>
-            {inputIsIncluded && setInputValue && (
+            {inputIsIncluded && (
               <TableCell>
                 <div className={classes.enhancedInputOuter}>
                   <EnhancedNumberInput
-                    value={nodeCount ? nodeCount : 0}
-                    setValue={setInputValue}
+                    value={type.count}
+                    setValue={(value: number) =>
+                      this.updatePlanCount(type.id, value)
+                    }
                   />
                   <Button
                     buttonType="primary"
-                    onClick={submitForm}
+                    onClick={() => submitForm!(type.id, type.count)}
                     disabled={type.id !== String(selectedID)}
                     className={classes.enhancedInputButton}
                   >
@@ -260,9 +274,11 @@ export class SelectPlanPanel extends React.Component<
             disabled={planTooSmall || isSamePlan || disabled}
             tooltip={tooltip}
             variant={inputIsIncluded ? 'quantityCheck' : 'check'}
-            inputValue={nodeCount ? nodeCount : 0}
-            setInputValue={setInputValue}
-            submitForm={submitForm}
+            inputValue={type.count}
+            setInputValue={(value: number) =>
+              this.updatePlanCount(type.id, value)
+            }
+            submitForm={() => submitForm!(type.id, type.count)}
             buttonDisabled={type.id !== String(selectedID)}
           />
         </Hidden>
@@ -315,14 +331,26 @@ export class SelectPlanPanel extends React.Component<
     );
   };
 
+  updatePlanCount = (planId: string, newCount: number) => {
+    const newTypes = this.state.types.map((thisType: any) => {
+      if (thisType.id === planId) {
+        return { ...thisType, count: newCount };
+      }
+      return thisType;
+    });
+    this.setState({
+      types: newTypes
+    });
+  };
+
   createTabs = (): [Tab[], LinodeTypeClass[]] => {
-    const { classes, types } = this.props;
+    const { classes } = this.props;
     const tabs: Tab[] = [];
-    const nanodes = getNanodes(types);
-    const standards = getStandard(types);
-    const highmem = getHighMem(types);
-    const dedicated = getDedicated(types);
-    const gpu = getGPU(types);
+    const nanodes = getNanodes(this.state.types);
+    const standards = getStandard(this.state.types);
+    const highmem = getHighMem(this.state.types);
+    const dedicated = getDedicated(this.state.types);
+    const gpu = getGPU(this.state.types);
 
     const tabOrder: LinodeTypeClass[] = [];
 

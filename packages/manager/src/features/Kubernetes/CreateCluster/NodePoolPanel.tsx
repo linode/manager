@@ -5,14 +5,13 @@ import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
-import Notice from 'src/components/Notice';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 
 import SelectPlanPanel, {
   ExtendedType
 } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 
-import { getMonthlyPrice, nodeWarning } from '.././kubeUtils';
+import { getMonthlyPrice } from '.././kubeUtils';
 import { PoolNodeWithPrice } from '.././types';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -44,8 +43,8 @@ interface Props {
   typesError?: string;
   apiError?: string;
   selectedType?: string;
-  nodeCount: number;
   hideTable?: boolean;
+  // nodeCount?: number;
   addNodePool: (pool: PoolNodeWithPrice) => void;
   handleTypeSelect: (newType?: string) => void;
   updateNodeCount: (newCount: number) => void;
@@ -84,10 +83,9 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
   const [typeError, setTypeError] = React.useState<string | undefined>(
     undefined
   );
-  const [countError, setCountError] = React.useState<string | undefined>(
-    undefined
-  );
-  const classes = useStyles();
+
+  // TODO: add countError back when ready for error handling
+  const [_, setCountError] = React.useState<string | undefined>(undefined);
 
   const {
     addNodePool,
@@ -97,10 +95,10 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
     hideTable,
     pools,
     selectedType,
+    // nodeCount,
     updateNodeCount,
     updatePool,
-    types,
-    nodeCount
+    types
   } = props;
 
   if (!hideTable && !(pools && updatePool && deleteNodePool)) {
@@ -114,7 +112,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
     );
   }
 
-  const submitForm = () => {
+  const submitForm = (selectedType: string, nodeCount: number) => {
     /** Do simple client validation for the two input fields */
     setTypeError(undefined);
     setCountError(undefined);
@@ -145,20 +143,8 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
     handleTypeSelect(newType);
   };
 
-  // If the user is about to create a cluster with a single node,
-  // we want to show a warning.
-  const showSingleNodeWarning =
-    pools?.reduce((acc, thisPool) => {
-      return acc + thisPool.count;
-    }, 0) === 1;
-
   return (
     <Grid container direction="column">
-      {showSingleNodeWarning && (
-        <Grid item className={classes.notice}>
-          <Notice warning text={nodeWarning} spacingBottom={0} />
-        </Grid>
-      )}
       <Grid item>
         <SelectPlanPanel
           types={types.filter(t => t.class !== 'nanode' && t.class !== 'gpu')} // No Nanodes or GPUs in clusters
@@ -167,8 +153,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
           error={apiError || typeError}
           header="Add Node Pools"
           copy="Add groups of Linodes to your cluster with a chosen size."
-          nodeCount={nodeCount}
-          setInputValue={nodeCount => updateNodeCount(Math.max(+nodeCount))}
+          // nodeCount={nodeCount}
           inputIsIncluded
           submitForm={submitForm}
         />

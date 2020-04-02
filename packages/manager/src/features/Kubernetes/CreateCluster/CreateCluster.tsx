@@ -87,7 +87,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
   state: State = {
     selectedRegion: undefined,
     selectedType: undefined,
-    numberOfLinodes: 3,
+    numberOfLinodes: 0,
     nodePools: [],
     label: undefined,
     version: undefined,
@@ -293,7 +293,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
                     )[0].reason
                   : undefined
               }
-              nodeCount={numberOfLinodes}
+              // nodeCount={numberOfLinodes}
               selectedType={selectedType}
               addNodePool={(pool: PoolNodeWithPrice) => this.addPool(pool)}
               deleteNodePool={(poolIdx: number) => this.removePool(poolIdx)}

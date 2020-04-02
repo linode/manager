@@ -63,7 +63,7 @@ export const ResizeCluster: React.FC<ResizeProps> = props => {
     undefined
   );
   // Default to 3 nodes in each pool; single nodes are possible but have downtime/performance risks.
-  const [count, setCount] = React.useState<number>(3);
+  const [_, setCount] = React.useState<number>(3);
   /** Form submission */
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [generalError, setErrors] = React.useState<APIError[] | undefined>(
@@ -292,7 +292,6 @@ export const ResizeCluster: React.FC<ResizeProps> = props => {
             hideTable
             selectedType={selectedType}
             types={typesData || []}
-            nodeCount={count}
             addNodePool={handleAddNodePool}
             handleTypeSelect={newType => setSelectedType(newType)}
             updateNodeCount={newCount => setCount(newCount)}
