@@ -35,6 +35,6 @@ const props: Props = {
 describe('NodeTable', () => {
   it('Includes the plan label', () => {
     const { getByText } = renderWithTheme(<NodePoolsDisplay {...props} />);
-    getByText('Standard 2GB, 1 CPU');
+    getByText('Linode 2GB');
   });
 });

@@ -6,7 +6,6 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-import { displayTypeForKubePoolNode } from 'src/features/linodes/presentation';
 import { ApplicationState } from 'src/store';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { PoolNodeWithPrice } from '../../types';
@@ -75,13 +74,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
                   thisType => thisType.id === thisPool.type
                 );
 
-                const typeLabel = thisPoolType
-                  ? displayTypeForKubePoolNode(
-                      thisPoolType.class,
-                      thisPoolType.memory,
-                      thisPoolType.vcpus
-                    )
-                  : 'Unknown type'; // This should never happen, but better not to crash if it does.
+                const typeLabel = thisPoolType?.label ?? 'Unknown type';
 
                 return (
                   <NodePool

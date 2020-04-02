@@ -16,8 +16,10 @@ import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
+import { transitionText } from 'src/features/linodes/transitions';
 import useLinodes from 'src/hooks/useLinodes';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
+import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
 
 const useStyles = makeStyles((theme: Theme) => ({
   labelCell: {
@@ -120,7 +122,7 @@ export const NodeTable: React.FC<Props> = props => {
                               key={`node-row-${eachRow.nodeId}`}
                               instanceId={eachRow.instanceId}
                               label={eachRow.label}
-                              status={eachRow.status}
+                              instanceStatus={eachRow.instanceStatus}
                               ip={eachRow.ip}
                             />
                           );
@@ -162,19 +164,25 @@ interface NodeRow {
   nodeId: string;
   instanceId?: number;
   label?: string;
-  status: string;
+  instanceStatus?: string;
   ip?: string;
 }
 
 type NodeRowProps = Omit<NodeRow, 'nodeId'>;
 
 export const NodeRow: React.FC<NodeRowProps> = React.memo(props => {
-  const { instanceId, label, status, ip } = props;
+  const { instanceId, label, instanceStatus, ip } = props;
+
+  const recentEvent = useRecentEventForLinode(instanceId ?? -1);
 
   const rowLink = instanceId ? `/linodes/${instanceId}` : undefined;
-  const statusIndicator = status === 'ready' ? 'active' : 'other';
+  const statusIndicator = instanceStatus === 'running' ? 'active' : 'other';
   const displayLabel = label ?? 'Not yet available';
-  const displayStatus = status === 'ready' ? 'Ready' : 'Not ready';
+  const displayStatus = transitionText(
+    instanceStatus ?? '',
+    instanceId ?? -1,
+    recentEvent
+  );
   const displayIP = ip ?? 'Not yet available';
 
   return (
@@ -218,7 +226,7 @@ export const nodeToRow = (
     nodeId: node.id,
     instanceId: foundLinode?.id,
     label: foundLinode?.label,
-    status: node.status,
+    instanceStatus: foundLinode?.status,
     ip: foundLinode?.ipv4[0]
   };
 };
