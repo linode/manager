@@ -8,10 +8,10 @@ import DetailsIcon from 'src/assets/icons/details.svg';
 import DownloadIcon from 'src/assets/icons/download.svg';
 import CPUIcon from 'src/assets/icons/longview/cpu-icon.svg';
 import DiskIcon from 'src/assets/icons/longview/disk.svg';
+import RamIcon from 'src/assets/icons/longview/ram-sticks.svg';
 import MapPin from 'src/assets/icons/map-pin-icon.svg';
 import MiniKube from 'src/assets/icons/mini-kube.svg';
 import PriceIcon from 'src/assets/icons/price-icon.svg';
-import RamIcon from 'src/assets/icons/ram-sticks.svg';
 
 import Paper from 'src/components/core/Paper';
 import {
