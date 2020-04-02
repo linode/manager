@@ -98,12 +98,21 @@ export interface Props {
   title: string;
   buttonProps?: ExtendedButtonProps[];
   className?: string;
+  renderAsSecondary?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const Placeholder: React.StatelessComponent<CombinedProps> = props => {
-  const { animate, classes, copy, title, icon: Icon, buttonProps } = props;
+  const {
+    animate,
+    classes,
+    copy,
+    title,
+    icon: Icon,
+    buttonProps,
+    renderAsSecondary
+  } = props;
   return (
     <Grid
       container
@@ -120,6 +129,7 @@ const Placeholder: React.StatelessComponent<CombinedProps> = props => {
         <H1Header
           title={title}
           className={classes.title}
+          renderAsSecondary={renderAsSecondary}
           data-qa-placeholder-title
         />
       </Grid>

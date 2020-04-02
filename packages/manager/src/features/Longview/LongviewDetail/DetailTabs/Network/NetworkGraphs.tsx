@@ -66,6 +66,7 @@ export const NetworkGraphs: React.FC<CombinedProps> = props => {
       <Placeholder
         title="No network interfaces detected"
         copy="The Longview agent has not detected any interfaces that it can monitor."
+        renderAsSecondary
       />
     );
   }

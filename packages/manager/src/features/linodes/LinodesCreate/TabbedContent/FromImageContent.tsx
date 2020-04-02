@@ -126,6 +126,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
           <Paper>
             <Placeholder
               title="My Images"
+              renderAsSecondary
               copy={
                 <Typography variant="subtitle1">
                   You don't have any private Images. Visit the{' '}

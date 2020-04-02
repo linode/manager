@@ -486,6 +486,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
               {userCannotCreateStackScripts ? (
                 <Placeholder
                   icon={StackScriptsIcon}
+                  renderAsSecondary
                   title="StackScripts"
                   copy="You don't have any StackScripts to select from."
                   className={classes.stackscriptPlaceholder}
@@ -493,6 +494,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
               ) : (
                 <Placeholder
                   icon={StackScriptsIcon}
+                  renderAsSecondary
                   title="StackScripts"
                   copy={<EmptyCopy />}
                   buttonProps={[

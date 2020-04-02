@@ -437,6 +437,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       fromLinodes
     } = this.props;
 
+    const isVolumesLanding = this.props.match.params.linodeId === undefined;
+
     if (
       linodeRegion &&
       !doesRegionSupportBlockStorage(linodeRegion, regionsData)
@@ -448,6 +450,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
             title="Volumes are not available in this region"
             copy=""
             icon={VolumesIcon}
+            renderAsSecondary={!isVolumesLanding}
           />
         </React.Fragment>
       );
@@ -467,6 +470,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                 children: 'View Linode Configurations'
               }
             ]}
+            renderAsSecondary={!isVolumesLanding}
           />
         </React.Fragment>
       );
@@ -480,6 +484,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           title="Add Block Storage!"
           copy={<EmptyCopy />}
           icon={VolumesIcon}
+          renderAsSecondary={!isVolumesLanding}
           buttonProps={[
             {
               onClick: fromLinodes

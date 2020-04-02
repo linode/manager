@@ -121,6 +121,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
             <Paper>
               <Placeholder
                 icon={VolumeIcon}
+                renderAsSecondary
                 copy="You do not have any existing Linodes to clone from.
                     Please first create a Linode from either an Image or StackScript."
                 title="Clone from Existing Linode"

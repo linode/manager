@@ -91,6 +91,7 @@ const Disks: React.FC<CombinedProps> = props => {
         <Placeholder
           title="No disks detected"
           copy="The Longview agent has not detected any disks that it can monitor."
+          renderAsSecondary
         />
       );
     }
