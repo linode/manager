@@ -108,9 +108,6 @@ const iconCircleHoverEffect = {
   '& .circle': {
     fill: primaryColors.main
   },
-  '& .outerCircle': {
-    stroke: primaryColors.dark
-  },
   '& .insidePath *': {
     stroke: 'white'
   }
