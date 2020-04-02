@@ -11,7 +11,8 @@ import { pluralize } from 'src/utilities/pluralize';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    paddingTop: theme.spacing(3)
+    paddingTop: theme.spacing(3),
+    marginBottom: theme.spacing(1) - 2
   },
   typeHeader: {
     paddingLeft: theme.spacing(),
@@ -75,7 +76,11 @@ export const NodePoolSummary: React.FC<Props> = props => {
         </Grid>
       </Grid>
       <Grid item>
-        <EnhancedNumberInput value={nodeCount} setValue={updateNodeCount} />
+        <EnhancedNumberInput
+          value={nodeCount}
+          setValue={updateNodeCount}
+          small
+        />
       </Grid>
       <Grid item>
         <DisplayPrice price={price} fontSize="16px" interval="month" />

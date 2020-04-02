@@ -50,6 +50,11 @@ const styles = (theme: Theme) =>
     sidebar: {
       [theme.breakpoints.up('md')]: {
         marginTop: '45px !important'
+      },
+      [theme.breakpoints.up('md')]: {
+        padding: `${theme.spacing(1)}px ${theme.spacing(1)}px ${theme.spacing(
+          1
+        )}px ${theme.spacing(3)}px !important`
       }
     },
     inner: {
