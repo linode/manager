@@ -24,9 +24,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   inner: {
     paddingTop: 0
   },
-  title: {
-    marginBottom: theme.spacing(2)
-  },
   copy: {
     lineHeight: 1.43,
     marginBottom: theme.spacing(3)
