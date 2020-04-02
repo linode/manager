@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
     alignContent: 'center',
-    color: theme.color.grey1
+    color: theme.color.grey6
   },
   active: {
     color: '#0AC267'

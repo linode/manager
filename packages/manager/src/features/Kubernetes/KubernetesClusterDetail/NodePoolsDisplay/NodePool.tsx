@@ -46,7 +46,7 @@ const NodePool: React.FC<Props> = props => {
         </div>
       </Box>
       <div className={classes.nodeTable}>
-        <NodeTable poolId={poolId} nodes={nodes} />
+        <NodeTable poolId={poolId} nodes={nodes} typeLabel={typeLabel} />
       </div>
     </div>
   );

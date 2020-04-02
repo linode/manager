@@ -1,4 +1,5 @@
 import { PoolNodeResponse } from 'linode-js-sdk/lib/kubernetes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -18,6 +19,7 @@ import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 import { transitionText } from 'src/features/linodes/transitions';
 import useLinodes from 'src/hooks/useLinodes';
+import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
 import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
 
@@ -30,6 +32,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   ipCell: {
     width: '25%'
+  },
+  error: {
+    color: theme.color.red
   }
 }));
 
@@ -39,22 +44,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface Props {
   poolId: number;
   nodes: PoolNodeResponse[];
+  typeLabel: string;
 }
 
 export const NodeTable: React.FC<Props> = props => {
-  const { nodes, poolId } = props;
+  const { nodes, poolId, typeLabel } = props;
 
   const classes = useStyles();
 
-  const { linodes, requestLinodes } = useLinodes();
-
-  React.useEffect(() => {
-    // Request Linodes if we haven't already.
-    if (linodes.lastUpdated === 0 && !linodes.loading) {
-      // OK to swallow the error here; we'll rely on Redux errors.
-      requestLinodes().catch(_ => null);
-    }
-  }, []);
+  const { _loading } = useReduxLoad(['linodes']);
+  const { linodes } = useLinodes();
 
   const rowData = nodes.map(thisNode => nodeToRow(thisNode, linodes.entities));
 
@@ -89,8 +88,8 @@ export const NodeTable: React.FC<Props> = props => {
                           Linode
                         </TableSortCell>
                         <TableSortCell
-                          active={orderBy === 'status'}
-                          label={'status'}
+                          active={orderBy === 'instanceStatus'}
+                          label={'instanceStatus'}
                           direction={order}
                           handleClick={handleOrderChange}
                           className={classes.statusCell}
@@ -111,8 +110,7 @@ export const NodeTable: React.FC<Props> = props => {
                     </TableHead>
                     <TableBody>
                       <TableContentWrapper
-                        loading={linodes.loading}
-                        error={linodes.error?.read}
+                        loading={linodes.loading || _loading}
                         lastUpdated={linodes.lastUpdated}
                         length={paginatedAndOrderedData.length}
                       >
@@ -124,6 +122,9 @@ export const NodeTable: React.FC<Props> = props => {
                               label={eachRow.label}
                               instanceStatus={eachRow.instanceStatus}
                               ip={eachRow.ip}
+                              nodeStatus={eachRow.nodeStatus}
+                              typeLabel={typeLabel}
+                              linodeError={linodes.error?.read}
                             />
                           );
                         })}
@@ -166,24 +167,39 @@ interface NodeRow {
   label?: string;
   instanceStatus?: string;
   ip?: string;
+  nodeStatus: string;
 }
 
-type NodeRowProps = Omit<NodeRow, 'nodeId'>;
+type NodeRowProps = Omit<NodeRow, 'nodeId'> & {
+  typeLabel: string;
+  linodeError?: APIError[];
+};
 
 export const NodeRow: React.FC<NodeRowProps> = React.memo(props => {
-  const { instanceId, label, instanceStatus, ip } = props;
+  const {
+    instanceId,
+    label,
+    instanceStatus,
+    ip,
+    typeLabel,
+    nodeStatus,
+    linodeError
+  } = props;
+
+  const classes = useStyles();
 
   const recentEvent = useRecentEventForLinode(instanceId ?? -1);
 
   const rowLink = instanceId ? `/linodes/${instanceId}` : undefined;
-  const statusIndicator = instanceStatus === 'running' ? 'active' : 'other';
-  const displayLabel = label ?? 'Not yet available';
-  const displayStatus = transitionText(
-    instanceStatus ?? '',
-    instanceId ?? -1,
-    recentEvent
-  );
-  const displayIP = ip ?? 'Not yet available';
+  const statusIndicator =
+    nodeStatus === 'ready' && instanceStatus === 'running' ? 'active' : 'other';
+  const displayLabel = label ?? typeLabel;
+  const displayStatus =
+    nodeStatus === 'not_ready'
+      ? 'Provisioning'
+      : transitionText(instanceStatus ?? '', instanceId ?? -1, recentEvent);
+
+  const displayIP = ip ?? '';
 
   return (
     <TableRow rowLink={rowLink} aria-label={label}>
@@ -197,8 +213,22 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo(props => {
           </Grid>
         </Grid>
       </TableCell>
-      <TableCell>{displayStatus}</TableCell>
-      <TableCell>{displayIP}</TableCell>
+      <TableCell>
+        {linodeError ? (
+          <Typography className={classes.error}>
+            Error retrieving status
+          </Typography>
+        ) : (
+          displayStatus
+        )}
+      </TableCell>
+      <TableCell>
+        {linodeError ? (
+          <Typography className={classes.error}>Error retrieving IP</Typography>
+        ) : (
+          displayIP
+        )}
+      </TableCell>
       <TableCell>
         {/* @todo: action menu */}
         {/* <ActionMenu/> */}
@@ -227,6 +257,7 @@ export const nodeToRow = (
     instanceId: foundLinode?.id,
     label: foundLinode?.label,
     instanceStatus: foundLinode?.status,
-    ip: foundLinode?.ipv4[0]
+    ip: foundLinode?.ipv4[0],
+    nodeStatus: node.status
   };
 };
