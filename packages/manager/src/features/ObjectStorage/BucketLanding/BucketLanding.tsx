@@ -185,6 +185,7 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
   const allBucketRequestsFailed =
     bucketErrors?.length === Object.keys(objectStorageClusterDisplay).length;
 
+  // Show a general error state if all the bucket requests failed.
   if (allBucketRequestsFailed) {
     return <RenderError data-qa-error-state />;
   }
@@ -312,26 +313,24 @@ interface BannerProps {
   regionsAffected: string[];
 }
 
-const Banner: React.FC<BannerProps> = ({ regionsAffected }) => {
+const Banner: React.FC<BannerProps> = React.memo(({ regionsAffected }) => {
   const moreThanOneRegionAffected = regionsAffected.length > 1;
 
   return (
     <Notice warning important>
-      <Typography>
-        There was an error loading buckets in{' '}
-        {moreThanOneRegionAffected
-          ? 'the following regions:'
-          : `${regionsAffected[0]}.`}
-        <ul>
-          {moreThanOneRegionAffected &&
-            regionsAffected.map(thisRegion => (
-              <li key={thisRegion}>{thisRegion}</li>
-            ))}
-        </ul>
-        If you have buckets in{' '}
-        {moreThanOneRegionAffected ? 'these regions' : regionsAffected[0]}, you
-        may not see them listed below.
-      </Typography>
+      There was an error loading buckets in{' '}
+      {moreThanOneRegionAffected
+        ? 'the following regions:'
+        : `${regionsAffected[0]}.`}
+      <ul>
+        {moreThanOneRegionAffected &&
+          regionsAffected.map(thisRegion => (
+            <li key={thisRegion}>{thisRegion}</li>
+          ))}
+      </ul>
+      If you have buckets in{' '}
+      {moreThanOneRegionAffected ? 'these regions' : regionsAffected[0]}, you
+      may not see them listed below.
     </Notice>
   );
-};
+});

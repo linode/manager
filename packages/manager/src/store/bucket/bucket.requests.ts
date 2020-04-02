@@ -1,7 +1,7 @@
 import {
   createBucket as _createBucket,
   deleteBucket as _deleteBucket,
-  getBucketsForCluster,
+  getBucketsInCluster,
   ObjectStorageBucket,
   ObjectStorageBucketRequestPayload,
   ObjectStorageDeleteBucketRequestPayload
@@ -33,7 +33,7 @@ export const createBucket = createRequestThunk<
  * Get All Buckets from All Clusters
  */
 const _getAllBucketsInCluster = getAllWithArguments<ObjectStorageBucket>(
-  getBucketsForCluster
+  getBucketsInCluster
 );
 
 /**

@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-import { objectStorageClusterDisplay } from 'src/constants';
 import { buckets } from 'src/__data__/buckets';
+import { objectStorageClusterDisplay } from 'src/constants';
 import { BucketLanding } from './BucketLanding';
 
 describe('ObjectStorageLanding', () => {

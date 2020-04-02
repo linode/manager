@@ -30,11 +30,11 @@ export const getBuckets = (params?: any, filters?: any) =>
   ).then(response => response.data);
 
 /**
- * getBucketsForCluster
+ * getBucketsInCluster
  *
  * Gets a list of a user's Object Storage Buckets in the specified cluster.
  */
-export const getBucketsForCluster = (
+export const getBucketsInCluster = (
   clusterId: string,
   params?: any,
   filters?: any
