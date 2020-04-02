@@ -5,7 +5,7 @@ import {
   PoolNodeRequest
 } from 'linode-js-sdk/lib/kubernetes';
 import { APIError } from 'linode-js-sdk/lib/types';
-import { pick } from 'ramda';
+import { pick, remove, update } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { StickyContainer } from 'react-sticky';
@@ -28,10 +28,10 @@ import { WithRegionsProps } from 'src/features/linodes/LinodesCreate/types';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
-import KubeCheckoutBar from '.././KubeCheckoutBar';
-// import { getMonthlyPrice } from '.././kubeUtils';
+import { getMonthlyPrice } from '.././kubeUtils';
 import { PoolNodeWithPrice } from '.././types';
+import KubeCheckoutBar from '../KubeCheckoutBar';
+
 // import NodePoolPanel from './NodePoolPanel';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -124,7 +124,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const [selectedRegion, setSelectedRegion] = React.useState<string>('');
-  const [nodePools] = React.useState<PoolNodeWithPrice[]>([]);
+  const [nodePools, setNodePools] = React.useState<PoolNodeWithPrice[]>([]);
   const [label, setLabel] = React.useState<string | undefined>();
   const [version, setVersion] = React.useState<Item<string> | undefined>();
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
@@ -197,6 +197,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
   const addPool = (pool: PoolNodeWithPrice) => {
     setNodePools([...nodePools, pool]);
   };
+  */
 
   const updatePool = (poolIdx: number, updatedPool: PoolNodeWithPrice) => {
     const updatedPoolWithPrice = {
@@ -213,7 +214,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
   const removePool = (poolIdx: number) => {
     const updatedPools = remove(poolIdx, 1, nodePools);
     setNodePools(updatedPools);
-  }; */
+  };
 
   const updateLabel = (newLabel: string) => {
     /**
@@ -242,12 +243,6 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
         thisRegion.capabilities.includes('Kubernetes')
       )
     : [];
-
-  const _region = filteredRegions.find(
-    thisRegion => thisRegion.id === selectedRegion
-  );
-
-  const regionDisplay = _region ? _region.display : undefined;
 
   if (typesError || regionsError || errorMap.versionLoad) {
     /**
@@ -336,11 +331,11 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
         </Grid>
         <Grid item className={`${classes.sidebar} mlSidebar`}>
           <KubeCheckoutBar
-            label={label || ''}
-            region={regionDisplay}
             pools={nodePools}
             createCluster={createCluster}
             submitting={submitting}
+            updatePool={updatePool}
+            removePool={removePool}
             typesData={typesData || []}
             updateFor={[
               label,
