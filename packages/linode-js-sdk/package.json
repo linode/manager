@@ -30,8 +30,7 @@
     "start": "concurrently \"tsc -w\" \"babel src --watch --out-dir lib --extensions '.ts,.tsx'\" -n 'tsc,babel' -k",
     "build": "tsc && babel src --out-dir lib --extensions '.ts,.tsx' && webpack",
     "test": "jest --config jestconfig.json",
-    "format": "prettier --write \"src/**/*.{ts,tsx}\" \"src/**/*.js\"",
-    "lint": "tslint -p tsconfig.json",
+    "lint": "yarn eslint . --quiet --fix",
     "typecheck": "tsc --noEmit true --emitDeclarationOnly false",
     "prepublishOnly": "yarn lint && yarn typecheck && yarn format && yarn build",
     "precommit": "lint-staged && yarn typecheck"
@@ -71,7 +70,7 @@
   },
   "lint-staged": {
     "*.{ts,tsx,js}": [
-      "tslint",
+      "eslint",
       "prettier --write",
       "git add"
     ]

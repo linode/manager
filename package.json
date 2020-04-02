@@ -4,14 +4,8 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "audit-ci": "^2.4.2",
-    "eslint-plugin-cypress": "^2.10.3",
     "husky": "^3.0.1",
     "postinstall": "^0.6.0",
-    "tslint": "^5.20.1",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-react": "^4.1.0",
-    "tslint-react-a11y": "^1.1.0",
-    "tslint-react-hooks": "^2.2.1",
     "typescript": "~3.7.3",
     "wait-on": "^4.0.0"
   },
@@ -22,6 +16,7 @@
     }
   },
   "scripts": {
+    "lint": "yarn eslint . --quiet --fix",
     "cost-of-modules": "yarn global add cost-of-modules && cost-of-modules --less --no-install --include-dev",
     "install:all": "yarn install --frozen-lockfile",
     "upgrade:sdk": "yarn workspace linode-js-sdk version --no-git-tag-version --no-commit-hooks && yarn workspace linode-manager upgrade linode-js-sdk",
