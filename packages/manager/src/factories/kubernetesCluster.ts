@@ -56,5 +56,6 @@ export const kubernetesClusterFactory = Factory.Sync.makeFactory<
   version: '1.17',
   node_pools: nodePoolFactory.buildList(2),
   totalMemory: 1000,
-  totalCPU: 4
+  totalCPU: 4,
+  totalStorage: 1000
 });
