@@ -3,26 +3,18 @@ import { LinodeType, LinodeTypeClass } from 'linode-js-sdk/lib/linodes';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import Button from 'src/components/Button';
 import Chip from 'src/components/core/Chip';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Hidden from 'src/components/core/Hidden';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
-import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
-import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
@@ -36,68 +28,38 @@ export interface ExtendedType extends LinodeType {
   subHeadings: [string, string];
 }
 
-type ClassNames =
-  | 'root'
-  | 'copy'
-  | 'disabledRow'
-  | 'chip'
-  | 'headingCellContainer'
-  | 'currentPlanChipCell'
-  | 'radioCell'
-  | 'enhancedInputOuter'
-  | 'enhancedInputButton';
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    marginTop: theme.spacing(3),
+    width: '100%'
+  },
+  copy: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(3)
+  },
+  disabledRow: {
+    backgroundColor: theme.bg.tableHeader,
+    cursor: 'not-allowed'
+  },
+  headingCellContainer: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  chip: {
+    backgroundColor: theme.color.green,
+    color: '#fff',
+    textTransform: 'uppercase',
+    marginLeft: theme.spacing(2)
+  },
+  currentPlanChipCell: {
+    width: '13%'
+  },
+  radioCell: {
+    width: '5%',
+    height: 55
+  }
+}));
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      marginTop: theme.spacing(3),
-      width: '100%'
-    },
-    copy: {
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(3)
-    },
-    disabledRow: {
-      backgroundColor: theme.bg.tableHeader,
-      cursor: 'not-allowed'
-    },
-    headingCellContainer: {
-      display: 'flex',
-      alignItems: 'center'
-    },
-    chip: {
-      backgroundColor: theme.color.green,
-      color: '#fff',
-      textTransform: 'uppercase',
-      marginLeft: theme.spacing(2)
-    },
-    currentPlanChipCell: {
-      width: '13%'
-    },
-    radioCell: {
-      width: '5%',
-      height: 55
-    },
-    enhancedInputOuter: {
-      display: 'flex',
-      justifyContent: 'flex-end',
-      alignItems: 'center'
-    },
-    enhancedInputButton: {
-      marginLeft: 10,
-      minWidth: 90,
-      paddingTop: 12,
-      paddingBottom: 12
-    }
-  });
-
-interface ExtendedTypeWithCount extends ExtendedType {
-  count: number;
-}
-
-interface State {
-  types: ExtendedTypeWithCount[];
-}
 interface Props {
   types: ExtendedType[];
   error?: string;
@@ -108,9 +70,6 @@ interface Props {
   disabled?: boolean;
   header?: string;
   copy?: string;
-  inputIsIncluded?: boolean;
-  // Below props only needed if inputIsIncluded === true
-  submitForm?: (key: string, value: number) => void;
 }
 
 const getNanodes = (types: ExtendedType[]) =>
@@ -128,29 +87,32 @@ const getDedicated = (types: ExtendedType[]) =>
 const getGPU = (types: ExtendedType[]) =>
   types.filter(t => /gpu/.test(t.class));
 
-export class SelectPlanPanel extends React.Component<
-  Props & WithStyles<ClassNames>,
-  State
-> {
-  state: State = {
-    types: this.props.types.map(thisType => ({
-      ...thisType,
-      count: 0
-    }))
-  };
-  onSelect = (id: string) => () => this.props.onSelect(id);
+export const SelectPlanPanel: React.FC<Props> = props => {
+  const {
+    types,
+    error,
+    selectedID,
+    currentPlanHeading,
+    disabled,
+    header,
+    copy
+  } = props;
 
-  renderSelection = (type: ExtendedTypeWithCount, idx: number) => {
-    const {
-      selectedID,
-      currentPlanHeading,
-      disabled,
-      classes,
-      inputIsIncluded,
-      submitForm
-    } = this.props;
-    const selectedDiskSize = this.props.selectedDiskSize
-      ? this.props.selectedDiskSize
+  // Determine initial plan category tab based on current plan selection
+  // (if there is one).
+  const selectedTypeClass: LinodeTypeClass = pathOr(
+    'standard', // Use `standard` by default
+    ['class'],
+    types.find(type => type.heading === currentPlanHeading)
+  );
+
+  const classes = useStyles();
+
+  const onSelect = (id: string) => () => props.onSelect(id);
+
+  const renderSelection = (type: ExtendedType, idx: number) => {
+    const selectedDiskSize = props.selectedDiskSize
+      ? props.selectedDiskSize
       : 0;
     let tooltip;
     const planTooSmall = selectedDiskSize > type.disk;
@@ -176,18 +138,14 @@ export class SelectPlanPanel extends React.Component<
             data-qa-plan-row={type.label}
             aria-label={rowAriaLabel}
             key={type.id}
-            onClick={!isSamePlan ? this.onSelect(type.id) : undefined}
-            rowLink={this.onSelect ? this.onSelect(type.id) : undefined}
+            onClick={!isSamePlan ? onSelect(type.id) : undefined}
+            rowLink={onSelect ? onSelect(type.id) : undefined}
             aria-disabled={isSamePlan || planTooSmall}
             className={classnames({
               [classes.disabledRow]: isSamePlan || planTooSmall
             })}
           >
-            <TableCell
-              className={
-                inputIsIncluded ? 'visually-hidden' : classes.radioCell
-              }
-            >
+            <TableCell className={classes.radioCell}>
               {!isSamePlan && (
                 <FormControlLabel
                   label={type.heading}
@@ -196,7 +154,7 @@ export class SelectPlanPanel extends React.Component<
                   control={
                     <Radio
                       checked={!planTooSmall && type.id === String(selectedID)}
-                      onChange={this.onSelect(type.id)}
+                      onChange={onSelect(type.id)}
                       disabled={planTooSmall || disabled}
                       id={type.id}
                     />
@@ -239,26 +197,6 @@ export class SelectPlanPanel extends React.Component<
             <TableCell data-qa-ram>
               {convertMegabytesTo(type.memory, true)}
             </TableCell>
-            {inputIsIncluded && (
-              <TableCell>
-                <div className={classes.enhancedInputOuter}>
-                  <EnhancedNumberInput
-                    value={type.count}
-                    setValue={(value: number) =>
-                      this.updatePlanCount(type.id, value)
-                    }
-                  />
-                  <Button
-                    buttonType="primary"
-                    onClick={() => submitForm!(type.id, type.count)}
-                    disabled={type.id !== String(selectedID)}
-                    className={classes.enhancedInputButton}
-                  >
-                    Add
-                  </Button>
-                </div>
-              </TableCell>
-            )}
           </TableRow>
         </Hidden>
         {/* Displays SelectionCard for small screens */}
@@ -266,52 +204,37 @@ export class SelectPlanPanel extends React.Component<
           <SelectionCard
             key={type.id}
             checked={type.id === String(selectedID)}
-            onClick={this.onSelect(type.id)}
+            onClick={onSelect(type.id)}
             heading={type.heading}
             subheadings={type.subHeadings}
             disabled={planTooSmall || isSamePlan || disabled}
             tooltip={tooltip}
-            variant={inputIsIncluded ? 'quantityCheck' : 'check'}
-            inputValue={type.count}
-            setInputValue={(value: number) =>
-              this.updatePlanCount(type.id, value)
-            }
-            submitForm={() => submitForm!(type.id, type.count)}
-            buttonDisabled={type.id !== String(selectedID)}
           />
         </Hidden>
       </React.Fragment>
     );
   };
 
-  renderPlanContainer = (plans: ExtendedType[]) => {
-    const { inputIsIncluded } = this.props;
+  const renderPlanContainer = (plans: ExtendedType[]) => {
     const tableHeader = (
       <TableHead>
         <TableRow>
-          <TableCell
-            className={inputIsIncluded ? 'visually-hidden' : 'radioHead'}
-          />
+          <TableCell />
           <TableCell data-qa-plan-header>Linode Plan</TableCell>
           <TableCell data-qa-monthly-header>Monthly</TableCell>
           <TableCell data-qa-hourly-header>Hourly</TableCell>
           <TableCell data-qa-cpu-header>CPUs</TableCell>
           <TableCell data-qa-storage-header>Storage</TableCell>
           <TableCell data-qa-ram-header>Ram</TableCell>
-          {inputIsIncluded && (
-            <TableCell>
-              <p className="visually-hidden">Quantity</p>
-            </TableCell>
-          )}
         </TableRow>
       </TableHead>
     );
 
     return (
       <Grid container>
-        <Hidden mdUp>{plans.map(this.renderSelection)}</Hidden>
+        <Hidden mdUp>{plans.map(renderSelection)}</Hidden>
         <Hidden smDown>
-          <Grid item xs={12} lg={inputIsIncluded ? 12 : 10}>
+          <Grid item xs={12} lg={10}>
             <Table
               isResponsive={false}
               border
@@ -320,7 +243,7 @@ export class SelectPlanPanel extends React.Component<
             >
               {tableHeader}
               <TableBody role="radiogroup">
-                {plans.map(this.renderSelection)}
+                {plans.map(renderSelection)}
               </TableBody>
             </Table>
           </Grid>
@@ -329,26 +252,13 @@ export class SelectPlanPanel extends React.Component<
     );
   };
 
-  updatePlanCount = (planId: string, newCount: number) => {
-    const newTypes = this.state.types.map((thisType: any) => {
-      if (thisType.id === planId) {
-        return { ...thisType, count: newCount };
-      }
-      return thisType;
-    });
-    this.setState({
-      types: newTypes
-    });
-  };
-
-  createTabs = (): [Tab[], LinodeTypeClass[]] => {
-    const { classes } = this.props;
+  const createTabs = (): [Tab[], LinodeTypeClass[]] => {
     const tabs: Tab[] = [];
-    const nanodes = getNanodes(this.state.types);
-    const standards = getStandard(this.state.types);
-    const highmem = getHighMem(this.state.types);
-    const dedicated = getDedicated(this.state.types);
-    const gpu = getGPU(this.state.types);
+    const nanodes = getNanodes(types);
+    const standards = getStandard(types);
+    const highmem = getHighMem(types);
+    const dedicated = getDedicated(types);
+    const gpu = getGPU(types);
 
     const tabOrder: LinodeTypeClass[] = [];
 
@@ -361,7 +271,7 @@ export class SelectPlanPanel extends React.Component<
                 Nanode instances are good for low-duty workloads, where
                 performance isn't critical.
               </Typography>
-              {this.renderPlanContainer(nanodes)}
+              {renderPlanContainer(nanodes)}
             </>
           );
         },
@@ -379,7 +289,7 @@ export class SelectPlanPanel extends React.Component<
                 Standard instances are good for medium-duty workloads and are a
                 good mix of performance, resources, and price.
               </Typography>
-              {this.renderPlanContainer(standards)}
+              {renderPlanContainer(standards)}
             </>
           );
         },
@@ -397,7 +307,7 @@ export class SelectPlanPanel extends React.Component<
                 Dedicated CPU instances are good for full-duty workloads where
                 consistent performance is important.
               </Typography>
-              {this.renderPlanContainer(dedicated)}
+              {renderPlanContainer(dedicated)}
             </>
           );
         },
@@ -416,7 +326,7 @@ export class SelectPlanPanel extends React.Component<
                 good for memory hungry use cases like caching and in-memory
                 databases.
               </Typography>
-              {this.renderPlanContainer(highmem)}
+              {renderPlanContainer(highmem)}
             </>
           );
         },
@@ -452,7 +362,7 @@ export class SelectPlanPanel extends React.Component<
                 applications such as machine learning, AI, and video
                 transcoding.
               </Typography>
-              {this.renderPlanContainer(gpu)}
+              {renderPlanContainer(gpu)}
             </>
           );
         },
@@ -464,47 +374,21 @@ export class SelectPlanPanel extends React.Component<
     return [tabs, tabOrder];
   };
 
-  render() {
-    const {
-      classes,
-      copy,
-      error,
-      header,
-      types,
-      currentPlanHeading
-    } = this.props;
+  const [tabs, tabOrder] = createTabs();
+  const initialTab = tabOrder.indexOf(selectedTypeClass);
 
-    const [tabs, tabOrder] = this.createTabs();
+  return (
+    <TabbedPanel
+      rootClass={`${classes.root} tabbedPanel`}
+      error={error}
+      header={header || 'Linode Plan'}
+      copy={copy}
+      tabs={tabs}
+      initTab={initialTab}
+    />
+  );
+};
 
-    // Determine initial plan category tab based on current plan selection
-    // (if there is one).
-    const selectedTypeClass: LinodeTypeClass = pathOr(
-      'standard', // Use `standard` by default
-      ['class'],
-      types.find(type => type.heading === currentPlanHeading)
-    );
+const enhanced = compose<Props, {}>();
 
-    const initialTab = tabOrder.indexOf(selectedTypeClass);
-
-    return (
-      <TabbedPanel
-        rootClass={`${classes.root} tabbedPanel`}
-        error={error}
-        header={header || 'Linode Plan'}
-        copy={copy}
-        tabs={tabs}
-        initTab={initialTab}
-      />
-    );
-  }
-}
-
-const styled = withStyles(styles);
-
-export default compose<
-  Props & WithStyles<ClassNames>,
-  Props & RenderGuardProps
->(
-  RenderGuard,
-  styled
-)(SelectPlanPanel);
+export default enhanced(SelectPlanPanel);
