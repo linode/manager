@@ -29,7 +29,8 @@ const props: Props = {
     ...thisType,
     heading: 'heading',
     subHeadings: ['a', 'subheading']
-  }))
+  })),
+  updatePool: jest.fn()
 };
 
 describe('NodeTable', () => {

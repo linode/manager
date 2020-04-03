@@ -1,5 +1,6 @@
 import { PoolNodeResponse } from 'linode-js-sdk/lib/kubernetes';
 import * as React from 'react';
+import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -20,13 +21,13 @@ interface Props {
   nodes: PoolNodeResponse[];
   // @todo: real handlers
   // deletePool: (poolId: number) => void;
-  // handleClickResize: (poolId: number) => void;
+  handleClickResize: (poolId: number) => void;
   // Not yet supported by the API:
   // recycleNodes: (poolId: number) => void;
 }
 
 const NodePool: React.FC<Props> = props => {
-  const { nodes, typeLabel, poolId } = props;
+  const { handleClickResize, nodes, typeLabel, poolId } = props;
 
   const classes = useStyles();
 
@@ -36,7 +37,7 @@ const NodePool: React.FC<Props> = props => {
         <Typography variant="h2">{typeLabel}</Typography>
         {/* @todo: Real buttons that do real things. You can ignore this bit for now.*/}
         <div>
-          <span className={classes.button}>Resize Pool</span>
+          <Button onClick={() => handleClickResize(poolId)}>Resize Pool</Button>
           <span className={classes.button}>Recycle All Nodes</span>
           <span className={classes.button}>Delete Pool</span>
         </div>
