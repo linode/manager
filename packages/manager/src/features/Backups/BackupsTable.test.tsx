@@ -5,8 +5,8 @@ import * as linodes from 'src/__data__/linodes';
 import * as types from 'src/__data__/types';
 import TableRowLoading from 'src/components/TableRowLoading';
 
-import { ExtendedLinode } from './BackupDrawer';
 import { BackupsTable } from './BackupsTable';
+import { ExtendedLinode } from './types';
 
 const type = types.types[0];
 

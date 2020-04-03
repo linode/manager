@@ -256,6 +256,7 @@ const RenderEmpty: React.StatelessComponent<{
         title="Object Storage"
         copy={<EmptyCopy />}
         icon={BucketIcon}
+        renderAsSecondary
         buttonProps={[
           {
             onClick: props.onClick,

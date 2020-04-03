@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-03-30] - v.1.4.1
+
+### Fixed:
+
+- Images not available on Marketplace flow
+
+## [2020-03-30] - v1.4.0
+
+### Changed:
+- Change "One-Click Apps" to "Marketplace"
+- Change message in the Events table empty state
+- Allow up to 10,000 USD payment with PayPal
+- Lazy load Images
+
+### Fixed:
+- Improve skeleton loading screen in the Events table
+- Fix bug in Image select
+- Fix visual bug in OAuth Apps table header (dark mode)
+- Edit DNS Records containing "linode.com" substring
+
+
 ## [2020-03-23] - v1.3.0
 
 ### Added:

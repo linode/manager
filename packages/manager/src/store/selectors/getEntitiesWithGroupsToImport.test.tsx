@@ -1,11 +1,14 @@
 import { Domain } from 'linode-js-sdk/lib/domains';
 import { domains, linodes } from 'src/__data__';
+import { apiResponseToMappedState } from 'src/store/store.helpers.tmp';
 import { entitiesWithGroupsToImport } from './getEntitiesWithGroupsToImport';
 
 const state = {
   __resources: {
-    linodes: { entities: linodes },
-    domains: { data: domains }
+    domains: { itemsById: apiResponseToMappedState(domains) },
+    linodes: {
+      itemsById: linodes.reduce((result, c) => ({ ...result, [c.id]: c }), {})
+    }
   }
 };
 
@@ -73,8 +76,8 @@ describe('Entities that have groups to import', () => {
 
       const newState = {
         __resources: {
-          linodes: { entities: linodes },
-          domains: { entities: [domain] }
+          domains: { itemsById: { [domain.id]: domain } },
+          linodes: { ...state.__resources.linodes }
         }
       };
       const newEntities = entitiesWithGroupsToImport(newState as any);

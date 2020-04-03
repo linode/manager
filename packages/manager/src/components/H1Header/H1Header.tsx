@@ -6,6 +6,7 @@ interface Props {
   title: string;
   className?: string;
   dataQaEl?: string;
+  renderAsSecondary?: boolean;
 }
 
 const useStyles = makeStyles({
@@ -22,7 +23,7 @@ const useStyles = makeStyles({
 // It should serve as the only source for all H1s
 const H1Header: React.FC<Props> = props => {
   const h1Header = React.useRef<HTMLDivElement>(null);
-  const { className, title, dataQaEl } = props;
+  const { className, title, dataQaEl, renderAsSecondary } = props;
   const classes = useStyles();
 
   React.useEffect(() => {
@@ -34,6 +35,7 @@ const H1Header: React.FC<Props> = props => {
   return (
     <Typography
       variant="h1"
+      component={renderAsSecondary ? 'h2' : 'h1'}
       className={`${classes.root} ${className}`}
       ref={h1Header}
       tabIndex={0}

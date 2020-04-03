@@ -120,12 +120,13 @@ const nodeBalToSearchableItem = (nodebal: NodeBalancer): SearchableItem => ({
   }
 });
 
-const linodeSelector = (state: State) => state.linodes.entities;
+const linodeSelector = (state: State) => Object.values(state.linodes.itemsById);
 const volumeSelector = ({ volumes }: State) => Object.values(volumes.itemsById);
 const nodebalSelector = ({ nodeBalancers }: State) =>
   Object.values(nodeBalancers.itemsById);
 const imageSelector = (state: State) => state.images.data || {};
-const domainSelector = (state: State) => state.domains.data || [];
+const domainSelector = (state: State) =>
+  Object.values(state.domains.itemsById) || [];
 const typesSelector = (state: State) => state.types.entities;
 
 export default createSelector<
@@ -145,7 +146,7 @@ export default createSelector<
   nodebalSelector,
   typesSelector,
   (linodes, volumes, images, domains, nodebalancers, types) => {
-    const arrOfImages = Object.keys(images).map(eachKey => images[eachKey]);
+    const arrOfImages = Object.values(images);
     const searchableLinodes = linodes.map(linode =>
       formatLinode(linode, types, images)
     );

@@ -149,7 +149,6 @@ export class App extends React.Component<CombinedProps, State> {
       accountLoading,
       accountError,
       linodesLoading,
-      domainsLoading,
       accountSettingsError,
       accountSettingsLoading,
       userId,
@@ -211,9 +210,6 @@ export class App extends React.Component<CombinedProps, State> {
           linodesLoadedOrErrorExists={
             linodesLoading === false || !!linodesError
           }
-          domainsLoadedOrErrorExists={
-            domainsLoading === false || !!domainsError
-          }
           profileLoadedOrErrorExists={!!this.props.userId || !!profileError}
           accountLoadedOrErrorExists={
             accountLoading === false || !!accountError
@@ -266,13 +262,9 @@ interface StateProps {
   isLoggedInAsCustomer: boolean;
   accountCapabilities: AccountCapability[];
   linodesLoading: boolean;
-  volumesLoading: boolean;
-  domainsLoading: boolean;
-  bucketsLoading: boolean;
   accountLoading: boolean;
   accountSettingsLoading: boolean;
   accountSettingsError?: APIError[];
-  nodeBalancersLoading: boolean;
   linodesError?: APIError[];
   volumesError?: APIError[];
   nodeBalancersError?: APIError[];
@@ -292,7 +284,7 @@ interface StateProps {
 const mapStateToProps: MapState<StateProps, Props> = state => ({
   /** Profile */
   profileError: path(['read'], state.__resources.profile.error),
-  linodes: state.__resources.linodes.entities,
+  linodes: Object.values(state.__resources.linodes.itemsById),
   linodesError: path(['read'], state.__resources.linodes.error),
   domainsError: state.__resources.domains.error.read,
   imagesError: path(['read'], state.__resources.images.error),
@@ -300,8 +292,6 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
   settingsError: state.__resources.accountSettings.error.read,
   typesError: state.__resources.types.error,
   regionsError: state.__resources.regions.error,
-  volumesError: path(['read'], state.__resources.volumes.error),
-  bucketsError: state.__resources.buckets.error,
   userId: path(['data', 'uid'], state.__resources.profile),
   username: pathOr('', ['data', 'username'], state.__resources.profile),
   accountData: state.__resources.account.data,
@@ -326,11 +316,7 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
     state
   ),
   linodesLoading: state.__resources.linodes.loading,
-  volumesLoading: state.__resources.volumes.loading,
-  domainsLoading: state.__resources.domains.loading,
-  bucketsLoading: state.__resources.buckets.loading,
   accountLoading: state.__resources.account.loading,
-  nodeBalancersLoading: state.__resources.nodeBalancers.loading,
   accountError: path(['read'], state.__resources.account.error),
   nodeBalancersError: path(['read'], state.__resources.nodeBalancers.error),
   appIsLoading: state.initialLoad.appIsLoading,
