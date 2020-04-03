@@ -9,6 +9,7 @@ import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel
 import { ApplicationState } from 'src/store';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { PoolNodeWithPrice } from '../../types';
+import ResizeNodePoolDrawer from '../ResizeNodePoolDrawer';
 import NodePool from './NodePool';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -41,12 +42,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface Props {
   pools: PoolNodeWithPrice[];
   types: ExtendedType[];
+  updatePool: (poolID: number, updatedPool: PoolNodeWithPrice) => void;
 }
 
 export const NodePoolsDisplay: React.FC<Props> = props => {
-  const { pools, types } = props;
+  const { pools, types, updatePool } = props;
 
   const classes = useStyles();
+
+  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
 
   /**
    * If the API returns an error when fetching node pools,
@@ -95,13 +99,19 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
                       nodes={nodes ?? []}
                       // @todo: real handlers
                       // deletePool={() => null}
-                      // handleClickResize={() => null}
+                      handleClickResize={() => setDrawerOpen(true)}
                     />
                   </div>
                 );
               })}
             </Grid>
-            {/* NodePoolResizeDrawer goes here. */}
+            <ResizeNodePoolDrawer
+              open={drawerOpen}
+              onClose={() => setDrawerOpen(false)}
+              onSubmit={() => updatePool(1, pools[0])}
+              nodePool={pools[0]}
+              isSubmitting={false}
+            />
           </Grid>
         )}
       </Paper>
