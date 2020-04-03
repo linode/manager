@@ -1,12 +1,10 @@
 module.exports = {
-    root: true
+  root: true
 };
 
 // automatically generated from tslint
 // each line must be reviewed to be added only if needed
 // work in progress
-
-
 //     "env": {
 //         "browser": true,
 //         "es6": true

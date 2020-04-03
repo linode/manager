@@ -20,7 +20,7 @@ describe('Editable Text', () => {
     $(editableTextField).waitForDisplayed();
   });
 
-  it('should become an editable field on click', () => {
+  it('Should become an editable field on click', () => {
     originalLabel = $(editableTextField).getText();
     //checking that editable text values are not displayed
     expect($(editField).isDisplayed())
