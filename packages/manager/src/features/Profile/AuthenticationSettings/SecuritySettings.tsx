@@ -77,7 +77,7 @@ export class SecuritySettings extends React.Component<CombinedProps, {}> {
 
     return (
       <React.Fragment>
-        <Paper className={classes.root}>
+        <Paper className={classes.root} data-testid="whitelisting-form">
           <Typography variant="h2" className={classes.title} data-qa-title>
             IP Whitelisting (Legacy)
           </Typography>
