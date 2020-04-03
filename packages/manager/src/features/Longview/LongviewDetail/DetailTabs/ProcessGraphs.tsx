@@ -45,7 +45,6 @@ export const ProcessGraphs: React.FC<CombinedProps> = props => {
   const { data, error, loading, isToday, timezone, start, end, theme } = props;
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
-
   const _data = React.useMemo(() => sumRelatedProcessesAcrossAllUsers(data), [
     data
   ]);
