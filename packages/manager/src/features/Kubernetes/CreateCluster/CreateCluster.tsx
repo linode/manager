@@ -32,7 +32,7 @@ import { getMonthlyPrice } from '.././kubeUtils';
 import { PoolNodeWithPrice } from '.././types';
 import KubeCheckoutBar from '../KubeCheckoutBar';
 
-// import NodePoolPanel from './NodePoolPanel';
+import NodePoolPanel from './NodePoolPanel';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -132,6 +132,8 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
   const [versionOptions, setVersionOptions] = React.useState<Item<string>[]>(
     []
   );
+  const [selectedType, setSelectedType] = React.useState<string>('');
+  const [newCount, setNewCount] = React.useState<number>(0);
 
   React.useEffect(() => {
     getAllVersions()
@@ -193,11 +195,9 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
       });
   };
 
-  /* TODO: uncomment for nodepool
   const addPool = (pool: PoolNodeWithPrice) => {
     setNodePools([...nodePools, pool]);
   };
-  */
 
   const updatePool = (poolIdx: number, updatedPool: PoolNodeWithPrice) => {
     const updatedPoolWithPrice = {
@@ -216,6 +216,14 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
     setNodePools(updatedPools);
   };
 
+  const updateCount = (count: number) => {
+    setNewCount(count);
+  };
+
+  const selectType = (type: string) => {
+    setSelectedType(type);
+  };
+
   const updateLabel = (newLabel: string) => {
     /**
      * If the new label is an empty string, use undefined.
@@ -227,7 +235,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
   const {
     regionsData,
     typesData,
-    // typesLoading,
+    typesLoading,
     typesError,
     regionsError
   } = props;
@@ -326,6 +334,35 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
                   />
                 </Grid>
               </div>
+              <NodePoolPanel
+                pools={nodePools}
+                types={typesData || []}
+                apiError={errorMap.node_pools}
+                typesLoading={typesLoading}
+                typesError={
+                  typesError
+                    ? getAPIErrorOrDefault(
+                        typesError,
+                        'Error loading Linode type information.'
+                      )[0].reason
+                    : undefined
+                }
+                selectedType={selectedType}
+                addNodePool={(pool: PoolNodeWithPrice) => addPool(pool)}
+                deleteNodePool={(poolIdx: number) => removePool(poolIdx)}
+                handleTypeSelect={(newType: string) => selectType(newType)}
+                updateNodeCount={(count: number) => updateCount(count)}
+                updatePool={updatePool}
+                updateFor={[
+                  nodePools,
+                  typesData,
+                  newCount,
+                  errorMap,
+                  typesLoading,
+                  selectedType,
+                  classes
+                ]}
+              />
             </Paper>
           </div>
         </Grid>
