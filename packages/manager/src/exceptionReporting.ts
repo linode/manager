@@ -1,17 +1,20 @@
 import { captureException, configureScope, withScope } from '@sentry/browser';
-import { pathOr } from 'ramda';
 import { SENTRY_URL } from 'src/constants';
 import { initSentry } from 'src/initSentry';
 
 initSentry();
 
-const promiseRejectionsToIgnore: string[] = [
+const errorsToIgnore: string[] = [
   'Invalid OAuth Token',
-  'Not Found'
+  'Not Found',
+  // Ignore errors from Safari extensions.
+  'safari-extension'
 ];
 
-window.addEventListener('unhandledrejection', err => {
-  if (pathOr('', ['reason', 'stack'], err).match(/launchdarkly/i)) {
+window.addEventListener('unhandledrejection', event => {
+  const stack: string = event?.reason?.stack ?? '';
+
+  if (stack.match(/launchdarkly/i)) {
     /**
      * This doesn't affect error reporting, but avoids some console noise
      * until we've cleaned up Sentry.
@@ -19,7 +22,7 @@ window.addEventListener('unhandledrejection', err => {
     return;
   }
 
-  const firstReason = pathOr('', [0, 'reason'], err.reason);
+  const firstReason = event.reason?.[0]?.reason ?? '';
 
   /*
     if our error is an error we want to ignore, don't report to Sentry
@@ -30,15 +33,16 @@ window.addEventListener('unhandledrejection', err => {
     to Sentry
    */
   if (
-    promiseRejectionsToIgnore.some(
-      eachString => !!firstReason.match(new RegExp(eachString, 'gmi'))
-    )
+    errorsToIgnore.some(eachString => {
+      const regex = new RegExp(eachString, 'gmi');
+      return !!firstReason.match(regex) || stack.match(regex);
+    })
   ) {
     return;
   }
 
   /* otherwise report to sentry as normal */
-  reportException(err.reason);
+  reportException(event.reason);
 });
 
 // Wrapper around Sentry's `captureException` function. A local scope is created
