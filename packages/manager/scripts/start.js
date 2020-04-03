@@ -64,7 +64,6 @@ choosePort(HOST, DEFAULT_PORT)
     // the goal is to make Cypress believe we are not changing domain
     const alternateProxyConfigForCypress = {
       '/api/v4': {
-
         changeOrigin: true, // needed for virtual hosted sites
         target: cypressProxyApiUrl
       }

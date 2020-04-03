@@ -154,14 +154,14 @@ module.exports = {
           {
             test: /\.(ts|tsx)$/,
             include: paths.appSrc,
-            exclude:[/(stories|test)\.(ts|tsx)$/, /__data__/],
+            exclude: [/(stories|test)\.(ts|tsx)$/, /__data__/],
             use: [
               {
                 loader: require.resolve('ts-loader'),
                 options: {
                   // disable type checker - we will use it in fork plugin
                   transpileOnly: true,
-                  onlyCompileBundledFiles:true
+                  onlyCompileBundledFiles: true
                 }
               }
             ]
