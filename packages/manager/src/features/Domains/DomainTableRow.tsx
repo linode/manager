@@ -1,4 +1,4 @@
-import { DomainStatus } from 'linode-js-sdk/lib/domains';
+import { DomainStatus, getDomainRecords } from 'linode-js-sdk/lib/domains';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -121,6 +121,9 @@ class DomainTableRow extends React.Component<CombinedProps> {
         <TableCell parentColumn="Status" data-qa-domain-status>
           {humanizeDomainStatus(status)}
         </TableCell>
+        <TableCell parentColumn="Last Modified" data-qa-domain-lastmodified>
+          {retrieveRecords(id)}
+        </TableCell>
         <TableCell>
           <ActionMenu
             domain={domain}
@@ -151,6 +154,33 @@ const humanizeDomainStatus = (status: DomainStatus) => {
     default:
       return 'Unknown';
   }
+};
+
+const retrieveRecords = (domainId: number) => {
+  return domainId; // comment this line out and uncomment the below lines when testing; I only added this here to return something and make TypeScript happy on the commit checks.
+
+  // getDomainRecords(domainId)
+  //   .then(result => {
+  //     const recordUpdateTimes: Array<Date> = [];
+
+  //     result.data.forEach(record => {
+  //       const individualRecordUpdateTime = new Date(record.updated + 'Z');
+  //       recordUpdateTimes.push(individualRecordUpdateTime);
+  //     });
+
+  //     const mostRecentChange = recordUpdateTimes.reduce((a, b) => {
+  //       return a > b ? a : b;
+  //     });
+
+  //     // console.log(recordUpdateTimes);
+  //     // console.log(mostRecentChange);
+
+  //     // return mostRecentChange;
+  //     return 'Success';
+  //   })
+  //   .catch(error => {
+  //     return 'Failed';
+  //   });
 };
 
 const styled = withStyles(styles);

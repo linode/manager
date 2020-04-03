@@ -94,6 +94,15 @@ const ListDomains: React.StatelessComponent<CombinedProps> = props => {
                   >
                     Status
                   </TableSortCell>
+                  <TableSortCell
+                    data-qa-domain-type-header={order}
+                    active={orderBy === 'last_modified'}
+                    label="last_modified"
+                    direction={order}
+                    handleClick={handleOrderChange}
+                  >
+                    Last Modified
+                  </TableSortCell>
                   <TableCell />
                 </TableRow>
               </TableHead>
@@ -127,8 +136,36 @@ interface RenderDataProps extends Handlers {
   data: Domain[];
 }
 
-const RenderData: React.StatelessComponent<RenderDataProps> = props => {
+const RenderData: React.FunctionComponent<RenderDataProps> = props => {
   const { data, onClone, onEdit, onRemove, onDisableOrEnable } = props;
+
+  // const retrieveRecords = (domainId: number) => {
+  //   // return domainId;
+
+  //   getDomainRecords(domainId)
+  //     .then(result => {
+  //       // const recordUpdateTimes: Array<Date> = [];
+
+  //       // result.data.forEach(record => {
+  //       //   const individualRecordUpdateTime = new Date(record.updated + 'Z');
+  //       //   recordUpdateTimes.push(individualRecordUpdateTime);
+  //       // });
+
+  //       // const mostRecentChange = recordUpdateTimes.reduce((a, b) => {
+  //       //   return a > b ? a : b;
+  //       // });
+
+  //       return 'Success';
+
+  //       // console.log(recordUpdateTimes);
+  //       // console.log(mostRecentChange);
+
+  //       // return mostRecentChange;
+  //     })
+  //     .catch(error => {
+  //       return 'Failed';
+  //     })
+  // }
 
   return (
     <>
@@ -142,6 +179,7 @@ const RenderData: React.StatelessComponent<RenderDataProps> = props => {
           onRemove={onRemove}
           type={domain.type}
           status={domain.status}
+          // updated={retrieveRecords(domain.id)}
           onDisableOrEnable={onDisableOrEnable}
         />
       ))}
