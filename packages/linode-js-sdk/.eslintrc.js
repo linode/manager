@@ -1,5 +1,5 @@
 module.exports = {
-  ignorePatterns: ['node_modules', 'lib', 'index.js'],
+  ignorePatterns: ['node_modules', 'lib', 'index.js', '!.eslintrc.js'],
   parser: '@typescript-eslint/parser', // Specifies the ESLint parser
   parserOptions: {
     tsconfigRootDir: './',

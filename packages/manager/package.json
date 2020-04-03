@@ -88,10 +88,9 @@
   "scripts": {
     "postinstall": "patch-package",
     "axe": "npx wdio ./e2e/config/wdio.axe.conf.js",
-    "format": "prettier 'src/**/*.{ts,tsx,js}' 'e2e/**/*.{ts,jsx,js}' --write",
     "compare": "./scripts/jira-changelog.sh",
     "start": "node scripts/start.js",
-    "lint": "yarn eslint . --quiet --fix",
+    "lint": "yarn run eslint . --quiet --fix",
     "build": "node scripts/build.js",
     "precommit": "lint-staged && tsc --noEmit",
     "prepush": "./scripts/pre-push.sh && yarn test --color",

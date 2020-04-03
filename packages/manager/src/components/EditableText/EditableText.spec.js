@@ -15,6 +15,27 @@ describe('Editable Text', () => {
 
   let originalLabel;
 
+
+  function setUpEditField() {
+    $(editableTextField).click();
+    //Edit text button should be displayed after clicking editable text
+    $(editableTextButton).waitForDisplayed(1000);
+    expect($(editableTextButton).isDisplayed())
+      .withContext(`Edit text ${shouldString} displayed`)
+      .toBe(true);
+    $(editableTextButton).click();
+    $(editField).waitForDisplayed();
+    //checking that edit field is enabled and save and cancel buttons are displayed
+    expect($(editField).isEnabled())
+      .withContext(`Edit field ${shouldString} enabled`)
+      .toBe(true);
+    expect($(saveEdit).isDisplayed())
+      .withContext(`Save button ${shouldString} displayed`)
+      .toBe(true);
+    expect($(cancelEdit).isDisplayed())
+      .withContext(`Cancel button ${shouldString} displayed`)
+      .toBe(true);
+  }
   beforeEach(() => {
     navigateToStory(component, childStories[0]);
     $(editableTextField).waitForDisplayed();
@@ -82,25 +103,4 @@ describe('Editable Text', () => {
       .withContext(`Field text ${shouldString}: '${originalLabel}'`)
       .toBe(originalLabel);
   });
-
-  function setUpEditField() {
-    $(editableTextField).click();
-    //Edit text button should be displayed after clicking editable text
-    $(editableTextButton).waitForDisplayed(1000);
-    expect($(editableTextButton).isDisplayed())
-      .withContext(`Edit text ${shouldString} displayed`)
-      .toBe(true);
-    $(editableTextButton).click();
-    $(editField).waitForDisplayed();
-    //checking that edit field is enabled and save and cancel buttons are displayed
-    expect($(editField).isEnabled())
-      .withContext(`Edit field ${shouldString} enabled`)
-      .toBe(true);
-    expect($(saveEdit).isDisplayed())
-      .withContext(`Save button ${shouldString} displayed`)
-      .toBe(true);
-    expect($(cancelEdit).isDisplayed())
-      .withContext(`Cancel button ${shouldString} displayed`)
-      .toBe(true);
-  }
 });

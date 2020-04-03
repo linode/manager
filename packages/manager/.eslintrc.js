@@ -1,5 +1,12 @@
 module.exports = {
-  ignorePatterns: ['node_modules', 'build', '.storybook', 'e2e', 'public'],
+  ignorePatterns: [
+    'node_modules',
+    'build',
+    '.storybook',
+    'e2e',
+    'public',
+    '!.eslintrc.js'
+  ],
 
   parser: '@typescript-eslint/parser', // Specifies the ESLint parser
   parserOptions: {
@@ -36,8 +43,37 @@ module.exports = {
     'plugin:prettier/recommended' // Enables eslint-plugin-prettier and eslint-config-prettier. This will display prettier errors as ESLint errors. Make sure this is always the last configuration in the extends array.
   ],
   rules: {
+    curly: 'warn',
+    'no-unused-vars': 'error',
+    'no-bitwise': 'error',
+    'no-caller': 'error',
+    'no-eval': 'error',
+    'no-invalid-this': 'error',
+    'no-multiple-empty-lines': 'error',
+    'no-new-wrappers': 'error',
+    'no-restricted-imports': [
+      'error',
+      'rxjs',
+      '@material-ui/core',
+      '@material-ui/icons'
+    ],
+    'no-throw-literal': 'error',
+    'comma-dangle': 'error',
+    'no-trailing-spaces': 'error',
+    'no-undef-init': 'error',
+    'no-underscore-dangle': 'error',
+    'no-mixed-requires': 'error',
+    'no-unused-expressions': 'error',
+    'spaced-comment': 'warn',
+    'object-shorthand': 'error',
+    '@typescript-eslint/no-unused-vars': 'error',
+    '@typescript-eslint/prefer-for-of': 'warn',
     '@typescript-eslint/camelcase': 'off',
-    '@typescript-eslint/no-use-before-define': 'off'
+    'no-console': 'error',
+    'sort-keys': 'warn',
+    'react/jsx-no-script-url': 'error',
+    'react/jsx-no-bind': 'error',
+    'react/jsx-no-useless-fragment': 'error'
   },
   env: {
     browser: true,
@@ -63,6 +99,14 @@ module.exports = {
       rules: {
         '@typescript-eslint/no-var-requires': 'off',
         '@typescript-eslint/no-empty-function': 'warn' // possible for tests
+      },
+      env: { node: true }
+    },
+    {
+      // scrips, config and cypress files can use console
+      files: ['scripts/**', 'config/**', 'testServer.js', 'cypress/**'],
+      rules: {
+        'no-console': 'off'
       },
       env: { node: true }
     }
