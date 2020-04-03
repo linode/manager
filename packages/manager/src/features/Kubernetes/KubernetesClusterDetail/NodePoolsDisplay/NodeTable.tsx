@@ -55,7 +55,9 @@ export const NodeTable: React.FC<Props> = props => {
   const { _loading } = useReduxLoad(['linodes']);
   const { linodes } = useLinodes();
 
-  const rowData = nodes.map(thisNode => nodeToRow(thisNode, linodes.entities));
+  const rowData = nodes.map(thisNode =>
+    nodeToRow(thisNode, Object.values(linodes.itemsById))
+  );
 
   return (
     <>

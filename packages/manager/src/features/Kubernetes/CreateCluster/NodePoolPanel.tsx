@@ -83,7 +83,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
   );
 
   // TODO: add countError back when ready for error handling
-  const [_, setCountError] = React.useState<string | undefined>(undefined);
+  // const [_, setCountError] = React.useState<string | undefined>(undefined);
 
   const {
     addNodePool,
@@ -103,7 +103,10 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
      * These props are required when showing the table,
      * which will be the case when hideTable is false or undefined
      * (i.e. omitted since it's an optional prop).
+     *
+     * @todo delete this
      */
+
     throw new Error(
       'You must provide pools, update and delete functions when displaying the table in NodePoolPanel.'
     );
@@ -112,13 +115,13 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
   const submitForm = (selectedPlanType: string, nodeCount: number) => {
     /** Do simple client validation for the two input fields */
     setTypeError(undefined);
-    setCountError(undefined);
+    // setCountError(undefined);
     if (!selectedPlanType) {
       setTypeError('Please select a type.');
       return;
     }
     if (typeof nodeCount !== 'number') {
-      setCountError('Invalid value.');
+      // setCountError('Invalid value.');
       return;
     }
 
