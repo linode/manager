@@ -13,7 +13,7 @@ describe('dashboard', () => {
     );
   });
   it('checks load time and number of GET', () => {
-    let xhrData = [];
+    const xhrData = [];
     cy.wrap(xhrData).as('xhrData');
     cy.server({
       // Here we handle all requests passing through Cypress' server

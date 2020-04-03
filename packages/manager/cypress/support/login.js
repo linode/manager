@@ -14,7 +14,7 @@ Cypress.Commands.add('loginWithUsername', () => {
   } catch (err) {
     cy.log('Could not log out');
   }
-  let options = {
+  const options = {
     url: Cypress.env('loginUrl'),
     body: {
       client_id: Cypress.env('clientId'),
