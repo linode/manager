@@ -386,7 +386,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
                 <TableCell style={{ width: '20%' }}>Access</TableCell>
                 <TableCell style={{ width: '20%' }}>ID</TableCell>
                 <TableCell style={{ width: '20%' }}>Callback URL</TableCell>
-                <TableCell style={{ width: '20%' }} />
+                <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>{this.renderContent()}</TableBody>

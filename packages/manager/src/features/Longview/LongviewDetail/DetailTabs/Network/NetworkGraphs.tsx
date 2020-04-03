@@ -66,6 +66,7 @@ export const NetworkGraphs: React.FC<CombinedProps> = props => {
       <Placeholder
         title="No network interfaces detected"
         copy="The Longview agent has not detected any interfaces that it can monitor."
+        renderAsSecondary
       />
     );
   }
@@ -89,7 +90,7 @@ export const NetworkGraphs: React.FC<CombinedProps> = props => {
                 subtitle={maxUnit + '/s'}
                 unit={'/s'}
                 formatData={(value: number) =>
-                  convertNetworkToUnit(value, maxUnit)
+                  convertNetworkToUnit(value * 8, maxUnit)
                 }
                 formatTooltip={formatNetworkTooltip}
                 error={error}

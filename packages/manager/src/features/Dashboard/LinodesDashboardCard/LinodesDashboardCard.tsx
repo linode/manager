@@ -215,7 +215,7 @@ interface WithUpdatingLinodesProps {
 }
 
 const withUpdatingLinodes = connect((state: ApplicationState, ownProps: {}) => {
-  const linodes = state.__resources.linodes.entities;
+  const linodes = Object.values(state.__resources.linodes.itemsById);
   const notifications = state.__resources.notifications.data || [];
 
   const linodesWithMaintenance = addNotificationsToLinodes(
@@ -229,7 +229,7 @@ const withUpdatingLinodes = connect((state: ApplicationState, ownProps: {}) => {
       take(5),
       sortBy(prop('label'))
     )(linodesWithMaintenance),
-    linodeCount: state.__resources.linodes.entities.length,
+    linodeCount: state.__resources.linodes.results,
     loading: state.__resources.linodes.loading,
     error: path(['read'], state.__resources.linodes.error)
   };

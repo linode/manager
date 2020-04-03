@@ -5,6 +5,7 @@ import { isEmpty, pathOr } from 'ramda';
 import { Reducer } from 'redux';
 import { updateAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import { updateMultipleLinodes } from 'src/store/linodes/linodes.actions';
+import { getLinodesWithoutBackups } from 'src/store/selectors/getLinodesWithBackups';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { sendBackupsEnabledEvent } from 'src/utilities/ga';
 import { ThunkActionCreator } from '../types';
@@ -251,10 +252,8 @@ export const enableAllBackups: EnableAllBackupsThunk = () => (
   dispatch,
   getState
 ) => {
-  const { entities } = getState().__resources.linodes;
-
-  const linodesWithoutBackups = entities.filter(
-    linode => !linode.backups.enabled
+  const linodesWithoutBackups = getLinodesWithoutBackups(
+    getState().__resources
   );
 
   dispatch(handleEnable());

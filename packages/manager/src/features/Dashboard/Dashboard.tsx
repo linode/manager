@@ -146,7 +146,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
 };
 
 const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
-  const linodes = state.__resources.linodes.entities;
+  const linodes = Object.values(state.__resources.linodes.itemsById);
   const notifications = state.__resources.notifications.data || [];
 
   const linodesWithMaintenance = addNotificationsToLinodes(
