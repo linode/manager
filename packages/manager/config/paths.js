@@ -57,7 +57,7 @@ module.exports = {
   testsSetup: resolveApp('src/setupTests.ts'),
   appNodeModules: resolveApp('node_modules'),
   appTsConfig: resolveApp('tsconfig.json'),
-  appTsLint: resolveApp('../../tslint.json'),
+  appEsLintConfig: resolveApp('.eslintrc.js'),
   publicUrl: getPublicUrl(resolveApp('package.json')),
   appVersion: getAppVersion(resolveApp('package.json')),
   servedPath: getServedPath(resolveApp('package.json'))

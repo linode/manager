@@ -259,7 +259,7 @@ module.exports = {
       memoryLimit: 4096,
       watch: paths.appSrc,
       tsconfig: paths.appTsConfig,
-      tslint: paths.appTsLint
+      eslint: paths.appEsLintConfig
     }),
     new CircularDependencyPlugin({
       // exclude detection of files based on a RegExp

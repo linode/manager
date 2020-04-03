@@ -305,7 +305,7 @@ module.exports = {
       async: false,
       memoryLimit: 4096,
       tsconfig: paths.appTsConfig,
-      tslint: paths.appTsLint
+      eslint: paths.appEsLintConfig
     }),
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
