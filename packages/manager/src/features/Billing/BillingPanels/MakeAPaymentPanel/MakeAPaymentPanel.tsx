@@ -189,7 +189,13 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
   };
 
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
-    if (!prevProps.isScriptLoadSucceed && this.props.isScriptLoadSucceed) {
+    const isPayPalInitialized = (window as any).paypal !== undefined;
+
+    if (
+      !prevProps.isScriptLoadSucceed &&
+      this.props.isScriptLoadSucceed &&
+      isPayPalInitialized
+    ) {
       /*
        * Because the paypal script is now loaded, so now we have access to this React component
        * in the window element. This will be used in the render method.
@@ -345,7 +351,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
    *
    * @param data - information that Paypal returns to then send to
    * /account/payment/paypal/execute
-   * @param actions - handers to do more things. Optional argument that we
+   * @param actions - handlers to do more things. Optional argument that we
    * don't really need
    *
    * See documentation:
@@ -362,7 +368,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
    * the order_id that we get from APIv4. It is imperative that this step happens before
    * we make the call to v4/execute.
    *
-   * It is also impertive that this function returns the checkout_id returned from APIv4.
+   * It is also imperative that this function returns the checkout_id returned from APIv4.
    * checkout_id is the same thing as order_id
    */
   createOrder = () => {
