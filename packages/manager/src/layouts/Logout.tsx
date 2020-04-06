@@ -5,10 +5,13 @@ import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { CLIENT_ID } from 'src/constants';
 import { ApplicationState } from 'src/store';
+import { clearUserInput } from 'src/store/authentication/authentication.helpers';
 import { handleLogout } from 'src/store/authentication/authentication.requests';
 
 export class Logout extends Component<DispatchProps & StateProps> {
   componentDidMount() {
+    // Clear any user input (in the Support Drawer) since the user is manually logging out.
+    clearUserInput();
     // Split the token so we can get the token portion of the "<prefix> <token>" pair
     this.props.dispatchLogout(CLIENT_ID || '', this.props.token.split(' ')[1]);
   }
@@ -42,9 +45,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export default connected(Logout);

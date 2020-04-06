@@ -24,4 +24,3 @@ export const handleRefreshTokens = actionCreator('REFRESH_TOKENS');
  * basically just clear local storage and redux state
  */
 export const handleLogout = actionCreator('LOGOUT');
-export const handleExpireTokens = actionCreator('EXPIRE_TOKENS');
