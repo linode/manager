@@ -12,20 +12,21 @@ export const generateInFilter = (keyName: string, arr: any[]) => {
 };
 
 /**
- * Generates a filter for API reqeusts;
+ * Generates a filter for API requests;
  * If we have IDs:
- *  "If `created` is greater than the datestamp provided or the `id` is one of ids."
+ *  "If `created` is greater than the timestamp provided or the `id` is one of ids."
  * or:
- *   "If `created` is greater than the datestamp provided."
+ *   "If `created` is greater than the timestamp provided."
  *
  * This filter is invoked on every events request to only get the latest or in-progress events.
  */
-export const generatePollingFilter = (datestamp: string, ids: string[]) => {
+export const generatePollingFilter = (timestamp: string, ids: string[]) => {
+  // @todo: Add check to NOT request events already in store (by ID).
   return ids.length
     ? {
-        '+or': [{ created: { '+gt': datestamp } }, generateInFilter('id', ids)]
+        '+or': [{ created: { '+gte': timestamp } }, generateInFilter('id', ids)]
       }
     : {
-        created: { '+gt': datestamp }
+        created: { '+gte': timestamp }
       };
 };

@@ -13,7 +13,7 @@ describe('requestFilters', () => {
   describe('generatePollingFilter', () => {
     it('generates a simple filter when pollIDs is empty', () => {
       const res = generatePollingFilter('1970-01-01T00:00:00', []);
-      expect(res).toEqual({ created: { '+gt': '1970-01-01T00:00:00' } });
+      expect(res).toEqual({ created: { '+gte': '1970-01-01T00:00:00' } });
     });
   });
 });
