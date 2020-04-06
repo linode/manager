@@ -167,7 +167,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
                 onSelect={this.props.updateTypeID}
                 selectedID={selectedTypeID}
                 selectedDiskSize={selectedDiskSize}
-                updateFor={[selectedDiskSize, selectedTypeID, errors]}
+                // updateFor={[selectedDiskSize, selectedTypeID, errors]}
                 disabled={userCannotCreateLinode}
               />
               <LabelAndTagsPanel

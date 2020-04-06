@@ -7,9 +7,9 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 
-import SelectPlanPanel, {
+import EnhancedSelectPlanPanel, {
   ExtendedType
-} from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+} from 'src/features/linodes/LinodesCreate/EnhancedSelectPlanPanel';
 
 import { getMonthlyPrice } from '.././kubeUtils';
 import { PoolNodeWithPrice } from '.././types';
@@ -146,14 +146,13 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
   return (
     <Grid container direction="column">
       <Grid item>
-        <SelectPlanPanel
+        <EnhancedSelectPlanPanel
           types={types.filter(t => t.class !== 'nanode' && t.class !== 'gpu')} // No Nanodes or GPUs in clusters
           selectedID={selectedType}
           onSelect={selectType}
           error={apiError || typeError}
           header="Add Node Pools"
           copy="Add groups of Linodes to your cluster with a chosen size."
-          inputIsIncluded
           submitForm={submitForm}
         />
       </Grid>

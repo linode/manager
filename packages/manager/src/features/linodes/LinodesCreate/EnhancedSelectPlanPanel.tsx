@@ -2,6 +2,7 @@ import * as classnames from 'classnames';
 import { LinodeType, LinodeTypeClass } from 'linode-js-sdk/lib/linodes';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
+import Button from 'src/components/Button';
 import Chip from 'src/components/core/Chip';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Hidden from 'src/components/core/Hidden';
@@ -10,6 +11,7 @@ import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
+import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
@@ -25,6 +27,10 @@ import { convertMegabytesTo } from 'src/utilities/unitConversions';
 export interface ExtendedType extends LinodeType {
   heading: string;
   subHeadings: [string, string];
+}
+
+export interface ExtendedTypeWithCount extends ExtendedType {
+  count: number;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -56,6 +62,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   radioCell: {
     width: '5%',
     height: 55
+  },
+  enhancedInputOuter: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center'
+  },
+  enhancedInputButton: {
+    marginLeft: 10,
+    minWidth: 90,
+    paddingTop: 12,
+    paddingBottom: 12
   }
 }));
 
@@ -69,6 +86,7 @@ interface Props {
   disabled?: boolean;
   header?: string;
   copy?: string;
+  submitForm: (key: string, value: number) => void;
 }
 
 const getNanodes = (types: ExtendedType[]) =>
@@ -87,15 +105,7 @@ const getGPU = (types: ExtendedType[]) =>
   types.filter(t => /gpu/.test(t.class));
 
 export const SelectPlanPanel: React.FC<Props> = props => {
-  const {
-    types,
-    error,
-    selectedID,
-    currentPlanHeading,
-    disabled,
-    header,
-    copy
-  } = props;
+  const { copy, error, header, types, currentPlanHeading } = props;
 
   // Determine initial plan category tab based on current plan selection
   // (if there is one).
@@ -107,9 +117,21 @@ export const SelectPlanPanel: React.FC<Props> = props => {
 
   const classes = useStyles();
 
+  const [_types, setNewType] = React.useState<ExtendedTypeWithCount[]>([]);
+
+  React.useEffect(() => {
+    _types.map(thisType => ({
+      ...thisType,
+      count: 0
+    }));
+  }),
+    [];
+
   const onSelect = (id: string) => () => props.onSelect(id);
 
-  const renderSelection = (type: ExtendedType, idx: number) => {
+  const renderSelection = (type: ExtendedTypeWithCount, idx: number) => {
+    const { selectedID, currentPlanHeading, disabled, submitForm } = props;
+
     const selectedDiskSize = props.selectedDiskSize
       ? props.selectedDiskSize
       : 0;
@@ -144,7 +166,7 @@ export const SelectPlanPanel: React.FC<Props> = props => {
               [classes.disabledRow]: isSamePlan || planTooSmall
             })}
           >
-            <TableCell className={classes.radioCell}>
+            <TableCell className={'visually-hidden'}>
               {!isSamePlan && (
                 <FormControlLabel
                   label={type.heading}
@@ -196,6 +218,22 @@ export const SelectPlanPanel: React.FC<Props> = props => {
             <TableCell data-qa-ram>
               {convertMegabytesTo(type.memory, true)}
             </TableCell>
+            <TableCell>
+              <div className={classes.enhancedInputOuter}>
+                <EnhancedNumberInput
+                  value={type.count}
+                  setValue={(value: number) => updatePlanCount(type.id, value)}
+                />
+                <Button
+                  buttonType="primary"
+                  onClick={() => submitForm!(type.id, type.count)}
+                  disabled={type.id !== String(selectedID)}
+                  className={classes.enhancedInputButton}
+                >
+                  Add
+                </Button>
+              </div>
+            </TableCell>
           </TableRow>
         </Hidden>
         {/* Displays SelectionCard for small screens */}
@@ -208,6 +246,11 @@ export const SelectPlanPanel: React.FC<Props> = props => {
             subheadings={type.subHeadings}
             disabled={planTooSmall || isSamePlan || disabled}
             tooltip={tooltip}
+            variant={'quantityCheck'}
+            inputValue={type.count}
+            setInputValue={(value: number) => updatePlanCount(type.id, value)}
+            submitForm={() => submitForm!(type.id, type.count)}
+            buttonDisabled={type.id !== String(selectedID)}
           />
         </Hidden>
       </React.Fragment>
@@ -218,13 +261,16 @@ export const SelectPlanPanel: React.FC<Props> = props => {
     const tableHeader = (
       <TableHead>
         <TableRow>
-          <TableCell />
+          <TableCell className={'visually-hidden'} />
           <TableCell data-qa-plan-header>Linode Plan</TableCell>
           <TableCell data-qa-monthly-header>Monthly</TableCell>
           <TableCell data-qa-hourly-header>Hourly</TableCell>
           <TableCell data-qa-cpu-header>CPUs</TableCell>
           <TableCell data-qa-storage-header>Storage</TableCell>
           <TableCell data-qa-ram-header>Ram</TableCell>
+          <TableCell>
+            <p className="visually-hidden">Quantity</p>
+          </TableCell>
         </TableRow>
       </TableHead>
     );
@@ -233,7 +279,7 @@ export const SelectPlanPanel: React.FC<Props> = props => {
       <Grid container>
         <Hidden mdUp>{plans.map(renderSelection)}</Hidden>
         <Hidden smDown>
-          <Grid item xs={12} lg={10}>
+          <Grid item xs={12} lg={12}>
             <Table
               isResponsive={false}
               border
@@ -251,7 +297,19 @@ export const SelectPlanPanel: React.FC<Props> = props => {
     );
   };
 
+  const updatePlanCount = (planId: string, newCount: number) => {
+    const { types } = props;
+    const newTypes = types.map((thisType: any) => {
+      if (thisType.id === planId) {
+        return { ...thisType, count: newCount };
+      }
+      return thisType;
+    });
+    setNewType(newTypes);
+  };
+
   const createTabs = (): [Tab[], LinodeTypeClass[]] => {
+    const { types } = props;
     const tabs: Tab[] = [];
     const nanodes = getNanodes(types);
     const standards = getStandard(types);
@@ -384,7 +442,6 @@ export const SelectPlanPanel: React.FC<Props> = props => {
       copy={copy}
       tabs={tabs}
       initTab={initialTab}
-      currentPlanHeading={currentPlanHeading}
     />
   );
 };
