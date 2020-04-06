@@ -22,7 +22,7 @@ import KubeContainer, {
 } from 'src/containers/kubernetes.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { ExtendedCluster } from '.././types';
+import { ExtendedCluster, PoolNodeWithPrice } from '.././types';
 import KubeSummaryPanel from './KubeSummaryPanel';
 import NodePoolsDisplay from './NodePoolsDisplay';
 
@@ -251,7 +251,14 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
           <NodePoolsDisplay
             pools={cluster.node_pools}
             types={props.typesData || []}
-            updatePool={(id: number, pool: any) => null}
+            updatePool={(id: number, updatedPool: PoolNodeWithPrice) =>
+              props.updateNodePool({
+                clusterID: cluster.id,
+                nodePoolID: id,
+                type: updatedPool.type,
+                count: updatedPool.count
+              })
+            }
           />
         </Grid>
       </Grid>

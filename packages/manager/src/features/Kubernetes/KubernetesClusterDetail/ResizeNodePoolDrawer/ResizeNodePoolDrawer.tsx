@@ -30,7 +30,7 @@ export interface Props {
   isSubmitting: boolean;
   onClose: () => void;
   onSubmit: (updatedValue: number) => void;
-  nodePool: PoolNodeWithPrice;
+  nodePool?: PoolNodeWithPrice;
 }
 
 const resizeWarning = `Resizing to fewer nodes will delete random nodes from
@@ -43,8 +43,17 @@ export const ResizeNodePoolDrawer: React.FC<Props> = props => {
   const classes = useStyles();
 
   const [updatedCount, setUpdatedCount] = React.useState<number>(
-    nodePool.count
+    nodePool?.count ?? 0
   );
+
+  React.useEffect(() => {
+    if (!nodePool) {
+      return;
+    }
+    if (open) {
+      setUpdatedCount(nodePool.count);
+    }
+  }, [nodePool, open]);
 
   const handleChange = (value: number) => {
     setUpdatedCount(Math.min(100, Math.floor(value)));
@@ -55,10 +64,16 @@ export const ResizeNodePoolDrawer: React.FC<Props> = props => {
   };
 
   const planType = types.entities.find(
-    thisType => thisType.id === nodePool.type
+    thisType => thisType.id === nodePool?.type
   );
 
   const pricePerNode = planType?.price.monthly ?? 0;
+
+  if (!nodePool) {
+    // This should never happen, but it keeps TypeScript happy and avoids crashing if we
+    // are unable to load the specified pool.
+    return null;
+  }
 
   return (
     <Drawer
