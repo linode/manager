@@ -252,14 +252,11 @@ export const SelectPlanPanel: React.FC<Props> = props => {
   };
 
   const createTabs = (): [Tab[], LinodeTypeClass[]] => {
-    const tabs: Tab[] = [];
     const nanodes = getNanodes(types);
     const standards = getStandard(types);
     const highmem = getHighMem(types);
     const dedicated = getDedicated(types);
     const gpu = getGPU(types);
-
-    const tabOrder: LinodeTypeClass[] = [];
 
     if (!isEmpty(nanodes)) {
       tabs.push({

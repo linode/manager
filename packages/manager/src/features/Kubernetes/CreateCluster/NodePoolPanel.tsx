@@ -7,9 +7,9 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 
-import EnhancedSelectPlanPanel, {
+import SelectPlanQuantityPanel, {
   ExtendedType
-} from 'src/features/linodes/LinodesCreate/EnhancedSelectPlanPanel';
+} from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel';
 
 import { getMonthlyPrice } from '.././kubeUtils';
 import { PoolNodeWithPrice } from '.././types';
@@ -146,7 +146,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
   return (
     <Grid container direction="column">
       <Grid item>
-        <EnhancedSelectPlanPanel
+        <SelectPlanQuantityPanel
           types={types.filter(t => t.class !== 'nanode' && t.class !== 'gpu')} // No Nanodes or GPUs in clusters
           selectedID={selectedType}
           onSelect={selectType}

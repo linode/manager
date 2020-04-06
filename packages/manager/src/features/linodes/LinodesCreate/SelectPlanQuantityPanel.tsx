@@ -104,7 +104,7 @@ const getDedicated = (types: ExtendedType[]) =>
 const getGPU = (types: ExtendedType[]) =>
   types.filter(t => /gpu/.test(t.class));
 
-export const SelectPlanPanel: React.FC<Props> = props => {
+export const SelectPlanQuantityPanel: React.FC<Props> = props => {
   const { copy, error, header, types, currentPlanHeading } = props;
 
   // Determine initial plan category tab based on current plan selection
@@ -124,13 +124,12 @@ export const SelectPlanPanel: React.FC<Props> = props => {
       ...thisType,
       count: 0
     }));
-  }),
-    [];
+  });
 
   const onSelect = (id: string) => () => props.onSelect(id);
 
   const renderSelection = (type: ExtendedTypeWithCount, idx: number) => {
-    const { selectedID, currentPlanHeading, disabled, submitForm } = props;
+    const { selectedID, disabled, submitForm } = props;
 
     const selectedDiskSize = props.selectedDiskSize
       ? props.selectedDiskSize
@@ -298,7 +297,7 @@ export const SelectPlanPanel: React.FC<Props> = props => {
   };
 
   const updatePlanCount = (planId: string, newCount: number) => {
-    const { types } = props;
+    // const { types } = props;
     const newTypes = types.map((thisType: any) => {
       if (thisType.id === planId) {
         return { ...thisType, count: newCount };
@@ -309,15 +308,11 @@ export const SelectPlanPanel: React.FC<Props> = props => {
   };
 
   const createTabs = (): [Tab[], LinodeTypeClass[]] => {
-    const { types } = props;
-    const tabs: Tab[] = [];
     const nanodes = getNanodes(types);
     const standards = getStandard(types);
     const highmem = getHighMem(types);
     const dedicated = getDedicated(types);
     const gpu = getGPU(types);
-
-    const tabOrder: LinodeTypeClass[] = [];
 
     if (!isEmpty(nanodes)) {
       tabs.push({
@@ -446,4 +441,4 @@ export const SelectPlanPanel: React.FC<Props> = props => {
   );
 };
 
-export default React.memo(SelectPlanPanel);
+export default React.memo(SelectPlanQuantityPanel);
