@@ -189,7 +189,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
   };
 
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
-    const isPayPalInitialized = (window as any).paypal !== undefined;
+    const isPayPalInitialized = window.hasOwnProperty('paypal');
 
     if (
       !prevProps.isScriptLoadSucceed &&
