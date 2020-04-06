@@ -7,8 +7,13 @@ initSentry();
 const errorsToIgnore: string[] = [
   'Invalid OAuth Token',
   'Not Found',
-  // Ignore errors from Safari extensions.
-  'safari-extension'
+  'You are not authorized',
+  'safari-extension',
+  'chrome-extension',
+  // We know this is a problem. @todo: implement flow control in Lish.
+  'write data discarded, use flow control to avoid losing data',
+  // This is an error coming from the MUI Ripple effect.
+  'TouchRipple'
 ];
 
 window.addEventListener('unhandledrejection', event => {
