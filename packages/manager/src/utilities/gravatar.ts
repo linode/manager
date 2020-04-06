@@ -7,7 +7,7 @@ export const getEmailHash = (email: string) => {
 
 export const getGravatarUrlFromHash = (hash: string): Promise<string> => {
   const url = `https://gravatar.com/avatar/${hash}?d=404`;
-  const instance = Axios.create();
+  const instance = Axios.create({ timeout: 1000 });
   return instance
     .get(url)
     .then(response => {
