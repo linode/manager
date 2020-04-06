@@ -74,6 +74,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
       return;
     }
     setDrawerSubmitting(true);
+    setDrawerError(undefined);
     updatePool(poolForEdit.id, { ...poolForEdit, count: updatedCount })
       .then(_ => {
         setDrawerSubmitting(false);
