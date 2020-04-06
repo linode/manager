@@ -315,10 +315,16 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
                     }
                     regions={filteredRegions}
                     selectedID={selectedRegion || null}
-                    textFieldProps={{
-                      helperText: regionHelperText,
-                      helperTextPosition: 'top'
-                    }}
+                    textFieldProps={
+                      // Only show the "Find out which region is best for you" message if there are
+                      // actually multiple regions to choose from.
+                      filteredRegions.length > 1
+                        ? {
+                            helperText: regionHelperText,
+                            helperTextPosition: 'top'
+                          }
+                        : undefined
+                    }
                   />
                 </Grid>
                 <Grid item>
