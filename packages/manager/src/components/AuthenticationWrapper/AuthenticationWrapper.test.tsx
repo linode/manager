@@ -20,6 +20,7 @@ const component = shallow<AuthenticationWrapper>(
     requestProfile={jest.fn()}
     requestRegions={jest.fn()}
     requestSettings={jest.fn()}
+    markAppAsDoneLoading={jest.fn()}
   >
     <div />
   </AuthenticationWrapper>

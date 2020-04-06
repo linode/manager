@@ -6,10 +6,9 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps } from 'react-redux';
+import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { Action, compose } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
+import { compose } from 'redux';
 import { Subscription } from 'rxjs/Subscription';
 import {
   DocumentTitleSegment,
@@ -20,14 +19,10 @@ import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.cont
 import { events$ } from 'src/events';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 
-import { ApplicationState } from 'src/store';
 import composeState from 'src/utilities/composeState';
 import { configureErrorReportingUser } from './exceptionReporting';
 import { MapState } from './store/types';
 import { isKubernetesEnabled as _isKubernetesEnabled } from './utilities/accountCapabilities';
-
-import DataLoadedListener from 'src/components/DataLoadedListener';
-import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
 
 import IdentifyUser from './IdentifyUser';
 
@@ -49,7 +44,6 @@ interface State {
 }
 
 type CombinedProps = Props &
-  DispatchProps &
   StateProps &
   RouteComponentProps &
   WithSnackbarProps;
@@ -148,9 +142,6 @@ export class App extends React.Component<CombinedProps, State> {
       accountCapabilities,
       accountLoading,
       accountError,
-      linodesLoading,
-      accountSettingsError,
-      accountSettingsLoading,
       userId,
       username
     } = this.props;
@@ -204,21 +195,6 @@ export class App extends React.Component<CombinedProps, State> {
           accountCountry={accountData ? accountData.country : undefined}
           taxID={accountData ? accountData.tax_id : undefined}
         />
-        <DataLoadedListener
-          markAppAsLoaded={this.props.markAppAsDoneLoading}
-          flagsHaveLoaded={this.state.flagsLoaded}
-          linodesLoadedOrErrorExists={
-            linodesLoading === false || !!linodesError
-          }
-          profileLoadedOrErrorExists={!!this.props.userId || !!profileError}
-          accountLoadedOrErrorExists={
-            accountLoading === false || !!accountError
-          }
-          accountSettingsLoadedOrErrorExists={
-            accountSettingsLoading === false || !!accountSettingsError
-          }
-          appIsLoaded={!this.props.appIsLoading}
-        />
         <DocumentTitleSegment segment="Linode Manager" />
         <MainContent
           accountCapabilities={accountCapabilities}
@@ -236,18 +212,6 @@ export class App extends React.Component<CombinedProps, State> {
     );
   }
 }
-
-interface DispatchProps {
-  markAppAsDoneLoading: () => void;
-}
-
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
-  dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
-) => {
-  return {
-    markAppAsDoneLoading: () => dispatch(handleLoadingDone())
-  };
-};
 
 interface StateProps {
   /** Profile */
@@ -323,7 +287,7 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
   euuid: state.__resources.account.data?.euuid
 });
 
-export const connected = connect(mapStateToProps, mapDispatchToProps);
+export const connected = connect(mapStateToProps);
 
 export default compose(
   connected,
