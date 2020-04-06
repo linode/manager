@@ -30,7 +30,8 @@ const props: Props = {
     heading: 'heading',
     subHeadings: ['a', 'subheading']
   })),
-  updatePool: jest.fn()
+  updatePool: jest.fn(),
+  deletePool: jest.fn()
 };
 
 describe('NodeTable', () => {
