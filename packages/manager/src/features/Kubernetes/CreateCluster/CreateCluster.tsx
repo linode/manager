@@ -19,7 +19,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
 import ErrorState from 'src/components/ErrorState';
-// import Notice from 'src/components/Notice';
+import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { dcDisplayNames } from 'src/constants';
 import regionsContainer from 'src/containers/regions.container';
@@ -289,6 +289,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
 
         <Grid item className={`mlMain py0`}>
           <div className={classes.main}>
+            {errorMap.none && <Notice error text={errorMap.none} />}
             <Paper data-qa-label-header>
               <div className={classes.inner}>
                 <Grid item>
@@ -374,11 +375,12 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
             removePool={removePool}
             typesData={typesData || []}
             updateFor={[
-              label,
-              selectedRegion,
               nodePools,
               submitting,
               typesData,
+              updatePool,
+              removePool,
+              createCluster,
               classes
             ]}
           />
