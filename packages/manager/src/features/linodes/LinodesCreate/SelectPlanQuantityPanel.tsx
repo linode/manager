@@ -87,6 +87,7 @@ interface Props {
   header?: string;
   copy?: string;
   submitForm: (key: string, value: number) => void;
+  isNotOnCreate?: boolean;
 }
 
 const getNanodes = (types: ExtendedType[]) =>
@@ -105,7 +106,14 @@ const getGPU = (types: ExtendedType[]) =>
   types.filter(t => /gpu/.test(t.class));
 
 export const SelectPlanQuantityPanel: React.FC<Props> = props => {
-  const { copy, error, header, types, currentPlanHeading } = props;
+  const {
+    copy,
+    error,
+    header,
+    types,
+    currentPlanHeading,
+    isNotOnCreate
+  } = props;
 
   // Determine initial plan category tab based on current plan selection
   // (if there is one).
@@ -119,14 +127,26 @@ export const SelectPlanQuantityPanel: React.FC<Props> = props => {
 
   const [_types, setNewType] = React.useState<ExtendedTypeWithCount[]>([]);
 
+  const [count, setNewCount] = React.useState<number>(0);
+
   React.useEffect(() => {
     _types.map(thisType => ({
       ...thisType,
-      count: 0
+      count
     }));
   });
 
   const onSelect = (id: string) => () => props.onSelect(id);
+
+  const updatePlanCount = (planId: string, newCount: number) => {
+    const newTypes = types.map((thisType: any) => {
+      if (thisType.id === planId) {
+        return { ...thisType, count: newCount };
+      }
+      return thisType;
+    });
+    setNewType(newTypes);
+  };
 
   const renderSelection = (type: ExtendedTypeWithCount, idx: number) => {
     const { selectedID, disabled, submitForm } = props;
@@ -220,17 +240,19 @@ export const SelectPlanQuantityPanel: React.FC<Props> = props => {
             <TableCell>
               <div className={classes.enhancedInputOuter}>
                 <EnhancedNumberInput
-                  value={type.count}
+                  value={count}
                   setValue={(value: number) => updatePlanCount(type.id, value)}
                 />
-                <Button
-                  buttonType="primary"
-                  onClick={() => submitForm!(type.id, type.count)}
-                  disabled={type.id !== String(selectedID)}
-                  className={classes.enhancedInputButton}
-                >
-                  Add
-                </Button>
+                {!isNotOnCreate && (
+                  <Button
+                    buttonType="primary"
+                    onClick={() => submitForm(type.id, type.count)}
+                    disabled={type.id !== String(selectedID)}
+                    className={classes.enhancedInputButton}
+                  >
+                    Add
+                  </Button>
+                )}
               </div>
             </TableCell>
           </TableRow>
@@ -246,9 +268,9 @@ export const SelectPlanQuantityPanel: React.FC<Props> = props => {
             disabled={planTooSmall || isSamePlan || disabled}
             tooltip={tooltip}
             variant={'quantityCheck'}
-            inputValue={type.count}
+            inputValue={count}
             setInputValue={(value: number) => updatePlanCount(type.id, value)}
-            submitForm={() => submitForm!(type.id, type.count)}
+            submitForm={() => submitForm(type.id, type.count)}
             buttonDisabled={type.id !== String(selectedID)}
           />
         </Hidden>
@@ -296,23 +318,15 @@ export const SelectPlanQuantityPanel: React.FC<Props> = props => {
     );
   };
 
-  const updatePlanCount = (planId: string, newCount: number) => {
-    // const { types } = props;
-    const newTypes = types.map((thisType: any) => {
-      if (thisType.id === planId) {
-        return { ...thisType, count: newCount };
-      }
-      return thisType;
-    });
-    setNewType(newTypes);
-  };
-
   const createTabs = (): [Tab[], LinodeTypeClass[]] => {
+    const tabs: Tab[] = [];
     const nanodes = getNanodes(types);
     const standards = getStandard(types);
     const highmem = getHighMem(types);
     const dedicated = getDedicated(types);
     const gpu = getGPU(types);
+
+    const tabOrder: LinodeTypeClass[] = [];
 
     if (!isEmpty(nanodes)) {
       tabs.push({
@@ -437,6 +451,7 @@ export const SelectPlanQuantityPanel: React.FC<Props> = props => {
       copy={copy}
       tabs={tabs}
       initTab={initialTab}
+      innerClass={'tabbedPanelInner'}
     />
   );
 };

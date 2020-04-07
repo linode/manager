@@ -19,6 +19,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& .tabbedPanel': {
       marginTop: 0,
       paddingTop: 0
+    },
+    '& .tabbedPanelInner': {
+      padding: 0
     }
   },
   title: {

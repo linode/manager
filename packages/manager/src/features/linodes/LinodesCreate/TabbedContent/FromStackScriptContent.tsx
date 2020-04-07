@@ -303,7 +303,6 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
               error={hasErrorFor('type')}
               types={typesData}
               onSelect={updateTypeID}
-              // updateFor={[selectedTypeID, errors]}
               selectedID={selectedTypeID}
               disabled={disabled}
             />
