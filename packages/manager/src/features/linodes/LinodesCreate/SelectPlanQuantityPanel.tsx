@@ -319,17 +319,17 @@ export const SelectPlanQuantityPanel: React.FC<Props> = props => {
   };
 
   const createTabs = (): [Tab[], LinodeTypeClass[]] => {
-    const tabs: Tab[] = [];
+    const _tabs: Tab[] = [];
     const nanodes = getNanodes(types);
     const standards = getStandard(types);
     const highmem = getHighMem(types);
     const dedicated = getDedicated(types);
     const gpu = getGPU(types);
 
-    const tabOrder: LinodeTypeClass[] = [];
+    const _tabOrder: LinodeTypeClass[] = [];
 
     if (!isEmpty(nanodes)) {
-      tabs.push({
+      _tabs.push({
         render: () => {
           return (
             <>
@@ -343,11 +343,11 @@ export const SelectPlanQuantityPanel: React.FC<Props> = props => {
         },
         title: 'Nanode'
       });
-      tabOrder.push('nanode');
+      _tabOrder.push('nanode');
     }
 
     if (!isEmpty(standards)) {
-      tabs.push({
+      _tabs.push({
         render: () => {
           return (
             <>
@@ -361,11 +361,11 @@ export const SelectPlanQuantityPanel: React.FC<Props> = props => {
         },
         title: 'Standard'
       });
-      tabOrder.push('standard');
+      _tabOrder.push('standard');
     }
 
     if (!isEmpty(dedicated)) {
-      tabs.push({
+      _tabs.push({
         render: () => {
           return (
             <>
@@ -379,11 +379,11 @@ export const SelectPlanQuantityPanel: React.FC<Props> = props => {
         },
         title: 'Dedicated CPU'
       });
-      tabOrder.push('dedicated');
+      _tabOrder.push('dedicated');
     }
 
     if (!isEmpty(highmem)) {
-      tabs.push({
+      _tabs.push({
         render: () => {
           return (
             <>
@@ -398,7 +398,7 @@ export const SelectPlanQuantityPanel: React.FC<Props> = props => {
         },
         title: 'High Memory'
       });
-      tabOrder.push('highmem');
+      _tabOrder.push('highmem');
     }
 
     if (!isEmpty(gpu)) {
@@ -418,7 +418,7 @@ export const SelectPlanQuantityPanel: React.FC<Props> = props => {
           may be required to access these services.
         </Typography>
       );
-      tabs.push({
+      _tabs.push({
         render: () => {
           return (
             <>
@@ -434,10 +434,10 @@ export const SelectPlanQuantityPanel: React.FC<Props> = props => {
         },
         title: 'GPU'
       });
-      tabOrder.push('gpu');
+      _tabOrder.push('gpu');
     }
 
-    return [tabs, tabOrder];
+    return [_tabs, _tabOrder];
   };
 
   const [tabs, tabOrder] = createTabs();
