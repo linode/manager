@@ -58,7 +58,7 @@ export const getAllBucketsFromAllClusters: ThunkActionCreator<Promise<
   // From a philosophical point of view, it would be better to first request
   // `/object-storage/clusters` and use the result as the list of clusters to
   // request. This would be a relatively big performance hit, however, and we
-  // have to maintain the cluster display map anyway, should it should always
+  // have to maintain the cluster display map anyway, so it should always
   // be kept up-to-date with region support for OBJ.
   const clusterIds = Object.keys(objectStorageClusterDisplay);
 
@@ -72,10 +72,10 @@ export const getAllBucketsFromAllClusters: ThunkActionCreator<Promise<
   );
 
   return Promise.all(promises).then(res => {
-    const { data, error } = gatherDataAndErrors(res);
+    const { data, errors } = gatherDataAndErrors(res);
 
-    if (error.length > 0) {
-      dispatch(getAllBucketsForAllClustersActions.failed({ error }));
+    if (errors.length > 0) {
+      dispatch(getAllBucketsForAllClustersActions.failed({ error: errors }));
     }
 
     dispatch(getAllBucketsForAllClustersActions.done({ result: data }));
@@ -94,7 +94,7 @@ const gatherDataAndErrors = (
       if ('error' in currentDataOrError) {
         return {
           ...accumulator,
-          error: [...accumulator.error, currentDataOrError]
+          errors: [...accumulator.errors, currentDataOrError]
         };
       }
       return {
@@ -102,7 +102,7 @@ const gatherDataAndErrors = (
         data: [...accumulator.data, ...currentDataOrError.data]
       };
     },
-    { data: initialData, error: initialError }
+    { data: initialData, errors: initialError }
   );
 };
 

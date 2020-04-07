@@ -19,7 +19,7 @@ export const getAllBucketsForAllClustersActions = actionCreator.async<
   void,
   ObjectStorageBucket[],
   BucketError[]
->('get-all-buckets-for--all-clusters');
+>('get-all-buckets-for-all-clusters');
 
 export const deleteBucketActions = actionCreator.async<
   ObjectStorageDeleteBucketRequestPayload,
