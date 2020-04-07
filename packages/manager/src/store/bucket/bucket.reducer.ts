@@ -2,7 +2,6 @@ import { ObjectStorageBucket } from 'linode-js-sdk/lib/object-storage';
 import { Reducer } from 'redux';
 import { RequestableRequiredData } from 'src/store/types';
 import { isType } from 'typescript-fsa';
-import { onStart } from '../store.helpers';
 import {
   createBucketActions,
   deleteBucketActions,
@@ -54,7 +53,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
   // START
   if (isType(action, getAllBucketsForAllClustersActions.started)) {
-    return onStart(state);
+    return { ...state, loading: true, bucketErrors: undefined };
   }
 
   // DONE
