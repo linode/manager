@@ -141,7 +141,7 @@ export const SelectPlanQuantityPanel: React.FC<Props> = props => {
   const updatePlanCount = (planId: string, newCount: number) => {
     const newTypes = types.map((thisType: any) => {
       if (thisType.id === planId) {
-        return { ...thisType, count: newCount };
+        return { ...thisType, count: setNewCount(newCount) };
       }
       return thisType;
     });
