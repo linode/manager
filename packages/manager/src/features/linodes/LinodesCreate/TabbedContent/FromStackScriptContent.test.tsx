@@ -99,7 +99,9 @@ describe('FromImageContent', () => {
   });
 
   it('should render SelectPlan panel', () => {
-    expect(component.find('memo(SelectPlanPanel)')).toHaveLength(1);
+    expect(
+      component.find('WithTheme(WithRenderGuard(WithStyles(SelectPlanPanel)))')
+    ).toHaveLength(1);
   });
 
   it('should render SelectLabel panel', () => {
