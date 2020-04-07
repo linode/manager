@@ -16,7 +16,7 @@
     }
   },
   "scripts": {
-    "lint": "yarn eslint . --quiet --fix",
+    "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",
     "cost-of-modules": "yarn global add cost-of-modules && cost-of-modules --less --no-install --include-dev",
     "install:all": "yarn install --frozen-lockfile",
     "upgrade:sdk": "yarn workspace linode-js-sdk version --no-git-tag-version --no-commit-hooks && yarn workspace linode-manager upgrade linode-js-sdk",

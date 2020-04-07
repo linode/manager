@@ -28,6 +28,8 @@ module.exports = {
     'react',
     'react-hooks',
     'jsx-a11y',
+    'sonarjs',
+    'ramda',
     'cypress',
     'prettier'
   ],
@@ -39,17 +41,25 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
     'plugin:jsx-a11y/recommended',
+    'plugin:sonarjs/recommended',
+    'plugin:ramda/recommended',
     'plugin:cypress/recommended',
     'plugin:prettier/recommended' // Enables eslint-plugin-prettier and eslint-config-prettier. This will display prettier errors as ESLint errors. Make sure this is always the last configuration in the extends array.
   ],
   rules: {
-    curly: 'warn',
-    'no-unused-vars': 'error',
+    // prepend `_` to an arg you accept to ignore
+    'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    'no-unused-expressions': 'warn',
     'no-bitwise': 'error',
     'no-caller': 'error',
     'no-eval': 'error',
-    'no-invalid-this': 'error',
-    'no-multiple-empty-lines': 'error',
+    'no-throw-literal': 'warn',
+    // loop rules
+    'no-loop-func': 'error',
+    'no-await-in-loop': 'error',
+    'array-callback-return': 'error',
+    // turned off to allow arrow functions in React Class Component
+    'no-invalid-this': 'off',
     'no-new-wrappers': 'error',
     'no-restricted-imports': [
       'error',
@@ -57,23 +67,51 @@ module.exports = {
       '@material-ui/core',
       '@material-ui/icons'
     ],
-    'no-throw-literal': 'error',
-    'comma-dangle': 'error',
-    'no-trailing-spaces': 'error',
-    'no-undef-init': 'error',
-    'no-underscore-dangle': 'error',
-    'no-mixed-requires': 'error',
-    'no-unused-expressions': 'error',
-    'spaced-comment': 'warn',
-    'object-shorthand': 'error',
-    '@typescript-eslint/no-unused-vars': 'error',
-    '@typescript-eslint/prefer-for-of': 'warn',
-    '@typescript-eslint/camelcase': 'off',
+
     'no-console': 'error',
-    'sort-keys': 'warn',
+    // allowing to init vars to undefined
+    'no-undef-init': 'off',
+    // typescript-eslint specific rules
+    // prepend `_` to an arg you accept to ignore
+    '@typescript-eslint/no-unused-vars': 'off',
+    '@typescript-eslint/prefer-for-of': 'warn',
+    '@typescript-eslint/no-inferrable-types': 'off',
+    '@typescript-eslint/no-namespace': 'warn',
+    '@typescript-eslint/camelcase': 'off',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    // this would disallow usage of ! postfix operator on non null types
+    '@typescript-eslint/no-non-null-assertion': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-use-before-define': 'off',
+    '@typescript-eslint/interface-name-prefix': 'off',
+    // react and jsx specific rules
+    // requires the definition of proptypes for react components
+    'react/prop-types': 'off',
     'react/jsx-no-script-url': 'error',
-    'react/jsx-no-bind': 'error',
-    'react/jsx-no-useless-fragment': 'error'
+    'react/jsx-no-useless-fragment': 'warn',
+    // A bind call or arrow function in a JSX prop will create a brand new function on every single render
+    'react/jsx-no-bind': 'warn',
+    'react/no-unescaped-entities': 'warn',
+    // sonar
+    'sonarjs/cognitive-complexity': 'warn',
+    'sonarjs/no-duplicate-string': 'warn',
+    'sonarjs/prefer-immediate-return': 'warn',
+    'sonarjs/no-identical-functions': 'warn',
+    'sonarjs/no-redundant-jump': 'warn',
+    'sonarjs/no-small-switch': 'warn',
+    // ramda
+    'ramda/prefer-ramda-boolean': 'off',
+    // style errors
+    'no-multiple-empty-lines': 'error',
+    curly: 'warn',
+    'sort-keys': 'off',
+    'comma-dangle': 'warn',
+    'no-trailing-spaces': 'warn',
+    'no-mixed-requires': 'warn',
+    'spaced-comment': 'warn',
+    'object-shorthand': 'warn',
+    // make prettier issues warnings
+    'prettier/prettier': 'warn'
   },
   env: {
     browser: true,
@@ -89,14 +127,18 @@ module.exports = {
     {
       // node files
       files: [
+        '**/*.test.*',
         '**/*.spec.js',
         '**/*.stories.js',
         'scripts/**',
         'config/**',
+        'config/**',
         'testServer.js',
-        'cypress/plugins/**'
+        'cypress/**'
       ],
       rules: {
+        'array-callback-return': 'off',
+        'no-unused-expressions': 'off',
         '@typescript-eslint/no-var-requires': 'off',
         '@typescript-eslint/no-empty-function': 'warn' // possible for tests
       },
