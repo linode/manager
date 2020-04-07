@@ -83,7 +83,7 @@ export const getAllBucketsFromAllClusters: ThunkActionCreator<Promise<
   });
 };
 
-const gatherDataAndErrors = (
+export const gatherDataAndErrors = (
   response: (GetAllData<ObjectStorageBucket> | BucketError)[]
 ) => {
   const initialData: ObjectStorageBucket[] = [];

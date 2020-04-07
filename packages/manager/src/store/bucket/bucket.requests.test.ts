@@ -1,11 +1,26 @@
+import { ObjectStorageBucket } from 'linode-js-sdk/lib/object-storage';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { objectStorageBucketFactory } from 'src/factories/objectStorage';
+import { GetAllData } from 'src/utilities/getAll';
 import { isType } from 'typescript-fsa';
 import { getAllBucketsForAllClustersActions as actions } from './bucket.actions';
-import { getAllBucketsFromAllClusters } from './bucket.requests';
+import {
+  gatherDataAndErrors,
+  getAllBucketsFromAllClusters
+} from './bucket.requests';
+import { BucketError } from './types';
 
 const mockStore = configureMockStore([thunk]);
+
+// Mock the cluster display map so the number of calls to getBucketsInCluster is deterministic.
+// We need this to stay the same even as we add new clusters, so that the mocked values work out.
+jest.mock('src/constants', () => ({
+  objectStorageClusterDisplay: {
+    'us-east-1': 'Newark, NJ',
+    'eu-central-1': 'Frankfurt, DE'
+  }
+}));
 
 jest.mock('linode-js-sdk/lib/object-storage', () => {
   const buckets1 = objectStorageBucketFactory.buildList(1, {
@@ -44,5 +59,30 @@ describe('getAllBucketsFromAllClusters', () => {
     expect(secondAction.payload.error[0]).toHaveProperty('error', [
       { reason: 'An error occurred' }
     ]);
+  });
+});
+
+describe('gatherDataAndErrors', () => {
+  const bucket = objectStorageBucketFactory.build();
+  const makeData = (): GetAllData<ObjectStorageBucket> => ({
+    data: [bucket],
+    results: 1
+  });
+  const makeError = (): BucketError => ({
+    error: { reason: 'An error occurred.' },
+    clusterId: 'us-east-1'
+  });
+
+  it('combines data', () => {
+    const input = [makeData(), makeData()];
+    const result = gatherDataAndErrors(input);
+    expect(result).toHaveProperty('data', [bucket, bucket]);
+    expect(result.errors).toHaveLength(0);
+  });
+  it('handles errors', () => {
+    const input = [makeData(), makeError()];
+    const result = gatherDataAndErrors(input);
+    expect(result).toHaveProperty('data', [bucket]);
+    expect(result).toHaveProperty('errors', [input[1]]);
   });
 });
