@@ -281,8 +281,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
           <Grid item>
             <Grid container alignItems="flex-end">
               <Grid item className="pt0">
-                {/* @todo: Insert real link when the doc is written. */}
-                <DocumentationButton href="https://www.linode.com/docs/platform" />
+                <DocumentationButton href="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/" />
               </Grid>
             </Grid>
           </Grid>
