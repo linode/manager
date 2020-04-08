@@ -259,6 +259,12 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
                 count: updatedPool.count
               })
             }
+            deletePool={(poolID: number) =>
+              props.deleteNodePool({
+                clusterID: cluster.id,
+                nodePoolID: poolID
+              })
+            }
           />
         </Grid>
       </Grid>
