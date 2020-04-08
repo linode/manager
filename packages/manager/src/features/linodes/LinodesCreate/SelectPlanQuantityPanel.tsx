@@ -1,8 +1,10 @@
 import * as classnames from 'classnames';
-import { LinodeType, LinodeTypeClass } from 'linode-js-sdk/lib/linodes';
+import { PoolNodeRequest } from 'linode-js-sdk/lib/kubernetes/types';
+import { LinodeType, LinodeTypeClass } from 'linode-js-sdk/lib/linodes/types';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
+import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Hidden from 'src/components/core/Hidden';
@@ -103,7 +105,7 @@ interface Props {
   header?: string;
   copy?: string;
   submitForm?: (key: string, value: number) => void;
-  addPool?: any;
+  addPool?: (pool?: PoolNodeRequest) => void;
   isOnCreate?: boolean;
   updatePlanCount: any;
 }
@@ -414,20 +416,36 @@ export class SelectPlanPanel extends React.Component<
 
     const initialTab = tabOrder.indexOf(selectedTypeClass);
 
+    const handleAdd = addPool ?? (() => null);
+
     return (
       <React.Fragment>
         <TabbedPanel
           rootClass={`${classes.root} tabbedPanel`}
           error={error}
-          header={header || 'Linode Plan'}
+          header={' '}
           copy={copy}
           tabs={tabs}
           initTab={initialTab}
         />
         {!isOnCreate && (
-          <Button buttonType="primary" onClick={addPool} disabled={disabled}>
-            Add pool
-          </Button>
+          <ActionsPanel>
+            <Button
+              buttonType="primary"
+              onClick={() => handleAdd()}
+              disabled={disabled}
+            >
+              Add pool
+            </Button>
+            <Typography>
+              This pool will add{' '}
+              <span>
+                {/* ${updatePlanCount * pricePerNode}/month ({updatePlanCount} nodes
+                at ${pricePerNode}/month ) */}
+              </span>{' '}
+              to this cluster.
+            </Typography>
+          </ActionsPanel>
         )}
       </React.Fragment>
     );

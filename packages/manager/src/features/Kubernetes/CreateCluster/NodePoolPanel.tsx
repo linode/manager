@@ -44,7 +44,7 @@ interface Props {
   apiError?: string;
   selectedType?: string;
   hideTable?: boolean;
-  addNodePool: (pool: PoolNodeWithPrice) => void;
+  addNodePool: (pool: any) => void;
   handleTypeSelect: (newType?: string) => void;
   // Props only needed if hideTable is false
   pools?: PoolNodeWithPrice[];
@@ -112,20 +112,6 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
   // TODO: add countError back when ready for error handling
   // const [_, setCountError] = React.useState<string | undefined>(undefined);
 
-  if (!hideTable && !(pools && updatePool && deleteNodePool)) {
-    /**
-     * These props are required when showing the table,
-     * which will be the case when hideTable is false or undefined
-     * (i.e. omitted since it's an optional prop).
-     *
-     * @todo delete this
-     */
-
-    throw new Error(
-      'You must provide pools, update and delete functions when displaying the table in NodePoolPanel.'
-    );
-  }
-
   const submitForm = (selectedPlanType: string, nodeCount: number) => {
     /** Do simple client validation for the two input fields */
     setTypeError(undefined);
@@ -165,6 +151,16 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
       return thisType;
     });
     setNewType(newTypes);
+    handleTypeSelect(planId);
+  };
+
+  const handleAdd = () => {
+    const type = _types.find(thisType => thisType.id === selectedType);
+    console.log('type: ', selectedType);
+    if (!type || !selectedType) {
+      return;
+    }
+    addNodePool({ type: type.id, count: type.count });
   };
 
   return (
@@ -179,7 +175,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
           copy="Add groups of Linodes to your cluster with a chosen size."
           updatePlanCount={updatePlanCount}
           submitForm={isOnCreate ? submitForm : undefined}
-          addPool={!isOnCreate ? submitForm : undefined}
+          addPool={!isOnCreate ? handleAdd : undefined}
           isOnCreate={isOnCreate}
         />
       </Grid>

@@ -322,8 +322,16 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
         </Grid>
         <Grid item xs={12}>
           <NodePoolsDisplay
+            clusterLabel={cluster.label}
             pools={cluster.node_pools}
             types={props.typesData || []}
+            addPool={(pool: PoolNodeWithPrice) =>
+              props.createNodePool({
+                clusterID: cluster.id,
+                type: pool.type,
+                count: pool.count
+              })
+            }
             updatePool={(id: number, updatedPool: PoolNodeWithPrice) =>
               props.updateNodePool({
                 clusterID: cluster.id,
@@ -338,6 +346,13 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
                 nodePoolID: poolID
               })
             }
+            addNodePool={(newPool: PoolNodeWithPrice) => {
+              props.createNodePool({
+                clusterID: cluster.id,
+                type: newPool.type,
+                count: newPool.count
+              });
+            }}
           />
         </Grid>
       </Grid>
