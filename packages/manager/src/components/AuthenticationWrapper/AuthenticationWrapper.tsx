@@ -19,6 +19,7 @@ import { MapState } from 'src/store/types';
 
 import { requestAccount } from 'src/store/account/account.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
+import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
 import { requestTypes } from 'src/store/linodeType/linodeType.requests';
 import { requestNotifications } from 'src/store/notification/notification.requests';
@@ -56,8 +57,10 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
 
     try {
       await Promise.all(dataFetchingPromises);
-    } catch (error) {
+      this.props.markAppAsDoneLoading();
+    } catch {
       /** We choose to do nothing, relying on the Redux error state. */
+      this.props.markAppAsDoneLoading();
     }
   };
 
@@ -130,6 +133,7 @@ interface DispatchProps {
   requestTypes: () => Promise<LinodeType[]>;
   requestRegions: () => Promise<Region[]>;
   requestProfile: () => Promise<Profile>;
+  markAppAsDoneLoading: () => void;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
@@ -142,7 +146,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   requestSettings: () => dispatch(requestAccountSettings()),
   requestTypes: () => dispatch(requestTypes()),
   requestRegions: () => dispatch(requestRegions()),
-  requestProfile: () => dispatch(requestProfile())
+  requestProfile: () => dispatch(requestProfile()),
+  markAppAsDoneLoading: () => dispatch(handleLoadingDone())
 });
 
 const connected = connect(mapStateToProps, mapDispatchToProps);

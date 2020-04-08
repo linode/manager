@@ -20,14 +20,20 @@ interface Props {
   typeLabel: string;
   nodes: PoolNodeResponse[];
   // @todo: real handlers
-  // deletePool: (poolId: number) => void;
+  openDeleteDialog: (poolId: number) => void;
   handleClickResize: (poolId: number) => void;
   // Not yet supported by the API:
   // recycleNodes: (poolId: number) => void;
 }
 
 const NodePool: React.FC<Props> = props => {
-  const { handleClickResize, nodes, typeLabel, poolId } = props;
+  const {
+    handleClickResize,
+    openDeleteDialog,
+    nodes,
+    typeLabel,
+    poolId
+  } = props;
 
   const classes = useStyles();
 
@@ -38,8 +44,8 @@ const NodePool: React.FC<Props> = props => {
         {/* @todo: Real buttons that do real things. You can ignore this bit for now.*/}
         <div>
           <Button onClick={() => handleClickResize(poolId)}>Resize Pool</Button>
-          <span className={classes.button}>Recycle All Nodes</span>
-          <span className={classes.button}>Delete Pool</span>
+          {/* <span className={classes.button}>Recycle All Nodes</span> (not ready yet) */}
+          <Button onClick={() => openDeleteDialog(poolId)}>Delete Pool</Button>
         </div>
       </Box>
       <div className={classes.nodeTable}>

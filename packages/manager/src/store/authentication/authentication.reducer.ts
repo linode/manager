@@ -2,13 +2,12 @@ import { redirectToLogin } from 'src/session';
 import { authentication } from 'src/utilities/storage';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import {
-  handleExpireTokens,
   handleInitTokens,
   handleLogout,
   handleRefreshTokens,
   handleStartSession
 } from './authentication.actions';
-import { clearLocalStorage, clearUserInput } from './authentication.helpers';
+import { clearLocalStorage } from './authentication.helpers';
 import { State } from './index';
 
 export const defaultState: State = {
@@ -85,22 +84,10 @@ const reducer = reducerWithInitialState(defaultState)
       loggedInAsCustomer: isLoggedInAsCustomer
     };
   })
-  .case(handleExpireTokens, state => {
-    /** clear local storage and redux state - plain and simple */
-    clearLocalStorage();
-    return {
-      ...state,
-      scopes: null,
-      token: null,
-      expiration: null,
-      loggedInAsCustomer: false
-    };
-  })
   .case(handleLogout, state => {
     /** clear local storage and redux state */
     clearLocalStorage();
-    /** since the user is explicitly logging out, clear user input from local storage */
-    clearUserInput();
+
     return {
       ...state,
       scopes: null,
