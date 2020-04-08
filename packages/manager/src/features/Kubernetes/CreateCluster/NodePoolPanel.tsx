@@ -1,30 +1,24 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
-import Notice from 'src/components/Notice';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-import TextField from 'src/components/TextField';
 
 import SelectPlanPanel, {
   ExtendedType
 } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 
-import { getMonthlyPrice, nodeWarning } from '.././kubeUtils';
+import { getMonthlyPrice } from '.././kubeUtils';
 import { PoolNodeWithPrice } from '.././types';
-import NodePoolDisplayTable from './NodePoolDisplayTable';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(3),
     '& .tabbedPanel': {
-      marginTop: 0
+      marginTop: 0,
+      paddingTop: 0
     }
   },
   title: {
@@ -48,7 +42,6 @@ interface Props {
   typesError?: string;
   apiError?: string;
   selectedType?: string;
-  nodeCount: number;
   hideTable?: boolean;
   addNodePool: (pool: PoolNodeWithPrice) => void;
   handleTypeSelect: (newType?: string) => void;
@@ -88,10 +81,10 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
   const [typeError, setTypeError] = React.useState<string | undefined>(
     undefined
   );
-  const [countError, setCountError] = React.useState<string | undefined>(
-    undefined
-  );
-  const classes = useStyles();
+
+  // TODO: add countError back when ready for error handling
+  // const [_, setCountError] = React.useState<string | undefined>(undefined);
+
   const {
     addNodePool,
     apiError,
@@ -100,7 +93,6 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
     hideTable,
     pools,
     selectedType,
-    nodeCount,
     updateNodeCount,
     updatePool,
     types
@@ -111,22 +103,25 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
      * These props are required when showing the table,
      * which will be the case when hideTable is false or undefined
      * (i.e. omitted since it's an optional prop).
+     *
+     * @todo delete this
      */
+
     throw new Error(
       'You must provide pools, update and delete functions when displaying the table in NodePoolPanel.'
     );
   }
 
-  const submitForm = () => {
+  const submitForm = (selectedPlanType: string, nodeCount: number) => {
     /** Do simple client validation for the two input fields */
     setTypeError(undefined);
-    setCountError(undefined);
-    if (!selectedType) {
+    // setCountError(undefined);
+    if (!selectedPlanType) {
       setTypeError('Please select a type.');
       return;
     }
     if (typeof nodeCount !== 'number') {
-      setCountError('Invalid value.');
+      // setCountError('Invalid value.');
       return;
     }
 
@@ -135,9 +130,9 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
      */
     addNodePool({
       id: Math.random(),
-      type: selectedType,
+      type: selectedPlanType,
       count: nodeCount,
-      totalMonthlyPrice: getMonthlyPrice(selectedType, nodeCount, types)
+      totalMonthlyPrice: getMonthlyPrice(selectedPlanType, nodeCount, types)
     });
     handleTypeSelect(undefined);
     updateNodeCount(3);
@@ -147,13 +142,6 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
     setTypeError(undefined);
     handleTypeSelect(newType);
   };
-
-  // If the user is about to create a cluster with a single node,
-  // we want to show a warning.
-  const showSingleNodeWarning =
-    pools?.reduce((acc, thisPool) => {
-      return acc + thisPool.count;
-    }, 0) === 1;
 
   return (
     <Grid container direction="column">
@@ -165,50 +153,10 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
           error={apiError || typeError}
           header="Add Node Pools"
           copy="Add groups of Linodes to your cluster with a chosen size."
+          inputIsIncluded
+          submitForm={submitForm}
         />
       </Grid>
-      <Grid item className={classes.gridItem}>
-        <Typography variant="h3">Number of Linodes</Typography>
-        <TextField
-          tiny
-          type="number"
-          min={0}
-          max={100}
-          label="Number of Linodes"
-          hideLabel
-          value={nodeCount}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            updateNodeCount(Math.max(+e.target.value, 0))
-          }
-          errorText={countError}
-        />
-      </Grid>
-      <Grid item className={classes.gridItem}>
-        <Button buttonType="secondary" onClick={submitForm}>
-          Add Node Pool
-        </Button>
-      </Grid>
-      {!hideTable && (
-        /* We checked for these props above so it's safe to assume they're defined. */
-        <>
-          {showSingleNodeWarning && (
-            <Grid item className={classes.notice}>
-              <Notice warning text={nodeWarning} spacingBottom={0} />
-            </Grid>
-          )}
-          <Grid item className={classes.gridItem}>
-            <NodePoolDisplayTable
-              small
-              editable
-              loading={false} // When creating we never need to load node pools from the API
-              pools={pools || []}
-              types={types}
-              handleDelete={(poolIdx: number) => deleteNodePool!(poolIdx)}
-              updatePool={updatePool!}
-            />
-          </Grid>
-        </>
-      )}
     </Grid>
   );
 };

@@ -1,6 +1,7 @@
 import Check from '@material-ui/icons/Check';
 import * as classNames from 'classnames';
 import * as React from 'react';
+import Button from 'src/components/Button';
 import Fade from 'src/components/core/Fade';
 import {
   createStyles,
@@ -9,6 +10,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
+import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
 import Grid from 'src/components/Grid';
 
 import CardBase from './CardBase';
@@ -21,7 +23,9 @@ type CSSClasses =
   | 'info'
   | 'checked'
   | 'disabled'
-  | 'showCursor';
+  | 'showCursor'
+  | 'enhancedInputOuter'
+  | 'enhancedInputButton';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -148,6 +152,19 @@ const styles = (theme: Theme) =>
       '&> div': {
         lineHeight: 1.3
       }
+    },
+    enhancedInputOuter: {
+      display: 'flex',
+      alignItems: 'center'
+    },
+    enhancedInputButton: {
+      marginLeft: 10,
+      minWidth: 80,
+      paddingTop: 12,
+      paddingBottom: 12,
+      '& span': {
+        color: '#fff !important'
+      }
     }
   });
 
@@ -161,8 +178,12 @@ export interface Props {
   checked?: boolean;
   disabled?: boolean;
   tooltip?: string;
-  variant?: 'check' | 'info';
+  variant?: 'check' | 'info' | 'quantityCheck';
   className?: string;
+  inputValue?: number;
+  setInputValue?: (value: number) => void;
+  submitForm?: (e: any) => void;
+  buttonDisabled?: boolean;
 }
 
 interface WithTooltipProps {
@@ -197,13 +218,14 @@ class SelectionCard extends React.PureComponent<CombinedProps, {}> {
   };
 
   content = () => {
-    const { heading, renderIcon, subheadings } = this.props;
+    const { heading, renderIcon, subheadings, variant } = this.props;
 
     return (
       <CardBase
         heading={heading}
         renderIcon={renderIcon}
         subheadings={subheadings}
+        fullWidth={variant === 'quantityCheck'}
       >
         {this.renderVariant()}
       </CardBase>
@@ -211,12 +233,41 @@ class SelectionCard extends React.PureComponent<CombinedProps, {}> {
   };
 
   renderVariant = () => {
-    const { classes, checked, variant } = this.props;
+    const {
+      classes,
+      checked,
+      variant,
+      inputValue,
+      setInputValue,
+      submitForm,
+      buttonDisabled
+    } = this.props;
     switch (variant) {
       case 'info':
         return (
           <Grid item className={`${classes.info} cardBaseInfo`} xs={2}>
             <Info onClick={this.handleInfoClick} />
+          </Grid>
+        );
+      case 'quantityCheck':
+        return (
+          <Grid item xs={12}>
+            {typeof inputValue === 'number' && setInputValue && (
+              <div className={classes.enhancedInputOuter}>
+                <EnhancedNumberInput
+                  value={inputValue}
+                  setValue={setInputValue}
+                />
+                <Button
+                  buttonType="primary"
+                  onClick={submitForm}
+                  disabled={buttonDisabled}
+                  className={classes.enhancedInputButton}
+                >
+                  Add
+                </Button>
+              </div>
+            )}
           </Grid>
         );
       /**

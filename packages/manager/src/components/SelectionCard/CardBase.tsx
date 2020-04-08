@@ -106,19 +106,20 @@ export interface Props {
   checked?: boolean;
   disabled?: boolean;
   tooltip?: string;
+  fullWidth?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<CSSClasses>;
 
 export class CardBase extends React.Component<CombinedProps> {
   render() {
-    const { classes, heading, renderIcon, subheadings } = this.props;
+    const { classes, heading, renderIcon, subheadings, fullWidth } = this.props;
     return (
       <Grid
         container
         alignItems="center"
         justify="space-between"
-        wrap="nowrap"
+        wrap={fullWidth ? 'wrap' : 'nowrap'}
         className={`${classes.innerGrid} innerGrid`}
       >
         {renderIcon && (
@@ -126,7 +127,7 @@ export class CardBase extends React.Component<CombinedProps> {
             {renderIcon()}
           </Grid>
         )}
-        <Grid item xs={10} className={classes.flex}>
+        <Grid item xs={fullWidth ? 12 : 10} className={classes.flex}>
           <div
             className={classes.heading}
             data-qa-select-card-heading={heading}

@@ -24,7 +24,19 @@ class Kubernetes extends React.Component<Props> {
     return (
       <Switch>
         <Route component={ClusterCreate} exact path={`${path}/create`} />
-        <Route component={ClusterDetail} path={`${path}/clusters/:clusterID`} />
+        <Route
+          component={ClusterDetail}
+          exact
+          path={`${path}/clusters/:clusterID/summary`}
+        />
+        <Route
+          path={`${path}/clusters/:clusterID`}
+          render={props => (
+            <Redirect
+              to={`${path}/clusters/${props.match.params.clusterID}/summary`}
+            />
+          )}
+        />
         <Route component={KubernetesLanding} exact path={`${path}/clusters`} />
         <Redirect to={'/kubernetes/clusters'} />
       </Switch>

@@ -76,7 +76,9 @@ export const KubeConfigDrawer: React.FC<CombinedProps> = props => {
           </Grid>
           <Grid item>
             <button
-              onClick={() => downloadFile('kubeconfig.yaml', kubeConfig)}
+              onClick={() =>
+                downloadFile(`${clusterLabel}-kubeconfig.yaml`, kubeConfig)
+              }
               className={classes.iconLink}
               role="button"
               title="Download"
