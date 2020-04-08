@@ -41,6 +41,7 @@ interface Props {
   typeLabel: string;
   nodes: PoolNodeResponse[];
   openDeleteDialog: (poolId: number) => void;
+  openDeleteNodeDialog: (linodeId: number, linodeLabel: string) => void;
   handleClickResize: (poolId: number) => void;
   // Not yet supported by the API:
   // recycleNodes: (poolId: number) => void;
@@ -50,6 +51,7 @@ const NodePool: React.FC<Props> = props => {
   const {
     handleClickResize,
     openDeleteDialog,
+    openDeleteNodeDialog,
     nodes,
     typeLabel,
     poolId
@@ -86,7 +88,12 @@ const NodePool: React.FC<Props> = props => {
         </div>
       </div>
       <div className={classes.nodeTable}>
-        <NodeTable poolId={poolId} nodes={nodes} typeLabel={typeLabel} />
+        <NodeTable
+          poolId={poolId}
+          nodes={nodes}
+          typeLabel={typeLabel}
+          openDeleteNodeDialog={openDeleteNodeDialog}
+        />
       </div>
     </>
   );

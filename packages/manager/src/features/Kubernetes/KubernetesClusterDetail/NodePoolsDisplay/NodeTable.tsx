@@ -22,6 +22,7 @@ import useLinodes from 'src/hooks/useLinodes';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
 import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
+import NodeActionMenu from './NodeActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   labelCell: {
@@ -45,10 +46,11 @@ export interface Props {
   poolId: number;
   nodes: PoolNodeResponse[];
   typeLabel: string;
+  openDeleteNodeDialog: (linodeId: number, linodeLabel: string) => void;
 }
 
 export const NodeTable: React.FC<Props> = props => {
-  const { nodes, poolId, typeLabel } = props;
+  const { nodes, poolId, typeLabel, openDeleteNodeDialog } = props;
 
   const classes = useStyles();
 
@@ -127,6 +129,7 @@ export const NodeTable: React.FC<Props> = props => {
                               nodeStatus={eachRow.nodeStatus}
                               typeLabel={typeLabel}
                               linodeError={linodes.error?.read}
+                              openDeleteNodeDialog={openDeleteNodeDialog}
                             />
                           );
                         })}
@@ -175,6 +178,7 @@ interface NodeRow {
 type NodeRowProps = Omit<NodeRow, 'nodeId'> & {
   typeLabel: string;
   linodeError?: APIError[];
+  openDeleteNodeDialog: (linodeId: number, linodeLabel: string) => void;
 };
 
 export const NodeRow: React.FC<NodeRowProps> = React.memo(props => {
@@ -185,7 +189,8 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo(props => {
     ip,
     typeLabel,
     nodeStatus,
-    linodeError
+    linodeError,
+    openDeleteNodeDialog
   } = props;
 
   const classes = useStyles();
@@ -232,6 +237,11 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo(props => {
         )}
       </TableCell>
       <TableCell>
+        <NodeActionMenu
+          instanceId={instanceId}
+          instanceLabel={label}
+          openDeleteNodeDialog={openDeleteNodeDialog}
+        />
         {/* @todo: action menu */}
         {/* <ActionMenu/> */}
       </TableCell>

@@ -7,10 +7,12 @@ import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { useDialog } from 'src/hooks/useDialog';
+import useLinodes from 'src/hooks/useLinodes';
 import { ApplicationState } from 'src/store';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { PoolNodeWithPrice } from '../../types';
 import ResizeNodePoolDrawer from '../ResizeNodePoolDrawer';
+import NodeDialog from './NodeDialog';
 import NodePool from './NodePool';
 import NodePoolDialog from './NodePoolDialog';
 
@@ -56,13 +58,10 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
 
   const classes = useStyles();
 
-  const {
-    dialog,
-    openDialog,
-    closeDialog,
-    submitDialog,
-    handleError
-  } = useDialog<number>(deletePool);
+  const { deleteLinode } = useLinodes();
+
+  const deletePoolDialog = useDialog<number>(deletePool);
+  const deleteNodeDialog = useDialog<number>(deleteLinode);
 
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
   const [drawerSubmitting, setDrawerSubmitting] = React.useState<boolean>(
@@ -99,13 +98,26 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
       });
   };
 
-  const handleDelete = () => {
+  const handleDeletePool = () => {
+    const { dialog, submitDialog, handleError } = deletePoolDialog;
     if (!dialog.entityID) {
       return;
     }
     submitDialog(dialog.entityID).catch(err => {
       handleError(
         getAPIErrorOrDefault(err, 'Error deleting this Node Pool.')[0].reason
+      );
+    });
+  };
+
+  const handleDeleteNode = () => {
+    const { dialog, submitDialog, handleError } = deleteNodeDialog;
+    if (!deleteNodeDialog.dialog.entityID) {
+      return;
+    }
+    submitDialog(dialog.entityID).catch(err => {
+      handleError(
+        getAPIErrorOrDefault(err, 'Error deleting this Linode.')[0].reason
       );
     });
   };
@@ -156,7 +168,8 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
                       typeLabel={typeLabel}
                       nodes={nodes ?? []}
                       handleClickResize={handleOpenResizeDrawer}
-                      openDeleteDialog={openDialog}
+                      openDeleteDialog={deletePoolDialog.openDialog}
+                      openDeleteNodeDialog={deleteNodeDialog.openDialog}
                     />
                   </div>
                 );
@@ -172,14 +185,23 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
             />
             <NodePoolDialog
               nodeCount={
-                pools.find(thisPool => thisPool.id === dialog.entityID)
-                  ?.count ?? 0
+                pools.find(
+                  thisPool => thisPool.id === deletePoolDialog.dialog.entityID
+                )?.count ?? 0
               }
-              onDelete={handleDelete}
-              onClose={closeDialog}
-              open={dialog.isOpen}
-              error={dialog.error}
-              loading={dialog.isLoading}
+              onDelete={handleDeletePool}
+              onClose={deletePoolDialog.closeDialog}
+              open={deletePoolDialog.dialog.isOpen}
+              error={deletePoolDialog.dialog.error}
+              loading={deletePoolDialog.dialog.isLoading}
+            />
+            <NodeDialog
+              onDelete={handleDeleteNode}
+              onClose={deleteNodeDialog.closeDialog}
+              open={deleteNodeDialog.dialog.isOpen}
+              error={deleteNodeDialog.dialog.error}
+              loading={deleteNodeDialog.dialog.isLoading}
+              label={deleteNodeDialog.dialog.entityLabel}
             />
           </Grid>
         )}
