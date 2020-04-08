@@ -19,7 +19,7 @@ import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
-import CheckoutBar from 'src/components/CheckoutBar';
+import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
@@ -189,10 +189,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
   afterProtocolUpdate = (L: { [key: string]: Lens }) => () => {
     this.setState(
-      compose(
-        set(L.sslCertificateLens, ''),
-        set(L.privateKeyLens, '')
-      )
+      compose(set(L.sslCertificateLens, ''), set(L.privateKeyLens, ''))
     );
   };
 
@@ -394,7 +391,10 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
   tagsChange = (tags: Tag[]) => {
     this.setState(
-      set(lensPath(['nodeBalancerFields', 'tags']), tags.map(tag => tag.value))
+      set(
+        lensPath(['nodeBalancerFields', 'tags']),
+        tags.map(tag => tag.value)
+      )
     );
   };
 
@@ -658,12 +658,14 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                     r => r.id === region
                   );
                   if (foundRegion) {
-                    displaySections = {
-                      title: dcDisplayCountry[foundRegion.id],
-                      details: foundRegion.display
-                    };
+                    displaySections = [
+                      {
+                        title: dcDisplayCountry[foundRegion.id],
+                        details: foundRegion.display
+                      }
+                    ];
                   } else {
-                    displaySections = { title: 'Unknown Region' };
+                    displaySections = [{ title: 'Unknown Region' }];
                   }
                 }
                 return (
@@ -672,10 +674,11 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                       'NodeBalancer'} Summary`}
                     onDeploy={this.createNodeBalancer}
                     calculatedPrice={10}
-                    displaySections={displaySections && [displaySections]}
                     disabled={this.state.submitting || disabled}
                     {...props}
-                  />
+                  >
+                    <DisplaySectionList displaySections={displaySections} />
+                  </CheckoutBar>
                 );
               }}
             </Sticky>

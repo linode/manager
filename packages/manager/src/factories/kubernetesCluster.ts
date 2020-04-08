@@ -28,7 +28,7 @@ export const kubeLinodeFactory = Factory.Sync.makeFactory<PoolNodeResponse>({
 export const _nodePoolFactory = Factory.Sync.makeFactory<PoolNodeWithPrice>({
   id: Factory.each(id => id),
   count: Math.floor(Math.random() * 10),
-  type: 'g6-standard-1',
+  type: 'g5-standard-1',
   totalMonthlyPrice: 1000
 });
 
@@ -56,5 +56,6 @@ export const kubernetesClusterFactory = Factory.Sync.makeFactory<
   version: '1.17',
   node_pools: nodePoolFactory.buildList(2),
   totalMemory: 1000,
-  totalCPU: 4
+  totalCPU: 4,
+  totalStorage: 1000
 });
