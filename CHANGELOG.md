@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-04-07] - 1.5.0
+
+### Changed:
+
+- [Performance] Lazy load Domains data
+- Set a timeout when requesting Gravatars
+- Preserve Support ticket text on page reload
+
+### Fixed:
+
+- Account tab crashing for some users
+- Fix handling of local storage on logout
+- Longview NGINX tab crashing for some users
+- Screen readers cannot access "Create Linode" interface
+- Values on LV Network graphs displayed incorrectly
+- Placeholder component double h1 display issue
+
 ## [2020-03-30] - v.1.4.1
 
 ### Fixed:
@@ -13,27 +30,30 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [2020-03-30] - v1.4.0
 
 ### Changed:
+
 - Change "One-Click Apps" to "Marketplace"
 - Change message in the Events table empty state
 - Allow up to 10,000 USD payment with PayPal
 - Lazy load Images
 
 ### Fixed:
+
 - Improve skeleton loading screen in the Events table
 - Fix bug in Image select
 - Fix visual bug in OAuth Apps table header (dark mode)
 - Edit DNS Records containing "linode.com" substring
 
-
 ## [2020-03-23] - v1.3.0
 
 ### Added:
+
 - Firewalls:
   - Add, Edit, and Delete rules
   - Prompt when navigating away from unsaved rule
   - Add icon to table rows
 
 ### Changed:
+
 - Remove “Active Deploys” StackScripts table column and add “Total Deploys” column
 - Update customer referral criteria text
 - Improve syntax highlighting
@@ -45,6 +65,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Cloud Manager PDF invoices pull in customer tax ID regardless of added date
 
 ### Fixed:
+
 - Volumes creation bug
 - Accessibility warnings for password inputs
 - Remove page break on invoices
