@@ -1,5 +1,4 @@
 #!/usr/local/bin/node
-/*eslint no-unused-expressions: "off"*/
 const { readFileSync } = require('fs');
 const yargs = require('yargs');
 

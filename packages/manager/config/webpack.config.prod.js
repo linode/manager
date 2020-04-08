@@ -60,7 +60,7 @@ module.exports = {
     filename: 'static/js/[name].[chunkhash:8].js',
     chunkFilename: 'static/js/[name].[chunkhash:8].chunk.js',
     // We inferred the "public path" (such as / or /my-project) from homepage.
-    publicPath: publicPath,
+    publicPath,
     // Point sourcemap entries to original disk location (format as URL on Windows)
     devtoolModuleFilenameTemplate: info =>
       path.relative(paths.appSrc, info.absoluteResourcePath).replace(/\\/g, '/')
@@ -169,7 +169,7 @@ module.exports = {
           // tags. If you use code splitting, however, any async bundles will still
           // use the "style" loader inside the async code so CSS from them won't be
           // in the main CSS file.
-          /**********************************************************
+          /** ********************************************************
            * Start Temporary Solution
            * re: https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/456
            **********************************************************/
@@ -208,7 +208,7 @@ module.exports = {
               'css-loader'
             ]
           },
-          /**********************************************************
+          /** ********************************************************
            * End Temporary Solution.
            **********************************************************/
           // "file" loader makes sure assets end up in the `build` folder.
@@ -347,7 +347,7 @@ module.exports = {
     hints: 'error',
     maxEntrypointSize: 1180000, // ~1.12 MiB
     maxAssetSize: 1180000, // ~1.12 MiB
-    assetFilter: function(assetFilename) {
+    assetFilter(assetFilename) {
       return !(
         assetFilename.endsWith('.chunk.js') || assetFilename.endsWith('.map')
       );
