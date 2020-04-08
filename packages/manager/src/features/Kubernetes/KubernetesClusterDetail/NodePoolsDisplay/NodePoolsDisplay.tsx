@@ -42,7 +42,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface Props {
   pools: PoolNodeWithPrice[];
   types: ExtendedType[];
-  updatePool: (poolID: number, updatedPool: PoolNodeWithPrice) => void;
+  updatePool: (
+    poolID: number,
+    updatedPool: PoolNodeWithPrice
+  ) => Promise<PoolNodeWithPrice>;
 }
 
 export const NodePoolsDisplay: React.FC<Props> = props => {
@@ -51,6 +54,39 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
   const classes = useStyles();
 
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+  const [drawerSubmitting, setDrawerSubmitting] = React.useState<boolean>(
+    false
+  );
+  const [drawerError, setDrawerError] = React.useState<string | undefined>();
+  const [poolForEdit, setPoolForEdit] = React.useState<
+    PoolNodeWithPrice | undefined
+  >();
+
+  const handleOpenResizeDrawer = (poolID: number) => {
+    setPoolForEdit(pools.find(thisPool => thisPool.id === poolID));
+    setDrawerOpen(true);
+    setDrawerError(undefined);
+  };
+
+  const handleResize = (updatedCount: number) => {
+    // Should never happen, just a safety check
+    if (!poolForEdit) {
+      return;
+    }
+    setDrawerSubmitting(true);
+    setDrawerError(undefined);
+    updatePool(poolForEdit.id, { ...poolForEdit, count: updatedCount })
+      .then(_ => {
+        setDrawerSubmitting(false);
+        setDrawerOpen(false);
+      })
+      .catch(error => {
+        setDrawerSubmitting(false);
+        setDrawerError(
+          getAPIErrorOrDefault(error, 'Error resizing Node Pool')[0].reason
+        );
+      });
+  };
 
   /**
    * If the API returns an error when fetching node pools,
@@ -99,7 +135,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
                       nodes={nodes ?? []}
                       // @todo: real handlers
                       // deletePool={() => null}
-                      handleClickResize={() => setDrawerOpen(true)}
+                      handleClickResize={handleOpenResizeDrawer}
                     />
                   </div>
                 );
@@ -108,9 +144,10 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
             <ResizeNodePoolDrawer
               open={drawerOpen}
               onClose={() => setDrawerOpen(false)}
-              onSubmit={() => updatePool(1, pools[0])}
-              nodePool={pools[0]}
-              isSubmitting={false}
+              onSubmit={(updatedCount: number) => handleResize(updatedCount)}
+              nodePool={poolForEdit}
+              isSubmitting={drawerSubmitting}
+              error={drawerError}
             />
           </Grid>
         )}
