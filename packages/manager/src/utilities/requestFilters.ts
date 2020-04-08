@@ -5,10 +5,15 @@
  *   would produce { '+or': [1, 22, 333, 4444] }
  *   and reads as "where `id` is 1, 22, 333, or 4444."
  */
-export const generateInFilter = (keyName: string, arr: any[]) => {
-  return {
-    '+or': arr.map(el => ({ [keyName]: el }))
-  };
+export const generateInFilter = (keyName: string, arr: (string | number)[]) => {
+  return arr.map(el => ({ [keyName]: el }));
+};
+
+export const generateNeqFilter = (
+  keyName: string,
+  arr: (string | number)[]
+) => {
+  return arr.map(el => ({ [keyName]: { '+neq': el } }));
 };
 
 /**
@@ -20,13 +25,24 @@ export const generateInFilter = (keyName: string, arr: any[]) => {
  *
  * This filter is invoked on every events request to only get the latest or in-progress events.
  */
-export const generatePollingFilter = (timestamp: string, ids: string[]) => {
-  // @todo: Add check to NOT request events already in store (by ID).
-  return ids.length
-    ? {
-        '+or': [{ created: { '+gte': timestamp } }, generateInFilter('id', ids)]
-      }
-    : {
-        created: { '+gte': timestamp }
-      };
+export const generatePollingFilter = (
+  timestamp: string,
+  inIds: number[] = [],
+  neqIds: number[] = []
+) => {
+  let filter: any = { created: { '+gte': timestamp } };
+
+  if (neqIds.length > 0) {
+    filter = {
+      '+and': [...filter, ...generateNeqFilter('id', neqIds)]
+    };
+  }
+
+  if (inIds.length > 0) {
+    filter = {
+      '+or': [...filter, ...generateInFilter('id', inIds)]
+    };
+  }
+
+  return filter;
 };
