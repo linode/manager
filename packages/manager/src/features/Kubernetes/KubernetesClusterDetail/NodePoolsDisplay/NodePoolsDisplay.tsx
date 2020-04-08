@@ -1,15 +1,17 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-import Grid from 'src/components/core/Grid';
+import AddNewLink from 'src/components/AddNewLink';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
+import Grid from 'src/components/Grid';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { useDialog } from 'src/hooks/useDialog';
 import { ApplicationState } from 'src/store';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { PoolNodeWithPrice } from '../../types';
+import AddNodePoolDrawer from '../AddNodePoolDrawer';
 import ResizeNodePoolDrawer from '../ResizeNodePoolDrawer';
 import NodePool from './NodePool';
 import NodePoolDialog from './NodePoolDialog';
@@ -49,10 +51,11 @@ export interface Props {
     updatedPool: PoolNodeWithPrice
   ) => Promise<PoolNodeWithPrice>;
   deletePool: (poolID: number) => Promise<any>;
+  addNodePool: (newPool: PoolNodeWithPrice) => Promise<PoolNodeWithPrice>;
 }
 
 export const NodePoolsDisplay: React.FC<Props> = props => {
-  const { pools, types, updatePool, deletePool } = props;
+  const { pools, types, updatePool, addNodePool, deletePool } = props;
 
   const classes = useStyles();
 
@@ -65,6 +68,10 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
   } = useDialog<number>(deletePool);
 
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+  const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
+  const [resizeDrawerOpen, setResizeDrawerOpen] = React.useState<boolean>(
+    false
+  );
   const [drawerSubmitting, setDrawerSubmitting] = React.useState<boolean>(
     false
   );
@@ -129,11 +136,38 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
     return undefined;
   });
 
+  const handleOpenAddDrawer = () => {
+    setAddDrawerOpen(true);
+    setDrawerError(undefined);
+  };
+
   return (
     <>
-      <Typography variant="h2" className={classes.nodePoolHeader}>
-        Node Pools
-      </Typography>
+      <Grid
+        container
+        justify="space-between"
+        alignItems="flex-end"
+        updateFor={[classes]}
+        style={{ paddingBottom: 0 }}
+      >
+        <Grid item>
+          <Typography variant="h2" className={classes.nodePoolHeader}>
+            Node Pools
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Grid container alignItems="flex-end">
+            <Grid item className="pt0">
+              <AddNewLink
+                onClick={() => {
+                  handleOpenAddDrawer();
+                }}
+                label="Add a Node Pool"
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
       <Paper className={classes.root}>
         {poolsError ? (
           <ErrorState errorText={poolsError} />
@@ -162,6 +196,14 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
                 );
               })}
             </Grid>
+            {/* <AddNodePoolDrawer
+              open={addDrawerOpen}
+              onClose={() => setAddDrawerOpen(false)}
+              onSubmit={addNodePool(pools[0])}
+              nodePool={pools[0]}
+              isSubmitting={drawerSubmitting}
+              error={drawerError}
+            /> */}
             <ResizeNodePoolDrawer
               open={drawerOpen}
               onClose={() => setDrawerOpen(false)}
