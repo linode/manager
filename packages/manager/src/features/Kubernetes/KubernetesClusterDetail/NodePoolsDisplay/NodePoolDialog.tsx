@@ -59,7 +59,8 @@ const NodePoolDialog: React.FC<CombinedProps> = props => {
       {error && <Notice error text={error} />}
       <Typography>
         Are you sure you want to delete this Node Pool?{' '}
-        {pluralize('node', 'nodes', nodeCount)} will be deleted.
+        {nodeCount > 0 &&
+          `${pluralize('node', 'nodes', nodeCount)} will be deleted.`}
       </Typography>
     </ConfirmationDialog>
   );
