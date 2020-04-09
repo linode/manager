@@ -16,8 +16,10 @@ export const NodeActionMenu: React.FC<Props> = props => {
         {
           title: 'Delete',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            // Defaults for TS, but this option will be disabled anyway in that case.
-            openDeleteNodeDialog(instanceId ?? 0, instanceLabel ?? '');
+            if (!instanceId || !instanceLabel) {
+              return;
+            }
+            openDeleteNodeDialog(instanceId!, instanceLabel!);
             closeMenu();
             e.preventDefault();
           },

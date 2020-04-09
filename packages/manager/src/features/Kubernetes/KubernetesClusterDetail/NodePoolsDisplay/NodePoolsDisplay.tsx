@@ -112,7 +112,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
 
   const handleDeleteNode = () => {
     const { dialog, submitDialog, handleError } = deleteNodeDialog;
-    if (!deleteNodeDialog.dialog.entityID) {
+    if (!dialog.entityID) {
       return;
     }
     submitDialog(dialog.entityID).catch(err => {
@@ -168,7 +168,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
                       typeLabel={typeLabel}
                       nodes={nodes ?? []}
                       handleClickResize={handleOpenResizeDrawer}
-                      openDeleteDialog={deletePoolDialog.openDialog}
+                      openDeletePoolDialog={deletePoolDialog.openDialog}
                       openDeleteNodeDialog={deleteNodeDialog.openDialog}
                     />
                   </div>

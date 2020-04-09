@@ -40,7 +40,7 @@ interface Props {
   poolId: number;
   typeLabel: string;
   nodes: PoolNodeResponse[];
-  openDeleteDialog: (poolId: number) => void;
+  openDeletePoolDialog: (poolId: number) => void;
   openDeleteNodeDialog: (linodeId: number, linodeLabel: string) => void;
   handleClickResize: (poolId: number) => void;
   // Not yet supported by the API:
@@ -50,7 +50,7 @@ interface Props {
 const NodePool: React.FC<Props> = props => {
   const {
     handleClickResize,
-    openDeleteDialog,
+    openDeletePoolDialog,
     openDeleteNodeDialog,
     nodes,
     typeLabel,
@@ -82,7 +82,7 @@ const NodePool: React.FC<Props> = props => {
             text="Delete Pool"
             SideIcon={Collapse}
             title="Delete Pool"
-            onClick={() => openDeleteDialog(poolId)}
+            onClick={() => openDeletePoolDialog(poolId)}
             className={classes.icon}
           />
         </div>
