@@ -32,7 +32,7 @@ describe('ClusterRow component', () => {
 
   it('should render the cluster version', () => {
     const version = component.find('[data-qa-cluster-version]');
-    expect(version.contains(extendedClusters[0].version)).toBeTruthy();
+    expect(version.contains(extendedClusters[0].k8s_version)).toBeTruthy();
   });
 
   it('should render the cluster label', () => {

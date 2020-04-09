@@ -270,7 +270,7 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
               </Grid>
 
               <Grid item>
-                <Typography>Version {cluster.version}</Typography>
+                <Typography>Version {cluster.k8s_version}</Typography>
               </Grid>
             </Grid>
 
