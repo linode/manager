@@ -77,9 +77,6 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
     false
   );
   const [drawerError, setDrawerError] = React.useState<string | undefined>();
-  const [poolForAdd, setPoolForAdd] = React.useState<
-    PoolNodeWithPrice | undefined
-  >();
   const [poolForEdit, setPoolForEdit] = React.useState<
     PoolNodeWithPrice | undefined
   >();
@@ -95,14 +92,10 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
     setDrawerError(undefined);
   };
 
-  const handleAdd = (pool: PoolNodeWithPrice) => {
-    // Should never happen, just a safety check
-    if (!poolForAdd) {
-      return;
-    }
+  const handleAdd = (type: string, count: number) => {
     setDrawerSubmitting(true);
     setDrawerError(undefined);
-    addPool(poolForAdd)
+    addPool({ type, count })
       .then(_ => {
         setDrawerSubmitting(false);
         setAddDrawerOpen(false);
@@ -224,8 +217,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
               clusterLabel={clusterLabel}
               open={addDrawerOpen}
               onClose={() => setAddDrawerOpen(false)}
-              onSubmit={(pool: PoolNodeWithPrice) => handleAdd(pool)}
-              nodePool={pools[0]}
+              onSubmit={handleAdd}
               isSubmitting={drawerSubmitting}
               error={drawerError}
             />

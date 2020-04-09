@@ -40,7 +40,6 @@ export interface Props {
   isSubmitting: boolean;
   onClose: () => void;
   onSubmit: (nodePool: PoolNodeRequest) => Promise<PoolNodeResponse>;
-  nodePool: PoolNodeWithPrice;
 }
 
 type CombinedProps = Props & WithTypesProps;
@@ -50,7 +49,6 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
     clusterLabel,
     error,
     isSubmitting,
-    nodePool,
     onClose,
     onSubmit,
     open,
@@ -60,34 +58,14 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const [selectedType, setSelectedType] = React.useState<string>('');
-  const [updatedCount, setUpdatedCount] = React.useState<number>(
-    nodePool?.count ?? 0
-  );
-
-  React.useEffect(() => {
-    if (!nodePool) {
-      return;
-    }
-    if (open) {
-      setUpdatedCount(nodePool.count);
-    }
-  }, [nodePool, open]);
-
-  // @todo: get cluster name
-  const planType = types.entities.find(
-    thisType => thisType.id === nodePool?.type
-  );
-
-  const selectType = (type: string) => {
-    setSelectedType(type);
-  };
+  const [updatedCount, setUpdatedCount] = React.useState<number>(0);
 
   const updateCount = (count: number) => {
-    setNewCount(count);
+    setUpdatedCount(count);
   };
 
-  const handleSubmit = () => {
-    onSubmit(nodePool);
+  const handleSubmit = (type: string, count: number) => {
+    onSubmit({ type, count });
   };
 
   return (
@@ -100,7 +78,7 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
       <form
         onSubmit={(e: React.ChangeEvent<HTMLFormElement>) => {
           e.preventDefault();
-          handleSubmit();
+          handleSubmit(selectedType, updatedCount);
         }}
       >
         <SelectPlanPanel
@@ -110,7 +88,7 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
             t => t.class !== 'nanode' && t.class !== 'gpu'
           )}
           selectedID={selectedType}
-          onSelect={selectType}
+          onSelect={(newType: string) => setSelectedType(newType)}
           // error={apiError || typeError}
           inputIsIncluded
         />
@@ -120,7 +98,7 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
             buttonType="primary"
             disabled={updatedCount === 0}
             onClick={() => {
-              handleSubmit();
+              handleSubmit(selectedType, updatedCount);
             }}
             data-qa-submit
             loading={isSubmitting}
@@ -141,6 +119,6 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
   );
 };
 
-const enhanced = compose<CombinedProps, {}>(withTypes);
+const enhanced = compose<CombinedProps, Props>(withTypes);
 
 export default enhanced(AddNodePoolDrawer);
