@@ -93,7 +93,7 @@ export interface ExtendedTypeWithCount extends ExtendedType {
 }
 
 interface Props {
-  types: ExtendedType[];
+  types: ExtendedTypeWithCount[];
   error?: string;
   onSelect: (key: string) => void;
   selectedID?: string;
@@ -184,7 +184,9 @@ export class SelectPlanPanel extends React.Component<
               <div className={classes.enhancedInputOuter}>
                 <EnhancedNumberInput
                   value={type.count}
-                  setValue={updatePlanCount}
+                  setValue={(newCount: number) =>
+                    updatePlanCount(type.id, newCount)
+                  }
                 />
                 {isOnCreate && (
                   <Button
