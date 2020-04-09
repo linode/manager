@@ -137,7 +137,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
       submitting: true
     });
 
-    const _version = version ? version.value : undefined;
+    const k8s_version = version ? version.value : undefined;
 
     /**
      * We need to remove the monthly price, which is used for client-side
@@ -150,7 +150,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
       region: selectedRegion,
       node_pools,
       label,
-      version: _version
+      k8s_version
     };
 
     createKubernetesCluster(payload)
