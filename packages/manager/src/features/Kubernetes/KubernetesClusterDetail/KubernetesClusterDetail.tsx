@@ -252,8 +252,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
             clusterLabel={cluster.label}
             pools={cluster.node_pools}
             types={props.typesData || []}
-<<<<<<< HEAD
-=======
             addPool={(pool: PoolNodeWithPrice) =>
               props.createNodePool({
                 clusterID: cluster.id,
@@ -261,7 +259,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
                 count: pool.count
               })
             }
->>>>>>> f6ebef406... Fix label
             updatePool={(id: number, updatedPool: PoolNodeWithPrice) =>
               props.updateNodePool({
                 clusterID: cluster.id,
@@ -276,13 +273,13 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
                 nodePoolID: poolID
               })
             }
-            // addNodePool={(newPool: PoolNodeWithPrice) => {
-            //   props.createNodePool({
-            //     clusterID: cluster.id,
-            //     type: newPool.type,
-            //     count: newPool.count
-            //   });
-            // }}
+            addNodePool={(newPool: PoolNodeWithPrice) => {
+              props.createNodePool({
+                clusterID: cluster.id,
+                type: newPool.type,
+                count: newPool.count
+              });
+            }}
           />
         </Grid>
       </Grid>
