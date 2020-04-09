@@ -226,18 +226,20 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
             data-qa-breadcrumb
           />
         </Grid>
-        <AppBar position="static" color="default" role="tablist">
-          <Tabs
-            value={0}
-            indicatorColor="primary"
-            textColor="primary"
-            variant="scrollable"
-            scrollButtons="on"
-            className={classes.tabBar}
-          >
-            <Tab key="Summary" label="Summary" data-qa-tab="Summary" />}
-          </Tabs>
-        </AppBar>
+        <Grid item xs={12}>
+          <AppBar position="static" color="default" role="tablist">
+            <Tabs
+              value={0}
+              indicatorColor="primary"
+              textColor="primary"
+              variant="scrollable"
+              scrollButtons="on"
+              className={classes.tabBar}
+            >
+              <Tab key="Summary" label="Summary" data-qa-tab="Summary" />}
+            </Tabs>
+          </AppBar>
+        </Grid>
         <Grid item xs={12} className={classes.section}>
           <KubeSummaryPanel
             cluster={cluster}
