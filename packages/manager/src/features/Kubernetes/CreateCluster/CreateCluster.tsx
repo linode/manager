@@ -384,6 +384,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
                     selectedType,
                     classes
                   ]}
+                  isOnCreate
                 />
               </Grid>
             </Paper>

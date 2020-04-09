@@ -4,7 +4,6 @@ import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
-import Chip from 'src/components/core/Chip';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Hidden from 'src/components/core/Hidden';
 import {
@@ -16,10 +15,8 @@ import {
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
-import Currency from 'src/components/Currency';
 import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
 import Grid from 'src/components/Grid';
-import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
@@ -91,13 +88,10 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface ExtendedTypeWithCount extends ExtendedType {
+export interface ExtendedTypeWithCount extends ExtendedType {
   count: number;
 }
 
-interface State {
-  types: ExtendedTypeWithCount[];
-}
 interface Props {
   types: ExtendedType[];
   error?: string;
@@ -108,7 +102,10 @@ interface Props {
   disabled?: boolean;
   header?: string;
   copy?: string;
-  submitForm: (key: string, value: number) => void;
+  submitForm?: (key: string, value: number) => void;
+  addPool?: any;
+  isOnCreate?: boolean;
+  updatePlanCount: any;
 }
 
 const getNanodes = (types: ExtendedType[]) =>
@@ -127,43 +124,19 @@ const getGPU = (types: ExtendedType[]) =>
   types.filter(t => /gpu/.test(t.class));
 
 export class SelectPlanPanel extends React.Component<
-  Props & WithStyles<ClassNames>,
-  State
+  Props & WithStyles<ClassNames>
 > {
-  state: State = {
-    types: this.props.types.map(thisType => ({
-      ...thisType,
-      count: 0
-    }))
-  };
   onSelect = (id: string) => () => this.props.onSelect(id);
 
   renderSelection = (type: ExtendedTypeWithCount, idx: number) => {
     const {
       selectedID,
-      currentPlanHeading,
       disabled,
       classes,
-      submitForm
+      submitForm,
+      isOnCreate,
+      updatePlanCount
     } = this.props;
-    const selectedDiskSize = this.props.selectedDiskSize
-      ? this.props.selectedDiskSize
-      : 0;
-    let tooltip;
-    const planTooSmall = selectedDiskSize > type.disk;
-    const isSamePlan = type.heading === currentPlanHeading;
-    const isGPU = type.class === 'gpu';
-
-    if (planTooSmall) {
-      tooltip = `This plan is too small for the selected image.`;
-    }
-
-    const rowAriaLabel =
-      type && type.label && isSamePlan
-        ? `${type.label} this is your current plan`
-        : planTooSmall
-        ? `${type.label} this plan is too small for resize`
-        : type.label;
 
     return (
       <React.Fragment key={`tabbed-panel-${idx}`}>
@@ -171,60 +144,35 @@ export class SelectPlanPanel extends React.Component<
         <Hidden smDown>
           <TableRow
             data-qa-plan-row={type.label}
-            aria-label={rowAriaLabel}
             key={type.id}
-            onClick={!isSamePlan ? this.onSelect(type.id) : undefined}
+            onClick={this.onSelect(type.id)}
             rowLink={this.onSelect ? this.onSelect(type.id) : undefined}
-            aria-disabled={isSamePlan || planTooSmall}
             className={classnames({
-              [classes.disabledRow]: isSamePlan || planTooSmall
+              [classes.disabledRow]: disabled
             })}
           >
             <TableCell className={'visually-hidden'}>
-              {!isSamePlan && (
-                <FormControlLabel
-                  label={type.heading}
-                  aria-label={type.heading}
-                  className={'label-visually-hidden'}
-                  control={
-                    <Radio
-                      checked={!planTooSmall && type.id === String(selectedID)}
-                      onChange={this.onSelect(type.id)}
-                      disabled={planTooSmall || disabled}
-                      id={type.id}
-                    />
-                  }
-                />
-              )}
+              <FormControlLabel
+                label={type.heading}
+                aria-label={type.heading}
+                className={'label-visually-hidden'}
+                control={
+                  <Radio
+                    checked={type.id === String(selectedID)}
+                    onChange={this.onSelect(type.id)}
+                    disabled={disabled}
+                    id={type.id}
+                  />
+                }
+              />
             </TableCell>
             <TableCell data-qa-plan-name>
               <div className={classes.headingCellContainer}>
                 {type.heading}{' '}
-                {isSamePlan && (
-                  <Chip
-                    data-qa-current-plan
-                    label="Current Plan"
-                    aria-label="This is your current plan"
-                    className={classes.chip}
-                  />
-                )}
-                {tooltip && (
-                  <HelpIcon
-                    text={tooltip}
-                    tooltipPosition="right-end"
-                    className="py0"
-                  />
-                )}
               </div>
             </TableCell>
             <TableCell data-qa-monthly> ${type.price.monthly}</TableCell>
-            <TableCell data-qa-hourly>
-              {isGPU ? (
-                <Currency quantity={type.price.hourly} />
-              ) : (
-                `$` + type.price.hourly
-              )}
-            </TableCell>
+            <TableCell data-qa-hourly>{`$` + type.price.hourly}</TableCell>
             <TableCell data-qa-cpu>{type.vcpus}</TableCell>
             <TableCell data-qa-storage>
               {convertMegabytesTo(type.disk, true)}
@@ -236,18 +184,18 @@ export class SelectPlanPanel extends React.Component<
               <div className={classes.enhancedInputOuter}>
                 <EnhancedNumberInput
                   value={type.count}
-                  setValue={(value: number) =>
-                    this.updatePlanCount(type.id, value)
-                  }
+                  setValue={updatePlanCount}
                 />
-                <Button
-                  buttonType="primary"
-                  onClick={() => submitForm(type.id, type.count)}
-                  disabled={type.id !== String(selectedID)}
-                  className={classes.enhancedInputButton}
-                >
-                  Add
-                </Button>
+                {isOnCreate && (
+                  <Button
+                    buttonType="primary"
+                    onClick={() => submitForm!(type.id, type.count)}
+                    disabled={type.id !== String(selectedID)}
+                    className={classes.enhancedInputButton}
+                  >
+                    Add
+                  </Button>
+                )}
               </div>
             </TableCell>
           </TableRow>
@@ -260,14 +208,12 @@ export class SelectPlanPanel extends React.Component<
             onClick={this.onSelect(type.id)}
             heading={type.heading}
             subheadings={type.subHeadings}
-            disabled={planTooSmall || isSamePlan || disabled}
-            tooltip={tooltip}
+            disabled={disabled}
             variant={'quantityCheck'}
             inputValue={type.count}
-            setInputValue={(value: number) =>
-              this.updatePlanCount(type.id, value)
-            }
-            submitForm={() => submitForm(type.id, type.count)}
+            setInputValue={updatePlanCount}
+            displayButton={isOnCreate}
+            submitForm={() => submitForm!(type.id, type.count)}
             buttonDisabled={type.id !== String(selectedID)}
           />
         </Hidden>
@@ -315,26 +261,14 @@ export class SelectPlanPanel extends React.Component<
     );
   };
 
-  updatePlanCount = (planId: string, newCount: number) => {
-    const newTypes = this.state.types.map((thisType: any) => {
-      if (thisType.id === planId) {
-        return { ...thisType, count: newCount };
-      }
-      return thisType;
-    });
-    this.setState({
-      types: newTypes
-    });
-  };
-
   createTabs = (): [Tab[], LinodeTypeClass[]] => {
-    const { classes } = this.props;
+    const { classes, types } = this.props;
     const tabs: Tab[] = [];
-    const nanodes = getNanodes(this.state.types);
-    const standards = getStandard(this.state.types);
-    const highmem = getHighMem(this.state.types);
-    const dedicated = getDedicated(this.state.types);
-    const gpu = getGPU(this.state.types);
+    const nanodes = getNanodes(types);
+    const standards = getStandard(types);
+    const highmem = getHighMem(types);
+    const dedicated = getDedicated(types);
+    const gpu = getGPU(types);
 
     const tabOrder: LinodeTypeClass[] = [];
 
@@ -457,7 +391,10 @@ export class SelectPlanPanel extends React.Component<
       error,
       header,
       types,
-      currentPlanHeading
+      currentPlanHeading,
+      addPool,
+      disabled,
+      isOnCreate
     } = this.props;
 
     const [tabs, tabOrder] = this.createTabs();
@@ -473,14 +410,21 @@ export class SelectPlanPanel extends React.Component<
     const initialTab = tabOrder.indexOf(selectedTypeClass);
 
     return (
-      <TabbedPanel
-        rootClass={`${classes.root} tabbedPanel`}
-        error={error}
-        header={header || 'Linode Plan'}
-        copy={copy}
-        tabs={tabs}
-        initTab={initialTab}
-      />
+      <React.Fragment>
+        <TabbedPanel
+          rootClass={`${classes.root} tabbedPanel`}
+          error={error}
+          header={header || 'Linode Plan'}
+          copy={copy}
+          tabs={tabs}
+          initTab={initialTab}
+        />
+        {!isOnCreate && (
+          <Button buttonType="primary" onClick={addPool} disabled={disabled}>
+            Add pool
+          </Button>
+        )}
+      </React.Fragment>
     );
   }
 }

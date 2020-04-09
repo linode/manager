@@ -8,7 +8,8 @@ import ErrorState from 'src/components/ErrorState';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 
 import SelectPlanQuantityPanel, {
-  ExtendedType
+  ExtendedType,
+  ExtendedTypeWithCount
 } from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel';
 
 import { getMonthlyPrice } from '.././kubeUtils';
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  types: ExtendedType[];
+  types: ExtendedTypeWithCount[];
   typesLoading: boolean;
   typesError?: string;
   apiError?: string;
@@ -50,6 +51,7 @@ interface Props {
   pools?: PoolNodeWithPrice[];
   deleteNodePool?: (poolIdx: number) => void;
   updatePool?: (poolIdx: number, updatedPool: PoolNodeWithPrice) => void;
+  isOnCreate: boolean;
 }
 
 type CombinedProps = Props;
@@ -82,6 +84,10 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
     undefined
   );
 
+  const [_types, setNewType] = React.useState<ExtendedTypeWithCount[]>([]);
+
+  const [count, setNewCount] = React.useState<number>(0);
+
   // TODO: add countError back when ready for error handling
   // const [_, setCountError] = React.useState<string | undefined>(undefined);
 
@@ -95,7 +101,8 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
     selectedType,
     updateNodeCount,
     updatePool,
-    types
+    types,
+    isOnCreate
   } = props;
 
   if (!hideTable && !(pools && updatePool && deleteNodePool)) {
@@ -143,6 +150,24 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
     handleTypeSelect(newType);
   };
 
+  React.useEffect(() => {
+    types.map(thisType => ({
+      ...thisType,
+      count
+    }));
+    setNewType(types);
+  }, []);
+
+  const updatePlanCount = (planId: string, newCount: number) => {
+    const newTypes = types.map((thisType: any) => {
+      if (thisType.id === planId) {
+        return { ...thisType, count: setNewCount(newCount) };
+      }
+      return thisType;
+    });
+    setNewType(newTypes);
+  };
+
   return (
     <Grid container direction="column">
       <Grid item>
@@ -153,7 +178,10 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
           error={apiError || typeError}
           header="Add Node Pools"
           copy="Add groups of Linodes to your cluster with a chosen size."
-          submitForm={submitForm}
+          updatePlanCount={updatePlanCount}
+          submitForm={isOnCreate ? submitForm : undefined}
+          addPool={!isOnCreate ? submitForm : undefined}
+          isOnCreate={isOnCreate}
         />
       </Grid>
     </Grid>
