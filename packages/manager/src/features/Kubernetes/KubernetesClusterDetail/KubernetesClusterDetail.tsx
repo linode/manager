@@ -1,4 +1,7 @@
-import { getKubernetesClusterEndpoints } from 'linode-js-sdk/lib/kubernetes';
+import {
+  getKubernetesClusterEndpoints,
+  KubernetesEndpointResponse
+} from 'linode-js-sdk/lib/kubernetes';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
@@ -88,7 +91,9 @@ type CombinedProps = WithTypesProps &
   DispatchProps &
   WithStyles<ClassNames>;
 
-const getAllEndpoints = getAll<string>(getKubernetesClusterEndpoints);
+const getAllEndpoints = getAll<KubernetesEndpointResponse>(
+  getKubernetesClusterEndpoints
+);
 
 export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = props => {
   const {
@@ -135,7 +140,9 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
       const kubeconfigAvailabilityCheck = () => {
         getAllEndpoints(clusterID)
           .then(response => {
-            successfulClusterEndpointResponse(response.data);
+            successfulClusterEndpointResponse(
+              response.data.map(thisEndpoint => thisEndpoint.endpoint)
+            );
           })
           .catch(error => {
             // Do nothing since kubeconfigAvailable is false by default
@@ -148,7 +155,9 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
       setEndpointLoading(true);
       getAllEndpoints(clusterID)
         .then(response => {
-          successfulClusterEndpointResponse(response.data);
+          successfulClusterEndpointResponse(
+            response.data.map(thisEndpoint => thisEndpoint.endpoint)
+          );
         })
         .catch(error => {
           setEndpointLoading(false);
