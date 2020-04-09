@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  types: ExtendedTypeWithCount[];
+  types: ExtendedType[];
   typesLoading: boolean;
   typesError?: string;
   apiError?: string;
@@ -55,6 +55,15 @@ interface Props {
 }
 
 type CombinedProps = Props;
+
+export const addCountToTypes = (
+  types: ExtendedType[]
+): ExtendedTypeWithCount[] => {
+  return types.map(thisType => ({
+    ...thisType,
+    count: 0
+  }));
+};
 
 export const NodePoolPanel: React.FunctionComponent<CombinedProps> = props => {
   const classes = useStyles();
@@ -80,17 +89,6 @@ const RenderLoadingOrContent: React.FunctionComponent<CombinedProps> = props => 
 };
 
 const Panel: React.FunctionComponent<CombinedProps> = props => {
-  const [typeError, setTypeError] = React.useState<string | undefined>(
-    undefined
-  );
-
-  const [_types, setNewType] = React.useState<ExtendedTypeWithCount[]>([]);
-
-  const [count, setNewCount] = React.useState<number>(0);
-
-  // TODO: add countError back when ready for error handling
-  // const [_, setCountError] = React.useState<string | undefined>(undefined);
-
   const {
     addNodePool,
     apiError,
@@ -104,6 +102,17 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
     types,
     isOnCreate
   } = props;
+
+  const [typeError, setTypeError] = React.useState<string | undefined>(
+    undefined
+  );
+
+  const [_types, setNewType] = React.useState<ExtendedTypeWithCount[]>(
+    addCountToTypes(types)
+  );
+
+  // TODO: add countError back when ready for error handling
+  // const [_, setCountError] = React.useState<string | undefined>(undefined);
 
   if (!hideTable && !(pools && updatePool && deleteNodePool)) {
     /**
@@ -151,17 +160,14 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
   };
 
   React.useEffect(() => {
-    types.map(thisType => ({
-      ...thisType,
-      count
-    }));
-    setNewType(types);
-  }, []);
+    const typesWithCount = addCountToTypes(types);
+    setNewType(typesWithCount);
+  }, [types]);
 
   const updatePlanCount = (planId: string, newCount: number) => {
-    const newTypes = types.map((thisType: any) => {
+    const newTypes = _types.map((thisType: any) => {
       if (thisType.id === planId) {
-        return { ...thisType, count: setNewCount(newCount) };
+        return { ...thisType, count: newCount };
       }
       return thisType;
     });
@@ -172,7 +178,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
     <Grid container direction="column">
       <Grid item>
         <SelectPlanQuantityPanel
-          types={types.filter(t => t.class !== 'nanode' && t.class !== 'gpu')} // No Nanodes or GPUs in clusters
+          types={_types.filter(t => t.class !== 'nanode' && t.class !== 'gpu')} // No Nanodes or GPUs in clusters
           selectedID={selectedType}
           onSelect={selectType}
           error={apiError || typeError}
