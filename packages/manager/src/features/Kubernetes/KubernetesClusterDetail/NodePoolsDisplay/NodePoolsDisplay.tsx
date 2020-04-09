@@ -61,7 +61,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
   const { deleteLinode } = useLinodes();
 
   const deletePoolDialog = useDialog<number>(deletePool);
-  const deleteNodeDialog = useDialog<number>(deleteLinode);
+  const recycleNodeDialog = useDialog<number>(deleteLinode);
 
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
   const [drawerSubmitting, setDrawerSubmitting] = React.useState<boolean>(
@@ -111,7 +111,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
   };
 
   const handleDeleteNode = () => {
-    const { dialog, submitDialog, handleError } = deleteNodeDialog;
+    const { dialog, submitDialog, handleError } = recycleNodeDialog;
     if (!dialog.entityID) {
       return;
     }
@@ -169,7 +169,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
                       nodes={nodes ?? []}
                       handleClickResize={handleOpenResizeDrawer}
                       openDeletePoolDialog={deletePoolDialog.openDialog}
-                      openDeleteNodeDialog={deleteNodeDialog.openDialog}
+                      openRecycleNodeDialog={recycleNodeDialog.openDialog}
                     />
                   </div>
                 );
@@ -197,11 +197,11 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
             />
             <NodeDialog
               onDelete={handleDeleteNode}
-              onClose={deleteNodeDialog.closeDialog}
-              open={deleteNodeDialog.dialog.isOpen}
-              error={deleteNodeDialog.dialog.error}
-              loading={deleteNodeDialog.dialog.isLoading}
-              label={deleteNodeDialog.dialog.entityLabel}
+              onClose={recycleNodeDialog.closeDialog}
+              open={recycleNodeDialog.dialog.isOpen}
+              error={recycleNodeDialog.dialog.error}
+              loading={recycleNodeDialog.dialog.isLoading}
+              label={recycleNodeDialog.dialog.entityLabel}
             />
           </Grid>
         )}

@@ -37,7 +37,7 @@ const renderActions = (
         data-qa-confirm
         data-testid={'dialog-confirm'}
       >
-        Delete
+        Recycle
       </Button>
     </ActionsPanel>
   );
@@ -49,16 +49,14 @@ const NodeDialog: React.FC<Props> = props => {
   return (
     <ConfirmationDialog
       open={open}
-      title={`Are you sure you want to delete ${
-        label ? label : 'this Linode'
-      }?`}
+      title={`Recycle ${label ? label : 'this Node'}?`}
       onClose={onClose}
       actions={() => renderActions(loading, onClose, onDelete)}
     >
       {error && <Notice error text={error} />}
       <Typography>
-        Are you sure you want to delete your Linode? This will result in
-        permanent data loss.
+        Are you sure you want to recycle this Node? The Linode will be deleted
+        and all data lost. A new Linode we be recreated to take its place.
       </Typography>
     </ConfirmationDialog>
   );

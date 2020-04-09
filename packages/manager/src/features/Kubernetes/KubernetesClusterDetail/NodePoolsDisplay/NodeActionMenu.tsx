@@ -4,22 +4,22 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 interface Props {
   instanceId?: number;
   instanceLabel?: string;
-  openDeleteNodeDialog: (linodeId: number, linodeLabel: string) => void;
+  openRecycleNodeDialog: (linodeId: number, linodeLabel: string) => void;
 }
 
 export const NodeActionMenu: React.FC<Props> = props => {
-  const { instanceId, instanceLabel, openDeleteNodeDialog } = props;
+  const { instanceId, instanceLabel, openRecycleNodeDialog } = props;
 
   const createActions = () => {
     return (closeMenu: Function): Action[] => {
       const actions = [
         {
-          title: 'Delete',
+          title: 'Recycle',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             if (!instanceId || !instanceLabel) {
               return;
             }
-            openDeleteNodeDialog(instanceId!, instanceLabel!);
+            openRecycleNodeDialog(instanceId!, instanceLabel!);
             closeMenu();
             e.preventDefault();
           },

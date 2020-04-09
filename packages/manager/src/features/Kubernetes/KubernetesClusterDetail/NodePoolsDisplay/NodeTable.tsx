@@ -46,11 +46,11 @@ export interface Props {
   poolId: number;
   nodes: PoolNodeResponse[];
   typeLabel: string;
-  openDeleteNodeDialog: (linodeId: number, linodeLabel: string) => void;
+  openRecycleNodeDialog: (linodeId: number, linodeLabel: string) => void;
 }
 
 export const NodeTable: React.FC<Props> = props => {
-  const { nodes, poolId, typeLabel, openDeleteNodeDialog } = props;
+  const { nodes, poolId, typeLabel, openRecycleNodeDialog } = props;
 
   const classes = useStyles();
 
@@ -129,7 +129,7 @@ export const NodeTable: React.FC<Props> = props => {
                               nodeStatus={eachRow.nodeStatus}
                               typeLabel={typeLabel}
                               linodeError={linodes.error?.read}
-                              openDeleteNodeDialog={openDeleteNodeDialog}
+                              openRecycleNodeDialog={openRecycleNodeDialog}
                             />
                           );
                         })}
@@ -178,7 +178,7 @@ interface NodeRow {
 type NodeRowProps = Omit<NodeRow, 'nodeId'> & {
   typeLabel: string;
   linodeError?: APIError[];
-  openDeleteNodeDialog: (linodeId: number, linodeLabel: string) => void;
+  openRecycleNodeDialog: (linodeId: number, linodeLabel: string) => void;
 };
 
 export const NodeRow: React.FC<NodeRowProps> = React.memo(props => {
@@ -190,7 +190,7 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo(props => {
     typeLabel,
     nodeStatus,
     linodeError,
-    openDeleteNodeDialog
+    openRecycleNodeDialog
   } = props;
 
   const classes = useStyles();
@@ -240,7 +240,7 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo(props => {
         <NodeActionMenu
           instanceId={instanceId}
           instanceLabel={label}
-          openDeleteNodeDialog={openDeleteNodeDialog}
+          openRecycleNodeDialog={openRecycleNodeDialog}
         />
         {/* @todo: action menu */}
         {/* <ActionMenu/> */}
