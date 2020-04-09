@@ -15,9 +15,7 @@ describe('Select Plan Panel', () => {
         chip: '',
         currentPlanChipCell: '',
         radioCell: '',
-        headingCellContainer: '',
-        enhancedInputOuter: '',
-        enhancedInputButton: ''
+        headingCellContainer: ''
       }}
       types={extendedTypes}
       currentPlanHeading="Linode 2GB"

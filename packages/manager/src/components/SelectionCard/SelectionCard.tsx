@@ -184,6 +184,7 @@ export interface Props {
   setInputValue?: (value: number) => void;
   submitForm?: (e: any) => void;
   buttonDisabled?: boolean;
+  displayButton?: boolean;
 }
 
 interface WithTooltipProps {
@@ -240,7 +241,8 @@ class SelectionCard extends React.PureComponent<CombinedProps, {}> {
       inputValue,
       setInputValue,
       submitForm,
-      buttonDisabled
+      buttonDisabled,
+      displayButton
     } = this.props;
     switch (variant) {
       case 'info':
@@ -258,14 +260,16 @@ class SelectionCard extends React.PureComponent<CombinedProps, {}> {
                   value={inputValue}
                   setValue={setInputValue}
                 />
-                <Button
-                  buttonType="primary"
-                  onClick={submitForm}
-                  disabled={buttonDisabled}
-                  className={classes.enhancedInputButton}
-                >
-                  Add
-                </Button>
+                {displayButton && (
+                  <Button
+                    buttonType="primary"
+                    onClick={submitForm}
+                    disabled={buttonDisabled}
+                    className={classes.enhancedInputButton}
+                  >
+                    Add
+                  </Button>
+                )}
               </div>
             )}
           </Grid>
