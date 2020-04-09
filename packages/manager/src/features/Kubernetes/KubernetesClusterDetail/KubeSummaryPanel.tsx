@@ -66,6 +66,7 @@ const styles = (theme: Theme) =>
     },
     linksGrid: {
       width: '30%',
+      paddingTop: '6px !important',
       marginRight: theme.spacing(2)
     },
     iconsSharedStyling: {
