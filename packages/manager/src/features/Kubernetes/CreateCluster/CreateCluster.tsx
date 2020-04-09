@@ -185,7 +185,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
     setErrors(undefined);
     setSubmitting(true);
 
-    const _version = version ? version.value : undefined;
+    const k8s_version = version ? version.value : undefined;
 
     /**
      * We need to remove the monthly price, which is used for client-side
@@ -198,7 +198,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
       region: selectedRegion,
       node_pools,
       label,
-      version: _version
+      k8s_version
     };
 
     createKubernetesCluster(payload)

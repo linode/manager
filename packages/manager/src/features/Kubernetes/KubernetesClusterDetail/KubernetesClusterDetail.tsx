@@ -1,4 +1,4 @@
-import { getKubernetesClusterEndpoint } from 'linode-js-sdk/lib/kubernetes';
+import { getKubernetesClusterEndpoints } from 'linode-js-sdk/lib/kubernetes';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
@@ -22,6 +22,7 @@ import KubeContainer, {
 } from 'src/containers/kubernetes.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { getAll } from 'src/utilities/getAll';
 import { ExtendedCluster, PoolNodeWithPrice } from '.././types';
 import KubeSummaryPanel from './KubeSummaryPanel';
 import NodePoolsDisplay from './NodePoolsDisplay';
@@ -87,6 +88,8 @@ type CombinedProps = WithTypesProps &
   DispatchProps &
   WithStyles<ClassNames>;
 
+const getAllEndpoints = getAll<string>(getKubernetesClusterEndpoints);
+
 export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = props => {
   const {
     classes,
@@ -116,11 +119,12 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
     clearInterval(kubeconfigAvailabilityInterval.current);
   };
 
-  const successfulClusterEndpointResponse = (response: {
-    endpoints: React.SetStateAction<string | null>[];
-  }) => {
+  const successfulClusterEndpointResponse = (endpoints: string[]) => {
     setEndpointError(undefined);
-    setEndpoint(response.endpoints[0]); // @todo will there ever be multiple values here?
+    setEndpoint(
+      endpoints.find(thisEndpoint => thisEndpoint.match(/\:443/)) ||
+        endpoints[0]
+    );
     setEndpointLoading(false);
     kubeconfigAvailableEndInterval();
   };
@@ -129,9 +133,9 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
     const clusterID = +props.match.params.clusterID;
     if (clusterID) {
       const kubeconfigAvailabilityCheck = () => {
-        getKubernetesClusterEndpoint(clusterID)
+        getAllEndpoints(clusterID)
           .then(response => {
-            successfulClusterEndpointResponse(response);
+            successfulClusterEndpointResponse(response.data);
           })
           .catch(error => {
             // Do nothing since kubeconfigAvailable is false by default
@@ -142,9 +146,9 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
       // The cluster endpoint has its own API...uh, endpoint, so we need
       // to request it separately.
       setEndpointLoading(true);
-      getKubernetesClusterEndpoint(clusterID)
+      getAllEndpoints(clusterID)
         .then(response => {
-          successfulClusterEndpointResponse(response);
+          successfulClusterEndpointResponse(response.data);
         })
         .catch(error => {
           setEndpointLoading(false);
