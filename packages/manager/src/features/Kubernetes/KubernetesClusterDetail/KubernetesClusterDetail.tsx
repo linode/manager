@@ -249,8 +249,19 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
         </Grid>
         <Grid item xs={12}>
           <NodePoolsDisplay
+            clusterLabel={cluster.label}
             pools={cluster.node_pools}
             types={props.typesData || []}
+<<<<<<< HEAD
+=======
+            addPool={(pool: PoolNodeWithPrice) =>
+              props.createNodePool({
+                clusterID: cluster.id,
+                type: pool.type,
+                count: pool.count
+              })
+            }
+>>>>>>> f6ebef406... Fix label
             updatePool={(id: number, updatedPool: PoolNodeWithPrice) =>
               props.updateNodePool({
                 clusterID: cluster.id,

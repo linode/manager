@@ -44,8 +44,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface Props {
+  clusterLabel: string;
   pools: PoolNodeWithPrice[];
   types: ExtendedType[];
+  addPool: (pool: PoolNodeWithPrice) => Promise<any>;
   updatePool: (
     poolID: number,
     updatedPool: PoolNodeWithPrice
@@ -55,7 +57,7 @@ export interface Props {
 }
 
 export const NodePoolsDisplay: React.FC<Props> = props => {
-  const { pools, types, updatePool, addNodePool, deletePool } = props;
+  const { clusterLabel, pools, types, addPool, updatePool, deletePool } = props;
 
   const classes = useStyles();
 
@@ -67,7 +69,6 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
     handleError
   } = useDialog<number>(deletePool);
 
-  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
   const [resizeDrawerOpen, setResizeDrawerOpen] = React.useState<boolean>(
     false
@@ -76,14 +77,42 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
     false
   );
   const [drawerError, setDrawerError] = React.useState<string | undefined>();
+  const [poolForAdd, setPoolForAdd] = React.useState<
+    PoolNodeWithPrice | undefined
+  >();
   const [poolForEdit, setPoolForEdit] = React.useState<
     PoolNodeWithPrice | undefined
   >();
 
+  const handleOpenAddDrawer = () => {
+    setAddDrawerOpen(true);
+    setDrawerError(undefined);
+  };
+
   const handleOpenResizeDrawer = (poolID: number) => {
     setPoolForEdit(pools.find(thisPool => thisPool.id === poolID));
-    setDrawerOpen(true);
+    setResizeDrawerOpen(true);
     setDrawerError(undefined);
+  };
+
+  const handleAdd = (pool: PoolNodeWithPrice) => {
+    // Should never happen, just a safety check
+    if (!poolForAdd) {
+      return;
+    }
+    setDrawerSubmitting(true);
+    setDrawerError(undefined);
+    addPool(poolForAdd)
+      .then(_ => {
+        setDrawerSubmitting(false);
+        setAddDrawerOpen(false);
+      })
+      .catch(error => {
+        setDrawerSubmitting(false);
+        setDrawerError(
+          getAPIErrorOrDefault(error, 'Error adding Node Pool')[0].reason
+        );
+      });
   };
 
   const handleResize = (updatedCount: number) => {
@@ -96,7 +125,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
     updatePool(poolForEdit.id, { ...poolForEdit, count: updatedCount })
       .then(_ => {
         setDrawerSubmitting(false);
-        setDrawerOpen(false);
+        setResizeDrawerOpen(false);
       })
       .catch(error => {
         setDrawerSubmitting(false);
@@ -135,11 +164,6 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
     }
     return undefined;
   });
-
-  const handleOpenAddDrawer = () => {
-    setAddDrawerOpen(true);
-    setDrawerError(undefined);
-  };
 
   return (
     <>
@@ -196,17 +220,18 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
                 );
               })}
             </Grid>
-            {/* <AddNodePoolDrawer
+            <AddNodePoolDrawer
+              clusterLabel={clusterLabel}
               open={addDrawerOpen}
               onClose={() => setAddDrawerOpen(false)}
-              onSubmit={addNodePool(pools[0])}
+              onSubmit={(pool: PoolNodeWithPrice) => handleAdd(pool)}
               nodePool={pools[0]}
               isSubmitting={drawerSubmitting}
               error={drawerError}
-            /> */}
+            />
             <ResizeNodePoolDrawer
-              open={drawerOpen}
-              onClose={() => setDrawerOpen(false)}
+              open={resizeDrawerOpen}
+              onClose={() => setResizeDrawerOpen(false)}
               onSubmit={(updatedCount: number) => handleResize(updatedCount)}
               nodePool={poolForEdit}
               isSubmitting={drawerSubmitting}
