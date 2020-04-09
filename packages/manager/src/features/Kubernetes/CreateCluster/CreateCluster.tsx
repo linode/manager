@@ -35,22 +35,37 @@ import KubeCheckoutBar from '../KubeCheckoutBar';
 import NodePoolPanel from './NodePoolPanel';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
+  root: {
+    '& .mlMain': {
+      maxWidth: '100%',
+      flexBasis: '100%',
+      [theme.breakpoints.up('lg')]: {
+        maxWidth: '78.8%',
+        flexBasis: '78.8%'
+      }
+    },
+    '& .mlSidebar': {
+      position: 'static',
+      width: '100%',
+      flexBasis: '100%',
+      maxWidth: '100%',
+      [theme.breakpoints.up('lg')]: {
+        position: 'sticky',
+        maxWidth: '21.2%',
+        flexBasis: '21.2%'
+      }
+    }
+  },
   title: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(3)
   },
-  main: {
-    maxWidth: '890px !important'
-  },
+  main: {},
   sidebar: {
-    [theme.breakpoints.up('md')]: {
-      marginTop: '45px !important'
-    },
-    [theme.breakpoints.up('md')]: {
-      padding: `${theme.spacing(1)}px ${theme.spacing(1)}px ${theme.spacing(
-        1
-      )}px ${theme.spacing(3)}px !important`
+    background: theme.color.white,
+    padding: `0px 0px ${theme.spacing(1)}px ${theme.spacing(3)}px !important`,
+    [theme.breakpoints.up('lg')]: {
+      background: 'none'
     }
   },
   inner: {
@@ -265,7 +280,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
 
   return (
     <StickyContainer>
-      <Grid container>
+      <Grid container className={classes.root}>
         <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
         <Grid
           container
@@ -347,35 +362,38 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
                   />
                 </Grid>
               </div>
-              <NodePoolPanel
-                pools={nodePools}
-                types={typesData || []}
-                apiError={errorMap.node_pools}
-                typesLoading={typesLoading}
-                typesError={
-                  typesError
-                    ? getAPIErrorOrDefault(
-                        typesError,
-                        'Error loading Linode type information.'
-                      )[0].reason
-                    : undefined
-                }
-                selectedType={selectedType}
-                addNodePool={(pool: PoolNodeWithPrice) => addPool(pool)}
-                deleteNodePool={(poolIdx: number) => removePool(poolIdx)}
-                handleTypeSelect={(newType: string) => selectType(newType)}
-                updateNodeCount={(count: number) => updateCount(count)}
-                updatePool={updatePool}
-                updateFor={[
-                  nodePools,
-                  typesData,
-                  newCount,
-                  errorMap,
-                  typesLoading,
-                  selectedType,
-                  classes
-                ]}
-              />
+              <Grid item>
+                <NodePoolPanel
+                  pools={nodePools}
+                  types={typesData || []}
+                  apiError={errorMap.node_pools}
+                  typesLoading={typesLoading}
+                  typesError={
+                    typesError
+                      ? getAPIErrorOrDefault(
+                          typesError,
+                          'Error loading Linode type information.'
+                        )[0].reason
+                      : undefined
+                  }
+                  selectedType={selectedType}
+                  addNodePool={(pool: PoolNodeWithPrice) => addPool(pool)}
+                  deleteNodePool={(poolIdx: number) => removePool(poolIdx)}
+                  handleTypeSelect={(newType: string) => selectType(newType)}
+                  updateNodeCount={(count: number) => updateCount(count)}
+                  updatePool={updatePool}
+                  updateFor={[
+                    nodePools,
+                    typesData,
+                    newCount,
+                    errorMap,
+                    typesLoading,
+                    selectedType,
+                    classes
+                  ]}
+                  isOnCreate
+                />
+              </Grid>
             </Paper>
           </div>
         </Grid>

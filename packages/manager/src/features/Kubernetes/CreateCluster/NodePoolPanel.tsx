@@ -7,9 +7,10 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 
-import SelectPlanPanel, {
-  ExtendedType
-} from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+import SelectPlanQuantityPanel, {
+  ExtendedType,
+  ExtendedTypeWithCount
+} from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel';
 
 import { getMonthlyPrice } from '.././kubeUtils';
 import { PoolNodeWithPrice } from '.././types';
@@ -50,9 +51,19 @@ interface Props {
   pools?: PoolNodeWithPrice[];
   deleteNodePool?: (poolIdx: number) => void;
   updatePool?: (poolIdx: number, updatedPool: PoolNodeWithPrice) => void;
+  isOnCreate: boolean;
 }
 
 type CombinedProps = Props;
+
+export const addCountToTypes = (
+  types: ExtendedType[]
+): ExtendedTypeWithCount[] => {
+  return types.map(thisType => ({
+    ...thisType,
+    count: 0
+  }));
+};
 
 export const NodePoolPanel: React.FunctionComponent<CombinedProps> = props => {
   const classes = useStyles();
@@ -78,13 +89,6 @@ const RenderLoadingOrContent: React.FunctionComponent<CombinedProps> = props => 
 };
 
 const Panel: React.FunctionComponent<CombinedProps> = props => {
-  const [typeError, setTypeError] = React.useState<string | undefined>(
-    undefined
-  );
-
-  // TODO: add countError back when ready for error handling
-  // const [_, setCountError] = React.useState<string | undefined>(undefined);
-
   const {
     addNodePool,
     apiError,
@@ -95,8 +99,20 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
     selectedType,
     updateNodeCount,
     updatePool,
-    types
+    types,
+    isOnCreate
   } = props;
+
+  const [typeError, setTypeError] = React.useState<string | undefined>(
+    undefined
+  );
+
+  const [_types, setNewType] = React.useState<ExtendedTypeWithCount[]>(
+    addCountToTypes(types)
+  );
+
+  // TODO: add countError back when ready for error handling
+  // const [_, setCountError] = React.useState<string | undefined>(undefined);
 
   if (!hideTable && !(pools && updatePool && deleteNodePool)) {
     /**
@@ -143,18 +159,35 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
     handleTypeSelect(newType);
   };
 
+  React.useEffect(() => {
+    const typesWithCount = addCountToTypes(types);
+    setNewType(typesWithCount);
+  }, [types]);
+
+  const updatePlanCount = (planId: string, newCount: number) => {
+    const newTypes = _types.map((thisType: any) => {
+      if (thisType.id === planId) {
+        return { ...thisType, count: newCount };
+      }
+      return thisType;
+    });
+    setNewType(newTypes);
+  };
+
   return (
     <Grid container direction="column">
       <Grid item>
-        <SelectPlanPanel
-          types={types.filter(t => t.class !== 'nanode' && t.class !== 'gpu')} // No Nanodes or GPUs in clusters
+        <SelectPlanQuantityPanel
+          types={_types.filter(t => t.class !== 'nanode' && t.class !== 'gpu')} // No Nanodes or GPUs in clusters
           selectedID={selectedType}
           onSelect={selectType}
           error={apiError || typeError}
           header="Add Node Pools"
           copy="Add groups of Linodes to your cluster with a chosen size."
-          inputIsIncluded
-          submitForm={submitForm}
+          updatePlanCount={updatePlanCount}
+          submitForm={isOnCreate ? submitForm : undefined}
+          addPool={!isOnCreate ? submitForm : undefined}
+          isOnCreate={isOnCreate}
         />
       </Grid>
     </Grid>
