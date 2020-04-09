@@ -39,6 +39,7 @@ type ClassNames =
   | 'column'
   | 'linksGrid'
   | 'iconsSharedStyling'
+  | 'kubeconfigSection'
   | 'kubeconfigElements'
   | 'kubeconfigFileText'
   | 'kubeconfigIcons';
@@ -58,7 +59,7 @@ const styles = (theme: Theme) =>
     },
     label: {
       color: theme.color.kubeLabel,
-      marginBottom: theme.spacing(1),
+      marginBottom: `${theme.spacing(1) - 3}px`,
       fontWeight: 'bold'
     },
     column: {
@@ -66,13 +67,16 @@ const styles = (theme: Theme) =>
     },
     linksGrid: {
       width: '30%',
-      paddingTop: '6px !important',
+      paddingTop: `${theme.spacing(1) - 1}px !important`,
       marginRight: theme.spacing(2)
     },
     iconsSharedStyling: {
       width: 24,
       height: 24,
       objectFit: 'contain'
+    },
+    kubeconfigSection: {
+      marginTop: `${theme.spacing() + 2}px`
     },
     kubeconfigElements: {
       color: theme.palette.primary.main,
@@ -226,7 +230,7 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
             </Typography>
           </Paper>
 
-          <Paper className={classes.item}>
+          <Paper className={`${classes.item} ${classes.kubeconfigSection}`}>
             <Typography className={classes.label}>Kubeconfig:</Typography>
 
             <div className={classes.kubeconfigElements}>
