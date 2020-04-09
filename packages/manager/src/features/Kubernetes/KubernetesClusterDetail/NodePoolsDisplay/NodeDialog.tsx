@@ -49,7 +49,9 @@ const NodeDialog: React.FC<Props> = props => {
   return (
     <ConfirmationDialog
       open={open}
-      title={`Are you sure you want to delete ${label}?`}
+      title={`Are you sure you want to delete ${
+        label ? label : 'this Linode'
+      }?`}
       onClose={onClose}
       actions={() => renderActions(loading, onClose, onDelete)}
     >
