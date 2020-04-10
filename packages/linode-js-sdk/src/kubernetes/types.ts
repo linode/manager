@@ -5,6 +5,7 @@ export interface KubernetesCluster {
   label: string;
   version: string;
   id: number;
+  tags: string[];
 }
 
 export interface KubeNodePoolResponse {

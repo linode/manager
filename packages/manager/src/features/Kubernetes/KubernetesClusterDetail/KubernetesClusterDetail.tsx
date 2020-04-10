@@ -309,6 +309,12 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
             endpointLoading={endpointLoading}
             kubeconfigAvailable={kubeconfigAvailable}
             kubeconfigError={kubeconfigError}
+            handleUpdateTags={(id: number, updatedCluster: ExtendedCluster) =>
+              props.updateCluster({
+                clusterID: cluster.id,
+                tags: updatedCluster.tags
+              })
+            }
           />
         </Grid>
         <Grid item xs={12}>

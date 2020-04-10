@@ -22,7 +22,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-// import TagsPanel from 'src/components/TagsPanel'; // Temporarily commented out because Tags functionality for clusters is not in place yet.
+import TagsPanel from 'src/components/TagsPanel';
 import { dcDisplayNames } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { ExtendedCluster } from 'src/features/Kubernetes/types';
@@ -99,6 +99,10 @@ interface Props {
   endpointLoading: boolean;
   kubeconfigAvailable: boolean;
   kubeconfigError?: string;
+  handleUpdateTags: (
+    clusterID: number,
+    updatedCluster: ExtendedCluster
+  ) => Promise<any>;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames> & WithSnackbarProps;
@@ -128,7 +132,8 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
     endpointLoading,
     enqueueSnackbar,
     kubeconfigAvailable,
-    kubeconfigError
+    kubeconfigError,
+    handleUpdateTags
   } = props;
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
   const [drawerError, setDrawerError] = React.useState<string | null>(null);
@@ -193,13 +198,9 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
       });
   };
 
-  // The function below is a placeholder that will need to be edited once cluster Tags functionality is in place.
-  /* const updateTags = async (tags: string[]) => {
-    const { cluster.id, clusterActions } = props;
-
-    // Send the request (which updates the internal store.)
-    await clusterActions.updateCluster({ cluster.id, tags });
-  }; */
+  const updateTags = async (updatedTags: string[]) => {
+    await handleUpdateTags(cluster.id, { ...cluster, tags: updatedTags });
+  };
 
   const setKubeconfigDisplay = () => {
     return (
@@ -361,8 +362,7 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
 
           <Grid item>
             <Paper className={classes.item}>
-              {/* <TagsPanel tags={['test']} updateTags={updateTags} /> */}
-              {/* Will be done in a follow-up PR once Tags functionality is ready for clusters */}
+              <TagsPanel tags={cluster.tags} updateTags={updateTags} />
             </Paper>
           </Grid>
         </Grid>
