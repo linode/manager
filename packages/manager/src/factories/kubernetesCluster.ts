@@ -53,7 +53,7 @@ export const kubernetesClusterFactory = Factory.Sync.makeFactory<
   region: 'us-central',
   status: 'ready',
   label: Factory.each(i => `test-cluster-${i}`),
-  version: '1.17',
+  k8s_version: '1.17',
   node_pools: nodePoolFactory.buildList(2),
   totalMemory: 1000,
   totalCPU: 4,
