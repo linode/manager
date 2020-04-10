@@ -25,7 +25,7 @@ import KubeContainer, {
 } from 'src/containers/kubernetes.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getAll } from 'src/utilities/getAll';
+import { getAllWithArguments } from 'src/utilities/getAll';
 import { ExtendedCluster, PoolNodeWithPrice } from '.././types';
 import KubeSummaryPanel from './KubeSummaryPanel';
 import NodePoolsDisplay from './NodePoolsDisplay';
@@ -91,7 +91,7 @@ type CombinedProps = WithTypesProps &
   DispatchProps &
   WithStyles<ClassNames>;
 
-const getAllEndpoints = getAll<KubernetesEndpointResponse>(
+const getAllEndpoints = getAllWithArguments<KubernetesEndpointResponse>(
   getKubernetesClusterEndpoints
 );
 
@@ -138,7 +138,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
     const clusterID = +props.match.params.clusterID;
     if (clusterID) {
       const kubeconfigAvailabilityCheck = () => {
-        getAllEndpoints(clusterID)
+        getAllEndpoints([clusterID])
           .then(response => {
             successfulClusterEndpointResponse(
               response.data.map(thisEndpoint => thisEndpoint.endpoint)
@@ -153,7 +153,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
       // The cluster endpoint has its own API...uh, endpoint, so we need
       // to request it separately.
       setEndpointLoading(true);
-      getAllEndpoints(clusterID)
+      getAllEndpoints([clusterID])
         .then(response => {
           successfulClusterEndpointResponse(
             response.data.map(thisEndpoint => thisEndpoint.endpoint)
