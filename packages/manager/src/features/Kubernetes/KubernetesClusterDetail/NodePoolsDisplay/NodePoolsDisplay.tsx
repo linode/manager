@@ -1,3 +1,7 @@
+import {
+  PoolNodeRequest,
+  PoolNodeResponse
+} from 'linode-js-sdk/lib/kubernetes/types';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import AddNewLink from 'src/components/AddNewLink';
@@ -49,17 +53,23 @@ export interface Props {
   clusterLabel: string;
   pools: PoolNodeWithPrice[];
   types: ExtendedType[];
-  addPool: (pool: PoolNodeWithPrice) => Promise<any>;
   updatePool: (
     poolID: number,
     updatedPool: PoolNodeWithPrice
   ) => Promise<PoolNodeWithPrice>;
   deletePool: (poolID: number) => Promise<any>;
-  addNodePool: (newPool: PoolNodeWithPrice) => Promise<PoolNodeWithPrice>;
+  addNodePool: (newPool: PoolNodeRequest) => Promise<PoolNodeResponse>;
 }
 
 export const NodePoolsDisplay: React.FC<Props> = props => {
-  const { clusterLabel, pools, types, addPool, updatePool, deletePool } = props;
+  const {
+    clusterLabel,
+    pools,
+    types,
+    addNodePool,
+    updatePool,
+    deletePool
+  } = props;
 
   const classes = useStyles();
 
@@ -94,7 +104,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
   const handleAdd = (type: string, count: number) => {
     setDrawerSubmitting(true);
     setDrawerError(undefined);
-    addPool({ type, count })
+    addNodePool({ type, count })
       .then(_ => {
         setDrawerSubmitting(false);
         setAddDrawerOpen(false);

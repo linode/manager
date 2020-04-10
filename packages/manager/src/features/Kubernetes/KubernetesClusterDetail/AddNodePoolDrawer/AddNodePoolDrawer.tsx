@@ -1,3 +1,4 @@
+import { PoolNodeRequest } from 'linode-js-sdk/lib/';
 import * as React from 'react';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -30,7 +31,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface Props {
   clusterLabel: string;
   open: boolean;
-  label: string;
   error?: string;
   isSubmitting: boolean;
   onClose: () => void;
@@ -81,7 +81,9 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
               : undefined
           }
           selectedType={selectedType}
-          addNodePool={(pool: any) => onSubmit(pool.type, pool.count)}
+          addNodePool={(pool: PoolNodeRequest) =>
+            onSubmit(pool.type, pool.count)
+          }
           handleTypeSelect={(newType: string) => setSelectedType(newType)}
           updateFor={[typesData, types, classes]}
           isOnCreate={false}

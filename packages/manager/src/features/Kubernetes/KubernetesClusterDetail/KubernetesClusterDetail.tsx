@@ -346,13 +346,13 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
                 nodePoolID: poolID
               })
             }
-            addNodePool={(newPool: PoolNodeWithPrice) => {
+            addNodePool={(newPool: PoolNodeWithPrice) =>
               props.createNodePool({
                 clusterID: cluster.id,
                 type: newPool.type,
                 count: newPool.count
-              });
-            }}
+              })
+            }
           />
         </Grid>
       </Grid>
