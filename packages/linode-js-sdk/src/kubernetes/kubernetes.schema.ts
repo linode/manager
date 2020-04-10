@@ -21,7 +21,7 @@ export const clusterLabelSchema = string()
 export const createKubeClusterSchema = object().shape({
   label: clusterLabelSchema,
   region: string().required('Region is required.'),
-  version: string().required('Kubernetes version is required.'),
+  k8s_version: string().required('Kubernetes version is required.'),
   node_pools: array()
     .of(nodePoolSchema)
     .min(1, 'Please add at least one node pool.')
