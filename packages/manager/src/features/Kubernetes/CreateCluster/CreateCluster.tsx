@@ -252,10 +252,6 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
     setNodePools(updatedPools);
   };
 
-  const selectType = (type: string) => {
-    setSelectedType(type);
-  };
-
   const updateLabel = (newLabel: string) => {
     /**
      * If the new label is an empty string, use undefined.
@@ -361,7 +357,6 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
               </div>
               <Grid item>
                 <NodePoolPanel
-                  pools={nodePools}
                   types={typesData || []}
                   apiError={errorMap.node_pools}
                   typesLoading={typesLoading}
@@ -373,17 +368,13 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
                         )[0].reason
                       : undefined
                   }
-                  selectedType={selectedType}
                   addNodePool={(pool: PoolNodeWithPrice) => addPool(pool)}
-                  deleteNodePool={(poolIdx: number) => removePool(poolIdx)}
-                  handleTypeSelect={(newType: string) => selectType(newType)}
-                  updatePool={updatePool}
                   updateFor={[
                     nodePools,
                     typesData,
                     errorMap,
                     typesLoading,
-                    selectedType,
+
                     classes
                   ]}
                   isOnCreate

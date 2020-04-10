@@ -41,10 +41,8 @@ interface Props {
   typesLoading: boolean;
   typesError?: string;
   apiError?: string;
-  selectedType?: string;
   isOnCreate?: boolean;
   addNodePool: (pool: any) => void;
-  handleTypeSelect: (newType?: string) => void;
 }
 
 type CombinedProps = Props;
@@ -82,14 +80,7 @@ const RenderLoadingOrContent: React.FunctionComponent<CombinedProps> = props => 
 };
 
 const Panel: React.FunctionComponent<CombinedProps> = props => {
-  const {
-    addNodePool,
-    apiError,
-    handleTypeSelect,
-    selectedType,
-    types,
-    isOnCreate
-  } = props;
+  const { addNodePool, apiError, types, isOnCreate } = props;
 
   const [typeError, setTypeError] = React.useState<string | undefined>(
     undefined
@@ -98,6 +89,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
   const [_types, setNewType] = React.useState<ExtendedTypeWithCount[]>(
     addCountToTypes(types)
   );
+  const [selectedType, setSelectedType] = React.useState<string>('');
 
   // TODO: add countError back when ready for error handling
   // const [_, setCountError] = React.useState<string | undefined>(undefined);
@@ -124,12 +116,13 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
       count: nodeCount,
       totalMonthlyPrice: getMonthlyPrice(selectedPlanType, nodeCount, types)
     });
-    handleTypeSelect(undefined);
+    updatePlanCount(selectedPlanType, 0);
+    setSelectedType(undefined);
   };
 
   const selectType = (newType: string) => {
     setTypeError(undefined);
-    handleTypeSelect(newType);
+    setSelectedType(newType);
   };
 
   const updatePlanCount = (planId: string, newCount: number) => {
@@ -140,7 +133,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
       return thisType;
     });
     setNewType(newTypes);
-    handleTypeSelect(planId);
+    setSelectedType(planId);
   };
 
   const handleAdd = () => {
@@ -158,7 +151,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
         <SelectPlanQuantityPanel
           types={_types.filter(t => t.class !== 'nanode' && t.class !== 'gpu')} // No Nanodes or GPUs in clusters
           selectedID={selectedType}
-          onSelect={selectType}
+          onSelect={(newType: string) => setSelectedType(newType)}
           error={apiError || typeError}
           header="Add Node Pools"
           copy="Add groups of Linodes to your cluster with a chosen size."
