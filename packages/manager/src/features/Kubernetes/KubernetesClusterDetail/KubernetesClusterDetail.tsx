@@ -1,4 +1,8 @@
-import { getKubernetesClusterEndpoint } from 'linode-js-sdk/lib/kubernetes';
+import {
+  getKubeConfig,
+  getKubernetesClusterEndpoint,
+  KubernetesEndpointResponse
+} from 'linode-js-sdk/lib/kubernetes';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
@@ -108,33 +112,86 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
   const [kubeconfigAvailable, setKubeconfigAvailability] = React.useState<
     boolean
   >(false);
+  const [kubeconfigError, setKubeconfigError] = React.useState<
+    string | undefined
+  >(undefined);
 
-  const kubeconfigAvailabilityInterval = React.useRef<any>();
+  const endpointAvailabilityInterval = React.useRef<number>();
+  const kubeconfigAvailabilityInterval = React.useRef<number>();
+
+  const getEndpointToDisplay = (response: KubernetesEndpointResponse) => {
+    let endpointToDisplay = null;
+
+    // Per discussions with the API team and UX, we should display only the endpoint with port 443, so we are matching on that.
+    response.endpoints.forEach(responseEndpoint => {
+      if (responseEndpoint.match(/linodelke\.net:443$/i)) {
+        endpointToDisplay = responseEndpoint;
+      }
+    });
+
+    return endpointToDisplay;
+  };
+
+  const successfulClusterEndpointResponse = (
+    response: KubernetesEndpointResponse
+  ) => {
+    setEndpointError(undefined);
+
+    const endpointToDisplay = getEndpointToDisplay(response);
+
+    setEndpoint(endpointToDisplay);
+    setEndpointLoading(false);
+    clearInterval(endpointAvailabilityInterval.current);
+  };
+
+  // Create a function to check if the Kubeconfig is available.
+  const kubeconfigAvailabilityCheck = (clusterID: number) => {
+    getKubeConfig(clusterID)
+      .then(() => {
+        kubeconfigAvailableEndInterval();
+      })
+      .catch(() => {
+        // Do nothing since in the instances where this function is called, kubeconfigAvailabilityInterval has been set in motion already.
+      });
+  };
+
+  const kubeconfigAvailabilityCheckWithInterval = (clusterID: number) => {
+    getKubeConfig(clusterID)
+      .then(response => {
+        kubeconfigAvailableEndInterval();
+      })
+      .catch(error => {
+        setKubeconfigAvailability(false);
+
+        if (error?.[0]?.reason.match(/not yet available/i)) {
+          // If it is not yet available, set kubeconfigAvailabilityInterval equal to function that continues polling the endpoint every 30 seconds to grab it when it is
+          kubeconfigAvailabilityInterval.current = window.setInterval(() => {
+            kubeconfigAvailabilityCheck(clusterID);
+          }, 30 * 1000);
+        } else {
+          setKubeconfigError(
+            getAPIErrorOrDefault(error, 'Kubeconfig not available.')[0].reason
+          );
+        }
+      });
+  };
 
   const kubeconfigAvailableEndInterval = () => {
     setKubeconfigAvailability(true);
     clearInterval(kubeconfigAvailabilityInterval.current);
   };
 
-  const successfulClusterEndpointResponse = (response: {
-    endpoints: React.SetStateAction<string | null>[];
-  }) => {
-    setEndpointError(undefined);
-    setEndpoint(response.endpoints[0]); // @todo will there ever be multiple values here?
-    setEndpointLoading(false);
-    kubeconfigAvailableEndInterval();
-  };
-
   React.useEffect(() => {
     const clusterID = +props.match.params.clusterID;
     if (clusterID) {
-      const kubeconfigAvailabilityCheck = () => {
+      // A function to check if the endpoint is available.
+      const endpointAvailabilityCheck = () => {
         getKubernetesClusterEndpoint(clusterID)
           .then(response => {
             successfulClusterEndpointResponse(response);
           })
           .catch(error => {
-            // Do nothing since kubeconfigAvailable is false by default
+            // Do nothing since endpoint is null by default, and in the instances where this function is called, endpointAvailabilityInterval has been set in motion already.
           });
       };
 
@@ -149,18 +206,20 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
         .catch(error => {
           setEndpointLoading(false);
 
-          // If the error is that the endpoint is not yet available, set kubeconfigAvailabilityInterval equal to function that continues polling the endpoint every 5 seconds to grab it when it is.
-          if (error[0].reason.match(/endpoint not available/i)) {
-            kubeconfigAvailabilityInterval.current = setInterval(() => {
-              kubeconfigAvailabilityCheck();
+          // If the error is that the endpoint is not yet available, set endpointAvailabilityInterval equal to function that continues polling the endpoint every 5 seconds to grab it when it is.
+          if (error?.[0]?.reason.match(/endpoint not available/i)) {
+            endpointAvailabilityInterval.current = window.setInterval(() => {
+              endpointAvailabilityCheck();
             }, 5000);
+          } else {
+            setEndpointError(
+              getAPIErrorOrDefault(error, 'Cluster endpoint not available.')[0]
+                .reason
+            );
           }
-
-          setEndpointError(
-            getAPIErrorOrDefault(error, 'Cluster endpoint not available.')[0]
-              .reason
-          );
         });
+
+      kubeconfigAvailabilityCheckWithInterval(clusterID);
     }
 
     const interval = setInterval(
@@ -170,6 +229,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
 
     return () => {
       clearInterval(interval);
+      clearInterval(endpointAvailabilityInterval.current);
+      clearInterval(kubeconfigAvailabilityInterval.current);
     };
   }, []);
 
@@ -247,6 +308,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
             endpointError={endpointError}
             endpointLoading={endpointLoading}
             kubeconfigAvailable={kubeconfigAvailable}
+            kubeconfigError={kubeconfigError}
           />
         </Grid>
         <Grid item xs={12}>
