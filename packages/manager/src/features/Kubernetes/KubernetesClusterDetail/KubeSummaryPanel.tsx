@@ -98,6 +98,7 @@ interface Props {
   endpointError?: string;
   endpointLoading: boolean;
   kubeconfigAvailable: boolean;
+  kubeconfigError?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames> & WithSnackbarProps;
@@ -105,15 +106,17 @@ type CombinedProps = Props & WithStyles<ClassNames> & WithSnackbarProps;
 const renderEndpoint = (
   endpoint: string | null,
   endpointLoading: boolean,
-  kubeconfigAvailable: boolean,
   endpointError?: string
 ) => {
-  if (endpointLoading || !kubeconfigAvailable) {
+  if (endpoint) {
+    return endpoint;
+  } else if (endpointLoading) {
     return 'Loading...';
   } else if (endpointError) {
     return endpointError;
+  } else {
+    return 'Your endpoint will be displayed here once it is available.';
   }
-  return endpoint || ''; // Just leave it blank if endpoint === null (which should never happen)
 };
 
 export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props => {
@@ -124,7 +127,8 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
     endpointError,
     endpointLoading,
     enqueueSnackbar,
-    kubeconfigAvailable
+    kubeconfigAvailable,
+    kubeconfigError
   } = props;
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
   const [drawerError, setDrawerError] = React.useState<string | null>(null);
@@ -198,37 +202,21 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
   }; */
 
   const setKubeconfigDisplay = () => {
-    if (!endpoint && kubeconfigAvailable === false) {
-      return (
-        <Grid item className={classes.linksGrid} xs={12} md={6}>
-          <Paper className={classes.item}>
-            <Typography>
-              This cluster is being provisioned. Upon completion, the Kubernetes
-              API Endpoint and Kubeconfig will appear here.
-            </Typography>
-          </Paper>
-        </Grid>
-      );
-    } else {
-      return (
-        <Grid item className={classes.linksGrid} xs={12} md={4}>
-          <Paper className={classes.item}>
-            <Typography className={classes.label}>
-              Kubernetes API Endpoint:
-            </Typography>
-            <Typography>
-              {renderEndpoint(
-                endpoint,
-                endpointLoading,
-                kubeconfigAvailable,
-                endpointError
-              )}
-            </Typography>
-          </Paper>
+    return (
+      <Grid item className={classes.linksGrid} xs={12} md={4}>
+        <Paper className={classes.item}>
+          <Typography className={classes.label}>
+            Kubernetes API Endpoint:
+          </Typography>
+          <Typography>
+            {renderEndpoint(endpoint, endpointLoading, endpointError)}
+          </Typography>
+        </Paper>
 
-          <Paper className={classes.item}>
-            <Typography className={classes.label}>Kubeconfig:</Typography>
+        <Paper className={classes.item}>
+          <Typography className={classes.label}>Kubeconfig:</Typography>
 
+          {kubeconfigAvailable ? (
             <div className={classes.kubeconfigElements}>
               <Typography
                 className={classes.kubeconfigFileText}
@@ -248,10 +236,15 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
                 />
               </div>
             </div>
-          </Paper>
-        </Grid>
-      );
-    }
+          ) : (
+            <Typography>
+              {kubeconfigError ??
+                'Your Kubeconfig will be viewable here once it is available.'}
+            </Typography>
+          )}
+        </Paper>
+      </Grid>
+    );
   };
 
   return (
