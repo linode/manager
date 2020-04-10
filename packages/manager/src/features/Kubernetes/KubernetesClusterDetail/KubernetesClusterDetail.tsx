@@ -142,33 +142,28 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
   };
 
   // Create a function to check if the Kubeconfig is available.
-  const kubeconfigAvailabilityCheck = (clusterID: number) => {
+  const kubeconfigAvailabilityCheck = (
+    clusterID: number,
+    startInterval: boolean = false
+  ) => {
     getKubeConfig(clusterID)
       .then(() => {
         kubeconfigAvailableEndInterval();
       })
-      .catch(() => {
-        // Do nothing since in the instances where this function is called, kubeconfigAvailabilityInterval has been set in motion already.
-      });
-  };
-
-  const kubeconfigAvailabilityCheckWithInterval = (clusterID: number) => {
-    getKubeConfig(clusterID)
-      .then(response => {
-        kubeconfigAvailableEndInterval();
-      })
       .catch(error => {
-        setKubeconfigAvailability(false);
+        if (startInterval) {
+          setKubeconfigAvailability(false);
 
-        if (error?.[0]?.reason.match(/not yet available/i)) {
-          // If it is not yet available, set kubeconfigAvailabilityInterval equal to function that continues polling the endpoint every 30 seconds to grab it when it is
-          kubeconfigAvailabilityInterval.current = window.setInterval(() => {
-            kubeconfigAvailabilityCheck(clusterID);
-          }, 30 * 1000);
-        } else {
-          setKubeconfigError(
-            getAPIErrorOrDefault(error, 'Kubeconfig not available.')[0].reason
-          );
+          if (error?.[0]?.reason.match(/not yet available/i)) {
+            // If it is not yet available, set kubeconfigAvailabilityInterval equal to function that continues polling the endpoint every 30 seconds to grab it when it is
+            kubeconfigAvailabilityInterval.current = window.setInterval(() => {
+              kubeconfigAvailabilityCheck(clusterID);
+            }, 30 * 1000);
+          } else {
+            setKubeconfigError(
+              getAPIErrorOrDefault(error, 'Kubeconfig not available.')[0].reason
+            );
+          }
         }
       });
   };
@@ -220,7 +215,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
           }
         });
 
-      kubeconfigAvailabilityCheckWithInterval(clusterID);
+      kubeconfigAvailabilityCheck(clusterID, true);
     }
 
     const interval = setInterval(
