@@ -292,7 +292,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                 onSelect={updateTypeID}
                 selectedID={selectedTypeID}
                 selectedDiskSize={selectedDiskSize}
-                updateFor={[selectedTypeID, selectedDiskSize, errors]}
+                // updateFor={[selectedTypeID, selectedDiskSize, errors]}
                 disabled={disabled}
               />
               <LabelAndTagsPanel
