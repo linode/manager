@@ -338,12 +338,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
                       setSelectedRegion(regionID)
                     }
                     regions={filteredRegions}
-                    selectedID={
-                      // Select the first region by default if there is only one to choose from.
-                      filteredRegions.length === 1
-                        ? filteredRegions[0].id
-                        : selectedID
-                    }
+                    selectedID={selectedID}
                     textFieldProps={
                       // Only show the "Find out which region is best for you" message if there are
                       // actually multiple regions to choose from.
