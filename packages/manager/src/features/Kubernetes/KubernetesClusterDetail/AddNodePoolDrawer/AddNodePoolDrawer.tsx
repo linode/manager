@@ -1,14 +1,13 @@
-import { PoolNodeRequest } from 'linode-js-sdk/lib/';
 import * as React from 'react';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
-import NodePoolPanel from 'src/features/Kubernetes/CreateCluster/NodePoolPanel.tsx';
-// import SelectPlanQuantityPanel from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel.tsx';
-import { useTypes } from 'src/hooks/useTypes';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-// import { PoolNodeWithPrice } from '../../types';
+import { addCountToTypes } from 'src/features/Kubernetes/CreateCluster/NodePoolPanel.tsx';
+import SelectPlanQuantityPanel, {
+  ExtendedTypeWithCount
+} from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel.tsx';
+// import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   summary: {
@@ -48,10 +47,38 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
     open,
     typesData
   } = props;
-  const { types } = useTypes();
   const classes = useStyles();
 
-  const [selectedType, setSelectedType] = React.useState<string>('');
+  const [selectedType, setSelectedType] = React.useState<string | undefined>(
+    undefined
+  );
+
+  const [_types, setNewType] = React.useState<ExtendedTypeWithCount[]>(
+    addCountToTypes(typesData || [])
+  );
+
+  const updatePlanCount = (planId: string, newCount: number) => {
+    const newTypes = _types.map((thisType: any) => {
+      if (thisType.id === planId) {
+        return { ...thisType, count: newCount };
+      }
+      return { ...thisType, count: 0 };
+    });
+    setNewType(newTypes);
+    if (newTypes.every(thisType => thisType.count === 0)) {
+      setSelectedType(undefined);
+    } else {
+      setSelectedType(planId);
+    }
+  };
+
+  const handleAdd = () => {
+    const type = _types.find(thisType => thisType.id === selectedType);
+    if (!type || !selectedType) {
+      return;
+    }
+    onSubmit(type.id, type.count);
+  };
 
   return (
     <Drawer
@@ -60,56 +87,15 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
       onClose={onClose}
       wide={true}
     >
-      <form
-      // onSubmit={(e: React.ChangeEvent<HTMLFormElement>) => {
-      //   e.preventDefault();
-      //   handleSubmit(selectedType, updatedCount);
-      // }}
-      >
-        <NodePoolPanel
-          types={types.entities?.filter(
-            t => t.class !== 'nanode' && t.class !== 'gpu'
-          )}
-          apiError={undefined}
-          typesLoading={types.loading}
-          typesError={
-            types.error
-              ? getAPIErrorOrDefault(
-                  types.error,
-                  'Error loading Linode type information.'
-                )[0].reason
-              : undefined
-          }
-          selectedType={selectedType}
-          addNodePool={(pool: PoolNodeRequest) =>
-            onSubmit(pool.type, pool.count)
-          }
-          handleTypeSelect={(newType: string) => setSelectedType(newType)}
-          updateFor={[typesData, types, classes]}
-          isOnCreate={false}
+      <form className={classes.planPanel}>
+        <SelectPlanQuantityPanel
+          types={_types.filter(t => t.class !== 'nanode' && t.class !== 'gpu')} // No Nanodes or GPUs in clusters
+          selectedID={selectedType}
+          onSelect={(newType: string) => setSelectedType(newType)}
+          updatePlanCount={updatePlanCount}
+          addPool={handleAdd}
+          isSubmitting={isSubmitting}
         />
-
-        {/* <ActionsPanel>
-          <Button
-            buttonType="primary"
-            disabled={updatedCount === 0}
-            onClick={() => {
-              handleSubmit(selectedType, updatedCount);
-            }}
-            data-qa-submit
-            loading={isSubmitting}
-          >
-            Add pool
-          </Button>
-          <Typography className={classes.summary}>
-            This pool will add{' '}
-            // {/* <span>
-            //   ${updatedCount * pricePerNode}/month ({updatedCount} nodes at $
-            //   {pricePerNode}/month )
-            // </span>{' '} 
-            to this cluster.
-          </Typography>
-        </ActionsPanel> */}
       </form>
     </Drawer>
   );

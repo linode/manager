@@ -108,6 +108,7 @@ interface Props {
   addPool?: (pool?: PoolNodeRequest) => void;
   isOnCreate?: boolean;
   updatePlanCount: any;
+  isSubmitting?: boolean;
 }
 
 const getNanodes = (types: ExtendedType[]) =>
@@ -147,8 +148,6 @@ export class SelectPlanPanel extends React.Component<
           <TableRow
             data-qa-plan-row={type.label}
             key={type.id}
-            onClick={this.onSelect(type.id)}
-            rowLink={this.onSelect ? this.onSelect(type.id) : undefined}
             className={classnames({
               [classes.disabledRow]: disabled
             })}
@@ -190,6 +189,9 @@ export class SelectPlanPanel extends React.Component<
                     updatePlanCount(type.id, newCount)
                   }
                   small
+                  disabled={
+                    !isOnCreate && Boolean(selectedID) && type.count < 1
+                  }
                 />
                 {isOnCreate && (
                   <Button
@@ -401,7 +403,8 @@ export class SelectPlanPanel extends React.Component<
       currentPlanHeading,
       addPool,
       disabled,
-      isOnCreate
+      isOnCreate,
+      isSubmitting
     } = this.props;
 
     const [tabs, tabOrder] = this.createTabs();
@@ -423,7 +426,7 @@ export class SelectPlanPanel extends React.Component<
         <TabbedPanel
           rootClass={`${classes.root} tabbedPanel`}
           error={error}
-          header={header}
+          header={header || ' '}
           copy={copy}
           tabs={tabs}
           initTab={initialTab}
@@ -434,6 +437,7 @@ export class SelectPlanPanel extends React.Component<
               buttonType="primary"
               onClick={() => handleAdd()}
               disabled={disabled}
+              loading={isSubmitting}
             >
               Add pool
             </Button>
