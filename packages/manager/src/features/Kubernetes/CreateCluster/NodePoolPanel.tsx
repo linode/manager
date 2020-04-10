@@ -89,7 +89,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
   const [_types, setNewType] = React.useState<ExtendedTypeWithCount[]>(
     addCountToTypes(types)
   );
-  const [selectedType, setSelectedType] = React.useState<string>('');
+  const [selectedType, setSelectedType] = React.useState<string | undefined>();
 
   // TODO: add countError back when ready for error handling
   // const [_, setCountError] = React.useState<string | undefined>(undefined);
@@ -120,11 +120,6 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
     setSelectedType(undefined);
   };
 
-  const selectType = (newType: string) => {
-    setTypeError(undefined);
-    setSelectedType(newType);
-  };
-
   const updatePlanCount = (planId: string, newCount: number) => {
     const newTypes = _types.map((thisType: any) => {
       if (thisType.id === planId) {
@@ -138,7 +133,6 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
 
   const handleAdd = () => {
     const type = _types.find(thisType => thisType.id === selectedType);
-    console.log('type: ', selectedType);
     if (!type || !selectedType) {
       return;
     }

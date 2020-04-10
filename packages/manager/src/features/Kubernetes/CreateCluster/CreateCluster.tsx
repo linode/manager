@@ -369,14 +369,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
                       : undefined
                   }
                   addNodePool={(pool: PoolNodeWithPrice) => addPool(pool)}
-                  updateFor={[
-                    nodePools,
-                    typesData,
-                    errorMap,
-                    typesLoading,
-
-                    classes
-                  ]}
+                  updateFor={[typesData, errorMap, typesLoading, classes]}
                   isOnCreate
                 />
               </Grid>
