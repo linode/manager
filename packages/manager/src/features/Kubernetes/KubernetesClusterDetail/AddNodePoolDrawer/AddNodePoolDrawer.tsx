@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { compose } from 'recompose';
+import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
+import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { addCountToTypes } from 'src/features/Kubernetes/CreateCluster/NodePoolPanel.tsx';
@@ -24,6 +28,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   planPanel: {
     marginTop: 0
+  },
+  priceDisplay: {
+    marginLeft: theme.spacing(2)
   }
 }));
 
@@ -81,6 +88,10 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
     onSubmit(type.id, type.count);
   };
 
+  const _selectedType = _types.find(thisType => thisType.id === selectedType);
+  const currentCount = _selectedType?.count ?? 0;
+  const pricePerNode = _selectedType?.price?.monthly ?? 0;
+
   return (
     <Drawer
       title={`Add a Node Pool: ${clusterLabel}`}
@@ -97,6 +108,26 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
           addPool={handleAdd}
           isSubmitting={isSubmitting}
         />
+        <ActionsPanel>
+          <Box display="flex" flexDirection="row" alignItems="center">
+            <Button
+              buttonType="primary"
+              onClick={() => handleAdd()}
+              disabled={false}
+              loading={isSubmitting}
+            >
+              Add pool
+            </Button>
+            <Typography className={classes.priceDisplay}>
+              This pool will add{' '}
+              <strong>
+                ${currentCount * pricePerNode}/month ({currentCount} nodes at $
+                {pricePerNode}/month
+              </strong>{' '}
+              to this cluster.
+            </Typography>
+          </Box>
+        </ActionsPanel>
       </form>
     </Drawer>
   );

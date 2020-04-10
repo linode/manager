@@ -4,7 +4,6 @@ import { LinodeType, LinodeTypeClass } from 'linode-js-sdk/lib/linodes/types';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Hidden from 'src/components/core/Hidden';
@@ -402,11 +401,7 @@ export class SelectPlanPanel extends React.Component<
       error,
       header,
       types,
-      currentPlanHeading,
-      addPool,
-      disabled,
-      isOnCreate,
-      isSubmitting
+      currentPlanHeading
     } = this.props;
 
     const [tabs, tabOrder] = this.createTabs();
@@ -421,39 +416,15 @@ export class SelectPlanPanel extends React.Component<
 
     const initialTab = tabOrder.indexOf(selectedTypeClass);
 
-    const handleAdd = addPool ?? (() => null);
-
     return (
-      <React.Fragment>
-        <TabbedPanel
-          rootClass={`${classes.root} tabbedPanel`}
-          error={error}
-          header={header || ' '}
-          copy={copy}
-          tabs={tabs}
-          initTab={initialTab}
-        />
-        {!isOnCreate && (
-          <ActionsPanel>
-            <Button
-              buttonType="primary"
-              onClick={() => handleAdd()}
-              disabled={disabled}
-              loading={isSubmitting}
-            >
-              Add pool
-            </Button>
-            <Typography>
-              This pool will add{' '}
-              <span>
-                {/* ${updatePlanCount * pricePerNode}/month ({updatePlanCount} nodes
-                at ${pricePerNode}/month ) */}
-              </span>{' '}
-              to this cluster.
-            </Typography>
-          </ActionsPanel>
-        )}
-      </React.Fragment>
+      <TabbedPanel
+        rootClass={`${classes.root} tabbedPanel`}
+        error={error}
+        header={header || ' '}
+        copy={copy}
+        tabs={tabs}
+        initTab={initialTab}
+      />
     );
   }
 }
