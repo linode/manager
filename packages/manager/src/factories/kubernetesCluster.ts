@@ -27,7 +27,7 @@ export const kubeLinodeFactory = Factory.Sync.makeFactory<PoolNodeResponse>({
 
 export const _nodePoolFactory = Factory.Sync.makeFactory<PoolNodeWithPrice>({
   id: Factory.each(id => id),
-  count: Math.floor(Math.random() * 10),
+  count: 3,
   type: 'g5-standard-1',
   totalMonthlyPrice: 1000
 });
