@@ -42,6 +42,7 @@ interface Props {
   typesError?: string;
   apiError?: string;
   selectedType?: string;
+  isOnCreate?: boolean;
   addNodePool: (pool: any) => void;
   handleTypeSelect: (newType?: string) => void;
 }
@@ -86,10 +87,6 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
     apiError,
     handleTypeSelect,
     selectedType,
-<<<<<<< HEAD
-    updatePool,
-=======
->>>>>>> Delete unused stuff
     types,
     isOnCreate
   } = props;
@@ -128,10 +125,6 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
       totalMonthlyPrice: getMonthlyPrice(selectedPlanType, nodeCount, types)
     });
     handleTypeSelect(undefined);
-<<<<<<< HEAD
-    updatePlanCount(selectedPlanType, 0);
-=======
->>>>>>> Delete unused stuff
   };
 
   const selectType = (newType: string) => {
