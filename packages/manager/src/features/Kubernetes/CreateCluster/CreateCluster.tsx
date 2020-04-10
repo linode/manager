@@ -137,6 +137,22 @@ const regionHelperText = (
 
 export const CreateCluster: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const {
+    regionsData,
+    typesData,
+    typesLoading,
+    typesError,
+    regionsError
+  } = props;
+
+  // Only include regions that have LKE capability
+  const filteredRegions = React.useMemo(() => {
+    return regionsData
+      ? regionsData.filter(thisRegion =>
+          thisRegion.capabilities.includes('Kubernetes')
+        )
+      : [];
+  }, [regionsData]);
 
   const [selectedRegion, setSelectedRegion] = React.useState<string>('');
   const [nodePools, setNodePools] = React.useState<PoolNodeWithPrice[]>([]);
@@ -148,7 +164,6 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
     []
   );
   const [selectedType, setSelectedType] = React.useState<string>('');
-  const [newCount, setNewCount] = React.useState<number>(0);
 
   React.useEffect(() => {
     getAllVersions()
@@ -176,6 +191,12 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
         );
       });
   }, []);
+
+  React.useEffect(() => {
+    if (filteredRegions.length === 1 && !selectedRegion) {
+      setSelectedRegion(filteredRegions[0].id);
+    }
+  }, [filteredRegions]);
 
   const createCluster = () => {
     const {
@@ -231,10 +252,6 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
     setNodePools(updatedPools);
   };
 
-  const updateCount = (count: number) => {
-    setNewCount(count);
-  };
-
   const selectType = (type: string) => {
     setSelectedType(type);
   };
@@ -247,25 +264,10 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
     setLabel(newLabel ? newLabel : undefined);
   };
 
-  const {
-    regionsData,
-    typesData,
-    typesLoading,
-    typesError,
-    regionsError
-  } = props;
-
   const errorMap = getErrorMap(
     ['region', 'node_pools', 'label', 'k8s_version', 'versionLoad'],
     errors
   );
-
-  // Only displaying regions that have LKE capability
-  const filteredRegions = regionsData
-    ? regionsData.filter(thisRegion =>
-        thisRegion.capabilities.includes('Kubernetes')
-      )
-    : [];
 
   const selectedID = selectedRegion || null;
 
@@ -331,12 +333,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
                       setSelectedRegion(regionID)
                     }
                     regions={filteredRegions}
-                    selectedID={
-                      // Select the first region by default if there is only one to choose from.
-                      filteredRegions.length === 1
-                        ? filteredRegions[0].id
-                        : selectedID
-                    }
+                    selectedID={selectedID}
                     textFieldProps={
                       // Only show the "Find out which region is best for you" message if there are
                       // actually multiple regions to choose from.
@@ -380,12 +377,10 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
                   addNodePool={(pool: PoolNodeWithPrice) => addPool(pool)}
                   deleteNodePool={(poolIdx: number) => removePool(poolIdx)}
                   handleTypeSelect={(newType: string) => selectType(newType)}
-                  updateNodeCount={(count: number) => updateCount(count)}
                   updatePool={updatePool}
                   updateFor={[
                     nodePools,
                     typesData,
-                    newCount,
                     errorMap,
                     typesLoading,
                     selectedType,
