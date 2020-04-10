@@ -121,8 +121,8 @@ export const getKubernetesVersion = (versionID: string) =>
  *
  */
 
-export const getKubernetesClusterEndpoint = (clusterID: number) =>
-  Request<KubernetesEndpointResponse>(
+export const getKubernetesClusterEndpoints = (clusterID: number) =>
+  Request<Page<KubernetesEndpointResponse>>(
     setMethod('GET'),
-    setURL(`${BETA_API_ROOT}/lke/clusters/${clusterID}/api-endpoint`)
+    setURL(`${BETA_API_ROOT}/lke/clusters/${clusterID}/api-endpoints`)
   ).then(response => response.data);

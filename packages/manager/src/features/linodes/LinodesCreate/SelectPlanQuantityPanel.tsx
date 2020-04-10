@@ -177,7 +177,7 @@ export const SelectPlanQuantityPanel: React.FC<Props> = props => {
                   <Button
                     buttonType="primary"
                     onClick={() => submitForm!(type.id, type.count)}
-                    disabled={type.id !== String(selectedID)}
+                    disabled={type.count < 1}
                     className={classes.enhancedInputButton}
                   >
                     Add
