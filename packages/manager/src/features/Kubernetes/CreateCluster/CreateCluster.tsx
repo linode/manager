@@ -227,7 +227,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
     } = this.state;
 
     const errorMap = getErrorMap(
-      ['region', 'node_pools', 'label', 'version', 'versionLoad'],
+      ['region', 'node_pools', 'label', 'k8s_version', 'versionLoad'],
       errors
     );
 
@@ -329,7 +329,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
                 <Select
                   label="Version"
                   value={version || null}
-                  errorText={errorMap.version}
+                  errorText={errorMap.k8s_version}
                   options={versionOptions}
                   placeholder={'Select a Kubernetes version'}
                   onChange={(selected: Item<string>) =>
