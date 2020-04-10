@@ -6,6 +6,7 @@ import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
+import Notice from 'src/components/Notice';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { addCountToTypes } from 'src/features/Kubernetes/CreateCluster/NodePoolPanel.tsx';
 import SelectPlanQuantityPanel, {
@@ -48,6 +49,7 @@ type CombinedProps = Props & WithTypesProps;
 export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
   const {
     clusterLabel,
+    error,
     isSubmitting,
     onClose,
     onSubmit,
@@ -99,6 +101,7 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
       onClose={onClose}
       wide={true}
     >
+      {error && <Notice error text={error} />}
       <form className={classes.planPanel}>
         <SelectPlanQuantityPanel
           types={_types.filter(t => t.class !== 'nanode' && t.class !== 'gpu')} // No Nanodes or GPUs in clusters
