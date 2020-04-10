@@ -106,19 +106,10 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
       if (thisType.id === planId) {
         return { ...thisType, count: newCount };
       }
-      // We should probably handle this
       return thisType;
     });
     setNewType(newTypes);
     setSelectedType(planId);
-  };
-
-  const handleAdd = () => {
-    const type = _types.find(thisType => thisType.id === selectedType);
-    if (!type || !selectedType) {
-      return;
-    }
-    addNodePool({ type: type.id, count: type.count });
   };
 
   return (
@@ -132,8 +123,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
           header="Add Node Pools"
           copy="Add groups of Linodes to your cluster with a chosen size."
           updatePlanCount={updatePlanCount}
-          submitForm={isOnCreate ? submitForm : undefined}
-          addPool={!isOnCreate ? handleAdd : undefined}
+          submitForm={submitForm}
           isOnCreate={isOnCreate}
         />
       </Grid>

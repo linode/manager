@@ -325,7 +325,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
             clusterLabel={cluster.label}
             pools={cluster.node_pools}
             types={props.typesData || []}
-            addPool={(pool: PoolNodeWithPrice) =>
+            addNodePool={(pool: PoolNodeWithPrice) =>
               props.createNodePool({
                 clusterID: cluster.id,
                 type: pool.type,
@@ -344,13 +344,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
               props.deleteNodePool({
                 clusterID: cluster.id,
                 nodePoolID: poolID
-              })
-            }
-            addNodePool={(newPool: PoolNodeWithPrice) =>
-              props.createNodePool({
-                clusterID: cluster.id,
-                type: newPool.type,
-                count: newPool.count
               })
             }
           />
