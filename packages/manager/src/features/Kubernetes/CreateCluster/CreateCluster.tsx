@@ -164,7 +164,6 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
     []
   );
   const [selectedType, setSelectedType] = React.useState<string>('');
-  const [newCount, setNewCount] = React.useState<number>(0);
 
   React.useEffect(() => {
     getAllVersions()
@@ -251,10 +250,6 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
   const removePool = (poolIdx: number) => {
     const updatedPools = remove(poolIdx, 1, nodePools);
     setNodePools(updatedPools);
-  };
-
-  const updateCount = (count: number) => {
-    setNewCount(count);
   };
 
   const selectType = (type: string) => {
@@ -382,12 +377,10 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
                   addNodePool={(pool: PoolNodeWithPrice) => addPool(pool)}
                   deleteNodePool={(poolIdx: number) => removePool(poolIdx)}
                   handleTypeSelect={(newType: string) => selectType(newType)}
-                  updateNodeCount={(count: number) => updateCount(count)}
                   updatePool={updatePool}
                   updateFor={[
                     nodePools,
                     typesData,
-                    newCount,
                     errorMap,
                     typesLoading,
                     selectedType,

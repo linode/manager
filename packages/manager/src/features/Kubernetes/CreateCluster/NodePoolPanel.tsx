@@ -46,7 +46,6 @@ interface Props {
   hideTable?: boolean;
   addNodePool: (pool: PoolNodeWithPrice) => void;
   handleTypeSelect: (newType?: string) => void;
-  updateNodeCount: (newCount: number) => void;
   // Props only needed if hideTable is false
   pools?: PoolNodeWithPrice[];
   deleteNodePool?: (poolIdx: number) => void;
@@ -97,7 +96,6 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
     hideTable,
     pools,
     selectedType,
-    updateNodeCount,
     updatePool,
     types,
     isOnCreate
@@ -151,18 +149,13 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
       totalMonthlyPrice: getMonthlyPrice(selectedPlanType, nodeCount, types)
     });
     handleTypeSelect(undefined);
-    updateNodeCount(3);
+    updatePlanCount(selectedPlanType, 0);
   };
 
   const selectType = (newType: string) => {
     setTypeError(undefined);
     handleTypeSelect(newType);
   };
-
-  React.useEffect(() => {
-    const typesWithCount = addCountToTypes(types);
-    setNewType(typesWithCount);
-  }, [types]);
 
   const updatePlanCount = (planId: string, newCount: number) => {
     const newTypes = _types.map((thisType: any) => {
