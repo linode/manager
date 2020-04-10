@@ -65,6 +65,7 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
       return { ...thisType, count: 0 };
     });
     setNewType(newTypes);
+    // If everything's empty, we need to reset the selected type.
     if (newTypes.every(thisType => thisType.count === 0)) {
       setSelectedType(undefined);
     } else {
