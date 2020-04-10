@@ -1,4 +1,3 @@
-import { PoolNodeRequest } from 'linode-js-sdk/lib/kubernetes/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -53,7 +52,6 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const [selectedType, setSelectedType] = React.useState<string>('');
-  const [count, setCount] = React.useState<number>(0);
 
   return (
     <Drawer
@@ -85,7 +83,6 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
           selectedType={selectedType}
           addNodePool={(pool: any) => onSubmit(pool.type, pool.count)}
           handleTypeSelect={(newType: string) => setSelectedType(newType)}
-          updateNodeCount={(newCount: number) => setCount(newCount)}
           updateFor={[typesData, types, classes]}
           isOnCreate={false}
         />

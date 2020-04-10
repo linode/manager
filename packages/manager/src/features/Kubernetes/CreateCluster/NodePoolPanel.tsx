@@ -13,7 +13,6 @@ import SelectPlanQuantityPanel, {
 } from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel';
 
 import { getMonthlyPrice } from '.././kubeUtils';
-import { PoolNodeWithPrice } from '.././types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -43,14 +42,8 @@ interface Props {
   typesError?: string;
   apiError?: string;
   selectedType?: string;
-  hideTable?: boolean;
   addNodePool: (pool: any) => void;
   handleTypeSelect: (newType?: string) => void;
-  // Props only needed if hideTable is false
-  pools?: PoolNodeWithPrice[];
-  deleteNodePool?: (poolIdx: number) => void;
-  updatePool?: (poolIdx: number, updatedPool: PoolNodeWithPrice) => void;
-  isOnCreate: boolean;
 }
 
 type CombinedProps = Props;
@@ -91,12 +84,12 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
   const {
     addNodePool,
     apiError,
-    deleteNodePool,
     handleTypeSelect,
-    hideTable,
-    pools,
     selectedType,
+<<<<<<< HEAD
     updatePool,
+=======
+>>>>>>> Delete unused stuff
     types,
     isOnCreate
   } = props;
@@ -135,7 +128,10 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
       totalMonthlyPrice: getMonthlyPrice(selectedPlanType, nodeCount, types)
     });
     handleTypeSelect(undefined);
+<<<<<<< HEAD
     updatePlanCount(selectedPlanType, 0);
+=======
+>>>>>>> Delete unused stuff
   };
 
   const selectType = (newType: string) => {
