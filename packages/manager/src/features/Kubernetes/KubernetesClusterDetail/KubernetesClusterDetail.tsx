@@ -203,7 +203,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
           setEndpointLoading(false);
 
           // If the error is that the endpoint is not yet available, set endpointAvailabilityInterval equal to function that continues polling the endpoint every 5 seconds to grab it when it is.
-          if (error?.[0]?.reason.match(/endpoint not available/i)) {
+          if (error?.[0]?.reason.match(/endpoints are not yet available/i)) {
             endpointAvailabilityInterval.current = window.setInterval(() => {
               endpointAvailabilityCheck();
             }, 5000);
