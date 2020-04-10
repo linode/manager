@@ -28,6 +28,7 @@ import { reportException } from 'src/exceptionReporting';
 import { ExtendedCluster } from 'src/features/Kubernetes/types';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { pluralize } from 'src/utilities/pluralize';
 import { getTotalClusterPrice } from '../kubeUtils';
 
 import KubeConfigDrawer from './KubeConfigDrawer';
@@ -322,7 +323,9 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
               </Grid>
 
               <Grid item>
-                <Typography>{cluster.totalCPU} CPU Cores</Typography>
+                <Typography>
+                  {pluralize('CPU Core', 'CPU Cores', cluster.totalCPU)}
+                </Typography>
               </Grid>
             </Grid>
 
