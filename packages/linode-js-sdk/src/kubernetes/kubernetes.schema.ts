@@ -6,7 +6,7 @@ export const nodePoolSchema = object().shape({
 });
 
 export const clusterLabelSchema = string()
-  .notRequired()
+  .required('Label is required.')
   /**
    * This regex is adapted from the API docs. Kubernetes does
    * not allow underscores.

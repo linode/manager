@@ -256,7 +256,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
   } = props;
 
   const errorMap = getErrorMap(
-    ['region', 'node_pools', 'label', 'version', 'versionLoad'],
+    ['region', 'node_pools', 'label', 'k8s_version', 'versionLoad'],
     errors
   );
 
@@ -354,7 +354,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
                     className={classes.inputWidth}
                     label="Kubernetes Version"
                     value={version || null}
-                    errorText={errorMap.version}
+                    errorText={errorMap.k8s_version}
                     options={versionOptions}
                     placeholder={' '}
                     onChange={(selected: Item<string>) => setVersion(selected)}
