@@ -87,17 +87,34 @@ const getGPU = (types: ExtendedType[]) =>
   types.filter(t => /gpu/.test(t.class));
 
 export const SelectPlanPanel: React.FC<Props> = props => {
-  const { types, error, currentPlanHeading, header, copy } = props;
+  const {
+    types,
+    error,
+    selectedID,
+    currentPlanHeading,
+    disabled,
+    header,
+    copy
+  } = props;
+
+  // Determine initial plan category tab based on current plan selection
+  // (if there is one).
+  const selectedTypeClass: LinodeTypeClass = pathOr(
+    'standard', // Use `standard` by default
+    ['class'],
+    types.find(type => type.heading === currentPlanHeading)
+  );
+
   const classes = useStyles();
 
-  const onSelect = (id: string) => () => onSelect(id);
+  const onSelect = (id: string) => () => props.onSelect(id);
 
   const renderSelection = (type: ExtendedType, idx: number) => {
-    const { disabled, selectedDiskSize, selectedID } = props;
-
-    const _selectedDiskSize = selectedDiskSize ? selectedDiskSize : 0;
+    const selectedDiskSize = props.selectedDiskSize
+      ? props.selectedDiskSize
+      : 0;
     let tooltip;
-    const planTooSmall = _selectedDiskSize > type.disk;
+    const planTooSmall = selectedDiskSize > type.disk;
     const isSamePlan = type.heading === currentPlanHeading;
     const isGPU = type.class === 'gpu';
 
@@ -127,7 +144,7 @@ export const SelectPlanPanel: React.FC<Props> = props => {
               [classes.disabledRow]: isSamePlan || planTooSmall
             })}
           >
-            <TableCell>
+            <TableCell className={classes.radioCell}>
               {!isSamePlan && (
                 <FormControlLabel
                   label={type.heading}
@@ -191,7 +208,6 @@ export const SelectPlanPanel: React.FC<Props> = props => {
             subheadings={type.subHeadings}
             disabled={planTooSmall || isSamePlan || disabled}
             tooltip={tooltip}
-            variant={'check'}
           />
         </Hidden>
       </React.Fragment>
@@ -236,19 +252,17 @@ export const SelectPlanPanel: React.FC<Props> = props => {
   };
 
   const createTabs = (): [Tab[], LinodeTypeClass[]] => {
-    const { types } = props;
-
-    const tabs: Tab[] = [];
+    const _tabs: Tab[] = [];
     const nanodes = getNanodes(types);
     const standards = getStandard(types);
     const highmem = getHighMem(types);
     const dedicated = getDedicated(types);
     const gpu = getGPU(types);
 
-    const tabOrder: LinodeTypeClass[] = [];
+    const _tabOrder: LinodeTypeClass[] = [];
 
     if (!isEmpty(nanodes)) {
-      tabs.push({
+      _tabs.push({
         render: () => {
           return (
             <>
@@ -262,11 +276,11 @@ export const SelectPlanPanel: React.FC<Props> = props => {
         },
         title: 'Nanode'
       });
-      tabOrder.push('nanode');
+      _tabOrder.push('nanode');
     }
 
     if (!isEmpty(standards)) {
-      tabs.push({
+      _tabs.push({
         render: () => {
           return (
             <>
@@ -280,11 +294,11 @@ export const SelectPlanPanel: React.FC<Props> = props => {
         },
         title: 'Standard'
       });
-      tabOrder.push('standard');
+      _tabOrder.push('standard');
     }
 
     if (!isEmpty(dedicated)) {
-      tabs.push({
+      _tabs.push({
         render: () => {
           return (
             <>
@@ -298,11 +312,11 @@ export const SelectPlanPanel: React.FC<Props> = props => {
         },
         title: 'Dedicated CPU'
       });
-      tabOrder.push('dedicated');
+      _tabOrder.push('dedicated');
     }
 
     if (!isEmpty(highmem)) {
-      tabs.push({
+      _tabs.push({
         render: () => {
           return (
             <>
@@ -317,7 +331,7 @@ export const SelectPlanPanel: React.FC<Props> = props => {
         },
         title: 'High Memory'
       });
-      tabOrder.push('highmem');
+      _tabOrder.push('highmem');
     }
 
     if (!isEmpty(gpu)) {
@@ -337,7 +351,7 @@ export const SelectPlanPanel: React.FC<Props> = props => {
           may be required to access these services.
         </Typography>
       );
-      tabs.push({
+      _tabs.push({
         render: () => {
           return (
             <>
@@ -353,22 +367,13 @@ export const SelectPlanPanel: React.FC<Props> = props => {
         },
         title: 'GPU'
       });
-      tabOrder.push('gpu');
+      _tabOrder.push('gpu');
     }
 
-    return [tabs, tabOrder];
+    return [_tabs, _tabOrder];
   };
 
   const [tabs, tabOrder] = createTabs();
-
-  // Determine initial plan category tab based on current plan selection
-  // (if there is one).
-  const selectedTypeClass: LinodeTypeClass = pathOr(
-    'standard', // Use `standard` by default
-    ['class'],
-    types.find(type => type.heading === currentPlanHeading)
-  );
-
   const initialTab = tabOrder.indexOf(selectedTypeClass);
 
   return (
@@ -379,6 +384,7 @@ export const SelectPlanPanel: React.FC<Props> = props => {
       copy={copy}
       tabs={tabs}
       initTab={initialTab}
+      currentPlanHeading={currentPlanHeading}
     />
   );
 };
