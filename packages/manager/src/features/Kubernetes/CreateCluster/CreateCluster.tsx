@@ -163,7 +163,6 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
   const [versionOptions, setVersionOptions] = React.useState<Item<string>[]>(
     []
   );
-  const [selectedType, setSelectedType] = React.useState<string>('');
 
   React.useEffect(() => {
     getAllVersions()

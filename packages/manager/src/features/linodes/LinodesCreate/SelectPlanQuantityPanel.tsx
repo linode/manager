@@ -423,7 +423,7 @@ export class SelectPlanPanel extends React.Component<
         <TabbedPanel
           rootClass={`${classes.root} tabbedPanel`}
           error={error}
-          header={' '}
+          header={header}
           copy={copy}
           tabs={tabs}
           initTab={initialTab}

@@ -82,31 +82,12 @@ const RenderLoadingOrContent: React.FunctionComponent<CombinedProps> = props => 
 const Panel: React.FunctionComponent<CombinedProps> = props => {
   const { addNodePool, apiError, types, isOnCreate } = props;
 
-  const [typeError, setTypeError] = React.useState<string | undefined>(
-    undefined
-  );
-
   const [_types, setNewType] = React.useState<ExtendedTypeWithCount[]>(
     addCountToTypes(types)
   );
   const [selectedType, setSelectedType] = React.useState<string | undefined>();
 
-  // TODO: add countError back when ready for error handling
-  // const [_, setCountError] = React.useState<string | undefined>(undefined);
-
   const submitForm = (selectedPlanType: string, nodeCount: number) => {
-    /** Do simple client validation for the two input fields */
-    setTypeError(undefined);
-    // setCountError(undefined);
-    if (!selectedPlanType) {
-      setTypeError('Please select a type.');
-      return;
-    }
-    if (typeof nodeCount !== 'number') {
-      // setCountError('Invalid value.');
-      return;
-    }
-
     /**
      * Add pool and reset form state.
      */
@@ -125,6 +106,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
       if (thisType.id === planId) {
         return { ...thisType, count: newCount };
       }
+      // We should probably handle this
       return thisType;
     });
     setNewType(newTypes);
@@ -146,7 +128,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
           types={_types.filter(t => t.class !== 'nanode' && t.class !== 'gpu')} // No Nanodes or GPUs in clusters
           selectedID={selectedType}
           onSelect={(newType: string) => setSelectedType(newType)}
-          error={apiError || typeError}
+          error={apiError}
           header="Add Node Pools"
           copy="Add groups of Linodes to your cluster with a chosen size."
           updatePlanCount={updatePlanCount}
