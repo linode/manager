@@ -19,6 +19,7 @@ import {
 } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
+import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import KubeContainer, {
@@ -269,7 +270,13 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
   return (
     <React.Fragment>
       <DocumentTitleSegment segment={`Kubernetes Cluster ${cluster.label}`} />
-      <Grid container className={classes.titleGridWrapper}>
+      <Grid
+        container
+        className={classes.titleGridWrapper}
+        direction="row"
+        wrap="nowrap"
+        alignItems="flex-end"
+      >
         <Grid item xs={12}>
           <Breadcrumb
             onEditHandlers={{
@@ -283,6 +290,11 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
             data-qa-breadcrumb
           />
         </Grid>
+        <Grid item className="pt0">
+          <DocumentationButton href="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/" />
+        </Grid>
+      </Grid>
+      <Grid item>
         <Grid item xs={12}>
           <AppBar position="static" color="default" role="tablist">
             <Tabs
