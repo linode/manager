@@ -144,7 +144,7 @@ export class SelectPlanPanel extends React.Component<
               [classes.disabledRow]: isSamePlan || planTooSmall
             })}
           >
-            <TableCell>
+            <TableCell className={classes.radioCell}>
               {!isSamePlan && (
                 <FormControlLabel
                   label={type.heading}
