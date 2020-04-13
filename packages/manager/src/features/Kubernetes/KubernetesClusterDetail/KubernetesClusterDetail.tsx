@@ -275,7 +275,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
         className={classes.titleGridWrapper}
         direction="row"
         wrap="nowrap"
-        alignItems="flex-end"
+        justify="space-between"
+        alignItems="flex-start"
       >
         <Grid item xs={12}>
           <Breadcrumb
