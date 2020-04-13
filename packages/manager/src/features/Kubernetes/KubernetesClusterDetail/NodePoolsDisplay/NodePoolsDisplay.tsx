@@ -1,16 +1,22 @@
+import {
+  PoolNodeRequest,
+  PoolNodeResponse
+} from 'linode-js-sdk/lib/kubernetes/types';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-import Grid from 'src/components/core/Grid';
+import AddNewLink from 'src/components/AddNewLink';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
+import Grid from 'src/components/Grid';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { useDialog } from 'src/hooks/useDialog';
 import useLinodes from 'src/hooks/useLinodes';
 import { ApplicationState } from 'src/store';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { PoolNodeWithPrice } from '../../types';
+import AddNodePoolDrawer from '../AddNodePoolDrawer';
 import ResizeNodePoolDrawer from '../ResizeNodePoolDrawer';
 import NodeDialog from './NodeDialog';
 import NodePool from './NodePool';
@@ -18,7 +24,16 @@ import NodePoolDialog from './NodePoolDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(3)
+    padding: theme.spacing(3),
+    paddingTop: '4px'
+  },
+  addNodePoolLink: {
+    display: 'flex',
+    alignItems: 'flex-end',
+    '& button': {
+      marginButton: 0,
+      paddingBottom: theme.spacing()
+    }
   },
   displayTable: {
     width: '100%',
@@ -44,6 +59,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface Props {
+  clusterLabel: string;
   pools: PoolNodeWithPrice[];
   types: ExtendedType[];
   updatePool: (
@@ -51,10 +67,18 @@ export interface Props {
     updatedPool: PoolNodeWithPrice
   ) => Promise<PoolNodeWithPrice>;
   deletePool: (poolID: number) => Promise<any>;
+  addNodePool: (newPool: PoolNodeRequest) => Promise<PoolNodeResponse>;
 }
 
 export const NodePoolsDisplay: React.FC<Props> = props => {
-  const { pools, types, updatePool, deletePool } = props;
+  const {
+    clusterLabel,
+    pools,
+    types,
+    addNodePool,
+    updatePool,
+    deletePool
+  } = props;
 
   const classes = useStyles();
 
@@ -63,7 +87,10 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
   const deletePoolDialog = useDialog<number>(deletePool);
   const recycleNodeDialog = useDialog<number>(deleteLinode);
 
-  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+  const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
+  const [resizeDrawerOpen, setResizeDrawerOpen] = React.useState<boolean>(
+    false
+  );
   const [drawerSubmitting, setDrawerSubmitting] = React.useState<boolean>(
     false
   );
@@ -72,10 +99,31 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
     PoolNodeWithPrice | undefined
   >();
 
+  const handleOpenAddDrawer = () => {
+    setAddDrawerOpen(true);
+    setDrawerError(undefined);
+  };
+
   const handleOpenResizeDrawer = (poolID: number) => {
     setPoolForEdit(pools.find(thisPool => thisPool.id === poolID));
-    setDrawerOpen(true);
+    setResizeDrawerOpen(true);
     setDrawerError(undefined);
+  };
+
+  const handleAdd = (type: string, count: number) => {
+    setDrawerSubmitting(true);
+    setDrawerError(undefined);
+    return addNodePool({ type, count })
+      .then(_ => {
+        setDrawerSubmitting(false);
+        setAddDrawerOpen(false);
+      })
+      .catch(error => {
+        setDrawerSubmitting(false);
+        setDrawerError(
+          getAPIErrorOrDefault(error, 'Error adding Node Pool')[0].reason
+        );
+      });
   };
 
   const handleResize = (updatedCount: number) => {
@@ -88,7 +136,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
     updatePool(poolForEdit.id, { ...poolForEdit, count: updatedCount })
       .then(_ => {
         setDrawerSubmitting(false);
-        setDrawerOpen(false);
+        setResizeDrawerOpen(false);
       })
       .catch(error => {
         setDrawerSubmitting(false);
@@ -143,9 +191,29 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
 
   return (
     <>
-      <Typography variant="h2" className={classes.nodePoolHeader}>
-        Node Pools
-      </Typography>
+      <Grid
+        container
+        justify="space-between"
+        alignItems="flex-end"
+        updateFor={[classes]}
+        style={{ paddingBottom: 0 }}
+      >
+        <Grid item>
+          <Typography variant="h2" className={classes.nodePoolHeader}>
+            Node Pools
+          </Typography>
+        </Grid>
+        <Grid item>
+          <div className={classes.addNodePoolLink}>
+            <AddNewLink
+              onClick={() => {
+                handleOpenAddDrawer();
+              }}
+              label="Add a Node Pool"
+            />
+          </div>
+        </Grid>
+      </Grid>
       <Paper className={classes.root}>
         {poolsError ? (
           <ErrorState errorText={poolsError} />
@@ -175,9 +243,17 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
                 );
               })}
             </Grid>
+            <AddNodePoolDrawer
+              clusterLabel={clusterLabel}
+              open={addDrawerOpen}
+              onClose={() => setAddDrawerOpen(false)}
+              onSubmit={handleAdd}
+              isSubmitting={drawerSubmitting}
+              error={drawerError}
+            />
             <ResizeNodePoolDrawer
-              open={drawerOpen}
-              onClose={() => setDrawerOpen(false)}
+              open={resizeDrawerOpen}
+              onClose={() => setResizeDrawerOpen(false)}
               onSubmit={(updatedCount: number) => handleResize(updatedCount)}
               nodePool={poolForEdit}
               isSubmitting={drawerSubmitting}
