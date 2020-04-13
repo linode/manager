@@ -237,7 +237,7 @@ export class SelectPlanPanel extends React.Component<
       <TableHead>
         <TableRow>
           <TableCell className={'visually-hidden'} />
-          <TableCell data-qa-plan-header>Linode Plan</TableCell>
+          <TableCell data-qa-plan-header>Plan</TableCell>
           <TableCell data-qa-monthly-header>Monthly</TableCell>
           <TableCell data-qa-hourly-header>Hourly</TableCell>
           <TableCell data-qa-cpu-header>CPUs</TableCell>
@@ -273,7 +273,7 @@ export class SelectPlanPanel extends React.Component<
   };
 
   createTabs = (): [Tab[], LinodeTypeClass[]] => {
-    const { classes, types } = this.props;
+    const { classes, types, isOnCreate } = this.props;
     const tabs: Tab[] = [];
     const nanodes = getNanodes(types);
     const standards = getStandard(types);
@@ -288,10 +288,12 @@ export class SelectPlanPanel extends React.Component<
         render: () => {
           return (
             <>
-              <Typography data-qa-nanode className={classes.copy}>
-                Nanode instances are good for low-duty workloads, where
-                performance isn't critical.
-              </Typography>
+              {isOnCreate && (
+                <Typography data-qa-nanode className={classes.copy}>
+                  Nanode instances are good for low-duty workloads, where
+                  performance isn't critical.
+                </Typography>
+              )}
               {this.renderPlanContainer(nanodes)}
             </>
           );
@@ -306,10 +308,12 @@ export class SelectPlanPanel extends React.Component<
         render: () => {
           return (
             <>
-              <Typography data-qa-standard className={classes.copy}>
-                Standard instances are good for medium-duty workloads and are a
-                good mix of performance, resources, and price.
-              </Typography>
+              {isOnCreate && (
+                <Typography data-qa-standard className={classes.copy}>
+                  Standard instances are good for medium-duty workloads and are
+                  a good mix of performance, resources, and price.
+                </Typography>
+              )}
               {this.renderPlanContainer(standards)}
             </>
           );
@@ -324,10 +328,12 @@ export class SelectPlanPanel extends React.Component<
         render: () => {
           return (
             <>
-              <Typography data-qa-dedicated className={classes.copy}>
-                Dedicated CPU instances are good for full-duty workloads where
-                consistent performance is important.
-              </Typography>
+              {isOnCreate && (
+                <Typography data-qa-dedicated className={classes.copy}>
+                  Dedicated CPU instances are good for full-duty workloads where
+                  consistent performance is important.
+                </Typography>
+              )}
               {this.renderPlanContainer(dedicated)}
             </>
           );
@@ -342,11 +348,13 @@ export class SelectPlanPanel extends React.Component<
         render: () => {
           return (
             <>
-              <Typography data-qa-highmem className={classes.copy}>
-                High Memory instances favor RAM over other resources, and can be
-                good for memory hungry use cases like caching and in-memory
-                databases.
-              </Typography>
+              {isOnCreate && (
+                <Typography data-qa-highmem className={classes.copy}>
+                  High Memory instances favor RAM over other resources, and can
+                  be good for memory hungry use cases like caching and in-memory
+                  databases.
+                </Typography>
+              )}
               {this.renderPlanContainer(highmem)}
             </>
           );
@@ -378,11 +386,13 @@ export class SelectPlanPanel extends React.Component<
           return (
             <>
               <Notice warning text={programInfo} />
-              <Typography data-qa-gpu className={classes.copy}>
-                Linodes with dedicated GPUs accelerate highly specialized
-                applications such as machine learning, AI, and video
-                transcoding.
-              </Typography>
+              {isOnCreate && (
+                <Typography data-qa-gpu className={classes.copy}>
+                  Linodes with dedicated GPUs accelerate highly specialized
+                  applications such as machine learning, AI, and video
+                  transcoding.
+                </Typography>
+              )}
               {this.renderPlanContainer(gpu)}
             </>
           );

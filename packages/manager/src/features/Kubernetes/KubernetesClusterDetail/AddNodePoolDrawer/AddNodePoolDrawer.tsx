@@ -15,23 +15,35 @@ import SelectPlanQuantityPanel, {
 import { nodeWarning } from '../../kubeUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  summary: {
+  drawer: {
+    '& .MuiDrawer-paper': {
+      minWidth: 790,
+      overflowX: 'hidden'
+    },
+    '& .MuiGrid-root': {
+      marginBottom: 0
+    }
+  },
+  plans: {
+    '& > *': {
+      marginTop: 0,
+      '& > *': {
+        padding: 0
+      }
+    }
+  },
+  button: {
+    marginTop: '0 !important'
+  },
+  priceDisplay: {
     color: theme.color.headline,
     display: 'inline',
-    fontSize: '16px',
-    lineHeight: '20px',
+    fontSize: '1rem',
+    lineHeight: '1.25rem',
+    marginLeft: theme.spacing(2),
     '& span': {
       fontWeight: 'bold'
     }
-  },
-  section: {
-    paddingBottom: theme.spacing(3)
-  },
-  planPanel: {
-    marginTop: 0
-  },
-  priceDisplay: {
-    marginLeft: theme.spacing(2)
   }
 }));
 
@@ -97,12 +109,12 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
   return (
     <Drawer
       title={`Add a Node Pool: ${clusterLabel}`}
+      className={classes.drawer}
       open={open}
       onClose={onClose}
-      wide={true}
     >
       {error && <Notice error text={error} />}
-      <form className={classes.planPanel}>
+      <form className={classes.plans}>
         <SelectPlanQuantityPanel
           types={_types.filter(t => t.class !== 'nanode' && t.class !== 'gpu')} // No Nanodes or GPUs in clusters
           selectedID={selectedType}
@@ -114,7 +126,7 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
         {currentCount > 0 && currentCount < 3 && (
           <Notice important warning text={nodeWarning} spacingTop={8} />
         )}
-        <ActionsPanel>
+        <ActionsPanel className={classes.button}>
           <Box display="flex" flexDirection="row" alignItems="center">
             <Button
               buttonType="primary"

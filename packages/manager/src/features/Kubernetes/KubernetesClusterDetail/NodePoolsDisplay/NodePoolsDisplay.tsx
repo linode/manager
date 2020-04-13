@@ -26,6 +26,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: theme.spacing(3)
   },
+  addNodePoolLink: {
+    display: 'flex',
+    alignItems: 'flex-end',
+    '& button': {
+      marginButton: 0,
+      paddingBottom: theme.spacing()
+    }
+  },
   displayTable: {
     width: '100%',
     '& > div': {
@@ -195,16 +203,14 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
           </Typography>
         </Grid>
         <Grid item>
-          <Grid container alignItems="flex-end">
-            <Grid item className="pt0">
-              <AddNewLink
-                onClick={() => {
-                  handleOpenAddDrawer();
-                }}
-                label="Add a Node Pool"
-              />
-            </Grid>
-          </Grid>
+          <div className={classes.addNodePoolLink}>
+            <AddNewLink
+              onClick={() => {
+                handleOpenAddDrawer();
+              }}
+              label="Add a Node Pool"
+            />
+          </div>
         </Grid>
       </Grid>
       <Paper className={classes.root}>
