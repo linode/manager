@@ -100,7 +100,11 @@ export const ResizeNodePoolDrawer: React.FC<Props> = props => {
           <Typography className={classes.helperText}>
             Enter the number of nodes you'd like in this pool:
           </Typography>
-          <EnhancedNumberInput value={updatedCount} setValue={handleChange} />
+          <EnhancedNumberInput
+            value={updatedCount}
+            setValue={handleChange}
+            small
+          />
         </div>
 
         <div className={classes.section}>
@@ -126,10 +130,10 @@ export const ResizeNodePoolDrawer: React.FC<Props> = props => {
           >
             Save Changes
           </Button>
-          {/* 
+          {/*
             <Button onClick={onClose} buttonType="cancel" data-qa-cancel>
                 Cancel
-            </Button> 
+            </Button>
           */}
         </ActionsPanel>
       </form>

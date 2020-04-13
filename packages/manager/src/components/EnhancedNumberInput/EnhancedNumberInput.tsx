@@ -49,6 +49,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       height: 30,
       minWidth: 30
     },
+    '& $input': {
+      padding: '0 8px'
+    },
     '& $textField': {
       width: 50,
       minWidth: 40,
