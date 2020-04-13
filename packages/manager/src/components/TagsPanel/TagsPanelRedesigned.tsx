@@ -24,7 +24,6 @@ import {
 import Typography from 'src/components/core/Typography';
 import Select from 'src/components/EnhancedSelect/Select';
 import IconTextLink from 'src/components/IconTextLink';
-import Notice from 'src/components/Notice';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import TagsPanelItem from './TagsPanelItem';
 
