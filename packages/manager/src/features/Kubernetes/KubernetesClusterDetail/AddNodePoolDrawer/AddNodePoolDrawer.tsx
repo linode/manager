@@ -12,7 +12,7 @@ import { addCountToTypes } from 'src/features/Kubernetes/CreateCluster/NodePoolP
 import SelectPlanQuantityPanel, {
   ExtendedTypeWithCount
 } from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel.tsx';
-// import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { nodeWarning } from '../../kubeUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   summary: {
@@ -111,24 +111,29 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
           addPool={handleAdd}
           isSubmitting={isSubmitting}
         />
+        {currentCount > 0 && currentCount < 3 && (
+          <Notice important warning text={nodeWarning} spacingTop={8} />
+        )}
         <ActionsPanel>
           <Box display="flex" flexDirection="row" alignItems="center">
             <Button
               buttonType="primary"
               onClick={() => handleAdd()}
-              disabled={false}
+              disabled={currentCount === 0}
               loading={isSubmitting}
             >
               Add pool
             </Button>
-            <Typography className={classes.priceDisplay}>
-              This pool will add{' '}
-              <strong>
-                ${currentCount * pricePerNode}/month ({currentCount} nodes at $
-                {pricePerNode}/month
-              </strong>{' '}
-              to this cluster.
-            </Typography>
+            {currentCount > 0 && (
+              <Typography className={classes.priceDisplay}>
+                This pool will add{' '}
+                <strong>
+                  ${currentCount * pricePerNode}/month ({currentCount} nodes at
+                  ${pricePerNode}/month
+                </strong>{' '}
+                to this cluster.
+              </Typography>
+            )}
           </Box>
         </ActionsPanel>
       </form>
