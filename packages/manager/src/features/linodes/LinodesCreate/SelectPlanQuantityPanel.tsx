@@ -82,9 +82,9 @@ const styles = (theme: Theme) =>
     },
     enhancedInputButton: {
       marginLeft: 10,
-      minWidth: 90,
-      paddingTop: 12,
-      paddingBottom: 12
+      minWidth: 85,
+      paddingTop: 7,
+      paddingBottom: 7
     }
   });
 
@@ -187,6 +187,7 @@ export class SelectPlanPanel extends React.Component<
                   setValue={(newCount: number) =>
                     updatePlanCount(type.id, newCount)
                   }
+                  small
                 />
                 {isOnCreate && (
                   <Button
