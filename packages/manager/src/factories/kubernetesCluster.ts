@@ -27,7 +27,7 @@ export const kubeLinodeFactory = Factory.Sync.makeFactory<PoolNodeResponse>({
 
 export const _nodePoolFactory = Factory.Sync.makeFactory<PoolNodeWithPrice>({
   id: Factory.each(id => id),
-  count: Math.floor(Math.random() * 10),
+  count: 3,
   type: 'g5-standard-1',
   totalMonthlyPrice: 1000
 });
@@ -50,12 +50,14 @@ export const kubernetesClusterFactory = Factory.Sync.makeFactory<
 >({
   id: Factory.each(id => id),
   created: '2020-01-01 8:00',
+  updated: '2020-01-01 8:00',
   region: 'us-central',
   status: 'ready',
   label: Factory.each(i => `test-cluster-${i}`),
-  version: '1.17',
+  k8s_version: '1.17',
   node_pools: nodePoolFactory.buildList(2),
   totalMemory: 1000,
   totalCPU: 4,
-  totalStorage: 1000
+  totalStorage: 1000,
+  tags: []
 });

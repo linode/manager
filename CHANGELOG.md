@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-04-10] - 1.5.1
+
+### Changed:
+
+- Update LKE schema to reflect breaking API changes (version is now k8s_version)
+
 ## [2020-04-07] - 1.5.0
 
 ### Changed:

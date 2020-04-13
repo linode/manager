@@ -1,23 +1,12 @@
-import DomainIcon from 'src/assets/addnewmenu/domain.svg';
-import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
-import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
-import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import { SearchableItem, SearchResultsByEntity } from './search.interfaces';
-
-export const iconMap = {
-  LinodeIcon,
-  NodebalIcon,
-  VolumeIcon,
-  DomainIcon,
-  default: LinodeIcon
-};
 
 export const emptyResults: SearchResultsByEntity = {
   linodes: [],
   volumes: [],
   domains: [],
   images: [],
-  nodebalancers: []
+  nodebalancers: [],
+  kubernetesClusters: []
 };
 
 export const separateResultsByEntity = (
@@ -28,7 +17,8 @@ export const separateResultsByEntity = (
     volumes: [],
     domains: [],
     images: [],
-    nodebalancers: []
+    nodebalancers: [],
+    kubernetesClusters: []
   };
 
   searchResults.forEach(result => {

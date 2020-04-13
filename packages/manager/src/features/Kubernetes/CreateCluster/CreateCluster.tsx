@@ -164,7 +164,6 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
     []
   );
   const [selectedType, setSelectedType] = React.useState<string>('');
-  const [newCount, setNewCount] = React.useState<number>(0);
 
   React.useEffect(() => {
     getAllVersions()
@@ -207,7 +206,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
     setErrors(undefined);
     setSubmitting(true);
 
-    const _version = version ? version.value : undefined;
+    const k8s_version = version ? version.value : undefined;
 
     /**
      * We need to remove the monthly price, which is used for client-side
@@ -220,7 +219,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
       region: selectedRegion,
       node_pools,
       label,
-      version: _version
+      k8s_version
     };
 
     createKubernetesCluster(payload)
@@ -253,10 +252,6 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
     setNodePools(updatedPools);
   };
 
-  const updateCount = (count: number) => {
-    setNewCount(count);
-  };
-
   const selectType = (type: string) => {
     setSelectedType(type);
   };
@@ -270,7 +265,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
   };
 
   const errorMap = getErrorMap(
-    ['region', 'node_pools', 'label', 'version', 'versionLoad'],
+    ['region', 'node_pools', 'label', 'k8s_version', 'versionLoad'],
     errors
   );
 
@@ -356,7 +351,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
                     className={classes.inputWidth}
                     label="Kubernetes Version"
                     value={version || null}
-                    errorText={errorMap.version}
+                    errorText={errorMap.k8s_version}
                     options={versionOptions}
                     placeholder={' '}
                     onChange={(selected: Item<string>) => setVersion(selected)}
@@ -382,12 +377,10 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
                   addNodePool={(pool: PoolNodeWithPrice) => addPool(pool)}
                   deleteNodePool={(poolIdx: number) => removePool(poolIdx)}
                   handleTypeSelect={(newType: string) => selectType(newType)}
-                  updateNodeCount={(count: number) => updateCount(count)}
                   updatePool={updatePool}
                   updateFor={[
                     nodePools,
                     typesData,
-                    newCount,
                     errorMap,
                     typesLoading,
                     selectedType,

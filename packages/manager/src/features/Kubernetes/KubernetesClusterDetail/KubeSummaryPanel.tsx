@@ -4,14 +4,14 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
 
-import DetailsIcon from 'src/assets/icons/details.svg';
-import DownloadIcon from 'src/assets/icons/download.svg';
-import CPUIcon from 'src/assets/icons/longview/cpu-icon.svg';
-import DiskIcon from 'src/assets/icons/longview/disk.svg';
-import RamIcon from 'src/assets/icons/longview/ram-sticks.svg';
+import DetailsIcon from 'src/assets/icons/code-file.svg';
+import CPUIcon from 'src/assets/icons/cpu-icon.svg';
+import DiskIcon from 'src/assets/icons/disk.svg';
+import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import MapPin from 'src/assets/icons/map-pin-icon.svg';
 import MiniKube from 'src/assets/icons/mini-kube.svg';
 import PriceIcon from 'src/assets/icons/price-icon.svg';
+import RamIcon from 'src/assets/icons/ram-sticks.svg';
 
 import Paper from 'src/components/core/Paper';
 import {
@@ -38,20 +38,22 @@ type ClassNames =
   | 'item'
   | 'label'
   | 'column'
-  | 'linksGrid'
   | 'iconsSharedStyling'
+  | 'kubeconfigSection'
   | 'kubeconfigElements'
   | 'kubeconfigFileText'
   | 'kubeconfigIcons'
   | 'tagsSection'
-  | 'mainGridContainer';
+  | 'mainGridContainer'
+  | 'iconSharedOuter'
+  | 'iconTextOuter';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
       marginBottom: theme.spacing(3),
-      padding: `${theme.spacing(3) + 5}px ${theme.spacing(3) +
-        1}px ${theme.spacing(2) - 3}px`
+      padding: `${theme.spacing(2) + 4}px ${theme.spacing(2) +
+        4}px ${theme.spacing(3)}px`
     },
     mainGridContainer: {
       [theme.breakpoints.up('lg')]: {
@@ -60,26 +62,22 @@ const styles = (theme: Theme) =>
     },
     item: {
       '&:last-of-type': {
-        marginBottom: 0
+        paddingBottom: 0
       },
       paddingBottom: theme.spacing(1)
     },
     label: {
-      color: theme.color.kubeLabel,
-      marginBottom: theme.spacing(1),
+      marginBottom: `${theme.spacing(1) - 3}px`,
       fontWeight: 'bold'
     },
-    column: {
-      marginRight: theme.spacing(3)
-    },
-    linksGrid: {
-      width: '30%',
-      marginRight: theme.spacing(2)
-    },
+    column: {},
     iconsSharedStyling: {
       width: 24,
       height: 24,
       objectFit: 'contain'
+    },
+    kubeconfigSection: {
+      marginTop: `${theme.spacing() + 2}px`
     },
     kubeconfigElements: {
       color: theme.palette.primary.main,
@@ -88,7 +86,8 @@ const styles = (theme: Theme) =>
     },
     kubeconfigFileText: {
       cursor: 'pointer',
-      color: theme.palette.primary.main
+      color: theme.palette.primary.main,
+      marginRight: theme.spacing(1)
     },
     kubeconfigIcons: {
       cursor: 'pointer',
@@ -103,6 +102,14 @@ const styles = (theme: Theme) =>
         justifyContent: 'flex-end',
         textAlign: 'right'
       }
+    },
+    iconSharedOuter: {
+      textAlign: 'center',
+      flexBasis: '28%'
+    },
+    iconTextOuter: {
+      flexBasis: '72%',
+      minWidth: 115
     }
   });
 
@@ -211,17 +218,24 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
 
   const setKubeconfigDisplay = () => {
     return (
-      <Grid item className={classes.linksGrid} xs={12} md={4}>
-        <Paper className={classes.item}>
+      <Grid
+        item
+        container
+        direction="column"
+        justify="space-between"
+        xs={12}
+        lg={4}
+      >
+        <Grid item>
           <Typography className={classes.label}>
             Kubernetes API Endpoint:
           </Typography>
           <Typography>
             {renderEndpoint(endpoint, endpointLoading, endpointError)}
           </Typography>
-        </Paper>
+        </Grid>
 
-        <Paper className={classes.item}>
+        <Grid item>
           <Typography className={classes.label}>Kubeconfig:</Typography>
 
           {kubeconfigAvailable ? (
@@ -250,7 +264,7 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
                 'Your Kubeconfig will be viewable here once it is available.'}
             </Typography>
           )}
-        </Paper>
+        </Grid>
       </Grid>
     );
   };
@@ -258,113 +272,115 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
   return (
     <React.Fragment>
       <Paper className={classes.root}>
-        <Grid
+        <Grid 
           container
           alignItems="flex-start"
           className={classes.mainGridContainer}
         >
-          <Grid item className={classes.column}>
-            <Grid
-              container
-              item
-              wrap="nowrap"
-              alignItems="center"
-              className={classes.item}
-            >
-              <Grid item>
-                <MiniKube className={classes.iconsSharedStyling} />
+          <Grid item container direction="row" xs={12} lg={4}>
+            <Grid item className={classes.column}>
+              <Grid
+                container
+                item
+                wrap="nowrap"
+                alignItems="center"
+                className={classes.item}
+              >
+                <Grid item className={classes.iconSharedOuter}>
+                  <MiniKube className={classes.iconsSharedStyling} />
+                </Grid>
+
+                <Grid item className={classes.iconTextOuter}>
+                  <Typography>Version {cluster.k8s_version}</Typography>
+                </Grid>
               </Grid>
 
-              <Grid item>
-                <Typography>Version {cluster.version}</Typography>
-              </Grid>
-            </Grid>
+              <Grid
+                container
+                item
+                wrap="nowrap"
+                alignItems="center"
+                className={classes.item}
+              >
+                <Grid item className={classes.iconSharedOuter}>
+                  <MapPin className={classes.iconsSharedStyling} />
+                </Grid>
 
-            <Grid
-              container
-              item
-              wrap="nowrap"
-              alignItems="center"
-              className={classes.item}
-            >
-              <Grid item>
-                <MapPin className={classes.iconsSharedStyling} />
-              </Grid>
-
-              <Grid item>
-                <Typography>{region}</Typography>
-              </Grid>
-            </Grid>
-
-            <Grid
-              container
-              item
-              wrap="nowrap"
-              alignItems="center"
-              className={classes.item}
-            >
-              <Grid item>
-                <PriceIcon className={classes.iconsSharedStyling} />
+                <Grid item className={classes.iconTextOuter}>
+                  <Typography>{region}</Typography>
+                </Grid>
               </Grid>
 
-              <Grid item>
-                <Typography>
-                  {`$${getTotalClusterPrice(cluster.node_pools)}/month`}
-                </Typography>
-              </Grid>
-            </Grid>
-          </Grid>
+              <Grid
+                container
+                item
+                wrap="nowrap"
+                alignItems="center"
+                className={classes.item}
+              >
+                <Grid item className={classes.iconSharedOuter}>
+                  <PriceIcon className={classes.iconsSharedStyling} />
+                </Grid>
 
-          <Grid item className={classes.column}>
-            <Grid
-              container
-              item
-              wrap="nowrap"
-              alignItems="center"
-              className={classes.item}
-            >
-              <Grid item>
-                <CPUIcon className={classes.iconsSharedStyling} />
-              </Grid>
-
-              <Grid item>
-                <Typography>
-                  {pluralize('CPU Core', 'CPU Cores', cluster.totalCPU)}
-                </Typography>
+                <Grid item className={classes.iconTextOuter}>
+                  <Typography>
+                    {`$${getTotalClusterPrice(cluster.node_pools)}/month`}
+                  </Typography>
+                </Grid>
               </Grid>
             </Grid>
 
-            <Grid
-              container
-              item
-              wrap="nowrap"
-              alignItems="center"
-              className={classes.item}
-            >
-              <Grid item>
-                <RamIcon className={classes.iconsSharedStyling} />
+            <Grid item className={classes.column}>
+              <Grid
+                container
+                item
+                wrap="nowrap"
+                alignItems="center"
+                className={classes.item}
+              >
+                <Grid item className={classes.iconSharedOuter}>
+                  <CPUIcon className={classes.iconsSharedStyling} />
+                </Grid>
+
+                <Grid item className={classes.iconTextOuter}>
+                  <Typography>
+                    {pluralize('CPU Core', 'CPU Cores', cluster.totalCPU)}
+                  </Typography>
+                </Grid>
               </Grid>
 
-              <Grid item>
-                <Typography>{cluster.totalMemory / 1024} GB RAM</Typography>
-              </Grid>
-            </Grid>
+              <Grid
+                container
+                item
+                wrap="nowrap"
+                alignItems="center"
+                className={classes.item}
+              >
+                <Grid item className={classes.iconSharedOuter}>
+                  <RamIcon className={classes.iconsSharedStyling} />
+                </Grid>
 
-            <Grid
-              container
-              item
-              wrap="nowrap"
-              alignItems="center"
-              className={classes.item}
-            >
-              <Grid item>
-                <DiskIcon width={19} height={24} object-fit="contain" />
+                <Grid item className={classes.iconTextOuter}>
+                  <Typography>{cluster.totalMemory / 1024} GB RAM</Typography>
+                </Grid>
               </Grid>
 
-              <Grid item>
-                <Typography>
-                  {Math.floor(cluster.totalStorage / 1024)} GB Storage
-                </Typography>
+              <Grid
+                container
+                item
+                wrap="nowrap"
+                alignItems="center"
+                className={classes.item}
+              >
+                <Grid item className={classes.iconSharedOuter}>
+                  <DiskIcon width={19} height={24} object-fit="contain" />
+                </Grid>
+
+                <Grid item className={classes.iconTextOuter}>
+                  <Typography>
+                    {Math.floor(cluster.totalStorage / 1024)} GB Storage
+                  </Typography>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>

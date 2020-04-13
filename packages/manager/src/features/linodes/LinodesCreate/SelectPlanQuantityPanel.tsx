@@ -82,9 +82,9 @@ const styles = (theme: Theme) =>
     },
     enhancedInputButton: {
       marginLeft: 10,
-      minWidth: 90,
-      paddingTop: 12,
-      paddingBottom: 12
+      minWidth: 85,
+      paddingTop: 7,
+      paddingBottom: 7
     }
   });
 
@@ -187,12 +187,13 @@ export class SelectPlanPanel extends React.Component<
                   setValue={(newCount: number) =>
                     updatePlanCount(type.id, newCount)
                   }
+                  small
                 />
                 {isOnCreate && (
                   <Button
                     buttonType="primary"
                     onClick={() => submitForm!(type.id, type.count)}
-                    disabled={type.id !== String(selectedID)}
+                    disabled={type.count < 1}
                     className={classes.enhancedInputButton}
                   >
                     Add
@@ -213,7 +214,9 @@ export class SelectPlanPanel extends React.Component<
             disabled={disabled}
             variant={'quantityCheck'}
             inputValue={type.count}
-            setInputValue={updatePlanCount}
+            setInputValue={(newCount: number) =>
+              updatePlanCount(type.id, newCount)
+            }
             displayButton={isOnCreate}
             submitForm={() => submitForm!(type.id, type.count)}
             buttonDisabled={type.id !== String(selectedID)}

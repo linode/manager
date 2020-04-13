@@ -78,7 +78,8 @@ const styles = (theme: Theme) =>
         fontFamily: '"LatoWeb", sans-serif'
       },
       textAlign: 'left',
-      paddingLeft: 10
+      paddingLeft: 10,
+      marginTop: 20
     },
     addButton: {
       padding: 0,
@@ -106,7 +107,8 @@ const styles = (theme: Theme) =>
       position: 'relative'
     },
     selectTag: {
-      marginTop: theme.spacing(1),
+      minWidth: 275,
+      textAlign: 'left',
       width: '100%',
       position: 'relative',
       zIndex: 3,
