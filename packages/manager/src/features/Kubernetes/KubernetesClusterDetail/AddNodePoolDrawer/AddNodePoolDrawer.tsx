@@ -54,7 +54,7 @@ export interface Props {
   error?: string;
   isSubmitting: boolean;
   onClose: () => void;
-  onSubmit: (type: string, count: number) => Promise<void>;
+  onSubmit: (type: string, count: number) => void;
 }
 
 type CombinedProps = Props & WithTypesProps;
@@ -95,6 +95,12 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
     }
   }, [open]);
 
+  React.useEffect(() => {
+    if (error) {
+      scrollErrorIntoView();
+    }
+  }, [error]);
+
   const updatePlanCount = (planId: string, newCount: number) => {
     const newTypes = _types.map((thisType: any) => {
       if (thisType.id === planId) {
@@ -116,9 +122,7 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
     if (!type || !selectedType) {
       return;
     }
-    onSubmit(type.id, type.count).catch(() => {
-      scrollErrorIntoView();
-    });
+    onSubmit(type.id, type.count);
   };
 
   return (
