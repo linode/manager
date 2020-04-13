@@ -389,9 +389,9 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
             })}
           >
             <IconTextLink
-              text="Add a Tag"
+              text="Add a tag"
               SideIcon={AddCircle}
-              title="Add a Tag"
+              title="Add a tag"
               onClick={this.toggleTagInput}
               className={classes.addButton}
             />
