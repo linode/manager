@@ -21,6 +21,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Select from 'src/components/EnhancedSelect/Select';
 import IconTextLink from 'src/components/IconTextLink';
 import Notice from 'src/components/Notice';
@@ -68,10 +69,17 @@ const styles = (theme: Theme) =>
       marginTop: 0
     },
     errorNotice: {
+      borderLeft: `5px solid ${theme.palette.status.errorDark}`,
+      animation: '$fadeIn 225ms linear forwards',
+      '&$important': {
+        borderLeftWidth: 32
+      },
       '& .noticeText': {
         ...theme.typography.body1,
         fontFamily: '"LatoWeb", sans-serif'
-      }
+      },
+      textAlign: 'left',
+      paddingLeft: 10
     },
     addButton: {
       padding: 0,
@@ -424,13 +432,11 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
             })}
           </div>
           {tagError && (
-            <Notice
-              text={tagError}
-              error
-              spacingBottom={0}
-              spacingTop={16}
-              className={classes.errorNotice}
-            />
+            <Typography
+                className={classes.errorNotice}
+            >
+              {tagError}
+            </Typography>
           )}
         </div>
       </div>
