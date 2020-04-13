@@ -195,11 +195,6 @@ export class SelectPlanPanel extends React.Component<
                     !isOnCreate && Boolean(selectedID) && type.count < 1
                   }
                   small
-                  disabled={
-                    // When on the add pool flow, we only want the current input to be active,
-                    // unless we've just landed on the form or all the inputs are empty.
-                    !isOnCreate && Boolean(selectedID) && type.count < 1
-                  }
                 />
                 {isOnCreate && (
                   <Button
