@@ -56,7 +56,8 @@ const NodeDialog: React.FC<Props> = props => {
       {error && <Notice error text={error} />}
       <Typography>
         Are you sure you want to recycle this Node? The Linode will be deleted
-        and all data lost. A new Linode we be recreated to take its place.
+        and its data will be lost. A new Linode we be created to take its place.
+        It may take up to 30 minutes for the recycled Node to come back online.
       </Typography>
     </ConfirmationDialog>
   );
