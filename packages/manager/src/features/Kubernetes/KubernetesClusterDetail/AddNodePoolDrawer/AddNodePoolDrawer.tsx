@@ -46,9 +46,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'inline',
     fontSize: '1rem',
     lineHeight: '1.25rem',
-    marginLeft: theme.spacing(2),
+    marginTop: theme.spacing(2),
     '& span': {
       fontWeight: 'bold'
+    },
+    [theme.breakpoints.up('md')]: {
+      marginLeft: theme.spacing(2),
+      marginTop: 0
+    }
+  },
+  boxOuter: {
+    [theme.breakpoints.down('sm')]: {
+      alignItems: 'flex-start',
+      flexDirection: 'column'
     }
   }
 }));
@@ -157,7 +167,12 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
           <Notice important warning text={nodeWarning} spacingTop={8} />
         )}
         <ActionsPanel className={classes.button}>
-          <Box display="flex" flexDirection="row" alignItems="center">
+          <Box
+            display="flex"
+            flexDirection="row"
+            alignItems="center"
+            className={classes.boxOuter}
+          >
             <Button
               buttonType="primary"
               onClick={() => handleAdd()}
