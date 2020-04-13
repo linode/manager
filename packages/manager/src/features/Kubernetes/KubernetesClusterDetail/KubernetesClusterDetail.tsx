@@ -1,4 +1,8 @@
-import { getKubernetesClusterEndpoint } from 'linode-js-sdk/lib/kubernetes';
+import {
+  getKubeConfig,
+  getKubernetesClusterEndpoints,
+  KubernetesEndpointResponse
+} from 'linode-js-sdk/lib/kubernetes';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
@@ -22,6 +26,7 @@ import KubeContainer, {
 } from 'src/containers/kubernetes.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { getAllWithArguments } from 'src/utilities/getAll';
 import { ExtendedCluster, PoolNodeWithPrice } from '.././types';
 import KubeSummaryPanel from './KubeSummaryPanel';
 import NodePoolsDisplay from './NodePoolsDisplay';
@@ -87,6 +92,10 @@ type CombinedProps = WithTypesProps &
   DispatchProps &
   WithStyles<ClassNames>;
 
+const getAllEndpoints = getAllWithArguments<KubernetesEndpointResponse>(
+  getKubernetesClusterEndpoints
+);
+
 export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = props => {
   const {
     classes,
@@ -108,33 +117,75 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
   const [kubeconfigAvailable, setKubeconfigAvailability] = React.useState<
     boolean
   >(false);
+  const [kubeconfigError, setKubeconfigError] = React.useState<
+    string | undefined
+  >(undefined);
 
-  const kubeconfigAvailabilityInterval = React.useRef<any>();
+  const endpointAvailabilityInterval = React.useRef<number>();
+  const kubeconfigAvailabilityInterval = React.useRef<number>();
+
+  const getEndpointToDisplay = (endpoints: string[]) => {
+    // Per discussions with the API team and UX, we should display only the endpoint with port 443, so we are matching on that.
+    return endpoints.find(thisResponse =>
+      thisResponse.match(/linodelke\.net:443$/i)
+    );
+  };
+
+  const successfulClusterEndpointResponse = (endpoints: string[]) => {
+    setEndpointError(undefined);
+
+    const endpointToDisplay = getEndpointToDisplay(endpoints);
+
+    setEndpoint(endpointToDisplay ?? null);
+    setEndpointLoading(false);
+    clearInterval(endpointAvailabilityInterval.current);
+  };
+
+  // Create a function to check if the Kubeconfig is available.
+  const kubeconfigAvailabilityCheck = (
+    clusterID: number,
+    startInterval: boolean = false
+  ) => {
+    getKubeConfig(clusterID)
+      .then(() => {
+        kubeconfigAvailableEndInterval();
+      })
+      .catch(error => {
+        if (startInterval) {
+          setKubeconfigAvailability(false);
+
+          if (error?.[0]?.reason.match(/not yet available/i)) {
+            // If it is not yet available, set kubeconfigAvailabilityInterval equal to function that continues polling the endpoint every 30 seconds to grab it when it is
+            kubeconfigAvailabilityInterval.current = window.setInterval(() => {
+              kubeconfigAvailabilityCheck(clusterID);
+            }, 30 * 1000);
+          } else {
+            setKubeconfigError(
+              getAPIErrorOrDefault(error, 'Kubeconfig not available.')[0].reason
+            );
+          }
+        }
+      });
+  };
 
   const kubeconfigAvailableEndInterval = () => {
     setKubeconfigAvailability(true);
     clearInterval(kubeconfigAvailabilityInterval.current);
   };
 
-  const successfulClusterEndpointResponse = (response: {
-    endpoints: React.SetStateAction<string | null>[];
-  }) => {
-    setEndpointError(undefined);
-    setEndpoint(response.endpoints[0]); // @todo will there ever be multiple values here?
-    setEndpointLoading(false);
-    kubeconfigAvailableEndInterval();
-  };
-
   React.useEffect(() => {
     const clusterID = +props.match.params.clusterID;
     if (clusterID) {
-      const kubeconfigAvailabilityCheck = () => {
-        getKubernetesClusterEndpoint(clusterID)
+      // A function to check if the endpoint is available.
+      const endpointAvailabilityCheck = () => {
+        getAllEndpoints([clusterID])
           .then(response => {
-            successfulClusterEndpointResponse(response);
+            successfulClusterEndpointResponse(
+              response.data.map(thisEndpoint => thisEndpoint.endpoint)
+            );
           })
           .catch(error => {
-            // Do nothing since kubeconfigAvailable is false by default
+            // Do nothing since endpoint is null by default, and in the instances where this function is called, endpointAvailabilityInterval has been set in motion already.
           });
       };
 
@@ -142,25 +193,29 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
       // The cluster endpoint has its own API...uh, endpoint, so we need
       // to request it separately.
       setEndpointLoading(true);
-      getKubernetesClusterEndpoint(clusterID)
+      getAllEndpoints([clusterID])
         .then(response => {
-          successfulClusterEndpointResponse(response);
+          successfulClusterEndpointResponse(
+            response.data.map(thisEndpoint => thisEndpoint.endpoint)
+          );
         })
         .catch(error => {
           setEndpointLoading(false);
 
-          // If the error is that the endpoint is not yet available, set kubeconfigAvailabilityInterval equal to function that continues polling the endpoint every 5 seconds to grab it when it is.
-          if (error[0].reason.match(/endpoint not available/i)) {
-            kubeconfigAvailabilityInterval.current = setInterval(() => {
-              kubeconfigAvailabilityCheck();
+          // If the error is that the endpoint is not yet available, set endpointAvailabilityInterval equal to function that continues polling the endpoint every 5 seconds to grab it when it is.
+          if (error?.[0]?.reason.match(/endpoints are not yet available/i)) {
+            endpointAvailabilityInterval.current = window.setInterval(() => {
+              endpointAvailabilityCheck();
             }, 5000);
+          } else {
+            setEndpointError(
+              getAPIErrorOrDefault(error, 'Cluster endpoint not available.')[0]
+                .reason
+            );
           }
-
-          setEndpointError(
-            getAPIErrorOrDefault(error, 'Cluster endpoint not available.')[0]
-              .reason
-          );
         });
+
+      kubeconfigAvailabilityCheck(clusterID, true);
     }
 
     const interval = setInterval(
@@ -170,6 +225,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
 
     return () => {
       clearInterval(interval);
+      clearInterval(endpointAvailabilityInterval.current);
+      clearInterval(kubeconfigAvailabilityInterval.current);
     };
   }, []);
 
@@ -247,6 +304,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
             endpointError={endpointError}
             endpointLoading={endpointLoading}
             kubeconfigAvailable={kubeconfigAvailable}
+            kubeconfigError={kubeconfigError}
           />
         </Grid>
         <Grid item xs={12}>
