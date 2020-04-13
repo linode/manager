@@ -183,6 +183,7 @@ export class SelectPlanPanel extends React.Component<
             <TableCell>
               <div className={classes.enhancedInputOuter}>
                 <EnhancedNumberInput
+                  inputLabel={`edit-quantity-${type.id}`}
                   value={type.count}
                   setValue={(newCount: number) =>
                     updatePlanCount(type.id, newCount)
