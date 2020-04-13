@@ -1,3 +1,12 @@
+/**
+ * This component was essential copied from ./TagsPanel.tsx. The new designs
+ * for the TagsPanel component are largely similar to the original, but there
+ * were enough differences that we didn't want to handle for both cases with props.
+ *
+ * When the *new* component (this one) has been applied everywhere, the original
+ * "./TagsPanel.tsx" should be replaced with the contents of this file, and this
+ * file should be deleted.
+ */
 import AddCircle from '@material-ui/icons/AddCircle';
 import * as classNames from 'classnames';
 import { getTags } from 'linode-js-sdk/lib/tags';
@@ -86,7 +95,7 @@ const styles = (theme: Theme) =>
     },
     addButtonText: {
       color: theme.palette.primary.main,
-      fontWeight: 700,
+      fontWeight: 700
     },
     tagsPanelItemWrapper: {
       marginBottom: theme.spacing(2),
@@ -354,7 +363,7 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
           [classes.root]: true
         })}
       >
-          {isCreatingTag ? (
+        {isCreatingTag ? (
           <Select
             onChange={this.handleCreateTag}
             options={tagsToSuggest}
@@ -377,7 +386,7 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
               [classes.hasError]: tagError
             })}
           >
-            <IconTextLink 
+            <IconTextLink
               text="Add a Tag"
               SideIcon={AddCircle}
               title="Add a Tag"
