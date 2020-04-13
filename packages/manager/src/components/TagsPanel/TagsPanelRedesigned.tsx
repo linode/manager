@@ -42,11 +42,7 @@ const styles = (theme: Theme) =>
         opacity: 1
       }
     },
-    root: {
-      display: 'flex',
-      alignItems: 'center',
-      flexWrap: 'wrap'
-    },
+    root: {},
     tag: {
       marginTop: theme.spacing(1) / 2,
       marginRight: theme.spacing(1),
@@ -57,7 +53,6 @@ const styles = (theme: Theme) =>
     },
     addButtonWrapper: {
       width: '100%',
-      marginTop: theme.spacing(2) - 1,
       marginBottom: theme.spacing(2) + 1
     },
     hasError: {
@@ -73,6 +68,7 @@ const styles = (theme: Theme) =>
       padding: 0,
       position: 'relative',
       top: 2,
+      display: 'inline-block',
       '& svg': {
         marginRight: theme.spacing(1)
       },
@@ -86,7 +82,7 @@ const styles = (theme: Theme) =>
     },
     addButtonText: {
       color: theme.palette.primary.main,
-      fontWeight: 700,
+      fontWeight: 700
     },
     tagsPanelItemWrapper: {
       marginBottom: theme.spacing(2),
@@ -354,7 +350,7 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
           [classes.root]: true
         })}
       >
-          {isCreatingTag ? (
+        {isCreatingTag ? (
           <Select
             onChange={this.handleCreateTag}
             options={tagsToSuggest}
@@ -377,7 +373,7 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
               [classes.hasError]: tagError
             })}
           >
-            <IconTextLink 
+            <IconTextLink
               text="Add a Tag"
               SideIcon={AddCircle}
               title="Add a Tag"

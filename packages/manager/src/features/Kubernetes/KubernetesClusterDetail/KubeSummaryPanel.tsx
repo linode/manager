@@ -43,7 +43,8 @@ type ClassNames =
   | 'kubeconfigElements'
   | 'kubeconfigFileText'
   | 'kubeconfigIcons'
-  | 'tagsSection';
+  | 'tagsSection'
+  | 'mainGridContainer';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -51,6 +52,11 @@ const styles = (theme: Theme) =>
       marginBottom: theme.spacing(3),
       padding: `${theme.spacing(3) + 5}px ${theme.spacing(3) +
         1}px ${theme.spacing(2) - 3}px`
+    },
+    mainGridContainer: {
+      [theme.breakpoints.up('lg')]: {
+        justifyContent: 'space-between'
+      }
     },
     item: {
       '&:last-of-type': {
@@ -92,7 +98,11 @@ const styles = (theme: Theme) =>
       margin: `0 ${theme.spacing(1)}px`
     },
     tagsSection: {
-      display: 'inline-block'
+      display: 'flex',
+      [theme.breakpoints.up('lg')]: {
+        justifyContent: 'flex-end',
+        textAlign: 'right'
+      }
     }
   });
 
@@ -248,7 +258,11 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
   return (
     <React.Fragment>
       <Paper className={classes.root}>
-        <Grid container justify="space-around">
+        <Grid
+          container
+          alignItems="flex-start"
+          className={classes.mainGridContainer}
+        >
           <Grid item className={classes.column}>
             <Grid
               container
@@ -357,9 +371,12 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
 
           {setKubeconfigDisplay()}
 
-          <Grid item>
+          <Grid item xs={12} lg={4}>
             <Paper className={classes.tagsSection}>
-              <TagsPanelRedesigned tags={cluster.tags} updateTags={handleUpdateTags} />
+              <TagsPanelRedesigned
+                tags={cluster.tags}
+                updateTags={handleUpdateTags}
+              />
             </Paper>
           </Grid>
         </Grid>
