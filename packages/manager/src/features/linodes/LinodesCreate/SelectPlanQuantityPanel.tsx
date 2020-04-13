@@ -214,7 +214,9 @@ export class SelectPlanPanel extends React.Component<
             disabled={disabled}
             variant={'quantityCheck'}
             inputValue={type.count}
-            setInputValue={updatePlanCount}
+            setInputValue={(newCount: number) =>
+              updatePlanCount(type.id, newCount)
+            }
             displayButton={isOnCreate}
             submitForm={() => submitForm!(type.id, type.count)}
             buttonDisabled={type.id !== String(selectedID)}
