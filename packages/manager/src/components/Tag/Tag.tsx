@@ -28,11 +28,12 @@ type CSSClasses = 'label' | 'root' | 'deleteButton' | Variants;
 const styles = (theme: Theme) =>
   createStyles({
     label: {},
-    root: {},
+    root: {
+      '&:last-child': {
+        marginRight: 8
+      },
+    },
     deleteButton: {
-      // width: 10,
-      // height: 10,
-      // border: 'solid 0.5 #3683dc',
       minWidth: 'auto'
     },
     white: {
