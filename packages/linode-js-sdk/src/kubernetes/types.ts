@@ -1,10 +1,12 @@
 export interface KubernetesCluster {
   created: string;
+  updated: string;
   region: string;
   status: string; // @todo enum this
   label: string;
   k8s_version: string;
   id: number;
+  tags: string[];
 }
 
 export interface KubeNodePoolResponse {
