@@ -99,7 +99,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
   };
 
   const updatePlanCount = (planId: string, newCount: number) => {
-    const newTypes = _types.map((thisType: any) => {
+    const newTypes = _types.map((thisType: ExtendedTypeWithCount) => {
       if (thisType.id === planId) {
         return { ...thisType, count: newCount };
       }
@@ -122,6 +122,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
           updatePlanCount={updatePlanCount}
           submitForm={submitForm}
           isOnCreate={isOnCreate}
+          resetValues={() => null} // In this flow we don't want to clear things on tab changes
         />
       </Grid>
     </Grid>

@@ -89,14 +89,7 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
 
   React.useEffect(() => {
     if (open) {
-      setSelectedType(undefined);
-      const resetTypes = _types.map(thisType => {
-        return {
-          ...thisType,
-          count: 0
-        };
-      });
-      setNewType(resetTypes);
+      resetDrawer();
     }
   }, [open]);
 
@@ -105,6 +98,17 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
       scrollErrorIntoView();
     }
   }, [error]);
+
+  const resetDrawer = () => {
+    const newTypes = _types.map(thisType => {
+      return {
+        ...thisType,
+        count: 0
+      };
+    });
+    setNewType(newTypes);
+    setSelectedType(undefined);
+  };
 
   const updatePlanCount = (planId: string, newCount: number) => {
     const newTypes = _types.map((thisType: any) => {
@@ -147,6 +151,7 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
           updatePlanCount={updatePlanCount}
           addPool={handleAdd}
           isSubmitting={isSubmitting}
+          resetValues={resetDrawer}
         />
         {currentCount > 0 && currentCount < 3 && (
           <Notice important warning text={nodeWarning} spacingTop={8} />

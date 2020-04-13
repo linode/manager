@@ -108,6 +108,7 @@ interface Props {
   isOnCreate?: boolean;
   updatePlanCount: any;
   isSubmitting?: boolean;
+  resetValues: () => void;
 }
 
 const getNanodes = (types: ExtendedType[]) =>
@@ -417,6 +418,7 @@ export class SelectPlanPanel extends React.Component<
       error,
       header,
       types,
+      resetValues,
       currentPlanHeading
     } = this.props;
 
@@ -440,6 +442,7 @@ export class SelectPlanPanel extends React.Component<
         copy={copy}
         tabs={tabs}
         initTab={initialTab}
+        handleTabChange={() => resetValues()}
       />
     );
   }
