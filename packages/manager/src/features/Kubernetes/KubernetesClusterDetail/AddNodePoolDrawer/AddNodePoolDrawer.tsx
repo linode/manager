@@ -18,12 +18,17 @@ import { nodeWarning } from '../../kubeUtils';
 const useStyles = makeStyles((theme: Theme) => ({
   drawer: {
     '& .MuiDrawer-paper': {
-      minWidth: 790,
+      [theme.breakpoints.up('md')]: {
+        width: 790
+      },
       overflowX: 'hidden'
     },
     '& .MuiGrid-root': {
       marginBottom: 0
     }
+  },
+  error: {
+    marginBottom: '0 !important'
   },
   plans: {
     '& > *': {
@@ -79,18 +84,18 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
   );
 
   const _selectedType = _types.find(thisType => thisType.id === selectedType);
-  const resetTypes = _types.map(thisType => {
-    return {
-      ...thisType,
-      count: 0
-    };
-  });
   const currentCount = _selectedType?.count ?? 0;
   const pricePerNode = _selectedType?.price?.monthly ?? 0;
 
   React.useEffect(() => {
     if (open) {
       setSelectedType(undefined);
+      const resetTypes = _types.map(thisType => {
+        return {
+          ...thisType,
+          count: 0
+        };
+      });
       setNewType(resetTypes);
     }
   }, [open]);
@@ -132,7 +137,7 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
       open={open}
       onClose={onClose}
     >
-      {error && <Notice error text={error} />}
+      {error && <Notice className={classes.error} error text={error} />}
       <form className={classes.plans}>
         <SelectPlanQuantityPanel
           // No nanodes or GPUs in clusters

@@ -41,7 +41,7 @@ interface Props {
   typesError?: string;
   apiError?: string;
   isOnCreate?: boolean;
-  addNodePool: (pool: PoolNodeRequest) => void;
+  addNodePool: (pool: PoolNodeRequest) => any;
 }
 
 type CombinedProps = Props;
