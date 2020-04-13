@@ -47,7 +47,7 @@ const styles = (theme: Theme) =>
     root: {},
     title: {},
     tabBar: {
-      marginTop: theme.spacing(3)
+      marginTop: 0
     },
     backButton: {
       margin: '-6px 0 0 -16px',
@@ -72,7 +72,7 @@ const styles = (theme: Theme) =>
       }
     },
     titleGridWrapper: {
-      marginBottom: theme.spacing(1) + 4
+      marginBottom: theme.spacing(1)
     },
     tagHeading: {
       marginBottom: theme.spacing(1) + 4
