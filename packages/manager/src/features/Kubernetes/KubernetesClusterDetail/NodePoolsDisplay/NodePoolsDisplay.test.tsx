@@ -31,7 +31,9 @@ const props: Props = {
     subHeadings: ['a', 'subheading']
   })),
   updatePool: jest.fn(),
-  deletePool: jest.fn()
+  deletePool: jest.fn(),
+  addNodePool: jest.fn(),
+  clusterLabel: 'a cluster'
 };
 
 describe('NodeTable', () => {

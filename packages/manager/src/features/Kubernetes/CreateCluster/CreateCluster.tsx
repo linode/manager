@@ -163,7 +163,6 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
   const [versionOptions, setVersionOptions] = React.useState<Item<string>[]>(
     []
   );
-  const [selectedType, setSelectedType] = React.useState<string>('');
 
   React.useEffect(() => {
     getAllVersions()
@@ -250,10 +249,6 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
   const removePool = (poolIdx: number) => {
     const updatedPools = remove(poolIdx, 1, nodePools);
     setNodePools(updatedPools);
-  };
-
-  const selectType = (type: string) => {
-    setSelectedType(type);
   };
 
   const updateLabel = (newLabel: string) => {
@@ -361,7 +356,6 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
               </div>
               <Grid item>
                 <NodePoolPanel
-                  pools={nodePools}
                   types={typesData || []}
                   apiError={errorMap.node_pools}
                   typesLoading={typesLoading}
@@ -373,17 +367,12 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
                         )[0].reason
                       : undefined
                   }
-                  selectedType={selectedType}
                   addNodePool={(pool: PoolNodeWithPrice) => addPool(pool)}
-                  deleteNodePool={(poolIdx: number) => removePool(poolIdx)}
-                  handleTypeSelect={(newType: string) => selectType(newType)}
-                  updatePool={updatePool}
                   updateFor={[
                     nodePools,
                     typesData,
                     errorMap,
                     typesLoading,
-                    selectedType,
                     classes
                   ]}
                   isOnCreate

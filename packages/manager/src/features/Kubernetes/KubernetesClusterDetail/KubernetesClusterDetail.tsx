@@ -47,7 +47,7 @@ const styles = (theme: Theme) =>
     root: {},
     title: {},
     tabBar: {
-      marginTop: theme.spacing(3)
+      marginTop: 0
     },
     backButton: {
       margin: '-6px 0 0 -16px',
@@ -72,7 +72,7 @@ const styles = (theme: Theme) =>
       }
     },
     titleGridWrapper: {
-      marginBottom: theme.spacing(1) + 4
+      marginBottom: theme.spacing(1)
     },
     tagHeading: {
       marginBottom: theme.spacing(1) + 4
@@ -322,8 +322,16 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
         </Grid>
         <Grid item xs={12}>
           <NodePoolsDisplay
+            clusterLabel={cluster.label}
             pools={cluster.node_pools}
             types={props.typesData || []}
+            addNodePool={(pool: PoolNodeWithPrice) =>
+              props.createNodePool({
+                clusterID: cluster.id,
+                type: pool.type,
+                count: pool.count
+              })
+            }
             updatePool={(id: number, updatedPool: PoolNodeWithPrice) =>
               props.updateNodePool({
                 clusterID: cluster.id,

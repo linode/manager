@@ -1,5 +1,6 @@
 import * as classnames from 'classnames';
-import { LinodeType, LinodeTypeClass } from 'linode-js-sdk/lib/linodes';
+import { PoolNodeRequest } from 'linode-js-sdk/lib/kubernetes/types';
+import { LinodeType, LinodeTypeClass } from 'linode-js-sdk/lib/linodes/types';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -103,9 +104,11 @@ interface Props {
   header?: string;
   copy?: string;
   submitForm?: (key: string, value: number) => void;
-  addPool?: any;
+  addPool?: (pool?: PoolNodeRequest) => void;
   isOnCreate?: boolean;
   updatePlanCount: any;
+  isSubmitting?: boolean;
+  resetValues: () => void;
 }
 
 const getNanodes = (types: ExtendedType[]) =>
@@ -145,8 +148,6 @@ export class SelectPlanPanel extends React.Component<
           <TableRow
             data-qa-plan-row={type.label}
             key={type.id}
-            onClick={this.onSelect(type.id)}
-            rowLink={this.onSelect ? this.onSelect(type.id) : undefined}
             className={classnames({
               [classes.disabledRow]: disabled
             })}
@@ -183,9 +184,15 @@ export class SelectPlanPanel extends React.Component<
             <TableCell>
               <div className={classes.enhancedInputOuter}>
                 <EnhancedNumberInput
+                  inputLabel={`edit-quantity-${type.id}`}
                   value={type.count}
                   setValue={(newCount: number) =>
                     updatePlanCount(type.id, newCount)
+                  }
+                  disabled={
+                    // When on the add pool flow, we only want the current input to be active,
+                    // unless we've just landed on the form or all the inputs are empty.
+                    !isOnCreate && Boolean(selectedID) && type.count < 1
                   }
                   small
                 />
@@ -231,7 +238,7 @@ export class SelectPlanPanel extends React.Component<
       <TableHead>
         <TableRow>
           <TableCell className={'visually-hidden'} />
-          <TableCell data-qa-plan-header>Linode Plan</TableCell>
+          <TableCell data-qa-plan-header>Plan</TableCell>
           <TableCell data-qa-monthly-header>Monthly</TableCell>
           <TableCell data-qa-hourly-header>Hourly</TableCell>
           <TableCell data-qa-cpu-header>CPUs</TableCell>
@@ -267,7 +274,7 @@ export class SelectPlanPanel extends React.Component<
   };
 
   createTabs = (): [Tab[], LinodeTypeClass[]] => {
-    const { classes, types } = this.props;
+    const { classes, types, isOnCreate } = this.props;
     const tabs: Tab[] = [];
     const nanodes = getNanodes(types);
     const standards = getStandard(types);
@@ -282,10 +289,12 @@ export class SelectPlanPanel extends React.Component<
         render: () => {
           return (
             <>
-              <Typography data-qa-nanode className={classes.copy}>
-                Nanode instances are good for low-duty workloads, where
-                performance isn't critical.
-              </Typography>
+              {isOnCreate && (
+                <Typography data-qa-nanode className={classes.copy}>
+                  Nanode instances are good for low-duty workloads, where
+                  performance isn't critical.
+                </Typography>
+              )}
               {this.renderPlanContainer(nanodes)}
             </>
           );
@@ -300,10 +309,12 @@ export class SelectPlanPanel extends React.Component<
         render: () => {
           return (
             <>
-              <Typography data-qa-standard className={classes.copy}>
-                Standard instances are good for medium-duty workloads and are a
-                good mix of performance, resources, and price.
-              </Typography>
+              {isOnCreate && (
+                <Typography data-qa-standard className={classes.copy}>
+                  Standard instances are good for medium-duty workloads and are
+                  a good mix of performance, resources, and price.
+                </Typography>
+              )}
               {this.renderPlanContainer(standards)}
             </>
           );
@@ -318,10 +329,12 @@ export class SelectPlanPanel extends React.Component<
         render: () => {
           return (
             <>
-              <Typography data-qa-dedicated className={classes.copy}>
-                Dedicated CPU instances are good for full-duty workloads where
-                consistent performance is important.
-              </Typography>
+              {isOnCreate && (
+                <Typography data-qa-dedicated className={classes.copy}>
+                  Dedicated CPU instances are good for full-duty workloads where
+                  consistent performance is important.
+                </Typography>
+              )}
               {this.renderPlanContainer(dedicated)}
             </>
           );
@@ -336,11 +349,13 @@ export class SelectPlanPanel extends React.Component<
         render: () => {
           return (
             <>
-              <Typography data-qa-highmem className={classes.copy}>
-                High Memory instances favor RAM over other resources, and can be
-                good for memory hungry use cases like caching and in-memory
-                databases.
-              </Typography>
+              {isOnCreate && (
+                <Typography data-qa-highmem className={classes.copy}>
+                  High Memory instances favor RAM over other resources, and can
+                  be good for memory hungry use cases like caching and in-memory
+                  databases.
+                </Typography>
+              )}
               {this.renderPlanContainer(highmem)}
             </>
           );
@@ -372,11 +387,13 @@ export class SelectPlanPanel extends React.Component<
           return (
             <>
               <Notice warning text={programInfo} />
-              <Typography data-qa-gpu className={classes.copy}>
-                Linodes with dedicated GPUs accelerate highly specialized
-                applications such as machine learning, AI, and video
-                transcoding.
-              </Typography>
+              {isOnCreate && (
+                <Typography data-qa-gpu className={classes.copy}>
+                  Linodes with dedicated GPUs accelerate highly specialized
+                  applications such as machine learning, AI, and video
+                  transcoding.
+                </Typography>
+              )}
               {this.renderPlanContainer(gpu)}
             </>
           );
@@ -396,10 +413,8 @@ export class SelectPlanPanel extends React.Component<
       error,
       header,
       types,
-      currentPlanHeading,
-      addPool,
-      disabled,
-      isOnCreate
+      resetValues,
+      currentPlanHeading
     } = this.props;
 
     const [tabs, tabOrder] = this.createTabs();
@@ -415,21 +430,15 @@ export class SelectPlanPanel extends React.Component<
     const initialTab = tabOrder.indexOf(selectedTypeClass);
 
     return (
-      <React.Fragment>
-        <TabbedPanel
-          rootClass={`${classes.root} tabbedPanel`}
-          error={error}
-          header={header || 'Linode Plan'}
-          copy={copy}
-          tabs={tabs}
-          initTab={initialTab}
-        />
-        {!isOnCreate && (
-          <Button buttonType="primary" onClick={addPool} disabled={disabled}>
-            Add pool
-          </Button>
-        )}
-      </React.Fragment>
+      <TabbedPanel
+        rootClass={`${classes.root} tabbedPanel`}
+        error={error}
+        header={header || ' '}
+        copy={copy}
+        tabs={tabs}
+        initTab={initialTab}
+        handleTabChange={() => resetValues()}
+      />
     );
   }
 }
