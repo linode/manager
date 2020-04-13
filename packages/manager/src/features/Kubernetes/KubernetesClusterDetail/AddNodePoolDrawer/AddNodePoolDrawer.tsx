@@ -73,10 +73,26 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
   const [selectedType, setSelectedType] = React.useState<string | undefined>(
     undefined
   );
-
   const [_types, setNewType] = React.useState<ExtendedTypeWithCount[]>(
     addCountToTypes(typesData || [])
   );
+
+  const _selectedType = _types.find(thisType => thisType.id === selectedType);
+  const resetTypes = _types.map(thisType => {
+    return {
+      ...thisType,
+      count: 0
+    };
+  });
+  const currentCount = _selectedType?.count ?? 0;
+  const pricePerNode = _selectedType?.price?.monthly ?? 0;
+
+  React.useEffect(() => {
+    if (open) {
+      setSelectedType(undefined);
+      setNewType(resetTypes);
+    }
+  }, [open]);
 
   const updatePlanCount = (planId: string, newCount: number) => {
     const newTypes = _types.map((thisType: any) => {
@@ -101,10 +117,6 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
     }
     onSubmit(type.id, type.count);
   };
-
-  const _selectedType = _types.find(thisType => thisType.id === selectedType);
-  const currentCount = _selectedType?.count ?? 0;
-  const pricePerNode = _selectedType?.price?.monthly ?? 0;
 
   return (
     <Drawer

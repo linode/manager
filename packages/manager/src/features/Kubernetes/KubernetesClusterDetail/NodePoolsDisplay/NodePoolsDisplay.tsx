@@ -24,7 +24,8 @@ import NodePoolDialog from './NodePoolDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(3)
+    padding: theme.spacing(3),
+    paddingTop: '4px'
   },
   addNodePoolLink: {
     display: 'flex',
