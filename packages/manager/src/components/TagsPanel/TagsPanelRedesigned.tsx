@@ -1,5 +1,5 @@
 /**
- * This component was essential copied from ./TagsPanel.tsx. The new designs
+ * This component was essentially copied from ./TagsPanel.tsx. The new designs
  * for the TagsPanel component are largely similar to the original, but there
  * were enough differences that we didn't want to handle for both cases with props.
  *
@@ -75,6 +75,7 @@ const styles = (theme: Theme) =>
     },
     addButton: {
       padding: 0,
+      marginRight: 2,
       position: 'relative',
       top: 2,
       display: 'inline-block',
@@ -103,10 +104,6 @@ const styles = (theme: Theme) =>
       position: 'relative',
       zIndex: 3,
       animation: '$fadeIn .3s ease-in-out forwards',
-      maxWidth: 275,
-      '& > div > div': {
-        marginTop: 0
-      },
       '& .error-for-scroll > div': {
         flexDirection: 'row',
         flexWrap: 'wrap-reverse'
