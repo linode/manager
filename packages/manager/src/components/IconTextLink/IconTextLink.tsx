@@ -14,7 +14,7 @@ type CSSClasses = 'root' | 'active' | 'disabled' | 'icon' | 'left' | 'label';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      display: 'flex',
+      display: 'inline-block',
       alignItems: 'flex-start',
       cursor: 'pointer',
       padding: theme.spacing(1) + theme.spacing(1) / 2,

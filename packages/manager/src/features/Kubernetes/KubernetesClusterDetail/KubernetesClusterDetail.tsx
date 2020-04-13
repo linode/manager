@@ -309,10 +309,10 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
             endpointLoading={endpointLoading}
             kubeconfigAvailable={kubeconfigAvailable}
             kubeconfigError={kubeconfigError}
-            handleUpdateTags={(id: number, updatedCluster: ExtendedCluster) =>
+            handleUpdateTags={(newTags: string[]) =>
               props.updateCluster({
                 clusterID: cluster.id,
-                tags: updatedCluster.tags
+                tags: newTags
               })
             }
           />

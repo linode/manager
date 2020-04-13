@@ -1,4 +1,4 @@
-import { getKubeConfig } from 'linode-js-sdk/lib/kubernetes';
+import { getKubeConfig, KubernetesCluster } from 'linode-js-sdk/lib/kubernetes';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
@@ -22,7 +22,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import TagsPanel from 'src/components/TagsPanel';
+import TagsPanelRedesigned from 'src/components/TagsPanel/TagsPanelRedesigned';
 import { dcDisplayNames } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { ExtendedCluster } from 'src/features/Kubernetes/types';
@@ -42,7 +42,8 @@ type ClassNames =
   | 'iconsSharedStyling'
   | 'kubeconfigElements'
   | 'kubeconfigFileText'
-  | 'kubeconfigIcons';
+  | 'kubeconfigIcons'
+  | 'tagsSection';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -89,6 +90,9 @@ const styles = (theme: Theme) =>
       height: 16,
       objectFit: 'contain',
       margin: `0 ${theme.spacing(1)}px`
+    },
+    tagsSection: {
+      display: 'inline-block'
     }
   });
 
@@ -99,10 +103,7 @@ interface Props {
   endpointLoading: boolean;
   kubeconfigAvailable: boolean;
   kubeconfigError?: string;
-  handleUpdateTags: (
-    clusterID: number,
-    updatedCluster: ExtendedCluster
-  ) => Promise<any>;
+  handleUpdateTags: (updatedTags: string[]) => Promise<KubernetesCluster>;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames> & WithSnackbarProps;
@@ -198,10 +199,6 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
       });
   };
 
-  const updateTags = async (updatedTags: string[]) => {
-    await handleUpdateTags(cluster.id, { ...cluster, tags: updatedTags });
-  };
-
   const setKubeconfigDisplay = () => {
     return (
       <Grid item className={classes.linksGrid} xs={12} md={4}>
@@ -251,7 +248,7 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
   return (
     <React.Fragment>
       <Paper className={classes.root}>
-        <Grid container>
+        <Grid container justify="space-around">
           <Grid item className={classes.column}>
             <Grid
               container
@@ -361,8 +358,8 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
           {setKubeconfigDisplay()}
 
           <Grid item>
-            <Paper className={classes.item}>
-              <TagsPanel tags={cluster.tags} updateTags={updateTags} />
+            <Paper className={classes.tagsSection}>
+              <TagsPanelRedesigned tags={cluster.tags} updateTags={handleUpdateTags} />
             </Paper>
           </Grid>
         </Grid>

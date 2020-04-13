@@ -30,6 +30,9 @@ const styles = (theme: Theme) =>
     label: {},
     root: {},
     deleteButton: {
+      // width: 10,
+      // height: 10,
+      // border: 'solid 0.5 #3683dc',
       minWidth: 'auto'
     },
     white: {
