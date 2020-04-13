@@ -12,6 +12,7 @@ import { addCountToTypes } from 'src/features/Kubernetes/CreateCluster/NodePoolP
 import SelectPlanQuantityPanel, {
   ExtendedTypeWithCount
 } from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel.tsx';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { nodeWarning } from '../../kubeUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -53,7 +54,7 @@ export interface Props {
   error?: string;
   isSubmitting: boolean;
   onClose: () => void;
-  onSubmit: (type: string, count: number) => void;
+  onSubmit: (type: string, count: number) => Promise<void>;
 }
 
 type CombinedProps = Props & WithTypesProps;
@@ -115,7 +116,9 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
     if (!type || !selectedType) {
       return;
     }
-    onSubmit(type.id, type.count);
+    onSubmit(type.id, type.count).catch(() => {
+      scrollErrorIntoView();
+    });
   };
 
   return (
@@ -128,7 +131,8 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
       {error && <Notice error text={error} />}
       <form className={classes.plans}>
         <SelectPlanQuantityPanel
-          types={_types.filter(t => t.class !== 'nanode' && t.class !== 'gpu')} // No Nanodes or GPUs in clusters
+          // No nanodes or GPUs in clusters
+          types={_types.filter(t => t.class !== 'nanode' && t.class !== 'gpu')}
           selectedID={selectedType}
           onSelect={(newType: string) => setSelectedType(newType)}
           updatePlanCount={updatePlanCount}

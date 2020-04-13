@@ -1,3 +1,4 @@
+import { PoolNodeRequest } from 'linode-js-sdk/lib/kubernetes';
 import * as React from 'react';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
@@ -11,8 +12,6 @@ import SelectPlanQuantityPanel, {
   ExtendedType,
   ExtendedTypeWithCount
 } from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel';
-
-import { getMonthlyPrice } from '.././kubeUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -42,7 +41,7 @@ interface Props {
   typesError?: string;
   apiError?: string;
   isOnCreate?: boolean;
-  addNodePool: (pool: any) => void;
+  addNodePool: (pool: PoolNodeRequest) => void;
 }
 
 type CombinedProps = Props;
@@ -92,10 +91,8 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
      * Add pool and reset form state.
      */
     addNodePool({
-      id: Math.random(),
       type: selectedPlanType,
-      count: nodeCount,
-      totalMonthlyPrice: getMonthlyPrice(selectedPlanType, nodeCount, types)
+      count: nodeCount
     });
     updatePlanCount(selectedPlanType, 0);
     setSelectedType(undefined);

@@ -113,7 +113,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
   const handleAdd = (type: string, count: number) => {
     setDrawerSubmitting(true);
     setDrawerError(undefined);
-    addNodePool({ type, count })
+    return addNodePool({ type, count })
       .then(_ => {
         setDrawerSubmitting(false);
         setAddDrawerOpen(false);
