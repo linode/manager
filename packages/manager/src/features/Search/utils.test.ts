@@ -12,6 +12,7 @@ describe('separate results by entity', () => {
     expect(results).toHaveProperty('domains');
     expect(results).toHaveProperty('images');
     expect(results).toHaveProperty('nodebalancers');
+    expect(results).toHaveProperty('kubernetesClusters');
   });
 
   it('the value of each entity type is an array', () => {
@@ -20,6 +21,7 @@ describe('separate results by entity', () => {
     expect(results.domains).toBeInstanceOf(Array);
     expect(results.images).toBeInstanceOf(Array);
     expect(results.nodebalancers).toBeInstanceOf(Array);
+    expect(results.kubernetesClusters).toBeInstanceOf(Array);
   });
 
   it('returns empty results if there is no data', () => {
@@ -29,7 +31,8 @@ describe('separate results by entity', () => {
       volumes: [],
       domains: [],
       images: [],
-      nodebalancers: []
+      nodebalancers: [],
+      kubernetesClusters: []
     });
   });
 });

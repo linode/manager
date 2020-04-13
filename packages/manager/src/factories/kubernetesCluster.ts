@@ -50,6 +50,7 @@ export const kubernetesClusterFactory = Factory.Sync.makeFactory<
 >({
   id: Factory.each(id => id),
   created: '2020-01-01 8:00',
+  updated: '2020-01-01 8:00',
   region: 'us-central',
   status: 'ready',
   label: Factory.each(i => `test-cluster-${i}`),
@@ -57,5 +58,6 @@ export const kubernetesClusterFactory = Factory.Sync.makeFactory<
   node_pools: nodePoolFactory.buildList(2),
   totalMemory: 1000,
   totalCPU: 4,
-  totalStorage: 1000
+  totalStorage: 1000,
+  tags: []
 });

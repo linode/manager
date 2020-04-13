@@ -53,7 +53,8 @@ const displayMap = {
   domains: 'Domains',
   volumes: 'Volumes',
   nodebalancers: 'NodeBalancers',
-  images: 'Images'
+  images: 'Images',
+  kubernetesClusters: 'Kubernetes'
 };
 
 export type CombinedProps = SearchProps & RouteComponentProps<{}>;
@@ -74,6 +75,9 @@ const getErrorMessage = (errors: ErrorObject): string => {
   }
   if (errors.images) {
     errorString.push('Images');
+  }
+  if (errors.kubernetes) {
+    errorString.push('Kubernetes');
   }
   const joined = errorString.join(', ');
   return `Could not retrieve search results for: ${joined}`;
@@ -105,7 +109,8 @@ export const SearchLanding: React.FC<CombinedProps> = props => {
     'volumes',
     'nodeBalancers',
     'images',
-    'domains'
+    'domains',
+    'kubernetes'
   ]);
 
   React.useEffect(() => {

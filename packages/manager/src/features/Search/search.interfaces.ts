@@ -15,7 +15,8 @@ export type SearchableEntityType =
   | 'volume'
   | 'domain'
   | 'image'
-  | 'nodebalancer';
+  | 'nodebalancer'
+  | 'kubernetesCluster';
 
 // These are the properties on our entities we'd like to search
 export type SearchField = 'tags' | 'label' | 'ips' | 'type';
@@ -26,4 +27,5 @@ export interface SearchResultsByEntity {
   nodebalancers: SearchableItem[];
   domains: SearchableItem[];
   images: SearchableItem[];
+  kubernetesClusters: SearchableItem[];
 }
