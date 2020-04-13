@@ -83,8 +83,8 @@ const styles = (theme: Theme) =>
     enhancedInputButton: {
       marginLeft: 10,
       minWidth: 85,
-      paddingTop: 8,
-      paddingBottom: 8
+      paddingTop: 7,
+      paddingBottom: 7
     }
   });
 
