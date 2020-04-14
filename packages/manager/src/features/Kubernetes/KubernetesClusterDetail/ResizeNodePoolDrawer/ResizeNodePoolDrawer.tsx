@@ -35,8 +35,7 @@ export interface Props {
 }
 
 const resizeWarning = `Resizing to fewer nodes will delete random nodes from
-the pool. If you want to keep specific nodes, delete unneeded nodes manually from
-the pool's node list.`;
+the pool.`;
 
 export const ResizeNodePoolDrawer: React.FC<Props> = props => {
   const { error, isSubmitting, nodePool, onClose, onSubmit, open } = props;
@@ -132,11 +131,6 @@ export const ResizeNodePoolDrawer: React.FC<Props> = props => {
           >
             Save Changes
           </Button>
-          {/*
-            <Button onClick={onClose} buttonType="cancel" data-qa-cancel>
-                Cancel
-            </Button>
-          */}
         </ActionsPanel>
       </form>
     </Drawer>

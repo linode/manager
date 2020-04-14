@@ -12,6 +12,7 @@ import { addCountToTypes } from 'src/features/Kubernetes/CreateCluster/NodePoolP
 import SelectPlanQuantityPanel, {
   ExtendedTypeWithCount
 } from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel.tsx';
+import { pluralize } from 'src/utilities/pluralize';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { nodeWarning } from '../../kubeUtils';
 
@@ -185,8 +186,9 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
               <Typography className={classes.priceDisplay}>
                 This pool will add{' '}
                 <strong>
-                  ${currentCount * pricePerNode}/month ({currentCount} nodes at
-                  ${pricePerNode}/month
+                  ${currentCount * pricePerNode}/month (
+                  {pluralize('node', 'nodes', currentCount)} at ${pricePerNode}
+                  /month)
                 </strong>{' '}
                 to this cluster.
               </Typography>
