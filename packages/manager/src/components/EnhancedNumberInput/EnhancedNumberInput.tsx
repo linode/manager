@@ -49,6 +49,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       height: 30,
       minWidth: 30
     },
+    '& $input': {
+      padding: '0 8px'
+    },
     '& $textField': {
       width: 50,
       minWidth: 40,
@@ -86,6 +89,7 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
     }
   };
 
+  // TODO add error prop for error handling
   const classes = useStyles();
   return (
     <React.Fragment>
@@ -121,9 +125,9 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
             className: classnames({
               [classes.input]: true
             }),
-            min: 0
+            min: 0,
+            max: 100
           }}
-          autoFocus={true}
           disabled={disabled}
           data-testid={'quantity-input'}
         />

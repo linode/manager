@@ -11,6 +11,7 @@ export interface ErrorObject {
   domains: boolean;
   images: boolean;
   nodebalancers: boolean;
+  kubernetes: boolean;
 }
 
 export const linodesErrorSelector = (state: State) => {
@@ -25,9 +26,12 @@ export const imagesErrorSelector = (state: State) =>
   Object.values(state.images.error ?? {}).some(Boolean);
 export const typesErrorSelector = (state: State) =>
   Boolean(state.types.error && state.types.error.length > 0);
+export const kubernetesErrorSelector = (state: State) =>
+  Object.values(state.kubernetes.error ?? {}).some(Boolean);
 
 export default createSelector<
   State,
+  boolean,
   boolean,
   boolean,
   boolean,
@@ -40,12 +44,15 @@ export default createSelector<
   nodeBalsErrorSelector,
   domainsErrorSelector,
   imagesErrorSelector,
-  (linodes, volumes, nodebalancers, domains, images) => ({
+  kubernetesErrorSelector,
+  (linodes, volumes, nodebalancers, domains, images, kubernetes) => ({
     linodes,
     volumes,
     nodebalancers,
     domains,
     images,
-    hasErrors: linodes || volumes || nodebalancers || domains || images
+    kubernetes,
+    hasErrors:
+      linodes || volumes || nodebalancers || domains || images || kubernetes
   })
 );

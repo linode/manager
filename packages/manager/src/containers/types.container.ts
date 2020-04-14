@@ -1,6 +1,5 @@
 import { LinodeType } from 'linode-js-sdk/lib/linodes';
 import { APIError } from 'linode-js-sdk/lib/types';
-import { compose, filter, map, pathOr } from 'ramda';
 import { connect } from 'react-redux';
 
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
@@ -13,33 +12,38 @@ export interface WithTypesProps {
   typesError?: APIError[];
 }
 
+export const extendTypes = (types: LinodeType[]): ExtendedType[] => {
+  return (
+    types
+      .map(thisType => {
+        const {
+          label,
+          memory,
+          vcpus,
+          disk,
+          price: { monthly, hourly }
+        } = thisType;
+        return {
+          ...thisType,
+          heading: label,
+          subHeadings: [
+            `$${monthly}/mo ($${hourly}/hr)`,
+            typeLabelDetails(memory, disk, vcpus)
+          ] as [string, string]
+        };
+      })
+      /* filter out all the deprecated types because we don't to display them */
+      .filter((eachType: ExtendedType) => {
+        if (!eachType.successor) {
+          return true;
+        }
+        return eachType.successor === null;
+      })
+  );
+};
+
 export default connect((state: ApplicationState, ownProps) => ({
-  typesData: compose(
-    map<LinodeType, ExtendedType>(type => {
-      const {
-        label,
-        memory,
-        vcpus,
-        disk,
-        price: { monthly, hourly }
-      } = type;
-      return {
-        ...type,
-        heading: label,
-        subHeadings: [
-          `$${monthly}/mo ($${hourly}/hr)`,
-          typeLabelDetails(memory, disk, vcpus)
-        ]
-      };
-    }),
-    /* filter out all the deprecated types because we don't to display them */
-    filter<any>((eachType: LinodeType) => {
-      if (!eachType.successor) {
-        return true;
-      }
-      return eachType.successor === null;
-    })
-  )(state.__resources.types.entities),
-  typesLoading: pathOr(false, ['loading'], state.__resources.types),
-  typesError: pathOr(undefined, ['error'], state.__resources.types)
+  typesData: extendTypes(state.__resources.types.entities),
+  typesLoading: state.__resources.types?.loading ?? false,
+  typesError: state.__resources.types?.error
 }));

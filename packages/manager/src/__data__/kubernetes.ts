@@ -6,17 +6,21 @@ export const clusters: KubernetesCluster[] = [
     region: 'us-central',
     label: 'cluster-1',
     created: '2019-04-29 18:02:17',
+    updated: '2019-04-29 18:02:17',
     id: 35,
     status: 'running',
-    version: '1.13.5'
+    k8s_version: '1.13.5',
+    tags: []
   },
   {
     region: 'us-central',
     label: 'cluster-2',
     created: '2019-04-29 18:02:17',
+    updated: '2019-04-29 18:02:17',
     id: 34,
     status: 'running',
-    version: '1.13.5'
+    k8s_version: '1.13.5',
+    tags: []
   }
 ];
 
@@ -25,6 +29,7 @@ export const extendedClusters = clusters.map(cluster => {
     ...cluster,
     node_pools: [pool1],
     totalMemory: 10,
-    totalCPU: 2
+    totalCPU: 2,
+    totalStorage: 10
   };
 });
