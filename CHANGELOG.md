@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-04-15] - v1.6.0
+
+### Added:
+
+- EnhancedNumberInput component
+
+### Changed:
+
+- Redesign of LKE interface, including Detail and Create Cluster views
+- Add LKE clusters to search results
+
+### Fixed:
+
+- Case where some long-running actions may not be updated when complete
+
 ## [2020-04-10] - 1.5.1
 
 ### Changed:
