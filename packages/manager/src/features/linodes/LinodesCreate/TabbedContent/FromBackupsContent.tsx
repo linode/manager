@@ -7,7 +7,7 @@ import { compose as ramdaCompose, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
-import CheckoutBar from 'src/components/CheckoutBar';
+import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -245,6 +245,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                 icon={VolumeIcon}
                 copy="You do not have backups enabled for your Linodes. Please visit the Backups panel in the Linode Details view."
                 title="Create from Backup"
+                renderAsSecondary
               />
             </Paper>
           ) : (
@@ -378,9 +379,10 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                     isMakingRequest={this.props.formIsSubmitting}
                     disabled={this.props.formIsSubmitting || disabled}
                     onDeploy={this.createLinode}
-                    displaySections={displaySections}
                     {...props}
-                  />
+                  >
+                    <DisplaySectionList displaySections={displaySections} />
+                  </CheckoutBar>
                 );
               }}
             </Sticky>

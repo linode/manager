@@ -32,17 +32,12 @@ it('renders without crashing.', () => {
             }}
             userId={123456}
             documentation={[]}
-            markAppAsDoneLoading={jest.fn()}
             appIsLoading={false}
             toggleTheme={jest.fn()}
             toggleSpacing={jest.fn()}
             accountCapabilities={[]}
             accountLoading={false}
-            nodeBalancersLoading={false}
             linodesLoading={false}
-            volumesLoading={false}
-            domainsLoading={false}
-            bucketsLoading={false}
             accountSettingsLoading={false}
           />
         </StaticRouter>

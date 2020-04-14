@@ -47,6 +47,8 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     visually: any;
     font?: any;
     animateCircleIcon?: any;
+    addCircleHoverEffect?: any;
+
     notificationList: any;
     status: any;
   }
@@ -61,6 +63,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     visually?: any;
     font?: any;
     animateCircleIcon?: any;
+    addCircleHoverEffect?: any;
     notificationList?: any;
     status?: any;
   }
@@ -97,6 +100,15 @@ const iconCircleAnimation = {
   },
   '& .insidePath *': {
     transition: 'fill .2s ease-in-out .2s, stroke .2s ease-in-out .2s',
+    stroke: 'white'
+  }
+};
+
+const iconCircleHoverEffect = {
+  '& .circle': {
+    fill: primaryColors.main
+  },
+  '& .insidePath *': {
     stroke: 'white'
   }
 };
@@ -203,6 +215,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       grey3: '#ccc',
       grey4: '#8C929D',
       grey5: '#f5f5f5',
+      grey6: '#e3e5e8',
       white: '#fff',
       black: '#222',
       blue: primaryColors.main,
@@ -292,6 +305,9 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
     },
     animateCircleIcon: {
       ...iconCircleAnimation
+    },
+    addCircleHoverEffect: {
+      ...iconCircleHoverEffect
     },
     notificationList: {
       padding: '16px 32px 16px 23px',
