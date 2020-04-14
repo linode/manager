@@ -164,4 +164,4 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
   );
 };
 
-export default EnhancedNumberInput;
+export default React.memo(EnhancedNumberInput);
