@@ -7,23 +7,10 @@ import {
   withRouter
 } from 'react-router-dom';
 
-import DefaultLoader from 'src/components/DefaultLoader';
-
-const StackScriptsDetail = DefaultLoader({
-  loader: () => import('./StackScriptsDetail')
-});
-
-const StackScriptsLanding = DefaultLoader({
-  loader: () => import('./StackScriptsLanding')
-});
-
-const StackScriptCreate = DefaultLoader({
-  loader: () => import('./StackScriptCreate')
-});
-
-const StackScriptUpdate = DefaultLoader({
-  loader: () => import('./StackScriptUpdate')
-});
+const StackScriptsDetail = React.lazy(() => import('./StackScriptsDetail'));
+const StackScriptsLanding = React.lazy(() => import('./StackScriptsLanding'));
+const StackScriptCreate = React.lazy(() => import('./StackScriptCreate'));
+const StackScriptUpdate = React.lazy(() => import('./StackScriptUpdate'));
 
 type Props = RouteComponentProps<{}>;
 

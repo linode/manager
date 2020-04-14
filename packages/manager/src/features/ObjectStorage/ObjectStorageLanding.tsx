@@ -21,7 +21,6 @@ import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
-import DefaultLoader from 'src/components/DefaultLoader';
 import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import PromotionalOfferCard from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
@@ -33,13 +32,10 @@ import { requestClusters as _requestClusters } from 'src/store/clusters/clusters
 import { MapState } from 'src/store/types';
 import BucketDrawer from './BucketLanding/BucketDrawer';
 
-const BucketLanding = DefaultLoader({
-  loader: () => import('./BucketLanding/BucketLanding')
-});
-
-const AccessKeyLanding = DefaultLoader({
-  loader: () => import('./AccessKeyLanding/AccessKeyLanding')
-});
+const BucketLanding = React.lazy(() => import('./BucketLanding/BucketLanding'));
+const AccessKeyLanding = React.lazy(() =>
+  import('./AccessKeyLanding/AccessKeyLanding')
+);
 
 const useStyles = makeStyles((theme: Theme) => ({
   promo: {

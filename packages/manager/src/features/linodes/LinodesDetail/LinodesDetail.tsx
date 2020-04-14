@@ -21,13 +21,10 @@ import linodesDetailContainer, { InnerProps } from './LinodesDetail.container';
 import reloadableWithRouter from './reloadableWithRouter';
 
 const CloneLanding = React.lazy(() => import('../CloneLanding'));
-
 const LinodesDetailHeader = React.lazy(() => import('./LinodesDetailHeader'));
-
 const LinodesDetailNavigation = React.lazy(() =>
   import('./LinodesDetailNavigation')
 );
-
 const MigrateLanding = React.lazy(() => import('../MigrateLanding'));
 
 interface MatchProps {
