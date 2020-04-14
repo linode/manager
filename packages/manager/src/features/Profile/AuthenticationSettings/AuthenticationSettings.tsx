@@ -3,6 +3,7 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
+import GitHubIcon from 'src/assets/icons/providers/git-hub-logo.svg';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -26,12 +27,40 @@ const useStyles = makeStyles((theme: Theme) => ({
   copy: {
     lineHeight: 1.43,
     marginBottom: theme.spacing(3)
+  },
+  providers: {
+    marginBottom: theme.spacing(6),
+
+    '& button': {
+      border: `1px solid theme.color.divider`,
+      backgroundColor: theme.bg.offWhite,
+      minHeight: '70px',
+      minWidth: '344px',
+      paddingLeft: theme.spacing(3) - 4
+    },
+    '& .MuiButton-label': {
+      color: theme.color.headline,
+      justifyContent: 'flex-start'
+    }
+  },
+  providerIcon: {
+    color: '#939598',
+    marginRight: theme.spacing(2)
+  },
+  enabled: {
+    // TODO: Replace hex code with value from theme
+    border: `2px solid #3683dc !important`,
+
+    '& svg': {
+      // TODO: Replace hex code with value from theme
+      color: '#3683dc'
+    }
+  },
+  enabledText: {
+    fontFamily: theme.font.normal,
+    marginLeft: theme.spacing() - 4
   }
 }));
-
-// interface Props {
-//   disabled?: boolean;
-// }
 
 type CombinedProps = StateProps & DispatchProps;
 
@@ -39,7 +68,7 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const [success, setSuccess] = React.useState<string | undefined>('');
-  const [thirdPartyAuthEnabled] = React.useState<boolean>(true);
+  const [thirdPartyAuthEnabled] = React.useState<boolean>(false);
 
   const { loading, ipWhitelisting, twoFactor, username, updateProfile } = props;
 
@@ -62,7 +91,7 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
       render: () => (
         <React.Fragment>
           <ThirdPartyAuthentication
-            provider={'Github'}
+            provider={'GitHub'}
             thirdPartyAuthEnabled={thirdPartyAuthEnabled}
           />
           <ResetPassword username={username} disabled={thirdPartyAuthEnabled} />
@@ -99,7 +128,25 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
             Select a provider below to go to their web site and set up access.
             You may only use one provider at a time.
           </Typography>
-          <Button buttonType="primary">Github</Button>
+          <div className={classes.providers}>
+            <Button
+              className={thirdPartyAuthEnabled ? classes.enabled : ''}
+              // onClick={}
+            >
+              <GitHubIcon className={classes.providerIcon} />
+              GitHub
+              {thirdPartyAuthEnabled && (
+                <span className={classes.enabledText}>{'  '}(Enabled)</span>
+              )}
+            </Button>
+          </div>
+          <Typography className={classes.copy}>
+            If you prefer to log in using your Linode credentials, you can
+            disable Third-Party Authentication. We’ll send you an e-mail to
+            reset your Linode password.
+          </Typography>
+          {/* TODO: Get name of provider currently enabled  */}
+          <Button buttonType="primary">Disable GitHub Authentication</Button>
         </React.Fragment>
       )
     }
