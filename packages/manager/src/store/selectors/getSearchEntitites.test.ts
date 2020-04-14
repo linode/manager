@@ -7,12 +7,16 @@ import {
   types,
   volumes
 } from 'src/__data__';
+import { kubernetesClusterFactory } from 'src/factories/kubernetesCluster';
+import { apiResponseToMappedState } from 'src/store/store.helpers.tmp';
 import getSearchEntities from './getSearchEntities';
 
 describe('getSearchEntities selector', () => {
   const mockState: any = {
-    linodes: { entities: linodes },
-    domains: { entities: domains },
+    domains: { itemsById: apiResponseToMappedState(domains) },
+    linodes: {
+      itemsById: apiResponseToMappedState(linodes)
+    },
     images: { entities: images },
     types: { entities: types },
     volumes: {
@@ -23,6 +27,9 @@ describe('getSearchEntities selector', () => {
         (result, c) => ({ ...result, [c.id]: c }),
         {}
       )
+    },
+    kubernetes: {
+      entities: kubernetesClusterFactory.buildList(2)
     }
   };
   it('should return an array of SearchableItems', () => {
@@ -36,13 +43,21 @@ describe('getSearchEntities selector', () => {
   });
   it('should recompute objects if the list of entities changes.', () => {
     getSearchEntities.resetRecomputations();
-    getSearchEntities({ ...mockState, linodes: { entities: [] } });
+    getSearchEntities({ ...mockState, linodes: { itemsById: {} } });
     expect(getSearchEntities.recomputations()).toEqual(1);
   });
   it('should recompute if an entry in entities is updated', () => {
     getSearchEntities.resetRecomputations();
     const updatedLinodes = assocPath([0, 'label'], 'newlabel', linodes);
-    getSearchEntities({ ...mockState, linodes: { entities: updatedLinodes } });
+    getSearchEntities({
+      ...mockState,
+      linodes: {
+        itemsById: updatedLinodes.reduce(
+          (result, c) => ({ ...result, [c.id]: c }),
+          {}
+        )
+      }
+    });
     expect(getSearchEntities.recomputations()).toEqual(1);
   });
 });

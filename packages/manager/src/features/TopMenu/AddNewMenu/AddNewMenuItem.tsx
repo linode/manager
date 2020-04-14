@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
-import MenuItem from 'src/components/core/MenuItem';
 import {
   createStyles,
   Theme,
@@ -41,8 +39,8 @@ const styles = (theme: Theme) =>
         stroke: theme.bg.main
       },
       '&:hover, &:focus': {
-        ...theme.animateCircleIcon,
-        backgroundColor: theme.bg.offWhiteDT,
+        ...theme.addCircleHoverEffect,
+        backgroundColor: theme.bg.main,
         color: theme.palette.text.primary
       }
     },
@@ -71,18 +69,11 @@ const styles = (theme: Theme) =>
     }
   });
 
-export interface MenuItems {
+interface Props {
   title: string;
-  onClick: (e: React.MouseEvent<HTMLElement>) => void;
-  linkTo?: string;
   body: string;
   ItemIcon: React.ComponentClass<any>;
   attr?: { [key: string]: any };
-}
-
-interface Props extends MenuItems {
-  index: number;
-  count: number;
 }
 
 interface State {
@@ -93,19 +84,11 @@ type PropsWithStyles = Props & WithStyles<CSSClasses>;
 
 class AddNewMenuItem extends React.Component<PropsWithStyles, State> {
   render() {
-    const {
-      classes,
-      title,
-      onClick,
-      linkTo,
-      body,
-      ItemIcon,
-      attr
-    } = this.props;
+    const { classes, title, body, ItemIcon, attr } = this.props;
 
-    const menuItemContent = () => (
-      <>
-        <div className={classes.iconWrapper}>
+    return (
+      <div className={classes.root} data-qa-add-new-menu={title}>
+        <div className={classes.iconWrapper} {...attr}>
           <ItemIcon />
         </div>
         <div className={classes.content}>
@@ -114,27 +97,7 @@ class AddNewMenuItem extends React.Component<PropsWithStyles, State> {
             {body}
           </Typography>
         </div>
-      </>
-    );
-
-    return (
-      <MenuItem
-        onClick={onClick}
-        className={classes.root}
-        data-qa-add-new-menu={title}
-        button
-        component="li"
-        aria-label={`Create ${title}`}
-        {...attr}
-      >
-        {linkTo ? (
-          <Link to={linkTo} className={classes.link}>
-            {menuItemContent()}
-          </Link>
-        ) : (
-          menuItemContent()
-        )}
-      </MenuItem>
+      </div>
     );
   }
 }

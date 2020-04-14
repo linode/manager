@@ -2,7 +2,7 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
-import CheckoutBar from 'src/components/CheckoutBar';
+import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -121,6 +121,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
             <Paper>
               <Placeholder
                 icon={VolumeIcon}
+                renderAsSecondary
                 copy="You do not have any existing Linodes to clone from.
                     Please first create a Linode from either an Image or StackScript."
                 title="Clone from Existing Linode"
@@ -236,9 +237,10 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
                         this.props.formIsSubmitting || userCannotCreateLinode
                       }
                       onDeploy={this.cloneLinode}
-                      displaySections={displaySections}
                       {...props}
-                    />
+                    >
+                      <DisplaySectionList displaySections={displaySections} />
+                    </CheckoutBar>
                   );
                 }}
               </Sticky>

@@ -15,6 +15,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import { handleOpen } from 'src/store/backupDrawer';
+import { getLinodesWithoutBackups } from 'src/store/selectors/getLinodesWithBackups';
 import { MapState } from 'src/store/types';
 
 type ClassNames = 'root' | 'container' | 'buttonsContainer' | 'dismiss';
@@ -129,9 +130,7 @@ interface DispatchProps {
 }
 
 const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => ({
-  linodesWithoutBackups: state.__resources.linodes.entities.filter(
-    l => !l.backups.enabled
-  ),
+  linodesWithoutBackups: getLinodesWithoutBackups(state.__resources),
   managed: state?.__resources?.accountSettings?.data?.managed ?? false
 });
 

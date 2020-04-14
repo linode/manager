@@ -3,7 +3,7 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import * as moment from 'moment-timezone';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { parse, stringify } from 'qs';
-import { path, pathOr } from 'ramda';
+import { path } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
@@ -179,11 +179,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     };
 
     if (imagesError.read || linodesRequestError) {
-      let errorText: string | JSX.Element = pathOr<string | JSX.Element>(
-        'Error loading linodes',
-        [0, 'reason'],
-        linodesRequestError
-      );
+      let errorText: string | JSX.Element =
+        linodesRequestError?.[0]?.reason ?? 'Error loading Linodes';
 
       if (
         typeof errorText === 'string' &&
@@ -472,7 +469,7 @@ interface StateProps {
 }
 
 const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
-  const linodes = state.__resources.linodes.entities;
+  const linodes = Object.values(state.__resources.linodes.itemsById);
   const notifications = state.__resources.notifications.data || [];
 
   const linodesWithMaintenance = addNotificationsToLinodes(
@@ -481,12 +478,8 @@ const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
   );
 
   return {
-    managed: pathOr(
-      false,
-      ['__resources', 'accountSettings', 'data', 'managed'],
-      state
-    ),
-    linodesCount: state.__resources.linodes.results.length,
+    managed: state.__resources.accountSettings.data?.managed ?? false,
+    linodesCount: state.__resources.linodes.results,
     linodesData: linodesWithMaintenance,
     someLinodesHaveScheduledMaintenance: linodesWithMaintenance
       ? linodesWithMaintenance.some(
@@ -496,7 +489,7 @@ const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
       : false,
     linodesRequestLoading: state.__resources.linodes.loading,
     linodesRequestError: path(['error', 'read'], state.__resources.linodes),
-    userTimezone: pathOr('', ['data', 'timezone'], state.__resources.profile),
+    userTimezone: state.__resources.profile.data?.timezone ?? '',
     userTimezoneLoading: state.__resources.profile.loading,
     userTimezoneError: path<APIError[]>(
       ['read'],

@@ -1,6 +1,14 @@
 import { Reducer } from 'redux';
-import { EntityError, EntityState, HasNumericID } from 'src/store/types';
-import updateOrAdd from 'src/utilities/updateOrAdd';
+import {
+  addMany,
+  createDefaultState,
+  onCreateOrUpdate,
+  onDeleteSuccess,
+  onError,
+  onGetAllSuccess,
+  onStart
+} from 'src/store/store.helpers.tmp';
+import { EntityError, MappedEntityState2 } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import {
   createLinodeActions,
@@ -14,23 +22,15 @@ import {
 
 import { LinodeWithMaintenanceAndDisplayStatus } from './types';
 
-const getId = <E extends HasNumericID>({ id }: E) => id;
-
 /**
  * State
  */
-export type State = EntityState<
+export type State = MappedEntityState2<
   LinodeWithMaintenanceAndDisplayStatus,
   EntityError
 >;
 
-export const defaultState: State = {
-  results: [],
-  entities: [],
-  loading: true,
-  lastUpdated: 0,
-  error: undefined
-};
+export const defaultState: State = createDefaultState({}, {});
 
 /**
  * Reducer
@@ -38,47 +38,30 @@ export const defaultState: State = {
 const reducer: Reducer<State> = (state = defaultState, action) => {
   /** Get ALL */
   if (isType(action, getLinodesActions.started)) {
-    return {
-      ...state,
-      loading: true,
-      error: { ...state.error, read: undefined }
-    };
+    return onStart(state);
   }
 
   if (isType(action, getLinodesActions.done)) {
     const {
       payload: { result }
     } = action;
-    return {
-      ...state,
-      entities: result.data,
-      results: result.data.map(getId),
-      lastUpdated: Date.now(),
-      loading: false
-    };
+    return onGetAllSuccess(result.data, state, result.results);
   }
 
   if (isType(action, getLinodesActions.failed)) {
     const { error } = action.payload;
 
-    return {
-      ...state,
-      error: {
+    return onError(
+      {
         read: error
       },
-      loading: false
-    };
+      state
+    );
   }
 
   if (isType(action, upsertLinode)) {
     const { payload } = action;
-    const entities = updateOrAdd(payload, state.entities);
-
-    return {
-      ...state,
-      entities,
-      results: entities.map(getId)
-    };
+    return onCreateOrUpdate(payload, state);
   }
 
   if (isType(action, updateMultipleLinodes)) {
@@ -86,63 +69,29 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     if (payload && payload.length === 0) {
       return state;
     }
-    return {
-      ...state,
-      entities: [
-        ...state.entities.filter(eachEntity => {
-          return !payload.some(eachLinode => {
-            return eachLinode.id === eachEntity.id;
-          });
-        }),
-        ...payload
-      ]
-    };
+    return addMany(payload, state);
   }
 
   if (isType(action, deleteLinode)) {
     const { payload } = action;
-    const { entities, results } = state;
-
-    return {
-      ...state,
-      entities: entities.filter(linode => linode.id !== payload),
-      results: results.filter(id => id !== payload)
-    };
+    return onDeleteSuccess(payload, state);
   }
 
   if (isType(action, updateLinodeActions.done)) {
     const { result } = action.payload;
-    const update = updateOrAdd(result, state.entities);
-
-    return {
-      ...state,
-      entities: update,
-      results: update.map(getId)
-    };
+    return onCreateOrUpdate(result, state);
   }
 
   if (isType(action, createLinodeActions.done)) {
     const { result } = action.payload;
-    const entities = [...state.entities, result];
-
-    return {
-      ...state,
-      entities,
-      results: entities.map(getId)
-    };
+    return onCreateOrUpdate(result, state);
   }
 
   if (isType(action, deleteLinodeActions.done)) {
     const {
       params: { linodeId }
     } = action.payload;
-    const entities = state.entities.filter(({ id }) => id !== linodeId);
-
-    return {
-      ...state,
-      entities,
-      results: entities.map(getId)
-    };
+    return onDeleteSuccess(linodeId, state);
   }
 
   return state;

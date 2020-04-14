@@ -563,6 +563,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
         <Placeholder
           icon={VolumeIcon}
           title="Backups"
+          renderAsSecondary
           copy={backupPlaceholderText}
           buttonProps={[
             {

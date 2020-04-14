@@ -60,7 +60,10 @@ export const requestLinodeForStore: RequestLinodeForStoreThunk = (
 ) => (dispatch, getState) => {
   const state = getState();
   /** Don't request a Linode if it's already been deleted. */
-  if (isCreatingOrUpdating || state.__resources.linodes.results.includes(id)) {
+  if (
+    isCreatingOrUpdating ||
+    Boolean(state.__resources.linodes.itemsById[id])
+  ) {
     return _getLinode(id)
       .then(response => response.data)
       .then(linode => {

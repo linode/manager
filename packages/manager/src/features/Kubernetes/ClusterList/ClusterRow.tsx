@@ -54,7 +54,7 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
       key={cluster.id}
       data-qa-cluster-cell={cluster.id}
       data-testid={'cluster-row'}
-      rowLink={`/kubernetes/clusters/${cluster.id}`}
+      rowLink={`/kubernetes/clusters/${cluster.id}/summary`}
       className={classes.clusterRow}
     >
       <TableCell
@@ -72,7 +72,7 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
         </Grid>
       </TableCell>
       <TableCell parentColumn="Version" data-qa-cluster-version>
-        {cluster.version}
+        {cluster.k8s_version}
       </TableCell>
       <TableCell parentColumn="Created" data-qa-cluster-date>
         <DateTimeDisplay value={cluster.created} humanizeCutoff="month" />

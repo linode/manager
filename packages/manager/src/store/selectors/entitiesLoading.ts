@@ -5,7 +5,11 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import { createSelector } from 'reselect';
 import { ApplicationState } from 'src/store';
-import { EntityError, RequestableDataWithEntityError } from 'src/store/types';
+import {
+  EntityError,
+  MappedEntityState2 as MappedEntityState,
+  RequestableDataWithEntityError
+} from 'src/store/types';
 
 import { State as ImageState } from 'src/store/image/image.reducer';
 
@@ -39,7 +43,7 @@ const isInitialLoad = (
 
 export default createSelector<
   State,
-  Resource<Linode[], EntityError>,
+  MappedEntityState<Linode, EntityError>,
   Resource<Volume[]>,
   Resource<NodeBalancer[][]>,
   RequestableDataWithEntityError<Domain[]>,

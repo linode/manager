@@ -4,168 +4,131 @@ This document aims to give general guidelines of how code is written and structu
 
 ## Writing a React Component
 
-When it comes to writing a React component, there are some clear optimizations you should be making
-to your code.
+At this point in the project, we prefer the use of function components using hooks
+for state management. It is not necessary to rewrite existing class components as function components,
+and it is still fine to write a class component if that works better for your situation.
 
-As a rule, if you're writing a class component and do not intend on writing any `shouldComponentUpdate` logic yourself, write a PureComponent. PureComponents implement a shallow comparison of props and state by default
-so this should encourage you to pass down props and use state that is flat and doesn't need any deep checking.
+### Function Component
 
-NOTE: PureComponent only offers benefits when passed props that will respect a strict equality check (`===`).
-In other cases, most commonly passing a Lambda function as a prop,
-PureComponent will actually be slower, since the component will always fail the `shouldComponentUpdate` logic,
-resulting in two comparisons instead of one.
-
-Good
 ```js
-class MyComponent extends React.PureComponent<MyProps> {}
+export const Component: React.FC<Props> = props => {
+  const [count, setCount] = React.useState < number > 0;
+
+  return <div>{count}</div>;
+};
+
+export default React.memo(Component);
 ```
 
-Also good
-```js
-import { equals } from 'ramda'
+You should include React.memo() as in the example if you think the component will be included
+in larger layouts where frequent re-renders are common. Note also that we generally export
+the "raw" component (`export const Component...`) as well as the "wrapped" component (`export default React.memo(Component)`). This is often helpful for testing, when you don't want to
+test the containers, wrappers, HOCs, or whatever that the base component is using.
 
-class MyComponent extends React.Component<MyProps> {
-  shouldComponentUpdate(prevProps: MyProps) {
-    if(equals(prevProps, this.props)) {
-      return false;
-    }
-    return true;
+When using the component in the app, import the default export:
+
+```js
+import Component from "./src/Component";
+```
+
+### Class Component
+
+```js
+export class Component extends React.Component<CombinedProps, State> {
+  state: State = {
+    count: 0
+  };
+
+  render() {
+    return <div>{count}</div>;
   }
 }
+
+export default Component;
 ```
 
-Worse
+Default and raw exports are the same as in function components. If you want the equivalent
+of `React.memo`, use a PureComponent:
+
 ```js
-class MyComponent extends React.Component<MyProps> {}
+export class Component extends React.PureComponent<CombinedProps, State> {
+  ...
 ```
 
-Worst
+### When things get complicated
+
+Even with hooks, we still have components that require multiple wrappers (HOCs).
+To combine multiple HOCs into a single wrapper, we use a helper called `compose` from
+the `recompose` library. (This is a functional programming concept called function
+composition, hence the name).
+
 ```js
-class MyComponent extends React.PureComponent<Props> {
-  render (
-    <div>{this.props.doTheThing()}</div>
-  )
+import { compose } from 'recompose';
+
+interface Props {...}
+
+type CombinedProps = Props & HOC1Props & HOC2Props & HOC3Props;
+
+export const RawComponent: React.FC<CombinedProps> = props => {
+  ...
 }
 
-<MyComponent doTheThing={() => Math.random()} />
+const enhanced = compose<CombinedProps, Props>(
+  hoc1,
+  hoc2,
+  hoc3
+);
+
+export default enhanced(RawComponent);
+
 ```
 
-Function components have their place, but please keep in mind [function components are treated as Classes under the hood in React](https://twitter.com/dan_abramov/status/755343749983657986?lang=en), so really, you're not getting any performance boost from writing a function component versus a class.
+Most HOCs pass extra props to the raw component; when using Redux's `connect`, for example,
+the data you select from the Redux store is available as props in the connected component.
+`CombinedProps` is our convention for the final set of props that a component
+will have once it is wrapped in all its HOCs. Note that the component itself is typed
+as expecting `CombinedProps`, and the `compose` function generally takes `<CombinedProps, Props>`.
+This is backward from intuition (a holdover from functional programming), but tells TypeScript
+that what is being passed into `compose` is a component that expects `Props` and what comes
+out the other end of `compose` is a component that has `CombinedProps`.
 
-That being, said with the [introduction of hooks](https://reactjs.org/docs/hooks-intro.html), function components have become a lot more valuable, so you may find yourself writing them more often than you would a PureComponent. With that in mind, nearly all function components should be memoized with the invocation of `React.memo()` in order to gain the same benefit that PureComponents do.
+## Styling
 
-Like PureComponents, function components wrapped in `React.memo()` have a shallow prop and state comparison implemented by default. You can also create your own update conditions as the second argument passed to `React.memo()`
-
-Okay
-```js
-const MyComponent: React.FC<MyProps> = (props) => ()
-```
-
-Much better
-```js
-const MyComponent: React.FC<MyProps> = (props) => ()
-
-/** this is what we need to export */
-const EnhancedComponent = React.memo(MyComponent);
-```
-
-With custom update conditions
-```js
-import { equals } from 'ramda'
-
-const MyComponent: React.FC<MyProps> = (props) => ()
-
-/*
- return true if passing nextProps to render would return
- the same result as passing prevProps to render,
- otherwise return false
-*/
-const areEqual = (prevProps: MyProps, nextProps: MyProps) => {
-  return equals(prevProps, nexProps)
-}
-
-/** this is what we need to export */
-const EnhancedComponent = React.memo(MyComponent, areEqual);
-```
-
-## Testing Memoized components
-Testing memoized components is little tricky, since they dont return JSX when shallow rendered, but instead return an object. This means when you try
+As with everything else in React-world, MUI's styling solution now supports hooks.
+We prefer this pattern as it is terser, makes testing easier, and avoids cluttering up the component
+tree with `withStyles(Component)`.
 
 ```js
-const MyChildComponent = React.memo(props => {
-  return <div />
-});
+import { makeStyles, Theme } from "src/components/core/styles";
 
-const MyComponent = React.memo(props => {
-  return <MyChildComponent />
-});
-
-const Component = shallow(<MyComponent />); // fails here
-
-expect(Component.find('MyChildComponent'))
+const useStyles = makeStyles((theme: Theme) => ({
+  message: {
+    fontSize: "16px",
+    color: theme.color.red
+  }
+}));
 ```
 
-You end up with an error like this in your test
-
-```
-Invariant Violation: ReactShallowRenderer render(): Shallow rendering works only with
-custom components, but the provided element type was `object`.
-```
-
-Instead, try something like this
+Inside the component, access these classes by calling `useStyles()`:
 
 ```js
-const MyChildComponent = React.memo(props => {
-  return <div />
-});
+const Component: React.FC<{}> = props => {
+  const classes = useStyles();
 
-const MyComponent = props => {
-  return <MyChildComponent />
+  return <div className={classes.message}>A message for you</div>;
 };
-
-export default React.memo(MyComponent);
-
-const Component = shallow(<MyComponent />); // all systems go
-
-expect(Component.find('MyChildComponent')); // wait - it's still failing here
 ```
 
-Now you'll be able to correctly shallow render the component and still be able to leverage
-memoization; however, the smoke test still fails? Why?
+## Avoid instance methods that could be made into components.
 
-Well, if you `console.log(Component.debug())`, you'll see something like this
-
-```js
-<[object Object] />
-```
-
-Now we're running into the issue where our component doesn't have a display name. Our current
-solution is to implement solution that mimics our end-to-end tests
-
-```js
-const MyChildComponent = React.memo(props => {
-  return <div />
-});
-
-const MyComponent = props => {
-  return <MyChildComponent data-qa-child-component />
-};
-
-export default React.memo(MyComponent);
-
-const Component = shallow(<MyComponent />); // all systems go
-
-expect(Component.find('[data-qa-child-component]')); // our test is passing!!! woooo
-```
-
-## Avoiding instance methods that could be made into components.
 Every time an instance of a component is created so are all the instance methods, just like
 renderContent in the following code. So this takes more CPU to create, more memory to store, and
-more CPU to tear down. This code smells because theres a function invocation that has no arguments.
+more CPU to tear down. This code smells because there's a function invocation that has no arguments.
 That screams side-effects. To correct this we simply extract the functionality into a new component
 passing the props as necessary.
 
 Before
+
 ```js
 class MyComponent extends Component {
   renderContent = () => {
@@ -176,25 +139,24 @@ class MyComponent extends Component {
     }
 
     if (loading) {
-      return this.renderLoading()
+      return this.renderLoading();
     }
 
     if (!data || data.length === 0) {
-      return this.renderEmptyState()
+      return this.renderEmptyState();
     }
 
     return this.renderData();
-  }
+  };
 
-  render(){
-    <div>
-      { this.renderContent() }
-    </div>
+  render() {
+    <div>{this.renderContent()}</div>;
   }
 }
 ```
 
 After
+
 ```js
 const MyComponent = (props) => {
   const { loading, error, data } = props;
@@ -254,6 +216,7 @@ Abstracting code is a great way to not repeat yourself and keep the code DRY. It
 1. Any functions that are inside a React Class/function that don't rely on state or props should be abstracted out
 
 Bad
+
 ```js
 class MyComponent extends React.PureComponent<MyProps> {
   /** no reason for this to be attached to the Class */
@@ -266,20 +229,22 @@ class MyComponent extends React.PureComponent<MyProps> {
 ```
 
 Good
+
 ```js
 class MyComponent extends React.PureComponent<MyProps> {
   return <div />
 }
 
-/** this can now be unit tested seperately */
+/** this can now be unit tested separately */
 const filterOutNumbers = (arrayOfNumbers: number[]) => {
   return arrayOfNumbers.filter(eachNumber => eachNumber > 10)
 }
 ```
 
-2. Any logic that is being duplicated or even used more than twice should live in it's own file (ideally in the `/utilities` dir)
+2. Any logic that is being duplicated or even used more than twice should live in its own file (ideally in the `/utilities` dir)
 
 Bad
+
 ```js
 class MyComponent extends React.PureComponent<MyProps> {
   return (
@@ -304,6 +269,7 @@ class MyComponent extends React.PureComponent<MyProps> {
 ```
 
 Good
+
 ```js
 import { capitalizeAllWords } from 'src/utilities/word-formatting-utils'
 
@@ -320,108 +286,112 @@ class MyComponent extends React.PureComponent<MyProps> {
 We're creating abstractions of all external components, even if that's just an immediate exporting
 of the component `export { default } from '@material-ui/core'`. We're doing this for the following
 reasons;
+
 - Provides a common entry point where can make site-wide changes to the components structure or functionality.
 - Allows us control of the API we consume, regardless of where the component comes from.
 - The wrapper component allows us to respond to naming/file structure changes made by the
-component authors.
+  component authors.
 
 ## Importing and Structuring Dependencies
 
 As a rule, always use absolute paths for module imports. Something that looks similar to
 
 ```js
-import MyComponent from 'src/components/MyComponent';
+import MyComponent from "src/components/MyComponent";
 ```
 
 is much better than
 
 ```js
-import MyComponent from '../../../MyComponent';
+import MyComponent from "../../../MyComponent";
 ```
 
-This project relies on a number of third-party dependencies. It us important that when importing those
+This project relies on a number of third-party dependencies. It is important that when importing those
 dependencies you import only the necessary files. For example, if I needed to create an Observable
 using RxJS I would import only Observable and the type of Observable I want to create. This keeps bundle
 size down substantially.
 
 Bad
+
 ```js
-import { Observable } from 'rxjs/Rx';
+import { Observable } from "rxjs/Rx";
 ```
 
 Good
+
 ```js
-import 'rxjs/add/observable/of';
-import { Observable } from 'rxjs/Observable';
+import "rxjs/add/observable/of";
+import { Observable } from "rxjs/Observable";
 ```
 
 ## Other Things
 
 ### Error Handling
 
-Our application has to work with different types of errors: JavaScript `Error` objects, `AxiosErrors`, and field errors
-from the Linode API. To simplify working with these and maintain consistency, we have created several helper methods in `src/utilities/errorUtils`.
-
 #### API Error arrays
 
-In most cases, we want components to work with an array of Linode API errors. These have the shape:
+Components making API requests generally want to work with an array of Linode API errors. These have the shape:
 
 `{ field: 'field-name', reason: 'why this error occurred' }`
 
-However, when we make an API request, there is no guarantee that the errors returned will have this shape (if the request fails before
-reaching the API, for instance). To make sure that our components have an array of field errors to work with, use `getAPIErrorOrDefault`:
+We have added an interceptor to our Axios instance that essentially guarantees that any
+error from an API function will have this shape. For example, if you block network requests
+using devtools, there is no response from the API. But if you `.catch()` this error,
+you'll find that it has the above shape, with a default message ("An unexpected error occurred.")
+
+This makes it easy to work with errors, but the default message is not very situation specific.
+Often, what we want is to use a real error message from the API if it is available, and use
+a situation-specific fallback message otherwise. We have a helper in our utilities directory
+for this called `getAPIErrorOrDefault`.
 
 ```js
-import { getApiErrorOrDefault } from 'src/utilities/errorUtils';
+import { getAPIErrorOrDefault } from "src/utilities/errorUtils";
 
-apiRequest()
-  .catch(error => {
-    const apiError = getApiErrorOrDefault(
-      error, // If this is an array of API field errors, it will be returned unchanged.
-      'An unexpected error occurred.', // If no field errors are present, an array consisting of an error with this reason is returned.
-      'linode-id' // Optional. If you want the default field error to have a `field` property, this argument will be used.
-    )
+apiRequest().catch(error => {
+  const apiError = getAPIErrorOrDefault(
+    error, // If this is an array of API field errors, it will be returned unchanged.
+    "Your Linode is hopelessly broken.", // If no field errors are present, an array consisting of an error with this reason is returned.
+    "linode-id" // Optional. If you want the default field error to have a `field` property, this argument will be used.
+  );
+});
+```
+
+A common pattern is to wrap an API response in this method, then use the first reason as the error
+message. This isn't ideal since it's possible multiple errors could be returned from the same
+request, but it is used in many places throughout the app.
+
+```js
+makeApiRequest()
+  .then(doSomethingOnSuccess)
+  .catch(errorResponse => {
+    const fallBackMessage = "Oh no, something horrible happened!";
+    const errorMessage = getAPIErrorOrDefault(errorResponse, fallbackMessage)[0]
+      .reason;
   });
 ```
 
-#### Error Strings
-
-In some cases, we only want to display a single error message, regardless of how many things went wrong. This is not an ideal pattern,
-because some error data is potentially lost and not shown to the user. When it is necessary, however, use the `getErrorStringOrDefault`
-helper:
-
-```js
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-
-apiRequest()
-  .catch(error => {
-    const errorMessage = getErrorStringOrDefault(
-      error, // Whatever this is, the helper will return the reason, or a default message if no reason is found
-      'Default message' // Optional; a generic message is displayed if this isn't provided.
-    )
-  })
-```
+Given the setup of our app, `errorMessage` will be a string containing either a legit message
+from the API or else the `fallBackMessage` specified.
 
 #### Error Maps
 
 The usual pattern is to map field errors to the appropriate field, showing a generalError for any errors that don't have a field. For example,
-a form might have an input for `region`, and that element will display any errors with `{ field: 'region', reason: 'whatever' }` inline. In 
-some cases, however, we either aren't checking for every possible error field, or we aren't entirely sure what all of the possible fields the 
+a form might have an input for `region`, and that element will display any errors with `{ field: 'region', reason: 'whatever' }` inline. In
+some cases, however, we either aren't checking for every possible error field, or we aren't entirely sure what all of the possible fields the
 API is considering are. To make sure that we catch these and show them to the user, use the `getErrorMap` helper:
 
 ```js
-import { getErrorMap } from 'src/utilities/errorUtils';
+import { getErrorMap } from "src/utilities/errorUtils";
 
-apiRequest()
-  .catch(error => {
-    const errorMap = getErrorMap(
-      ['label', 'region'], // Fields we want to check for
-      error
-      )
-    const labelError = errorMap.label;
-    const regionError = errorMap.region;
-    const generalError = errorMap.none;
-  });
+apiRequest().catch(error => {
+  const errorMap = getErrorMap(
+    ["label", "region"], // Fields we want to check for
+    error
+  );
+  const labelError = errorMap.label;
+  const regionError = errorMap.region;
+  const generalError = errorMap.none;
+});
 ```
 
 `errorMap` will be an object with one key for each of the fields we specified, and a `none` key that captures any errors (the first
@@ -449,9 +419,9 @@ If your data is being sourced from Redux state, it's safe to assume that the dat
 The first step in paginating things from Redux is to source the data
 
 ```js
-import { APIError } from 'linode-js-sdk/lib/types'
-import { Volume } from 'linode-js-sdk/lib/volumes'
-import { connect } from 'react-redux'
+import { APIError } from "linode-js-sdk/lib/types";
+import { Volume } from "linode-js-sdk/lib/volumes";
+import { connect } from "react-redux";
 
 interface ReduxStateProps {
   loading: boolean;
@@ -459,11 +429,9 @@ interface ReduxStateProps {
   data: Volume[];
 }
 
-const MyComponent: React.FC<ReduxStateProps> = (props) => {
-  return (
-    <div />
-  )
-}
+const MyComponent: React.FC<ReduxStateProps> = props => {
+  return <div />;
+};
 
 const mapStateToProps: MapStateToProps<
   /* props that this HOC returns */
@@ -478,14 +446,13 @@ const mapStateToProps: MapStateToProps<
   volumes: state.__resources.volumes.items
 });
 
-export default connected(mapStateToProps)(MyComponent)
+export default connected(mapStateToProps)(MyComponent);
 ```
 
 Next, we need to leverage the `<Paginate />` render props Component, which has built-in pagination logic, so you don't have to worry about the heavy lifting
 
-
 ```js
-const MyComponent: React.FC<ReduxStateProps> = (props) => {
+const MyComponent: React.FC<ReduxStateProps> = props => {
   return (
     <Paginate data={data} pageSize={25}>
       {({
@@ -495,12 +462,10 @@ const MyComponent: React.FC<ReduxStateProps> = (props) => {
         handlePageSizeChange,
         page,
         pageSize
-      }) => (
-        <div />
-      )}
+      }) => <div />}
     </Paginate>
-  )
-}
+  );
+};
 ```
 
 Now we see that we have access to all the data, the current page, the page size, and helper functions to change page and page size.
@@ -508,7 +473,7 @@ Now we see that we have access to all the data, the current page, the page size,
 Finally, lets put it all together now with our `<PaginationFooter />` component
 
 ```js
-const MyComponent: React.FC<ReduxStateProps> = (props) => {
+const MyComponent: React.FC<ReduxStateProps> = props => {
   return (
     <Paginate data={data} pageSize={25}>
       {({
@@ -523,16 +488,14 @@ const MyComponent: React.FC<ReduxStateProps> = (props) => {
           <Table aria-label="List of your Volumes">
             <TableHeader>My Volumes</TableHeader>
             <TableBody>
-              {
-                (paginatedData.map(eachVolumes => {
-                  return (
-                    <TableRow>
-                      <TableCell>{eachVolume.label}</TableCell>
-                      <TableCell>{eachVolume.size}</TableCell>
-                    </TableRow>
-                  )
-                }))
-              }
+              {paginatedData.map(eachVolumes => {
+                return (
+                  <TableRow>
+                    <TableCell>{eachVolume.label}</TableCell>
+                    <TableCell>{eachVolume.size}</TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
           <PaginationFooter
@@ -545,42 +508,39 @@ const MyComponent: React.FC<ReduxStateProps> = (props) => {
         </React.Fragment>
       )}
     </Paginate>
-  )
-}
+  );
+};
 ```
-
-And that is how you paginate data sourced from Redux.
 
 #### Paginating Data requested in `componentDidMount()`
 
 Paginating data this way is similar to the last approach with some differences. In this case, we'll be leveraging the `<Pagey />` higher-order component.
 
-So the first step is to wrap your base component in the HOC and tell Pagey what request you want to fire when the page changes:
+The first step is to wrap your base component in the HOC and tell Pagey what request you want to fire when the page changes:
 
 ```js
-import { Pagey, PaginationProps } from 'src/components/Pagey';
-import { getInvoices } from 'linode-js-sdk/lib/account'
+import { Pagey, PaginationProps } from "src/components/Pagey";
+import { getInvoices } from "linode-js-sdk/lib/account";
 
 interface OtherProps {
   someText: string;
 }
 
-const MyComponent: React.FC<PaginationProps & OtherProps> = (props) => {
-  return <div />
-}
+const MyComponent: React.FC<PaginationProps & OtherProps> = props => {
+  return <div />;
+};
 
 const paginated = Pagey((ownProps: OtherProps, params: any, filter: any) => {
-  return getInvoices(params, filter)
-})
+  return getInvoices(params, filter);
+});
 
-export default paginated(MyComponent)
+export default paginated(MyComponent);
 ```
 
 Now we have access to the same props as before. Lets add in the rest of our markup
 
 ```js
-const MyComponent: React.FC<PaginationProps & OtherProps> = (props) => {
-
+const MyComponent: React.FC<PaginationProps & OtherProps> = props => {
   const {
     data: myInvoices,
     page,
@@ -597,16 +557,14 @@ const MyComponent: React.FC<PaginationProps & OtherProps> = (props) => {
       <Table aria-label="List of your Invoices">
         <TableHeader>My Invoices</TableHeader>
         <TableBody>
-          {
-            (myInvoices.map(eachInvoice => {
-              return (
-                <TableRow>
-                  <TableCell>{eachInvoice.label}</TableCell>
-                  <TableCell>{eachInvoice.amount}</TableCell>
-                </TableRow>
-              )
-            }))
-          }
+          {myInvoices.map(eachInvoice => {
+            return (
+              <TableRow>
+                <TableCell>{eachInvoice.label}</TableCell>
+                <TableCell>{eachInvoice.amount}</TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
       <PaginationFooter
@@ -617,24 +575,24 @@ const MyComponent: React.FC<PaginationProps & OtherProps> = (props) => {
         handleSizeChange={handlePageSizeChange}
       />
     </React.Fragment>
-  )
-}
+  );
+};
 ```
 
 Now, each time you change a page, the appropriate page will be requested. `<Pagey />` also gives you access to a bunch of other props that might help for other tasks you're attempting to accomplish, namely:
 
-| Prop Name | Type | Description
-| --------- | ---- | ---------- |
-| onDelete  | () => void | Helper function that should be invoked when you're deleting items from the list. This will ensure no redundant requests are made |
-| order | 'asc' or 'desc' | What order in which the data is being sorted. |
-| handleSearch | (filter?: any) => void | Helper function to re-invoke the base request with new filters |
-| searching | boolean | is the handleSeach Promise in-progress |
-| handleOrderChange | (sortBy: string, order: 'asc' or 'desc' = 'asc', page: number = 1) => void | Helper function to change the sort and sort order of the base request |
-| isSorting | boolean | is the handleOrderChange Promise in-progress |
+| Prop Name         | Type                                                                       | Description                                                                                                                      |
+| ----------------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| onDelete          | () => void                                                                 | Helper function that should be invoked when you're deleting items from the list. This will ensure no redundant requests are made |
+| order             | 'asc' or 'desc'                                                            | What order in which the data is being sorted.                                                                                    |
+| handleSearch      | (filter?: any) => void                                                     | Helper function to re-invoke the base request with new filters                                                                   |
+| searching         | boolean                                                                    | is the handleSeach Promise in-progress                                                                                           |
+| handleOrderChange | (sortBy: string, order: 'asc' or 'desc' = 'asc', page: number = 1) => void | Helper function to change the sort and sort order of the base request                                                            |
+| isSorting         | boolean                                                                    | is the handleOrderChange Promise in-progress                                                                                     |
 
 ### Toasts
 
-Showing messaging to users is a complex task that varies depending on whether an action is immidiate or scheduled to happen some n time in the future. For all actions that we cannot predict their completion time,
+Showing messaging to users is a complex task that varies depending on whether an action is immediate or scheduled to happen some n time in the future. For all actions that we cannot predict their completion time,
 we use toasts or snackbar messages.
 
 We're leveraging [notistack](https://github.com/iamhosseindhv/notistack) for all toasts, which is
@@ -643,9 +601,9 @@ an abstracted HOC built upon material-ui's Snackbar. All [MUI's props](https://m
 An example of how to use a Toast is as follows:
 
 ```js
-import React from 'react';
+import React from "react";
 
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { InjectedNotistackProps, withSnackbar } from "notistack";
 
 interface Props extends InjectedNotistackProps {
   /**
@@ -655,81 +613,13 @@ interface Props extends InjectedNotistackProps {
 
 export const Example: React.SFC<Props> = props => {
   const handleClick = () => {
-    props.enqueueSnackbar('this is a toast notification', {
-      onClick: () => alert('you clicked the toast!')
-    })
-  }
+    props.enqueueSnackbar("this is a toast notification", {
+      onClick: () => alert("you clicked the toast!")
+    });
+  };
 
-  return (
-    <div onClick={handleClick}>
-      Click Me
-    </div>
-  );
+  return <div onClick={handleClick}>Click Me</div>;
 };
 
 export default withSnackbar(Example);
 ```
-
-### Testing Redux Functionality
-
-Most Redux artifacts are basic functions, so actions and reducers can be exported and tested functionally. Many reducers also include asynchronous actions with Thunk,
-which generally call API methods from the services library and dispatch multiple actions. Testing these requires more setup:
-
-1. Mock the services library module that is called by the Thunk in question:
-
-  ```js
-  jest.mock('../../../services/instances', () => ({
-    getInstances: () => Promise.resolve('return value');
-  }))
-```
-
-2. To verify that the Thunk called the correct method, you will have to mock that specific method (in the example above, the `getInstances` method can't be accessed
-  later in your tests).
-
-  ```js
-    // Using requireMock makes it semantically clear that this import is not used, and avoids TypeScript issues.
-    const requests = require.requireMock('../../../services/instances');
-
-    // (In your tests somewhere)
-
-    requests.getInstances = jest.fn(() => Promise.resolve('return something here'));
-
-    it("calls the right method", () => {
-      expect(requests.getInstances).toHaveBeenCalled();
-    });
-```
-
-3. To actually test the Thunk, you will need to dispatch it, which requires the creation of a mock store:
-
-  ```js
-  import configureStore from 'redux-mock-store';
-  import ReduxThunk from 'redux-thunk';
-
-  const middlewares = [ReduxThunk];
-  const createMockStore = configureStore(middlewares);
-  const store = createMockStore({});
-  ```
-
-  You can then dispatch your async actions normally:
-
-  ```js
-  await store.dispatch(instances.getInstances() as any);
-  ```
-
-  The mock store allows you to check the actions dispatched by Thunks:
-
-  ```js
-  const actions = store.getActions();
-  // [{ type: ACTION_1 }, { type: ACTION_2, payload: some_payload }]
-  expect(actions).toEqual([instances.load(), instances.handleError(error)]);
-  ```
-
-  It is also helpful to reset the mock store before each request, to keep the actions history clean:
-
-  ```js
-  const store = createMockStore({});
-  beforeEach(() => {
-    jest.resetAllMocks();
-    store.clearActions();
-  });
-  ```
