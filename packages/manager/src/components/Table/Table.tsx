@@ -40,7 +40,7 @@ const styles = (theme: Theme) =>
           '& > td:first-child': {
             backgroundColor: theme.bg.tableHeader,
             '& .data': {
-              textAlign: 'left'
+              textAlign: 'right'
             }
           }
         },
