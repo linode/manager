@@ -28,7 +28,11 @@ type CSSClasses = 'label' | 'root' | 'deleteButton' | Variants;
 const styles = (theme: Theme) =>
   createStyles({
     label: {},
-    root: {},
+    root: {
+      '&:last-child': {
+        marginRight: 8
+      },
+    },
     deleteButton: {
       minWidth: 'auto'
     },
