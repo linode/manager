@@ -257,11 +257,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
                 <Paper className={classes.root}>
                   {success && <Notice success text={success} />}
                   {generalError && <Notice error text={generalError} />}
-                  <Typography
-                    variant="h3"
-                    className={classes.title}
-                    data-qa-title
-                  >
+                  <Typography variant="h3" className={classes.title}>
                     Two-Factor Authentication (TFA)
                   </Typography>
                   <Typography

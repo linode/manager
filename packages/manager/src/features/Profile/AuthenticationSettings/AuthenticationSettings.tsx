@@ -1,6 +1,5 @@
 import { Profile } from 'linode-js-sdk/lib/profile';
 import { APIError } from 'linode-js-sdk/lib/types';
-import { path } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
@@ -39,7 +38,7 @@ type CombinedProps = StateProps & DispatchProps;
 export const AuthenticationSettings: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const [success, setSuccess] = React.useState<string | undefined>('');
+  const [success, setSuccess] = React.useState<string | undefined>(undefined);
   // const [thirdPartyAuthEnabled, setThirdPartyAuthEnabled] = React.useState<
   //   boolean
   // >(true);
@@ -82,7 +81,6 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
             <SecuritySettings
               updateProfile={updateProfile}
               onSuccess={onWhitelistingDisable}
-              data-qa-whitelisting-form
               updateProfileError={props.profileUpdateError}
               ipWhitelistingEnabled={ipWhitelisting}
             />
@@ -154,9 +152,9 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
     loading: profile.loading,
     thirdPartyAuth: false,
     ipWhitelisting: profile?.data?.ip_whitelist_enabled ?? false,
-    twoFactor: path(['data', 'two_factor_auth'], profile),
-    username: path(['data', 'username'], profile),
-    profileUpdateError: path<APIError[]>(['update'], profile.error)
+    twoFactor: profile?.data?.two_factor_auth,
+    username: profile?.data?.username,
+    profileUpdateError: profile.error?.update
   };
 };
 

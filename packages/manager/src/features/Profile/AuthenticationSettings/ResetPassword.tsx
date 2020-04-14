@@ -31,9 +31,7 @@ export const ResetPassword: React.FC<CombinedProps> = props => {
 
   return (
     <Paper className={classes.root}>
-      <Typography variant="h3" data-qa-title>
-        Password Reset
-      </Typography>
+      <Typography variant="h3">Password Reset</Typography>
       <Typography variant="body2" className={classes.copy}>
         If you’ve forgotten your password or would like to change it, we’ll send
         you an e-mail with instructions.

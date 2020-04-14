@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -37,17 +38,13 @@ export const ThirdPartyAuthentication: React.FC<Props> = props => {
           </Notice>
           <Typography variant="body2" className={classes.copy}>
             Your login credentials are currently managed via {props.provider}.
-            If you need to reset your password, please visit
-            <a
-              target="_blank"
-              aria-describedby="external-site"
-              rel="noopener noreferrer"
-              href={`https://www.` + props.provider + `.com/`}
+            If you need to reset your password, please visit{' '}
+            <Link
+              to="{`https://www.` + props.provider + `.com/`}"
               style={{ fontWeight: 600 }}
             >
-              {' '}
               the {props.provider} website
-            </a>
+            </Link>
             .
           </Typography>
           <Typography variant="body2" className={classes.copy}>

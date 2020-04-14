@@ -61,7 +61,7 @@ export const TrustedDevices: React.FC<CombinedProps> = props => {
     <ToggleState>
       {({ open: dialogOpen, toggle: toggleDialog }) => (
         <Paper>
-          <Typography variant="h3" className={classes.title} data-qa-title>
+          <Typography variant="h3" className={classes.title}>
             Trusted Devices
           </Typography>
           <Table>
