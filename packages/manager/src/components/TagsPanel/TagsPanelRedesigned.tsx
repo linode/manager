@@ -70,9 +70,6 @@ const styles = (theme: Theme) =>
     errorNotice: {
       borderLeft: `5px solid ${theme.palette.status.errorDark}`,
       animation: '$fadeIn 225ms linear forwards',
-      '&$important': {
-        borderLeftWidth: 32
-      },
       '& .noticeText': {
         ...theme.typography.body1,
         fontFamily: '"LatoWeb", sans-serif'
@@ -433,11 +430,7 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
             })}
           </div>
           {tagError && (
-            <Typography
-                className={classes.errorNotice}
-            >
-              {tagError}
-            </Typography>
+            <Typography className={classes.errorNotice}>{tagError}</Typography>
           )}
         </div>
       </div>
