@@ -90,7 +90,10 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
   }
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(+e.target.value);
+    const parsedValue = +e.target.value;
+    if (parsedValue >= min && parsedValue <= max) {
+      setValue(+e.target.value);
+    }
   };
 
   const incrementValue = () => {
