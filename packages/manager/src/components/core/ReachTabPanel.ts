@@ -1,0 +1,4 @@
+import { TabPanel } from '@reach/tabs';
+import '@reach/tabs/styles.css';
+
+export default TabPanel;
