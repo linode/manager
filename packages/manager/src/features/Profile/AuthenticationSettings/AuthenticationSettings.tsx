@@ -39,7 +39,7 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const [success, setSuccess] = React.useState<string | undefined>('');
-  const [thirdPartyAuthEnabled] = React.useState<boolean>(false);
+  const [thirdPartyAuthEnabled] = React.useState<boolean>(true);
 
   const { loading, ipWhitelisting, twoFactor, username, updateProfile } = props;
 
