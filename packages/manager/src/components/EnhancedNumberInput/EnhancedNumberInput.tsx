@@ -70,21 +70,37 @@ interface Props {
   value: number;
   setValue: (value: number) => void;
   disabled?: boolean;
+  max?: number;
+  min?: number;
 }
 
 type FinalProps = Props;
 
 export const EnhancedNumberInput: React.FC<FinalProps> = props => {
-  const { inputLabel, small, value, setValue, disabled } = props;
+  const { inputLabel, small, setValue, disabled } = props;
+
+  const max = props.max ?? 100;
+  const min = props.min ?? 0;
+
+  let value = props.value;
+  if (value > max) {
+    value = max;
+  } else if (value < min) {
+    value = min;
+  }
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(+e.target.value);
   };
 
-  const incrementValue = () => setValue(value + 1);
+  const incrementValue = () => {
+    if (value < max) {
+      setValue(value + 1);
+    }
+  };
 
   const decrementValue = () => {
-    if (value > 0) {
+    if (value > min) {
       setValue(value - 1);
     }
   };
@@ -106,7 +122,7 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
           aria-label="Subtract 1"
           name="Subtract 1"
           onClick={decrementValue}
-          disabled={disabled || value === 0 ? true : false}
+          disabled={disabled || value === min}
           data-testid={'decrement-button'}
         >
           <Minus className={classes.minusIcon} />
@@ -125,8 +141,8 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
             className: classnames({
               [classes.input]: true
             }),
-            min: 0,
-            max: 100
+            min,
+            max
           }}
           disabled={disabled}
           data-testid={'quantity-input'}
@@ -138,7 +154,7 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
           aria-label="Add 1"
           name="Add 1"
           onClick={incrementValue}
-          disabled={disabled}
+          disabled={disabled || value === max}
           data-testid={'increment-button'}
         >
           <Plus className={classes.plusIcon} />
