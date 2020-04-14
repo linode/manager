@@ -34,6 +34,7 @@ export type RuleStatus =
 
 export interface ExtendedFirewallRule extends FirewallRuleType {
   status: RuleStatus;
+  index?: number;
   errors?: FirewallRuleError[];
 }
 
@@ -164,23 +165,26 @@ export const editorStateToRules = (
 ): ExtendedFirewallRule[] =>
   state.map(revisionList => revisionList[revisionList.length - 1]);
 
-export const removeErrors = (
-  rules: ExtendedFirewallRule[]
-): FirewallRuleType[] =>
-  rules.map(thisRule => ({ ...thisRule, errors: undefined }));
-
-export const removeStatus = (
-  rules: ExtendedFirewallRule[]
-): FirewallRuleType[] =>
-  rules.map(thisRule => ({ ...thisRule, status: undefined }));
+// Remove fields we use internally.
+export const stripExtendedFields = (
+  rule: ExtendedFirewallRule
+): FirewallRuleType => {
+  const ruleCopy = { ...rule };
+  delete ruleCopy.errors;
+  delete ruleCopy.status;
+  delete ruleCopy.index;
+  return ruleCopy;
+};
 
 export const filterRulesPendingDeletion = (rules: ExtendedFirewallRule[]) =>
   rules.filter(thisRule => thisRule.status !== 'PENDING_DELETION');
 
+export const appendIndex = (rules: ExtendedFirewallRule[]) =>
+  rules.map((thisRule, index) => ({ ...thisRule, index }));
+
 export const prepareRules = compose(
-  removeErrors,
-  removeStatus,
   filterRulesPendingDeletion,
+  appendIndex,
   editorStateToRules
 );
 

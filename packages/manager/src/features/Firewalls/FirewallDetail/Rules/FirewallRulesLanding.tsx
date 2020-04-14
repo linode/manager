@@ -18,9 +18,11 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import FirewallRuleDrawer, { Mode } from './FirewallRuleDrawer';
 import curriedFirewallRuleEditorReducer, {
   editorStateToRules,
+  ExtendedFirewallRule,
   hasModified as _hasModified,
   initRuleEditorState,
-  prepareRules
+  prepareRules,
+  stripExtendedFields
 } from './firewallRuleEditor';
 import FirewallRuleTable from './FirewallRuleTable';
 import { Category, parseFirewallRuleError } from './shared';
@@ -141,10 +143,16 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
     setSubmitting(true);
     setGeneralErrors(undefined);
 
-    // Gather rules from state for submission to the API.
-    const finalRules: FirewallRules = {
+    // Gather rules from state for submission to the API. Keep these around,
+    // because we may need to reference extended fields like "index" for error handling.
+    const preparedRules = {
       inbound: prepareRules(inboundState),
       outbound: prepareRules(outboundState)
+    };
+
+    const finalRules = {
+      inbound: preparedRules.inbound.map(stripExtendedFields),
+      outbound: preparedRules.outbound.map(stripExtendedFields)
     };
 
     props
@@ -171,12 +179,25 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
               thisError
             ]);
           } else {
+            const { idx: errorIndex, category } = parsedError;
+
+            // Refer back to the prepared list of rules to get the actual index to set the error on.
+            // This may be different than the index returned by the API, since we don't send deleted
+            // rules in the PUT request (but we still have them in state).
+            const ruleInError: ExtendedFirewallRule =
+              preparedRules[category][errorIndex];
+            const actualIndex = ruleInError.index;
+
+            if (actualIndex === undefined) {
+              return;
+            }
+
             const dispatch = dispatchFromCategory(
               parsedError.category as Category
             );
             dispatch({
               type: 'SET_ERROR',
-              idx: parsedError.idx,
+              idx: actualIndex,
               error: parsedError
             });
           }
