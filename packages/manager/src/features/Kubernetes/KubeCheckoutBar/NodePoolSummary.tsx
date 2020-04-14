@@ -80,6 +80,7 @@ export const NodePoolSummary: React.FC<Props> = props => {
           value={nodeCount}
           setValue={updateNodeCount}
           small
+          min={1}
         />
       </Grid>
       <Grid item>
