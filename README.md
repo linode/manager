@@ -13,6 +13,8 @@ This repository is the home for all things related to front-end development at L
 
 ## Running Projects Within the Repository
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d3076f49ad024868a2e96f43074476ef)](https://app.codacy.com/gh/linode/manager?utm_source=github.com&utm_medium=referral&utm_content=linode/manager&utm_campaign=Badge_Grade_Settings)
+
 To get started running Linode UI projects locally, please [see the _Getting Started_ documentation.](GETTING_STARTED.md)
 
 ## Contributing
