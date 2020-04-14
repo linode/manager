@@ -1,4 +1,6 @@
 // Configure Enzyme Adapter
+const sdk = require('linode-js-sdk/lib/request');
+const preferences = require.requireMock('linode-js-sdk/lib/profile');
 var Enzyme = require('enzyme');
 var Adapter = require('enzyme-adapter-react-16');
 var React = require('react');
@@ -26,6 +28,23 @@ const localStorageMock = (function() {
     }
   };
 })();
+
+// If we ever forget to mock a request in our unit tests,
+// and hit the API, log an error to the console (and stop
+// the request)
+sdk.baseRequest.interceptors.request.use(request => {
+  console.error('Making a real API request', request.url);
+  return null;
+});
+
+// Our renderWithTheme helper includes a call to /preferences, mock that out
+jest.mock('linode-js-sdk/lib/profile', () => ({
+  getUserPreferences: jest.fn(),
+  updateUserPreferences: jest.fn()
+}));
+
+preferences.getUserPreferences = jest.fn().mockResolvedValue({});
+preferences.updateUserPreferences = jest.fn().mockResolvedValue({});
 
 Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 

@@ -6,10 +6,9 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps } from 'react-redux';
+import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { Action, compose } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
+import { compose } from 'redux';
 import { Subscription } from 'rxjs/Subscription';
 import {
   DocumentTitleSegment,
@@ -20,14 +19,10 @@ import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.cont
 import { events$ } from 'src/events';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 
-import { ApplicationState } from 'src/store';
 import composeState from 'src/utilities/composeState';
 import { configureErrorReportingUser } from './exceptionReporting';
 import { MapState } from './store/types';
 import { isKubernetesEnabled as _isKubernetesEnabled } from './utilities/accountCapabilities';
-
-import DataLoadedListener from 'src/components/DataLoadedListener';
-import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
 
 import IdentifyUser from './IdentifyUser';
 
@@ -49,7 +44,6 @@ interface State {
 }
 
 type CombinedProps = Props &
-  DispatchProps &
   StateProps &
   RouteComponentProps &
   WithSnackbarProps;
@@ -148,15 +142,8 @@ export class App extends React.Component<CombinedProps, State> {
       accountCapabilities,
       accountLoading,
       accountError,
-      linodesLoading,
-      domainsLoading,
-      accountSettingsError,
-      accountSettingsLoading,
       userId,
-      username,
-      volumesLoading,
-      bucketsLoading,
-      nodeBalancersLoading
+      username
     } = this.props;
 
     if (hasError) {
@@ -208,33 +195,6 @@ export class App extends React.Component<CombinedProps, State> {
           accountCountry={accountData ? accountData.country : undefined}
           taxID={accountData ? accountData.tax_id : undefined}
         />
-        <DataLoadedListener
-          markAppAsLoaded={this.props.markAppAsDoneLoading}
-          flagsHaveLoaded={this.state.flagsLoaded}
-          linodesLoadedOrErrorExists={
-            linodesLoading === false || !!linodesError
-          }
-          volumesLoadedOrErrorExists={
-            volumesLoading === false || !!volumesError
-          }
-          domainsLoadedOrErrorExists={
-            domainsLoading === false || !!domainsError
-          }
-          bucketsLoadedOrErrorExists={
-            bucketsLoading === false || !!bucketsError
-          }
-          nodeBalancersLoadedOrErrorExists={
-            nodeBalancersLoading === false || !!nodeBalancersError
-          }
-          profileLoadedOrErrorExists={!!this.props.userId || !!profileError}
-          accountLoadedOrErrorExists={
-            accountLoading === false || !!accountError
-          }
-          accountSettingsLoadedOrErrorExists={
-            accountSettingsLoading === false || !!accountSettingsError
-          }
-          appIsLoaded={!this.props.appIsLoading}
-        />
         <DocumentTitleSegment segment="Linode Manager" />
         <MainContent
           accountCapabilities={accountCapabilities}
@@ -253,18 +213,6 @@ export class App extends React.Component<CombinedProps, State> {
   }
 }
 
-interface DispatchProps {
-  markAppAsDoneLoading: () => void;
-}
-
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
-  dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
-) => {
-  return {
-    markAppAsDoneLoading: () => dispatch(handleLoadingDone())
-  };
-};
-
 interface StateProps {
   /** Profile */
   linodes: Linode[];
@@ -278,13 +226,9 @@ interface StateProps {
   isLoggedInAsCustomer: boolean;
   accountCapabilities: AccountCapability[];
   linodesLoading: boolean;
-  volumesLoading: boolean;
-  domainsLoading: boolean;
-  bucketsLoading: boolean;
   accountLoading: boolean;
   accountSettingsLoading: boolean;
   accountSettingsError?: APIError[];
-  nodeBalancersLoading: boolean;
   linodesError?: APIError[];
   volumesError?: APIError[];
   nodeBalancersError?: APIError[];
@@ -304,7 +248,7 @@ interface StateProps {
 const mapStateToProps: MapState<StateProps, Props> = state => ({
   /** Profile */
   profileError: path(['read'], state.__resources.profile.error),
-  linodes: state.__resources.linodes.entities,
+  linodes: Object.values(state.__resources.linodes.itemsById),
   linodesError: path(['read'], state.__resources.linodes.error),
   domainsError: state.__resources.domains.error.read,
   imagesError: path(['read'], state.__resources.images.error),
@@ -312,8 +256,6 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
   settingsError: state.__resources.accountSettings.error.read,
   typesError: state.__resources.types.error,
   regionsError: state.__resources.regions.error,
-  volumesError: path(['read'], state.__resources.volumes.error),
-  bucketsError: state.__resources.buckets.error,
   userId: path(['data', 'uid'], state.__resources.profile),
   username: pathOr('', ['data', 'username'], state.__resources.profile),
   accountData: state.__resources.account.data,
@@ -338,18 +280,14 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
     state
   ),
   linodesLoading: state.__resources.linodes.loading,
-  volumesLoading: state.__resources.volumes.loading,
-  domainsLoading: state.__resources.domains.loading,
-  bucketsLoading: state.__resources.buckets.loading,
   accountLoading: state.__resources.account.loading,
-  nodeBalancersLoading: state.__resources.nodeBalancers.loading,
   accountError: path(['read'], state.__resources.account.error),
   nodeBalancersError: path(['read'], state.__resources.nodeBalancers.error),
   appIsLoading: state.initialLoad.appIsLoading,
   euuid: state.__resources.account.data?.euuid
 });
 
-export const connected = connect(mapStateToProps, mapDispatchToProps);
+export const connected = connect(mapStateToProps);
 
 export default compose(
   connected,

@@ -13,7 +13,14 @@ import {
   RebuildFromStackScript
 } from './RebuildFromStackScript';
 
+const request = jest.requireMock('linode-js-sdk/lib/account');
+
 jest.mock('src/utilities/scrollErrorIntoView');
+jest.mock('linode-js-sdk/lib/account', () => ({
+  getUsers: jest.fn()
+}));
+
+request.getUsers = jest.fn().mockResolvedValue([]);
 
 afterEach(cleanup);
 
@@ -30,6 +37,7 @@ const props: CombinedProps = {
   requestKeys: jest.fn(),
   imagesLoading: false,
   imagesError: {},
+  imagesLastUpdated: 0,
   userSSHKeys: [],
   closeSnackbar: jest.fn(),
   enqueueSnackbar: jest.fn(),

@@ -22,4 +22,5 @@ export interface ExtendedCluster extends KubernetesCluster {
   node_pools: PoolNodeWithPrice[];
   totalMemory: number;
   totalCPU: number;
+  totalStorage: number;
 }

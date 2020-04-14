@@ -2,8 +2,85 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/)
-and this project adheres to [Semantic Versioning](http://semver.org/).
+The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
+
+## [2020-04-10] - 1.5.1
+
+### Changed:
+
+- Update LKE schema to reflect breaking API changes (version is now k8s_version)
+
+## [2020-04-07] - 1.5.0
+
+### Changed:
+
+- [Performance] Lazy load Domains data
+- Set a timeout when requesting Gravatars
+- Preserve Support ticket text on page reload
+
+### Fixed:
+
+- Account tab crashing for some users
+- Fix handling of local storage on logout
+- Longview NGINX tab crashing for some users
+- Screen readers cannot access "Create Linode" interface
+- Values on LV Network graphs displayed incorrectly
+- Placeholder component double h1 display issue
+
+## [2020-03-30] - v.1.4.1
+
+### Fixed:
+
+- Images not available on Marketplace flow
+
+## [2020-03-30] - v1.4.0
+
+### Changed:
+
+- Change "One-Click Apps" to "Marketplace"
+- Change message in the Events table empty state
+- Allow up to 10,000 USD payment with PayPal
+- Lazy load Images
+
+### Fixed:
+
+- Improve skeleton loading screen in the Events table
+- Fix bug in Image select
+- Fix visual bug in OAuth Apps table header (dark mode)
+- Edit DNS Records containing "linode.com" substring
+
+## [2020-03-23] - v1.3.0
+
+### Added:
+
+- Firewalls:
+  - Add, Edit, and Delete rules
+  - Prompt when navigating away from unsaved rule
+  - Add icon to table rows
+
+### Changed:
+
+- Remove “Active Deploys” StackScripts table column and add “Total Deploys” column
+- Update customer referral criteria text
+- Improve syntax highlighting
+- Include LKE clusters in Support tickets dropdown
+- Make Support Ticket table sortable by summary, ID, and updated_by
+- Update Images messaging to reflect new 6144 MB default limit
+- Remove deprecated border on graph legends
+- Adjust header padding in Linode Group By Tag
+- Cloud Manager PDF invoices pull in customer tax ID regardless of added date
+
+### Fixed:
+
+- Volumes creation bug
+- Accessibility warnings for password inputs
+- Remove page break on invoices
+- Fix collision of tax ID and address on invoices
+- 404 error after importing Domain Zone
+- Enable editing of DNS Records containing "linode.com" substring
+- Removed extraneous table header cell on Search Landing table
+- Add error handling for Kubernetes breadcrumb
+- Prevent Linode Power Control menu from being empty upon click
 
 ## [v1.2.0] - 2020-03-09
 

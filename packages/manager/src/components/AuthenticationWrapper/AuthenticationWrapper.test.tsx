@@ -15,21 +15,12 @@ const component = shallow<AuthenticationWrapper>(
     initSession={jest.fn()}
     requestAccount={jest.fn()}
     requestTypes={jest.fn()}
-    requestClusters={jest.fn()}
-    requestDomains={jest.fn()}
-    requestImages={jest.fn()}
     requestLinodes={jest.fn()}
     requestNotifications={jest.fn()}
     requestProfile={jest.fn()}
     requestRegions={jest.fn()}
     requestSettings={jest.fn()}
-    nodeBalancerActions={{
-      createNodeBalancer: jest.fn(),
-      deleteNodeBalancer: jest.fn(),
-      getAllNodeBalancers: jest.fn(),
-      getAllNodeBalancersWithConfigs: jest.fn(),
-      updateNodeBalancer: jest.fn()
-    }}
+    markAppAsDoneLoading={jest.fn()}
   >
     <div />
   </AuthenticationWrapper>
@@ -47,7 +38,7 @@ describe('AuthenticationWrapper', () => {
     expect(component.instance().props.initSession).toHaveBeenCalledTimes(1);
   });
 
-  it('should set showChildren state to true when the isAuhenticated prop goes from false to true', () => {
+  it('should set showChildren state to true when the isAuthenticated prop goes from false to true', () => {
     component.setState({ showChildren: false });
     component.setProps({ isAuthenticated: true });
     expect(component.state('showChildren')).toBeTruthy();

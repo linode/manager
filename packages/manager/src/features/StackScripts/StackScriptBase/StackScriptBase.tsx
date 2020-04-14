@@ -40,7 +40,7 @@ type CurrentFilter = 'label' | 'deploys' | 'revision';
 
 type SortOrder = 'asc' | 'desc';
 
-type APIFilters = 'label' | 'deployments_active' | 'updated';
+type APIFilters = 'label' | 'deployments_total' | 'updated';
 
 interface FilterInfo {
   apiFilter: APIFilters | null;
@@ -115,7 +115,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
       sortOrder: 'asc',
       currentFilterType: null,
       currentFilter: {
-        ['+order_by']: 'deployments_active',
+        ['+order_by']: 'deployments_total',
         ['+order']: 'desc'
       },
       currentSearchFilter: {},
@@ -260,7 +260,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
           };
         case 'deploys':
           return {
-            apiFilter: 'deployments_active',
+            apiFilter: 'deployments_total',
             currentFilter: 'deploys'
           };
         case 'revision':
@@ -486,6 +486,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
               {userCannotCreateStackScripts ? (
                 <Placeholder
                   icon={StackScriptsIcon}
+                  renderAsSecondary
                   title="StackScripts"
                   copy="You don't have any StackScripts to select from."
                   className={classes.stackscriptPlaceholder}
@@ -493,6 +494,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
               ) : (
                 <Placeholder
                   icon={StackScriptsIcon}
+                  renderAsSecondary
                   title="StackScripts"
                   copy={<EmptyCopy />}
                   buttonProps={[

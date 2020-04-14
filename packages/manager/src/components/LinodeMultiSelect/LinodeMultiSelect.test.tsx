@@ -21,7 +21,7 @@ const props: CombinedProps = {
   handleChange: jest.fn(),
   linodesLoading: false,
   linodesData: linodes,
-  linodesResults: linodes.map(i => i.id),
+  linodesResults: linodes.length,
   linodesLastUpdated: 1000,
   showAllOption: true,
   getLinodes: jest.fn()
@@ -110,7 +110,7 @@ describe('Linode Multi Select', () => {
 
       await wait(() =>
         fireEvent.change(getByTestId('select'), {
-          target: { value: linodes[1].id }
+          target: { value: [linodes[1].id] }
         })
       );
       expect(props.handleChange).toHaveBeenCalledWith([linodes[1].id]);
@@ -121,7 +121,7 @@ describe('Linode Multi Select', () => {
 
       await wait(() =>
         fireEvent.change(getByTestId('select'), {
-          target: { value: 'ALL' }
+          target: { value: ['ALL'] }
         })
       );
       expect(props.handleChange).toHaveBeenCalledWith(linodes.map(i => i.id));

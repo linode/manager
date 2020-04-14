@@ -201,11 +201,14 @@ class Select extends React.PureComponent<CombinedProps, {}> {
           InputLabelProps: {
             shrink: true
           },
-          className: classNames({
-            [classes.medium]: medium,
-            [classes.small]: small,
-            [classes.inline]: inline
-          })
+          className: classNames(
+            {
+              [classes.medium]: medium,
+              [classes.small]: small,
+              [classes.inline]: inline
+            },
+            className
+          )
         }}
         /**
          * react-select wants you to pass "null" to clear out the value

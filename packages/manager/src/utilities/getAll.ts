@@ -29,7 +29,7 @@ export type GetFromEntity = (
 ) => Promise<APIResponsePage<any>>;
 
 export interface GetAllData<T> {
-  data: T;
+  data: T[];
   results: number;
 }
 
@@ -53,7 +53,7 @@ export interface GetAllData<T> {
 export const getAll: <T>(
   getter: GetFunction,
   pageSize?: number
-) => (params?: any, filter?: any) => Promise<GetAllData<T[]>> = (
+) => (params?: any, filter?: any) => Promise<GetAllData<T>> = (
   getter,
   pageSize = API_MAX_PAGE_SIZE
 ) => (params?: any, filter?: any) => {
@@ -96,7 +96,7 @@ export const getAll: <T>(
 export const getAllWithArguments: <T>(
   getter: GetFunction,
   pageSize?: number
-) => (args: any[], params?: any, filter?: any) => Promise<GetAllData<T[]>> = (
+) => (args: any[], params?: any, filter?: any) => Promise<GetAllData<T>> = (
   getter,
   pageSize = API_MAX_PAGE_SIZE
 ) => (args = [], params, filter) => {
@@ -132,43 +132,6 @@ export const getAllWithArguments: <T>(
               results
             };
           })
-      );
-    }
-  );
-};
-
-export const getAllFromEntity: (
-  getter: GetFromEntity
-) => (params?: any, filter?: any) => Promise<any> = getter => (
-  entityId: number,
-  params?: any,
-  filter?: any
-) => {
-  const pagination = { ...params, page_size: 100 };
-  return getter(entityId, pagination, filter).then(
-    ({ data: firstPageData, page, pages }) => {
-      // If we only have one page, return it.
-      if (page === pages) {
-        return firstPageData;
-      }
-
-      // Create an iterable list of the remaining pages.
-      const remainingPages = range(page + 1, pages + 1);
-
-      //
-      return (
-        Bluebird.map(remainingPages, nextPage =>
-          getter({ ...pagination, page: nextPage }, filter).then(
-            response => response.data
-          )
-        )
-          /** We're given NodeBalancer[][], so we flatten that, and append the first page response. */
-          .then(resultPages =>
-            resultPages.reduce(
-              (result, nextPage) => [...result, ...nextPage],
-              firstPageData
-            )
-          )
       );
     }
   );

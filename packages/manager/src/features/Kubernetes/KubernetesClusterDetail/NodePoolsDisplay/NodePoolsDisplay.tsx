@@ -1,127 +1,174 @@
-import { APIError } from 'linode-js-sdk/lib/types';
+import {
+  PoolNodeRequest,
+  PoolNodeResponse
+} from 'linode-js-sdk/lib/kubernetes/types';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-import { compose } from 'recompose';
-
-import Button from 'src/components/Button';
-import CopyTooltip from 'src/components/CopyTooltip';
-import Grid from 'src/components/core/Grid';
+import AddNewLink from 'src/components/AddNewLink';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import HelpIcon from 'src/components/HelpIcon';
-import Notice from 'src/components/Notice';
-
+import ErrorState from 'src/components/ErrorState';
+import Grid from 'src/components/Grid';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+import { useDialog } from 'src/hooks/useDialog';
+import useLinodes from 'src/hooks/useLinodes';
 import { ApplicationState } from 'src/store';
-import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
-
-import NodePoolDisplayTable from '../../CreateCluster/NodePoolDisplayTable';
-import { getTotalClusterPrice, nodeWarning } from '../../kubeUtils';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { PoolNodeWithPrice } from '../../types';
+import AddNodePoolDrawer from '../AddNodePoolDrawer';
+import ResizeNodePoolDrawer from '../ResizeNodePoolDrawer';
+import NodeDialog from './NodeDialog';
+import NodePool from './NodePool';
+import NodePoolDialog from './NodePoolDialog';
 
-type ClassNames =
-  | 'root'
-  | 'button'
-  | 'pricing'
-  | 'ctaOuter'
-  | 'displayTable'
-  | 'codeOuter'
-  | 'tooltipCode'
-  | 'statusHelpIcon'
-  | 'nodePoolHeader'
-  | 'nodePoolHeaderOuter'
-  | 'tooltipOuter'
-  | 'code'
-  | 'copyTooltip';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      padding: theme.spacing(3)
-    },
-    button: {
-      marginTop: theme.spacing(1),
-      marginRight: theme.spacing(1)
-    },
-    pricing: {
-      marginTop: theme.spacing(3),
-      fontFamily: theme.font.bold,
-      fontSize: '1rem',
-      color: theme.color.headline
-    },
-    ctaOuter: {
-      marginTop: theme.spacing(2) - 1
-    },
-    displayTable: {
-      width: '100%'
-    },
-    codeOuter: {
-      display: 'flex'
-    },
-    code: {
-      display: 'block',
-      width: '100%'
-    },
-    statusHelpIcon: {},
-    nodePoolHeader: {
-      display: 'inline-block'
-    },
-    nodePoolHeaderOuter: {
-      display: 'flex',
-      alignItems: 'center'
-    },
-    copyTooltip: {
-      maxHeight: 24,
-      marginLeft: 2
-    },
-    tooltipOuter: {
-      maxWidth: 225
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    padding: theme.spacing(3),
+    paddingTop: '4px'
+  },
+  addNodePoolLink: {
+    display: 'flex',
+    alignItems: 'flex-end',
+    '& button': {
+      marginButton: 0,
+      paddingBottom: theme.spacing()
     }
-  });
+  },
+  displayTable: {
+    width: '100%',
+    '& > div': {
+      marginTop: theme.spacing(),
+      marginBottom: theme.spacing(4)
+    },
+    '& > div:last-child': {
+      marginBottom: 0
+    }
+  },
+  nodePoolHeader: {
+    marginBottom: theme.spacing()
+  },
+  nodePoolHeaderOuter: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  nodePool: {
+    marginTop: theme.spacing(),
+    marginBottom: theme.spacing(4)
+  }
+}));
 
-interface Props {
-  editing: boolean;
-  submittingForm?: boolean;
-  submissionSuccess?: boolean;
-  submissionError?: APIError[];
+export interface Props {
+  clusterLabel: string;
   pools: PoolNodeWithPrice[];
-  poolsForEdit: PoolNodeWithPrice[];
   types: ExtendedType[];
-  loading: boolean;
-  submitDisabled?: boolean;
-  updatePool?: (poolIdx: number, updatedPool: PoolNodeWithPrice) => void;
-  deletePool?: (poolID: number) => void;
-  resetForm?: () => void;
-  submitForm?: () => void;
+  updatePool: (
+    poolID: number,
+    updatedPool: PoolNodeWithPrice
+  ) => Promise<PoolNodeWithPrice>;
+  deletePool: (poolID: number) => Promise<any>;
+  addNodePool: (newPool: PoolNodeRequest) => Promise<PoolNodeResponse>;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-const command = 'kubectl get nodes -o wide';
-
-export const NodePoolsDisplay: React.FunctionComponent<CombinedProps> = props => {
+export const NodePoolsDisplay: React.FC<Props> = props => {
   const {
-    classes,
-    deletePool,
-    editing,
-    loading,
+    clusterLabel,
     pools,
-    poolsForEdit,
-    resetForm,
-    submitForm,
-    submissionError,
-    submissionSuccess,
-    submittingForm,
-    submitDisabled,
     types,
-    updatePool
+    addNodePool,
+    updatePool,
+    deletePool
   } = props;
+
+  const classes = useStyles();
+
+  const { deleteLinode } = useLinodes();
+
+  const deletePoolDialog = useDialog<number>(deletePool);
+  const recycleNodeDialog = useDialog<number>(deleteLinode);
+
+  const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
+  const [resizeDrawerOpen, setResizeDrawerOpen] = React.useState<boolean>(
+    false
+  );
+  const [drawerSubmitting, setDrawerSubmitting] = React.useState<boolean>(
+    false
+  );
+  const [drawerError, setDrawerError] = React.useState<string | undefined>();
+  const [poolForEdit, setPoolForEdit] = React.useState<
+    PoolNodeWithPrice | undefined
+  >();
+
+  const handleOpenAddDrawer = () => {
+    setAddDrawerOpen(true);
+    setDrawerError(undefined);
+  };
+
+  const handleOpenResizeDrawer = (poolID: number) => {
+    setPoolForEdit(pools.find(thisPool => thisPool.id === poolID));
+    setResizeDrawerOpen(true);
+    setDrawerError(undefined);
+  };
+
+  const handleAdd = (type: string, count: number) => {
+    setDrawerSubmitting(true);
+    setDrawerError(undefined);
+    return addNodePool({ type, count })
+      .then(_ => {
+        setDrawerSubmitting(false);
+        setAddDrawerOpen(false);
+      })
+      .catch(error => {
+        setDrawerSubmitting(false);
+        setDrawerError(
+          getAPIErrorOrDefault(error, 'Error adding Node Pool')[0].reason
+        );
+      });
+  };
+
+  const handleResize = (updatedCount: number) => {
+    // Should never happen, just a safety check
+    if (!poolForEdit) {
+      return;
+    }
+    setDrawerSubmitting(true);
+    setDrawerError(undefined);
+    updatePool(poolForEdit.id, { ...poolForEdit, count: updatedCount })
+      .then(_ => {
+        setDrawerSubmitting(false);
+        setResizeDrawerOpen(false);
+      })
+      .catch(error => {
+        setDrawerSubmitting(false);
+        setDrawerError(
+          getAPIErrorOrDefault(error, 'Error resizing Node Pool')[0].reason
+        );
+      });
+  };
+
+  const handleDeletePool = () => {
+    const { dialog, submitDialog, handleError } = deletePoolDialog;
+    if (!dialog.entityID) {
+      return;
+    }
+    submitDialog(dialog.entityID).catch(err => {
+      handleError(
+        getAPIErrorOrDefault(err, 'Error deleting this Node Pool.')[0].reason
+      );
+    });
+  };
+
+  const handleDeleteNode = () => {
+    const { dialog, submitDialog, handleError } = recycleNodeDialog;
+    if (!dialog.entityID) {
+      return;
+    }
+    submitDialog(dialog.entityID).catch(err => {
+      handleError(
+        getAPIErrorOrDefault(err, 'Error deleting this Linode.')[0].reason
+      );
+    });
+  };
 
   /**
    * If the API returns an error when fetching node pools,
@@ -142,131 +189,101 @@ export const NodePoolsDisplay: React.FunctionComponent<CombinedProps> = props =>
     return undefined;
   });
 
-  const TooltipText = () => {
-    return (
-      <>
-        For more detailed information about the nodes in your cluster, run the
-        following command:
-        <div className={classes.codeOuter}>
-          <code className={classes.code}>{command}</code>
-          <CopyTooltip text={command} className={classes.copyTooltip} />
-        </div>
-      </>
-    );
-  };
-  const errorMap = getErrorMap(['count'], submissionError);
-
-  // If a user is about to put their cluster in a state where it will
-  // only have a single node, we want to show a warning.
-  const hasSingleNode =
-    !submitDisabled &&
-    poolsForEdit.reduce((acc, thisPool) => {
-      if (thisPool.queuedForDeletion) {
-        return acc;
-      }
-      return acc + thisPool.count;
-    }, 0) === 1;
-
   return (
-    <Paper className={classes.root}>
-      <Grid container direction="column">
-        <Grid
-          container
-          item
-          direction="row"
-          justify="space-between"
-          alignItems="center"
-          xs={12}
-        >
-          <Grid item className={classes.nodePoolHeaderOuter}>
-            <Typography variant="h2" className={classes.nodePoolHeader}>
-              Node Pools
-            </Typography>
-            <HelpIcon
-              text={<TooltipText />}
-              className={classes.statusHelpIcon}
-              tooltipPosition="right-start"
-              interactive
-              classes={{ tooltip: classes.tooltipOuter }}
-            />
-          </Grid>
+    <>
+      <Grid
+        container
+        justify="space-between"
+        alignItems="flex-end"
+        updateFor={[classes]}
+        style={{ paddingBottom: 0 }}
+      >
+        <Grid item>
+          <Typography variant="h2" className={classes.nodePoolHeader}>
+            Node Pools
+          </Typography>
         </Grid>
-        {hasSingleNode && (
-          <Grid item xs={12}>
-            <Notice warning text={nodeWarning} />
-          </Grid>
-        )}
-        {submissionSuccess && (
-          <Grid item xs={12}>
-            <Notice success text={'Your node pools are being updated.'} />
-          </Grid>
-        )}
-        {submissionError && (
-          <Grid item xs={12}>
-            <Notice
-              error
-              text={
-                errorMap.none || 'Some of your updates could not be completed.'
-              }
+        <Grid item>
+          <div className={classes.addNodePoolLink}>
+            <AddNewLink
+              onClick={() => {
+                handleOpenAddDrawer();
+              }}
+              label="Add a Node Pool"
             />
-          </Grid>
-        )}
-        <Grid item xs={12} className={classes.displayTable}>
-          {editing ? (
-            <NodePoolDisplayTable
-              editable
-              loading={loading}
-              pools={poolsForEdit}
-              types={types}
-              handleDelete={deletePool}
-              updatePool={updatePool}
-              error={poolsError}
-            />
-          ) : (
-            <NodePoolDisplayTable
-              pools={pools}
-              types={types}
-              loading={loading}
-              error={poolsError}
-            />
-          )}
-        </Grid>
-        <Grid item xs={12}>
-          {editing && (
-            <Typography className={classes.pricing}>
-              *Updated Monthly Estimate:{' '}
-              {`$${getTotalClusterPrice(poolsForEdit)}/month`}
-            </Typography>
-          )}
-          {editing && (
-            <Grid item container xs={12} className={classes.ctaOuter}>
-              <Button
-                className={classes.button}
-                buttonType="primary"
-                disabled={submitDisabled || submittingForm}
-                loading={submittingForm}
-                onClick={submitForm}
-              >
-                Save
-              </Button>
-              <Button
-                className={classes.button}
-                buttonType="secondary"
-                disabled={!editing}
-                onClick={resetForm}
-              >
-                Clear Changes
-              </Button>
-            </Grid>
-          )}
+          </div>
         </Grid>
       </Grid>
-    </Paper>
+      <Paper className={classes.root}>
+        {poolsError ? (
+          <ErrorState errorText={poolsError} />
+        ) : (
+          <Grid container direction="column">
+            <Grid item xs={12} className={classes.displayTable}>
+              {pools.map(thisPool => {
+                const { id, nodes } = thisPool;
+
+                const thisPoolType = types.find(
+                  thisType => thisType.id === thisPool.type
+                );
+
+                const typeLabel = thisPoolType?.label ?? 'Unknown type';
+
+                return (
+                  <div key={id} className={classes.nodePool}>
+                    <NodePool
+                      poolId={thisPool.id}
+                      typeLabel={typeLabel}
+                      nodes={nodes ?? []}
+                      handleClickResize={handleOpenResizeDrawer}
+                      openDeletePoolDialog={deletePoolDialog.openDialog}
+                      openRecycleNodeDialog={recycleNodeDialog.openDialog}
+                    />
+                  </div>
+                );
+              })}
+            </Grid>
+            <AddNodePoolDrawer
+              clusterLabel={clusterLabel}
+              open={addDrawerOpen}
+              onClose={() => setAddDrawerOpen(false)}
+              onSubmit={handleAdd}
+              isSubmitting={drawerSubmitting}
+              error={drawerError}
+            />
+            <ResizeNodePoolDrawer
+              open={resizeDrawerOpen}
+              onClose={() => setResizeDrawerOpen(false)}
+              onSubmit={(updatedCount: number) => handleResize(updatedCount)}
+              nodePool={poolForEdit}
+              isSubmitting={drawerSubmitting}
+              error={drawerError}
+            />
+            <NodePoolDialog
+              nodeCount={
+                pools.find(
+                  thisPool => thisPool.id === deletePoolDialog.dialog.entityID
+                )?.count ?? 0
+              }
+              onDelete={handleDeletePool}
+              onClose={deletePoolDialog.closeDialog}
+              open={deletePoolDialog.dialog.isOpen}
+              error={deletePoolDialog.dialog.error}
+              loading={deletePoolDialog.dialog.isLoading}
+            />
+            <NodeDialog
+              onDelete={handleDeleteNode}
+              onClose={recycleNodeDialog.closeDialog}
+              open={recycleNodeDialog.dialog.isOpen}
+              error={recycleNodeDialog.dialog.error}
+              loading={recycleNodeDialog.dialog.isLoading}
+              label={recycleNodeDialog.dialog.entityLabel}
+            />
+          </Grid>
+        )}
+      </Paper>
+    </>
   );
 };
 
-const styled = withStyles(styles);
-
-const enhanced = compose<CombinedProps, Props>(React.memo, styled);
-
-export default enhanced(NodePoolsDisplay);
+export default React.memo(NodePoolsDisplay);

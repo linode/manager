@@ -6,7 +6,7 @@ export const nodePoolSchema = object().shape({
 });
 
 export const clusterLabelSchema = string()
-  .notRequired()
+  .required('Label is required.')
   /**
    * This regex is adapted from the API docs. Kubernetes does
    * not allow underscores.
@@ -21,7 +21,7 @@ export const clusterLabelSchema = string()
 export const createKubeClusterSchema = object().shape({
   label: clusterLabelSchema,
   region: string().required('Region is required.'),
-  version: string().required('Kubernetes version is required.'),
+  k8s_version: string().required('Kubernetes version is required.'),
   node_pools: array()
     .of(nodePoolSchema)
     .min(1, 'Please add at least one node pool.')

@@ -59,6 +59,7 @@ interface Props {
   // isEventsLandingForEntity?: boolean;
   entityId?: number;
   errorMessage?: string; // Custom error message (for an entity's Activity page, for example)
+  emptyMessage?: string; // Custom message for the empty state (i.e. no events).
 }
 
 type CombinedProps = Props &
@@ -265,7 +266,13 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
     });
   }, [props.eventsFromRedux, props.inProgressEvents]);
 
-  const { classes, entitiesLoading, errorMessage, entityId } = props;
+  const {
+    classes,
+    entitiesLoading,
+    errorMessage,
+    entityId,
+    emptyMessage
+  } = props;
   const isLoading = loading || entitiesLoading;
 
   return (
@@ -305,7 +312,8 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
               errorMessage,
               entityId,
               error,
-              events.reactStateEvents
+              events.reactStateEvents,
+              emptyMessage
             )}
           </TableBody>
         </Table>
@@ -316,7 +324,8 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
         </Waypoint>
       ) : (
         !isLoading &&
-        !error && (
+        !error &&
+        events.reactStateEvents.length > 0 && (
           <Typography className={classes.noMoreEvents}>
             No more events to show
           </Typography>
@@ -332,18 +341,20 @@ export const renderTableBody = (
   errorMessage = 'There was an error retrieving the events on your account.',
   entityId?: number,
   error?: string,
-  events?: Event[]
+  events?: Event[],
+  emptyMessage = "You don't have any events on your account."
 ) => {
   const filteredEvents = removeBlacklistedEvents(events, ['profile_update']);
 
   if (loading) {
     return (
       <TableRowLoading
-        colSpan={3}
+        colSpan={4}
         numberOfRows={10}
+        numberOfColumns={3}
         oneLine
         data-qa-events-table-loading
-        firstColWidth={70}
+        firstColWidth={60}
         compact
       />
     );
@@ -359,7 +370,7 @@ export const renderTableBody = (
     return (
       <TableRowEmptyState
         colSpan={12}
-        message={"You don't have any events on your account."}
+        message={emptyMessage}
         data-qa-events-table-empty
       />
     );
@@ -373,7 +384,17 @@ export const renderTableBody = (
             event={thisEvent}
           />
         ))}
-        {isRequesting && <TableRowLoading colSpan={12} transparent />}
+        {isRequesting && (
+          <TableRowLoading
+            colSpan={4}
+            numberOfColumns={3}
+            numberOfRows={4}
+            oneLine
+            compact
+            firstColWidth={60}
+            transparent
+          />
+        )}
       </>
     );
   }

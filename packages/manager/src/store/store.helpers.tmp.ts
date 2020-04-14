@@ -16,7 +16,7 @@ export const addEntityRecord = <T extends Entity>(
 ): EntityMap<T> => assoc(String(current.id), current, result);
 
 export const onStart = <S>(state: S) =>
-  Object.assign({}, state, { loading: true, error: undefined });
+  Object.assign({}, state, { loading: true, error: { read: undefined } });
 
 export const onGetAllSuccess = <E extends Entity, S>(
   items: E[],
@@ -33,6 +33,14 @@ export const onGetAllSuccess = <E extends Entity, S>(
       {}
     )
   });
+
+export const setError = <E extends Entity>(
+  type: string,
+  error: APIError[] | undefined,
+  state: MappedEntityState<E, EntityError>
+) => {
+  return Object.assign({}, state, { error: { ...state.error, [type]: error } });
+};
 
 export const onError = <S = {}, E = APIError[] | undefined>(
   error: E,
@@ -112,10 +120,25 @@ export const getAddRemoved = <E extends Entity>(
   return [added, removed];
 };
 
+export const onGetPageSuccess = <E extends Entity>(
+  items: E[],
+  state: MappedEntityState<E, EntityError>,
+  results: number
+): MappedEntityState<E, EntityError> => {
+  const isFullRequest = results === items.length;
+  const newState = addMany(items, state, results);
+  return isFullRequest
+    ? {
+        ...newState,
+        lastUpdated: Date.now()
+      }
+    : newState;
+};
+
 export const createRequestThunk = <Req extends any, Res extends any, Err>(
   actions: AsyncActionCreators<Req, Res, Err>,
   request: (params: Req) => Promise<any>
-): ThunkActionCreator<Promise<Res[]>, Req> => {
+): ThunkActionCreator<Promise<Res>, Req> => {
   return (params: Req) => async dispatch => {
     const { started, done, failed } = actions;
 
@@ -125,7 +148,7 @@ export const createRequestThunk = <Req extends any, Res extends any, Err>(
       const result = await request(params);
       const doneAction = done({ result, params });
       dispatch(doneAction);
-      return result.data;
+      return result;
     } catch (error) {
       const failAction = failed({ error, params });
       dispatch(failAction);

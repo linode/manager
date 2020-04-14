@@ -131,11 +131,17 @@ export class NodeBalancersLanding extends React.Component<
   pollInterval: number;
 
   componentDidMount() {
+    const { getAllNodeBalancersWithConfigs } = this.props.nodeBalancerActions;
+    /**
+     * Normally we check for lastUpdated === 0 before requesting data,
+     * but since this page is already polling every 30 seconds (@todo should it?),
+     * it seems counterintuitive to make the first request conditional.
+     */
+    getAllNodeBalancersWithConfigs();
     /**
      * To keep NB node status up to date, poll NodeBalancers and configs every 30 seconds while the
      * user is on this page.
      */
-    const { getAllNodeBalancersWithConfigs } = this.props.nodeBalancerActions;
     this.pollInterval = window.setInterval(
       () => getAllNodeBalancersWithConfigs(),
       30 * 1000
@@ -390,13 +396,13 @@ export const enhanced = compose<CombinedProps, {}>(
     const { nodeBalancers } = __resources;
     const {
       error,
-      items,
+      results,
       loading: nodeBalancersLoading,
       lastUpdated
     } = nodeBalancers;
 
     return {
-      nodeBalancersCount: items.length,
+      nodeBalancersCount: results,
       nodeBalancersData: nodeBalancersWithConfigs(__resources),
       nodeBalancersError: path(['read'], error),
       // In this component we only want to show loading state on initial load

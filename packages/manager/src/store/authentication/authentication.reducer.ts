@@ -2,7 +2,6 @@ import { redirectToLogin } from 'src/session';
 import { authentication } from 'src/utilities/storage';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import {
-  handleExpireTokens,
   handleInitTokens,
   handleLogout,
   handleRefreshTokens,
@@ -85,9 +84,10 @@ const reducer = reducerWithInitialState(defaultState)
       loggedInAsCustomer: isLoggedInAsCustomer
     };
   })
-  .cases([handleExpireTokens, handleLogout], state => {
-    /** clear local storage and redux state - plain and simple */
+  .case(handleLogout, state => {
+    /** clear local storage and redux state */
     clearLocalStorage();
+
     return {
       ...state,
       scopes: null,
@@ -98,9 +98,10 @@ const reducer = reducerWithInitialState(defaultState)
   })
   .case(handleRefreshTokens, state => {
     /** get local storage values and append to redux state */
-    const [localToken, localScopes, localExpiry] = (tokenInLocalStorage.get(),
-    scopesInLocalStorage.get(),
-    expiryInLocalStorage.get());
+    const [localToken, localScopes, localExpiry] =
+      (tokenInLocalStorage.get(),
+      scopesInLocalStorage.get(),
+      expiryInLocalStorage.get());
     return {
       ...state,
       token: localToken,

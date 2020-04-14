@@ -142,6 +142,9 @@ export const appendStats = (
   prevStats: StatWithDummyPoint[],
   newStats: StatWithDummyPoint[]
 ) => {
+  if (!newStats || !Array.isArray(newStats)) {
+    return prevStats;
+  }
   return newStats.reduce(
     (acc, { x, y }, idx) => {
       const existing = acc[idx];
@@ -247,13 +250,15 @@ export const sumStatsObject = <T>(
   return Object.values(data).reduce(
     (accum, thisObject) => {
       return produce(accum, draft => {
-        Object.keys(thisObject).forEach(thisKey => {
-          if (thisKey in accum) {
-            draft[thisKey] = appendStats(accum[thisKey], thisObject[thisKey]);
-          } else {
-            draft[thisKey] = thisObject[thisKey];
-          }
-        });
+        if (thisObject && typeof thisObject === 'object') {
+          Object.keys(thisObject).forEach(thisKey => {
+            if (thisKey in accum) {
+              draft[thisKey] = appendStats(accum[thisKey], thisObject[thisKey]);
+            } else {
+              draft[thisKey] = thisObject[thisKey];
+            }
+          });
+        }
       });
     },
     { ...emptyState }

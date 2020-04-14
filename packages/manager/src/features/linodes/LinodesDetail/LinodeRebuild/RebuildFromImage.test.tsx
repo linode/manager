@@ -12,6 +12,13 @@ import { CombinedProps, RebuildFromImage } from './RebuildFromImage';
 
 jest.mock('src/utilities/scrollErrorIntoView');
 jest.mock('src/components/EnhancedSelect/Select');
+jest.mock('src/hooks/useReduxLoad', () => ({
+  useReduxLoad: () => jest.fn().mockReturnValue({ _loading: false })
+}));
+jest.mock('src/hooks/useImages', () => ({
+  useImages: jest.fn().mockResolvedValue({ error: {} })
+}));
+
 afterEach(cleanup);
 
 const props: CombinedProps = {
@@ -20,6 +27,7 @@ const props: CombinedProps = {
   imagesData: images,
   imagesError: {},
   imagesLoading: false,
+  imagesLastUpdated: 0,
   userSSHKeys: [],
   closeSnackbar: jest.fn(),
   enqueueSnackbar: jest.fn(),

@@ -46,8 +46,8 @@ export const useEntities = () => {
    * or Object.value(data.itemsById).
    */
 
-  const linodes = _linodes.entities ?? [];
-  const domains = _domains.data ?? [];
+  const domains = Object.values(_domains.itemsById);
+  const linodes = Object.values(_linodes.itemsById);
   const images = (Object.values(_images.data) ?? []).filter(
     thisImage => !thisImage.is_public
   );
@@ -82,13 +82,13 @@ export const useEntities = () => {
     },
     nodeBalancers: {
       data: nodeBalancers,
-      request: requestNodeBalancers,
+      request: () => requestNodeBalancers().then(response => response.data),
       lastUpdated: _nodeBalancers.lastUpdated,
       error: _nodeBalancers.error?.read
     },
     volumes: {
       data: volumes,
-      request: requestVolumes,
+      request: () => requestVolumes().then(response => response.data),
       lastUpdated: _volumes.lastUpdated,
       error: _volumes.error?.read
     }
