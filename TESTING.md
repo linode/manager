@@ -166,6 +166,13 @@ Run:
 Check docker is installed.
 Run `yarn docker:cy` or `docker build -t cloudcy -f Dockerfile-e2e . && docker run --rm cloudcy`
 
+#### Record Screenshots for visual regression
+
+When you write a new Visual regression test with cypress and used `checkSnapshot()` you need to record the correct snapshot.
+
+1. run `yarn cy:rec-snap` which launches Cypress with the Dashboard, run the tests for which you need to record snapshots
+2. Commit the `screenshots/<your test>/record-*.png`
+
 ### Run Storybook UI Components e2e tests
 
 #### dependencies
