@@ -40,7 +40,7 @@ export const KubeCheckoutBar: React.FC<Props> = props => {
               heading="Cluster Summary"
               calculatedPrice={getTotalClusterPrice(pools)}
               isMakingRequest={submitting}
-              disabled={pools.length > 0 ? false : true}
+              disabled={pools.length < 1}
               onDeploy={createCluster}
               submitText={'Create Cluster'}
             >
