@@ -72,18 +72,16 @@ type CombinedProps = Props;
 
 const ActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const { createActions } = props;
 
   const [actions, setActions] = React.useState<Action[]>([]);
-  const [anchorEl, setAnchorEl] = React.useState<any>(undefined);
-
-  const generateActions = (createActions: any) => {
-    setActions(createActions(handleClose));
-  };
+  const [anchorEl, setAnchorEl] = React.useState<
+    (EventTarget & HTMLElement) | undefined
+  >(undefined);
 
   React.useEffect(() => {
-    const { createActions } = props;
-    generateActions(createActions);
-  }, []);
+    setActions(createActions(handleClose));
+  }, [createActions]);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     if (props.toggleOpenCallback) {
