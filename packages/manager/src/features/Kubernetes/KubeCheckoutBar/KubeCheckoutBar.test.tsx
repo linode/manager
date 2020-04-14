@@ -8,6 +8,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import KubeCheckoutBar, { Props } from './KubeCheckoutBar';
 
 const pools = nodePoolFactory.buildList(5, { count: 3 });
+const emptyPools = nodePoolFactory.buildList(0, { count: 0 });
 
 const props: Props = {
   pools,
@@ -50,5 +51,14 @@ describe('KubeCheckoutBar', () => {
   it('should display the total price of the cluster', () => {
     const { getByText } = renderComponent(props);
     getByText(/\$5,000\.00/);
+  });
+
+  it('should have a disabled "Create Cluster" button if no Node Pools have been added', () => {
+    const { queryByTestId } = renderComponent({
+      ...props,
+      pools: emptyPools
+    });
+
+    expect(queryByTestId(/checkout-btn/i)).toBeDisabled();
   });
 });
