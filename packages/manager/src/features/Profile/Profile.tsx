@@ -13,39 +13,16 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import H1Header from 'src/components/H1Header';
 import TabLink from 'src/components/TabLink';
 
-import DefaultLoader from 'src/components/DefaultLoader';
-
-const SSHKeys = DefaultLoader({
-  loader: () => import('./SSHKeys')
-});
-
-const Settings = DefaultLoader({
-  loader: () => import('./Settings')
-});
-
-const Referrals = DefaultLoader({
-  loader: () => import('./Referrals')
-});
-
-const OAuthClients = DefaultLoader({
-  loader: () => import('./OAuthClients')
-});
-
-const LishSettings = DefaultLoader({
-  loader: () => import('./LishSettings')
-});
-
-const DisplaySettings = DefaultLoader({
-  loader: () => import('./DisplaySettings')
-});
-
-const AuthenticationSettings = DefaultLoader({
-  loader: () => import('./AuthenticationSettings')
-});
-
-const APITokens = DefaultLoader({
-  loader: () => import('./APITokens')
-});
+const SSHKeys = React.lazy(() => import('./SSHKeys'));
+const Settings = React.lazy(() => import('./Settings'));
+const Referrals = React.lazy(() => import('./Referrals'));
+const OAuthClients = React.lazy(() => import('./OAuthClients'));
+const LishSettings = React.lazy(() => import('./LishSettings'));
+const DisplaySettings = React.lazy(() => import('./DisplaySettings'));
+const AuthenticationSettings = React.lazy(() =>
+  import('./AuthenticationSettings')
+);
+const APITokens = React.lazy(() => import('./APITokens'));
 
 type Props = RouteComponentProps<{}>;
 

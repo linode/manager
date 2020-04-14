@@ -1,19 +1,13 @@
 import * as React from 'react';
 import { Route, RouteComponentProps, Switch } from 'react-router-dom';
 
-import DefaultLoader from 'src/components/DefaultLoader';
-
-const InvoiceDetail = DefaultLoader({
-  loader: () => import('src/features/Billing/InvoiceDetail')
-});
-
-const UserDetail = DefaultLoader({
-  loader: () => import('src/features/Users/UserDetail')
-});
-
-const AccountLanding = DefaultLoader({
-  loader: () => import('src/features/Account/AccountLanding')
-});
+const InvoiceDetail = React.lazy(() =>
+  import('src/features/Billing/InvoiceDetail')
+);
+const UserDetail = React.lazy(() => import('src/features/Users/UserDetail'));
+const AccountLanding = React.lazy(() =>
+  import('src/features/Account/AccountLanding')
+);
 
 type Props = RouteComponentProps<{}>;
 
