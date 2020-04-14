@@ -7,6 +7,7 @@ import Drawer from 'src/components/Drawer';
 import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
 import Notice from 'src/components/Notice';
 import { useTypes } from 'src/hooks/useTypes';
+import { pluralize } from 'src/utilities/pluralize';
 import { nodeWarning } from '../../kubeUtils';
 import { PoolNodeWithPrice } from '../../types';
 
@@ -89,8 +90,8 @@ export const ResizeNodePoolDrawer: React.FC<Props> = props => {
       >
         <div className={classes.section}>
           <Typography className={classes.summary}>
-            Current pool: ${nodePool.totalMonthlyPrice}/month ({nodePool.count}{' '}
-            nodes at ${pricePerNode}/month)
+            Current pool: ${nodePool.totalMonthlyPrice}/month (
+            {pluralize('node', 'nodes', updatedCount)} at ${pricePerNode}/month)
           </Typography>
         </div>
 
@@ -104,13 +105,14 @@ export const ResizeNodePoolDrawer: React.FC<Props> = props => {
             value={updatedCount}
             setValue={handleChange}
             small
+            min={1}
           />
         </div>
 
         <div className={classes.section}>
           <Typography className={classes.summary}>
-            Resized pool: ${updatedCount * pricePerNode}/month ({updatedCount}{' '}
-            nodes at ${pricePerNode}/month)
+            Resized pool: ${updatedCount * pricePerNode}/month (
+            {pluralize('node', 'nodes', updatedCount)} at ${pricePerNode}/month)
           </Typography>
         </div>
 
