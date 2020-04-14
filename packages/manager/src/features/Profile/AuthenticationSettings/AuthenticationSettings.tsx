@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 // interface Props {
-//   thirdPartyAuth: boolean;
+//   disabled?: boolean;
 // }
 
 type CombinedProps = StateProps & DispatchProps;
@@ -38,10 +38,8 @@ type CombinedProps = StateProps & DispatchProps;
 export const AuthenticationSettings: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const [success, setSuccess] = React.useState<string | undefined>(undefined);
-  // const [thirdPartyAuthEnabled, setThirdPartyAuthEnabled] = React.useState<
-  //   boolean
-  // >(true);
+  const [success, setSuccess] = React.useState<string | undefined>('');
+  const [thirdPartyAuthEnabled] = React.useState<boolean>(false);
 
   const { loading, ipWhitelisting, twoFactor, username, updateProfile } = props;
 
@@ -57,6 +55,7 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
 
   // const toggleThirdPartyAuth = () => {
   //   if (thirdPartyAuthEnabled) {
+  //     disabled = true;
   //   }
   // };
 
@@ -67,16 +66,17 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
         <React.Fragment>
           <ThirdPartyAuthentication
             provider={'Github'}
-            thirdPartyAuthEnabled={true}
+            thirdPartyAuthEnabled={thirdPartyAuthEnabled}
           />
-          <ResetPassword username={username} />
+          <ResetPassword username={username} disabled={thirdPartyAuthEnabled} />
           <TwoFactor
             twoFactor={twoFactor}
             username={username}
             clearState={clearState}
             updateProfile={updateProfile}
+            disabled={thirdPartyAuthEnabled}
           />
-          <TrustedDevices />
+          <TrustedDevices disabled={thirdPartyAuthEnabled} />
           {ipWhitelisting && (
             <SecuritySettings
               updateProfile={updateProfile}

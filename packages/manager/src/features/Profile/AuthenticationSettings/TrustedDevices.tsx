@@ -31,10 +31,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   expireCell: {
     minWidth: 100
+  },
+  disabled: {
+    '& *': {
+      color: theme.color.disabledText
+    }
   }
 }));
 
-type CombinedProps = PaginationProps<TrustedDevice> &
+interface Props {
+  disabled?: boolean;
+}
+
+type CombinedProps = Props &
+  PaginationProps<TrustedDevice> &
   StateUpdaters &
   DialogState;
 
@@ -54,13 +64,14 @@ export const TrustedDevices: React.FC<CombinedProps> = props => {
     handlePageChange,
     handlePageSizeChange,
     selectedDeviceId,
-    setSelectedDevice
+    setSelectedDevice,
+    disabled
   } = props;
 
   return (
     <ToggleState>
       {({ open: dialogOpen, toggle: toggleDialog }) => (
-        <Paper>
+        <Paper className={disabled ? classes.disabled : ''}>
           <Typography variant="h3" className={classes.title}>
             Trusted Devices
           </Typography>
@@ -75,13 +86,15 @@ export const TrustedDevices: React.FC<CombinedProps> = props => {
               </TableRow>
             </TableHead>
             <TableBody>
-              <TrustedDevicesTable
-                error={error}
-                data={devices}
-                loading={loading}
-                toggleDialog={toggleDialog}
-                setDevice={setSelectedDevice}
-              />
+              {!disabled && (
+                <TrustedDevicesTable
+                  error={error}
+                  data={devices}
+                  loading={loading}
+                  toggleDialog={toggleDialog}
+                  setDevice={setSelectedDevice}
+                />
+              )}
             </TableBody>
             {devices && devices.length > 0 && (
               <PaginationFooter

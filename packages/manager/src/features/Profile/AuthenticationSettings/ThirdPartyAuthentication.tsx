@@ -11,6 +11,8 @@ interface Props {
   thirdPartyAuthEnabled: boolean;
 }
 
+type CombinedProps = Props;
+
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(4)
@@ -25,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-export const ThirdPartyAuthentication: React.FC<Props> = props => {
+export const ThirdPartyAuthentication: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   return (

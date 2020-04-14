@@ -34,7 +34,8 @@ type ClassNames =
   | 'title'
   | 'helpText'
   | 'visibility'
-  | 'showHideText';
+  | 'showHideText'
+  | 'disabled';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -64,6 +65,11 @@ const styles = (theme: Theme) =>
       fontSize: '1rem',
       marginLeft: theme.spacing(2),
       color: theme.palette.text.primary
+    },
+    disabled: {
+      '& *': {
+        color: theme.color.disabledText
+      }
     }
   });
 
@@ -72,6 +78,7 @@ interface Props {
   twoFactor?: boolean;
   username?: string;
   updateProfile: (profile: Partial<Profile>) => Promise<Profile>;
+  disabled?: boolean;
 }
 
 interface ConfirmDisable {
@@ -235,7 +242,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, username } = this.props;
+    const { classes, username, disabled } = this.props;
     const {
       errors,
       loading,
@@ -254,7 +261,11 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
           <ToggleState>
             {({ open: scratchDialogOpen, toggle: toggleScratchDialog }) => (
               <React.Fragment>
-                <Paper className={classes.root}>
+                <Paper
+                  className={`${classes.root} ${
+                    disabled ? classes.disabled : ''
+                  }`}
+                >
                   {success && <Notice success text={success} />}
                   {generalError && <Notice error text={generalError} />}
                   <Typography variant="h3" className={classes.title}>
@@ -278,6 +289,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
                       onChange={this.toggleTwoFactorEnabled}
                       toggleDisableDialog={toggleDisable2FA}
                       twoFactorConfirmed={twoFactorConfirmed}
+                      disabled={disabled}
                     />
                   )}
                   {twoFactorEnabled && (
@@ -377,6 +389,7 @@ interface ToggleProps {
   onChange: (value: boolean) => void;
   twoFactorEnabled: boolean;
   twoFactorConfirmed: boolean;
+  disabled?: boolean;
 }
 
 class TwoFactorToggle extends React.PureComponent<ToggleProps, {}> {
@@ -404,6 +417,7 @@ class TwoFactorToggle extends React.PureComponent<ToggleProps, {}> {
               checked={twoFactorEnabled}
               onChange={this.handleChange}
               data-qa-toggle-tfa={twoFactorEnabled}
+              disabled={this.props.disabled}
             />
           }
         />
