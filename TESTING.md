@@ -148,6 +148,38 @@ See cypress documentation on how to check this in the UI: https://docs.cypress.i
 
 ### Run Cypress e2e tests
 
+#### set up your environment
+You will need to create a `development.json` file and `staging.json` file in `~/packages/manager/config` to run these locally. 
+An example of this is in `~packages/manager/config/development.example.json`
+
+Example with localhost
+```
+{
+  "env": {
+    "username": "someuser",
+    "password": "somepass",
+    "clientId": "someId",
+    "oauthtoken": "someauthtoken",
+    "apiroot": "https://api.linode.com/v4",
+    "loginUrl": "https://login.linode.com/login"
+  }
+}
+```
+Example using staging
+```
+{
+  "baseUrl": "https://cloud.staging.linode.com",
+  "env": {
+    "username": "someuser",
+    "password": "somepass",
+    "clientId": "someId",
+    "oauthtoken": "someauthtoken",
+    "apiroot": "https://api.staging.linode.com/v4",
+    "loginUrl": "https://login.staging.linode.com/login"
+  }
+}
+```
+
 #### dependencies
 
 Run `yarn install:all && yarn run cypress verify`.
@@ -160,6 +192,20 @@ Run:
 - In a **new terminal** `yarn run wait-on http://localhost:3000 && yarn cy:e2e`
 
 `yarn run wait-on` will simply wait for the website on 3000 to be ready.
+
+##### Different commands than `cy:e2e`
+
+Run tests headless with the electron browser:
+localhost = yarn cy.e2e
+staging = yarn cy:stage2e
+
+Run tests with the chrome browser:
+localhost = yarn cy.e2e --browser chrome
+staging = yarn cy:stage2e --browser chrome
+
+To use the debugging mode and see the test runner:
+localhost = yarn cy:debug
+staging = cy:stagedebug
 
 #### How to run with Docker
 
