@@ -1,4 +1,4 @@
-import { getKubeConfig } from 'linode-js-sdk/lib/kubernetes';
+import { getKubeConfig, KubernetesCluster } from 'linode-js-sdk/lib/kubernetes';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
@@ -22,7 +22,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-// import TagsPanel from 'src/components/TagsPanel'; // Temporarily commented out because Tags functionality for clusters is not in place yet.
+import TagsPanelRedesigned from 'src/components/TagsPanel/TagsPanelRedesigned';
 import { dcDisplayNames } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { ExtendedCluster } from 'src/features/Kubernetes/types';
@@ -43,6 +43,8 @@ type ClassNames =
   | 'kubeconfigElements'
   | 'kubeconfigFileText'
   | 'kubeconfigIcons'
+  | 'tagsSection'
+  | 'mainGridContainer'
   | 'iconSharedOuter'
   | 'iconTextOuter';
 
@@ -52,6 +54,11 @@ const styles = (theme: Theme) =>
       marginBottom: theme.spacing(3),
       padding: `${theme.spacing(2) + 4}px ${theme.spacing(2) +
         4}px ${theme.spacing(3)}px`
+    },
+    mainGridContainer: {
+      [theme.breakpoints.up('lg')]: {
+        justifyContent: 'space-between'
+      }
     },
     item: {
       '&:last-of-type': {
@@ -89,6 +96,13 @@ const styles = (theme: Theme) =>
       objectFit: 'contain',
       margin: `0 ${theme.spacing(1)}px`
     },
+    tagsSection: {
+      display: 'flex',
+      [theme.breakpoints.up('lg')]: {
+        justifyContent: 'flex-end',
+        textAlign: 'right'
+      }
+    },
     iconSharedOuter: {
       textAlign: 'center',
       flexBasis: '28%'
@@ -106,6 +120,7 @@ interface Props {
   endpointLoading: boolean;
   kubeconfigAvailable: boolean;
   kubeconfigError?: string;
+  handleUpdateTags: (updatedTags: string[]) => Promise<KubernetesCluster>;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames> & WithSnackbarProps;
@@ -135,7 +150,8 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
     endpointLoading,
     enqueueSnackbar,
     kubeconfigAvailable,
-    kubeconfigError
+    kubeconfigError,
+    handleUpdateTags
   } = props;
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
   const [drawerError, setDrawerError] = React.useState<string | null>(null);
@@ -200,14 +216,6 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
       });
   };
 
-  // The function below is a placeholder that will need to be edited once cluster Tags functionality is in place.
-  /* const updateTags = async (tags: string[]) => {
-    const { cluster.id, clusterActions } = props;
-
-    // Send the request (which updates the internal store.)
-    await clusterActions.updateCluster({ cluster.id, tags });
-  }; */
-
   const setKubeconfigDisplay = () => {
     return (
       <Grid
@@ -264,7 +272,11 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
   return (
     <React.Fragment>
       <Paper className={classes.root}>
-        <Grid container>
+        <Grid 
+          container
+          alignItems="flex-start"
+          className={classes.mainGridContainer}
+        >
           <Grid item container direction="row" xs={12} lg={4}>
             <Grid item className={classes.column}>
               <Grid
@@ -375,10 +387,12 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
 
           {setKubeconfigDisplay()}
 
-          <Grid item>
-            <Paper className={classes.item}>
-              {/* <TagsPanel tags={['test']} updateTags={updateTags} /> */}
-              {/* Will be done in a follow-up PR once Tags functionality is ready for clusters */}
+          <Grid item xs={12} lg={4}>
+            <Paper className={classes.tagsSection}>
+              <TagsPanelRedesigned
+                tags={cluster.tags}
+                updateTags={handleUpdateTags}
+              />
             </Paper>
           </Grid>
         </Grid>
