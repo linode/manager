@@ -43,12 +43,9 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
 
   const { loading, ipWhitelisting, twoFactor, username, updateProfile } = props;
 
-  // See above
   const clearState = () => {
     setSuccess(undefined);
   };
-
-  // See above
   const onWhitelistingDisable = () => {
     setSuccess('IP whitelisting disabled. This feature cannot be re-enabled.');
   };
