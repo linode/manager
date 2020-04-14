@@ -8,7 +8,6 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import DefaultLoader from 'src/components/DefaultLoader';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { WithTypes } from 'src/store/linodeType/linodeType.containers';
 import { ThunkDispatch } from 'src/store/types';
@@ -21,21 +20,15 @@ import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
 import linodesDetailContainer, { InnerProps } from './LinodesDetail.container';
 import reloadableWithRouter from './reloadableWithRouter';
 
-const CloneLanding = DefaultLoader({
-  loader: () => import('../CloneLanding')
-});
+const CloneLanding = React.lazy(() => import('../CloneLanding'));
 
-const LinodesDetailHeader = DefaultLoader({
-  loader: () => import('./LinodesDetailHeader')
-});
+const LinodesDetailHeader = React.lazy(() => import('./LinodesDetailHeader'));
 
-const LinodesDetailNavigation = DefaultLoader({
-  loader: () => import('./LinodesDetailNavigation')
-});
+const LinodesDetailNavigation = React.lazy(() =>
+  import('./LinodesDetailNavigation')
+);
 
-const MigrateLanding = DefaultLoader({
-  loader: () => import('../MigrateLanding')
-});
+const MigrateLanding = React.lazy(() => import('../MigrateLanding'));
 
 interface MatchProps {
   linodeId?: string;
