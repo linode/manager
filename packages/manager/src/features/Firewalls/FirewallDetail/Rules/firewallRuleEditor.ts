@@ -23,7 +23,8 @@
 
 import produce from 'immer';
 import { FirewallRuleType } from 'linode-js-sdk/lib/firewalls';
-import { compose, last } from 'ramda';
+import { compose, last, omit } from 'ramda';
+import { FirewallRuleError } from './shared';
 
 export type RuleStatus =
   | 'NOT_MODIFIED'
@@ -31,11 +32,13 @@ export type RuleStatus =
   | 'NEW'
   | 'PENDING_DELETION';
 
-export interface FirewallRuleWithStatus extends FirewallRuleType {
+export interface ExtendedFirewallRule extends FirewallRuleType {
   status: RuleStatus;
+  index?: number;
+  errors?: FirewallRuleError[];
 }
 
-export type RuleEditorState = FirewallRuleWithStatus[][];
+export type RuleEditorState = ExtendedFirewallRule[][];
 
 export type RuleEditorAction =
   | {
@@ -50,6 +53,11 @@ export type RuleEditorAction =
       type: 'MODIFY_RULE';
       idx: number;
       modifiedRule: Partial<FirewallRuleType>;
+    }
+  | {
+      type: 'SET_ERROR';
+      idx: number;
+      error: FirewallRuleError;
     }
   | {
       type: 'UNDO';
@@ -79,6 +87,9 @@ const ruleEditorReducer = (
         return;
       }
 
+      // Seems pointless to show errors on rules pending deletion.
+      delete lastRevision.errors;
+
       draft[action.idx].push({
         ...lastRevision,
         status: 'PENDING_DELETION'
@@ -92,11 +103,28 @@ const ruleEditorReducer = (
         return;
       }
 
+      // Errors might no longer apply to the modified rule, so we delete them.
+      delete lastRevision.errors;
+
       draft[action.idx].push({
         ...lastRevision,
         ...action.modifiedRule,
         status: 'MODIFIED'
       });
+      return;
+
+    case 'SET_ERROR':
+      lastRevision = last(draft[action.idx]);
+
+      if (!lastRevision) {
+        return;
+      }
+
+      if (!lastRevision.errors) {
+        lastRevision.errors = [];
+      }
+
+      lastRevision.errors.push(action.error);
       return;
 
     case 'UNDO':
@@ -134,20 +162,23 @@ export const initRuleEditorState = (
 
 export const editorStateToRules = (
   state: RuleEditorState
-): FirewallRuleWithStatus[] =>
+): ExtendedFirewallRule[] =>
   state.map(revisionList => revisionList[revisionList.length - 1]);
 
-export const removeStatus = (
-  rules: FirewallRuleWithStatus[]
-): FirewallRuleType[] =>
-  rules.map(thisRule => ({ ...thisRule, status: undefined }));
+// Remove fields we use internally.
+export const stripExtendedFields = (
+  rule: ExtendedFirewallRule
+): FirewallRuleType => omit(['errors', 'status', 'index'], rule);
 
-export const filterRulesPendingDeletion = (rules: FirewallRuleWithStatus[]) =>
+export const filterRulesPendingDeletion = (rules: ExtendedFirewallRule[]) =>
   rules.filter(thisRule => thisRule.status !== 'PENDING_DELETION');
 
+export const appendIndex = (rules: ExtendedFirewallRule[]) =>
+  rules.map((thisRule, index) => ({ ...thisRule, index }));
+
 export const prepareRules = compose(
-  removeStatus,
   filterRulesPendingDeletion,
+  appendIndex,
   editorStateToRules
 );
 
