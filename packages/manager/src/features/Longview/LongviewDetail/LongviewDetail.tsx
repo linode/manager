@@ -17,7 +17,6 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
-import DefaultLoader from 'src/components/DefaultLoader';
 import DocumentationButton from 'src/components/DocumentationButton';
 import ErrorState from 'src/components/ErrorState';
 import NotFound from 'src/components/NotFound';
@@ -59,17 +58,11 @@ interface Props {
   longviewClientsError: LVProps['longviewClientsError'];
 }
 
-const Overview = DefaultLoader({
-  loader: () => import('./DetailTabs/LongviewDetailOverview')
-});
-
-const Installation = DefaultLoader({
-  loader: () => import('./DetailTabs/Installation')
-});
-
-const Disks = DefaultLoader({
-  loader: () => import('./DetailTabs/Disks')
-});
+const Overview = React.lazy(() =>
+  import('./DetailTabs/LongviewDetailOverview')
+);
+const Installation = React.lazy(() => import('./DetailTabs/Installation'));
+const Disks = React.lazy(() => import('./DetailTabs/Disks'));
 
 export type CombinedProps = RouteComponentProps<{ id: string }> &
   Props &

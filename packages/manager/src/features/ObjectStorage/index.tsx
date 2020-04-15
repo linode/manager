@@ -1,14 +1,8 @@
 import * as React from 'react';
 import { Route, RouteComponentProps, Switch } from 'react-router-dom';
-import DefaultLoader from 'src/components/DefaultLoader';
 
-const ObjectStorageLanding = DefaultLoader({
-  loader: () => import('./ObjectStorageLanding')
-});
-
-const BucketDetail = DefaultLoader({
-  loader: () => import('./BucketDetail/BucketDetail')
-});
+const ObjectStorageLanding = React.lazy(() => import('./ObjectStorageLanding'));
+const BucketDetail = React.lazy(() => import('./BucketDetail/BucketDetail'));
 
 type CombinedProps = RouteComponentProps;
 

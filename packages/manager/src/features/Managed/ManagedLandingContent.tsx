@@ -17,7 +17,6 @@ import AppBar from 'src/components/core/AppBar';
 import Box from 'src/components/core/Box';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
-import DefaultLoader from 'src/components/DefaultLoader';
 import DocumentationButton from 'src/components/DocumentationButton';
 import Grid from 'src/components/Grid';
 import TabLink from 'src/components/TabLink';
@@ -26,21 +25,10 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import SupportWidget from './SupportWidget';
 
-const Monitors = DefaultLoader({
-  loader: () => import('./Monitors')
-});
-
-const SSHAccess = DefaultLoader({
-  loader: () => import('./SSHAccess')
-});
-
-const Credentials = DefaultLoader({
-  loader: () => import('./Credentials')
-});
-
-const Contacts = DefaultLoader({
-  loader: () => import('./Contacts')
-});
+const Monitors = React.lazy(() => import('./Monitors'));
+const SSHAccess = React.lazy(() => import('./SSHAccess'));
+const Credentials = React.lazy(() => import('./Credentials'));
+const Contacts = React.lazy(() => import('./Contacts'));
 
 export type CombinedProps = {} & RouteComponentProps<{}>;
 

@@ -13,18 +13,12 @@ import AppBar from 'src/components/core/AppBar';
 import Box from 'src/components/core/Box';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
-import DefaultLoader from 'src/components/DefaultLoader';
 import DocumentationButton from 'src/components/DocumentationButton';
 import TabLink from 'src/components/TabLink';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 
-const LongviewClients = DefaultLoader({
-  loader: () => import('./LongviewClients')
-});
-
-const LongviewPlans = DefaultLoader({
-  loader: () => import('./LongviewPlans')
-});
+const LongviewClients = React.lazy(() => import('./LongviewClients'));
+const LongviewPlans = React.lazy(() => import('./LongviewPlans'));
 
 type CombinedProps = RouteComponentProps<{}>;
 

@@ -6,11 +6,7 @@ import {
   withRouter
 } from 'react-router-dom';
 
-import DefaultLoader from 'src/components/DefaultLoader';
-
-const ManagedLanding = DefaultLoader({
-  loader: () => import('./ManagedLanding')
-});
+const ManagedLanding = React.lazy(() => import('./ManagedLanding'));
 
 type Props = RouteComponentProps<{}>;
 

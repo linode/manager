@@ -16,43 +16,15 @@ import TabLink from 'src/components/TabLink';
 import VolumesLanding from 'src/features/Volumes/VolumesLanding';
 import { withLinodeDetailContext } from './linodeDetailContext';
 
-import DefaultLoader from 'src/components/DefaultLoader';
-
-const LinodeSummary = DefaultLoader({
-  loader: () => import('./LinodeSummary')
-});
-
-const LinodeSettings = DefaultLoader({
-  loader: () => import('./LinodeSettings')
-});
-
-const LinodeResize = DefaultLoader({
-  loader: () => import('./LinodeResize')
-});
-
-const LinodeRescue = DefaultLoader({
-  loader: () => import('./LinodeRescue')
-});
-
-const LinodeRebuild = DefaultLoader({
-  loader: () => import('./LinodeRebuild')
-});
-
-const LinodeNetworking = DefaultLoader({
-  loader: () => import('./LinodeNetworking')
-});
-
-const LinodeActivity = DefaultLoader({
-  loader: () => import('./LinodeActivity')
-});
-
-const LinodeAdvanced = DefaultLoader({
-  loader: () => import('./LinodeAdvanced')
-});
-
-const LinodeBackup = DefaultLoader({
-  loader: () => import('./LinodeBackup')
-});
+const LinodeSummary = React.lazy(() => import('./LinodeSummary'));
+const LinodeSettings = React.lazy(() => import('./LinodeSettings'));
+const LinodeResize = React.lazy(() => import('./LinodeResize'));
+const LinodeRescue = React.lazy(() => import('./LinodeRescue'));
+const LinodeRebuild = React.lazy(() => import('./LinodeRebuild'));
+const LinodeNetworking = React.lazy(() => import('./LinodeNetworking'));
+const LinodeActivity = React.lazy(() => import('./LinodeActivity'));
+const LinodeAdvanced = React.lazy(() => import('./LinodeAdvanced'));
+const LinodeBackup = React.lazy(() => import('./LinodeBackup'));
 
 type CombinedProps = ContextProps &
   RouteComponentProps<{
