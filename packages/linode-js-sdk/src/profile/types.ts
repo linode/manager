@@ -18,6 +18,7 @@ export interface Profile {
   referrals: Referrals;
   ip_whitelist_enabled: boolean;
   lish_auth_method: 'password_keys' | 'keys_only' | 'disabled';
+  authentication_type: string;
   authorized_keys: string[];
   two_factor_auth: boolean;
   restricted: boolean;

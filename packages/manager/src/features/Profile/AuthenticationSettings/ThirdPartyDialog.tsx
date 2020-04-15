@@ -50,7 +50,7 @@ const ThirdPartyDialog: React.FC<CombinedProps> = props => {
       open={open}
       title={'Enable GitHub Authentication'}
       onClose={onClose}
-      actions={() => renderActions(loading, onClose)}
+      actions={() => renderActions(loading, onClose, onEnable)}
     >
       {error && <Notice error text={error} />}
       <Typography>

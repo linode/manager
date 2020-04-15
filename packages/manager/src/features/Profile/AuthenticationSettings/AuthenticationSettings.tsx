@@ -74,6 +74,7 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const {
     loading,
+    thirdPartyAuth,
     ipWhitelisting,
     twoFactor,
     username,
@@ -94,11 +95,16 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
   const _submitDialog = React.useCallback(submitDialog, [dialog, submitDialog]);
 
   const [success, setSuccess] = React.useState<string | undefined>('');
-  // TODO: get status from user profile
   const [thirdPartyEnabled, setThirdPartyEnabled] = React.useState<boolean>(
-    true
+    false
   );
   const [disableTPA, setDisableTPA] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    if (thirdPartyAuth === 'github') {
+      setThirdPartyEnabled(true);
+    }
+  }, [thirdPartyAuth]);
 
   const clearState = () => {
     setSuccess(undefined);
@@ -107,11 +113,14 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
     setSuccess('IP whitelisting disabled. This feature cannot be re-enabled.');
   };
 
-  // TOOD: add logic
-  const handleEnableTPA = () => {};
+  // TODO: add logic
+  const handleEnableTPA = () => {
+    console.log('Enable TPA');
+  };
 
   // TODO: add logic
   const handleDisableTPA = () => {
+    console.log('Disable TPA');
     setDisableTPA(true);
   };
 
@@ -123,6 +132,7 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
           <ThirdParty
             provider={'GitHub'}
             thirdPartyEnabled={thirdPartyEnabled}
+            disableTPA={handleDisableTPA}
           />
           <ResetPassword username={username} disabled={thirdPartyEnabled} />
           <TwoFactor
@@ -132,6 +142,7 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
             updateProfile={updateProfile}
             disabled={thirdPartyEnabled}
           />
+          {/* TODO: fix this error */}
           <TrustedDevices disabled={thirdPartyEnabled} />
           {ipWhitelisting && (
             <SecuritySettings
@@ -192,7 +203,6 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
               >
                 Disable GitHub Authentication
               </Button>
-              {/* TODO: show only on click */}
               {disableTPA && (
                 <Notice className={classes.notice} warning>
                   We sent password reset instructions to {email}.
@@ -235,7 +245,7 @@ const docs = [AccountsAndPasswords, SecurityControls];
 
 interface StateProps {
   loading: boolean;
-  thirdPartyAuth: boolean;
+  thirdPartyAuth: string | undefined;
   ipWhitelisting: boolean;
   twoFactor?: boolean;
   username?: string;
@@ -248,8 +258,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
 
   return {
     loading: profile.loading,
-    // TODO: get TPA status
-    thirdPartyAuth: false,
+    thirdPartyAuth: profile?.data?.authentication_type,
     ipWhitelisting: profile?.data?.ip_whitelist_enabled ?? false,
     twoFactor: profile?.data?.two_factor_auth,
     username: profile?.data?.username,
