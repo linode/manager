@@ -19,6 +19,7 @@ describe.skip('smoke - axe', () => {
         ]
       });
       cy.checkA11y();
+
     });
   });
 });

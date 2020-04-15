@@ -115,7 +115,13 @@ packages/manager/test-report.xml
 **/manager/config/development.json
 **/manager/config/staging.json
 **/manager/cypress/videos/
-**/manager/cypress/screenshots/
+
+# ignore all screenshots except records
+# we ignore the png files, not the whole folder recursively
+# or the record files are ignored too
+**/manager/cypress/screenshots/**/*.png
+!**/manager/cypress/screenshots/**/record*.png
+
 packages/manager/cypress/fixtures/example.json
 
 nohup.out
