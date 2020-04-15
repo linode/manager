@@ -28,7 +28,8 @@ import PromotionalOfferCard from 'src/components/PromotionalOfferCard/Promotiona
 import TabLink from 'src/components/TabLink';
 import useFlags from 'src/hooks/useFlags';
 import { ApplicationState } from 'src/store';
-import { getAllBuckets } from 'src/store/bucket/bucket.requests';
+import { getAllBucketsFromAllClusters } from 'src/store/bucket/bucket.requests';
+import { BucketError } from 'src/store/bucket/types';
 import { requestClusters as _requestClusters } from 'src/store/clusters/clusters.actions';
 import { MapState } from 'src/store/types';
 import BucketDrawer from './BucketLanding/BucketDrawer';
@@ -49,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = StateProps & DispatchProps & RouteComponentProps<{}>;
 
-export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = props => {
+export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const tabs = [
@@ -75,9 +76,10 @@ export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = prop
   React.useEffect(() => {
     const {
       bucketsLastUpdated,
+      bucketErrors,
       clustersLastUpdated,
       isRestrictedUser,
-      requestBuckets,
+      requestAllBucketsFromAllClusters,
       requestClusters
     } = props;
 
@@ -87,13 +89,10 @@ export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = prop
       return;
     }
 
-    /**
-     * @todo: Move these requests to App.tsx like other entities when OBJ is generally available.
-     */
-
-    // Request buckets if we haven't already
-    if (bucketsLastUpdated === 0) {
-      requestBuckets().catch(err => {
+    // Request buckets if we haven't already, or if there are errors.
+    // @todo: use useReduxLoad for this.
+    if (bucketsLastUpdated === 0 || bucketErrors.length > 0) {
+      requestAllBucketsFromAllClusters().catch(err => {
         /** We choose to do nothing, relying on the Redux error state. */
       });
     }
@@ -191,10 +190,12 @@ interface StateProps {
   bucketsLastUpdated: number;
   clustersLastUpdated: number;
   isRestrictedUser: boolean;
+  bucketErrors: BucketError[];
 }
 
 const mapStateToProps: MapState<StateProps, {}> = state => ({
   bucketsLastUpdated: state.__resources.buckets.lastUpdated,
+  bucketErrors: state.__resources.buckets.bucketErrors ?? [],
   clustersLastUpdated: state.__resources.clusters.lastUpdated,
   isRestrictedUser: pathOr(
     true,
@@ -204,7 +205,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 });
 
 interface DispatchProps {
-  requestBuckets: () => Promise<ObjectStorageBucket[]>;
+  requestAllBucketsFromAllClusters: () => Promise<ObjectStorageBucket[]>;
   requestClusters: () => Promise<ObjectStorageCluster[]>;
 }
 
@@ -212,7 +213,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
 ) => {
   return {
-    requestBuckets: () => dispatch(getAllBuckets()),
+    requestAllBucketsFromAllClusters: () =>
+      dispatch(getAllBucketsFromAllClusters()),
     requestClusters: () => dispatch(_requestClusters())
   };
 };
