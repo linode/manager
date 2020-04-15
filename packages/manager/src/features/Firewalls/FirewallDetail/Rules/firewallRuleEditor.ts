@@ -23,7 +23,7 @@
 
 import produce from 'immer';
 import { FirewallRuleType } from 'linode-js-sdk/lib/firewalls';
-import { compose, last } from 'ramda';
+import { compose, last, omit } from 'ramda';
 import { FirewallRuleError } from './shared';
 
 export type RuleStatus =
@@ -168,13 +168,7 @@ export const editorStateToRules = (
 // Remove fields we use internally.
 export const stripExtendedFields = (
   rule: ExtendedFirewallRule
-): FirewallRuleType => {
-  const ruleCopy = { ...rule };
-  delete ruleCopy.errors;
-  delete ruleCopy.status;
-  delete ruleCopy.index;
-  return ruleCopy;
-};
+): FirewallRuleType => omit(['errors', 'status', 'index'], rule);
 
 export const filterRulesPendingDeletion = (rules: ExtendedFirewallRule[]) =>
   rules.filter(thisRule => thisRule.status !== 'PENDING_DELETION');
