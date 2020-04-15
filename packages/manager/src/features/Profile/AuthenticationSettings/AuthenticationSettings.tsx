@@ -12,11 +12,13 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Notice from 'src/components/Notice';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { AccountsAndPasswords, SecurityControls } from 'src/documentation';
+import { useDialog } from 'src/hooks/useDialog';
 import { updateProfile as _updateProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
 import ResetPassword from './ResetPassword';
 import SecuritySettings from './SecuritySettings';
 import ThirdPartyAuthentication from './ThirdPartyAuthentication';
+import ThirdPartyAuthenticationDialog from './ThirdPartyAuthenticationDialog';
 import TrustedDevices from './TrustedDevices';
 import TwoFactor from './TwoFactor';
 
@@ -48,11 +50,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: theme.spacing(2)
   },
   enabled: {
-    // TODO: Replace hex code with value from theme
     border: `2px solid #3683dc !important`,
 
     '& svg': {
-      // TODO: Replace hex code with value from theme
       color: '#3683dc'
     }
   },
@@ -66,11 +66,25 @@ type CombinedProps = StateProps & DispatchProps;
 
 export const AuthenticationSettings: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const { loading, ipWhitelisting, twoFactor, username, updateProfile } = props;
+
+  const {
+    dialog,
+    openDialog,
+    closeDialog,
+    handleError,
+    submitDialog
+  } = useDialog<number>(undefined);
+
+  const _openDialog = React.useCallback(openDialog, [dialog, openDialog]);
+  const _closeDialog = React.useCallback(closeDialog, [dialog, closeDialog]);
+  const _submitDialog = React.useCallback(submitDialog, [dialog, submitDialog]);
 
   const [success, setSuccess] = React.useState<string | undefined>('');
-  const [thirdPartyAuthEnabled] = React.useState<boolean>(false);
+  // TODO: get status from user profile
+  const [thirdPartyAuthEnabled] = React.useState<boolean>(true);
 
-  const { loading, ipWhitelisting, twoFactor, username, updateProfile } = props;
+  // const enableThirdPartyAuthDialog = useDialog<boolean>(thirdPartyAuthEnabled);
 
   const clearState = () => {
     setSuccess(undefined);
@@ -78,12 +92,6 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
   const onWhitelistingDisable = () => {
     setSuccess('IP whitelisting disabled. This feature cannot be re-enabled.');
   };
-
-  // const toggleThirdPartyAuth = () => {
-  //   if (thirdPartyAuthEnabled) {
-  //     disabled = true;
-  //   }
-  // };
 
   const tabs = [
     {
@@ -131,22 +139,33 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
           <div className={classes.providers}>
             <Button
               className={thirdPartyAuthEnabled ? classes.enabled : ''}
-              // onClick={}
+              onClick={!thirdPartyAuthEnabled && openDialog}
             >
               <GitHubIcon className={classes.providerIcon} />
               GitHub
               {thirdPartyAuthEnabled && (
-                <span className={classes.enabledText}>{'  '}(Enabled)</span>
+                <span className={classes.enabledText}>(Enabled)</span>
               )}
             </Button>
+            <ThirdPartyAuthenticationDialog
+              open={dialog.isOpen}
+              loading={dialog.isLoading}
+              error={dialog.error}
+              onClose={_closeDialog}
+            />
           </div>
-          <Typography className={classes.copy}>
-            If you prefer to log in using your Linode credentials, you can
-            disable Third-Party Authentication. We’ll send you an e-mail to
-            reset your Linode password.
-          </Typography>
-          {/* TODO: Get name of provider currently enabled  */}
-          <Button buttonType="primary">Disable GitHub Authentication</Button>
+          {thirdPartyAuthEnabled && (
+            <React.Fragment>
+              <Typography className={classes.copy}>
+                If you prefer to log in using your Linode credentials, you can
+                disable Third-Party Authentication. We’ll send you an e-mail to
+                reset your Linode password.
+              </Typography>
+              <Button buttonType="primary">
+                Disable GitHub Authentication
+              </Button>
+            </React.Fragment>
+          )}
         </React.Fragment>
       )
     }
