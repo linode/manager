@@ -179,16 +179,17 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
               thisError
             ]);
           } else {
-            const { idx: errorIndex, category } = parsedError;
+            const { idx, category } = parsedError;
 
             // Refer back to the prepared list of rules to get the actual index to set the error on.
             // This may be different than the index returned by the API, since we don't send deleted
             // rules in the PUT request (but we still have them in state).
-            const ruleInError: ExtendedFirewallRule =
-              preparedRules[category][errorIndex];
-            const actualIndex = ruleInError.index;
+            const originalRule: ExtendedFirewallRule =
+              preparedRules[category][idx];
 
-            if (actualIndex === undefined) {
+            const originalIndex = originalRule.index;
+
+            if (originalIndex === undefined) {
               return;
             }
 
@@ -197,7 +198,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
             );
             dispatch({
               type: 'SET_ERROR',
-              idx: actualIndex,
+              idx: originalIndex,
               error: parsedError
             });
           }
