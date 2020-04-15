@@ -6,11 +6,7 @@ import {
   withRouter
 } from 'react-router-dom';
 
-import DefaultLoader from 'src/components/DefaultLoader';
-
-const ImagesLanding = DefaultLoader({
-  loader: () => import('./ImagesLanding')
-});
+const ImagesLanding = React.lazy(() => import('./ImagesLanding'));
 
 type Props = RouteComponentProps<{}>;
 

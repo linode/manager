@@ -1,18 +1,12 @@
 import * as React from 'react';
 import { Route, RouteComponentProps, Switch } from 'react-router-dom';
-import DefaultLoader from 'src/components/DefaultLoader';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import withFirewalls, {
   Props as FireProps
 } from 'src/containers/firewalls.container';
 
-const FirewallLanding = DefaultLoader({
-  loader: () => import('./FirewallLanding')
-});
-
-const FirewallDetail = DefaultLoader({
-  loader: () => import('./FirewallDetail')
-});
+const FirewallLanding = React.lazy(() => import('./FirewallLanding'));
+const FirewallDetail = React.lazy(() => import('./FirewallDetail'));
 
 type Props = RouteComponentProps<{}>;
 

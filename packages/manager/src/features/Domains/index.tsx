@@ -8,20 +8,14 @@ import {
 } from 'react-router-dom';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
-import DefaultLoader from 'src/components/DefaultLoader';
 import NotFound from 'src/components/NotFound';
 import { REFRESH_INTERVAL } from 'src/constants';
 import withDomains, {
   Props as DomainProps
 } from 'src/containers/domains.container';
 
-const DomainsLanding = DefaultLoader({
-  loader: () => import('./DomainsLanding')
-});
-
-const DomainDetail = DefaultLoader({
-  loader: () => import('./DomainDetail')
-});
+const DomainsLanding = React.lazy(() => import('./DomainsLanding'));
+const DomainDetail = React.lazy(() => import('./DomainDetail'));
 
 type CombinedProps = RouteComponentProps<{ domainId?: string }> & DomainProps;
 

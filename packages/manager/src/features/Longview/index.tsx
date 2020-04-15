@@ -1,15 +1,9 @@
 import * as React from 'react';
 import { Route, RouteComponentProps, Switch } from 'react-router-dom';
-import DefaultLoader from 'src/components/DefaultLoader';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
-const LongviewLanding = DefaultLoader({
-  loader: () => import('./LongviewLanding')
-});
-
-const LongviewDetail = DefaultLoader({
-  loader: () => import('./LongviewDetail')
-});
+const LongviewLanding = React.lazy(() => import('./LongviewLanding'));
+const LongviewDetail = React.lazy(() => import('./LongviewDetail'));
 
 type Props = RouteComponentProps<{}>;
 

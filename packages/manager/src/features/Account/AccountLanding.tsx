@@ -14,7 +14,6 @@ import Tabs from 'src/components/core/Tabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import TabLink from 'src/components/TabLink';
 
-import DefaultLoader from 'src/components/DefaultLoader';
 import withProfile, {
   Props as ProfileActionsProps
 } from 'src/containers/profile.container';
@@ -23,17 +22,9 @@ import TaxBanner from 'src/components/TaxBanner';
 
 type Props = RouteComponentProps<{}> & ProfileActionsProps & StateProps;
 
-const GlobalSettings = DefaultLoader({
-  loader: () => import('./GlobalSettings')
-});
-
-const Users = DefaultLoader({
-  loader: () => import('src/features/Users')
-});
-
-const Billing = DefaultLoader({
-  loader: () => import('src/features/Billing')
-});
+const GlobalSettings = React.lazy(() => import('./GlobalSettings'));
+const Users = React.lazy(() => import('src/features/Users'));
+const Billing = React.lazy(() => import('src/features/Billing'));
 
 class AccountLanding extends React.Component<Props> {
   handleTabChange = (

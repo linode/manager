@@ -27,7 +27,6 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import Typography from 'src/components/core/Typography';
-import DefaultLoader from 'src/components/DefaultLoader';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import TabLink from 'src/components/TabLink';
@@ -50,13 +49,8 @@ import {
   defaultState
 } from './utilities';
 
-const Configs = DefaultLoader({
-  loader: () => import('./Configs')
-});
-
-const Disks = DefaultLoader({
-  loader: () => import('./Disks')
-});
+const Configs = React.lazy(() => import('./Configs'));
+const Disks = React.lazy(() => import('./Disks'));
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -484,10 +478,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-const connected = connect(
-  undefined,
-  mapDispatchToProps
-);
+const connected = connect(undefined, mapDispatchToProps);
 
 const enhanced = compose<CombinedProps, {}>(
   connected,
