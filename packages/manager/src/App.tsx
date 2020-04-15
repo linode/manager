@@ -22,7 +22,6 @@ import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 import composeState from 'src/utilities/composeState';
 import { configureErrorReportingUser } from './exceptionReporting';
 import { MapState } from './store/types';
-import { isKubernetesEnabled as _isKubernetesEnabled } from './utilities/accountCapabilities';
 
 import IdentifyUser from './IdentifyUser';
 
