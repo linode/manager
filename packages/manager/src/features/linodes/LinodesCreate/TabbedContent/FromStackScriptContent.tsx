@@ -4,7 +4,6 @@ import { StackScript, UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
 import { ResourcePage } from 'linode-js-sdk/lib/types';
 import { assocPath, pathOr } from 'ramda';
 import * as React from 'react';
-import { Sticky, StickyProps } from 'react-sticky';
 import AccessPanel from 'src/components/AccessPanel';
 import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
@@ -226,6 +225,47 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
         ? 'community-stackscript-create'
         : 'account-stackscript-create';
 
+    const displaySections = [];
+
+    if (selectedStackScriptUsername && selectedStackScriptLabel) {
+      displaySections.push({
+        title: selectedStackScriptUsername + ' / ' + selectedStackScriptLabel
+      });
+    }
+
+    if (imageDisplayInfo) {
+      displaySections.push(imageDisplayInfo);
+    }
+
+    if (regionDisplayInfo) {
+      displaySections.push({
+        title: regionDisplayInfo.title,
+        details: regionDisplayInfo.details
+      });
+    }
+
+    if (typeDisplayInfo) {
+      displaySections.push(typeDisplayInfo);
+    }
+
+    if (label) {
+      displaySections.push({
+        title: 'Linode Label',
+        details: label
+      });
+    }
+
+    if (hasBackups && typeDisplayInfo && backupsMonthlyPrice) {
+      displaySections.push(
+        renderBackupsDisplaySection(accountBackupsEnabled, backupsMonthlyPrice)
+      );
+    }
+
+    let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
+    if (hasBackups && typeDisplayInfo && backupsMonthlyPrice) {
+      calculatedPrice += backupsMonthlyPrice;
+    }
+
     return (
       <React.Fragment>
         <Grid
@@ -360,69 +400,15 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
           </form>
         </Grid>
         <Grid item className={`${classes.sidebar} mlSidebar`}>
-          <Sticky topOffset={-24} disableCompensation>
-            {(props: StickyProps) => {
-              const displaySections = [];
-
-              if (selectedStackScriptUsername && selectedStackScriptLabel) {
-                displaySections.push({
-                  title:
-                    selectedStackScriptUsername +
-                    ' / ' +
-                    selectedStackScriptLabel
-                });
-              }
-
-              if (imageDisplayInfo) {
-                displaySections.push(imageDisplayInfo);
-              }
-
-              if (regionDisplayInfo) {
-                displaySections.push({
-                  title: regionDisplayInfo.title,
-                  details: regionDisplayInfo.details
-                });
-              }
-
-              if (typeDisplayInfo) {
-                displaySections.push(typeDisplayInfo);
-              }
-
-              if (label) {
-                displaySections.push({
-                  title: 'Linode Label',
-                  details: label
-                });
-              }
-
-              if (hasBackups && typeDisplayInfo && backupsMonthlyPrice) {
-                displaySections.push(
-                  renderBackupsDisplaySection(
-                    accountBackupsEnabled,
-                    backupsMonthlyPrice
-                  )
-                );
-              }
-
-              let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
-              if (hasBackups && typeDisplayInfo && backupsMonthlyPrice) {
-                calculatedPrice += backupsMonthlyPrice;
-              }
-
-              return (
-                <CheckoutBar
-                  heading="Linode Summary"
-                  calculatedPrice={calculatedPrice}
-                  isMakingRequest={this.props.formIsSubmitting}
-                  disabled={this.props.formIsSubmitting || disabled}
-                  onDeploy={this.handleCreateLinode}
-                  {...props}
-                >
-                  <DisplaySectionList displaySections={displaySections} />
-                </CheckoutBar>
-              );
-            }}
-          </Sticky>
+          <CheckoutBar
+            heading="Linode Summary"
+            calculatedPrice={calculatedPrice}
+            isMakingRequest={this.props.formIsSubmitting}
+            disabled={this.props.formIsSubmitting || disabled}
+            onDeploy={this.handleCreateLinode}
+          >
+            <DisplaySectionList displaySections={displaySections} />
+          </CheckoutBar>
         </Grid>
         <StackScriptDrawer />
       </React.Fragment>

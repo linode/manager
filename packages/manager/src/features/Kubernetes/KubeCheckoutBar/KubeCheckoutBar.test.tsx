@@ -1,6 +1,5 @@
 import { cleanup } from '@testing-library/react';
 import * as React from 'react';
-import { StickyContainer } from 'react-sticky';
 import { extendedTypes } from 'src/__data__/ExtendedType';
 import { nodePoolFactory } from 'src/factories/kubernetesCluster';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -21,11 +20,7 @@ const props: Props = {
 afterEach(cleanup);
 
 const renderComponent = (_props: Props) =>
-  renderWithTheme(
-    <StickyContainer>
-      <KubeCheckoutBar {..._props} />
-    </StickyContainer>
-  );
+  renderWithTheme(<KubeCheckoutBar {..._props} />);
 
 describe('KubeCheckoutBar', () => {
   it('should render a section for each pool', () => {
