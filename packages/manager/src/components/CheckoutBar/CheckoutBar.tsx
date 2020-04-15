@@ -62,6 +62,7 @@ const CheckoutBar = React.forwardRef<any, CombinedProps>((props, ref) => {
           onClick={onDeploy}
           data-qa-deploy-linode
           loading={isMakingRequest}
+          data-testid="checkout-btn"
         >
           {submitText ?? 'Create'}
         </Button>

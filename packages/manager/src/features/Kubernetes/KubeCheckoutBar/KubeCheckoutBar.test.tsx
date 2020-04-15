@@ -51,4 +51,13 @@ describe('KubeCheckoutBar', () => {
     const { getByText } = renderComponent(props);
     getByText(/\$5,000\.00/);
   });
+
+  it('should have a disabled "Create Cluster" button if no Node Pools have been added', () => {
+    const { queryByTestId } = renderComponent({
+      ...props,
+      pools: []
+    });
+
+    expect(queryByTestId(/checkout-btn/i)).toBeDisabled();
+  });
 });
