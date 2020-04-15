@@ -6,19 +6,9 @@ import {
   withRouter
 } from 'react-router-dom';
 
-import DefaultLoader from 'src/components/DefaultLoader';
-
-const NodeBalancerDetail = DefaultLoader({
-  loader: () => import('./NodeBalancerDetail')
-});
-
-const NodeBalancersLanding = DefaultLoader({
-  loader: () => import('./NodeBalancersLanding')
-});
-
-const NodeBalancerCreate = DefaultLoader({
-  loader: () => import('./NodeBalancerCreate')
-});
+const NodeBalancerDetail = React.lazy(() => import('./NodeBalancerDetail'));
+const NodeBalancersLanding = React.lazy(() => import('./NodeBalancersLanding'));
+const NodeBalancerCreate = React.lazy(() => import('./NodeBalancerCreate'));
 
 type Props = RouteComponentProps<{}>;
 
