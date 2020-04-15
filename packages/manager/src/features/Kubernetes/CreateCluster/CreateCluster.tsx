@@ -8,7 +8,6 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import { pick, remove, update } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { StickyContainer } from 'react-sticky';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Grid from 'src/components/core/Grid';
@@ -276,7 +275,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
   }
 
   return (
-    <StickyContainer>
+    <div>
       <Grid container className={classes.root}>
         <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
         <Grid
@@ -401,7 +400,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
           />
         </Grid>
       </Grid>
-    </StickyContainer>
+    </div>
   );
 };
 
