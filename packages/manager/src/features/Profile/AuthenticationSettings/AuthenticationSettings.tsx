@@ -17,8 +17,8 @@ import { updateProfile as _updateProfile } from 'src/store/profile/profile.reque
 import { MapState } from 'src/store/types';
 import ResetPassword from './ResetPassword';
 import SecuritySettings from './SecuritySettings';
-import ThirdPartyAuthentication from './ThirdPartyAuthentication';
-import ThirdPartyAuthenticationDialog from './ThirdPartyAuthenticationDialog';
+import ThirdParty from './ThirdParty';
+import ThirdPartyDialog from './ThirdPartyDialog';
 import TrustedDevices from './TrustedDevices';
 import TwoFactor from './TwoFactor';
 
@@ -51,6 +51,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   enabled: {
     border: `2px solid #3683dc !important`,
+    cursor: 'auto',
 
     '& svg': {
       color: '#3683dc'
@@ -59,6 +60,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   enabledText: {
     fontFamily: theme.font.normal,
     marginLeft: theme.spacing() - 4
+  },
+  notice: {
+    display: 'inline-block',
+    marginBottom: '0 !important',
+    marginLeft: '30px'
   }
 }));
 
@@ -66,7 +72,14 @@ type CombinedProps = StateProps & DispatchProps;
 
 export const AuthenticationSettings: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const { loading, ipWhitelisting, twoFactor, username, updateProfile } = props;
+  const {
+    loading,
+    ipWhitelisting,
+    twoFactor,
+    username,
+    email,
+    updateProfile
+  } = props;
 
   const {
     dialog,
@@ -82,9 +95,10 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
 
   const [success, setSuccess] = React.useState<string | undefined>('');
   // TODO: get status from user profile
-  const [thirdPartyAuthEnabled] = React.useState<boolean>(true);
-
-  // const enableThirdPartyAuthDialog = useDialog<boolean>(thirdPartyAuthEnabled);
+  const [thirdPartyEnabled, setThirdPartyEnabled] = React.useState<boolean>(
+    true
+  );
+  const [disableTPA, setDisableTPA] = React.useState<boolean>(false);
 
   const clearState = () => {
     setSuccess(undefined);
@@ -93,24 +107,32 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
     setSuccess('IP whitelisting disabled. This feature cannot be re-enabled.');
   };
 
+  // TOOD: add logic
+  const handleEnableTPA = () => {};
+
+  // TODO: add logic
+  const handleDisableTPA = () => {
+    setDisableTPA(true);
+  };
+
   const tabs = [
     {
       title: 'Linode Credentials',
       render: () => (
         <React.Fragment>
-          <ThirdPartyAuthentication
+          <ThirdParty
             provider={'GitHub'}
-            thirdPartyAuthEnabled={thirdPartyAuthEnabled}
+            thirdPartyEnabled={thirdPartyEnabled}
           />
-          <ResetPassword username={username} disabled={thirdPartyAuthEnabled} />
+          <ResetPassword username={username} disabled={thirdPartyEnabled} />
           <TwoFactor
             twoFactor={twoFactor}
             username={username}
             clearState={clearState}
             updateProfile={updateProfile}
-            disabled={thirdPartyAuthEnabled}
+            disabled={thirdPartyEnabled}
           />
-          <TrustedDevices disabled={thirdPartyAuthEnabled} />
+          <TrustedDevices disabled={thirdPartyEnabled} />
           {ipWhitelisting && (
             <SecuritySettings
               updateProfile={updateProfile}
@@ -138,32 +160,44 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
           </Typography>
           <div className={classes.providers}>
             <Button
-              className={thirdPartyAuthEnabled ? classes.enabled : ''}
-              onClick={!thirdPartyAuthEnabled && openDialog}
+              className={thirdPartyEnabled ? classes.enabled : ''}
+              onClick={!thirdPartyEnabled && openDialog}
             >
               <GitHubIcon className={classes.providerIcon} />
               GitHub
-              {thirdPartyAuthEnabled && (
+              {thirdPartyEnabled && (
                 <span className={classes.enabledText}>(Enabled)</span>
               )}
             </Button>
-            <ThirdPartyAuthenticationDialog
+            <ThirdPartyDialog
               open={dialog.isOpen}
               loading={dialog.isLoading}
               error={dialog.error}
               onClose={_closeDialog}
+              onEnable={handleEnableTPA}
             />
           </div>
-          {thirdPartyAuthEnabled && (
+          {thirdPartyEnabled && (
             <React.Fragment>
               <Typography className={classes.copy}>
                 If you prefer to log in using your Linode credentials, you can
                 disable Third-Party Authentication. We’ll send you an e-mail to
                 reset your Linode password.
               </Typography>
-              <Button buttonType="primary">
+              <Button
+                buttonType="primary"
+                onClick={() => {
+                  handleDisableTPA();
+                }}
+              >
                 Disable GitHub Authentication
               </Button>
+              {/* TODO: show only on click */}
+              {disableTPA && (
+                <Notice className={classes.notice} warning>
+                  We sent password reset instructions to {email}.
+                </Notice>
+              )}
             </React.Fragment>
           )}
         </React.Fragment>
@@ -205,6 +239,7 @@ interface StateProps {
   ipWhitelisting: boolean;
   twoFactor?: boolean;
   username?: string;
+  email?: string;
   profileUpdateError?: APIError[];
 }
 
@@ -213,10 +248,12 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
 
   return {
     loading: profile.loading,
+    // TODO: get TPA status
     thirdPartyAuth: false,
     ipWhitelisting: profile?.data?.ip_whitelist_enabled ?? false,
     twoFactor: profile?.data?.two_factor_auth,
     username: profile?.data?.username,
+    email: profile?.data?.email,
     profileUpdateError: profile.error?.update
   };
 };

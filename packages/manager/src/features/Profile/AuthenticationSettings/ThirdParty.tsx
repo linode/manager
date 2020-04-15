@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import ExternalLink from 'src/components/ExternalLink';
 import Notice from 'src/components/Notice';
 
 interface Props {
   provider: string;
-  thirdPartyAuthEnabled: boolean;
+  thirdPartyEnabled: boolean;
 }
 
 type CombinedProps = Props;
@@ -22,17 +22,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 6,
     marginBottom: theme.spacing(1)
   },
+  link: {
+    fontWeight: 600
+  },
   button: {
     marginTop: theme.spacing(1)
   }
 }));
 
-export const ThirdPartyAuthentication: React.FC<CombinedProps> = props => {
+export const ThirdParty: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   return (
     <React.Fragment>
-      {props.thirdPartyAuthEnabled && (
+      {props.thirdPartyEnabled && (
         <Paper className={classes.root}>
           <Notice warning>
             Third-Party Authentication via {props.provider} is enabled on your
@@ -41,12 +44,12 @@ export const ThirdPartyAuthentication: React.FC<CombinedProps> = props => {
           <Typography variant="body2" className={classes.copy}>
             Your login credentials are currently managed via {props.provider}.
             If you need to reset your password, please visit{' '}
-            <Link
-              to="{`https://www.` + props.provider + `.com/`}"
-              style={{ fontWeight: 600 }}
-            >
-              the {props.provider} website
-            </Link>
+            <ExternalLink
+              className={classes.link}
+              hideIcon
+              link={`https://www.` + `${props.provider}` + `.com/`}
+              text={`the ` + `${props.provider}` + ` website`}
+            />
             .
           </Typography>
           <Typography variant="body2" className={classes.copy}>
@@ -63,4 +66,4 @@ export const ThirdPartyAuthentication: React.FC<CombinedProps> = props => {
   );
 };
 
-export default ThirdPartyAuthentication;
+export default ThirdParty;

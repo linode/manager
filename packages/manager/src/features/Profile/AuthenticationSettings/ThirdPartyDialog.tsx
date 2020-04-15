@@ -34,13 +34,14 @@ interface Props {
   error?: string;
   loading: boolean;
   onClose: () => void;
+  onEnable: () => void;
 }
 
 type CombinedProps = Props;
 
-const ThirdPartyAuthenticationDialog: React.FC<CombinedProps> = props => {
+const ThirdPartyDialog: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const { error, loading, open, onClose } = props;
+  const { error, loading, open, onClose, onEnable } = props;
 
   return (
     // TODO: missing 'X' button in the upper right
@@ -66,7 +67,11 @@ const ThirdPartyAuthenticationDialog: React.FC<CombinedProps> = props => {
   );
 };
 
-const renderActions = (loading: boolean, onClose: () => void) => {
+const renderActions = (
+  loading: boolean,
+  onClose: () => void,
+  onEnable: () => void
+) => {
   return (
     <ActionsPanel style={{ padding: 0 }}>
       <Button
@@ -80,7 +85,7 @@ const renderActions = (loading: boolean, onClose: () => void) => {
       <Button
         buttonType="primary"
         loading={loading}
-        onClick={}
+        onClick={onEnable}
         data-qa-confirm
         data-testid={'dialog-confirm'}
       >
@@ -90,4 +95,4 @@ const renderActions = (loading: boolean, onClose: () => void) => {
   );
 };
 
-export default React.memo(ThirdPartyAuthenticationDialog);
+export default React.memo(ThirdPartyDialog);
