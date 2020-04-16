@@ -90,7 +90,8 @@ export const ResizeNodePoolDrawer: React.FC<Props> = props => {
         <div className={classes.section}>
           <Typography className={classes.summary}>
             Current pool: ${nodePool.totalMonthlyPrice}/month (
-            {pluralize('node', 'nodes', updatedCount)} at ${pricePerNode}/month)
+            {pluralize('node', 'nodes', nodePool.count)} at ${pricePerNode}
+            /month)
           </Typography>
         </div>
 
