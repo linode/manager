@@ -2,7 +2,9 @@ module.exports = {
   ignorePatterns: ['node_modules', 'lib', 'index.js', '!.eslintrc.js'],
   parser: '@typescript-eslint/parser', // Specifies the ESLint parser
   parserOptions: {
-    tsconfigRootDir: './',
+    ecmaVersion: 2020,
+    project:'tsconfig.json',
+    tsconfigRootDir: __dirname,
     warnOnUnsupportedTypeScriptVersion: true
   },
   plugins: ['@typescript-eslint', 'sonarjs', 'ramda', 'prettier'],

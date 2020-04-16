@@ -22,15 +22,14 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "src/*": ["src/*"]
+      "src/*": ["src/*"],
+      "cypress/*": ["cypress/*"]
     }
-
   },
   "exclude": [
     "node_modules",
     "config",
     "build",
-    "cypress",
     "e2e",
     "scripts",
     "acceptance-tests",

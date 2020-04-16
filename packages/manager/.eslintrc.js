@@ -1,4 +1,4 @@
-module.exports = {
+module.exports= {
   ignorePatterns: [
     'node_modules',
     'build',
@@ -10,12 +10,13 @@ module.exports = {
 
   parser: '@typescript-eslint/parser', // Specifies the ESLint parser
   parserOptions: {
+    project: 'tsconfig.json',
     // Only ESLint 6.2.0 and later support ES2020.
     ecmaVersion: 2020,
     ecmaFeatures: {
       jsx: true
     },
-    tsconfigRootDir: './',
+    tsconfigRootDir: __dirname,
     warnOnUnsupportedTypeScriptVersion: true
   },
   settings: {
@@ -67,24 +68,26 @@ module.exports = {
       '@material-ui/core',
       '@material-ui/icons'
     ],
-
     'no-console': 'error',
     // allowing to init vars to undefined
     'no-undef-init': 'off',
     // typescript-eslint specific rules
-    // prepend `_` to an arg you accept to ignore
+    // This rules is disabled to avoid duplicates errors as no-unused-vars is set
     '@typescript-eslint/no-unused-vars': 'off',
     '@typescript-eslint/prefer-for-of': 'warn',
     '@typescript-eslint/no-inferrable-types': 'off',
     '@typescript-eslint/no-namespace': 'warn',
     '@typescript-eslint/camelcase': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
+    // A function returning a promise should be async
+    '@typescript-eslint/promise-function-async': 'warn',
     // this would disallow usage of ! postfix operator on non null types
     '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/interface-name-prefix': 'off',
     // react and jsx specific rules
+    'react/display-name':'off',
     // requires the definition of proptypes for react components
     'react/prop-types': 'off',
     'react/jsx-no-script-url': 'error',
@@ -93,7 +96,7 @@ module.exports = {
     'react/jsx-no-bind': 'warn',
     'react/no-unescaped-entities': 'warn',
     // sonar
-    'sonarjs/cognitive-complexity': 'warn',
+    'sonarjs/cognitive-complexity': 'off',
     'sonarjs/no-duplicate-string': 'warn',
     'sonarjs/prefer-immediate-return': 'warn',
     'sonarjs/no-identical-functions': 'warn',
@@ -114,8 +117,7 @@ module.exports = {
     'prettier/prettier': 'warn'
   },
   env: {
-    browser: true,
-    'cypress/globals': true
+    browser: true
   },
   overrides: [
     {
@@ -161,7 +163,10 @@ module.exports = {
       rules: {
         'no-console': 'off'
       },
-      env: { node: true }
+      env: { 
+        node: true ,
+        'cypress/globals': true
+      }
     }
   ]
 };
