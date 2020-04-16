@@ -5,6 +5,7 @@ import {
   Switch,
   withRouter
 } from 'react-router-dom';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 
 const ImagesLanding = React.lazy(() => import('./ImagesLanding'));
 
@@ -17,9 +18,11 @@ class ImagesRoutes extends React.Component<Props> {
     } = this.props;
 
     return (
-      <Switch>
-        <Route component={ImagesLanding} path={path} exact />
-      </Switch>
+      <React.Suspense fallback={<SuspenseLoader delay={100} />}>
+        <Switch>
+          <Route component={ImagesLanding} path={path} exact />
+        </Switch>
+      </React.Suspense>
     );
   }
 }

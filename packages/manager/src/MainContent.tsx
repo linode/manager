@@ -256,7 +256,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                 <Grid container spacing={0} className={classes.grid}>
                   <Grid item className={classes.switchWrapper}>
                     <RegionStatusBanner />
-                    <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+                    <React.Suspense fallback={<SuspenseLoader delay={100} />}>
                       <Switch>
                         <Route path="/linodes" component={LinodesRoutes} />
                         <Route path="/volumes" component={Volumes} />

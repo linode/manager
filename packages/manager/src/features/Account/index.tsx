@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Route, RouteComponentProps, Switch } from 'react-router-dom';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 
 const InvoiceDetail = React.lazy(() =>
   import('src/features/Billing/InvoiceDetail')
@@ -18,15 +19,17 @@ class Account extends React.Component<Props> {
     } = this.props;
 
     return (
-      <Switch>
-        <Route path={`${path}/users/:username`} component={UserDetail} />
-        <Route
-          exact
-          path={`${path}/billing/invoices/:invoiceId`}
-          component={InvoiceDetail}
-        />
-        <Route path={`${path}`} component={AccountLanding} />
-      </Switch>
+      <React.Suspense fallback={<SuspenseLoader delay={100} />}>
+        <Switch>
+          <Route path={`${path}/users/:username`} component={UserDetail} />
+          <Route
+            exact
+            path={`${path}/billing/invoices/:invoiceId`}
+            component={InvoiceDetail}
+          />
+          <Route path={`${path}`} component={AccountLanding} />
+        </Switch>
+      </React.Suspense>
     );
   }
 }

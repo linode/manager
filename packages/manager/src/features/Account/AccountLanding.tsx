@@ -12,6 +12,7 @@ import AppBar from 'src/components/core/AppBar';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLink from 'src/components/TabLink';
 
 import withProfile, {
@@ -97,28 +98,30 @@ class AccountLanding extends React.Component<Props> {
             ))}
           </Tabs>
         </AppBar>
-        <Switch>
-          <Route exact strict path={`${url}/billing`} component={Billing} />
-          <Route
-            exact
-            strict
-            path={`${url}/users`}
-            render={props => (
-              <Users
-                {...props}
-                isRestrictedUser={this.props.isRestrictedUser}
-              />
-            )}
-          />
-          <Route
-            exact
-            strict
-            path={`${url}/settings`}
-            component={GlobalSettings}
-          />
-          <Route exact strict path={`${url}`} component={Billing} />
-          <Redirect to={`${url}/billing`} />
-        </Switch>
+        <React.Suspense fallback={<SuspenseLoader delay={100} />}>
+          <Switch>
+            <Route exact strict path={`${url}/billing`} component={Billing} />
+            <Route
+              exact
+              strict
+              path={`${url}/users`}
+              render={props => (
+                <Users
+                  {...props}
+                  isRestrictedUser={this.props.isRestrictedUser}
+                />
+              )}
+            />
+            <Route
+              exact
+              strict
+              path={`${url}/settings`}
+              component={GlobalSettings}
+            />
+            <Route exact strict path={`${url}`} component={Billing} />
+            <Redirect to={`${url}/billing`} />
+          </Switch>
+        </React.Suspense>
       </React.Fragment>
     );
   }

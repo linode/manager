@@ -14,6 +14,7 @@ import Box from 'src/components/core/Box';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import DocumentationButton from 'src/components/DocumentationButton';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLink from 'src/components/TabLink';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 
@@ -90,28 +91,32 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
           ))}
         </Tabs>
       </AppBar>
-      <Switch>
-        <Route
-          exact
-          strict
-          path={`${url}/clients`}
-          render={() => (
-            <LongviewClients
-              subscriptionsData={subscriptionRequestHook.data || []}
-              {...props}
-            />
-          )}
-        />
-        <Route
-          exact
-          strict
-          path={`${url}/plan-details`}
-          render={() => (
-            <LongviewPlans subscriptionRequestHook={subscriptionRequestHook} />
-          )}
-        />
-        <Redirect to={`${url}/clients`} />
-      </Switch>
+      <React.Suspense fallback={<SuspenseLoader delay={100} />}>
+        <Switch>
+          <Route
+            exact
+            strict
+            path={`${url}/clients`}
+            render={() => (
+              <LongviewClients
+                subscriptionsData={subscriptionRequestHook.data || []}
+                {...props}
+              />
+            )}
+          />
+          <Route
+            exact
+            strict
+            path={`${url}/plan-details`}
+            render={() => (
+              <LongviewPlans
+                subscriptionRequestHook={subscriptionRequestHook}
+              />
+            )}
+          />
+          <Redirect to={`${url}/clients`} />
+        </Switch>
+      </React.Suspense>
     </React.Fragment>
   );
 };

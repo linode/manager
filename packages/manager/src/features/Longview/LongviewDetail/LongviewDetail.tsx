@@ -21,6 +21,7 @@ import DocumentationButton from 'src/components/DocumentationButton';
 import ErrorState from 'src/components/ErrorState';
 import NotFound from 'src/components/NotFound';
 import Notice from 'src/components/Notice';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLink from 'src/components/TabLink';
 import withLongviewClients, {
   DispatchProps,
@@ -256,138 +257,140 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           ))}
         </Tabs>
       </AppBar>
-      <Switch>
-        <Route
-          exact
-          strict
-          path={`${url}/processes`}
-          render={() => {
-            return (
-              <ProcessesLanding
-                clientID={client.id}
+      <React.Suspense fallback={<SuspenseLoader delay={100} />}>
+        <Switch>
+          <Route
+            exact
+            strict
+            path={`${url}/processes`}
+            render={() => {
+              return (
+                <ProcessesLanding
+                  clientID={client.id}
+                  clientAPIKey={client.api_key}
+                  lastUpdated={lastUpdated}
+                  lastUpdatedError={lastUpdatedError}
+                  timezone={timezone}
+                />
+              );
+            }}
+          />
+          <Route
+            exact
+            strict
+            path={`${url}/network`}
+            render={() => (
+              <NetworkLanding
                 clientAPIKey={client.api_key}
                 lastUpdated={lastUpdated}
                 lastUpdatedError={lastUpdatedError}
                 timezone={timezone}
               />
-            );
-          }}
-        />
-        <Route
-          exact
-          strict
-          path={`${url}/network`}
-          render={() => (
-            <NetworkLanding
-              clientAPIKey={client.api_key}
-              lastUpdated={lastUpdated}
-              lastUpdatedError={lastUpdatedError}
-              timezone={timezone}
-            />
-          )}
-        />
-        <Route
-          exact
-          strict
-          path={`${url}/disks`}
-          render={routerProps => (
-            <Disks
-              clientID={client.id}
-              clientAPIKey={client.api_key}
-              lastUpdated={lastUpdated}
-              clientLastUpdated={lastUpdated}
-              lastUpdatedError={lastUpdatedError}
-              timezone={props.timezone}
-              {...routerProps}
-            />
-          )}
-        />
-        )}
-        <Route
-          exact
-          strict
-          path={`${url}/apache`}
-          render={() => {
-            return (
-              <Apache
-                timezone={timezone}
-                clientAPIKey={clientAPIKey}
+            )}
+          />
+          <Route
+            exact
+            strict
+            path={`${url}/disks`}
+            render={routerProps => (
+              <Disks
+                clientID={client.id}
+                clientAPIKey={client.api_key}
                 lastUpdated={lastUpdated}
+                clientLastUpdated={lastUpdated}
                 lastUpdatedError={lastUpdatedError}
+                timezone={props.timezone}
+                {...routerProps}
               />
-            );
-          }}
-        />
-        )}
-        <Route
-          exact
-          strict
-          path={`${url}/nginx`}
-          render={() => {
-            return (
-              <NGINX
-                timezone={timezone}
-                clientAPIKey={clientAPIKey}
-                lastUpdated={lastUpdated}
-                lastUpdatedError={lastUpdatedError}
-              />
-            );
-          }}
-        />
-        )}
-        <Route
-          exact
-          strict
-          path={`${url}/mysql`}
-          render={() => {
-            return (
-              <MySQLLanding
-                timezone={timezone}
-                clientAPIKey={clientAPIKey}
-                lastUpdated={lastUpdated}
-                lastUpdatedError={lastUpdatedError}
-              />
-            );
-          }}
-        />
-        )}
-        <Route
-          exact
-          strict
-          path={`${url}/installation`}
-          render={routerProps => (
-            <Installation
-              clientInstallationKey={client.install_code}
-              clientAPIKey={client.api_key}
-              {...routerProps}
-            />
+            )}
+          />
           )}
-        />
-        <Route
-          strict
-          exact
-          path={`${url}/overview`}
-          render={routerProps => (
-            <Overview
-              client={client.label}
-              clientID={client.id}
-              clientAPIKey={client.api_key}
-              longviewClientData={longviewClientData}
-              timezone={timezone}
-              {...routerProps}
-              topProcessesData={topProcesses.data}
-              topProcessesLoading={topProcesses.loading}
-              topProcessesError={topProcesses.error}
-              listeningPortsData={listeningPorts.data}
-              listeningPortsError={listeningPorts.error}
-              listeningPortsLoading={listeningPorts.loading}
-              lastUpdatedError={lastUpdatedError}
-              lastUpdated={lastUpdated}
-            />
+          <Route
+            exact
+            strict
+            path={`${url}/apache`}
+            render={() => {
+              return (
+                <Apache
+                  timezone={timezone}
+                  clientAPIKey={clientAPIKey}
+                  lastUpdated={lastUpdated}
+                  lastUpdatedError={lastUpdatedError}
+                />
+              );
+            }}
+          />
           )}
-        />
-        <Redirect to={`${url}/overview`} />
-      </Switch>
+          <Route
+            exact
+            strict
+            path={`${url}/nginx`}
+            render={() => {
+              return (
+                <NGINX
+                  timezone={timezone}
+                  clientAPIKey={clientAPIKey}
+                  lastUpdated={lastUpdated}
+                  lastUpdatedError={lastUpdatedError}
+                />
+              );
+            }}
+          />
+          )}
+          <Route
+            exact
+            strict
+            path={`${url}/mysql`}
+            render={() => {
+              return (
+                <MySQLLanding
+                  timezone={timezone}
+                  clientAPIKey={clientAPIKey}
+                  lastUpdated={lastUpdated}
+                  lastUpdatedError={lastUpdatedError}
+                />
+              );
+            }}
+          />
+          )}
+          <Route
+            exact
+            strict
+            path={`${url}/installation`}
+            render={routerProps => (
+              <Installation
+                clientInstallationKey={client.install_code}
+                clientAPIKey={client.api_key}
+                {...routerProps}
+              />
+            )}
+          />
+          <Route
+            strict
+            exact
+            path={`${url}/overview`}
+            render={routerProps => (
+              <Overview
+                client={client.label}
+                clientID={client.id}
+                clientAPIKey={client.api_key}
+                longviewClientData={longviewClientData}
+                timezone={timezone}
+                {...routerProps}
+                topProcessesData={topProcesses.data}
+                topProcessesLoading={topProcesses.loading}
+                topProcessesError={topProcesses.error}
+                listeningPortsData={listeningPorts.data}
+                listeningPortsError={listeningPorts.error}
+                listeningPortsLoading={listeningPorts.loading}
+                lastUpdatedError={lastUpdatedError}
+                lastUpdated={lastUpdated}
+              />
+            )}
+          />
+          <Redirect to={`${url}/overview`} />
+        </Switch>
+      </React.Suspense>
     </React.Fragment>
   );
 };
