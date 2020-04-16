@@ -52,7 +52,7 @@ export const useEntities = () => {
     thisImage => !thisImage.is_public
   );
   const volumes = Object.values(_volumes.itemsById);
-  const kubernetesClusters = _kubernetesClusters.entities;
+  const kubernetesClusters = Object.values(_kubernetesClusters.itemsById);
   const nodeBalancers = Object.values(_nodeBalancers.itemsById);
 
   return {
@@ -70,7 +70,8 @@ export const useEntities = () => {
     },
     kubernetesClusters: {
       data: kubernetesClusters,
-      request: requestKubernetesClusters,
+      request: () =>
+        requestKubernetesClusters().then(response => response.data),
       lastUpdated: _kubernetesClusters.lastUpdated,
       error: _kubernetesClusters.error?.read
     },

@@ -3,12 +3,13 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import actionCreatorFactory from 'typescript-fsa';
 
 import { EntityError } from 'src/store/types';
+import { GetAllData } from 'src/utilities/getAll';
 
 export const actionCreator = actionCreatorFactory(`@@manager/kubernetes`);
 
 export const requestClustersActions = actionCreator.async<
   void,
-  KubernetesCluster[],
+  GetAllData<KubernetesCluster>,
   APIError[]
 >('request');
 

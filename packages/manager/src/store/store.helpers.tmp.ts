@@ -1,6 +1,6 @@
 // @todo rename this file to store.helpers when all reducers are using MappedEntityState2
 import { APIError } from 'linode-js-sdk/lib/types';
-import { assoc, omit } from 'ramda';
+import { assoc, omit } from 'ramda'; // @todo replace with mergeRight when updating Ramda
 import {
   Entity,
   EntityError,
@@ -35,11 +35,10 @@ export const onGetAllSuccess = <E extends Entity, S>(
   });
 
 export const setError = <E extends Entity>(
-  type: string,
-  error: APIError[] | undefined,
+  error: EntityError,
   state: MappedEntityState<E, EntityError>
 ) => {
-  return Object.assign({}, state, { error: { ...state.error, [type]: error } });
+  return Object.assign({}, state, { error: { ...state.error, ...error } });
 };
 
 export const onError = <S = {}, E = APIError[] | undefined>(
@@ -48,8 +47,8 @@ export const onError = <S = {}, E = APIError[] | undefined>(
 ) => Object.assign({}, state, { error, loading: false });
 
 export const createDefaultState = <E extends Entity, O extends EntityError>(
-  override: Partial<MappedEntityState<E, O>>,
-  defaultError?: O
+  override: Partial<MappedEntityState<E, O>> = {},
+  defaultError: O = {} as O
 ): MappedEntityState<E, O> => ({
   itemsById: {},
   loading: false,
