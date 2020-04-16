@@ -12,7 +12,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Notice from 'src/components/Notice';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { AccountsAndPasswords, SecurityControls } from 'src/documentation';
-import { useDialog } from 'src/hooks/useDialog';
 import { updateProfile as _updateProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
 import ResetPassword from './ResetPassword';
@@ -81,9 +80,7 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
     updateProfile
   } = props;
 
-  const { dialog, openDialog, closeDialog } = useDialog<number>(undefined);
-
-  const _closeDialog = React.useCallback(closeDialog, [dialog, closeDialog]);
+  const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
 
   const [success, setSuccess] = React.useState<string | undefined>('');
   const [thirdPartyEnabled, setThirdPartyEnabled] = React.useState<boolean>(
@@ -154,7 +151,7 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
               className={thirdPartyEnabled ? classes.enabled : ''}
               onClick={() => {
                 setProvider('GitHub');
-                openDialog();
+                setDialogOpen(true);
               }}
               disabled={thirdPartyEnabled}
             >
@@ -165,10 +162,9 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
               )}
             </Button>
             <ThirdPartyDialog
-              open={dialog.isOpen}
-              loading={dialog.isLoading}
-              error={dialog.error}
-              onClose={_closeDialog}
+              open={dialogOpen}
+              loading={false}
+              onClose={() => setDialogOpen(false)}
               provider={provider}
             />
           </div>

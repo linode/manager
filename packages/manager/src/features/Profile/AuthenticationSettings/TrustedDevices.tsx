@@ -1,11 +1,6 @@
 import { getTrustedDevices, TrustedDevice } from 'linode-js-sdk/lib/profile';
 import * as React from 'react';
-import {
-  compose,
-  lifecycle,
-  StateHandlerMap,
-  withStateHandlers
-} from 'recompose';
+import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
@@ -43,16 +38,17 @@ interface Props {
   disabled?: boolean;
 }
 
-type CombinedProps = Props &
-  PaginationProps<TrustedDevice> &
-  StateUpdaters &
-  DialogState;
+type CombinedProps = Props & PaginationProps<TrustedDevice>;
 
 export const TrustedDevices: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const refreshList = () => {
     props.onDelete();
   };
+
+  React.useEffect(() => {
+    props.handleOrderChange('expiry', 'asc');
+  }, []);
 
   const {
     loading,
@@ -63,10 +59,10 @@ export const TrustedDevices: React.FC<CombinedProps> = props => {
     pageSize,
     handlePageChange,
     handlePageSizeChange,
-    selectedDeviceId,
-    setSelectedDevice,
     disabled
   } = props;
+
+  const [selectedDeviceId, setSelectedDeviceId] = React.useState<number>(0);
 
   return (
     <ToggleState>
@@ -92,7 +88,7 @@ export const TrustedDevices: React.FC<CombinedProps> = props => {
                   data={devices}
                   loading={loading}
                   toggleDialog={toggleDialog}
-                  setDevice={setSelectedDevice}
+                  setDevice={setSelectedDeviceId}
                 />
               )}
             </TableBody>
@@ -123,40 +119,4 @@ const paginated = Pagey((ownProps: {}, params: any, filter: any) =>
   getTrustedDevices(params, filter).then(response => response)
 );
 
-const withRequestOnMount = lifecycle<PaginationProps<TrustedDevice>, {}>({
-  componentDidMount() {
-    /** initial request for trusted devices, ordered by which ones expire first */
-    this.props.handleOrderChange('expiry', 'asc');
-  }
-});
-
-export interface DialogState {
-  selectedDeviceId?: number;
-}
-
-export interface StateUpdaters {
-  setSelectedDevice: (deviceId: number) => void;
-}
-
-type StateAndStateUpdaters = StateHandlerMap<DialogState> & StateUpdaters;
-
-const withDialogHandlers = withStateHandlers<
-  DialogState,
-  StateAndStateUpdaters,
-  {}
->(
-  {
-    selectedDeviceId: undefined
-  },
-  {
-    setSelectedDevice: () => (deviceId: number) => ({
-      selectedDeviceId: deviceId
-    })
-  }
-);
-
-export default compose<CombinedProps, Props>(
-  withDialogHandlers,
-  paginated,
-  withRequestOnMount
-)(TrustedDevices);
+export default compose<CombinedProps, Props>(paginated)(TrustedDevices);
