@@ -155,7 +155,7 @@ const withDialogHandlers = withStateHandlers<
   }
 );
 
-export default compose<CombinedProps, {}>(
+export default compose<CombinedProps, Props>(
   withDialogHandlers,
   paginated,
   withRequestOnMount
