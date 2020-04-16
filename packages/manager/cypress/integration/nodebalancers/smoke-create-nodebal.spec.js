@@ -82,7 +82,7 @@ describe('create NodeBalancer', () => {
             ]
     });
     cy.findByText(errMessage).should('be.visible');
-
+    deleteLinodeById(linode.id);
 
   });
 });
