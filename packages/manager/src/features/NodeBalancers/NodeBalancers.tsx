@@ -5,6 +5,7 @@ import {
   Switch,
   withRouter
 } from 'react-router-dom';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 
 const NodeBalancerDetail = React.lazy(() => import('./NodeBalancerDetail'));
 const NodeBalancersLanding = React.lazy(() => import('./NodeBalancersLanding'));
@@ -19,14 +20,16 @@ class NodeBalancers extends React.Component<Props> {
     } = this.props;
 
     return (
-      <Switch>
-        <Route component={NodeBalancersLanding} path={path} exact />
-        <Route component={NodeBalancerCreate} path={`${path}/create`} exact />
-        <Route
-          component={NodeBalancerDetail}
-          path={`${path}/:nodeBalancerId`}
-        />
-      </Switch>
+      <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+        <Switch>
+          <Route component={NodeBalancersLanding} path={path} exact />
+          <Route component={NodeBalancerCreate} path={`${path}/create`} exact />
+          <Route
+            component={NodeBalancerDetail}
+            path={`${path}/:nodeBalancerId`}
+          />
+        </Switch>
+      </React.Suspense>
     );
   }
 }

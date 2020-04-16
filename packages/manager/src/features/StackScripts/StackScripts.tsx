@@ -6,6 +6,7 @@ import {
   Switch,
   withRouter
 } from 'react-router-dom';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 
 const StackScriptsDetail = React.lazy(() => import('./StackScriptsDetail'));
 const StackScriptsLanding = React.lazy(() => import('./StackScriptsLanding'));
@@ -21,21 +22,23 @@ class NodeBalancers extends React.Component<Props> {
     } = this.props;
 
     return (
-      <Switch>
-        <Route component={StackScriptsLanding} path={path} exact />
-        <Route component={StackScriptCreate} path={`${path}/create`} exact />
-        <Route
-          component={StackScriptUpdate}
-          path={`${path}/:stackScriptID/edit`}
-          exact
-        />
-        <Route
-          component={StackScriptsDetail}
-          path={`${path}/:stackScriptId`}
-          exact
-        />
-        <Redirect to={`${path}`} />
-      </Switch>
+      <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+        <Switch>
+          <Route component={StackScriptsLanding} path={path} exact />
+          <Route component={StackScriptCreate} path={`${path}/create`} exact />
+          <Route
+            component={StackScriptUpdate}
+            path={`${path}/:stackScriptID/edit`}
+            exact
+          />
+          <Route
+            component={StackScriptsDetail}
+            path={`${path}/:stackScriptId`}
+            exact
+          />
+          <Redirect to={`${path}`} />
+        </Switch>
+      </React.Suspense>
     );
   }
 }

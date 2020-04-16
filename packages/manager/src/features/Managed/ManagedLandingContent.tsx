@@ -19,6 +19,7 @@ import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import DocumentationButton from 'src/components/DocumentationButton';
 import Grid from 'src/components/Grid';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLink from 'src/components/TabLink';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -148,59 +149,63 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
           ))}
         </Tabs>
       </AppBar>
-      <Switch>
-        <Route
-          exact
-          strict
-          path={`${props.match.path}/monitors`}
-          render={() => (
-            <Monitors
-              credentials={credentials.data}
-              loading={
-                (credentials.loading && contacts.lastUpdated === 0) ||
-                (contacts.loading && contacts.lastUpdated === 0)
-              }
-              groups={groups}
-              errorFromProps={credentials.error || contacts.error || undefined}
-            />
-          )}
-        />
-        <Route
-          exact
-          strict
-          path={`${props.match.path}/ssh-access`}
-          component={SSHAccess}
-        />
-        <Route
-          exact
-          strict
-          path={`${props.match.path}/credentials`}
-          render={() => (
-            <Credentials
-              loading={credentials.loading && credentials.lastUpdated === 0}
-              error={credentialsError}
-              credentials={credentials.data}
-              update={credentials.update}
-            />
-          )}
-        />
-        <Route
-          exact
-          strict
-          path={`${props.match.path}/contacts`}
-          render={() => (
-            <Contacts
-              contacts={contacts.data}
-              loading={contacts.loading && contacts.lastUpdated === 0}
-              error={contacts.error}
-              lastUpdated={contacts.lastUpdated}
-              transformData={contacts.transformData}
-              update={contacts.update}
-            />
-          )}
-        />
-        <Redirect to={`${props.match.path}/monitors`} />
-      </Switch>
+      <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+        <Switch>
+          <Route
+            exact
+            strict
+            path={`${props.match.path}/monitors`}
+            render={() => (
+              <Monitors
+                credentials={credentials.data}
+                loading={
+                  (credentials.loading && contacts.lastUpdated === 0) ||
+                  (contacts.loading && contacts.lastUpdated === 0)
+                }
+                groups={groups}
+                errorFromProps={
+                  credentials.error || contacts.error || undefined
+                }
+              />
+            )}
+          />
+          <Route
+            exact
+            strict
+            path={`${props.match.path}/ssh-access`}
+            component={SSHAccess}
+          />
+          <Route
+            exact
+            strict
+            path={`${props.match.path}/credentials`}
+            render={() => (
+              <Credentials
+                loading={credentials.loading && credentials.lastUpdated === 0}
+                error={credentialsError}
+                credentials={credentials.data}
+                update={credentials.update}
+              />
+            )}
+          />
+          <Route
+            exact
+            strict
+            path={`${props.match.path}/contacts`}
+            render={() => (
+              <Contacts
+                contacts={contacts.data}
+                loading={contacts.loading && contacts.lastUpdated === 0}
+                error={contacts.error}
+                lastUpdated={contacts.lastUpdated}
+                transformData={contacts.transformData}
+                update={contacts.update}
+              />
+            )}
+          />
+          <Redirect to={`${props.match.path}/monitors`} />
+        </Switch>
+      </React.Suspense>
     </React.Fragment>
   );
 };

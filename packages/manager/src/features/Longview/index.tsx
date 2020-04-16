@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Route, RouteComponentProps, Switch } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 
 const LongviewLanding = React.lazy(() => import('./LongviewLanding'));
 const LongviewDetail = React.lazy(() => import('./LongviewDetail'));
@@ -15,10 +16,12 @@ const Longview: React.FC<Props> = props => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Longview" />
-      <Switch>
-        <Route component={LongviewDetail} path={`${path}/clients/:id`} />
-        <Route component={LongviewLanding} />
-      </Switch>
+      <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+        <Switch>
+          <Route component={LongviewDetail} path={`${path}/clients/:id`} />
+          <Route component={LongviewLanding} />
+        </Switch>
+      </React.Suspense>
     </React.Fragment>
   );
 };

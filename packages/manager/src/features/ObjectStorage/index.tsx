@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Route, RouteComponentProps, Switch } from 'react-router-dom';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 
 const ObjectStorageLanding = React.lazy(() => import('./ObjectStorageLanding'));
 const BucketDetail = React.lazy(() => import('./BucketDetail/BucketDetail'));
@@ -10,13 +11,15 @@ export const ObjectStorage: React.FC<CombinedProps> = props => {
   const path = props.match.path;
 
   return (
-    <Switch>
-      <Route
-        path={`${path}/buckets/:clusterId/:bucketName`}
-        component={BucketDetail}
-      />
-      <Route component={ObjectStorageLanding} path={path} />
-    </Switch>
+    <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+      <Switch>
+        <Route
+          path={`${path}/buckets/:clusterId/:bucketName`}
+          component={BucketDetail}
+        />
+        <Route component={ObjectStorageLanding} path={path} />
+      </Switch>
+    </React.Suspense>
   );
 };
 

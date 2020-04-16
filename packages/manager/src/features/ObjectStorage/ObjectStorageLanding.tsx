@@ -24,6 +24,7 @@ import Tabs from 'src/components/core/Tabs';
 import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import PromotionalOfferCard from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLink from 'src/components/TabLink';
 import useFlags from 'src/hooks/useFlags';
 import { ApplicationState } from 'src/store';
@@ -159,25 +160,27 @@ export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = prop
           className={classes.promo}
         />
       ))}
-      <Switch>
-        <Route
-          exact
-          strict
-          path={`${url}/buckets`}
-          render={() => (
-            <BucketLanding isRestrictedUser={props.isRestrictedUser} />
-          )}
-        />
-        <Route
-          exact
-          strict
-          path={`${url}/access-keys`}
-          render={() => (
-            <AccessKeyLanding isRestrictedUser={props.isRestrictedUser} />
-          )}
-        />
-        <Redirect to={`${url}/buckets`} />
-      </Switch>
+      <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+        <Switch>
+          <Route
+            exact
+            strict
+            path={`${url}/buckets`}
+            render={() => (
+              <BucketLanding isRestrictedUser={props.isRestrictedUser} />
+            )}
+          />
+          <Route
+            exact
+            strict
+            path={`${url}/access-keys`}
+            render={() => (
+              <AccessKeyLanding isRestrictedUser={props.isRestrictedUser} />
+            )}
+          />
+          <Redirect to={`${url}/buckets`} />
+        </Switch>
+      </React.Suspense>
       <BucketDrawer isRestrictedUser={props.isRestrictedUser} />
     </React.Fragment>
   );
