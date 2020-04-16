@@ -82,27 +82,23 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
     updateProfile
   } = props;
 
-  const {
-    dialog,
-    openDialog,
-    closeDialog,
-    handleError,
-    submitDialog
-  } = useDialog<number>(undefined);
+  const { dialog, openDialog, closeDialog, handleError } = useDialog<number>(
+    undefined
+  );
 
-  const _openDialog = React.useCallback(openDialog, [dialog, openDialog]);
   const _closeDialog = React.useCallback(closeDialog, [dialog, closeDialog]);
-  const _submitDialog = React.useCallback(submitDialog, [dialog, submitDialog]);
 
   const [success, setSuccess] = React.useState<string | undefined>('');
   const [thirdPartyEnabled, setThirdPartyEnabled] = React.useState<boolean>(
     false
   );
+  const [provider, setProvider] = React.useState<string>('');
   const [disableTPA, setDisableTPA] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     if (thirdPartyAuth === 'github') {
       setThirdPartyEnabled(true);
+      setProvider('GitHub');
     }
   }, [thirdPartyAuth]);
 
@@ -113,26 +109,14 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
     setSuccess('IP whitelisting disabled. This feature cannot be re-enabled.');
   };
 
-  // TODO: add logic
-  const handleEnableTPA = () => {
-    console.log('Enable TPA');
-  };
-
-  // TODO: add logic
-  const handleDisableTPA = () => {
-    console.log('Disable TPA');
-    setDisableTPA(true);
-  };
-
   const tabs = [
     {
       title: 'Linode Credentials',
       render: () => (
         <React.Fragment>
           <ThirdParty
-            provider={'GitHub'}
+            provider={provider}
             thirdPartyEnabled={thirdPartyEnabled}
-            disableTPA={handleDisableTPA}
           />
           <ResetPassword username={username} disabled={thirdPartyEnabled} />
           <TwoFactor
@@ -142,7 +126,6 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
             updateProfile={updateProfile}
             disabled={thirdPartyEnabled}
           />
-          {/* TODO: fix this error */}
           <TrustedDevices disabled={thirdPartyEnabled} />
           {ipWhitelisting && (
             <SecuritySettings
@@ -172,7 +155,13 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
           <div className={classes.providers}>
             <Button
               className={thirdPartyEnabled ? classes.enabled : ''}
-              onClick={!thirdPartyEnabled && openDialog}
+              onClick={
+                !thirdPartyEnabled &&
+                (() => {
+                  setProvider('GitHub');
+                  openDialog();
+                })
+              }
             >
               <GitHubIcon className={classes.providerIcon} />
               GitHub
@@ -185,7 +174,7 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
               loading={dialog.isLoading}
               error={dialog.error}
               onClose={_closeDialog}
-              onEnable={handleEnableTPA}
+              provider={provider}
             />
           </div>
           {thirdPartyEnabled && (
@@ -196,12 +185,18 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
                 reset your Linode password.
               </Typography>
               <Button
+                aria-describedby="external-site"
                 buttonType="primary"
                 onClick={() => {
-                  handleDisableTPA();
+                  setDisableTPA(true);
+                  window.open(
+                    'http://login.testing.linode.com/tpa/disable',
+                    '_blank',
+                    'noopener'
+                  );
                 }}
               >
-                Disable GitHub Authentication
+                Disable {provider} Authentication
               </Button>
               {disableTPA && (
                 <Notice className={classes.notice} warning>

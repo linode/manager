@@ -9,8 +9,6 @@ import Notice from 'src/components/Notice';
 interface Props {
   provider: string;
   thirdPartyEnabled: boolean;
-  // TODO: add types
-  disableTPA?: () => void;
 }
 
 type CombinedProps = Props;
@@ -60,9 +58,16 @@ export const ThirdParty: React.FC<CombinedProps> = props => {
             with instructions on how to reset your password.
           </Typography>
           <Button
+            aria-describedby="external-site"
             buttonType="primary"
             className={classes.button}
-            onClick={props.disableTPA}
+            onClick={() => {
+              window.open(
+                'http://login.testing.linode.com/tpa/disable',
+                '_blank',
+                'noopener'
+              );
+            }}
           >
             Disable {props.provider} Authentication
           </Button>
