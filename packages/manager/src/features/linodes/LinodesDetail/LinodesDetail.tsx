@@ -8,6 +8,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { WithTypes } from 'src/store/linodeType/linodeType.containers';
 import { ThunkDispatch } from 'src/store/types';
@@ -73,24 +74,26 @@ const LinodeDetail: React.StatelessComponent<CombinedProps> = props => {
   return (
     <LinodeDetailContextProvider value={ctx}>
       {/* <pre>{JSON.stringify(linode, null, 2)}</pre> */}
-      <Switch>
-        {/*
-        Currently, the "Clone Configs and Disks" feature exists OUTSIDE of LinodeDetail.
-        Or... at least it appears that way to the user. We would like it to live WITHIN
-        LinodeDetail, though, because we'd like to use the same context, so we don't
-        have to reload all the configs, disks, etc. once we get to the CloneLanding page.
-        */}
-        <Route path={`${path}/clone`} component={CloneLanding} />
-        <Route path={`${path}/migrate`} component={MigrateLanding} />
-        <Route
-          render={() => (
-            <React.Fragment>
-              <LinodesDetailHeader />
-              <LinodesDetailNavigation />
-            </React.Fragment>
-          )}
-        />
-      </Switch>
+      <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+        <Switch>
+          {/*
+          Currently, the "Clone Configs and Disks" feature exists OUTSIDE of LinodeDetail.
+          Or... at least it appears that way to the user. We would like it to live WITHIN
+          LinodeDetail, though, because we'd like to use the same context, so we don't
+          have to reload all the configs, disks, etc. once we get to the CloneLanding page.
+          */}
+          <Route path={`${path}/clone`} component={CloneLanding} />
+          <Route path={`${path}/migrate`} component={MigrateLanding} />
+          <Route
+            render={() => (
+              <React.Fragment>
+                <LinodesDetailHeader />
+                <LinodesDetailNavigation />
+              </React.Fragment>
+            )}
+          />
+        </Switch>
+      </React.Suspense>
     </LinodeDetailContextProvider>
   );
 };

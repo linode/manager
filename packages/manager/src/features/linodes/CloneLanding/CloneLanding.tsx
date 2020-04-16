@@ -29,6 +29,7 @@ import Tabs from 'src/components/core/Tabs';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLink from 'src/components/TabLink';
 import withLinodes from 'src/containers/withLinodes.container';
 import { resetEventsPolling } from 'src/eventsPolling';
@@ -441,7 +442,9 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
           />
         </Grid>
       </Grid>
-      <Switch />
+      <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+        <Switch />
+      </React.Suspense>
     </React.Fragment>
   );
 };

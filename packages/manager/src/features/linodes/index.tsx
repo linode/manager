@@ -6,6 +6,7 @@ import {
   Switch,
   withRouter
 } from 'react-router-dom';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 
 const LinodesLanding = React.lazy(() => import('./LinodesLanding'));
 const LinodesCreate = React.lazy(() =>
@@ -22,12 +23,14 @@ class LinodesRoutes extends React.Component<Props> {
     } = this.props;
 
     return (
-      <Switch>
-        <Route component={LinodesCreate} path={`${path}/create`} />
-        <Route component={LinodesDetail} path={`${path}/:linodeId`} />
-        <Route component={LinodesLanding} path={path} exact strict />
-        <Redirect to={path} />
-      </Switch>
+      <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+        <Switch>
+          <Route component={LinodesCreate} path={`${path}/create`} />
+          <Route component={LinodesDetail} path={`${path}/:linodeId`} />
+          <Route component={LinodesLanding} path={path} exact strict />
+          <Redirect to={path} />
+        </Switch>
+      </React.Suspense>
     );
   }
 }
