@@ -91,7 +91,7 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
           ))}
         </Tabs>
       </AppBar>
-      <React.Suspense fallback={<SuspenseLoader delay={100} />}>
+      <React.Suspense fallback={<SuspenseLoader delay={300} />}>
         <Switch>
           <Route
             exact
