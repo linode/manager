@@ -1,6 +1,6 @@
 // @todo rename this file to store.helpers when all reducers are using MappedEntityState2
 import { APIError } from 'linode-js-sdk/lib/types';
-import { assoc, omit } from 'ramda'; // @todo replace with mergeRight when updating Ramda
+import { assoc, omit } from 'ramda';
 import {
   Entity,
   EntityError,
