@@ -14,6 +14,8 @@ import {
 describe('create NodeBalancer', () => {
 
   it('creates a nodebal', () => {
+
+    // create a linode in NW where the NB will be created
     createLinode().then(linode=>{
         cy.server();
         cy.route({
@@ -26,9 +28,11 @@ describe('create NodeBalancer', () => {
         cy.findByText('NodeBalancer Settings');
         cy.findByLabelText('NodeBalancer Label').click().type(nodeBalLabel);
         cy.contains('create a tag').click().type(testNodeBalTag);
+        // this will create the NB in newark, where the default Linode was created
         cy.contains('Regions')
         .click()
         .type('new {enter}');
+
         // node backend config
         cy.findByLabelText('Label').click().type(makeLinodeLabel());
         cy.contains('Enter IP Address').click().type(`${privateIp}{enter}`);
