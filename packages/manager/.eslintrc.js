@@ -119,6 +119,17 @@ module.exports = {
   },
   overrides: [
     {
+      files: ['*.ts', '*.tsx'],
+      rules: {
+        // eslint not typescript does a bad job with type aliases, we let typescript eslint do it
+        'no-unused-vars': 'off',
+        '@typescript-eslint/no-unused-vars': [
+          'warn',
+          { argsIgnorePattern: '^_' }
+        ]
+      }
+    },
+    {
       files: ['*js'],
       rules: {
         '@typescript-eslint/explicit-function-return-type': 'off'
