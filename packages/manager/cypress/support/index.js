@@ -22,8 +22,10 @@ chai.use(chaiString);
 
 import './commands';
 import { deleteAllTestLinodes } from './api/linodes';
+import { deleteAllTestNodeBalancers } from './api/nodebalancers';
 import { deleteAllTestVolumes } from './api/volumes';
 it('Delete All Test Entities before anything happens', () => {
   deleteAllTestLinodes();
+  deleteAllTestNodeBalancers();
   deleteAllTestVolumes();
 });
