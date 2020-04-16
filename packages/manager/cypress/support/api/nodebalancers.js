@@ -1,5 +1,4 @@
 import {
-  apiCheckErrors,
   testTag,
   getAll,
   deleteById,
@@ -9,7 +8,7 @@ import {
 export const testNodeBalTag = testTag;
 export const makeNodeBalLabel = makeTestLabel;
 
-const makeNodeBalCreateReq = nodeBal => {
+export const makeNodeBalCreateReq = nodeBal => {
   const nodeBalData = nodeBal
     ? nodeBal
     : {
@@ -27,17 +26,6 @@ const makeNodeBalCreateReq = nodeBal => {
     auth: {
       bearer: Cypress.env('oauthtoken')
     }
-  });
-};
-
-/// Use this method if you do not need to get the request detail
-// if linode is undefined, will create default test debian linode in us-east
-/// @param linode {label:'', tags:[],type:'',region:'',image:'',root_pass:''}
-export const createLinode = (linode = undefined) => {
-  return makeNodeBalCreateReq(linode).then(resp => {
-    apiCheckErrors(resp);
-    console.log(`Created Linode ${resp.body.label} successfully`, resp);
-    return resp.body;
   });
 };
 
