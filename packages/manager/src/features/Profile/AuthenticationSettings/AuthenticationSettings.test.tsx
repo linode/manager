@@ -24,7 +24,7 @@ const props = {
 };
 
 describe('Authentication settings profile tab', () => {
-  it.skip('should render', () => {
+  it('should render', () => {
     const { getByTestId } = render(
       wrapWithTheme(<AuthenticationSettings {...props} />)
     );

@@ -8,14 +8,6 @@ import Notice from 'src/components/Notice';
 
 const useStyles = makeStyles((theme: Theme) => ({
   dialog: {
-    '& .dialog-title': {
-      paddingTop: theme.spacing(3) - 4,
-      paddingBottom: theme.spacing(3) - 4
-    },
-    '& .MuiTypography-h6': {
-      color: '#6b7380',
-      fontSize: '1.125rem'
-    },
     '& .dialog-content': {
       paddingTop: 0,
       paddingBottom: 0
@@ -47,7 +39,6 @@ const ThirdPartyDialog: React.FC<CombinedProps> = props => {
     `http://login.testing.linode.com/tpa/enable/` + `${provider}`.toLowerCase();
 
   return (
-    // TODO: missing 'X' button in the upper right
     <ConfirmationDialog
       className={classes.dialog}
       open={open}

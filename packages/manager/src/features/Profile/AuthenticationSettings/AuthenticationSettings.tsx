@@ -51,7 +51,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   enabled: {
     border: `2px solid #3683dc !important`,
-    cursor: 'auto',
 
     '& svg': {
       color: '#3683dc'
@@ -82,9 +81,7 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
     updateProfile
   } = props;
 
-  const { dialog, openDialog, closeDialog, handleError } = useDialog<number>(
-    undefined
-  );
+  const { dialog, openDialog, closeDialog } = useDialog<number>(undefined);
 
   const _closeDialog = React.useCallback(closeDialog, [dialog, closeDialog]);
 
@@ -155,13 +152,11 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
           <div className={classes.providers}>
             <Button
               className={thirdPartyEnabled ? classes.enabled : ''}
-              onClick={
-                !thirdPartyEnabled &&
-                (() => {
-                  setProvider('GitHub');
-                  openDialog();
-                })
-              }
+              onClick={() => {
+                setProvider('GitHub');
+                openDialog();
+              }}
+              disabled={thirdPartyEnabled}
             >
               <GitHubIcon className={classes.providerIcon} />
               GitHub
