@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(6),
 
     '& button': {
-      border: `1px solid #f4f4f4`,
+      border: `1px solid ${theme.palette.divider}`,
       backgroundColor: theme.bg.offWhite,
       minHeight: '70px',
       minWidth: '344px',
@@ -53,10 +53,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: theme.spacing(2)
   },
   enabled: {
-    border: `2px solid #3683dc !important`,
+    border: `2px solid ${theme.color.blue} !important`,
 
     '& svg': {
-      color: '#3683dc'
+      color: theme.color.blue
     }
   },
   enabledText: {
