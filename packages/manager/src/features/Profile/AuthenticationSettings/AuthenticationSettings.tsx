@@ -11,6 +11,7 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Notice from 'src/components/Notice';
 import TabbedPanel from 'src/components/TabbedPanel';
+import { LOGIN_ROOT } from 'src/constants';
 import { AccountsAndPasswords, SecurityControls } from 'src/documentation';
 import { updateProfile as _updateProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
@@ -86,18 +87,10 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
 
   const [success, setSuccess] = React.useState<string | undefined>(undefined);
-  const [thirdPartyEnabled, setThirdPartyEnabled] = React.useState<boolean>(
-    false
-  );
   const [provider, setProvider] = React.useState<string>('');
   const [disableTPA, setDisableTPA] = React.useState<boolean>(false);
 
-  React.useEffect(() => {
-    if (authType === 'github') {
-      setThirdPartyEnabled(true);
-      setProvider('GitHub');
-    }
-  }, [authType]);
+  const thirdPartyEnabled = authType !== 'password';
 
   const clearState = () => {
     setSuccess(undefined);
@@ -111,11 +104,7 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
       title: 'Linode Credentials',
       render: () => (
         <React.Fragment>
-          <ThirdParty
-            authType={authType}
-            provider={provider}
-            // thirdPartyEnabled={thirdPartyEnabled}
-          />
+          <ThirdParty authType={authType} />
           <ResetPassword username={username} disabled={thirdPartyEnabled} />
           <TwoFactor
             twoFactor={twoFactor}
@@ -186,7 +175,7 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
                 onClick={() => {
                   setDisableTPA(true);
                   window.open(
-                    'http://login.testing.linode.com/tpa/disable',
+                    `${LOGIN_ROOT}/tpa/disable`,
                     '_blank',
                     'noopener'
                   );

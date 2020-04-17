@@ -5,6 +5,7 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
+import { LOGIN_ROOT } from 'src/constants';
 
 const useStyles = makeStyles((theme: Theme) => ({
   dialog: {
@@ -35,16 +36,13 @@ const ThirdPartyDialog: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const { open, error, loading, provider, onClose } = props;
 
-  const enableTPALink =
-    `http://login.testing.linode.com/tpa/enable/` + `${provider}`.toLowerCase();
-
   return (
     <ConfirmationDialog
       className={classes.dialog}
       open={open}
       title={`Enable ` + `${provider}` + ` Authentication`}
       onClose={onClose}
-      actions={() => renderActions(enableTPALink, loading, provider, onClose)}
+      actions={() => renderActions(loading, provider, onClose)}
     >
       {error && <Notice error text={error} />}
       <Typography>
@@ -63,7 +61,6 @@ const ThirdPartyDialog: React.FC<CombinedProps> = props => {
 };
 
 const renderActions = (
-  enableTPALink: string,
   loading: boolean,
   provider: string,
   onClose: () => void
@@ -82,7 +79,13 @@ const renderActions = (
         aria-describedby="external-site"
         buttonType="primary"
         loading={loading}
-        onClick={() => window.open(enableTPALink, '_blank', 'noopener')}
+        onClick={() =>
+          window.open(
+            `${LOGIN_ROOT}/tpa/enable/` + `${provider}`.toLowerCase(),
+            '_blank',
+            'noopener'
+          )
+        }
         data-qa-confirm
         data-testid={'dialog-confirm'}
       >
