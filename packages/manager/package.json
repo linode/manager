@@ -105,8 +105,6 @@
     "storyshots:update": "export UPDATE=-u && docker-compose -f storyshots.yml up --build --exit-code-from manager-storyshots && unset UPDATE && docker-compose -f storyshots.yml down -v",
     "storyshots:test": "npx jest --config ./.storybook/storyshots.jest.config.js src/components/Storyshots.test.tsx --env=jsdom",
     "build-storybook": "build-storybook",
-    "cy:stage2e": "cypress run --env configFile=staging",
-    "cy:stagedebug": "cypress open --env configFile=staging",
     "cy:e2e": "cypress run",
     "cy:debug": "cypress open",
     "cy:rec-snap": "cypress open --env visualRegMode=record",
