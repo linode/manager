@@ -23,7 +23,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import { getErrorMap } from 'src/utilities/errorUtils';
 
 import SelectIP from './ConfigNodeIPSelect';
 
@@ -334,15 +334,15 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       classes
     } = this.props;
 
-    const hasErrorFor = getAPIErrorFor(
-      {
-        check_attempts: 'Check attempts',
-        check_body: 'Check body',
-        check_interval: 'Check interval',
-        check_path: 'Check path',
-        check_timeout: 'Check timeout',
-        check: 'Check type'
-      },
+    const errorMap = getErrorMap(
+      [
+        'check_attempts',
+        'check_body',
+        'check_interval',
+        'check_path',
+        'check_timeout',
+        'check'
+      ],
       errors
     );
 
@@ -389,7 +389,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
             updateFor={[
               protocol,
               healthCheckType,
-              hasErrorFor('check'),
+              errorMap.check,
               configIdx,
               classes
             ]}
@@ -402,7 +402,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 label="Type"
                 value={defaultType || typeOptions[0]}
                 onChange={this.onHealthCheckTypeChange}
-                errorText={hasErrorFor('check')}
+                errorText={errorMap.check}
                 errorGroup={forEdit ? `${configIdx}` : undefined}
                 textFieldProps={{
                   dataAttrs: {
@@ -425,7 +425,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               <Grid
                 updateFor={[
                   healthCheckInterval,
-                  hasErrorFor('check_interval'),
+                  errorMap.check_interval,
                   configIdx,
                   classes
                 ]}
@@ -443,7 +443,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   }}
                   value={healthCheckInterval}
                   onChange={this.onHealthCheckIntervalChange}
-                  errorText={hasErrorFor('check_interval')}
+                  errorText={errorMap.check_interval}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   data-qa-active-check-interval
                   disabled={disabled}
@@ -456,7 +456,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               <Grid
                 updateFor={[
                   healthCheckTimeout,
-                  hasErrorFor('check_timeout'),
+                  errorMap.check_timeout,
                   configIdx,
                   classes
                 ]}
@@ -474,7 +474,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   }}
                   value={healthCheckTimeout}
                   onChange={this.onHealthCheckTimeoutChange}
-                  errorText={hasErrorFor('check_timeout')}
+                  errorText={errorMap.check_timeout}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   data-qa-active-check-timeout
                   disabled={disabled}
@@ -488,7 +488,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               <Grid
                 updateFor={[
                   healthCheckAttempts,
-                  hasErrorFor('check_attempts'),
+                  errorMap.check_attempts,
                   configIdx,
                   classes
                 ]}
@@ -501,7 +501,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   label="Attempts"
                   value={healthCheckAttempts}
                   onChange={this.onHealthCheckAttemptsChange}
-                  errorText={hasErrorFor('check_attempts')}
+                  errorText={errorMap.check_attempts}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   InputProps={{
                     'aria-label': 'Active Health Check Attempts'
@@ -520,7 +520,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   updateFor={[
                     checkPath,
                     healthCheckType,
-                    hasErrorFor('check_path'),
+                    errorMap.check_path,
                     configIdx,
                     classes
                   ]}
@@ -533,7 +533,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     value={checkPath || ''}
                     onChange={this.onCheckPathChange}
                     required={['http', 'http_body'].includes(healthCheckType)}
-                    errorText={hasErrorFor('check_path')}
+                    errorText={errorMap.check_path}
                     errorGroup={forEdit ? `${configIdx}` : undefined}
                     disabled={disabled}
                     small
@@ -545,7 +545,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   updateFor={[
                     checkBody,
                     healthCheckType,
-                    hasErrorFor('check_body'),
+                    errorMap.check_body,
                     configIdx,
                     classes
                   ]}
@@ -558,7 +558,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     value={checkBody}
                     onChange={this.onCheckBodyChange}
                     required={healthCheckType === 'http_body'}
-                    errorText={hasErrorFor('check_body')}
+                    errorText={errorMap.check_body}
                     errorGroup={forEdit ? `${configIdx}` : undefined}
                     disabled={disabled}
                     small
@@ -624,29 +624,29 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       disabled
     } = this.props;
 
-    const hasErrorFor = getAPIErrorFor(
-      {
-        algorithm: 'Algorithm',
-        check_attempts: 'Check attempts',
-        check_body: 'Check body',
-        check_interval: 'Check interval',
-        check_passive: 'Passive check',
-        check_path: 'Check path',
-        check_timeout: 'Check timeout',
-        check: 'Check type',
-        cipher_suite: 'Cipher suite',
-        configs: 'configs',
-        port: 'Port',
-        protocol: 'Protocol',
-        ssl_cert: 'SSL certificate',
-        ssl_key: 'SSL private key',
-        stickiness: 'Session stickiness',
-        nodes: 'Nodes'
-      },
+    const errorMap = getErrorMap(
+      [
+        'algorithm',
+        'check_attempts',
+        'check_body',
+        'check_interval',
+        'check_passive',
+        'check_path',
+        'check_timeout',
+        'check',
+        'cipher_suite',
+        'configs',
+        'port',
+        'protocol',
+        'ssl_cert',
+        'ssl_key',
+        'stickiness',
+        'nodes'
+      ],
       errors
     );
 
-    const globalFormError = hasErrorFor('none');
+    const globalFormError = errorMap.none;
 
     const protocolOptions = [
       { label: 'TCP', value: 'tcp' },
@@ -692,15 +692,15 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
             <Grid
               updateFor={[
                 port,
-                hasErrorFor('port'),
+                errorMap.port,
                 protocol,
-                hasErrorFor('protocol'),
+                errorMap.protocol,
                 algorithm,
-                hasErrorFor('algorithm'),
+                errorMap.algorithm,
                 sessionStickiness,
-                hasErrorFor('stickiness'),
-                hasErrorFor('ssl_cert'),
-                hasErrorFor('ssl_key'),
+                errorMap.stickiness,
+                errorMap.ssl_cert,
+                errorMap.ssl_key,
                 configIdx,
                 sslCertificate,
                 privateKey,
@@ -720,7 +720,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   required
                   value={port || ''}
                   onChange={this.onPortChange}
-                  errorText={hasErrorFor('port') || hasErrorFor('configs')}
+                  errorText={errorMap.port || errorMap.configs}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   data-qa-port
                   small
@@ -735,7 +735,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   label="Protocol"
                   value={defaultProtocol || protocolOptions[0]}
                   onChange={this.onProtocolChange}
-                  errorText={hasErrorFor('protocol')}
+                  errorText={errorMap.protocol}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   textFieldProps={{
                     dataAttrs: {
@@ -755,9 +755,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     updateFor={[
                       sslCertificate,
                       protocol,
-                      hasErrorFor('ssl_cert'),
+                      errorMap.ssl_cert,
                       privateKey,
-                      hasErrorFor('ssl_key'),
+                      errorMap.ssl_key,
                       configIdx,
                       classes
                     ]}
@@ -771,7 +771,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         value={sslCertificate || ''}
                         onChange={this.onSslCertificateChange}
                         required={protocol === 'https'}
-                        errorText={hasErrorFor('ssl_cert')}
+                        errorText={errorMap.ssl_cert}
                         errorGroup={forEdit ? `${configIdx}` : undefined}
                         data-qa-cert-field
                         small
@@ -786,7 +786,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         value={privateKey || ''}
                         onChange={this.onPrivateKeyChange}
                         required={protocol === 'https'}
-                        errorText={hasErrorFor('ssl_key')}
+                        errorText={errorMap.ssl_key}
                         errorGroup={forEdit ? `${configIdx}` : undefined}
                         data-qa-private-key-field
                         small
@@ -803,7 +803,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   label="Algorithm"
                   value={defaultAlg || algOptions[0]}
                   onChange={this.onAlgorithmChange}
-                  errorText={hasErrorFor('algorithm')}
+                  errorText={errorMap.algorithm}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   textFieldProps={{
                     dataAttrs: {
@@ -828,7 +828,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   label="Session Stickiness"
                   value={defaultSession || sessionOptions[1]}
                   onChange={this.onSessionStickinessChange}
-                  errorText={hasErrorFor('stickiness')}
+                  errorText={errorMap.stickiness}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   textFieldProps={{
                     dataAttrs: {
@@ -873,8 +873,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 <Typography variant="h2" data-qa-backend-ip-header>
                   Backend Nodes
                 </Typography>
-                {hasErrorFor('nodes') && (
-                  <FormHelperText error>{hasErrorFor('nodes')}</FormHelperText>
+                {errorMap.nodes && (
+                  <FormHelperText error>{errorMap.nodes}</FormHelperText>
                 )}
               </Grid>
               <Grid item xs={12} style={{ paddingBottom: 24 }}>
@@ -886,14 +886,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         return null;
                       }
 
-                      const nodesHasErrorFor = getAPIErrorFor(
-                        {
-                          label: 'label',
-                          address: 'address',
-                          weight: 'weight',
-                          port: 'port',
-                          mode: 'mode'
-                        },
+                      const nodesErrorMap = getErrorMap(
+                        ['label', 'address', 'weight', 'port', 'mode'],
                         node.errors
                       );
 
@@ -933,7 +927,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                   value={node.label}
                                   inputProps={{ 'data-node-idx': idx }}
                                   onChange={this.onNodeLabelChange}
-                                  errorText={nodesHasErrorFor('label')}
+                                  errorText={nodesErrorMap.label}
                                   errorGroup={
                                     forEdit ? `${configIdx}` : undefined
                                   }
@@ -994,7 +988,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                   handleChange={this.props.onNodeAddressChange}
                                   selectedRegion={this.props.nodeBalancerRegion}
                                   nodeIndex={idx}
-                                  errorText={nodesHasErrorFor('address')}
+                                  errorText={nodesErrorMap.address}
                                   nodeAddress={node.address}
                                   workflow={forEdit ? 'edit' : 'create'}
                                 />
@@ -1006,7 +1000,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                   value={node.port}
                                   inputProps={{ 'data-node-idx': idx }}
                                   onChange={this.onNodePortChange}
-                                  errorText={nodesHasErrorFor('port')}
+                                  errorText={nodesErrorMap.port}
                                   errorGroup={
                                     forEdit ? `${configIdx}` : undefined
                                   }
@@ -1023,7 +1017,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                   value={node.weight}
                                   inputProps={{ 'data-node-idx': idx }}
                                   onChange={this.onNodeWeightChange}
-                                  errorText={nodesHasErrorFor('weight')}
+                                  errorText={nodesErrorMap.weight}
                                   errorGroup={
                                     forEdit ? `${configIdx}` : undefined
                                   }
@@ -1041,7 +1035,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                     select
                                     inputProps={{ 'data-node-idx': idx }}
                                     onChange={this.onNodeModeChange}
-                                    errorText={nodesHasErrorFor('mode')}
+                                    errorText={nodesErrorMap.mode}
                                     data-qa-backend-ip-mode
                                     small
                                     noMarginTop

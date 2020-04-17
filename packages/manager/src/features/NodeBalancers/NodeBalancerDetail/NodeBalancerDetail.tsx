@@ -28,6 +28,7 @@ import Tabs from 'src/components/core/Tabs';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import { convertForAria } from 'src/components/TabLink/TabLink';
 import withLoadingAndError, {
   LoadingAndErrorHandlers,
@@ -40,9 +41,9 @@ import {
 } from 'src/store/nodeBalancer/nodeBalancer.containers';
 import {
   getAPIErrorOrDefault,
+  getErrorMap,
   getErrorStringOrDefault
 } from 'src/utilities/errorUtils';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { NodeBalancerProvider } from './context';
 import NodeBalancerConfigurations from './NodeBalancerConfigurations';
@@ -162,11 +163,12 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
       return Promise.resolve();
     }
 
+    this.setState({ ApiError: undefined });
+
     return updateNodeBalancer({ nodeBalancerId: nodeBalancer.id, label })
       .then(() => {
         this.setState({
           nodeBalancer: { ...nodeBalancer, label },
-          ApiError: undefined,
           labelInput: label
         });
       })
@@ -184,6 +186,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
             scrollErrorIntoView();
           }
         );
+        return Promise.reject(error);
       });
   };
 
@@ -287,11 +290,8 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
       return null;
     }
 
-    const hasErrorFor = getAPIErrorsFor(
-      { label: 'label' },
-      this.state.ApiError
-    );
-    const apiErrorText = hasErrorFor('label');
+    const errorMap = getErrorMap(['label'], this.state.ApiError);
+    const labelError = errorMap.label;
 
     const nodeBalancerLabel =
       this.state.labelInput !== undefined
@@ -325,11 +325,12 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
                   editableTextTitle: nodeBalancerLabel,
                   onEdit: this.updateLabel,
                   onCancel: this.cancelUpdate,
-                  errorText: apiErrorText
+                  errorText: labelError
                 }}
               />
             </Grid>
           </Grid>
+          {errorMap.none && <Notice error text={errorMap.none} />}
           <AppBar position="static" color="default" role="tablist">
             <Tabs
               value={findTabIndex === -1 ? 0 : findTabIndex}
