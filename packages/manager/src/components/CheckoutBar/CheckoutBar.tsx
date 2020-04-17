@@ -17,7 +17,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const CheckoutBar = React.forwardRef<any, CombinedProps>((props, ref) => {
+const CheckoutBar: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const {
@@ -33,7 +33,7 @@ const CheckoutBar = React.forwardRef<any, CombinedProps>((props, ref) => {
   const price = calculatedPrice ?? 0;
 
   return (
-    <div className={classes.root} ref={ref}>
+    <div className={classes.root}>
       <Typography
         variant="h2"
         className={classes.sidebarTitle}
@@ -68,6 +68,6 @@ const CheckoutBar = React.forwardRef<any, CombinedProps>((props, ref) => {
       </div>
     </div>
   );
-});
+};
 
 export default CheckoutBar;
