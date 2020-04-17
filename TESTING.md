@@ -150,39 +150,8 @@ See cypress documentation on how to check this in the UI: https://docs.cypress.i
 
 #### set up your environment
 
-You will need to create a `development.json` file and `staging.json` file in `~/packages/manager/config` to run these locally.
-An example of this can be found in `~packages/manager/config/development.example.json`
-
-Example with localhost:
-
-```
-{
-  "env": {
-    "username": "someuser",
-    "password": "somepass",
-    "clientId": "someId",
-    "oauthtoken": "someauthtoken",
-    "apiroot": "https://api.linode.com",
-    "loginUrl": "https://login.linode.com/login"
-  }
-}
-```
-
-Example using staging:
-
-```
-{
-  "baseUrl": "https://cloud.staging.linode.com",
-  "env": {
-    "username": "someuser",
-    "password": "somepass",
-    "clientId": "someId",
-    "oauthtoken": "someauthtoken",
-    "apiroot": "https://api.staging.linode.com",
-    "loginUrl": "https://login.staging.linode.com/login"
-  }
-}
-```
+Cypress will read your env variables from `.env` in `/packages/manager`.
+It uses `MANAGER_OAUTH`, `REACT_APP_LOGIN_ROOT` and `REACT_APP_API_ROOT`.
 
 #### Dependencies
 
