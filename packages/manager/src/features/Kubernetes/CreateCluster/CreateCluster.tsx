@@ -275,7 +275,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
   }
 
   return (
-    <div>
+    <>
       <Grid container className={classes.root}>
         <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
         <Grid
@@ -400,7 +400,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
           />
         </Grid>
       </Grid>
-    </div>
+    </>
   );
 };
 
