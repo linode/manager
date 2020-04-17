@@ -11,8 +11,8 @@ import {
 import { initAnalytics, initTagManager } from 'src/analytics';
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
 import CookieWarning from 'src/components/CookieWarning';
-import DefaultLoader from 'src/components/DefaultLoader';
 import SnackBar from 'src/components/SnackBar';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 import { GA_ID, GTM_ID, isProductionBuild } from 'src/constants';
 import 'src/exceptionReporting';
 import LoginAsCustomerCallback from 'src/layouts/LoginAsCustomerCallback';
@@ -24,21 +24,10 @@ import LinodeThemeWrapper from './LinodeThemeWrapper';
 
 import SplashScreen from 'src/components/SplashScreen';
 
-const Lish = DefaultLoader({
-  loader: () => import('src/features/Lish')
-});
-
-const App = DefaultLoader({
-  loader: () => import('./App')
-});
-
-const OAuthCallbackPage = DefaultLoader({
-  loader: () => import('src/layouts/OAuth')
-});
-
-const Cancel = DefaultLoader({
-  loader: () => import('src/features/CancelLanding')
-});
+const Lish = React.lazy(() => import('src/features/Lish'));
+const App = React.lazy(() => import('./App'));
+const OAuthCallbackPage = React.lazy(() => import('src/layouts/OAuth'));
+const Cancel = React.lazy(() => import('src/features/CancelLanding'));
 
 /*
  * Initialize Analytic and Google Tag Manager
@@ -57,7 +46,6 @@ const renderLish = () => (
 
 const renderApp = (props: RouteComponentProps) => (
   <React.Fragment>
-    <SplashScreen />
     <LinodeThemeWrapper>
       {(toggle, spacing) => (
         <SnackBar
@@ -107,11 +95,14 @@ ReactDOM.render(
     {navigator.cookieEnabled ? (
       <Provider store={store}>
         <Router>
-          <Switch>
-            {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
-            <Route exact path="/null" render={renderNull} />
-            <Route render={renderAuthentication} />
-          </Switch>
+          <SplashScreen />
+          <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+            <Switch>
+              {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
+              <Route exact path="/null" render={renderNull} />
+              <Route render={renderAuthentication} />
+            </Switch>
+          </React.Suspense>
         </Router>
       </Provider>
     ) : (
