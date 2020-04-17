@@ -1,10 +1,4 @@
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-
-import * as classNames from 'classnames';
 import * as React from 'react';
-import Hidden from 'src/components/core/Hidden';
-import IconButton from 'src/components/core/IconButton';
 import Paper from 'src/components/core/Paper';
 import Tab from 'src/components/core/ReachTab';
 import TabList from 'src/components/core/ReachTabList';
@@ -81,29 +75,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   tabPanelOuter: {},
-  tabPanel: {},
-  scrollButton: {
-    position: 'absolute',
-    top: 0,
-    padding: 0,
-    '& svg': {
-      width: 38,
-      height: 39,
-      padding: '7px 4px',
-      borderRadius: '50%',
-      backgroundColor: 'rgba(232, 232, 232, .9)',
-      fill: theme.color.black
-    }
-  },
-  leftScrollButton: {
-    left: 0
-  },
-  rightScrollButton: {
-    right: 0
-  },
-  hidden: {
-    visibility: 'hidden'
-  }
+  tabPanel: {}
 }));
 
 export interface Tab {
@@ -147,44 +119,6 @@ export const TabbedPanel: React.FC<CombinedProps> = props => {
 
   const classes = useStyles();
 
-  const scrollList = document.querySelector('div[data-reach-tab-list]');
-  const scrollLocation = scrollList && scrollList.scrollLeft;
-  const scrollListWidth = scrollList && scrollList!.scrollWidth;
-
-  const [leftButtonDisplay, setLeftButtonDisplay] = React.useState<boolean>(
-    true
-  );
-
-  const [rightButtonDisplay, setRightButtonDisplay] = React.useState<boolean>(
-    true
-  );
-
-  const scrollToStart = () => {
-    scrollList!.scrollTo({
-      behavior: 'smooth',
-      top: 0,
-      left: 0
-    });
-  };
-
-  const scrollToEnd = () => {
-    scrollList!.scrollTo({
-      behavior: 'smooth',
-      top: 0,
-      left: scrollList!.scrollWidth
-    });
-  };
-
-  React.useEffect(() => {
-    if (scrollLocation === 0) {
-      setLeftButtonDisplay(true);
-      setRightButtonDisplay(false);
-    } else if (scrollLocation === scrollListWidth) {
-      setRightButtonDisplay(true);
-      setLeftButtonDisplay(false);
-    }
-  }, [scrollListWidth, scrollLocation]);
-
   return (
     <Paper className={`${classes.root} ${rootClass}`} data-qa-tp={header}>
       <div className={`${classes.inner} ${innerClass}`}>
@@ -202,40 +136,15 @@ export const TabbedPanel: React.FC<CombinedProps> = props => {
 
         <Tabs className={classes.tabsWrapper}>
           <TabList className={classes.tabList}>
-            {tabs.map((tab, index) => (
+            {tabs.map((tab, _index) => (
               <Tab className={classes.tab} key={index}>
                 {tab.title}
               </Tab>
             ))}
           </TabList>
 
-          <Hidden mdUp>
-            <IconButton
-              onClick={scrollToStart}
-              aria-label="Scroll to start of list"
-              className={classNames({
-                [classes.scrollButton]: true,
-                [classes.leftScrollButton]: true,
-                [classes.hidden]: leftButtonDisplay
-              })}
-            >
-              <ChevronLeftIcon />
-            </IconButton>
-            <IconButton
-              onClick={scrollToEnd}
-              aria-label="Scroll to end of list"
-              className={classNames({
-                [classes.scrollButton]: true,
-                [classes.rightScrollButton]: true,
-                [classes.hidden]: rightButtonDisplay
-              })}
-            >
-              <ChevronRightIcon />
-            </IconButton>
-          </Hidden>
-
           <TabPanels className={classes.tabPanelOuter}>
-            {tabs.map((tab, index) => (
+            {tabs.map((tab, _index) => (
               <TabPanel className={classes.tabPanel} key={index}>
                 {tab.render(rest.children)}
               </TabPanel>
