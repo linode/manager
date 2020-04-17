@@ -23,7 +23,7 @@ const {
   prepareUrls
 } = require('react-dev-utils/WebpackDevServerUtils');
 const paths = require('../config/paths');
-
+require('dotenv').config({path:paths.dotenv});
 const cypressProxyApiUrl = process.env.REACT_APP_API_ROOT;
 
 const config = require('../config/webpack.config.dev');
