@@ -7,6 +7,7 @@ import Drawer from 'src/components/Drawer';
 import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
 import Notice from 'src/components/Notice';
 import { useTypes } from 'src/hooks/useTypes';
+import { pluralize } from 'src/utilities/pluralize';
 import { nodeWarning } from '../../kubeUtils';
 import { PoolNodeWithPrice } from '../../types';
 
@@ -34,8 +35,7 @@ export interface Props {
 }
 
 const resizeWarning = `Resizing to fewer nodes will delete random nodes from
-the pool. If you want to keep specific nodes, delete unneeded nodes manually from
-the pool's node list.`;
+the pool.`;
 
 export const ResizeNodePoolDrawer: React.FC<Props> = props => {
   const { error, isSubmitting, nodePool, onClose, onSubmit, open } = props;
@@ -89,8 +89,8 @@ export const ResizeNodePoolDrawer: React.FC<Props> = props => {
       >
         <div className={classes.section}>
           <Typography className={classes.summary}>
-            Current pool: ${nodePool.totalMonthlyPrice}/month ({nodePool.count}{' '}
-            nodes at ${pricePerNode}/month)
+            Current pool: ${nodePool.totalMonthlyPrice}/month (
+            {pluralize('node', 'nodes', updatedCount)} at ${pricePerNode}/month)
           </Typography>
         </div>
 
@@ -104,13 +104,14 @@ export const ResizeNodePoolDrawer: React.FC<Props> = props => {
             value={updatedCount}
             setValue={handleChange}
             small
+            min={1}
           />
         </div>
 
         <div className={classes.section}>
           <Typography className={classes.summary}>
-            Resized pool: ${updatedCount * pricePerNode}/month ({updatedCount}{' '}
-            nodes at ${pricePerNode}/month)
+            Resized pool: ${updatedCount * pricePerNode}/month (
+            {pluralize('node', 'nodes', updatedCount)} at ${pricePerNode}/month)
           </Typography>
         </div>
 
@@ -130,11 +131,6 @@ export const ResizeNodePoolDrawer: React.FC<Props> = props => {
           >
             Save Changes
           </Button>
-          {/*
-            <Button onClick={onClose} buttonType="cancel" data-qa-cancel>
-                Cancel
-            </Button>
-          */}
         </ActionsPanel>
       </form>
     </Drawer>

@@ -1,9 +1,9 @@
-import { FirewallRuleWithStatus } from './firewallRuleEditor';
+import { ExtendedFirewallRule } from './firewallRuleEditor';
 import { firewallRuleToRowData } from './FirewallRuleTable';
 
 describe('firewallRuleToRowData', () => {
   it('transforms a FirewallRuleType to the appropriate row', () => {
-    const rule: FirewallRuleWithStatus = {
+    const rule: ExtendedFirewallRule = {
       ports: '22',
       protocol: 'TCP',
       addresses: { ipv4: ['0.0.0.0/0'], ipv6: ['::0/0'] },

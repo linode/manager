@@ -64,6 +64,26 @@ describe('EnhancedNumberInput', () => {
     expect(setValue).toHaveBeenCalledWith(0);
   });
 
+  it('should respect min values', () => {
+    const { getByTestId } = render(
+      wrapWithTheme(<EnhancedNumberInput {...props} value={0} min={1} />)
+    );
+
+    const input = getByTestId('textfield-input') as HTMLInputElement;
+    expect(input.value).toBe('1');
+    expect(getByTestId('decrement-button')).toHaveAttribute('disabled');
+  });
+
+  it('should respect max values', () => {
+    const { getByTestId } = render(
+      wrapWithTheme(<EnhancedNumberInput {...props} value={6} max={5} />)
+    );
+
+    const input = getByTestId('textfield-input') as HTMLInputElement;
+    expect(input.value).toBe('5');
+    expect(getByTestId('increment-button')).toHaveAttribute('disabled');
+  });
+
   it('should display buttons and input as disabled when given the corresponding prop', () => {
     const { getByTestId } = render(
       wrapWithTheme(<EnhancedNumberInput {...disabledProps} />)
