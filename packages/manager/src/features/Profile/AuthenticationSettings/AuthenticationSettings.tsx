@@ -33,11 +33,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(6),
 
     '& button': {
-      border: `1px solid theme.color.divider`,
+      border: `1px solid #f4f4f4`,
       backgroundColor: theme.bg.offWhite,
       minHeight: '70px',
       minWidth: '344px',
       paddingLeft: theme.spacing(3) - 4
+    },
+    '& button:hover': {
+      backgroundColor: theme.bg.offWhite
     },
     '& .MuiButton-label': {
       color: theme.color.headline,
@@ -72,7 +75,7 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const {
     loading,
-    thirdPartyAuth,
+    authType,
     ipWhitelisting,
     twoFactor,
     username,
@@ -82,7 +85,7 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
 
-  const [success, setSuccess] = React.useState<string | undefined>('');
+  const [success, setSuccess] = React.useState<string | undefined>(undefined);
   const [thirdPartyEnabled, setThirdPartyEnabled] = React.useState<boolean>(
     false
   );
@@ -90,11 +93,11 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
   const [disableTPA, setDisableTPA] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    if (thirdPartyAuth === 'github') {
+    if (authType === 'github') {
       setThirdPartyEnabled(true);
       setProvider('GitHub');
     }
-  }, [thirdPartyAuth]);
+  }, [authType]);
 
   const clearState = () => {
     setSuccess(undefined);
@@ -109,8 +112,9 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
       render: () => (
         <React.Fragment>
           <ThirdParty
+            authType={authType}
             provider={provider}
-            thirdPartyEnabled={thirdPartyEnabled}
+            // thirdPartyEnabled={thirdPartyEnabled}
           />
           <ResetPassword username={username} disabled={thirdPartyEnabled} />
           <TwoFactor
@@ -127,6 +131,7 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
               onSuccess={onWhitelistingDisable}
               updateProfileError={props.profileUpdateError}
               ipWhitelistingEnabled={ipWhitelisting}
+              data-qa-whitelisting-form
             />
           )}
         </React.Fragment>
@@ -231,7 +236,7 @@ const docs = [AccountsAndPasswords, SecurityControls];
 
 interface StateProps {
   loading: boolean;
-  thirdPartyAuth: string | undefined;
+  authType: string | undefined;
   ipWhitelisting: boolean;
   twoFactor?: boolean;
   username?: string;
@@ -244,7 +249,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
 
   return {
     loading: profile.loading,
-    thirdPartyAuth: profile?.data?.authentication_type,
+    authType: profile?.data?.authentication_type,
     ipWhitelisting: profile?.data?.ip_whitelist_enabled ?? false,
     twoFactor: profile?.data?.two_factor_auth,
     username: profile?.data?.username,

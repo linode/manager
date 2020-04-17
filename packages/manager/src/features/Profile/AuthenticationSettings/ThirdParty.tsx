@@ -7,8 +7,9 @@ import ExternalLink from 'src/components/ExternalLink';
 import Notice from 'src/components/Notice';
 
 interface Props {
+  authType: string | undefined;
   provider: string;
-  thirdPartyEnabled: boolean;
+  // thirdPartyEnabled: boolean;
 }
 
 type CombinedProps = Props;
@@ -32,10 +33,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const ThirdParty: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const thirdPartyEnabled = props.authType !== 'password';
 
   return (
     <React.Fragment>
-      {props.thirdPartyEnabled && (
+      {thirdPartyEnabled && (
         <Paper className={classes.root}>
           <Notice warning>
             Third-Party Authentication via {props.provider} is enabled on your

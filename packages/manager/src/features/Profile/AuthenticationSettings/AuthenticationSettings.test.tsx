@@ -1,4 +1,3 @@
-// import { shallow } from 'enzyme';
 import { cleanup, render } from '@testing-library/react';
 import * as React from 'react';
 
@@ -16,7 +15,7 @@ afterEach(cleanup);
 
 const props = {
   loading: false,
-  thirdPartyAuth: 'password',
+  authType: 'password',
   ipWhitelisting: true,
   twoFactor: true,
   username: 'username',

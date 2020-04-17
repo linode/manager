@@ -9,6 +9,7 @@ export interface Referrals {
   credit: number;
 }
 
+export type TPAProvider = 'password' | 'github';
 export interface Profile {
   uid: number;
   username: string;
@@ -18,7 +19,7 @@ export interface Profile {
   referrals: Referrals;
   ip_whitelist_enabled: boolean;
   lish_auth_method: 'password_keys' | 'keys_only' | 'disabled';
-  authentication_type: string;
+  authentication_type: TPAProvider;
   authorized_keys: string[];
   two_factor_auth: boolean;
   restricted: boolean;
