@@ -1,6 +1,5 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { Sticky, StickyProps } from 'react-sticky';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
@@ -108,6 +107,39 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
 
     const hasBackups = backupsEnabled || accountBackupsEnabled;
 
+    const displaySections = [];
+    if (regionInfo) {
+      displaySections.push({
+        title: regionInfo.title,
+        details: regionInfo.details
+      });
+    }
+
+    if (typeInfo) {
+      displaySections.push(typeInfo);
+    }
+
+    if (label) {
+      displaySections.push({
+        title: 'Linode Label',
+        details: label
+      });
+    }
+
+    if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
+      displaySections.push(
+        renderBackupsDisplaySection(
+          accountBackupsEnabled,
+          typeInfo.backupsMonthly
+        )
+      );
+    }
+
+    let calculatedPrice = pathOr(0, ['monthly'], typeInfo);
+    if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
+      calculatedPrice += typeInfo.backupsMonthly;
+    }
+
     return (
       <React.Fragment>
         {linodes && linodes.length === 0 ? (
@@ -193,57 +225,15 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
               />
             </Grid>
             <Grid item className={`${classes.sidebar} mlSidebar`}>
-              <Sticky topOffset={-24} disableCompensation>
-                {(props: StickyProps) => {
-                  const displaySections = [];
-                  if (regionInfo) {
-                    displaySections.push({
-                      title: regionInfo.title,
-                      details: regionInfo.details
-                    });
-                  }
-
-                  if (typeInfo) {
-                    displaySections.push(typeInfo);
-                  }
-
-                  if (label) {
-                    displaySections.push({
-                      title: 'Linode Label',
-                      details: label
-                    });
-                  }
-
-                  if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
-                    displaySections.push(
-                      renderBackupsDisplaySection(
-                        accountBackupsEnabled,
-                        typeInfo.backupsMonthly
-                      )
-                    );
-                  }
-
-                  let calculatedPrice = pathOr(0, ['monthly'], typeInfo);
-                  if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
-                    calculatedPrice += typeInfo.backupsMonthly;
-                  }
-
-                  return (
-                    <CheckoutBar
-                      heading="Linode Summary"
-                      calculatedPrice={calculatedPrice}
-                      isMakingRequest={this.props.formIsSubmitting}
-                      disabled={
-                        this.props.formIsSubmitting || userCannotCreateLinode
-                      }
-                      onDeploy={this.cloneLinode}
-                      {...props}
-                    >
-                      <DisplaySectionList displaySections={displaySections} />
-                    </CheckoutBar>
-                  );
-                }}
-              </Sticky>
+              <CheckoutBar
+                heading="Linode Summary"
+                calculatedPrice={calculatedPrice}
+                isMakingRequest={this.props.formIsSubmitting}
+                disabled={this.props.formIsSubmitting || userCannotCreateLinode}
+                onDeploy={this.cloneLinode}
+              >
+                <DisplaySectionList displaySections={displaySections} />
+              </CheckoutBar>
             </Grid>
           </React.Fragment>
         )}
