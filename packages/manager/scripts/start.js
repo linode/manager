@@ -24,7 +24,7 @@ const {
 } = require('react-dev-utils/WebpackDevServerUtils');
 const paths = require('../config/paths');
 
-const cypressProxyApiUrl = require('../config/development.json').env.apiroot;
+const cypressProxyApiUrl = process.env.REACT_APP_API_ROOT;
 
 const config = require('../config/webpack.config.dev');
 const createDevServerConfig = require('../config/webpackDevServer.config');

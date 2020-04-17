@@ -162,7 +162,7 @@ Example with localhost:
     "password": "somepass",
     "clientId": "someId",
     "oauthtoken": "someauthtoken",
-    "apiroot": "https://api.linode.com/v4",
+    "apiroot": "https://api.linode.com",
     "loginUrl": "https://login.linode.com/login"
   }
 }
@@ -178,7 +178,7 @@ Example using staging:
     "password": "somepass",
     "clientId": "someId",
     "oauthtoken": "someauthtoken",
-    "apiroot": "https://api.staging.linode.com/v4",
+    "apiroot": "https://api.staging.linode.com",
     "loginUrl": "https://login.staging.linode.com/login"
   }
 }
