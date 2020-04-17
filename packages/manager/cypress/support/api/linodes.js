@@ -22,7 +22,7 @@ const makeLinodeCreateReq = linode => {
         tags: [testLinodeTag],
         backups_enabled: false,
         booted: true,
-        private_ip: false,
+        private_ip: true,
         authorized_users: []
       };
 
@@ -54,7 +54,7 @@ export const deleteLinodeById = linodeId =>
 
 export const deleteLinodeByLabel = (label = undefined) => {
   getLinodes().then(resp => {
-    const linodeToDelete = resp.body.data.find(l => l.label == label);
+    const linodeToDelete = resp.body.data.find(l => l.label === label);
     deleteLinodeById(linodeToDelete.id);
   });
 };
