@@ -207,12 +207,10 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         })
         .catch(errResponse => {
           this.setState({
-            errors: [
-              {
-                reason:
-                  'Unknown error occured while fetching user permissions. Try again later.'
-              }
-            ]
+            errors: getAPIErrorOrDefault(
+              errResponse,
+              'Unknown error occurred while fetching user permissions. Try again later.'
+            )
           });
           scrollErrorIntoView();
         });
@@ -230,6 +228,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   }
 
   savePermsType = (type: string) => () => {
+    this.setState({ errors: undefined });
     const { username, clearNewUser } = this.props;
     const { grants } = this.state;
     if (!username || !(grants && grants[type])) {
@@ -285,6 +284,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   };
 
   saveSpecificGrants = () => {
+    this.setState({ errors: undefined });
     const { username } = this.props;
     const { grants } = this.state;
     if (!username || !grants) {
