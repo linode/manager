@@ -2,12 +2,7 @@ import MoreHoriz from '@material-ui/icons/MoreHoriz';
 import * as React from 'react';
 import IconButton from 'src/components/core/IconButton';
 import Menu from 'src/components/core/Menu';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import MenuItem from 'src/components/MenuItem';
 
 export interface Action {
@@ -19,52 +14,49 @@ export interface Action {
   onClick: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
-type CSSClasses = 'root' | 'item' | 'button' | 'actionSingleLink' | 'menu';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'flex-end'
-    },
-    item: {
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2),
-      paddingTop: theme.spacing(1) * 1.5,
-      paddingBottom: theme.spacing(1) * 1.5,
-      fontFamily: 'LatoWeb',
-      fontSize: '.9rem',
-      color: theme.color.blueDTwhite,
-      transition: `
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end'
+  },
+  item: {
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingTop: theme.spacing(1) * 1.5,
+    paddingBottom: theme.spacing(1) * 1.5,
+    fontFamily: 'LatoWeb',
+    fontSize: '.9rem',
+    color: theme.color.blueDTwhite,
+    transition: `
       ${'color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, '}
       ${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}
     `,
-      '&:hover, &:focus': {
-        backgroundColor: theme.palette.primary.main,
-        color: '#fff'
-      }
-    },
-    button: {
-      width: 26,
-      padding: 0,
-      '& svg': {
-        fontSize: '28px'
-      },
-      '&[aria-expanded="true"] .kebob': {
-        fill: theme.palette.primary.dark
-      }
-    },
-    actionSingleLink: {
-      marginRight: theme.spacing(1),
-      whiteSpace: 'nowrap',
-      float: 'right',
-      fontFamily: theme.font.bold
-    },
-    menu: {
-      maxWidth: theme.spacing(25)
+    '&:hover, &:focus': {
+      backgroundColor: theme.palette.primary.main,
+      color: '#fff'
     }
-  });
+  },
+  button: {
+    width: 26,
+    padding: 0,
+    '& svg': {
+      fontSize: '28px'
+    },
+    '&[aria-expanded="true"] .kebob': {
+      fill: theme.palette.primary.dark
+    }
+  },
+  actionSingleLink: {
+    marginRight: theme.spacing(1),
+    whiteSpace: 'nowrap',
+    float: 'right',
+    fontFamily: theme.font.bold
+  },
+  menu: {
+    maxWidth: theme.spacing(25)
+  }
+}));
 
 export interface Props {
   createActions: (closeMenu: Function) => Action[];
@@ -76,106 +68,85 @@ export interface Props {
   disabled?: boolean;
 }
 
-interface State {
-  actions?: Action[];
-  anchorEl?: any;
-}
+type CombinedProps = Props;
 
-type CombinedProps = Props & WithStyles<CSSClasses>;
+const ActionMenu: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+  const { createActions } = props;
 
-export class ActionMenu extends React.Component<CombinedProps, State> {
-  state = {
-    actions: [],
-    anchorEl: undefined
-  };
+  const [actions, setActions] = React.useState<Action[]>([]);
+  const [anchorEl, setAnchorEl] = React.useState<
+    (EventTarget & HTMLElement) | undefined
+  >(undefined);
 
-  generateActions(createActions: any) {
-    this.setState({
-      actions: createActions(this.handleClose)
-    });
-  }
+  React.useEffect(() => {
+    setActions(createActions(handleClose));
+  }, [createActions]);
 
-  componentDidMount() {
-    const { createActions } = this.props;
-    this.generateActions(createActions);
-  }
-
-  UNSAFE_componentWillReceiveProps(nextProps: Props) {
-    const { createActions } = nextProps;
-    this.generateActions(createActions);
-  }
-
-  handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    if (this.props.toggleOpenCallback) {
-      this.props.toggleOpenCallback();
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    if (props.toggleOpenCallback) {
+      props.toggleOpenCallback();
     }
-    this.setState({ anchorEl: event.currentTarget });
+    setAnchorEl(event.currentTarget);
   };
 
-  handleClose = () => {
-    this.setState({ anchorEl: undefined });
+  const handleClose = () => {
+    setAnchorEl(undefined);
   };
 
-  render() {
-    const { classes, ariaLabel, disabled } = this.props;
-    const { actions, anchorEl } = this.state;
+  const { ariaLabel, disabled } = props;
 
-    if (typeof actions === 'undefined') {
-      return null;
-    }
+  if (typeof actions === 'undefined') {
+    return null;
+  }
 
-    return (
-      <div
-        className={`${classes.root} action-menu ${this.props.className ?? ''}`}
+  return (
+    <div className={`${classes.root} action-menu ${props.className ?? ''}`}>
+      <IconButton
+        disabled={disabled}
+        aria-owns={anchorEl ? 'action-menu' : undefined}
+        aria-expanded={anchorEl ? true : undefined}
+        aria-haspopup="true"
+        onClick={handleClick}
+        className={classes.button}
+        data-qa-action-menu
+        aria-label={ariaLabel}
       >
-        <IconButton
-          disabled={disabled}
-          aria-owns={anchorEl ? 'action-menu' : undefined}
-          aria-expanded={anchorEl ? true : undefined}
-          aria-haspopup="true"
-          onClick={this.handleClick}
-          className={classes.button}
-          data-qa-action-menu
-          aria-label={ariaLabel}
-        >
-          <MoreHoriz type="primary" className="kebob" />
-        </IconButton>
-        <Menu
-          id="action-menu"
-          className={classes.menu}
-          anchorEl={anchorEl}
-          getContentAnchorEl={undefined}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-          open={Boolean(anchorEl)}
-          onClose={this.handleClose}
-          BackdropProps={{
-            style: {
-              backgroundColor: 'transparent'
-            }
-          }}
-        >
-          {(actions as Action[]).map((a, idx) => (
-            <MenuItem
-              key={idx}
-              onClick={a.onClick}
-              className={classes.item}
-              data-qa-action-menu-item={a.title}
-              disabled={a.disabled}
-              tooltip={a.tooltip}
-              isLoading={a.isLoading}
-              aria-describedby={a.ariaDescribedBy}
-              role="menuitem"
-            >
-              {a.title}
-            </MenuItem>
-          ))}
-        </Menu>
-      </div>
-    );
-  }
-}
+        <MoreHoriz type="primary" className="kebob" />
+      </IconButton>
+      <Menu
+        id="action-menu"
+        className={classes.menu}
+        anchorEl={anchorEl}
+        getContentAnchorEl={undefined}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        BackdropProps={{
+          style: {
+            backgroundColor: 'transparent'
+          }
+        }}
+      >
+        {(actions as Action[]).map((a, idx) => (
+          <MenuItem
+            key={idx}
+            onClick={a.onClick}
+            className={classes.item}
+            data-qa-action-menu-item={a.title}
+            disabled={a.disabled}
+            tooltip={a.tooltip}
+            isLoading={a.isLoading}
+            aria-describedby={a.ariaDescribedBy}
+            role="menuitem"
+          >
+            {a.title}
+          </MenuItem>
+        ))}
+      </Menu>
+    </div>
+  );
+};
 
-const styled = withStyles(styles);
-
-export default styled(ActionMenu);
+export default ActionMenu;
