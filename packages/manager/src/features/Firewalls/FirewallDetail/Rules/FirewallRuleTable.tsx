@@ -162,7 +162,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
                   >
                     {capitalize(addressColumnLabel)}
                   </TableSortCell>
-                  <TableCell style={{ width: '10%' }} />
+                  <TableCell style={{ borderBottom: 0 }} />
                 </TableRow>
               </TableHead>
               <TableBody>
