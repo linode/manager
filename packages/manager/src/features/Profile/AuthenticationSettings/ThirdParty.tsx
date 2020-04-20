@@ -1,4 +1,4 @@
-import { TPAProvider } from 'linode-js-sdk/lib/profile/types';
+import { TPAProvider } from 'linode-js-sdk/lib/profile';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
@@ -34,7 +34,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const ThirdParty: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const thirdPartyEnabled = props.authType !== 'password';
-  const authTypeToDisplayName: Record<TPAProvider, string> = {
+  const authTypeToDisplayName: Record<TPAProvider, string | undefined> = {
+    password: undefined,
     github: 'GitHub'
   };
   // Takes into account if authType is undefined but this should never happen

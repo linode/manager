@@ -87,7 +87,6 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
 
   const [success, setSuccess] = React.useState<string | undefined>(undefined);
   const [provider, setProvider] = React.useState<string>('');
-  const [disableTPA, setDisableTPA] = React.useState<boolean>(false);
 
   const thirdPartyEnabled = authType !== 'password';
 
@@ -172,7 +171,6 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
                 aria-describedby="external-site"
                 buttonType="primary"
                 onClick={() => {
-                  setDisableTPA(true);
                   window.open(
                     `${LOGIN_ROOT}/tpa/disable`,
                     '_blank',
