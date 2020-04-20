@@ -13,12 +13,6 @@ describe('Account Landing', () => {
       history={history}
       location={mockLocation}
       match={match}
-      classes={{
-        root: '',
-        heading: '',
-        main: '',
-        sidebar: ''
-      }}
       setDocs={jest.fn()}
       clearDocs={jest.fn()}
     />

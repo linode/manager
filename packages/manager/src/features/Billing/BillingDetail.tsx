@@ -2,12 +2,7 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
@@ -21,35 +16,30 @@ import SummaryPanel from './BillingPanels/SummaryPanel';
 import UpdateContactInformationPanel from './BillingPanels/UpdateContactInformationPanel';
 import UpdateCreditCardPanel from './BillingPanels/UpdateCreditCardPanel';
 
-type ClassNames = 'root' | 'main' | 'sidebar' | 'heading';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    main: {
-      [theme.breakpoints.up('md')]: {
-        order: 1
-      }
-    },
-    sidebar: {
-      [theme.breakpoints.up('md')]: {
-        order: 2
-      }
-    },
-    heading: {
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(2)
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {},
+  main: {
+    [theme.breakpoints.up('md')]: {
+      order: 1
     }
-  });
+  },
+  sidebar: {
+    [theme.breakpoints.up('md')]: {
+      order: 2
+    }
+  },
+  heading: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(2)
+  }
+}));
 
-type CombinedProps = SetDocsProps &
-  WithStyles<ClassNames> &
-  RouteComponentProps<{}>;
+type CombinedProps = SetDocsProps & RouteComponentProps<{}>;
 
 export const BillingDetail: React.FC<CombinedProps> = props => {
   const { _loading } = useReduxLoad(['account']);
 
-  const { classes } = props;
+  const classes = useStyles();
 
   if (_loading) {
     return <CircleProgress />;
@@ -81,8 +71,6 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-
 const docs = [BillingAndPayments, AccountsAndPasswords];
 
-export default compose<CombinedProps, {}>(styled, setDocs(docs))(BillingDetail);
+export default compose<CombinedProps, {}>(setDocs(docs))(BillingDetail);
