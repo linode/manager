@@ -36,8 +36,6 @@ import withFeatureFlags, {
 
 import Logo from 'src/assets/logo/logo-text.svg';
 
-import { isKubernetesEnabled as _isKubernetesEnabled } from './utilities/accountCapabilities';
-
 const useStyles = makeStyles((theme: Theme) => ({
   appFrame: {
     position: 'relative',
@@ -213,8 +211,6 @@ const MainContent: React.FC<CombinedProps> = props => {
 
   const [menuIsOpen, toggleMenu] = React.useState<boolean>(false);
 
-  const isKubernetesEnabled = _isKubernetesEnabled(props.accountCapabilities);
-
   /**
    * this is the case where the user has successfully completed signup
    * but needs a manual review from Customer Support. In this case,
@@ -329,9 +325,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                           path="/object-storage"
                           component={ObjectStorage}
                         />
-                        {isKubernetesEnabled && (
-                          <Route path="/kubernetes" component={Kubernetes} />
-                        )}
+                        <Route path="/kubernetes" component={Kubernetes} />
                         <Route path="/account" component={Account} />
                         <Route
                           exact
