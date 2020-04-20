@@ -3,9 +3,10 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import ExpansionPanel from 'src/components/ExpansionPanel';
+import Typography from 'src/components/core/Typography';
 import paginate, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
@@ -17,8 +18,7 @@ import TableRowLoading from 'src/components/TableRowLoading';
 import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
 import { ThunkDispatch } from 'src/store/types';
-
-import RecentInvoiceRow from './RecentInvoicesRow';
+import RecentInvoiceRow from './BillingItemRow';
 
 type CombinedProps = PaginationProps<Invoice> & StateProps;
 
@@ -26,14 +26,15 @@ interface State {
   loading: boolean;
 }
 
-class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
+class BillingActivityPanel extends React.Component<CombinedProps, State> {
   state: State = {
     loading: false
   };
 
   componentDidMount() {
-    if (!this.props.account) {
-      this.props.requestAccount();
+    if (!this.props.data) {
+      this.setState({ loading: true });
+      this.props.handleOrderChange('date', 'desc');
     }
   }
 
@@ -41,29 +42,32 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
     const { data, page, pageSize, count } = this.props;
 
     return (
-      <ExpansionPanel heading="Recent Invoices" onChange={this.handleExpansion}>
-        <Table aria-label="List of Recent Invoices">
-          <TableHead>
-            <TableRow>
-              <TableCell>Date Created</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell>Amount</TableCell>
-              <TableCell />
-            </TableRow>
-          </TableHead>
-          <TableBody>{this.renderContent()}</TableBody>
-        </Table>
-        {data && data.length > 0 && (
-          <PaginationFooter
-            count={count}
-            page={page}
-            pageSize={pageSize}
-            handlePageChange={this.props.handlePageChange}
-            handleSizeChange={this.props.handlePageSizeChange}
-            eventCategory="recent invoices panel"
-          />
-        )}
-      </ExpansionPanel>
+      <>
+        <Typography variant="h2">Activity</Typography>
+        <Paper>
+          <Table aria-label="List of Recent Invoices">
+            <TableHead>
+              <TableRow>
+                <TableCell>Date Created</TableCell>
+                <TableCell>Description</TableCell>
+                <TableCell>Amount</TableCell>
+                <TableCell />
+              </TableRow>
+            </TableHead>
+            <TableBody>{this.renderContent()}</TableBody>
+          </Table>
+          {data && data.length > 0 && (
+            <PaginationFooter
+              count={count}
+              page={page}
+              pageSize={pageSize}
+              handlePageChange={this.props.handlePageChange}
+              handleSizeChange={this.props.handlePageSizeChange}
+              eventCategory="recent invoices panel"
+            />
+          )}
+        </Paper>
+      </>
     );
   }
 
@@ -98,13 +102,6 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
       <TableRowEmptyState colSpan={4} />
     );
   };
-
-  handleExpansion = (e: any, expanded: boolean) => {
-    if (expanded && !this.props.data) {
-      this.setState({ loading: true });
-      this.props.handleOrderChange('date', 'desc');
-    }
-  };
 }
 
 interface ReduxState {
@@ -135,4 +132,4 @@ const paginated = paginate(updatedRequest);
 
 const enhanced = compose(connected, paginated);
 
-export default enhanced(RecentInvoicesPanel);
+export default enhanced(BillingActivityPanel);

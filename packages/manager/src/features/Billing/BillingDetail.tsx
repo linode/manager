@@ -10,24 +10,15 @@ import Grid from 'src/components/Grid';
 import { AccountsAndPasswords, BillingAndPayments } from 'src/documentation';
 import { useAccount } from 'src/hooks/useAccount';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import MakeAPaymentPanel from './BillingPanels/MakeAPaymentPanel';
-import PromotionsPanel from './BillingPanels/PromotionsPanel';
-import RecentInvoicesPanel from './BillingPanels/RecentInvoicesPanel';
-import RecentPaymentsPanel from './BillingPanels/RecentPaymentsPanel';
+import BillingActivityPanel from './BillingPanels/BillingActivityPanel';
 import SummaryPanel from './BillingPanels/SummaryPanel';
-import UpdateContactInformationPanel from './BillingPanels/UpdateContactInformationPanel';
-import UpdateCreditCardPanel from './BillingPanels/UpdateCreditCardPanel';
+import BillingSummary from './BillingSummary';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
   main: {
     [theme.breakpoints.up('md')]: {
       order: 1
-    }
-  },
-  sidebar: {
-    [theme.breakpoints.up('md')]: {
-      order: 2
     }
   },
   heading: {
@@ -70,16 +61,10 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
         aria-labelledby="tab-billingInfo"
       >
         <Grid container>
-          <Grid item xs={12} md={8} lg={9} className={classes.main}>
-            <UpdateContactInformationPanel />
-            <UpdateCreditCardPanel />
-            <MakeAPaymentPanel />
-            <PromotionsPanel />
-            <RecentInvoicesPanel />
-            <RecentPaymentsPanel />
-          </Grid>
-          <Grid item xs={12} md={4} lg={3} className={classes.sidebar}>
+          <Grid item xs={12} md={12} lg={12} className={classes.main}>
+            <BillingSummary />
             <SummaryPanel data-qa-summary-panel history={props.history} />
+            <BillingActivityPanel />
           </Grid>
         </Grid>
       </div>
