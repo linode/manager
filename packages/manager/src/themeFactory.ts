@@ -1258,7 +1258,6 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           fontSize: '.9rem',
           lineHeight: 1.1,
           '&.emptyCell': {
-            width: '100%',
             height: 48
           }
         },
