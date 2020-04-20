@@ -1,4 +1,4 @@
-import { Account, saveCreditCard } from 'linode-js-sdk/lib/account';
+import { saveCreditCard } from 'linode-js-sdk/lib/account';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { range, take, takeLast } from 'ramda';
 import * as React from 'react';
@@ -22,7 +22,6 @@ import TextField from 'src/components/TextField';
 import accountContainer, {
   Props as AccountContainerProps
 } from 'src/containers/account.container';
-import { withAccount } from 'src/features/Billing/context';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
@@ -67,15 +66,6 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface AccountContextProps {
-  accountLoading: boolean;
-  accountErrors: APIError[];
-  expiry: string;
-  last_four: string;
-  updateContext: (update: (a: Account) => Account) => void;
-  cvv: string;
-}
-
 interface State {
   submitting: boolean;
   errors?: APIError[];
@@ -86,9 +76,7 @@ interface State {
   cvv: string;
 }
 
-type CombinedProps = AccountContextProps &
-  WithStyles<ClassNames> &
-  AccountContainerProps;
+type CombinedProps = WithStyles<ClassNames> & AccountContainerProps;
 
 class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
   state: State = {
@@ -144,12 +132,9 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
         // information.
         this.props.saveCreditCard(credit_card);
 
-        // Update context so components within this context tree will display
-        // updated information.
-        this.props.updateContext(account => ({
-          ...account,
+        this.props.updateAccount({
           credit_card
-        }));
+        });
         this.setState({
           card_number: '',
           expiry_month: 1,
@@ -197,8 +182,14 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, last_four, expiry } = this.props;
+    const { classes, accountData } = this.props;
     const { errors, success } = this.state;
+
+    if (!accountData) {
+      return null;
+    } // Temporary; remove when refactoring to a drawer.
+
+    const { expiry, last_four } = accountData.credit_card;
     const hasErrorFor = getAPIErrorFor(
       {
         card_number: 'card number',
@@ -335,28 +326,6 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-const accountContext = withAccount(({ loading, errors, data, update }) => {
-  if (data) {
-    return {
-      accountLoading: loading,
-      accountErrors: errors,
-      expiry: data.credit_card.expiry,
-      last_four: data.credit_card.last_four,
-      cvv: data.credit_card.cvv,
-      updateContext: update
-    };
-  }
-
-  return {
-    accountLoading: loading,
-    accountErrors: errors
-  };
-});
-
-const enhanced = compose<CombinedProps, {}>(
-  styled,
-  accountContext,
-  accountContainer()
-);
+const enhanced = compose<CombinedProps, {}>(styled, accountContainer());
 
 export default enhanced(UpdateCreditCardPanel) as React.ComponentType<{}>;

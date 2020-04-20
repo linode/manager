@@ -1,10 +1,7 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-
-import { BillingDetail } from './BillingDetail';
-
-import { account } from 'src/__data__/account';
 import { history, match, mockLocation } from 'src/__data__/reactRouterProps';
+import { BillingDetail } from './BillingDetail';
 
 const request = require.requireMock('linode-js-sdk/lib/account');
 jest.mock('linode-js-sdk/lib/account');
@@ -24,9 +21,6 @@ describe('Account Landing', () => {
       }}
       setDocs={jest.fn()}
       clearDocs={jest.fn()}
-      account={{
-        response: account
-      }}
     />
   );
 
