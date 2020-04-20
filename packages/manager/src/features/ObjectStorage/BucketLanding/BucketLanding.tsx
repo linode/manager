@@ -30,6 +30,7 @@ import bucketRequestsContainer, {
   BucketsRequests
 } from 'src/containers/bucketRequests.container';
 import useOpenClose from 'src/hooks/useOpenClose';
+import { BucketError } from 'src/store/bucket/types';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import {
   sendDeleteBucketEvent,
@@ -191,7 +192,12 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
   }
 
   if (bucketsData.length === 0) {
-    return <RenderEmpty onClick={openBucketDrawer} data-qa-empty-state />;
+    return (
+      <>
+        {bucketErrors && <BucketErrorDisplay bucketErrors={bucketErrors} />}
+        <RenderEmpty onClick={openBucketDrawer} data-qa-empty-state />;
+      </>
+    );
   }
 
   return (
@@ -203,13 +209,7 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
             <AddNewLink onClick={openBucketDrawer} label="Add a Bucket" />
           </Grid>
         </Grid>
-        {bucketErrors && (
-          <Banner
-            regionsAffected={bucketErrors.map(
-              thisError => objectStorageClusterDisplay[thisError.clusterId]
-            )}
-          />
-        )}
+        {bucketErrors && <BucketErrorDisplay bucketErrors={bucketErrors} />}
         <Grid item xs={12}>
           <OrderBy data={bucketsData} order={'asc'} orderBy={'label'}>
             {({ data: orderedData, handleOrderChange, order, orderBy }) => {
@@ -309,6 +309,22 @@ const enhanced = compose<CombinedProps, Props>(
 );
 
 export default enhanced(BucketLanding);
+
+interface BucketErrorDisplayProps {
+  bucketErrors: BucketError[];
+}
+
+const BucketErrorDisplay: React.FC<BucketErrorDisplayProps> = React.memo(
+  ({ bucketErrors }) => {
+    return (
+      <Banner
+        regionsAffected={bucketErrors.map(
+          thisError => objectStorageClusterDisplay[thisError.clusterId]
+        )}
+      />
+    );
+  }
+);
 
 interface BannerProps {
   regionsAffected: string[];
