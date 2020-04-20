@@ -18,16 +18,6 @@ describe('Account Landing', () => {
     />
   );
 
-  it('should render a headline of "Billing"', () => {
-    expect(
-      component
-        .find('WithStyles(ForwardRef(Typography))')
-        .first()
-        .children()
-        .text()
-    ).toBe('Billing');
-  });
-
   it('should render Summary Panel', () => {
     expect(component.find('[data-qa-summary-panel]')).toHaveLength(1);
   });
