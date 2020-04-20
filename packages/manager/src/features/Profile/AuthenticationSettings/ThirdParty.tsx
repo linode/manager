@@ -38,6 +38,7 @@ export const ThirdParty: React.FC<CombinedProps> = props => {
     password: undefined,
     github: 'GitHub'
   };
+
   // Takes into account if authType is undefined but this should never happen
   const displayName = authTypeToDisplayName[props.authType ?? ''];
 
