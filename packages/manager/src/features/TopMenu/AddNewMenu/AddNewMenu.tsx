@@ -30,7 +30,6 @@ import {
 } from 'src/components/core/styles';
 import { openForCreating as openDomainDrawerForCreating } from 'src/store/domainDrawer';
 import { MapState } from 'src/store/types';
-import { isKubernetesEnabled } from 'src/utilities/accountCapabilities';
 import AddNewMenuItem from './AddNewMenuItem';
 
 import { sendOneClickNavigationEvent } from 'src/utilities/ga';
@@ -219,19 +218,17 @@ class AddNewMenu extends React.Component<CombinedProps> {
                   attr={{ 'data-qa-one-click-add-new': true }}
                 />
               </MenuLink>
-              {isKubernetesEnabled(this.props.accountCapabilities) && (
-                <MenuLink
-                  as={Link}
-                  to="/kubernetes/create"
-                  className={classes.menuItemLink}
-                >
-                  <AddNewMenuItem
-                    title="Kubernetes"
-                    body="Create and manage Kubernetes Clusters for highly available container workloads"
-                    ItemIcon={KubernetesIcon}
-                  />
-                </MenuLink>
-              )}
+              <MenuLink
+                as={Link}
+                to="/kubernetes/create"
+                className={classes.menuItemLink}
+              >
+                <AddNewMenuItem
+                  title="Kubernetes"
+                  body="Create and manage Kubernetes Clusters for highly available container workloads"
+                  ItemIcon={KubernetesIcon}
+                />
+              </MenuLink>
             </MenuItems>
           </MenuPopover>
         </Menu>

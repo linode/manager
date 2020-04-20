@@ -1,4 +1,4 @@
-import { BETA_API_ROOT } from 'src/constants';
+import { API_ROOT } from 'src/constants';
 import Request, {
   setData,
   setMethod,
@@ -20,7 +20,7 @@ export const getNodePools = (clusterID: number, params?: any, filters?: any) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
-    setURL(`${BETA_API_ROOT}/lke/clusters/${clusterID}/pools`)
+    setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools`)
   ).then(response => response.data);
 
 /**
@@ -31,7 +31,7 @@ export const getNodePools = (clusterID: number, params?: any, filters?: any) =>
 export const getNodePool = (clusterID: number, nodePoolID: number) =>
   Request<KubeNodePoolResponse>(
     setMethod('GET'),
-    setURL(`${BETA_API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}`)
+    setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}`)
   ).then(response => response.data);
 
 /**
@@ -42,7 +42,7 @@ export const getNodePool = (clusterID: number, nodePoolID: number) =>
 export const createNodePool = (clusterID: number, data: PoolNodeRequest) =>
   Request<KubeNodePoolResponse>(
     setMethod('POST'),
-    setURL(`${BETA_API_ROOT}/lke/clusters/${clusterID}/pools`),
+    setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools`),
     setData(data, nodePoolSchema)
   ).then(response => response.data);
 
@@ -58,7 +58,7 @@ export const updateNodePool = (
 ) =>
   Request<KubeNodePoolResponse>(
     setMethod('PUT'),
-    setURL(`${BETA_API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}`),
+    setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}`),
     setData(data, nodePoolSchema)
   ).then(response => response.data);
 
@@ -70,5 +70,5 @@ export const updateNodePool = (
 export const deleteNodePool = (clusterID: number, nodePoolID: number) =>
   Request<{}>(
     setMethod('DELETE'),
-    setURL(`${BETA_API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}`)
+    setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}`)
   ).then(response => response.data);

@@ -18,7 +18,6 @@ import withFeatureFlagConsumer, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container';
 import { MapState } from 'src/store/types';
-import { isKubernetesEnabled } from 'src/utilities/accountCapabilities';
 import { sendOneClickNavigationEvent } from 'src/utilities/ga';
 import AdditionalMenuItems from './AdditionalMenuItems';
 import styled, { StyleProps } from './PrimaryNav.styles';
@@ -133,32 +132,17 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
   }
 
   primaryNavManipulator = (): MenuItemReducer[] => {
-    const {
-      hasAccountAccess,
-      isManagedAccount,
-      accountCapabilities,
-      flags
-    } = this.props;
+    const { hasAccountAccess, isManagedAccount, flags } = this.props;
 
     return [
       {
         conditionToAdd: () => isManagedAccount,
-        insertAfter: 'Longview',
+        insertAfter: 'Kubernetes',
         link: {
           display: 'Managed',
           href: '/managed',
           key: 'managed',
           icon: <Managed />
-        }
-      },
-      {
-        conditionToAdd: () => isKubernetesEnabled(accountCapabilities),
-        insertAfter: 'Longview',
-        link: {
-          display: 'Kubernetes',
-          href: '/kubernetes/clusters',
-          key: 'kubernetes',
-          icon: <Kubernetes />
         }
       },
       {
@@ -244,6 +228,12 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
         href: '/longview',
         key: 'longview',
         icon: <Longview className="small" />
+      },
+      {
+        display: 'Kubernetes',
+        href: '/kubernetes/clusters',
+        key: 'kubernetes',
+        icon: <Kubernetes />
       },
       {
         display: 'StackScripts',

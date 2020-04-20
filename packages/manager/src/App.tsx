@@ -21,7 +21,6 @@ import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 
 import composeState from 'src/utilities/composeState';
 import { MapState } from './store/types';
-import { isKubernetesEnabled as _isKubernetesEnabled } from './utilities/accountCapabilities';
 
 import IdentifyUser from './IdentifyUser';
 import MainContent from './MainContent';

@@ -1,5 +1,6 @@
-const mockTrue = { isObjectStorageEnabledForEnvironment: true };
-const mockFalse = { isObjectStorageEnabledForEnvironment: false };
+import { isFeatureEnabled } from './accountCapabilities';
+
+const isObjectStorageEnabled = isFeatureEnabled('Object Storage');
 
 describe('isObjectStorageEnabled', () => {
   beforeEach(() => {
@@ -7,39 +8,40 @@ describe('isObjectStorageEnabled', () => {
   });
   describe('when "Object Storage EAP" is NOT in beta_programs...', () => {
     it("returns `false` when OBJ isn't enabled for the environment", () => {
-      // Since `isObjectStorageEnabledForEnvironment` is a global constant that
-      // the isObjectStorageEnabled() helper consumes, it needs to be mocked from
-      // constants.ts, and the helper function needs to be imported for each test.
-      jest.mock('src/constants', () => mockFalse);
-      const { isObjectStorageEnabled } = require('./accountCapabilities');
-      expect(isObjectStorageEnabled([])).toBe(false);
-      expect(isObjectStorageEnabled(['Hello', 'World'])).toBe(false);
+      expect(isObjectStorageEnabled(false, [])).toBe(false);
+      expect(isObjectStorageEnabled(false, ['Hello', 'World'] as any)).toBe(
+        false
+      );
     });
 
     it('returns `true` when OBJ is enabled for the environment', () => {
-      jest.mock('src/constants', () => mockTrue);
-      const { isObjectStorageEnabled } = require('./accountCapabilities');
-      expect(isObjectStorageEnabled([])).toBe(true);
-      expect(isObjectStorageEnabled(['Hello', 'World'])).toBe(true);
+      expect(isObjectStorageEnabled(true, [])).toBe(true);
+      expect(isObjectStorageEnabled(true, ['Hello', 'World'] as any)).toBe(
+        true
+      );
     });
   });
 
   describe('when "Object Storage EAP" IS in beta_programs', () => {
     it('returns `true` if OBJ is disabled for environment', () => {
-      jest.mock('src/constants', () => mockFalse);
-      const { isObjectStorageEnabled } = require('./accountCapabilities');
-      expect(isObjectStorageEnabled(['Object Storage'])).toBe(true);
-      expect(isObjectStorageEnabled(['Hello', 'World', 'Object Storage'])).toBe(
-        true
-      );
+      expect(isObjectStorageEnabled(false, ['Object Storage'])).toBe(true);
+      expect(
+        isObjectStorageEnabled(false, [
+          'Hello',
+          'World',
+          'Object Storage'
+        ] as any)
+      ).toBe(true);
     });
     it('returns `true` if OBJ is enabled for environment', () => {
-      jest.mock('src/constants', () => mockFalse);
-      const { isObjectStorageEnabled } = require('./accountCapabilities');
-      expect(isObjectStorageEnabled(['Object Storage'])).toBe(true);
-      expect(isObjectStorageEnabled(['Hello', 'World', 'Object Storage'])).toBe(
-        true
-      );
+      expect(isObjectStorageEnabled(false, ['Object Storage'])).toBe(true);
+      expect(
+        isObjectStorageEnabled(false, [
+          'Hello',
+          'World',
+          'Object Storage'
+        ] as any)
+      ).toBe(true);
     });
   });
 });
