@@ -32,9 +32,7 @@ describe('LinodeSummary', () => {
         textWrap: '',
         headerOuter: ''
       }}
-      theme={light({
-        spacingOverride: 4
-      })}
+      theme={light(4)}
       linodeVolumes={[]}
       typesData={[]}
       imagesData={{}}

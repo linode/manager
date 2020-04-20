@@ -33,9 +33,7 @@ describe('CPUMetrics', () => {
         simpleLegendRoot: '',
         simpleLegend: ''
       }}
-      theme={light({
-        spacingOverride: 4
-      })}
+      theme={light(4)}
       rows={[
         {
           legendTitle: 'Legend Title',

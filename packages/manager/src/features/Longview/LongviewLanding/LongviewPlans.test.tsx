@@ -1,4 +1,4 @@
-import { cleanup, waitForDomChange, within } from '@testing-library/react';
+import { cleanup, within } from '@testing-library/react';
 import * as React from 'react';
 import { accountSettings } from 'src/__data__/account';
 import { withDocumentTitleProvider } from 'src/components/DocumentTitle';
@@ -37,7 +37,6 @@ describe('LongviewPlans', () => {
   it('sets the document title to "Plan Details"', async () => {
     const WrappedComponent = withDocumentTitleProvider(LongviewPlans);
     renderWithTheme(<WrappedComponent {...props} />);
-    await waitForDomChange();
     expect(document.title).toMatch(/^Plan Details/);
   });
 
