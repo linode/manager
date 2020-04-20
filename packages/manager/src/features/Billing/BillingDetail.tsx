@@ -5,9 +5,11 @@ import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import { AccountsAndPasswords, BillingAndPayments } from 'src/documentation';
-import { useReduxLoad } from 'src/hooks/useReduxLoad';
+import { useAccount } from 'src/hooks/useAccount';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import MakeAPaymentPanel from './BillingPanels/MakeAPaymentPanel';
 import PromotionsPanel from './BillingPanels/PromotionsPanel';
 import RecentInvoicesPanel from './BillingPanels/RecentInvoicesPanel';
@@ -37,12 +39,26 @@ const useStyles = makeStyles((theme: Theme) => ({
 type CombinedProps = SetDocsProps & RouteComponentProps<{}>;
 
 export const BillingDetail: React.FC<CombinedProps> = props => {
-  const { _loading } = useReduxLoad(['account']);
+  const { account, requestAccount } = useAccount();
 
   const classes = useStyles();
 
-  if (_loading) {
+  React.useEffect(() => {
+    if (account.loading && account.lastUpdated === 0) {
+      requestAccount();
+    }
+  }, []);
+
+  if (account.loading) {
     return <CircleProgress />;
+  }
+
+  if (account.error.read) {
+    const errorText = getAPIErrorOrDefault(
+      account.error.read,
+      'There was an error retrieving your account data.'
+    )[0].reason;
+    return <ErrorState errorText={errorText} />;
   }
 
   return (
