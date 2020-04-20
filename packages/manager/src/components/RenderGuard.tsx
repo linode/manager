@@ -34,7 +34,10 @@ const renderGuard = <P extends {}>(
     render() {
       // cast of this.props to any needed because of
       // https://github.com/Microsoft/TypeScript/issues/17281
-      const { updateFor, ...rest } = this.props as any;
+      //
+      // Destructure out "theme" so it's not passed to the component.
+      // This fixes the "<div theme=[object Object] />" issue.
+      const { updateFor, theme, ...rest } = this.props as any;
       return <Component {...rest} />;
     }
   }

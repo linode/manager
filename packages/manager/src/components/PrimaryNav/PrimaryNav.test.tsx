@@ -44,9 +44,7 @@ describe('PrimaryNav', () => {
       wrapper = shallow(
         <PrimaryNav
           classes={mockClasses}
-          theme={light({
-            spacingOverride: 4
-          })}
+          theme={light(4)}
           toggleSpacing={jest.fn()}
           closeMenu={jest.fn()}
           flags={{}}
@@ -113,9 +111,7 @@ describe('PrimaryNav', () => {
       wrapper = shallow(
         <PrimaryNav
           classes={mockClasses}
-          theme={light({
-            spacingOverride: 4
-          })}
+          theme={light(4)}
           toggleSpacing={jest.fn()}
           closeMenu={jest.fn()}
           flags={{}}
@@ -146,9 +142,7 @@ describe('PrimaryNav', () => {
       wrapper = shallow(
         <PrimaryNav
           classes={mockClasses}
-          theme={light({
-            spacingOverride: 4
-          })}
+          theme={light(4)}
           toggleSpacing={jest.fn()}
           closeMenu={jest.fn()}
           flags={{}}
@@ -179,9 +173,7 @@ describe('PrimaryNav', () => {
       wrapper = shallow(
         <PrimaryNav
           classes={mockClasses}
-          theme={light({
-            spacingOverride: 4
-          })}
+          theme={light(4)}
           toggleSpacing={jest.fn()}
           closeMenu={jest.fn()}
           flags={{}}

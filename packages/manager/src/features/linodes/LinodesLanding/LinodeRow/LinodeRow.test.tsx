@@ -23,7 +23,7 @@ describe('LinodeRow', () => {
 
   const mockProps: CombinedProps = {
     classes: mockClasses,
-    theme: light({ spacingOverride: 4 }),
+    theme: light(4),
     maintenanceStartTime: '',
     recentEvent: undefined,
     openDeleteDialog: jest.fn(),
