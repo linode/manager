@@ -15,16 +15,14 @@ const path = require('path');
 
 // loading config object to append to cypress
 function getConfiguration() {
-
-  const dotenvPath = path.resolve(__dirname,'../../.env');
-  console.log(dotenvPath)
+  const dotenvPath = path.resolve(__dirname, '../../.env');
   const conf = require('dotenv').config({
-    path: dotenvPath,
+    path: dotenvPath
   });
-  if (conf.error){
+  if (conf.error) {
     throw `Could not load .env from Cypress plugin/index.js: ${conf.error}`;
   }
-  return {env:conf.parsed};
+  return { env: conf.parsed };
 }
 
 const registerVisualRegTasks = require('./visualRegPlugin');

@@ -1,4 +1,3 @@
-
 import strings from '../cypresshelpers';
 import {
   apiCheckErrors,

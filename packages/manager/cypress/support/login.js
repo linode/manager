@@ -1,10 +1,7 @@
 const loginUrl = Cypress.env('REACT_APP_LOGIN_ROOT') + '/login';
 const oauthtoken = Cypress.env('MANAGER_OAUTH');
 const _loginWithToken = win => {
-  win.localStorage.setItem(
-    'authentication/oauth-token',
-    oauthtoken
-  );
+  win.localStorage.setItem('authentication/oauth-token', oauthtoken);
   win.localStorage.setItem('authentication/scopes', '*');
   // cy.log(window.localStorage.getItem('authentication/oauth-token'));
   const expireDate = Cypress.moment().add(30, 'days');
@@ -12,10 +9,7 @@ const _loginWithToken = win => {
   // cy.log(isoExpire);
   win.localStorage.setItem('authentication/expires', isoExpire);
   win.localStorage.setItem('authentication/expire-datetime', isoExpire);
-  win.localStorage.setItem(
-    'authentication/token',
-    'Bearer ' + oauthtoken
-  );
+  win.localStorage.setItem('authentication/token', 'Bearer ' + oauthtoken);
   win.localStorage.setItem('authentication/expire', isoExpire);
 };
 
