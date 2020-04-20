@@ -65,7 +65,7 @@ const ContactInformation: React.FC<CombinedProps> = props => {
     <React.Fragment>
       <Paper className={classes.summarySection} data-qa-contact-summary>
         <Typography variant="h3" className={classes.title}>
-          Contact Information
+          Billing Contact
         </Typography>
 
         <div className={classes.section} data-qa-company>
