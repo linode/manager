@@ -1,4 +1,4 @@
-import { TPAProvider } from 'linode-js-sdk/lib/profile';
+import { TPAProvider } from 'linode-js-sdk/lib/profile/types';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';

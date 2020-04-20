@@ -80,7 +80,6 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
     ipWhitelisting,
     twoFactor,
     username,
-    email,
     updateProfile
   } = props;
 
@@ -183,11 +182,6 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
               >
                 Disable {provider} Authentication
               </Button>
-              {disableTPA && (
-                <Notice className={classes.notice} warning>
-                  We sent password reset instructions to {email}.
-                </Notice>
-              )}
             </React.Fragment>
           )}
         </React.Fragment>
@@ -229,7 +223,6 @@ interface StateProps {
   ipWhitelisting: boolean;
   twoFactor?: boolean;
   username?: string;
-  email?: string;
   profileUpdateError?: APIError[];
 }
 
@@ -242,7 +235,6 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
     ipWhitelisting: profile?.data?.ip_whitelist_enabled ?? false,
     twoFactor: profile?.data?.two_factor_auth,
     username: profile?.data?.username,
-    email: profile?.data?.email,
     profileUpdateError: profile.error?.update
   };
 };
