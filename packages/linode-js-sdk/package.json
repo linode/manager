@@ -77,7 +77,7 @@
       "git add"
     ],
     ".{ts,tsx}": [
-      "tsc --noEmit true --emitDeclarationOnly false"
+      "tsc -p tsconfig.json --noEmit true --emitDeclarationOnly false"
     ]
   }
 }
