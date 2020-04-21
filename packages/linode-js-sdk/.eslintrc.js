@@ -39,7 +39,6 @@ module.exports = {
       '@material-ui/core',
       '@material-ui/icons'
     ],
-
     'no-console': 'error',
     // allowing to init vars to undefined
     'no-undef-init': 'off',
