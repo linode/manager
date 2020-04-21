@@ -33,7 +33,7 @@
     "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",
     "typecheck": "tsc --noEmit true --emitDeclarationOnly false",
     "prepublishOnly": "yarn lint && yarn typecheck && yarn format && yarn build",
-    "precommit": "lint-staged && yarn typecheck"
+    "precommit": "lint-staged"
   },
   "files": [
     "index.js",
@@ -75,6 +75,9 @@
       "prettier --write",
       "eslint --ext .js,.ts,.tsx",
       "git add"
+    ],
+    ".{ts,tsx}": [
+      "tsc --noEmit true --emitDeclarationOnly false"
     ]
   }
 }

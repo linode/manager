@@ -92,7 +92,7 @@
     "start": "node scripts/start.js",
     "lint": "yarn run eslint . --ext .js,.ts,.tsx --quiet",
     "build": "node scripts/build.js",
-    "precommit": "lint-staged && tsc --noEmit",
+    "precommit": "lint-staged",
     "prepush": "./scripts/pre-push.sh",
     "mock": "./scripts/mb.js",
     "test": "jest --color",
@@ -117,14 +117,16 @@
     "e2e:browserstack": "npx wdio ./e2e/config/browserstack.conf.js",
     "mb": "npx mb",
     "release": "./scripts/release_changelog.sh",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit true --emitDeclarationOnly false"
   },
   "lint-staged": {
     "*.{ts,tsx,js}": [
       "prettier --write",
-      "eslint --ext .js,.ts,.tsx",
-      "git add",
-      "npx madge --circular --extensions ts"
+      "eslint --ext .js,.ts,.tsx --debug",
+      "git add"
+    ],
+    "*.{ts,tsx}": [
+      "tsc --noEmit"
     ]
   },
   "devDependencies": {
