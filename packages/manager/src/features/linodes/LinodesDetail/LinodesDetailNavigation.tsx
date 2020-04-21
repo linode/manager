@@ -1,17 +1,13 @@
 import { Config } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
-import {
-  matchPath,
-  Redirect,
-  Route,
-  RouteComponentProps,
-  Switch,
-  withRouter
-} from 'react-router-dom';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { Link, Router } from '@reach/router';
 import { compose } from 'recompose';
-import AppBar from 'src/components/core/AppBar';
-import Tab from 'src/components/core/Tab';
-import Tabs from 'src/components/core/Tabs';
+import Tab from 'src/components/core/ReachTab';
+import TabList from 'src/components/core/ReachTabList';
+import TabPanel from 'src/components/core/ReachTabPanel';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
 import TabLink from 'src/components/TabLink';
 import VolumesLanding from 'src/features/Volumes/VolumesLanding';
 import { withLinodeDetailContext } from './linodeDetailContext';
@@ -113,121 +109,70 @@ const LinodesDetailNavigation: React.StatelessComponent<CombinedProps> = props =
     }
   ];
 
-  const handleTabChange = (
-    event: React.ChangeEvent<HTMLDivElement>,
-    value: number
-  ) => {
-    const { history } = props;
-    const routeName = tabs[value].routeName;
-    history.push(`${routeName}`);
-  };
+  // const handleTabChange = (value: number) => {
+  //   const { history } = props;
+  //   const routeName = tabs[value].routeName;
+  //   history.push(`${routeName}`);
+  // };
 
   return (
     <>
-      <AppBar position="static" color="default" role="tablist">
-        <Tabs
-          value={tabs.findIndex(tab => matches(tab.routeName))}
-          onChange={handleTabChange}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="scrollable"
-          scrollButtons="on"
-        >
-          {tabs.map(tab => (
-            <Tab
-              key={tab.title}
-              label={tab.title}
-              data-qa-tab={tab.title}
-              component={React.forwardRef((tabProps, ref) => (
-                <TabLink
-                  to={tab.routeName}
-                  title={tab.title}
-                  {...tabProps}
-                  ref={ref}
-                />
-              ))}
-            />
+      <Tabs>
+        <TabList>
+          {tabs.map((tab, _index) => (
+            <Tab key={tab.title}>{tab.title}</Tab>
           ))}
-        </Tabs>
-      </AppBar>
-      <Switch>
-        <Route
-          exact
-          path={`/linodes/:linodeId/summary`}
-          component={LinodeSummary}
-        />
-        <Route
-          exact
-          path={`/linodes/:linodeId/volumes`}
-          render={routeProps => (
-            <div
-              id="tabpanel-volumes"
-              role="tabpanel"
-              aria-labelledby="tab-volumes"
-            >
-              <VolumesLanding
-                linodeId={linodeId}
-                linodeLabel={linodeLabel}
-                linodeRegion={linodeRegion}
-                linodeConfigs={linodeConfigs}
-                readOnly={readOnly}
-                fromLinodes
-                removeBreadCrumb
-                {...routeProps}
-              />
-            </div>
-          )}
-        />
-        <Route
-          exact
-          path={`/linodes/:linodeId/networking`}
-          component={LinodeNetworking}
-        />
-        <Route
-          exact
-          path={`/linodes/:linodeId/resize`}
-          component={LinodeResize}
-        />
-        <Route
-          exact
-          path={`/linodes/:linodeId/rescue`}
-          component={LinodeRescue}
-        />
-        <Route
-          exact
-          path={`/linodes/:linodeId/rebuild`}
-          component={LinodeRebuild}
-        />
-        <Route
-          exact
-          path={`/linodes/:linodeId/backup`}
-          component={LinodeBackup}
-        />
-        <Route
-          exact
-          path={`/linodes/:linodeId/activity`}
-          component={LinodeActivity}
-        />
-        <Route
-          exact
-          path={`/linodes/:linodeId/settings`}
-          component={LinodeSettings}
-        />
-        <Route
-          exact
-          path={`/linodes/:linodeId/advanced`}
-          component={LinodeAdvanced}
-        />
-        {/* 404 */}
-        <Redirect to={`${url}/summary`} />
-      </Switch>
+        </TabList>
+
+        <TabPanels>
+          <TabPanel>
+            <LinodeSummary />
+          </TabPanel>
+          <TabPanel>
+            <VolumesLanding
+              linodeId={linodeId}
+              linodeLabel={linodeLabel}
+              linodeRegion={linodeRegion}
+              linodeConfigs={linodeConfigs}
+              readOnly={readOnly}
+              fromLinodes
+              removeBreadCrumb
+            />
+          </TabPanel>
+          <TabPanel>
+            <LinodeNetworking />
+          </TabPanel>
+          <TabPanel>
+            <LinodeResize />
+          </TabPanel>
+          <TabPanel>
+            <LinodeRescue />
+          </TabPanel>
+          <TabPanel>
+            <LinodeRebuild />
+          </TabPanel>
+          <TabPanel>
+            <LinodeBackup />
+          </TabPanel>
+          <TabPanel>
+            <LinodeActivity />
+          </TabPanel>
+          <TabPanel>
+            <LinodeSettings />
+          </TabPanel>
+          <TabPanel>
+            <LinodeAdvanced />
+          </TabPanel>
+          {/* <Redirect to={`${url}/summary`} /> */}
+        </TabPanels>
+      </Tabs>
     </>
   );
 };
 
-const matches = (p: string) => {
-  return Boolean(matchPath(p, { path: location.pathname }));
-};
+// const matches = (p: string) => {
+//   return Boolean(matchPath(p, { path: location.pathname }));
+// };
 
 interface ContextProps {
   linodeId: number;

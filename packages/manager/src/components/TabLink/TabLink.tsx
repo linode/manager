@@ -1,6 +1,6 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@reach/router';
 import {
   createStyles,
   withStyles,
@@ -47,10 +47,6 @@ class TabLink extends React.Component<CombinedProps> {
           [classes.root]: true,
           [classes.selected]: pathName === to
         })}
-        role="tab"
-        id={`tab-${convertForAria(title)}`}
-        aria-controls={`tabpanel-${convertForAria(title)}`}
-        tabIndex={0}
         aria-selected={pathName === to}
         data-qa-tab={title}
       >
