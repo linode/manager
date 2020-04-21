@@ -1,5 +1,5 @@
 import * as React from 'react';
-import _Option, { OptionProps } from 'react-select/lib/components/Option';
+import _Option, { OptionProps } from 'react-select/src/components/Option';
 
 interface Props extends OptionProps<any> {
   value: number | string;
@@ -13,5 +13,7 @@ const Option: React.StatelessComponent<Props> = props => {
     </div>
   );
 };
+
+export { OptionProps };
 
 export default Option;

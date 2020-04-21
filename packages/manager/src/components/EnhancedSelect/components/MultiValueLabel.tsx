@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { components as reactSelectComponents } from 'react-select';
-import { MultiValueGenericProps } from 'react-select/lib/components/MultiValue';
+import { MultiValueProps } from 'react-select';
 
-interface Props extends MultiValueGenericProps<any> {}
+interface Props extends MultiValueProps<any> {}
 
 type CombinedProps = Props;
 

@@ -7,4 +7,5 @@ import EnhancedSelect, {
 export interface Item<T> extends _Item<T> {}
 export interface GroupType<T> extends _GroupType<T> {}
 export interface BaseSelectProps extends _BaseSelectProps {}
+export { OptionProps } from './components/Option';
 export default EnhancedSelect;

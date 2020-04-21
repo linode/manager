@@ -3,8 +3,7 @@ import Search from '@material-ui/icons/Search';
 import { take } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import _Control from 'react-select/lib/components/Control';
-import _Option from 'react-select/lib/components/Option';
+import { components } from 'react-select';
 import { compose } from 'recompose';
 import IconButton from 'src/components/core/IconButton';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
@@ -26,14 +25,14 @@ type CombinedProps = WithTypesProps &
   StyleProps &
   RouteComponentProps<{}>;
 
-const Control = (props: any) => <_Control {...props} />;
+const Control = (props: any) => <components.Control {...props} />;
 
 /* The final option in the list will be the "go to search results page" link.
  * This doesn't share the same shape as the rest of the results, so should use
  * the default styling. */
 const Option = (props: any) => {
   return ['redirect', 'info'].includes(props.value) ? (
-    <_Option {...props} />
+    <components.Option {...props} />
   ) : (
     <SearchSuggestion {...props} />
   );

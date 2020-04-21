@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import * as React from 'react';
-import { OptionProps } from 'react-select/lib/components/Option';
+import { OptionProps } from 'react-select';
 import Option from 'src/components/EnhancedSelect/components/Option';
 import { Item } from 'src/components/EnhancedSelect/Select';
 
@@ -21,7 +21,7 @@ export interface RegionItem extends Item<string> {
   flag: () => JSX.Element | null;
   country: string;
 }
-interface RegionOptionProps extends OptionProps<string> {
+interface RegionOptionProps extends OptionProps<Record<string, any>> {
   data: RegionItem;
 }
 
