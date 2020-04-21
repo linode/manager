@@ -160,7 +160,7 @@ export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = prop
           className={classes.promo}
         />
       ))}
-      <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+      <React.Suspense fallback={<SuspenseLoader />}>
         <Switch>
           <Route
             exact

@@ -23,7 +23,7 @@ class LinodesRoutes extends React.Component<Props> {
     } = this.props;
 
     return (
-      <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+      <React.Suspense fallback={<SuspenseLoader />}>
         <Switch>
           <Route component={LinodesCreate} path={`${path}/create`} />
           <Route component={LinodesDetail} path={`${path}/:linodeId`} />

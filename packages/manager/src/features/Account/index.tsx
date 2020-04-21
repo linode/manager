@@ -19,7 +19,7 @@ class Account extends React.Component<Props> {
     } = this.props;
 
     return (
-      <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+      <React.Suspense fallback={<SuspenseLoader />}>
         <Switch>
           <Route path={`${path}/users/:username`} component={UserDetail} />
           <Route

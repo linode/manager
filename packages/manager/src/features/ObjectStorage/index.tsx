@@ -11,7 +11,7 @@ export const ObjectStorage: React.FC<CombinedProps> = props => {
   const path = props.match.path;
 
   return (
-    <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+    <React.Suspense fallback={<SuspenseLoader />}>
       <Switch>
         <Route
           path={`${path}/buckets/:clusterId/:bucketName`}

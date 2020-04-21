@@ -111,7 +111,7 @@ class Profile extends React.Component<Props> {
             ))}
           </Tabs>
         </AppBar>
-        <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+        <React.Suspense fallback={<SuspenseLoader />}>
           <Switch>
             <Route exact path={`${url}/settings`} component={Settings} />
             <Route

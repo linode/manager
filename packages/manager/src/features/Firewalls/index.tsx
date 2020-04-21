@@ -28,7 +28,7 @@ class Firewall extends React.Component<CombinedProps> {
     } = this.props;
 
     return (
-      <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+      <React.Suspense fallback={<SuspenseLoader />}>
         <React.Fragment>
           <DocumentTitleSegment segment="Firewalls" />
           <Switch>

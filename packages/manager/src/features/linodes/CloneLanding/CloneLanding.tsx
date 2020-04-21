@@ -442,7 +442,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
           />
         </Grid>
       </Grid>
-      <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+      <React.Suspense fallback={<SuspenseLoader />}>
         <Switch />
       </React.Suspense>
     </React.Fragment>

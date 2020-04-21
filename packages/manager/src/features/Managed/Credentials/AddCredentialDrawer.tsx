@@ -78,7 +78,7 @@ const CredentialDrawer: React.FC<CombinedProps> = props => {
                 onBlur={handleBlur}
               />
 
-              <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+              <React.Suspense fallback={<SuspenseLoader />}>
                 <PasswordInput
                   name="password"
                   label="Password / Passphrase"

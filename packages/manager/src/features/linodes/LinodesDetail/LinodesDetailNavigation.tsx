@@ -123,7 +123,7 @@ const LinodesDetailNavigation: React.StatelessComponent<CombinedProps> = props =
           ))}
         </Tabs>
       </AppBar>
-      <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+      <React.Suspense fallback={<SuspenseLoader />}>
         <Switch>
           <Route
             exact

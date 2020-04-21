@@ -74,7 +74,7 @@ const LinodeDetail: React.StatelessComponent<CombinedProps> = props => {
   return (
     <LinodeDetailContextProvider value={ctx}>
       {/* <pre>{JSON.stringify(linode, null, 2)}</pre> */}
-      <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+      <React.Suspense fallback={<SuspenseLoader />}>
         <Switch>
           {/*
           Currently, the "Clone Configs and Disks" feature exists OUTSIDE of LinodeDetail.

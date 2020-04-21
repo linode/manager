@@ -227,7 +227,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
             disabled={disabled}
             isClearable={false}
           />
-          <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+          <React.Suspense fallback={<SuspenseLoader />}>
             <PasswordInput
               autoComplete="new-password"
               label="Password"

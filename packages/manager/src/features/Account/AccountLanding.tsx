@@ -98,7 +98,7 @@ class AccountLanding extends React.Component<Props> {
             ))}
           </Tabs>
         </AppBar>
-        <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+        <React.Suspense fallback={<SuspenseLoader />}>
           <Switch>
             <Route exact strict path={`${url}/billing`} component={Billing} />
             <Route

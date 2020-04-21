@@ -20,7 +20,7 @@ class NodeBalancers extends React.Component<Props> {
     } = this.props;
 
     return (
-      <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+      <React.Suspense fallback={<SuspenseLoader />}>
         <Switch>
           <Route component={NodeBalancersLanding} path={path} exact />
           <Route component={NodeBalancerCreate} path={`${path}/create`} exact />

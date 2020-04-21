@@ -18,7 +18,7 @@ class ImagesRoutes extends React.Component<Props> {
     } = this.props;
 
     return (
-      <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+      <React.Suspense fallback={<SuspenseLoader />}>
         <Switch>
           <Route component={ImagesLanding} path={path} exact />
         </Switch>

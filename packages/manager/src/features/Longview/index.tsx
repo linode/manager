@@ -16,7 +16,7 @@ const Longview: React.FC<Props> = props => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Longview" />
-      <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+      <React.Suspense fallback={<SuspenseLoader />}>
         <Switch>
           <Route component={LongviewDetail} path={`${path}/clients/:id`} />
           <Route component={LongviewLanding} />
