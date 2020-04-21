@@ -27,4 +27,3 @@ import '@testing-library/cypress/add-commands';
 import 'cypress-axe';
 import './login';
 import './visualRegCommands';
-
