@@ -75,8 +75,8 @@ const renderCancel = () => (
 );
 
 const renderAuthentication = () => (
-  <Switch>
-    <React.Suspense fallback={<SplashScreen />}>
+  <React.Suspense fallback={<SplashScreen />}>
+    <Switch>
       <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
       <Route exact path="/admin/callback" component={LoginAsCustomerCallback} />
       {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
@@ -89,8 +89,8 @@ const renderAuthentication = () => (
           <Route render={renderApp} />
         </Switch>
       </AuthenticationWrapper>
-    </React.Suspense>
-  </Switch>
+    </Switch>
+  </React.Suspense>
 );
 
 ReactDOM.render(
