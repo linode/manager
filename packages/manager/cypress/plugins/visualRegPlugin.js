@@ -38,6 +38,12 @@ function compareSnapshotsPlugin(args) {
           .pipe(new PNG())
           .on('parsed', function() {
             const imgExpected = this;
+
+            if(imgActual.width != imgExpected.width || imgActual.height != imgExpected.height){
+              const err = `The images have different sizes: w: ${imgActual.width} (${imgExpected.width}) x h: ${imgActual.height} (${imgExpected.height})`;
+              console.error(err);
+              throw err;
+            }
             const diff = new PNG({
               width: imgActual.width,
               height: imgActual.height

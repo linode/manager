@@ -1,7 +1,7 @@
 Cypress.Commands.add(
   'checkSnapshot',
   { prevSubject: 'optional' },
-  (subject, name, threshold) => {
+  (subject, name, threshold, viewport = 'macbook-13') => {
     const visualRegMode =
       Cypress.env('visualRegMode') === 'record' ? 'record' : 'actual';
 
@@ -31,6 +31,7 @@ Cypress.Commands.add(
       visualRegMode === 'record' ? recordScreenShotName : actualScreenShotName;
     cy.log('path', screenshotName);
 
+    cy.viewport(viewport);
     if (subject) {
       cy.get(subject).screenshot(screenshotName);
     } else {
