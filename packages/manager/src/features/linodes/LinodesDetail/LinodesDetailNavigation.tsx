@@ -8,7 +8,6 @@ import TabList from 'src/components/core/ReachTabList';
 import TabPanel from 'src/components/core/ReachTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import TabLink from 'src/components/TabLink';
 import VolumesLanding from 'src/features/Volumes/VolumesLanding';
 import { withLinodeDetailContext } from './linodeDetailContext';
 
@@ -109,62 +108,53 @@ const LinodesDetailNavigation: React.StatelessComponent<CombinedProps> = props =
     }
   ];
 
-  // const handleTabChange = (value: number) => {
-  //   const { history } = props;
-  //   const routeName = tabs[value].routeName;
-  //   history.push(`${routeName}`);
-  // };
-
   return (
     <>
       <Tabs>
         <TabList>
           {tabs.map((tab, _index) => (
-            <Tab key={tab.title}>{tab.title}</Tab>
+            <Tab as={Link} key={tab.title} to={tab.routeName}>
+              {tab.title}
+            </Tab>
           ))}
         </TabList>
+        <Router component={TabPanels}>
+          <TabPanel
+            as={LinodeSummary}
+            path={`/linodes/:linodeId/summary`}
+            default
+          />
 
-        <TabPanels>
-          <TabPanel>
-            <LinodeSummary />
-          </TabPanel>
-          <TabPanel>
-            <VolumesLanding
-              linodeId={linodeId}
-              linodeLabel={linodeLabel}
-              linodeRegion={linodeRegion}
-              linodeConfigs={linodeConfigs}
-              readOnly={readOnly}
-              fromLinodes
-              removeBreadCrumb
-            />
-          </TabPanel>
-          <TabPanel>
-            <LinodeNetworking />
-          </TabPanel>
-          <TabPanel>
-            <LinodeResize />
-          </TabPanel>
-          <TabPanel>
-            <LinodeRescue />
-          </TabPanel>
-          <TabPanel>
-            <LinodeRebuild />
-          </TabPanel>
-          <TabPanel>
-            <LinodeBackup />
-          </TabPanel>
-          <TabPanel>
-            <LinodeActivity />
-          </TabPanel>
-          <TabPanel>
-            <LinodeSettings />
-          </TabPanel>
-          <TabPanel>
-            <LinodeAdvanced />
-          </TabPanel>
-          {/* <Redirect to={`${url}/summary`} /> */}
-        </TabPanels>
+          <TabPanel
+            as={VolumesLanding}
+            path={`/linodes/:linodeId/volumes`}
+            linodeId={linodeId}
+            linodeLabel={linodeLabel}
+            linodeRegion={linodeRegion}
+            linodeConfigs={linodeConfigs}
+            readOnly={readOnly}
+            fromLinodes
+            removeBreadCrumb
+          />
+
+          <TabPanel
+            as={LinodeNetworking}
+            path={`/linodes/:linodeId/networking`}
+          />
+
+          <TabPanel as={LinodeResize} path={`/linodes/:linodeId/resize`} />
+
+          <TabPanel as={LinodeRescue} path={`/linodes/:linodeId/rescue`} />
+          <TabPanel as={LinodeRebuild} path={`/linodes/:linodeId/rebuild`} />
+
+          <TabPanel as={LinodeBackup} path={`/linodes/:linodeId/backups`} />
+
+          <TabPanel as={LinodeActivity} path={`/linodes/:linodeId/activity`} />
+
+          <TabPanel as={LinodeSettings} path={`/linodes/:linodeId/settings`} />
+
+          <TabPanel as={LinodeAdvanced} path={`/linodes/:linodeId/advanced`} />
+        </Router>
       </Tabs>
     </>
   );

@@ -1,8 +1,8 @@
 import * as React from 'react';
+import { Link } from '@reach/router';
 import Tab from 'src/components/core/ReachTab';
 import TabList from 'src/components/core/ReachTabList';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import TabLink from 'src/components/TabLink';
 
 const useStyles = makeStyles((theme: Theme) => ({
   tab: {
@@ -71,8 +71,8 @@ export const TabLinkList: React.FC<CombinedProps> = props => {
   return (
     <TabList className={classes.tabList}>
       {tabs.map((tab, _index) => (
-        <Tab className={classes.tab} key={index}>
-          <TabLink to={tab.routeName} title={tab.title} />
+        <Tab className={classes.tab} key={index} as={Link} to={tab.routeName}>
+          {tab.title}
         </Tab>
       ))}
     </TabList>
