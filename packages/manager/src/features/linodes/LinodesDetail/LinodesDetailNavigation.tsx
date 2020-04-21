@@ -1,6 +1,6 @@
 import { Config } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
 import { Router } from '@reach/router';
 import { compose } from 'recompose';
 import TabPanel from 'src/components/core/ReachTabPanel';
@@ -9,54 +9,15 @@ import Tabs from 'src/components/core/ReachTabs';
 import TabLinkList from 'src/components/TabLinkList';
 import VolumesLanding from 'src/features/Volumes/VolumesLanding';
 import { withLinodeDetailContext } from './linodeDetailContext';
-
-// import DefaultLoader from 'src/components/DefaultLoader';
-
-import LinodeSummary from './LinodeSummary';
-import LinodeSettings from './LinodeSettings';
-import LinodeResize from './LinodeResize';
-import LinodeRescue from './LinodeRescue';
-import LinodeRebuild from './LinodeRebuild';
-import LinodeNetworking from './LinodeNetworking';
 import LinodeActivity from './LinodeActivity';
 import LinodeAdvanced from './LinodeAdvanced';
 import LinodeBackup from './LinodeBackup';
-
-// const LinodeSummary = DefaultLoader({
-//   loader: () => import('./LinodeSummary')
-// });
-
-// const LinodeSettings = DefaultLoader({
-//   loader: () => import('./LinodeSettings')
-// });
-
-// const LinodeResize = DefaultLoader({
-//   loader: () => import('./LinodeResize')
-// });
-
-// const LinodeRescue = DefaultLoader({
-//   loader: () => import('./LinodeRescue')
-// });
-
-// const LinodeRebuild = DefaultLoader({
-//   loader: () => import('./LinodeRebuild')
-// });
-
-// const LinodeNetworking = DefaultLoader({
-//   loader: () => import('./LinodeNetworking')
-// });
-
-// const LinodeActivity = DefaultLoader({
-//   loader: () => import('./LinodeActivity')
-// });
-
-// const LinodeAdvanced = DefaultLoader({
-//   loader: () => import('./LinodeAdvanced')
-// });
-
-// const LinodeBackup = DefaultLoader({
-//   loader: () => import('./LinodeBackup')
-// });
+import LinodeNetworking from './LinodeNetworking';
+import LinodeRebuild from './LinodeRebuild';
+import LinodeRescue from './LinodeRescue';
+import LinodeResize from './LinodeResize';
+import LinodeSettings from './LinodeSettings';
+import LinodeSummary from './LinodeSummary';
 
 type CombinedProps = ContextProps &
   RouteComponentProps<{
@@ -119,7 +80,7 @@ const LinodesDetailNavigation: React.StatelessComponent<CombinedProps> = props =
 
   return (
     <>
-      <Tabs>
+      <Tabs defaultIndex={tabs.findIndex(tab => matches(tab.routeName))}>
         <TabLinkList tabs={tabs} />
         <Router component={TabPanels}>
           <TabPanel
@@ -164,6 +125,10 @@ const LinodesDetailNavigation: React.StatelessComponent<CombinedProps> = props =
       </Tabs>
     </>
   );
+};
+
+const matches = (p: string) => {
+  return Boolean(matchPath(p, { path: location.pathname }));
 };
 
 interface ContextProps {
