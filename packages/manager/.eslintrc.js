@@ -72,6 +72,9 @@ module.exports = {
     'no-console': 'error',
     // allowing to init vars to undefined
     'no-undef-init': 'off',
+    // radix: Codacy considers it as an error, i put it here to fix it before push
+    // radix requires to give the base in parseInt https://eslint.org/docs/rules/radix
+    radix: 'error',
     // typescript-eslint specific rules
     // This rules is disabled to avoid duplicates errors as no-unused-vars is set
     '@typescript-eslint/no-unused-vars': 'off',

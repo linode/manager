@@ -76,7 +76,8 @@ describe('Pagination Controls Suite', () => {
           e.getAttribute('class').includes('disabled')
         );
         const newPageNumber = parseInt(
-          activePages[0].getAttribute('data-qa-page-to')
+          activePages[0].getAttribute('data-qa-page-to'),
+          10
         );
 
         expect(newPageNumber)
@@ -103,7 +104,8 @@ describe('Pagination Controls Suite', () => {
           e.getAttribute('class').includes('disabled')
         );
         const newPageNumber = parseInt(
-          activePages[0].getAttribute('data-qa-page-to')
+          activePages[0].getAttribute('data-qa-page-to'),
+          10
         );
 
         expect(newPageNumber)
@@ -144,7 +146,8 @@ describe('Pagination Controls Suite', () => {
       const prevPage = parseInt(
         $$('[data-qa-page-to]')
           .filter(e => e.getAttribute('class').includes('disabled'))[0]
-          .getAttribute('data-qa-page-to')
+          .getAttribute('data-qa-page-to'),
+        10
       );
       expect(prevPage)
         .withContext(`Should only be one disabled button`)
