@@ -59,6 +59,7 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
         id="tabpanel-billingInfo"
         role="tabpanel"
         aria-labelledby="tab-billingInfo"
+        data-testid="billing-detail"
       >
         <Grid container>
           <Grid item xs={12} md={12} lg={12} className={classes.main}>
