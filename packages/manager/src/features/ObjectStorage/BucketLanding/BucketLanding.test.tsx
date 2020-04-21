@@ -1,6 +1,7 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { buckets } from 'src/__data__/buckets';
+import { objectStorageClusterDisplay } from 'src/constants';
 import { BucketLanding } from './BucketLanding';
 
 describe('ObjectStorageLanding', () => {
@@ -35,9 +36,14 @@ describe('ObjectStorageLanding', () => {
     expect(wrapper.find('[data-qa-empty-state]')).toHaveLength(1);
   });
 
-  it('renders an error state when there is an error', () => {
+  it('renders an error state when there is an error in each cluster', () => {
     wrapper.setProps({
-      bucketsError: [{ reason: 'An error occurred.' }],
+      bucketErrors: Object.keys(objectStorageClusterDisplay).map(
+        thisClusterId => ({
+          error: [{ reason: 'An error occurred.' }],
+          clusterId: thisClusterId
+        })
+      ),
       bucketsLoading: false
     });
     expect(wrapper.find('[data-qa-error-state]')).toHaveLength(1);
