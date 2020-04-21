@@ -3,7 +3,10 @@ import * as React from 'react';
 
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
-import { AuthenticationSettings } from './AuthenticationSettings';
+import {
+  AuthenticationSettings,
+  CombinedProps
+} from './AuthenticationSettings';
 
 const requests = require.requireMock('linode-js-sdk/lib/profile');
 jest.mock('linode-js-sdk/lib/profile');
@@ -13,13 +16,12 @@ requests.getTrustedDevices = jest.fn().mockResolvedValue([]);
 
 afterEach(cleanup);
 
-const props = {
+const props: CombinedProps = {
   loading: false,
   authType: 'password',
   ipWhitelisting: true,
   twoFactor: true,
   username: 'username',
-  email: '',
   updateProfile: jest.fn()
 };
 

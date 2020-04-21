@@ -1,11 +1,11 @@
 import { TPAProvider } from 'linode-js-sdk/lib/profile';
 import * as React from 'react';
-import GitHubIcon from 'src/assets/icons/providers/git-hub-logo.svg';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { LOGIN_ROOT } from 'src/constants';
 import { updateProfile as _updateProfile } from 'src/store/profile/profile.requests';
+import { ProviderOptions, providers } from './shared';
 import ThirdPartyDialog from './ThirdPartyDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  authType: string | undefined;
+  authType: TPAProvider;
 }
 
 type CombinedProps = Props;
@@ -58,7 +58,9 @@ export const ThirdPartyContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
-  const [provider, setProvider] = React.useState<string>('');
+  const [provider, setProvider] = React.useState<ProviderOptions>(
+    providers[0].name
+  );
 
   const thirdPartyEnabled = props.authType !== 'password';
   const authTypeToDisplayName: Record<TPAProvider, string | undefined> = {
@@ -79,25 +81,33 @@ export const ThirdPartyContent: React.FC<CombinedProps> = props => {
         may only use one provider at a time.
       </Typography>
       <div className={classes.providers}>
-        <Button
-          className={thirdPartyEnabled ? classes.enabled : ''}
-          onClick={() => {
-            setProvider('github');
-            setDialogOpen(true);
-          }}
-          disabled={thirdPartyEnabled}
-        >
-          <GitHubIcon className={classes.providerIcon} />
-          GitHub
-          {thirdPartyEnabled && (
-            <span className={classes.enabledText}>(Enabled)</span>
-          )}
-        </Button>
+        {providers.map(thisProvider => {
+          return (
+            <>
+              <Button
+                className={thirdPartyEnabled ? classes.enabled : ''}
+                key={thisProvider.displayName}
+                onClick={() => {
+                  setProvider(thisProvider.name);
+                  setDialogOpen(true);
+                }}
+                disabled={thirdPartyEnabled}
+              >
+                <thisProvider.Icon className={classes.providerIcon} />
+                {thisProvider.displayName}
+                {thirdPartyEnabled && (
+                  <span className={classes.enabledText}>(Enabled)</span>
+                )}
+              </Button>
+            </>
+          );
+        })}
+
         <ThirdPartyDialog
           open={dialogOpen}
           loading={false}
           onClose={() => setDialogOpen(false)}
-          provider={authTypeToDisplayName[provider ?? '']}
+          provider={provider}
         />
       </div>
       {thirdPartyEnabled && (

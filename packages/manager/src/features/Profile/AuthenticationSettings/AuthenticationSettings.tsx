@@ -1,4 +1,4 @@
-import { Profile } from 'linode-js-sdk/lib/profile';
+import { Profile, TPAProvider } from 'linode-js-sdk/lib/profile';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-type CombinedProps = StateProps & DispatchProps;
+export type CombinedProps = StateProps & DispatchProps;
 
 export const AuthenticationSettings: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -111,7 +111,7 @@ const docs = [AccountsAndPasswords, SecurityControls];
 
 interface StateProps {
   loading: boolean;
-  authType: string | undefined;
+  authType: TPAProvider;
   ipWhitelisting: boolean;
   twoFactor?: boolean;
   username?: string;
@@ -123,7 +123,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
 
   return {
     loading: profile.loading,
-    authType: profile?.data?.authentication_type,
+    authType: profile?.data?.authentication_type ?? 'password',
     ipWhitelisting: profile?.data?.ip_whitelist_enabled ?? false,
     twoFactor: profile?.data?.two_factor_auth,
     username: profile?.data?.username,

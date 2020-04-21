@@ -6,6 +6,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { LOGIN_ROOT } from 'src/constants';
+import { ProviderOptions, providers } from './shared';
 
 const useStyles = makeStyles((theme: Theme) => ({
   dialog: {
@@ -26,7 +27,7 @@ interface Props {
   open: boolean;
   error?: string;
   loading: boolean;
-  provider: string;
+  provider: ProviderOptions;
   onClose: () => void;
 }
 
@@ -36,25 +37,31 @@ const ThirdPartyDialog: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const { open, error, loading, provider, onClose } = props;
 
+  const displayName =
+    providers.find(thisProvider => thisProvider.name === provider)
+      ?.displayName || '';
+
   return (
     <ConfirmationDialog
       className={classes.dialog}
       open={open}
-      title={`Enable ` + `${provider}` + ` Authentication`}
+      title={`Enable ` + `${displayName}` + ` Authentication`}
       onClose={onClose}
-      actions={() => renderActions(loading, provider, onClose)}
+      actions={() => renderActions(loading, provider, displayName, onClose)}
     >
       {error && <Notice error text={error} />}
       <Typography>
-        After you enable {provider} authentication, your Linode account password
-        will be disabled and any trusted devices will be removed from your
-        account. If you’ve enabled Two-Factor Authentication (TFA) with your
-        Linode account, that will also be disabled. You should enable TFA via
+        After you enable {displayName} authentication, your Linode account
+        password will be disabled and any trusted devices will be removed from
+        your account. If you’ve enabled Two-Factor Authentication (TFA) with
+        your Linode account, that will also be disabled. You should enable TFA
+        via
         {` `}
-        {provider} for extra security.
+        {displayName} for extra security.
       </Typography>
       <Typography>
-        Do you want to go to {provider} and enable Third-Party Authentication?
+        Do you want to go to {displayName} and enable Third-Party
+        Authentication?
       </Typography>
     </ConfirmationDialog>
   );
@@ -62,7 +69,8 @@ const ThirdPartyDialog: React.FC<CombinedProps> = props => {
 
 const renderActions = (
   loading: boolean,
-  provider: string,
+  provider: ProviderOptions,
+  displayName: string,
   onClose: () => void
 ) => {
   return (
@@ -81,7 +89,7 @@ const renderActions = (
         loading={loading}
         onClick={() =>
           window.open(
-            `${LOGIN_ROOT}/tpa/enable/` + `${provider}`.toLowerCase(),
+            `${LOGIN_ROOT}/tpa/enable/` + `${provider}`,
             '_blank',
             'noopener'
           )
@@ -89,7 +97,7 @@ const renderActions = (
         data-qa-confirm
         data-testid={'dialog-confirm'}
       >
-        Go to {provider}
+        Go to {displayName}
       </Button>
     </ActionsPanel>
   );

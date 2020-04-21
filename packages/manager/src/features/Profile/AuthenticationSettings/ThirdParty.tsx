@@ -9,7 +9,7 @@ import Notice from 'src/components/Notice';
 import { LOGIN_ROOT } from 'src/constants';
 
 interface Props {
-  authType: string | undefined;
+  authType: TPAProvider;
 }
 
 type CombinedProps = Props;
@@ -31,20 +31,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
+const authTypeToDisplayName: Record<TPAProvider, string | undefined> = {
+  password: '',
+  github: 'GitHub'
+};
+
 export const ThirdParty: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const thirdPartyEnabled = props.authType !== 'password';
-  const authTypeToDisplayName: Record<TPAProvider, string | undefined> = {
-    password: undefined,
-    github: 'GitHub'
-  };
 
   // Takes into account if authType is undefined but this should never happen
   const displayName = authTypeToDisplayName[props.authType ?? ''];
 
   return (
     <React.Fragment>
-      {thirdPartyEnabled && (
+      {props.authType !== 'password' && (
         <Paper className={classes.root}>
           <Notice warning>
             Third-Party Authentication via {displayName} is enabled on your
@@ -56,7 +56,7 @@ export const ThirdParty: React.FC<CombinedProps> = props => {
             <ExternalLink
               className={classes.link}
               hideIcon
-              link={`https://www.` + `${displayName}` + `.com/`}
+              link={`https://www.` + `${props.authType}` + `.com/`}
               text={`the ` + `${displayName}` + ` website`}
             />
             .

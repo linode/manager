@@ -25,5 +25,5 @@ export const updateProfileSchema = object({
   restricted: boolean(),
   two_factor_auth: boolean(),
   lish_auth_method: string().oneOf(['password_keys', 'keys_only', 'disabled']),
-  authentication_type: string()
+  authentication_type: string().oneOf(['password', 'github'])
 });
