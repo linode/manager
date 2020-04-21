@@ -2,9 +2,10 @@ module.exports = {
   ignorePatterns: ['node_modules', 'lib', 'index.js', '!.eslintrc.js'],
   parser: '@typescript-eslint/parser', // Specifies the ESLint parser
   parserOptions: {
+    // Warning if you want to set tsconfig.json, you ll need laso to set `tsconfigRootDir:__dirname`
+    // BUT we decided not to use this feature due to a very important performance impact
+    // project: 'tsconfig.json',
     ecmaVersion: 2020,
-    project:'tsconfig.json',
-    tsconfigRootDir: __dirname,
     warnOnUnsupportedTypeScriptVersion: true
   },
   plugins: ['@typescript-eslint', 'sonarjs', 'ramda', 'prettier'],

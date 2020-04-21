@@ -1,4 +1,4 @@
-module.exports= {
+module.exports = {
   ignorePatterns: [
     'node_modules',
     'build',
@@ -10,13 +10,14 @@ module.exports= {
 
   parser: '@typescript-eslint/parser', // Specifies the ESLint parser
   parserOptions: {
-    project: 'tsconfig.json',
+    // Warning if you want to set tsconfig.json, you ll need laso to set `tsconfigRootDir:__dirname`
+    // BUT we decided not to use this feature due to a very important performance impact
+    // project: 'tsconfig.json',
     // Only ESLint 6.2.0 and later support ES2020.
     ecmaVersion: 2020,
     ecmaFeatures: {
       jsx: true
     },
-    tsconfigRootDir: __dirname,
     warnOnUnsupportedTypeScriptVersion: true
   },
   settings: {
@@ -79,15 +80,13 @@ module.exports= {
     '@typescript-eslint/no-namespace': 'warn',
     '@typescript-eslint/camelcase': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
-    // A function returning a promise should be async
-    '@typescript-eslint/promise-function-async': 'warn',
     // this would disallow usage of ! postfix operator on non null types
     '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/interface-name-prefix': 'off',
     // react and jsx specific rules
-    'react/display-name':'off',
+    'react/display-name': 'off',
     // requires the definition of proptypes for react components
     'react/prop-types': 'off',
     'react/jsx-no-script-url': 'error',
@@ -163,8 +162,8 @@ module.exports= {
       rules: {
         'no-console': 'off'
       },
-      env: { 
-        node: true ,
+      env: {
+        node: true,
         'cypress/globals': true
       }
     }
