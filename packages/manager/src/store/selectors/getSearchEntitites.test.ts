@@ -7,6 +7,7 @@ import {
   types,
   volumes
 } from 'src/__data__';
+import { kubernetesClusterFactory } from 'src/factories/kubernetesCluster';
 import { apiResponseToMappedState } from 'src/store/store.helpers.tmp';
 import getSearchEntities from './getSearchEntities';
 
@@ -26,6 +27,9 @@ describe('getSearchEntities selector', () => {
         (result, c) => ({ ...result, [c.id]: c }),
         {}
       )
+    },
+    kubernetes: {
+      entities: kubernetesClusterFactory.buildList(2)
     }
   };
   it('should return an array of SearchableItems', () => {

@@ -20,13 +20,9 @@ import { events$ } from 'src/events';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 
 import composeState from 'src/utilities/composeState';
-import { configureErrorReportingUser } from './exceptionReporting';
 import { MapState } from './store/types';
-import { isKubernetesEnabled as _isKubernetesEnabled } from './utilities/accountCapabilities';
 
 import IdentifyUser from './IdentifyUser';
-
-import { initGTMUser } from './analytics';
 import MainContent from './MainContent';
 
 interface Props {
@@ -77,18 +73,6 @@ export class App extends React.Component<CombinedProps, State> {
         (window as any).ga('send', 'pageview', pathname);
       }
     });
-
-    // Configure error reporting to include user information.
-    if (this.props.userId && this.props.username) {
-      configureErrorReportingUser(
-        String(this.props.userId),
-        this.props.username
-      );
-    }
-
-    if (this.props.euuid) {
-      initGTMUser(this.props.euuid);
-    }
 
     /*
      * We want to listen for migration events side-wide
@@ -194,6 +178,7 @@ export class App extends React.Component<CombinedProps, State> {
           accountError={accountError}
           accountCountry={accountData ? accountData.country : undefined}
           taxID={accountData ? accountData.tax_id : undefined}
+          euuid={this.props.euuid}
         />
         <DocumentTitleSegment segment="Linode Manager" />
         <MainContent

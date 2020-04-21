@@ -19,6 +19,7 @@ function getConfigurationByFile(file) {
   return fs.readJson(pathToConfigFile);
 }
 
+const registerVisualRegTasks = require('./visualRegPlugin');
 function checkNodeVersionRequiredByLinode() {
   const v = process.version.substr(1, process.version.length - 1).split('.');
   if (![12, 10].includes(v[0])) {
@@ -26,8 +27,11 @@ function checkNodeVersionRequiredByLinode() {
   }
 }
 
+
 module.exports = (on, config) => {
+  registerVisualRegTasks(on);
   checkNodeVersionRequiredByLinode();
+
 
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config

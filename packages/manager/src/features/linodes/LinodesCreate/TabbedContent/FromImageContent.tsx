@@ -1,9 +1,8 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { Sticky, StickyProps } from 'react-sticky';
 import AccessPanel from 'src/components/AccessPanel';
-import CheckoutBar from 'src/components/CheckoutBar';
+import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -153,6 +152,43 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
     const determineIDName =
       variant === 'private' ? 'image-private-create' : 'distro-create';
 
+    const displaySections = [];
+    if (imageDisplayInfo) {
+      displaySections.push(imageDisplayInfo);
+    }
+
+    if (regionDisplayInfo) {
+      displaySections.push({
+        title: regionDisplayInfo.title,
+        details: regionDisplayInfo.details
+      });
+    }
+
+    if (typeDisplayInfo) {
+      displaySections.push(typeDisplayInfo);
+    }
+
+    if (this.props.label) {
+      displaySections.push({
+        title: 'Linode Label',
+        details: this.props.label
+      });
+    }
+
+    if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
+      displaySections.push(
+        renderBackupsDisplaySection(
+          accountBackupsEnabled,
+          typeDisplayInfo.backupsMonthly
+        )
+      );
+    }
+
+    let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
+    if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
+      calculatedPrice += typeDisplayInfo.backupsMonthly;
+    }
+
     return (
       <React.Fragment>
         <Grid
@@ -266,69 +302,16 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
               : classes.sidebarPublic)
           }
         >
-          <Sticky topOffset={-24} disableCompensation>
-            {(props: StickyProps) => {
-              const displaySections = [];
-              if (imageDisplayInfo) {
-                displaySections.push(imageDisplayInfo);
-              }
-
-              if (regionDisplayInfo) {
-                displaySections.push({
-                  title: regionDisplayInfo.title,
-                  details: regionDisplayInfo.details
-                });
-              }
-
-              if (typeDisplayInfo) {
-                displaySections.push(typeDisplayInfo);
-              }
-
-              if (this.props.label) {
-                displaySections.push({
-                  title: 'Linode Label',
-                  details: this.props.label
-                });
-              }
-
-              if (
-                hasBackups &&
-                typeDisplayInfo &&
-                typeDisplayInfo.backupsMonthly
-              ) {
-                displaySections.push(
-                  renderBackupsDisplaySection(
-                    accountBackupsEnabled,
-                    typeDisplayInfo.backupsMonthly
-                  )
-                );
-              }
-
-              let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
-              if (
-                hasBackups &&
-                typeDisplayInfo &&
-                typeDisplayInfo.backupsMonthly
-              ) {
-                calculatedPrice += typeDisplayInfo.backupsMonthly;
-              }
-
-              return (
-                <CheckoutBar
-                  data-qa-checkout-bar
-                  heading="Linode Summary"
-                  calculatedPrice={calculatedPrice}
-                  isMakingRequest={this.props.formIsSubmitting}
-                  disabled={
-                    this.props.formIsSubmitting || userCannotCreateLinode
-                  }
-                  onDeploy={this.createLinode}
-                  displaySections={displaySections}
-                  {...props}
-                />
-              );
-            }}
-          </Sticky>
+          <CheckoutBar
+            data-qa-checkout-bar
+            heading="Linode Summary"
+            calculatedPrice={calculatedPrice}
+            isMakingRequest={this.props.formIsSubmitting}
+            disabled={this.props.formIsSubmitting || userCannotCreateLinode}
+            onDeploy={this.createLinode}
+          >
+            <DisplaySectionList displaySections={displaySections} />
+          </CheckoutBar>
         </Grid>
       </React.Fragment>
     );

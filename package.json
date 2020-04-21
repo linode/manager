@@ -39,6 +39,7 @@
     "cy:stagedebug": "yarn workspace linode-manager cy:stagedebug",
     "cy:e2e": "yarn workspace linode-manager cy:e2e",
     "cy:debug": "yarn workspace linode-manager cy:debug",
+    "cy:rec-snap": "yarn workspace linode-manager cy:rec-snap",
     "docker:cy": "docker build -t cloudcy -f Dockerfile-e2e . && docker run --rm cloudcy",
     "docker:sb": "docker build -t cloudsb -f Dockerfile-storybook . && docker run --rm cloudsb",
     "docker:e2e": "docker-compose -f integration-test.yml up --exit-code-from manager-e2e",

@@ -19,7 +19,7 @@ const props = {
   backupError: undefined,
   entitiesWithGroupsToImport: { linodes: [], domains: [] },
   classes: { root: '' },
-  theme: light({ spacingOverride: 8 })
+  theme: light(8)
 };
 
 jest.mock('src/store');

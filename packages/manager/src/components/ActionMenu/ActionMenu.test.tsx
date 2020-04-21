@@ -1,16 +1,7 @@
 import { mount } from 'enzyme';
 import * as React from 'react';
 
-import { ActionMenu } from './ActionMenu';
-
-const classes = {
-  actionSingleLink: '',
-  button: '',
-  hidden: '',
-  item: '',
-  root: '',
-  menu: ''
-};
+import ActionMenu from './ActionMenu';
 
 describe('ActionMenu', () => {
   const action = { title: 'whatever', onClick: () => undefined };
@@ -20,11 +11,7 @@ describe('ActionMenu', () => {
 
   it.skip('should render a menu when provided many or one action(s).', () => {
     const result = mount(
-      <ActionMenu
-        classes={classes}
-        createActions={createActionsMany}
-        ariaLabel="label"
-      />
+      <ActionMenu createActions={createActionsMany} ariaLabel="label" />
     );
     expect(result.find('WithStyles(ActionMenu)')).toHaveLength(1);
 

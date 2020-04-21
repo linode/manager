@@ -14,12 +14,11 @@ import {
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { Sticky, StickyContainer, StickyProps } from 'react-sticky';
 import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
-import CheckoutBar from 'src/components/CheckoutBar';
+import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
@@ -189,10 +188,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
   afterProtocolUpdate = (L: { [key: string]: Lens }) => () => {
     this.setState(
-      compose(
-        set(L.sslCertificateLens, ''),
-        set(L.privateKeyLens, '')
-      )
+      compose(set(L.sslCertificateLens, ''), set(L.privateKeyLens, ''))
     );
   };
 
@@ -394,7 +390,10 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
   tagsChange = (tags: Tag[]) => {
     this.setState(
-      set(lensPath(['nodeBalancerFields', 'tags']), tags.map(tag => tag.value))
+      set(
+        lensPath(['nodeBalancerFields', 'tags']),
+        tags.map(tag => tag.value)
+      )
     );
   };
 
@@ -450,12 +449,28 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     const hasErrorFor = getAPIErrorFor(errorResources, this.state.errors);
     const generalError = hasErrorFor('none');
 
+    const { region } = this.state.nodeBalancerFields;
+    let displaySections;
+    if (region) {
+      const foundRegion = (regionsData || []).find(r => r.id === region);
+      if (foundRegion) {
+        displaySections = [
+          {
+            title: dcDisplayCountry[foundRegion.id],
+            details: foundRegion.display
+          }
+        ];
+      } else {
+        displaySections = [{ title: 'Unknown Region' }];
+      }
+    }
+
     if (this.props.regionsLoading) {
       return <CircleProgress />;
     }
 
     return (
-      <StickyContainer>
+      <React.Fragment>
         <DocumentTitleSegment segment="Create a NodeBalancer" />
         <Grid container>
           <Grid item className={`${classes.main} mlMain`}>
@@ -649,36 +664,15 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
             </Grid>
           </Grid>
           <Grid item className={`${classes.sidebar} mlSidebar`}>
-            <Sticky topOffset={-24} disableCompensation>
-              {(props: StickyProps) => {
-                const { region } = this.state.nodeBalancerFields;
-                let displaySections;
-                if (region) {
-                  const foundRegion = (regionsData || []).find(
-                    r => r.id === region
-                  );
-                  if (foundRegion) {
-                    displaySections = {
-                      title: dcDisplayCountry[foundRegion.id],
-                      details: foundRegion.display
-                    };
-                  } else {
-                    displaySections = { title: 'Unknown Region' };
-                  }
-                }
-                return (
-                  <CheckoutBar
-                    heading={`${this.state.nodeBalancerFields.label ||
-                      'NodeBalancer'} Summary`}
-                    onDeploy={this.createNodeBalancer}
-                    calculatedPrice={10}
-                    displaySections={displaySections && [displaySections]}
-                    disabled={this.state.submitting || disabled}
-                    {...props}
-                  />
-                );
-              }}
-            </Sticky>
+            <CheckoutBar
+              heading={`${this.state.nodeBalancerFields.label ||
+                'NodeBalancer'} Summary`}
+              onDeploy={this.createNodeBalancer}
+              calculatedPrice={10}
+              disabled={this.state.submitting || disabled}
+            >
+              <DisplaySectionList displaySections={displaySections} />
+            </CheckoutBar>
           </Grid>
         </Grid>
 
@@ -693,7 +687,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
             Are you sure you want to delete this NodeBalancer Configuration?
           </Typography>
         </ConfirmationDialog>
-      </StickyContainer>
+      </React.Fragment>
     );
   }
 }

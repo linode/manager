@@ -215,6 +215,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       grey3: '#ccc',
       grey4: '#8C929D',
       grey5: '#f5f5f5',
+      grey6: '#e3e5e8',
       white: '#fff',
       black: '#222',
       blue: primaryColors.main,
@@ -1244,9 +1245,6 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           padding: spacingUnit + 2,
           borderTop: `1px solid ${primaryColors.divider}`,
           borderBottom: `1px solid ${primaryColors.divider}`,
-          '&:first-child': {
-            paddingLeft: 15
-          },
           '&:last-child': {
             paddingRight: spacingUnit + 2
           },
