@@ -82,6 +82,7 @@ module.exports = {
     '@typescript-eslint/no-namespace': 'warn',
     '@typescript-eslint/camelcase': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/no-empty-interface': 'warn',
     // this would disallow usage of ! postfix operator on non null types
     '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
