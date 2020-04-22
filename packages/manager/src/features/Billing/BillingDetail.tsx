@@ -13,23 +13,24 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import BillingActivityPanel from './BillingPanels/BillingActivityPanel';
 import SummaryPanel from './BillingPanels/SummaryPanel';
 import BillingSummary from './BillingSummary';
+import PaymentDrawer from './BillingPanels/PaymentDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
   main: {
     [theme.breakpoints.up('md')]: {
-      order: 1
-    }
+      order: 1,
+    },
   },
   heading: {
     marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(2)
-  }
+    marginBottom: theme.spacing(2),
+  },
 }));
 
 type CombinedProps = SetDocsProps & RouteComponentProps<{}>;
 
-export const BillingDetail: React.FC<CombinedProps> = props => {
+export const BillingDetail: React.FC<CombinedProps> = (props) => {
   const { account, requestAccount } = useAccount();
 
   const classes = useStyles();
@@ -38,7 +39,7 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
     if (account.loading && account.lastUpdated === 0) {
       requestAccount();
     }
-  }, []);
+  }, [account.loading, account.lastUpdated, requestAccount]);
 
   if (account.loading) {
     return <CircleProgress />;
@@ -69,6 +70,7 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
           </Grid>
         </Grid>
       </div>
+      <PaymentDrawer />
     </React.Fragment>
   );
 };

@@ -20,36 +20,26 @@
  *
  */
 
-import * as classNames from 'classnames';
 import {
   executePaypalPayment,
   makePayment,
   stagePaypalPayment
 } from 'linode-js-sdk/lib/account';
 import { APIError } from 'linode-js-sdk/lib/types';
-import { pathOr } from 'ramda';
 import * as React from 'react';
-import scriptLoader from 'react-async-script-loader';
-import * as ReactDOM from 'react-dom';
 import { compose } from 'recompose';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import RadioGroup from 'src/components/core/RadioGroup';
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Tooltip from 'src/components/core/Tooltip';
+
+import Drawer from 'src/components/Drawer';
 import ErrorState from 'src/components/ErrorState';
-import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
-import { PAYPAL_CLIENT_ENV } from 'src/constants';
 import AccountContainer, {
   DispatchProps as AccountDispatchProps
 } from 'src/containers/account.container';
@@ -58,7 +48,9 @@ import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 import { reportException } from 'src/exceptionReporting';
 
+import CreditCard from './CreditCard';
 import CreditCardDialog from './PaymentBits/CreditCardDialog';
+import PayPal from './Paypal'
 import PaypalDialog from './PaymentBits/PaypalDialog';
 
 type ClassNames =
@@ -86,31 +78,10 @@ const styles = (theme: Theme) =>
       flexWrap: 'wrap',
       position: 'relative'
     },
-    paypalMask: {
-      width: 175,
-      height: 45,
-      position: 'absolute',
-      zIndex: 10,
-      left: theme.spacing(2),
-      top: theme.spacing(2)
-    },
-    paypalButtonWrapper: {
-      position: 'relative',
-      zIndex: 1,
-      transition: theme.transitions.create(['opacity'])
-    },
-    PaypalHidden: {
-      opacity: 0.3
-    },
-    cvvField: {
-      width: 100
-    }
+    
   });
 
-type PaymentType = 'CREDIT_CARD' | 'PAYPAL';
-
 interface State {
-  type: PaymentType;
   isSubmittingCreditCardPayment: boolean;
   successMessage?: string;
   errors?: APIError[];
@@ -137,33 +108,13 @@ interface AccountContextProps {
   accountLoading: boolean;
   balance: false | number;
   lastFour: string;
+  expiry: string;
 }
 
 type CombinedProps = AccountContextProps &
   PaypalScript &
   AccountDispatchProps &
   WithStyles<ClassNames>;
-
-type PaypalButton = React.ComponentType<Paypal.PayButtonProps>;
-
-/* tslint:disable-next-line */
-let PaypalButton: PaypalButton; // needs to be a JSX.Element with some props
-
-/*
- * Client Script src for Linode Paypal Apps
- */
-const client = {
-  sandbox: 'sb',
-  // 'YbjxBCou-0Aum1f2K1xqSgrJqhNCHOEbdmvi1pPQhk-bj_dLrJ41Cssm_ektzlNxZJc9A-dx6UkYu2n',
-  production:
-    'AWdnFJ_Yx5X9uqKZQdbdkLfCnEJwtauQJ2tyesKf3S0IxSrkRLmB2ZN2ACSwy37gxY_AZoTagHWlZCOA'
-};
-
-const paypalSrcQueryParams = `&disable-funding=card,credit&currency=USD&commit=false&intent=capture`;
-
-const paypalScriptSrc = () => {
-  return `https://www.paypal.com/sdk/js?client-id=${client[PAYPAL_CLIENT_ENV]}${paypalSrcQueryParams}`;
-};
 
 export const getDefaultPayment = (balance: number | false): string => {
   if (!balance) {
@@ -173,7 +124,7 @@ export const getDefaultPayment = (balance: number | false): string => {
   return balance > 5 ? String(balance.toFixed(2)) : '';
 };
 
-export const getMinimumPayment = (balance: number, type: PaymentType) => {
+export const getMinimumPayment = (balance: number, type: string) => {
   /**
    * Paypal payments have a minimum of $5 under all circumstances.
    * For other payments, we follow the API's validation logic:
@@ -190,7 +141,6 @@ export const getMinimumPayment = (balance: number, type: PaymentType) => {
 
 class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
   state: State = {
-    type: 'CREDIT_CARD',
     isSubmittingCreditCardPayment: false,
     usd: getDefaultPayment(this.props.balance),
     cvv: '',
@@ -205,27 +155,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     paypalPaymentFailed: false
   };
 
-  componentDidUpdate(prevProps: CombinedProps, prevState: State) {
-    const isPayPalInitialized = window.hasOwnProperty('paypal');
-
-    if (
-      !prevProps.isScriptLoadSucceed &&
-      this.props.isScriptLoadSucceed &&
-      isPayPalInitialized
-    ) {
-      /*
-       * Because the paypal script is now loaded, so now we have access to this React component
-       * in the window element. This will be used in the render method.
-       * See documentation here:
-       * https://github.com/paypal/paypal-checkout-components/blob/master/demo/react.htm
-       */
-      PaypalButton = (window as any).paypal.Buttons.driver('react', {
-        React,
-        ReactDOM
-      });
-      this.setState({ paypalLoaded: true });
-    }
-
+  componentDidUpdate(prevProps: CombinedProps) {
     if (prevProps.accountLoading && !this.props.accountLoading) {
       const defaultPayment = getDefaultPayment(this.props.balance);
       this.setState({
@@ -234,16 +164,6 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
       });
     }
   }
-
-  handleTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({
-      successMessage: '',
-      type: e.target.value as 'CREDIT_CARD' | 'PAYPAL',
-      paypalSubmitEnabled: shouldEnablePaypalButton(
-        parseInt(this.state.usd, 10)
-      )
-    });
-  };
 
   handleUSDChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     /*
@@ -256,13 +176,10 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
 
     const amountAsInt = parseInt(e.target.value, 10);
 
-    if (this.state.type === 'PAYPAL') {
-      this.setState({
-        paypalSubmitEnabled: shouldEnablePaypalButton(amountAsInt)
-      });
-    }
-
-    this.setState({ usd: e.target.value || '' });
+    this.setState({
+      usd: e.target.value || '',
+      paypalSubmitEnabled: shouldEnablePaypalButton(amountAsInt)
+    });
   };
 
   handleCVVChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -287,7 +204,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
       usd: (+usd).toFixed(2),
       cvv
     })
-      .then(response => {
+      .then(_ => {
         this.setState({
           isSubmittingCreditCardPayment: false,
           successMessage: `Payment for $${usd} submitted successfully`,
@@ -430,7 +347,6 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
           isStagingPaypalPayment: false,
           paypalPaymentFailed: true
         });
-        return;
       });
   };
 
@@ -450,16 +366,18 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
 
   renderNotAuthorized = () => {
     return (
-      <ExpansionPanel heading="Make a Payment">
-        <Grid container>
-          <ErrorState errorText="You are not authorized to view billing information" />
-        </Grid>
-      </ExpansionPanel>
+      <Grid container>
+        <ErrorState errorText="You are not authorized to view billing information" />
+      </Grid>
     );
   };
 
+  makeCreditCardPayment = (cvv: string) => {
+    alert(`cvv: ${cvv}, balance: ${this.props.balance}`);
+  };
+
   renderForm = () => {
-    const { balance, lastFour, classes } = this.props;
+    const { balance, lastFour } = this.props;
     const { errors, successMessage } = this.state;
 
     const hasErrorFor = getAPIErrorFor(
@@ -475,7 +393,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <ExpansionPanel heading="Make a Payment" actions={this.renderActions}>
+        <Drawer title="Make a Payment" open={true}>
           <Grid container>
             {/* Payment */}
             <Grid item xs={12}>
@@ -488,53 +406,37 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
               {successMessage && (
                 <Notice success text={this.state.successMessage} />
               )}
-              <RadioGroup
-                aria-label="payment type"
-                name="type"
-                value={this.state.type}
-                onChange={this.handleTypeChange}
-                row
-              >
-                <FormControlLabel
-                  value="CREDIT_CARD"
-                  label={`Credit Card ${lastFour}`}
-                  control={<Radio />}
-                />
-                {!!PaypalButton && this.state.paypalLoaded && (
-                  <FormControlLabel
-                    value="PAYPAL"
-                    label="Paypal"
-                    control={<Radio />}
-                  />
-                )}
-              </RadioGroup>
-              <TextField
-                errorText={hasErrorFor('usd')}
-                label="Amount to Charge"
-                onChange={this.handleUSDChange}
-                value={this.state.usd}
-                required
-                type="number"
-                placeholder={`${getMinimumPayment(
-                  balance || 0,
-                  this.state.type
-                ).toFixed(2)} minimum`}
-              />
-              {this.state.type === 'CREDIT_CARD' && (
+
+              <Grid item>
                 <TextField
-                  errorText={hasErrorFor('cvv')}
-                  label="CVV"
-                  onChange={this.handleCVVChange}
-                  value={this.state.cvv}
-                  type="text"
-                  placeholder={`000`}
-                  inputProps={{ id: 'paymentCVV' }}
-                  className={classes.cvvField}
+                  errorText={hasErrorFor('usd')}
+                  label="Payment Amount"
+                  onChange={this.handleUSDChange}
+                  value={this.state.usd}
+                  required
+                  type="number"
+                  placeholder={`${getMinimumPayment(
+                    balance || 0,
+                    'CREDIT_CARD'
+                  ).toFixed(2)} minimum`}
                 />
-              )}
+              </Grid>
+
+              <CreditCard
+                lastFour={lastFour}
+                expiry={this.props.expiry}
+                submitForm={this.makeCreditCardPayment}
+              />
+
+              <PayPal
+                enabled={shouldEnablePaypalButton(parseInt(this.state.usd, 10))}
+                onApprove={this.onApprove}
+                onCancel={this.onCancel}
+                createOrder={this.createOrder}
+              />
             </Grid>
           </Grid>
-        </ExpansionPanel>
+        </Drawer>
         <PaypalDialog
           open={this.state.paypalDialogOpen}
           closeDialog={this.closePaypalDialog}
@@ -561,56 +463,6 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
       ? this.renderNotAuthorized()
       : this.renderForm();
   }
-
-  renderActions = () => {
-    const { classes } = this.props;
-    const { paypalSubmitEnabled } = this.state;
-    return (
-      <ActionsPanel className={classes.actionPanel}>
-        {this.state.type === 'PAYPAL' ? (
-          <React.Fragment>
-            {!paypalSubmitEnabled && (
-              <Tooltip
-                title={'Amount to charge must be between $5 and $10000'}
-                data-qa-help-tooltip
-                enterTouchDelay={0}
-                leaveTouchDelay={5000}
-              >
-                <div className={classes.paypalMask} />
-              </Tooltip>
-            )}
-
-            <div
-              data-qa-paypal-button
-              className={classNames({
-                [classes.paypalButtonWrapper]: true,
-                [classes.PaypalHidden]: !paypalSubmitEnabled
-              })}
-            >
-              <PaypalButton
-                env={PAYPAL_CLIENT_ENV as 'sandbox' | 'production'}
-                client={client}
-                createOrder={this.createOrder}
-                onApprove={this.onApprove}
-                onCancel={this.onCancel}
-                style={{
-                  color: 'blue',
-                  shape: 'rect'
-                }}
-              />
-            </div>
-          </React.Fragment>
-        ) : (
-          <Button buttonType="primary" onClick={this.openCreditCardDialog}>
-            Submit Payment
-          </Button>
-        )}
-        <Button buttonType="cancel" onClick={this.resetForm}>
-          Cancel
-        </Button>
-      </ActionsPanel>
-    );
-  };
 }
 
 const styled = withStyles(styles);
@@ -618,15 +470,15 @@ const styled = withStyles(styles);
 const withAccount = AccountContainer(
   (ownProps, { accountLoading, accountData }) => ({
     accountLoading,
-    balance: pathOr(false, ['balance'], accountData),
-    lastFour: pathOr('', ['credit_card', 'last_four'], accountData)
+    balance: accountData?.balance ?? 0,
+    lastFour: accountData?.credit_card.last_four ?? '0000',
+    expiry: accountData?.credit_card.expiry ?? ''
   })
 );
 
 export default compose<CombinedProps, {}>(
   styled,
-  withAccount,
-  scriptLoader(paypalScriptSrc())
+  withAccount
 )(MakeAPaymentPanel);
 
 export const isAllowedUSDAmount = (usd: number) => {
@@ -638,6 +490,7 @@ export const shouldEnablePaypalButton = (value: number | undefined) => {
    * paypal button should be disabled if there is either
    * no value entered or it's below $5 or over $500 as per APIv4 requirements
    */
+
   if (!value || !isAllowedUSDAmount(value)) {
     return false;
   }

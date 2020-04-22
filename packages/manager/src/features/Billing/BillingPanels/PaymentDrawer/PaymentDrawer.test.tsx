@@ -3,7 +3,7 @@ import {
   getMinimumPayment,
   isAllowedUSDAmount,
   shouldEnablePaypalButton
-} from './MakeAPaymentPanel';
+} from './PaymentDrawer';
 
 describe('Make a Payment Panel', () => {
   it('should return false for invalid USD amount', () => {
