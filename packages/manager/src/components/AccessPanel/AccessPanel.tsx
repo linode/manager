@@ -128,7 +128,7 @@ class AccessPanel extends React.Component<CombinedProps> {
       >
         <div className={!noPadding ? classes.inner : ''}>
           {error && <Notice text={error} error />}
-          <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+          <React.Suspense fallback={<SuspenseLoader />}>
             <PasswordInput
               data-qa-password-input
               className={classes.passwordInputOuter}

@@ -95,25 +95,52 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
             preference: spacingChoice,
             togglePreference: _toggleSpacing
           }: ToggleProps<SpacingChoice>) => (
-            <ThemeProvider
-              theme={safelyGetTheme(
-                themes,
-                themeChoice
-              )({
-                spacingOverride:
-                  spacingChoice === 'compact'
-                    ? COMPACT_SPACING_UNIT
-                    : NORMAL_SPACING_UNIT
-              })}
-            >
-              {typeof children === 'function'
-                ? (children as RenderChildren)(_toggleTheme, _toggleSpacing)
-                : children}
-            </ThemeProvider>
+            <MemoizedThemeProvider
+              themeChoice={themeChoice}
+              spacingChoice={spacingChoice}
+              toggleTheme={_toggleTheme}
+              toggleSpacing={_toggleSpacing}
+              children={children}
+            />
           )}
         </PreferenceToggle>
       )}
     </PreferenceToggle>
+  );
+};
+
+interface MemoizedThemeProviderProps {
+  themeChoice: ThemeChoice;
+  spacingChoice: SpacingChoice;
+  toggleTheme: () => ThemeChoice;
+  toggleSpacing: () => SpacingChoice;
+  children: any;
+}
+
+const MemoizedThemeProvider: React.FC<MemoizedThemeProviderProps> = props => {
+  const {
+    themeChoice,
+    toggleTheme,
+    spacingChoice,
+    toggleSpacing,
+    children
+  } = props;
+
+  const theme = React.useMemo(() => {
+    const themeCreator = safelyGetTheme(themes, themeChoice);
+
+    const spacingUnit =
+      spacingChoice === 'compact' ? COMPACT_SPACING_UNIT : NORMAL_SPACING_UNIT;
+
+    return themeCreator(spacingUnit);
+  }, [themeChoice, spacingChoice]);
+
+  return (
+    <ThemeProvider theme={theme}>
+      {typeof children === 'function'
+        ? (children as RenderChildren)(toggleTheme, toggleSpacing)
+        : children}
+    </ThemeProvider>
   );
 };
 

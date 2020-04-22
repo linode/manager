@@ -1,9 +1,9 @@
 // Configure Enzyme Adapter
 const sdk = require('linode-js-sdk/lib/request');
 const preferences = require.requireMock('linode-js-sdk/lib/profile');
-var Enzyme = require('enzyme');
-var Adapter = require('enzyme-adapter-react-16');
-var React = require('react');
+const Enzyme = require('enzyme');
+const Adapter = require('enzyme-adapter-react-16');
+const React = require('react');
 
 require('@testing-library/jest-dom/extend-expect');
 

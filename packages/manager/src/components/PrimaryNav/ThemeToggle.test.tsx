@@ -15,7 +15,7 @@ describe('ThemeToggle', () => {
       <ThemeToggle
         toggleTheme={jest.fn()}
         classes={mockClasses}
-        theme={light({ spacingOverride: 4 })}
+        theme={light(4)}
       />
     );
   });
