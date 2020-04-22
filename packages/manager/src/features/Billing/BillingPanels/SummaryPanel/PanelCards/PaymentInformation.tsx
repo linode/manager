@@ -28,7 +28,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const BillingInformation: React.FC<CombinedProps> = props => {
+const PaymentInformation: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const flags = useFlags();
 
@@ -37,7 +37,7 @@ const BillingInformation: React.FC<CombinedProps> = props => {
   return (
     <Paper className={classes.summarySection} data-qa-billing-summary>
       <Typography variant="h3" className={classes.title}>
-        Billing Information
+        Payment Method
       </Typography>
 
       <div className={classes.billingGroup}>
@@ -91,4 +91,4 @@ const BillingInformation: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(BillingInformation);
+export default compose<CombinedProps, Props>(React.memo)(PaymentInformation);
