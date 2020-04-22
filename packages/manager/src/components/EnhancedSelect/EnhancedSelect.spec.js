@@ -15,7 +15,7 @@ describe('Enhanced Select -', () => {
     it('should display the placeholder text in the select', () => {
       selectLabels = $$('[data-qa-textfield-label]');
       basicSelects = $$('[data-qa-enhanced-select="Choose one fruit"]');
-      let placeholderMsg = 'Choose one fruit';
+      const placeholderMsg = 'Choose one fruit';
 
       expect(selectLabels[0].getText())
         .withContext(`Select Title should be Basic Select`)

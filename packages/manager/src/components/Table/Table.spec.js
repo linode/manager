@@ -1,7 +1,6 @@
 const { navigateToStory } = require('../../../e2e/utils/storybook');
 
 describe('Table Suite', () => {
-
   beforeAll(() => {
     const component = 'Table';
     const childStories = ['default'];

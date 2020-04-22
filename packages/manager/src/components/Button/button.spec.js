@@ -1,4 +1,7 @@
-const { navigateToStory, executeInAllStories } = require('../../../e2e/utils/storybook');
+const {
+  navigateToStory,
+  executeInAllStories
+} = require('../../../e2e/utils/storybook');
 
 describe('Button Suite', () => {
   const component = 'Button';
@@ -7,24 +10,26 @@ describe('Button Suite', () => {
     'Disabled',
     'Primary Dropdown',
     'Secondary Dropdown',
-    'Destructive',
-  ]
+    'Destructive'
+  ];
   const button = {
     generic: '[data-qa-button]',
     primary: '[data-qa-button="primary"]',
     secondary: '[data-qa-button="secondary"]',
-    primaryDropdown:  '[data-qa-button="Primary Dropdown"]',
+    primaryDropdown: '[data-qa-button="Primary Dropdown"]',
     secondaryDropdown: '[data-qa-button="Secondary Dropdown"]',
-    destructive: '[data-qa-button="Destructive"]',
-  }
+    destructive: '[data-qa-button="Destructive"]'
+  };
 
   it('should display buttons in each story', () => {
     executeInAllStories(component, childStories, () => {
       $(button.generic).waitForDisplayed();
       const buttons = $$(button.generic);
-      buttons.forEach(b => expect(b.isDisplayed())
-        .withContext(`button should be displayed`)
-        .toBe(true));
+      buttons.forEach(b =>
+        expect(b.isDisplayed())
+          .withContext(`button should be displayed`)
+          .toBe(true)
+      );
     });
   });
 
@@ -76,7 +81,7 @@ describe('Button Suite', () => {
       secondaryButtons.forEach(button => {
         expect(button.getCSSProperty('background-color').parsed.hex)
           .withContext(`incorrect color background color`)
-          .toBe('#000000')
+          .toBe('#000000');
       });
     });
 
@@ -142,7 +147,6 @@ describe('Button Suite', () => {
   });
 
   describe('Destructive Button', () => {
-
     beforeAll(() => {
       navigateToStory(component, childStories[4]);
     });
@@ -151,7 +155,9 @@ describe('Button Suite', () => {
 
     it('should display an enabled destructive button and a disabled button', () => {
       destructiveButtons = $$(button.generic);
-      const disabledButtons = destructiveButtons.filter(d => d.getAttribute('class').includes('disabled'));
+      const disabledButtons = destructiveButtons.filter(d =>
+        d.getAttribute('class').includes('disabled')
+      );
 
       destructiveButtons.forEach(d => {
         expect(d.isDisplayed())

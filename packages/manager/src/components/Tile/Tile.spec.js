@@ -11,7 +11,7 @@ describe('Tile Suite', () => {
 
   it('should display the tile', () => {
     const title = 'This is the Tile title';
-    const description = /In order to make the tile a link, the link prop needs to be set. It can be either an internal or external link, or an onClick function/ig;
+    const description = /In order to make the tile a link, the link prop needs to be set. It can be either an internal or external link, or an onClick function/gi;
 
     $('[data-qa-tile]').waitForDisplayed(constants.wait.normal);
 

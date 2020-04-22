@@ -1,4 +1,7 @@
-const { navigateToStory , executeInAllStories } = require('../../../e2e/utils/storybook');
+const {
+  navigateToStory,
+  executeInAllStories
+} = require('../../../e2e/utils/storybook');
 
 describe('Selection Card Suite', () => {
   const component = 'SelectionCard';
@@ -11,8 +14,8 @@ describe('Selection Card Suite', () => {
     'Checked with SvgIcon',
     'Checked with plain SVG',
     'Checked with font Icon',
-    'Checked with no Icon',
-  ]
+    'Checked with no Icon'
+  ];
 
   const selectionCard = '[data-qa-selection-card]';
   const heading = '[data-qa-select-card-heading]';
@@ -28,41 +31,46 @@ describe('Selection Card Suite', () => {
         .withContext(`Missing or 'false' value for data-qa-checked`)
         .toBe('true');
     });
-  }
+  };
 
   const assertPlainSvgsDisplay = () => {
     const plainSvgs = $$(`${selectionCard} svg g`);
     plainSvgs.forEach(svg =>
       expect(svg.isDisplayed())
         .withContext(`Svg should be displayed`)
-        .toBe(true));
-  }
+        .toBe(true)
+    );
+  };
 
   const assertSvgIconsDisplay = () => {
     const svgElems = $$(`${selectionCard} svg`);
     svgElems.forEach(svg =>
       expect(svg.isDisplayed())
         .withContext(`Svg icon should be displayed`)
-        .toBe(true));
-  }
+        .toBe(true)
+    );
+  };
 
   const assertFontIconsDisplay = () => {
     const selectionCardElems = $$(selectionCard);
-    const fontIcons = $$(`${selectionCard} span`)
-      .filter(e => e.getAttribute('class')
-      .includes('fl-'));
+    const fontIcons = $$(`${selectionCard} span`).filter(e =>
+      e.getAttribute('class').includes('fl-')
+    );
 
     fontIcons.forEach(icon =>
       expect(icon.isDisplayed())
         .withContext(`Font icons should be displayed`)
-        .toBe(true));
-      expect(fontIcons.length)
-        .withContext(`Incorrect number of font icons`)
-        .toEqual(selectionCardElems.length);
-  }
+        .toBe(true)
+    );
+    expect(fontIcons.length)
+      .withContext(`Incorrect number of font icons`)
+      .toEqual(selectionCardElems.length);
+  };
 
-  const assertNoIcons = (checked) => {
-    const fontIcons = $$(`${selectionCard} span`).filter(e => e.getAttribute('class').includes('fl-'));
+  const assertNoIcons = checked => {
+    const fontIcons = $$(`${selectionCard} span`).filter(e =>
+      e.getAttribute('class').includes('fl-')
+    );
 
     if (checked) {
       const svgs = $$(`${selectionCard} svg`);
@@ -70,16 +78,16 @@ describe('Selection Card Suite', () => {
         .withContext(`Incorrect number of icons`)
         .toBe(3);
     } else {
-        const svgs = $(`${selectionCard} svg`).isExisting();
-        expect(svgs)
-          .withContext(`Svg icons should not exist`)
-          .toBe(false);
+      const svgs = $(`${selectionCard} svg`).isExisting();
+      expect(svgs)
+        .withContext(`Svg icons should not exist`)
+        .toBe(false);
     }
 
     expect(fontIcons.length)
       .withContext(`Font icon should not be displayed`)
       .toEqual(0);
-  }
+  };
 
   it('should display selection cards', () => {
     executeInAllStories(component, childStories, () => {
@@ -88,10 +96,11 @@ describe('Selection Card Suite', () => {
       selectionCardElems.forEach(card =>
         expect(card.isDisplayed())
           .withContext(`Selection Card should be displayed`)
-          .toBe(true));
-        expect(selectionCardElems.length)
-          .withContext(`Missing cards to select`)
-          .toBeGreaterThanOrEqual(1);
+          .toBe(true)
+      );
+      expect(selectionCardElems.length)
+        .withContext(`Missing cards to select`)
+        .toBeGreaterThanOrEqual(1);
     });
   });
 
@@ -101,7 +110,8 @@ describe('Selection Card Suite', () => {
       headingElems.forEach(e =>
         expect(e.isDisplayed())
           .withContext(`Heading should be displayed`)
-          .toBe(true));
+          .toBe(true)
+      );
     });
   });
 
@@ -114,7 +124,9 @@ describe('Selection Card Suite', () => {
       $(selectionCard).click();
 
       const selectionCardElements = $$(selectionCard);
-      const disabledCards = selectionCardElements.filter(e => e.getAttribute('class').includes('disabled'));
+      const disabledCards = selectionCardElements.filter(e =>
+        e.getAttribute('class').includes('disabled')
+      );
 
       expect(disabledCards.length)
         .withContext(`Incorrect number of disabled cards`)
@@ -125,7 +137,9 @@ describe('Selection Card Suite', () => {
     });
 
     it('should check enabled cards', () => {
-      const enabledCards = $$(selectionCard).filter(e => !e.getAttribute('class').includes('disabled'));
+      const enabledCards = $$(selectionCard).filter(
+        e => !e.getAttribute('class').includes('disabled')
+      );
       enabledCards.forEach(card => {
         card.click();
         const classes = card.getAttribute('class');
@@ -140,9 +154,10 @@ describe('Selection Card Suite', () => {
 
     it('should display subheadings for all selection cards', () => {
       const subheadingElems = $$(subheading);
-      subheadingElems.forEach(e => expect(e.isDisplayed())
-        .withContext(`Missing subheadings`)
-        .toBe(true)
+      subheadingElems.forEach(e =>
+        expect(e.isDisplayed())
+          .withContext(`Missing subheadings`)
+          .toBe(true)
       );
     });
   });
@@ -162,9 +177,7 @@ describe('Selection Card Suite', () => {
       navigateToStory(component, childStories[2]);
     });
 
-    it('should display plain svgs for all selection cards', () => {
-
-    });
+    it('should display plain svgs for all selection cards', () => {});
   });
 
   describe('Default with font Icon', () => {

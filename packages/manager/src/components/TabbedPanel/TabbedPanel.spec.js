@@ -2,9 +2,7 @@ const { navigateToStory } = require('../../../e2e/utils/storybook');
 
 describe('Tabbed Panel Suite', () => {
   const component = 'TabbedPanel';
-  const childStories = [
-    'default',
-  ]
+  const childStories = ['default'];
   const tabbedPanel = '[data-qa-tp]';
   const header = '[data-qa-tp-title]';
   const copy = '[data-qa-tp-copy]';
@@ -26,12 +24,16 @@ describe('Tabbed Panel Suite', () => {
 
   it('should display tabs as buttons', () => {
     const tabs = $$(tab);
-    tabs.forEach(t => expect(t.getAttribute('role'))
-      .withContext(`Incorrect attribute for role ${t.index+1}`)
-      .toBe('tab'));
-    tabs.forEach(t => expect(t.getTagName())
-      .withContext(`Incorrect TagName for button ${t.index+1}`)
-      .toBe('button'));
+    tabs.forEach(t =>
+      expect(t.getAttribute('role'))
+        .withContext(`Incorrect attribute for role ${t.index + 1}`)
+        .toBe('tab')
+    );
+    tabs.forEach(t =>
+      expect(t.getTagName())
+        .withContext(`Incorrect TagName for button ${t.index + 1}`)
+        .toBe('button')
+    );
   });
 
   it('should display panel heading', () => {
@@ -41,7 +43,7 @@ describe('Tabbed Panel Suite', () => {
       .toBe(true);
     expect(panelHeader.getText())
       .withContext(`Missing header text`)
-      .toMatch(/([A-Z])/ig);
+      .toMatch(/([A-Z])/gi);
   });
 
   it('should display panel copy', () => {
@@ -51,7 +53,7 @@ describe('Tabbed Panel Suite', () => {
       .toBe(true);
     expect(panelCopy.getText())
       .withContext(`Incorrect panel copy text`)
-      .toMatch(/([A-z])/ig);
+      .toMatch(/([A-z])/gi);
   });
 
   it('should update panel text on tab change', () => {
@@ -63,7 +65,7 @@ describe('Tabbed Panel Suite', () => {
       const tabText = $(tabBody).getText();
 
       expect(tabText)
-        .withContext(`Incorrect panel text: ${tabText} on Tab ${t.index+1}`)
+        .withContext(`Incorrect panel text: ${tabText} on Tab ${t.index + 1}`)
         .not.toBe(text);
       text = tabText;
     });
@@ -77,11 +79,11 @@ describe('Tabbed Panel Suite', () => {
       const selected = t.getAttribute('aria-selected').includes('true');
 
       expect(selected)
-        .withContext(`Tab ${t.index+1} should be selected`)
+        .withContext(`Tab ${t.index + 1} should be selected`)
         .toBe(true);
       expect(buttonColor.parsed.hex)
-        .withContext(`Incorrect color for button ${t.index+1}`)
-        .toBe('#32363c')
+        .withContext(`Incorrect color for button ${t.index + 1}`)
+        .toBe('#32363c');
     });
   });
 });

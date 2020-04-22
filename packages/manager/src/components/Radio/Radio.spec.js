@@ -2,9 +2,7 @@ const { navigateToStory } = require('../../../e2e/utils/storybook');
 
 describe('Radio Suite', () => {
   const component = 'Radio';
-  const childStories = [
-    'Interactive',
-  ]
+  const childStories = ['Interactive'];
   const radio = '[data-qa-radio]';
   let radios;
 
@@ -17,14 +15,18 @@ describe('Radio Suite', () => {
     radios = $$(radio);
     expect(radios.length)
       .withContext(`Should be 4 buttons`)
-      .toEqual(4)
-    radios.forEach(r => expect(r.isDisplayed())
-      .withContext(`Radio button should be displayed`)
-      .toBe(true));
+      .toEqual(4);
+    radios.forEach(r =>
+      expect(r.isDisplayed())
+        .withContext(`Radio button should be displayed`)
+        .toBe(true)
+    );
   });
 
   it('should check enabled buttons on click', () => {
-    const enabledRadios = $$(radio).filter(r => !r.getAttribute('class').includes('Mui-disabled'));
+    const enabledRadios = $$(radio).filter(
+      r => !r.getAttribute('class').includes('Mui-disabled')
+    );
     enabledRadios.forEach(r => {
       r.click();
 
@@ -36,7 +38,9 @@ describe('Radio Suite', () => {
   });
 
   it('should not check disabled buttons on click', () => {
-    const disabledRadios = $$(radio).filter(r => r.getAttribute('class').includes('Mui-disabled'));
+    const disabledRadios = $$(radio).filter(r =>
+      r.getAttribute('class').includes('Mui-disabled')
+    );
     disabledRadios.forEach(r => {
       r.$('..').click();
       expect(r.getAttribute('class').includes('Mui-disabled'))
@@ -67,5 +71,5 @@ describe('Radio Suite', () => {
     expect($('[variant=error] circle').getCSSProperty('stroke').value)
       .withContext(`Error notice color should be ${errorColor}`)
       .toBe(errorColor);
-  })
+  });
 });

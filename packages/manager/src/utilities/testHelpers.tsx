@@ -10,11 +10,11 @@ import { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import store, { ApplicationState } from 'src/store';
 
-export let createPromiseLoaderResponse: <T>(r: T) => PromiseLoaderResponse<T>;
-createPromiseLoaderResponse = response => ({ response });
+export const createPromiseLoaderResponse: <T>(
+  r: T
+) => PromiseLoaderResponse<T> = response => ({ response });
 
-export let createResourcePage: <T>(data: T[]) => ResourcePage<T>;
-createResourcePage = data => ({
+export const createResourcePage: <T>(data: T[]) => ResourcePage<T> = data => ({
   data,
   page: 0,
   pages: 0,
@@ -71,6 +71,8 @@ export const renderWithTheme = (ui: any, options: Options = {}) => {
 };
 
 declare global {
+  // export would be better, but i m aligning with how the namespace is declared by jest-axe
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace jest {
     interface Matchers<R, T> {
       toPassAxeCheck(): R;
@@ -89,7 +91,6 @@ export const toPassAxeCheck = {
     // Here i want to use forEach but tslint has a bug saying not all my pth return a value,
     // which is intended as i want to return only if there is an error, if not keep traversing
     // Also i could have used For .. Of but this was making tslint think e was a string...
-    // tslint:disable-next-line: prefer-for-of
     for (let i = 0; i < anchors.length; i++) {
       const e = anchors[i];
       const hasHref = e.hasAttribute('href');

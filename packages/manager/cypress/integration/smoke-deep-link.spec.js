@@ -1,7 +1,7 @@
 import { pages } from '../support/ui/constants';
 
 describe('smoke - deep link', () => {
-  //check if we run oinly one test
+  // check if we run oinly one test
 
   pages.forEach(page => {
     if (!page.goWithUI) {

@@ -4,20 +4,17 @@ const { constants } = require('../../../e2e/constants');
 describe('Toast Notification Suite', () => {
   const component = 'Toast Notification';
   const childStory = 'Default';
-  const variants = [
-    'success',
-    'warning',
-    'error',
-    'info'
-  ];
+  const variants = ['success', 'warning', 'error', 'info'];
   const toast = '[data-qa-toast] div';
-  const toastColor = '[data-qa-toast] [role="alertdialog"]'
+  const toastColor = '[data-qa-toast] [role="alertdialog"]';
 
-  const notificationButton = (state) => {
-    const button = $$('#root>[type="button"]').find(button => button.getText() === state);
+  const notificationButton = state => {
+    const button = $$('#root>[type="button"]').find(
+      button => button.getText() === state
+    );
     button.waitForDisplayed(constants.wait.normal);
     return button;
-  }
+  };
 
   const checkToastColor = (variant, color) => {
     notificationButton(variant).click();
@@ -27,14 +24,14 @@ describe('Toast Notification Suite', () => {
       .toBe(color);
     $('[title="Dismiss Notification"]').click();
     $(toastColor).waitForDisplayed(constants.wait.normal, true);
-  }
+  };
 
   beforeAll(() => {
     navigateToStory(component, childStory);
   });
 
   it('Toast notification displays with expected variant', () => {
-    variants.forEach((variant) => {
+    variants.forEach(variant => {
       notificationButton(variant).click();
       $(toast).waitForDisplayed(constants.wait.normal);
       expect($(toast).getAttribute('class'))
@@ -70,7 +67,9 @@ describe('Toast Notification Suite', () => {
     notificationButton(variants[1]).click();
     notificationButton(variants[1]).click();
     browser.pause(500);
-    const successIsNull = $$(toast).find(toast => toast.getAttribute('class').includes('SnackBar-success'));
+    const successIsNull = $$(toast).find(toast =>
+      toast.getAttribute('class').includes('SnackBar-success')
+    );
     expect(successIsNull)
       .withContext(`should not have SnackBar-success class`)
       .toEqual(undefined);

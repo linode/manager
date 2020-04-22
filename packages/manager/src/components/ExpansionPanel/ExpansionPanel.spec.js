@@ -4,11 +4,11 @@ const { navigateToStory } = require('../../../e2e/utils/storybook');
 describe('Expansion Panel Suite', () => {
   const component = 'ExpansionPanel';
   const childStories = [
-      'Interactive',
-      'Success!',
-      'Warning!',
-      'Error!',
-      'Asynchronous Content',
+    'Interactive',
+    'Success!',
+    'Warning!',
+    'Error!',
+    'Asynchronous Content'
   ];
 
   const panel = '[data-qa-panel]';
@@ -23,25 +23,29 @@ describe('Expansion Panel Suite', () => {
     const noticeMsg = $(notice);
     noticeMsg.waitForExist();
     expect(noticeMsg.isDisplayed())
-      .withContext(`notice message was not displayed`).toBe(true);
+      .withContext(`notice message was not displayed`)
+      .toBe(true);
     expect(noticeMsg.getText())
-      .withContext(`Incorrect text found`).toMatch(noticeTxt);
+      .withContext(`Incorrect text found`)
+      .toMatch(noticeTxt);
   }
 
-  function expandAssertGridItem(visible=true,opposite=false) {
+  function expandAssertGridItem(visible = true, opposite = false) {
     $('[data-qa-panel-summary]').click();
-    $(gridItem).waitForDisplayed(constants.wait.short, opposite)
+    $(gridItem).waitForDisplayed(constants.wait.short, opposite);
     expect($(gridItem).isDisplayed())
       .withContext(`grid item display should be ${visible}`)
       .toBe(visible);
-  };
+  }
 
   function panelDisplays(panelMsg) {
     $(panel).waitForDisplayed(constants.wait.normal);
     expect($(panelSubheading).getText())
-      .withContext(`Incorrect text found`).toEqual(panelMsg);
+      .withContext(`Incorrect text found`)
+      .toEqual(panelMsg);
     expect($(panel).isDisplayed())
-      .withContext(`Expansion panel should be displayed`).toBe(true)
+      .withContext(`Expansion panel should be displayed`)
+      .toBe(true);
   }
 
   function checkButtons() {
@@ -64,7 +68,6 @@ describe('Expansion Panel Suite', () => {
     expect(saveBtn.getText())
       .withContext(`incorrect save button text`)
       .toBe('Save');
-
   }
 
   describe('Interactive Suite', () => {
@@ -79,7 +82,7 @@ describe('Expansion Panel Suite', () => {
 
     it('should collapse on click', () => {
       expandAssertGridItem();
-      expandAssertGridItem(false,true);
+      expandAssertGridItem(false, true);
     });
   });
 
@@ -171,7 +174,9 @@ describe('Expansion Panel Suite', () => {
       const loadingMsg = 'Loading...';
       expandAssertGridItem();
       browser.waitUntil(function() {
-          return $(gridItem).getText().includes(loadingMsg);
+        return $(gridItem)
+          .getText()
+          .includes(loadingMsg);
       }, constants.wait.normal);
     });
 
@@ -179,7 +184,9 @@ describe('Expansion Panel Suite', () => {
       expandAssertGridItem();
       const loadedMsg = 'Your patience has been rewarded';
       browser.waitUntil(function() {
-          return $(gridItem).getText().includes(loadedMsg);
+        return $(gridItem)
+          .getText()
+          .includes(loadedMsg);
       }, constants.wait.normal);
     });
   });
