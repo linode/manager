@@ -53,7 +53,7 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
       title: 'Linode Credentials',
       render: () => (
         <React.Fragment>
-          <ThirdParty authType={authType} />
+          {thirdPartyEnabled && <ThirdParty authType={authType} />}
           <ResetPassword username={username} disabled={thirdPartyEnabled} />
           <TwoFactor
             twoFactor={twoFactor}

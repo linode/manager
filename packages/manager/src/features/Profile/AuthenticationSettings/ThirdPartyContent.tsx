@@ -63,13 +63,13 @@ export const ThirdPartyContent: React.FC<CombinedProps> = props => {
   );
 
   const thirdPartyEnabled = props.authType !== 'password';
-  const authTypeToDisplayName: Record<TPAProvider, string | undefined> = {
-    password: undefined,
-    github: 'GitHub'
-  };
+
+  const displayName =
+    providers.find(thisProvider => thisProvider.name === props.authType)
+      ?.displayName || '';
 
   return (
-    <React.Fragment>
+    <>
       <Typography className={classes.copy}>
         Third-Party Authentication (TPA) allows you to log in to your Linode
         account using another provider. All aspects of logging in, such as
@@ -83,23 +83,21 @@ export const ThirdPartyContent: React.FC<CombinedProps> = props => {
       <div className={classes.providers}>
         {providers.map(thisProvider => {
           return (
-            <>
-              <Button
-                className={thirdPartyEnabled ? classes.enabled : ''}
-                key={thisProvider.displayName}
-                onClick={() => {
-                  setProvider(thisProvider.name);
-                  setDialogOpen(true);
-                }}
-                disabled={thirdPartyEnabled}
-              >
-                <thisProvider.Icon className={classes.providerIcon} />
-                {thisProvider.displayName}
-                {thirdPartyEnabled && (
-                  <span className={classes.enabledText}>(Enabled)</span>
-                )}
-              </Button>
-            </>
+            <Button
+              className={thirdPartyEnabled ? classes.enabled : ''}
+              key={thisProvider.displayName}
+              onClick={() => {
+                setProvider(thisProvider.name);
+                setDialogOpen(true);
+              }}
+              disabled={thirdPartyEnabled}
+            >
+              <thisProvider.Icon className={classes.providerIcon} />
+              {thisProvider.displayName}
+              {thirdPartyEnabled && (
+                <span className={classes.enabledText}>(Enabled)</span>
+              )}
+            </Button>
           );
         })}
 
@@ -111,7 +109,7 @@ export const ThirdPartyContent: React.FC<CombinedProps> = props => {
         />
       </div>
       {thirdPartyEnabled && (
-        <React.Fragment>
+        <>
           <Typography className={classes.copy}>
             If you prefer to log in using your Linode credentials, you can
             disable Third-Party Authentication. We’ll send you an e-mail to
@@ -124,11 +122,11 @@ export const ThirdPartyContent: React.FC<CombinedProps> = props => {
               window.open(`${LOGIN_ROOT}/tpa/disable`, '_blank', 'noopener');
             }}
           >
-            Disable {authTypeToDisplayName[props.authType ?? '']} Authentication
+            Disable {displayName} Authentication
           </Button>
-        </React.Fragment>
+        </>
       )}
-    </React.Fragment>
+    </>
   );
 };
 
