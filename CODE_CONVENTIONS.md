@@ -285,7 +285,7 @@ class MyComponent extends React.PureComponent<MyProps> {
 
 We're creating abstractions of all external components, even if that's just an immediate exporting
 of the component `export { default } from '@material-ui/core'`. We're doing this for the following
-reasons;
+reasons:
 
 - Provides a common entry point where can make site-wide changes to the components structure or functionality.
 - Allows us control of the API we consume, regardless of where the component comes from.
@@ -412,7 +412,7 @@ The first step to creating a paginated list is asking yourself one question:
 
 Is my data sourced from Redux state or is it being requested on `componentDidMount`?
 
-If your data is being sourced from Redux state, it's safe to assume that the data is being pre-loaded on app mount. But not just some of the data - ALL of the data. A pattern we have adopted is to request every single page of entities for data that we are storing is Redux. Because of this, there is a possibility that there may be more than 100 items in the slice of Redux state. Which leads us to the first solution
+If your data is being sourced from Redux state, it's safe to assume that the data is being pre-loaded on app mount. But not just some of the data - ALL of the data. A pattern we have adopted is to request every single page of entities for data that we are storing in Redux. Because of this, there is a possibility that there may be more than 100 items in the slice of Redux state. Which leads us to the first solution...
 
 #### Paginating Data Sourced From Redux
 
@@ -592,11 +592,11 @@ Now, each time you change a page, the appropriate page will be requested. `<Page
 
 ### Toasts
 
-Showing messaging to users is a complex task that varies depending on whether an action is immediate or scheduled to happen some n time in the future. For all actions that we cannot predict their completion time,
+Showing messaging to users is a complex task that varies depending on whether an action is immediate or scheduled to happen sometime in the future. For all actions where we cannot predict their completion time,
 we use toasts or snackbar messages.
 
 We're leveraging [notistack](https://github.com/iamhosseindhv/notistack) for all toasts, which is
-an abstracted HOC built upon material-ui's Snackbar. All [MUI's props](https://material-ui.com/demos/snackbars/) can be applied to the Snackbar as well
+an abstracted HOC built upon material-ui's Snackbar. All [MUI's props](https://material-ui.com/demos/snackbars/) can be applied to the Snackbar as well.
 
 An example of how to use a Toast is as follows:
 
@@ -611,7 +611,7 @@ interface Props extends InjectedNotistackProps {
    */
 }
 
-export const Example: React.SFC<Props> = props => {
+export const Example: React.FC<Props> = props => {
   const handleClick = () => {
     props.enqueueSnackbar("this is a toast notification", {
       onClick: () => alert("you clicked the toast!")
