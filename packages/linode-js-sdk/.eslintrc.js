@@ -48,7 +48,6 @@ module.exports = {
     // typescript-eslint specific rules
     // prepend `_` to an arg you accept to ignore
     '@typescript-eslint/no-unused-vars': 'off',
-    '@typescript-eslint/prefer-for-of': 'warn',
     '@typescript-eslint/no-inferrable-types': 'off',
     '@typescript-eslint/no-namespace': 'warn',
     '@typescript-eslint/camelcase': 'off',

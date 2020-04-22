@@ -78,7 +78,6 @@ module.exports = {
     // typescript-eslint specific rules
     // This rules is disabled to avoid duplicates errors as no-unused-vars is set
     '@typescript-eslint/no-unused-vars': 'off',
-    '@typescript-eslint/prefer-for-of': 'warn',
     '@typescript-eslint/no-inferrable-types': 'off',
     '@typescript-eslint/no-namespace': 'warn',
     '@typescript-eslint/camelcase': 'off',
