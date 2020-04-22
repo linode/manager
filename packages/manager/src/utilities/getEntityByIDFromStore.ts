@@ -57,7 +57,7 @@ const _getEntityByIDFromStore = (
     case 'volume':
       return volumes.itemsById[entityID];
     case 'kubeCluster':
-      return kubernetes.entities.find(cluster => cluster.id === entityID);
+      return kubernetes.itemsById[entityID];
     default:
       return;
   }

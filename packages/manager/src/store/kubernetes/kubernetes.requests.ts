@@ -8,7 +8,7 @@ import {
   updateKubernetesCluster as _updateCluster,
   updateNodePool as _updateNodePool
 } from 'linode-js-sdk/lib/kubernetes';
-import { getAll } from 'src/utilities/getAll';
+import { getAll, GetAllData } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';
 import {
@@ -22,22 +22,24 @@ import { requestNodePoolsForCluster } from './nodePools.requests';
 const getAllClusters = getAll<KubernetesCluster>(getKubernetesClusters);
 
 export const requestKubernetesClusters: ThunkActionCreator<Promise<
-  KubernetesCluster[]
+  GetAllData<KubernetesCluster>
 >> = () => dispatch => {
   dispatch(requestClustersActions.started());
 
   return getAllClusters()
-    .then(({ data }) => {
+    .then(response => {
       let i = 0;
-      for (; i < data.length; i++) {
-        dispatch(requestNodePoolsForCluster({ clusterID: data[i].id }));
+      for (; i < response.data.length; i++) {
+        dispatch(
+          requestNodePoolsForCluster({ clusterID: response.data[i].id })
+        );
       }
       dispatch(
         requestClustersActions.done({
-          result: data
+          result: response
         })
       );
-      return data;
+      return response.data;
     })
     .catch(error => {
       dispatch(requestClustersActions.failed({ error }));

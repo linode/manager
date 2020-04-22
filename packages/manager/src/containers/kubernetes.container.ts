@@ -57,7 +57,8 @@ export interface DispatchProps {
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
 ) => ({
-  requestKubernetesClusters: () => dispatch(_requestKubernetesClusters()),
+  requestKubernetesClusters: () =>
+    dispatch(_requestKubernetesClusters()).then(response => response.data),
   requestClusterForStore: (clusterID: number) =>
     dispatch(_requestClusterForStore(clusterID)),
   updateCluster: (params: UpdateClusterParams) =>
@@ -105,7 +106,7 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
   mapKubernetesToProps?: MapProps<ReduxState, OwnProps>
 ) =>
   connect((state: ApplicationState, ownProps: OwnProps) => {
-    const _clusters = state.__resources.kubernetes.entities;
+    const _clusters = Object.values(state.__resources.kubernetes.itemsById);
     // Add node pool and pricing data to clusters
     const nodePools = state.__resources.nodePools.entities;
     const types = state.__resources.types.entities;
