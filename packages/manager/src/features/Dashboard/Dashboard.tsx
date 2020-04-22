@@ -20,11 +20,9 @@ import H1Header from 'src/components/H1Header';
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import PromotionalOfferCard from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
 import TaxBanner from 'src/components/TaxBanner';
-import TagImportDrawer from 'src/features/TagImport';
 import useFlags from 'src/hooks/useFlags';
 import { handleOpen } from 'src/store/backupDrawer';
 import { addNotificationsToLinodes } from 'src/store/linodes/linodes.helpers';
-import { openDrawer as openGroupDrawer } from 'src/store/tagImportDrawer';
 import { MapState } from 'src/store/types';
 import { formatNotifications } from 'src/utilities/formatNotifications';
 import BackupsDashboardCard from './BackupsDashboardCard';
@@ -60,7 +58,6 @@ interface StateProps {
 interface DispatchProps {
   actions: {
     openBackupDrawer: () => void;
-    openImportDrawer: () => void;
   };
 }
 
@@ -140,7 +137,6 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
           <BlogDashboardCard />
         </Grid>
       </Grid>
-      <TagImportDrawer />
     </React.Fragment>
   );
 };
@@ -185,8 +181,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 ) => {
   return {
     actions: {
-      openBackupDrawer: () => dispatch(handleOpen()),
-      openImportDrawer: () => dispatch(openGroupDrawer())
+      openBackupDrawer: () => dispatch(handleOpen())
     }
   };
 };

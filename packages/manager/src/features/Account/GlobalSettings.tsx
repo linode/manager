@@ -12,6 +12,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
 import TagImportDrawer from 'src/features/TagImport';
+import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { ApplicationState } from 'src/store';
 import { updateSettingsInStore } from 'src/store/accountSettings/accountSettings.actions';
 import {
@@ -60,28 +61,34 @@ type CombinedProps = StateProps &
   WithSnackbarProps &
   RouteComponentProps<{}>;
 
-class GlobalSettings extends React.Component<CombinedProps, {}> {
-  toggleAutomaticBackups = () => {
-    const {
-      actions: { updateAccount },
-      backups_enabled
-    } = this.props;
+const GlobalSettings: React.FC<CombinedProps> = props => {
+  const {
+    actions: { openBackupsDrawer, openImportDrawer, updateAccount },
+    backups_enabled,
+    networkHelperEnabled,
+    error,
+    loading,
+    linodesWithoutBackups,
+    entitiesWithGroupsToImport,
+    isManaged,
+    object_storage
+  } = props;
+
+  const { _loading } = useReduxLoad(['accountSettings', 'domains', 'linodes']);
+
+  const toggleAutomaticBackups = () => {
     return updateAccount({ backups_enabled: !backups_enabled }).catch(
-      this.displayError
+      displayError
     );
   };
 
-  toggleNetworkHelper = () => {
-    const {
-      actions: { updateAccount },
-      networkHelperEnabled
-    } = this.props;
+  const toggleNetworkHelper = () => {
     return updateAccount({ network_helper: !networkHelperEnabled }).catch(
-      this.displayError
+      displayError
     );
   };
 
-  displayError = (errors: APIError[] | undefined) => {
+  const displayError = (errors: APIError[] | undefined) => {
     if (!errors) {
       return;
     }
@@ -90,74 +97,51 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
       'There was an error updating your account settings.'
     )[0].reason;
 
-    return this.props.enqueueSnackbar(errorText, {
+    return props.enqueueSnackbar(errorText, {
       variant: 'error'
     });
   };
 
-  // Make sure account settings are fresh on mount.
-  componentDidMount = () => {
-    this.props.actions.requestSettings();
-  };
-
-  render() {
-    const {
-      actions: { openBackupsDrawer, openImportDrawer },
-      backups_enabled,
-      networkHelperEnabled,
-      error,
-      loading,
-      linodesWithoutBackups,
-      entitiesWithGroupsToImport,
-      isManaged,
-      object_storage
-    } = this.props;
-
-    if (loading) {
-      return <CircleProgress />;
-    }
-    if (error) {
-      return (
-        <ErrorState
-          errorText={'There was an error retrieving your account data.'}
-        />
-      );
-    }
-
+  if (loading || _loading) {
+    return <CircleProgress />;
+  }
+  if (error) {
     return (
-      <div
-        id="tabpanel-settings"
-        role="tabpanel"
-        aria-labelledby="tab-settings"
-      >
-        <AutoBackups
-          isManagedCustomer={isManaged}
-          backups_enabled={backups_enabled}
-          onChange={this.toggleAutomaticBackups}
-          openBackupsDrawer={openBackupsDrawer}
-          hasLinodesWithoutBackups={!isEmpty(linodesWithoutBackups)}
-        />
-        <NetworkHelper
-          onChange={this.toggleNetworkHelper}
-          networkHelperEnabled={networkHelperEnabled}
-        />
-        <EnableObjectStorage
-          object_storage={object_storage}
-          update={this.props.actions.updateAccountSettingsInStore}
-        />
-        <EnableManaged
-          isManaged={isManaged}
-          update={this.props.actions.updateAccountSettingsInStore}
-          push={this.props.history.push}
-        />
-        {shouldDisplayGroupImport(entitiesWithGroupsToImport) && (
-          <ImportGroupsAsTags openDrawer={openImportDrawer} />
-        )}
-        <TagImportDrawer />
-      </div>
+      <ErrorState
+        errorText={'There was an error retrieving your account data.'}
+      />
     );
   }
-}
+
+  return (
+    <div id="tabpanel-settings" role="tabpanel" aria-labelledby="tab-settings">
+      <AutoBackups
+        isManagedCustomer={isManaged}
+        backups_enabled={backups_enabled}
+        onChange={toggleAutomaticBackups}
+        openBackupsDrawer={openBackupsDrawer}
+        hasLinodesWithoutBackups={!isEmpty(linodesWithoutBackups)}
+      />
+      <NetworkHelper
+        onChange={toggleNetworkHelper}
+        networkHelperEnabled={networkHelperEnabled}
+      />
+      <EnableObjectStorage
+        object_storage={object_storage}
+        update={props.actions.updateAccountSettingsInStore}
+      />
+      <EnableManaged
+        isManaged={isManaged}
+        update={props.actions.updateAccountSettingsInStore}
+        push={props.history.push}
+      />
+      {shouldDisplayGroupImport(entitiesWithGroupsToImport) && (
+        <ImportGroupsAsTags openDrawer={openImportDrawer} />
+      )}
+      <TagImportDrawer />
+    </div>
+  );
+};
 const mapStateToProps: MapState<StateProps, {}> = state => ({
   loading: pathOr(false, ['__resources', 'accountSettings', 'loading'], state),
 
