@@ -2,12 +2,12 @@ import { defensiveDo } from '../support/ui/common';
 
 describe('Test', () => {
   it('check  Defensive do retries 3 times and calls wait', () => {
-    let fun = cy.stub();
+    const fun = cy.stub();
     const throwingFun = () => {
       fun();
       throw 'error';
     };
-    let wait = cy.spy(cy, 'wait');
+    const wait = cy.spy(cy, 'wait');
     try {
       defensiveDo(throwingFun, 3, 100, 20);
     } catch (err) {}
