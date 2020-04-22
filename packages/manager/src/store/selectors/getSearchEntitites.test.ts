@@ -23,13 +23,10 @@ describe('getSearchEntities selector', () => {
       itemsById: volumes.reduce((result, c) => ({ ...result, [c.id]: c }), {})
     },
     nodeBalancers: {
-      itemsById: nodeBalancers.reduce(
-        (result, c) => ({ ...result, [c.id]: c }),
-        {}
-      )
+      itemsById: apiResponseToMappedState(nodeBalancers)
     },
     kubernetes: {
-      entities: kubernetesClusterFactory.buildList(2)
+      itemsById: apiResponseToMappedState(kubernetesClusterFactory.buildList(2))
     }
   };
   it('should return an array of SearchableItems', () => {
@@ -52,10 +49,7 @@ describe('getSearchEntities selector', () => {
     getSearchEntities({
       ...mockState,
       linodes: {
-        itemsById: updatedLinodes.reduce(
-          (result, c) => ({ ...result, [c.id]: c }),
-          {}
-        )
+        itemsById: apiResponseToMappedState(updatedLinodes)
       }
     });
     expect(getSearchEntities.recomputations()).toEqual(1);
