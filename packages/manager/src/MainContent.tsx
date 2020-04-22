@@ -20,7 +20,6 @@ import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 
-import DefaultLoader from 'src/components/DefaultLoader';
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
@@ -121,90 +120,37 @@ type CombinedProps = Props &
   WithTheme &
   FeatureFlagConsumerProps;
 
-const Account = DefaultLoader({
-  loader: () => import('src/features/Account')
-});
-
-const LinodesRoutes = DefaultLoader({
-  loader: () => import('src/features/linodes')
-});
-
-const Volumes = DefaultLoader({
-  loader: () => import('src/features/Volumes')
-});
-
-const Domains = DefaultLoader({
-  loader: () => import('src/features/Domains')
-});
-
-const Images = DefaultLoader({
-  loader: () => import('src/features/Images')
-});
-
-const Kubernetes = DefaultLoader({
-  loader: () => import('src/features/Kubernetes')
-});
-
-const ObjectStorage = DefaultLoader({
-  loader: () => import('src/features/ObjectStorage')
-});
-
-const Profile = DefaultLoader({
-  loader: () => import('src/features/Profile')
-});
-
-const NodeBalancers = DefaultLoader({
-  loader: () => import('src/features/NodeBalancers')
-});
-
-const StackScripts = DefaultLoader({
-  loader: () => import('src/features/StackScripts')
-});
-
-const SupportTickets = DefaultLoader({
-  loader: () => import('src/features/Support/SupportTickets')
-});
-
-const SupportTicketDetail = DefaultLoader({
-  loader: () => import('src/features/Support/SupportTicketDetail')
-});
-
-const Longview = DefaultLoader({
-  loader: () => import('src/features/Longview')
-});
-
-const Managed = DefaultLoader({
-  loader: () => import('src/features/Managed')
-});
-
-const Dashboard = DefaultLoader({
-  loader: () => import('src/features/Dashboard')
-});
-
-const Help = DefaultLoader({
-  loader: () => import('src/features/Help')
-});
-
-const SupportSearchLanding = DefaultLoader({
-  loader: () => import('src/features/Help/SupportSearchLanding')
-});
-
-const SearchLanding = DefaultLoader({
-  loader: () => import('src/features/Search')
-});
-
-const EventsLanding = DefaultLoader({
-  loader: () => import('src/features/Events/EventsLanding')
-});
-
-const AccountActivationLanding = DefaultLoader({
-  loader: () =>
-    import('src/components/AccountActivation/AccountActivationLanding')
-});
-
-const Firewalls = DefaultLoader({
-  loader: () => import('src/features/Firewalls')
-});
+const Account = React.lazy(() => import('src/features/Account'));
+const LinodesRoutes = React.lazy(() => import('src/features/linodes'));
+const Volumes = React.lazy(() => import('src/features/Volumes'));
+const Domains = React.lazy(() => import('src/features/Domains'));
+const Images = React.lazy(() => import('src/features/Images'));
+const Kubernetes = React.lazy(() => import('src/features/Kubernetes'));
+const ObjectStorage = React.lazy(() => import('src/features/ObjectStorage'));
+const Profile = React.lazy(() => import('src/features/Profile'));
+const NodeBalancers = React.lazy(() => import('src/features/NodeBalancers'));
+const StackScripts = React.lazy(() => import('src/features/StackScripts'));
+const SupportTickets = React.lazy(() =>
+  import('src/features/Support/SupportTickets')
+);
+const SupportTicketDetail = React.lazy(() =>
+  import('src/features/Support/SupportTicketDetail')
+);
+const Longview = React.lazy(() => import('src/features/Longview'));
+const Managed = React.lazy(() => import('src/features/Managed'));
+const Dashboard = React.lazy(() => import('src/features/Dashboard'));
+const Help = React.lazy(() => import('src/features/Help'));
+const SupportSearchLanding = React.lazy(() =>
+  import('src/features/Help/SupportSearchLanding')
+);
+const SearchLanding = React.lazy(() => import('src/features/Search'));
+const EventsLanding = React.lazy(() =>
+  import('src/features/Events/EventsLanding')
+);
+const AccountActivationLanding = React.lazy(() =>
+  import('src/components/AccountActivation/AccountActivationLanding')
+);
+const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 
 const MainContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -306,7 +252,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                 <Grid container spacing={0} className={classes.grid}>
                   <Grid item className={classes.switchWrapper}>
                     <RegionStatusBanner />
-                    <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+                    <React.Suspense fallback={<SuspenseLoader />}>
                       <Switch>
                         <Route path="/linodes" component={LinodesRoutes} />
                         <Route path="/volumes" component={Volumes} />
