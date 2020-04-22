@@ -13,18 +13,13 @@ import AppBar from 'src/components/core/AppBar';
 import Box from 'src/components/core/Box';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
-import DefaultLoader from 'src/components/DefaultLoader';
 import DocumentationButton from 'src/components/DocumentationButton';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLink from 'src/components/TabLink';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 
-const LongviewClients = DefaultLoader({
-  loader: () => import('./LongviewClients')
-});
-
-const LongviewPlans = DefaultLoader({
-  loader: () => import('./LongviewPlans')
-});
+const LongviewClients = React.lazy(() => import('./LongviewClients'));
+const LongviewPlans = React.lazy(() => import('./LongviewPlans'));
 
 type CombinedProps = RouteComponentProps<{}>;
 
@@ -96,28 +91,32 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
           ))}
         </Tabs>
       </AppBar>
-      <Switch>
-        <Route
-          exact
-          strict
-          path={`${url}/clients`}
-          render={() => (
-            <LongviewClients
-              subscriptionsData={subscriptionRequestHook.data || []}
-              {...props}
-            />
-          )}
-        />
-        <Route
-          exact
-          strict
-          path={`${url}/plan-details`}
-          render={() => (
-            <LongviewPlans subscriptionRequestHook={subscriptionRequestHook} />
-          )}
-        />
-        <Redirect to={`${url}/clients`} />
-      </Switch>
+      <React.Suspense fallback={<SuspenseLoader />}>
+        <Switch>
+          <Route
+            exact
+            strict
+            path={`${url}/clients`}
+            render={() => (
+              <LongviewClients
+                subscriptionsData={subscriptionRequestHook.data || []}
+                {...props}
+              />
+            )}
+          />
+          <Route
+            exact
+            strict
+            path={`${url}/plan-details`}
+            render={() => (
+              <LongviewPlans
+                subscriptionRequestHook={subscriptionRequestHook}
+              />
+            )}
+          />
+          <Redirect to={`${url}/clients`} />
+        </Switch>
+      </React.Suspense>
     </React.Fragment>
   );
 };

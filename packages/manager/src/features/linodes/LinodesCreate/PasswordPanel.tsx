@@ -63,7 +63,7 @@ class PasswordPanel extends React.Component<CombinedProps> {
       <Paper className={classes.root}>
         <div className={!noPadding ? classes.inner : ''} data-qa-password-input>
           {error && <Notice text={error} error />}
-          <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+          <React.Suspense fallback={<SuspenseLoader />}>
             <PasswordInput
               required={required}
               value={this.props.password || ''}

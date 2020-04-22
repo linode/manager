@@ -21,10 +21,10 @@ import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
-import DefaultLoader from 'src/components/DefaultLoader';
 import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import PromotionalOfferCard from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLink from 'src/components/TabLink';
 import useFlags from 'src/hooks/useFlags';
 import { ApplicationState } from 'src/store';
@@ -34,13 +34,10 @@ import { requestClusters as _requestClusters } from 'src/store/clusters/clusters
 import { MapState } from 'src/store/types';
 import BucketDrawer from './BucketLanding/BucketDrawer';
 
-const BucketLanding = DefaultLoader({
-  loader: () => import('./BucketLanding/BucketLanding')
-});
-
-const AccessKeyLanding = DefaultLoader({
-  loader: () => import('./AccessKeyLanding/AccessKeyLanding')
-});
+const BucketLanding = React.lazy(() => import('./BucketLanding/BucketLanding'));
+const AccessKeyLanding = React.lazy(() =>
+  import('./AccessKeyLanding/AccessKeyLanding')
+);
 
 const useStyles = makeStyles((theme: Theme) => ({
   promo: {
@@ -162,25 +159,27 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
           className={classes.promo}
         />
       ))}
-      <Switch>
-        <Route
-          exact
-          strict
-          path={`${url}/buckets`}
-          render={() => (
-            <BucketLanding isRestrictedUser={props.isRestrictedUser} />
-          )}
-        />
-        <Route
-          exact
-          strict
-          path={`${url}/access-keys`}
-          render={() => (
-            <AccessKeyLanding isRestrictedUser={props.isRestrictedUser} />
-          )}
-        />
-        <Redirect to={`${url}/buckets`} />
-      </Switch>
+      <React.Suspense fallback={<SuspenseLoader />}>
+        <Switch>
+          <Route
+            exact
+            strict
+            path={`${url}/buckets`}
+            render={() => (
+              <BucketLanding isRestrictedUser={props.isRestrictedUser} />
+            )}
+          />
+          <Route
+            exact
+            strict
+            path={`${url}/access-keys`}
+            render={() => (
+              <AccessKeyLanding isRestrictedUser={props.isRestrictedUser} />
+            )}
+          />
+          <Redirect to={`${url}/buckets`} />
+        </Switch>
+      </React.Suspense>
       <BucketDrawer isRestrictedUser={props.isRestrictedUser} />
     </React.Fragment>
   );

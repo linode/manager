@@ -11,41 +11,19 @@ import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import H1Header from 'src/components/H1Header';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLink from 'src/components/TabLink';
 
-import DefaultLoader from 'src/components/DefaultLoader';
-
-const SSHKeys = DefaultLoader({
-  loader: () => import('./SSHKeys')
-});
-
-const Settings = DefaultLoader({
-  loader: () => import('./Settings')
-});
-
-const Referrals = DefaultLoader({
-  loader: () => import('./Referrals')
-});
-
-const OAuthClients = DefaultLoader({
-  loader: () => import('./OAuthClients')
-});
-
-const LishSettings = DefaultLoader({
-  loader: () => import('./LishSettings')
-});
-
-const DisplaySettings = DefaultLoader({
-  loader: () => import('./DisplaySettings')
-});
-
-const AuthenticationSettings = DefaultLoader({
-  loader: () => import('./AuthenticationSettings')
-});
-
-const APITokens = DefaultLoader({
-  loader: () => import('./APITokens')
-});
+const SSHKeys = React.lazy(() => import('./SSHKeys'));
+const Settings = React.lazy(() => import('./Settings'));
+const Referrals = React.lazy(() => import('./Referrals'));
+const OAuthClients = React.lazy(() => import('./OAuthClients'));
+const LishSettings = React.lazy(() => import('./LishSettings'));
+const DisplaySettings = React.lazy(() => import('./DisplaySettings'));
+const AuthenticationSettings = React.lazy(() =>
+  import('./AuthenticationSettings')
+);
+const APITokens = React.lazy(() => import('./APITokens'));
 
 type Props = RouteComponentProps<{}>;
 
@@ -133,20 +111,22 @@ class Profile extends React.Component<Props> {
             ))}
           </Tabs>
         </AppBar>
-        <Switch>
-          <Route exact path={`${url}/settings`} component={Settings} />
-          <Route
-            exact
-            path={`${url}/auth`}
-            component={AuthenticationSettings}
-          />
-          <Route exact path={`${url}/tokens`} component={APITokens} />
-          <Route exact path={`${url}/clients`} component={OAuthClients} />
-          <Route exact path={`${url}/lish`} component={LishSettings} />
-          <Route exact path={`${url}/referrals`} component={Referrals} />
-          <Route exact path={`${url}/keys`} component={SSHKeys} />
-          <Route path={`${url}`} component={DisplaySettings} />
-        </Switch>
+        <React.Suspense fallback={<SuspenseLoader />}>
+          <Switch>
+            <Route exact path={`${url}/settings`} component={Settings} />
+            <Route
+              exact
+              path={`${url}/auth`}
+              component={AuthenticationSettings}
+            />
+            <Route exact path={`${url}/tokens`} component={APITokens} />
+            <Route exact path={`${url}/clients`} component={OAuthClients} />
+            <Route exact path={`${url}/lish`} component={LishSettings} />
+            <Route exact path={`${url}/referrals`} component={Referrals} />
+            <Route exact path={`${url}/keys`} component={SSHKeys} />
+            <Route path={`${url}`} component={DisplaySettings} />
+          </Switch>
+        </React.Suspense>
       </React.Fragment>
     );
   }

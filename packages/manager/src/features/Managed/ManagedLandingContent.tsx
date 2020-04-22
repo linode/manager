@@ -17,30 +17,19 @@ import AppBar from 'src/components/core/AppBar';
 import Box from 'src/components/core/Box';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
-import DefaultLoader from 'src/components/DefaultLoader';
 import DocumentationButton from 'src/components/DocumentationButton';
 import Grid from 'src/components/Grid';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLink from 'src/components/TabLink';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import SupportWidget from './SupportWidget';
 
-const Monitors = DefaultLoader({
-  loader: () => import('./Monitors')
-});
-
-const SSHAccess = DefaultLoader({
-  loader: () => import('./SSHAccess')
-});
-
-const Credentials = DefaultLoader({
-  loader: () => import('./Credentials')
-});
-
-const Contacts = DefaultLoader({
-  loader: () => import('./Contacts')
-});
+const Monitors = React.lazy(() => import('./Monitors'));
+const SSHAccess = React.lazy(() => import('./SSHAccess'));
+const Credentials = React.lazy(() => import('./Credentials'));
+const Contacts = React.lazy(() => import('./Contacts'));
 
 export type CombinedProps = {} & RouteComponentProps<{}>;
 
@@ -160,59 +149,63 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
           ))}
         </Tabs>
       </AppBar>
-      <Switch>
-        <Route
-          exact
-          strict
-          path={`${props.match.path}/monitors`}
-          render={() => (
-            <Monitors
-              credentials={credentials.data}
-              loading={
-                (credentials.loading && contacts.lastUpdated === 0) ||
-                (contacts.loading && contacts.lastUpdated === 0)
-              }
-              groups={groups}
-              errorFromProps={credentials.error || contacts.error || undefined}
-            />
-          )}
-        />
-        <Route
-          exact
-          strict
-          path={`${props.match.path}/ssh-access`}
-          component={SSHAccess}
-        />
-        <Route
-          exact
-          strict
-          path={`${props.match.path}/credentials`}
-          render={() => (
-            <Credentials
-              loading={credentials.loading && credentials.lastUpdated === 0}
-              error={credentialsError}
-              credentials={credentials.data}
-              update={credentials.update}
-            />
-          )}
-        />
-        <Route
-          exact
-          strict
-          path={`${props.match.path}/contacts`}
-          render={() => (
-            <Contacts
-              contacts={contacts.data}
-              loading={contacts.loading && contacts.lastUpdated === 0}
-              error={contacts.error}
-              lastUpdated={contacts.lastUpdated}
-              transformData={contacts.transformData}
-              update={contacts.update}
-            />
-          )}
-        />
-        <Redirect to={`${props.match.path}/monitors`} />
-      </Switch>
+      <React.Suspense fallback={<SuspenseLoader />}>
+        <Switch>
+          <Route
+            exact
+            strict
+            path={`${props.match.path}/monitors`}
+            render={() => (
+              <Monitors
+                credentials={credentials.data}
+                loading={
+                  (credentials.loading && contacts.lastUpdated === 0) ||
+                  (contacts.loading && contacts.lastUpdated === 0)
+                }
+                groups={groups}
+                errorFromProps={
+                  credentials.error || contacts.error || undefined
+                }
+              />
+            )}
+          />
+          <Route
+            exact
+            strict
+            path={`${props.match.path}/ssh-access`}
+            component={SSHAccess}
+          />
+          <Route
+            exact
+            strict
+            path={`${props.match.path}/credentials`}
+            render={() => (
+              <Credentials
+                loading={credentials.loading && credentials.lastUpdated === 0}
+                error={credentialsError}
+                credentials={credentials.data}
+                update={credentials.update}
+              />
+            )}
+          />
+          <Route
+            exact
+            strict
+            path={`${props.match.path}/contacts`}
+            render={() => (
+              <Contacts
+                contacts={contacts.data}
+                loading={contacts.loading && contacts.lastUpdated === 0}
+                error={contacts.error}
+                lastUpdated={contacts.lastUpdated}
+                transformData={contacts.transformData}
+                update={contacts.update}
+              />
+            )}
+          />
+          <Redirect to={`${props.match.path}/monitors`} />
+        </Switch>
+      </React.Suspense>
     </React.Fragment>
   );
 };

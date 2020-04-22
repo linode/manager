@@ -5,12 +5,9 @@ import {
   Switch,
   withRouter
 } from 'react-router-dom';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 
-import DefaultLoader from 'src/components/DefaultLoader';
-
-const ManagedLanding = DefaultLoader({
-  loader: () => import('./ManagedLanding')
-});
+const ManagedLanding = React.lazy(() => import('./ManagedLanding'));
 
 type Props = RouteComponentProps<{}>;
 
@@ -21,9 +18,11 @@ class Managed extends React.Component<Props> {
     } = this.props;
 
     return (
-      <Switch>
-        <Route component={ManagedLanding} path={path} />
-      </Switch>
+      <React.Suspense fallback={<SuspenseLoader />}>
+        <Switch>
+          <Route component={ManagedLanding} path={path} />
+        </Switch>
+      </React.Suspense>
     );
   }
 }
