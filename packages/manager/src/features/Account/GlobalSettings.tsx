@@ -74,7 +74,7 @@ const GlobalSettings: React.FC<CombinedProps> = props => {
     object_storage
   } = props;
 
-  const { _loading } = useReduxLoad(['accountSettings', 'domains']);
+  const { _loading } = useReduxLoad(['accountSettings', 'domains', 'linodes']);
 
   const toggleAutomaticBackups = () => {
     return updateAccount({ backups_enabled: !backups_enabled }).catch(
