@@ -1,135 +1,148 @@
-import { Account, getInvoices, Invoice } from 'linode-js-sdk/lib/account';
-import { APIError } from 'linode-js-sdk/lib/types';
-import { compose, pathOr } from 'ramda';
+import {
+  getInvoices,
+  getPayments,
+  Invoice,
+  Payment
+} from 'linode-js-sdk/lib/account';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
-import paginate, { PaginationProps } from 'src/components/Pagey';
+import Currency from 'src/components/Currency';
+import DateTimeDisplay from 'src/components/DateTimeDisplay';
+import OrderBy from 'src/components/OrderBy';
+import { PaginationProps } from 'src/components/Pagey';
+import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import TableContentWrapper from 'src/components/TableContentWrapper';
 import TableRow from 'src/components/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
-import { ApplicationState } from 'src/store';
-import { requestAccount } from 'src/store/account/account.requests';
-import { ThunkDispatch } from 'src/store/types';
-import RecentInvoiceRow from './BillingItemRow';
+import { getAll } from 'src/utilities/getAll';
 
-type CombinedProps = PaginationProps<Invoice> & StateProps;
+type CombinedProps = PaginationProps<Invoice>;
 
-interface State {
-  loading: boolean;
+const getAllInvoices = getAll<Invoice>(getInvoices);
+const getAllPayments = getAll<Payment>(getPayments);
+
+interface ActivityFeedItem {
+  label: string;
+  total: number;
+  date: string;
+  type: string;
+  // type: 'payment' | 'invoice';
+  id: number;
 }
 
-class BillingActivityPanel extends React.Component<CombinedProps, State> {
-  state: State = {
-    loading: false
-  };
+export const BillingActivityPanel: React.FC<CombinedProps> = props => {
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [combinedData, setCombinedData] = React.useState<ActivityFeedItem[]>(
+    []
+  );
 
-  componentDidMount() {
-    if (!this.props.data) {
-      this.setState({ loading: true });
-      this.props.handleOrderChange('date', 'desc');
-    }
-  }
+  React.useEffect(() => {
+    setLoading(true);
 
-  render() {
-    const { data, page, pageSize, count } = this.props;
+    Promise.all([getAllInvoices(), getAllPayments()])
+      .then(([invoices, payments]) => {
+        const _combinedData: ActivityFeedItem[] = [
+          ...invoices.data.map(({ id, label, date, total }) => ({
+            id,
+            label,
+            date,
+            total,
+            type: 'invoice'
+          })),
+          ...payments.data.map(({ id, date, usd }) => ({
+            label: 'Payment',
+            date,
+            id,
+            total: usd,
+            type: 'payment'
+          }))
+        ];
+        setCombinedData(_combinedData);
+        setLoading(false);
+      })
+      .catch(error => {
+        setLoading(false);
+      });
+  }, []);
 
-    return (
-      <>
-        <Typography variant="h2">Activity</Typography>
-        <Paper>
-          <Table aria-label="List of Recent Invoices">
-            <TableHead>
-              <TableRow>
-                <TableCell>Date Created</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell>Amount</TableCell>
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>{this.renderContent()}</TableBody>
-          </Table>
-          {data && data.length > 0 && (
-            <PaginationFooter
-              count={count}
-              page={page}
-              pageSize={pageSize}
-              handlePageChange={this.props.handlePageChange}
-              handleSizeChange={this.props.handlePageSizeChange}
-              eventCategory="recent invoices panel"
-            />
+  return (
+    <>
+      <Typography variant="h2">Activity</Typography>
+      <Paper>
+        <OrderBy data={combinedData} orderBy={'date'} order={'desc'}>
+          {({ data: orderedData }) => (
+            <Paginate pageSize={25} data={orderedData}>
+              {({
+                data: paginatedAndOrderedData,
+                count,
+                handlePageChange,
+                handlePageSizeChange,
+                page,
+                pageSize
+              }) => (
+                <>
+                  <Table aria-label="List of Recent Invoices">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell style={{ width: '17%' }}>
+                          Description
+                        </TableCell>
+                        <TableCell style={{ width: '17%' }}>Date</TableCell>
+                        <TableCell style={{ width: '17%' }}>Amount</TableCell>
+                        <TableCell />
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableContentWrapper
+                        length={paginatedAndOrderedData.length}
+                        loading={loading}
+                        // @todo error state
+                        error={[]}
+                      >
+                        {paginatedAndOrderedData.map((thisItem, index) => (
+                          <ActivityFeedItem key={thisItem.id} {...thisItem} />
+                        ))}
+                      </TableContentWrapper>
+                    </TableBody>
+                  </Table>
+                  <PaginationFooter
+                    count={count}
+                    handlePageChange={handlePageChange}
+                    handleSizeChange={handlePageSizeChange}
+                    page={page}
+                    pageSize={pageSize}
+                    eventCategory="Billing Activity Table"
+                  />
+                </>
+              )}
+            </Paginate>
           )}
-        </Paper>
-      </>
-    );
-  }
+        </OrderBy>
+      </Paper>
+    </>
+  );
+};
 
-  renderContent = () => {
-    const {
-      data,
-      error,
-      loading,
-      account,
-      accountLoading,
-      accountError
-    } = this.props;
+export const ActivityFeedItem: React.FC<ActivityFeedItem> = props => {
+  const { date, label, total } = props;
+  return (
+    <TableRow>
+      <TableCell>{label}</TableCell>
+      <TableCell>
+        <DateTimeDisplay format="YYYY-MM-DD" value={date} />
+      </TableCell>
+      <TableCell>
+        <Currency quantity={total} />
+      </TableCell>
+      {/* @todo action menu */}
+      <TableCell />
+    </TableRow>
+  );
+};
 
-    if (loading || accountLoading) {
-      return <TableRowLoading colSpan={4} />;
-    }
-
-    if (error || accountError) {
-      return (
-        <TableRowError
-          colSpan={4}
-          message="We were unable to load your invoices."
-        />
-      );
-    }
-
-    return data && data.length > 0 && account ? (
-      data.map((eachInvoice, index) => (
-        <RecentInvoiceRow key={index} invoice={eachInvoice} account={account} />
-      ))
-    ) : (
-      <TableRowEmptyState colSpan={4} />
-    );
-  };
-}
-
-interface ReduxState {
-  account?: Account;
-  accountLoading: boolean;
-  accountError?: APIError[] | Error;
-}
-
-interface StateProps extends ReduxState {
-  requestAccount: () => void;
-}
-
-const connected = connect(
-  (state: ApplicationState): ReduxState => ({
-    account: state.__resources.account.data,
-    accountLoading: pathOr(false, ['__resources', 'account', 'loading'], state),
-    accountError: state.__resources.account.error.read
-  }),
-  (dispatch: ThunkDispatch): { requestAccount: () => void } => ({
-    requestAccount: () => dispatch(requestAccount())
-  })
-);
-
-const updatedRequest = (ownProps: any, params: any, filters: any) =>
-  getInvoices(params, filters).then(response => response);
-
-const paginated = paginate(updatedRequest);
-
-const enhanced = compose(connected, paginated);
-
-export default enhanced(BillingActivityPanel);
+export default BillingActivityPanel;
