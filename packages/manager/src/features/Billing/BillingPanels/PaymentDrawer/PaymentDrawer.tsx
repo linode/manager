@@ -10,6 +10,7 @@ import TextField from 'src/components/TextField';
 import AccountContainer, {
   DispatchProps as AccountDispatchProps
 } from 'src/containers/account.container';
+import { v4 } from 'uuid';
 
 import CreditCard from './CreditCard';
 import PayPal from './Paypal';
@@ -54,6 +55,9 @@ export const MakeAPaymentPanel: React.FC<CombinedProps> = props => {
     null
   );
 
+  const [creditCardKey, setCreditCardKey] = React.useState<string>(v4());
+  const [payPalKey, setPayPalKey] = React.useState<string>(v4());
+
   React.useEffect(() => {
     setUSD(getMinimumPayment(balance));
   }, [balance]);
@@ -68,7 +72,10 @@ export const MakeAPaymentPanel: React.FC<CombinedProps> = props => {
   ) => {
     setSuccessMessage(message);
     if (paymentWasMade) {
+      // Reset everything
       setUSD('0.00');
+      setCreditCardKey(v4());
+      setPayPalKey(v4());
       props.requestAccount();
     }
   };
@@ -119,13 +126,14 @@ export const MakeAPaymentPanel: React.FC<CombinedProps> = props => {
           </Grid>
 
           <CreditCard
+            key={creditCardKey}
             lastFour={lastFour}
             expiry={expiry}
             usd={usd}
             setSuccess={setSuccess}
           />
 
-          <PayPal usd={usd} setSuccess={setSuccess} />
+          <PayPal key={payPalKey} usd={usd} setSuccess={setSuccess} />
         </Grid>
       </Grid>
     </Drawer>
