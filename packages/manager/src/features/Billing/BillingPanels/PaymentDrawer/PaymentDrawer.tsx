@@ -33,7 +33,7 @@ interface AccountContextProps {
 type CombinedProps = AccountContextProps & AccountDispatchProps;
 
 export const getMinimumPayment = (balance: number | false) => {
-  if (!balance) {
+  if (!balance || balance <= 0) {
     return '5.00';
   }
   /**

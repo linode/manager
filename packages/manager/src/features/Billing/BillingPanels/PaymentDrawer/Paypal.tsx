@@ -32,7 +32,6 @@ import { Theme, makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Tooltip from 'src/components/core/Tooltip';
-import Notice from 'src/components/Notice';
 import { PAYPAL_CLIENT_ENV } from 'src/constants';
 import PaypalDialog from './PaymentBits/PaypalDialog';
 import { reportException } from 'src/exceptionReporting';
@@ -105,8 +104,6 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
 
   const [payerID, setPayerID] = React.useState<string>('');
   const [paymentID, setPaymentID] = React.useState<string>('');
-
-  const [error, setError] = React.useState<string | null>(null);
 
   /**
    * Has to be stored separately;
@@ -192,7 +189,6 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
   const createOrder = () => {
     setDialogOpen(true);
     setStaging(true);
-    setError(null);
     setPaymentFailed(false);
     setSuccess(null);
 
@@ -223,7 +219,6 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
 
         setStaging(false);
         setPaymentFailed(true);
-        setError(cleanedError);
       });
   };
 
@@ -249,7 +244,6 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
             <strong>Pay via PayPal</strong>
           </Typography>
         </Grid>
-        {error && <Notice error text={error} />}
         <Grid item>
           <Typography>
             You'll be taken to PayPal to complete your payment.
