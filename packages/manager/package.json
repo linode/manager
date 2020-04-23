@@ -90,7 +90,7 @@
     "start": "node scripts/start.js",
     "lint": "yarn run eslint . --ext .js,.ts,.tsx --quiet",
     "build": "node scripts/build.js",
-    "precommit": "lint-staged",
+    "precommit": "lint-staged && yarn typecheck",
     "prepush": "./scripts/pre-push.sh",
     "mock": "./scripts/mb.js",
     "test": "jest --color",
@@ -119,11 +119,7 @@
   "lint-staged": {
     "*.{ts,tsx,js}": [
       "prettier --write",
-      "eslint --ext .js,.ts,.tsx --debug",
-      "git add"
-    ],
-    "*.{ts,tsx}": [
-      "tsc -p tsconfig.json --noEmit"
+      "eslint --ext .js,.ts,.tsx --debug"
     ]
   },
   "devDependencies": {
