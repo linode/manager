@@ -1,3 +1,25 @@
+/**
+ * When viewing the PayPal code, please keep in mind the following flow
+ *
+ * 1. Make API call to v4/paypal to stage our paypal payment
+ * 2. Return an order id in the createOrder callback
+ * 3. Set payment_id state with the payment_id provided by Paypal
+ * 4. Finally, POST to v4/paypal/execute
+ *
+ * These things must happen in this order or the paypal payment will not
+ * process correctly. It is imperative that the APIv4 staging call happens before
+ * the the createOrder callback is returned.
+ *
+ * For all documentation, see below:
+ *
+ * https://developer.paypal.com/docs/checkout/
+ * https://developer.paypal.com/docs/checkout/integrate/
+ *
+ * We are **NOT** using the legacy PayPal version so please disregard any legacy
+ * instructions
+ *
+ */
+
 import scriptLoader from 'react-async-script-loader';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
@@ -75,7 +97,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
    * refs don't notify anyone that they've updated,
    * so the view won't update to use the loaded PaypalButton.
    *
-   * otoh, trying to store the button in a useState causes
+   * otoh, trying to store the button component in a useState causes
    * an explosion for unknown reasons. So a separate boolean
    * tracking value is necessary.
    */

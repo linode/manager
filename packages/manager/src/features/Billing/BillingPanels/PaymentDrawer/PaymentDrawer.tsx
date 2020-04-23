@@ -22,7 +22,6 @@
 
 import {
   executePaypalPayment,
-  makePayment,
   stagePaypalPayment
 } from 'linode-js-sdk/lib/account';
 import { APIError } from 'linode-js-sdk/lib/types';
@@ -49,8 +48,7 @@ import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import { reportException } from 'src/exceptionReporting';
 
 import CreditCard from './CreditCard';
-import CreditCardDialog from './PaymentBits/CreditCardDialog';
-import PayPal from './Paypal'
+import PayPal from './Paypal';
 import PaypalDialog from './PaymentBits/PaypalDialog';
 
 type ClassNames =
@@ -77,8 +75,7 @@ const styles = (theme: Theme) =>
       alignItems: 'center',
       flexWrap: 'wrap',
       position: 'relative'
-    },
-    
+    }
   });
 
 interface State {
@@ -116,33 +113,24 @@ type CombinedProps = AccountContextProps &
   AccountDispatchProps &
   WithStyles<ClassNames>;
 
-export const getDefaultPayment = (balance: number | false): string => {
+export const getMinimumPayment = (balance: number | false) => {
   if (!balance) {
-    return '';
+    return '5';
   }
-  // $5 is the minimum payment amount, so we don't want to set a default if they owe less than that.
-  return balance > 5 ? String(balance.toFixed(2)) : '';
-};
-
-export const getMinimumPayment = (balance: number, type: string) => {
   /**
-   * Paypal payments have a minimum of $5 under all circumstances.
    * For other payments, we follow the API's validation logic:
    *
    * If balance > 5 then min payment is $5
    * If balance < 5 but > 0, min payment is their balance
    * If balance < 0 then min payment is $5
    */
-  if (type === 'PAYPAL' || balance <= 0) {
-    return 5;
-  }
-  return Math.min(5, balance);
+  return Math.min(5, balance).toFixed(2);
 };
 
 class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
   state: State = {
     isSubmittingCreditCardPayment: false,
-    usd: getDefaultPayment(this.props.balance),
+    usd: getMinimumPayment(this.props.balance),
     cvv: '',
     paypalDialogOpen: false,
     creditCardDialogOpen: false,
@@ -157,10 +145,10 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
 
   componentDidUpdate(prevProps: CombinedProps) {
     if (prevProps.accountLoading && !this.props.accountLoading) {
-      const defaultPayment = getDefaultPayment(this.props.balance);
+      const defaultPayment = getMinimumPayment(this.props.balance);
       this.setState({
         usd: defaultPayment,
-        paypalSubmitEnabled: Number(defaultPayment) >= 5
+        paypalSubmitEnabled: shouldEnablePaypalButton(Number(defaultPayment))
       });
     }
   }
@@ -180,48 +168,6 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
       usd: e.target.value || '',
       paypalSubmitEnabled: shouldEnablePaypalButton(amountAsInt)
     });
-  };
-
-  handleCVVChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // All characters except numbers
-    const regex = /(([\D]))/;
-
-    // Prevents more than 4 characters from being submitted
-    const cvv = e.target.value.slice(0, 4);
-    this.setState({ cvv: cvv.replace(regex, '') });
-  };
-
-  confirmCardPayment = () => {
-    const { usd, cvv } = this.state;
-
-    this.setState({
-      isSubmittingCreditCardPayment: true,
-      errors: undefined,
-      successMessage: ''
-    });
-
-    makePayment({
-      usd: (+usd).toFixed(2),
-      cvv
-    })
-      .then(_ => {
-        this.setState({
-          isSubmittingCreditCardPayment: false,
-          successMessage: `Payment for $${usd} submitted successfully`,
-          creditCardDialogOpen: false
-        });
-        this.props.requestAccount();
-      })
-      .catch(errorResponse => {
-        this.setState({
-          isSubmittingCreditCardPayment: false,
-          creditCardDialogOpen: false,
-          errors: getAPIErrorOrDefault(
-            errorResponse,
-            'Unable to make a payment at this time.'
-          )
-        });
-      });
   };
 
   resetForm = () => {
@@ -374,6 +320,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
 
   makeCreditCardPayment = (cvv: string) => {
     alert(`cvv: ${cvv}, balance: ${this.props.balance}`);
+    this.openCreditCardDialog();
   };
 
   renderForm = () => {
@@ -415,16 +362,14 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
                   value={this.state.usd}
                   required
                   type="number"
-                  placeholder={`${getMinimumPayment(
-                    balance || 0,
-                    'CREDIT_CARD'
-                  ).toFixed(2)} minimum`}
+                  placeholder={`${getMinimumPayment(balance || 0)} minimum`}
                 />
               </Grid>
 
               <CreditCard
                 lastFour={lastFour}
                 expiry={this.props.expiry}
+                usd={this.state.usd}
                 submitForm={this.makeCreditCardPayment}
               />
 
@@ -445,13 +390,6 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
           initExecutePayment={this.confirmPaypalPayment}
           paypalPaymentFailed={this.state.paypalPaymentFailed}
           usd={(+this.state.usd).toFixed(2)}
-        />
-        <CreditCardDialog
-          isMakingPayment={this.state.isSubmittingCreditCardPayment}
-          cancel={this.closeCreditCardDialog}
-          executePayment={this.confirmCardPayment}
-          open={this.state.creditCardDialogOpen}
-          usd={this.state.usd}
         />
       </React.Fragment>
     );
