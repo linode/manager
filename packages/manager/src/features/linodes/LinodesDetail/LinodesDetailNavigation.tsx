@@ -86,7 +86,7 @@ const LinodesDetailNavigation: React.StatelessComponent<CombinedProps> = props =
           <TabPanel
             as={LinodeSummary}
             path={`/linodes/:linodeId/summary`}
-            default
+            default={true}
           />
 
           <TabPanel
@@ -115,10 +115,7 @@ const LinodesDetailNavigation: React.StatelessComponent<CombinedProps> = props =
 
           <TabPanel as={LinodeActivity} path={`/linodes/:linodeId/activity`} />
 
-          <TabPanel
-            component={LinodeSettings}
-            path={`/linodes/:linodeId/settings`}
-          />
+          <TabPanel as={LinodeSettings} path={`/linodes/:linodeId/settings`} />
 
           <TabPanel as={LinodeAdvanced} path={`/linodes/:linodeId/advanced`} />
         </Router>
