@@ -71,7 +71,6 @@ export const CreditCard: React.FC<Props> = props => {
         setSubmitting(false);
         setDialogOpen(false);
         setSuccess(`Payment for $${usd} submitted successfully`, true);
-        // props.requestAccount();
       })
       .catch(errorResponse => {
         setSubmitting(false);
@@ -94,15 +93,15 @@ export const CreditCard: React.FC<Props> = props => {
         </Grid>
         <Grid item>
           <Typography>XXXX XXXX XXXX {lastFour}</Typography>
-          <Typography>Expires {expiry}</Typography>
+          {Boolean(expiry) && <Typography>Expires {expiry}</Typography>}
         </Grid>
         <Grid container alignItems="flex-end" justify="flex-start">
           <Grid item>
             <Button buttonType="primary" onClick={handleOpen}>
-              Pay now
+              Pay Now
             </Button>
           </Grid>
-          <Grid item className={'grid-item'}>
+          <Grid item>
             <TextField
               errorText={cvvError ?? ''}
               label="Please enter your CVV:"

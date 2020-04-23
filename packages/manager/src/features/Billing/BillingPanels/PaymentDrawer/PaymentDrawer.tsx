@@ -46,7 +46,7 @@ export const getMinimumPayment = (balance: number | false) => {
   return Math.min(5, balance).toFixed(2);
 };
 
-export const MakeAPaymentPanel: React.FC<CombinedProps> = props => {
+export const PaymentDrawer: React.FC<CombinedProps> = props => {
   const { accountLoading, balance, expiry, lastFour } = props;
   const classes = useStyles();
 
@@ -135,4 +135,4 @@ const withAccount = AccountContainer(
   })
 );
 
-export default compose<CombinedProps, {}>(withAccount)(MakeAPaymentPanel);
+export default compose<CombinedProps, {}>(withAccount)(PaymentDrawer);
