@@ -25,6 +25,7 @@ export interface Props {
   lastFour: string;
   expiry: string;
   usd: string;
+  setSuccess: (message: string | null) => void;
 }
 
 export const CreditCard: React.FC<Props> = props => {
@@ -95,7 +96,7 @@ export const CreditCard: React.FC<Props> = props => {
         </Grid>
         {success && (
           <Grid item>
-            <Notice text={success} />
+            <Notice success text={success} />
           </Grid>
         )}
         <Grid item>

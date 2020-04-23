@@ -19,11 +19,6 @@
  * instructions
  *
  */
-
-import {
-  executePaypalPayment,
-  stagePaypalPayment
-} from 'linode-js-sdk/lib/account';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -42,14 +37,10 @@ import TextField from 'src/components/TextField';
 import AccountContainer, {
   DispatchProps as AccountDispatchProps
 } from 'src/containers/account.container';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-
-import { reportException } from 'src/exceptionReporting';
 
 import CreditCard from './CreditCard';
 import PayPal from './Paypal';
-import PaypalDialog from './PaymentBits/PaypalDialog';
 
 type ClassNames =
   | 'root'
@@ -79,20 +70,9 @@ const styles = (theme: Theme) =>
   });
 
 interface State {
-  isSubmittingCreditCardPayment: boolean;
-  successMessage?: string;
+  successMessage: string | null;
   errors?: APIError[];
   usd: string;
-  cvv?: string;
-  paymentID: string;
-  payerID: string;
-  isExecutingPaypalPayment: boolean;
-  paypalSubmitEnabled: boolean;
-  paypalDialogOpen: boolean;
-  creditCardDialogOpen: boolean;
-  paypalLoaded: boolean;
-  isStagingPaypalPayment: boolean;
-  paypalPaymentFailed: boolean;
 }
 
 interface PaypalScript {
@@ -129,26 +109,15 @@ export const getMinimumPayment = (balance: number | false) => {
 
 class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
   state: State = {
-    isSubmittingCreditCardPayment: false,
     usd: getMinimumPayment(this.props.balance),
-    cvv: '',
-    paypalDialogOpen: false,
-    creditCardDialogOpen: false,
-    paymentID: '',
-    payerID: '',
-    isExecutingPaypalPayment: false,
-    paypalLoaded: false,
-    paypalSubmitEnabled: false, // disabled until a user enters in an amount over $5 USD
-    isStagingPaypalPayment: false,
-    paypalPaymentFailed: false
+    successMessage: null
   };
 
   componentDidUpdate(prevProps: CombinedProps) {
     if (prevProps.accountLoading && !this.props.accountLoading) {
       const defaultPayment = getMinimumPayment(this.props.balance);
       this.setState({
-        usd: defaultPayment,
-        paypalSubmitEnabled: shouldEnablePaypalButton(Number(defaultPayment))
+        usd: defaultPayment
       });
     }
   }
@@ -165,149 +134,12 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     const amountAsInt = parseInt(e.target.value, 10);
 
     this.setState({
-      usd: e.target.value || '',
-      paypalSubmitEnabled: shouldEnablePaypalButton(amountAsInt)
+      usd: e.target.value || ''
     });
   };
 
-  resetForm = () => {
-    this.setState({
-      errors: undefined,
-      successMessage: '',
-      usd: '',
-      cvv: '',
-      paypalSubmitEnabled: false
-    });
-  };
-
-  closePaypalDialog = (wasCancelled: boolean) => {
-    this.setState({
-      paypalDialogOpen: false,
-      successMessage: wasCancelled ? 'Payment Cancelled' : ''
-    });
-  };
-
-  openCreditCardDialog = () => {
-    this.setState({ creditCardDialogOpen: true });
-  };
-
-  closeCreditCardDialog = () => {
-    this.setState({
-      errors: undefined,
-      creditCardDialogOpen: false
-    });
-  };
-
-  /**
-   * user submits payment and we send APIv4 request to confirm paypal payment
-   */
-  confirmPaypalPayment = () => {
-    const { payerID, paymentID } = this.state;
-    this.setState({ isExecutingPaypalPayment: true });
-    executePaypalPayment({
-      payer_id: payerID,
-      payment_id: paymentID
-    })
-      .then(() => {
-        this.setState({
-          isExecutingPaypalPayment: false,
-          paypalDialogOpen: false,
-          successMessage: `Payment for $${this.state.usd} successfully submitted`
-        });
-      })
-      .catch(errorResponse => {
-        this.setState({
-          isExecutingPaypalPayment: false,
-          usd: '',
-          paypalPaymentFailed: true
-        });
-      });
-  };
-
-  /**
-   * Once the user authorizes the payment on Paypal's website. This functions
-   * runs at the point when the user clicks "confirm" on paypal's website
-   * and returns back to cloud manager
-   *
-   * @param data - information that Paypal returns to then send to
-   * /account/payment/paypal/execute
-   * @param actions - handlers to do more things. Optional argument that we
-   * don't really need
-   *
-   * See documentation:
-   * https://github.com/paypal/paypal-checkout-components/blob/master/docs/implement-checkout.md
-   */
-  onApprove = (data: Paypal.AuthData) => {
-    this.setState({
-      payerID: data.payerID
-    });
-  };
-
-  /**
-   * Callback function which serves the purpose of providing Paypal with
-   * the order_id that we get from APIv4. It is imperative that this step happens before
-   * we make the call to v4/execute.
-   *
-   * It is also imperative that this function returns the checkout_id returned from APIv4.
-   * checkout_id is the same thing as order_id
-   */
-  createOrder = () => {
-    const { usd } = this.state;
-
-    this.setState({
-      paypalDialogOpen: true,
-      isStagingPaypalPayment: true,
-      errors: undefined,
-      paypalPaymentFailed: false,
-      successMessage: ''
-    });
-
-    return stagePaypalPayment({
-      cancel_url: 'https://www.paypal.com/checkoutnow/error',
-      redirect_url: 'https://www.paypal.com/checkoutnow/error',
-      usd: (+usd).toFixed(2)
-    })
-      .then(response => {
-        this.setState({
-          isStagingPaypalPayment: false,
-          paymentID: response.payment_id
-        });
-        return response.checkout_token;
-      })
-      .catch(errorResponse => {
-        /** For sentry purposes only */
-        const cleanedError = getAPIErrorOrDefault(
-          errorResponse,
-          'Something went wrong with the call to Linode /v4/account/paypal. See tags for USD info'
-        )[0].reason;
-
-        /**
-         * Send the error off to sentry with the USD amount in the tags
-         */
-        reportException(cleanedError, {
-          'Raw USD': usd,
-          'USD converted to number': (+usd).toFixed(2)
-        });
-
-        this.setState({
-          isStagingPaypalPayment: false,
-          paypalPaymentFailed: true
-        });
-      });
-  };
-
-  /*
-   * User was navigated to Paypal's site and then cancelled the payment and came back
-   * to cloud manager
-   *
-   * See documentation:
-   * https://github.com/paypal/paypal-checkout-components/blob/master/docs/implement-checkout.md
-   */
-  onCancel = () => {
-    this.setState({
-      successMessage: 'Payment Cancelled',
-      paypalDialogOpen: false
-    });
+  setSuccess = (message: string | null) => {
+    this.setState({ successMessage: message });
   };
 
   renderNotAuthorized = () => {
@@ -316,11 +148,6 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
         <ErrorState errorText="You are not authorized to view billing information" />
       </Grid>
     );
-  };
-
-  makeCreditCardPayment = (cvv: string) => {
-    alert(`cvv: ${cvv}, balance: ${this.props.balance}`);
-    this.openCreditCardDialog();
   };
 
   renderForm = () => {
@@ -339,59 +166,44 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     const generalError = hasErrorFor('none');
 
     return (
-      <React.Fragment>
-        <Drawer title="Make a Payment" open={true}>
-          <Grid container>
-            {/* Payment */}
-            <Grid item xs={12}>
-              {(generalError || hasErrorFor('payment_id')) && (
-                <Notice
-                  error
-                  text={generalError || hasErrorFor('payment_id')}
-                />
-              )}
-              {successMessage && (
-                <Notice success text={this.state.successMessage} />
-              )}
+      <Drawer title="Make a Payment" open={true}>
+        <Grid container>
+          {/* Payment */}
+          <Grid item xs={12}>
+            {(generalError || hasErrorFor('payment_id')) && (
+              <Notice error text={generalError || hasErrorFor('payment_id')} />
+            )}
+            {successMessage && (
+              <Notice success text={this.state.successMessage ?? ''} />
+            )}
 
-              <Grid item>
-                <TextField
-                  errorText={hasErrorFor('usd')}
-                  label="Payment Amount"
-                  onChange={this.handleUSDChange}
-                  value={this.state.usd}
-                  required
-                  type="number"
-                  placeholder={`${getMinimumPayment(balance || 0)} minimum`}
-                />
-              </Grid>
-
-              <CreditCard
-                lastFour={lastFour}
-                expiry={this.props.expiry}
-                usd={this.state.usd}
-                submitForm={this.makeCreditCardPayment}
-              />
-
-              <PayPal
-                enabled={shouldEnablePaypalButton(parseInt(this.state.usd, 10))}
-                onApprove={this.onApprove}
-                onCancel={this.onCancel}
-                createOrder={this.createOrder}
+            <Grid item>
+              <TextField
+                errorText={hasErrorFor('usd')}
+                label="Payment Amount"
+                onChange={this.handleUSDChange}
+                value={this.state.usd}
+                required
+                type="number"
+                placeholder={`${getMinimumPayment(balance || 0)} minimum`}
               />
             </Grid>
+
+            <CreditCard
+              lastFour={lastFour}
+              expiry={this.props.expiry}
+              usd={this.state.usd}
+              setSuccess={this.setSuccess}
+            />
+
+            <PayPal
+              enabled={shouldEnablePaypalButton(parseInt(this.state.usd, 10))}
+              usd={this.state.usd}
+              setSuccess={this.setSuccess}
+            />
           </Grid>
-        </Drawer>
-        <PaypalDialog
-          open={this.state.paypalDialogOpen}
-          closeDialog={this.closePaypalDialog}
-          isExecutingPayment={this.state.isExecutingPaypalPayment}
-          isStagingPaypalPayment={this.state.isStagingPaypalPayment}
-          initExecutePayment={this.confirmPaypalPayment}
-          paypalPaymentFailed={this.state.paypalPaymentFailed}
-          usd={(+this.state.usd).toFixed(2)}
-        />
-      </React.Fragment>
+        </Grid>
+      </Drawer>
     );
   };
 
