@@ -16,9 +16,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(3),
     padding: theme.spacing(3) + 1,
-    border: `solid 1px #cce2ff`,
+    border: `solid 1px ${theme.color.borderBilling}`,
     borderRadius: 8,
-    backgroundColor: '#f5f9ff'
+    backgroundColor: theme.bg.billingHeader
   },
   header: {
     marginBottom: theme.spacing(2) - 1
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '&:nth-of-type(2)': {
       [theme.breakpoints.up('md')]: {
-        borderLeft: '1px solid #cce2ff'
+        borderLeft: `1px solid ${theme.color.borderBilling}`
       }
     },
     '&:last-of-type': {
@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   balanceOuter: {
     paddingTop: theme.spacing(1) - 3,
-    borderTop: '1px dashed #cce2ff'
+    borderTop: `1px dashed ${theme.color.borderBilling}`
   },
   label: {
     margin: `${theme.spacing(1) - 3}px 0`,
@@ -78,7 +78,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   text: {
     lineHeight: 1.43,
     letterSpacing: 0.1,
-    color: '#313335'
+    color: theme.color.billingText
   },
   iconButtonOuter: {
     display: 'flex',
