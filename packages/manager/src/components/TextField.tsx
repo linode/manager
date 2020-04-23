@@ -32,7 +32,8 @@ type ClassNames =
   | 'noTransform'
   | 'selectSmall'
   | 'wrapper'
-  | 'tiny';
+  | 'tiny'
+  | 'absolute';
 
 const styles = (theme: Theme) =>
   createStyles({
