@@ -157,10 +157,6 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
       });
   };
 
-  const handleOpen = () => {
-    setDialogOpen(true);
-  };
-
   const handleClose = () => {
     setDialogOpen(false);
   };

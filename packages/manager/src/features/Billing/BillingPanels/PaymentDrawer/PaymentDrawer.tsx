@@ -1,12 +1,6 @@
-import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 
 import Drawer from 'src/components/Drawer';
 import ErrorState from 'src/components/ErrorState';
@@ -16,49 +10,25 @@ import TextField from 'src/components/TextField';
 import AccountContainer, {
   DispatchProps as AccountDispatchProps
 } from 'src/containers/account.container';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 import CreditCard from './CreditCard';
 import PayPal from './Paypal';
 
-type ClassNames =
-  | 'root'
-  | 'positive'
-  | 'negative'
-  | 'actionPanel'
-  | 'paypalMask'
-  | 'paypalButtonWrapper'
-  | 'PaypalHidden'
-  | 'cvvField';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    positive: {
-      color: theme.color.green
-    },
-    negative: {
-      color: theme.color.red
-    },
-    actionPanel: {
-      display: 'flex',
-      alignItems: 'center',
-      flexWrap: 'wrap',
-      position: 'relative'
-    }
-  });
-
-interface State {
-  successMessage: string | null;
-  errors?: APIError[];
-  usd: string;
-}
-
-interface PaypalScript {
-  isScriptLoadSucceed?: boolean;
-  isScriptLoaded?: boolean;
-  onScriptLoaded?: () => void;
-}
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {},
+  positive: {
+    color: theme.color.green
+  },
+  negative: {
+    color: theme.color.red
+  },
+  actionPanel: {
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    position: 'relative'
+  }
+}));
 
 interface AccountContextProps {
   accountLoading: boolean;
@@ -67,17 +37,14 @@ interface AccountContextProps {
   expiry: string;
 }
 
-type CombinedProps = AccountContextProps &
-  PaypalScript &
-  AccountDispatchProps &
-  WithStyles<ClassNames>;
+type CombinedProps = AccountContextProps & AccountDispatchProps;
 
 export const getMinimumPayment = (balance: number | false) => {
   if (!balance) {
-    return '5';
+    return '5.00';
   }
   /**
-   * For other payments, we follow the API's validation logic:
+   * We follow the API's validation logic:
    *
    * If balance > 5 then min payment is $5
    * If balance < 5 but > 0, min payment is their balance
@@ -86,104 +53,86 @@ export const getMinimumPayment = (balance: number | false) => {
   return Math.min(5, balance).toFixed(2);
 };
 
-class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
-  state: State = {
-    usd: getMinimumPayment(this.props.balance),
-    successMessage: null
+export const MakeAPaymentPanel: React.FC<CombinedProps> = props => {
+  const { accountLoading, balance, expiry, lastFour } = props;
+  const classes = useStyles();
+
+  const [usd, setUSD] = React.useState<string>(getMinimumPayment(balance));
+  const [successMessage, setSuccessMessage] = React.useState<string | null>(
+    null
+  );
+
+  React.useEffect(() => {
+    setUSD(getMinimumPayment(balance));
+  }, [balance]);
+
+  const handleUSDChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUSD(e.target.value || '');
   };
 
-  componentDidUpdate(prevProps: CombinedProps) {
-    if (prevProps.accountLoading && !this.props.accountLoading) {
-      const defaultPayment = getMinimumPayment(this.props.balance);
-      this.setState({
-        usd: defaultPayment
-      });
-    }
-  }
-
-  handleUSDChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({
-      usd: e.target.value || ''
-    });
-  };
-
-  setSuccess = (message: string | null, paymentWasMade: boolean = true) => {
-    this.setState({ successMessage: message });
+  const setSuccess = (
+    message: string | null,
+    paymentWasMade: boolean = true
+  ) => {
+    setSuccessMessage(message);
     if (paymentWasMade) {
-      this.setState({ usd: '0.00' });
+      setUSD('0.00');
+      props.requestAccount();
     }
   };
 
-  renderNotAuthorized = () => {
+  // const hasErrorFor = getAPIErrorFor(
+  //   {
+  //     usd: 'amount',
+  //     cvv: 'cvv',
+  //     payment_id: 'payment_id'
+  //   },
+  //   errors
+  // );
+
+  // const generalError = hasErrorFor('none');
+  if (!accountLoading && balance === undefined) {
     return (
       <Grid container>
         <ErrorState errorText="You are not authorized to view billing information" />
       </Grid>
     );
-  };
-
-  renderForm = () => {
-    const { balance, lastFour } = this.props;
-    const { errors, successMessage } = this.state;
-
-    const hasErrorFor = getAPIErrorFor(
-      {
-        usd: 'amount',
-        cvv: 'cvv',
-        payment_id: 'payment_id'
-      },
-      errors
-    );
-
-    const generalError = hasErrorFor('none');
-
-    return (
-      <Drawer title="Make a Payment" open={true}>
-        <Grid container>
-          {/* Payment */}
-          <Grid item xs={12}>
-            {(generalError || hasErrorFor('payment_id')) && (
-              <Notice error text={generalError || hasErrorFor('payment_id')} />
-            )}
-            {successMessage && (
-              <Notice success text={this.state.successMessage ?? ''} />
-            )}
-
-            <Grid item>
-              <TextField
-                errorText={hasErrorFor('usd')}
-                label="Payment Amount"
-                onChange={this.handleUSDChange}
-                value={this.state.usd}
-                required
-                type="number"
-                placeholder={`${getMinimumPayment(balance || 0)} minimum`}
-              />
-            </Grid>
-
-            <CreditCard
-              lastFour={lastFour}
-              expiry={this.props.expiry}
-              usd={this.state.usd}
-              setSuccess={this.setSuccess}
-            />
-
-            <PayPal usd={this.state.usd} setSuccess={this.setSuccess} />
-          </Grid>
-        </Grid>
-      </Drawer>
-    );
-  };
-
-  render() {
-    const { accountLoading, balance } = this.props;
-    return !accountLoading && balance === undefined
-      ? this.renderNotAuthorized()
-      : this.renderForm();
   }
-}
+  return (
+    <Drawer title="Make a Payment" open={true}>
+      <Grid container>
+        {/* Payment */}
+        <Grid item xs={12}>
+          {/* {(generalError || hasErrorFor('payment_id')) && (
+              <Notice error text={generalError || hasErrorFor('payment_id')} />
+            )} */}
+          {successMessage && <Notice success text={successMessage ?? ''} />}
 
-const styled = withStyles(styles);
+          <Grid item>
+            <TextField
+              // errorText={hasErrorFor('usd')}
+              label="Payment Amount"
+              onChange={handleUSDChange}
+              value={usd}
+              required
+              type="number"
+              placeholder={`${getMinimumPayment(balance || 0)} minimum`}
+            />
+          </Grid>
+
+          <CreditCard
+            lastFour={lastFour}
+            expiry={expiry}
+            usd={usd}
+            setSuccess={setSuccess}
+          />
+
+          <PayPal usd={usd} setSuccess={setSuccess} />
+        </Grid>
+      </Grid>
+    </Drawer>
+  );
+};
 
 const withAccount = AccountContainer(
   (ownProps, { accountLoading, accountData }) => ({
@@ -194,7 +143,4 @@ const withAccount = AccountContainer(
   })
 );
 
-export default compose<CombinedProps, {}>(
-  styled,
-  withAccount
-)(MakeAPaymentPanel);
+export default compose<CombinedProps, {}>(withAccount)(MakeAPaymentPanel);
