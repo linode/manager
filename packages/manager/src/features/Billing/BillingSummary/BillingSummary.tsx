@@ -1,11 +1,15 @@
 import * as React from 'react';
-import Grid from 'src/components/core/Grid';
-import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
+import { ActivePromotion } from 'linode-js-sdk/lib/account/types';
 import CreditCard from 'src/assets/icons/credit-card.svg';
+import Info from 'src/assets/icons/info.svg';
 import Invoice from 'src/assets/icons/invoice.svg';
 // import GiftBox from 'src/assets/icons/gift-box.svg';
+import Grid from 'src/components/core/Grid';
+import IconButton from 'src/components/core/IconButton';
+import Paper from 'src/components/core/Paper';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Tooltip from 'src/components/core/Tooltip';
+import Typography from 'src/components/core/Typography';
 import IconTextLink from 'src/components/IconTextLink';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -26,9 +30,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   gridItem: {
     padding: `0 0 ${theme.spacing(3) + 1}px`,
-    '&:last-of-type': {
-      paddingBottom: 0
-    },
     [theme.breakpoints.up('md')]: {
       padding: `0 ${theme.spacing(4) - 2}px`
     },
@@ -46,6 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       }
     },
     '&:last-of-type': {
+      paddingBottom: 0,
       [theme.breakpoints.up('md')]: {
         paddingRight: 0
       }
@@ -65,7 +67,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   field: {
     margin: `${theme.spacing(1) - 3}px 0`,
-    color: theme.color.headline,
+    color: `${theme.color.headline}`,
     fontSize: '1rem',
     lineHeight: 1.13
   },
@@ -94,14 +96,24 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  pastDueAmount?: number;
-  hasPromotion?: boolean;
-  openPaymentDrawer: () => void;
-  goToInvoice: () => void;
+  promotion: ActivePromotion;
+  openPaymentDrawer?: () => void;
+  goToInvoice?: () => void;
+  uninvoicedBalance: number;
+  promotionAmount?: number;
+  creditsAmount?: number;
+  balance: number;
 }
 
 export const BillingSummary: React.FC<Props> = props => {
-  const { hasPromotion, openPaymentDrawer, goToInvoice, pastDueAmount } = props;
+  const {
+    promotion,
+    openPaymentDrawer,
+    goToInvoice,
+    uninvoicedBalance,
+    creditsAmount,
+    balance
+  } = props;
 
   const classes = useStyles();
 
@@ -138,21 +150,22 @@ export const BillingSummary: React.FC<Props> = props => {
     <Paper className={classes.root}>
       <Grid container alignItems="stretch">
         <Grid item xs={12} md={4} className={classes.gridItem}>
-          {determinePaymentDisplay(pastDueAmount)}
+          {/* TODO Need to get this val figured out */}
+          {determinePaymentDisplay(0)}
 
           <div className={classes.iconButtonOuter}>
             <IconTextLink
               SideIcon={CreditCard}
               text="Make a payment"
               title="Make a payment"
-              onClick={openPaymentDrawer}
+              onClick={openPaymentDrawer!}
               className={classes.iconButton}
             />
             <IconTextLink
               SideIcon={Invoice}
               text="View invoice"
               title="View invoice"
-              onClick={goToInvoice}
+              onClick={goToInvoice!}
               className={classes.iconButton}
             />
           </div>
@@ -187,27 +200,47 @@ export const BillingSummary: React.FC<Props> = props => {
               </Typography>
             </Grid>
             <Grid item>
-              <Typography className={classes.field}>$100.00</Typography>
+              <Typography className={classes.field}>
+                ${uninvoicedBalance.toFixed(2)}
+              </Typography>
             </Grid>
           </Grid>
-          {hasPromotion && (
-            <Grid item container justify="space-between">
+          {/* TODO Need to get this section figured out */}
+          {promotion && (
+            <Grid item container justify="space-between" alignItems="center">
               <Grid item>
-                <Typography className={classes.label}>Promotion</Typography>
+                <Typography className={classes.label}>
+                  Promotion {promotion.summary}
+                  <Tooltip
+                    title={promotion.description}
+                    enterTouchDelay={0}
+                    leaveTouchDelay={5000}
+                    placement={'bottom'}
+                  >
+                    <IconButton>
+                      <Info />
+                    </IconButton>
+                  </Tooltip>
+                </Typography>
               </Grid>
               <Grid item>
-                <Typography className={classes.field}>-($25.00)</Typography>
+                <Typography className={classes.field}>
+                  {`-($${promotion.this_month_credit_remaining})`}
+                </Typography>
               </Grid>
             </Grid>
           )}
           <Grid item container justify="space-between">
             <Grid item>
               <Typography className={classes.label}>
+                {/* TODO Need to get this section figured out */}
                 Payment &amp; Credits
               </Typography>
             </Grid>
             <Grid item>
-              <Typography className={classes.field}>$0.00</Typography>
+              <Typography className={classes.field}>
+                {creditsAmount ? `$${creditsAmount}` : '$0.00'}
+              </Typography>
             </Grid>
           </Grid>
           <Grid
@@ -220,7 +253,9 @@ export const BillingSummary: React.FC<Props> = props => {
               <Typography className={classes.label}>Balance</Typography>
             </Grid>
             <Grid item>
-              <Typography className={classes.field}>$150.00</Typography>
+              <Typography className={classes.field}>
+                ${balance.toFixed(2)}
+              </Typography>
             </Grid>
           </Grid>
           <Typography className={classes.caption}>
