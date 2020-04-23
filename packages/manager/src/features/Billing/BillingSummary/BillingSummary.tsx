@@ -150,8 +150,7 @@ export const BillingSummary: React.FC<Props> = props => {
     <Paper className={classes.root}>
       <Grid container alignItems="stretch">
         <Grid item xs={12} md={4} className={classes.gridItem}>
-          {/* TODO Need to get this val figured out */}
-          {determinePaymentDisplay(0)}
+          {determinePaymentDisplay(balance)}
 
           <div className={classes.iconButtonOuter}>
             <IconTextLink
