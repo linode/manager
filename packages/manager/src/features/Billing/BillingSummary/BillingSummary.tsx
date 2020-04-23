@@ -25,13 +25,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: '#cf1e1e'
   },
   gridItem: {
-    padding: `0 0 ${theme.spacing(4) - 2}px`,
+    padding: `0 0 ${theme.spacing(3) + 1}px`,
+    '&:last-of-type': {
+      paddingBottom: 0
+    },
     [theme.breakpoints.up('md')]: {
       padding: `0 ${theme.spacing(4) - 2}px`
     },
     '&:first-of-type': {
       [theme.breakpoints.up('md')]: {
-        paddingLeft: 0
+        paddingLeft: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between'
       }
     },
     '&:nth-of-type(2)': {
@@ -74,11 +80,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   iconButtonOuter: {
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    [theme.breakpoints.only('md')]: {
+      flexDirection: 'column'
+    }
   },
   iconButton: {
+    paddingLeft: 0,
     [theme.breakpoints.up('md')]: {
-      padding: 0
+      paddingBottom: 0
     }
   }
 }));
@@ -98,7 +108,7 @@ export const BillingSummary: React.FC<Props> = props => {
   const determinePaymentDisplay = (_pastDueAmount: number) => {
     if (_pastDueAmount > 0) {
       return (
-        <>
+        <div>
           <Typography className={classes.header} variant="h2">
             Past Due Amount
           </Typography>
@@ -109,18 +119,18 @@ export const BillingSummary: React.FC<Props> = props => {
             Your payment was due on $DATE. Please make a payment immediately to
             avoid service disruption.
           </Typography>
-        </>
+        </div>
       );
     } else {
       return (
-        <>
+        <div>
           <Typography className={classes.header} variant="h2">
             No Payment Due
           </Typography>
           <Typography className={classes.text}>
             Your account is paid in full and no payment is due at this time.
           </Typography>
-        </>
+        </div>
       );
     }
   };
