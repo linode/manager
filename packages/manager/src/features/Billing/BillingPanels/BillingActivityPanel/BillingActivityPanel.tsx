@@ -12,7 +12,6 @@ import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import OrderBy from 'src/components/OrderBy';
-import { PaginationProps } from 'src/components/Pagey';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
@@ -20,8 +19,6 @@ import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import TableRow from 'src/components/TableRow';
 import { getAll } from 'src/utilities/getAll';
-
-type CombinedProps = PaginationProps<Invoice>;
 
 const getAllInvoices = getAll<Invoice>(getInvoices);
 const getAllPayments = getAll<Payment>(getPayments);
@@ -35,7 +32,7 @@ interface ActivityFeedItem {
   id: number;
 }
 
-export const BillingActivityPanel: React.FC<CombinedProps> = props => {
+export const BillingActivityPanel: React.FC<{}> = props => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [combinedData, setCombinedData] = React.useState<ActivityFeedItem[]>(
     []
