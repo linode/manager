@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: theme.spacing(3)
   },
   header: {
-    fontSize: '1.2rem'
+    fontSize: '1.1rem'
   },
   cvvField: {
     width: 180
@@ -70,7 +70,7 @@ export const CreditCard: React.FC<Props> = props => {
       .then(_ => {
         setSubmitting(false);
         setDialogOpen(false);
-        setSuccess(`Payment for $${usd} submitted successfully`);
+        setSuccess(`Payment for $${usd} submitted successfully`, true);
         // props.requestAccount();
       })
       .catch(errorResponse => {

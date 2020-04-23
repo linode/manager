@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: theme.spacing(3)
   },
   header: {
-    fontSize: '1.2rem'
+    fontSize: '1.1rem'
   },
   paypalMask: {
     width: 175,
@@ -149,7 +149,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
       .then(() => {
         setExecuting(false);
         setDialogOpen(false);
-        setSuccess(`Payment for $${usd} successfully submitted`);
+        setSuccess(`Payment for $${usd} successfully submitted`, true);
       })
       .catch(_ => {
         setExecuting(false);
@@ -191,7 +191,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
     setStaging(true);
     setError(null);
     setPaymentFailed(false);
-    setSuccess(null, false);
+    setSuccess(null);
 
     return stagePaypalPayment({
       cancel_url: 'https://www.paypal.com/checkoutnow/error',

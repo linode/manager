@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
-
+import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
@@ -16,17 +16,9 @@ import PayPal from './Paypal';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
-  positive: {
-    color: theme.color.green
-  },
-  negative: {
-    color: theme.color.red
-  },
-  actionPanel: {
-    display: 'flex',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    position: 'relative'
+  currentBalance: {
+    fontSize: '1.1rem',
+    marginBottom: theme.spacing(3)
   }
 }));
 
@@ -72,7 +64,7 @@ export const MakeAPaymentPanel: React.FC<CombinedProps> = props => {
 
   const setSuccess = (
     message: string | null,
-    paymentWasMade: boolean = true
+    paymentWasMade: boolean = false
   ) => {
     setSuccessMessage(message);
     if (paymentWasMade) {
@@ -98,16 +90,20 @@ export const MakeAPaymentPanel: React.FC<CombinedProps> = props => {
       </Grid>
     );
   }
+
   return (
     <Drawer title="Make a Payment" open={true}>
       <Grid container>
-        {/* Payment */}
         <Grid item xs={12}>
           {/* {(generalError || hasErrorFor('payment_id')) && (
               <Notice error text={generalError || hasErrorFor('payment_id')} />
             )} */}
           {successMessage && <Notice success text={successMessage ?? ''} />}
-
+          <Grid item>
+            <Typography className={classes.currentBalance}>
+              <strong>Current balance: ${balance.toFixed(2)}</strong>
+            </Typography>
+          </Grid>
           <Grid item>
             <TextField
               // errorText={hasErrorFor('usd')}
