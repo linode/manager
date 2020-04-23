@@ -102,7 +102,7 @@ export const CreditCard: React.FC<Props> = props => {
               Pay now
             </Button>
           </Grid>
-          <Grid item>
+          <Grid item className={'grid-item'}>
             <TextField
               errorText={cvvError ?? ''}
               label="Please enter your CVV:"
@@ -112,6 +112,8 @@ export const CreditCard: React.FC<Props> = props => {
               placeholder={'000'}
               inputProps={{ id: 'paymentCVV' }}
               className={classes.cvvField}
+              hasAbsoluteError
+              noMarginTop
             />
           </Grid>
         </Grid>

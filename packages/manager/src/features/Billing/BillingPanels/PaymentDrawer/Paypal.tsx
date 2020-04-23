@@ -19,6 +19,7 @@
  * instructions
  *
  */
+import * as classnames from 'classnames';
 import {
   executePaypalPayment,
   stagePaypalPayment
@@ -44,16 +45,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '1.1rem'
   },
   paypalMask: {
-    width: 175,
-    height: 45,
+    width: 200,
+    height: 38,
     position: 'absolute',
     zIndex: 10,
-    left: theme.spacing(2),
-    top: theme.spacing(2)
+    left: 0,
+    top: 0
   },
   paypalButtonWrapper: {
     position: 'relative',
-    zIndex: 1
+    zIndex: 1,
+    transition: theme.transitions.create(['opacity'])
   },
   PaypalHidden: {
     opacity: 0.3
@@ -251,38 +253,38 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
           </Typography>
         </Grid>
         <Grid container alignItems="flex-end" justify="flex-start">
-          <Grid item>
-            <React.Fragment>
-              {!enabled && (
-                <Tooltip
-                  title={'Amount to charge must be between $5 and $10000'}
-                  data-qa-help-tooltip
-                  enterTouchDelay={0}
-                  leaveTouchDelay={5000}
-                >
-                  <div className={classes.paypalMask} />
-                </Tooltip>
-              )}
-
-              <div
-                data-qa-paypal-button
-                className={classes.paypalButtonWrapper}
+          <Grid item style={{ position: 'relative' }}>
+            {!enabled && (
+              <Tooltip
+                title={'Amount to charge must be between $5 and $10000'}
+                data-qa-help-tooltip
+                enterTouchDelay={0}
+                leaveTouchDelay={5000}
               >
-                {PaypalButton.current && shouldRenderButton && (
-                  <PaypalButton.current
-                    env={PAYPAL_CLIENT_ENV as 'sandbox' | 'production'}
-                    client={client}
-                    createOrder={createOrder}
-                    onApprove={onApprove}
-                    onCancel={onCancel}
-                    style={{
-                      color: 'blue',
-                      shape: 'rect'
-                    }}
-                  />
-                )}
-              </div>
-            </React.Fragment>
+                <div className={classes.paypalMask} />
+              </Tooltip>
+            )}
+            <div
+              data-qa-paypal-button
+              className={classnames({
+                [classes.paypalButtonWrapper]: true,
+                [classes.PaypalHidden]: !enabled
+              })}
+            >
+              {PaypalButton.current && shouldRenderButton && (
+                <PaypalButton.current
+                  env={PAYPAL_CLIENT_ENV as 'sandbox' | 'production'}
+                  client={client}
+                  createOrder={createOrder}
+                  onApprove={onApprove}
+                  onCancel={onCancel}
+                  style={{
+                    color: 'blue',
+                    shape: 'rect'
+                  }}
+                />
+              )}
+            </div>
           </Grid>
         </Grid>
       </Grid>
