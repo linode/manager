@@ -32,6 +32,7 @@ import { Theme, makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Tooltip from 'src/components/core/Tooltip';
+import Notice from 'src/components/Notice';
 import { PAYPAL_CLIENT_ENV } from 'src/constants';
 import PaypalDialog from './PaymentBits/PaypalDialog';
 import { reportException } from 'src/exceptionReporting';
@@ -137,7 +138,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
       });
       setShouldRenderButton(true);
     }
-  }, [isScriptLoaded]);
+  }, [isScriptLoaded, shouldRenderButton]);
 
   /**
    * user submits payment and we send APIv4 request to confirm paypal payment
@@ -209,7 +210,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
         /** For sentry purposes only */
         const cleanedError = getAPIErrorOrDefault(
           errorResponse,
-          'Something went wrong with the call to Linode /v4/account/paypal. See tags for USD info'
+          'Unable to complete PayPal payment.'
         )[0].reason;
 
         /**
@@ -222,6 +223,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
 
         setStaging(false);
         setPaymentFailed(true);
+        setError(cleanedError);
       });
   };
 
@@ -247,6 +249,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
             <strong>Pay via PayPal</strong>
           </Typography>
         </Grid>
+        {error && <Notice error text={error} />}
         <Grid item>
           <Typography>
             You'll be taken to PayPal to complete your payment.

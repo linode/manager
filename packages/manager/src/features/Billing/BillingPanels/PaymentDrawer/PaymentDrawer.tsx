@@ -80,16 +80,6 @@ export const MakeAPaymentPanel: React.FC<CombinedProps> = props => {
     }
   };
 
-  // const hasErrorFor = getAPIErrorFor(
-  //   {
-  //     usd: 'amount',
-  //     cvv: 'cvv',
-  //     payment_id: 'payment_id'
-  //   },
-  //   errors
-  // );
-
-  // const generalError = hasErrorFor('none');
   if (!accountLoading && balance === undefined) {
     return (
       <Grid container>
@@ -102,9 +92,6 @@ export const MakeAPaymentPanel: React.FC<CombinedProps> = props => {
     <Drawer title="Make a Payment" open={true}>
       <Grid container>
         <Grid item xs={12}>
-          {/* {(generalError || hasErrorFor('payment_id')) && (
-              <Notice error text={generalError || hasErrorFor('payment_id')} />
-            )} */}
           {successMessage && <Notice success text={successMessage ?? ''} />}
           {balance !== false && (
             <Grid item>
@@ -115,7 +102,6 @@ export const MakeAPaymentPanel: React.FC<CombinedProps> = props => {
           )}
           <Grid item>
             <TextField
-              // errorText={hasErrorFor('usd')}
               label="Payment Amount"
               onChange={handleUSDChange}
               value={usd}
