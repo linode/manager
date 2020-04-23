@@ -31,7 +31,6 @@ import { Theme, makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Tooltip from 'src/components/core/Tooltip';
-import Notice from 'src/components/Notice';
 import { PAYPAL_CLIENT_ENV } from 'src/constants';
 import PaypalDialog from './PaymentBits/PaypalDialog';
 import { reportException } from 'src/exceptionReporting';
@@ -68,9 +67,8 @@ interface PaypalScript {
 }
 
 export interface Props {
-  enabled: boolean;
   usd: string;
-  setSuccess: (message: string | null) => void;
+  setSuccess: (message: string | null, paymentWasMade?: boolean) => void;
 }
 
 type CombinedProps = Props & PaypalScript;
@@ -94,7 +92,7 @@ const paypalScriptSrc = () => {
 };
 
 export const PayPalDisplay: React.FC<CombinedProps> = props => {
-  const { enabled, isScriptLoaded, usd, setSuccess } = props;
+  const { isScriptLoaded, usd, setSuccess } = props;
   const classes = useStyles();
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
@@ -197,7 +195,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
     setStaging(true);
     setError(null);
     setPaymentFailed(false);
-    setSuccess(null);
+    setSuccess(null, false);
 
     return stagePaypalPayment({
       cancel_url: 'https://www.paypal.com/checkoutnow/error',
@@ -240,6 +238,8 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
     setSuccess('Payment Cancelled');
     setDialogOpen(false);
   };
+
+  const enabled = shouldEnablePaypalButton(+usd);
 
   return (
     <>
@@ -301,6 +301,22 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
       />
     </>
   );
+};
+
+export const isAllowedUSDAmount = (usd: number) => {
+  return !!(usd >= 5 && usd <= 10000);
+};
+
+export const shouldEnablePaypalButton = (value: number | undefined) => {
+  /**
+   * paypal button should be disabled if there is either
+   * no value entered or it's below $5 or over $500 as per APIv4 requirements
+   */
+
+  if (!value || !isAllowedUSDAmount(value)) {
+    return false;
+  }
+  return true;
 };
 
 export default compose<CombinedProps, Props>(

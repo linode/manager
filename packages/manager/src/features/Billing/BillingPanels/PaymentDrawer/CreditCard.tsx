@@ -4,7 +4,6 @@ import Button from 'src/components/Button';
 import { Theme, makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import CreditCardDialog from './PaymentBits/CreditCardDialog';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -25,15 +24,14 @@ export interface Props {
   lastFour: string;
   expiry: string;
   usd: string;
-  setSuccess: (message: string | null) => void;
+  setSuccess: (message: string | null, paymentWasMade?: boolean) => void;
 }
 
 export const CreditCard: React.FC<Props> = props => {
-  const { expiry, lastFour, usd } = props;
+  const { expiry, lastFour, setSuccess, usd } = props;
   const [cvv, setCVV] = React.useState<string>('');
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
-  const [success, setSuccess] = React.useState<string | null>(null);
   const [error, setError] = React.useState<string | null>(null);
   const [cvvError, setCVVError] = React.useState<string | null>(null);
   const classes = useStyles();
@@ -94,11 +92,6 @@ export const CreditCard: React.FC<Props> = props => {
             <strong>Pay via credit card</strong>
           </Typography>
         </Grid>
-        {success && (
-          <Grid item>
-            <Notice success text={success} />
-          </Grid>
-        )}
         <Grid item>
           <Typography>XXXX XXXX XXXX {lastFour}</Typography>
           <Typography>Expires {expiry}</Typography>

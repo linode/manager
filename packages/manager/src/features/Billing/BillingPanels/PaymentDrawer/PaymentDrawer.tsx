@@ -1,24 +1,3 @@
-/**
- * When viewing the PayPal code, please keep in mind the following flow
- *
- * 1. Make API call to v4/paypal to stage our paypal payment
- * 2. Return an order id in the createOrder callback
- * 3. Set payment_id state with the payment_id provided by Paypal
- * 4. Finally, POST to v4/paypal/execute
- *
- * These things must happen in this order or the paypal payment will not
- * process correctly. It is imperative that the APIv4 staging call happens before
- * the the createOrder callback is returned.
- *
- * For all documentation, see below:
- *
- * https://developer.paypal.com/docs/checkout/
- * https://developer.paypal.com/docs/checkout/integrate/
- *
- * We are **NOT** using the legacy PayPal version so please disregard any legacy
- * instructions
- *
- */
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -123,23 +102,16 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
   }
 
   handleUSDChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    /*
-     * This is a little hacky. Papyal doesn't give us any reliable way to
-     * validate the form before opening up paypal.com in a new tab, so we have
-     * to do this validation on each keypress and disable the submit button if
-     * the criteria isn't met
-     * Luckily, the only thing the API validates is if the amount is over $5 USD
-     */
-
-    const amountAsInt = parseInt(e.target.value, 10);
-
     this.setState({
       usd: e.target.value || ''
     });
   };
 
-  setSuccess = (message: string | null) => {
+  setSuccess = (message: string | null, paymentWasMade: boolean = true) => {
     this.setState({ successMessage: message });
+    if (paymentWasMade) {
+      this.setState({ usd: '0.00' });
+    }
   };
 
   renderNotAuthorized = () => {
@@ -196,11 +168,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
               setSuccess={this.setSuccess}
             />
 
-            <PayPal
-              enabled={shouldEnablePaypalButton(parseInt(this.state.usd, 10))}
-              usd={this.state.usd}
-              setSuccess={this.setSuccess}
-            />
+            <PayPal usd={this.state.usd} setSuccess={this.setSuccess} />
           </Grid>
         </Grid>
       </Drawer>
@@ -230,19 +198,3 @@ export default compose<CombinedProps, {}>(
   styled,
   withAccount
 )(MakeAPaymentPanel);
-
-export const isAllowedUSDAmount = (usd: number) => {
-  return !!(usd >= 5 && usd <= 10000);
-};
-
-export const shouldEnablePaypalButton = (value: number | undefined) => {
-  /**
-   * paypal button should be disabled if there is either
-   * no value entered or it's below $5 or over $500 as per APIv4 requirements
-   */
-
-  if (!value || !isAllowedUSDAmount(value)) {
-    return false;
-  }
-  return true;
-};
