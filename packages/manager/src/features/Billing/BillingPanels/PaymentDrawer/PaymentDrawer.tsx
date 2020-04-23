@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {},
   currentBalance: {
     fontSize: '1.1rem',
-    marginBottom: theme.spacing(3)
+    marginBottom: theme.spacing(4)
   }
 }));
 
@@ -99,11 +99,13 @@ export const MakeAPaymentPanel: React.FC<CombinedProps> = props => {
               <Notice error text={generalError || hasErrorFor('payment_id')} />
             )} */}
           {successMessage && <Notice success text={successMessage ?? ''} />}
-          <Grid item>
-            <Typography className={classes.currentBalance}>
-              <strong>Current balance: ${balance.toFixed(2)}</strong>
-            </Typography>
-          </Grid>
+          {balance !== false && (
+            <Grid item>
+              <Typography className={classes.currentBalance}>
+                <strong>Current balance: ${balance.toFixed(2)}</strong>
+              </Typography>
+            </Grid>
+          )}
           <Grid item>
             <TextField
               // errorText={hasErrorFor('usd')}
@@ -133,7 +135,7 @@ export const MakeAPaymentPanel: React.FC<CombinedProps> = props => {
 const withAccount = AccountContainer(
   (ownProps, { accountLoading, accountData }) => ({
     accountLoading,
-    balance: accountData?.balance ?? 0,
+    balance: accountData?.balance ?? false,
     lastFour: accountData?.credit_card.last_four ?? '0000',
     expiry: accountData?.credit_card.expiry ?? ''
   })

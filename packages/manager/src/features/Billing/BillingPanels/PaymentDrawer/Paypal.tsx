@@ -38,7 +38,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    paddingTop: theme.spacing(3)
+    marginTop: theme.spacing(4)
   },
   header: {
     fontSize: '1.1rem'
@@ -122,7 +122,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
   React.useEffect(() => {
     const isPayPalInitialized = window.hasOwnProperty('paypal');
 
-    if (isScriptLoaded && isPayPalInitialized) {
+    if (isScriptLoaded && isPayPalInitialized && !shouldRenderButton) {
       /*
        * Because the paypal script is now loaded, we have access to this React component
        * in the window element. This will be used in the render method.

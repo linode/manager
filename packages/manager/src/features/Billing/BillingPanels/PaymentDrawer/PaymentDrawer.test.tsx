@@ -1,8 +1,6 @@
-import {
-  getMinimumPayment,
-  isAllowedUSDAmount,
-  shouldEnablePaypalButton
-} from './PaymentDrawer';
+import { getMinimumPayment } from './PaymentDrawer';
+
+import { isAllowedUSDAmount, shouldEnablePaypalButton } from './Paypal';
 
 describe('Make a Payment Panel', () => {
   it('should return false for invalid USD amount', () => {

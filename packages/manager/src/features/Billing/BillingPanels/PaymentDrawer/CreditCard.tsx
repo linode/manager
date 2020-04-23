@@ -10,7 +10,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    paddingTop: theme.spacing(3)
+    marginTop: theme.spacing(4)
   },
   header: {
     fontSize: '1.1rem'
