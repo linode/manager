@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { components } from 'react-select';
-import { OptionProps } from 'react-select/src/components/Option';
+import { components, OptionProps } from 'react-select';
 
 interface Props extends OptionProps<any> {
   value: number | string;
