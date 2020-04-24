@@ -42,7 +42,6 @@ describe('Access Panel Suite', () => {
       //Hide for remaining tests
       $(hideShowPassword).click();
     });
-
   });
 
   describe('Password and SSH Key Access Suite', () => {

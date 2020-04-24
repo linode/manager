@@ -3,9 +3,7 @@ const { navigateToStory } = require('../../../e2e/utils/storybook');
 describe('Linear Progress Bar Suite', () => {
   const linearProgress = '[data-qa-linear-progress]';
   const component = 'Linear Progress Indicator';
-  const childStories = [
-    'Indefinite',
-  ]
+  const childStories = ['Indefinite'];
 
   beforeAll(() => {
     navigateToStory(component, childStories[0]);
@@ -29,8 +27,11 @@ describe('Linear Progress Bar Suite', () => {
     $(linearProgress).waitForDisplayed();
 
     const progressBar = $(linearProgress);
-    const progressBarColor = progressBar.getCSSProperty('background-color').parsed.hex
-    const barPrimaryColor = $('.MuiLinearProgress-barColorPrimary').getCSSProperty('background-color').parsed.hex
+    const progressBarColor = progressBar.getCSSProperty('background-color')
+      .parsed.hex;
+    const barPrimaryColor = $(
+      '.MuiLinearProgress-barColorPrimary'
+    ).getCSSProperty('background-color').parsed.hex;
 
     expect(progressBarColor)
       .withContext(`Incorrect color used`)

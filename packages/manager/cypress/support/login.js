@@ -1,4 +1,3 @@
-const loginUrl = Cypress.env('REACT_APP_LOGIN_ROOT') + '/login';
 const oauthtoken = Cypress.env('MANAGER_OAUTH');
 const _loginWithToken = win => {
   win.localStorage.setItem('authentication/oauth-token', oauthtoken);
@@ -14,11 +13,9 @@ const _loginWithToken = win => {
 };
 
 Cypress.Commands.add('visitWithLogin', (url, opt) => {
-  Cypress.on('uncaught:exception', (err, runnable) => {
-    // returning false here prevents Cypress from
-    // failing the test with newrelic errors
-    return false;
-  });
+  // returning false here prevents Cypress from
+  // failing the test with newrelic errors
+  Cypress.on('uncaught:exception', (_err, _runnable) => false);
   const options = {
     onBeforeLoad: win => {
       _loginWithToken(win);

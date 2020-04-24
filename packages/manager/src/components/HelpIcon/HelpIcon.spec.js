@@ -2,19 +2,14 @@ const { executeInAllStories } = require('../../../e2e/utils/storybook');
 
 describe('Help Icon Component Suite', () => {
   const component = 'HelpIcon';
-  const childStories = [
-    'default',
-    'center',
-    'left',
-    'right',
-  ]
+  const childStories = ['default', 'center', 'left', 'right'];
 
   const helpButton = '[data-qa-help-button]';
   const popoverText = '[role="tooltip"]';
 
   it('should display icon on the page', () => {
     executeInAllStories(component, childStories, () => {
-        $(helpButton).waitForDisplayed();
+      $(helpButton).waitForDisplayed();
     });
   });
 
