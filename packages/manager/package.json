@@ -119,7 +119,7 @@
   "lint-staged": {
     "*.{ts,tsx,js}": [
       "prettier --write",
-      "eslint --ext .js,.ts,.tsx --debug"
+      "eslint --ext .js,.ts,.tsx --quiet"
     ]
   },
   "devDependencies": {
