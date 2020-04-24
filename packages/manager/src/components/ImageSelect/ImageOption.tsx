@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import * as React from 'react';
-import { Item, OptionProps } from 'src/components/EnhancedSelect';
+import { OptionProps } from 'react-select';
+import { Item } from 'src/components/EnhancedSelect';
 import Option from 'src/components/EnhancedSelect/components/Option';
 
 import { makeStyles, Theme } from 'src/components/core/styles';

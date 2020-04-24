@@ -1,7 +1,7 @@
 import { LinodeStatus } from 'linode-js-sdk/lib/linodes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { OptionProps } from 'src/components/EnhancedSelect';
+import { OptionProps } from 'react-select';
 import EntityIcon from 'src/components/EntityIcon';
 import Tag from 'src/components/Tag';
 import { linodeInTransition } from 'src/features/linodes/transitions';
@@ -91,8 +91,10 @@ class SearchSuggestion extends React.Component<CombinedProps> {
         data-qa-selected={Boolean(this.props.isFocused)}
         ref={innerRef}
         onClick={this.handleClick}
+        onKeyPress={this.handleClick}
         {...innerProps}
         role="button"
+        tabIndex={0}
       >
         <div className={classes.resultContainer}>
           <div
@@ -103,7 +105,7 @@ class SearchSuggestion extends React.Component<CombinedProps> {
           >
             <EntityIcon
               variant={icon}
-              status={status && status}
+              status={status}
               marginTop={3}
               loading={status && linodeInTransition(status)}
             />

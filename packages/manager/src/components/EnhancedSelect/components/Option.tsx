@@ -14,6 +14,4 @@ const Option: React.StatelessComponent<Props> = props => {
   );
 };
 
-export { OptionProps };
-
 export default Option;
