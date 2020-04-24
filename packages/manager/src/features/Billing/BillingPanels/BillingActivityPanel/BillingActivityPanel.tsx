@@ -17,8 +17,10 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
-import TableRow from 'src/components/TableRow';
+import TableRow, { TableRowProps } from 'src/components/TableRow';
 import { getAll } from 'src/utilities/getAll';
+import { APIError } from 'linode-js-sdk/lib/types';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const getAllInvoices = getAll<Invoice>(getInvoices);
 const getAllPayments = getAll<Payment>(getPayments);
@@ -34,6 +36,7 @@ interface ActivityFeedItem {
 
 export const BillingActivityPanel: React.FC<{}> = props => {
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<APIError[] | undefined>();
   const [combinedData, setCombinedData] = React.useState<ActivityFeedItem[]>(
     []
   );
@@ -44,25 +47,19 @@ export const BillingActivityPanel: React.FC<{}> = props => {
     Promise.all([getAllInvoices(), getAllPayments()])
       .then(([invoices, payments]) => {
         const _combinedData: ActivityFeedItem[] = [
-          ...invoices.data.map(({ id, label, date, total }) => ({
-            id,
-            label,
-            date,
-            total,
-            type: 'invoice'
-          })),
-          ...payments.data.map(({ id, date, usd }) => ({
-            label: 'Payment',
-            date,
-            id,
-            total: usd,
-            type: 'payment'
-          }))
+          ...invoices.data.map(invoiceToActivityFeedItem),
+          ...payments.data.map(paymentToActivityFeedItem)
         ];
         setCombinedData(_combinedData);
         setLoading(false);
       })
-      .catch(error => {
+      .catch(_error => {
+        setError(
+          getAPIErrorOrDefault(
+            _error,
+            'There was an error retrieving your billing activity.'
+          )
+        );
         setLoading(false);
       });
   }, []);
@@ -91,17 +88,16 @@ export const BillingActivityPanel: React.FC<{}> = props => {
                         </TableCell>
                         <TableCell style={{ width: '17%' }}>Date</TableCell>
                         <TableCell style={{ width: '17%' }}>Amount</TableCell>
-                        <TableCell />
+                        <TableCell />z
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       <TableContentWrapper
                         length={paginatedAndOrderedData.length}
                         loading={loading}
-                        // @todo error state
-                        error={[]}
+                        error={error}
                       >
-                        {paginatedAndOrderedData.map((thisItem, index) => (
+                        {paginatedAndOrderedData.map(thisItem => (
                           <ActivityFeedItem key={thisItem.id} {...thisItem} />
                         ))}
                       </TableContentWrapper>
@@ -125,21 +121,51 @@ export const BillingActivityPanel: React.FC<{}> = props => {
   );
 };
 
-export const ActivityFeedItem: React.FC<ActivityFeedItem> = props => {
-  const { date, label, total } = props;
-  return (
-    <TableRow>
-      <TableCell>{label}</TableCell>
-      <TableCell>
-        <DateTimeDisplay format="YYYY-MM-DD" value={date} />
-      </TableCell>
-      <TableCell>
-        <Currency quantity={total} />
-      </TableCell>
-      {/* @todo action menu */}
-      <TableCell />
-    </TableRow>
-  );
-};
+export const ActivityFeedItem: React.FC<ActivityFeedItem> = React.memo(
+  props => {
+    const { date, label, total, id, type } = props;
+
+    const rowProps: TableRowProps = {};
+    if (type === 'invoice') {
+      rowProps.rowLink = `/account/billing/invoices/${id}`;
+    }
+
+    return (
+      <TableRow {...rowProps}>
+        <TableCell>{label}</TableCell>
+        <TableCell>
+          <DateTimeDisplay format="YYYY-MM-DD" value={date} />
+        </TableCell>
+        <TableCell>
+          <Currency quantity={total} />
+        </TableCell>
+        {/* @todo icon */}
+        <TableCell />
+      </TableRow>
+    );
+  }
+);
 
 export default BillingActivityPanel;
+
+const invoiceToActivityFeedItem = (invoice: Invoice): ActivityFeedItem => {
+  const { id, label, date, total } = invoice;
+  return {
+    id,
+    label,
+    date,
+    total,
+    type: 'invoice'
+  };
+};
+
+const paymentToActivityFeedItem = (payment: Payment): ActivityFeedItem => {
+  const { date, id, usd } = payment;
+  return {
+    label: 'Payment',
+    date,
+    id,
+    total: usd,
+    type: 'payment'
+  };
+};

@@ -36,7 +36,7 @@ const TableContentWrapper: React.FC<CombinedProps> = props => {
     );
   }
 
-  return <React.Fragment>{props.children}</React.Fragment>;
+  return props.children;
 };
 
 export default compose<CombinedProps, Props>(React.memo)(TableContentWrapper);
