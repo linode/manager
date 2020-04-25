@@ -22,7 +22,8 @@ import useLinodes from 'src/hooks/useLinodes';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
 import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
-import NodeActionMenu from './NodeActionMenu';
+// Temporarily hidden; @todo reactivate
+// import NodeActionMenu from './NodeActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   labelCell: {
@@ -62,102 +63,100 @@ export const NodeTable: React.FC<Props> = props => {
   );
 
   return (
-    <>
-      <OrderBy data={rowData} orderBy={'label'} order={'asc'}>
-        {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-          <Paginate data={orderedData}>
-            {({
-              data: paginatedAndOrderedData,
-              count,
-              handlePageChange,
-              handlePageSizeChange,
-              page,
-              pageSize
-            }) => (
-              <>
-                <Paper>
-                  <Table
-                    aria-label="List of Your Cluster Nodes"
-                    isResponsive={false}
-                  >
-                    <TableHead>
-                      <TableRow>
-                        <TableSortCell
-                          active={orderBy === 'label'}
-                          label={'label'}
-                          direction={order}
-                          handleClick={handleOrderChange}
-                          className={classes.labelCell}
-                        >
-                          Linode
-                        </TableSortCell>
-                        <TableSortCell
-                          active={orderBy === 'instanceStatus'}
-                          label={'instanceStatus'}
-                          direction={order}
-                          handleClick={handleOrderChange}
-                          className={classes.statusCell}
-                        >
-                          Status
-                        </TableSortCell>
-                        <TableSortCell
-                          active={orderBy === 'ip'}
-                          label={'ip'}
-                          direction={order}
-                          handleClick={handleOrderChange}
-                          className={classes.ipCell}
-                        >
-                          IP Address
-                        </TableSortCell>
-                        <TableCell />
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableContentWrapper
-                        loading={linodes.loading || _loading}
-                        lastUpdated={linodes.lastUpdated}
-                        length={paginatedAndOrderedData.length}
+    <OrderBy data={rowData} orderBy={'label'} order={'asc'}>
+      {({ data: orderedData, handleOrderChange, order, orderBy }) => (
+        <Paginate data={orderedData}>
+          {({
+            data: paginatedAndOrderedData,
+            count,
+            handlePageChange,
+            handlePageSizeChange,
+            page,
+            pageSize
+          }) => (
+            <>
+              <Paper>
+                <Table
+                  aria-label="List of Your Cluster Nodes"
+                  isResponsive={false}
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableSortCell
+                        active={orderBy === 'label'}
+                        label={'label'}
+                        direction={order}
+                        handleClick={handleOrderChange}
+                        className={classes.labelCell}
                       >
-                        {paginatedAndOrderedData.map(eachRow => {
-                          return (
-                            <NodeRow
-                              key={`node-row-${eachRow.nodeId}`}
-                              instanceId={eachRow.instanceId}
-                              label={eachRow.label}
-                              instanceStatus={eachRow.instanceStatus}
-                              ip={eachRow.ip}
-                              nodeStatus={eachRow.nodeStatus}
-                              typeLabel={typeLabel}
-                              linodeError={linodes.error?.read}
-                              openRecycleNodeDialog={openRecycleNodeDialog}
-                            />
-                          );
-                        })}
-                      </TableContentWrapper>
-                    </TableBody>
-                    <TableFooter>
-                      <TableRow>
-                        <TableCell colSpan={4}>
-                          <Typography>Pool ID {poolId}</Typography>
-                        </TableCell>
-                      </TableRow>
-                    </TableFooter>
-                  </Table>
-                </Paper>
-                <PaginationFooter
-                  count={count}
-                  handlePageChange={handlePageChange}
-                  handleSizeChange={handlePageSizeChange}
-                  page={page}
-                  pageSize={pageSize}
-                  eventCategory="Node Table"
-                />
-              </>
-            )}
-          </Paginate>
-        )}
-      </OrderBy>
-    </>
+                        Linode
+                      </TableSortCell>
+                      <TableSortCell
+                        active={orderBy === 'instanceStatus'}
+                        label={'instanceStatus'}
+                        direction={order}
+                        handleClick={handleOrderChange}
+                        className={classes.statusCell}
+                      >
+                        Status
+                      </TableSortCell>
+                      <TableSortCell
+                        active={orderBy === 'ip'}
+                        label={'ip'}
+                        direction={order}
+                        handleClick={handleOrderChange}
+                        className={classes.ipCell}
+                      >
+                        IP Address
+                      </TableSortCell>
+                      <TableCell />
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableContentWrapper
+                      loading={linodes.loading || _loading}
+                      lastUpdated={linodes.lastUpdated}
+                      length={paginatedAndOrderedData.length}
+                    >
+                      {paginatedAndOrderedData.map(eachRow => {
+                        return (
+                          <NodeRow
+                            key={`node-row-${eachRow.nodeId}`}
+                            instanceId={eachRow.instanceId}
+                            label={eachRow.label}
+                            instanceStatus={eachRow.instanceStatus}
+                            ip={eachRow.ip}
+                            nodeStatus={eachRow.nodeStatus}
+                            typeLabel={typeLabel}
+                            linodeError={linodes.error?.read}
+                            openRecycleNodeDialog={openRecycleNodeDialog}
+                          />
+                        );
+                      })}
+                    </TableContentWrapper>
+                  </TableBody>
+                  <TableFooter>
+                    <TableRow>
+                      <TableCell colSpan={4}>
+                        <Typography>Pool ID {poolId}</Typography>
+                      </TableCell>
+                    </TableRow>
+                  </TableFooter>
+                </Table>
+              </Paper>
+              <PaginationFooter
+                count={count}
+                handlePageChange={handlePageChange}
+                handleSizeChange={handlePageSizeChange}
+                page={page}
+                pageSize={pageSize}
+                eventCategory="Node Table"
+              />
+            </>
+          )}
+        </Paginate>
+      )}
+    </OrderBy>
   );
 };
 
@@ -189,8 +188,7 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo(props => {
     ip,
     typeLabel,
     nodeStatus,
-    linodeError,
-    openRecycleNodeDialog
+    linodeError
   } = props;
 
   const classes = useStyles();
@@ -237,13 +235,11 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo(props => {
         )}
       </TableCell>
       <TableCell>
-        <NodeActionMenu
+        {/* <NodeActionMenu
           instanceId={instanceId}
           instanceLabel={label}
           openRecycleNodeDialog={openRecycleNodeDialog}
-        />
-        {/* @todo: action menu */}
-        {/* <ActionMenu/> */}
+        /> */}
       </TableCell>
     </TableRow>
   );
