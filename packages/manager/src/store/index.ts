@@ -233,7 +233,7 @@ export interface ApplicationState {
   longviewStats: LongviewStatsState;
 }
 
-const defaultState: ApplicationState = {
+export const defaultState: ApplicationState = {
   __resources: __resourcesDefaultState,
   authentication: authenticationDefaultState,
   backups: backupsDefaultState,
