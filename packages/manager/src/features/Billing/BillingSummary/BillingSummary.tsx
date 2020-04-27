@@ -101,7 +101,6 @@ interface Props {
   goToInvoice?: () => void;
   uninvoicedBalance: number;
   promotionAmount?: number;
-  creditsAmount?: number;
   balance: number;
 }
 
@@ -111,11 +110,12 @@ export const BillingSummary: React.FC<Props> = props => {
     openPaymentDrawer,
     goToInvoice,
     uninvoicedBalance,
-    creditsAmount,
     balance
   } = props;
 
   const classes = useStyles();
+
+  const calculatedBalance = uninvoicedBalance + balance;
 
   const determinePaymentDisplay = (_pastDueAmount: number) => {
     if (_pastDueAmount > 0) {
@@ -128,8 +128,7 @@ export const BillingSummary: React.FC<Props> = props => {
             ${_pastDueAmount.toFixed(2)}
           </Typography>
           <Typography className={classes.text}>
-            Your payment was due on $DATE. Please make a payment immediately to
-            avoid service disruption.
+            Please make a payment immediately to avoid service disruption.
           </Typography>
         </div>
       );
@@ -204,7 +203,6 @@ export const BillingSummary: React.FC<Props> = props => {
               </Typography>
             </Grid>
           </Grid>
-          {/* TODO Need to get this section figured out */}
           {promotion && (
             <Grid item container justify="space-between" alignItems="center">
               <Grid item>
@@ -232,13 +230,14 @@ export const BillingSummary: React.FC<Props> = props => {
           <Grid item container justify="space-between">
             <Grid item>
               <Typography className={classes.label}>
-                {/* TODO Need to get this section figured out */}
                 Payment &amp; Credits
               </Typography>
             </Grid>
             <Grid item>
               <Typography className={classes.field}>
-                {creditsAmount ? `$${creditsAmount}` : '$0.00'}
+                {balance < 0
+                  ? `($${balance.toFixed(2)})`
+                  : `$${balance.toFixed(2)}`}
               </Typography>
             </Grid>
           </Grid>
@@ -249,11 +248,11 @@ export const BillingSummary: React.FC<Props> = props => {
             justify="space-between"
           >
             <Grid item>
-              <Typography className={classes.label}>Balance</Typography>
+              <Typography className={classes.label}>Balance*</Typography>
             </Grid>
             <Grid item>
               <Typography className={classes.field}>
-                ${balance.toFixed(2)}
+                ${calculatedBalance.toFixed(2)}
               </Typography>
             </Grid>
           </Grid>
