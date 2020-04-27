@@ -85,7 +85,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
       return;
     }
 
-    // Once the OBJ Clusters have been loaded, request buckets from each cluster.
+    // Once the OBJ Clusters have been loaded, request Buckets from each Cluster.
     if (clustersLoaded && !bucketsLoadingOrLoaded) {
       const clusterIds = objectStorageClusters.entities.map(
         thisCluster => thisCluster.id
