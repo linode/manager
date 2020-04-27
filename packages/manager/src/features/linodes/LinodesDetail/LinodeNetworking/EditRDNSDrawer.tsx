@@ -1,7 +1,6 @@
 import { IPAddress, updateIP } from 'linode-js-sdk/lib/networking';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormHelperText from 'src/components/core/FormHelperText';
@@ -63,24 +62,25 @@ export const ViewRangeDrawer: React.FC<CombinedProps> = props => {
 
   const classes = useStyles();
 
-  let timer: any;
+  let timer: number;
 
   React.useEffect(() => {
-    setMountedState(true); // equivalent to the old componentDidMount fxn
+    setMountedState(true);
 
     return () => {
       setMountedState(false);
       clearTimeout(timer);
-    }; // equivalent to the old componentWillUnmount fxn
+    };
   });
 
   React.useEffect(() => {
-    // converted from UNSAFE_componentWillReceiveProps
-    setRDNS(rdns);
-    setCurrentAddress(currentAddress);
-    setIpv6Address(ipv6address);
-    setErrors([]);
-  }, [props]);
+    if (open) {
+      setRDNS(rdns);
+      setCurrentAddress(currentAddress);
+      setIpv6Address(ipv6address);
+      setErrors([]);
+    }
+  }, [open]);
 
   const errorResources = {
     rdns: 'RDNS'
@@ -101,17 +101,17 @@ export const ViewRangeDrawer: React.FC<CombinedProps> = props => {
 
     // If the field is blank, return an error.
     if (!ipToUpdate) {
-      return () => {
-        setErrors([
-          { field: 'ipv6Address', reason: 'Please enter an IPv6 Address' }
-        ]);
-      };
+      setErrors([
+        { field: 'ipv6Address', reason: 'Please enter an IPv6 Address' }
+      ]);
+
+      return;
     }
 
     setLoading(true);
     setErrors([]);
 
-    timer = setTimeout(showDelayText, 5000);
+    timer = window.setTimeout(showDelayText, 5000);
 
     updateIP(
       ipToUpdate,
@@ -227,4 +227,4 @@ export const ViewRangeDrawer: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, Props>(ViewRangeDrawer);
+export default React.memo(ViewRangeDrawer);
