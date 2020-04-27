@@ -24,6 +24,7 @@ import useObjectStorageBuckets from 'src/hooks/useObjectStorageBuckets';
 import useObjectStorageClusters from 'src/hooks/useObjectStorageClusters';
 import { MapState } from 'src/store/types';
 import BucketDrawer from './BucketLanding/BucketDrawer';
+import useReduxLoad from 'src/hooks/useReduxLoad';
 
 const BucketLanding = React.lazy(() => import('./BucketLanding/BucketLanding'));
 const AccessKeyLanding = React.lazy(() =>
@@ -40,6 +41,8 @@ type CombinedProps = StateProps & RouteComponentProps<{}>;
 
 export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+
+  useReduxLoad(['clusters']);
 
   const { objectStorageClusters } = useObjectStorageClusters();
   const {

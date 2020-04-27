@@ -175,6 +175,11 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
     return <RenderEmpty onClick={openBucketDrawer} />;
   }
 
+  // Show a general error state if there is a Cluster error.
+  if (objectStorageClusters.error) {
+    return <RenderError data-qa-error-state />;
+  }
+
   if (lastUpdated === 0 || loading) {
     return <RenderLoading />;
   }
@@ -183,7 +188,7 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
     bucketErrors?.length === objectStorageClusters.entities.length;
 
   // Show a general error state if all the bucket requests failed.
-  if (allBucketRequestsFailed) {
+  if (allBucketRequestsFailed || objectStorageClusters.error) {
     return <RenderError data-qa-error-state />;
   }
 
