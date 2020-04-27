@@ -109,7 +109,8 @@ export const NodeTable: React.FC<Props> = props => {
                       >
                         IP Address
                       </TableSortCell>
-                      <TableCell />
+                      {/* Hiding action menu until backend can support it properly. */}
+                      {/* <TableCell /> */}
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -234,13 +235,14 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo(props => {
           displayIP
         )}
       </TableCell>
-      <TableCell>
-        {/* <NodeActionMenu
+      {/* Hiding action menu until backend can support it properly. */}
+      {/* <TableCell>
+        {<NodeActionMenu
           instanceId={instanceId}
           instanceLabel={label}
           openRecycleNodeDialog={openRecycleNodeDialog}
-        /> */}
-      </TableCell>
+        />
+      </TableCell> */}
     </TableRow>
   );
 });
