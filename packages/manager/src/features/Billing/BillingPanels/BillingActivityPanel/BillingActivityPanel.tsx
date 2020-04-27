@@ -29,12 +29,11 @@ interface ActivityFeedItem {
   label: string;
   total: number;
   date: string;
-  type: string;
-  // type: 'payment' | 'invoice';
+  type: 'payment' | 'invoice';
   id: number;
 }
 
-export const BillingActivityPanel: React.FC<{}> = props => {
+export const BillingActivityPanel: React.FC<{}> = () => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<APIError[] | undefined>();
   const [combinedData, setCombinedData] = React.useState<ActivityFeedItem[]>(
@@ -88,7 +87,7 @@ export const BillingActivityPanel: React.FC<{}> = props => {
                         </TableCell>
                         <TableCell style={{ width: '17%' }}>Date</TableCell>
                         <TableCell style={{ width: '17%' }}>Amount</TableCell>
-                        <TableCell />z
+                        <TableCell />
                       </TableRow>
                     </TableHead>
                     <TableBody>
