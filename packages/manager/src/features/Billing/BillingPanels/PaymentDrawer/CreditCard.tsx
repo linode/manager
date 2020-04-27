@@ -87,7 +87,7 @@ export const CreditCard: React.FC<Props> = props => {
     <>
       <Grid container direction="column" className={classes.root}>
         <Grid item>
-          <Typography className={classes.header}>
+          <Typography variant="h3" className={classes.header}>
             <strong>Pay via credit card</strong>
           </Typography>
         </Grid>

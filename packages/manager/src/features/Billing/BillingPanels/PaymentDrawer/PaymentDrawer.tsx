@@ -95,7 +95,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
           {successMessage && <Notice success text={successMessage ?? ''} />}
           {balance !== false && (
             <Grid item>
-              <Typography className={classes.currentBalance}>
+              <Typography variant="h3" className={classes.currentBalance}>
                 <strong>Current balance: ${balance.toFixed(2)}</strong>
               </Typography>
             </Grid>

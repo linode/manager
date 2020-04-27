@@ -59,6 +59,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   PaypalHidden: {
     opacity: 0.3
+  },
+  text: {
+    marginBottom: theme.spacing(2) - 1
   }
 }));
 
@@ -240,12 +243,12 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
     <>
       <Grid container direction="column" className={classes.root}>
         <Grid item>
-          <Typography className={classes.header}>
+          <Typography variant="h3" className={classes.header}>
             <strong>Pay via PayPal</strong>
           </Typography>
         </Grid>
         <Grid item>
-          <Typography>
+          <Typography className={classes.text}>
             You'll be taken to PayPal to complete your payment.
           </Typography>
         </Grid>
