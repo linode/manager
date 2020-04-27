@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { Link } from '@reach/router';
+import * as React from 'react';
 import Tab from 'src/components/core/ReachTab';
 import TabList from 'src/components/core/ReachTabList';
 import { makeStyles, Theme } from 'src/components/core/styles';

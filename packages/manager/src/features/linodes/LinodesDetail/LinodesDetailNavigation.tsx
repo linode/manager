@@ -1,17 +1,16 @@
 import { Config } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
-import { Router } from '@reach/router';
 import { compose } from 'recompose';
 import TabPanel from 'src/components/core/ReachTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import TabLinkList from 'src/components/TabLinkList';
 import VolumesLanding from 'src/features/Volumes/VolumesLanding';
-import { withLinodeDetailContext } from './linodeDetailContext';
 import LinodeActivity from './LinodeActivity';
 import LinodeAdvanced from './LinodeAdvanced';
 import LinodeBackup from './LinodeBackup';
+import { withLinodeDetailContext } from './linodeDetailContext';
 import LinodeNetworking from './LinodeNetworking';
 import LinodeRebuild from './LinodeRebuild';
 import LinodeRescue from './LinodeRescue';
@@ -82,43 +81,55 @@ const LinodesDetailNavigation: React.StatelessComponent<CombinedProps> = props =
     <>
       <Tabs defaultIndex={tabs.findIndex(tab => matches(tab.routeName))}>
         <TabLinkList tabs={tabs} />
-        <Router component={TabPanels}>
-          <TabPanel
-            as={LinodeSummary}
-            path={`/linodes/:linodeId/summary`}
-            default={true}
-          />
+        <TabPanels>
+          <TabPanel>
+            <LinodeSummary />
+          </TabPanel>
 
-          <TabPanel
-            as={VolumesLanding}
-            path={`/linodes/:linodeId/volumes`}
-            linodeId={linodeId}
-            linodeLabel={linodeLabel}
-            linodeRegion={linodeRegion}
-            linodeConfigs={linodeConfigs}
-            readOnly={readOnly}
-            fromLinodes
-            removeBreadCrumb
-          />
+          <TabPanel>
+            <VolumesLanding
+              linodeId={linodeId}
+              linodeLabel={linodeLabel}
+              linodeRegion={linodeRegion}
+              linodeConfigs={linodeConfigs}
+              readOnly={readOnly}
+              fromLinodes
+              removeBreadCrumb
+            />
+          </TabPanel>
 
-          <TabPanel
-            as={LinodeNetworking}
-            path={`/linodes/:linodeId/networking`}
-          />
+          <TabPanel>
+            <LinodeNetworking />
+          </TabPanel>
 
-          <TabPanel as={LinodeResize} path={`/linodes/:linodeId/resize`} />
+          <TabPanel>
+            <LinodeResize />
+          </TabPanel>
 
-          <TabPanel as={LinodeRescue} path={`/linodes/:linodeId/rescue`} />
-          <TabPanel as={LinodeRebuild} path={`/linodes/:linodeId/rebuild`} />
+          <TabPanel>
+            <LinodeRescue />
+          </TabPanel>
 
-          <TabPanel as={LinodeBackup} path={`/linodes/:linodeId/backup`} />
+          <TabPanel>
+            <LinodeRebuild />
+          </TabPanel>
 
-          <TabPanel as={LinodeActivity} path={`/linodes/:linodeId/activity`} />
+          <TabPanel>
+            <LinodeBackup />
+          </TabPanel>
 
-          <TabPanel as={LinodeSettings} path={`/linodes/:linodeId/settings`} />
+          <TabPanel>
+            <LinodeActivity />
+          </TabPanel>
 
-          <TabPanel as={LinodeAdvanced} path={`/linodes/:linodeId/advanced`} />
-        </Router>
+          <TabPanel>
+            <LinodeSettings />
+          </TabPanel>
+
+          <TabPanel>
+            <LinodeAdvanced />
+          </TabPanel>
+        </TabPanels>
       </Tabs>
     </>
   );
