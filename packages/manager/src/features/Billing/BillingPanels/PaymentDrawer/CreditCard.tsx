@@ -34,13 +34,10 @@ export const CreditCard: React.FC<Props> = props => {
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
-  const [cvvErrorMessage, setCVVErrorMessage] = React.useState<string | null>(
-    null
-  );
+
   const classes = useStyles();
 
   const handleCVVChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCVVErrorMessage(null);
     const _cvv = cleanCVV(e.target.value);
     setCVV(_cvv);
   };
@@ -50,9 +47,6 @@ export const CreditCard: React.FC<Props> = props => {
   };
 
   const handleOpenDialog = () => {
-    if (!cvv) {
-      return setCVVErrorMessage('CVV is required');
-    }
     setDialogOpen(true);
     setErrorMessage(null);
   };
@@ -102,8 +96,7 @@ export const CreditCard: React.FC<Props> = props => {
           </Grid>
           <Grid item>
             <TextField
-              errorText={cvvErrorMessage ?? ''}
-              label="Please enter your CVV:"
+              label="CVV:"
               onChange={handleCVVChange}
               value={cvv}
               type="text"
