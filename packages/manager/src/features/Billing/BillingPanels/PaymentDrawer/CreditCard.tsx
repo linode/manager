@@ -5,6 +5,7 @@ import { Theme, makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
+import { cleanCVV } from 'src/features/Billing/billingUtils';
 import CreditCardDialog from './PaymentBits/CreditCardDialog';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -38,19 +39,15 @@ export const CreditCard: React.FC<Props> = props => {
 
   const handleCVVChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCVVError(null);
-    // All characters except numbers
-    const regex = /(([\D]))/;
-
-    // Prevents more than 4 characters from being submitted
-    const cvv = e.target.value.slice(0, 4);
-    setCVV(cvv.replace(regex, ''));
+    const _cvv = cleanCVV(e.target.value);
+    setCVV(_cvv);
   };
 
   const handleClose = () => {
     setDialogOpen(false);
   };
 
-  const handleOpen = () => {
+  const handleOpenDialog = () => {
     if (!cvv) {
       return setCVVError('CVV is required');
     }
@@ -97,7 +94,7 @@ export const CreditCard: React.FC<Props> = props => {
         </Grid>
         <Grid container alignItems="flex-end" justify="flex-start">
           <Grid item>
-            <Button buttonType="primary" onClick={handleOpen}>
+            <Button buttonType="primary" onClick={handleOpenDialog}>
               Pay Now
             </Button>
           </Grid>
