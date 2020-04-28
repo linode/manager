@@ -78,9 +78,7 @@ export const getAllBucketsFromAllClusters: ThunkActionCreator<Promise<
       dispatch(getAllBucketsForAllClustersActions.failed({ error: errors }));
     }
 
-    if (data.length > 0) {
-      dispatch(getAllBucketsForAllClustersActions.done({ result: data }));
-    }
+    dispatch(getAllBucketsForAllClustersActions.done({ result: data }));
 
     return data;
   });

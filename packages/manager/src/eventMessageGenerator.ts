@@ -645,12 +645,11 @@ export default (e: Event): string => {
   if (!fn) {
     /** log unknown events to the console */
     if (!isProductionBuild) {
-      /* tslint:disable */
+      /* eslint-disable no-console */
       console.error('============================================');
       console.error('Unknown API Event Received');
       console.log(e);
       console.error('============================================');
-      /* tslint:enable */
     }
 
     /** finally return some default fallback text */

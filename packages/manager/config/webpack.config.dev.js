@@ -28,7 +28,7 @@ const env = getClientEnvironment(publicUrl);
 // It is focused on developer experience and fast rebuilds.
 // The production configuration is different and lives in a separate file.
 
-/* tslint:disable:object-literal-sort-keys */
+/* eslint-disable sort-keys */
 module.exports = {
   mode: 'development',
   // You may want 'eval' instead if you prefer to see the compiled output in DevTools.
@@ -67,7 +67,7 @@ module.exports = {
     // There are also additional JS chunk files if you use code splitting.
     chunkFilename: 'static/js/[name].chunk.js',
     // This is the URL that app is served from. We use "/" in development.
-    publicPath: publicPath,
+    publicPath,
     // Point sourcemap entries to original disk location (format as URL on Windows)
     devtoolModuleFilenameTemplate: info =>
       path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')
@@ -154,14 +154,14 @@ module.exports = {
           {
             test: /\.(ts|tsx)$/,
             include: paths.appSrc,
-            exclude:[/(stories|test)\.(ts|tsx)$/, /__data__/],
+            exclude: [/(stories|test)\.(ts|tsx)$/, /__data__/],
             use: [
               {
                 loader: require.resolve('ts-loader'),
                 options: {
                   // disable type checker - we will use it in fork plugin
                   transpileOnly: true,
-                  onlyCompileBundledFiles:true
+                  onlyCompileBundledFiles: true
                 }
               }
             ]
@@ -259,7 +259,7 @@ module.exports = {
       memoryLimit: 4096,
       watch: paths.appSrc,
       tsconfig: paths.appTsConfig,
-      tslint: paths.appTsLint
+      eslint: paths.appEsLintConfig
     }),
     new CircularDependencyPlugin({
       // exclude detection of files based on a RegExp

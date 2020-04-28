@@ -6,20 +6,13 @@ import {
   Switch,
   withRouter
 } from 'react-router-dom';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 
-import DefaultLoader from 'src/components/DefaultLoader';
-
-const LinodesLanding = DefaultLoader({
-  loader: () => import('./LinodesLanding')
-});
-
-const LinodesCreate = DefaultLoader({
-  loader: () => import('./LinodesCreate/LinodeCreateContainer')
-});
-
-const LinodesDetail = DefaultLoader({
-  loader: () => import('./LinodesDetail')
-});
+const LinodesLanding = React.lazy(() => import('./LinodesLanding'));
+const LinodesCreate = React.lazy(() =>
+  import('./LinodesCreate/LinodeCreateContainer')
+);
+const LinodesDetail = React.lazy(() => import('./LinodesDetail'));
 
 type Props = RouteComponentProps<{}>;
 
@@ -30,12 +23,14 @@ class LinodesRoutes extends React.Component<Props> {
     } = this.props;
 
     return (
-      <Switch>
-        <Route component={LinodesCreate} path={`${path}/create`} />
-        <Route component={LinodesDetail} path={`${path}/:linodeId`} />
-        <Route component={LinodesLanding} path={path} exact strict />
-        <Redirect to={path} />
-      </Switch>
+      <React.Suspense fallback={<SuspenseLoader />}>
+        <Switch>
+          <Route component={LinodesCreate} path={`${path}/create`} />
+          <Route component={LinodesDetail} path={`${path}/:linodeId`} />
+          <Route component={LinodesLanding} path={path} exact strict />
+          <Redirect to={path} />
+        </Switch>
+      </React.Suspense>
     );
   }
 }

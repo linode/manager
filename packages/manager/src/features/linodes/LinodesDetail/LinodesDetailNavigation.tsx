@@ -6,17 +6,20 @@ import TabPanel from 'src/components/core/ReachTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import TabLinkList from 'src/components/TabLinkList';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 import VolumesLanding from 'src/features/Volumes/VolumesLanding';
-import LinodeActivity from './LinodeActivity';
-import LinodeAdvanced from './LinodeAdvanced';
-import LinodeBackup from './LinodeBackup';
+
 import { withLinodeDetailContext } from './linodeDetailContext';
-import LinodeNetworking from './LinodeNetworking';
-import LinodeRebuild from './LinodeRebuild';
-import LinodeRescue from './LinodeRescue';
-import LinodeResize from './LinodeResize';
-import LinodeSettings from './LinodeSettings';
-import LinodeSummary from './LinodeSummary';
+
+const LinodeSummary = React.lazy(() => import('./LinodeSummary'));
+const LinodeSettings = React.lazy(() => import('./LinodeSettings'));
+const LinodeResize = React.lazy(() => import('./LinodeResize'));
+const LinodeRescue = React.lazy(() => import('./LinodeRescue'));
+const LinodeRebuild = React.lazy(() => import('./LinodeRebuild'));
+const LinodeNetworking = React.lazy(() => import('./LinodeNetworking'));
+const LinodeActivity = React.lazy(() => import('./LinodeActivity'));
+const LinodeAdvanced = React.lazy(() => import('./LinodeAdvanced'));
+const LinodeBackup = React.lazy(() => import('./LinodeBackup'));
 
 type CombinedProps = ContextProps &
   RouteComponentProps<{
@@ -81,55 +84,57 @@ const LinodesDetailNavigation: React.StatelessComponent<CombinedProps> = props =
     <>
       <Tabs defaultIndex={tabs.findIndex(tab => matches(tab.routeName))}>
         <TabLinkList tabs={tabs} />
-        <TabPanels>
-          <TabPanel>
-            <LinodeSummary />
-          </TabPanel>
 
-          <TabPanel>
-            <VolumesLanding
-              linodeId={linodeId}
-              linodeLabel={linodeLabel}
-              linodeRegion={linodeRegion}
-              linodeConfigs={linodeConfigs}
-              readOnly={readOnly}
-              fromLinodes
-              removeBreadCrumb
-            />
-          </TabPanel>
+        <React.Suspense fallback={<SuspenseLoader />}>
+          <TabPanels>
+            <TabPanel>
+              <LinodeSummary />
+            </TabPanel>
+            <TabPanel>
+              <VolumesLanding
+                linodeId={linodeId}
+                linodeLabel={linodeLabel}
+                linodeRegion={linodeRegion}
+                linodeConfigs={linodeConfigs}
+                readOnly={readOnly}
+                fromLinodes
+                removeBreadCrumb
+              />
+            </TabPanel>
 
-          <TabPanel>
-            <LinodeNetworking />
-          </TabPanel>
+            <TabPanel>
+              <LinodeNetworking />
+            </TabPanel>
 
-          <TabPanel>
-            <LinodeResize />
-          </TabPanel>
+            <TabPanel>
+              <LinodeResize />
+            </TabPanel>
 
-          <TabPanel>
-            <LinodeRescue />
-          </TabPanel>
+            <TabPanel>
+              <LinodeRescue />
+            </TabPanel>
 
-          <TabPanel>
-            <LinodeRebuild />
-          </TabPanel>
+            <TabPanel>
+              <LinodeRebuild />
+            </TabPanel>
 
-          <TabPanel>
-            <LinodeBackup />
-          </TabPanel>
+            <TabPanel>
+              <LinodeBackup />
+            </TabPanel>
 
-          <TabPanel>
-            <LinodeActivity />
-          </TabPanel>
+            <TabPanel>
+              <LinodeActivity />
+            </TabPanel>
 
-          <TabPanel>
-            <LinodeSettings />
-          </TabPanel>
+            <TabPanel>
+              <LinodeSettings />
+            </TabPanel>
 
-          <TabPanel>
-            <LinodeAdvanced />
-          </TabPanel>
-        </TabPanels>
+            <TabPanel>
+              <LinodeAdvanced />
+            </TabPanel>
+          </TabPanels>
+        </React.Suspense>
       </Tabs>
     </>
   );

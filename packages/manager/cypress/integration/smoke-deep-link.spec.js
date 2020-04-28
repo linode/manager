@@ -1,14 +1,14 @@
 import { pages } from '../support/ui/constants';
 
 describe('smoke - deep link', () => {
-  //check if we run oinly one test
+  // check if we run oinly one test
 
   pages.forEach(page => {
     if (!page.goWithUI) {
       return;
     }
     describe.skip(`Got to ${page.name}`, () => {
-      // Here we use login to /null here 
+      // Here we use login to /null here
       // so this is independant from what is coded in constants and which path are skipped
       beforeEach(() => {
         cy.visitWithLogin('/null');

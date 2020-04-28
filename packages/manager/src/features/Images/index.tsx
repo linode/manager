@@ -5,12 +5,9 @@ import {
   Switch,
   withRouter
 } from 'react-router-dom';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 
-import DefaultLoader from 'src/components/DefaultLoader';
-
-const ImagesLanding = DefaultLoader({
-  loader: () => import('./ImagesLanding')
-});
+const ImagesLanding = React.lazy(() => import('./ImagesLanding'));
 
 type Props = RouteComponentProps<{}>;
 
@@ -21,9 +18,11 @@ class ImagesRoutes extends React.Component<Props> {
     } = this.props;
 
     return (
-      <Switch>
-        <Route component={ImagesLanding} path={path} exact />
-      </Switch>
+      <React.Suspense fallback={<SuspenseLoader />}>
+        <Switch>
+          <Route component={ImagesLanding} path={path} exact />
+        </Switch>
+      </React.Suspense>
     );
   }
 }

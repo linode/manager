@@ -1,5 +1,6 @@
 import strings from '../cypresshelpers';
-
+const apiroot = Cypress.env('REACT_APP_API_ROOT') + '/';
+const oauthtoken = Cypress.env('MANAGER_OAUTH');
 export const apiCheckErrors = (resp, failOnError = true) => {
   let errs = undefined;
   if (resp.body && resp.body.ERRORARRAY && resp.body.ERRORARRAY.length > 0) {
@@ -18,18 +19,18 @@ export const apiCheckErrors = (resp, failOnError = true) => {
 export const getAll = path => {
   return cy.request({
     method: 'GET',
-    url: Cypress.env('apiroot') + '/v4/' + path,
+    url: `${apiroot}${path}`,
     auth: {
-      bearer: Cypress.env('oauthtoken')
+      bearer: oauthtoken
     }
   });
 };
 export const deleteById = (path, id) => {
   return cy.request({
     method: 'DELETE',
-    url: `${Cypress.env('apiroot')}/v4/${path}/${id}`,
+    url: `${apiroot}${path}/${id}`,
     auth: {
-      bearer: Cypress.env('oauthtoken')
+      bearer: oauthtoken
     }
   });
 };
