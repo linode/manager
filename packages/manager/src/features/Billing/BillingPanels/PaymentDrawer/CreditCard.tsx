@@ -33,12 +33,14 @@ export const CreditCard: React.FC<Props> = props => {
   const [cvv, setCVV] = React.useState<string>('');
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<string | null>(null);
-  const [cvvError, setCVVError] = React.useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
+  const [cvvErrorMessage, setCVVErrorMessage] = React.useState<string | null>(
+    null
+  );
   const classes = useStyles();
 
   const handleCVVChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCVVError(null);
+    setCVVErrorMessage(null);
     const _cvv = cleanCVV(e.target.value);
     setCVV(_cvv);
   };
@@ -49,16 +51,16 @@ export const CreditCard: React.FC<Props> = props => {
 
   const handleOpenDialog = () => {
     if (!cvv) {
-      return setCVVError('CVV is required');
+      return setCVVErrorMessage('CVV is required');
     }
     setDialogOpen(true);
-    setError(null);
+    setErrorMessage(null);
   };
 
   const confirmCardPayment = () => {
     setSubmitting(true);
     setSuccess(null);
-    setError(null);
+    setErrorMessage(null);
 
     makePayment({
       usd: (+usd).toFixed(2),
@@ -71,7 +73,7 @@ export const CreditCard: React.FC<Props> = props => {
       })
       .catch(errorResponse => {
         setSubmitting(false);
-        setError(
+        setErrorMessage(
           getAPIErrorOrDefault(
             errorResponse,
             'Unable to make a payment at this time.'
@@ -100,7 +102,7 @@ export const CreditCard: React.FC<Props> = props => {
           </Grid>
           <Grid item>
             <TextField
-              errorText={cvvError ?? ''}
+              errorText={cvvErrorMessage ?? ''}
               label="Please enter your CVV:"
               onChange={handleCVVChange}
               value={cvv}
@@ -115,7 +117,7 @@ export const CreditCard: React.FC<Props> = props => {
         </Grid>
       </Grid>
       <CreditCardDialog
-        error={error}
+        error={errorMessage}
         isMakingPayment={submitting}
         cancel={handleClose}
         executePayment={confirmCardPayment}
