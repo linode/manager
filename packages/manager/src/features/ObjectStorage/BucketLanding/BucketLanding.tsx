@@ -312,7 +312,9 @@ const BucketErrorDisplay: React.FC<BucketErrorDisplayProps> = React.memo(
     return (
       <Banner
         regionsAffected={bucketErrors.map(
-          thisError => objectStorageClusterDisplay[thisError.clusterId]
+          thisError =>
+            objectStorageClusterDisplay[thisError.clusterId] ??
+            thisError.clusterId
         )}
       />
     );
