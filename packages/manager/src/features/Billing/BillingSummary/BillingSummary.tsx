@@ -96,7 +96,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  promotion: ActivePromotion;
+  promotion?: ActivePromotion;
   openPaymentDrawer?: () => void;
   goToInvoice?: () => void;
   uninvoicedBalance: number;
@@ -117,15 +117,27 @@ export const BillingSummary: React.FC<Props> = props => {
 
   const calculatedBalance = uninvoicedBalance + balance;
 
-  const determinePaymentDisplay = (_pastDueAmount: number) => {
-    if (_pastDueAmount > 0) {
+  const hasCredit = calculatedBalance < 0;
+
+  const convertedPromoCredit = promotion
+    ? parseInt(promotion.this_month_credit_remaining, 10)
+    : 0;
+
+  const totalBalance = hasCredit
+    ? Math.abs(calculatedBalance)
+    : promotion
+    ? Math.max(0, calculatedBalance - convertedPromoCredit)
+    : calculatedBalance;
+
+  const determinePaymentDisplay = (pastDueAmount: number) => {
+    if (pastDueAmount > 0) {
       return (
         <div>
           <Typography className={classes.header} variant="h2">
             Past Due Amount
           </Typography>
           <Typography className={classes.unpaidBalance} component="h2">
-            ${_pastDueAmount.toFixed(2)}
+            ${pastDueAmount.toFixed(2)}
           </Typography>
           <Typography className={classes.text}>
             Please make a payment immediately to avoid service disruption.
@@ -149,6 +161,7 @@ export const BillingSummary: React.FC<Props> = props => {
     <Paper className={classes.root}>
       <Grid container alignItems="stretch">
         <Grid item xs={12} md={4} className={classes.gridItem}>
+          {/* If balance is > 0, it is considered past due. */}
           {determinePaymentDisplay(balance)}
 
           <div className={classes.iconButtonOuter}>
@@ -227,6 +240,7 @@ export const BillingSummary: React.FC<Props> = props => {
               </Grid>
             </Grid>
           )}
+
           <Grid item container justify="space-between">
             <Grid item>
               <Typography className={classes.label}>
@@ -235,9 +249,8 @@ export const BillingSummary: React.FC<Props> = props => {
             </Grid>
             <Grid item>
               <Typography className={classes.field}>
-                {balance < 0
-                  ? `($${balance.toFixed(2)})`
-                  : `$${balance.toFixed(2)}`}
+                {/* Only display balance if less than 0, otherwise display 0. Balance, if a positive integer, is instead applied as past due. */}
+                {balance < 0 ? `-($${Math.abs(balance).toFixed(2)})` : `$0.00`}
               </Typography>
             </Grid>
           </Grid>
@@ -248,11 +261,16 @@ export const BillingSummary: React.FC<Props> = props => {
             justify="space-between"
           >
             <Grid item>
-              <Typography className={classes.label}>Balance*</Typography>
+              <Typography className={classes.label}>
+                {/* If there is credit left over post-calculation, change the label to Credit */}
+                {hasCredit && Math.abs(calculatedBalance) > 0
+                  ? 'Credit*'
+                  : 'Balance*'}
+              </Typography>
             </Grid>
             <Grid item>
               <Typography className={classes.field}>
-                ${calculatedBalance.toFixed(2)}
+                ${totalBalance.toFixed(2)}
               </Typography>
             </Grid>
           </Grid>
@@ -265,4 +283,4 @@ export const BillingSummary: React.FC<Props> = props => {
   );
 };
 
-export default BillingSummary;
+export default React.memo(BillingSummary);

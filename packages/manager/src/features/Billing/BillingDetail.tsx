@@ -64,9 +64,9 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
         <Grid container>
           <Grid item xs={12} md={12} lg={12} className={classes.main}>
             <BillingSummary
-              balance={account!.data!.balance}
-              promotion={account!.data!.active_promotions[0]}
-              uninvoicedBalance={account!.data!.balance_uninvoiced}
+              balance={account?.data?.balance ?? 0}
+              promotion={account?.data?.active_promotions?.[0]}
+              uninvoicedBalance={account?.data?.balance_uninvoiced ?? 0}
             />
             <SummaryPanel data-qa-summary-panel history={props.history} />
             <BillingActivityPanel />
