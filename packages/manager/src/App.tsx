@@ -1,3 +1,4 @@
+import '@reach/tabs/styles.css';
 import { Account, AccountCapability } from 'linode-js-sdk/lib/account';
 import { Image } from 'linode-js-sdk/lib/images';
 import { Linode } from 'linode-js-sdk/lib/linodes';
