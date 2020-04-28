@@ -76,6 +76,8 @@ export const CreditCard: React.FC<Props> = props => {
       });
   };
 
+  const hasCreditCardOnFile = Boolean(lastFour);
+
   return (
     <>
       <Grid container direction="column" className={classes.root}>
@@ -85,12 +87,21 @@ export const CreditCard: React.FC<Props> = props => {
           </Typography>
         </Grid>
         <Grid item>
-          <Typography>XXXX XXXX XXXX {lastFour}</Typography>
+          {hasCreditCardOnFile ? (
+            // This will rarely/never happen, best to be safe.
+            <Typography>XXXX XXXX XXXX {lastFour}</Typography>
+          ) : (
+            <Typography>No credit card on file.</Typography>
+          )}
           {Boolean(expiry) && <Typography>Expires {expiry}</Typography>}
         </Grid>
         <Grid container alignItems="flex-end" justify="flex-start">
           <Grid item>
-            <Button buttonType="primary" onClick={handleOpenDialog}>
+            <Button
+              buttonType="primary"
+              onClick={handleOpenDialog}
+              disabled={!hasCreditCardOnFile}
+            >
               Pay Now
             </Button>
           </Grid>
