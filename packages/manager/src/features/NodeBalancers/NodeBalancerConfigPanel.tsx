@@ -186,6 +186,8 @@ interface State {
   currentNodeAddressIndex: number | null;
 }
 
+const DATA_NODE = 'data-node-idx';
+
 class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
   state: State = {
     currentNodeAddressIndex: null
@@ -252,41 +254,41 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     this.props.onSslCertificateChange(e.target.value);
 
   onNodeLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const nodeIdx = e.currentTarget.getAttribute('data-node-idx');
+    const nodeIdx = e.currentTarget.getAttribute(DATA_NODE);
     if (nodeIdx) {
       this.props.onNodeLabelChange(+nodeIdx, e.target.value);
     }
   };
 
   onNodeAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const nodeIdx = e.currentTarget.getAttribute('data-node-idx');
+    const nodeIdx = e.currentTarget.getAttribute(DATA_NODE);
     if (nodeIdx) {
       this.props.onNodeAddressChange(+nodeIdx, e.target.value);
     }
   };
 
   onNodePortChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const nodeIdx = e.currentTarget.getAttribute('data-node-idx');
+    const nodeIdx = e.currentTarget.getAttribute(DATA_NODE);
     if (nodeIdx) {
       this.props.onNodePortChange(+nodeIdx, e.target.value);
     }
   };
 
   onNodeWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const nodeIdx = e.currentTarget.getAttribute('data-node-idx');
+    const nodeIdx = e.currentTarget.getAttribute(DATA_NODE);
     if (nodeIdx) {
       this.props.onNodeWeightChange(+nodeIdx, e.target.value);
     }
   };
 
   onNodeModeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const nodeIdx = e.currentTarget.getAttribute('data-node-idx');
+    const nodeIdx = e.currentTarget.getAttribute(DATA_NODE);
     if (nodeIdx) {
       this.props.onNodeModeChange!(+nodeIdx, e.target.value);
     }
   };
 
-  addNode = (e: React.MouseEvent<HTMLElement>) => {
+  addNode = () => {
     if (this.props.disabled) {
       return;
     }
@@ -297,9 +299,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     if (this.props.disabled) {
       return;
     }
-    const nodeIdx: string | null = e.currentTarget.getAttribute(
-      'data-node-idx'
-    );
+    const nodeIdx: string | null = e.currentTarget.getAttribute(DATA_NODE);
     const { removeNode } = this.props;
     if (removeNode && nodeIdx) {
       return removeNode(+nodeIdx);
@@ -313,7 +313,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     if (p === 'http' || p === 'https') {
       return `'HTTP Valid Status' requires a 2xx or 3xx response from the backend node. 'HTTP Body Regex' uses a regex to match against an expected result body.`;
     }
-    return;
+    return undefined;
   };
 
   onSave = this.props.onSave;
@@ -817,8 +817,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 />
                 <FormHelperText>
                   Roundrobin. Least connections assigns connections to the
-                  backend with the least connections. Source uses the client's
-                  IPv4 address
+                  backend with the least connections. Source uses the
+                  client&#39;s IPv4 address
                 </FormHelperText>
               </Grid>
 
@@ -973,12 +973,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               container
                               data-qa-node
                             >
-                              <Grid
-                                item
-                                xs={12}
-                                sm={forEdit ? 3 : 3}
-                                lg={forEdit ? 2 : 4}
-                              >
+                              <Grid item xs={12} sm={3} lg={forEdit ? 2 : 4}>
                                 <SelectIP
                                   textfieldProps={{
                                     dataAttrs: {
