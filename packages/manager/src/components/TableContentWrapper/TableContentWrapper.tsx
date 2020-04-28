@@ -36,7 +36,8 @@ const TableContentWrapper: React.FC<CombinedProps> = props => {
     );
   }
 
-  return <>props.children</>;
+  /* eslint-disable-next-line */
+  return <>{props.children}</>;
 };
 
 export default compose<CombinedProps, Props>(React.memo)(TableContentWrapper);
