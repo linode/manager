@@ -385,6 +385,11 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               Active Health Checks
             </Typography>
           </Grid>
+          {errorMap.none && (
+            <Grid item>
+              <Notice error text={errorMap.none} />
+            </Grid>
+          )}
           <Grid
             updateFor={[
               protocol,
@@ -686,13 +691,14 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               <Notice
                 className={`error-for-scroll-${configIdx}`}
                 text={globalFormError}
-                error={true}
+                error
               />
             )}
             <Grid
               updateFor={[
                 port,
                 errorMap.port,
+                errorMap.configs,
                 protocol,
                 errorMap.protocol,
                 algorithm,
@@ -913,6 +919,11 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                     marginBottom: 24
                                   }}
                                 />
+                              </Grid>
+                            )}
+                            {nodesErrorMap.none && (
+                              <Grid item>
+                                <Notice error text={nodesErrorMap.none} />
                               </Grid>
                             )}
                             <Grid container>
