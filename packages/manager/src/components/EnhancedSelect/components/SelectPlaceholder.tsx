@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PlaceholderProps } from 'react-select/lib/components/Placeholder';
+import { PlaceholderProps } from 'react-select';
 import {
   createStyles,
   Theme,

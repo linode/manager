@@ -1,10 +1,9 @@
 import classNames from 'classnames';
 import * as React from 'react';
-import { OptionProps } from 'react-select/lib/components/Option';
-import Option from 'src/components/EnhancedSelect/components/Option';
-import { Item } from 'src/components/EnhancedSelect/Select';
-
+import { OptionProps } from 'react-select';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import { Item } from 'src/components/EnhancedSelect';
+import Option from 'src/components/EnhancedSelect/components/Option';
 import Grid from 'src/components/Grid';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -21,7 +20,7 @@ export interface RegionItem extends Item<string> {
   flag: () => JSX.Element | null;
   country: string;
 }
-interface RegionOptionProps extends OptionProps<string> {
+interface RegionOptionProps extends OptionProps<any> {
   data: RegionItem;
 }
 

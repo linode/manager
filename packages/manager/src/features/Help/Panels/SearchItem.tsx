@@ -1,8 +1,8 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import { OptionProps } from 'react-select/lib/components/Option';
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
 import Typography from 'src/components/core/Typography';
+import { OptionProps } from 'react-select';
 import Option from 'src/components/EnhancedSelect/components/Option';
 
 interface Props extends OptionProps<any> {

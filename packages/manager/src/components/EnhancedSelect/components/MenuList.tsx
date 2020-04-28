@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { components as reactSelectComponents } from 'react-select';
-import { MenuListComponentProps } from 'react-select/lib/components/Menu';
+import { MenuListComponentProps } from 'react-select';
 import Guidance from './Guidance';
 
 type CombinedProps = MenuListComponentProps<any>;
