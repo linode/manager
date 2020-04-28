@@ -347,7 +347,6 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
             error={hasErrorFor('type')}
             types={typesData}
             onSelect={updateTypeID}
-            updateFor={[selectedTypeID, errors]}
             selectedID={selectedTypeID}
             disabled={userCannotCreateLinode}
           />

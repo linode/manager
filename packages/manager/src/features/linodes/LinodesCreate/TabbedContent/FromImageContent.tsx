@@ -229,7 +229,6 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
               data-qa-select-plan-panel
               onSelect={this.props.updateTypeID}
               selectedID={this.props.selectedTypeID}
-              updateFor={[this.props.selectedTypeID, errors]}
               disabled={userCannotCreateLinode}
             />
             <LabelAndTagsPanel
