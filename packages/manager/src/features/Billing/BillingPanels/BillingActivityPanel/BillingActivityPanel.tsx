@@ -145,7 +145,7 @@ export const ActivityFeedItem: React.FC<ActivityFeedItem> = React.memo(
   }
 );
 
-export default BillingActivityPanel;
+export default React.memo(BillingActivityPanel);
 
 const invoiceToActivityFeedItem = (invoice: Invoice): ActivityFeedItem => {
   const { id, label, date, total } = invoice;
