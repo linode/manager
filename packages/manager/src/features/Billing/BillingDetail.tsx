@@ -13,7 +13,6 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import BillingActivityPanel from './BillingPanels/BillingActivityPanel';
 import SummaryPanel from './BillingPanels/SummaryPanel';
 import BillingSummary from './BillingSummary';
-import PaymentDrawer from './BillingPanels/PaymentDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -70,7 +69,6 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
           </Grid>
         </Grid>
       </div>
-      <PaymentDrawer />
     </React.Fragment>
   );
 };
