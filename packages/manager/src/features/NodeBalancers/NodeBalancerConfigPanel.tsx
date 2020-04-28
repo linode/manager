@@ -318,12 +318,11 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
 
   onSave = this.props.onSave;
 
-  renderActiveCheck() {
+  renderActiveCheck(errorMap: Record<string, string | undefined>) {
     const {
       checkBody,
       checkPath,
       configIdx,
-      errors,
       forEdit,
       healthCheckAttempts,
       healthCheckInterval,
@@ -333,18 +332,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       disabled,
       classes
     } = this.props;
-
-    const errorMap = getErrorMap(
-      [
-        'check_attempts',
-        'check_body',
-        'check_interval',
-        'check_path',
-        'check_timeout',
-        'check'
-      ],
-      errors
-    );
 
     const conditionalText = this.displayProtocolText(protocol);
 
@@ -630,11 +617,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
         'check_attempts',
         'check_body',
         'check_interval',
-        'check_passive',
         'check_path',
         'check_timeout',
         'check',
-        'cipher_suite',
         'configs',
         'port',
         'protocol',
@@ -850,7 +835,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               </Grid>
             </Grid>
             <Grid container>
-              {this.renderActiveCheck()}
+              {this.renderActiveCheck(errorMap)}
               {this.renderPassiveCheck()}
               <Grid item xs={12}>
                 <Divider className={classes.divider} />
