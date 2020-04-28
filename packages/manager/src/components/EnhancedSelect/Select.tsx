@@ -1,10 +1,9 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import ReactSelect from 'react-select';
+import ReactSelect, { Props as SelectProps } from 'react-select';
 import CreatableSelect, {
   Props as CreatableSelectProps
-} from 'react-select/lib/Creatable';
-import { Props as SelectProps } from 'react-select/lib/Select';
+} from 'react-select/creatable';
 import { withStyles, WithStyles } from 'src/components/core/styles';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
