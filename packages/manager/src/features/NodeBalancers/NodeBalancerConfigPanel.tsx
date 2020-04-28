@@ -385,11 +385,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               Active Health Checks
             </Typography>
           </Grid>
-          {errorMap.none && (
-            <Grid item>
-              <Notice error text={errorMap.none} />
-            </Grid>
-          )}
           <Grid
             updateFor={[
               protocol,
