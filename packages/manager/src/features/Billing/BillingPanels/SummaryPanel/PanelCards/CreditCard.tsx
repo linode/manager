@@ -7,25 +7,11 @@ import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
+  root: {
+    display: 'flex'
+  },
   expired: {
     color: theme.color.red
-  },
-  root: {
-    display: 'flex',
-    [theme.breakpoints.up('md')]: {
-      justifyContent: 'space-between'
-    }
-  },
-  label: {
-    [theme.breakpoints.only('sm')]: {
-      minWidth: 150
-    }
-  },
-  result: {
-    marginLeft: theme.spacing(1),
-    [theme.breakpoints.up('md')]: {
-      textAlign: 'right'
-    }
   }
 }));
 
@@ -42,22 +28,14 @@ export const CreditCard: React.FC<CombinedProps> = props => {
   return (
     <>
       <div className={`${classes.section} ${classes.root}`} data-qa-contact-cc>
-        <div className={classes.label}>
-          <strong>Credit Card: </strong>
-        </div>
-        <div className={classes.result}>
-          {lastFour ? `Ending in ${lastFour}` : 'None'}
-        </div>
+        <div>{lastFour ? `XXXX XXXX XXXX ${lastFour}` : 'None'}</div>
       </div>
       <div
         className={`${classes.section} ${classes.root}`}
         data-qa-contact-cc-exp-date
       >
-        <div className={classes.label}>
-          <strong>Expiration Date: </strong>
-        </div>
-        <div className={classes.result}>
-          {expiry ? `${expiry} ` : 'None'}
+        <div>
+          Expires {expiry ? `${expiry} ` : 'None'}
           {expiry && isCreditCardExpired(expiry) && (
             <span className={classes.expired}>(Expired)</span>
           )}
