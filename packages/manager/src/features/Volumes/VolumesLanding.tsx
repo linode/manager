@@ -437,7 +437,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       fromLinodes
     } = this.props;
 
-    const isVolumesLanding = this.props.match.params.linodeId === undefined;
+    const isVolumesLanding = this.props.linodeId === undefined;
 
     if (
       linodeRegion &&
@@ -503,7 +503,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   };
 
   renderData = (volumes: ExtendedVolume[], volumesAreGrouped: boolean) => {
-    const isVolumesLanding = this.props.match.params.linodeId === undefined;
+    const isVolumesLanding = this.props.linodeId === undefined;
     const renderProps = {
       isVolumesLanding,
       handleAttach: this.handleAttach,
