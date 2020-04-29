@@ -45,7 +45,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       boxShadow: `inset 0 -1px 0 ${theme.color.border2}`,
       marginBottom: theme.spacing(3),
       [theme.breakpoints.down('md')]: {
-        overflowX: 'scroll'
+        overflowX: 'scroll',
+        padding: 1
       }
     }
   }
