@@ -89,7 +89,7 @@
     "start": "node scripts/start.js",
     "lint": "yarn run eslint . --ext .js,.ts,.tsx --quiet",
     "build": "node scripts/build.js",
-    "precommit": "lint-staged",
+    "precommit": "lint-staged && yarn typecheck",
     "prepush": "./scripts/pre-push.sh",
     "mock": "./scripts/mb.js",
     "test": "jest --color",
@@ -118,11 +118,7 @@
   "lint-staged": {
     "*.{ts,tsx,js}": [
       "prettier --write",
-      "eslint --ext .js,.ts,.tsx --debug",
-      "git add"
-    ],
-    "*.{ts,.tsx}": [
-      "tsc -p tsconfig.json --noEmit"
+      "eslint --ext .js,.ts,.tsx --quiet"
     ]
   },
   "devDependencies": {
@@ -200,7 +196,7 @@
     "circular-dependency-plugin": "^5.2.0",
     "core-js": "^2.6.5",
     "coveralls": "^3.0.2",
-    "css-loader": "^2.1.0",
+    "css-loader": "^3.5.2",
     "csstype": "^2.5.5",
     "cypress": "~4.0.2",
     "cypress-axe": "^0.8.1",
@@ -252,7 +248,7 @@
     "svgr": "^1.9.0",
     "sw-precache-webpack-plugin": "^0.11.5",
     "ts-jest": "^24.1.0",
-    "ts-loader": "^6.0.4",
+    "ts-loader": "^7.0.1",
     "tsconfig-paths-webpack-plugin": "^3.2.0",
     "url-loader": "^1.1.2",
     "utility-types": "^2.1.0",
