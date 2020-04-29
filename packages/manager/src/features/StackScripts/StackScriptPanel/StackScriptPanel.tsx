@@ -137,17 +137,15 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, {}> {
     const tabValue = getTabValueFromQueryString(queryString, StackScriptTabs);
 
     return (
-      <React.Fragment>
-        <TabbedPanel
-          error={error}
-          rootClass={classes.root}
-          shrinkTabContent={classes.creating}
-          tabs={this.createTabs}
-          header=""
-          value={tabValue}
-          handleTabChange={this.handleTabChange}
-        />
-      </React.Fragment>
+      <TabbedPanel
+        error={error}
+        rootClass={classes.root}
+        shrinkTabContent={classes.creating}
+        tabs={this.createTabs}
+        header=""
+        value={tabValue}
+        handleTabChange={this.handleTabChange}
+      />
     );
   }
 }

@@ -8,7 +8,6 @@ import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import {
   createStyles,
-  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -31,7 +30,7 @@ import StackScriptRow from './StackScriptRow';
 
 type ClassNames = 'root' | 'loadingWrapper';
 
-const styles = (theme: Theme) =>
+const styles = () =>
   createStyles({
     root: {},
     loadingWrapper: {
