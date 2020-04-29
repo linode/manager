@@ -81,62 +81,60 @@ const LinodesDetailNavigation: React.StatelessComponent<CombinedProps> = props =
   ];
 
   return (
-    <>
-      <Tabs defaultIndex={tabs.findIndex(tab => matches(tab.routeName))}>
-        <TabLinkList tabs={tabs} />
+    <Tabs defaultIndex={tabs.findIndex(tab => matches(tab.routeName))}>
+      <TabLinkList tabs={tabs} />
 
-        <React.Suspense fallback={<SuspenseLoader />}>
-          <TabPanels>
-            <TabPanel>
-              <LinodeSummary />
-            </TabPanel>
-            <TabPanel>
-              <VolumesLanding
-                linodeId={linodeId}
-                linodeLabel={linodeLabel}
-                linodeRegion={linodeRegion}
-                linodeConfigs={linodeConfigs}
-                readOnly={readOnly}
-                fromLinodes
-                removeBreadCrumb
-              />
-            </TabPanel>
+      <React.Suspense fallback={<SuspenseLoader />}>
+        <TabPanels>
+          <TabPanel>
+            <LinodeSummary />
+          </TabPanel>
+          <TabPanel>
+            <VolumesLanding
+              linodeId={linodeId}
+              linodeLabel={linodeLabel}
+              linodeRegion={linodeRegion}
+              linodeConfigs={linodeConfigs}
+              readOnly={readOnly}
+              fromLinodes
+              removeBreadCrumb
+            />
+          </TabPanel>
 
-            <TabPanel>
-              <LinodeNetworking />
-            </TabPanel>
+          <TabPanel>
+            <LinodeNetworking />
+          </TabPanel>
 
-            <TabPanel>
-              <LinodeResize />
-            </TabPanel>
+          <TabPanel>
+            <LinodeResize />
+          </TabPanel>
 
-            <TabPanel>
-              <LinodeRescue />
-            </TabPanel>
+          <TabPanel>
+            <LinodeRescue />
+          </TabPanel>
 
-            <TabPanel>
-              <LinodeRebuild />
-            </TabPanel>
+          <TabPanel>
+            <LinodeRebuild />
+          </TabPanel>
 
-            <TabPanel>
-              <LinodeBackup />
-            </TabPanel>
+          <TabPanel>
+            <LinodeBackup />
+          </TabPanel>
 
-            <TabPanel>
-              <LinodeActivity />
-            </TabPanel>
+          <TabPanel>
+            <LinodeActivity />
+          </TabPanel>
 
-            <TabPanel>
-              <LinodeSettings />
-            </TabPanel>
+          <TabPanel>
+            <LinodeSettings />
+          </TabPanel>
 
-            <TabPanel>
-              <LinodeAdvanced />
-            </TabPanel>
-          </TabPanels>
-        </React.Suspense>
-      </Tabs>
-    </>
+          <TabPanel>
+            <LinodeAdvanced />
+          </TabPanel>
+        </TabPanels>
+      </React.Suspense>
+    </Tabs>
   );
 };
 

@@ -159,4 +159,4 @@ export const TabbedPanel: React.FC<CombinedProps> = props => {
   );
 };
 
-export default TabbedPanel;
+export default React.memo(TabbedPanel);
