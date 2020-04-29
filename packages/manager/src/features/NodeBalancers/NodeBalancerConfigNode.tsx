@@ -46,6 +46,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: theme.color.grey2,
       color: theme.palette.text.primary
     }
+  },
+  'chip-UP': {
+    backgroundColor: theme.color.green
+  },
+  'chip-DOWN': {
+    backgroundColor: theme.color.red
   }
 }));
 
