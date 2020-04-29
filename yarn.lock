@@ -2540,6 +2540,7 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
+<<<<<<< HEAD
 "@open-draft/until@^1.0.0":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@open-draft/until/-/until-1.0.3.tgz#db9cc719191a62e7d9200f6e7bab21c5b848adca"
@@ -2552,6 +2553,15 @@
   dependencies:
     "@reach/utils" "0.10.4"
     tslib "^2.0.0"
+=======
+"@reach/auto-id@^0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@reach/auto-id/-/auto-id-0.10.0.tgz#72b70b9bb3f7d0f39b9fae0dcb412168ee139762"
+  integrity sha512-Uwsd4eNFa5YteZ7DKCVIbhE3c8x9DYVwtLy6ZCl1jo6bXAF6Di1dYm/XnkTmo+OYoKOZlVTu7umONDeezY33rQ==
+  dependencies:
+    "@reach/utils" "^0.10.0"
+    tslib "^1.10.0"
+>>>>>>> Refactor Tabbed Panel Component & Linode Details Navigation (#6331)
 
 "@reach/auto-id@^0.9.0":
   version "0.9.0"
@@ -2561,6 +2571,7 @@
     "@reach/utils" "^0.9.0"
     tslib "^1.10.0"
 
+<<<<<<< HEAD
 "@reach/descendants@0.10.4":
   version "0.10.4"
   resolved "https://registry.yarnpkg.com/@reach/descendants/-/descendants-0.10.4.tgz#1f5248ed50b2f25429af008ee553bc2f6cf94fa6"
@@ -2568,6 +2579,15 @@
   dependencies:
     "@reach/utils" "0.10.4"
     tslib "^2.0.0"
+=======
+"@reach/descendants@^0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@reach/descendants/-/descendants-0.10.0.tgz#43eeba4aea10ffc62fe5144248c1455ab317964b"
+  integrity sha512-G7wm0poMVR+aT9W5O8C6cnrZBYskIAfgBfPwByOY7F6TwEj7HqHDs7tZ/3Paj6UIZZ9lkVfhHPEGGvfOpEXhlg==
+  dependencies:
+    "@reach/utils" "^0.10.0"
+    tslib "^1.10.0"
+>>>>>>> Refactor Tabbed Panel Component & Linode Details Navigation (#6331)
 
 "@reach/descendants@^0.9.1":
   version "0.9.1"
@@ -2729,6 +2749,7 @@
     prop-types "^15.6.1"
     react-lifecycles-compat "^3.0.4"
 
+<<<<<<< HEAD
 "@reach/utils@0.10.4":
   version "0.10.4"
   resolved "https://registry.yarnpkg.com/@reach/utils/-/utils-0.10.4.tgz#164ea50910db2d1015505a10fac6a48e7b3c54e7"
@@ -2736,6 +2757,8 @@
   dependencies:
     "@types/warning" "^3.0.0"
     tslib "^2.0.0"
+=======
+>>>>>>> Refactor Tabbed Panel Component & Linode Details Navigation (#6331)
 "@reach/tabs@^0.10.0":
   version "0.10.0"
   resolved "https://registry.yarnpkg.com/@reach/tabs/-/tabs-0.10.0.tgz#cf5df6da6c32b346fce0734f847592a367987329"
@@ -2747,6 +2770,7 @@
     prop-types "^15.7.2"
     tslib "^1.10.0"
 
+<<<<<<< HEAD
 "@reach/utils@0.10.5":
   version "0.10.5"
   resolved "https://registry.yarnpkg.com/@reach/utils/-/utils-0.10.5.tgz#fbac944d29565f6dd7abd0e1b13950e99b1e470b"
@@ -2754,6 +2778,14 @@
   dependencies:
     "@types/warning" "^3.0.0"
     tslib "^2.0.0"
+=======
+"@reach/utils@^0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@reach/utils/-/utils-0.10.0.tgz#480332433f9d0232aff2c36374cf9a2fe559990b"
+  integrity sha512-qPiwjw8jcT7JYrVT+ZO7bLTVEdp9KyvY0RO1emyCxqpYVr4s9oSZ3XG6n7G+bvnKeyjpbpIfCVfxYvPF1Uq2DQ==
+  dependencies:
+    tslib "^1.10.0"
+>>>>>>> Refactor Tabbed Panel Component & Linode Details Navigation (#6331)
     warning "^4.0.3"
 
 "@reach/utils@^0.9.0":
