@@ -136,16 +136,16 @@ export const TabbedPanel: React.FC<CombinedProps> = props => {
 
         <Tabs className={classes.tabsWrapper}>
           <TabList className={classes.tabList}>
-            {tabs.map((tab, _index) => (
-              <Tab className={classes.tab} key={index}>
+            {tabs.map((tab, idx) => (
+              <Tab className={classes.tab} key={`tabs-${idx}`}>
                 {tab.title}
               </Tab>
             ))}
           </TabList>
 
           <TabPanels className={classes.tabPanelOuter}>
-            {tabs.map((tab, _index) => (
-              <TabPanel className={classes.tabPanel} key={index}>
+            {tabs.map((tab, idx) => (
+              <TabPanel className={classes.tabPanel} key={`tabs-panel-${idx}`}>
                 {tab.render(rest.children)}
               </TabPanel>
             ))}
