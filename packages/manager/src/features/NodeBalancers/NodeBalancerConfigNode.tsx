@@ -86,6 +86,7 @@ export const NodeBalancerConfigNode: React.FC<Props> = props => {
     onNodePortChange,
     removeNode
   } = props;
+
   if (node.modifyStatus === 'delete') {
     /* This node has been marked for deletion, don't display it */
     return null;
@@ -171,7 +172,6 @@ export const NodeBalancerConfigNode: React.FC<Props> = props => {
               nodeIndex={idx}
               errorText={nodesErrorMap.address}
               nodeAddress={node.address}
-              workflow={forEdit ? 'edit' : 'create'}
               inputId={`ip-select-node-${configIdx}-${idx}`}
             />
           </Grid>

@@ -4,7 +4,6 @@ import { compose } from 'recompose';
 
 import {
   createStyles,
-  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -15,7 +14,7 @@ import { privateIPRegex } from 'src/utilities/ipUtils';
 
 type ClassNames = 'labelOuter';
 
-const styles = (theme: Theme) =>
+const styles = () =>
   createStyles({
     labelOuter: {
       display: 'block'
@@ -29,7 +28,6 @@ interface Props {
   inputId?: string;
   errorText?: string;
   nodeAddress?: string;
-  workflow: 'create' | 'edit';
   textfieldProps: Omit<TextFieldProps, 'label'>;
 }
 
@@ -39,18 +37,10 @@ const ConfigNodeIPSelect: React.FC<CombinedProps> = props => {
   const [selectedLinode, setSelectedLinode] = React.useState<number | null>(
     null
   );
-  const {
-    classes,
-    selectedRegion,
-    handleChange: _handleChange,
-    workflow,
-    nodeIndex,
-    inputId
-  } = props;
+  const { classes, handleChange: _handleChange, inputId } = props;
 
   const handleChange = (linode: Linode) => {
     setSelectedLinode(linode.id);
-
     const thisLinodesPrivateIP = linode.ipv4.find(ipv4 =>
       ipv4.match(privateIPRegex)
     );
@@ -60,18 +50,6 @@ const ConfigNodeIPSelect: React.FC<CombinedProps> = props => {
      */
     _handleChange(props.nodeIndex, thisLinodesPrivateIP!);
   };
-
-  React.useEffect(() => {
-    /**
-     * In other words, when we select a new region in the create workflow
-     * clear out the selected IP Address because it might belong to a node
-     * NOT in the selected region
-     */
-    if (workflow === 'create') {
-      setSelectedLinode(null);
-      _handleChange(nodeIndex, '');
-    }
-  }, [selectedRegion, workflow, nodeIndex, _handleChange]);
 
   return (
     <LinodeSelect

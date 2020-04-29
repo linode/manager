@@ -249,13 +249,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     }
   };
 
-  onNodeAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const nodeIdx = e.currentTarget.getAttribute(DATA_NODE);
-    if (nodeIdx) {
-      this.props.onNodeAddressChange(+nodeIdx, e.target.value);
-    }
-  };
-
   onNodePortChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const nodeIdx = e.currentTarget.getAttribute(DATA_NODE);
     if (nodeIdx) {
