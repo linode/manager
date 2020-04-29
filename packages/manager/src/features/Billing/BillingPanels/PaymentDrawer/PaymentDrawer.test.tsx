@@ -1,9 +1,6 @@
-import {
-  getDefaultPayment,
-  getMinimumPayment,
-  isAllowedUSDAmount,
-  shouldEnablePaypalButton
-} from './MakeAPaymentPanel';
+import { getMinimumPayment } from './PaymentDrawer';
+
+import { isAllowedUSDAmount, shouldEnablePaypalButton } from './Paypal';
 
 describe('Make a Payment Panel', () => {
   it('should return false for invalid USD amount', () => {
@@ -28,39 +25,21 @@ describe('Make a Payment Panel', () => {
     expect(shouldEnablePaypalButton(5)).toBeTruthy();
   });
 
-  describe('getDefaultPayment helper function', () => {
-    it('should return an empty string if balance is false', () => {
-      expect(getDefaultPayment(false)).toEqual('');
-    });
-
-    it('should return an empty string if the balance is below $5', () => {
-      expect(getDefaultPayment(3.0)).toEqual('');
-    });
-
-    it('should return a formatted string if the balance is above $5', () => {
-      expect(getDefaultPayment(6.1)).toEqual('6.10');
-    });
-  });
-
   describe('getMinimumPayment helper method', () => {
     it('should return 5 if the balance due is 0', () => {
-      expect(getMinimumPayment(0, 'CREDIT_CARD')).toBe(5);
+      expect(getMinimumPayment(0)).toBe('5.00');
     });
 
     it('should return the balance if the balance due is less than $5', () => {
-      expect(getMinimumPayment(1.5, 'CREDIT_CARD')).toBe(1.5);
-    });
-
-    it('should return 5 if the user is making a PayPal payment', () => {
-      expect(getMinimumPayment(2, 'PAYPAL')).toBe(5);
+      expect(getMinimumPayment(1.5)).toBe('1.50');
     });
 
     it('should return 5 if the balance due is less than 0', () => {
-      expect(getMinimumPayment(-10.6, 'CREDIT_CARD')).toBe(5);
+      expect(getMinimumPayment(-10.6)).toBe('5.00');
     });
 
     it('should return 5 if the balance due is greater than 5', () => {
-      expect(getMinimumPayment(100000, 'CREDIT_CARD')).toBe(5);
+      expect(getMinimumPayment(100000)).toBe('5.00');
     });
   });
 });

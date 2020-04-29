@@ -38,9 +38,9 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
     if (account.loading && account.lastUpdated === 0) {
       requestAccount();
     }
-  }, []);
+  }, [account.loading, account.lastUpdated, requestAccount]);
 
-  if (account.loading) {
+  if (account.loading && account.lastUpdated === 0) {
     return <CircleProgress />;
   }
 
