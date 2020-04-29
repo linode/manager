@@ -45,4 +45,13 @@ describe('Currency Component', () => {
     rerender(<Currency quantity={-5} decimalPlaces={3} />);
     getByText('-$5.000');
   });
+
+  it('groups by comma', () => {
+    const { getByText, rerender } = renderWithTheme(
+      <Currency quantity={1000} />
+    );
+    getByText('$1,000.00');
+    rerender(<Currency quantity={100000} />);
+    getByText('$100,000.00');
+  });
 });
