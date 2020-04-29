@@ -114,7 +114,10 @@ export const BillingActivityPanel: React.FC<{}> = () => {
                         error={error}
                       >
                         {paginatedAndOrderedData.map(thisItem => (
-                          <ActivityFeedItem key={thisItem.id} {...thisItem} />
+                          <ActivityFeedItem
+                            key={`${thisItem.type}-${thisItem.id}`}
+                            {...thisItem}
+                          />
                         ))}
                       </TableContentWrapper>
                     </TableBody>
@@ -149,7 +152,7 @@ export const ActivityFeedItem: React.FC<ActivityFeedItem> = React.memo(
     }
 
     return (
-      <TableRow {...rowProps}>
+      <TableRow {...rowProps} data-testid={`${type}-${id}`}>
         <TableCell>{label}</TableCell>
         <TableCell>
           <DateTimeDisplay format="YYYY-MM-DD" value={date} />
