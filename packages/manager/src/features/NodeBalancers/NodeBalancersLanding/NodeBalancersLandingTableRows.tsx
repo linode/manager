@@ -88,7 +88,7 @@ const NodeBalancersLandingTableRows: React.StatelessComponent<CombinedProps> = p
                 </Grid>
               </Grid>
             </TableCell>
-            <TableCell parentColumn="Node Status" data-qa-node-status>
+            <TableCell parentColumn="Backend Status" data-qa-node-status>
               <span>{nodesUp} up</span> - <span>{nodesDown} down</span>
             </TableCell>
             <TableCell parentColumn="Transferred" data-qa-transferred>

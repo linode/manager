@@ -69,7 +69,7 @@ const SortableTableHead: React.StatelessComponent<CombinedProps> = props => {
           Name
         </TableSortCell>
         <TableCell className={classes.nodeStatus} noWrap>
-          Node Status
+          Backend Status
         </TableCell>
         <TableCell className={classes.transferred}>Transferred</TableCell>
         <TableCell className={classes.ports}>Ports</TableCell>
