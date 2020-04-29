@@ -29,6 +29,10 @@ const getAllPayments = getAll<Payment>(getPayments);
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
     marginBottom: theme.spacing()
+  },
+  totalColumn: {
+    textAlign: 'right',
+    width: '10%'
   }
 }));
 
@@ -96,8 +100,10 @@ export const BillingActivityPanel: React.FC<{}> = () => {
                         <TableCell style={{ width: '17%' }}>
                           Description
                         </TableCell>
-                        <TableCell style={{ width: '17%' }}>Date</TableCell>
-                        <TableCell style={{ width: '17%' }}>Amount</TableCell>
+                        <TableCell style={{ width: '10%' }}>Date</TableCell>
+                        <TableCell className={classes.totalColumn}>
+                          Amount
+                        </TableCell>
                         <TableCell />
                       </TableRow>
                     </TableHead>
@@ -133,6 +139,8 @@ export const BillingActivityPanel: React.FC<{}> = () => {
 
 export const ActivityFeedItem: React.FC<ActivityFeedItem> = React.memo(
   props => {
+    const classes = useStyles();
+
     const { date, label, total, id, type } = props;
 
     const rowProps: TableRowProps = {};
@@ -146,7 +154,7 @@ export const ActivityFeedItem: React.FC<ActivityFeedItem> = React.memo(
         <TableCell>
           <DateTimeDisplay format="YYYY-MM-DD" value={date} />
         </TableCell>
-        <TableCell>
+        <TableCell className={classes.totalColumn}>
           <Currency quantity={total} wrapInParentheses={total < 0} />
         </TableCell>
         {/* @todo icon */}
