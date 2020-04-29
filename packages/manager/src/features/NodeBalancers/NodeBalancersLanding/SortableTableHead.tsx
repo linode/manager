@@ -14,7 +14,7 @@ import TableSortCell from 'src/components/TableSortCell';
 type ClassNames =
   | 'ip'
   | 'nameCell'
-  | 'nodeStatus'
+  | 'backendStatus'
   | 'ports'
   | 'transferred'
   | 'region';
@@ -26,7 +26,7 @@ const styles = (theme: Theme) =>
       minWidth: 150,
       paddingLeft: theme.spacing(2) + 49
     },
-    nodeStatus: {
+    backendStatus: {
       width: '15%',
       minWidth: 100
     },
@@ -68,7 +68,7 @@ const SortableTableHead: React.StatelessComponent<CombinedProps> = props => {
         >
           Name
         </TableSortCell>
-        <TableCell className={classes.nodeStatus} noWrap>
+        <TableCell className={classes.backendStatus} noWrap>
           Backend Status
         </TableCell>
         <TableCell className={classes.transferred}>Transferred</TableCell>
