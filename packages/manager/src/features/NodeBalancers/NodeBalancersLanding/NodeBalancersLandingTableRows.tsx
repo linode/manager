@@ -56,6 +56,7 @@ const NodeBalancersLandingTableRows: React.StatelessComponent<CombinedProps> = p
   const { classes, data, toggleDialog } = props;
 
   return (
+    /* eslint-disable-next-line */
     <>
       {data.map(nodeBalancer => {
         const configs = nodeBalancer.configs || [];
