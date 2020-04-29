@@ -2736,7 +2736,16 @@
   dependencies:
     "@types/warning" "^3.0.0"
     tslib "^2.0.0"
-    warning "^4.0.3"
+"@reach/tabs@^0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@reach/tabs/-/tabs-0.10.0.tgz#cf5df6da6c32b346fce0734f847592a367987329"
+  integrity sha512-jdzj4i2IWTzFibfPZyrgJTIm0qyUXCzYvXC6w8Qn4UB5/+8DLn2SPYcDzKSfWKHEVhfMM37kiNV5eetmJPgJ6g==
+  dependencies:
+    "@reach/auto-id" "^0.10.0"
+    "@reach/descendants" "^0.10.0"
+    "@reach/utils" "^0.10.0"
+    prop-types "^15.7.2"
+    tslib "^1.10.0"
 
 "@reach/utils@0.10.5":
   version "0.10.5"
