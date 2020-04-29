@@ -38,7 +38,13 @@ const ConfigNodeIPSelect: React.FC<CombinedProps> = props => {
   const [selectedLinode, setSelectedLinode] = React.useState<number | null>(
     null
   );
-  const { classes } = props;
+  const {
+    classes,
+    selectedRegion,
+    handleChange: _handleChange,
+    workflow,
+    nodeIndex
+  } = props;
 
   const handleChange = (linode: Linode) => {
     setSelectedLinode(linode.id);
@@ -50,7 +56,7 @@ const ConfigNodeIPSelect: React.FC<CombinedProps> = props => {
      * we can be sure the selection has a private IP because of the
      * filterCondition prop in the render method below
      */
-    props.handleChange(props.nodeIndex, thisLinodesPrivateIP!);
+    _handleChange(props.nodeIndex, thisLinodesPrivateIP!);
   };
 
   React.useEffect(() => {
@@ -59,11 +65,11 @@ const ConfigNodeIPSelect: React.FC<CombinedProps> = props => {
      * clear out the selected IP Address because it might belong to a node
      * NOT in the selected region
      */
-    if (props.workflow === 'create') {
+    if (workflow === 'create') {
       setSelectedLinode(null);
-      props.handleChange(props.nodeIndex, '');
+      _handleChange(nodeIndex, '');
     }
-  }, [props.selectedRegion]);
+  }, [selectedRegion, workflow, nodeIndex, _handleChange]);
 
   return (
     <LinodeSelect

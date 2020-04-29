@@ -376,6 +376,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               <Select
                 options={typeOptions}
                 label="Type"
+                inputId={`type-${configIdx}`}
                 value={defaultType || typeOptions[0]}
                 onChange={this.onHealthCheckTypeChange}
                 errorText={errorMap.check}
@@ -701,6 +702,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   small
                   disabled={disabled}
                   noMarginTop
+                  InputProps={{ id: `port-${configIdx}` }}
                 />
                 <FormHelperText>Listen on this port</FormHelperText>
               </Grid>
@@ -708,6 +710,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 <Select
                   options={protocolOptions}
                   label="Protocol"
+                  inputId={`protocol-${configIdx}`}
                   value={defaultProtocol || protocolOptions[0]}
                   onChange={this.onProtocolChange}
                   errorText={errorMap.protocol}
@@ -776,6 +779,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 <Select
                   options={algOptions}
                   label="Algorithm"
+                  inputId={`algorithm-${configIdx}`}
                   value={defaultAlg || algOptions[0]}
                   onChange={this.onAlgorithmChange}
                   errorText={errorMap.algorithm}
@@ -801,6 +805,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 <Select
                   options={sessionOptions}
                   label="Session Stickiness"
+                  inputId={`session-stickiness-${configIdx}`}
                   value={defaultSession || sessionOptions[1]}
                   onChange={this.onSessionStickinessChange}
                   errorText={errorMap.stickiness}
@@ -837,6 +842,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 errors,
                 nodeMessage,
                 classes,
+                errorMap.nodes,
                 this.props.nodeBalancerRegion
               ]}
               container
@@ -855,12 +861,12 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               <Grid item xs={12} style={{ paddingBottom: 24 }}>
                 <Grid container>
                   {nodes &&
-                    nodes.map((node, idx) => (
+                    nodes.map((node, nodeIdx) => (
                       <NodeBalancerConfigNode
-                        key={`nb-node-${idx}`}
+                        key={`nb-node-${nodeIdx}`}
                         forEdit={Boolean(forEdit)}
                         node={node}
-                        idx={idx}
+                        idx={nodeIdx}
                         configIdx={configIdx}
                         nodeBalancerRegion={this.props.nodeBalancerRegion}
                         onNodeLabelChange={this.onNodeLabelChange}

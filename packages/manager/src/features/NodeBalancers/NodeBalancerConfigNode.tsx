@@ -113,6 +113,7 @@ export const NodeBalancerConfigNode: React.FC<Props> = props => {
             <TextField
               label="Label"
               value={node.label}
+              inputId={`node-label-${configIdx}-${idx}`}
               inputProps={{ 'data-node-idx': idx }}
               onChange={onNodeLabelChange}
               errorText={nodesErrorMap.label}
