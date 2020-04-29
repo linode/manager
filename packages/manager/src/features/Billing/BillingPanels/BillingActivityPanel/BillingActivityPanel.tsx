@@ -4,6 +4,7 @@ import {
   Invoice,
   Payment
 } from 'linode-js-sdk/lib/account';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';
@@ -25,6 +26,12 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 const getAllInvoices = getAll<Invoice>(getInvoices);
 const getAllPayments = getAll<Payment>(getPayments);
 
+const useStyles = makeStyles((theme: Theme) => ({
+  header: {
+    marginBottom: theme.spacing()
+  }
+}));
+
 interface ActivityFeedItem {
   label: string;
   total: number;
@@ -34,6 +41,8 @@ interface ActivityFeedItem {
 }
 
 export const BillingActivityPanel: React.FC<{}> = () => {
+  const classes = useStyles();
+
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<APIError[] | undefined>();
   const [combinedData, setCombinedData] = React.useState<ActivityFeedItem[]>(
@@ -65,21 +74,23 @@ export const BillingActivityPanel: React.FC<{}> = () => {
 
   return (
     <>
-      <Typography variant="h2">Activity</Typography>
-      <Paper>
-        <OrderBy data={combinedData} orderBy={'date'} order={'desc'}>
-          {({ data: orderedData }) => (
-            <Paginate pageSize={25} data={orderedData}>
-              {({
-                data: paginatedAndOrderedData,
-                count,
-                handlePageChange,
-                handlePageSizeChange,
-                page,
-                pageSize
-              }) => (
-                <>
-                  <Table aria-label="List of Recent Invoices">
+      <Typography variant="h2" className={classes.header}>
+        Activity
+      </Typography>
+      <OrderBy data={combinedData} orderBy={'date'} order={'desc'}>
+        {({ data: orderedData }) => (
+          <Paginate pageSize={25} data={orderedData}>
+            {({
+              data: paginatedAndOrderedData,
+              count,
+              handlePageChange,
+              handlePageSizeChange,
+              page,
+              pageSize
+            }) => (
+              <>
+                <Paper>
+                  <Table aria-label="List of Invoices and Payments">
                     <TableHead>
                       <TableRow>
                         <TableCell style={{ width: '17%' }}>
@@ -102,20 +113,20 @@ export const BillingActivityPanel: React.FC<{}> = () => {
                       </TableContentWrapper>
                     </TableBody>
                   </Table>
-                  <PaginationFooter
-                    count={count}
-                    handlePageChange={handlePageChange}
-                    handleSizeChange={handlePageSizeChange}
-                    page={page}
-                    pageSize={pageSize}
-                    eventCategory="Billing Activity Table"
-                  />
-                </>
-              )}
-            </Paginate>
-          )}
-        </OrderBy>
-      </Paper>
+                </Paper>
+                <PaginationFooter
+                  count={count}
+                  handlePageChange={handlePageChange}
+                  handleSizeChange={handlePageSizeChange}
+                  page={page}
+                  pageSize={pageSize}
+                  eventCategory="Billing Activity Table"
+                />
+              </>
+            )}
+          </Paginate>
+        )}
+      </OrderBy>
     </>
   );
 };
