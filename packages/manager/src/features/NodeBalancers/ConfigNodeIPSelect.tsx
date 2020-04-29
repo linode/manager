@@ -26,6 +26,7 @@ interface Props {
   selectedRegion?: string;
   handleChange: (nodeIndex: number, ipAddress: string) => void;
   nodeIndex: number;
+  inputId?: string;
   errorText?: string;
   nodeAddress?: string;
   workflow: 'create' | 'edit';
@@ -43,7 +44,8 @@ const ConfigNodeIPSelect: React.FC<CombinedProps> = props => {
     selectedRegion,
     handleChange: _handleChange,
     workflow,
-    nodeIndex
+    nodeIndex,
+    inputId
   } = props;
 
   const handleChange = (linode: Linode) => {
@@ -74,6 +76,7 @@ const ConfigNodeIPSelect: React.FC<CombinedProps> = props => {
   return (
     <LinodeSelect
       noMarginTop
+      inputId={inputId}
       textFieldProps={props.textfieldProps}
       value={
         props.nodeAddress

@@ -601,6 +601,14 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       disabled
     } = this.props;
 
+    // We don't want to end up with nodes[3].ip_address as errorMap.none
+    const filteredErrors = errors
+      ? errors.filter(
+          thisError =>
+            !thisError.field || !thisError.field.match(/nodes\[[0-9+]\]/)
+        )
+      : [];
+
     const errorMap = getErrorMap(
       [
         'algorithm',
@@ -618,7 +626,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
         'stickiness',
         'nodes'
       ],
-      errors
+      filteredErrors
     );
 
     const globalFormError = errorMap.none;

@@ -166,6 +166,7 @@ export const NodeBalancerConfigNode: React.FC<Props> = props => {
               errorText={nodesErrorMap.address}
               nodeAddress={node.address}
               workflow={forEdit ? 'edit' : 'create'}
+              inputId={`ip-select-node-${configIdx}-${idx}`}
             />
           </Grid>
           <Grid item xs={6} sm={3} lg={2}>
@@ -244,4 +245,4 @@ export const NodeBalancerConfigNode: React.FC<Props> = props => {
   );
 };
 
-export default NodeBalancerConfigNode;
+export default React.memo(NodeBalancerConfigNode);
