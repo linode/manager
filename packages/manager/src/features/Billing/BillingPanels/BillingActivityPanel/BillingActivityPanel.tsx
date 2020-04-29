@@ -136,7 +136,7 @@ export const ActivityFeedItem: React.FC<ActivityFeedItem> = React.memo(
           <DateTimeDisplay format="YYYY-MM-DD" value={date} />
         </TableCell>
         <TableCell>
-          <Currency quantity={total} />
+          <Currency quantity={total} wrapInParentheses={total < 0} />
         </TableCell>
         {/* @todo icon */}
         <TableCell />
@@ -147,24 +147,43 @@ export const ActivityFeedItem: React.FC<ActivityFeedItem> = React.memo(
 
 export default React.memo(BillingActivityPanel);
 
-const invoiceToActivityFeedItem = (invoice: Invoice): ActivityFeedItem => {
+// =============================================================================
+// Utilities
+// =============================================================================
+export const invoiceToActivityFeedItem = (
+  invoice: Invoice
+): ActivityFeedItem => {
   const { id, label, date, total } = invoice;
+
+  // Negative invoice totals are effectively credits, so replace the label.
+  const adjustedLabel = total < 0 ? label.replace('Invoice', 'Credit') : label;
+
   return {
     id,
-    label,
+    label: adjustedLabel,
     date,
     total,
     type: 'invoice'
   };
 };
 
-const paymentToActivityFeedItem = (payment: Payment): ActivityFeedItem => {
+export const paymentToActivityFeedItem = (
+  payment: Payment
+): ActivityFeedItem => {
   const { date, id, usd } = payment;
+
+  // Negative payments are effectively credits.
+  const label = usd < 0 ? 'Credit' : 'Payment';
+
+  // We always want Payments (and negative Payments, i.e. Credits) to appear as a negative number.
+  // The delineation between these two types comes from the label ("Credit" or "Payment").
+  const total = usd > 0 ? -usd : usd;
+
   return {
-    label: 'Payment',
+    label,
     date,
     id,
-    total: usd,
+    total,
     type: 'payment'
   };
 };
