@@ -86,14 +86,12 @@ const ContactInformation: React.FC<CombinedProps> = props => {
     address1,
     address2,
     email,
-    username,
     phone,
     taxId
   } = props;
 
   const classes = useStyles();
 
-  const [modalOpen, toggleModal] = React.useState<boolean>(false);
   const [editContactDrawerOpen, setEditContactDrawerOpen] = React.useState<
     boolean
   >(false);
@@ -167,12 +165,6 @@ const ContactInformation: React.FC<CombinedProps> = props => {
           </Grid>
         </Grid>
       </Paper>
-      <Dialog
-        username={username}
-        closeDialog={() => toggleModal(false)}
-        open={modalOpen}
-        history={props.history}
-      />
       <BillingContactDrawer
         open={editContactDrawerOpen}
         onClose={() => setEditContactDrawerOpen(false)}
