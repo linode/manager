@@ -9,7 +9,7 @@ import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import TextField from 'src/components/TextField';
 import AccountContainer, {
-    Props as AccountProps
+  Props as AccountProps
 } from 'src/containers/account.container';
 import { arePropsEqual } from 'src/utilities/arePropsEqual';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -18,44 +18,43 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import UpdateContactInformationPanel from 'src/features/Billing/BillingPanels/UpdateContactInformationPanel';
 
 const useStyles = makeStyles((theme: Theme) => ({
-    drawer: {
-        '& .MuiDrawer-paper': {
-          [theme.breakpoints.up('md')]: {
-            width: 480
-          },
-          overflowX: 'hidden'
-        },
-        '& .MuiGrid-root': {
-          marginBottom: 0
-        }
+  drawer: {
+    '& .MuiDrawer-paper': {
+      [theme.breakpoints.up('md')]: {
+        width: 480
+      },
+      overflowX: 'hidden'
     },
-
+    '& .MuiGrid-root': {
+      marginBottom: 0
+    }
+  }
 }));
 
 export interface Props {
-    open: boolean;
-    onSubmit: () => void;
-    onClose: () => void;
-    // onSubmit: (type: string, count: number) => void;
+  open: boolean;
+  onSubmit: () => void;
+  onClose: () => void;
+  // onSubmit: (type: string, count: number) => void;
 }
 
 type CombinedProps = Props & AccountProps;
 
 export const BillingContactDrawer: React.FC<CombinedProps> = props => {
-    const { open, onSubmit, onClose } = props;
+  const { open, onSubmit, onClose } = props;
 
-    const classes = useStyles();
+  const classes = useStyles();
 
-    return (
-        <Drawer
-            title='Edit Billing Contact Info'
-            className={classes.drawer}
-            open={open}
-            onClose={onClose}
-        >
-            <UpdateContactInformationPanel />
-        </Drawer>
-    )
-}
+  return (
+    <Drawer
+      title="Edit Billing Contact Info"
+      className={classes.drawer}
+      open={open}
+      onClose={onClose}
+    >
+      <UpdateContactInformationPanel />
+    </Drawer>
+  );
+};
 
 export default BillingContactDrawer;

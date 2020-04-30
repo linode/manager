@@ -507,10 +507,10 @@ class UpdateContactInformationPanel extends React.Component<
         </Button>
         <Button
           buttonType="secondary"
-          onClick={this.resetForm}
+          onClick={this.cancelForm}
           data-qa-reset-contact-info
         >
-          Reset
+          Cancel
         </Button>
       </ActionsPanel>
     );
@@ -595,6 +595,29 @@ class UpdateContactInformationPanel extends React.Component<
       });
   };
 
+  cancelForm = () => {
+    this.setState({
+      success: undefined,
+      submitting: false
+    });
+
+    // this.props
+    //   .updateAccount(this.state.fields)
+    //   .then(_ => {
+    //     this.setState({
+    //       success: 'Account information updated.',
+    //       submitting: false
+    //     });
+    //   })
+    //   .catch(_ => {
+    //     this.setState({
+    //       submitting: false,
+    //       success: undefined
+    //     });
+    //     scrollErrorIntoView();
+    //   });
+  };
+
   resetForm = () => {
     const { accountData: account } = this.props;
     this.setState({
@@ -611,10 +634,7 @@ const styled = withStyles(styles);
 
 const withAccount = AccountContainer();
 
-const enhanced = compose(
-  styled,
-  withAccount
-);
+const enhanced = compose(styled, withAccount);
 
 export default enhanced(
   UpdateContactInformationPanel
