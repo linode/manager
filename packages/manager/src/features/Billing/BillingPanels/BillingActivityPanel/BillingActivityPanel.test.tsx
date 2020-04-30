@@ -1,10 +1,11 @@
-import { cleanup, wait } from '@testing-library/react';
+import { cleanup, fireEvent, wait } from '@testing-library/react';
 import * as React from 'react';
 import { invoiceFactory, paymentFactory } from 'src/factories/billing';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import BillingActivityPanel, {
   invoiceToActivityFeedItem,
-  paymentToActivityFeedItem
+  paymentToActivityFeedItem,
+  BillingActivityPanelProps
 } from './BillingActivityPanel';
 
 afterEach(cleanup);
@@ -29,9 +30,17 @@ jest.mock('linode-js-sdk/lib/account', () => {
   };
 });
 
+const mockOpenCloseAccountDialog = jest.fn();
+
+const props: BillingActivityPanelProps = {
+  isRestrictedUser: false,
+  openCloseAccountDialog: mockOpenCloseAccountDialog,
+  accountActiveSince: '2018-01-01T00:00:00'
+};
+
 describe('BillingActivityPanel', () => {
   it('renders the header and appropriate rows', async () => {
-    const { getByText } = renderWithTheme(<BillingActivityPanel />);
+    const { getByText } = renderWithTheme(<BillingActivityPanel {...props} />);
     await wait(() => {
       getByText('Activity');
       getByText('Description');
@@ -42,13 +51,46 @@ describe('BillingActivityPanel', () => {
 
   it('renders a row for each payment and invoice', async () => {
     const { getByText, getByTestId } = renderWithTheme(
-      <BillingActivityPanel />
+      <BillingActivityPanel {...props} />
     );
     await wait(() => {
       getByText('Invoice #0');
       getByText('Invoice #1');
       getByTestId(`payment-0`);
       getByTestId(`payment-1`);
+    });
+  });
+
+  it('should display "Account active since"', async () => {
+    const { getByText } = renderWithTheme(<BillingActivityPanel {...props} />);
+    await wait(() => {
+      getByText('Account active since 2018-01-01');
+    });
+  });
+
+  it('should display "Close Account" button if unrestricted', async () => {
+    const { getByText } = renderWithTheme(<BillingActivityPanel {...props} />);
+    await wait(() => {
+      const closeAccountButton = getByText('Close Account');
+      fireEvent.click(closeAccountButton);
+      expect(mockOpenCloseAccountDialog).toHaveBeenCalled();
+    });
+  });
+
+  it('should not display "Close Account" button if restricted', async () => {
+    const { queryByText } = renderWithTheme(
+      <BillingActivityPanel {...props} isRestrictedUser={true} />
+    );
+    await wait(() => {
+      expect(queryByText('Close Account')).toBeFalsy();
+    });
+  });
+
+  it('should display transaction selection components with defaults', async () => {
+    const { getByText } = renderWithTheme(<BillingActivityPanel {...props} />);
+    await wait(() => {
+      getByText('All Transaction Types');
+      getByText('90 Days');
     });
   });
 });

@@ -1,3 +1,4 @@
+import PDFIcon from 'src/assets/icons/pdf.svg';
 import {
   getInvoices,
   getPayments,
@@ -22,17 +23,84 @@ import TableRow, { TableRowProps } from 'src/components/TableRow';
 import { getAll } from 'src/utilities/getAll';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-
-const getAllInvoices = getAll<Invoice>(getInvoices);
-const getAllPayments = getAll<Payment>(getPayments);
+import formatDate from 'src/utilities/formatDate';
+import Button from 'src/components/Button';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  header: {
-    marginBottom: theme.spacing()
+  headerContainer: {
+    marginBottom: theme.spacing() - 2,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+      alignItems: 'flex-start'
+    }
+  },
+  headerRight: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+      alignItems: 'flex-start'
+    }
+  },
+  flexContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  activeSince: {
+    marginRight: theme.spacing() + 2
+  },
+  cancelButton: {
+    '&:focus, &:hover': {
+      backgroundColor: 'inherit !important'
+    },
+    borderLeft: `solid 1px ${
+      theme.name === 'lightTheme' ? theme.color.border2 : theme.color.border3
+    } !important`,
+    fontSize: '0.875rem !important',
+    padding: 6,
+    marginRight: theme.spacing() + 2,
+    '& :first-child': {
+      marginLeft: 2
+    }
+  },
+  transactionType: {
+    marginRight: theme.spacing() + 2,
+    width: 200,
+    [theme.breakpoints.down('sm')]: {
+      marginTop: 4
+    }
+  },
+  transactionDate: {
+    width: 130,
+    [theme.breakpoints.down('sm')]: {
+      marginTop: 4
+    }
+  },
+  descriptionColumn: {
+    width: '17%'
+  },
+  dateColumn: {
+    width: '10%'
   },
   totalColumn: {
     textAlign: 'right',
     width: '10%'
+  },
+  pdfDownloadColumn: {
+    textAlign: 'right'
+  },
+  pdfDownloadButton: {
+    border: 'none',
+    backgroundColor: 'inherit',
+    cursor: 'pointer'
   }
 }));
 
@@ -44,14 +112,60 @@ interface ActivityFeedItem {
   id: number;
 }
 
-export const BillingActivityPanel: React.FC<{}> = () => {
+type TransactionTypes = ActivityFeedItem['type'] | 'all';
+const transactionTypeOptions: Item<TransactionTypes>[] = [
+  { label: 'Invoices', value: 'invoice' },
+  { label: 'Payments', value: 'payment' },
+  { label: 'All Transaction Types', value: 'all' }
+];
+
+type DateRanges =
+  | '30 Days'
+  | '60 Days'
+  | '90 Days'
+  | '6 Months'
+  | '12 Months'
+  | 'All Time';
+const transactionDateOptions: Item<DateRanges>[] = [
+  { label: '30 Days', value: '30 Days' },
+  { label: '60 Days', value: '60 Days' },
+  { label: '90 Days', value: '90 Days' },
+  { label: '6 Months', value: '6 Months' },
+  { label: '12 Months', value: '12 Months' },
+  { label: 'All Time', value: 'All Time' }
+];
+
+// =============================================================================
+// <BillingActivityPanel />
+// =============================================================================
+export interface BillingActivityPanelProps {
+  accountActiveSince?: string;
+  isRestrictedUser: boolean;
+  openCloseAccountDialog: () => void;
+}
+
+export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props => {
   const classes = useStyles();
+
+  const {
+    accountActiveSince,
+    isRestrictedUser,
+    openCloseAccountDialog
+  } = props;
 
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<APIError[] | undefined>();
   const [combinedData, setCombinedData] = React.useState<ActivityFeedItem[]>(
     []
   );
+
+  const [selectedTransactionType, setSelectedTransactionType] = React.useState<
+    TransactionTypes
+  >('all');
+
+  const [selectedTransactionDate, setSelectedTransactionDate] = React.useState<
+    DateRanges
+  >('90 Days');
 
   React.useEffect(() => {
     setLoading(true);
@@ -76,70 +190,164 @@ export const BillingActivityPanel: React.FC<{}> = () => {
       });
   }, []);
 
+  // Handlers for <Select /> components.
+  const handleTransactionTypeChange = React.useCallback(
+    (item: Item<TransactionTypes>) => {
+      setSelectedTransactionType(item.value);
+    },
+    []
+  );
+  const handleTransactionDateChange = React.useCallback(
+    (item: Item<DateRanges>) => {
+      setSelectedTransactionDate(item.value);
+    },
+    []
+  );
+
+  // Values for <Select />  components.
+  const transactionTypeValue = React.useMemo(
+    () =>
+      transactionTypeOptions.find(
+        thisOption => thisOption.value === selectedTransactionType
+      ) || null,
+    [selectedTransactionType]
+  );
+  const transactionDateValue = React.useMemo(
+    () =>
+      transactionDateOptions.find(
+        thisOption => thisOption.value === selectedTransactionDate
+      ) || null,
+    [selectedTransactionDate]
+  );
+
+  // This is the OrderBy render props function. It's wrapped in React.useCallback because otherwise
+  // it would be re-created on every render, which was causing a lot of lagging on an account with
+  // many invoices. @todo: Re-think how we use the OrderBy and Paginate combo in other components.
+  const billingActivityPanel = React.useCallback(
+    ({ data: orderedData }) => (
+      <Paginate pageSize={25} data={orderedData}>
+        {({
+          data: paginatedAndOrderedData,
+          count,
+          handlePageChange,
+          handlePageSizeChange,
+          page,
+          pageSize
+        }) => (
+          <>
+            <Paper>
+              <Table aria-label="List of Invoices and Payments">
+                <TableHead>
+                  <TableRow>
+                    <TableCell className={classes.descriptionColumn}>
+                      Description
+                    </TableCell>
+                    <TableCell className={classes.dateColumn}>Date</TableCell>
+                    <TableCell className={classes.totalColumn}>
+                      Amount
+                    </TableCell>
+                    <TableCell className={classes.pdfDownloadColumn} />
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableContentWrapper
+                    length={paginatedAndOrderedData.length}
+                    loading={loading}
+                    error={error}
+                  >
+                    {paginatedAndOrderedData.map(thisItem => (
+                      <ActivityFeedItem
+                        key={`${thisItem.type}-${thisItem.id}`}
+                        {...thisItem}
+                      />
+                    ))}
+                  </TableContentWrapper>
+                </TableBody>
+              </Table>
+            </Paper>
+            <PaginationFooter
+              count={count}
+              handlePageChange={handlePageChange}
+              handleSizeChange={handlePageSizeChange}
+              page={page}
+              pageSize={pageSize}
+              eventCategory="Billing Activity Table"
+            />
+          </>
+        )}
+      </Paginate>
+    ),
+    [
+      classes.descriptionColumn,
+      classes.dateColumn,
+      classes.totalColumn,
+      classes.pdfDownloadColumn,
+      loading,
+      error
+    ]
+  );
+
   return (
     <>
-      <Typography variant="h2" className={classes.header}>
-        Activity
-      </Typography>
-      <OrderBy data={combinedData} orderBy={'date'} order={'desc'}>
-        {({ data: orderedData }) => (
-          <Paginate pageSize={25} data={orderedData}>
-            {({
-              data: paginatedAndOrderedData,
-              count,
-              handlePageChange,
-              handlePageSizeChange,
-              page,
-              pageSize
-            }) => (
-              <>
-                <Paper>
-                  <Table aria-label="List of Invoices and Payments">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell style={{ width: '17%' }}>
-                          Description
-                        </TableCell>
-                        <TableCell style={{ width: '10%' }}>Date</TableCell>
-                        <TableCell className={classes.totalColumn}>
-                          Amount
-                        </TableCell>
-                        <TableCell />
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableContentWrapper
-                        length={paginatedAndOrderedData.length}
-                        loading={loading}
-                        error={error}
-                      >
-                        {paginatedAndOrderedData.map(thisItem => (
-                          <ActivityFeedItem
-                            key={`${thisItem.type}-${thisItem.id}`}
-                            {...thisItem}
-                          />
-                        ))}
-                      </TableContentWrapper>
-                    </TableBody>
-                  </Table>
-                </Paper>
-                <PaginationFooter
-                  count={count}
-                  handlePageChange={handlePageChange}
-                  handleSizeChange={handlePageSizeChange}
-                  page={page}
-                  pageSize={pageSize}
-                  eventCategory="Billing Activity Table"
-                />
-              </>
+      <div className={classes.headerContainer}>
+        <Typography variant="h2">Activity</Typography>
+        <div className={classes.headerRight}>
+          <div className={classes.flexContainer}>
+            {accountActiveSince && (
+              <Typography variant="body1" className={classes.activeSince}>
+                Account active since{' '}
+                {formatDate(accountActiveSince, {
+                  format: 'YYYY-MM-DD'
+                })}
+              </Typography>
             )}
-          </Paginate>
-        )}
+            {!isRestrictedUser && (
+              <Button
+                onClick={openCloseAccountDialog}
+                className={`${classes.cancelButton} px0`}
+              >
+                <strong>Close Account</strong>
+              </Button>
+            )}
+          </div>
+          <div className={classes.flexContainer}>
+            <Select
+              className={classes.transactionType}
+              label="Transaction Types"
+              onChange={handleTransactionTypeChange}
+              value={transactionTypeValue}
+              isClearable={false}
+              isSearchable={false}
+              options={transactionTypeOptions}
+              inline
+              small
+              hideLabel
+            />
+            <Select
+              className={classes.transactionDate}
+              label="Transaction Dates"
+              onChange={handleTransactionDateChange}
+              value={transactionDateValue}
+              isClearable={false}
+              isSearchable={false}
+              options={transactionDateOptions}
+              inline
+              small
+              hideLabel
+            />
+          </div>
+        </div>
+      </div>
+      <OrderBy data={combinedData} orderBy={'date'} order={'desc'}>
+        {billingActivityPanel}
       </OrderBy>
     </>
   );
 };
 
+// =============================================================================
+// <ActivityFeedItem />
+// =============================================================================
 export const ActivityFeedItem: React.FC<ActivityFeedItem> = React.memo(
   props => {
     const classes = useStyles();
@@ -161,7 +369,11 @@ export const ActivityFeedItem: React.FC<ActivityFeedItem> = React.memo(
           <Currency quantity={total} wrapInParentheses={total < 0} />
         </TableCell>
         {/* @todo icon */}
-        <TableCell />
+        <TableCell className={classes.pdfDownloadColumn}>
+          <button className={classes.pdfDownloadButton}>
+            <PDFIcon />
+          </button>
+        </TableCell>
       </TableRow>
     );
   }
@@ -172,6 +384,9 @@ export default React.memo(BillingActivityPanel);
 // =============================================================================
 // Utilities
 // =============================================================================
+const getAllInvoices = getAll<Invoice>(getInvoices);
+const getAllPayments = getAll<Payment>(getPayments);
+
 export const invoiceToActivityFeedItem = (
   invoice: Invoice
 ): ActivityFeedItem => {
