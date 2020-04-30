@@ -2,6 +2,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Currency from 'src/components/Currency';
 import Drawer from 'src/components/Drawer';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
@@ -23,6 +24,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
+interface Props {
+  open: boolean;
+  onClose: () => void;
+}
+
 interface AccountContextProps {
   accountLoading: boolean;
   balance: false | number;
@@ -30,7 +36,7 @@ interface AccountContextProps {
   expiry: string;
 }
 
-type CombinedProps = AccountContextProps & AccountDispatchProps;
+type CombinedProps = Props & AccountContextProps & AccountDispatchProps;
 
 export const getMinimumPayment = (balance: number | false) => {
   if (!balance || balance <= 0) {
@@ -47,7 +53,7 @@ export const getMinimumPayment = (balance: number | false) => {
 };
 
 export const PaymentDrawer: React.FC<CombinedProps> = props => {
-  const { accountLoading, balance, expiry, lastFour } = props;
+  const { accountLoading, balance, expiry, lastFour, open, onClose } = props;
   const classes = useStyles();
 
   const [usd, setUSD] = React.useState<string>(getMinimumPayment(balance));
@@ -61,6 +67,12 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
   React.useEffect(() => {
     setUSD(getMinimumPayment(balance));
   }, [balance]);
+
+  React.useEffect(() => {
+    if (open) {
+      setSuccessMessage(null);
+    }
+  }, [open]);
 
   const handleUSDChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUSD(e.target.value || '');
@@ -80,6 +92,8 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
     }
   };
 
+  const minimumPayment = getMinimumPayment(balance || 0);
+
   if (!accountLoading && balance === undefined) {
     return (
       <Grid container>
@@ -89,14 +103,20 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
   }
 
   return (
-    <Drawer title="Make a Payment" open={true}>
+    <Drawer title="Make a Payment" open={open} onClose={onClose}>
       <Grid container>
         <Grid item xs={12}>
           {successMessage && <Notice success text={successMessage ?? ''} />}
           {balance !== false && (
             <Grid item>
               <Typography variant="h3" className={classes.currentBalance}>
-                <strong>Current balance: ${balance.toFixed(2)}</strong>
+                <strong>
+                  Current balance:{' '}
+                  <Currency
+                    quantity={balance}
+                    wrapInParentheses={balance < 0}
+                  />
+                </strong>
               </Typography>
             </Grid>
           )}
@@ -107,7 +127,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
               value={usd}
               required
               type="number"
-              placeholder={`${getMinimumPayment(balance || 0)} minimum`}
+              placeholder={`${minimumPayment} minimum`}
             />
           </Grid>
 
@@ -116,6 +136,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
             lastFour={lastFour}
             expiry={expiry}
             usd={usd}
+            minimumPayment={minimumPayment}
             setSuccess={setSuccess}
           />
 
@@ -135,4 +156,4 @@ const withAccount = AccountContainer(
   })
 );
 
-export default compose<CombinedProps, {}>(withAccount)(PaymentDrawer);
+export default compose<CombinedProps, Props>(withAccount)(PaymentDrawer);
