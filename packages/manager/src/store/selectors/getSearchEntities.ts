@@ -148,7 +148,8 @@ const imageSelector = (state: State) => state.images.data || {};
 const domainSelector = (state: State) =>
   Object.values(state.domains.itemsById) || [];
 const typesSelector = (state: State) => state.types.entities;
-const kubernetesClusterSelector = (state: State) => state.kubernetes.entities;
+const kubernetesClusterSelector = (state: State) =>
+  Object.values(state.kubernetes.itemsById);
 
 export default createSelector<
   State,

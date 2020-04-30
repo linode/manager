@@ -12,9 +12,9 @@ import AppBar from 'src/components/core/AppBar';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLink from 'src/components/TabLink';
 
-import DefaultLoader from 'src/components/DefaultLoader';
 import withProfile, {
   Props as ProfileActionsProps
 } from 'src/containers/profile.container';
@@ -23,17 +23,9 @@ import TaxBanner from 'src/components/TaxBanner';
 
 type Props = RouteComponentProps<{}> & ProfileActionsProps & StateProps;
 
-const GlobalSettings = DefaultLoader({
-  loader: () => import('./GlobalSettings')
-});
-
-const Users = DefaultLoader({
-  loader: () => import('src/features/Users')
-});
-
-const Billing = DefaultLoader({
-  loader: () => import('src/features/Billing')
-});
+const GlobalSettings = React.lazy(() => import('./GlobalSettings'));
+const Users = React.lazy(() => import('src/features/Users'));
+const Billing = React.lazy(() => import('src/features/Billing'));
 
 class AccountLanding extends React.Component<Props> {
   handleTabChange = (
@@ -106,28 +98,30 @@ class AccountLanding extends React.Component<Props> {
             ))}
           </Tabs>
         </AppBar>
-        <Switch>
-          <Route exact strict path={`${url}/billing`} component={Billing} />
-          <Route
-            exact
-            strict
-            path={`${url}/users`}
-            render={props => (
-              <Users
-                {...props}
-                isRestrictedUser={this.props.isRestrictedUser}
-              />
-            )}
-          />
-          <Route
-            exact
-            strict
-            path={`${url}/settings`}
-            component={GlobalSettings}
-          />
-          <Route exact strict path={`${url}`} component={Billing} />
-          <Redirect to={`${url}/billing`} />
-        </Switch>
+        <React.Suspense fallback={<SuspenseLoader />}>
+          <Switch>
+            <Route exact strict path={`${url}/billing`} component={Billing} />
+            <Route
+              exact
+              strict
+              path={`${url}/users`}
+              render={props => (
+                <Users
+                  {...props}
+                  isRestrictedUser={this.props.isRestrictedUser}
+                />
+              )}
+            />
+            <Route
+              exact
+              strict
+              path={`${url}/settings`}
+              component={GlobalSettings}
+            />
+            <Route exact strict path={`${url}`} component={Billing} />
+            <Redirect to={`${url}/billing`} />
+          </Switch>
+        </React.Suspense>
       </React.Fragment>
     );
   }

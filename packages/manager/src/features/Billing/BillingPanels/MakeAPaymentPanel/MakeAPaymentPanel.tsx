@@ -107,8 +107,10 @@ const styles = (theme: Theme) =>
     }
   });
 
+type PaymentType = 'CREDIT_CARD' | 'PAYPAL';
+
 interface State {
-  type: 'CREDIT_CARD' | 'PAYPAL';
+  type: PaymentType;
   isSubmittingCreditCardPayment: boolean;
   successMessage?: string;
   errors?: APIError[];
@@ -169,6 +171,21 @@ export const getDefaultPayment = (balance: number | false): string => {
   }
   // $5 is the minimum payment amount, so we don't want to set a default if they owe less than that.
   return balance > 5 ? String(balance.toFixed(2)) : '';
+};
+
+export const getMinimumPayment = (balance: number, type: PaymentType) => {
+  /**
+   * Paypal payments have a minimum of $5 under all circumstances.
+   * For other payments, we follow the API's validation logic:
+   *
+   * If balance > 5 then min payment is $5
+   * If balance < 5 but > 0, min payment is their balance
+   * If balance < 0 then min payment is $5
+   */
+  if (type === 'PAYPAL' || balance <= 0) {
+    return 5;
+  }
+  return Math.min(5, balance);
 };
 
 class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
@@ -442,7 +459,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
   };
 
   renderForm = () => {
-    const { lastFour, classes } = this.props;
+    const { balance, lastFour, classes } = this.props;
     const { errors, successMessage } = this.state;
 
     const hasErrorFor = getAPIErrorFor(
@@ -498,7 +515,10 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
                 value={this.state.usd}
                 required
                 type="number"
-                placeholder={`5.00 minimum`}
+                placeholder={`${getMinimumPayment(
+                  balance || 0,
+                  this.state.type
+                ).toFixed(2)} minimum`}
               />
               {this.state.type === 'CREDIT_CARD' && (
                 <TextField

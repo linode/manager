@@ -12,7 +12,7 @@ export const SuspenseLoader: React.FC<Props> = props => {
   const [show, setShow] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    const timeout = setTimeout(() => setShow(true), delay ?? 500);
+    const timeout = setTimeout(() => setShow(true), delay ?? 300);
     return () => {
       clearTimeout(timeout);
     };
