@@ -27,7 +27,7 @@ export const Currency: React.StatelessComponent<CurrencyFormatterProps> = props 
   }
 
   // eslint-disable-next-line
-  return <div className="notranslate">{output}</div>;
+  return <span className="notranslate">{output}</span>;
 };
 
 export default React.memo(Currency);
