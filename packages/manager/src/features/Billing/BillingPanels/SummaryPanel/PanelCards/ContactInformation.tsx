@@ -82,7 +82,7 @@ const ContactInformation: React.FC<CombinedProps> = props => {
       </div>
       <div className={classes.section} data-qa-contact-phone>
         <strong>Phone Number:&nbsp;</strong>
-        {phone ? phone : 'None'}
+        {phone ?? 'None'}
       </div>
       <div className={classes.section}>
         <strong>Active Since:&nbsp;</strong>
