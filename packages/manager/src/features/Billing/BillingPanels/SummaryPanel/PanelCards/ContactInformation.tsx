@@ -72,8 +72,6 @@ const ContactInformation: React.FC<CombinedProps> = props => {
     email,
     username,
     phone,
-    activeSince,
-    isRestrictedUser,
     taxId
   } = props;
 
@@ -119,11 +117,13 @@ const ContactInformation: React.FC<CombinedProps> = props => {
                 className={classes.wordWrap}
               >{`${firstName} ${lastName}`}</div>
             </div>
-            <div className={classes.section} data-qa-company>
-              <div className={classes.wordWrap}>
-                {company ? company : 'No Company Name Provided'}
+
+            {company ? (
+              <div className={classes.section} data-qa-company>
+                <div className={classes.wordWrap}>{company}</div>
               </div>
-            </div>
+            ) : null}
+
             <div className={classes.section} data-qa-contact-address>
               <div>
                 {!(address1 || address2 || city || state || zip) && 'None'}
@@ -138,12 +138,16 @@ const ContactInformation: React.FC<CombinedProps> = props => {
             <div className={classes.section} data-qa-contact-email>
               <div className={classes.wordWrap}>{email}</div>
             </div>
-            <div className={classes.section} data-qa-contact-phone>
-              {phone ? phone : 'No Phone Number Provided'}
-            </div>
-            <div className={classes.section}>
-              {taxId ? 'Tax ID ' + { taxId } : 'No Tax ID Provided'}
-            </div>
+
+            {phone ? (
+              <div className={classes.section} data-qa-contact-phone>
+                {phone ? phone : 'No Phone Number Provided'}
+              </div>
+            ) : null}
+
+            {taxId ? (
+              <div className={classes.section}>{'Tax ID ' + taxId}</div>
+            ) : null}
           </Grid>
         </Grid>
       </Paper>
