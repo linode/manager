@@ -71,6 +71,7 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
             zip={account.zip}
             activeSince={account.active_since}
             history={this.props.history}
+            taxId={account.tax_id}
           />
         </Grid>
         <Grid item xs={6}>

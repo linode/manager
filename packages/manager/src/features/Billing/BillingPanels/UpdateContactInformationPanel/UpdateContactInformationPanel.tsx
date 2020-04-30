@@ -13,7 +13,6 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
-import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
@@ -111,12 +110,10 @@ class UpdateContactInformationPanel extends React.Component<
 
   render() {
     return (
-      <ExpansionPanel
-        heading="Update Contact Information"
-        actions={this.renderFormActions}
-      >
+      <>
         {this.renderContent()}
-      </ExpansionPanel>
+        {this.renderFormActions()}
+      </>
     );
   }
 
@@ -215,61 +212,6 @@ class UpdateContactInformationPanel extends React.Component<
         <Grid
           item
           xs={12}
-          updateFor={[
-            account.company,
-            fields.company,
-            errorMap.company,
-            classes
-          ]}
-        >
-          <Grid container>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Company Name"
-                value={defaultTo(account.company, fields.company)}
-                errorText={errorMap.company}
-                onChange={this.updateCompany}
-                data-qa-company
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-
-        <Grid
-          item
-          xs={12}
-          sm={6}
-          updateFor={[account.email, fields.email, errorMap.email, classes]}
-        >
-          <TextField
-            label="Email"
-            type="email"
-            value={defaultTo(account.email, fields.email)}
-            errorText={errorMap.email}
-            onChange={this.updateEmail}
-            data-qa-contact-email
-          />
-        </Grid>
-
-        <Grid
-          item
-          xs={12}
-          sm={6}
-          updateFor={[account.phone, fields.phone, errorMap.phone, classes]}
-        >
-          <TextField
-            label="Phone Number"
-            type="tel"
-            value={defaultTo(account.phone, fields.phone)}
-            errorText={errorMap.phone}
-            onChange={this.updatePhone}
-            data-qa-contact-phone
-          />
-        </Grid>
-
-        <Grid
-          item
-          xs={12}
           sm={6}
           updateFor={[
             account.first_name,
@@ -310,7 +252,30 @@ class UpdateContactInformationPanel extends React.Component<
         <Grid
           item
           xs={12}
-          sm={6}
+          updateFor={[
+            account.company,
+            fields.company,
+            errorMap.company,
+            classes
+          ]}
+        >
+          <Grid container>
+            <Grid item xs={12} sm={12}>
+              <TextField
+                label="Company Name (optional)"
+                value={defaultTo(account.company, fields.company)}
+                errorText={errorMap.company}
+                onChange={this.updateCompany}
+                data-qa-company
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+
+        <Grid
+          item
+          xs={12}
+          sm={12}
           updateFor={[
             account.address_1,
             fields.address_1,
@@ -330,7 +295,7 @@ class UpdateContactInformationPanel extends React.Component<
         <Grid
           item
           xs={12}
-          sm={6}
+          sm={12}
           updateFor={[
             account.address_2,
             fields.address_2,
@@ -377,7 +342,7 @@ class UpdateContactInformationPanel extends React.Component<
           ]}
         >
           <Grid container className={classes.stateZip}>
-            <Grid item xs={12} sm={7}>
+            <Grid item xs={'auto'} sm={'auto'}>
               {/*
                 @todo use the <EnhancedSelect /> in favor of the
                 <TextField /> when the DB and API remove the 24 character limit.
@@ -429,16 +394,17 @@ class UpdateContactInformationPanel extends React.Component<
                 value={fields.state || ''}
               />
             </Grid>
-            <Grid item xs={12} sm={5}>
-              <TextField
-                label="Zip / Postal Code"
-                value={defaultTo(account.zip, fields.zip)}
-                errorText={errorMap.zip}
-                onChange={this.updateZip}
-                data-qa-contact-post-code
-              />
-            </Grid>
           </Grid>
+        </Grid>
+
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="Zip / Postal Code"
+            value={defaultTo(account.zip, fields.zip)}
+            errorText={errorMap.zip}
+            onChange={this.updateZip}
+            data-qa-contact-post-code
+          />
         </Grid>
 
         <Grid
@@ -474,8 +440,40 @@ class UpdateContactInformationPanel extends React.Component<
 
         <Grid
           item
-          xs={12}
+          xs={6}
           sm={6}
+          updateFor={[account.email, fields.email, errorMap.email, classes]}
+        >
+          <TextField
+            label="Email"
+            type="email"
+            value={defaultTo(account.email, fields.email)}
+            errorText={errorMap.email}
+            onChange={this.updateEmail}
+            data-qa-contact-email
+          />
+        </Grid>
+
+        <Grid
+          item
+          xs={6}
+          sm={6}
+          updateFor={[account.phone, fields.phone, errorMap.phone, classes]}
+        >
+          <TextField
+            label="Phone"
+            type="tel"
+            value={defaultTo(account.phone, fields.phone)}
+            errorText={errorMap.phone}
+            onChange={this.updatePhone}
+            data-qa-contact-phone
+          />
+        </Grid>
+
+        <Grid
+          item
+          xs={12}
+          sm={12}
           updateFor={[account.tax_id, fields.tax_id, errorMap.tax_id, classes]}
         >
           <TextField
