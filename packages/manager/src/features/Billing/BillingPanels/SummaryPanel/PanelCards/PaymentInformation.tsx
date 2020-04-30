@@ -6,6 +6,7 @@ import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 import styled from 'src/containers/SummaryPanels.styles';
 import CreditCard from './CreditCard';
+import UpdateCreditCardDrawer from '../../UpdateCreditCardDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
@@ -40,6 +41,12 @@ const PaymentInformation: React.FC<CombinedProps> = props => {
 
   const { lastFour, expiry } = props;
 
+  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+
+  const handleOpenDrawer = () => {
+    setDrawerOpen(true);
+  };
+
   return (
     <Paper className={classes.summarySection} data-qa-billing-summary>
       <div className={classes.container}>
@@ -47,12 +54,18 @@ const PaymentInformation: React.FC<CombinedProps> = props => {
           Payment Method
         </Typography>
 
-        <Button className={classes.edit}>Edit</Button>
+        <Button className={classes.edit} onClick={handleOpenDrawer}>
+          Edit
+        </Button>
       </div>
 
       <div className={classes.billingGroup}>
         <CreditCard lastFour={lastFour} expiry={expiry} />
       </div>
+      <UpdateCreditCardDrawer
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      />
     </Paper>
   );
 };
