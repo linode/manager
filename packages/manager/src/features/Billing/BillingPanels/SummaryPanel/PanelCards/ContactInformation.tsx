@@ -1,15 +1,10 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import Button from 'src/components/Button';
-import { makeStyles, Theme } from 'src/components/core/styles';
-
 import Paper from 'src/components/core/Paper';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
-
-import Dialog from './CancelAccountDialog';
-
 import styled from 'src/containers/SummaryPanels.styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -34,16 +29,12 @@ interface Props extends Pick<RouteComponentProps, 'history'> {
   email: string;
   phone: string;
   activeSince: string;
-  username: string;
-  isRestrictedUser: boolean;
 }
 
 type CombinedProps = Props;
 
 const ContactInformation: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-
-  const [modalOpen, toggleModal] = React.useState<boolean>(false);
 
   const {
     city,
@@ -55,67 +46,49 @@ const ContactInformation: React.FC<CombinedProps> = props => {
     address1,
     address2,
     email,
-    username,
     phone,
-    activeSince,
-    isRestrictedUser
+    activeSince
   } = props;
 
   return (
-    <React.Fragment>
-      <Paper className={classes.summarySection} data-qa-contact-summary>
-        <Typography variant="h3" className={classes.title}>
-          Billing Contact
-        </Typography>
+    <Paper className={classes.summarySection} data-qa-contact-summary>
+      <Typography variant="h3" className={classes.title}>
+        Billing Contact
+      </Typography>
 
-        <div className={classes.section} data-qa-company>
-          <strong>Company Name:&nbsp;</strong>
-          <div className={classes.wordWrap}>{company ? company : 'None'}</div>
+      <div className={classes.section} data-qa-company>
+        <strong>Company Name:&nbsp;</strong>
+        <div className={classes.wordWrap}>{company ? company : 'None'}</div>
+      </div>
+      <div className={classes.section} data-qa-contact-name>
+        <strong>Name:&nbsp;</strong>
+        {!(firstName || lastName) && 'None'}
+        <div className={classes.wordWrap}>{`${firstName} ${lastName}`}</div>
+      </div>
+      <div className={classes.section} data-qa-contact-address>
+        <div>
+          <strong>Address:&nbsp;</strong>
         </div>
-        <div className={classes.section} data-qa-contact-name>
-          <strong>Name:&nbsp;</strong>
-          {!(firstName || lastName) && 'None'}
-          <div className={classes.wordWrap}>{`${firstName} ${lastName}`}</div>
+        <div>
+          {!(address1 || address2 || city || state || zip) && 'None'}
+          <span>{address1}</span>
+          <div>{address2}</div>
+          <div>{`${city}${city && state && ','} ${state} ${zip}`}</div>
         </div>
-        <div className={classes.section} data-qa-contact-address>
-          <div>
-            <strong>Address:&nbsp;</strong>
-          </div>
-          <div>
-            {!(address1 || address2 || city || state || zip) && 'None'}
-            <span>{address1}</span>
-            <div>{address2}</div>
-            <div>{`${city}${city && state && ','} ${state} ${zip}`}</div>
-          </div>
-        </div>
-        <div className={classes.section} data-qa-contact-email>
-          <strong>Email:&nbsp;</strong>
-          <div className={classes.wordWrap}>{email}</div>
-        </div>
-        <div className={classes.section} data-qa-contact-phone>
-          <strong>Phone Number:&nbsp;</strong>
-          {phone ? phone : 'None'}
-        </div>
-        <div className={classes.section}>
-          <strong>Active Since:&nbsp;</strong>
-          <DateTimeDisplay value={activeSince} format="D MMM YYYY" />
-        </div>
-        {!isRestrictedUser && (
-          <Button
-            onClick={() => toggleModal(true)}
-            className={`${classes.cancel} px0`}
-          >
-            <strong>Close Account</strong>
-          </Button>
-        )}
-      </Paper>
-      <Dialog
-        username={username}
-        closeDialog={() => toggleModal(false)}
-        open={modalOpen}
-        history={props.history}
-      />
-    </React.Fragment>
+      </div>
+      <div className={classes.section} data-qa-contact-email>
+        <strong>Email:&nbsp;</strong>
+        <div className={classes.wordWrap}>{email}</div>
+      </div>
+      <div className={classes.section} data-qa-contact-phone>
+        <strong>Phone Number:&nbsp;</strong>
+        {phone ? phone : 'None'}
+      </div>
+      <div className={classes.section}>
+        <strong>Active Since:&nbsp;</strong>
+        <DateTimeDisplay value={activeSince} format="D MMM YYYY" />
+      </div>
+    </Paper>
   );
 };
 
