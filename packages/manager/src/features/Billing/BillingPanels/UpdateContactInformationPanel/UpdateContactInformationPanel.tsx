@@ -40,6 +40,10 @@ const styles = (theme: Theme) =>
     }
   });
 
+interface Props {
+  onCancel: () => void;
+}
+
 interface State {
   submitting: boolean;
   success?: string;
@@ -59,7 +63,7 @@ interface State {
   };
 }
 
-type CombinedProps = AccountProps & WithStyles<ClassNames>;
+type CombinedProps = AccountProps & Props & WithStyles<ClassNames>;
 
 const field = (path: string[]) => lensPath(['fields', ...path]);
 
@@ -507,7 +511,7 @@ class UpdateContactInformationPanel extends React.Component<
         </Button>
         <Button
           buttonType="secondary"
-          onClick={this.cancelForm}
+          onClick={this.props.onCancel}
           data-qa-reset-contact-info
         >
           Cancel

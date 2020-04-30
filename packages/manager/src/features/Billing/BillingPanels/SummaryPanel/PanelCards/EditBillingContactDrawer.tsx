@@ -33,15 +33,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export interface Props {
   open: boolean;
-  onSubmit: () => void;
   onClose: () => void;
-  // onSubmit: (type: string, count: number) => void;
 }
 
 type CombinedProps = Props & AccountProps;
 
 export const BillingContactDrawer: React.FC<CombinedProps> = props => {
-  const { open, onSubmit, onClose } = props;
+  const { open, onClose } = props;
 
   const classes = useStyles();
 
@@ -52,7 +50,9 @@ export const BillingContactDrawer: React.FC<CombinedProps> = props => {
       open={open}
       onClose={onClose}
     >
-      <UpdateContactInformationPanel />
+      <UpdateContactInformationPanel 
+        onCancel={onClose}
+      />
     </Drawer>
   );
 };

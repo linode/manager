@@ -155,9 +155,6 @@ const ContactInformation: React.FC<CombinedProps> = props => {
       />
       <BillingContactDrawer
         open={editContactDrawerOpen}
-        onSubmit={() => {
-          console.log('Submitted');
-        }}
         onClose={() => setEditContactDrawerOpen(false)}
       ></BillingContactDrawer>
     </React.Fragment>
