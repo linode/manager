@@ -12,6 +12,8 @@ import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import IconTextLink from 'src/components/IconTextLink';
 
+import PaymentDrawer from '../BillingPanels/PaymentDrawer';
+
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(3),
@@ -97,7 +99,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   promotion?: ActivePromotion;
-  openPaymentDrawer?: () => void;
   goToInvoice?: () => void;
   uninvoicedBalance: number;
   promotionAmount?: number;
@@ -105,13 +106,21 @@ interface Props {
 }
 
 export const BillingSummary: React.FC<Props> = props => {
-  const {
-    promotion,
-    openPaymentDrawer,
-    goToInvoice,
-    uninvoicedBalance,
-    balance
-  } = props;
+  const { promotion, goToInvoice, uninvoicedBalance, balance } = props;
+
+  const [paymentDrawerOpen, setPaymentDrawerOpen] = React.useState<boolean>(
+    false
+  );
+
+  const openPaymentDrawer = React.useCallback(
+    () => setPaymentDrawerOpen(true),
+    []
+  );
+
+  const closePaymentDrawer = React.useCallback(
+    () => setPaymentDrawerOpen(false),
+    []
+  );
 
   const classes = useStyles();
 
@@ -158,38 +167,39 @@ export const BillingSummary: React.FC<Props> = props => {
     }
   };
   return (
-    <Paper className={classes.root}>
-      <Grid container alignItems="stretch">
-        <Grid item xs={12} md={4} className={classes.gridItem}>
-          {/* If balance is > 0, it is considered past due. */}
-          {determinePaymentDisplay(balance)}
+    <>
+      <Paper className={classes.root}>
+        <Grid container alignItems="stretch">
+          <Grid item xs={12} md={4} className={classes.gridItem}>
+            {/* If balance is > 0, it is considered past due. */}
+            {determinePaymentDisplay(balance)}
 
-          <div className={classes.iconButtonOuter}>
-            <IconTextLink
-              SideIcon={CreditCard}
-              text="Make a payment"
-              title="Make a payment"
-              onClick={openPaymentDrawer!}
-              className={classes.iconButton}
-            />
-            <IconTextLink
-              SideIcon={Invoice}
-              text="View invoice"
-              title="View invoice"
-              onClick={goToInvoice!}
-              className={classes.iconButton}
-            />
-          </div>
-        </Grid>
-        <Grid item xs={12} md={4} className={classes.gridItem}>
-          <Typography className={classes.header} variant="h2">
-            Next Billing Cycle
-          </Typography>
-          <Typography className={classes.text}>
-            Your balance reflects charges accrued since your last invoice, minus
-            any promotions or credits applied to your account.
-          </Typography>
-          {/*
+            <div className={classes.iconButtonOuter}>
+              <IconTextLink
+                SideIcon={CreditCard}
+                text="Make a payment"
+                title="Make a payment"
+                onClick={openPaymentDrawer}
+                className={classes.iconButton}
+              />
+              <IconTextLink
+                SideIcon={Invoice}
+                text="View invoice"
+                title="View invoice"
+                onClick={goToInvoice!}
+                className={classes.iconButton}
+              />
+            </div>
+          </Grid>
+          <Grid item xs={12} md={4} className={classes.gridItem}>
+            <Typography className={classes.header} variant="h2">
+              Next Billing Cycle
+            </Typography>
+            <Typography className={classes.text}>
+              Your balance reflects charges accrued since your last invoice,
+              minus any promotions or credits applied to your account.
+            </Typography>
+            {/*
           Commenting out as adding promo code is not possible yet
 
           <div className={classes.iconButtonOuter}>
@@ -202,84 +212,88 @@ export const BillingSummary: React.FC<Props> = props => {
             />
           </div>
           */}
-        </Grid>
-        <Grid item xs={12} md={4} className={classes.gridItem}>
-          <Grid item container justify="space-between">
-            <Grid item>
-              <Typography className={classes.label}>
-                Uninvoiced Charges*
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Typography className={classes.field}>
-                ${uninvoicedBalance.toFixed(2)}
-              </Typography>
-            </Grid>
           </Grid>
-          {promotion && (
-            <Grid item container justify="space-between" alignItems="center">
+          <Grid item xs={12} md={4} className={classes.gridItem}>
+            <Grid item container justify="space-between">
               <Grid item>
                 <Typography className={classes.label}>
-                  Promotion {promotion.summary}
-                  <Tooltip
-                    title={promotion.description}
-                    enterTouchDelay={0}
-                    leaveTouchDelay={5000}
-                    placement={'bottom'}
-                  >
-                    <IconButton>
-                      <Info />
-                    </IconButton>
-                  </Tooltip>
+                  Uninvoiced Charges*
                 </Typography>
               </Grid>
               <Grid item>
                 <Typography className={classes.field}>
-                  {`-($${promotion.this_month_credit_remaining})`}
+                  ${uninvoicedBalance.toFixed(2)}
                 </Typography>
               </Grid>
             </Grid>
-          )}
+            {promotion && (
+              <Grid item container justify="space-between" alignItems="center">
+                <Grid item>
+                  <Typography className={classes.label}>
+                    Promotion {promotion.summary}
+                    <Tooltip
+                      title={promotion.description}
+                      enterTouchDelay={0}
+                      leaveTouchDelay={5000}
+                      placement={'bottom'}
+                    >
+                      <IconButton>
+                        <Info />
+                      </IconButton>
+                    </Tooltip>
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography className={classes.field}>
+                    {`-($${promotion.this_month_credit_remaining})`}
+                  </Typography>
+                </Grid>
+              </Grid>
+            )}
 
-          <Grid item container justify="space-between">
-            <Grid item>
-              <Typography className={classes.label}>
-                Payment &amp; Credits
-              </Typography>
+            <Grid item container justify="space-between">
+              <Grid item>
+                <Typography className={classes.label}>
+                  Payment &amp; Credits
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography className={classes.field}>
+                  {/* Only display balance if less than 0, otherwise display 0. Balance, if a positive integer, is instead applied as past due. */}
+                  {balance < 0
+                    ? `-($${Math.abs(balance).toFixed(2)})`
+                    : `$0.00`}
+                </Typography>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Typography className={classes.field}>
-                {/* Only display balance if less than 0, otherwise display 0. Balance, if a positive integer, is instead applied as past due. */}
-                {balance < 0 ? `-($${Math.abs(balance).toFixed(2)})` : `$0.00`}
-              </Typography>
+            <Grid
+              item
+              container
+              className={classes.balanceOuter}
+              justify="space-between"
+            >
+              <Grid item>
+                <Typography className={classes.label}>
+                  {/* If there is credit left over post-calculation, change the label to Credit */}
+                  {hasCredit && Math.abs(calculatedBalance) > 0
+                    ? 'Credit*'
+                    : 'Balance*'}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography className={classes.field}>
+                  ${totalBalance.toFixed(2)}
+                </Typography>
+              </Grid>
             </Grid>
+            <Typography className={classes.caption}>
+              * Based on estimated usage
+            </Typography>
           </Grid>
-          <Grid
-            item
-            container
-            className={classes.balanceOuter}
-            justify="space-between"
-          >
-            <Grid item>
-              <Typography className={classes.label}>
-                {/* If there is credit left over post-calculation, change the label to Credit */}
-                {hasCredit && Math.abs(calculatedBalance) > 0
-                  ? 'Credit*'
-                  : 'Balance*'}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Typography className={classes.field}>
-                ${totalBalance.toFixed(2)}
-              </Typography>
-            </Grid>
-          </Grid>
-          <Typography className={classes.caption}>
-            * Based on estimated usage
-          </Typography>
         </Grid>
-      </Grid>
-    </Paper>
+      </Paper>
+      <PaymentDrawer open={paymentDrawerOpen} onClose={closePaymentDrawer} />
+    </>
   );
 };
 
