@@ -25,11 +25,12 @@ export interface Props {
   lastFour: string;
   expiry: string;
   usd: string;
+  minimumPayment: string;
   setSuccess: (message: string | null, paymentWasMade?: boolean) => void;
 }
 
 export const CreditCard: React.FC<Props> = props => {
-  const { expiry, lastFour, setSuccess, usd } = props;
+  const { expiry, lastFour, minimumPayment, setSuccess, usd } = props;
   const [cvv, setCVV] = React.useState<string>('');
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
@@ -100,7 +101,8 @@ export const CreditCard: React.FC<Props> = props => {
             <Button
               buttonType="primary"
               onClick={handleOpenDialog}
-              disabled={!hasCreditCardOnFile}
+              disabled={!hasCreditCardOnFile || +usd < +minimumPayment}
+              tooltipText={`Payment amount must be at least ${minimumPayment}.`}
             >
               Pay Now
             </Button>

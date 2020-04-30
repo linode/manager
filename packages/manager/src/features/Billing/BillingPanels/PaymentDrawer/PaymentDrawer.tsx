@@ -92,6 +92,8 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
     }
   };
 
+  const minimumPayment = getMinimumPayment(balance || 0);
+
   if (!accountLoading && balance === undefined) {
     return (
       <Grid container>
@@ -125,7 +127,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
               value={usd}
               required
               type="number"
-              placeholder={`${getMinimumPayment(balance || 0)} minimum`}
+              placeholder={`${minimumPayment} minimum`}
             />
           </Grid>
 
@@ -134,6 +136,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
             lastFour={lastFour}
             expiry={expiry}
             usd={usd}
+            minimumPayment={minimumPayment}
             setSuccess={setSuccess}
           />
 
