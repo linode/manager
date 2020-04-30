@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       flexDirection: 'column',
       alignItems: 'flex-start'
     }
@@ -91,8 +91,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '10%'
   },
   totalColumn: {
-    textAlign: 'right',
-    width: '10%'
+    [theme.breakpoints.up('md')]: {
+      textAlign: 'right',
+      width: '10%'
+    }
   },
   pdfDownloadColumn: {
     textAlign: 'right'
@@ -361,11 +363,11 @@ export const ActivityFeedItem: React.FC<ActivityFeedItem> = React.memo(
 
     return (
       <TableRow {...rowProps} data-testid={`${type}-${id}`}>
-        <TableCell>{label}</TableCell>
-        <TableCell>
+        <TableCell parentColumn="Description">{label}</TableCell>
+        <TableCell parentColumn="Date">
           <DateTimeDisplay format="YYYY-MM-DD" value={date} />
         </TableCell>
-        <TableCell className={classes.totalColumn}>
+        <TableCell parentColumn="Amount" className={classes.totalColumn}>
           <Currency quantity={total} wrapInParentheses={total < 0} />
         </TableCell>
         {/* @todo icon */}
