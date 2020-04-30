@@ -37,6 +37,22 @@ const useStyles = makeStyles((theme: Theme) => ({
         maxWidth: '78.8%'
       }
     }
+  },
+  editBtn: {
+    marginBottom: theme.spacing(1),
+    ...theme.typography.body1,
+    '& .dif': {
+      position: 'relative',
+      width: 'auto',
+      '& .chip': {
+        position: 'absolute',
+        top: '-4px',
+        right: -10
+      }
+    },
+    cursor: 'pointer',
+    color: '#3683dc',
+    fontWeight: 700
   }
 }));
 
@@ -99,7 +115,7 @@ const ContactInformation: React.FC<CombinedProps> = props => {
           <Grid item>
             {/* need to fix styling, Edit should look like a link and be on same horizontal level as Billing Contact. */}
             <div
-              className={classes.section}
+              className={classes.editBtn}
               onClick={() => {
                 handleEditDrawerOpen();
               }}
@@ -160,7 +176,7 @@ const ContactInformation: React.FC<CombinedProps> = props => {
       <BillingContactDrawer
         open={editContactDrawerOpen}
         onClose={() => setEditContactDrawerOpen(false)}
-      ></BillingContactDrawer>
+      />
     </React.Fragment>
   );
 };
