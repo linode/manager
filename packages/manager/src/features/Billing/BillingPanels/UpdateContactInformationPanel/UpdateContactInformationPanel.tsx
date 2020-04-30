@@ -599,29 +599,6 @@ class UpdateContactInformationPanel extends React.Component<
       });
   };
 
-  cancelForm = () => {
-    this.setState({
-      success: undefined,
-      submitting: false
-    });
-
-    // this.props
-    //   .updateAccount(this.state.fields)
-    //   .then(_ => {
-    //     this.setState({
-    //       success: 'Account information updated.',
-    //       submitting: false
-    //     });
-    //   })
-    //   .catch(_ => {
-    //     this.setState({
-    //       submitting: false,
-    //       success: undefined
-    //     });
-    //     scrollErrorIntoView();
-    //   });
-  };
-
   resetForm = () => {
     const { accountData: account } = this.props;
     this.setState({
