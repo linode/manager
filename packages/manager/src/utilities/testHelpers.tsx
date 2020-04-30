@@ -144,6 +144,7 @@ export const includesActions = (
 
 type Query = (f: MatcherFunction) => HTMLElement;
 
+/** H/T to https://stackoverflow.com/questions/55509875/how-to-query-by-text-string-which-contains-html-tags-using-react-testing-library */
 export const withMarkup = (query: Query) => (text: string): HTMLElement =>
   query((content: string, node: HTMLElement) => {
     const hasText = (node: HTMLElement) => node.textContent === text;
