@@ -33,8 +33,7 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
       accountLoading,
       username,
       profileError,
-      profileLoading,
-      isRestricted
+      profileLoading
     } = this.props;
 
     if (accountLoading || profileLoading) {
@@ -60,7 +59,6 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
       <Grid container direction="row" wrap="nowrap">
         <Grid item xs={6}>
           <ContactInfo
-            username={username}
             company={account.company}
             firstName={account.first_name}
             lastName={account.last_name}
@@ -72,7 +70,6 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
             state={account.state}
             zip={account.zip}
             activeSince={account.active_since}
-            isRestrictedUser={isRestricted}
             history={this.props.history}
           />
         </Grid>
