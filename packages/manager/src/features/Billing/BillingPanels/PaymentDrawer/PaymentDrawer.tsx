@@ -2,6 +2,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Currency from 'src/components/Currency';
 import Drawer from 'src/components/Drawer';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
@@ -67,6 +68,12 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
     setUSD(getMinimumPayment(balance));
   }, [balance]);
 
+  React.useEffect(() => {
+    if (open) {
+      setSuccessMessage(null);
+    }
+  }, [open]);
+
   const handleUSDChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUSD(e.target.value || '');
   };
@@ -101,7 +108,13 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
           {balance !== false && (
             <Grid item>
               <Typography variant="h3" className={classes.currentBalance}>
-                <strong>Current balance: ${balance.toFixed(2)}</strong>
+                <strong>
+                  Current balance:{' '}
+                  <Currency
+                    quantity={balance}
+                    wrapInParentheses={balance < 0}
+                  />
+                </strong>
               </Typography>
             </Grid>
           )}
