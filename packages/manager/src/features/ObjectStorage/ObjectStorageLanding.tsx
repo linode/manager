@@ -21,25 +21,23 @@ import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
-import DefaultLoader from 'src/components/DefaultLoader';
 import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import PromotionalOfferCard from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLink from 'src/components/TabLink';
 import useFlags from 'src/hooks/useFlags';
 import { ApplicationState } from 'src/store';
-import { getAllBuckets } from 'src/store/bucket/bucket.requests';
+import { getAllBucketsFromAllClusters } from 'src/store/bucket/bucket.requests';
+import { BucketError } from 'src/store/bucket/types';
 import { requestClusters as _requestClusters } from 'src/store/clusters/clusters.actions';
 import { MapState } from 'src/store/types';
 import BucketDrawer from './BucketLanding/BucketDrawer';
 
-const BucketLanding = DefaultLoader({
-  loader: () => import('./BucketLanding/BucketLanding')
-});
-
-const AccessKeyLanding = DefaultLoader({
-  loader: () => import('./AccessKeyLanding/AccessKeyLanding')
-});
+const BucketLanding = React.lazy(() => import('./BucketLanding/BucketLanding'));
+const AccessKeyLanding = React.lazy(() =>
+  import('./AccessKeyLanding/AccessKeyLanding')
+);
 
 const useStyles = makeStyles((theme: Theme) => ({
   promo: {
@@ -49,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = StateProps & DispatchProps & RouteComponentProps<{}>;
 
-export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = props => {
+export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const tabs = [
@@ -75,9 +73,10 @@ export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = prop
   React.useEffect(() => {
     const {
       bucketsLastUpdated,
+      bucketErrors,
       clustersLastUpdated,
       isRestrictedUser,
-      requestBuckets,
+      requestAllBucketsFromAllClusters,
       requestClusters
     } = props;
 
@@ -87,13 +86,10 @@ export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = prop
       return;
     }
 
-    /**
-     * @todo: Move these requests to App.tsx like other entities when OBJ is generally available.
-     */
-
-    // Request buckets if we haven't already
-    if (bucketsLastUpdated === 0) {
-      requestBuckets().catch(err => {
+    // Request buckets if we haven't already, or if there are errors.
+    // @todo: use useReduxLoad for this.
+    if (bucketsLastUpdated === 0 || bucketErrors.length > 0) {
+      requestAllBucketsFromAllClusters().catch(err => {
         /** We choose to do nothing, relying on the Redux error state. */
       });
     }
@@ -163,25 +159,27 @@ export const ObjectStorageLanding: React.FunctionComponent<CombinedProps> = prop
           className={classes.promo}
         />
       ))}
-      <Switch>
-        <Route
-          exact
-          strict
-          path={`${url}/buckets`}
-          render={() => (
-            <BucketLanding isRestrictedUser={props.isRestrictedUser} />
-          )}
-        />
-        <Route
-          exact
-          strict
-          path={`${url}/access-keys`}
-          render={() => (
-            <AccessKeyLanding isRestrictedUser={props.isRestrictedUser} />
-          )}
-        />
-        <Redirect to={`${url}/buckets`} />
-      </Switch>
+      <React.Suspense fallback={<SuspenseLoader />}>
+        <Switch>
+          <Route
+            exact
+            strict
+            path={`${url}/buckets`}
+            render={() => (
+              <BucketLanding isRestrictedUser={props.isRestrictedUser} />
+            )}
+          />
+          <Route
+            exact
+            strict
+            path={`${url}/access-keys`}
+            render={() => (
+              <AccessKeyLanding isRestrictedUser={props.isRestrictedUser} />
+            )}
+          />
+          <Redirect to={`${url}/buckets`} />
+        </Switch>
+      </React.Suspense>
       <BucketDrawer isRestrictedUser={props.isRestrictedUser} />
     </React.Fragment>
   );
@@ -191,10 +189,12 @@ interface StateProps {
   bucketsLastUpdated: number;
   clustersLastUpdated: number;
   isRestrictedUser: boolean;
+  bucketErrors: BucketError[];
 }
 
 const mapStateToProps: MapState<StateProps, {}> = state => ({
   bucketsLastUpdated: state.__resources.buckets.lastUpdated,
+  bucketErrors: state.__resources.buckets.bucketErrors ?? [],
   clustersLastUpdated: state.__resources.clusters.lastUpdated,
   isRestrictedUser: pathOr(
     true,
@@ -204,7 +204,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 });
 
 interface DispatchProps {
-  requestBuckets: () => Promise<ObjectStorageBucket[]>;
+  requestAllBucketsFromAllClusters: () => Promise<ObjectStorageBucket[]>;
   requestClusters: () => Promise<ObjectStorageCluster[]>;
 }
 
@@ -212,7 +212,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
 ) => {
   return {
-    requestBuckets: () => dispatch(getAllBuckets()),
+    requestAllBucketsFromAllClusters: () =>
+      dispatch(getAllBucketsFromAllClusters()),
     requestClusters: () => dispatch(_requestClusters())
   };
 };

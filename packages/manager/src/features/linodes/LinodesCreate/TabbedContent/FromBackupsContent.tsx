@@ -5,7 +5,6 @@ import {
 } from 'linode-js-sdk/lib/linodes';
 import { compose as ramdaCompose, pathOr } from 'ramda';
 import * as React from 'react';
-import { Sticky, StickyProps } from 'react-sticky';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
@@ -230,6 +229,40 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 
     const hasBackups = Boolean(backupsEnabled || accountBackupsEnabled);
 
+    const displaySections = [];
+
+    if (regionDisplayInfo) {
+      displaySections.push({
+        title: regionDisplayInfo.title,
+        details: regionDisplayInfo.details
+      });
+    }
+
+    if (typeDisplayInfo) {
+      displaySections.push(typeDisplayInfo);
+    }
+
+    if (label) {
+      displaySections.push({
+        title: 'Linode Label',
+        details: label
+      });
+    }
+
+    if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
+      displaySections.push(
+        renderBackupsDisplaySection(
+          accountBackupsEnabled,
+          typeDisplayInfo.backupsMonthly
+        )
+      );
+    }
+
+    let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
+    if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
+      calculatedPrice += typeDisplayInfo.backupsMonthly;
+    }
+
     return (
       <React.Fragment>
         <Grid
@@ -328,64 +361,15 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
           <React.Fragment />
         ) : (
           <Grid item className={`${classes.sidebar} mlSidebar`}>
-            <Sticky topOffset={-24} disableCompensation>
-              {(props: StickyProps) => {
-                const displaySections = [];
-
-                if (regionDisplayInfo) {
-                  displaySections.push({
-                    title: regionDisplayInfo.title,
-                    details: regionDisplayInfo.details
-                  });
-                }
-
-                if (typeDisplayInfo) {
-                  displaySections.push(typeDisplayInfo);
-                }
-
-                if (label) {
-                  displaySections.push({
-                    title: 'Linode Label',
-                    details: label
-                  });
-                }
-
-                if (
-                  hasBackups &&
-                  typeDisplayInfo &&
-                  typeDisplayInfo.backupsMonthly
-                ) {
-                  displaySections.push(
-                    renderBackupsDisplaySection(
-                      accountBackupsEnabled,
-                      typeDisplayInfo.backupsMonthly
-                    )
-                  );
-                }
-
-                let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
-                if (
-                  hasBackups &&
-                  typeDisplayInfo &&
-                  typeDisplayInfo.backupsMonthly
-                ) {
-                  calculatedPrice += typeDisplayInfo.backupsMonthly;
-                }
-
-                return (
-                  <CheckoutBar
-                    heading="Linode Summary"
-                    calculatedPrice={calculatedPrice}
-                    isMakingRequest={this.props.formIsSubmitting}
-                    disabled={this.props.formIsSubmitting || disabled}
-                    onDeploy={this.createLinode}
-                    {...props}
-                  >
-                    <DisplaySectionList displaySections={displaySections} />
-                  </CheckoutBar>
-                );
-              }}
-            </Sticky>
+            <CheckoutBar
+              heading="Linode Summary"
+              calculatedPrice={calculatedPrice}
+              isMakingRequest={this.props.formIsSubmitting}
+              disabled={this.props.formIsSubmitting || disabled}
+              onDeploy={this.createLinode}
+            >
+              <DisplaySectionList displaySections={displaySections} />
+            </CheckoutBar>
           </Grid>
         )}
       </React.Fragment>

@@ -129,6 +129,7 @@ Cypress uses a configuration file in `packages/manager/config/`
 The file can be `development.json` when running `cy:e2e`
 
 This file should look like this:
+
 ```
 {
     "env": {
@@ -145,10 +146,14 @@ To get your OAuth token, go to https://cloud.linode.com/profile/tokens and click
 This file is read by Cypress, and used to configure environment setting for the execution.
 See cypress documentation on how to check this in the UI: https://docs.cypress.io/guides/references/configuration.html#Browser
 
-
 ### Run Cypress e2e tests
 
-#### dependencies
+#### set up your environment
+
+Cypress will read your env variables from `.env` in `/packages/manager`.
+It uses `MANAGER_OAUTH`, `REACT_APP_LOGIN_ROOT` and `REACT_APP_API_ROOT`.
+
+#### Dependencies
 
 Run `yarn install:all && yarn run cypress verify`.
 
@@ -159,12 +164,45 @@ Run:
 - `yarn up` in one terminal
 - In a **new terminal** `yarn run wait-on http://localhost:3000 && yarn cy:e2e`
 
-`yarn run wait-on` will simply wait for the website on 3000 to be ready.
+`yarn run wait-on` will simply wait for the website on port 3000 to be ready.
+
+##### Commands
+
+Run tests headless with the electron browser:
+
+```bash
+## Run tests on localhost
+yarn cy:e2e
+
+## Run tests against staging
+yarn cy:stage2e
+```
+
+Run tests with the Chrome browser:
+
+```bash
+yarn cy.e2e --browser chrome
+yarn cy:stage2e --browser chrome
+```
+
+To use the debugging mode and see the test runner:
+
+```bash
+yarn cy:debug
+yarn cy:stagedebug
+```
 
 #### How to run with Docker
 
-Check docker is installed.
+Check that Docker is installed.
 Run `yarn docker:cy` or `docker build -t cloudcy -f Dockerfile-e2e . && docker run --rm cloudcy`
+
+#### Record Screenshots for visual regression
+
+When you write a new Visual regression test with cypress and used `checkSnapshot()` you need to record the correct snapshot.
+
+1. run `yarn cy:rec-snap` which launches Cypress with the Dashboard, run the tests for which you need to record snapshots
+2. Commit the `screenshots/<your test>/record-*.png`
 
 ### Run Storybook UI Components e2e tests
 
@@ -196,47 +234,49 @@ live in `src/components/ComponentName/ComponentName.spec.js`. The WDIO config li
 
 #### Dependencies
 
-- Java JDK 12
+```bash
+brew cask uninstall java
+brew tap caskroom/versions
+brew cask install java
 
-      		brew cask uninstall java
-      		brew tap caskroom/versions
-      		brew cask install java
-
-- Node.js 10 LTS
-  brew install node@10
-- Google Chrome v80+
-  brew cask install google-chrome
-- Yarn
-
-  brew install yarn
+brew install node@10
+brew cask install google-chrome
+brew install yarn
+```
 
 #### Run Suite
 
-    # Starts storybook
+```bash
+# Starts storybook
 
-    yarn storybook
+yarn storybook
 
-    # you do not need to start selenium for this, this will be started by wdio automatically
+# you do not need to start selenium for this, this will be started by wdio automatically
 
-    ## New shell
-    ## Executes specs matching src/components/**/*.spec.js
+## New shell
+## Executes specs matching src/components/**/*.spec.js
 
-    yarn storybook:e2e
+yarn storybook:e2e
+```
 
 #### Run a Single Test
 
-    # Executes spec matching src/components/StoryName/StoryName.spec.js
+```bash
+# Executes spec matching src/components/StoryName/StoryName.spec.js
 
-    yarn storybook:e2e --story StoryName
+yarn storybook:e2e --story StoryName
+```
 
 #### Run a Test in Non-Headless Chrome
 
+```bash
 yarn selenium
 
-    ## New Shell
-    ## The --debug flag spawns a visible chrome session
+## New Shell
+## The --debug flag spawns a visible chrome session
 
-    yarn storybook:e2e --debug --story StoryName
+yarn storybook:e2e --debug --story StoryName
+```
 
 ## Accessibility Testing
 
@@ -250,7 +290,7 @@ The axe-core accessibility testing script has been integrated into the webdriver
 
 #### Run Suite
 
-```
+```bash
 # Starts the local development environment
 
 yarn install:all && yarn up

@@ -7,6 +7,8 @@ import {
   isTestEntity,
   makeTestLabel
 } from './common';
+
+const oauthtoken = Cypress.env('MANAGER_OAUTH');
 const testLinodeTag = testTag;
 export const makeLinodeLabel = makeTestLabel;
 
@@ -22,16 +24,16 @@ const makeLinodeCreateReq = linode => {
         tags: [testLinodeTag],
         backups_enabled: false,
         booted: true,
-        private_ip: false,
+        private_ip: true,
         authorized_users: []
       };
 
   return cy.request({
     method: 'POST',
-    url: Cypress.env('apiroot') + '/v4/linode/instances',
+    url: Cypress.env('REACT_APP_API_ROOT') + '/linode/instances',
     body: linodeData,
     auth: {
-      bearer: Cypress.env('oauthtoken')
+      bearer: oauthtoken
     }
   });
 };
@@ -54,7 +56,7 @@ export const deleteLinodeById = linodeId =>
 
 export const deleteLinodeByLabel = (label = undefined) => {
   getLinodes().then(resp => {
-    const linodeToDelete = resp.body.data.find(l => l.label == label);
+    const linodeToDelete = resp.body.data.find(l => l.label === label);
     deleteLinodeById(linodeToDelete.id);
   });
 };

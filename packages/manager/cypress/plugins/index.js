@@ -10,15 +10,22 @@
 
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
-const fs = require('fs-extra');
+
 const path = require('path');
 
-function getConfigurationByFile(file) {
-  const pathToConfigFile = path.resolve('../manager', 'config', `${file}.json`);
-
-  return fs.readJson(pathToConfigFile);
+// loading config object to append to cypress
+function getConfiguration() {
+  const dotenvPath = path.resolve(__dirname, '../../.env');
+  const conf = require('dotenv').config({
+    path: dotenvPath
+  });
+  if (conf.error) {
+    throw `Could not load .env from Cypress plugin/index.js: ${conf.error}`;
+  }
+  return { env: conf.parsed };
 }
 
+const registerVisualRegTasks = require('./visualRegPlugin');
 function checkNodeVersionRequiredByLinode() {
   const v = process.version.substr(1, process.version.length - 1).split('.');
   if (![12, 10].includes(v[0])) {
@@ -27,11 +34,8 @@ function checkNodeVersionRequiredByLinode() {
 }
 
 module.exports = (on, config) => {
+  registerVisualRegTasks(on);
   checkNodeVersionRequiredByLinode();
-
-  // `on` is used to hook into various events Cypress emits
-  // `config` is the resolved Cypress config
-  // accept a configFile value or use development by default
 
   on('task', {
     datenow() {
@@ -39,7 +43,5 @@ module.exports = (on, config) => {
     }
   });
 
-  const file = config.env.configFile || 'development';
-
-  return getConfigurationByFile(file);
+  return getConfiguration();
 };

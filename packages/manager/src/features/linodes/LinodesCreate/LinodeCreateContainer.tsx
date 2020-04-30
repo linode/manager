@@ -11,7 +11,6 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { StickyContainer } from 'react-sticky';
 import { compose as recompose } from 'recompose';
 
 import { REFRESH_INTERVAL } from 'src/constants';
@@ -574,7 +573,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     const { enqueueSnackbar, closeSnackbar, ...restOfProps } = this.props;
     const { label, udfs: selectedUDFs, ...restOfState } = this.state;
     return (
-      <StickyContainer>
+      <React.Fragment>
         <DocumentTitleSegment segment="Create a Linode" />
         <Grid container spacing={0}>
           <Grid item xs={12}>
@@ -610,7 +609,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             {...restOfState}
           />
         </Grid>
-      </StickyContainer>
+      </React.Fragment>
     );
   }
 }

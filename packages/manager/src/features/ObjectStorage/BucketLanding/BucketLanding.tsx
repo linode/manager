@@ -17,9 +17,11 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import OrderBy from 'src/components/OrderBy';
 import Placeholder from 'src/components/Placeholder';
 import TextField from 'src/components/TextField';
+import { objectStorageClusterDisplay } from 'src/constants';
 import bucketContainer, { StateProps } from 'src/containers/bucket.container';
 import bucketDrawerContainer, {
   DispatchProps
@@ -28,6 +30,7 @@ import bucketRequestsContainer, {
   BucketsRequests
 } from 'src/containers/bucketRequests.container';
 import useOpenClose from 'src/hooks/useOpenClose';
+import { BucketError } from 'src/store/bucket/types';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import {
   sendDeleteBucketEvent,
@@ -55,12 +58,12 @@ type CombinedProps = Props &
   WithStyles<ClassNames> &
   BucketsRequests;
 
-export const BucketLanding: React.StatelessComponent<CombinedProps> = props => {
+export const BucketLanding: React.FC<CombinedProps> = props => {
   const {
     classes,
     bucketsData,
     bucketsLoading,
-    bucketsError,
+    bucketErrors,
     isRestrictedUser,
     openBucketDrawer
   } = props;
@@ -180,12 +183,21 @@ export const BucketLanding: React.StatelessComponent<CombinedProps> = props => {
     return <RenderLoading data-qa-loading-state />;
   }
 
-  if (bucketsError) {
+  const allBucketRequestsFailed =
+    bucketErrors?.length === Object.keys(objectStorageClusterDisplay).length;
+
+  // Show a general error state if all the bucket requests failed.
+  if (allBucketRequestsFailed) {
     return <RenderError data-qa-error-state />;
   }
 
   if (bucketsData.length === 0) {
-    return <RenderEmpty onClick={openBucketDrawer} data-qa-empty-state />;
+    return (
+      <>
+        {bucketErrors && <BucketErrorDisplay bucketErrors={bucketErrors} />}
+        <RenderEmpty onClick={openBucketDrawer} data-qa-empty-state />;
+      </>
+    );
   }
 
   return (
@@ -197,6 +209,7 @@ export const BucketLanding: React.StatelessComponent<CombinedProps> = props => {
             <AddNewLink onClick={openBucketDrawer} label="Add a Bucket" />
           </Grid>
         </Grid>
+        {bucketErrors && <BucketErrorDisplay bucketErrors={bucketErrors} />}
         <Grid item xs={12}>
           <OrderBy data={bucketsData} order={'asc'} orderBy={'label'}>
             {({ data: orderedData, handleOrderChange, order, orderBy }) => {
@@ -296,3 +309,45 @@ const enhanced = compose<CombinedProps, Props>(
 );
 
 export default enhanced(BucketLanding);
+
+interface BucketErrorDisplayProps {
+  bucketErrors: BucketError[];
+}
+
+const BucketErrorDisplay: React.FC<BucketErrorDisplayProps> = React.memo(
+  ({ bucketErrors }) => {
+    return (
+      <Banner
+        regionsAffected={bucketErrors.map(
+          thisError => objectStorageClusterDisplay[thisError.clusterId]
+        )}
+      />
+    );
+  }
+);
+
+interface BannerProps {
+  regionsAffected: string[];
+}
+
+const Banner: React.FC<BannerProps> = React.memo(({ regionsAffected }) => {
+  const moreThanOneRegionAffected = regionsAffected.length > 1;
+
+  return (
+    <Notice warning important>
+      There was an error loading buckets in{' '}
+      {moreThanOneRegionAffected
+        ? 'the following regions:'
+        : `${regionsAffected[0]}.`}
+      <ul>
+        {moreThanOneRegionAffected &&
+          regionsAffected.map(thisRegion => (
+            <li key={thisRegion}>{thisRegion}</li>
+          ))}
+      </ul>
+      If you have buckets in{' '}
+      {moreThanOneRegionAffected ? 'these regions' : regionsAffected[0]}, you
+      may not see them listed below.
+    </Notice>
+  );
+});

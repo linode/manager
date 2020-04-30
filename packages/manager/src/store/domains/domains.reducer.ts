@@ -74,7 +74,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   }
 
   if (isType(action, createDomainActions.started)) {
-    return setError('create', undefined, state);
+    return setError({ create: undefined }, state);
   }
 
   if (isType(action, createDomainActions.done)) {
@@ -93,7 +93,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   }
 
   if (isType(action, updateDomainActions.started)) {
-    return setError('update', undefined, state);
+    return setError({ update: undefined }, state);
   }
 
   if (isType(action, updateDomainActions.done)) {
@@ -112,7 +112,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   }
 
   if (isType(action, deleteDomainActions.started)) {
-    return setError('delete', undefined, state);
+    return setError({ delete: undefined }, state);
   }
 
   if (isType(action, deleteDomainActions.done)) {
@@ -130,7 +130,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   }
 
   if (isType(action, getDomainsPageActions.started)) {
-    return setError('read', undefined, state);
+    return setError({ read: undefined }, state);
   }
 
   if (isType(action, getDomainsPageActions.done)) {

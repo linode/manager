@@ -3,8 +3,7 @@ import Search from '@material-ui/icons/Search';
 import { take } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import _Control from 'react-select/lib/components/Control';
-import _Option from 'react-select/lib/components/Option';
+import { components } from 'react-select';
 import { compose } from 'recompose';
 import IconButton from 'src/components/core/IconButton';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
@@ -26,14 +25,14 @@ type CombinedProps = WithTypesProps &
   StyleProps &
   RouteComponentProps<{}>;
 
-const Control = (props: any) => <_Control {...props} />;
+const Control = (props: any) => <components.Control {...props} />;
 
 /* The final option in the list will be the "go to search results page" link.
  * This doesn't share the same shape as the rest of the results, so should use
  * the default styling. */
 const Option = (props: any) => {
   return ['redirect', 'info'].includes(props.value) ? (
-    <_Option {...props} />
+    <components.Option {...props} />
   ) : (
     <SearchSuggestion {...props} />
   );
@@ -55,7 +54,7 @@ export const selectStyles = {
     margin: 0,
     border: 0
   }),
-  dropdownIndicator: (base: any) => ({ display: 'none' }),
+  dropdownIndicator: () => ({ display: 'none' }),
   placeholder: (base: any) => ({ ...base, color: 'blue' }),
   menu: (base: any) => ({ ...base, maxWidth: '100% !important' })
 };
@@ -64,6 +63,8 @@ export const selectStyles = {
 const debouncedSearchAutoEvent = debounce(1000, false, sendSearchBarUsedEvent);
 
 export const SearchBar: React.FC<CombinedProps> = props => {
+  const { classes, combinedResults, entitiesLoading, search } = props;
+
   const [searchText, setSearchText] = React.useState<string>('');
   const [searchActive, setSearchActive] = React.useState<boolean>(false);
   const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
@@ -75,10 +76,8 @@ export const SearchBar: React.FC<CombinedProps> = props => {
   );
 
   React.useEffect(() => {
-    props.search(searchText);
-  }, [_loading]);
-
-  const { classes, combinedResults, entitiesLoading } = props;
+    search(searchText);
+  }, [_loading, search, searchText]);
 
   const handleSearchChange = (_searchText: string): void => {
     setSearchText(_searchText);
@@ -131,15 +130,17 @@ export const SearchBar: React.FC<CombinedProps> = props => {
   };
 
   const onKeyDown = (e: any) => {
-    if (e.keyCode === 13 && searchText !== '') {
-      if (!combinedResults || combinedResults.length < 1) {
-        props.history.push({
-          pathname: `/search`,
-          search: `?query=${encodeURIComponent(searchText)}`
-        });
-        sendSearchBarUsedEvent('Search Landing', searchText);
-        onClose();
-      }
+    if (
+      e.keyCode === 13 &&
+      searchText !== '' &&
+      (!combinedResults || combinedResults.length < 1)
+    ) {
+      props.history.push({
+        pathname: `/search`,
+        search: `?query=${encodeURIComponent(searchText)}`
+      });
+      sendSearchBarUsedEvent('Search Landing', searchText);
+      onClose();
     }
   };
 
@@ -155,7 +156,7 @@ export const SearchBar: React.FC<CombinedProps> = props => {
   /* Need to override the default RS filtering; otherwise entities whose label
    * doesn't match the search term will be automatically filtered, meaning that
    * searching by tag won't work. */
-  const filterResults = (option: Item, inputValue: string) => {
+  const filterResults = () => {
     return true;
   };
 

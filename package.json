@@ -4,14 +4,8 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "audit-ci": "^2.4.2",
-    "eslint-plugin-cypress": "^2.10.3",
     "husky": "^3.0.1",
     "postinstall": "^0.6.0",
-    "tslint": "^5.20.1",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-react": "^4.1.0",
-    "tslint-react-a11y": "^1.1.0",
-    "tslint-react-hooks": "^2.2.1",
     "typescript": "~3.7.3",
     "wait-on": "^4.0.0"
   },
@@ -22,6 +16,7 @@
     }
   },
   "scripts": {
+    "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",
     "cost-of-modules": "yarn global add cost-of-modules && cost-of-modules --less --no-install --include-dev",
     "install:all": "yarn install --frozen-lockfile",
     "upgrade:sdk": "yarn workspace linode-js-sdk version --no-git-tag-version --no-commit-hooks && yarn workspace linode-manager upgrade linode-js-sdk",
@@ -40,10 +35,9 @@
     "e2e": "yarn workspace linode-manager e2e --color",
     "e2e:all": "yarn workspace linode-manager e2e:all --color",
     "e2e:modified": "yarn workspace linode-manager e2e:modified --color",
-    "cy:stage2e": "yarn workspace linode-manager cy:stage2e",
-    "cy:stagedebug": "yarn workspace linode-manager cy:stagedebug",
     "cy:e2e": "yarn workspace linode-manager cy:e2e",
     "cy:debug": "yarn workspace linode-manager cy:debug",
+    "cy:rec-snap": "yarn workspace linode-manager cy:rec-snap",
     "docker:cy": "docker build -t cloudcy -f Dockerfile-e2e . && docker run --rm cloudcy",
     "docker:sb": "docker build -t cloudsb -f Dockerfile-storybook . && docker run --rm cloudsb",
     "docker:e2e": "docker-compose -f integration-test.yml up --exit-code-from manager-e2e",

@@ -1,6 +1,6 @@
 {
   "name": "linode-js-sdk",
-  "version": "0.23.0-alpha.0",
+  "version": "0.25.0-alpha.0",
   "homepage": "https://github.com/linode/manager/tree/develop/packages/linode-js-sdk",
   "bugs": {
     "url": "https://github.com/linode/manager/issues",
@@ -30,11 +30,10 @@
     "start": "concurrently \"tsc -w\" \"babel src --watch --out-dir lib --extensions '.ts,.tsx'\" -n 'tsc,babel' -k",
     "build": "tsc && babel src --out-dir lib --extensions '.ts,.tsx' && webpack",
     "test": "jest --config jestconfig.json",
-    "format": "prettier --write \"src/**/*.{ts,tsx}\" \"src/**/*.js\"",
-    "lint": "tslint -p tsconfig.json",
+    "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",
     "typecheck": "tsc --noEmit true --emitDeclarationOnly false",
     "prepublishOnly": "yarn lint && yarn typecheck && yarn format && yarn build",
-    "precommit": "lint-staged && yarn typecheck"
+    "precommit": "lint-staged"
   },
   "files": [
     "index.js",
@@ -57,6 +56,9 @@
     "@types/yup": "^0.26.22",
     "babel-plugin-module-resolver": "^3.2.0",
     "concurrently": "^4.1.1",
+    "eslint": "^6.8.0",
+    "eslint-plugin-ramda": "^2.5.1",
+    "eslint-plugin-sonarjs": "^0.5.0",
     "jest": "^24.8.0",
     "lint-staged": "^9.4.2",
     "npm-dts-webpack-plugin": "^1.1.10",
@@ -71,9 +73,12 @@
   },
   "lint-staged": {
     "*.{ts,tsx,js}": [
-      "tslint",
       "prettier --write",
+      "eslint --ext .js,.ts,.tsx",
       "git add"
+    ],
+    ".{ts,tsx}": [
+      "tsc -p tsconfig.json --noEmit true --emitDeclarationOnly false"
     ]
   }
 }
