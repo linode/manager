@@ -106,7 +106,7 @@ const styles = (theme: Theme) =>
 interface BaseProps {
   errorText?: string;
   errorGroup?: string;
-  affirmative?: Boolean;
+  affirmative?: boolean;
   helperTextPosition?: 'top' | 'bottom';
   tooltipText?: string;
   className?: any;
@@ -125,6 +125,7 @@ interface BaseProps {
   noMarginTop?: boolean;
   loading?: boolean;
   hideLabel?: boolean;
+  inputId?: string;
 }
 
 interface TextFieldPropsOverrides extends TextFieldProps {
@@ -233,6 +234,7 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
       noMarginTop,
       label,
       loading,
+      inputId,
       ...textFieldProps
     } = this.props;
 
@@ -310,9 +312,11 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
             }}
             inputProps={{
               'data-testid': 'textfield-input',
-              id: this.props.label
-                ? convertToKebabCase(`${this.props.label}`)
-                : undefined,
+              id:
+                inputId ||
+                (this.props.label
+                  ? convertToKebabCase(`${this.props.label}`)
+                  : undefined),
               ...inputProps
             }}
             InputProps={{
