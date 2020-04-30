@@ -1,4 +1,3 @@
-import PDFIcon from 'src/assets/icons/pdf.svg';
 import {
   getInvoices,
   getPayments,
@@ -102,7 +101,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   pdfDownloadButton: {
     border: 'none',
     backgroundColor: 'inherit',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    color: theme.palette.primary.main,
+    padding: 0,
+    font: 'inherit',
+    '&:hover': {
+      textDecoration: 'underline'
+    }
   }
 }));
 
@@ -292,7 +297,7 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
   return (
     <>
       <div className={classes.headerContainer}>
-        <Typography variant="h2">Activity</Typography>
+        <Typography variant="h2">Billing & Payment History</Typography>
         <div className={classes.headerRight}>
           <div className={classes.flexContainer}>
             {accountActiveSince && (
@@ -372,9 +377,7 @@ export const ActivityFeedItem: React.FC<ActivityFeedItem> = React.memo(
         </TableCell>
         {/* @todo icon */}
         <TableCell className={classes.pdfDownloadColumn}>
-          <button className={classes.pdfDownloadButton}>
-            <PDFIcon />
-          </button>
+          <button className={classes.pdfDownloadButton}>View PDF</button>
         </TableCell>
       </TableRow>
     );
@@ -412,7 +415,7 @@ export const paymentToActivityFeedItem = (
   const { date, id, usd } = payment;
 
   // Negative payments are effectively credits.
-  const label = usd < 0 ? 'Credit' : 'Payment';
+  const label = usd < 0 ? 'Refund to Card' : 'Payment';
 
   // We always want Payments (and negative Payments, i.e. Credits) to appear as a negative number.
   // The delineation between these two types comes from the label ("Credit" or "Payment").
