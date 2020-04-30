@@ -1,4 +1,4 @@
-import { Profile } from 'linode-js-sdk/lib/profile';
+import { Profile, TPAProvider } from 'linode-js-sdk/lib/profile';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { dec, lensPath, path, remove, set } from 'ramda';
 import * as React from 'react';
@@ -88,6 +88,7 @@ interface State {
   lishAuthMethod: Pick<Profile, 'lish_auth_method'>;
   authorizedKeys: string[];
   authorizedKeysCount: number;
+  authType: TPAProvider;
 }
 
 type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
@@ -99,7 +100,8 @@ class LishSettings extends React.Component<CombinedProps, State> {
     authorizedKeys: this.props.authorizedKeys || [],
     authorizedKeysCount: this.props.authorizedKeys
       ? this.props.authorizedKeys.length
-      : 1
+      : 1,
+    authType: this.props.authType
   };
 
   render() {
@@ -109,7 +111,8 @@ class LishSettings extends React.Component<CombinedProps, State> {
       authorizedKeys,
       authorizedKeysCount,
       success,
-      errors
+      errors,
+      authType
     } = this.state;
     const hasErrorFor = getAPIErrorFor(
       {
@@ -125,7 +128,8 @@ class LishSettings extends React.Component<CombinedProps, State> {
     const modeOptions = [
       {
         label: 'Allow both password and key authentication',
-        value: 'password_keys'
+        value: 'password_keys',
+        isDisabled: authType !== 'password'
       },
       {
         label: 'Allow key authentication only',
@@ -138,7 +142,11 @@ class LishSettings extends React.Component<CombinedProps, State> {
     ];
 
     const defaultMode = modeOptions.find(eachMode => {
-      return (eachMode.value as any) === lishAuthMethod;
+      if (authType !== 'password') {
+        return (eachMode.value as any) === 'keys_only';
+      } else {
+        return (eachMode.value as any) === lishAuthMethod;
+      }
     });
 
     return (
@@ -286,6 +294,7 @@ interface StateProps {
   lishAuthMethod?: Pick<Profile, 'lish_auth_method'>;
   authorizedKeys?: string[];
   loading: boolean;
+  authType: TPAProvider;
 }
 
 const mapStateToProps: MapState<StateProps, {}> = state => {
@@ -293,7 +302,8 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
   return {
     loading: profile.loading,
     lishAuthMethod: path(['data', 'lish_auth_method'], profile),
-    authorizedKeys: path(['data', 'authorized_keys'], profile)
+    authorizedKeys: path(['data', 'authorized_keys'], profile),
+    authType: profile?.data?.authentication_type ?? 'password'
   };
 };
 
@@ -305,10 +315,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
   updateProfile: (v: Profile) => dispatch(handleUpdateProfile(v) as any)
 });
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const enhanced = compose<CombinedProps, {}>(
   styled,
