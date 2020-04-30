@@ -29,6 +29,7 @@ jest.mock('linode-js-sdk/lib/account', () => {
     })
   };
 });
+jest.mock('src/components/EnhancedSelect/Select');
 
 const mockOpenCloseAccountDialog = jest.fn();
 
@@ -58,6 +59,30 @@ describe('BillingActivityPanel', () => {
       getByText('Invoice #1');
       getByTestId(`payment-0`);
       getByTestId(`payment-1`);
+    });
+  });
+
+  it.only('should filter by item type', async () => {
+    const { queryAllByTestId, queryByText, queryByTestId } = renderWithTheme(
+      <BillingActivityPanel {...props} />
+    );
+
+    // Test selecting "Invoices"
+    await wait(() => {
+      const transactionTypeSelect = queryAllByTestId('select')?.[0];
+      fireEvent.change(transactionTypeSelect, {
+        target: { value: 'invoice' }
+      });
+      expect(queryByTestId('payment-0')).toBeFalsy();
+    });
+
+    // Test selecting "Payments"
+    await wait(() => {
+      const transactionTypeSelect = queryAllByTestId('select')?.[0];
+      fireEvent.change(transactionTypeSelect, {
+        target: { value: 'payment' }
+      });
+      expect(queryByText('Invoice #0')).toBeFalsy();
     });
   });
 
