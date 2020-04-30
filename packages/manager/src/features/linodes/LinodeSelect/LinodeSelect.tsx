@@ -40,6 +40,7 @@ interface Props {
   small?: boolean;
   noMarginTop?: boolean;
   value?: Item<any> | null;
+  inputId?: string;
 }
 
 type CombinedProps = Props & WithLinodesProps;
@@ -61,7 +62,8 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
     valueOverride,
     labelOverride,
     filterCondition,
-    value
+    value,
+    inputId
   } = props;
 
   const linodes = region
@@ -103,6 +105,7 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
       disabled={disabled}
       small={props.small}
       isLoading={linodesLoading}
+      inputId={inputId}
       onChange={(selected: Item<number>) => {
         return handleChange(selected.data);
       }}
