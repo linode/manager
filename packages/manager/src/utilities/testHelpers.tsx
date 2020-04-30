@@ -153,5 +153,3 @@ export const withMarkup = (query: Query) => (text: string): HTMLElement =>
     );
     return hasText(node) && childrenDontHaveText;
   });
-
-export default withMarkup;
