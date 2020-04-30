@@ -54,8 +54,8 @@ const ThirdPartyDialog: React.FC<CombinedProps> = props => {
         After you enable {displayName} authentication, your Linode account
         password will be disabled and any trusted devices will be removed from
         your account. If you’ve enabled Two-Factor Authentication (TFA) with
-        your Linode account, that will also be disabled. You should enable TFA
-        via
+        your Linode account, that will also be disabled. If you've enabled LISH,
+        that will be set to key authentication only. You should enable TFA via
         {` `}
         {displayName} for extra security.
       </Typography>
