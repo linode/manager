@@ -294,6 +294,14 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
     ]
   );
 
+  const filteredData = React.useMemo(() => {
+    return selectedTransactionType !== 'all'
+      ? combinedData.filter(
+          thisBillingItem => thisBillingItem.type === selectedTransactionType
+        )
+      : combinedData;
+  }, [selectedTransactionType, combinedData]);
+
   return (
     <>
       <div className={classes.headerContainer}>
@@ -345,7 +353,7 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
           </div>
         </div>
       </div>
-      <OrderBy data={combinedData} orderBy={'date'} order={'desc'}>
+      <OrderBy data={filteredData} orderBy={'date'} order={'desc'}>
         {billingActivityPanel}
       </OrderBy>
     </>
