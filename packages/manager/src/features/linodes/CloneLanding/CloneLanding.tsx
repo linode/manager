@@ -120,15 +120,6 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
     }
   ];
 
-  // Update browser URL with tab change
-  // const handleTabChange = (
-  //   event: React.ChangeEvent<HTMLDivElement>,
-  //   value: number
-  // ) => {
-  //   const routeName = tabs[value].routeName;
-  //   history.push(`${routeName}`);
-  // };
-
   // Helper function for the <Tabs /> component
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
