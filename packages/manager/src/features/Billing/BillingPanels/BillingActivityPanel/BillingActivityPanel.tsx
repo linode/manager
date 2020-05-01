@@ -1,3 +1,4 @@
+import { printPayment } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import {
   getInvoiceItems,
   getInvoices,
@@ -27,9 +28,11 @@ import TableRow, { TableRowProps } from 'src/components/TableRow';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { useAccount } from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
+import CircleProgress from 'src/components/CircleProgress';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { getAll } from 'src/utilities/getAll';
+import { getTaxID } from '../RecentPaymentsPanel/RecentPaymentsPanel';
 
 const useStyles = makeStyles((theme: Theme) => ({
   headerContainer: {
@@ -147,6 +150,8 @@ const transactionDateOptions: Item<DateRanges>[] = [
   { label: 'All Time', value: 'All Time' }
 ];
 
+const PDFError = 'There was an error generating this PDF.';
+
 // =============================================================================
 // <BillingActivityPanel />
 // =============================================================================
@@ -210,9 +215,14 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
   const flags = useFlags();
   const { account } = useAccount();
 
-  const [pdfError, setPDFError] = React.useState<string | undefined>();
-  const [isDownloadingPDF, setIsDownloadingPDF] = React.useState<boolean>(
-    false
+  const [invoicePDFErrors, setInvoicePDFErrors] = React.useState<Set<number>>(
+    new Set<number>()
+  );
+  const [invoicePDFLoading, setInvoicePDFLoading] = React.useState<Set<number>>(
+    new Set<number>()
+  );
+  const [paymentPDFErrors, setPaymentPDFErrors] = React.useState<Set<number>>(
+    new Set<number>()
   );
 
   const downloadInvoicePDF = React.useCallback(
@@ -220,14 +230,21 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
       const invoice = invoices.find(
         thisInvoice => thisInvoice.id === invoiceId
       );
-
       if (!account.data || !invoice) {
-        setPDFError('There was an error generating this PDF.');
+        setInvoicePDFErrors(prevInvoicePDFErrors => {
+          prevInvoicePDFErrors.add(invoiceId);
+          return prevInvoicePDFErrors;
+        });
         return;
       }
 
-      setPDFError(undefined);
-      setIsDownloadingPDF(true);
+      setInvoicePDFErrors(prevInvoicePDFErrors => {
+        prevInvoicePDFErrors.delete(invoiceId);
+        return prevInvoicePDFErrors;
+      });
+      setInvoicePDFLoading(prevInvoicePDFLoading => {
+        return new Set(prevInvoicePDFLoading).add(invoiceId);
+      });
 
       getAll<InvoiceItem>((params, filter) =>
         getInvoiceItems(invoiceId, params, filter)
@@ -240,18 +257,61 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
             invoiceItems,
             flags.taxBanner
           );
-          setIsDownloadingPDF(false);
+          setInvoicePDFLoading(prevInvoicePDFLoading => {
+            const newSet = new Set(prevInvoicePDFLoading);
+            newSet.delete(invoiceId);
+            return newSet;
+          });
 
           if (result.status === 'error') {
-            setPDFError('There was an error generating this PDF.');
+            setInvoicePDFErrors(prevInvoicePDFErrors => {
+              prevInvoicePDFErrors.add(invoiceId);
+              return prevInvoicePDFErrors;
+            });
           }
         })
         .catch(e => {
-          setPDFError(e);
-          setIsDownloadingPDF(false);
+          // setPDFError(e);
+          // setIsDownloadingPDF(false);
         });
     },
     [account.data, flags.taxBanner, invoices]
+  );
+
+  const downloadPaymentPDF = React.useCallback(
+    (paymentId: number) => {
+      const payment = payments.find(
+        thisPayment => thisPayment.id === paymentId
+      );
+      if (!account.data || !payment) {
+        setPaymentPDFErrors(prevPaymentPDFErrors => {
+          prevPaymentPDFErrors.add(paymentId);
+          return prevPaymentPDFErrors;
+        });
+        return;
+      }
+
+      setPaymentPDFErrors(prevPaymentPDFErrors => {
+        prevPaymentPDFErrors.delete(paymentId);
+        return prevPaymentPDFErrors;
+      });
+
+      const taxBanner = flags.taxBanner;
+      const taxId = getTaxID(
+        payment.date,
+        taxBanner?.date,
+        taxBanner?.linode_tax_id
+      );
+      const result = printPayment(account.data, payment, taxId);
+
+      if (result.status === 'error') {
+        setPaymentPDFErrors(prevPaymentPDFErrors => {
+          prevPaymentPDFErrors.add(paymentId);
+          return prevPaymentPDFErrors;
+        });
+      }
+    },
+    [payments, flags.taxBanner, account.data]
   );
 
   // Handlers for <Select /> components.
@@ -319,14 +379,29 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
                     loading={loading}
                     error={error}
                   >
-                    {paginatedAndOrderedData.map(thisItem => (
-                      <ActivityFeedItem
-                        key={`${thisItem.type}-${thisItem.id}`}
-                        downloadPDF={downloadInvoicePDF}
-                        isDownloadingPDF={isDownloadingPDF}
-                        {...thisItem}
-                      />
-                    ))}
+                    {paginatedAndOrderedData.map(thisItem => {
+                      return (
+                        <ActivityFeedItem
+                          key={`${thisItem.type}-${thisItem.id}`}
+                          downloadPDF={
+                            thisItem.type === 'invoice'
+                              ? downloadInvoicePDF
+                              : downloadPaymentPDF
+                          }
+                          hasPDFError={
+                            thisItem.type === 'invoice'
+                              ? invoicePDFErrors.has(thisItem.id)
+                              : paymentPDFErrors.has(thisItem.id)
+                          }
+                          isLoading={
+                            thisItem.type === 'invoice'
+                              ? invoicePDFLoading.has(thisItem.id)
+                              : false
+                          }
+                          {...thisItem}
+                        />
+                      );
+                    })}
                   </TableContentWrapper>
                 </TableBody>
               </Table>
@@ -351,7 +426,10 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
       loading,
       error,
       downloadInvoicePDF,
-      isDownloadingPDF
+      downloadPaymentPDF,
+      invoicePDFErrors,
+      invoicePDFLoading,
+      paymentPDFErrors
     ]
   );
 
@@ -418,7 +496,8 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
 // =============================================================================
 interface ActivityFeedItemProps extends ActivityFeedItem {
   downloadPDF: (id: number) => void;
-  isDownloadingPDF: boolean;
+  hasError: boolean;
+  isLoading: boolean;
 }
 
 export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
@@ -432,11 +511,12 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
       id,
       type,
       downloadPDF,
-      isDownloadingPDF
+      hasError,
+      isLoading
     } = props;
 
     const rowProps: TableRowProps = {};
-    if (type === 'invoice' && !isDownloadingPDF) {
+    if (type === 'invoice' && !isLoading) {
       rowProps.rowLink = `/account/billing/invoices/${id}`;
     }
 
@@ -446,7 +526,7 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
         e.preventDefault();
         downloadPDF(id);
       },
-      [downloadPDF, id]
+      [id, downloadPDF]
     );
 
     return (
@@ -460,9 +540,13 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
         </TableCell>
         {/* @todo icon */}
         <TableCell className={classes.pdfDownloadColumn}>
-          <button className={classes.pdfDownloadButton} onClick={handleClick}>
-            Download PDF
-          </button>
+          {isLoading ? (
+            <CircleProgress mini />
+          ) : (
+            <button className={classes.pdfDownloadButton} onClick={handleClick}>
+              Download PDF
+            </button>
+          )}
         </TableCell>
       </TableRow>
     );
