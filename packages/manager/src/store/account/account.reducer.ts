@@ -4,9 +4,7 @@ import { Reducer } from 'redux';
 import { RequestableDataWithEntityError } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import {
-  profileRequest,
-  profileRequestFail,
-  profileRequestSuccess,
+  requestAccountActions,
   saveCreditCard,
   updateAccountActions
 } from './account.actions';
@@ -28,24 +26,24 @@ export const defaultState: State = {
  */
 const reducer: Reducer<State> = (state: State = defaultState, action) => {
   return produce(state, draft => {
-    if (isType(action, profileRequest)) {
+    if (isType(action, requestAccountActions.started)) {
       draft.loading = true;
     }
 
-    if (isType(action, profileRequestSuccess)) {
-      const { payload } = action;
+    if (isType(action, requestAccountActions.done)) {
+      const { result } = action.payload;
 
       draft.loading = false;
-      draft.data = payload;
+      draft.data = result;
       draft.lastUpdated = Date.now();
       draft.error.read = undefined;
     }
 
-    if (isType(action, profileRequestFail)) {
-      const { payload } = action;
+    if (isType(action, requestAccountActions.failed)) {
+      const { error } = action.payload;
 
       draft.loading = false;
-      draft.error.read = payload;
+      draft.error.read = error;
     }
 
     if (isType(action, updateAccountActions.started)) {
