@@ -1,17 +1,13 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
-import DateTimeDisplay from 'src/components/DateTimeDisplay';
 
 import BillingContactDrawer from './EditBillingContactDrawer';
-
-import Dialog from './CancelAccountDialog';
 
 import styled from 'src/containers/SummaryPanels.styles';
 
@@ -67,9 +63,6 @@ interface Props extends Pick<RouteComponentProps, 'history'> {
   address1: string;
   email: string;
   phone: string;
-  activeSince: string;
-  username: string;
-  isRestrictedUser: boolean;
   taxId: string;
 }
 
