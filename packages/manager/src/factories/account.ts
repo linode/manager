@@ -4,7 +4,7 @@ import { Account, ActivePromotion } from 'linode-js-sdk/lib/account/types';
 export const promoFactory = Factory.Sync.makeFactory<ActivePromotion>({
   image_url: '',
   summary: 'UBUNTU20',
-  description: 'SIgned up via Ubuntu 20.04 announcement $20/60 days',
+  description: 'Signed up via Ubuntu 20.04 announcement $20/60 days',
   expire_dt: '2025-05-01T03:59:59',
   credit_monthly_cap: '20.00',
   credit_remaining: '20.00',
@@ -13,7 +13,7 @@ export const promoFactory = Factory.Sync.makeFactory<ActivePromotion>({
 
 export const accountFactory = Factory.Sync.makeFactory<Account>({
   company: 'xrTHcxhFdaDW1XyYWSNWsccDa07iUy',
-  email: 'prod-test-004@linode.com',
+  email: 'my-email@example.com',
   first_name: 'XRbganOEO',
   last_name: 'demo2',
   address_1: '249 Arch St',
@@ -43,7 +43,7 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
     {
       image_url: '',
       summary: 'UBUNTU20',
-      description: 'SIgned up via Ubuntu 20.04 announcement $20/60 days',
+      description: 'Signed up via Ubuntu 20.04 announcement $20/60 days',
       expire_dt: '2025-05-01T03:59:59',
       credit_monthly_cap: '20.00',
       credit_remaining: '20.00',
