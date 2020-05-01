@@ -84,7 +84,7 @@ const L = {
   }
 };
 
-class UpdateContactInformationPanel extends React.Component<
+class UpdateContactInformationForm extends React.Component<
   CombinedProps,
   State
 > {
@@ -598,17 +598,6 @@ class UpdateContactInformationPanel extends React.Component<
         scrollErrorIntoView();
       });
   };
-
-  resetForm = () => {
-    const { accountData: account } = this.props;
-    this.setState({
-      fields: {
-        state: account ? account.state : undefined
-      },
-      submitting: false,
-      success: undefined
-    });
-  };
 }
 
 const styled = withStyles(styles);
@@ -618,5 +607,5 @@ const withAccount = AccountContainer();
 const enhanced = compose(styled, withAccount);
 
 export default enhanced(
-  UpdateContactInformationPanel
+  UpdateContactInformationForm
 ) as React.ComponentType<{}>;

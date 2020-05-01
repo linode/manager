@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
-import UpdateContactInformationPanel from 'src/features/Billing/BillingPanels/UpdateContactInformationPanel';
+import UpdateContactInformationForm from 'src/features/Billing/BillingPanels/UpdateContactInformationPanel';
 
 const useStyles = makeStyles((theme: Theme) => ({
   drawer: {
@@ -36,7 +36,7 @@ export const BillingContactDrawer: React.FC<CombinedProps> = props => {
       open={open}
       onClose={onClose}
     >
-      <UpdateContactInformationPanel 
+      <UpdateContactInformationForm 
         onCancel={onClose}
       />
     </Drawer>
