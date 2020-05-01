@@ -104,7 +104,6 @@ const ContactInformation: React.FC<CombinedProps> = props => {
           </Grid>
 
           <Grid item>
-            {/* need to fix styling, Edit should look like a link and be on same horizontal level as Billing Contact. */}
             <div
               className={classes.editBtn}
               onClick={() => {
