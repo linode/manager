@@ -5,7 +5,6 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import BillingActivityPanel, {
   invoiceToActivityFeedItem,
   paymentToActivityFeedItem,
-  BillingActivityPanelProps,
   getCutoffFromDateRange
 } from './BillingActivityPanel';
 
@@ -43,17 +42,11 @@ jest.mock('linode-js-sdk/lib/account', () => {
 });
 jest.mock('src/components/EnhancedSelect/Select');
 
-const mockOpenCloseAccountDialog = jest.fn();
-
-const props: BillingActivityPanelProps = {
-  isRestrictedUser: false,
-  openCloseAccountDialog: mockOpenCloseAccountDialog,
-  accountActiveSince: '2018-01-01T00:00:00'
-};
+// const mockOpenCloseAccountDialog = jest.fn();
 
 describe('BillingActivityPanel', () => {
   it('renders the header and appropriate rows', async () => {
-    const { getByText } = renderWithTheme(<BillingActivityPanel {...props} />);
+    const { getByText } = renderWithTheme(<BillingActivityPanel />);
     await wait(() => {
       getByText('Billing & Payment History');
       getByText('Description');
@@ -64,7 +57,7 @@ describe('BillingActivityPanel', () => {
 
   it('renders a row for each payment and invoice', async () => {
     const { getByText, getByTestId } = renderWithTheme(
-      <BillingActivityPanel {...props} />
+      <BillingActivityPanel />
     );
     await wait(() => {
       getByText('Invoice #0');
@@ -76,7 +69,7 @@ describe('BillingActivityPanel', () => {
 
   it('should filter by item type', async () => {
     const { queryAllByTestId, queryByText, queryByTestId } = renderWithTheme(
-      <BillingActivityPanel {...props} />
+      <BillingActivityPanel />
     );
 
     // Test selecting "Invoices"
@@ -100,7 +93,7 @@ describe('BillingActivityPanel', () => {
 
   it('should filter by transaction date', async () => {
     const { queryAllByTestId, queryByText, queryByTestId } = renderWithTheme(
-      <BillingActivityPanel {...props} />
+      <BillingActivityPanel />
     );
 
     await wait(() => {
@@ -113,33 +106,8 @@ describe('BillingActivityPanel', () => {
     });
   });
 
-  it('should display "Account active since"', async () => {
-    const { getByText } = renderWithTheme(<BillingActivityPanel {...props} />);
-    await wait(() => {
-      getByText('Account active since 2018-01-01');
-    });
-  });
-
-  it('should display "Close Account" button if unrestricted', async () => {
-    const { getByText } = renderWithTheme(<BillingActivityPanel {...props} />);
-    await wait(() => {
-      const closeAccountButton = getByText('Close Account');
-      fireEvent.click(closeAccountButton);
-      expect(mockOpenCloseAccountDialog).toHaveBeenCalled();
-    });
-  });
-
-  it('should not display "Close Account" button if restricted', async () => {
-    const { queryByText } = renderWithTheme(
-      <BillingActivityPanel {...props} isRestrictedUser={true} />
-    );
-    await wait(() => {
-      expect(queryByText('Close Account')).toBeFalsy();
-    });
-  });
-
   it('should display transaction selection components with defaults', async () => {
-    const { getByText } = renderWithTheme(<BillingActivityPanel {...props} />);
+    const { getByText } = renderWithTheme(<BillingActivityPanel />);
     await wait(() => {
       getByText('All Transaction Types');
       getByText('90 Days');
@@ -153,11 +121,6 @@ describe('invoiceToActivityFeedItem', () => {
     const invoice1 = invoiceFactory.build({ label: 'Invoice #101', total: 1 });
     expect(invoiceToActivityFeedItem(invoice0).label).toBe('Invoice #100');
     expect(invoiceToActivityFeedItem(invoice1).label).toBe('Invoice #101');
-  });
-
-  it('renames the invoice to "Credit" if < 0', () => {
-    const invoice = invoiceFactory.build({ label: 'Invoice #102', total: -1 });
-    expect(invoiceToActivityFeedItem(invoice).label).toBe('Credit #102');
   });
 });
 
@@ -177,7 +140,7 @@ describe('paymentToActivityFeedItem', () => {
     const paymentNegative = paymentFactory.build({ usd: -1 });
     const paymentZero = paymentFactory.build({ usd: 0 });
     const paymentPositive = paymentFactory.build({ usd: 1 });
-    expect(paymentToActivityFeedItem(paymentNegative).total).toBe(-1);
+    expect(paymentToActivityFeedItem(paymentNegative).total).toBe(1);
     expect(paymentToActivityFeedItem(paymentZero).total).toBe(0);
     expect(paymentToActivityFeedItem(paymentPositive).total).toBe(-1);
   });
