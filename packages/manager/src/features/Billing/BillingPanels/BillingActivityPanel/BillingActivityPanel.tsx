@@ -24,6 +24,7 @@ import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import TableRow, { TableRowProps } from 'src/components/TableRow';
 import { ISO_FORMAT } from 'src/constants';
+import { isAfter } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { getAll } from 'src/utilities/getAll';
@@ -170,6 +171,13 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
     []
   );
 
+  const [earliestInvoiceDate, setEarliestInvoiceDate] = React.useState<string>(
+    moment.utc().format(ISO_FORMAT)
+  );
+  const [earliestPaymentDate, setEarliestPaymentDate] = React.useState<string>(
+    moment.utc().format(ISO_FORMAT)
+  );
+
   const [selectedTransactionType, setSelectedTransactionType] = React.useState<
     TransactionTypes
   >('all');
@@ -178,55 +186,48 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
     DateRange
   >(defaultDateRange);
 
-  const makeRequest = React.useCallback(
-    (endDate?: string, startDate?: string) => {
-      // @todo: Extract and test filter generation.
-      const filter: any = {
-        '+order_by': 'date',
-        '+order': 'desc'
-      };
+  const makeRequest = React.useCallback((endDate?: string) => {
+    const filter: any = {
+      '+order_by': 'date',
+      '+order': 'desc'
+    };
 
-      const dateFilter = {};
-      if (endDate) {
-        dateFilter['+gte'] = endDate;
-      }
-      if (startDate) {
-        dateFilter['+lte'] = startDate;
-      }
+    if (endDate) {
+      filter.date = { '+gte': endDate };
+    }
 
-      if (Object.keys(dateFilter).length > 0) {
-        filter.date = dateFilter;
-      }
+    setLoading(true);
 
-      setLoading(true);
+    Promise.all([getAllInvoices({}, filter), getAllPayments({}, filter)])
+      .then(([invoices, payments]) => {
+        if (invoices.data.length > 0) {
+          setEarliestInvoiceDate(invoices.data[invoices.data.length - 1].date);
+        }
 
-      Promise.all([getAllInvoices({}, filter), getAllPayments({}, filter)])
-        .then(([invoices, payments]) => {
-          const _combinedData: ActivityFeedItem[] = [
-            ...invoices.data.map(invoiceToActivityFeedItem),
-            ...payments.data.map(paymentToActivityFeedItem)
-          ];
-          setCombinedData(_combinedData);
-          setLoading(false);
-        })
-        .catch(_error => {
-          setError(
-            getAPIErrorOrDefault(
-              _error,
-              'There was an error retrieving your billing activity.'
-            )
-          );
-          setLoading(false);
-        });
-    },
-    []
-  );
+        if (payments.data.length > 0) {
+          setEarliestPaymentDate(payments.data[payments.data.length - 1].date);
+        }
+
+        const _combinedData: ActivityFeedItem[] = [
+          ...invoices.data.map(invoiceToActivityFeedItem),
+          ...payments.data.map(paymentToActivityFeedItem)
+        ];
+        setCombinedData(_combinedData);
+        setLoading(false);
+      })
+      .catch(_error => {
+        setError(
+          getAPIErrorOrDefault(
+            _error,
+            'There was an error retrieving your billing activity.'
+          )
+        );
+        setLoading(false);
+      });
+  }, []);
 
   React.useEffect(() => {
-    const defaultDateCutoff = getCutoffFromDateRange(
-      new Date().toISOString(),
-      defaultDateRange
-    );
+    const defaultDateCutoff = getCutoffFromDateRange(defaultDateRange);
     makeRequest(defaultDateCutoff);
   }, [makeRequest]);
 
@@ -239,16 +240,23 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
   );
   const handleTransactionDateChange = React.useCallback(
     (item: Item<DateRange>) => {
-      const dateCutoff = getCutoffFromDateRange(
-        new Date().toISOString(),
-        item.value
-      );
-
       setSelectedTransactionDate(item.value);
-      // @todo: Only make this request if we need to.
+
+      const dateCutoff = getCutoffFromDateRange(item.value);
+
+      // If the data we already have falls within the selected date range,
+      // no need to request more data.
+      if (
+        isAfter(dateCutoff, earliestInvoiceDate) &&
+        isAfter(dateCutoff, earliestPaymentDate)
+      ) {
+        return;
+      }
+
       makeRequest(dateCutoff);
+      // @todo: Only make this request if we need to.
     },
-    [makeRequest]
+    [makeRequest, earliestInvoiceDate, earliestPaymentDate]
   );
 
   // Values for <Select />  components.
@@ -341,10 +349,7 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
           ? thisBillingItem.type === selectedTransactionType
           : true;
 
-      const dateCutoff = getCutoffFromDateRange(
-        moment.utc().format(),
-        selectedTransactionDate
-      );
+      const dateCutoff = getCutoffFromDateRange(selectedTransactionDate);
 
       const matchesDate = moment
         .utc(thisBillingItem.date)
@@ -491,10 +496,10 @@ export const paymentToActivityFeedItem = (
 };
 
 export const getCutoffFromDateRange = (
-  currentDatetime: string,
-  range: DateRange
+  range: DateRange,
+  currentDatetime?: string
 ) => {
-  const date = moment.utc(currentDatetime);
+  const date = currentDatetime ? moment.utc(currentDatetime) : moment.utc();
 
   let outputDate: moment.Moment;
   switch (range) {

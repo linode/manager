@@ -185,22 +185,22 @@ describe('paymentToActivityFeedItem', () => {
   describe('getCutoffFromDateRange', () => {
     it('returns the datetime of the range relative to given date', () => {
       const testDate = '2020-01-01T00:00:00';
-      expect(getCutoffFromDateRange(testDate, '30 Days')).toBe(
+      expect(getCutoffFromDateRange('30 Days', testDate)).toBe(
         '2019-12-02 00:00:00'
       );
-      expect(getCutoffFromDateRange(testDate, '60 Days')).toBe(
+      expect(getCutoffFromDateRange('60 Days', testDate)).toBe(
         '2019-11-02 00:00:00'
       );
-      expect(getCutoffFromDateRange(testDate, '90 Days')).toBe(
+      expect(getCutoffFromDateRange('90 Days', testDate)).toBe(
         '2019-10-03 00:00:00'
       );
-      expect(getCutoffFromDateRange(testDate, '6 Months')).toBe(
+      expect(getCutoffFromDateRange('6 Months', testDate)).toBe(
         '2019-07-01 00:00:00'
       );
-      expect(getCutoffFromDateRange(testDate, '12 Months')).toBe(
+      expect(getCutoffFromDateRange('12 Months', testDate)).toBe(
         '2019-01-01 00:00:00'
       );
-      expect(getCutoffFromDateRange(testDate, 'All Time')).toBe(
+      expect(getCutoffFromDateRange('All Time', testDate)).toBe(
         '1970-01-01 00:00:00'
       );
     });
