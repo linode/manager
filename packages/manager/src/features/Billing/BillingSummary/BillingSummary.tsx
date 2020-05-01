@@ -10,6 +10,7 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
+import Currency from 'src/components/Currency';
 import IconTextLink from 'src/components/IconTextLink';
 
 import PaymentDrawer from '../BillingPanels/PaymentDrawer';
@@ -94,6 +95,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up('md')]: {
       paddingBottom: 0
     }
+  },
+  infoIcon: {
+    padding: `0px ${theme.spacing(1) + 2}px`,
+    top: -2
   }
 }));
 
@@ -124,7 +129,9 @@ export const BillingSummary: React.FC<Props> = props => {
 
   const classes = useStyles();
 
-  const calculatedBalance = uninvoicedBalance + balance;
+  // If balance is < 0 we apply it to the univoiced balance, otherwise only apply uninvoiced so a past due amount is not included in calculation.
+  const calculatedBalance =
+    balance < 0 ? uninvoicedBalance + balance : uninvoicedBalance;
 
   const hasCredit = calculatedBalance < 0;
 
@@ -146,7 +153,7 @@ export const BillingSummary: React.FC<Props> = props => {
             Past Due Amount
           </Typography>
           <Typography className={classes.unpaidBalance} component="h2">
-            ${pastDueAmount.toFixed(2)}
+            <Currency quantity={pastDueAmount} />
           </Typography>
           <Typography className={classes.text}>
             Please make a payment immediately to avoid service disruption.
@@ -222,13 +229,13 @@ export const BillingSummary: React.FC<Props> = props => {
               </Grid>
               <Grid item>
                 <Typography className={classes.field}>
-                  ${uninvoicedBalance.toFixed(2)}
+                  <Currency quantity={uninvoicedBalance} />
                 </Typography>
               </Grid>
             </Grid>
             {promotion && (
               <Grid item container justify="space-between" alignItems="center">
-                <Grid item>
+                <Grid item xs={8}>
                   <Typography className={classes.label}>
                     Promotion {promotion.summary}
                     <Tooltip
@@ -237,7 +244,7 @@ export const BillingSummary: React.FC<Props> = props => {
                       leaveTouchDelay={5000}
                       placement={'bottom'}
                     >
-                      <IconButton>
+                      <IconButton className={classes.infoIcon}>
                         <Info />
                       </IconButton>
                     </Tooltip>
@@ -245,7 +252,14 @@ export const BillingSummary: React.FC<Props> = props => {
                 </Grid>
                 <Grid item>
                   <Typography className={classes.field}>
-                    {`-($${promotion.this_month_credit_remaining})`}
+                    -
+                    <Currency
+                      quantity={parseInt(
+                        promotion.this_month_credit_remaining,
+                        10
+                      )}
+                      wrapInParentheses
+                    />
                   </Typography>
                 </Grid>
               </Grid>
@@ -260,9 +274,11 @@ export const BillingSummary: React.FC<Props> = props => {
               <Grid item>
                 <Typography className={classes.field}>
                   {/* Only display balance if less than 0, otherwise display 0. Balance, if a positive integer, is instead applied as past due. */}
-                  {balance < 0
-                    ? `-($${Math.abs(balance).toFixed(2)})`
-                    : `$0.00`}
+                  {balance < 0 ? (
+                    `-${(<Currency quantity={balance} wrapInParentheses />)}`
+                  ) : (
+                    <Currency quantity={0} />
+                  )}
                 </Typography>
               </Grid>
             </Grid>
@@ -273,16 +289,17 @@ export const BillingSummary: React.FC<Props> = props => {
               justify="space-between"
             >
               <Grid item>
-                <Typography className={classes.label}>
-                  {/* If there is credit left over post-calculation, change the label to Credit */}
-                  {hasCredit && Math.abs(calculatedBalance) > 0
-                    ? 'Credit*'
-                    : 'Balance*'}
-                </Typography>
+                <Typography className={classes.label}>Balance*</Typography>
               </Grid>
               <Grid item>
                 <Typography className={classes.field}>
-                  ${totalBalance.toFixed(2)}
+                  {/* If there is credit left over post-calculation, display as negative in parens */}
+                  <Currency
+                    quantity={totalBalance}
+                    wrapInParentheses={
+                      hasCredit && Math.abs(calculatedBalance) > 0
+                    }
+                  />
                 </Typography>
               </Grid>
             </Grid>
