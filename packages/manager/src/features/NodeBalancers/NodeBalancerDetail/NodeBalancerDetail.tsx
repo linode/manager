@@ -4,32 +4,26 @@ import {
 } from '@linode/api-v4/lib/nodebalancers';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { any, last, pathOr } from 'ramda';
+import { last, pathOr } from 'ramda';
 import * as React from 'react';
-import {
-  matchPath,
-  Redirect,
-  Route,
-  RouteComponentProps,
-  Switch
-} from 'react-router-dom';
+import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
-import AppBar from 'src/components/core/AppBar';
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Tab from 'src/components/core/Tab';
-import Tabs from 'src/components/core/Tabs';
+import TabPanel from 'src/components/core/ReachTabPanel';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
+import TabLinkList from 'src/components/TabLinkList';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import { convertForAria } from 'src/components/TabLink/TabLink';
 import withLoadingAndError, {
   LoadingAndErrorHandlers,
   LoadingAndErrorState
@@ -146,12 +140,6 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
     clearInterval(this.pollInterval);
   }
 
-  handleTabChange = (_: React.ChangeEvent<HTMLDivElement>, value: number) => {
-    const { history } = this.props;
-    const routeName = this.tabs[value].routeNames[0];
-    history.push(`${routeName}`);
-  };
-
   updateLabel = (label: string) => {
     const { nodeBalancer } = this.state;
     const {
@@ -246,18 +234,16 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
 
   tabs = [
     {
-      routeNames: [`${this.props.match.url}/summary`],
+      routeName: `${this.props.match.url}/summary`,
       title: 'Summary'
     },
     {
-      routeNames: [
-        `${this.props.match.url}/configurations`,
-        `${this.props.match.url}/configurations/:configId`
-      ],
+      //TODO need to look into configId addition here
+      routeName: `${this.props.match.url}/configurations`,
       title: 'Configurations'
     },
     {
-      routeNames: [`${this.props.match.url}/settings`],
+      routeName: `${this.props.match.url}/settings`,
       title: 'Settings'
     }
   ];
@@ -265,12 +251,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   render() {
     const matches = (pathName: string) =>
       Boolean(matchPath(this.props.location.pathname, { path: pathName }));
-    const {
-      match: { path, url },
-      error,
-      loading,
-      location
-    } = this.props;
+    const { error, loading, location } = this.props;
     const { nodeBalancer } = this.state;
 
     /** Loading State */
@@ -302,9 +283,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
       updateTags: this.updateTags
     };
 
-    const findTabIndex = this.tabs.findIndex(tab =>
-      any(matches)(tab.routeNames)
-    );
+    const findTabIndex = this.tabs.findIndex(tab => matches(tab.routeName));
 
     return (
       <NodeBalancerProvider value={p}>
@@ -331,32 +310,11 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
             </Grid>
           </Grid>
           {errorMap.none && <Notice error text={errorMap.none} />}
-          <AppBar position="static" color="default" role="tablist">
-            <Tabs
-              value={findTabIndex === -1 ? 0 : findTabIndex}
-              onChange={this.handleTabChange}
-              indicatorColor="primary"
-              textColor="primary"
-              variant="scrollable"
-              scrollButtons="on"
-            >
-              {this.tabs.map(tab => (
-                <Tab
-                  key={tab.title}
-                  role="tab"
-                  id={`tab-${convertForAria(tab.title)}`}
-                  aria-controls={`tabpanel-${convertForAria(tab.title)}`}
-                  label={tab.title}
-                  data-qa-tab={tab.title}
-                />
-              ))}
-            </Tabs>
-          </AppBar>
-          <Switch>
-            <Route
-              exact
-              path={`${path}/summary`}
-              render={() => (
+          <Tabs defaultIndex={findTabIndex}>
+            <TabLinkList tabs={this.tabs} />
+
+            <TabPanels>
+              <TabPanel>
                 <NodeBalancerSummary
                   nodeBalancer={nodeBalancer}
                   errorResponses={pathOr(
@@ -365,12 +323,17 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
                     this.props
                   )}
                 />
-              )}
-            />
-            <Route
-              exact
-              path={`${path}/settings`}
-              render={() => (
+              </TabPanel>
+
+              <TabPanel>
+                <NodeBalancerConfigurations
+                  nodeBalancerLabel={nodeBalancer.label}
+                  nodeBalancerRegion={nodeBalancer.region}
+                />
+              </TabPanel>
+
+              <TabPanel>
+                {' '}
                 <NodeBalancerSettings
                   nodeBalancerId={nodeBalancer.id}
                   nodeBalancerLabel={nodeBalancer.label}
@@ -378,30 +341,9 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
                     nodeBalancer.client_conn_throttle
                   }
                 />
-              )}
-            />
-            <Route
-              exact
-              path={`${path}/configurations`}
-              render={() => (
-                <NodeBalancerConfigurations
-                  nodeBalancerLabel={nodeBalancer.label}
-                  nodeBalancerRegion={nodeBalancer.region}
-                />
-              )}
-            />
-            <Route
-              path={`${path}/configurations/:configId`}
-              render={() => (
-                <NodeBalancerConfigurations
-                  nodeBalancerLabel={nodeBalancer.label}
-                  nodeBalancerRegion={nodeBalancer.region}
-                />
-              )}
-            />
-            {/* 404 */}
-            <Redirect to={`${url}/summary`} />
-          </Switch>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
         </React.Fragment>
       </NodeBalancerProvider>
     );
