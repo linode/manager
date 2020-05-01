@@ -419,16 +419,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       cancel_account: 'Can cancel the entire account'
     };
     return (
-      <Grid
-        item
-        key={perm}
-        xs={12}
-        sm={6}
-        className="py0"
-        id="tabpanel-userPermissions"
-        role="tabpanel"
-        aria-labelledby="tab-userPermissions"
-      >
+      <Grid item key={perm} xs={12} sm={6} className="py0">
         <FormControlLabel
           className={classes.globalRow}
           label={permDescriptionMap[perm]}

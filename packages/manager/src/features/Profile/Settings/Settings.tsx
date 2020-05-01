@@ -49,12 +49,7 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
     const { classes, status } = this.props;
 
     return (
-      <Paper
-        className={classes.root}
-        id="tabpanel-settings"
-        role="tabpanel"
-        aria-labelledby="tab-settings"
-      >
+      <Paper className={classes.root}>
         <DocumentTitleSegment segment="Settings" />
         <Typography variant="h2" className={classes.title}>
           Notifications
@@ -110,14 +105,8 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
   status: path(['data', 'email_notifications'], state.__resources.profile)
 });
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced = compose<CombinedProps, {}>(
-  styled,
-  connected
-);
+const enhanced = compose<CombinedProps, {}>(styled, connected);
 
 export default enhanced(ProfileSettings);

@@ -859,10 +859,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
   afterProtocolUpdate = (L: { [key: string]: Lens }) => () => {
     this.setState(
-      compose(
-        set(L.sslCertificateLens, ''),
-        set(L.privateKeyLens, '')
-      )
+      compose(set(L.sslCertificateLens, ''), set(L.privateKeyLens, ''))
     );
   };
 
@@ -1097,11 +1094,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     } = this.state;
 
     return (
-      <div
-        role="tabpanel"
-        id="tabpanel--configurations"
-        aria-labelledby="tab-configurations"
-      >
+      <div>
         <DocumentTitleSegment
           segment={`${nodeBalancerLabel} - Configurations`}
         />

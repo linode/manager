@@ -140,11 +140,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
     const generalError = hasErrorFor('none');
 
     return (
-      <div
-        role="tabpanel"
-        id="tabpanel-settings"
-        aria-labelledby="tab-settings"
-      >
+      <div>
         <DocumentTitleSegment segment={`${nodeBalancerLabel} - Settings`} />
         <Paper className={classes.root}>
           <Grid item xs={12}>
@@ -197,9 +193,8 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
   }
 }
 
-const controlClientConnectionThrottle = compose(
-  clamp(0, 20),
-  (value: string) => defaultNumeric(0, value)
+const controlClientConnectionThrottle = compose(clamp(0, 20), (value: string) =>
+  defaultNumeric(0, value)
 );
 
 const styled = withStyles(styles);

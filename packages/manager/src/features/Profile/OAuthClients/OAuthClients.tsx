@@ -354,11 +354,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
     // TODO Need to unify internal & external usage of 'OAuth Clients'/'OAuth Apps'.
     // Currently in the context of profile, the term 'Oauth Client(s)' is referred to as 'app' or 'OAuth Apps' for user-facing displays.
     return (
-      <div
-        id="tabpanel-oauthApps"
-        role="tabpanel"
-        aria-labelledby="tab-oauthApps"
-      >
+      <div>
         <DocumentTitleSegment segment="OAuth Apps" />
         <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
