@@ -5,14 +5,26 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import BillingActivityPanel, {
   invoiceToActivityFeedItem,
   paymentToActivityFeedItem,
-  BillingActivityPanelProps
+  BillingActivityPanelProps,
+  getCutoffFromDateRange
 } from './BillingActivityPanel';
 
 afterEach(cleanup);
 
+// Mock global Date object so Transaction Date tests are deterministic.
+global.Date.now = jest.fn(() => new Date('2020-01-02T00:00:00').getTime());
+
 jest.mock('linode-js-sdk/lib/account', () => {
-  const invoices = invoiceFactory.buildList(2);
-  const payments = paymentFactory.buildList(2);
+  const invoices = [
+    // eslint-disable-next-line
+    invoiceFactory.build({ date: '2020-01-01T00:00:00' }),
+    // eslint-disable-next-line
+    invoiceFactory.build({ date: '2019-12-01T00:00:00' })
+  ];
+  const payments = [
+    paymentFactory.build({ date: '2020-01-01T00:00:00' }),
+    paymentFactory.build({ date: '2019-12-01T00:00:00' })
+  ];
 
   return {
     getInvoices: jest.fn().mockResolvedValue({
@@ -86,6 +98,21 @@ describe('BillingActivityPanel', () => {
     });
   });
 
+  it('should filter by transaction date', async () => {
+    const { queryAllByTestId, queryByText, queryByTestId } = renderWithTheme(
+      <BillingActivityPanel {...props} />
+    );
+
+    await wait(() => {
+      const transactionDateSelect = queryAllByTestId('select')?.[1];
+      fireEvent.change(transactionDateSelect, {
+        target: { value: '30 Days' }
+      });
+      expect(queryByText('Invoice #1')).toBeFalsy();
+      expect(queryByTestId('payment-1')).toBeFalsy();
+    });
+  });
+
   it('should display "Account active since"', async () => {
     const { getByText } = renderWithTheme(<BillingActivityPanel {...props} />);
     await wait(() => {
@@ -153,5 +180,29 @@ describe('paymentToActivityFeedItem', () => {
     expect(paymentToActivityFeedItem(paymentNegative).total).toBe(-1);
     expect(paymentToActivityFeedItem(paymentZero).total).toBe(0);
     expect(paymentToActivityFeedItem(paymentPositive).total).toBe(-1);
+  });
+
+  describe('getCutoffFromDateRange', () => {
+    it('returns the datetime of the range relative to given date', () => {
+      const testDate = '2020-01-01T00:00:00';
+      expect(getCutoffFromDateRange(testDate, '30 Days')).toBe(
+        '2019-12-02 00:00:00'
+      );
+      expect(getCutoffFromDateRange(testDate, '60 Days')).toBe(
+        '2019-11-02 00:00:00'
+      );
+      expect(getCutoffFromDateRange(testDate, '90 Days')).toBe(
+        '2019-10-03 00:00:00'
+      );
+      expect(getCutoffFromDateRange(testDate, '6 Months')).toBe(
+        '2019-07-01 00:00:00'
+      );
+      expect(getCutoffFromDateRange(testDate, '12 Months')).toBe(
+        '2019-01-01 00:00:00'
+      );
+      expect(getCutoffFromDateRange(testDate, 'All Time')).toBe(
+        '1970-01-01 00:00:00'
+      );
+    });
   });
 });

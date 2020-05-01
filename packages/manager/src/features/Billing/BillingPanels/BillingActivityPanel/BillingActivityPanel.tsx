@@ -1,3 +1,4 @@
+import * as moment from 'moment';
 import {
   getInvoices,
   getPayments,
@@ -25,6 +26,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import Button from 'src/components/Button';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import { ISO_FORMAT } from 'src/constants';
 
 const useStyles = makeStyles((theme: Theme) => ({
   headerContainer: {
@@ -126,14 +128,14 @@ const transactionTypeOptions: Item<TransactionTypes>[] = [
   { label: 'All Transaction Types', value: 'all' }
 ];
 
-type DateRanges =
+type DateRange =
   | '30 Days'
   | '60 Days'
   | '90 Days'
   | '6 Months'
   | '12 Months'
   | 'All Time';
-const transactionDateOptions: Item<DateRanges>[] = [
+const transactionDateOptions: Item<DateRange>[] = [
   { label: '30 Days', value: '30 Days' },
   { label: '60 Days', value: '60 Days' },
   { label: '90 Days', value: '90 Days' },
@@ -171,7 +173,7 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
   >('all');
 
   const [selectedTransactionDate, setSelectedTransactionDate] = React.useState<
-    DateRanges
+    DateRange
   >('90 Days');
 
   React.useEffect(() => {
@@ -205,7 +207,9 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
     []
   );
   const handleTransactionDateChange = React.useCallback(
-    (item: Item<DateRanges>) => {
+    (item: Item<DateRange>) => {
+      // @todo: Should make new request?
+
       setSelectedTransactionDate(item.value);
     },
     []
@@ -295,12 +299,24 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
   );
 
   const filteredData = React.useMemo(() => {
-    return selectedTransactionType !== 'all'
-      ? combinedData.filter(
-          thisBillingItem => thisBillingItem.type === selectedTransactionType
-        )
-      : combinedData;
-  }, [selectedTransactionType, combinedData]);
+    return combinedData.filter(thisBillingItem => {
+      const matchesType =
+        selectedTransactionType !== 'all'
+          ? thisBillingItem.type === selectedTransactionType
+          : true;
+
+      const dateCutoff = getCutoffFromDateRange(
+        moment.utc().format(),
+        selectedTransactionDate
+      );
+
+      const matchesDate = moment
+        .utc(thisBillingItem.date)
+        .isAfter(moment.utc(dateCutoff));
+
+      return matchesType && matchesDate;
+    });
+  }, [selectedTransactionType, selectedTransactionDate, combinedData]);
 
   return (
     <>
@@ -436,4 +452,35 @@ export const paymentToActivityFeedItem = (
     total,
     type: 'payment'
   };
+};
+
+export const getCutoffFromDateRange = (
+  currentDatetime: string,
+  range: DateRange
+) => {
+  const date = moment.utc(currentDatetime);
+
+  let outputDate: moment.Moment;
+  switch (range) {
+    case '30 Days':
+      outputDate = date.subtract(30, 'days');
+      break;
+    case '60 Days':
+      outputDate = date.subtract(60, 'days');
+      break;
+    case '90 Days':
+      outputDate = date.subtract(90, 'days');
+      break;
+    case '6 Months':
+      outputDate = date.subtract(6, 'months');
+      break;
+    case '12 Months':
+      outputDate = date.subtract(12, 'months');
+      break;
+    default:
+      outputDate = moment('1970-01-01T00:00:00.000');
+      break;
+  }
+
+  return outputDate.format(ISO_FORMAT);
 };
