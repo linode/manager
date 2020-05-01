@@ -62,7 +62,7 @@ export const ViewRangeDrawer: React.FC<CombinedProps> = props => {
 
   const classes = useStyles();
 
-  let timer: number;
+  let timer: number = 0;
 
   React.useEffect(() => {
     setMounted(true);
@@ -71,7 +71,7 @@ export const ViewRangeDrawer: React.FC<CombinedProps> = props => {
       setMounted(false);
       clearTimeout(timer);
     };
-  });
+  }, [timer]);
 
   React.useEffect(() => {
     if (open) {
