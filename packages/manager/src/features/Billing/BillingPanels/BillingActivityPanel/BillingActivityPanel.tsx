@@ -1,17 +1,22 @@
 import {
+  getInvoiceItems,
   getInvoices,
   getPayments,
   Invoice,
+  InvoiceItem,
   Payment
 } from 'linode-js-sdk/lib/account';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
+import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -19,12 +24,12 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import TableRow, { TableRowProps } from 'src/components/TableRow';
-import { getAll } from 'src/utilities/getAll';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
+import { useAccount } from 'src/hooks/useAccount';
+import useFlags from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
-import Button from 'src/components/Button';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import { getAll } from 'src/utilities/getAll';
 
 const useStyles = makeStyles((theme: Theme) => ({
   headerContainer: {
@@ -162,6 +167,8 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
 
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<APIError[] | undefined>();
+  const [invoices, setInvoices] = React.useState<Invoice[]>([]);
+  const [payments, setPayments] = React.useState<Payment[]>([]);
   const [combinedData, setCombinedData] = React.useState<ActivityFeedItem[]>(
     []
   );
@@ -179,6 +186,9 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
 
     Promise.all([getAllInvoices(), getAllPayments()])
       .then(([invoices, payments]) => {
+        setInvoices(invoices.data);
+        setPayments(payments.data);
+
         const _combinedData: ActivityFeedItem[] = [
           ...invoices.data.map(invoiceToActivityFeedItem),
           ...payments.data.map(paymentToActivityFeedItem)
@@ -196,6 +206,53 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
         setLoading(false);
       });
   }, []);
+
+  const flags = useFlags();
+  const { account } = useAccount();
+
+  const [pdfError, setPDFError] = React.useState<string | undefined>();
+  const [isDownloadingPDF, setIsDownloadingPDF] = React.useState<boolean>(
+    false
+  );
+
+  const downloadInvoicePDF = React.useCallback(
+    (invoiceId: number) => {
+      const invoice = invoices.find(
+        thisInvoice => thisInvoice.id === invoiceId
+      );
+
+      if (!account.data || !invoice) {
+        setPDFError('There was an error generating this PDF.');
+        return;
+      }
+
+      setPDFError(undefined);
+      setIsDownloadingPDF(true);
+
+      getAll<InvoiceItem>((params, filter) =>
+        getInvoiceItems(invoiceId, params, filter)
+      )()
+        .then(response => {
+          const invoiceItems = response.data;
+          const result = printInvoice(
+            account.data!,
+            invoice,
+            invoiceItems,
+            flags.taxBanner
+          );
+          setIsDownloadingPDF(false);
+
+          if (result.status === 'error') {
+            setPDFError('There was an error generating this PDF.');
+          }
+        })
+        .catch(e => {
+          setPDFError(e);
+          setIsDownloadingPDF(false);
+        });
+    },
+    [account.data, flags.taxBanner, invoices]
+  );
 
   // Handlers for <Select /> components.
   const handleTransactionTypeChange = React.useCallback(
@@ -265,6 +322,8 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
                     {paginatedAndOrderedData.map(thisItem => (
                       <ActivityFeedItem
                         key={`${thisItem.type}-${thisItem.id}`}
+                        downloadPDF={downloadInvoicePDF}
+                        isDownloadingPDF={isDownloadingPDF}
                         {...thisItem}
                       />
                     ))}
@@ -290,7 +349,9 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
       classes.totalColumn,
       classes.pdfDownloadColumn,
       loading,
-      error
+      error,
+      downloadInvoicePDF,
+      isDownloadingPDF
     ]
   );
 
@@ -355,16 +416,38 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
 // =============================================================================
 // <ActivityFeedItem />
 // =============================================================================
-export const ActivityFeedItem: React.FC<ActivityFeedItem> = React.memo(
+interface ActivityFeedItemProps extends ActivityFeedItem {
+  downloadPDF: (id: number) => void;
+  isDownloadingPDF: boolean;
+}
+
+export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
   props => {
     const classes = useStyles();
 
-    const { date, label, total, id, type } = props;
+    const {
+      date,
+      label,
+      total,
+      id,
+      type,
+      downloadPDF,
+      isDownloadingPDF
+    } = props;
 
     const rowProps: TableRowProps = {};
-    if (type === 'invoice') {
+    if (type === 'invoice' && !isDownloadingPDF) {
       rowProps.rowLink = `/account/billing/invoices/${id}`;
     }
+
+    const handleClick = React.useCallback(
+      (e: React.MouseEvent) => {
+        e.stopPropagation();
+        e.preventDefault();
+        downloadPDF(id);
+      },
+      [downloadPDF, id]
+    );
 
     return (
       <TableRow {...rowProps} data-testid={`${type}-${id}`}>
@@ -377,7 +460,9 @@ export const ActivityFeedItem: React.FC<ActivityFeedItem> = React.memo(
         </TableCell>
         {/* @todo icon */}
         <TableCell className={classes.pdfDownloadColumn}>
-          <button className={classes.pdfDownloadButton}>View PDF</button>
+          <button className={classes.pdfDownloadButton} onClick={handleClick}>
+            Download PDF
+          </button>
         </TableCell>
       </TableRow>
     );
