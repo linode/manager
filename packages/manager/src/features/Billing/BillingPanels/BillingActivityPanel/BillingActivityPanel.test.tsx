@@ -62,7 +62,7 @@ describe('BillingActivityPanel', () => {
     });
   });
 
-  it.only('should filter by item type', async () => {
+  it('should filter by item type', async () => {
     const { queryAllByTestId, queryByText, queryByTestId } = renderWithTheme(
       <BillingActivityPanel {...props} />
     );
