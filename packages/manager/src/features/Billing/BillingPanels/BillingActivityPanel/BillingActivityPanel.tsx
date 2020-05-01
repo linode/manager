@@ -1,18 +1,21 @@
-import * as moment from 'moment';
 import {
   getInvoices,
   getPayments,
   Invoice,
   Payment
 } from 'linode-js-sdk/lib/account';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { APIError } from 'linode-js-sdk/lib/types';
+import * as moment from 'moment';
 import * as React from 'react';
+import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -20,13 +23,10 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import TableRow, { TableRowProps } from 'src/components/TableRow';
-import { getAll } from 'src/utilities/getAll';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { ISO_FORMAT } from 'src/constants';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
-import Button from 'src/components/Button';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { ISO_FORMAT } from 'src/constants';
+import { getAll } from 'src/utilities/getAll';
 
 const useStyles = makeStyles((theme: Theme) => ({
   headerContainer: {
@@ -144,6 +144,8 @@ const transactionDateOptions: Item<DateRange>[] = [
   { label: 'All Time', value: 'All Time' }
 ];
 
+const defaultDateRange: DateRange = '6 Months';
+
 // =============================================================================
 // <BillingActivityPanel />
 // =============================================================================
@@ -174,30 +176,59 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
 
   const [selectedTransactionDate, setSelectedTransactionDate] = React.useState<
     DateRange
-  >('90 Days');
+  >(defaultDateRange);
+
+  const makeRequest = React.useCallback(
+    (endDate?: string, startDate?: string) => {
+      // @todo: Extract and test filter generation.
+      const filter: any = {
+        '+order_by': 'date',
+        '+order': 'desc'
+      };
+
+      const dateFilter = {};
+      if (endDate) {
+        dateFilter['+gte'] = endDate;
+      }
+      if (startDate) {
+        dateFilter['+lte'] = startDate;
+      }
+
+      if (Object.keys(dateFilter).length > 0) {
+        filter.date = dateFilter;
+      }
+
+      setLoading(true);
+
+      Promise.all([getAllInvoices({}, filter), getAllPayments({}, filter)])
+        .then(([invoices, payments]) => {
+          const _combinedData: ActivityFeedItem[] = [
+            ...invoices.data.map(invoiceToActivityFeedItem),
+            ...payments.data.map(paymentToActivityFeedItem)
+          ];
+          setCombinedData(_combinedData);
+          setLoading(false);
+        })
+        .catch(_error => {
+          setError(
+            getAPIErrorOrDefault(
+              _error,
+              'There was an error retrieving your billing activity.'
+            )
+          );
+          setLoading(false);
+        });
+    },
+    []
+  );
 
   React.useEffect(() => {
-    setLoading(true);
-
-    Promise.all([getAllInvoices(), getAllPayments()])
-      .then(([invoices, payments]) => {
-        const _combinedData: ActivityFeedItem[] = [
-          ...invoices.data.map(invoiceToActivityFeedItem),
-          ...payments.data.map(paymentToActivityFeedItem)
-        ];
-        setCombinedData(_combinedData);
-        setLoading(false);
-      })
-      .catch(_error => {
-        setError(
-          getAPIErrorOrDefault(
-            _error,
-            'There was an error retrieving your billing activity.'
-          )
-        );
-        setLoading(false);
-      });
-  }, []);
+    const defaultDateCutoff = getCutoffFromDateRange(
+      new Date().toISOString(),
+      defaultDateRange
+    );
+    makeRequest(defaultDateCutoff);
+  }, [makeRequest]);
 
   // Handlers for <Select /> components.
   const handleTransactionTypeChange = React.useCallback(
@@ -208,11 +239,16 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
   );
   const handleTransactionDateChange = React.useCallback(
     (item: Item<DateRange>) => {
-      // @todo: Should make new request?
+      const dateCutoff = getCutoffFromDateRange(
+        new Date().toISOString(),
+        item.value
+      );
 
       setSelectedTransactionDate(item.value);
+      // @todo: Only make this request if we need to.
+      makeRequest(dateCutoff);
     },
-    []
+    [makeRequest]
   );
 
   // Values for <Select />  components.
