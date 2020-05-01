@@ -42,7 +42,7 @@ describe('BillingActivityPanel', () => {
   it('renders the header and appropriate rows', async () => {
     const { getByText } = renderWithTheme(<BillingActivityPanel {...props} />);
     await wait(() => {
-      getByText('Activity');
+      getByText('Billing & Payment History');
       getByText('Description');
       getByText('Date');
       getByText('Amount');
@@ -116,9 +116,9 @@ describe('paymentToActivityFeedItem', () => {
     expect(paymentToActivityFeedItem(payment0).label).toBe('Payment');
   });
 
-  it('sets label as "Credit" if usd < 0 ', () => {
+  it('sets label as "Refund to Card" if usd < 0 ', () => {
     const payment = paymentFactory.build({ usd: -1 });
-    expect(paymentToActivityFeedItem(payment).label).toBe('Credit');
+    expect(paymentToActivityFeedItem(payment).label).toBe('Refund to Card');
   });
 
   it('sets total as -usd', () => {
