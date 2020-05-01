@@ -275,7 +275,7 @@ export const BillingSummary: React.FC<Props> = props => {
                 <Typography className={classes.field}>
                   {/* Only display balance if less than 0, otherwise display 0. Balance, if a positive integer, is instead applied as past due. */}
                   {balance < 0 ? (
-                    `-${(<Currency quantity={balance} wrapInParentheses />)}`
+                    <Currency quantity={balance} wrapInParentheses />
                   ) : (
                     <Currency quantity={0} />
                   )}
