@@ -55,6 +55,7 @@ interface Props extends EditableRecordFields, EditableDomainFields {
   open: boolean;
   onClose: () => void;
   domainId: number;
+  domain: string;
   mode: 'create' | 'edit';
   records: DomainRecord[];
   updateRecords: () => void;
@@ -100,15 +101,14 @@ interface State {
 
 type CombinedProps = Props & DomainActionsProps;
 
-/* tslint:disable-next-line */
-interface _TextFieldProps {
+interface AdjustedTextFieldProps {
   label: string;
   field: keyof EditableRecordFields | keyof EditableDomainFields;
   min?: number;
   max?: number;
 }
 
-interface NumberFieldProps extends _TextFieldProps {
+interface NumberFieldProps extends AdjustedTextFieldProps {
   defaultValue?: number;
 }
 
@@ -177,7 +177,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     this.updateField('axfr_ips')(axfr_ips);
   };
 
-  TextField = ({ label, field }: _TextFieldProps) => (
+  TextField = ({ label, field }: AdjustedTextFieldProps) => (
     <TextField
       label={label}
       errorText={getAPIErrorsFor(
@@ -462,7 +462,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   };
 
   onRecordCreate = () => {
-    const { records, type } = this.props;
+    const { records, domain, type } = this.props;
 
     /** Appease TS ensuring we won't use it during Record create. */
     if (type === 'master' || type === 'slave') {
@@ -470,10 +470,13 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     }
 
     this.setState({ submitting: true, errors: undefined });
-    const data = {
+    const _data = {
       type,
       ...this.filterDataByType(this.state.fields, type)
     };
+
+    // Expand @ to the Domain
+    const data = resolveAlias(_data, domain);
 
     /**
      * Validation
@@ -500,7 +503,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   };
 
   onRecordEdit = () => {
-    const { type, id, domainId } = this.props;
+    const { type, id, domain, domainId } = this.props;
     const fields = this.state.fields as EditableRecordFields;
 
     /** Appease TS ensuring we won't use it during Record create. */
@@ -510,9 +513,12 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
 
     this.setState({ submitting: true, errors: undefined });
 
-    const data = {
+    const _data = {
       ...this.filterDataByType(fields, type)
     };
+
+    // Replace a single @ with a reference to the Domain
+    const data = resolveAlias(_data, domain);
 
     updateDomainRecord(domainId, id, data)
       .then(this.handleRecordSubmissionSuccess)
@@ -759,6 +765,17 @@ const typeMap = {
   PTR: 'PTR',
   SRV: 'SRV',
   TXT: 'TXT'
+};
+
+export const resolveAlias = (data: Record<string, any>, domain: string) => {
+  // Replace a single @ with a reference to the Domain
+  const clone = { ...data };
+  for (const [key, value] of Object.entries(clone)) {
+    if (typeof value === 'string') {
+      clone[key] = value.replace(/\@/, domain);
+    }
+  }
+  return clone;
 };
 
 const enhanced = compose<CombinedProps, Props>(withDomainActions);

@@ -800,6 +800,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         </ConfirmationDialog>
         <Drawer
           open={drawer.open}
+          domain={this.props.domain.domain}
           domainId={this.props.domain.id}
           onClose={this.resetDrawer}
           mode={drawer.mode}
