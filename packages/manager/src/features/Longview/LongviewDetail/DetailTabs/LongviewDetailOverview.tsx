@@ -1,7 +1,6 @@
 import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -47,7 +46,7 @@ interface Props {
   listeningPortsData: LongviewPortsResponse;
 }
 
-export type CombinedProps = RouteComponentProps<{ id: string }> & Props;
+export type CombinedProps = Props;
 
 export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -86,12 +85,7 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      <Grid
-        container
-        id="tabpanel-overview"
-        role="tabpanel"
-        aria-labelledby="tab-overview"
-      >
+      <Grid container>
         <Grid item xs={12}>
           <Paper className={classes.paperSection}>
             <Grid

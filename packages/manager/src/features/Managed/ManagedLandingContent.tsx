@@ -5,22 +5,17 @@ import {
   ManagedCredential
 } from 'linode-js-sdk/lib/managed';
 import * as React from 'react';
-import {
-  matchPath,
-  Redirect,
-  Route,
-  RouteComponentProps,
-  Switch
-} from 'react-router-dom';
+import { matchPath, RouteComponentProps } from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';
-import AppBar from 'src/components/core/AppBar';
+
 import Box from 'src/components/core/Box';
-import Tab from 'src/components/core/Tab';
-import Tabs from 'src/components/core/Tabs';
+import TabPanel from 'src/components/core/ReachTabPanel';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
+import TabLinkList from 'src/components/TabLinkList';
 import DocumentationButton from 'src/components/DocumentationButton';
 import Grid from 'src/components/Grid';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import TabLink from 'src/components/TabLink';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
@@ -87,15 +82,6 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
       )
     : undefined;
 
-  const handleTabChange = (
-    event: React.ChangeEvent<HTMLDivElement>,
-    value: number
-  ) => {
-    const { history } = props;
-    const routeName = tabs[value].routeName;
-    history.push(`${routeName}`);
-  };
-
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
@@ -124,38 +110,12 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
           </Grid>
         </Grid>
       </Box>
-      <AppBar position="static" color="default" role="tablist">
-        <Tabs
-          value={tabs.findIndex(tab => matches(tab.routeName))}
-          onChange={handleTabChange}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="scrollable"
-          scrollButtons="on"
-        >
-          {tabs.map(tab => (
-            <Tab
-              key={tab.title}
-              data-qa-tab={tab.title}
-              component={React.forwardRef((forwardedProps, ref) => (
-                <TabLink
-                  to={tab.routeName}
-                  title={tab.title}
-                  {...forwardedProps}
-                  ref={ref}
-                />
-              ))}
-            />
-          ))}
-        </Tabs>
-      </AppBar>
-      <React.Suspense fallback={<SuspenseLoader />}>
-        <Switch>
-          <Route
-            exact
-            strict
-            path={`${props.match.path}/monitors`}
-            render={() => (
+      <Tabs defaultIndex={tabs.findIndex(tab => matches(tab.routeName))}>
+        <TabLinkList tabs={tabs} />
+
+        <React.Suspense fallback={<SuspenseLoader />}>
+          <TabPanels>
+            <TabPanel>
               <Monitors
                 credentials={credentials.data}
                 loading={
@@ -167,32 +127,20 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
                   credentials.error || contacts.error || undefined
                 }
               />
-            )}
-          />
-          <Route
-            exact
-            strict
-            path={`${props.match.path}/ssh-access`}
-            component={SSHAccess}
-          />
-          <Route
-            exact
-            strict
-            path={`${props.match.path}/credentials`}
-            render={() => (
+            </TabPanel>
+
+            <TabPanel>
+              <SSHAccess />
+            </TabPanel>
+            <TabPanel>
               <Credentials
                 loading={credentials.loading && credentials.lastUpdated === 0}
                 error={credentialsError}
                 credentials={credentials.data}
                 update={credentials.update}
               />
-            )}
-          />
-          <Route
-            exact
-            strict
-            path={`${props.match.path}/contacts`}
-            render={() => (
+            </TabPanel>
+            <TabPanel>
               <Contacts
                 contacts={contacts.data}
                 loading={contacts.loading && contacts.lastUpdated === 0}
@@ -201,11 +149,10 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
                 transformData={contacts.transformData}
                 update={contacts.update}
               />
-            )}
-          />
-          <Redirect to={`${props.match.path}/monitors`} />
-        </Switch>
-      </React.Suspense>
+            </TabPanel>
+          </TabPanels>
+        </React.Suspense>
+      </Tabs>
     </React.Fragment>
   );
 };

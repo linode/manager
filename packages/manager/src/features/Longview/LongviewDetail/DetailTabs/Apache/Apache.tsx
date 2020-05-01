@@ -87,13 +87,7 @@ export const Apache: React.FC<Props> = props => {
   }
 
   return (
-    <Grid
-      container
-      id="tabpanel-apache"
-      role="tabpanel"
-      aria-labelledby="tab-apache"
-      direction="column"
-    >
+    <Grid container direction="column">
       <DocumentTitleSegment segment={'Apache'} />
       <Grid item xs={12}>
         <Box
