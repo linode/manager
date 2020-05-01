@@ -28,6 +28,8 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
+import { ProviderOptions, providers } from '../AuthenticationSettings/shared';
+
 type ClassNames =
   | 'root'
   | 'title'
@@ -89,6 +91,7 @@ interface State {
   authorizedKeys: string[];
   authorizedKeysCount: number;
   authType: TPAProvider;
+  provider: ProviderOptions;
 }
 
 type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
@@ -101,7 +104,8 @@ class LishSettings extends React.Component<CombinedProps, State> {
     authorizedKeysCount: this.props.authorizedKeys
       ? this.props.authorizedKeys.length
       : 1,
-    authType: this.props.authType
+    authType: this.props.authType,
+    provider: providers[0].name
   };
 
   render() {
@@ -114,6 +118,13 @@ class LishSettings extends React.Component<CombinedProps, State> {
       errors,
       authType
     } = this.state;
+
+    const thirdPartyEnabled = this.props.authType !== 'password';
+
+    const displayName =
+      providers.find(thisProvider => thisProvider.name === this.props.authType)
+        ?.displayName || '';
+
     const hasErrorFor = getAPIErrorFor(
       {
         lish_auth_method: 'authentication method',
@@ -162,6 +173,12 @@ class LishSettings extends React.Component<CombinedProps, State> {
             LISH
           </Typography>
           {success && <Notice success text={success} />}
+          {thirdPartyEnabled && (
+            <Notice warning>
+              Third-Party Authentication via {displayName} is enabled on your
+              account.
+            </Notice>
+          )}
           {authorizedKeysError && <Notice error text={authorizedKeysError} />}
           {generalError && <Notice error text={generalError} />}
           <Typography className={classes.intro}>
