@@ -55,6 +55,9 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       this.props.requestRegions()
     ];
 
+    // Start events polling
+    startEventsInterval();
+
     try {
       await Promise.all(dataFetchingPromises);
       this.props.markAppAsDoneLoading();
@@ -70,7 +73,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
      * set redux state to what's in local storage
      * or expire the tokens if the expiry time is in the past
      *
-     * if nothing exist in local storage, we get shot off to login
+     * if nothing exists in local storage, we get shot off to login
      */
     initSession();
 
@@ -82,7 +85,6 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       this.setState({ showChildren: true });
 
       this.makeInitialRequests();
-      startEventsInterval();
     }
   }
 
@@ -98,7 +100,6 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       !this.state.showChildren
     ) {
       this.makeInitialRequests();
-      startEventsInterval();
 
       return this.setState({ showChildren: true });
     }
