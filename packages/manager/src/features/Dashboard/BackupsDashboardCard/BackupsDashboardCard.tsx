@@ -3,6 +3,7 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -12,6 +13,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
+import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import DashboardCard from '../DashboardCard';
 
 type ClassNames =
@@ -79,10 +81,16 @@ export const BackupsDashboardCard: React.FC<CombinedProps> = props => {
     openBackupDrawer
   } = props;
 
+  const { _loading } = useReduxLoad(['linodes']);
+
   const restricted = isRestrictedUser();
 
   if (restricted || (accountBackups && !linodesWithoutBackups)) {
     return null;
+  }
+
+  if (_loading) {
+    return <CircleProgress />;
   }
 
   return (
@@ -124,9 +132,11 @@ export const BackupsDashboardCard: React.FC<CombinedProps> = props => {
       {Boolean(linodesWithoutBackups) && (
         <div
           onClick={openBackupDrawer}
+          onKeyPress={openBackupDrawer}
           data-qa-backup-existing
           className={classes.ctaLink}
           role="button"
+          tabIndex={0}
         >
           <Paper
             className={classNames({
