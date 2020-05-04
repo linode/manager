@@ -124,9 +124,6 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
     setCVV('');
   };
 
-  // const { accountData } = props;
-  // const { expiry, last_four } = accountData.credit_card;
-
   const hasErrorFor = getAPIErrorFor(
     {
       card_number: 'card number',
@@ -236,6 +233,6 @@ const creditCardField = (props: CreditCardFormProps) => {
   );
 };
 
-const enhanced = compose<CombinedProps, {}>(accountContainer());
+const enhanced = compose<CombinedProps, Props>(accountContainer());
 
-export default enhanced(UpdateCreditCardDrawer) as React.ComponentType<{}>;
+export default enhanced(UpdateCreditCardDrawer);
