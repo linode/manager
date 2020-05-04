@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IndicatorProps } from 'react-select/lib/components/indicators';
+import { IndicatorProps } from 'react-select';
 import CircularProgress from 'src/components/core/CircularProgress';
 import {
   createStyles,

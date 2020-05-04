@@ -82,7 +82,7 @@ type CombinedProps = StyleProps &
 
 interface HelperFunctions {
   getDataAtPage: (page: number, filter?: any, isSorting?: boolean) => any;
-  getNext: (e?: any) => void;
+  getNext: () => void;
 }
 
 export type StateProps = HelperFunctions & State;
@@ -149,7 +149,11 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
       isSorting: boolean = false
     ) => {
       const { currentUser, category, request, stackScriptGrants } = this.props;
-      this.setState({ gettingMoreStackScripts: true, isSorting });
+      this.setState({
+        gettingMoreStackScripts: true,
+        isSorting,
+        currentPage: page
+      });
 
       const filteredUser = category === 'linode' ? 'linode' : currentUser;
 
@@ -228,7 +232,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
         });
     };
 
-    getNext = (e?: any) => {
+    getNext = () => {
       if (!this.mounted) {
         return;
       }
