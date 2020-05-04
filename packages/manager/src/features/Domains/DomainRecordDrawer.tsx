@@ -223,13 +223,13 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   TargetField = ({ label }: { label: string }) => {
     const { domain } = this.props;
     const value = this.state.fields['target'];
-    const hasAliasToResolve = value === '@';
+    const hasAliasToResolve = value.indexOf('@') >= 0;
     return (
       <this.TextField
         field="target"
         label={label}
         placeholder={'hostname or @ for root'}
-        helperText={hasAliasToResolve ? resolve(value, domain) : value}
+        helperText={hasAliasToResolve ? resolve(value, domain) : undefined}
       />
     );
   };
