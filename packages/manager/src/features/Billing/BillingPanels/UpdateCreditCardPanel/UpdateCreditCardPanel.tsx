@@ -22,6 +22,7 @@ import TextField from 'src/components/TextField';
 import accountContainer, {
   Props as AccountContainerProps
 } from 'src/containers/account.container';
+import { cleanCVV } from 'src/features/Billing/billingUtils';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
@@ -108,12 +109,8 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
   };
 
   handleCVVChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // All characters except numbers
-    const regex = /(([\D]))/;
-
-    // Prevents more than 4 characters from being submitted
-    const cvv = e.target.value.slice(0, 4);
-    this.setState({ cvv: cvv.replace(regex, '') });
+    const cvv = cleanCVV(e.target.value);
+    this.setState({ cvv });
   };
 
   submitForm = () => {

@@ -1,5 +1,6 @@
 import { KubernetesCluster } from 'linode-js-sdk/lib/kubernetes';
 import { LinodeType } from 'linode-js-sdk/lib/linodes';
+import { pluralize } from 'src/utilities/pluralize';
 import { ExtendedCluster, ExtendedPoolNode, PoolNodeWithPrice } from './types';
 
 export const nodeWarning = `We recommend at least 3 nodes in each pool. Fewer nodes may affect availability.`;
@@ -96,3 +97,12 @@ export const getTotalNodesInCluster = (pools: PoolNodeWithPrice[]): number =>
   pools.reduce((accum, thisPool) => {
     return accum + thisPool.count;
   }, 0);
+
+export const getDescriptionForCluster = (cluster: ExtendedCluster) => {
+  const nodes = getTotalNodesInCluster(cluster.node_pools);
+  return `${pluralize('node', 'nodes', nodes)}, ${pluralize(
+    'CPU core',
+    'CPU cores',
+    cluster.totalCPU
+  )}, ${cluster.totalMemory / 1024}GB RAM`;
+};
