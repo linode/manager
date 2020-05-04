@@ -65,14 +65,19 @@ interface Props {
 type CombinedProps = Props;
 
 export const TabLinkList: React.FC<CombinedProps> = props => {
-  const { tabs, index } = props;
+  const { tabs } = props;
 
   const classes = useStyles();
 
   return (
     <TabList className={classes.tabList}>
       {tabs.map((tab, _index) => (
-        <Tab className={classes.tab} key={index} as={Link} to={tab.routeName}>
+        <Tab
+          className={classes.tab}
+          key={`tab-${_index}`}
+          as={Link}
+          to={tab.routeName}
+        >
           {tab.title}
         </Tab>
       ))}
