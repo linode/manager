@@ -5,27 +5,22 @@ import {
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import {
-  matchPath,
-  Redirect,
-  Route,
-  RouteComponentProps,
-  Switch
-} from 'react-router-dom';
+import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import Breadcrumb from 'src/components/Breadcrumb';
-import AppBar from 'src/components/core/AppBar';
+
 import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Tab from 'src/components/core/Tab';
-import Tabs from 'src/components/core/Tabs';
+import TabPanel from 'src/components/core/ReachTabPanel';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
+import TabLinkList from 'src/components/TabLinkList';
 import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import PromotionalOfferCard from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import TabLink from 'src/components/TabLink';
 import useFlags from 'src/hooks/useFlags';
 import { ApplicationState } from 'src/store';
 import { getAllBucketsFromAllClusters } from 'src/store/bucket/bucket.requests';
@@ -62,14 +57,6 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
     }
   ];
 
-  const handleTabChange = (
-    _: React.ChangeEvent<HTMLDivElement>,
-    value: number
-  ) => {
-    const routeName = tabs[value].routeName;
-    props.history.push(`${routeName}`);
-  };
-
   React.useEffect(() => {
     const {
       bucketsLastUpdated,
@@ -102,7 +89,6 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
     }
   }, [props.isRestrictedUser]);
 
-  const url = props.match.url;
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
@@ -126,61 +112,29 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
         />
         <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/" />
       </Box>
-      <AppBar position="static" color="default" role="tablist">
-        <Tabs
-          value={tabs.findIndex(tab => matches(tab.routeName))}
-          onChange={handleTabChange}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="scrollable"
-          scrollButtons="on"
-        >
-          {tabs.map(tab => (
-            <Tab
-              key={tab.title}
-              data-qa-tab={tab.title}
-              component={React.forwardRef((forwardedProps, ref) => (
-                <TabLink
-                  to={tab.routeName}
-                  title={tab.title}
-                  {...forwardedProps}
-                  ref={ref}
-                />
-              ))}
-            />
-          ))}
-        </Tabs>
-      </AppBar>
-      {objPromotionalOffers.map(promotionalOffer => (
-        <PromotionalOfferCard
-          key={promotionalOffer.name}
-          {...promotionalOffer}
-          fullWidth
-          className={classes.promo}
-        />
-      ))}
-      <React.Suspense fallback={<SuspenseLoader />}>
-        <Switch>
-          <Route
-            exact
-            strict
-            path={`${url}/buckets`}
-            render={() => (
+      <Tabs defaultIndex={tabs.findIndex(tab => matches(tab.routeName))}>
+        <TabLinkList tabs={tabs} />
+
+        {objPromotionalOffers.map(promotionalOffer => (
+          <PromotionalOfferCard
+            key={promotionalOffer.name}
+            {...promotionalOffer}
+            fullWidth
+            className={classes.promo}
+          />
+        ))}
+        <React.Suspense fallback={<SuspenseLoader />}>
+          <TabPanels>
+            <TabPanel>
               <BucketLanding isRestrictedUser={props.isRestrictedUser} />
-            )}
-          />
-          <Route
-            exact
-            strict
-            path={`${url}/access-keys`}
-            render={() => (
+            </TabPanel>
+            <TabPanel>
               <AccessKeyLanding isRestrictedUser={props.isRestrictedUser} />
-            )}
-          />
-          <Redirect to={`${url}/buckets`} />
-        </Switch>
-      </React.Suspense>
-      <BucketDrawer isRestrictedUser={props.isRestrictedUser} />
+            </TabPanel>
+          </TabPanels>
+        </React.Suspense>
+        <BucketDrawer isRestrictedUser={props.isRestrictedUser} />
+      </Tabs>
     </React.Fragment>
   );
 };
