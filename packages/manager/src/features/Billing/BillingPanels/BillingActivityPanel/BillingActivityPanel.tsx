@@ -173,14 +173,7 @@ export const BillingActivityPanel: React.FC<{}> = () => {
   >(defaultDateRange);
 
   const makeRequest = React.useCallback((endDate?: string) => {
-    const filter: any = {
-      '+order_by': 'date',
-      '+order': 'desc'
-    };
-
-    if (endDate) {
-      filter.date = { '+gte': moment.utc(endDate).format(ISO_FORMAT) };
-    }
+    const filter = makeFilter(endDate);
 
     setLoading(true);
 
@@ -337,10 +330,7 @@ export const BillingActivityPanel: React.FC<{}> = () => {
           : true;
 
       const dateCutoff = getCutoffFromDateRange(selectedTransactionDate);
-
-      const matchesDate = moment
-        .utc(thisBillingItem.date)
-        .isAfter(moment.utc(dateCutoff));
+      const matchesDate = isAfter(thisBillingItem.date, dateCutoff);
 
       return matchesType && matchesDate;
     });
@@ -428,13 +418,8 @@ const getAllPayments = getAll<Payment>(getPayments);
 export const invoiceToActivityFeedItem = (
   invoice: Invoice
 ): ActivityFeedItem => {
-  const { id, label, date, total } = invoice;
-
   return {
-    id,
-    label,
-    date,
-    total,
+    ...invoice,
     type: 'invoice'
   };
 };
@@ -489,4 +474,17 @@ export const getCutoffFromDateRange = (
   }
 
   return outputDate.format(ISO_FORMAT);
+};
+
+export const makeFilter = (endDate?: string) => {
+  const filter: any = {
+    '+order_by': 'date',
+    '+order': 'desc'
+  };
+
+  if (endDate) {
+    filter.date = { '+gte': moment.utc(endDate).format(ISO_FORMAT) };
+  }
+
+  return filter;
 };

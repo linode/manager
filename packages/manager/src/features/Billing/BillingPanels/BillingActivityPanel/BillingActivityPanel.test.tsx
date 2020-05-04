@@ -5,7 +5,8 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import BillingActivityPanel, {
   invoiceToActivityFeedItem,
   paymentToActivityFeedItem,
-  getCutoffFromDateRange
+  getCutoffFromDateRange,
+  makeFilter
 } from './BillingActivityPanel';
 
 afterEach(cleanup);
@@ -166,6 +167,23 @@ describe('paymentToActivityFeedItem', () => {
       expect(getCutoffFromDateRange('All Time', testDate)).toBe(
         '1970-01-01 00:00:00'
       );
+    });
+  });
+
+  describe('makeFilter', () => {
+    const endDate = '2020-01-01T00:00:00';
+    it('always includes conditions to order by date desc', () => {
+      expect(makeFilter()).toHaveProperty('+order_by', 'date');
+      expect(makeFilter()).toHaveProperty('+order', 'desc');
+      expect(makeFilter(endDate)).toHaveProperty('+order_by', 'date');
+      expect(makeFilter(endDate)).toHaveProperty('+order', 'desc');
+    });
+
+    it('includes a date filter only if given an endDate', () => {
+      expect(makeFilter()).not.toHaveProperty('date');
+      expect(makeFilter(endDate)).toHaveProperty('date', {
+        '+gte': '2020-01-01 00:00:00'
+      });
     });
   });
 });
