@@ -10,6 +10,7 @@ import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 /* TODO will be refactoring enhanced select to be an abstraction.
 Styles added in this file and the below imports will be utilized for the abstraction. */
 import DropdownIndicator from './components/DropdownIndicator';
+import Input from './components/Input';
 import LoadingIndicator from './components/LoadingIndicator';
 import MenuList from './components/MenuList';
 import MultiValueLabel from './components/MultiValueLabel';
@@ -57,7 +58,8 @@ const _components = {
   MenuList,
   Option,
   DropdownIndicator,
-  LoadingIndicator
+  LoadingIndicator,
+  Input
 };
 
 type CombinedProps = WithStyles<ClassNames> & BaseSelectProps & CreatableProps;
@@ -171,7 +173,7 @@ class Select extends React.PureComponent<CombinedProps, {}> {
       <BaseSelect
         {...restOfProps}
         // If isClearable hasn't been supplied, default to true
-        isClearable={isClearable === undefined ? true : isClearable}
+        isClearable={isClearable ?? true}
         isSearchable
         blurInputOnSelect={blurInputOnSelect}
         isLoading={isLoading}
