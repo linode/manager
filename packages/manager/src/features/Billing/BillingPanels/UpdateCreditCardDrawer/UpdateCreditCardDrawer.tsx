@@ -1,15 +1,14 @@
 import { saveCreditCard } from 'linode-js-sdk/lib/account';
 import { APIError } from 'linode-js-sdk/lib/types';
-import { range, take, takeLast } from 'ramda';
+import { take, takeLast } from 'ramda';
 import * as React from 'react';
-import NumberFormat from 'react-number-format';
+import NumberFormat, { NumberFormatProps } from 'react-number-format';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
-import NativeSelect from 'src/components/NativeSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import accountContainer, {
@@ -17,7 +16,6 @@ import accountContainer, {
 } from 'src/containers/account.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -62,26 +60,16 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [success, setSuccess] = React.useState<boolean>();
   const [card_number, set_card_number] = React.useState<string>('');
-  const [expiry_date] = React.useState<string>('');
-  const [expiry_month, set_expiry_month] = React.useState<number>(1);
-  const [expiry_year, set_expiry_year] = React.useState<number>(currentYear);
+  const [expiry_date, set_expiry_date] = React.useState<string>('');
   const [cvv, setCVV] = React.useState<string>('');
 
   const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     set_card_number(e.target.value ? take(19, e.target.value) : '');
   };
 
-  const HandleExpiryDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const date = e.target.value;
-    console.log(date);
-  };
-
-  const handleExpiryMonthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    set_expiry_month(+e.target.value);
-  };
-
-  const handleExpiryYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    set_expiry_year(+e.target.value);
+  const handleExpiryDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const expiry_date = e.target.value;
+    set_expiry_date(expiry_date);
   };
 
   const handleCVVChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,6 +84,11 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
   const submitForm = () => {
     setSubmitting(true);
     setErrors(undefined);
+
+    // MM/YYYY
+    const _date = expiry_date.match(/([0-2][0-9])\/?([2][0-9]{3})+/);
+    const expiry_month = _date ? +_date[1] : -1;
+    const expiry_year = _date ? +_date?.[2] : -1;
 
     saveCreditCard({ card_number, expiry_month, expiry_year, cvv })
       .then(() => {
@@ -112,8 +105,7 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
           credit_card
         });
         set_card_number('');
-        set_expiry_month(1);
-        set_expiry_year(currentYear);
+        set_expiry_date(1 + '/' + currentYear);
         setCVV('');
         setSubmitting(false);
         setSuccess(true);
@@ -127,38 +119,14 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
   const resetForm = () => {
     set_card_number('');
     setErrors(undefined);
-    set_expiry_month(1);
-    set_expiry_year(currentYear);
+    set_expiry_date('');
     setSuccess(undefined);
     setCVV('');
   };
 
-  const creditCardField = (props: any) => {
-    const { inputRef, onChange, ...other } = props;
-
-    return (
-      <NumberFormat
-        {...other}
-        getInputRef={inputRef}
-        onValueChange={values => {
-          onChange({
-            target: {
-              value: values.value
-            }
-          });
-        }}
-        format="#### #### #### #######"
-      />
-    );
-  };
-
-  const { accountData } = props;
-
-  if (!accountData) {
-    return null;
-  } // Temporary; remove when refactoring to a drawer.
-
+  // const { accountData } = props;
   // const { expiry, last_four } = accountData.credit_card;
+
   const hasErrorFor = getAPIErrorFor(
     {
       card_number: 'card number',
@@ -170,39 +138,16 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
   );
   const generalError = hasErrorFor('none');
 
-  const yearMenuItems = range(currentYear, currentYear + 20).map((v: any) => {
-    return { label: v, value: v };
-  });
-
-  const monthMenuItems = range(1, 13).map((v: any) => {
-    const label = String(v).padStart(2, '0');
-    return { label, value: v };
-  });
-
   return (
-    <Drawer title="Edit Credit Card" open={open} onClose={onClose}>
+    <Drawer
+      title="Edit Credit Card"
+      open={open}
+      onClose={() => {
+        resetForm();
+        onClose();
+      }}
+    >
       <Grid container>
-        {/* {last_four && (
-          <Grid item xs={12}>
-            <div className={classes.currentccContainer}>
-              <Typography variant="h2" className={classes.currentCCTitle}>
-                Current Credit Card
-              </Typography>
-              <Grid container>
-                <Grid item>
-                  <Typography>
-                    Exp Date:&nbsp;
-                    {expiry}
-                    {isCreditCardExpired(expiry) && (
-                      <span className={classes.expired}>{` Expired`}</span>
-                    )}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </div>
-            <Divider />
-          </Grid>
-        )} */}
         <Grid item xs={12}>
           <div className={classes.newccContainer}>
             {generalError && (
@@ -218,7 +163,6 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
             <Grid container>
               <Grid item xs={12}>
                 <TextField
-                  // required
                   label="Credit Card Number"
                   value={card_number}
                   onChange={handleCardNumberChange}
@@ -231,38 +175,15 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
               </Grid>
               <Grid item className={classes.fullWidthMobile}>
                 <TextField
-                  // required
                   label="Expiration Date"
                   value={expiry_date}
-                  onChange={HandleExpiryDateChange}
+                  onChange={handleExpiryDateChange}
                   errorText={hasErrorFor('expiry_date')}
-                  // InputProps={{
-                  //   inputComponent: expiryDate
-                  // }}
-                  placeholder={'MM / YYYY'}
+                  placeholder={'MM/YYYY'}
                 />
               </Grid>
-              {/* <Grid item className={classes.fullWidthMobile}>
-                <NativeSelect
-                  label="Expiration Month"
-                  onChange={handleExpiryMonthChange}
-                  errorText={hasErrorFor('expiry_month')}
-                  value={expiry_month}
-                  options={monthMenuItems}
-                />
-              </Grid>
-              <Grid item className={classes.fullWidthMobile}>
-                <NativeSelect
-                  label="Expiration Year"
-                  onChange={handleExpiryYearChange}
-                  errorText={hasErrorFor('expiry_year')}
-                  value={expiry_year}
-                  options={yearMenuItems}
-                />
-              </Grid> */}
               <Grid item className={classes.fullWidthMobile}>
                 <TextField
-                  // required
                   label="CVV"
                   value={cvv}
                   onChange={handleCVVChange}
@@ -277,11 +198,41 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
         <Button buttonType="primary" onClick={submitForm} loading={submitting}>
           Save
         </Button>
-        <Button buttonType="cancel" onClick={onClose}>
+        <Button
+          buttonType="cancel"
+          onClick={() => {
+            resetForm();
+            onClose();
+          }}
+        >
           Cancel
         </Button>
       </ActionsPanel>
     </Drawer>
+  );
+};
+
+export interface CreditCardFormProps extends NumberFormatProps {
+  inputRef: React.Ref<any>;
+  onChange: any;
+}
+
+const creditCardField = (props: CreditCardFormProps) => {
+  const { inputRef, onChange, ...other } = props;
+
+  return (
+    <NumberFormat
+      {...other}
+      getInputRef={inputRef}
+      onValueChange={values => {
+        onChange({
+          target: {
+            value: values.value
+          }
+        });
+      }}
+      format="#### #### #### #######"
+    />
   );
 };
 
