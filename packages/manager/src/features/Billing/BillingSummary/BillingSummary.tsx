@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ActivePromotion } from 'linode-js-sdk/lib/account/types';
 import CreditCard from 'src/assets/icons/credit-card.svg';
 import Info from 'src/assets/icons/info.svg';
-import Invoice from 'src/assets/icons/invoice.svg';
+import InvoiceIcon from 'src/assets/icons/invoice.svg';
 // import GiftBox from 'src/assets/icons/gift-box.svg';
 import Grid from 'src/components/core/Grid';
 import IconButton from 'src/components/core/IconButton';
@@ -94,6 +94,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: 0,
     [theme.breakpoints.up('md')]: {
       paddingBottom: 0
+    },
+    '&:hover': {
+      '& svg': {
+        color: `${theme.palette.primary.main} !important`
+      }
     }
   },
   infoIcon: {
@@ -108,10 +113,17 @@ interface Props {
   uninvoicedBalance: number;
   promotionAmount?: number;
   balance: number;
+  disabled?: boolean;
 }
 
 export const BillingSummary: React.FC<Props> = props => {
-  const { promotion, goToInvoice, uninvoicedBalance, balance } = props;
+  const {
+    promotion,
+    goToInvoice,
+    uninvoicedBalance,
+    balance,
+    disabled
+  } = props;
 
   const [paymentDrawerOpen, setPaymentDrawerOpen] = React.useState<boolean>(
     false
@@ -190,11 +202,12 @@ export const BillingSummary: React.FC<Props> = props => {
                 className={classes.iconButton}
               />
               <IconTextLink
-                SideIcon={Invoice}
-                text="View invoice"
-                title="View invoice"
+                SideIcon={InvoiceIcon}
+                text="View last invoice"
+                title="View last invoice"
                 onClick={goToInvoice!}
                 className={classes.iconButton}
+                disabled={disabled}
               />
             </div>
           </Grid>
@@ -289,7 +302,9 @@ export const BillingSummary: React.FC<Props> = props => {
               justify="space-between"
             >
               <Grid item>
-                <Typography className={classes.label}>Balance*</Typography>
+                <Typography className={classes.label}>
+                  Next Cycle Estimated Balance*
+                </Typography>
               </Grid>
               <Grid item>
                 <Typography className={classes.field}>
