@@ -33,6 +33,7 @@ interface Props {
   username: string;
   twoFactorConfirmed: boolean;
   onSuccess: (scratchCode: string) => void;
+  onCancel: () => void;
   toggleDialog: () => void;
 }
 
@@ -118,12 +119,6 @@ export class EnableTwoFactorForm extends React.Component<CombinedProps, State> {
       });
   };
 
-  onCancel = () => {
-    // @todo should this mirror the behavior of toggling off TFA
-    // in TwoFactor.tsx?
-    this.setState({ token: '', errors: undefined });
-  };
-
   render() {
     const { classes, loading, secret, twoFactorConfirmed } = this.props;
     const { errors, submitting, token } = this.state;
@@ -156,7 +151,7 @@ export class EnableTwoFactorForm extends React.Component<CombinedProps, State> {
           submitting={submitting}
           twoFactorConfirmed={twoFactorConfirmed}
           handleChange={this.handleTokenInputChange}
-          onCancel={this.onCancel}
+          onCancel={this.props.onCancel}
           onSubmit={this.onSubmit}
           updateFor={[token, tokenError, submitting, classes]}
         />

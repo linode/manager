@@ -327,6 +327,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
                         username={username}
                         loading={loading}
                         onSuccess={this.handleEnableSuccess}
+                        onCancel={this.toggleHidden}
                         twoFactorConfirmed={twoFactorConfirmed}
                         toggleDialog={toggleScratchDialog}
                       />
@@ -374,15 +375,9 @@ const mapDispatchToProps: MapDispatchToProps<
   refreshProfile: () => dispatch(requestProfile() as any)
 });
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose<CombinedProps, Props>(
-  styled,
-  connected
-)(TwoFactor);
+export default compose<CombinedProps, Props>(styled, connected)(TwoFactor);
 
 interface ToggleProps {
   toggleDisableDialog: () => void;
