@@ -53,31 +53,31 @@ export const ViewRangeDrawer: React.FC<CombinedProps> = props => {
   >(address);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [delayText, setDelayText] = React.useState<string | null>(null);
-  const [ipv6address, setIpv6Address] = React.useState<string | undefined>(
+  const [ipv6Address, setIPv6Address] = React.useState<string | undefined>(
     range
   );
   const [errors, setErrors] = React.useState<APIError[]>([]);
 
-  const [mounted, setMountedState] = React.useState<boolean>(false);
+  const [mounted, setMounted] = React.useState<boolean>(false);
 
   const classes = useStyles();
 
-  let timer: number;
+  let timer: number = 0;
 
   React.useEffect(() => {
-    setMountedState(true);
+    setMounted(true);
 
     return () => {
-      setMountedState(false);
+      setMounted(false);
       clearTimeout(timer);
     };
-  });
+  }, [timer]);
 
   React.useEffect(() => {
     if (open) {
       setRDNS(rdns);
       setCurrentAddress(currentAddress);
-      setIpv6Address(ipv6address);
+      setIPv6Address(range);
       setErrors([]);
     }
   }, [open]);
@@ -97,7 +97,7 @@ export const ViewRangeDrawer: React.FC<CombinedProps> = props => {
   };
 
   const save = () => {
-    const ipToUpdate = range ? ipv6address : address;
+    const ipToUpdate = range ? ipv6Address : address;
 
     // If the field is blank, return an error.
     if (!ipToUpdate) {
@@ -152,7 +152,7 @@ export const ViewRangeDrawer: React.FC<CombinedProps> = props => {
   };
 
   const handleChangeIPv6Address = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIpv6Address(e.target.value);
+    setIPv6Address(e.target.value);
   };
 
   const hasErrorFor = getAPIErrorsFor(errorResources, errors);
@@ -166,7 +166,7 @@ export const ViewRangeDrawer: React.FC<CombinedProps> = props => {
               placeholder="Enter an IPv6 address"
               label="Enter an IPv6 address"
               hideLabel
-              value={ipv6address || ''}
+              value={ipv6Address || ''}
               errorText={hasErrorFor('ipv6Address')}
               onChange={handleChangeIPv6Address}
               data-qa-address-name
