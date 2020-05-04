@@ -196,7 +196,7 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
     return (
       <>
         {bucketErrors && <BucketErrorDisplay bucketErrors={bucketErrors} />}
-        <RenderEmpty onClick={openBucketDrawer} />;
+        <RenderEmpty onClick={openBucketDrawer} />
       </>
     );
   }
