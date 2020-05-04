@@ -10,6 +10,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import { convertForAria } from 'src/components/TabLink/TabLink';
 
 export interface Props extends DrawerProps {
   title: string;
@@ -72,6 +73,8 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const DDrawer: React.StatelessComponent<CombinedProps> = props => {
   const { title, classes, children, wide, ...rest } = props;
 
+  const titleID = convertForAria(title);
+
   return (
     <Drawer
       anchor="right"
@@ -83,7 +86,7 @@ const DDrawer: React.StatelessComponent<CombinedProps> = props => {
       }}
       data-qa-drawer
       role="dialog"
-      aria-labelledby={title}
+      aria-labelledby={titleID}
     >
       <Grid
         container
@@ -93,7 +96,7 @@ const DDrawer: React.StatelessComponent<CombinedProps> = props => {
         updateFor={[title, classes]}
       >
         <Grid item>
-          <Typography variant="h2" data-qa-drawer-title={title}>
+          <Typography variant="h2" id={titleID} data-qa-drawer-title={title}>
             {title}
           </Typography>
         </Grid>

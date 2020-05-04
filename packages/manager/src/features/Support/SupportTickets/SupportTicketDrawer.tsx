@@ -475,7 +475,15 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
             </a>
             .
           </Typography>
-
+          <TextField
+            label="Title"
+            placeholder="Enter a title for your ticket."
+            required
+            value={summary}
+            onChange={handleSummaryInputChange}
+            errorText={summaryError}
+            data-qa-ticket-summary
+          />
           {props.hideProductSelection ? null : (
             <React.Fragment>
               <Select
@@ -508,15 +516,6 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
               )}
             </React.Fragment>
           )}
-          <TextField
-            label="Title"
-            placeholder="Enter a title for your ticket."
-            required
-            value={summary}
-            onChange={handleSummaryInputChange}
-            errorText={summaryError}
-            data-qa-ticket-summary
-          />
           <TabbedReply
             required
             error={descriptionError}
