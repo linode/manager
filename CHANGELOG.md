@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-05-04] - v1.8.0
+
+### Changed:
+- "Node Status" is now "Backend Status" on NodeBalancers list and detail view
+- Minimum payment placeholder text
+- Hide Recycle Node in the LKE Node action menu
+- Provide cluster summary information for LKE search results
+
+
+### Fixed:
+- Remove invalid credits
+- NodeBalancer Error Handling (SSL)
+- Xterm flow control errors
+- Remove stray characters in FromBackupsContent
+
 ## [2020-04-20] - v1.7.0
 
 ### Added:
