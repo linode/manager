@@ -94,8 +94,7 @@ module.exports = {
     'react/prop-types': 'off',
     'react/jsx-no-script-url': 'error',
     'react/jsx-no-useless-fragment': 'warn',
-    // A bind call or arrow function in a JSX prop will create a brand new function on every single render
-    'react/jsx-no-bind': 'warn',
+    'react/jsx-no-bind': 'off',
     'react/no-unescaped-entities': 'warn',
     // sonar
     'sonarjs/cognitive-complexity': 'off',
