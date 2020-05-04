@@ -24,10 +24,7 @@ import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import MultipleIPInput from 'src/components/MultipleIPInput';
 import Notice from 'src/components/Notice';
-import {
-  default as _TextField,
-  Props as TextFieldProps
-} from 'src/components/TextField';
+import TextField from 'src/components/TextField';
 import {
   DomainActionsProps,
   withDomainActions
@@ -46,10 +43,6 @@ import {
   isValidDomainRecord,
   transferHelperText as helperText
 } from './domainUtils';
-
-const TextField: React.StatelessComponent<TextFieldProps> = props => (
-  <_TextField {...props} />
-);
 
 interface Props extends EditableRecordFields, EditableDomainFields {
   open: boolean;
@@ -106,6 +99,7 @@ interface AdjustedTextFieldProps {
   field: keyof EditableRecordFields | keyof EditableDomainFields;
   min?: number;
   max?: number;
+  placeholder?: string;
 }
 
 interface NumberFieldProps extends AdjustedTextFieldProps {
@@ -177,7 +171,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     this.updateField('axfr_ips')(axfr_ips);
   };
 
-  TextField = ({ label, field }: AdjustedTextFieldProps) => (
+  TextField = ({ label, field, placeholder }: AdjustedTextFieldProps) => (
     <TextField
       label={label}
       errorText={getAPIErrorsFor(
@@ -191,6 +185,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
         this.updateField(field)(e.target.value)
       }
+      placeholder={placeholder}
       data-qa-target={label}
     />
   );
@@ -219,7 +214,11 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   );
 
   TargetField = ({ label }: { label: string }) => (
-    <this.TextField field="target" label={label} />
+    <this.TextField
+      field="target"
+      label={label}
+      placeholder={'hostname or @ for root'}
+    />
   );
 
   ServiceField = () => <this.TextField field="service" label="Service" />;
@@ -475,7 +474,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       ...this.filterDataByType(this.state.fields, type)
     };
 
-    // Expand @ to the Domain
+    // Expand @ to the Domain in appropriate fields
     const data = resolveAlias(_data, domain);
 
     /**
@@ -767,11 +766,12 @@ const typeMap = {
   TXT: 'TXT'
 };
 
+const fieldsToResolve = ['target'];
 export const resolveAlias = (data: Record<string, any>, domain: string) => {
   // Replace a single @ with a reference to the Domain
   const clone = { ...data };
   for (const [key, value] of Object.entries(clone)) {
-    if (typeof value === 'string') {
+    if (fieldsToResolve.includes(key) && typeof value === 'string') {
       clone[key] = value.replace(/\@/, domain);
     }
   }
