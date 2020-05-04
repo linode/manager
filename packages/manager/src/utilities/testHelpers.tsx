@@ -1,4 +1,5 @@
 import { render, RenderResult } from '@testing-library/react';
+import { mergeDeepRight } from 'ramda';
 import { ResourcePage } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { Provider } from 'react-redux';
@@ -8,7 +9,8 @@ import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-import store, { ApplicationState } from 'src/store';
+import store, { ApplicationState, defaultState } from 'src/store';
+import { DeepPartial } from 'redux';
 
 export const createPromiseLoaderResponse: <T>(
   r: T
@@ -24,7 +26,7 @@ export const createResourcePage: <T>(data: T[]) => ResourcePage<T> = data => ({
 
 interface Options {
   MemoryRouter?: MemoryRouterProps;
-  customStore?: Partial<ApplicationState>;
+  customStore?: DeepPartial<ApplicationState>;
 }
 
 /**
@@ -32,15 +34,10 @@ interface Options {
  * renderWithTheme() helper function, since the whole app is wrapped with
  * the TogglePreference component
  */
-export const baseStore = (customStore: Partial<ApplicationState> = {}) =>
-  configureStore<Partial<ApplicationState>>([thunk])({
-    preferences: {
-      data: {},
-      loading: false,
-      lastUpdated: 0
-    },
-    ...customStore
-  });
+export const baseStore = (customStore: DeepPartial<ApplicationState> = {}) =>
+  configureStore<DeepPartial<ApplicationState>>([thunk])(
+    mergeDeepRight(defaultState, customStore)
+  );
 
 export const wrapWithTheme = (ui: any, options: Options = {}) => {
   const { customStore } = options;

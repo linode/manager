@@ -155,6 +155,7 @@ const Placeholder: React.StatelessComponent<CombinedProps> = props => {
                 className={classes.button}
                 {...thisButton}
                 data-qa-placeholder-button
+                data-testid="placeholder-button"
               />
             </Grid>
           ))}

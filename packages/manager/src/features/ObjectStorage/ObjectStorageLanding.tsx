@@ -1,10 +1,5 @@
-import {
-  ObjectStorageBucket,
-  ObjectStorageCluster
-} from 'linode-js-sdk/lib/object-storage';
-import { pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps } from 'react-redux';
+import { connect } from 'react-redux';
 import {
   matchPath,
   Redirect,
@@ -13,8 +8,6 @@ import {
   Switch
 } from 'react-router-dom';
 import { compose } from 'recompose';
-import { Action } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
 import Breadcrumb from 'src/components/Breadcrumb';
 import AppBar from 'src/components/core/AppBar';
 import Box from 'src/components/core/Box';
@@ -27,12 +20,11 @@ import PromotionalOfferCard from 'src/components/PromotionalOfferCard/Promotiona
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLink from 'src/components/TabLink';
 import useFlags from 'src/hooks/useFlags';
-import { ApplicationState } from 'src/store';
-import { getAllBucketsFromAllClusters } from 'src/store/bucket/bucket.requests';
-import { BucketError } from 'src/store/bucket/types';
-import { requestClusters as _requestClusters } from 'src/store/clusters/clusters.actions';
+import useObjectStorageBuckets from 'src/hooks/useObjectStorageBuckets';
+import useObjectStorageClusters from 'src/hooks/useObjectStorageClusters';
 import { MapState } from 'src/store/types';
 import BucketDrawer from './BucketLanding/BucketDrawer';
+import useReduxLoad from 'src/hooks/useReduxLoad';
 
 const BucketLanding = React.lazy(() => import('./BucketLanding/BucketLanding'));
 const AccessKeyLanding = React.lazy(() =>
@@ -45,13 +37,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-type CombinedProps = StateProps & DispatchProps & RouteComponentProps<{}>;
+type CombinedProps = StateProps & RouteComponentProps<{}>;
 
 export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
+  useReduxLoad(['clusters']);
+
+  const { objectStorageClusters } = useObjectStorageClusters();
+  const {
+    objectStorageBuckets,
+    requestObjectStorageBuckets
+  } = useObjectStorageBuckets();
+
   const tabs = [
-    /* NB: These must correspond to the routes inside the Switch */
+    /* NB: These must correspond to the routes, inside the Switch */
     {
       title: 'Buckets',
       routeName: `${props.match.url}/buckets`
@@ -70,37 +70,38 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
     props.history.push(`${routeName}`);
   };
 
-  React.useEffect(() => {
-    const {
-      bucketsLastUpdated,
-      bucketErrors,
-      clustersLastUpdated,
-      isRestrictedUser,
-      requestAllBucketsFromAllClusters,
-      requestClusters
-    } = props;
+  const { isRestrictedUser } = props;
 
-    // Object Storage is not available for restricted users, so we avoid these
-    // requests if the user is restricted.
+  const clustersLoaded = objectStorageClusters.lastUpdated > 0;
+
+  const bucketsLoadingOrLoaded =
+    objectStorageBuckets.loading ||
+    objectStorageBuckets.lastUpdated > 0 ||
+    objectStorageBuckets.bucketErrors;
+
+  React.useEffect(() => {
+    // Object Storage is not available for restricted users.
     if (isRestrictedUser) {
       return;
     }
 
-    // Request buckets if we haven't already, or if there are errors.
-    // @todo: use useReduxLoad for this.
-    if (bucketsLastUpdated === 0 || bucketErrors.length > 0) {
-      requestAllBucketsFromAllClusters().catch(err => {
-        /** We choose to do nothing, relying on the Redux error state. */
-      });
-    }
+    // Once the OBJ Clusters have been loaded, request Buckets from each Cluster.
+    if (clustersLoaded && !bucketsLoadingOrLoaded) {
+      const clusterIds = objectStorageClusters.entities.map(
+        thisCluster => thisCluster.id
+      );
 
-    // Request clusters if we haven't already
-    if (clustersLastUpdated === 0) {
-      requestClusters().catch(err => {
+      requestObjectStorageBuckets(clusterIds).catch(() => {
         /** We choose to do nothing, relying on the Redux error state. */
       });
     }
-  }, [props.isRestrictedUser]);
+  }, [
+    isRestrictedUser,
+    clustersLoaded,
+    bucketsLoadingOrLoaded,
+    objectStorageClusters,
+    requestObjectStorageBuckets
+  ]);
 
   const url = props.match.url;
   const matches = (p: string) => {
@@ -113,6 +114,16 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
     flags.promotionalOffers ?? []
   ).filter(promotionalOffer =>
     promotionalOffer.features.includes('Object Storage')
+  );
+
+  const renderBucketLanding = React.useCallback(
+    () => <BucketLanding isRestrictedUser={props.isRestrictedUser} />,
+    [props.isRestrictedUser]
+  );
+
+  const renderAccessKeyLanding = React.useCallback(
+    () => <AccessKeyLanding isRestrictedUser={props.isRestrictedUser} />,
+    [props.isRestrictedUser]
   );
 
   return (
@@ -165,17 +176,13 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
             exact
             strict
             path={`${url}/buckets`}
-            render={() => (
-              <BucketLanding isRestrictedUser={props.isRestrictedUser} />
-            )}
+            render={renderBucketLanding}
           />
           <Route
             exact
             strict
             path={`${url}/access-keys`}
-            render={() => (
-              <AccessKeyLanding isRestrictedUser={props.isRestrictedUser} />
-            )}
+            render={renderAccessKeyLanding}
           />
           <Redirect to={`${url}/buckets`} />
         </Switch>
@@ -186,39 +193,15 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
 };
 
 interface StateProps {
-  bucketsLastUpdated: number;
-  clustersLastUpdated: number;
   isRestrictedUser: boolean;
-  bucketErrors: BucketError[];
 }
 
 const mapStateToProps: MapState<StateProps, {}> = state => ({
-  bucketsLastUpdated: state.__resources.buckets.lastUpdated,
-  bucketErrors: state.__resources.buckets.bucketErrors ?? [],
-  clustersLastUpdated: state.__resources.clusters.lastUpdated,
-  isRestrictedUser: pathOr(
-    true,
-    ['__resources', 'profile', 'data', 'restricted'],
-    state
-  )
+  isRestrictedUser: state.__resources.profile.data?.restricted ?? true
 });
 
-interface DispatchProps {
-  requestAllBucketsFromAllClusters: () => Promise<ObjectStorageBucket[]>;
-  requestClusters: () => Promise<ObjectStorageCluster[]>;
-}
+export const connected = connect(mapStateToProps);
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
-  dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
-) => {
-  return {
-    requestAllBucketsFromAllClusters: () =>
-      dispatch(getAllBucketsFromAllClusters()),
-    requestClusters: () => dispatch(_requestClusters())
-  };
-};
+const enhanced = compose(connected, React.memo);
 
-export const connected = connect(mapStateToProps, mapDispatchToProps);
-
-const enhanced = compose<CombinedProps, {}>(connected);
 export default enhanced(ObjectStorageLanding);

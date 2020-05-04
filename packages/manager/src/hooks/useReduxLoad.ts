@@ -21,6 +21,7 @@ import { requestNotifications } from 'src/store/notification/notification.reques
 import { requestProfile } from 'src/store/profile/profile.requests';
 import { requestRegions } from 'src/store/regions/regions.actions';
 import { getAllVolumes } from 'src/store/volume/volume.requests';
+import { requestClusters } from 'src/store/clusters/clusters.actions';
 
 interface UseReduxPreload {
   _loading: boolean;
@@ -43,7 +44,8 @@ export type ReduxEntity =
   | 'types'
   | 'events'
   | 'longview'
-  | 'firewalls';
+  | 'firewalls'
+  | 'clusters';
 
 type RequestMap = Record<ReduxEntity, any>;
 const requestMap: RequestMap = {
@@ -63,7 +65,8 @@ const requestMap: RequestMap = {
   managedIssues: requestManagedIssues,
   kubernetes: requestKubernetesClusters,
   longview: getAllLongviewClients,
-  firewalls: getAllFirewalls
+  firewalls: getAllFirewalls,
+  clusters: requestClusters
 };
 
 export const useReduxLoad = (

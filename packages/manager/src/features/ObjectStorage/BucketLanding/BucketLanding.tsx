@@ -7,12 +7,7 @@ import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
@@ -22,13 +17,11 @@ import OrderBy from 'src/components/OrderBy';
 import Placeholder from 'src/components/Placeholder';
 import TextField from 'src/components/TextField';
 import { objectStorageClusterDisplay } from 'src/constants';
-import bucketContainer, { StateProps } from 'src/containers/bucket.container';
 import bucketDrawerContainer, {
   DispatchProps
 } from 'src/containers/bucketDrawer.container';
-import bucketRequestsContainer, {
-  BucketsRequests
-} from 'src/containers/bucketRequests.container';
+import useObjectStorageBuckets from 'src/hooks/useObjectStorageBuckets';
+import useObjectStorageClusters from 'src/hooks/useObjectStorageClusters';
 import useOpenClose from 'src/hooks/useOpenClose';
 import { BucketError } from 'src/store/bucket/types';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
@@ -39,34 +32,30 @@ import {
 import CancelNotice from '../CancelNotice';
 import BucketTable from './BucketTable';
 
-type ClassNames = 'copy';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    copy: {
-      marginTop: theme.spacing(1)
-    }
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  copy: {
+    marginTop: theme.spacing(1)
+  }
+}));
 
 interface Props {
   isRestrictedUser: boolean;
 }
 
-type CombinedProps = Props &
-  StateProps &
-  DispatchProps &
-  WithStyles<ClassNames> &
-  BucketsRequests;
+export type CombinedProps = Props & DispatchProps;
 
 export const BucketLanding: React.FC<CombinedProps> = props => {
+  const { isRestrictedUser, openBucketDrawer } = props;
+
+  const classes = useStyles();
+
+  const { objectStorageClusters } = useObjectStorageClusters();
   const {
-    classes,
-    bucketsData,
-    bucketsLoading,
-    bucketErrors,
-    isRestrictedUser,
-    openBucketDrawer
-  } = props;
+    objectStorageBuckets,
+    deleteObjectStorageBucket
+  } = useObjectStorageBuckets();
+
+  const { data, loading, bucketErrors, lastUpdated } = objectStorageBuckets;
 
   const removeBucketConfirmationDialog = useOpenClose();
   const [bucketToRemove, setBucketToRemove] = React.useState<
@@ -83,8 +72,6 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
   };
 
   const removeBucket = () => {
-    const { deleteBucket } = props;
-
     // This shouldn't happen, but just in case (and to get TS to quit complaining...)
     if (!bucketToRemove) {
       return;
@@ -94,7 +81,7 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
     setIsLoading(true);
 
     const { cluster, label } = bucketToRemove;
-    deleteBucket({ cluster, label })
+    deleteObjectStorageBucket({ cluster, label })
       .then(() => {
         removeBucketConfirmationDialog.close();
         setIsLoading(false);
@@ -112,13 +99,22 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
       });
   };
 
+  const closeRemoveBucketConfirmationDialog = React.useCallback(() => {
+    removeBucketConfirmationDialog.close();
+  }, [removeBucketConfirmationDialog]);
+
+  const setConfirmBucketNameToInput = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setConfirmBucketName(e.target.value);
+    },
+    []
+  );
+
   const actions = () => (
     <ActionsPanel>
       <Button
         buttonType="cancel"
-        onClick={() => {
-          removeBucketConfirmationDialog.close();
-        }}
+        onClick={closeRemoveBucketConfirmationDialog}
         data-qa-cancel
       >
         Cancel
@@ -167,7 +163,7 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
       {/* If the user is attempting to delete their last Bucket, remind them
       that they will still be billed unless they cancel Object Storage in
       Account Settings. */}
-      {bucketsData.length === 1 && <CancelNotice className={classes.copy} />}
+      {data.length === 1 && <CancelNotice className={classes.copy} />}
       <Typography className={classes.copy}>
         To confirm deletion, type the name of the bucket (
         <b>{bucketToRemove.label}</b>) in the field below:
@@ -176,26 +172,31 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
   ) : null;
 
   if (isRestrictedUser) {
-    return <RenderEmpty onClick={openBucketDrawer} data-qa-empty-state />;
+    return <RenderEmpty onClick={openBucketDrawer} />;
   }
 
-  if (bucketsLoading) {
-    return <RenderLoading data-qa-loading-state />;
-  }
-
-  const allBucketRequestsFailed =
-    bucketErrors?.length === Object.keys(objectStorageClusterDisplay).length;
-
-  // Show a general error state if all the bucket requests failed.
-  if (allBucketRequestsFailed) {
+  // Show a general error state if there is a Cluster error.
+  if (objectStorageClusters.error) {
     return <RenderError data-qa-error-state />;
   }
 
-  if (bucketsData.length === 0) {
+  if (lastUpdated === 0 || loading) {
+    return <RenderLoading />;
+  }
+
+  const allBucketRequestsFailed =
+    bucketErrors?.length === objectStorageClusters.entities.length;
+
+  // Show a general error state if all the bucket requests failed.
+  if (allBucketRequestsFailed || objectStorageClusters.error) {
+    return <RenderError data-qa-error-state />;
+  }
+
+  if (lastUpdated > 0 && data.length === 0) {
     return (
       <>
         {bucketErrors && <BucketErrorDisplay bucketErrors={bucketErrors} />}
-        <RenderEmpty onClick={openBucketDrawer} data-qa-empty-state />;
+        <RenderEmpty onClick={openBucketDrawer} />;
       </>
     );
   }
@@ -211,7 +212,7 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
         </Grid>
         {bucketErrors && <BucketErrorDisplay bucketErrors={bucketErrors} />}
         <Grid item xs={12}>
-          <OrderBy data={bucketsData} order={'asc'} orderBy={'label'}>
+          <OrderBy data={data} order={'asc'} orderBy={'label'}>
             {({ data: orderedData, handleOrderChange, order, orderBy }) => {
               const bucketTableProps = {
                 orderBy,
@@ -226,9 +227,7 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
         </Grid>
         <ConfirmationDialog
           open={removeBucketConfirmationDialog.isOpen}
-          onClose={() => {
-            removeBucketConfirmationDialog.close();
-          }}
+          onClose={closeRemoveBucketConfirmationDialog}
           title={
             bucketToRemove ? `Delete ${bucketToRemove.label}` : 'Delete bucket'
           }
@@ -237,9 +236,7 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
         >
           {deleteBucketConfirmationMessage}
           <TextField
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setConfirmBucketName(e.target.value)
-            }
+            onChange={setConfirmBucketNameToInput}
             expand
             label="Bucket Name"
           />
@@ -250,7 +247,7 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
 };
 
 const RenderLoading: React.StatelessComponent<{}> = () => {
-  return <CircleProgress />;
+  return <CircleProgress data-testid="loading-state" />;
 };
 
 const RenderError: React.StatelessComponent<{}> = () => {
@@ -299,12 +296,8 @@ const EmptyCopy = () => (
   </>
 );
 
-const styled = withStyles(styles);
-
 const enhanced = compose<CombinedProps, Props>(
-  styled,
-  bucketContainer,
-  bucketRequestsContainer,
+  React.memo,
   bucketDrawerContainer
 );
 
@@ -319,7 +312,9 @@ const BucketErrorDisplay: React.FC<BucketErrorDisplayProps> = React.memo(
     return (
       <Banner
         regionsAffected={bucketErrors.map(
-          thisError => objectStorageClusterDisplay[thisError.clusterId]
+          thisError =>
+            objectStorageClusterDisplay[thisError.clusterId] ??
+            thisError.clusterId
         )}
       />
     );
