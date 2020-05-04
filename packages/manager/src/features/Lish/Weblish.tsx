@@ -146,7 +146,7 @@ export class Weblish extends React.Component<CombinedProps, State> {
       /*
        * data is either going to be command line strings
        * or it's going to look like {type: 'error', reason: 'thing failed'}
-       * the latter be JSON parsed and the other cannot
+       * the latter can be JSON parsed and the other cannot
        */
       try {
         data = JSON.parse(evt.data);
@@ -180,7 +180,19 @@ export class Weblish extends React.Component<CombinedProps, State> {
         retryingConnection: false,
         retryAttempts: 0
       });
-      this.terminal.write(evt.data);
+      try {
+        this.terminal.write(evt.data);
+      } catch {
+        /**
+         * We've most likely hit a data flow limit.
+         * This is fine and won't break anything. However,
+         * by reloading the page, we can bring the window back
+         * in sync with the screen session that Weblish is connecting
+         * to.
+         */
+
+        window.location.reload();
+      }
     });
 
     this.socket.addEventListener('close', () => {
