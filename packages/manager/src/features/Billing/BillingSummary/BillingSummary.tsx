@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Invoice } from 'linode-js-sdk/lib/account';
 import { ActivePromotion } from 'linode-js-sdk/lib/account/types';
 import CreditCard from 'src/assets/icons/credit-card.svg';
 import Info from 'src/assets/icons/info.svg';
@@ -109,21 +110,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   promotion?: ActivePromotion;
-  goToInvoice?: () => void;
+  invoice?: Invoice;
   uninvoicedBalance: number;
   promotionAmount?: number;
   balance: number;
-  disabled?: boolean;
 }
 
 export const BillingSummary: React.FC<Props> = props => {
-  const {
-    promotion,
-    goToInvoice,
-    uninvoicedBalance,
-    balance,
-    disabled
-  } = props;
+  const { promotion, invoice, uninvoicedBalance, balance } = props;
 
   const [paymentDrawerOpen, setPaymentDrawerOpen] = React.useState<boolean>(
     false
@@ -205,9 +199,9 @@ export const BillingSummary: React.FC<Props> = props => {
                 SideIcon={InvoiceIcon}
                 text="View last invoice"
                 title="View last invoice"
-                onClick={goToInvoice!}
+                href={`/account/billing/invoices/${invoice?.id}`}
                 className={classes.iconButton}
-                disabled={disabled}
+                disabled={!invoice}
               />
             </div>
           </Grid>

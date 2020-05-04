@@ -67,12 +67,13 @@ const styles = (theme: Theme) =>
 export interface Props {
   SideIcon: typeof SvgIcon | React.ComponentClass;
   text: string;
-  onClick: () => void;
-  active?: Boolean;
-  disabled?: Boolean;
+  onClick?: () => void;
+  active?: boolean;
+  disabled?: boolean;
   title: string;
   left?: boolean;
   className?: any;
+  href?: string;
 }
 
 type FinalProps = Props & WithStyles<CSSClasses>;
@@ -87,7 +88,8 @@ const IconTextLink: React.StatelessComponent<FinalProps> = props => {
     disabled,
     title,
     left,
-    className
+    className,
+    href
   } = props;
 
   return (
@@ -104,6 +106,7 @@ const IconTextLink: React.StatelessComponent<FinalProps> = props => {
       )}
       title={title}
       onClick={onClick}
+      href={href}
       data-qa-icon-text-link={title}
     >
       <SideIcon className={classes.icon} />
