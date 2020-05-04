@@ -100,6 +100,7 @@ interface AdjustedTextFieldProps {
   min?: number;
   max?: number;
   placeholder?: string;
+  helperText?: string;
 }
 
 interface NumberFieldProps extends AdjustedTextFieldProps {
@@ -171,7 +172,12 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     this.updateField('axfr_ips')(axfr_ips);
   };
 
-  TextField = ({ label, field, placeholder }: AdjustedTextFieldProps) => (
+  TextField = ({
+    label,
+    field,
+    helperText,
+    placeholder
+  }: AdjustedTextFieldProps) => (
     <TextField
       label={label}
       errorText={getAPIErrorsFor(
@@ -186,6 +192,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         this.updateField(field)(e.target.value)
       }
       placeholder={placeholder}
+      helperText={helperText}
       data-qa-target={label}
     />
   );
@@ -213,13 +220,19 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     <this.TextField field="name" label={label} />
   );
 
-  TargetField = ({ label }: { label: string }) => (
-    <this.TextField
-      field="target"
-      label={label}
-      placeholder={'hostname or @ for root'}
-    />
-  );
+  TargetField = ({ label }: { label: string }) => {
+    const { domain } = this.props;
+    const value = this.state.fields['target'];
+    const hasAliasToResolve = value === '@';
+    return (
+      <this.TextField
+        field="target"
+        label={label}
+        placeholder={'hostname or @ for root'}
+        helperText={hasAliasToResolve ? resolve(value, domain) : value}
+      />
+    );
+  };
 
   ServiceField = () => <this.TextField field="service" label="Service" />;
 
@@ -766,13 +779,16 @@ const typeMap = {
   TXT: 'TXT'
 };
 
+export const resolve = (value: string, domain: string) =>
+  value.replace(/\@/, domain);
+
 const fieldsToResolve = ['target'];
 export const resolveAlias = (data: Record<string, any>, domain: string) => {
   // Replace a single @ with a reference to the Domain
   const clone = { ...data };
   for (const [key, value] of Object.entries(clone)) {
     if (fieldsToResolve.includes(key) && typeof value === 'string') {
-      clone[key] = value.replace(/\@/, domain);
+      clone[key] = resolve(value, domain);
     }
   }
   return clone;
