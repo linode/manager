@@ -156,7 +156,6 @@ export class EnableTwoFactorForm extends React.Component<CombinedProps, State> {
           submitting={submitting}
           twoFactorConfirmed={twoFactorConfirmed}
           handleChange={this.handleTokenInputChange}
-          onCancel={this.onCancel}
           onSubmit={this.onSubmit}
           updateFor={[token, tokenError, submitting, classes]}
         />

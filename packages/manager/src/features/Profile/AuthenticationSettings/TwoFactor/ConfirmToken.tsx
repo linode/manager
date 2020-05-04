@@ -30,7 +30,6 @@ interface Props {
   error?: string;
   twoFactorConfirmed: boolean;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onCancel: () => void;
   onSubmit: () => void;
 }
 
@@ -44,8 +43,7 @@ const ConfirmToken: React.StatelessComponent<CombinedProps> = props => {
     handleChange,
     onSubmit,
     submitting,
-    twoFactorConfirmed,
-    onCancel
+    twoFactorConfirmed
   } = props;
 
   return (
@@ -68,9 +66,6 @@ const ConfirmToken: React.StatelessComponent<CombinedProps> = props => {
           data-qa-submit
         >
           Confirm Token
-        </Button>
-        <Button buttonType="cancel" onClick={onCancel} data-qa-cancel>
-          Cancel
         </Button>
         {twoFactorConfirmed && (
           <Notice
