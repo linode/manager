@@ -19,14 +19,6 @@ const props = {
   ...reactRouterProps
 };
 
-// const component = shallow(
-//   <BackupsDashboardCard
-//     {...props}
-//     {...reactRouterProps}
-//     accountBackups={false}
-//   />
-// );
-
 describe('Backups dashboard card', () => {
   it('should render a link to /account/settings', () => {
     const { getByTestId } = renderWithTheme(
