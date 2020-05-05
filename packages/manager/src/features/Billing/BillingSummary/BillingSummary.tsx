@@ -151,8 +151,8 @@ export const BillingSummary: React.FC<Props> = props => {
       );
 
       const mostRecentInvoice = invoicesData.filter(invoice => {
-        const d = new Date(invoice.date);
-        return d.getTime() == mostRecentDate.getTime();
+        const invoiceDate = new Date(invoice.date);
+        return invoiceDate.getTime() === mostRecentDate.getTime();
       })[0];
 
       setLatestInvoice(mostRecentInvoice);
