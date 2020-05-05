@@ -18,6 +18,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   cvvField: {
     width: 180
+  },
+  cardNumber: {
+    marginTop: theme.spacing(3),
+    fontSize: '0.8rem'
   }
 }));
 
@@ -89,42 +93,46 @@ export const CreditCard: React.FC<Props> = props => {
           </Typography>
         </Grid>
         <Grid item>
-          {hasCreditCardOnFile ? (
-            // This will rarely/never happen, best to be safe.
-            <Typography>Credit card ending with: {lastFour}</Typography>
-          ) : (
-            <Typography>No credit card on file.</Typography>
-          )}
-          {Boolean(expiry) && <Typography>Expires {expiry}</Typography>}
+          <Grid container direction="row" wrap="nowrap" alignItems="center">
+            {hasCreditCardOnFile ? (
+              <>
+                <Grid item className={classes.cardNumber}>
+                  <Typography>Card ending with: {lastFour}</Typography>
+                  {Boolean(expiry) && <Typography>Expires {expiry}</Typography>}
+                </Grid>
+                <Grid item>
+                  <TextField
+                    label="CVV:"
+                    onChange={handleCVVChange}
+                    value={cvv}
+                    type="text"
+                    placeholder={'000'}
+                    inputProps={{ id: 'paymentCVV' }}
+                    className={classes.cvvField}
+                    hasAbsoluteError
+                    noMarginTop
+                  />
+                </Grid>
+              </>
+            ) : (
+              <Typography>No credit card on file.</Typography>
+            )}
+          </Grid>
         </Grid>
-        <Grid container alignItems="flex-end" justify="flex-start">
-          <Grid item>
-            <Button
-              buttonType="primary"
-              onClick={handleOpenDialog}
-              disabled={!hasCreditCardOnFile || paymentTooLow}
-              tooltipText={
-                paymentTooLow
-                  ? `Payment amount must be at least ${minimumPayment}.`
-                  : undefined
-              }
-            >
-              Pay Now
-            </Button>
-          </Grid>
-          <Grid item>
-            <TextField
-              label="CVV:"
-              onChange={handleCVVChange}
-              value={cvv}
-              type="text"
-              placeholder={'000'}
-              inputProps={{ id: 'paymentCVV' }}
-              className={classes.cvvField}
-              hasAbsoluteError
-              noMarginTop
-            />
-          </Grid>
+
+        <Grid item>
+          <Button
+            buttonType="primary"
+            onClick={handleOpenDialog}
+            disabled={!hasCreditCardOnFile || paymentTooLow}
+            tooltipText={
+              paymentTooLow
+                ? `Payment amount must be at least ${minimumPayment}.`
+                : undefined
+            }
+          >
+            Pay Now
+          </Button>
         </Grid>
       </Grid>
       <CreditCardDialog
