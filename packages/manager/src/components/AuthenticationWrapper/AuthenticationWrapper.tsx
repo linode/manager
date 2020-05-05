@@ -39,7 +39,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
   };
 
   makeInitialRequests = async () => {
-    // When loading lish we avoid all this extra data loading
+    // When loading Lish we avoid all this extra data loading
     if (window.location?.pathname?.includes('/lish/')) {
       return;
     }
@@ -48,10 +48,10 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     const dataFetchingPromises: Promise<any>[] = [
       // Grants/what a user has permission to view
       this.props.requestAccount(),
+
       // Username and whether a user is restricted
       this.props.requestProfile(),
-      // @todo move to secondaryRequests
-      this.props.requestLinodes(),
+
       // Is a user managed
       this.props.requestSettings()
     ];
@@ -64,6 +64,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
        * likely difference will be the status of each
        * Region.
        */
+      this.props.requestLinodes(),
       this.props.requestTypes(),
       this.props.requestRegions(),
       this.props.requestNotifications()
