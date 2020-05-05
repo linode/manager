@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Invoice } from 'linode-js-sdk/lib/account';
+import { getInvoices, Invoice } from 'linode-js-sdk/lib/account';
 import { ActivePromotion } from 'linode-js-sdk/lib/account/types';
 import CreditCard from 'src/assets/icons/credit-card.svg';
 import Info from 'src/assets/icons/info.svg';
@@ -15,6 +15,7 @@ import Currency from 'src/components/Currency';
 import IconTextLink from 'src/components/IconTextLink';
 
 import PaymentDrawer from '../BillingPanels/PaymentDrawer';
+import { getAll } from 'src/utilities/getAll';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -110,18 +111,19 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   promotion?: ActivePromotion;
-  invoice?: Invoice;
   uninvoicedBalance: number;
   promotionAmount?: number;
   balance: number;
 }
 
 export const BillingSummary: React.FC<Props> = props => {
-  const { promotion, invoice, uninvoicedBalance, balance } = props;
+  const { promotion, uninvoicedBalance, balance } = props;
 
   const [paymentDrawerOpen, setPaymentDrawerOpen] = React.useState<boolean>(
     false
   );
+
+  const [invoice, setLatestInvoice] = React.useState<Invoice | undefined>();
 
   const openPaymentDrawer = React.useCallback(
     () => setPaymentDrawerOpen(true),
@@ -132,6 +134,30 @@ export const BillingSummary: React.FC<Props> = props => {
     () => setPaymentDrawerOpen(false),
     []
   );
+
+  const getAllInvoices = getAll<Invoice>(getInvoices);
+
+  React.useEffect(() => {
+    Promise.all([getAllInvoices()]).then(([invoices]) => {
+      const invoicesData = [...invoices.data];
+
+      const mostRecentDate = new Date(
+        Math.max.apply(
+          null,
+          invoicesData.map(invoice => {
+            return new Date(invoice.date);
+          })
+        )
+      );
+
+      const mostRecentInvoice = invoicesData.filter(invoice => {
+        const d = new Date(invoice.date);
+        return d.getTime() == mostRecentDate.getTime();
+      })[0];
+
+      setLatestInvoice(mostRecentInvoice);
+    });
+  }, []);
 
   const classes = useStyles();
 
