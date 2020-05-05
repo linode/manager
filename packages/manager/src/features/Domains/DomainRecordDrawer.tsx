@@ -215,21 +215,23 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     );
   };
 
-  NameField = ({ label }: { label: string }) => (
-    <this.TextField field="name" label={label} />
-  );
-
-  TargetField = ({ label }: { label: string }) => {
+  NameOrTargetField = ({
+    label,
+    field
+  }: {
+    label: string;
+    field: 'name' | 'target';
+  }) => {
     const { domain, type } = this.props;
-    const value = this.state.fields['target'];
+    const value = this.state.fields[field];
     const hasAliasToResolve =
-      value.indexOf('@') >= 0 && typesToResolve.includes(type);
+      value.indexOf('@') >= 0 && shouldResolve(type, field);
     return (
       <this.TextField
-        field="target"
+        field={field}
         label={label}
         placeholder={
-          typesToResolve.includes(type) ? 'hostname or @ for root' : undefined
+          shouldResolve(type, field) ? 'hostname or @ for root' : undefined
         }
         helperText={hasAliasToResolve ? resolve(value, domain) : undefined}
       />
@@ -632,41 +634,69 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     // },
     AAAA: {
       fields: [
-        (idx: number) => <this.NameField label="Hostname" key={idx} />,
-        (idx: number) => <this.TargetField label="IP Address" key={idx} />,
+        (idx: number) => (
+          <this.NameOrTargetField label="Hostname" field="name" key={idx} />
+        ),
+        (idx: number) => (
+          <this.NameOrTargetField label="IP Address" field="target" key={idx} />
+        ),
         (idx: number) => <this.TTLField key={idx} />
       ]
     },
     NS: {
       fields: [
-        (idx: number) => <this.TargetField label="Name Server" key={idx} />,
-        (idx: number) => <this.NameField label="Subdomain" key={idx} />,
+        (idx: number) => (
+          <this.NameOrTargetField
+            label="Name Server"
+            field="target"
+            key={idx}
+          />
+        ),
+        (idx: number) => (
+          <this.NameOrTargetField label="Subdomain" field="name" key={idx} />
+        ),
         (idx: number) => <this.TTLField key={idx} />
       ]
     },
     MX: {
       fields: [
-        (idx: number) => <this.TargetField label="Mail Server" key={idx} />,
+        (idx: number) => (
+          <this.NameOrTargetField
+            label="Mail Server"
+            field="target"
+            key={idx}
+          />
+        ),
         ,
         (idx: number) => (
           <this.PriorityField min={0} max={255} label="Preference" key={idx} />
         ),
         (idx: number) => <this.TTLField key={idx} />,
-        (idx: number) => <this.NameField label="Subdomain" key={idx} />
+        (idx: number) => (
+          <this.NameOrTargetField label="Subdomain" field="name" key={idx} />
+        )
       ]
     },
     CNAME: {
       fields: [
-        (idx: number) => <this.NameField label="Hostname" key={idx} />,
-        (idx: number) => <this.TargetField label="Alias to" key={idx} />,
+        (idx: number) => (
+          <this.NameOrTargetField label="Hostname" field="name" key={idx} />
+        ),
+        (idx: number) => (
+          <this.NameOrTargetField label="Alias to" field="target" key={idx} />
+        ),
         (idx: number) => <this.TTLField key={idx} />,
         ,
       ]
     },
     TXT: {
       fields: [
-        (idx: number) => <this.NameField label="Hostname" key={idx} />,
-        (idx: number) => <this.TargetField label="Value" key={idx} />,
+        (idx: number) => (
+          <this.NameOrTargetField label="Hostname" field="name" key={idx} />
+        ),
+        (idx: number) => (
+          <this.NameOrTargetField label="Value" field="target" key={idx} />
+        ),
         (idx: number) => <this.TTLField key={idx} />
       ]
     },
@@ -679,15 +709,21 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         ),
         (idx: number) => <this.WeightField key={idx} />,
         (idx: number) => <this.PortField key={idx} />,
-        (idx: number) => <this.TargetField label="Target" key={idx} />,
+        (idx: number) => (
+          <this.NameOrTargetField label="Target" field="target" key={idx} />
+        ),
         (idx: number) => <this.TTLField key={idx} />
       ]
     },
     CAA: {
       fields: [
-        (idx: number) => <this.NameField label="Name" key={idx} />,
+        (idx: number) => (
+          <this.NameOrTargetField label="Name" field="name" key={idx} />
+        ),
         (idx: number) => <this.TagField key={idx} />,
-        (idx: number) => <this.TargetField label="Value" key={idx} />,
+        (idx: number) => (
+          <this.NameOrTargetField label="Value" field="name" key={idx} />
+        ),
         (idx: number) => <this.TTLField key={idx} />
       ]
     }
@@ -781,12 +817,20 @@ const typeMap = {
   TXT: 'TXT'
 };
 
+export const shouldResolve = (type: string, field: string) => {
+  switch (type) {
+    case 'AAAA':
+      return field === 'name';
+    case 'CNAME':
+      return field === 'target';
+    default:
+      return false;
+  }
+};
+
 export const resolve = (value: string, domain: string) =>
   value.replace(/\@/, domain);
 
-const typesToResolve = ['CNAME'];
-
-const fieldsToResolve = ['target'];
 export const resolveAlias = (
   data: Record<string, any>,
   domain: string,
@@ -795,11 +839,7 @@ export const resolveAlias = (
   // Replace a single @ with a reference to the Domain
   const clone = { ...data };
   for (const [key, value] of Object.entries(clone)) {
-    if (
-      fieldsToResolve.includes(key) &&
-      typeof value === 'string' &&
-      typesToResolve.includes(type)
-    ) {
+    if (shouldResolve(type, key) && typeof value === 'string') {
       clone[key] = resolve(value, domain);
     }
   }
