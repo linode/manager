@@ -44,15 +44,29 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       return;
     }
 
-    // Initial Requests
+    // Initial Requests: Things we need immediately (before rendering the app)
     const dataFetchingPromises: Promise<any>[] = [
+      // Grants/what a user has permission to view
       this.props.requestAccount(),
+      // Username and whether a user is restricted
       this.props.requestProfile(),
+      // @todo move to secondaryRequests
       this.props.requestLinodes(),
-      this.props.requestNotifications(),
-      this.props.requestSettings(),
+      // Is a user managed
+      this.props.requestSettings()
+    ];
+
+    // Secondary Requests (non-app-blocking)
+    const secondaryRequests: Promise<any>[] = [
+      /**
+       * We have cached Regions data that can be used
+       * until the real data comes in; the only
+       * likely difference will be the status of each
+       * Region.
+       */
       this.props.requestTypes(),
-      this.props.requestRegions()
+      this.props.requestRegions(),
+      this.props.requestNotifications()
     ];
 
     // Start events polling
@@ -61,9 +75,11 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     try {
       await Promise.all(dataFetchingPromises);
       this.props.markAppAsDoneLoading();
+      Promise.all(secondaryRequests);
     } catch {
       /** We choose to do nothing, relying on the Redux error state. */
       this.props.markAppAsDoneLoading();
+      Promise.all(secondaryRequests);
     }
   };
 
@@ -113,6 +129,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
   render() {
     const { children } = this.props;
     const { showChildren } = this.state;
+    // eslint-disable-next-line
     return <React.Fragment>{showChildren ? children : null}</React.Fragment>;
   }
 }
