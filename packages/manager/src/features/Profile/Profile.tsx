@@ -7,6 +7,7 @@ import TabLinkList from 'src/components/TabLinkList';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import H1Header from 'src/components/H1Header';
 import SuspenseLoader from 'src/components/SuspenseLoader';
+import Props from './OAuthClients';
 
 const SSHKeys = React.lazy(() => import('./SSHKeys'));
 const Settings = React.lazy(() => import('./Settings'));

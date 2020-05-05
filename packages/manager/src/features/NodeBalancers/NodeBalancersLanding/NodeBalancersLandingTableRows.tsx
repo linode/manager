@@ -72,7 +72,7 @@ const NodeBalancersLandingTableRows: React.StatelessComponent<CombinedProps> = p
           <TableRow
             key={nodeBalancer.id}
             data-qa-nodebalancer-cell={nodeBalancer.label}
-            rowLink={`/nodebalancers/${nodeBalancer.id}`}
+            rowLink={`/nodebalancers/${nodeBalancer.id}/summary`}
             className="fade-in-table"
             aria-label={nodeBalancer.label}
           >
@@ -82,7 +82,10 @@ const NodeBalancersLandingTableRows: React.StatelessComponent<CombinedProps> = p
                   <EntityIcon variant="nodebalancer" marginTop={1} />
                 </Grid>
                 <Grid item>
-                  <Link to={`/nodebalancers/${nodeBalancer.id}`} tabIndex={0}>
+                  <Link
+                    to={`/nodebalancers/${nodeBalancer.id}/summary`}
+                    tabIndex={0}
+                  >
                     <Typography variant="h3">{nodeBalancer.label}</Typography>
                   </Link>
                 </Grid>
