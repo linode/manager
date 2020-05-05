@@ -63,7 +63,6 @@ interface Props extends EditableRecordFields, EditableDomainFields {
 interface EditableSharedFields {
   ttl_sec?: number;
 }
-
 interface EditableRecordFields extends EditableSharedFields {
   name?: string;
   port?: number;
@@ -221,14 +220,17 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   );
 
   TargetField = ({ label }: { label: string }) => {
-    const { domain } = this.props;
+    const { domain, type } = this.props;
     const value = this.state.fields['target'];
-    const hasAliasToResolve = value.indexOf('@') >= 0;
+    const hasAliasToResolve =
+      value.indexOf('@') >= 0 && typesToResolve.includes(type);
     return (
       <this.TextField
         field="target"
         label={label}
-        placeholder={'hostname or @ for root'}
+        placeholder={
+          typesToResolve.includes(type) ? 'hostname or @ for root' : undefined
+        }
         helperText={hasAliasToResolve ? resolve(value, domain) : undefined}
       />
     );
@@ -488,7 +490,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     };
 
     // Expand @ to the Domain in appropriate fields
-    const data = resolveAlias(_data, domain);
+    const data = resolveAlias(_data, domain, type);
 
     /**
      * Validation
@@ -530,7 +532,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     };
 
     // Replace a single @ with a reference to the Domain
-    const data = resolveAlias(_data, domain);
+    const data = resolveAlias(_data, domain, type);
 
     updateDomainRecord(domainId, id, data)
       .then(this.handleRecordSubmissionSuccess)
@@ -782,12 +784,22 @@ const typeMap = {
 export const resolve = (value: string, domain: string) =>
   value.replace(/\@/, domain);
 
+const typesToResolve = ['CNAME'];
+
 const fieldsToResolve = ['target'];
-export const resolveAlias = (data: Record<string, any>, domain: string) => {
+export const resolveAlias = (
+  data: Record<string, any>,
+  domain: string,
+  type: string
+) => {
   // Replace a single @ with a reference to the Domain
   const clone = { ...data };
   for (const [key, value] of Object.entries(clone)) {
-    if (fieldsToResolve.includes(key) && typeof value === 'string') {
+    if (
+      fieldsToResolve.includes(key) &&
+      typeof value === 'string' &&
+      typesToResolve.includes(type)
+    ) {
       clone[key] = resolve(value, domain);
     }
   }
