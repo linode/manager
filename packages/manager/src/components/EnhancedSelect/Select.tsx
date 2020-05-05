@@ -1,16 +1,16 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import ReactSelect from 'react-select';
+import ReactSelect, { Props as SelectProps } from 'react-select';
 import CreatableSelect, {
   Props as CreatableSelectProps
-} from 'react-select/lib/Creatable';
-import { Props as SelectProps } from 'react-select/lib/Select';
+} from 'react-select/creatable';
 import { withStyles, WithStyles } from 'src/components/core/styles';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 /* TODO will be refactoring enhanced select to be an abstraction.
 Styles added in this file and the below imports will be utilized for the abstraction. */
 import DropdownIndicator from './components/DropdownIndicator';
+import Input from './components/Input';
 import LoadingIndicator from './components/LoadingIndicator';
 import MenuList from './components/MenuList';
 import MultiValueLabel from './components/MultiValueLabel';
@@ -58,7 +58,8 @@ const _components = {
   MenuList,
   Option,
   DropdownIndicator,
-  LoadingIndicator
+  LoadingIndicator,
+  Input
 };
 
 type CombinedProps = WithStyles<ClassNames> & BaseSelectProps & CreatableProps;
@@ -172,7 +173,7 @@ class Select extends React.PureComponent<CombinedProps, {}> {
       <BaseSelect
         {...restOfProps}
         // If isClearable hasn't been supplied, default to true
-        isClearable={isClearable === undefined ? true : isClearable}
+        isClearable={isClearable ?? true}
         isSearchable
         blurInputOnSelect={blurInputOnSelect}
         isLoading={isLoading}

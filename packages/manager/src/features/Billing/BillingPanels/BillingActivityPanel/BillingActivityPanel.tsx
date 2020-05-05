@@ -1,4 +1,3 @@
-import { printPayment } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import {
   getInvoiceItems,
   getInvoices,
@@ -8,8 +7,9 @@ import {
   Payment
 } from 'linode-js-sdk/lib/account';
 import { APIError } from 'linode-js-sdk/lib/types';
+import * as moment from 'moment';
 import * as React from 'react';
-import Button from 'src/components/Button';
+import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
@@ -25,12 +25,15 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import TableRow, { TableRowProps } from 'src/components/TableRow';
-import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
+import { ISO_FORMAT } from 'src/constants';
+import {
+  printInvoice,
+  printPayment
+} from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { useAccount } from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
-import CircleProgress from 'src/components/CircleProgress';
+import { isAfter } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import formatDate from 'src/utilities/formatDate';
 import { getAll } from 'src/utilities/getAll';
 import { getTaxID } from '../RecentPaymentsPanel/RecentPaymentsPanel';
 
@@ -134,14 +137,14 @@ const transactionTypeOptions: Item<TransactionTypes>[] = [
   { label: 'All Transaction Types', value: 'all' }
 ];
 
-type DateRanges =
+type DateRange =
   | '30 Days'
   | '60 Days'
   | '90 Days'
   | '6 Months'
   | '12 Months'
   | 'All Time';
-const transactionDateOptions: Item<DateRanges>[] = [
+const transactionDateOptions: Item<DateRange>[] = [
   { label: '30 Days', value: '30 Days' },
   { label: '60 Days', value: '60 Days' },
   { label: '90 Days', value: '90 Days' },
@@ -151,24 +154,13 @@ const transactionDateOptions: Item<DateRanges>[] = [
 ];
 
 const PDFError = 'There was an error generating this PDF.';
+const defaultDateRange: DateRange = '6 Months';
 
 // =============================================================================
 // <BillingActivityPanel />
 // =============================================================================
-export interface BillingActivityPanelProps {
-  accountActiveSince?: string;
-  isRestrictedUser: boolean;
-  openCloseAccountDialog: () => void;
-}
-
-export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props => {
+export const BillingActivityPanel: React.FC<{}> = () => {
   const classes = useStyles();
-
-  const {
-    accountActiveSince,
-    isRestrictedUser,
-    openCloseAccountDialog
-  } = props;
 
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<APIError[] | undefined>();
@@ -178,21 +170,39 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
     []
   );
 
+  const [earliestInvoiceDate, setEarliestInvoiceDate] = React.useState<string>(
+    new Date().toISOString()
+  );
+  const [earliestPaymentDate, setEarliestPaymentDate] = React.useState<string>(
+    new Date().toISOString()
+  );
+
   const [selectedTransactionType, setSelectedTransactionType] = React.useState<
     TransactionTypes
   >('all');
 
   const [selectedTransactionDate, setSelectedTransactionDate] = React.useState<
-    DateRanges
-  >('90 Days');
+    DateRange
+  >(defaultDateRange);
 
-  React.useEffect(() => {
+  const makeRequest = React.useCallback((endDate?: string) => {
+    const filter = makeFilter(endDate);
+
     setLoading(true);
 
-    Promise.all([getAllInvoices(), getAllPayments()])
+    Promise.all([getAllInvoices({}, filter), getAllPayments({}, filter)])
       .then(([invoices, payments]) => {
         setInvoices(invoices.data);
         setPayments(payments.data);
+        // Keep track of earliest Invoice date for reference when the user changes date ranges.
+        if (invoices.data.length > 0) {
+          setEarliestInvoiceDate(invoices.data[invoices.data.length - 1].date);
+        }
+
+        // Keep track of earliest Payment date for reference when the user changes date ranges.
+        if (payments.data.length > 0) {
+          setEarliestPaymentDate(payments.data[payments.data.length - 1].date);
+        }
 
         const _combinedData: ActivityFeedItem[] = [
           ...invoices.data.map(invoiceToActivityFeedItem),
@@ -313,6 +323,10 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
     },
     [payments, flags.taxBanner, account.data]
   );
+  React.useEffect(() => {
+    const defaultDateCutoff = getCutoffFromDateRange(defaultDateRange);
+    makeRequest(defaultDateCutoff);
+  }, [makeRequest]);
 
   // Handlers for <Select /> components.
   const handleTransactionTypeChange = React.useCallback(
@@ -322,10 +336,23 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
     []
   );
   const handleTransactionDateChange = React.useCallback(
-    (item: Item<DateRanges>) => {
+    (item: Item<DateRange>) => {
       setSelectedTransactionDate(item.value);
+
+      const dateCutoff = getCutoffFromDateRange(item.value);
+
+      // If the data we already have falls within the selected date range,
+      // no need to request more data.
+      if (
+        isAfter(dateCutoff, earliestInvoiceDate) &&
+        isAfter(dateCutoff, earliestPaymentDate)
+      ) {
+        return;
+      }
+
+      makeRequest(dateCutoff);
     },
-    []
+    [makeRequest, earliestInvoiceDate, earliestPaymentDate]
   );
 
   // Values for <Select />  components.
@@ -433,29 +460,25 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
     ]
   );
 
+  const filteredData = React.useMemo(() => {
+    return combinedData.filter(thisBillingItem => {
+      const matchesType =
+        selectedTransactionType !== 'all'
+          ? thisBillingItem.type === selectedTransactionType
+          : true;
+
+      const dateCutoff = getCutoffFromDateRange(selectedTransactionDate);
+      const matchesDate = isAfter(thisBillingItem.date, dateCutoff);
+
+      return matchesType && matchesDate;
+    });
+  }, [selectedTransactionType, selectedTransactionDate, combinedData]);
+
   return (
     <>
       <div className={classes.headerContainer}>
         <Typography variant="h2">Billing & Payment History</Typography>
         <div className={classes.headerRight}>
-          <div className={classes.flexContainer}>
-            {accountActiveSince && (
-              <Typography variant="body1" className={classes.activeSince}>
-                Account active since{' '}
-                {formatDate(accountActiveSince, {
-                  format: 'YYYY-MM-DD'
-                })}
-              </Typography>
-            )}
-            {!isRestrictedUser && (
-              <Button
-                onClick={openCloseAccountDialog}
-                className={`${classes.cancelButton} px0`}
-              >
-                <strong>Close Account</strong>
-              </Button>
-            )}
-          </div>
           <div className={classes.flexContainer}>
             <Select
               className={classes.transactionType}
@@ -484,7 +507,7 @@ export const BillingActivityPanel: React.FC<BillingActivityPanelProps> = props =
           </div>
         </div>
       </div>
-      <OrderBy data={combinedData} orderBy={'date'} order={'desc'}>
+      <OrderBy data={filteredData} orderBy={'date'} order={'desc'}>
         {billingActivityPanel}
       </OrderBy>
     </>
@@ -538,7 +561,6 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
         <TableCell parentColumn="Amount" className={classes.totalColumn}>
           <Currency quantity={total} wrapInParentheses={total < 0} />
         </TableCell>
-        {/* @todo icon */}
         <TableCell className={classes.pdfDownloadColumn}>
           {isLoading ? (
             <CircleProgress mini />
@@ -564,16 +586,8 @@ const getAllPayments = getAll<Payment>(getPayments);
 export const invoiceToActivityFeedItem = (
   invoice: Invoice
 ): ActivityFeedItem => {
-  const { id, label, date, total } = invoice;
-
-  // Negative invoice totals are effectively credits, so replace the label.
-  const adjustedLabel = total < 0 ? label.replace('Invoice', 'Credit') : label;
-
   return {
-    id,
-    label: adjustedLabel,
-    date,
-    total,
+    ...invoice,
     type: 'invoice'
   };
 };
@@ -582,13 +596,13 @@ export const paymentToActivityFeedItem = (
   payment: Payment
 ): ActivityFeedItem => {
   const { date, id, usd } = payment;
-
-  // Negative payments are effectively credits.
+  // Refunds are issued as negative payments.
   const label = usd < 0 ? 'Refund to Card' : 'Payment';
 
-  // We always want Payments (and negative Payments, i.e. Credits) to appear as a negative number.
-  // The delineation between these two types comes from the label ("Credit" or "Payment").
-  const total = usd > 0 ? -usd : usd;
+  // Note: this is confusing.
+  // We flip the polarity here, since we display a positive payment as e.g. "-($5.00)"
+  // and a negative payment (i.e. refund) as e.g. "$5.00"
+  const total = usd <= 0 ? Math.abs(usd) : -usd;
 
   return {
     label,
@@ -597,4 +611,48 @@ export const paymentToActivityFeedItem = (
     total,
     type: 'payment'
   };
+};
+
+export const getCutoffFromDateRange = (
+  range: DateRange,
+  currentDatetime?: string
+) => {
+  const date = currentDatetime ? moment.utc(currentDatetime) : moment.utc();
+
+  let outputDate: moment.Moment;
+  switch (range) {
+    case '30 Days':
+      outputDate = date.subtract(30, 'days');
+      break;
+    case '60 Days':
+      outputDate = date.subtract(60, 'days');
+      break;
+    case '90 Days':
+      outputDate = date.subtract(90, 'days');
+      break;
+    case '6 Months':
+      outputDate = date.subtract(6, 'months');
+      break;
+    case '12 Months':
+      outputDate = date.subtract(12, 'months');
+      break;
+    default:
+      outputDate = moment.utc('1970-01-01T00:00:00.000');
+      break;
+  }
+
+  return outputDate.format(ISO_FORMAT);
+};
+
+export const makeFilter = (endDate?: string) => {
+  const filter: any = {
+    '+order_by': 'date',
+    '+order': 'desc'
+  };
+
+  if (endDate) {
+    filter.date = { '+gte': moment.utc(endDate).format(ISO_FORMAT) };
+  }
+
+  return filter;
 };

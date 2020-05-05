@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import * as React from 'react';
-import { OptionProps } from 'react-select/lib/components/Option';
+import { OptionProps } from 'react-select';
 import { Item } from 'src/components/EnhancedSelect';
 import Option from 'src/components/EnhancedSelect/components/Option';
 
@@ -24,7 +24,7 @@ interface ImageItem extends Item<string> {
   className?: string;
 }
 
-interface ImageOptionProps extends OptionProps<string> {
+interface ImageOptionProps extends OptionProps<any> {
   data: ImageItem;
 }
 
