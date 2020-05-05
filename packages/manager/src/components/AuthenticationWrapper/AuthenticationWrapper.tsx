@@ -59,20 +59,15 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     // Start events polling
     startEventsInterval();
 
-    Promise.all(dataFetchingPromises)
-      .then(() => this.props.markAppAsDoneLoading())
-      .then(() => this.makeSecondaryRequests())
-      .catch();
-
-    // try {
-    //   await Promise.all(dataFetchingPromises);
-    //   this.props.markAppAsDoneLoading();
-    //   Promise.all(secondaryRequests);
-    // } catch {
-    //   /** We choose to do nothing, relying on the Redux error state. */
-    //   this.props.markAppAsDoneLoading();
-    //   Promise.all(secondaryRequests);
-    // }
+    try {
+      await Promise.all(dataFetchingPromises);
+      this.props.markAppAsDoneLoading();
+      this.makeSecondaryRequests();
+    } catch {
+      /** We choose to do nothing, relying on the Redux error state. */
+      this.props.markAppAsDoneLoading();
+      this.makeSecondaryRequests();
+    }
   };
 
   makeSecondaryRequests = () => {
