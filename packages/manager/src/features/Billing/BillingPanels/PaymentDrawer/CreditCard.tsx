@@ -91,7 +91,7 @@ export const CreditCard: React.FC<Props> = props => {
         <Grid item>
           {hasCreditCardOnFile ? (
             // This will rarely/never happen, best to be safe.
-            <Typography>XXXX XXXX XXXX {lastFour}</Typography>
+            <Typography>Credit card ending with: {lastFour}</Typography>
           ) : (
             <Typography>No credit card on file.</Typography>
           )}
