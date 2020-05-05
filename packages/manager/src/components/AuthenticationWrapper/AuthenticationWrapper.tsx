@@ -56,32 +56,36 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       this.props.requestSettings()
     ];
 
-    // Secondary Requests (non-app-blocking)
-    const secondaryRequests: Promise<any>[] = [
-      /**
-       * We have cached Regions data that can be used
-       * until the real data comes in; the only
-       * likely difference will be the status of each
-       * Region.
-       */
-      this.props.requestLinodes(),
-      this.props.requestTypes(),
-      this.props.requestRegions(),
-      this.props.requestNotifications()
-    ];
-
     // Start events polling
     startEventsInterval();
 
-    try {
-      await Promise.all(dataFetchingPromises);
-      this.props.markAppAsDoneLoading();
-      Promise.all(secondaryRequests);
-    } catch {
-      /** We choose to do nothing, relying on the Redux error state. */
-      this.props.markAppAsDoneLoading();
-      Promise.all(secondaryRequests);
-    }
+    Promise.all(dataFetchingPromises)
+      .then(() => this.props.markAppAsDoneLoading())
+      .then(() => this.makeSecondaryRequests())
+      .catch();
+
+    // try {
+    //   await Promise.all(dataFetchingPromises);
+    //   this.props.markAppAsDoneLoading();
+    //   Promise.all(secondaryRequests);
+    // } catch {
+    //   /** We choose to do nothing, relying on the Redux error state. */
+    //   this.props.markAppAsDoneLoading();
+    //   Promise.all(secondaryRequests);
+    // }
+  };
+
+  makeSecondaryRequests = () => {
+    /**
+     * We have cached Regions data that can be used
+     * until the real data comes in; the only
+     * likely difference will be the status of each
+     * Region.
+     */
+    this.props.requestLinodes();
+    this.props.requestTypes();
+    this.props.requestRegions();
+    this.props.requestNotifications();
   };
 
   componentDidMount() {
