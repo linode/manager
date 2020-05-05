@@ -217,7 +217,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
     const { showQRCode } = this.state;
     if (!showQRCode) {
       return this.getToken()
-        .then(response => this.setState({ showQRCode: !showQRCode }))
+        .then(_ => this.setState({ showQRCode: !showQRCode }))
         .catch(err => err);
     }
     return this.setState({ showQRCode: !this.state.showQRCode });
@@ -234,6 +234,9 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
         showQRCode: true
       });
     }
+    this.setState({
+      twoFactorEnabled: false
+    });
   };
 
   render() {
@@ -390,12 +393,14 @@ class TwoFactorToggle extends React.PureComponent<ToggleProps, {}> {
   handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { twoFactorConfirmed, onChange } = this.props;
     const enabled = e.currentTarget.checked;
-    onChange(enabled);
     /**
      * only open the disable dialog if 2FA has been turned on and we're flipping the toggle off
      */
     if (!enabled && twoFactorConfirmed) {
       this.props.toggleDisableDialog();
+    } else {
+      /** Otherwise flip the toggle. If toggling on, the parent will handle the API request. */
+      onChange(enabled);
     }
   };
 
