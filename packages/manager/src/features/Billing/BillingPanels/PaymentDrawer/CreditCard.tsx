@@ -78,6 +78,7 @@ export const CreditCard: React.FC<Props> = props => {
   };
 
   const hasCreditCardOnFile = Boolean(lastFour);
+  const paymentTooLow = +usd < +minimumPayment;
 
   return (
     <>
@@ -101,8 +102,12 @@ export const CreditCard: React.FC<Props> = props => {
             <Button
               buttonType="primary"
               onClick={handleOpenDialog}
-              disabled={!hasCreditCardOnFile || +usd < +minimumPayment}
-              tooltipText={`Payment amount must be at least ${minimumPayment}.`}
+              disabled={!hasCreditCardOnFile || paymentTooLow}
+              tooltipText={
+                paymentTooLow
+                  ? `Payment amount must be at least ${minimumPayment}.`
+                  : undefined
+              }
             >
               Pay Now
             </Button>
