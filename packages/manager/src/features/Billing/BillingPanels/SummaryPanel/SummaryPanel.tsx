@@ -10,7 +10,6 @@ import withAccount, {
   Props as AccountProps
 } from 'src/containers/account.container';
 import withProfile from 'src/containers/profile.container';
-import ContactInfo from './PanelCards/ContactInformation';
 import PaymentInformation from './PanelCards/PaymentInformation';
 
 interface AccountContextProps
@@ -56,33 +55,14 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
     );
 
     return (
-      <Grid container direction="row" wrap="nowrap">
-        <Grid item xs={6}>
-          <ContactInfo
-            company={account.company}
-            firstName={account.first_name}
-            lastName={account.last_name}
-            address1={account.address_1}
-            address2={account.address_2}
-            email={account.email}
-            phone={account.phone}
-            city={account.city}
-            state={account.state}
-            zip={account.zip}
-            activeSince={account.active_since}
-            history={this.props.history}
-            taxId={account.tax_id}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <PaymentInformation
-            balance={account.balance}
-            balanceUninvoiced={account.balance_uninvoiced}
-            expiry={account.credit_card.expiry}
-            lastFour={account.credit_card.last_four}
-            promoCredit={promoCredit}
-          />
-        </Grid>
+      <Grid item xs={6}>
+        <PaymentInformation
+          balance={account.balance}
+          balanceUninvoiced={account.balance_uninvoiced}
+          expiry={account.credit_card.expiry}
+          lastFour={account.credit_card.last_four}
+          promoCredit={promoCredit}
+        />
       </Grid>
     );
   }

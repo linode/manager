@@ -41,7 +41,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  onCancel: () => void;
+  onClose: () => void;
 }
 
 interface State {
@@ -137,7 +137,7 @@ class UpdateContactInformationForm extends React.Component<
       return this.renderErrors(accountError.read || []);
     }
 
-    return account ? this.renderForm(account) : this.renderEmpty();
+    return this.renderForm(account);
   };
 
   renderLoading = () => null;
@@ -511,7 +511,7 @@ class UpdateContactInformationForm extends React.Component<
         </Button>
         <Button
           buttonType="secondary"
-          onClick={this.props.onCancel}
+          onClick={this.props.onClose}
           data-qa-reset-contact-info
         >
           Cancel
@@ -589,6 +589,7 @@ class UpdateContactInformationForm extends React.Component<
           success: 'Account information updated.',
           submitting: false
         });
+        this.props.onClose();
       })
       .catch(_ => {
         this.setState({

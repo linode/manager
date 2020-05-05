@@ -53,17 +53,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props extends Pick<RouteComponentProps, 'history'> {
-  company: string;
-  lastName: string;
-  firstName: string;
-  zip: string;
-  state: string;
-  city: string;
-  address2: string;
-  address1: string;
-  email: string;
-  phone: string;
-  taxId: string;
+  company: string | undefined;
+  lastName: string | undefined;
+  firstName: string | undefined;
+  zip: string | undefined;
+  state: string | undefined;
+  city: string | undefined;
+  address2: string | undefined;
+  address1: string | undefined;
+  email: string | undefined;
+  phone: string | undefined;
+  taxId: string | undefined;
 }
 
 type CombinedProps = Props;
@@ -94,7 +94,7 @@ const ContactInformation: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <React.Fragment>
+    <Grid item xs={6}>
       <Paper className={classes.summarySection} data-qa-contact-summary>
         <Grid container spacing={2} className={classes.grid}>
           <Grid item className={classes.switchWrapper}>
@@ -161,7 +161,7 @@ const ContactInformation: React.FC<CombinedProps> = props => {
         open={editContactDrawerOpen}
         onClose={() => setEditContactDrawerOpen(false)}
       />
-    </React.Fragment>
+    </Grid>
   );
 };
 

@@ -37,7 +37,7 @@ export const BillingContactDrawer: React.FC<CombinedProps> = props => {
       onClose={onClose}
     >
       <UpdateContactInformationForm 
-        onCancel={onClose}
+        onClose={onClose}
       />
     </Drawer>
   );

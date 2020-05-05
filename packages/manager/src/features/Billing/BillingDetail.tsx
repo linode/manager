@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -13,6 +14,10 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import BillingActivityPanel from './BillingPanels/BillingActivityPanel';
 import SummaryPanel from './BillingPanels/SummaryPanel';
 import BillingSummary from './BillingSummary';
+import ContactInfo from './BillingPanels/SummaryPanel/PanelCards/ContactInformation';
+import {
+  Props as AccountProps
+} from 'src/containers/account.container';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -27,7 +32,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-type CombinedProps = SetDocsProps & RouteComponentProps<{}>;
+interface AccountContextProps
+  extends Pick<
+    AccountProps,
+    'accountLoading' | 'accountLastUpdated' | 'accountData'
+  > {
+  _accountError?: APIError[];
+}
+
+type CombinedProps = SetDocsProps & RouteComponentProps<{}> & AccountContextProps;
 
 export const BillingDetail: React.FC<CombinedProps> = props => {
   const { account, requestAccount } = useAccount();
@@ -68,7 +81,23 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
               promotion={account?.data?.active_promotions?.[0]}
               uninvoicedBalance={account?.data?.balance_uninvoiced ?? 0}
             />
-            <SummaryPanel data-qa-summary-panel history={props.history} />
+            <Grid container direction="row" wrap="nowrap">
+              <ContactInfo
+                company={account?.data?.company}
+                firstName={account?.data?.first_name}
+                lastName={account?.data?.last_name}
+                address1={account?.data?.address_1}
+                address2={account?.data?.address_2}
+                email={account?.data?.email}
+                phone={account?.data?.phone}
+                city={account?.data?.city}
+                state={account?.data?.state}
+                zip={account?.data?.zip}
+                history={props.history}
+                taxId={account?.data?.tax_id}
+              />
+              <SummaryPanel data-qa-summary-panel history={props.history} />
+            </Grid>
             <BillingActivityPanel />
           </Grid>
         </Grid>
