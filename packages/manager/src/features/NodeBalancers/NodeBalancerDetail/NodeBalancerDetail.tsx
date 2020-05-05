@@ -238,7 +238,6 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
       title: 'Summary'
     },
     {
-      //TODO need to look into configId addition here
       routeName: `${this.props.match.url}/configurations`,
       title: 'Configurations'
     },

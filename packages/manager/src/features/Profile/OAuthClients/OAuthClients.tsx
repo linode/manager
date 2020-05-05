@@ -49,7 +49,7 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface Props extends PaginationProps<OAuthClient> {}
+export interface Props extends PaginationProps<OAuthClient> {}
 
 interface State {
   secretModalOpen: boolean;
