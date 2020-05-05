@@ -383,6 +383,20 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/plesk_color.svg'
   },
   {
+    name: 'Percona PMM',
+    description: `A GUI for managing and monitoring the performance of your MySQL, MariaDB, PostgreSQL, and MongoDB databases.`,
+    summary:
+      'An open source analytics and monitoring solution with a focus on accessibility for metric visualization.',
+    related_info: [
+      {
+        title: 'Percona Monitoring and Management',
+        href:
+          'https://www.percona.com/software/database-tools/percona-monitoring-and-management'
+      }
+    ],
+    logo_url: 'assets/perconappm_color.svg'
+  },
+  {
     name: 'Redis',
     description: `Redis is an open-source, in-memory, data-structure store, with the optional ability to write and persist data to a disk, which can be used as a key-value database, cache, and message broker. Redis features
  built-in transactions, replication, and support for a variety of data structures such as strings, hashes, lists, sets, and others.`,
