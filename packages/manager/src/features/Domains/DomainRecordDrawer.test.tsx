@@ -1,4 +1,4 @@
-import { resolve, shouldResolve } from './DomainRecordDrawer';
+import { resolve, resolveAlias, shouldResolve } from './DomainRecordDrawer';
 
 const exampleDomain = 'example.com';
 
@@ -34,6 +34,21 @@ describe('Domain record helper methods', () => {
 
     it('should ignore additional @s', () => {
       expect(resolve('mail.@.@', exampleDomain)).toBe('mail.example.com.@');
+    });
+  });
+
+  describe('resolveAlias helper', () => {
+    it('should resolve aliases where shouldResolve is true', () => {
+      const payload = {
+        name: 'my-name-@',
+        target: 'my-target-@'
+      };
+      const result = resolveAlias(payload, exampleDomain, 'CNAME');
+      expect(result).toHaveProperty('name', payload.name);
+      expect(result).toHaveProperty(
+        'target',
+        resolve(payload.target, exampleDomain)
+      );
     });
   });
 });
