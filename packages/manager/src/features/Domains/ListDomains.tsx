@@ -99,8 +99,8 @@ const ListDomains: React.StatelessComponent<CombinedProps> = props => {
 
                   <TableSortCell
                     data-qa-domain-type-header={order}
-                    active={orderBy === 'last_modified'}
-                    label="last_modified"
+                    active={orderBy === 'updated'}
+                    label="updated"
                     direction={order}
                     handleClick={handleOrderChange}
                   >
