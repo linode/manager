@@ -44,28 +44,15 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
     number | undefined
   >();
 
-  // const getAllInvoices = getAll<Invoice>(getInvoices);
+  React.useEffect(() => {
+    // need to figure out how to get filters to work
+    const filters = { '+order_by': 'date', '+order': 'asc' };
+    // need this to not return a promise
+    const recentInvoice = getInvoices(filters).then(resp => resp.data[0].id);
 
-  // React.useEffect(() => {
-  //   getInvoices().then(data) => {
-
-  //     const mostRecentDate = new Date(
-  //       Math.max.apply(
-  //         null,
-  //         data.map(invoice => {
-  //           return new Date(invoice.date);
-  //         })
-  //       )
-  //     );
-
-  //     const mostRecentInvoice = data.filter(invoice => {
-  //       const invoiceDate = new Date(invoice.date);
-  //       return invoiceDate.getTime() === mostRecentDate.getTime();
-  //     })[0];
-
-  //     setMostRecentInvoiceId(mostRecentInvoice.id);
-  //   };
-  // }, []);
+    console.log(recentInvoice);
+    // setMostRecentInvoiceId(recentInvoice)
+  }, []);
 
   // @todo: useReduxLoad for account/profile requests?
   React.useEffect(() => {
