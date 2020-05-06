@@ -177,9 +177,8 @@ export const BillingActivityPanel: React.FC<{}> = () => {
   const [invoices, setInvoices] = React.useState<Invoice[]>([]);
   const [payments, setPayments] = React.useState<Payment[]>([]);
 
-  const invoicePDFErrors = useSet();
-  const invoicePDFLoading = useSet();
-  const paymentPDFErrors = useSet();
+  const pdfErrors = useSet();
+  const pdfLoading = useSet();
 
   const [selectedTransactionType, setSelectedTransactionType] = React.useState<
     TransactionTypes
@@ -194,6 +193,7 @@ export const BillingActivityPanel: React.FC<{}> = () => {
       const filter = makeFilter(endDate);
 
       setLoading(true);
+      setError(undefined);
 
       Promise.all([getAllInvoices({}, filter), getAllPayments({}, filter)])
         .then(([invoices, payments]) => {
@@ -218,7 +218,8 @@ export const BillingActivityPanel: React.FC<{}> = () => {
   React.useEffect(() => {
     const defaultDateCutoff = getCutoffFromDateRange(defaultDateRange);
     requestAllInvoicesAndPayments(defaultDateCutoff);
-  }, [requestAllInvoicesAndPayments]);
+    // eslint-disable-next-line
+  }, []);
 
   const downloadInvoicePDF = React.useCallback(
     (invoiceId: number) => {
@@ -226,18 +227,20 @@ export const BillingActivityPanel: React.FC<{}> = () => {
         thisInvoice => thisInvoice.id === invoiceId
       );
 
+      const id = `invoice-${invoiceId}`;
+
       // TS Safeguard.
       if (!account.data || !invoice) {
-        invoicePDFErrors.add(invoiceId);
+        pdfErrors.add(id);
         return;
       }
 
-      invoicePDFErrors.delete(invoiceId);
-      invoicePDFLoading.add(invoiceId);
+      pdfErrors.delete(id);
+      pdfLoading.add(id);
 
       getAllInvoiceItems([invoiceId])
         .then(response => {
-          invoicePDFLoading.delete(invoiceId);
+          pdfLoading.delete(id);
 
           const invoiceItems = response.data;
           const result = printInvoice(
@@ -248,21 +251,15 @@ export const BillingActivityPanel: React.FC<{}> = () => {
           );
 
           if (result.status === 'error') {
-            invoicePDFErrors.add(invoiceId);
+            pdfErrors.add(id);
           }
         })
         .catch(() => {
-          invoicePDFLoading.delete(invoiceId);
-          invoicePDFErrors.add(invoiceId);
+          pdfLoading.delete(id);
+          pdfErrors.add(id);
         });
     },
-    [
-      account.data,
-      flags.taxBanner,
-      invoices,
-      invoicePDFErrors,
-      invoicePDFLoading
-    ]
+    [account.data, flags.taxBanner, invoices, pdfErrors, pdfLoading]
   );
 
   const downloadPaymentPDF = React.useCallback(
@@ -271,13 +268,15 @@ export const BillingActivityPanel: React.FC<{}> = () => {
         thisPayment => thisPayment.id === paymentId
       );
 
+      const id = `payment-${paymentId}`;
+
       // TS Safeguard.
       if (!account.data || !payment) {
-        paymentPDFErrors.add(paymentId);
+        pdfErrors.add(id);
         return;
       }
 
-      paymentPDFErrors.delete(paymentId);
+      pdfErrors.delete(id);
 
       const taxBanner = flags.taxBanner;
       const taxId = getTaxID(
@@ -288,22 +287,26 @@ export const BillingActivityPanel: React.FC<{}> = () => {
       const result = printPayment(account.data, payment, taxId);
 
       if (result.status === 'error') {
-        paymentPDFErrors.add(paymentId);
+        pdfErrors.add(id);
       }
     },
-    [payments, flags.taxBanner, account.data, paymentPDFErrors]
+    [payments, flags.taxBanner, account.data, pdfErrors]
   );
 
   // Handlers for <Select /> components.
   const handleTransactionTypeChange = React.useCallback(
     (item: Item<TransactionTypes>) => {
       setSelectedTransactionType(item.value);
+      pdfErrors.clear();
+      pdfLoading.clear();
     },
-    []
+    [pdfErrors, pdfLoading]
   );
   const handleTransactionDateChange = React.useCallback(
     (item: Item<DateRange>) => {
       setSelectedTransactionDate(item.value);
+      pdfErrors.clear();
+      pdfLoading.clear();
 
       const earliestInvoiceDate =
         invoices[invoices.length - 1]?.date || new Date().toISOString();
@@ -322,7 +325,7 @@ export const BillingActivityPanel: React.FC<{}> = () => {
 
       requestAllInvoicesAndPayments(dateCutoff);
     },
-    [requestAllInvoicesAndPayments, invoices, payments]
+    [requestAllInvoicesAndPayments, invoices, payments, pdfErrors, pdfLoading]
   );
 
   // Combine Invoices and Payments
@@ -434,15 +437,12 @@ export const BillingActivityPanel: React.FC<{}> = () => {
                                     ? downloadInvoicePDF
                                     : downloadPaymentPDF
                                 }
-                                hasError={
-                                  thisItem.type === 'invoice'
-                                    ? invoicePDFErrors.has(thisItem.id)
-                                    : paymentPDFErrors.has(thisItem.id)
-                                }
-                                isLoading={
-                                  thisItem.type === 'invoice' &&
-                                  invoicePDFLoading.has(thisItem.id)
-                                }
+                                hasError={pdfErrors.has(
+                                  `${thisItem.type}-${thisItem.id}`
+                                )}
+                                isLoading={pdfLoading.has(
+                                  `${thisItem.type}-${thisItem.id}`
+                                )}
                                 {...thisItem}
                               />
                             );
@@ -472,9 +472,8 @@ export const BillingActivityPanel: React.FC<{}> = () => {
             error,
             downloadInvoicePDF,
             downloadPaymentPDF,
-            invoicePDFErrors,
-            invoicePDFLoading,
-            paymentPDFErrors
+            pdfErrors,
+            pdfLoading
           ]
         )}
       </OrderBy>

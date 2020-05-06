@@ -33,11 +33,14 @@ export const useSet = <T>(initial?: Iterable<T>) => {
   const forEach = (callbackFn: (value1: T, value2: T, set: Set<T>) => void) =>
     set.forEach(callbackFn);
 
+  const clear = () => set.clear();
+
   return {
     add,
     delete: _delete,
     has,
     forEach,
+    clear,
     set
   };
 };
