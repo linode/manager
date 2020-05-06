@@ -1,5 +1,6 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import Button from 'src/components/Button';
 import {
   createStyles,
@@ -73,7 +74,7 @@ export interface Props {
   title: string;
   left?: boolean;
   className?: any;
-  href?: string;
+  to?: string;
 }
 
 type FinalProps = Props & WithStyles<CSSClasses>;
@@ -89,29 +90,52 @@ const IconTextLink: React.StatelessComponent<FinalProps> = props => {
     title,
     left,
     className,
-    href
+    to
   } = props;
 
   return (
-    <Button
-      className={classNames(
-        {
-          [classes.root]: true,
-          [classes.disabled]: disabled === true,
-          [classes.active]: active === true,
-          [classes.left]: left === true,
-          iconTextLink: true
-        },
-        className
+    <>
+      {to && !disabled ? (
+        <Link to={to}>
+          <Button
+            className={classNames(
+              {
+                [classes.root]: true,
+                [classes.active]: active === true,
+                [classes.left]: left === true,
+                iconTextLink: true
+              },
+              className
+            )}
+            title={title}
+            onClick={onClick}
+            data-qa-icon-text-link={title}
+          >
+            <SideIcon className={classes.icon} />
+            <span className={classes.label}>{text}</span>
+          </Button>
+        </Link>
+      ) : (
+        <Button
+          className={classNames(
+            {
+              [classes.root]: true,
+              [classes.disabled]: disabled === true,
+              [classes.active]: active === true,
+              [classes.left]: left === true,
+              iconTextLink: true
+            },
+            className
+          )}
+          title={title}
+          onClick={onClick}
+          data-qa-icon-text-link={title}
+        >
+          <SideIcon className={classes.icon} />
+          <span className={classes.label}>{text}</span>
+        </Button>
       )}
-      title={title}
-      onClick={onClick}
-      href={href}
-      data-qa-icon-text-link={title}
-    >
-      <SideIcon className={classes.icon} />
-      <span className={classes.label}>{text}</span>
-    </Button>
+    </>
   );
 };
 

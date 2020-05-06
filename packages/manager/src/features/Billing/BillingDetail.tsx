@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
+import { getInvoices } from 'linode-js-sdk/lib/account';
 import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
@@ -38,6 +39,33 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const [modalOpen, toggleModal] = React.useState<boolean>(false);
+
+  const [mostRecentInvoiceId, setMostRecentInvoiceId] = React.useState<
+    number | undefined
+  >();
+
+  // const getAllInvoices = getAll<Invoice>(getInvoices);
+
+  // React.useEffect(() => {
+  //   getInvoices().then(data) => {
+
+  //     const mostRecentDate = new Date(
+  //       Math.max.apply(
+  //         null,
+  //         data.map(invoice => {
+  //           return new Date(invoice.date);
+  //         })
+  //       )
+  //     );
+
+  //     const mostRecentInvoice = data.filter(invoice => {
+  //       const invoiceDate = new Date(invoice.date);
+  //       return invoiceDate.getTime() === mostRecentDate.getTime();
+  //     })[0];
+
+  //     setMostRecentInvoiceId(mostRecentInvoice.id);
+  //   };
+  // }, []);
 
   // @todo: useReduxLoad for account/profile requests?
   React.useEffect(() => {
@@ -87,6 +115,7 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
               balance={account?.data?.balance ?? 0}
               promotion={account?.data?.active_promotions?.[0]}
               uninvoicedBalance={account?.data?.balance_uninvoiced ?? 0}
+              mostRecentInvoiceId={mostRecentInvoiceId}
             />
             <SummaryPanel data-qa-summary-panel history={props.history} />
             <BillingActivityPanel

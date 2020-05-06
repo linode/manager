@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { getInvoices, Invoice } from 'linode-js-sdk/lib/account';
 import { ActivePromotion } from 'linode-js-sdk/lib/account/types';
 import CreditCard from 'src/assets/icons/credit-card.svg';
 import Info from 'src/assets/icons/info.svg';
@@ -15,7 +14,6 @@ import Currency from 'src/components/Currency';
 import IconTextLink from 'src/components/IconTextLink';
 
 import PaymentDrawer from '../BillingPanels/PaymentDrawer';
-import { getAll } from 'src/utilities/getAll';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -114,16 +112,15 @@ interface Props {
   uninvoicedBalance: number;
   promotionAmount?: number;
   balance: number;
+  mostRecentInvoiceId?: number;
 }
 
 export const BillingSummary: React.FC<Props> = props => {
-  const { promotion, uninvoicedBalance, balance } = props;
+  const { promotion, uninvoicedBalance, balance, mostRecentInvoiceId } = props;
 
   const [paymentDrawerOpen, setPaymentDrawerOpen] = React.useState<boolean>(
     false
   );
-
-  const [invoice, setLatestInvoice] = React.useState<Invoice | undefined>();
 
   const openPaymentDrawer = React.useCallback(
     () => setPaymentDrawerOpen(true),
@@ -135,33 +132,9 @@ export const BillingSummary: React.FC<Props> = props => {
     []
   );
 
-  const getAllInvoices = getAll<Invoice>(getInvoices);
-
-  React.useEffect(() => {
-    Promise.all([getAllInvoices()]).then(([invoices]) => {
-      const invoicesData = [...invoices.data];
-
-      const mostRecentDate = new Date(
-        Math.max.apply(
-          null,
-          invoicesData.map(invoice => {
-            return new Date(invoice.date);
-          })
-        )
-      );
-
-      const mostRecentInvoice = invoicesData.filter(invoice => {
-        const invoiceDate = new Date(invoice.date);
-        return invoiceDate.getTime() === mostRecentDate.getTime();
-      })[0];
-
-      setLatestInvoice(mostRecentInvoice);
-    });
-  }, []);
-
   const classes = useStyles();
 
-  // If balance is < 0 we apply it to the univoiced balance, otherwise only apply uninvoiced so a past due amount is not included in calculation.
+  // If balance is < 0 we apply it to the uninvoiced balance, otherwise only apply uninvoiced so a past due amount is not included in calculation.
   const calculatedBalance =
     balance < 0 ? uninvoicedBalance + balance : uninvoicedBalance;
 
@@ -221,13 +194,14 @@ export const BillingSummary: React.FC<Props> = props => {
                 onClick={openPaymentDrawer}
                 className={classes.iconButton}
               />
+
               <IconTextLink
                 SideIcon={InvoiceIcon}
                 text="View last invoice"
                 title="View last invoice"
-                href={`/account/billing/invoices/${invoice?.id}`}
+                to={`/account/billing/invoices/${mostRecentInvoiceId}`}
                 className={classes.iconButton}
-                disabled={!invoice}
+                disabled={!mostRecentInvoiceId}
               />
             </div>
           </Grid>
