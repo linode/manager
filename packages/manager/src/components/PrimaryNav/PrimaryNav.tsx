@@ -346,130 +346,128 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     const { expandedMenus, anchorEl } = this.state;
 
     return (
-      <React.Fragment>
-        <Grid
-          className={classes.menuGrid}
-          container
-          alignItems="flex-start"
-          justify="flex-start"
-          direction="column"
-          wrap="nowrap"
-          spacing={0}
-          component="nav"
-          role="navigation"
-        >
-          <Grid item>
-            <div
-              className={classNames({
-                [classes.logoItem]: true,
-                [classes.logoCollapsed]: isCollapsed
-              })}
-            >
-              <Link
-                to={`/dashboard`}
-                onClick={() => this.props.closeMenu()}
-                title="Dashboard"
-              >
-                <Logo width={115} height={43} />
-              </Link>
-            </div>
-          </Grid>
+      <Grid
+        className={classes.menuGrid}
+        container
+        alignItems="flex-start"
+        justify="flex-start"
+        direction="column"
+        wrap="nowrap"
+        spacing={0}
+        component="nav"
+        role="navigation"
+      >
+        <Grid item>
           <div
             className={classNames({
-              ['fade-in-table']: true,
-              [classes.fadeContainer]: true
+              [classes.logoItem]: true,
+              [classes.logoCollapsed]: isCollapsed
             })}
           >
-            {this.state.primaryLinks.map((primaryLink, id, arr) =>
-              this.renderPrimaryLink(primaryLink, id === arr.length - 1)
-            )}
-
-            {/** menu items under the main navigation links */}
-            <AdditionalMenuItems
-              linkClasses={(href?: string) =>
-                classNames({
-                  [classes.listItem]: true,
-                  [classes.active]: href ? linkIsActive(href) : false
-                })
-              }
-              listItemClasses={classNames({
-                [classes.linkItem]: true
-              })}
-              closeMenu={this.props.closeMenu}
-              dividerClasses={classes.divider}
-              isCollapsed={isCollapsed}
-            />
-
-            <Hidden mdUp>
-              <Divider className={classes.divider} />
-              <Link
-                to="/profile/display"
-                onClick={this.props.closeMenu}
-                data-qa-nav-item="/profile/display"
-                className={classNames({
-                  [classes.listItem]: true,
-                  [classes.active]:
-                    expandedMenus.support ||
-                    linkIsActive('/profile/display') === true
-                })}
-              >
-                <ListItemText
-                  primary="My Profile"
-                  disableTypography={true}
-                  className={classNames({
-                    [classes.linkItem]: true
-                  })}
-                />
-              </Link>
-              <Link
-                to="/logout"
-                onClick={this.props.closeMenu}
-                data-qa-nav-item="/logout"
-                className={classNames({
-                  [classes.listItem]: true
-                })}
-              >
-                <ListItemText
-                  primary="Log Out"
-                  disableTypography={true}
-                  className={classNames({
-                    [classes.linkItem]: true
-                  })}
-                />
-              </Link>
-            </Hidden>
-            <div className={classes.spacer} />
-            <IconButton
-              onClick={this.handleClick}
-              className={classNames({
-                [classes.settings]: true,
-                [classes.settingsCollapsed]: isCollapsed,
-                [classes.activeSettings]: anchorEl
-              })}
-              aria-label="User settings"
+            <Link
+              to={`/dashboard`}
+              onClick={() => this.props.closeMenu()}
+              title="Dashboard"
             >
-              <Settings />
-            </IconButton>
-            <Menu
-              id="settings-menu"
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={this.handleClose}
-              getContentAnchorEl={undefined}
-              PaperProps={{ square: true, className: classes.paper }}
-              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-              transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-              className={classes.menu}
-              BackdropProps={{
-                className: classes.settingsBackdrop
-              }}
-            >
-              <ThemeToggle toggleTheme={this.props.toggleTheme} />
-              <SpacingToggle toggleSpacing={this.props.toggleSpacing} />
-            </Menu>
+              <Logo width={115} height={43} />
+            </Link>
           </div>
         </Grid>
-      </React.Fragment>
+        <div
+          className={classNames({
+            ['fade-in-table']: true,
+            [classes.fadeContainer]: true
+          })}
+        >
+          {this.state.primaryLinks.map((primaryLink, id, arr) =>
+            this.renderPrimaryLink(primaryLink, id === arr.length - 1)
+          )}
+
+          {/** menu items under the main navigation links */}
+          <AdditionalMenuItems
+            linkClasses={(href?: string) =>
+              classNames({
+                [classes.listItem]: true,
+                [classes.active]: href ? linkIsActive(href) : false
+              })
+            }
+            listItemClasses={classNames({
+              [classes.linkItem]: true
+            })}
+            closeMenu={this.props.closeMenu}
+            dividerClasses={classes.divider}
+            isCollapsed={isCollapsed}
+          />
+
+          <Hidden mdUp>
+            <Divider className={classes.divider} />
+            <Link
+              to="/profile/display"
+              onClick={this.props.closeMenu}
+              data-qa-nav-item="/profile/display"
+              className={classNames({
+                [classes.listItem]: true,
+                [classes.active]:
+                  expandedMenus.support ||
+                  linkIsActive('/profile/display') === true
+              })}
+            >
+              <ListItemText
+                primary="My Profile"
+                disableTypography={true}
+                className={classNames({
+                  [classes.linkItem]: true
+                })}
+              />
+            </Link>
+            <Link
+              to="/logout"
+              onClick={this.props.closeMenu}
+              data-qa-nav-item="/logout"
+              className={classNames({
+                [classes.listItem]: true
+              })}
+            >
+              <ListItemText
+                primary="Log Out"
+                disableTypography={true}
+                className={classNames({
+                  [classes.linkItem]: true
+                })}
+              />
+            </Link>
+          </Hidden>
+          <div className={classes.spacer} />
+          <IconButton
+            onClick={this.handleClick}
+            className={classNames({
+              [classes.settings]: true,
+              [classes.settingsCollapsed]: isCollapsed,
+              [classes.activeSettings]: anchorEl
+            })}
+            aria-label="User settings"
+          >
+            <Settings />
+          </IconButton>
+          <Menu
+            id="settings-menu"
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={this.handleClose}
+            getContentAnchorEl={undefined}
+            PaperProps={{ square: true, className: classes.paper }}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            className={classes.menu}
+            BackdropProps={{
+              className: classes.settingsBackdrop
+            }}
+          >
+            <ThemeToggle toggleTheme={this.props.toggleTheme} />
+            <SpacingToggle toggleSpacing={this.props.toggleSpacing} />
+          </Menu>
+        </div>
+      </Grid>
     );
   }
 }
@@ -497,7 +495,7 @@ const userHasAccountAccess = (profile: Profile) => {
 
 // const accountHasLongviewSubscription = (account: Linode.AccountSettings) => Boolean(account.longview_subscription);
 
-const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
+const mapStateToProps: MapState<StateProps, Props> = state => {
   const account = state.__resources.accountSettings.data;
   const profile = state.__resources.profile.data;
   const accountLastUpdated = state.__resources.account.lastUpdated;

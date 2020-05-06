@@ -17,11 +17,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '1.1rem'
   },
   cvvField: {
-    width: 180
+    width: 100
   },
-  cardNumber: {
-    marginTop: theme.spacing(3),
-    fontSize: '0.8rem'
+  cardSection: { height: '100%' },
+  cardText: {
+    fontSize: '1rem',
+    padding: '1px',
+    lineHeight: '1.15rem'
   }
 }));
 
@@ -93,20 +95,27 @@ export const CreditCard: React.FC<Props> = props => {
           </Typography>
         </Grid>
         <Grid item>
-          <Grid container direction="row" wrap="nowrap" alignItems="center">
-            {hasCreditCardOnFile ? (
+          {hasCreditCardOnFile ? (
+            <Grid container direction="row" wrap="nowrap" alignItems="center">
               <>
-                <Grid item className={classes.cardNumber}>
-                  <Typography>Card ending with: {lastFour}</Typography>
-                  {Boolean(expiry) && <Typography>Expires {expiry}</Typography>}
+                <Grid item className={classes.cardSection}>
+                  <Typography className={classes.cardText}>
+                    Card ending with: {lastFour}
+                  </Typography>
+                  {Boolean(expiry) && (
+                    <Typography className={classes.cardText}>
+                      Expires {expiry}
+                    </Typography>
+                  )}
                 </Grid>
                 <Grid item>
                   <TextField
                     label="CVV:"
+                    small
                     onChange={handleCVVChange}
                     value={cvv}
                     type="text"
-                    placeholder={'000'}
+                    placeholder={'0000'}
                     inputProps={{ id: 'paymentCVV' }}
                     className={classes.cvvField}
                     hasAbsoluteError
@@ -114,10 +123,10 @@ export const CreditCard: React.FC<Props> = props => {
                   />
                 </Grid>
               </>
-            ) : (
-              <Typography>No credit card on file.</Typography>
-            )}
-          </Grid>
+            </Grid>
+          ) : (
+            <Typography>No credit card on file.</Typography>
+          )}
         </Grid>
 
         <Grid item>
