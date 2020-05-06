@@ -70,15 +70,20 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     }
   };
 
+  /** Secondary Requests (non-blocking)
+   * Make these once the user is past the
+   * splash screen, since they aren't needed
+   * for navigation, basic display, etc.
+   */
   makeSecondaryRequests = () => {
+    this.props.requestLinodes();
+    this.props.requestTypes();
     /**
      * We have cached Regions data that can be used
      * until the real data comes in; the only
      * likely difference will be the status of each
      * Region.
      */
-    this.props.requestLinodes();
-    this.props.requestTypes();
     this.props.requestRegions();
     this.props.requestNotifications();
   };
@@ -109,7 +114,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
    * and redux has now been synced with what is in local storage
    */
   componentDidUpdate(prevProps: CombinedProps) {
-    /** if we were previously not authed and now we are authed */
+    /** if we were previously not authenticated and now we are */
     if (
       !prevProps.isAuthenticated &&
       this.props.isAuthenticated &&
