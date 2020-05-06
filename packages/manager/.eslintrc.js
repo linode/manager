@@ -33,7 +33,8 @@ module.exports = {
     'sonarjs',
     'ramda',
     'cypress',
-    'prettier'
+    'prettier',
+    'scanjs-rules'
   ],
   extends: [
     // disables a few of the recommended rules from the previous set that we know are already covered by TypeScript's typechecker
@@ -115,7 +116,42 @@ module.exports = {
     'spaced-comment': 'warn',
     'object-shorthand': 'warn',
     // make prettier issues warnings
-    'prettier/prettier': 'warn'
+    'prettier/prettier': 'warn',
+    'scanjs-rules/accidental_assignment': 'error',
+    'scanjs-rules/assign_to_hostname': 'error',
+    'scanjs-rules/assign_to_href': 'error',
+    'scanjs-rules/assign_to_location': 'error',
+    'scanjs-rules/assign_to_onmessage': 'error',
+    'scanjs-rules/assign_to_pathname': 'error',
+    'scanjs-rules/assign_to_protocol': 'error',
+    'scanjs-rules/assign_to_search': 'error',
+    'scanjs-rules/assign_to_src': 'error',
+    'scanjs-rules/call_addEventListener_deviceproximity': 'error',
+    'scanjs-rules/call_addEventListener_message': 'error',
+    'scanjs-rules/call_addEventListener': 'error',
+    'scanjs-rules/call_connect': 'error',
+    'scanjs-rules/call_eval': 'error',
+    'scanjs-rules/call_execScript': 'error',
+    'scanjs-rules/call_Function': 'error',
+    'scanjs-rules/call_hide': 'error',
+    'scanjs-rules/call_open_remote=true': 'error',
+    'scanjs-rules/call_parseFromString': 'error',
+    'scanjs-rules/call_setImmediate': 'error',
+    'scanjs-rules/call_setInterval': 'error',
+    'scanjs-rules/call_setTimeout': 'error',
+    'scanjs-rules/identifier_indexedDB': 'error',
+    'scanjs-rules/identifier_localStorage': 'error',
+    'scanjs-rules/identifier_sessionStorage': 'error',
+    'scanjs-rules/new_Function': 'error',
+    'scanjs-rules/property_addIdleObserver': 'error',
+    'scanjs-rules/property_createContextualFragment': 'error',
+    'scanjs-rules/property_crypto': 'error',
+    'scanjs-rules/property_geolocation': 'error',
+    'scanjs-rules/property_getUserMedia': 'error',
+    'scanjs-rules/property_indexedDB': 'error',
+    'scanjs-rules/property_localStorage': 'error',
+    'scanjs-rules/property_mgmt': 'error',
+    'scanjs-rules/property_sessionStorage': 'error'
   },
   env: {
     browser: true
