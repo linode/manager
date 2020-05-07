@@ -16,7 +16,10 @@ const TEST_URL = 'https://www.example.com';
 const mock = new adapter(baseRequest);
 mock.onAny().reply(200, { data: {} });
 
-beforeEach(() => mock.resetHistory());
+beforeEach(() => {
+  mock.resetHistory();
+  jest.clearAllMocks();
+});
 
 describe('Linode JS SDK', () => {
   describe('Base request and helper methods', () => {
@@ -129,12 +132,18 @@ describe('Linode JS SDK', () => {
       expect(mock.history.get).toHaveLength(1);
     });
 
-    it('should return schema errors without submitting a request', async () => {
-      const result = await request(setData({} as any, testSchema));
-      console.log(result.data);
-      expect(spy).toHaveBeenCalledTimes(1);
-      expect(mock.history.get).toHaveLength(0);
-      expect(result.data).toBeDefined();
+    it('should return schema errors as an array of Linode API errors without submitting a request', async () => {
+      await request(setData({} as any, testSchema)).catch(error => {
+        expect(error).toEqual([
+          {
+            field: 'name',
+            reason: 'This is required!'
+          }
+        ]);
+
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(mock.history.get).toHaveLength(0);
+      });
     });
   });
 });
