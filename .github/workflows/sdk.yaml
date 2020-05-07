@@ -1,25 +1,40 @@
+# This workflow run unit tests for the SDK as well as a build. It will then
+# run npm publish if the preceding steps succeeded. (Note that the publishing
+# action we are using will only run if the version has been updated.)
+
 name: Linode JS SDK
+
 on:
-    push:
-        branches:
-            - master
-            - develop
+  push:
+    branches: [ master, M3-github-actions ]
+
 jobs:
-    build:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.x]
 
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-node@v1
-              with:
-                node-version: '10.16.0'
-            - run: echo "Installing Yarn"
-            - name: Install Yarn
-              run: npm install -g yarn
-            - run: echo "Installing dependencies"
-            - name: Run Yarn install
-              run: |
-                yarn install:all
-                yarn workspace linode-js-sdk test
-            - run: echo "Unit tests passed"
-
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm install -g yarn
+    - run: yarn install:all
+    - name: Unit tests
+      run: yarn workspace linode-js-sdk run test
+    - name: Build SDK
+      run: yarn workspace linode-js-sdk build
+    - name: Archive production build artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: lib
+        path: packages/linode-js-sdk/lib
+    # - name: Publish
+    #   run: yarn workspace linode-js-sdk publish --dry-run
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #     NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+            
