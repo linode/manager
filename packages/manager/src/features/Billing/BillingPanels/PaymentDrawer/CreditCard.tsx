@@ -26,9 +26,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexFlow: 'column nowrap'
   },
   cardText: {
-    fontSize: '1rem',
     padding: '1px',
     lineHeight: '1.5rem'
+  },
+  cvvFieldWrapper: {
+    '& label': {
+      fontSize: 12
+    }
   }
 }));
 
@@ -112,7 +116,7 @@ export const CreditCard: React.FC<Props> = props => {
                   </Typography>
                 )}
               </Grid>
-              <Grid item>
+              <Grid item className={classes.cvvFieldWrapper}>
                 <TextField
                   label="CVV:"
                   small
