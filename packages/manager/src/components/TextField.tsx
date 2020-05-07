@@ -127,6 +127,7 @@ interface BaseProps {
   loading?: boolean;
   hideLabel?: boolean;
   hasAbsoluteError?: boolean;
+  inputId?: string;
 }
 
 interface TextFieldPropsOverrides extends TextFieldProps {
@@ -236,6 +237,7 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
       label,
       loading,
       hasAbsoluteError,
+      inputId,
       ...textFieldProps
     } = this.props;
 
@@ -313,9 +315,11 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
             }}
             inputProps={{
               'data-testid': 'textfield-input',
-              id: this.props.label
-                ? convertToKebabCase(`${this.props.label}`)
-                : undefined,
+              id:
+                inputId ||
+                (this.props.label
+                  ? convertToKebabCase(`${this.props.label}`)
+                  : undefined),
               ...inputProps
             }}
             InputProps={{

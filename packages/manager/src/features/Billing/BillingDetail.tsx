@@ -10,12 +10,10 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import { AccountsAndPasswords, BillingAndPayments } from 'src/documentation';
 import { useAccount } from 'src/hooks/useAccount';
-import { useProfile } from 'src/hooks/useProfile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import BillingActivityPanel from './BillingPanels/BillingActivityPanel';
 import SummaryPanel from './BillingPanels/SummaryPanel';
 import BillingSummary from './BillingSummary';
-import Dialog from './CancelAccountDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -34,11 +32,8 @@ type CombinedProps = SetDocsProps & RouteComponentProps<{}>;
 
 export const BillingDetail: React.FC<CombinedProps> = props => {
   const { account, requestAccount } = useAccount();
-  const { profile, requestProfile } = useProfile();
 
   const classes = useStyles();
-
-  const [modalOpen, toggleModal] = React.useState<boolean>(false);
 
   const [mostRecentInvoiceId, setMostRecentInvoiceId] = React.useState<
     number | undefined
@@ -66,20 +61,6 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
       requestAccount();
     }
   }, [account.loading, account.lastUpdated, requestAccount]);
-
-  React.useEffect(() => {
-    if (profile.loading && profile.lastUpdated === 0) {
-      requestProfile();
-    }
-  }, [profile.loading, profile.lastUpdated, requestProfile]);
-
-  const closeDialog = React.useCallback(() => {
-    toggleModal(false);
-  }, []);
-
-  const openDialog = React.useCallback(() => {
-    toggleModal(true);
-  }, []);
 
   if (account.loading && account.lastUpdated === 0) {
     return <CircleProgress />;
@@ -111,20 +92,10 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
               mostRecentInvoiceId={mostRecentInvoiceId}
             />
             <SummaryPanel data-qa-summary-panel history={props.history} />
-            <BillingActivityPanel
-              accountActiveSince={account.data?.active_since}
-              openCloseAccountDialog={openDialog}
-              isRestrictedUser={profile.data?.restricted ?? false}
-            />
+            <BillingActivityPanel />
           </Grid>
         </Grid>
       </div>
-      <Dialog
-        username={profile.data?.username ?? ''}
-        closeDialog={closeDialog}
-        open={modalOpen}
-        history={props.history}
-      />
     </React.Fragment>
   );
 };
