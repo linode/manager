@@ -19,11 +19,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   cvvField: {
     width: 100
   },
-  cardSection: { height: '100%' },
+  cardSection: {
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    flexFlow: 'column nowrap'
+  },
   cardText: {
     fontSize: '1rem',
     padding: '1px',
-    lineHeight: '1.15rem'
+    lineHeight: '1.5rem'
   }
 }));
 
@@ -97,32 +102,30 @@ export const CreditCard: React.FC<Props> = props => {
         <Grid item>
           {hasCreditCardOnFile ? (
             <Grid container direction="row" wrap="nowrap" alignItems="center">
-              <>
-                <Grid item className={classes.cardSection}>
+              <Grid item className={classes.cardSection}>
+                <Typography className={classes.cardText}>
+                  Card ending with: {lastFour}
+                </Typography>
+                {Boolean(expiry) && (
                   <Typography className={classes.cardText}>
-                    Card ending with: {lastFour}
+                    Expires {expiry}
                   </Typography>
-                  {Boolean(expiry) && (
-                    <Typography className={classes.cardText}>
-                      Expires {expiry}
-                    </Typography>
-                  )}
-                </Grid>
-                <Grid item>
-                  <TextField
-                    label="CVV:"
-                    small
-                    onChange={handleCVVChange}
-                    value={cvv}
-                    type="text"
-                    placeholder={'0000'}
-                    inputProps={{ id: 'paymentCVV' }}
-                    className={classes.cvvField}
-                    hasAbsoluteError
-                    noMarginTop
-                  />
-                </Grid>
-              </>
+                )}
+              </Grid>
+              <Grid item>
+                <TextField
+                  label="CVV:"
+                  small
+                  onChange={handleCVVChange}
+                  value={cvv}
+                  type="text"
+                  placeholder={'0000'}
+                  inputProps={{ id: 'paymentCVV' }}
+                  className={classes.cvvField}
+                  hasAbsoluteError
+                  noMarginTop
+                />
+              </Grid>
             </Grid>
           ) : (
             <Typography>No credit card on file.</Typography>
