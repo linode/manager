@@ -1,4 +1,5 @@
 import adapter from 'axios-mock-adapter';
+import { object, string } from 'yup';
 
 import request, {
   baseRequest,
@@ -112,6 +113,28 @@ describe('Linode JS SDK', () => {
           JSON.stringify(filter)
         );
       });
+    });
+  });
+
+  describe('Yup client validation', () => {
+    const testSchema = object({
+      name: string().required('This is required!')
+    });
+
+    const spy = jest.spyOn(testSchema, 'validateSync');
+
+    it('should validate the schema before submitting a request', async () => {
+      await request(setData({ name: 'valid-name' }, testSchema));
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(mock.history.get).toHaveLength(1);
+    });
+
+    it('should return schema errors without submitting a request', async () => {
+      const result = await request(setData({} as any, testSchema));
+      console.log(result.data);
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(mock.history.get).toHaveLength(0);
+      expect(result.data).toBeDefined();
     });
   });
 });
