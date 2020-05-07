@@ -40,10 +40,12 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
   >();
 
   React.useEffect(() => {
-    // need to figure out how to get filters to work
-    const filters = { order_by: 'date', order: 'asc' };
+    const filter: any = {
+      '+order_by': 'date',
+      '+order': 'desc'
+    };
 
-    getInvoices(filters)
+    getInvoices({}, filter)
       .then(function(resp) {
         return resp.data;
       })
