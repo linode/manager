@@ -17,10 +17,7 @@ const L = {
   headers: lensPath(['headers'])
 };
 
-const isNotEmpty = compose(
-  not,
-  (v: any) => isEmpty(v) || isNil(v)
-);
+const isNotEmpty = compose(not, (v: any) => isEmpty(v) || isNil(v));
 
 /** URL */
 export const setURL = (url: string) => set(L.url, url);
@@ -120,7 +117,6 @@ export const requestGenerator = <T>(...fns: Function[]): AxiosPromise<T> => {
       config.validationErrors // All failed requests, client or server errors, should be APIError[]
     );
   }
-
   return baseRequest(config);
 
   /*
@@ -201,20 +197,6 @@ const createError = (message: string, response: AxiosResponse) => {
   return error;
 };
 
-/**
- *
- * Helper method to easily generate APIError[] for a number of fields and a general error.
- */
-export const mockAPIFieldErrors = (fields: string[]): APIError[] => {
-  return fields.reduce(
-    (result, field) => [...result, { field, reason: `${field} is incorrect.` }],
-    [{ reason: 'A general error has occurred.' }]
-  );
-};
-
-/**
- * POC * POC * POC * POC * POC * POC * POC *
- */
 interface CancellableRequest<T> {
   request: () => Promise<T>;
   cancel: () => void;
