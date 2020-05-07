@@ -11,8 +11,8 @@ import { AccountsAndPasswords, BillingAndPayments } from 'src/documentation';
 import { useAccount } from 'src/hooks/useAccount';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import BillingActivityPanel from './BillingPanels/BillingActivityPanel';
-import SummaryPanel from './BillingPanels/SummaryPanel';
 import BillingSummary from './BillingSummary';
+import PaymentInformation from './BillingPanels/SummaryPanel/PanelCards/PaymentInformation';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -68,7 +68,16 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
               promotion={account?.data?.active_promotions?.[0]}
               uninvoicedBalance={account?.data?.balance_uninvoiced ?? 0}
             />
-            <SummaryPanel data-qa-summary-panel history={props.history} />
+            <PaymentInformation
+              balance={account?.data?.balance ?? 0}
+              balanceUninvoiced={account?.data?.balance_uninvoiced ?? 0}
+              expiry={account?.data?.credit_card?.expiry ?? ''}
+              lastFour={account?.data?.credit_card?.last_four ?? ''}
+              promoCredit={
+                account?.data?.active_promotions?.[0]
+                  ?.this_month_credit_remaining
+              }
+            />
             <BillingActivityPanel />
           </Grid>
         </Grid>

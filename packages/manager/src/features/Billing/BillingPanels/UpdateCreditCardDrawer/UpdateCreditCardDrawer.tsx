@@ -69,8 +69,13 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
   };
 
   const handleExpiryDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const expDate = e.target.value;
+    const expDate = e.target.value ? take(7, e.target.value) : '';
     setExpDate(expDate);
+  };
+
+  const handleCVVChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const _cvv = cleanCVV(e.target.value);
+    setCVV(_cvv);
   };
 
   const submitForm = () => {
@@ -78,9 +83,21 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
     setErrors(undefined);
 
     // MM/YYYY
-    const _date = expDate.match(/([0-2][0-9])\/?([2][0-9]{3})+/);
+    const _date = expDate.match(/(\-?[0-9][0-9]?)\/?([0-9]+)/);
     const expiry_month = _date ? +_date[1] : -1;
     const expiry_year = _date ? +_date?.[2] : -1;
+
+    // Handles if the user tries to use two digit year
+    if (expiry_year < 1000) {
+      setSubmitting(false);
+      setErrors([
+        {
+          field: 'expiry_year',
+          reason: 'Expiration date must have the format MM/YYYY.'
+        }
+      ]);
+      return;
+    }
 
     saveCreditCard({ card_number: cardNumber, expiry_month, expiry_year, cvv })
       .then(() => {
@@ -98,19 +115,21 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
       .catch(error => {
         setSubmitting(false);
         setErrors(getAPIErrorOrDefault(error, 'Unable to update credit card.'));
+        console.log(error);
       });
   };
 
   const resetForm = (_success: boolean | undefined) => {
     setErrors(undefined);
     setCardNumber('');
+    // TODO
     setExpDate(currentMonth + '/' + currentYear);
     setCVV('');
     setSuccess(_success);
   };
 
   const hasErrorFor = getErrorMap(
-    ['card number', 'expiration month', 'expiration year', 'cvv code'],
+    ['card_number', 'expiry_month', 'expiry_year', 'cvv'],
     errors
   );
   const generalError = hasErrorFor.none;
@@ -143,7 +162,7 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
                   label="Credit Card Number"
                   value={cardNumber}
                   onChange={handleCardNumberChange}
-                  errorText={hasErrorFor['card number']}
+                  errorText={hasErrorFor.card_number}
                   className={classes.cardNumber}
                   InputProps={{
                     inputComponent: creditCardField
@@ -156,8 +175,7 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
                   value={expDate}
                   onChange={handleExpiryDateChange}
                   errorText={
-                    hasErrorFor['expiration month'] ||
-                    hasErrorFor['expiration year']
+                    hasErrorFor.expiry_month || hasErrorFor.expiry_year
                   }
                   placeholder={'MM/YYYY'}
                 />
@@ -166,8 +184,8 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
                 <TextField
                   label="CVV"
                   value={cvv}
-                  onChange={cleanCVV}
-                  errorText={hasErrorFor['cvv code']}
+                  onChange={handleCVVChange}
+                  errorText={hasErrorFor.cvv}
                 />
               </Grid>
             </Grid>
