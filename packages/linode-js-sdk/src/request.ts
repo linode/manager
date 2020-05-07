@@ -1,7 +1,27 @@
-import Axios, { AxiosError, AxiosPromise, AxiosResponse } from 'axios';
-import { compose, isEmpty, isNil, lensPath, not, omit, set, when } from 'ramda';
+import Axios, {
+  AxiosError,
+  AxiosPromise,
+  AxiosRequestConfig,
+  AxiosResponse
+} from 'axios';
+import {
+  compose,
+  isEmpty,
+  isNil,
+  lensPath,
+  mergeDeepLeft,
+  not,
+  omit,
+  over,
+  set,
+  when
+} from 'ramda';
 import { ObjectSchema, ValidationError } from 'yup';
 import { APIError } from './types';
+
+interface RequestConfig extends AxiosRequestConfig {
+  validationErrors?: APIError[];
+}
 
 export const baseRequest = Axios.create({
   baseURL: 'https://api.linode.com/v4'
@@ -31,7 +51,7 @@ export const setParams = (params: any = {}) =>
   when(() => isNotEmpty(params), set(L.params, params));
 
 export const setHeaders = (headers: any = {}) =>
-  when(() => isNotEmpty(headers), set(L.headers, headers));
+  when(() => isNotEmpty(headers), over(L.headers, mergeDeepLeft(headers)));
 
 /**
  * Validate and set data in the request configuration object.
@@ -106,8 +126,24 @@ const mapYupToLinodeAPIError = ({
 export const setXFilter = (xFilter: any) =>
   when(() => isNotEmpty(xFilter), set(L.xFilter, JSON.stringify(xFilter)));
 
-const reduceRequestConfig = (...fns: Function[]): any =>
-  fns.reduceRight((result, fn) => fn(result), {});
+/**
+ * Builds up a config starting from a default object and applying
+ * each of the applied functions.
+ *
+ * URL is defaulted for testing purposes; otherwise all requests will
+ * fail unless setURL() is used in the chain.
+ *
+ * Config is defaulted to an empty object because setHeaders() merges
+ * with the existing headers object, unlike all other setters which directly
+ * assign the value. If setHeaders() is called and no headers are present, the result
+ * is an error.
+ * @param fns An array of functions to be applied to the config object.
+ */
+const reduceRequestConfig = (...fns: Function[]): RequestConfig =>
+  fns.reduceRight((result, fn) => fn(result), {
+    url: 'https://api.linode.com/v4',
+    headers: {}
+  });
 
 /** Generator */
 export const requestGenerator = <T>(...fns: Function[]): AxiosPromise<T> => {
