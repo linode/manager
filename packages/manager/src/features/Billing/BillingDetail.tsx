@@ -46,12 +46,18 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
 
   React.useEffect(() => {
     // need to figure out how to get filters to work
-    const filters = { '+order_by': 'date', '+order': 'asc' };
-    // need this to not return a promise
-    const recentInvoice = getInvoices(filters).then(resp => resp.data[0].id);
+    const filters = { order_by: 'date', order: 'asc' };
 
-    console.log(recentInvoice);
-    // setMostRecentInvoiceId(recentInvoice)
+    getInvoices(filters)
+      .then(function(resp) {
+        return resp.data;
+      })
+      .then(function(resp2) {
+        return resp2[0].id;
+      })
+      .then(function(resp3) {
+        setMostRecentInvoiceId(resp3);
+      });
   }, []);
 
   // @todo: useReduxLoad for account/profile requests?
