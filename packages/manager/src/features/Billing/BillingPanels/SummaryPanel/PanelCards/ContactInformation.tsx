@@ -105,9 +105,15 @@ const ContactInformation: React.FC<CombinedProps> = props => {
 
           <Grid item>
             <div
+              role="button"
               className={classes.editBtn}
               onClick={() => {
                 handleEditDrawerOpen();
+              }}
+              onKeyPress={e => {
+                if (e.keyCode === 13) {
+                  handleEditDrawerOpen();
+                }
               }}
             >
               Edit

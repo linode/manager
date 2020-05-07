@@ -42,6 +42,7 @@ const styles = (theme: Theme) =>
 
 interface Props {
   onClose: () => void;
+  open: boolean;
 }
 
 interface State {
@@ -61,6 +62,7 @@ interface State {
     state?: string;
     country?: string;
   };
+  errResponse: string | undefined;
 }
 
 type CombinedProps = AccountProps & Props & WithStyles<ClassNames>;
@@ -90,7 +92,8 @@ class UpdateContactInformationForm extends React.Component<
 > {
   state: State = {
     submitting: false,
-    fields: {}
+    fields: {},
+    errResponse: undefined
   };
 
   composeState = composeState;
@@ -114,10 +117,10 @@ class UpdateContactInformationForm extends React.Component<
 
   render() {
     return (
-      <>
+      <form>
         {this.renderContent()}
         {this.renderFormActions()}
-      </>
+      </form>
     );
   }
 
@@ -137,7 +140,11 @@ class UpdateContactInformationForm extends React.Component<
       return this.renderErrors(accountError.read || []);
     }
 
-    return this.renderForm(account);
+    if (account) {
+      return this.renderForm(account);
+    }
+
+    return null;
   };
 
   renderLoading = () => null;
@@ -202,7 +209,7 @@ class UpdateContactInformationForm extends React.Component<
         className={classes.mainFormContainer}
         data-qa-update-contact
       >
-        {generalError && (
+        {generalError && this.state.errResponse !== undefined && (
           <Grid item xs={12}>
             <Notice error text={generalError} />
           </Grid>
@@ -587,14 +594,16 @@ class UpdateContactInformationForm extends React.Component<
       .then(_ => {
         this.setState({
           success: 'Account information updated.',
-          submitting: false
+          submitting: false,
+          errResponse: undefined
         });
         this.props.onClose();
       })
-      .catch(_ => {
+      .catch(errResponse => {
         this.setState({
           submitting: false,
-          success: undefined
+          success: undefined,
+          errResponse
         });
         scrollErrorIntoView();
       });
@@ -605,8 +614,6 @@ const styled = withStyles(styles);
 
 const withAccount = AccountContainer();
 
-const enhanced = compose(styled, withAccount);
+const enhanced = compose<CombinedProps, Props>(styled, withAccount);
 
-export default enhanced(
-  UpdateContactInformationForm
-) as React.ComponentType<{}>;
+export default enhanced(UpdateContactInformationForm);
