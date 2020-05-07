@@ -106,6 +106,7 @@ const DDrawer: React.StatelessComponent<CombinedProps> = props => {
             onClick={props.onClose as (e: any) => void}
             className={classes.button}
             data-qa-close-drawer
+            aria-label="Close drawer"
           >
             <Close />
           </Button>
