@@ -148,7 +148,7 @@ module.exports = {
           {
             test: [/\.svg$/],
             exclude: [/font-logos\/assets/],
-            loader: ['svgr/webpack']
+            loader: ['@svgr/webpack']
           },
           // Compile .tsx?
           {
