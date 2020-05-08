@@ -34,7 +34,8 @@ module.exports = {
     'ramda',
     'cypress',
     'prettier',
-    'scanjs-rules'
+    'scanjs-rules',
+    'xss'
   ],
   extends: [
     // disables a few of the recommended rules from the previous set that we know are already covered by TypeScript's typechecker
@@ -130,7 +131,27 @@ module.exports = {
     'scanjs-rules/call_parseFromString': 'error',
     'scanjs-rules/new_Function': 'error',
     'scanjs-rules/property_crypto': 'error',
-    'scanjs-rules/property_geolocation': 'error'
+    'scanjs-rules/property_geolocation': 'error',
+    // Prevent patterns susceptible to XSS, like '<div>' + userInput + '</div>'.
+    // https://github.com/Rantanen/eslint-plugin-xss/blob/master/docs/rules/no-mixed-html.md
+    'xss/no-mixed-html': [
+      'error',
+      {
+        // It's only valid to assign HTML to variables/attributes named "_html" (for React's
+        // dangerouslySetInnerHTML) and /sanitize/i (regex matching).
+        htmlVariableRules: ['__html', 'sanitize/i'],
+        functions: {
+          // Declare "sanitizeHTML" as a function that accepts HTML as input and output, and that
+          // it's "safe", meaning callers can trust the output (but the output still can only be
+          // assigned to a variable with the naming convention above).
+          sanitizeHTML: {
+            htmlInput: true,
+            htmlOutput: true,
+            safe: true
+          }
+        }
+      }
+    ]
   },
   env: {
     browser: true

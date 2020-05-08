@@ -2,14 +2,17 @@ import { isURLValid, sanitizeHTML } from './sanitizeHTML';
 
 describe('sanitizeHTML', () => {
   it('should escape non-whitelisted tags', () => {
+    // safe
     expect(sanitizeHTML('<script>')).not.toContain('<script>');
   });
 
   it('should strip non-whitelisted attributes', () => {
+    // safe
     expect(sanitizeHTML('<a onmouseover>')).not.toContain('onmouseover');
   });
 
   it('should strip invalid href values', () => {
+    // safe
     expect(sanitizeHTML('<a href="javascript:void"/>')).not.toContain('href');
   });
 });
