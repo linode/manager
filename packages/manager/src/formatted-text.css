@@ -33,7 +33,7 @@
   width: 100%;
 }
 
-.formatted-text .version {
+.formatted-text p:last-of-type {
   display: block;
   margin-top: 32px;
 }
