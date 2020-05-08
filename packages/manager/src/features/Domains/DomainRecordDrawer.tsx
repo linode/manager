@@ -821,6 +821,8 @@ export const shouldResolve = (type: string, field: string) => {
   switch (type) {
     case 'AAAA':
       return field === 'name';
+    case 'SRV':
+      return field === 'target';
     case 'CNAME':
       return field === 'target';
     default:
