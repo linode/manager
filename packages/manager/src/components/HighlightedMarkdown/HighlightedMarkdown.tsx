@@ -71,13 +71,17 @@ export const HighlightedMarkdown: React.FC<HighlightedMarkdownProps> = props => 
   // Adapted from https://stackblitz.com/edit/react-highlighted-markdown?file=highlighted-markdown.tsx
   // All the safety checking is due to a reported error from certain versions of FireFox.
   React.useEffect(() => {
-    if (rootRef.current) {
-      const blocks = rootRef.current.querySelectorAll('pre code') ?? [];
-      const len = blocks.length ?? 0;
-      let i = 0;
-      for (i; i < len; i++) {
-        hljs.highlightBlock(blocks[i]);
+    try {
+      if (rootRef.current) {
+        const blocks = rootRef.current.querySelectorAll('pre code') ?? [];
+        const len = blocks.length ?? 0;
+        let i = 0;
+        for (i; i < len; i++) {
+          hljs.highlightBlock(blocks[i]);
+        }
       }
+    } catch {
+      // do nothing, it's not the end of the world if we can't highlight Markdown.
     }
   }, [textOrMarkdown]);
 
