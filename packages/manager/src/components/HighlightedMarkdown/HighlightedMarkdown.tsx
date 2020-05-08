@@ -69,10 +69,16 @@ export const HighlightedMarkdown: React.FC<HighlightedMarkdownProps> = props => 
   const sanitizedHtml = sanitizeHTML(html);
 
   // Adapted from https://stackblitz.com/edit/react-highlighted-markdown?file=highlighted-markdown.tsx
+  // All the safety checking is due to a reported error from certain versions of FireFox.
   React.useEffect(() => {
-    rootRef.current?.querySelectorAll('pre code').forEach(block => {
-      hljs.highlightBlock(block);
-    });
+    if (rootRef.current) {
+      const blocks = rootRef.current.querySelectorAll('pre code');
+      if (blocks && Array.isArray(blocks)) {
+        blocks.forEach(block => {
+          hljs.highlightBlock(block);
+        });
+      }
+    }
   }, [textOrMarkdown]);
 
   return (
