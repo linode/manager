@@ -72,12 +72,10 @@ export const HighlightedMarkdown: React.FC<HighlightedMarkdownProps> = props => 
   // All the safety checking is due to a reported error from certain versions of FireFox.
   React.useEffect(() => {
     if (rootRef.current) {
-      const blocks = rootRef.current.querySelectorAll('pre code');
-      if (blocks && Array.isArray(blocks)) {
-        blocks.forEach(block => {
-          hljs.highlightBlock(block);
-        });
-      }
+      const blocks = rootRef.current.querySelectorAll('pre code') ?? [];
+      blocks.forEach(block => {
+        hljs.highlightBlock(block);
+      });
     }
   }, [textOrMarkdown]);
 
