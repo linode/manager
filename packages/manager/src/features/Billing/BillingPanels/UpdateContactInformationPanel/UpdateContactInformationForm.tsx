@@ -106,10 +106,12 @@ class UpdateContactInformationForm extends React.Component<
   }
 
   componentDidUpdate(prevProps: CombinedProps) {
-    if (!prevProps.accountData && !!this.props.accountData) {
+    const { open } = this.props;
+
+    if (prevProps.open !== open) {
       this.setState({
         fields: {
-          state: this.props.accountData.state
+          state: this.props.accountData?.state
         }
       });
     }
