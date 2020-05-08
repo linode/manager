@@ -260,7 +260,7 @@ export const BillingActivityPanel: React.FC<{}> = () => {
   // many invoices. @todo: Re-think how we use the OrderBy and Paginate combo in other components.
   const billingActivityPanel = React.useCallback(
     ({ data: orderedData }) => (
-      <Paginate pageSize={25} data={orderedData}>
+      <Paginate pageSize={25} data={orderedData} shouldScroll={false}>
         {({
           data: paginatedAndOrderedData,
           count,
