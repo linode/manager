@@ -13,6 +13,7 @@ export interface Domain {
   axfr_ips: string[];
   group: string;
   type: DomainType;
+  updated: string;
 }
 
 export type DomainStatus = 'active' | 'disabled' | 'edit_mode' | 'has_errors';

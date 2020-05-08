@@ -137,6 +137,7 @@ const ListGroupedDomains: React.StatelessComponent<CombinedProps> = props => {
                           onRemove={onRemove}
                           type={domain.type}
                           status={domain.status}
+                          lastModified={domain.updated}
                           onDisableOrEnable={props.onDisableOrEnable}
                         />
                       ))}
