@@ -48,7 +48,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     cursor: 'pointer',
     color: '#3683dc',
-    fontWeight: 700
+    fontWeight: 700,
+    background: 'none',
+    border: 'none'
   }
 }));
 
@@ -104,9 +106,7 @@ const ContactInformation: React.FC<CombinedProps> = props => {
           </Grid>
 
           <Grid item>
-            <div
-              role="button"
-              tabIndex={0}
+            <button
               className={classes.editBtn}
               onClick={() => {
                 handleEditDrawerOpen();
@@ -118,7 +118,7 @@ const ContactInformation: React.FC<CombinedProps> = props => {
               }}
             >
               Edit
-            </div>
+            </button>
           </Grid>
         </Grid>
 
