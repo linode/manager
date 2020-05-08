@@ -106,6 +106,7 @@ const ContactInformation: React.FC<CombinedProps> = props => {
           <Grid item>
             <div
               role="button"
+              tabIndex={0}
               className={classes.editBtn}
               onClick={() => {
                 handleEditDrawerOpen();
