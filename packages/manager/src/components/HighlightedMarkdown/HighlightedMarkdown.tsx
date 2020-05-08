@@ -73,9 +73,11 @@ export const HighlightedMarkdown: React.FC<HighlightedMarkdownProps> = props => 
   React.useEffect(() => {
     if (rootRef.current) {
       const blocks = rootRef.current.querySelectorAll('pre code') ?? [];
-      blocks.forEach(block => {
-        hljs.highlightBlock(block);
-      });
+      const len = blocks.length ?? 0;
+      let i = 0;
+      for (i; i < len; i++) {
+        hljs.highlightBlock(blocks[i]);
+      }
     }
   }, [textOrMarkdown]);
 
