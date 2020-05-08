@@ -166,7 +166,7 @@ export const TwoFactor: React.FC<CombinedProps> = props => {
       return getToken()
         .then(_ => {
           setTwoFactorEnabled(true);
-          setLoading(true);
+          setLoading(false);
           setShowQRCode(true);
         })
         .catch(err => err);
@@ -255,7 +255,11 @@ export const TwoFactor: React.FC<CombinedProps> = props => {
                       username={username}
                       loading={loading}
                       onSuccess={handleEnableSuccess}
-                      onCancel={toggleHidden}
+                      onCancel={() => {
+                        twoFactorConfirmed
+                          ? toggleHidden()
+                          : toggleTwoFactorEnabled(false);
+                      }}
                       twoFactorConfirmed={twoFactorConfirmed}
                       toggleDialog={toggleScratchDialog}
                     />
@@ -312,6 +316,8 @@ interface ToggleProps {
 }
 
 const TwoFactorToggle: React.FC<ToggleProps> = props => {
+  const { twoFactorEnabled } = props;
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { twoFactorConfirmed, onChange } = props;
     const enabled = e.currentTarget.checked;
@@ -325,8 +331,6 @@ const TwoFactorToggle: React.FC<ToggleProps> = props => {
       onChange(enabled);
     }
   };
-
-  const { twoFactorEnabled } = props;
 
   return (
     <FormControl fullWidth>
