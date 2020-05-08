@@ -123,7 +123,6 @@ export const CreditCard: React.FC<Props> = props => {
                   onChange={handleCVVChange}
                   value={cvv}
                   type="text"
-                  placeholder={'0000'}
                   inputProps={{ id: 'paymentCVV' }}
                   className={classes.cvvField}
                   hasAbsoluteError
