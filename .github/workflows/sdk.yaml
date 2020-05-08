@@ -1,0 +1,25 @@
+name: Linode JS SDK
+on:
+    push:
+        branches:
+            - master
+            - develop
+jobs:
+    build:
+
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-node@v1
+              with:
+                node-version: '10.16.0'
+            - run: echo "Installing Yarn"
+            - name: Install Yarn
+              run: npm install -g yarn
+            - run: echo "Installing dependencies"
+            - name: Run Yarn install
+              run: |
+                yarn install:all
+                yarn workspace linode-js-sdk test
+            - run: echo "Unit tests passed"
+
