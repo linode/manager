@@ -283,23 +283,6 @@ export interface EntityEvent extends Event {
   entity: Entity;
 }
 
-export interface SupportTicket {
-  opened: string;
-  id: number;
-  closed: string | null;
-  closable: boolean;
-  description: string;
-  entity: Entity | null;
-  gravatar_id: string;
-  attachments: string[];
-  opened_by: string;
-  status: 'closed' | 'new' | 'open';
-  summary: string;
-  updated: string;
-  updated_by: string;
-  gravatarUrl: string | undefined;
-}
-
 export interface OAuthClient {
   id: string;
   label: string;
@@ -331,14 +314,4 @@ export interface SaveCreditCardData {
   expiry_year: number;
   expiry_month: number;
   cvv?: string;
-}
-
-export interface SupportReply {
-  created: string;
-  created_by: string;
-  gravatar_id: string;
-  description: string;
-  id: number;
-  from_linode: boolean;
-  gravatarUrl: string | undefined;
 }

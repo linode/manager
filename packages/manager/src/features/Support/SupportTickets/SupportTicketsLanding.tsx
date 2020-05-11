@@ -1,4 +1,4 @@
-import { SupportTicket } from 'linode-js-sdk/lib/account';
+import { SupportTicket } from 'linode-js-sdk/lib/support';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -185,9 +185,7 @@ export class SupportTicketsLanding extends React.PureComponent<
               data-qa-breadcrumb
             />
           </Grid>
-          {this.props.globalErrors.account_unactivated ? (
-            <React.Fragment />
-          ) : (
+          {this.props.globalErrors.account_unactivated && (
             <Grid item>
               <Grid container alignItems="flex-end">
                 <Grid item>
