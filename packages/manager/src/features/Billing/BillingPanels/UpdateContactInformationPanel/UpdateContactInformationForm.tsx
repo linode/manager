@@ -254,7 +254,7 @@ class UpdateContactInformationForm extends React.Component<
           ]}
         >
           <Grid container>
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={12}>
               <TextField
                 label="Company Name (optional)"
                 value={defaultTo(account.company, fields.company)}
@@ -269,7 +269,6 @@ class UpdateContactInformationForm extends React.Component<
         <Grid
           item
           xs={12}
-          sm={12}
           updateFor={[
             account.address_1,
             fields.address_1,
@@ -289,7 +288,6 @@ class UpdateContactInformationForm extends React.Component<
         <Grid
           item
           xs={12}
-          sm={12}
           updateFor={[
             account.address_2,
             fields.address_2,
@@ -431,7 +429,6 @@ class UpdateContactInformationForm extends React.Component<
         <Grid
           item
           xs={6}
-          sm={6}
           updateFor={[account.email, fields.email, errorMap.email, classes]}
         >
           <TextField
@@ -447,7 +444,6 @@ class UpdateContactInformationForm extends React.Component<
         <Grid
           item
           xs={6}
-          sm={6}
           updateFor={[account.phone, fields.phone, errorMap.phone, classes]}
         >
           <TextField
@@ -463,7 +459,6 @@ class UpdateContactInformationForm extends React.Component<
         <Grid
           item
           xs={12}
-          sm={12}
           updateFor={[account.tax_id, fields.tax_id, errorMap.tax_id, classes]}
         >
           <TextField

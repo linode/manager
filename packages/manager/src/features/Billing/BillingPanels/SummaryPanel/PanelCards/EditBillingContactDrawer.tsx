@@ -6,9 +6,6 @@ import UpdateContactInformationForm from 'src/features/Billing/BillingPanels/Upd
 const useStyles = makeStyles((theme: Theme) => ({
   drawer: {
     '& .MuiDrawer-paper': {
-      [theme.breakpoints.up('md')]: {
-        width: 480
-      },
       overflowX: 'hidden'
     },
     '& .MuiGrid-root': {
