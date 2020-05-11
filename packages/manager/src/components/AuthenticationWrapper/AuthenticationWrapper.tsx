@@ -38,6 +38,14 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     isAuthenticated: false
   };
 
+  /**
+   * We make a series of requests for data on app load. The flow is:
+   * 1. App begins load; users see splash screen
+   * 2. Initial requests (in makeInitialRequests) are made (account, profile, etc.)
+   * 3. Initial requests complete; app is marked as done loading
+   * 4. As splash screen goes away, secondary requests (in makeSecondaryRequests -- Linodes, types, regions)
+   * are kicked off
+   */
   makeInitialRequests = async () => {
     // When loading Lish we avoid all this extra data loading
     if (window.location?.pathname?.includes('/lish/')) {
