@@ -145,7 +145,7 @@ export const BillingSummary: React.FC<Props> = props => {
     : 0;
 
   const totalBalance = hasCredit
-    ? Math.abs(calculatedBalance)
+    ? calculatedBalance
     : promotion
     ? Math.max(0, calculatedBalance - convertedPromoCredit)
     : calculatedBalance;
@@ -305,9 +305,7 @@ export const BillingSummary: React.FC<Props> = props => {
                   {/* If there is credit left over post-calculation, display as negative in parens */}
                   <Currency
                     quantity={totalBalance}
-                    wrapInParentheses={
-                      hasCredit && Math.abs(calculatedBalance) > 0
-                    }
+                    wrapInParentheses={totalBalance < 0}
                   />
                 </Typography>
               </Grid>
