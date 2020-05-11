@@ -5,8 +5,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import { getErrorMap, getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import ConfirmToken from './ConfirmToken';
 import QRCodeForm from './QRCodeForm';
@@ -84,14 +83,9 @@ export const EnableTwoFactorForm: React.FC<CombinedProps> = props => {
 
   const { loading, secret, twoFactorConfirmed } = props;
   const secretLink = getSecretLink();
-  const hasErrorFor = getAPIErrorFor(
-    {
-      tfa_code: 'tfa_code'
-    },
-    errors
-  );
-  const tokenError = hasErrorFor('tfa_code');
-  const generalError = hasErrorFor('none');
+  const hasErrorFor = getErrorMap(['tfa_code'], errors);
+  const tokenError = hasErrorFor.tfa_code;
+  const generalError = hasErrorFor.none;
 
   return (
     <React.Fragment>

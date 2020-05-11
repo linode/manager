@@ -67,6 +67,8 @@ type CombinedProps = Props & StateProps & DispatchProps;
 export const TwoFactor: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
+  const { username } = props;
+
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [secret, setSecret] = React.useState<string>('');
@@ -84,13 +86,16 @@ export const TwoFactor: React.FC<CombinedProps> = props => {
    * @todo This logic can be removed when IP Whitelisting (legacy)
    * has been fully deprecated.
    */
-  React.useEffect(() => {
-    props.clearState();
-  }, [twoFactorEnabled]);
+
+  const { clearState, twoFactor } = props;
 
   React.useEffect(() => {
-    setTwoFactorConfirmed(props.twoFactor);
-  }, [TwoFactor]);
+    clearState();
+  }, [twoFactorEnabled, clearState]);
+
+  React.useEffect(() => {
+    setTwoFactorConfirmed(twoFactor);
+  }, [twoFactor]);
 
   /**
    * success when TFA is enabled
@@ -107,7 +112,7 @@ export const TwoFactor: React.FC<CombinedProps> = props => {
     setShowQRCode(false);
     setTwoFactorEnabled(true);
     setTwoFactorConfirmed(true);
-    setScratchCode('');
+    setScratchCode(scratchCode);
   };
 
   /**
@@ -124,6 +129,14 @@ export const TwoFactor: React.FC<CombinedProps> = props => {
     setSuccess('Two-factor authentication has been disabled.');
     setTwoFactorEnabled(false);
     setTwoFactorConfirmed(false);
+  };
+
+  const handleCancel = () => {
+    if (twoFactorConfirmed) {
+      toggleHidden();
+    } else {
+      toggleTwoFactorEnabled(false);
+    }
   };
 
   const getToken = () => {
@@ -175,7 +188,6 @@ export const TwoFactor: React.FC<CombinedProps> = props => {
     return undefined;
   };
 
-  const { username } = props;
   const hasErrorFor = getAPIErrorFor({}, errors);
   const generalError = hasErrorFor('none');
 
@@ -255,11 +267,7 @@ export const TwoFactor: React.FC<CombinedProps> = props => {
                       username={username}
                       loading={loading}
                       onSuccess={handleEnableSuccess}
-                      onCancel={() => {
-                        twoFactorConfirmed
-                          ? toggleHidden()
-                          : toggleTwoFactorEnabled(false);
-                      }}
+                      onCancel={handleCancel}
                       twoFactorConfirmed={twoFactorConfirmed}
                       toggleDialog={toggleScratchDialog}
                     />
