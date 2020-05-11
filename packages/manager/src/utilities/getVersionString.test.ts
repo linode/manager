@@ -14,8 +14,7 @@ describe('Append Cloud Manager Version', () => {
 
   it('returns the version as set by .env', () => {
     process.env.VERSION = '0.00.0';
-    // We're requiring a fresh module each time so that the module picks up
-    // ENV variable changes.
+    // We're requiring a fresh module each time so that the module picks up ENV variable changes.
     const versionString = require('./getVersionString').getVersionString();
     expect(versionString.includes('0.00.0')).toBeTruthy();
   });
@@ -23,17 +22,13 @@ describe('Append Cloud Manager Version', () => {
   it('prefixes the version with "Cloud Manager Version: "', () => {
     process.env.VERSION = '0.00.0';
     const versionString = require('./getVersionString').getVersionString();
-    expect(
-      versionString.startsWith('<span class="version">Cloud Manager Version: ')
-    ).toBeTruthy();
+    expect(versionString.startsWith('Cloud Manager Version: ')).toBeTruthy();
   });
 
   it('returns the prefix concatenated with the version', () => {
     process.env.VERSION = '0.00.0';
     const versionString = require('./getVersionString').getVersionString();
-    expect(versionString).toBe(
-      '<span class="version">Cloud Manager Version: 0.00.0</span>'
-    );
+    expect(versionString).toBe('Cloud Manager Version: 0.00.0');
   });
 
   it('returns an empty string if the version env variable cannot be found', () => {

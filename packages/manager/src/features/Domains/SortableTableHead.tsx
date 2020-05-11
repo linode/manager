@@ -59,6 +59,15 @@ const SortableTableHead: React.StatelessComponent<combinedProps> = props => {
         >
           Status
         </TableSortCell>
+        <TableSortCell
+          data-qa-domain-type-header={order}
+          active={orderBy === 'updated'}
+          label="updated"
+          direction={order}
+          handleClick={handleOrderChange}
+        >
+          Last Modified
+        </TableSortCell>
         <TableCell />
       </TableRow>
     </TableHead>
