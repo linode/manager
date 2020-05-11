@@ -1,30 +1,7 @@
 import Settings from '@material-ui/icons/Settings';
 import * as classNames from 'classnames';
-import { AccountCapability } from 'linode-js-sdk/lib/account';
-import { Profile } from 'linode-js-sdk/lib/profile';
-import { clone, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
-import Logo from 'src/assets/logo/new-logo.svg';
-import Divider from 'src/components/core/Divider';
-import Grid from 'src/components/core/Grid';
-import Hidden from 'src/components/core/Hidden';
-import IconButton from 'src/components/core/IconButton';
-import ListItemText from 'src/components/core/ListItemText';
-import Menu from 'src/components/core/Menu';
-import withFeatureFlagConsumer, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container';
-import { MapState } from 'src/store/types';
-import { sendOneClickNavigationEvent } from 'src/utilities/ga';
-import AdditionalMenuItems from './AdditionalMenuItems';
-import styled, { StyleProps } from './PrimaryNav.styles';
-import SpacingToggle from './SpacingToggle';
-import ThemeToggle from './ThemeToggle';
-import { linkIsActive } from './utils';
-
+import { Link } from 'react-router-dom';
 import Kubernetes from 'src/assets/addnewmenu/kubernetes.svg';
 import OCA from 'src/assets/addnewmenu/oneclick.svg';
 import Account from 'src/assets/icons/account.svg';
@@ -39,6 +16,22 @@ import StackScript from 'src/assets/icons/entityIcons/stackscript.svg';
 import Volume from 'src/assets/icons/entityIcons/volume.svg';
 import Longview from 'src/assets/icons/longview.svg';
 import Managed from 'src/assets/icons/managednav.svg';
+import Logo from 'src/assets/logo/new-logo.svg';
+import Divider from 'src/components/core/Divider';
+import Grid from 'src/components/core/Grid';
+import Hidden from 'src/components/core/Hidden';
+import IconButton from 'src/components/core/IconButton';
+import ListItemText from 'src/components/core/ListItemText';
+import Menu from 'src/components/core/Menu';
+import useAccountManagement from 'src/hooks/useAccountManagement';
+import useFlags from 'src/hooks/useFlags';
+import { sendOneClickNavigationEvent } from 'src/utilities/ga';
+import AdditionalMenuItems from './AdditionalMenuItems';
+import useStyles from './PrimaryNav.styles';
+import SpacingToggle from './SpacingToggle';
+import ThemeToggle from './ThemeToggle';
+import { linkIsActive } from './utils';
+import { useLocation } from 'react-router-dom';
 
 type NavEntity =
   | 'Linodes'
@@ -59,164 +52,81 @@ type NavEntity =
 interface PrimaryLink {
   display: NavEntity;
   href: string;
-  key: string;
   attr?: { [key: string]: any };
   icon?: JSX.Element;
   activeLinks?: Array<string>;
   onClick?: (e: React.ChangeEvent<any>) => void;
+  hide?: boolean;
 }
 
-interface Props {
+export interface Props {
   closeMenu: () => void;
   toggleTheme: () => void;
   toggleSpacing: () => void;
   isCollapsed: boolean;
 }
 
-interface State {
-  drawerOpen: boolean;
-  expandedMenus: Record<string, boolean>;
-  primaryLinks: PrimaryLink[];
-  anchorEl?: HTMLElement;
-}
+export const PrimaryNav: React.FC<Props> = props => {
+  const { closeMenu, isCollapsed, toggleTheme, toggleSpacing } = props;
+  const classes = useStyles();
 
-interface MenuItemReducer {
-  link: PrimaryLink;
-  insertAfter: NavEntity;
-  conditionToAdd: () => boolean;
-}
+  const [anchorEl, setAnchorEl] = React.useState<
+    (EventTarget & HTMLElement) | undefined
+  >();
 
-export type CombinedProps = Props &
-  StyleProps &
-  StateProps &
-  FeatureFlagConsumerProps &
-  FeatureFlagConsumerProps &
-  RouteComponentProps<{}>;
+  const flags = useFlags();
+  const location = useLocation();
 
-export class PrimaryNav extends React.Component<CombinedProps, State> {
-  state: State = {
-    drawerOpen: false,
-    expandedMenus: {
-      account: false,
-      support: false
-    },
-    primaryLinks: [],
-    anchorEl: undefined
-  };
+  const {
+    _hasAccountAccess,
+    _isManagedAccount,
+    account
+  } = useAccountManagement();
 
-  mounted: boolean = false;
-
-  componentDidMount() {
-    this.mounted = true;
-    this.createMenuItems();
-  }
-
-  componentWillUnmount() {
-    this.mounted = false;
-  }
-
-  componentDidUpdate(prevProps: CombinedProps) {
-    // Re-create menu items if account access has changed (via profile), or if account
-    // has been updated. If account has been updated (i.e. when it actually loads)
-    // there maybe be additional menu items we want to display, depending on
-    // `account.capabilities`.
-    if (
-      prevProps.hasAccountAccess !== this.props.hasAccountAccess ||
-      prevProps.accountLastUpdated !== this.props.accountLastUpdated ||
-      prevProps.isManagedAccount !== this.props.isManagedAccount ||
-      prevProps.accountLastUpdated !== this.props.accountLastUpdated ||
-      prevProps.flags !== this.props.flags
-    ) {
-      this.createMenuItems();
-    }
-  }
-
-  primaryNavManipulator = (): MenuItemReducer[] => {
-    const { hasAccountAccess, isManagedAccount, flags } = this.props;
-
-    return [
-      {
-        conditionToAdd: () => isManagedAccount,
-        insertAfter: 'Kubernetes',
-        link: {
-          display: 'Managed',
-          href: '/managed',
-          key: 'managed',
-          icon: <Managed />
-        }
-      },
-      {
-        conditionToAdd: () => hasAccountAccess,
-        insertAfter: 'Images',
-        link: {
-          display: 'Account',
-          href: '/account/billing',
-          key: 'account',
-          icon: <Account className="small" />,
-          activeLinks: [
-            '/account/billing',
-            '/account/users',
-            '/account/settings'
-          ]
-        }
-      },
-      {
-        conditionToAdd: () => !!flags.firewalls,
-        insertAfter: 'Domains',
-        link: {
-          display: 'Firewalls',
-          href: '/firewalls',
-          key: 'firewalls',
-          icon: <Firewall />
-        }
-      }
-    ];
-  };
-
-  createMenuItems = () => {
-    const primaryLinks: PrimaryLink[] = [
+  const primaryLinks: PrimaryLink[] = React.useMemo(
+    () => [
       {
         display: 'Dashboard',
         href: '/dashboard',
-        key: 'dashboard',
         icon: <Dashboard className="small" />
       },
       {
         display: 'Linodes',
         href: '/linodes',
         activeLinks: ['/linodes', '/linodes/create'],
-        key: 'linodes',
         icon: <Linode />
       },
       {
         display: 'Volumes',
         href: '/volumes',
-        key: 'volumes',
         icon: <Volume />
       },
       {
         display: 'Object Storage',
         href: '/object-storage/buckets',
         activeLinks: ['/object-storage/buckets', '/object-storage/access-keys'],
-        key: 'object-storage',
         icon: <Storage />
       },
       {
         display: 'NodeBalancers',
         href: '/nodebalancers',
-        key: 'nodebalancers',
         icon: <NodeBalancer />
       },
       {
         display: 'Domains',
         href: '/domains',
-        key: 'domains',
         icon: <Domain style={{ transform: 'scale(1.5)' }} />
+      },
+
+      {
+        hide: !flags.firewalls,
+        display: 'Firewalls',
+        href: '/firewalls',
+        icon: <Firewall />
       },
       {
         display: 'Marketplace',
         href: '/linodes/create?type=One-Click',
-        key: 'one-click',
         attr: { 'data-qa-one-click-nav-btn': true },
         icon: <OCA />,
         onClick: () => {
@@ -226,314 +136,239 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
       {
         display: 'Longview',
         href: '/longview',
-        key: 'longview',
         icon: <Longview className="small" />
       },
       {
         display: 'Kubernetes',
         href: '/kubernetes/clusters',
-        key: 'kubernetes',
         icon: <Kubernetes />
+      },
+      {
+        hide: !_isManagedAccount,
+        display: 'Managed',
+        href: '/managed',
+        icon: <Managed />
       },
       {
         display: 'StackScripts',
         href: '/stackscripts?type=account',
-        key: 'stackscripts',
         icon: <StackScript />
       },
       {
         display: 'Images',
         href: '/images',
-        key: 'images',
         icon: <Image className="small" />
-      }
-    ];
-
-    const potentialMenuItemsToAdd = this.primaryNavManipulator();
-
-    const finalMenuItems: PrimaryLink[] = potentialMenuItemsToAdd.reduce(
-      (acc, eachItem) => {
-        const indexOfFoundNavItem = acc.findIndex(
-          eachNavItem => eachNavItem.display === eachItem.insertAfter
-        );
-
-        /**
-         * if our passed boolean condition evaluates true,
-         * add it to the list of primary nav items.
-         */
-        if (eachItem.conditionToAdd()) {
-          acc.splice(indexOfFoundNavItem + 1, 0, eachItem.link);
-        }
-
-        return acc;
       },
-      clone(primaryLinks)
-    );
+      {
+        hide: account.lastUpdated === 0 || !_hasAccountAccess,
+        display: 'Account',
+        href: '/account/billing',
+        icon: <Account className="small" />,
+        activeLinks: ['/account/billing', '/account/users', '/account/settings']
+      }
+    ],
+    [flags.firewalls, _isManagedAccount, account.lastUpdated, _hasAccountAccess]
+  );
 
-    this.setState({ primaryLinks: finalMenuItems });
-  };
+  const filteredLinks = primaryLinks.filter(thisLink => !thisLink.hide);
 
-  navigate = (href: string) => {
-    const { history, closeMenu } = this.props;
-    history.push(href);
-    closeMenu();
-  };
-
-  goToHelp = () => {
-    this.navigate('/support');
-  };
-
-  goToProfile = () => {
-    this.navigate('/profile/display');
-  };
-
-  logOut = () => {
-    this.navigate('/logout');
-  };
-
-  handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    this.setState({ anchorEl: event.currentTarget });
-  };
-
-  handleClose = () => {
-    this.setState({ anchorEl: undefined });
-  };
-
-  renderPrimaryLink = (primaryLink: PrimaryLink, isLast: boolean) => {
-    const { classes, isCollapsed } = this.props;
-
-    return (
-      <React.Fragment key={primaryLink.key}>
-        <Link
-          to={primaryLink.href}
-          onClick={(e: React.ChangeEvent<any>) => {
-            this.props.closeMenu();
-            if (primaryLink.onClick) {
-              primaryLink.onClick(e);
-            }
-          }}
-          data-qa-nav-item={primaryLink.key}
-          {...primaryLink.attr}
+  return (
+    <Grid
+      className={classes.menuGrid}
+      container
+      alignItems="flex-start"
+      justify="flex-start"
+      direction="column"
+      wrap="nowrap"
+      spacing={0}
+      component="nav"
+      role="navigation"
+    >
+      <Grid item>
+        <div
           className={classNames({
-            [classes.listItem]: true,
-            [classes.active]: linkIsActive(
-              primaryLink.href,
-              primaryLink.activeLinks
-            ),
-            listItemCollpased: isCollapsed
+            [classes.logoItem]: true,
+            [classes.logoCollapsed]: isCollapsed
           })}
         >
-          {primaryLink.icon && isCollapsed && (
-            <div className="icon">{primaryLink.icon}</div>
-          )}
-          <ListItemText
-            primary={primaryLink.display}
-            disableTypography={true}
-            className={classNames({
-              [classes.linkItem]: true,
-              primaryNavLink: true,
-              hiddenWhenCollapsed: isCollapsed
-            })}
+          <Link to={`/dashboard`} onClick={closeMenu} title="Dashboard">
+            <Logo width={115} height={43} />
+          </Link>
+        </div>
+      </Grid>
+      <div
+        className={classNames({
+          ['fade-in-table']: true,
+          [classes.fadeContainer]: true
+        })}
+      >
+        {filteredLinks.map(thisLink => (
+          <PrimaryLink
+            key={thisLink.display}
+            closeMenu={closeMenu}
+            isCollapsed={isCollapsed}
+            locationSearch={location.search}
+            locationPathname={location.pathname}
+            {...thisLink}
           />
-        </Link>
-        <Divider className={classes.divider} />
-      </React.Fragment>
-    );
-  };
+        ))}
 
-  render() {
-    const { classes, isCollapsed } = this.props;
-    const { expandedMenus, anchorEl } = this.state;
+        {/** menu items under the main navigation links */}
+        <AdditionalMenuItems
+          linkClasses={(href?: string) =>
+            classNames({
+              [classes.listItem]: true,
+              [classes.active]: href
+                ? linkIsActive(href, location.search, location.pathname)
+                : false
+            })
+          }
+          listItemClasses={classNames({
+            [classes.linkItem]: true
+          })}
+          closeMenu={closeMenu}
+          dividerClasses={classes.divider}
+          isCollapsed={isCollapsed}
+        />
 
-    return (
-      <React.Fragment>
-        <Grid
-          className={classes.menuGrid}
-          container
-          alignItems="flex-start"
-          justify="flex-start"
-          direction="column"
-          wrap="nowrap"
-          spacing={0}
-          component="nav"
-          role="navigation"
-        >
-          <Grid item>
-            <div
-              className={classNames({
-                [classes.logoItem]: true,
-                [classes.logoCollapsed]: isCollapsed
-              })}
-            >
-              <Link
-                to={`/dashboard`}
-                onClick={() => this.props.closeMenu()}
-                title="Dashboard"
-              >
-                <Logo width={115} height={43} />
-              </Link>
-            </div>
-          </Grid>
-          <div
+        <Hidden mdUp>
+          <Divider className={classes.divider} />
+          <Link
+            to="/profile/display"
+            onClick={closeMenu}
+            data-qa-nav-item="/profile/display"
             className={classNames({
-              ['fade-in-table']: true,
-              [classes.fadeContainer]: true
+              [classes.listItem]: true,
+              [classes.active]:
+                linkIsActive(
+                  '/profile/display',
+                  location.search,
+                  location.pathname
+                ) === true
             })}
           >
-            {this.state.primaryLinks.map((primaryLink, id, arr) =>
-              this.renderPrimaryLink(primaryLink, id === arr.length - 1)
-            )}
-
-            {/** menu items under the main navigation links */}
-            <AdditionalMenuItems
-              linkClasses={(href?: string) =>
-                classNames({
-                  [classes.listItem]: true,
-                  [classes.active]: href ? linkIsActive(href) : false
-                })
-              }
-              listItemClasses={classNames({
+            <ListItemText
+              primary="My Profile"
+              disableTypography={true}
+              className={classNames({
                 [classes.linkItem]: true
               })}
-              closeMenu={this.props.closeMenu}
-              dividerClasses={classes.divider}
-              isCollapsed={isCollapsed}
             />
-
-            <Hidden mdUp>
-              <Divider className={classes.divider} />
-              <Link
-                to="/profile/display"
-                onClick={this.props.closeMenu}
-                data-qa-nav-item="/profile/display"
-                className={classNames({
-                  [classes.listItem]: true,
-                  [classes.active]:
-                    expandedMenus.support ||
-                    linkIsActive('/profile/display') === true
-                })}
-              >
-                <ListItemText
-                  primary="My Profile"
-                  disableTypography={true}
-                  className={classNames({
-                    [classes.linkItem]: true
-                  })}
-                />
-              </Link>
-              <Link
-                to="/logout"
-                onClick={this.props.closeMenu}
-                data-qa-nav-item="/logout"
-                className={classNames({
-                  [classes.listItem]: true
-                })}
-              >
-                <ListItemText
-                  primary="Log Out"
-                  disableTypography={true}
-                  className={classNames({
-                    [classes.linkItem]: true
-                  })}
-                />
-              </Link>
-            </Hidden>
-            <div className={classes.spacer} />
-            <IconButton
-              onClick={this.handleClick}
+          </Link>
+          <Link
+            to="/logout"
+            onClick={closeMenu}
+            data-qa-nav-item="/logout"
+            className={classNames({
+              [classes.listItem]: true
+            })}
+          >
+            <ListItemText
+              primary="Log Out"
+              disableTypography={true}
               className={classNames({
-                [classes.settings]: true,
-                [classes.settingsCollapsed]: isCollapsed,
-                [classes.activeSettings]: anchorEl
+                [classes.linkItem]: true
               })}
-              aria-label="User settings"
-            >
-              <Settings />
-            </IconButton>
-            <Menu
-              id="settings-menu"
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={this.handleClose}
-              getContentAnchorEl={undefined}
-              PaperProps={{ square: true, className: classes.paper }}
-              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-              transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-              className={classes.menu}
-              BackdropProps={{
-                className: classes.settingsBackdrop
-              }}
-            >
-              <ThemeToggle toggleTheme={this.props.toggleTheme} />
-              <SpacingToggle toggleSpacing={this.props.toggleSpacing} />
-            </Menu>
-          </div>
-        </Grid>
-      </React.Fragment>
-    );
-  }
-}
-
-interface StateProps {
-  hasAccountAccess: boolean;
-  // isLongviewEnabled: boolean;
-  accountCapabilities: AccountCapability[];
-  accountLastUpdated: number;
-  isManagedAccount: boolean;
-}
-
-const userHasAccountAccess = (profile: Profile) => {
-  if (profile.restricted === false) {
-    return true;
-  }
-
-  const { grants } = profile;
-  if (!grants) {
-    return false;
-  }
-
-  return Boolean(grants.global.account_access);
+            />
+          </Link>
+        </Hidden>
+        <div className={classes.spacer} />
+        <IconButton
+          onClick={(event: React.MouseEvent<HTMLElement>) => {
+            setAnchorEl(event.currentTarget);
+          }}
+          className={classNames({
+            [classes.settings]: true,
+            [classes.settingsCollapsed]: isCollapsed,
+            [classes.activeSettings]: !!anchorEl
+          })}
+          aria-label="User settings"
+        >
+          <Settings />
+        </IconButton>
+        <Menu
+          id="settings-menu"
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={() => {
+            setAnchorEl(undefined);
+          }}
+          getContentAnchorEl={undefined}
+          PaperProps={{ square: true, className: classes.paper }}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          className={classes.menu}
+          BackdropProps={{
+            className: classes.settingsBackdrop
+          }}
+        >
+          <ThemeToggle toggleTheme={toggleTheme} />
+          <SpacingToggle toggleSpacing={toggleSpacing} />
+        </Menu>
+      </div>
+    </Grid>
+  );
 };
 
-// const accountHasLongviewSubscription = (account: Linode.AccountSettings) => Boolean(account.longview_subscription);
+export default React.memo(PrimaryNav);
 
-const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
-  const account = state.__resources.accountSettings.data;
-  const profile = state.__resources.profile.data;
-  const accountLastUpdated = state.__resources.account.lastUpdated;
+interface PrimaryLinkProps extends PrimaryLink {
+  closeMenu: () => void;
+  isCollapsed: boolean;
+  locationSearch: string;
+  locationPathname: string;
+}
 
-  if (!account || !profile) {
-    return {
-      hasAccountAccess: false,
-      // isLongviewEnabled: false,
-      accountCapabilities: [],
-      accountLastUpdated,
-      isManagedAccount: false
-    };
-  }
+const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
+  const classes = useStyles();
 
-  return {
-    hasAccountAccess: userHasAccountAccess(profile),
-    // isLongviewEnabled: accountHasLongviewSubscription(account),
-    accountCapabilities: pathOr(
-      [],
-      ['__resources', 'account', 'data', 'capabilities'],
-      state
-    ),
-    accountLastUpdated,
-    isManagedAccount: pathOr(
-      false,
-      ['__resources', 'accountSettings', 'data', 'managed'],
-      state
-    )
-  };
-};
+  const {
+    isCollapsed,
+    closeMenu,
+    href,
+    onClick,
+    attr,
+    activeLinks,
+    icon,
+    display,
+    locationSearch,
+    locationPathname
+  } = props;
 
-const connected = connect(mapStateToProps);
-
-export default compose<CombinedProps, Props>(
-  withRouter,
-  withFeatureFlagConsumer,
-  connected,
-  styled
-)(PrimaryNav);
+  return (
+    <>
+      <Link
+        to={href}
+        onClick={(e: React.ChangeEvent<any>) => {
+          closeMenu();
+          if (onClick) {
+            onClick(e);
+          }
+        }}
+        {...attr}
+        className={classNames({
+          [classes.listItem]: true,
+          [classes.active]: linkIsActive(
+            href,
+            locationSearch,
+            locationPathname,
+            activeLinks
+          ),
+          listItemCollpased: isCollapsed
+        })}
+      >
+        {icon && isCollapsed && <div className="icon">{icon}</div>}
+        <ListItemText
+          primary={display}
+          disableTypography={true}
+          className={classNames({
+            [classes.linkItem]: true,
+            primaryNavLink: true,
+            hiddenWhenCollapsed: isCollapsed
+          })}
+        />
+      </Link>
+      <Divider className={classes.divider} />
+    </>
+  );
+});
