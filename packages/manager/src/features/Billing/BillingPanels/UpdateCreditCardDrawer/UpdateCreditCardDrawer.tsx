@@ -22,9 +22,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   expired: {
     color: theme.color.red
   },
-  currentccContainer: {
-    padding: `${theme.spacing(2)}px 0 ${theme.spacing(4)}px`
-  },
   newccContainer: {
     padding: `${theme.spacing(1)}px 0 0`
   },
@@ -115,7 +112,6 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
       .catch(error => {
         setSubmitting(false);
         setErrors(getAPIErrorOrDefault(error, 'Unable to update credit card.'));
-        console.log(error);
       });
   };
 
@@ -143,53 +139,49 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
         onClose();
       }}
     >
-      <Grid container>
+      <Grid container className={classes.newccContainer}>
         <Grid item xs={12}>
-          <div className={classes.newccContainer}>
-            {generalError && (
-              <Notice error spacingTop={24} spacingBottom={8}>
-                {generalError}
-              </Notice>
-            )}
-            {success && (
-              <Notice success spacingTop={24} spacingBottom={8}>
-                Credit card successfully updated.
-              </Notice>
-            )}
-            <Grid container>
-              <Grid item xs={12}>
-                <TextField
-                  label="Credit Card Number"
-                  value={cardNumber}
-                  onChange={handleCardNumberChange}
-                  errorText={hasErrorFor.card_number}
-                  className={classes.cardNumber}
-                  InputProps={{
-                    inputComponent: creditCardField
-                  }}
-                />
-              </Grid>
-              <Grid item className={classes.fullWidthMobile}>
-                <TextField
-                  label="Expiration Date"
-                  value={expDate}
-                  onChange={handleExpiryDateChange}
-                  errorText={
-                    hasErrorFor.expiry_month || hasErrorFor.expiry_year
-                  }
-                  placeholder={'MM/YYYY'}
-                />
-              </Grid>
-              <Grid item className={classes.fullWidthMobile}>
-                <TextField
-                  label="CVV"
-                  value={cvv}
-                  onChange={handleCVVChange}
-                  errorText={hasErrorFor.cvv}
-                />
-              </Grid>
+          {generalError && (
+            <Notice error spacingTop={24} spacingBottom={8}>
+              {generalError}
+            </Notice>
+          )}
+          {success && (
+            <Notice success spacingTop={24} spacingBottom={8}>
+              Credit card successfully updated.
+            </Notice>
+          )}
+          <Grid container>
+            <Grid item xs={12}>
+              <TextField
+                label="Credit Card Number"
+                value={cardNumber}
+                onChange={handleCardNumberChange}
+                errorText={hasErrorFor.card_number}
+                className={classes.cardNumber}
+                InputProps={{
+                  inputComponent: creditCardField
+                }}
+              />
             </Grid>
-          </div>
+            <Grid item className={classes.fullWidthMobile}>
+              <TextField
+                label="Expiration Date"
+                value={expDate}
+                onChange={handleExpiryDateChange}
+                errorText={hasErrorFor.expiry_month || hasErrorFor.expiry_year}
+                placeholder={'MM/YYYY'}
+              />
+            </Grid>
+            <Grid item className={classes.fullWidthMobile}>
+              <TextField
+                label="CVV"
+                value={cvv}
+                onChange={handleCVVChange}
+                errorText={hasErrorFor.cvv}
+              />
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
       <ActionsPanel>
