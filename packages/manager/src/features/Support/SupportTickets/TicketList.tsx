@@ -132,11 +132,7 @@ export class TicketList extends React.Component<CombinedProps, {}> {
 
     return (
       <React.Fragment>
-        <Paper
-          role="tabpanel"
-          aria-labelledby={`tab-${this.props.filterStatus}-tickets`}
-          id={`tabpanel-${this.props.filterStatus}-tickets`}
-        >
+        <Paper>
           <Table aria-label="List of Tickets">
             <TableHead>
               <TableRow>
