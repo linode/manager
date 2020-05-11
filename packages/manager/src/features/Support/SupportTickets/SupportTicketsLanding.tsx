@@ -185,7 +185,7 @@ export class SupportTicketsLanding extends React.PureComponent<
               data-qa-breadcrumb
             />
           </Grid>
-          {this.props.globalErrors.account_unactivated && (
+          {!this.props.globalErrors.account_unactivated && (
             <Grid item>
               <Grid container alignItems="flex-end">
                 <Grid item>
