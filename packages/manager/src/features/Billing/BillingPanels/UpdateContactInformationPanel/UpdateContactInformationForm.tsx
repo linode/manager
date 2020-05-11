@@ -62,7 +62,7 @@ interface State {
     state?: string;
     country?: string;
   };
-  errResponse: string | undefined;
+  errResponse: APIError[] | undefined;
 }
 
 type CombinedProps = AccountProps & Props & WithStyles<ClassNames>;
@@ -127,34 +127,15 @@ class UpdateContactInformationForm extends React.Component<
   }
 
   renderContent = () => {
-    const {
-      accountData: account,
-      accountLoading,
-      accountError,
-      accountLastUpdated
-    } = this.props;
-
-    if (accountLoading && accountLastUpdated === 0) {
-      return this.renderLoading();
-    }
-
-    if (accountError.read) {
-      return this.renderErrors(accountError.read || []);
-    }
+    const { accountData: account } = this.props;
 
     if (account) {
       return this.renderForm(account);
     }
-
-    return null;
   };
 
-  renderLoading = () => null;
-
-  renderErrors = (e: APIError[]) => null;
-
   renderForm = (account: Account) => {
-    const { classes, accountError } = this.props;
+    const { classes } = this.props;
     const { fields, success } = this.state;
 
     const errorMap = getErrorMap(
@@ -172,7 +153,7 @@ class UpdateContactInformationForm extends React.Component<
         'tax_id',
         'zip'
       ],
-      accountError.update
+      this.state.errResponse
     );
 
     const generalError = errorMap.none;
@@ -211,7 +192,7 @@ class UpdateContactInformationForm extends React.Component<
         className={classes.mainFormContainer}
         data-qa-update-contact
       >
-        {generalError && this.state.errResponse !== undefined && (
+        {generalError && (
           <Grid item xs={12}>
             <Notice error text={generalError} />
           </Grid>
@@ -354,9 +335,7 @@ class UpdateContactInformationForm extends React.Component<
             classes
           ]}
         >
-          <Grid container className={classes.stateZip}>
-            <Grid item xs={'auto'} sm={'auto'}>
-              {/*
+          {/*
                 @todo use the <EnhancedSelect /> in favor of the
                 <TextField /> when the DB and API remove the 24 character limit.
 
@@ -368,7 +347,7 @@ class UpdateContactInformationForm extends React.Component<
 
                 Follow DBA-1066 for more information.
               */}
-              {/* <EnhancedSelect
+          {/* <EnhancedSelect
                   label="State / Province"
                   errorText={errorMap.state}
                   onChange={this.updateState}
@@ -391,23 +370,21 @@ class UpdateContactInformationForm extends React.Component<
                     }
                   }}
                 /> */}
-              <TextField
-                label="State / Province"
-                placeholder="Enter a State or Province"
-                errorText={errorMap.state}
-                onChange={e =>
-                  this.updateState({
-                    label: e.target.value,
-                    value: e.target.value
-                  })
-                }
-                dataAttrs={{
-                  'data-qa-contact-province': true
-                }}
-                value={fields.state || ''}
-              />
-            </Grid>
-          </Grid>
+          <TextField
+            label="State / Province"
+            placeholder="Enter a State or Province"
+            errorText={errorMap.state}
+            onChange={e =>
+              this.updateState({
+                label: e.target.value,
+                value: e.target.value
+              })
+            }
+            dataAttrs={{
+              'data-qa-contact-province': true
+            }}
+            value={fields.state || ''}
+          />
         </Grid>
 
         <Grid item xs={12} sm={6}>

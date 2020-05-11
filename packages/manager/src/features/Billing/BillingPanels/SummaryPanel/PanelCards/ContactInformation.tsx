@@ -55,17 +55,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props extends Pick<RouteComponentProps, 'history'> {
-  company: string | undefined;
-  lastName: string | undefined;
-  firstName: string | undefined;
-  zip: string | undefined;
-  state: string | undefined;
-  city: string | undefined;
-  address2: string | undefined;
-  address1: string | undefined;
-  email: string | undefined;
-  phone: string | undefined;
-  taxId: string | undefined;
+  company: string;
+  lastName: string;
+  firstName: string;
+  zip: string;
+  state: string;
+  city: string;
+  address2: string;
+  address1: string;
+  email: string;
+  phone: string;
+  taxId: string;
 }
 
 type CombinedProps = Props;
