@@ -1,5 +1,6 @@
 import { Disk } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import BarPercent from 'src/components/BarPercent';
 import Grid from 'src/components/core/Grid';
 import {
@@ -92,8 +93,9 @@ export class LinodeDiskSpace extends React.PureComponent<CombinedProps> {
           {disks.length === 1 ? 'image' : 'images'}.
         </Typography>
         <Typography className={classes.text}>
-          <strong>Note: </strong> This section represents your plan's available
-          storage that has been allocated to your disks; run
+          <strong>Note: </strong> This section represents your plan&#39;s
+          available storage that has been allocated to your disks. Install{' '}
+          <Link to="/longview">Longview</Link> or run:
         </Typography>
         <pre className={classes.code}>df -h</pre>
         <Typography>
