@@ -8,8 +8,11 @@ import {
   onError,
   onGetAllSuccess,
   onStart
-} from 'src/store/store.helpers';
-import { EntityError, MappedEntityState } from 'src/store/types';
+} from 'src/store/store.helpers.tmp';
+import {
+  EntityError,
+  MappedEntityState2 as MappedEntityState
+} from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import { deleteLinode, deleteLinodeActions } from '../linodes.actions';
 import {
@@ -46,7 +49,7 @@ const reducer: Reducer<State> = (state = defaultState, action) =>
       draft = ensureInitializedNestedState(draft, linodeId);
 
       draft[linodeId].loading = false;
-      draft[linodeId] = addMany(result, draft[linodeId]);
+      draft[linodeId] = addMany(result.data, draft[linodeId], result.results);
     }
 
     if (isType(action, getAllLinodeDisksActions.done)) {
@@ -54,7 +57,11 @@ const reducer: Reducer<State> = (state = defaultState, action) =>
       const { linodeId } = action.payload.params;
       draft = ensureInitializedNestedState(draft, linodeId);
 
-      draft[linodeId] = onGetAllSuccess(result, draft[linodeId]);
+      draft[linodeId] = onGetAllSuccess(
+        result.data,
+        draft[linodeId],
+        result.results
+      );
     }
 
     if (isType(action, getAllLinodeDisksActions.failed)) {
