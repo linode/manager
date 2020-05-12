@@ -111,11 +111,6 @@ const ContactInformation: React.FC<CombinedProps> = props => {
               onClick={() => {
                 handleEditDrawerOpen();
               }}
-              onKeyPress={e => {
-                if (e.keyCode === 13) {
-                  handleEditDrawerOpen();
-                }
-              }}
             >
               Edit
             </button>
