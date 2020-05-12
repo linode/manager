@@ -86,7 +86,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       }
     }
   },
-  listItemCollpased: {},
+  listItemCollapsed: {},
   collapsible: {
     fontSize: '0.9rem'
   },
@@ -127,45 +127,11 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: 'none'
       }
     },
-    '&.listItemCollpased': {
+    '&.listItemCollapsed': {
       '&:before': {
         top: theme.spacing(1) === 8 ? 2 : 4
       }
     }
-  },
-  sublinkPanel: {
-    paddingLeft: theme.spacing(6),
-    paddingRight: theme.spacing(2),
-    fontSize: '.9rem',
-    flexShrink: 0,
-    listStyleType: 'none'
-  },
-  sublink: {
-    padding: `${theme.spacing(1) / 2}px 0 ${theme.spacing(1) /
-      2}px ${theme.spacing(1)}px`,
-    color: 'white',
-    display: 'block',
-    fontSize: '.8rem',
-    '&:hover, &:focus': {
-      textDecoration: 'underline',
-      outline: 0
-    }
-  },
-  activeLink: {
-    color: 'white',
-    '& $arrow': {
-      transform: 'rotate(90deg)'
-    }
-  },
-  sublinkActive: {
-    textDecoration: 'underline'
-  },
-  arrow: {
-    position: 'relative',
-    top: 4,
-    fontSize: '1.2rem',
-    margin: '0 4px 0 -7px',
-    transition: theme.transitions.create(['transform'])
   },
   spacer: {
     padding: 25

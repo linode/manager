@@ -354,7 +354,7 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
             locationPathname,
             activeLinks
           ),
-          listItemCollpased: isCollapsed
+          listItemCollapsed: isCollapsed
         })}
       >
         {icon && isCollapsed && <div className="icon">{icon}</div>}

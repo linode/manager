@@ -1,6 +1,6 @@
-import { cleanup } from '@testing-library/react';
+import { cleanup, render } from '@testing-library/react';
 import * as React from 'react';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 import PrimaryNav, { Props } from './PrimaryNav';
 import useFlags from 'src/hooks/useFlags';
 
@@ -56,39 +56,49 @@ describe('PrimaryNav', () => {
   });
 
   it('includes "Managed" link only when the account is Managed', () => {
-    const { findByText } = renderWithTheme(<PrimaryNav {...props} />);
+    const { findByText, rerender, getByText } = render(
+      wrapWithTheme(<PrimaryNav {...props} />)
+    );
 
     expect(findByText('Managed')).not.toBeInTheDocument;
 
-    const { getByText } = renderWithTheme(<PrimaryNav {...props} />, {
-      customStore: {
-        __resources: {
-          accountSettings: {
-            data: { managed: true } as any
+    rerender(
+      wrapWithTheme(<PrimaryNav {...props} />, {
+        customStore: {
+          __resources: {
+            accountSettings: {
+              data: { managed: true } as any
+            }
           }
         }
-      }
-    });
+      })
+    );
+
     getByText('Managed');
   });
 
   it('includes "Account" link only when the user has account access', () => {
-    const { findByText } = renderWithTheme(<PrimaryNav {...props} />);
+    const { findByText, getByText, rerender } = render(
+      wrapWithTheme(<PrimaryNav {...props} />)
+    );
 
     expect(findByText('Account')).not.toBeInTheDocument;
 
-    const { getByText } = renderWithTheme(<PrimaryNav {...props} />, {
-      customStore: {
-        __resources: {
-          profile: {
-            data: { restricted: false } as any
-          },
-          account: {
-            lastUpdated: 1
+    rerender(
+      wrapWithTheme(<PrimaryNav {...props} />, {
+        customStore: {
+          __resources: {
+            profile: {
+              data: { restricted: false } as any
+            },
+            account: {
+              lastUpdated: 1
+            }
           }
         }
-      }
-    });
+      })
+    );
+
     getByText('Account');
   });
 });
