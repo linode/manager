@@ -1,7 +1,7 @@
 import Settings from '@material-ui/icons/Settings';
 import * as classNames from 'classnames';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Kubernetes from 'src/assets/addnewmenu/kubernetes.svg';
 import OCA from 'src/assets/addnewmenu/oneclick.svg';
 import Account from 'src/assets/icons/account.svg';
@@ -25,13 +25,13 @@ import ListItemText from 'src/components/core/ListItemText';
 import Menu from 'src/components/core/Menu';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
+import usePreFetch, { PreFetchEntity } from 'src/hooks/usePreFetch';
 import { sendOneClickNavigationEvent } from 'src/utilities/ga';
 import AdditionalMenuItems from './AdditionalMenuItems';
 import useStyles from './PrimaryNav.styles';
 import SpacingToggle from './SpacingToggle';
 import ThemeToggle from './ThemeToggle';
 import { linkIsActive } from './utils';
-import { useLocation } from 'react-router-dom';
 
 type NavEntity =
   | 'Linodes'
@@ -57,6 +57,7 @@ interface PrimaryLink {
   activeLinks?: Array<string>;
   onClick?: (e: React.ChangeEvent<any>) => void;
   hide?: boolean;
+  entitiesToPreFetch?: PreFetchEntity[];
 }
 
 export interface Props {
@@ -76,6 +77,7 @@ export const PrimaryNav: React.FC<Props> = props => {
 
   const flags = useFlags();
   const location = useLocation();
+  const preFetch = usePreFetch();
 
   const {
     _hasAccountAccess,
@@ -115,7 +117,8 @@ export const PrimaryNav: React.FC<Props> = props => {
       {
         display: 'Domains',
         href: '/domains',
-        icon: <Domain style={{ transform: 'scale(1.5)' }} />
+        icon: <Domain style={{ transform: 'scale(1.5)' }} />,
+        entitiesToPreFetch: ['domains']
       },
 
       {
@@ -209,6 +212,7 @@ export const PrimaryNav: React.FC<Props> = props => {
             isCollapsed={isCollapsed}
             locationSearch={location.search}
             locationPathname={location.pathname}
+            preFetch={preFetch}
             {...thisLink}
           />
         ))}
@@ -317,6 +321,7 @@ interface PrimaryLinkProps extends PrimaryLink {
   isCollapsed: boolean;
   locationSearch: string;
   locationPathname: string;
+  preFetch: ReturnType<typeof usePreFetch>;
 }
 
 const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
@@ -332,8 +337,16 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
     icon,
     display,
     locationSearch,
-    locationPathname
+    locationPathname,
+    preFetch,
+    entitiesToPreFetch
   } = props;
+
+  const doPreFetch = React.useCallback(() => {
+    if (entitiesToPreFetch) {
+      preFetch(entitiesToPreFetch);
+    }
+  }, [preFetch, entitiesToPreFetch]);
 
   return (
     <>
@@ -345,6 +358,7 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
             onClick(e);
           }
         }}
+        onMouseEnter={doPreFetch}
         {...attr}
         className={classNames({
           [classes.listItem]: true,
