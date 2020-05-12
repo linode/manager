@@ -146,7 +146,7 @@ export const BillingSummary: React.FC<Props> = props => {
 
   const totalBalance = hasCredit
     ? calculatedBalance
-    : promotion
+    : promotion && calculatedBalance >= convertedPromoCredit
     ? Math.max(0, calculatedBalance - convertedPromoCredit)
     : calculatedBalance;
 
@@ -240,7 +240,11 @@ export const BillingSummary: React.FC<Props> = props => {
                 </Typography>
               </Grid>
             </Grid>
-            {promotion && (
+            {/*
+            We check if a promotion even exists for the account
+            in addition to if the promotion amount will be applied.
+            */}
+            {promotion && calculatedBalance >= convertedPromoCredit && (
               <Grid item container justify="space-between" alignItems="center">
                 <Grid item xs={8}>
                   <Typography className={classes.label}>
