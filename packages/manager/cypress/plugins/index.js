@@ -33,7 +33,7 @@ function checkNodeVersionRequiredByLinode() {
   }
 }
 
-module.exports = (on, config) => {
+module.exports = (on, _config) => {
   registerVisualRegTasks(on);
   checkNodeVersionRequiredByLinode();
 

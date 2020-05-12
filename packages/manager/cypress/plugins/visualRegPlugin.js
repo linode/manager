@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-this-alias */
 const fs = require('fs');
 const path = require('path');
 // const mkdirp = require('mkdirp');
@@ -10,7 +11,7 @@ function compareSnapshotsPlugin(args) {
     /* eslint-disable func-names */
     const expectedImage = path.resolve(args.expectedImage);
     const actualImage = path.resolve(args.actualImage);
-    console.log(`Checking is file exist [${actualImage}, ${expectedImage}]`);
+    // console.log(`Checking is file exist [${actualImage}, ${expectedImage}]`);
     if (!fs.existsSync(expectedImage)) {
       console.error(`did not find ${expectedImage}`);
       resolve({
@@ -39,8 +40,11 @@ function compareSnapshotsPlugin(args) {
           .on('parsed', function() {
             const imgExpected = this;
 
-            if(imgActual.width != imgExpected.width || imgActual.height != imgExpected.height){
-              const err = `The images have different sizes: w: ${imgActual.width} (${imgExpected.width}) x h: ${imgActual.height} (${imgExpected.height})`;
+            if (
+              imgActual.width != imgExpected.width ||
+              imgActual.height != imgExpected.height
+            ) {
+              const err = `The images have different sizes (expected): w: ${imgActual.width} (${imgExpected.width}) x h: ${imgActual.height} (${imgExpected.height})`;
               console.error(err);
               throw err;
             }
@@ -83,7 +87,9 @@ function deleteVisualRegFiles(args) {
       new Promise((resolve, reject) => {
         const f = path.resolve(file);
         // console.log('file:'+f)
-        if (!fs.existsSync(f)) resolve({ path: f });
+        if (!fs.existsSync(f)) {
+          resolve({ path: f });
+        }
         // console.log('file exists, deleting it');
         fs.unlink(f, err => {
           if (err) {

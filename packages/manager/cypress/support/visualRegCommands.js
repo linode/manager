@@ -1,17 +1,47 @@
+// Command
+const checkIsInsideViewport = elem => {
+  const height = Cypress.$(cy.state('window')).height();
+  const width = Cypress.$(cy.state('window')).width();
+  const rect = elem[0].getBoundingClientRect();
+
+  expect(rect.top, 'element top not above viewport').to.be.greaterThan(0);
+  expect(rect.bottom, 'element bottom not below viewport').to.be.lessThan(
+    height
+  );
+  expect(rect.left, 'element left not left of viewport').to.be.greaterThan(0);
+  expect(rect.right, 'element right not right of viewport').to.be.lessThan(
+    width
+  );
+};
+
 Cypress.Commands.add(
   'checkSnapshot',
   { prevSubject: 'optional' },
-  (subject, name, threshold, viewport = 'macbook-13') => {
+  (subject, name, threshold = 0.0) => {
+    // checking that our element, is well within viewport boundaries
+    expect(subject).not.to.be.null;
+
+    if (subject.length !== 1) {
+      cy.log(
+        `the subject must be an element not a colleciton, consider using first()`
+      );
+      return cy.wrap(false);
+    }
+    checkIsInsideViewport(subject);
+
+    // cy.positionToViewport(subject, 'inside');
     const visualRegMode =
       Cypress.env('visualRegMode') === 'record' ? 'record' : 'actual';
 
-    const recordScreenShotName = `record-${name}`;
-    const actualScreenShotName = `actual-${name}`;
-    const diffScreenShotName = `diff-${name}`;
+    const nameAndSize = `${name}-${Cypress.config().viewportWidth}-${
+      Cypress.config().viewportHeight
+    }`;
+
+    const recordScreenShotName = `record-${nameAndSize}`;
+    const actualScreenShotName = `actual-${nameAndSize}`;
+    const diffScreenShotName = `diff-${nameAndSize}`;
     const toFilename = name =>
       `${Cypress.config('screenshotsFolder')}/${Cypress.spec.name}/${name}.png`;
-
-    // cy.log('mode', visualRegMode);
 
     if (visualRegMode === 'record') {
       cy.task('deleteVisualRegFiles', {
@@ -29,14 +59,8 @@ Cypress.Commands.add(
     // take snapshot
     const screenshotName =
       visualRegMode === 'record' ? recordScreenShotName : actualScreenShotName;
-    cy.log('path', screenshotName);
 
-    cy.viewport(viewport);
-    if (subject) {
-      cy.get(subject).screenshot(screenshotName);
-    } else {
-      cy.screenshot(screenshotName);
-    }
+    cy.get(subject).screenshot(screenshotName);
 
     // run visual tests
     if (visualRegMode === 'actual') {
