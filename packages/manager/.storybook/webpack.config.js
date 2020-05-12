@@ -46,7 +46,16 @@ module.exports = {
       {
         test: /\.svg$/,
         exclude: [/font-logos.svg$/],
-        loader: ['@svgr/webpack']
+        use: {
+          loader: '@svgr/webpack',
+          options: {
+            svgoConfig: {
+              plugins: {
+                removeViewBox: false
+              }
+            }
+          }
+        }
       },
       {
         test: /\.tsx?$/,
