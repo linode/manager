@@ -104,7 +104,7 @@
     "build-storybook": "build-storybook",
     "cy:e2e": "cypress run --headless -b chrome",
     "cy:debug": "cypress open",
-    "cy:rec-snap": "cypress open --headless -b chrome --env visualRegMode=record",
+    "cy:rec-snap": "cypress run --headless -b chrome --env visualRegMode=record --spec ./cypress/integration/**/*visual*.spec.js",
     "serve": "node testServer.js",
     "selenium:install": "yarn run selenium-standalone install --config=./e2e/config/selenium-config.js",
     "selenium": "yarn selenium:install && ./node_modules/.bin/selenium-standalone start --config=./e2e/config/selenium-config.js",
