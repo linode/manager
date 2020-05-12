@@ -1,5 +1,3 @@
-import { APIError } from '../types';
-
 export interface NodeBalancer {
   id: number;
   label: string;
@@ -38,21 +36,6 @@ export type NodeBalancerConfigNodeMode =
   | 'reject'
   | 'backup'
   | 'drain';
-
-export interface NodeBalancerConfigNodeFields {
-  id?: number;
-  label: string;
-  address: string;
-  port?: number;
-  weight?: number;
-  nodebalancer_id?: number;
-  config_id?: number;
-  mode?: NodeBalancerConfigNodeMode;
-  /* for the sake of local operations */
-  modifyStatus?: 'new' | 'delete' | 'update';
-  errors?: APIError[];
-  status?: 'UP' | 'DOWN' | 'unknown';
-}
 
 export interface NodeBalancerConfig {
   id: number;
@@ -111,27 +94,7 @@ export interface CreateNodeBalancerConfig {
   ssl_key?: string;
 }
 
-/* tslint:disable-next-line:no-empty-interface */
-export interface UpdateNodeBalancerConfig extends CreateNodeBalancerConfig {}
-
-export interface NodeBalancerConfigFields {
-  id?: number;
-  algorithm?: 'roundrobin' | 'leastconn' | 'source';
-  check_attempts?: number /** 1..30 */;
-  check_body?: string;
-  check_interval?: number;
-  check_passive?: boolean;
-  check_path?: string;
-  check_timeout?: number /** 1..30 */;
-  check?: 'none' | 'connection' | 'http' | 'http_body';
-  cipher_suite?: 'recommended' | 'legacy';
-  port?: number /** 1..65535 */;
-  protocol?: 'http' | 'https' | 'tcp';
-  ssl_cert?: string;
-  ssl_key?: string;
-  stickiness?: 'none' | 'table' | 'http_cookie';
-  nodes: NodeBalancerConfigNodeFields[];
-}
+export type UpdateNodeBalancerConfig = CreateNodeBalancerConfig;
 
 export interface CreateNodeBalancerConfigNode {
   address: string;
@@ -153,6 +116,10 @@ export interface NodeBalancerConfigNode {
   nodebalancer_id: number;
   status: 'unknown' | 'UP' | 'DOWN';
   weight: number;
+}
+
+export interface NodeBalancerConfigNodeWithPort extends NodeBalancerConfigNode {
+  port?: number;
 }
 
 export interface CreateNodeBalancerPayload {

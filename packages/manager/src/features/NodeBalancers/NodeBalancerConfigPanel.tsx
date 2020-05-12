@@ -1,4 +1,3 @@
-import { NodeBalancerConfigNodeFields } from 'linode-js-sdk/lib/nodebalancers';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -23,6 +22,7 @@ import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import NodeBalancerConfigNode from './NodeBalancerConfigNode';
+import { NodeBalancerConfigNodeFields } from './types';
 
 type ClassNames =
   | 'divider'

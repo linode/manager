@@ -1,10 +1,10 @@
-import {
-  NodeBalancerConfigFields,
-  NodeBalancerConfigNode,
-  NodeBalancerConfigNodeFields
-} from 'linode-js-sdk/lib/nodebalancers';
+import { NodeBalancerConfigNode } from 'linode-js-sdk/lib/nodebalancers';
 import { clamp, compose, filter, isNil, toString } from 'ramda';
-import { ExtendedNodeBalancerConfigNode } from './types';
+import {
+  ExtendedNodeBalancerConfigNode,
+  NodeBalancerConfigNodeFields,
+  NodeBalancerConfigFields
+} from './types';
 
 import defaultNumeric from 'src/utilities/defaultNumeric';
 
