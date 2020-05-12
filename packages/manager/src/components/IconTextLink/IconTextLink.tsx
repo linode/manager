@@ -2,6 +2,7 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'src/components/Button';
+import ConditionalWrapper from 'src/components/ConditionalWrapper';
 import {
   createStyles,
   Theme,
@@ -94,48 +95,29 @@ const IconTextLink: React.StatelessComponent<FinalProps> = props => {
   } = props;
 
   return (
-    <>
-      {to && !disabled ? (
-        <Link to={to}>
-          <Button
-            className={classNames(
-              {
-                [classes.root]: true,
-                [classes.active]: active === true,
-                [classes.left]: left === true,
-                iconTextLink: true
-              },
-              className
-            )}
-            title={title}
-            onClick={onClick}
-            data-qa-icon-text-link={title}
-          >
-            <SideIcon className={classes.icon} />
-            <span className={classes.label}>{text}</span>
-          </Button>
-        </Link>
-      ) : (
-        <Button
-          className={classNames(
-            {
-              [classes.root]: true,
-              [classes.disabled]: disabled === true,
-              [classes.active]: active === true,
-              [classes.left]: left === true,
-              iconTextLink: true
-            },
-            className
-          )}
-          title={title}
-          onClick={onClick}
-          data-qa-icon-text-link={title}
-        >
-          <SideIcon className={classes.icon} />
-          <span className={classes.label}>{text}</span>
-        </Button>
-      )}
-    </>
+    <ConditionalWrapper
+      condition={to !== undefined && !disabled}
+      wrapper={children => <Link to={to}>{children}</Link>}
+    >
+      <Button
+        className={classNames(
+          {
+            [classes.root]: true,
+            [classes.disabled]: disabled === true,
+            [classes.active]: active === true,
+            [classes.left]: left === true,
+            iconTextLink: true
+          },
+          className
+        )}
+        title={title}
+        onClick={onClick}
+        data-qa-icon-text-link={title}
+      >
+        <SideIcon className={classes.icon} />
+        <span className={classes.label}>{text}</span>
+      </Button>
+    </ConditionalWrapper>
   );
 };
 
