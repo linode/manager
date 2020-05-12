@@ -33,9 +33,21 @@ const useStyles = makeStyles((theme: Theme) => ({
         maxWidth: '78.8%'
       }
     },
-    display: 'grid',
-    flexDirection: 'row',
-    alignContent: 'space-between'
+    display: 'grid'
+  },
+  taxSection: {
+    marginBottom: theme.spacing(1),
+    ...theme.typography.body1,
+    '& .dif': {
+      position: 'relative',
+      width: 'auto',
+      '& .chip': {
+        position: 'absolute',
+        top: '-4px',
+        right: -10
+      }
+    },
+    alignSelf: 'flex-end'
   },
   editBtn: {
     marginBottom: theme.spacing(1),
@@ -140,6 +152,11 @@ const ContactInformation: React.FC<CombinedProps> = props => {
                 {!(address1 || address2 || city || state || zip) && 'None'}
                 <span>{address1}</span>
                 <div>{address2}</div>
+              </div>
+            </div>
+
+            <div className={classes.section}>
+              <div>
                 <div>{`${city}${city && state && ','} ${state} ${zip}`}</div>
               </div>
             </div>
@@ -157,7 +174,7 @@ const ContactInformation: React.FC<CombinedProps> = props => {
             ) : null}
 
             {taxId ? (
-              <div className={classes.section}>{'Tax ID ' + taxId}</div>
+              <div className={classes.taxSection}>{'Tax ID ' + taxId}</div>
             ) : null}
           </Grid>
         </Grid>
