@@ -382,9 +382,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
               ]}
               password={password}
               handleChange={updatePassword}
-              users={
-                userSSHKeys.length > 0 && selectedImageID ? userSSHKeys : []
-              }
+              users={userSSHKeys}
               requestKeys={requestKeys}
             />
             <AddonsPanel
