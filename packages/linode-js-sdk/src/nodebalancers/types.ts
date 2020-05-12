@@ -39,21 +39,6 @@ export type NodeBalancerConfigNodeMode =
   | 'backup'
   | 'drain';
 
-export interface NodeBalancerConfigNode2 {
-  id: number;
-  label: string;
-  address: string;
-  port?: number;
-  weight?: number;
-  nodebalancer_id: number;
-  config_id?: number;
-  mode?: NodeBalancerConfigNodeMode;
-  /* for the sake of local operations */
-  modifyStatus?: 'new' | 'delete' | 'update';
-  errors?: APIError[];
-  status: 'UP' | 'DOWN' | 'unknown';
-}
-
 export interface NodeBalancerConfigNodeFields {
   id?: number;
   label: string;
@@ -155,12 +140,9 @@ export interface CreateNodeBalancerConfigNode {
   weight?: number;
 }
 
-export interface UpdateNodeBalancerConfigNode {
-  address?: string;
-  label?: string;
-  mode?: NodeBalancerConfigNodeMode;
-  weight?: number;
-}
+export type UpdateNodeBalancerConfigNode = Partial<
+  CreateNodeBalancerConfigNode
+>;
 
 export interface NodeBalancerConfigNode {
   address: string;
