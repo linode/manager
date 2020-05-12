@@ -25,19 +25,20 @@ export type CombinedProps = Props;
 export const CreditCard: React.FC<CombinedProps> = props => {
   const { expiry, lastFour } = props;
   const classes = useStyles();
+
   return (
     <>
       <div className={`${classes.section} ${classes.root}`} data-qa-contact-cc>
-        <div>{lastFour ? `XXXX XXXX XXXX ${lastFour}` : 'None'}</div>
+        <div>{lastFour ? `Card ending in ${lastFour}` : 'None'}</div>
       </div>
       <div
         className={`${classes.section} ${classes.root}`}
         data-qa-contact-cc-exp-date
       >
         <div>
-          Expires {expiry ? `${expiry} ` : 'None'}
+          {expiry && `Expires ${expiry}`}
           {expiry && isCreditCardExpired(expiry) && (
-            <span className={classes.expired}>(Expired)</span>
+            <span className={classes.expired}> (Expired)</span>
           )}
         </div>
       </div>

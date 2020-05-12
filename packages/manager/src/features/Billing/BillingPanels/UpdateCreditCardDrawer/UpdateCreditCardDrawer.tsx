@@ -51,9 +51,6 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
 
   const { onClose, open } = props;
 
-  const currentMonth = new Date().getMonth();
-  const currentYear = new Date().getFullYear();
-
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [success, setSuccess] = React.useState<boolean>();
@@ -118,8 +115,7 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
   const resetForm = (_success: boolean | undefined) => {
     setErrors(undefined);
     setCardNumber('');
-    // TODO
-    setExpDate(currentMonth + '/' + currentYear);
+    setExpDate('');
     setCVV('');
     setSuccess(_success);
   };
