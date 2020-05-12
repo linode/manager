@@ -70,7 +70,7 @@ export class LinodeDiskSpace extends React.PureComponent<CombinedProps> {
     return (
       <React.Fragment>
         <Typography className={classes.header} variant="h3">
-          Disk Storage
+          Disk Allocation
         </Typography>
         <BarPercent
           className={classes.bar}
@@ -80,7 +80,7 @@ export class LinodeDiskSpace extends React.PureComponent<CombinedProps> {
         />
         <Grid container justify="space-between">
           <Grid item style={{ marginRight: 10 }}>
-            <Typography>{usedDiskSpace} MB Used</Typography>
+            <Typography>{usedDiskSpace} MB Allocated</Typography>
           </Grid>
           <Grid item>
             <Typography>{freeDiskSpace} MB Available</Typography>
