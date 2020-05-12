@@ -12,13 +12,11 @@ import {
   updateLinodeDisk as _updateLinodeDisk
 } from 'linode-js-sdk/lib/linodes';
 import { createRequestThunk } from 'src/store/store.helpers';
-import { ThunkActionCreator } from 'src/store/types';
-import { getAll, GetAllData } from 'src/utilities/getAll';
+import { getAll } from 'src/utilities/getAll';
 import {
   createLinodeDiskActions,
   deleteLinodeDiskActions,
   getAllLinodeDisksActions,
-  GetAllLinodeDisksParams,
   getLinodeDiskActions,
   getLinodeDisksActions,
   resizeLinodeDiskActions,
@@ -46,6 +44,17 @@ export const getLinodeDisks = createRequestThunk(
     }))
 );
 
+export const getAllLinodeDisks = createRequestThunk(
+  getAllLinodeDisksActions,
+  ({ linodeId }) =>
+    getAll<Entity>((diskParams: any, filter: any) =>
+      _getLinodeDisks(linodeId, diskParams, filter)
+    )().then(result => ({
+      results: result.results,
+      data: result.data.map(addLinodeIdToDisk(linodeId))
+    }))
+);
+
 export const getLinodeDisk = createRequestThunk(
   getLinodeDiskActions,
   ({ linodeId, diskId }) =>
@@ -62,30 +71,6 @@ export const deleteLinodeDisk = createRequestThunk(
   deleteLinodeDiskActions,
   ({ linodeId, diskId }) => _deleteLinodeDisk(linodeId, diskId)
 );
-
-export const getAllLinodeDisks: ThunkActionCreator<
-  Promise<GetAllData<Entity>>,
-  GetAllLinodeDisksParams
-> = params => async dispatch => {
-  const { linodeId } = params;
-  const { started, done, failed } = getAllLinodeDisksActions;
-  dispatch(started(params));
-  const req = getAll<Entity>((diskParams: any, filter: any) =>
-    _getLinodeDisks(linodeId, diskParams, filter)
-  );
-
-  try {
-    const result = await req().then(result => ({
-      results: result.results,
-      data: result.data.map(addLinodeIdToDisk(linodeId))
-    }));
-    dispatch(done({ params, result }));
-    return result.data;
-  } catch (error) {
-    dispatch(failed({ params, error }));
-    return error;
-  }
-};
 
 export const resizeLinodeDisk = createRequestThunk(
   resizeLinodeDiskActions,
