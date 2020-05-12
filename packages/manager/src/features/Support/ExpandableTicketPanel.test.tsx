@@ -36,7 +36,7 @@ describe('replaceVersionStringWithHTML', () => {
   it('should insert the version string into a <span />', () => {
     expect(
       replaceVersionStringWithHTML('Hello. Cloud Manager Version: 1.0.0')
-    ).toBe('Hello. <span>Cloud Manager Version: 1.0.0</span>');
+    ).toBe('Hello. <span class="version">Cloud Manager Version: 1.0.0</span>');
   });
 
   it('only affects the last occurrence of a version string', () => {
@@ -45,7 +45,7 @@ describe('replaceVersionStringWithHTML', () => {
         'Hello. Cloud Manager Version: 1.0.0. World. Cloud Manager Version: 1.0.0'
       )
     ).toBe(
-      'Hello. Cloud Manager Version: 1.0.0. World. <span>Cloud Manager Version: 1.0.0</span>'
+      'Hello. Cloud Manager Version: 1.0.0. World. <span class="version">Cloud Manager Version: 1.0.0</span>'
     );
   });
 
