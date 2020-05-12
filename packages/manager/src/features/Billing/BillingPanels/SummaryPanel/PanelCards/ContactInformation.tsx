@@ -32,7 +32,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       [theme.breakpoints.up('lg')]: {
         maxWidth: '78.8%'
       }
-    }
+    },
+    display: 'grid',
+    flexDirection: 'row',
+    alignContent: 'space-between'
   },
   editBtn: {
     marginBottom: theme.spacing(1),
