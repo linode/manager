@@ -370,7 +370,6 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
             >
               <DisplaySectionList displaySections={displaySections} />
             </CheckoutBar>
-            );
           </Grid>
         )}
       </React.Fragment>

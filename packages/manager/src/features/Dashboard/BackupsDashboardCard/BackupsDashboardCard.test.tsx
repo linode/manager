@@ -1,60 +1,66 @@
-import { shallow } from 'enzyme';
+import { cleanup, fireEvent, wait } from '@testing-library/react';
 import * as React from 'react';
 
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { BackupsDashboardCard } from './BackupsDashboardCard';
+import BackupsDashboardCard from './BackupsDashboardCard';
 
-const classes = {
-  root: '',
-  header: '',
-  icon: '',
-  itemTitle: '',
-  section: '',
-  sectionLink: '',
-  title: '',
-  ctaLink: ''
-};
+afterEach(cleanup);
+
+jest.mock('src/hooks/useReduxLoad', () => ({
+  useReduxLoad: () => ({ _loading: false })
+}));
 
 const props = {
   linodesWithoutBackups: 0,
   openBackupDrawer: jest.fn(),
-  classes
+  accountBackups: false,
+  ...reactRouterProps
 };
-
-const component = shallow(
-  <BackupsDashboardCard
-    {...props}
-    {...reactRouterProps}
-    accountBackups={false}
-  />
-);
 
 describe('Backups dashboard card', () => {
   it('should render a link to /account/settings', () => {
-    expect(component.find('[data-qa-account-link]')).toHaveLength(1);
+    const { getByTestId } = renderWithTheme(
+      <BackupsDashboardCard {...props} />
+    );
+    getByTestId('account-link');
   });
+
   it('should not render Enable Backups for Existing Linodes if there are no Linodes w/out backups', () => {
-    expect(component.find('[data-qa-backup-existing]')).toHaveLength(0);
+    const { queryAllByText } = renderWithTheme(
+      <BackupsDashboardCard {...props} />
+    );
+    expect(queryAllByText(/existing linodes/i)).toHaveLength(0);
   });
+
   it('should render the backup-existing section if there are Linodes to be backed up', () => {
-    component.setProps({ linodesWithoutBackups: 2 });
-    expect(component.find('[data-qa-backup-existing]')).toHaveLength(1);
+    const { queryAllByText } = renderWithTheme(
+      <BackupsDashboardCard {...props} linodesWithoutBackups={3} />
+    );
+    expect(queryAllByText(/existing linodes/i)).toHaveLength(1);
   });
-  it('should open the backup drawer when backup-existing is clicked', () => {
-    component.find('[data-qa-backup-existing]').simulate('click');
-    expect(props.openBackupDrawer).toHaveBeenCalled();
+
+  it('should open the backup drawer when backup-existing is clicked', async () => {
+    const { getByTestId } = renderWithTheme(
+      <BackupsDashboardCard {...props} linodesWithoutBackups={3} />
+    );
+    const button = getByTestId('back-up-existing-linodes');
+    await wait(() => fireEvent.click(button));
+    expect(props.openBackupDrawer).toHaveBeenCalledTimes(1);
   });
+
   it('should display the number of Linodes to be backed up', () => {
-    component.setProps({ linodesWithoutBackups: 3 });
-    expect(component.find('[data-qa-linodes-message]').text()).toMatch(
-      '3 Linodes'
+    const { getByText } = renderWithTheme(
+      <BackupsDashboardCard {...props} linodesWithoutBackups={3} />
     );
+    getByText(/3 linodes without backups/i);
   });
+
   it('should pluralize the displayed number of Linodes correctly', () => {
-    component.setProps({ linodesWithoutBackups: 1 });
-    expect(component.find('[data-qa-linodes-message]').text()).toMatch(
-      '1 Linode'
+    const { getByText } = renderWithTheme(
+      <BackupsDashboardCard {...props} linodesWithoutBackups={1} />
     );
+    getByText(/1 linode without backups/i);
   });
 });

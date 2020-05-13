@@ -93,7 +93,9 @@ export const getErrorMap = <T extends string = string>(
       if (thisError.field && fields.includes(thisError.field as T)) {
         return {
           ...accum,
-          [thisError.field]: thisError.reason
+          // We generally want the first error that matches the field,
+          // so don't override it if it's already there
+          [thisError.field]: accum[thisError.field] || thisError.reason
         };
       } else {
         return {
