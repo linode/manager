@@ -54,9 +54,8 @@ export interface ActivePromotion {
 }
 
 interface CreditCard {
-  expiry: string;
-  last_four: string;
-  cvv: string;
+  expiry: string | null;
+  last_four: string | null;
 }
 
 export interface Invoice {

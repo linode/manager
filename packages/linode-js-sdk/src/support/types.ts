@@ -12,7 +12,7 @@ export interface SupportTicket {
   status: 'closed' | 'new' | 'open';
   summary: string;
   updated: string;
-  updated_by: string;
+  updated_by: string | null;
 }
 
 export interface SupportReply {
