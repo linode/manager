@@ -77,6 +77,7 @@ export const PrimaryNav: React.FC<Props> = props => {
 
   const flags = useFlags();
   const location = useLocation();
+  // Call usePreFetch() here in the parent, rather than for each child nav item.
   const preFetch = usePreFetch();
 
   const {
@@ -342,7 +343,8 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
     entitiesToPreFetch
   } = props;
 
-  const doPreFetch = React.useCallback(() => {
+  // If this NavItem has specified entities to prefetch, do it.
+  const maybePreFetchEntities = React.useCallback(() => {
     if (entitiesToPreFetch) {
       preFetch(entitiesToPreFetch);
     }
@@ -358,7 +360,7 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
             onClick(e);
           }
         }}
-        onMouseEnter={doPreFetch}
+        onMouseEnter={maybePreFetchEntities}
         {...attr}
         className={classNames({
           [classes.listItem]: true,

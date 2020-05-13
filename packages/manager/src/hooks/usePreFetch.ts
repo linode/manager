@@ -13,7 +13,7 @@ export type PreFetchEntity = 'domains'; // More entity types will go here.
  * that would trigger loading states, etc. We leave the ultimate authority to the consumers of the
  * data to decide when the data should be refreshed.
  *
- * Usage:
+ * Example usage:
  * const preFetch = usePreFetch();
  *
  * <div onmouseenter={() => preFetch(['linodes', 'images'])}>Linodes</div>
