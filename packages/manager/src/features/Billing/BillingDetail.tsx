@@ -13,6 +13,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import BillingActivityPanel from './BillingPanels/BillingActivityPanel';
 import SummaryPanel from './BillingPanels/SummaryPanel';
 import BillingSummary from './BillingSummary';
+import ContactInfo from './BillingPanels/SummaryPanel/PanelCards/ContactInformation';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -33,7 +34,6 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
   const { account, requestAccount } = useAccount();
 
   const classes = useStyles();
-
   React.useEffect(() => {
     if (account.loading && account.lastUpdated === 0) {
       requestAccount();
@@ -52,6 +52,12 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
     return <ErrorState errorText={errorText} />;
   }
 
+  /* This will never happen, /account is requested on app load
+  and the splash screen doesn't resolve until it succeeds */
+  if (!account.data) {
+    return null;
+  }
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment={`Account & Billing`} />
@@ -64,11 +70,27 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
         <Grid container>
           <Grid item xs={12} md={12} lg={12} className={classes.main}>
             <BillingSummary
-              balance={account?.data?.balance ?? 0}
-              promotion={account?.data?.active_promotions?.[0]}
-              uninvoicedBalance={account?.data?.balance_uninvoiced ?? 0}
+              balance={account.data.balance ?? 0}
+              promotion={account.data.active_promotions?.[0]}
+              uninvoicedBalance={account.data.balance_uninvoiced ?? 0}
             />
-            <SummaryPanel data-qa-summary-panel history={props.history} />
+            <Grid container direction="row" wrap="nowrap">
+              <ContactInfo
+                company={account.data.company}
+                firstName={account.data.first_name}
+                lastName={account.data.last_name}
+                address1={account.data.address_1}
+                address2={account.data.address_2}
+                email={account.data.email}
+                phone={account.data.phone}
+                city={account.data.city}
+                state={account.data.state}
+                zip={account.data.zip}
+                history={props.history}
+                taxId={account.data.tax_id}
+              />
+              <SummaryPanel data-qa-summary-panel history={props.history} />
+            </Grid>
             <BillingActivityPanel />
           </Grid>
         </Grid>
