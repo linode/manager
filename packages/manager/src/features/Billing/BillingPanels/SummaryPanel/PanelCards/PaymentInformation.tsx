@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
+import Grid from 'src/components/Grid';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
@@ -10,6 +11,9 @@ import UpdateCreditCardDrawer from '../../UpdateCreditCardDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
+  summarySectionHeight: {
+    minHeight: `calc(100% - 24px)`
+  },
   container: {
     display: 'flex',
     justifyContent: 'space-between'
@@ -48,25 +52,30 @@ const PaymentInformation: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <Paper className={classes.summarySection} data-qa-billing-summary>
-      <div className={classes.container}>
-        <Typography variant="h3" className={classes.title}>
-          Payment Method
-        </Typography>
+    <Grid item xs={6}>
+      <Paper
+        className={`${classes.summarySection} ${classes.summarySectionHeight}`}
+        data-qa-billing-summary
+      >
+        <div className={classes.container}>
+          <Typography variant="h3" className={classes.title}>
+            Payment Method
+          </Typography>
 
-        <Button className={classes.edit} onClick={handleOpenDrawer}>
-          Edit
-        </Button>
-      </div>
+          <Button className={classes.edit} onClick={handleOpenDrawer}>
+            Edit
+          </Button>
+        </div>
 
-      <div className={classes.billingGroup}>
-        <CreditCard lastFour={lastFour} expiry={expiry} />
-      </div>
-      <UpdateCreditCardDrawer
-        open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-      />
-    </Paper>
+        <div className={classes.billingGroup}>
+          <CreditCard lastFour={lastFour} expiry={expiry} />
+        </div>
+        <UpdateCreditCardDrawer
+          open={drawerOpen}
+          onClose={() => setDrawerOpen(false)}
+        />
+      </Paper>
+    </Grid>
   );
 };
 
