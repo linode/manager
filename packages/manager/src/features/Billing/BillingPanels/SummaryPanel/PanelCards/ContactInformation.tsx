@@ -10,6 +10,7 @@ import Typography from 'src/components/core/Typography';
 import BillingContactDrawer from './EditBillingContactDrawer';
 
 import styled from 'src/containers/SummaryPanels.styles';
+import * as classNames from 'classnames';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
@@ -32,19 +33,18 @@ const useStyles = makeStyles((theme: Theme) => ({
       [theme.breakpoints.up('lg')]: {
         maxWidth: '78.8%'
       }
-    },
-    display: 'grid',
+    }
+  },
+  switchWrapperFlex: {
+    display: 'flex',
+    flexDirection: 'column',
     alignContent: 'flex-start',
+    '& > div:nth-last-child(2)': {
+      flexGrow: 1
+    },
     '& > div:last-child': {
       alignSelf: 'end'
     }
-  },
-  sectionBreak: {
-    flexBasis: '100%',
-    width: 0,
-    height: '1rem',
-    overflow: 'hidden',
-    marginBottom: 8
   },
   editBtn: {
     marginBottom: theme.spacing(1),
@@ -159,7 +159,14 @@ const ContactInformation: React.FC<CombinedProps> = props => {
             </div>
           </Grid>
 
-          <Grid item className={classes.switchWrapper}>
+          <Grid
+            item
+            className={classNames({
+              [classes.switchWrapper]: true,
+              [classes.switchWrapperFlex]:
+                taxId !== undefined && taxId !== null && taxId !== ''
+            })}
+          >
             <div className={classes.section} data-qa-contact-email>
               <div className={classes.wordWrap}>{email}</div>
             </div>
@@ -170,12 +177,7 @@ const ContactInformation: React.FC<CombinedProps> = props => {
             ) : null}
 
             {taxId ? (
-              <div>
-                <div className={classes.sectionBreak}></div>
-                {/* The purpose of the above is to create a break row to align the Tax ID section to bottom */}
-
-                <div className={classes.section}>{'Tax ID ' + taxId}</div>
-              </div>
+              <div className={classes.section}>{'Tax ID ' + taxId}</div>
             ) : null}
           </Grid>
         </Grid>
