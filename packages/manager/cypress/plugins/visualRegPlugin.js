@@ -1,11 +1,7 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
 const fs = require('fs');
 const path = require('path');
-// const mkdirp = require('mkdirp');
-
-const { PNG } = require('pngjs');
-const pixelmatch = require('pixelmatch');
-
+const Jimp = require('jimp');
 function compareSnapshotsPlugin(args) {
   return new Promise((resolve, reject) => {
     /* eslint-disable func-names */
@@ -31,53 +27,41 @@ function compareSnapshotsPlugin(args) {
       console.log(`found ${actualImage}`);
     }
 
-    fs.createReadStream(actualImage)
-      .pipe(new PNG())
-      .on('parsed', function() {
-        const imgActual = this;
-        fs.createReadStream(expectedImage)
-          .pipe(new PNG())
-          .on('parsed', function() {
-            const imgExpected = this;
+    Jimp.read(actualImage).then(imgActual => {
+      Jimp.read(expectedImage).then(imgExpected => {
+        const wRatio = imgActual.bitmap.width / imgExpected.bitmap.width;
+        const hRatio = imgActual.bitmap.height / imgExpected.bitmap.height;
 
-            if (
-              imgActual.width != imgExpected.width ||
-              imgActual.height != imgExpected.height
-            ) {
-              const err = `The images have different sizes (expected): w: ${imgActual.width} (${imgExpected.width}) x h: ${imgActual.height} (${imgExpected.height})`;
-              console.error(err);
-              throw err;
-            }
-            const diff = new PNG({
-              width: imgActual.width,
-              height: imgActual.height
-            });
+        const isScaled = wRatio == hRatio;
+        if (isScaled) {
+          console.warn(
+            `detected a ratio of ${wRatio} between the expected image and the actual one, using scaled comparison`
+          );
+        }
+        if (
+          !isScaled &&
+          (imgActual.bitmap.width != imgExpected.bitmap.width ||
+            imgActual.bitmap.height != imgExpected.btimap.height)
+        ) {
+          const err = `The images have different sizes (expected): w: ${imgActual.width} (${imgExpected.width}) x h: ${imgActual.height} (${imgExpected.height})`;
+          console.error(err);
+          throw err;
+        }
+        const diff = Jimp.diff(
+          imgExpected.quality(100).scale(wRatio),
+          imgActual
+        );
 
-            const mismatchedPixels = pixelmatch(
-              imgActual.data,
-              imgExpected.data,
-              diff.data,
-              imgActual.width,
-              imgActual.height,
-              { threshold: 0.1 }
-            );
-
-            diff
-              .pack()
-              .pipe(fs.createWriteStream(path.resolve(args.diffImage)));
-
-            resolve({
-              result: {
-                mismatchedPixels,
-                percentage:
-                  (mismatchedPixels / imgActual.width / imgActual.height) ** 0.5
-              }
-            });
-          })
-          .on('error', error => reject(error));
-      })
-      .on('error', error => reject(error));
-    /* eslint-enable func-names */
+        diff.image.write(args.diffImage);
+        console.error(`diff ${diff.percent}`);
+        resolve({
+          result: {
+            percentage: diff.percent,
+            scaled: isScaled
+          }
+        });
+      });
+    });
   });
 }
 
