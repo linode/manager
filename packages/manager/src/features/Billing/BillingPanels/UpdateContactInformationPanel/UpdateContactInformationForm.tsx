@@ -118,21 +118,19 @@ class UpdateContactInformationForm extends React.Component<
   }
 
   render() {
+    const { accountData: account } = this.props;
+
+    if (!account) {
+      return null;
+    }
+
     return (
       <form>
-        {this.renderContent()}
+        {this.renderForm(account)}
         {this.renderFormActions()}
       </form>
     );
   }
-
-  renderContent = () => {
-    const { accountData: account } = this.props;
-
-    if (account) {
-      return this.renderForm(account);
-    }
-  };
 
   renderForm = (account: Account) => {
     const { classes } = this.props;
