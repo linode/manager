@@ -304,9 +304,10 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             Resize
           </Typography>
           <Typography data-qa-description>
-            If you're expecting a temporary burst of traffic to your website, or
-            if you're not using your Linode as much as you thought, you can
-            temporarily or permanently resize your Linode to a different plan.{' '} 
+            If you&apos;re expecting a temporary burst of traffic to your
+            website, or if you&apos;re not using your Linode as much as you
+            thought, you can temporarily or permanently resize your Linode to a
+            different plan.{' '}
             <ExternalLink
               fixedIcon
               text="Learn more."
@@ -347,16 +348,19 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             }
             onChange={this.handleToggleAutoDisksResize}
             text={
-              !_shouldEnableAutoResizeDiskOption ? (
-                `Would you like your disk on this Linode automatically resized to
-            scale with this Linode's new size? We recommend you keep this option enabled.`
-              ) : (
-                <Typography>
-                  Would you like the disk <strong>{diskToResize}</strong> to be
-                  automatically scaled with this Linode's new size? We recommend
-                  you keep this option enabled.
-                </Typography>
-              )
+              <Typography>
+                Would you like{' '}
+                {_shouldEnableAutoResizeDiskOption ? (
+                  <strong>{diskToResize}</strong>
+                ) : (
+                  'your disk'
+                )}{' '}
+                to be automatically scaled with this Linode&apos;s new size? We
+                recommend you keep this option enabled when available. Automatic
+                resizing is only available when moving to a larger plan, and
+                when you have a single ext disk (or one ext and one swap disk)
+                on your Linode.
+              </Typography>
             }
           />
         </Paper>
@@ -391,7 +395,7 @@ interface WithTypesProps {
   deprecatedTypesData: ExtendedType[];
 }
 
-const withTypes = connect((state: ApplicationState, ownProps) => ({
+const withTypes = connect((state: ApplicationState) => ({
   currentTypesData: state.__resources.types.entities
     .filter(eachType => eachType.successor === null)
     .map(LinodeResize.extendType),
