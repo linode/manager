@@ -34,7 +34,23 @@ const reducer: Reducer<State> = (state: State = defaultState, action) => {
       const { result } = action.payload;
 
       draft.loading = false;
-      draft.data = result;
+      draft.data = {
+        ...result,
+        balance: -20,
+        balance_uninvoiced: 20,
+        active_promotions: [
+          {
+            credit_monthly_cap: '10.00',
+            credit_remaining: '50.00',
+            description:
+              'Receive up to $10 off your services every month for 6 months! Unused credits will expire once this promotion period ends.',
+            expire_dt: '2018-01-31T23:59:59',
+            image_url: 'https://linode.com/10_a_month_promotion.svg',
+            summary: '$10 off your Linode a month!',
+            this_month_credit_remaining: '10.00'
+          }
+        ]
+      };
       draft.lastUpdated = Date.now();
       draft.error.read = undefined;
     }

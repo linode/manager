@@ -176,6 +176,9 @@ export const BillingActivityPanel: React.FC<{}> = () => {
   const [error, setError] = React.useState<APIError[] | undefined>();
   const [invoices, setInvoices] = React.useState<Invoice[]>([]);
   const [payments, setPayments] = React.useState<Payment[]>([]);
+  const [mostRecentInvoiceId, setMostRecentInvoiceId] = React.useState<
+    number | undefined
+  >();
 
   const pdfErrors = useSet();
   const pdfLoading = useSet();
@@ -200,6 +203,10 @@ export const BillingActivityPanel: React.FC<{}> = () => {
           setLoading(false);
           setInvoices(invoices.data);
           setPayments(payments.data);
+
+          if (!mostRecentInvoiceId && invoices.data.length > 0) {
+            setMostRecentInvoiceId(invoices.data[0].id);
+          }
         })
         .catch(_error => {
           setError(

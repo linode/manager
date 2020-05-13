@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import { getInvoices } from 'linode-js-sdk/lib/account';
 import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
@@ -38,24 +37,6 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
   const [mostRecentInvoiceId, setMostRecentInvoiceId] = React.useState<
     number | undefined
   >();
-
-  React.useEffect(() => {
-    const filter: any = {
-      '+order_by': 'date',
-      '+order': 'desc'
-    };
-
-    getInvoices({}, filter)
-      .then(function(resp) {
-        return resp.data;
-      })
-      .then(function(resp2) {
-        return resp2[0].id;
-      })
-      .then(function(resp3) {
-        setMostRecentInvoiceId(resp3);
-      });
-  }, []);
 
   // @todo: useReduxLoad for account/profile requests?
   React.useEffect(() => {
@@ -94,7 +75,9 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
               mostRecentInvoiceId={mostRecentInvoiceId}
             />
             <SummaryPanel data-qa-summary-panel history={props.history} />
-            <BillingActivityPanel />
+            <BillingActivityPanel
+              setMostRecentInvoiceId={setMostRecentInvoiceId}
+            />
           </Grid>
         </Grid>
       </div>
