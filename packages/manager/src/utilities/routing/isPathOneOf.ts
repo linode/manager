@@ -10,7 +10,7 @@ export default (
   paths: string[],
   pathname: string,
   props?: RouteProps
-): Boolean => {
+): boolean => {
   return paths.reduce((result, path) => {
     return result || Boolean(matchPath(pathname, { ...props, path }));
   }, false);
