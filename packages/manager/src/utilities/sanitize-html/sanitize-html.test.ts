@@ -12,6 +12,14 @@ describe('sanitizeHTML', () => {
   it('should strip invalid href values', () => {
     expect(sanitizeHTML('<a href="javascript:void"/>')).not.toContain('href');
   });
+
+  it('only allows "version" class, and only for spans', () => {
+    expect(sanitizeHTML('<div class="version" />')).not.toContain('class');
+    expect(sanitizeHTML('<div class="other-class" />')).not.toContain('class');
+
+    expect(sanitizeHTML('<span class="version" />')).toContain('class');
+    expect(sanitizeHTML('<span class="other-class" />')).not.toContain('class');
+  });
 });
 
 describe('isURLValid', () => {
