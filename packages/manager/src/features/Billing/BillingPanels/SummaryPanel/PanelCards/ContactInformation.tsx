@@ -39,6 +39,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       alignSelf: 'end'
     }
   },
+  sectionBreak: {
+    flexBasis: '100%',
+    width: 0,
+    height: '1rem',
+    overflow: 'hidden',
+    marginBottom: 8
+  },
   editBtn: {
     marginBottom: theme.spacing(1),
     ...theme.typography.body1,
@@ -156,15 +163,19 @@ const ContactInformation: React.FC<CombinedProps> = props => {
             <div className={classes.section} data-qa-contact-email>
               <div className={classes.wordWrap}>{email}</div>
             </div>
-
             {phone ? (
               <div className={classes.section} data-qa-contact-phone>
-                {phone ? phone : 'No Phone Number Provided'}
+                {phone}
               </div>
             ) : null}
 
             {taxId ? (
-              <div className={classes.section}>{'Tax ID ' + taxId}</div>
+              <div>
+                <div className={classes.sectionBreak}></div>
+                {/* The purpose of the above is to create a break row to align the Tax ID section to bottom */}
+
+                <div className={classes.section}>{'Tax ID ' + taxId}</div>
+              </div>
             ) : null}
           </Grid>
         </Grid>
