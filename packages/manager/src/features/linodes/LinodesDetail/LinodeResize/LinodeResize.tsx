@@ -348,24 +348,19 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             }
             onChange={this.handleToggleAutoDisksResize}
             text={
-              !_shouldEnableAutoResizeDiskOption ? (
-                <Typography>
-                  Would you like your disk to be automatically scaled with this
-                  Linode&apos;s new size? We recommend you keep this option
-                  enabled when available. Automatic resizing is only available
-                  when moving to a larger plan, and when you have a single ext
-                  disk (or one ext and one swap disk) on your Linode.
-                </Typography>
-              ) : (
-                <Typography>
-                  Would you like the disk <strong>{diskToResize}</strong> to be
-                  automatically scaled with this Linode&apos;s new size? We
-                  recommend you keep this option enabled when available.
-                  Automatic resizing is only available when moving to a larger
-                  plan, and when you have a single ext disk (or one ext and one
-                  swap disk) on your Linode.
-                </Typography>
-              )
+              <Typography>
+                Would you like{' '}
+                {_shouldEnableAutoResizeDiskOption ? (
+                  <strong>{diskToResize}</strong>
+                ) : (
+                  'your disk'
+                )}{' '}
+                to be automatically scaled with this Linode&apos;s new size? We
+                recommend you keep this option enabled when available. Automatic
+                resizing is only available when moving to a larger plan, and
+                when you have a single ext disk (or one ext and one swap disk)
+                on your Linode.
+              </Typography>
             }
           />
         </Paper>
