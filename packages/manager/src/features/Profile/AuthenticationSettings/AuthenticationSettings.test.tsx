@@ -26,11 +26,11 @@ const props: CombinedProps = {
 };
 
 describe('Authentication settings profile tab', () => {
-  it.skip('should render', () => {
+  it('should render', () => {
     const { getByTestId } = render(
       wrapWithTheme(<AuthenticationSettings {...props} />)
     );
-    expect(getByTestId('hello'));
+    expect(getByTestId('authSettings'));
   });
 
   it('should not render the whitelisting form when loading', () => {

@@ -88,20 +88,19 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
       id="tabpanel-passwordAuthentication"
       role="tabpanel"
       aria-labelledby="tab-passwordAuthentication"
+      data-testid="authSettings"
     >
       <DocumentTitleSegment segment={`Password & Authentication`} />
       {/* Remove when logic above is cleared */}
       {success && <Notice success text={success} />}
       {!loading && (
-        <React.Fragment>
-          <TabbedPanel
-            rootClass={`tabbedPanel`}
-            innerClass={`${classes.inner}`}
-            header={''}
-            tabs={tabs}
-            initTab={initialTab}
-          />
-        </React.Fragment>
+        <TabbedPanel
+          rootClass={`tabbedPanel`}
+          innerClass={`${classes.inner}`}
+          header={''}
+          tabs={tabs}
+          initTab={initialTab}
+        />
       )}
     </div>
   );
