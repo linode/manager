@@ -13,7 +13,6 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
-import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
@@ -41,6 +40,11 @@ const styles = (theme: Theme) =>
     }
   });
 
+interface Props {
+  onClose: () => void;
+  open: boolean;
+}
+
 interface State {
   submitting: boolean;
   success?: string;
@@ -58,9 +62,10 @@ interface State {
     state?: string;
     country?: string;
   };
+  errResponse: APIError[] | undefined;
 }
 
-type CombinedProps = AccountProps & WithStyles<ClassNames>;
+type CombinedProps = AccountProps & Props & WithStyles<ClassNames>;
 
 const field = (path: string[]) => lensPath(['fields', ...path]);
 
@@ -81,13 +86,14 @@ const L = {
   }
 };
 
-class UpdateContactInformationPanel extends React.Component<
+class UpdateContactInformationForm extends React.Component<
   CombinedProps,
   State
 > {
   state: State = {
     submitting: false,
-    fields: {}
+    fields: {},
+    errResponse: undefined
   };
 
   composeState = composeState;
@@ -100,51 +106,34 @@ class UpdateContactInformationPanel extends React.Component<
   }
 
   componentDidUpdate(prevProps: CombinedProps) {
-    if (!prevProps.accountData && !!this.props.accountData) {
+    const { open } = this.props;
+
+    if (prevProps.open !== open) {
       this.setState({
         fields: {
-          state: this.props.accountData.state
+          state: this.props.accountData?.state
         }
       });
     }
   }
 
   render() {
+    const { accountData: account } = this.props;
+
+    if (!account) {
+      return null;
+    }
+
     return (
-      <ExpansionPanel
-        heading="Update Contact Information"
-        actions={this.renderFormActions}
-      >
-        {this.renderContent()}
-      </ExpansionPanel>
+      <form>
+        {this.renderForm(account)}
+        {this.renderFormActions()}
+      </form>
     );
   }
 
-  renderContent = () => {
-    const {
-      accountData: account,
-      accountLoading,
-      accountError,
-      accountLastUpdated
-    } = this.props;
-
-    if (accountLoading && accountLastUpdated === 0) {
-      return this.renderLoading();
-    }
-
-    if (accountError.read) {
-      return this.renderErrors(accountError.read || []);
-    }
-
-    return account ? this.renderForm(account) : this.renderEmpty();
-  };
-
-  renderLoading = () => null;
-
-  renderErrors = (e: APIError[]) => null;
-
   renderForm = (account: Account) => {
-    const { classes, accountError } = this.props;
+    const { classes } = this.props;
     const { fields, success } = this.state;
 
     const errorMap = getErrorMap(
@@ -162,7 +151,7 @@ class UpdateContactInformationPanel extends React.Component<
         'tax_id',
         'zip'
       ],
-      accountError.update
+      this.state.errResponse
     );
 
     const generalError = errorMap.none;
@@ -215,61 +204,6 @@ class UpdateContactInformationPanel extends React.Component<
         <Grid
           item
           xs={12}
-          updateFor={[
-            account.company,
-            fields.company,
-            errorMap.company,
-            classes
-          ]}
-        >
-          <Grid container>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Company Name"
-                value={defaultTo(account.company, fields.company)}
-                errorText={errorMap.company}
-                onChange={this.updateCompany}
-                data-qa-company
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-
-        <Grid
-          item
-          xs={12}
-          sm={6}
-          updateFor={[account.email, fields.email, errorMap.email, classes]}
-        >
-          <TextField
-            label="Email"
-            type="email"
-            value={defaultTo(account.email, fields.email)}
-            errorText={errorMap.email}
-            onChange={this.updateEmail}
-            data-qa-contact-email
-          />
-        </Grid>
-
-        <Grid
-          item
-          xs={12}
-          sm={6}
-          updateFor={[account.phone, fields.phone, errorMap.phone, classes]}
-        >
-          <TextField
-            label="Phone Number"
-            type="tel"
-            value={defaultTo(account.phone, fields.phone)}
-            errorText={errorMap.phone}
-            onChange={this.updatePhone}
-            data-qa-contact-phone
-          />
-        </Grid>
-
-        <Grid
-          item
-          xs={12}
           sm={6}
           updateFor={[
             account.first_name,
@@ -310,7 +244,29 @@ class UpdateContactInformationPanel extends React.Component<
         <Grid
           item
           xs={12}
-          sm={6}
+          updateFor={[
+            account.company,
+            fields.company,
+            errorMap.company,
+            classes
+          ]}
+        >
+          <Grid container>
+            <Grid item xs={12}>
+              <TextField
+                label="Company Name (optional)"
+                value={defaultTo(account.company, fields.company)}
+                errorText={errorMap.company}
+                onChange={this.updateCompany}
+                data-qa-company
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+
+        <Grid
+          item
+          xs={12}
           updateFor={[
             account.address_1,
             fields.address_1,
@@ -330,7 +286,6 @@ class UpdateContactInformationPanel extends React.Component<
         <Grid
           item
           xs={12}
-          sm={6}
           updateFor={[
             account.address_2,
             fields.address_2,
@@ -376,9 +331,7 @@ class UpdateContactInformationPanel extends React.Component<
             classes
           ]}
         >
-          <Grid container className={classes.stateZip}>
-            <Grid item xs={12} sm={7}>
-              {/*
+          {/*
                 @todo use the <EnhancedSelect /> in favor of the
                 <TextField /> when the DB and API remove the 24 character limit.
 
@@ -390,7 +343,7 @@ class UpdateContactInformationPanel extends React.Component<
 
                 Follow DBA-1066 for more information.
               */}
-              {/* <EnhancedSelect
+          {/* <EnhancedSelect
                   label="State / Province"
                   errorText={errorMap.state}
                   onChange={this.updateState}
@@ -413,32 +366,31 @@ class UpdateContactInformationPanel extends React.Component<
                     }
                   }}
                 /> */}
-              <TextField
-                label="State / Province"
-                placeholder="Enter a State or Province"
-                errorText={errorMap.state}
-                onChange={e =>
-                  this.updateState({
-                    label: e.target.value,
-                    value: e.target.value
-                  })
-                }
-                dataAttrs={{
-                  'data-qa-contact-province': true
-                }}
-                value={fields.state || ''}
-              />
-            </Grid>
-            <Grid item xs={12} sm={5}>
-              <TextField
-                label="Zip / Postal Code"
-                value={defaultTo(account.zip, fields.zip)}
-                errorText={errorMap.zip}
-                onChange={this.updateZip}
-                data-qa-contact-post-code
-              />
-            </Grid>
-          </Grid>
+          <TextField
+            label="State / Province"
+            placeholder="Enter a State or Province"
+            errorText={errorMap.state}
+            onChange={e =>
+              this.updateState({
+                label: e.target.value,
+                value: e.target.value
+              })
+            }
+            dataAttrs={{
+              'data-qa-contact-province': true
+            }}
+            value={fields.state || ''}
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="Zip / Postal Code"
+            value={defaultTo(account.zip, fields.zip)}
+            errorText={errorMap.zip}
+            onChange={this.updateZip}
+            data-qa-contact-post-code
+          />
         </Grid>
 
         <Grid
@@ -474,8 +426,37 @@ class UpdateContactInformationPanel extends React.Component<
 
         <Grid
           item
+          xs={6}
+          updateFor={[account.email, fields.email, errorMap.email, classes]}
+        >
+          <TextField
+            label="Email"
+            type="email"
+            value={defaultTo(account.email, fields.email)}
+            errorText={errorMap.email}
+            onChange={this.updateEmail}
+            data-qa-contact-email
+          />
+        </Grid>
+
+        <Grid
+          item
+          xs={6}
+          updateFor={[account.phone, fields.phone, errorMap.phone, classes]}
+        >
+          <TextField
+            label="Phone"
+            type="tel"
+            value={defaultTo(account.phone, fields.phone)}
+            errorText={errorMap.phone}
+            onChange={this.updatePhone}
+            data-qa-contact-phone
+          />
+        </Grid>
+
+        <Grid
+          item
           xs={12}
-          sm={6}
           updateFor={[account.tax_id, fields.tax_id, errorMap.tax_id, classes]}
         >
           <TextField
@@ -509,10 +490,10 @@ class UpdateContactInformationPanel extends React.Component<
         </Button>
         <Button
           buttonType="secondary"
-          onClick={this.resetForm}
+          onClick={this.props.onClose}
           data-qa-reset-contact-info
         >
-          Reset
+          Cancel
         </Button>
       </ActionsPanel>
     );
@@ -585,27 +566,19 @@ class UpdateContactInformationPanel extends React.Component<
       .then(_ => {
         this.setState({
           success: 'Account information updated.',
-          submitting: false
+          submitting: false,
+          errResponse: undefined
         });
+        this.props.onClose();
       })
-      .catch(_ => {
+      .catch(errResponse => {
         this.setState({
           submitting: false,
-          success: undefined
+          success: undefined,
+          errResponse
         });
         scrollErrorIntoView();
       });
-  };
-
-  resetForm = () => {
-    const { accountData: account } = this.props;
-    this.setState({
-      fields: {
-        state: account ? account.state : undefined
-      },
-      submitting: false,
-      success: undefined
-    });
   };
 }
 
@@ -613,11 +586,6 @@ const styled = withStyles(styles);
 
 const withAccount = AccountContainer();
 
-const enhanced = compose(
-  styled,
-  withAccount
-);
+const enhanced = compose<CombinedProps, Props>(styled, withAccount);
 
-export default enhanced(
-  UpdateContactInformationPanel
-) as React.ComponentType<{}>;
+export default enhanced(UpdateContactInformationForm);

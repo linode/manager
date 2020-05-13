@@ -33,7 +33,6 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
   const { account, requestAccount } = useAccount();
 
   const classes = useStyles();
-
   React.useEffect(() => {
     if (account.loading && account.lastUpdated === 0) {
       requestAccount();
@@ -52,6 +51,12 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
     return <ErrorState errorText={errorText} />;
   }
 
+  /* This will never happen, /account is requested on app load
+  and the splash screen doesn't resolve until it succeeds */
+  if (!account.data) {
+    return null;
+  }
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment={`Account & Billing`} />
@@ -64,9 +69,9 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
         <Grid container>
           <Grid item xs={12} md={12} lg={12} className={classes.main}>
             <BillingSummary
-              balance={account?.data?.balance ?? 0}
-              promotion={account?.data?.active_promotions?.[0]}
-              uninvoicedBalance={account?.data?.balance_uninvoiced ?? 0}
+              balance={account.data.balance ?? 0}
+              promotion={account.data.active_promotions?.[0]}
+              uninvoicedBalance={account.data.balance_uninvoiced ?? 0}
             />
             <PaymentInformation
               balance={account?.data?.balance ?? 0}
