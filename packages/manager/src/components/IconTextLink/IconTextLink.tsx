@@ -97,7 +97,7 @@ const IconTextLink: React.StatelessComponent<FinalProps> = props => {
   return (
     <ConditionalWrapper
       condition={to !== undefined && !disabled}
-      wrapper={children => <Link to={to}>{children}</Link>}
+      wrapper={children => <Link to={to as string}>{children}</Link>}
     >
       <Button
         className={classNames(

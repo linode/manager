@@ -76,6 +76,7 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
             />
             <SummaryPanel data-qa-summary-panel history={props.history} />
             <BillingActivityPanel
+              mostRecentInvoiceId={mostRecentInvoiceId}
               setMostRecentInvoiceId={setMostRecentInvoiceId}
             />
           </Grid>

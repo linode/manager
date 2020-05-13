@@ -167,7 +167,12 @@ const defaultDateRange: DateRange = '6 Months';
 // =============================================================================
 // <BillingActivityPanel />
 // =============================================================================
-export const BillingActivityPanel: React.FC<{}> = () => {
+interface Props {
+  mostRecentInvoiceId?: number;
+  setMostRecentInvoiceId: (id: number) => void;
+}
+
+export const BillingActivityPanel: React.FC<Props> = props => {
   const classes = useStyles();
   const flags = useFlags();
   const { account } = useAccount();
@@ -176,9 +181,6 @@ export const BillingActivityPanel: React.FC<{}> = () => {
   const [error, setError] = React.useState<APIError[] | undefined>();
   const [invoices, setInvoices] = React.useState<Invoice[]>([]);
   const [payments, setPayments] = React.useState<Payment[]>([]);
-  const [mostRecentInvoiceId, setMostRecentInvoiceId] = React.useState<
-    number | undefined
-  >();
 
   const pdfErrors = useSet();
   const pdfLoading = useSet();
@@ -204,8 +206,8 @@ export const BillingActivityPanel: React.FC<{}> = () => {
           setInvoices(invoices.data);
           setPayments(payments.data);
 
-          if (!mostRecentInvoiceId && invoices.data.length > 0) {
-            setMostRecentInvoiceId(invoices.data[0].id);
+          if (!props.mostRecentInvoiceId && invoices.data.length > 0) {
+            props.setMostRecentInvoiceId(invoices.data[0].id);
           }
         })
         .catch(_error => {
@@ -362,7 +364,7 @@ export const BillingActivityPanel: React.FC<{}> = () => {
   return (
     <>
       <div className={classes.headerContainer}>
-        <Typography variant="h2">Billing & Payment History</Typography>
+        <Typography variant="h2">Billing &amp; Payment History</Typography>
         <div className={classes.headerRight}>
           <div className={classes.flexContainer}>
             <Select

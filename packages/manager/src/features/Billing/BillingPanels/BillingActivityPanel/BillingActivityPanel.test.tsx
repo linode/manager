@@ -45,9 +45,13 @@ jest.mock('src/components/EnhancedSelect/Select');
 
 // const mockOpenCloseAccountDialog = jest.fn();
 
+const setMostRecentInvoiceId = (id: number) => id;
+
 describe('BillingActivityPanel', () => {
   it('renders the header and appropriate rows', async () => {
-    const { getByText } = renderWithTheme(<BillingActivityPanel />);
+    const { getByText } = renderWithTheme(
+      <BillingActivityPanel setMostRecentInvoiceId={setMostRecentInvoiceId} />
+    );
     await wait(() => {
       getByText('Billing & Payment History');
       getByText('Description');
@@ -58,7 +62,7 @@ describe('BillingActivityPanel', () => {
 
   it('renders a row for each payment and invoice', async () => {
     const { getByText, getByTestId } = renderWithTheme(
-      <BillingActivityPanel />
+      <BillingActivityPanel setMostRecentInvoiceId={setMostRecentInvoiceId} />
     );
     await wait(() => {
       getByText('Invoice #0');
@@ -70,7 +74,7 @@ describe('BillingActivityPanel', () => {
 
   it('should filter by item type', async () => {
     const { queryAllByTestId, queryByText, queryByTestId } = renderWithTheme(
-      <BillingActivityPanel />
+      <BillingActivityPanel setMostRecentInvoiceId={setMostRecentInvoiceId} />
     );
 
     // Test selecting "Invoices"
@@ -94,7 +98,7 @@ describe('BillingActivityPanel', () => {
 
   it('should filter by transaction date', async () => {
     const { queryAllByTestId, queryByText, queryByTestId } = renderWithTheme(
-      <BillingActivityPanel />
+      <BillingActivityPanel setMostRecentInvoiceId={setMostRecentInvoiceId} />
     );
 
     await wait(() => {
@@ -108,7 +112,9 @@ describe('BillingActivityPanel', () => {
   });
 
   it('should display transaction selection components with defaults', async () => {
-    const { getByText } = renderWithTheme(<BillingActivityPanel />);
+    const { getByText } = renderWithTheme(
+      <BillingActivityPanel setMostRecentInvoiceId={setMostRecentInvoiceId} />
+    );
     await wait(() => {
       getByText('All Transaction Types');
       getByText('90 Days');
