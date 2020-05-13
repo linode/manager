@@ -29,7 +29,11 @@ export const CreditCard: React.FC<CombinedProps> = props => {
   return (
     <>
       <div className={`${classes.section} ${classes.root}`} data-qa-contact-cc>
-        <div>{lastFour ? `Card ending in ${lastFour}` : 'None'}</div>
+        <div>
+          {lastFour
+            ? `Card ending in ${lastFour}`
+            : 'No payment method has been specified for this account.'}
+        </div>
       </div>
       <div
         className={`${classes.section} ${classes.root}`}
