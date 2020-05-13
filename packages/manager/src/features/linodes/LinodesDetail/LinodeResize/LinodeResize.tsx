@@ -331,7 +331,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
                 className={classes.toolTip}
                 text={`Your disks cannot be automatically resized when moving to a smaller plan.`}
               />
-            ) : !_shouldEnableAutoResizeDiskOption || isSmaller ? (
+            ) : !_shouldEnableAutoResizeDiskOption ? (
               <HelpIcon
                 className={classes.toolTip}
                 text={`Your ext disk can only be automatically resized if you have one ext
