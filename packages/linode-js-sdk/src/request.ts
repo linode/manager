@@ -1,5 +1,6 @@
 import Axios, {
   AxiosError,
+  // AxiosInstance,
   AxiosPromise,
   AxiosRequestConfig,
   AxiosResponse
@@ -26,6 +27,26 @@ interface RequestConfig extends AxiosRequestConfig {
 export const baseRequest = Axios.create({
   baseURL: 'https://api.linode.com/v4'
 });
+
+/**
+ * setToken
+ *
+ * Helper function to authenticate your requests. Most Linode APIv4 endpoints
+ * require an OAuth token or personal access token (PAT) to authenticate.
+ * @param _baseRequest
+ * @param token
+ */
+export const setToken = (token: string) => {
+  return baseRequest.interceptors.request.use(config => {
+    return {
+      ...config,
+      headers: {
+        ...config.headers,
+        Authorization: `Bearer ${token}`
+      }
+    };
+  });
+};
 
 const L = {
   url: lensPath(['url']),
