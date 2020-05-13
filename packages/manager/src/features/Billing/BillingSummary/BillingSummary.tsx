@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ActivePromotion } from 'linode-js-sdk/lib/account/types';
 import CreditCard from 'src/assets/icons/credit-card.svg';
 import Info from 'src/assets/icons/info.svg';
-import Invoice from 'src/assets/icons/invoice.svg';
+import InvoiceIcon from 'src/assets/icons/invoice.svg';
 // import GiftBox from 'src/assets/icons/gift-box.svg';
 import Grid from 'src/components/core/Grid';
 import IconButton from 'src/components/core/IconButton';
@@ -94,6 +94,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: 0,
     [theme.breakpoints.up('md')]: {
       paddingBottom: 0
+    },
+    '&:hover': {
+      '& svg': {
+        color: `${theme.palette.primary.main} !important`
+      }
     }
   },
   infoIcon: {
@@ -104,14 +109,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   promotion?: ActivePromotion;
-  goToInvoice?: () => void;
   uninvoicedBalance: number;
   promotionAmount?: number;
   balance: number;
+  mostRecentInvoiceId?: number;
 }
 
 export const BillingSummary: React.FC<Props> = props => {
-  const { promotion, goToInvoice, uninvoicedBalance, balance } = props;
+  const { promotion, uninvoicedBalance, balance, mostRecentInvoiceId } = props;
 
   const [paymentDrawerOpen, setPaymentDrawerOpen] = React.useState<boolean>(
     false
@@ -129,7 +134,7 @@ export const BillingSummary: React.FC<Props> = props => {
 
   const classes = useStyles();
 
-  // If balance is < 0 we apply it to the univoiced balance, otherwise only apply uninvoiced so a past due amount is not included in calculation.
+  // If balance is < 0 we apply it to the uninvoiced balance, otherwise only apply uninvoiced so a past due amount is not included in calculation.
   const calculatedBalance =
     balance < 0 ? uninvoicedBalance + balance : uninvoicedBalance;
 
@@ -140,8 +145,8 @@ export const BillingSummary: React.FC<Props> = props => {
     : 0;
 
   const totalBalance = hasCredit
-    ? Math.abs(calculatedBalance)
-    : promotion
+    ? calculatedBalance
+    : promotion && calculatedBalance >= convertedPromoCredit
     ? Math.max(0, calculatedBalance - convertedPromoCredit)
     : calculatedBalance;
 
@@ -189,12 +194,14 @@ export const BillingSummary: React.FC<Props> = props => {
                 onClick={openPaymentDrawer}
                 className={classes.iconButton}
               />
+
               <IconTextLink
-                SideIcon={Invoice}
-                text="View invoice"
-                title="View invoice"
-                onClick={goToInvoice!}
+                SideIcon={InvoiceIcon}
+                text="View last invoice"
+                title="View last invoice"
+                to={`/account/billing/invoices/${mostRecentInvoiceId}`}
                 className={classes.iconButton}
+                disabled={!mostRecentInvoiceId}
               />
             </div>
           </Grid>
@@ -233,7 +240,11 @@ export const BillingSummary: React.FC<Props> = props => {
                 </Typography>
               </Grid>
             </Grid>
-            {promotion && (
+            {/*
+            We check if a promotion even exists for the account
+            in addition to if the promotion amount will be applied.
+            */}
+            {promotion && calculatedBalance >= convertedPromoCredit && (
               <Grid item container justify="space-between" alignItems="center">
                 <Grid item xs={8}>
                   <Typography className={classes.label}>
@@ -275,7 +286,7 @@ export const BillingSummary: React.FC<Props> = props => {
                 <Typography className={classes.field}>
                   {/* Only display balance if less than 0, otherwise display 0. Balance, if a positive integer, is instead applied as past due. */}
                   {balance < 0 ? (
-                    `-${(<Currency quantity={balance} wrapInParentheses />)}`
+                    <Currency quantity={balance} wrapInParentheses />
                   ) : (
                     <Currency quantity={0} />
                   )}
@@ -289,16 +300,16 @@ export const BillingSummary: React.FC<Props> = props => {
               justify="space-between"
             >
               <Grid item>
-                <Typography className={classes.label}>Balance*</Typography>
+                <Typography className={classes.label}>
+                  Next Cycle Estimated Balance*
+                </Typography>
               </Grid>
               <Grid item>
                 <Typography className={classes.field}>
                   {/* If there is credit left over post-calculation, display as negative in parens */}
                   <Currency
                     quantity={totalBalance}
-                    wrapInParentheses={
-                      hasCredit && Math.abs(calculatedBalance) > 0
-                    }
+                    wrapInParentheses={totalBalance < 0}
                   />
                 </Typography>
               </Grid>

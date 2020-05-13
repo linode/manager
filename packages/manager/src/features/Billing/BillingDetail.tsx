@@ -34,6 +34,11 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
   const { account, requestAccount } = useAccount();
 
   const classes = useStyles();
+
+  const [mostRecentInvoiceId, setMostRecentInvoiceId] = React.useState<
+    number | undefined
+  >();
+
   React.useEffect(() => {
     if (account.loading && account.lastUpdated === 0) {
       requestAccount();
@@ -70,9 +75,10 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
         <Grid container>
           <Grid item xs={12} md={12} lg={12} className={classes.main}>
             <BillingSummary
-              balance={account.data.balance ?? 0}
-              promotion={account.data.active_promotions?.[0]}
-              uninvoicedBalance={account.data.balance_uninvoiced ?? 0}
+              balance={account?.data?.balance ?? 0}
+              promotion={account?.data?.active_promotions?.[0]}
+              uninvoicedBalance={account?.data?.balance_uninvoiced ?? 0}
+              mostRecentInvoiceId={mostRecentInvoiceId}
             />
             <Grid container direction="row" wrap="nowrap">
               <ContactInfo
@@ -91,7 +97,10 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
               />
               <SummaryPanel data-qa-summary-panel history={props.history} />
             </Grid>
-            <BillingActivityPanel />
+            <BillingActivityPanel
+              mostRecentInvoiceId={mostRecentInvoiceId}
+              setMostRecentInvoiceId={setMostRecentInvoiceId}
+            />
           </Grid>
         </Grid>
       </div>
