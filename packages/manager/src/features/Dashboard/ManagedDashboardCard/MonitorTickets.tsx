@@ -57,10 +57,10 @@ export const MonitorTickets: React.FC<Props> = props => {
       <Grid item>
         <Typography variant="h2">
           {hasIssues
-            ? `${openIssues.length} open Support ${
+            ? `${openIssues.length} open support ${
                 openIssues.length === 1 ? 'ticket' : 'tickets'
               }`
-            : 'No open Support tickets'}
+            : 'No open support tickets'}
         </Typography>
       </Grid>
       <Grid item>

@@ -148,7 +148,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
   const [description, setDescription] = React.useState<string>(
     getInitialValue(prefilledDescription, valuesFromStorage.description)
   );
-  const [entityType, setEntityType] = React.useState<EntityType>('none');
+  const [entityType, setEntityType] = React.useState<EntityType>('general');
   const [entityID, setEntityID] = React.useState<string>('');
 
   // Entities for populating dropdown
@@ -253,7 +253,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
     setSummary(_summary);
     setDescription(_description);
     setEntityID('');
-    setEntityType('none');
+    setEntityType('general');
   };
 
   const resetDrawer = (clearValues: boolean = false) => {
@@ -444,8 +444,8 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
   const hasNoEntitiesMessage = getHasNoEntitiesMessage();
 
   const topicOptions = [
-    ...renderEntityTypes(),
-    { label: 'None/General', value: 'general' }
+    { label: 'General/Account/Billing', value: 'general' },
+    ...renderEntityTypes()
   ];
 
   const selectedTopic = topicOptions.find(eachTopic => {
@@ -484,7 +484,6 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
                 value={selectedTopic}
                 onChange={handleEntityTypeChange}
                 data-qa-ticket-entity-type
-                placeholder="Choose a Product"
                 isClearable={false}
               />
               {!['none', 'general'].includes(entityType) && (

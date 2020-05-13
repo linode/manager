@@ -69,10 +69,10 @@ const styles = (theme: Theme) =>
       }
     },
     labelCol: {
-      width: '70%'
+      width: '75%'
     },
     moreCol: {
-      width: '30%'
+      width: '25%'
     },
     actionsCol: {
       width: '10%'

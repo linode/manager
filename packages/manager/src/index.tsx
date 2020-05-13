@@ -94,21 +94,19 @@ const renderAuthentication = () => (
 );
 
 ReactDOM.render(
-  <React.Fragment>
-    {navigator.cookieEnabled ? (
-      <Provider store={store}>
-        <Router>
-          <Switch>
-            {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
-            <Route exact path="/null" render={renderNull} />
-            <Route render={renderAuthentication} />
-          </Switch>
-        </Router>
-      </Provider>
-    ) : (
-      <CookieWarning />
-    )}
-  </React.Fragment>,
+  navigator.cookieEnabled ? (
+    <Provider store={store}>
+      <Router>
+        <Switch>
+          {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
+          <Route exact path="/null" render={renderNull} />
+          <Route render={renderAuthentication} />
+        </Switch>
+      </Router>
+    </Provider>
+  ) : (
+    <CookieWarning />
+  ),
   document.getElementById('root') as HTMLElement
 );
 

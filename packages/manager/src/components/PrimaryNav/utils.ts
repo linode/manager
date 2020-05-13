@@ -1,7 +1,12 @@
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 
-export const linkIsActive = (href: string, activeLinks: Array<string> = []) => {
-  const currentlyOnOneClickTab = location.search.match(/one-click/gi);
+export const linkIsActive = (
+  href: string,
+  locationSearch: string,
+  locationPathname: string,
+  activeLinks: Array<string> = []
+) => {
+  const currentlyOnOneClickTab = locationSearch.match(/one-click/gi);
   const isOneClickTab = href.match(/one-click/gi);
 
   /**
@@ -12,5 +17,5 @@ export const linkIsActive = (href: string, activeLinks: Array<string> = []) => {
     return isOneClickTab;
   }
 
-  return isPathOneOf([href, ...activeLinks], location.pathname);
+  return isPathOneOf([href, ...activeLinks], locationPathname);
 };
