@@ -97,7 +97,7 @@ import { getLinodes } from 'linode-js-sdk'; // This is fine
 import { getLinodes } from 'linode-js-sdk/lib/linodes'; // This works too
 ```
 
-## Pagination and Filtering
+### Pagination and Filtering
 
 APIv4 supports [pagination](https://developers.linode.com/api/v4/#pagination) and [filtering and sorting](https://developers.linode.com/api/v4/#filtering-and-sorting). Paginated endpoints include the current page, total number
 of pages, and total number of results in the response:
@@ -133,15 +133,7 @@ getImages({}, { is_public: true });
 The [API docs](https://developers.linode.com/api/v4) provide a list of which response fields are filterable,
 as well as examples of more complex filtering and sorting operations.
 
-## Contributing
-
-This SDK aims to have a 1-to-1 relationship with the endpoints exposed from the Linode APIv4, but endpoints are being added all the time, so it's entirely possible that the SDK is incomplete. If you see an endpoint in the [API docs](https://developers.linode.com/api/v4) that doesn't exist in this package, don't hesitate to open a PR and add the function and typings that consume the endpoint. If you don't feel comfortable opening a PR, [feel free to open a ticket](https://github.com/linode/manager/issues/new).
-
-We'll do our best to publicize what work needs to be done in the GitHub issues and mark tickets as a _good first issue_. That way, it will be more apparent where the SDK needs work.
-
-When in doubt, look at the code that already exists and mimic that.
-
-## TypeScript
+### Types
 
 This library comes with TypeScript definitions so no need to write your own or find them elsewhere online. Just import the functions as normal and they should play nicely with TypeScript!
 
@@ -162,3 +154,11 @@ You can also import from the root if preferred:
 ```js
 import { APIError, Linode } from 'linode-js-sdk';
 ```
+
+## Contributing
+
+This SDK aims to have a 1-to-1 relationship with the endpoints exposed from the Linode APIv4, but endpoints are being added all the time, so it's entirely possible that the SDK is incomplete. If you see an endpoint in the [API docs](https://developers.linode.com/api/v4) that doesn't exist in this package, don't hesitate to open a PR and add the function and typings that consume the endpoint. If you don't feel comfortable opening a PR, [feel free to open a ticket](https://github.com/linode/manager/issues/new).
+
+We'll do our best to publicize what work needs to be done in the GitHub issues and mark tickets as a _good first issue_. That way, it will be more apparent where the SDK needs work.
+
+When in doubt, look at the code that already exists and mimic that.

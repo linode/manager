@@ -1,6 +1,5 @@
 import Axios, {
   AxiosError,
-  // AxiosInstance,
   AxiosPromise,
   AxiosRequestConfig,
   AxiosResponse
@@ -33,7 +32,7 @@ export const baseRequest = Axios.create({
  *
  * Helper function to authenticate your requests. Most Linode APIv4 endpoints
  * require an OAuth token or personal access token (PAT) to authenticate.
- * @param _baseRequest
+ *
  * @param token
  */
 export const setToken = (token: string) => {
