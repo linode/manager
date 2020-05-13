@@ -578,18 +578,6 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
             width: 12,
             height: 12,
             borderRadius: '50%'
-          },
-          [breakpoints.down('xs')]: {
-            marginLeft: 8,
-            marginRight: -8,
-            marginTop: -6,
-            color: 'white !important',
-            '& svg': {
-              width: 20,
-              height: 20,
-              borderRadius: '50%',
-              backgroundColor: primaryColors.main
-            }
           }
         }
       },
