@@ -387,9 +387,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
               ]}
               password={password}
               handleChange={updatePassword}
-              users={
-                userSSHKeys.length > 0 && selectedImageID ? userSSHKeys : []
-              }
+              users={userSSHKeys}
               requestKeys={requestKeys}
             />
           </form>

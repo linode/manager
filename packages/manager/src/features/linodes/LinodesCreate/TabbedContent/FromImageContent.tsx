@@ -269,11 +269,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
                 userSSHKeys,
                 this.props.selectedImageID
               ]}
-              users={
-                userSSHKeys.length > 0 && this.props.selectedImageID
-                  ? userSSHKeys
-                  : []
-              }
+              users={userSSHKeys}
               requestKeys={requestKeys}
             />
             <AddonsPanel
