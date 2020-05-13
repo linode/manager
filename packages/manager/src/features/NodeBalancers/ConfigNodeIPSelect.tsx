@@ -4,7 +4,6 @@ import { compose } from 'recompose';
 
 import {
   createStyles,
-  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -15,7 +14,7 @@ import { privateIPRegex } from 'src/utilities/ipUtils';
 
 type ClassNames = 'labelOuter';
 
-const styles = (theme: Theme) =>
+const styles = () =>
   createStyles({
     labelOuter: {
       display: 'block'
@@ -26,9 +25,9 @@ interface Props {
   selectedRegion?: string;
   handleChange: (nodeIndex: number, ipAddress: string) => void;
   nodeIndex: number;
+  inputId?: string;
   errorText?: string;
   nodeAddress?: string;
-  workflow: 'create' | 'edit';
   textfieldProps: Omit<TextFieldProps, 'label'>;
 }
 
@@ -38,11 +37,10 @@ const ConfigNodeIPSelect: React.FC<CombinedProps> = props => {
   const [selectedLinode, setSelectedLinode] = React.useState<number | null>(
     null
   );
-  const { classes } = props;
+  const { classes, handleChange: _handleChange, inputId } = props;
 
   const handleChange = (linode: Linode) => {
     setSelectedLinode(linode.id);
-
     const thisLinodesPrivateIP = linode.ipv4.find(ipv4 =>
       ipv4.match(privateIPRegex)
     );
@@ -50,24 +48,13 @@ const ConfigNodeIPSelect: React.FC<CombinedProps> = props => {
      * we can be sure the selection has a private IP because of the
      * filterCondition prop in the render method below
      */
-    props.handleChange(props.nodeIndex, thisLinodesPrivateIP!);
+    _handleChange(props.nodeIndex, thisLinodesPrivateIP!);
   };
-
-  React.useEffect(() => {
-    /**
-     * In other words, when we select a new region in the create workflow
-     * clear out the selected IP Address because it might belong to a node
-     * NOT in the selected region
-     */
-    if (props.workflow === 'create') {
-      setSelectedLinode(null);
-      props.handleChange(props.nodeIndex, '');
-    }
-  }, [props.selectedRegion]);
 
   return (
     <LinodeSelect
       noMarginTop
+      inputId={inputId}
       textFieldProps={props.textfieldProps}
       value={
         props.nodeAddress

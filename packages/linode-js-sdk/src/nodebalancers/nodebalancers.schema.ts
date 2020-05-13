@@ -2,6 +2,9 @@ import { array, boolean, mixed, number, object, string } from 'yup';
 
 import { NodeBalancerConfig } from './types';
 
+const PORT_WARNING = 'Port must be between 1 and 65535.';
+const LABEL_WARNING = 'Label must be between 3 and 32 characters.';
+
 export const nodeBalancerConfigNodeSchema = object({
   label: string()
     .matches(
@@ -22,8 +25,8 @@ export const nodeBalancerConfigNodeSchema = object({
   port: number()
     .typeError('Port must be a number.')
     .required('Port is required.')
-    .min(1, 'Port must be between 1 and 65535.')
-    .max(65535, 'Port must be between 1 and 65535.'),
+    .min(1, PORT_WARNING)
+    .max(65535, PORT_WARNING),
 
   weight: number()
     .typeError('Weight must be a number.')
@@ -60,8 +63,8 @@ export const createNodeBalancerConfigSchema = object({
   port: number()
     .integer()
     .required('Port is required')
-    .min(1, 'Port must be between 1 and 65535.')
-    .max(65535, 'Port must be between 1 and 65535.'),
+    .min(1, PORT_WARNING)
+    .max(65535, PORT_WARNING),
   protocol: mixed().oneOf(['http', 'https', 'tcp']),
   ssl_key: string().when('protocol', {
     is: protocol => protocol === 'https',
@@ -105,8 +108,8 @@ export const UpdateNodeBalancerConfigSchema = object({
   port: number()
     .typeError('Port must be a number.')
     .integer()
-    .min(1, 'Port must be between 1 and 65535.')
-    .max(65535, 'Port must be between 1 and 65535.'),
+    .min(1, PORT_WARNING)
+    .max(65535, PORT_WARNING),
   protocol: mixed().oneOf(['http', 'https', 'tcp']),
   ssl_key: string().when('protocol', {
     is: protocol => protocol === 'https',
@@ -122,8 +125,8 @@ export const UpdateNodeBalancerConfigSchema = object({
 
 export const NodeBalancerSchema = object({
   label: string()
-    .min(3, 'Label must be between 3 and 32 characters.')
-    .max(32, 'Label must be between 3 and 32 characters.')
+    .min(3, LABEL_WARNING)
+    .max(32, LABEL_WARNING)
     .matches(
       /^[a-zA-Z0-9-_]+$/,
       "Label can't contain special characters or spaces."
@@ -171,8 +174,8 @@ export const NodeBalancerSchema = object({
 
 export const UpdateNodeBalancerSchema = object({
   label: string()
-    .min(3, 'Label must be between 3 and 32 characters.')
-    .max(32, 'Label must be between 3 and 32 characters.')
+    .min(3, LABEL_WARNING)
+    .max(32, LABEL_WARNING)
     .matches(
       /^[a-zA-Z0-9-_]+$/,
       "Label can't contain special characters or spaces."
