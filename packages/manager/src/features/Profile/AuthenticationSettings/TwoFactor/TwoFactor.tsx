@@ -67,7 +67,7 @@ type CombinedProps = Props & StateProps & DispatchProps;
 export const TwoFactor: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const { username } = props;
+  const { clearState, twoFactor, username } = props;
 
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -81,13 +81,6 @@ export const TwoFactor: React.FC<CombinedProps> = props => {
     boolean | undefined
   >(props.twoFactor);
   const [scratchCode, setScratchCode] = React.useState<string>('');
-
-  /*
-   * @todo This logic can be removed when IP Whitelisting (legacy)
-   * has been fully deprecated.
-   */
-
-  const { clearState, twoFactor } = props;
 
   React.useEffect(() => {
     clearState();
@@ -132,11 +125,7 @@ export const TwoFactor: React.FC<CombinedProps> = props => {
   };
 
   const handleCancel = () => {
-    if (twoFactorConfirmed) {
-      toggleHidden();
-    } else {
-      toggleTwoFactorEnabled(false);
-    }
+    toggleTwoFactorEnabled(false);
   };
 
   const getToken = () => {
