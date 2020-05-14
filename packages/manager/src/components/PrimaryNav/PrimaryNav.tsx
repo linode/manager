@@ -227,7 +227,7 @@ export const PrimaryNav: React.FC<Props> = props => {
           };
 
           return thisLink.prefetchRequestFn &&
-            thisLink.prefetchRequestClearance ? (
+            thisLink.prefetchRequestClearance !== undefined ? (
             <PrefetchPrimaryLink
               {...props}
               prefetchRequestFn={thisLink.prefetchRequestFn}
@@ -423,5 +423,5 @@ export const PrefetchPrimaryLink: React.FC<PrimaryLinkProps &
     onMouseLeave: clearTimeoutID
   };
 
-  return <PrimaryLink {...props} {...prefetchProps} />;
+  return <PrimaryLink {...props} prefetchProps={prefetchProps} />;
 };

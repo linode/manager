@@ -61,6 +61,6 @@ export const usePreFetch = (
 };
 
 // Useful for consumers that may want to delay the prefetch request.
-export const PREFETCH_DELAY = 2000;
+export const PREFETCH_DELAY = 150;
 
 export default usePreFetch;
