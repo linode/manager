@@ -7,7 +7,7 @@ import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 import styled from 'src/containers/SummaryPanels.styles';
 import CreditCard from './CreditCard';
-import UpdateCreditCardDrawer from '../../UpdateCreditCardDrawer';
+import UpdateCreditCardDrawer from './UpdateCreditCardDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),

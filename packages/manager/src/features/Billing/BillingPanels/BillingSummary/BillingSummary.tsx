@@ -13,7 +13,7 @@ import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import IconTextLink from 'src/components/IconTextLink';
 
-import PaymentDrawer from '../BillingPanels/PaymentDrawer';
+import PaymentDrawer from './PaymentDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
