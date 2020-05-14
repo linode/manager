@@ -304,7 +304,6 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
               />
             )}
           />
-          )}
           <Route
             exact
             strict
@@ -320,7 +319,6 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
               );
             }}
           />
-          )}
           <Route
             exact
             strict
@@ -336,7 +334,6 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
               );
             }}
           />
-          )}
           <Route
             exact
             strict
@@ -352,7 +349,6 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
               );
             }}
           />
-          )}
           <Route
             exact
             strict
