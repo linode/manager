@@ -133,9 +133,9 @@ describe('invoiceToActivityFeedItem', () => {
 
 describe('paymentToActivityFeedItem', () => {
   it('sets label as "Payment" if usd >= 0 ', () => {
-    const payment0 = paymentFactory.build({ usd: 0 });
-    expect(paymentToActivityFeedItem(payment0).label).toBe('Payment');
-    expect(paymentToActivityFeedItem(payment0).label).toBe('Payment');
+    const payment = paymentFactory.build({ usd: 0, id: 1 });
+    expect(paymentToActivityFeedItem(payment).label).toBe('Payment #1');
+    expect(paymentToActivityFeedItem(payment).label).toBe('Payment #1');
   });
 
   it('sets label as "Refund to Card" if usd < 0 ', () => {
