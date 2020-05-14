@@ -130,34 +130,45 @@ const ContactInformation: React.FC<CombinedProps> = props => {
         </Grid>
 
         <Grid container spacing={2} className={classes.grid}>
-          <Grid item className={classes.switchWrapper}>
-            <div className={classes.section} data-qa-contact-name>
-              {!(firstName || lastName) && 'None'}
-              <div
-                className={classes.wordWrap}
-              >{`${firstName} ${lastName}`}</div>
-            </div>
+          {(firstName ||
+            lastName ||
+            company ||
+            address1 ||
+            address2 ||
+            city ||
+            state ||
+            zip) && (
+            <Grid item className={classes.switchWrapper}>
+              {(firstName || lastName) && (
+                <div className={classes.section} data-qa-contact-name>
+                  <div
+                    className={classes.wordWrap}
+                  >{`${firstName} ${lastName}`}</div>
+                </div>
+              )}
 
-            {company ? (
-              <div className={classes.section} data-qa-company>
-                <div className={classes.wordWrap}>{company}</div>
-              </div>
-            ) : null}
+              {company && (
+                <div className={classes.section} data-qa-company>
+                  <div className={classes.wordWrap}>{company}</div>
+                </div>
+              )}
 
-            <div className={classes.section} data-qa-contact-address>
-              <div>
-                {!(address1 || address2 || city || state || zip) && 'None'}
-                <span>{address1}</span>
-                <div>{address2}</div>
-              </div>
-            </div>
+              {(address1 || address2 || city || state || zip) && (
+                <div className={classes.section} data-qa-contact-address>
+                  <div>
+                    <span>{address1}</span>
+                    <div>{address2}</div>
+                  </div>
+                </div>
+              )}
 
-            <div className={classes.section}>
-              <div>
-                <div>{`${city}${city && state && ','} ${state} ${zip}`}</div>
+              <div className={classes.section}>
+                <div>
+                  <div>{`${city}${city && state && ','} ${state} ${zip}`}</div>
+                </div>
               </div>
-            </div>
-          </Grid>
+            </Grid>
+          )}
 
           <Grid
             item
@@ -170,15 +181,16 @@ const ContactInformation: React.FC<CombinedProps> = props => {
             <div className={classes.section} data-qa-contact-email>
               <div className={classes.wordWrap}>{email}</div>
             </div>
-            {phone ? (
+
+            {phone && (
               <div className={classes.section} data-qa-contact-phone>
                 {phone}
               </div>
-            ) : null}
+            )}
 
-            {taxId ? (
+            {taxId && (
               <div className={classes.section}>{'Tax ID ' + taxId}</div>
-            ) : null}
+            )}
           </Grid>
         </Grid>
       </Paper>
