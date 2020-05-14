@@ -56,7 +56,7 @@ const PaymentInformation: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <Grid className={classes.root} item xs={6}>
+    <Grid className={classes.root} item xs={12} md={6}>
       <Paper
         className={`${classes.summarySection} ${classes.summarySectionHeight}`}
         data-qa-billing-summary

@@ -80,7 +80,7 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
               uninvoicedBalance={account?.data?.balance_uninvoiced ?? 0}
               mostRecentInvoiceId={mostRecentInvoiceId}
             />
-            <Grid container direction="row" wrap="nowrap">
+            <Grid container direction="row">
               <ContactInfo
                 company={account.data.company}
                 firstName={account.data.first_name}
