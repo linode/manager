@@ -361,6 +361,7 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
           }
         }}
         onMouseEnter={maybePreFetchEntities}
+        onFocus={maybePreFetchEntities}
         {...attr}
         className={classNames({
           [classes.listItem]: true,
