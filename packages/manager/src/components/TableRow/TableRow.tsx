@@ -129,7 +129,7 @@ const styles = (theme: Theme) =>
 
 type onClickFn = (e: React.ChangeEvent<HTMLTableRowElement>) => void;
 
-interface Props {
+export interface Props {
   rowLink?: string | onClickFn;
   onClick?: onClickFn;
   onKeyUp?: any;
@@ -241,6 +241,9 @@ export class TableRow extends React.Component<CombinedProps> {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(withRouter, styled)(TableRow);
+const enhanced = compose<CombinedProps, Props>(
+  withRouter,
+  styled
+)(TableRow);
 
 export default enhanced;

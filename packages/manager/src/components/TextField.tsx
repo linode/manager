@@ -32,7 +32,8 @@ type ClassNames =
   | 'noTransform'
   | 'selectSmall'
   | 'wrapper'
-  | 'tiny';
+  | 'tiny'
+  | 'absolute';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -85,10 +86,10 @@ const styles = (theme: Theme) =>
       width: '3.6em'
     },
     errorText: {
-      color: theme.color.red,
-      '&$editable': {
-        position: 'absolute'
-      }
+      color: theme.color.red
+    },
+    absolute: {
+      position: 'absolute'
     },
     editable: {
       wordBreak: 'keep-all',
@@ -125,6 +126,7 @@ interface BaseProps {
   noMarginTop?: boolean;
   loading?: boolean;
   hideLabel?: boolean;
+  hasAbsoluteError?: boolean;
   inputId?: string;
 }
 
@@ -234,6 +236,7 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
       noMarginTop,
       label,
       loading,
+      hasAbsoluteError,
       inputId,
       ...textFieldProps
     } = this.props;
@@ -369,9 +372,11 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
           {tooltipText && <HelpIcon text={tooltipText} />}
           {errorText && (
             <FormHelperText
-              className={`${classes.errorText} ${
-                editable ? classes.editable : ''
-              }`}
+              className={classNames({
+                [classes.errorText]: true,
+                [classes.editable]: editable,
+                [classes.absolute]: editable || hasAbsoluteError
+              })}
               data-qa-textfield-error-text={this.props.label}
               role="alert"
             >
