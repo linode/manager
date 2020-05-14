@@ -3,6 +3,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
+import Button from 'src/components/Button';
 
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
@@ -47,22 +48,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   editBtn: {
-    marginBottom: theme.spacing(1),
-    ...theme.typography.body1,
-    '& .dif': {
-      position: 'relative',
-      width: 'auto',
-      '& .chip': {
-        position: 'absolute',
-        top: '-4px',
-        right: -10
-      }
-    },
-    cursor: 'pointer',
-    color: '#3683dc',
+    fontFamily: theme.font.normal,
+    fontSize: '.875rem',
     fontWeight: 700,
-    background: 'none',
-    border: 'none'
+    marginBottom: theme.spacing(2),
+    marginRight: theme.spacing(1),
+    minWidth: 'auto',
+    padding: 0
   }
 }));
 
@@ -118,14 +110,9 @@ const ContactInformation: React.FC<CombinedProps> = props => {
           </Grid>
 
           <Grid item>
-            <button
-              className={classes.editBtn}
-              onClick={() => {
-                handleEditDrawerOpen();
-              }}
-            >
+            <Button className={classes.editBtn} onClick={handleEditDrawerOpen}>
               Edit
-            </button>
+            </Button>
           </Grid>
         </Grid>
 
@@ -154,10 +141,17 @@ const ContactInformation: React.FC<CombinedProps> = props => {
               )}
 
               {(address1 || address2 || city || state || zip) && (
-                <div className={classes.section} data-qa-contact-address>
-                  <div>
-                    <span>{address1}</span>
-                    <div>{address2}</div>
+                <div>
+                  <div className={classes.section} data-qa-contact-address>
+                    <div>
+                      <span>{address1}</span>
+                    </div>
+                  </div>
+
+                  <div className={classes.section}>
+                    <div>
+                      <div>{address2}</div>
+                    </div>
                   </div>
                 </div>
               )}
