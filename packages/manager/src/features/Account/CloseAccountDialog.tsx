@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-const CancelAccountDialog: React.FC<CombinedProps> = props => {
+const CloseAccountDialog: React.FC<CombinedProps> = props => {
   const [isCancelling, setCancelling] = React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [comments, setComments] = React.useState<string>('');
@@ -171,4 +171,4 @@ const Actions: React.FC<ActionsProps> = props => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(CancelAccountDialog);
+export default compose<CombinedProps, Props>(React.memo)(CloseAccountDialog);

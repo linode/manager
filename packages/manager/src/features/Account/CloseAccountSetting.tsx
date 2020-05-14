@@ -1,44 +1,42 @@
 import * as React from 'react';
 import Button from 'src/components/Button';
-import Typography from 'src/components/core/Typography';
-import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
-import CancelAccountDialog from './CancelAccountDialog';
+import CloseAccountDialog from './CloseAccountDialog';
 
-interface Props {
-  activeSince?: string;
-}
+// interface Props {
+//   activeSince?: string;
+// }
 
-type CombinedProps = Props;
+// type CombinedProps = Props;
 
-const CancelAccountSetting: React.FC<CombinedProps> = ({ activeSince }) => {
+const CancelAccountSetting: React.FC<{}> = () => {
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
 
   return (
     <>
-      <ExpansionPanel heading="Account" defaultExpanded={true}>
+      <ExpansionPanel heading="Close Account" defaultExpanded={true}>
         <Grid container direction="column">
-          <Grid item>
+          {/* <Grid item>
             {activeSince && (
               <Typography variant="body1">
                 Your account has been active since{' '}
                 <DateTimeDisplay value={activeSince} format="YYYY-MM-DD" />.
               </Typography>
             )}
-          </Grid>
+          </Grid> */}
           <Grid item>
             <Button
               buttonType="secondary"
               destructive
               onClick={() => setDialogOpen(true)}
             >
-              Cancel Account
+              Close Account
             </Button>
           </Grid>
         </Grid>
       </ExpansionPanel>
-      <CancelAccountDialog
+      <CloseAccountDialog
         open={dialogOpen}
         closeDialog={() => setDialogOpen(false)}
       />
