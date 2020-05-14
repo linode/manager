@@ -405,7 +405,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
       <OrderBy data={filteredData} orderBy={'date'} order={'desc'}>
         {React.useCallback(
           ({ data: orderedData }) => (
-            <Paginate pageSize={25} data={orderedData}>
+            <Paginate pageSize={25} data={orderedData} shouldScroll={false}>
               {({
                 data: paginatedAndOrderedData,
                 count,
