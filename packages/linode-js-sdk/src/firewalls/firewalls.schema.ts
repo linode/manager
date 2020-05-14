@@ -1,13 +1,34 @@
-import { array, number, object, string } from 'yup';
+import { mixed, array, number, object, string } from 'yup';
 
 export const CreateFirewallDeviceSchema = object({
   linodes: array().of(number()),
   nodebalancers: array().of(number())
 });
+const validFirewallRuleProtocol = ['ALL', 'TCP', 'UDP', 'ICMP'];
+const FirewallRuleTypeSchema = object().shape({
+  protocol: mixed()
+    .oneOf(validFirewallRuleProtocol)
+    .required(),
+  ports: string().required(),
+  addresses: object()
+    .shape({
+      ipv4: array()
+        .of(string())
+        .nullable(true),
+      ipv6: array()
+        .of(string())
+        .nullable(true)
+    })
+    .nullable(true)
+});
 
 export const FirewallRuleSchema = object().shape({
-  inbound: array().required('You must provide a set of Firewall rules.'),
-  outbound: array().required('You must provide a set of Firewall rules.')
+  inbound: array(FirewallRuleTypeSchema)
+    .required('You must provide a set of Firewall rules.')
+    .nullable(true),
+  outbound: array(FirewallRuleTypeSchema)
+    .required('You must provide a set of Firewall rules.')
+    .nullable(true)
 });
 
 export const CreateFirewallSchema = object().shape({
