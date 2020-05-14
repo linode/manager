@@ -1,7 +1,7 @@
 import Settings from '@material-ui/icons/Settings';
 import * as classNames from 'classnames';
 import * as React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, LinkProps } from 'react-router-dom';
 import Kubernetes from 'src/assets/addnewmenu/kubernetes.svg';
 import OCA from 'src/assets/addnewmenu/oneclick.svg';
 import Account from 'src/assets/icons/account.svg';
@@ -25,13 +25,14 @@ import ListItemText from 'src/components/core/ListItemText';
 import Menu from 'src/components/core/Menu';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
-import usePreFetch, { PreFetchEntity } from 'src/hooks/usePreFetch';
+import usePreFetch from 'src/hooks/usePreFetch';
 import { sendOneClickNavigationEvent } from 'src/utilities/ga';
 import AdditionalMenuItems from './AdditionalMenuItems';
 import useStyles from './PrimaryNav.styles';
 import SpacingToggle from './SpacingToggle';
 import ThemeToggle from './ThemeToggle';
 import { linkIsActive } from './utils';
+import useDomains from 'src/hooks/useDomains';
 
 type NavEntity =
   | 'Linodes'
@@ -57,7 +58,8 @@ interface PrimaryLink {
   activeLinks?: Array<string>;
   onClick?: (e: React.ChangeEvent<any>) => void;
   hide?: boolean;
-  entitiesToPreFetch?: PreFetchEntity[];
+  prefetchRequestFn?: () => void;
+  prefetchRequestClearance?: boolean;
 }
 
 export interface Props {
@@ -77,8 +79,7 @@ export const PrimaryNav: React.FC<Props> = props => {
 
   const flags = useFlags();
   const location = useLocation();
-  // Call usePreFetch() here in the parent, rather than for each child nav item.
-  const preFetch = usePreFetch();
+  const { domains, requestDomains } = useDomains();
 
   const {
     _hasAccountAccess,
@@ -119,7 +120,8 @@ export const PrimaryNav: React.FC<Props> = props => {
         display: 'Domains',
         href: '/domains',
         icon: <Domain style={{ transform: 'scale(1.5)' }} />,
-        entitiesToPreFetch: ['domains']
+        prefetchRequestFn: requestDomains,
+        prefetchRequestClearance: !domains.loading && domains.lastUpdated === 0
       },
 
       {
@@ -171,7 +173,15 @@ export const PrimaryNav: React.FC<Props> = props => {
         activeLinks: ['/account/billing', '/account/users', '/account/settings']
       }
     ],
-    [flags.firewalls, _isManagedAccount, account.lastUpdated, _hasAccountAccess]
+    [
+      flags.firewalls,
+      _isManagedAccount,
+      account.lastUpdated,
+      _hasAccountAccess,
+      domains.loading,
+      domains.lastUpdated,
+      requestDomains
+    ]
   );
 
   const filteredLinks = primaryLinks.filter(thisLink => !thisLink.hide);
@@ -206,17 +216,27 @@ export const PrimaryNav: React.FC<Props> = props => {
           [classes.fadeContainer]: true
         })}
       >
-        {filteredLinks.map(thisLink => (
-          <PrimaryLink
-            key={thisLink.display}
-            closeMenu={closeMenu}
-            isCollapsed={isCollapsed}
-            locationSearch={location.search}
-            locationPathname={location.pathname}
-            preFetch={preFetch}
-            {...thisLink}
-          />
-        ))}
+        {filteredLinks.map(thisLink => {
+          const props = {
+            key: thisLink.display,
+            closeMenu,
+            isCollapsed,
+            locationSearch: location.search,
+            locationPathname: location.pathname,
+            ...thisLink
+          };
+
+          return thisLink.prefetchRequestFn &&
+            thisLink.prefetchRequestClearance ? (
+            <PrefetchPrimaryLink
+              {...props}
+              prefetchRequestFn={thisLink.prefetchRequestFn}
+              prefetchRequestClearance={thisLink.prefetchRequestClearance}
+            />
+          ) : (
+            <PrimaryLink {...props} />
+          );
+        })}
 
         {/** menu items under the main navigation links */}
         <AdditionalMenuItems
@@ -322,7 +342,11 @@ interface PrimaryLinkProps extends PrimaryLink {
   isCollapsed: boolean;
   locationSearch: string;
   locationPathname: string;
-  preFetch: ReturnType<typeof usePreFetch>;
+  prefetchProps?: {
+    onMouseEnter: LinkProps['onMouseEnter'];
+    onMouseLeave: LinkProps['onMouseLeave'];
+    onFocus: LinkProps['onFocus'];
+  };
 }
 
 const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
@@ -339,16 +363,8 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
     display,
     locationSearch,
     locationPathname,
-    preFetch,
-    entitiesToPreFetch
+    prefetchProps
   } = props;
-
-  // If this NavItem has specified entities to prefetch, do it.
-  const maybePreFetchEntities = React.useCallback(() => {
-    if (entitiesToPreFetch) {
-      preFetch(entitiesToPreFetch);
-    }
-  }, [preFetch, entitiesToPreFetch]);
 
   return (
     <>
@@ -360,8 +376,7 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
             onClick(e);
           }
         }}
-        onMouseEnter={maybePreFetchEntities}
-        onFocus={maybePreFetchEntities}
+        {...prefetchProps}
         {...attr}
         className={classNames({
           [classes.listItem]: true,
@@ -389,3 +404,24 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
     </>
   );
 });
+
+interface PrefetchPrimaryLinkProps {
+  prefetchRequestFn: () => void;
+  prefetchRequestClearance: boolean;
+}
+
+export const PrefetchPrimaryLink: React.FC<PrimaryLinkProps &
+  PrefetchPrimaryLinkProps> = props => {
+  const { prefetch, clearTimeoutID } = usePreFetch(
+    props.prefetchRequestFn,
+    props.prefetchRequestClearance
+  );
+
+  const prefetchProps: PrimaryLinkProps['prefetchProps'] = {
+    onMouseEnter: prefetch,
+    onFocus: prefetch,
+    onMouseLeave: clearTimeoutID
+  };
+
+  return <PrimaryLink {...props} {...prefetchProps} />;
+};
