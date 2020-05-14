@@ -92,7 +92,6 @@ class Profile extends React.Component<Props> {
                 <APITokens />
               </TabPanel>
               <TabPanel>
-                {/* TODO figure this out */}
                 <OAuthClients />
               </TabPanel>
               <TabPanel>

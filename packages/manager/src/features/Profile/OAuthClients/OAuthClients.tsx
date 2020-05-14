@@ -453,7 +453,7 @@ const updatedRequest = (ownProps: any, params: any, filters: any) =>
 
 const paginated = paginate(updatedRequest);
 
-const enhanced = compose<CombinedProps, Props>(
+const enhanced = compose<CombinedProps, {}>(
   styled,
   paginated,
   setDocs(OAuthClients.docs)
