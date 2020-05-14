@@ -9,7 +9,7 @@ import TableRowLoading from 'src/components/TableRowLoading';
 interface Props {
   length: number;
   loading: boolean;
-  lastUpdated: number;
+  lastUpdated?: number;
   error?: APIError[];
   emptyMessage?: string;
 }
@@ -23,7 +23,7 @@ const TableContentWrapper: React.FC<CombinedProps> = props => {
     return <TableRowLoading colSpan={6} firstColWidth={25} oneLine />;
   }
 
-  if (error) {
+  if (error && error.length > 0) {
     return <TableRowError colSpan={6} message={error[0].reason} />;
   }
 
@@ -36,7 +36,8 @@ const TableContentWrapper: React.FC<CombinedProps> = props => {
     );
   }
 
-  return <React.Fragment>{props.children}</React.Fragment>;
+  /* eslint-disable-next-line */
+  return <>{props.children}</>;
 };
 
 export default compose<CombinedProps, Props>(React.memo)(TableContentWrapper);

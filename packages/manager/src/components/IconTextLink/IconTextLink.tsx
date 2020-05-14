@@ -1,6 +1,8 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import Button from 'src/components/Button';
+import ConditionalWrapper from 'src/components/ConditionalWrapper';
 import {
   createStyles,
   Theme,
@@ -67,12 +69,13 @@ const styles = (theme: Theme) =>
 export interface Props {
   SideIcon: typeof SvgIcon | React.ComponentClass;
   text: string;
-  onClick: () => void;
-  active?: Boolean;
-  disabled?: Boolean;
+  onClick?: () => void;
+  active?: boolean;
+  disabled?: boolean;
   title: string;
   left?: boolean;
   className?: any;
+  to?: string;
 }
 
 type FinalProps = Props & WithStyles<CSSClasses>;
@@ -87,28 +90,34 @@ const IconTextLink: React.StatelessComponent<FinalProps> = props => {
     disabled,
     title,
     left,
-    className
+    className,
+    to
   } = props;
 
   return (
-    <Button
-      className={classNames(
-        {
-          [classes.root]: true,
-          [classes.disabled]: disabled === true,
-          [classes.active]: active === true,
-          [classes.left]: left === true,
-          iconTextLink: true
-        },
-        className
-      )}
-      title={title}
-      onClick={onClick}
-      data-qa-icon-text-link={title}
+    <ConditionalWrapper
+      condition={to !== undefined && !disabled}
+      wrapper={children => <Link to={to as string}>{children}</Link>}
     >
-      <SideIcon className={classes.icon} />
-      <span className={classes.label}>{text}</span>
-    </Button>
+      <Button
+        className={classNames(
+          {
+            [classes.root]: true,
+            [classes.disabled]: disabled === true,
+            [classes.active]: active === true,
+            [classes.left]: left === true,
+            iconTextLink: true
+          },
+          className
+        )}
+        title={title}
+        onClick={onClick}
+        data-qa-icon-text-link={title}
+      >
+        <SideIcon className={classes.icon} />
+        <span className={classes.label}>{text}</span>
+      </Button>
+    </ConditionalWrapper>
   );
 };
 

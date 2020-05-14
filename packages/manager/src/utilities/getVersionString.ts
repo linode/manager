@@ -1,6 +1,6 @@
 const { VERSION } = process.env;
 
 export const getVersionString = () =>
-  VERSION
-    ? `<span class="version">Cloud Manager Version: ${VERSION}</span>`
-    : '';
+  VERSION ? `Cloud Manager Version: ${VERSION}` : '';
+
+export const versionStringRegex = /Cloud Manager Version: [0-9.]+$/g;

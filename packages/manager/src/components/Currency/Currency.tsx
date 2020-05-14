@@ -1,19 +1,33 @@
 import * as React from 'react';
-import * as CurrencyFormatter from 'react-currency-formatter';
 
 interface CurrencyFormatterProps {
   quantity: number;
-  currency?: string;
-  locale?: string;
-  pattern?: string;
-  decimal?: string;
-  group?: string;
+  decimalPlaces?: number;
+  wrapInParentheses?: boolean;
 }
 
-type CombinedProps = CurrencyFormatterProps;
+export const Currency: React.StatelessComponent<CurrencyFormatterProps> = props => {
+  const { quantity, wrapInParentheses } = props;
 
-export const Currency: React.StatelessComponent<CombinedProps> = props => (
-  <CurrencyFormatter currency="USD" {...props} />
-);
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: props.decimalPlaces ?? 2
+  });
 
-export default Currency;
+  const formattedQuantity = formatter.format(Math.abs(quantity));
+  const isNegative = quantity < 0;
+
+  let output;
+
+  if (wrapInParentheses) {
+    output = isNegative ? `-(${formattedQuantity})` : `(${formattedQuantity})`;
+  } else {
+    output = isNegative ? `-${formattedQuantity}` : formattedQuantity;
+  }
+
+  // eslint-disable-next-line
+  return <span className="notranslate">{output}</span>;
+};
+
+export default React.memo(Currency);

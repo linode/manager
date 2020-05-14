@@ -42,23 +42,21 @@ const SplashScreen: React.FC<CombinedProps> = props => {
   }, []);
 
   return props.appIsLoading ? (
-    <>
-      <div
-        className={classNames({
-          [classes.root]: true
-        })}
-        aria-label="Loading Cloud Manager"
-      >
-        <div className={classes.logo}>
-          <Logo />
-          <div className="la-ball-beat la-dark">
-            <div />
-            <div />
-            <div />
-          </div>
+    <div
+      className={classNames({
+        [classes.root]: true
+      })}
+      aria-label="Loading Cloud Manager"
+    >
+      <div className={classes.logo}>
+        <Logo />
+        <div className="la-ball-beat la-dark">
+          <div />
+          <div />
+          <div />
         </div>
       </div>
-    </>
+    </div>
   ) : null;
 };
 
@@ -72,7 +70,4 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 
 const connected = connect(mapStateToProps);
 
-export default compose<CombinedProps, {}>(
-  connected,
-  React.memo
-)(SplashScreen);
+export default compose<CombinedProps, {}>(connected, React.memo)(SplashScreen);

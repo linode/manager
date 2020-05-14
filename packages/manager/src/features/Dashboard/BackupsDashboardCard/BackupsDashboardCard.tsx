@@ -3,65 +3,52 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
+import { useReduxLoad } from 'src/hooks/useReduxLoad';
+import { pluralize } from 'src/utilities/pluralize';
 import DashboardCard from '../DashboardCard';
 
-type ClassNames =
-  | 'root'
-  | 'itemTitle'
-  | 'header'
-  | 'icon'
-  | 'section'
-  | 'sectionLink'
-  | 'title'
-  | 'ctaLink';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%'
-    },
-    header: {
-      textAlign: 'center',
-      fontSize: 18
-    },
-    icon: {
-      color: theme.color.blueDTwhite,
-      marginRight: theme.spacing(1),
-      marginLeft: theme.spacing(2),
-      fontSize: 32
-    },
-    itemTitle: {
-      marginBottom: theme.spacing(1),
-      color: theme.palette.primary.main
-    },
-    section: {
-      padding: theme.spacing(3),
-      borderBottom: `1px solid ${theme.palette.divider}`
-    },
-    sectionLink: {
-      cursor: 'pointer'
-    },
-    title: {
-      background: theme.bg.tableHeader,
-      display: 'flex',
-      flexFlow: 'row nowrap',
-      alignItems: 'center',
-      justifyContent: 'flex-start',
-      padding: `${theme.spacing(1)}px !important`
-    },
-    ctaLink: {
-      display: 'block'
-    }
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    width: '100%'
+  },
+  header: {
+    textAlign: 'center',
+    fontSize: 18
+  },
+  icon: {
+    color: theme.color.blueDTwhite,
+    marginRight: theme.spacing(1),
+    marginLeft: theme.spacing(2),
+    fontSize: 32
+  },
+  itemTitle: {
+    marginBottom: theme.spacing(1),
+    color: theme.palette.primary.main
+  },
+  section: {
+    padding: theme.spacing(3),
+    borderBottom: `1px solid ${theme.palette.divider}`
+  },
+  sectionLink: {
+    cursor: 'pointer'
+  },
+  title: {
+    background: theme.bg.tableHeader,
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    padding: `${theme.spacing(1)}px !important`
+  },
+  ctaLink: {
+    display: 'block'
+  }
+}));
 
 interface Props {
   accountBackups: boolean;
@@ -69,20 +56,22 @@ interface Props {
   openBackupDrawer: () => void;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<ClassNames>;
+type CombinedProps = Props & RouteComponentProps<{}>;
 
 export const BackupsDashboardCard: React.FC<CombinedProps> = props => {
-  const {
-    accountBackups,
-    classes,
-    linodesWithoutBackups,
-    openBackupDrawer
-  } = props;
+  const { accountBackups, linodesWithoutBackups, openBackupDrawer } = props;
+
+  const { _loading } = useReduxLoad(['linodes']);
+  const classes = useStyles();
 
   const restricted = isRestrictedUser();
 
   if (restricted || (accountBackups && !linodesWithoutBackups)) {
     return null;
+  }
+
+  if (_loading) {
+    return <CircleProgress />;
   }
 
   return (
@@ -102,6 +91,7 @@ export const BackupsDashboardCard: React.FC<CombinedProps> = props => {
         <Link
           to="/account/settings"
           data-qa-account-link
+          data-testid="account-link"
           className={classes.ctaLink}
         >
           <Paper
@@ -124,9 +114,12 @@ export const BackupsDashboardCard: React.FC<CombinedProps> = props => {
       {Boolean(linodesWithoutBackups) && (
         <div
           onClick={openBackupDrawer}
+          onKeyPress={openBackupDrawer}
           data-qa-backup-existing
+          data-testid="back-up-existing-linodes"
           className={classes.ctaLink}
           role="button"
+          tabIndex={0}
         >
           <Paper
             className={classNames({
@@ -139,9 +132,7 @@ export const BackupsDashboardCard: React.FC<CombinedProps> = props => {
             </Typography>
             <Typography variant="body1" data-qa-linodes-message>
               {`You currently have
-                ${linodesWithoutBackups} ${
-                linodesWithoutBackups > 1 ? 'Linodes' : 'Linode'
-              }
+                ${pluralize('Linode', 'Linodes', linodesWithoutBackups)}
                 without backups. Enable backups to protect your data.`}
             </Typography>
           </Paper>
@@ -153,11 +144,8 @@ export const BackupsDashboardCard: React.FC<CombinedProps> = props => {
 
 BackupsDashboardCard.displayName = 'BackupsDashboardCard';
 
-const styled = withStyles(styles);
-
-const enhanced = compose<CombinedProps, Props>(
-  withRouter,
-  styled
-)(BackupsDashboardCard);
+const enhanced = compose<CombinedProps, Props>(withRouter)(
+  BackupsDashboardCard
+);
 
 export default enhanced;

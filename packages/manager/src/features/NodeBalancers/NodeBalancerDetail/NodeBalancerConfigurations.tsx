@@ -134,7 +134,7 @@ const getConfigsWithNodes = (nodeBalancerId: number) => {
           };
         }
       );
-    }).catch(e => []);
+    }).catch(_ => []);
   });
 };
 
@@ -149,7 +149,7 @@ const formatNodesStatus = (nodes: NodeBalancerConfigNodeFields[]) => {
     { UP: 0, DOWN: 0, unknown: 0 }
   );
 
-  return `Node status: ${statuses.UP} up, ${statuses.DOWN} down${
+  return `Backend status: ${statuses.UP} up, ${statuses.DOWN} down${
     statuses.unknown ? `, ${statuses.unknown} unknown` : ''
   }`;
 };
@@ -221,7 +221,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           }
         }
     */
-    const nodePathErrors = errors.reduce((acc: any, error: APIError) => {
+    return errors.reduce((acc: any, error: APIError) => {
       /**
        * Regex conditions are as follows:
        *
@@ -245,7 +245,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       }
       return acc;
     }, []);
-    return nodePathErrors;
   };
 
   setNodeErrors = (configIdx: number, error: APIError[]) => {
@@ -394,7 +393,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         }
         this.resetSubmitting(idx);
       })
-      .catch(requestFailure => {
+      .catch(_ => {
         this.resetSubmitting(idx);
       });
   };
@@ -544,7 +543,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     }
   };
 
-  deleteConfig = (e: any) => {
+  deleteConfig = () => {
     const {
       deleteConfigConfirmDialog: { idxToDelete }
     } = this.state;
@@ -595,7 +594,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       nodeBalancerId: Number(nodeBalancerId),
       nodeBalancerConfigId: config.id
     })
-      .then(response => {
+      .then(_ => {
         // update config data
         const newConfigs = clone(this.state.configs);
         newConfigs.splice(idxToDelete, 1);
@@ -694,13 +693,42 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         /* Return true as a Promise for the sake of aggregating results */
         return true;
       })
-      .catch(err => {
+      .catch(_ => {
         /* Return false as a Promise for the sake of aggregating results */
         return false;
         /* @todo:
             place an error on the node and set toDelete to undefined
         */
       });
+  };
+
+  handleNodeSuccess = (
+    responseNode: NodeBalancerConfigNode,
+    configIdx: number,
+    nodeIdx: number
+  ) => {
+    /* Set the new Node data including the ID
+      This also clears the errors and modified status. */
+    this.setState(
+      set(
+        lensPath(['configs', configIdx, 'nodes', nodeIdx]),
+        parseAddress(responseNode)
+      )
+    );
+    /* Return true as a Promise for the sake of aggregating results */
+    return true;
+  };
+
+  handleNodeFailure = (
+    errResponse: APIError[],
+    configIdx: number,
+    nodeIdx: number
+  ) => {
+    /* Set errors for this node */
+    const errors = getAPIErrorOrDefault(errResponse);
+    this.updateNodeErrors(configIdx, nodeIdx, errors);
+    /* Return false as a Promise for the sake of aggregating results */
+    return false;
   };
 
   addNode = (configIdx: number) => () => {
@@ -737,25 +765,12 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       config.id,
       nodeData
     )
-      .then(responseNode => {
-        /* Set the new Node data including the ID
-           This also clears the errors and modify status. */
-        this.setState(
-          set(
-            lensPath(['configs', configIdx, 'nodes', nodeIdx]),
-            parseAddress(responseNode)
-          )
-        );
-        /* Return true as a Promise for the sake of aggregating results */
-        return true;
-      })
-      .catch(errResponse => {
-        /* Set errors for this node */
-        const errors = getAPIErrorOrDefault(errResponse);
-        this.updateNodeErrors(configIdx, nodeIdx, errors);
-        /* Return false as a Promise for the sake of aggregating results */
-        return false;
-      });
+      .then(responseNode =>
+        this.handleNodeSuccess(responseNode, configIdx, nodeIdx)
+      )
+      .catch(errResponse =>
+        this.handleNodeFailure(errResponse, configIdx, nodeIdx)
+      );
   };
 
   setNodeValue = (cidx: number, nodeidx: number, key: string, value: any) => {
@@ -804,25 +819,12 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       node.id,
       nodeData
     )
-      .then(responseNode => {
-        /* Set the new Node data including the ID
-             This also clears the errors and modify status. */
-        this.setState(
-          set(
-            lensPath(['configs', configIdx, 'nodes', nodeIdx]),
-            parseAddress(responseNode)
-          )
-        );
-        /* Return true as a Promise for the sake of aggregating results */
-        return true;
-      })
-      .catch(errResponse => {
-        /* Set errors for this node */
-        const errors = getAPIErrorOrDefault(errResponse);
-        this.updateNodeErrors(configIdx, nodeIdx, errors);
-        /* Return false as a Promise for the sake of aggregating results */
-        return false;
-      });
+      .then(responseNode =>
+        this.handleNodeSuccess(responseNode, configIdx, nodeIdx)
+      )
+      .catch(errResponse =>
+        this.handleNodeFailure(errResponse, configIdx, nodeIdx)
+      );
   };
 
   addNodeBalancerConfig = () => {
@@ -859,10 +861,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
   afterProtocolUpdate = (L: { [key: string]: Lens }) => () => {
     this.setState(
-      compose(
-        set(L.sslCertificateLens, ''),
-        set(L.privateKeyLens, '')
-      )
+      compose(set(L.sslCertificateLens, ''), set(L.privateKeyLens, ''))
     );
   };
 

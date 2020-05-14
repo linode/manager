@@ -25,7 +25,7 @@ export type State = Omit<
 
 export const defaultState: State = {
   data: [],
-  loading: true,
+  loading: false,
   lastUpdated: 0,
   bucketErrors: undefined
 };

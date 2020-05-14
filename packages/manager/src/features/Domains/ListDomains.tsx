@@ -76,6 +76,7 @@ const ListDomains: React.StatelessComponent<CombinedProps> = props => {
                   >
                     Domain
                   </TableSortCell>
+
                   <TableSortCell
                     data-qa-domain-type-header={order}
                     active={orderBy === 'type'}
@@ -85,6 +86,7 @@ const ListDomains: React.StatelessComponent<CombinedProps> = props => {
                   >
                     Type
                   </TableSortCell>
+
                   <TableSortCell
                     data-qa-domain-type-header={order}
                     active={orderBy === 'status'}
@@ -94,6 +96,17 @@ const ListDomains: React.StatelessComponent<CombinedProps> = props => {
                   >
                     Status
                   </TableSortCell>
+
+                  <TableSortCell
+                    data-qa-domain-type-header={order}
+                    active={orderBy === 'updated'}
+                    label="updated"
+                    direction={order}
+                    handleClick={handleOrderChange}
+                  >
+                    Last Modified
+                  </TableSortCell>
+
                   <TableCell />
                 </TableRow>
               </TableHead>
@@ -127,7 +140,7 @@ interface RenderDataProps extends Handlers {
   data: Domain[];
 }
 
-const RenderData: React.StatelessComponent<RenderDataProps> = props => {
+const RenderData: React.FunctionComponent<RenderDataProps> = props => {
   const { data, onClone, onEdit, onRemove, onDisableOrEnable } = props;
 
   return (
@@ -142,6 +155,7 @@ const RenderData: React.StatelessComponent<RenderDataProps> = props => {
           onRemove={onRemove}
           type={domain.type}
           status={domain.status}
+          lastModified={domain.updated}
           onDisableOrEnable={onDisableOrEnable}
         />
       ))}

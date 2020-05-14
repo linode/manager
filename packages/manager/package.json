@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "private": true,
   "engines": {
     "node": ">= 10.16.0"
@@ -58,7 +58,6 @@
     "react-async-script-loader": "^0.3.0",
     "react-chartjs-2": "^2.7.0",
     "react-csv": "^1.1.2",
-    "react-currency-formatter": "^1.1.0",
     "react-dom": "~16.12.0",
     "react-dropzone": "~10.2.1",
     "react-ga": "^2.5.3",
