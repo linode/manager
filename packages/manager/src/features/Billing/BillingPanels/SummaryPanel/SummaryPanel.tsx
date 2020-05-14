@@ -3,17 +3,14 @@ import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
-
+import Grid from 'src/components/Grid';
 import withAccount, {
   Props as AccountProps
 } from 'src/containers/account.container';
 import withProfile from 'src/containers/profile.container';
-
-import BillingInfo from './PanelCards/BillingInformation';
-import ContactInfo from './PanelCards/ContactInformation';
+import PaymentInformation from './PanelCards/PaymentInformation';
 
 interface AccountContextProps
   extends Pick<
@@ -35,8 +32,7 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
       accountLoading,
       username,
       profileError,
-      profileLoading,
-      isRestricted
+      profileLoading
     } = this.props;
 
     if (accountLoading || profileLoading) {
@@ -59,31 +55,15 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
     );
 
     return (
-      <React.Fragment>
-        <ContactInfo
-          username={username}
-          company={account.company}
-          firstName={account.first_name}
-          lastName={account.last_name}
-          address1={account.address_1}
-          address2={account.address_2}
-          email={account.email}
-          phone={account.phone}
-          city={account.city}
-          state={account.state}
-          zip={account.zip}
-          activeSince={account.active_since}
-          isRestrictedUser={isRestricted}
-          history={this.props.history}
-        />
-        <BillingInfo
+      <Grid item xs={6}>
+        <PaymentInformation
           balance={account.balance}
           balanceUninvoiced={account.balance_uninvoiced}
           expiry={account.credit_card.expiry}
           lastFour={account.credit_card.last_four}
           promoCredit={promoCredit}
         />
-      </React.Fragment>
+      </Grid>
     );
   }
 }
