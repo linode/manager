@@ -1,2 +1,2 @@
-import UpdateContactInformationPanel from './UpdateContactInformationPanel';
-export default UpdateContactInformationPanel;
+import UpdateContactInformationForm from './UpdateContactInformationForm';
+export default UpdateContactInformationForm;

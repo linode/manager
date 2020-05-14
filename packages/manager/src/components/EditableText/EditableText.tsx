@@ -227,24 +227,22 @@ const EditableText: React.FC<FinalProps> = props => {
       className={`${classes.container} ${classes.initial} ${className}`}
       data-testid={'editable-text'}
     >
-      <React.Fragment>
-        {!!labelLink ? (
-          <Link to={labelLink!} className={classes.underlineOnHover}>
-            {labelText}
-          </Link>
-        ) : (
-          labelText
-        )}
-        {/** pencil icon */}
-        <Button
-          className={`${classes.button} ${classes.editIcon}`}
-          onClick={openEdit}
-          data-qa-edit-button
-          aria-label={`Edit ${text}`}
-        >
-          <Edit className={`${classes.icon} ${classes.edit}`} />
-        </Button>
-      </React.Fragment>
+      {!!labelLink ? (
+        <Link to={labelLink!} className={classes.underlineOnHover}>
+          {labelText}
+        </Link>
+      ) : (
+        labelText
+      )}
+      {/** pencil icon */}
+      <Button
+        className={`${classes.button} ${classes.editIcon}`}
+        onClick={openEdit}
+        data-qa-edit-button
+        aria-label={`Edit ${text}`}
+      >
+        <Edit className={`${classes.icon} ${classes.edit}`} />
+      </Button>
     </div>
   ) : (
     <ClickAwayListener onClickAway={cancelEditing} mouseEvent="onMouseDown">
@@ -271,6 +269,7 @@ const EditableText: React.FC<FinalProps> = props => {
               [classes.input]: true
             })
           }}
+          // eslint-disable-next-line
           autoFocus={true}
         />
         <Button

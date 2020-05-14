@@ -1,7 +1,7 @@
 import { cancelAccount } from 'linode-js-sdk/lib/account';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
@@ -10,11 +10,12 @@ import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import TextField from 'src/components/TextField';
+import useProfile from 'src/hooks/useProfile';
+import useReduxLoad from 'src/hooks/useReduxLoad';
 
-interface Props extends Pick<RouteComponentProps, 'history'> {
+interface Props {
   open: boolean;
   closeDialog: () => void;
-  username: string;
 }
 
 type CombinedProps = Props;
@@ -33,6 +34,9 @@ const CancelAccountDialog: React.FC<CombinedProps> = props => {
   const [canSubmit, setCanSubmit] = React.useState<boolean>(false);
 
   const classes = useStyles();
+  const history = useHistory();
+  const { profile } = useProfile();
+  useReduxLoad(['profile']);
 
   React.useEffect(() => {
     if (props.open) {
@@ -51,7 +55,7 @@ const CancelAccountDialog: React.FC<CombinedProps> = props => {
    * username correctly
    */
   React.useEffect(() => {
-    if (inputtedUsername === props.username) {
+    if (inputtedUsername === profile.data?.username) {
       setCanSubmit(true);
     } else {
       setCanSubmit(false);
@@ -82,13 +86,17 @@ const CancelAccountDialog: React.FC<CombinedProps> = props => {
       .then(response => {
         setCancelling(false);
         /** shoot the user off to survey monkey to answer some questions */
-        props.history.push('/cancel', { survey_link: response.survey_link });
+        history.push('/cancel', { survey_link: response.survey_link });
       })
       .catch((e: APIError[]) => {
         setCancelling(false);
         setErrors(e);
       });
   };
+
+  if (!profile.data?.username) {
+    return null;
+  }
 
   return (
     <Dialog
@@ -111,7 +119,7 @@ const CancelAccountDialog: React.FC<CombinedProps> = props => {
         etc will be lost and may not be able to be restored.
       </Typography>
       <TextField
-        label={`Please enter your username (${props.username}) to confirm.`}
+        label={`Please enter your username (${profile.data?.username}) to confirm.`}
         placeholder="Username"
         aria-label="username field"
         value={inputtedUsername}

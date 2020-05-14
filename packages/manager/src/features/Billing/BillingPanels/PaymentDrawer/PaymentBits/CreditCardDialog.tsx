@@ -5,6 +5,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
+import Notice from 'src/components/Notice';
 
 interface Actions {
   executePayment: () => void;
@@ -15,12 +16,13 @@ interface Actions {
 interface Props extends Actions {
   open: boolean;
   usd: string;
+  error: string | null;
 }
 
 type CombinedProps = Props;
 
 const CreditCardDialog: React.SFC<CombinedProps> = props => {
-  const { cancel, open, usd, ...actionsProps } = props;
+  const { cancel, error, open, usd, ...actionsProps } = props;
 
   return (
     <ConfirmationDialog
@@ -29,6 +31,7 @@ const CreditCardDialog: React.SFC<CombinedProps> = props => {
       onClose={cancel}
       actions={<DialogActions {...actionsProps} cancel={cancel} />}
     >
+      {error && <Notice error text={error} />}
       <Typography>{`Confirm payment of $${usd} USD to Linode LLC?`}</Typography>
     </ConfirmationDialog>
   );
