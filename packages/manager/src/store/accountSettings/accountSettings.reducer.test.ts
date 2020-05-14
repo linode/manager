@@ -7,7 +7,7 @@ import {
 import reducer, { defaultState } from './accountSettings.reducer';
 
 const error = [{ reason: 'An error occurred.' }];
-const updatedSettings = { backups_enabled: false, ...accountSettings };
+const updatedSettings = { ...accountSettings, backups_enabled: false };
 
 describe('Redux for Account settings', () => {
   it('should handle an initialization action', () => {
