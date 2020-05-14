@@ -11,8 +11,12 @@ import UpdateCreditCardDrawer from '../../UpdateCreditCardDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
+  root: {
+    display: 'flex'
+  },
   summarySectionHeight: {
-    minHeight: `calc(100% - 24px)`
+    flex: '0 1 auto',
+    width: '100%'
   },
   container: {
     display: 'flex',
@@ -52,7 +56,7 @@ const PaymentInformation: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <Grid item xs={6}>
+    <Grid className={classes.root} item xs={6}>
       <Paper
         className={`${classes.summarySection} ${classes.summarySectionHeight}`}
         data-qa-billing-summary
