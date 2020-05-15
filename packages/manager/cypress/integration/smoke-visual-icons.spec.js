@@ -1,31 +1,19 @@
 import { makeLinodeDataWithStatus } from '../support/api/linodes';
 
-const linodeIconStatus = [
-  {
-    status: 'running',
-    ariaLabel: 'linode is running',
-    name: 'linode-running'
-  },
-  {
-    status: 'offline',
-    ariaLabel: 'linode is offline',
-    name: 'linode-offline'
-  }
-];
-
-const linodeLandingIcons = [
-  {
-    name: 'button-list-view',
-    selector: 'button[data-qa-view="list"'
-  },
-  {
-    name: 'button-grid-view',
-    selector: 'button[data-qa-view="grid"'
-  }
-];
-
 describe('Checking icons render correctly', () => {
   describe('Linode icon status', () => {
+    const linodeIconStatus = [
+      {
+        status: 'running',
+        ariaLabel: 'linode is running',
+        name: 'linode-running'
+      },
+      {
+        status: 'offline',
+        ariaLabel: 'linode is offline',
+        name: 'linode-offline'
+      }
+    ];
     linodeIconStatus.forEach(s => {
       return it(`${s.name}`, () => {
         // not creating any linode, simply mocking them
@@ -49,11 +37,29 @@ describe('Checking icons render correctly', () => {
     });
   });
   describe('Linodes Landing List Icons', () => {
+    const linodeLandingIcons = [
+      {
+        name: 'button-list-view',
+        selector: 'button[data-qa-view="list"'
+      },
+      {
+        name: 'button-grid-view',
+        selector: 'button[data-qa-view="grid"'
+      }
+    ];
     linodeLandingIcons.forEach(i => {
       return it(`${i.name}`, () => {
+        // here we mock to avoid being on No linode list
+        cy.server();
+        cy.route({
+          url: '*/linode/instances/*',
+          method: 'GET',
+          response: {
+            data: [makeLinodeDataWithStatus('running')]
+          }
+        }).as('getLinodes');
         cy.visitWithLogin('/linodes');
         cy.get(i.selector)
-
           .should('be.visible')
           .click()
           .checkSnapshot(i.name)
