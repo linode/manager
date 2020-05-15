@@ -62,53 +62,43 @@
  * total = 0
  */
 export const getNextCycleEstimatedBalance = (values: NextCycleArguments) => {
-  const { balanceUninvoiced, promoThisMonthCreditRemaining, balance } = values;
+  const { balance, balanceUninvoiced, promoThisMonthCreditRemaining } = values;
 
-  // 1. Start with total = balanceUninvoiced.
-  let total = balanceUninvoiced;
+  // Steps 1-2
+  // Start with total = balanceUninvoiced.
+  // If there is a credit (i.e. negative balance), add balance to total.
+  let total = getSubtotal(balance, balanceUninvoiced);
 
-  // 2. If there is a credit (i.e. negative balance), add balance to total.
-  if (balance < 0) {
-    total += balance;
-  }
-
-  // 3. If total <= 0 no promotion will be applied, so RETURN total.
+  // Step 3
+  // IF total <= 0 no promotion will be applied, so RETURN total.
   if (total <= 0 || !promoThisMonthCreditRemaining) {
     return total;
   }
-  // 4. ELSE apply promoThisMonthCreditRemaining until total = 0.
+
+  // Step 4
+  // ELSE apply promoThisMonthCreditRemaining until total = 0.
   total = Math.max(total - promoThisMonthCreditRemaining, 0);
 
-  // 5. RETURN total.
+  // Step 5
+  // RETURN total
   return total;
 };
 
 /**
- * Determines if a promotion will be applied to the next cycle, given:
- *   1. The current balance
- *   2. The current uninvoiced balance
- *   3. The remaining credit from an active promo (if any)
- *
- * This function is similar to getNextCycleEstimatedBalance. It effectively returns TRUE if the
- * condition at step #3 is TRUE and FALSE otherwise.
+ * The subtotal is balanceUninvoiced + balance, if balance is negative (i.e. a credit).
  */
-export const willPromotionBeApplied = (values: NextCycleArguments) => {
-  const { balanceUninvoiced, promoThisMonthCreditRemaining, balance } = values;
-
-  // 0. Make sure there's a promotion to begin with.
-  if (!promoThisMonthCreditRemaining) {
-    return false;
-  }
-
-  // 1. Start with total = balanceUninvoiced.
+export const getSubtotal = (balance: number, balanceUninvoiced: number) => {
+  // Step 1
+  // Start with total = balanceUninvoiced.
   let total = balanceUninvoiced;
 
-  // 2. If there is a credit (i.e. negative balance), add balance to total.
+  // Step 2
+  // If there is a credit (i.e. negative balance), add balance to total.
   if (balance < 0) {
     total += balance;
   }
-  // 3. A promotion will be applied if total > 0.
-  return total > 0;
+
+  return total;
 };
 
 interface NextCycleArguments {

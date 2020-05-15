@@ -1,7 +1,4 @@
-import {
-  getNextCycleEstimatedBalance,
-  willPromotionBeApplied
-} from './billingUtilities';
+import { getNextCycleEstimatedBalance } from './billingUtilities';
 
 describe('getNextCycleEstimatedBalance', () => {
   it('always include balanceUninvoiced in the total', () => {
@@ -74,69 +71,5 @@ describe('getNextCycleEstimatedBalance', () => {
         balance: 0
       })
     ).toBe(0);
-  });
-});
-
-describe('willPromotionBeApplied', () => {
-  it('returns TRUE if balanceUninvoiced - credit is > 0', () => {
-    expect(
-      willPromotionBeApplied({
-        balanceUninvoiced: 10,
-        promoThisMonthCreditRemaining: 5,
-        balance: 0
-      })
-    ).toBe(true);
-
-    expect(
-      willPromotionBeApplied({
-        balanceUninvoiced: 10,
-        promoThisMonthCreditRemaining: 5,
-        balance: -5
-      })
-    ).toBe(true);
-
-    expect(
-      willPromotionBeApplied({
-        balanceUninvoiced: 10,
-        promoThisMonthCreditRemaining: 20,
-        balance: 0
-      })
-    ).toBe(true);
-
-    expect(
-      willPromotionBeApplied({
-        balanceUninvoiced: 10,
-        promoThisMonthCreditRemaining: 20,
-        balance: -5
-      })
-    ).toBe(true);
-  });
-
-  it('returns FALSE if balanceUninvoiced - credit <= 0', () => {
-    expect(
-      willPromotionBeApplied({
-        balanceUninvoiced: 10,
-        promoThisMonthCreditRemaining: 15,
-        balance: -10
-      })
-    ).toBe(false);
-
-    expect(
-      willPromotionBeApplied({
-        balanceUninvoiced: 10,
-        promoThisMonthCreditRemaining: 15,
-        balance: -20
-      })
-    ).toBe(false);
-  });
-
-  it('returns FALSE if there is no promo credit', () => {
-    expect(
-      willPromotionBeApplied({
-        balanceUninvoiced: 10,
-        promoThisMonthCreditRemaining: 0,
-        balance: 0
-      })
-    ).toBe(false);
   });
 });
