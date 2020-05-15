@@ -435,7 +435,7 @@ class UpdateContactInformationForm extends React.Component<
             type="email"
             value={defaultTo(account.email, fields.email)}
             errorText={errorMap.email}
-            helperText="This address receives all emails (billing emails, job notifications, etc.)"
+            helperText="All e-mails from Linode will be sent to this address."
             helperTextPosition="top"
             onChange={this.updateEmail}
             data-qa-contact-email
