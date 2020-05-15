@@ -109,6 +109,7 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
             <BillingActivityPanel
               mostRecentInvoiceId={mostRecentInvoiceId}
               setMostRecentInvoiceId={setMostRecentInvoiceId}
+              accountActiveSince={account?.data?.active_since}
             />
           </Grid>
         </Grid>
