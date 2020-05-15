@@ -61,7 +61,7 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
   };
 
   const {
-    data: firewalls,
+    itemsById: firewalls,
     loading: firewallsLoading,
     error: firewallsError,
     lastUpdated: firewallsLastUpdated
@@ -93,7 +93,7 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
         </Grid>
       </Grid>
       <FirewallTable
-        data={firewalls}
+        itemsById={firewalls}
         loading={firewallsLoading}
         error={firewallsError}
         lastUpdated={firewallsLastUpdated}
