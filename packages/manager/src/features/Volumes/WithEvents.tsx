@@ -1,6 +1,6 @@
-import { Event } from 'linode-js-sdk/lib/account';
-import { getLinode } from 'linode-js-sdk/lib/linodes';
-import { getVolume, Volume } from 'linode-js-sdk/lib/volumes';
+import { Event } from '@linode/api-v4/lib/account';
+import { getLinode } from '@linode/api-v4/lib/linodes';
+import { getVolume, Volume } from '@linode/api-v4/lib/volumes';
 import { clone } from 'ramda';
 import * as React from 'react';
 import { Subject } from 'rxjs/Subject';

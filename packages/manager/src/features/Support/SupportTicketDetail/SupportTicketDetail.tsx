@@ -5,8 +5,8 @@ import {
   getTicketReplies,
   SupportReply,
   SupportTicket
-} from 'linode-js-sdk/lib/support';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/support';
+import { APIError } from '@linode/api-v4/lib/types';
 import { compose, isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';

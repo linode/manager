@@ -1,5 +1,5 @@
 import * as Factory from 'factory.ts';
-import { InvoiceItem, Payment, Invoice } from 'linode-js-sdk/lib/account';
+import { InvoiceItem, Payment, Invoice } from '@linode/api-v4/lib/account';
 
 export const invoiceItemFactory = Factory.Sync.makeFactory<InvoiceItem>({
   label: Factory.each(i => `Nanode 1GB - my-linode-${i} (${i})`),

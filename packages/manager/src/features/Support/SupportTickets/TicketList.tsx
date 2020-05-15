@@ -1,4 +1,4 @@
-import { SupportTicket } from 'linode-js-sdk/lib/support';
+import { SupportTicket } from '@linode/api-v4/lib/support';
 import { compose } from 'ramda';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';

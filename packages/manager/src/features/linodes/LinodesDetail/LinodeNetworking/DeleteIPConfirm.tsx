@@ -1,4 +1,4 @@
-import { Linode, removeIPAddress } from 'linode-js-sdk/lib/linodes';
+import { Linode, removeIPAddress } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { compose } from 'recompose';
 

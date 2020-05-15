@@ -22,7 +22,7 @@
 // instance manages "outbound" rules.
 
 import produce from 'immer';
-import { FirewallRuleType } from 'linode-js-sdk/lib/firewalls';
+import { FirewallRuleType } from '@linode/api-v4/lib/firewalls';
 import { compose, last, omit } from 'ramda';
 import { FirewallRuleError } from './shared';
 

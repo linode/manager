@@ -6,8 +6,8 @@ import {
   ObjectStorageBucketRequestPayload,
   ObjectStorageClusterID,
   ObjectStorageDeleteBucketRequestPayload
-} from 'linode-js-sdk/lib/object-storage';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/object-storage';
+import { APIError } from '@linode/api-v4/lib/types';
 import { GetAllData, getAllWithArguments } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';

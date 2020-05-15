@@ -4,7 +4,7 @@ import {
   getImages,
   Image,
   updateImage as _update
-} from 'linode-js-sdk/lib/images';
+} from '@linode/api-v4/lib/images';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import {

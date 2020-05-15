@@ -1,5 +1,5 @@
-import { getRegions, Region } from 'linode-js-sdk/lib/regions';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { getRegions, Region } from '@linode/api-v4/lib/regions';
+import { APIError } from '@linode/api-v4/lib/types';
 import { actionCreatorFactory } from 'typescript-fsa';
 
 import { ThunkActionCreator } from 'src/store/types';

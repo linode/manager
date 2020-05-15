@@ -1,5 +1,5 @@
 import * as copy from 'copy-to-clipboard';
-import { getSSHPubKey, ManagedSSHPubKey } from 'linode-js-sdk/lib/managed';
+import { getSSHPubKey, ManagedSSHPubKey } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 import SSHKeyIcon from 'src/assets/icons/ssh-key.svg';
 import Button from 'src/components/Button';

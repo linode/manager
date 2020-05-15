@@ -1,5 +1,5 @@
-import { KubernetesCluster } from 'linode-js-sdk/lib/kubernetes';
-import { LinodeType } from 'linode-js-sdk/lib/linodes';
+import { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
+import { LinodeType } from '@linode/api-v4/lib/linodes';
 import { pluralize } from 'src/utilities/pluralize';
 import { ExtendedCluster, ExtendedPoolNode, PoolNodeWithPrice } from './types';
 

@@ -23,7 +23,7 @@ import * as classnames from 'classnames';
 import {
   executePaypalPayment,
   stagePaypalPayment
-} from 'linode-js-sdk/lib/account';
+} from '@linode/api-v4/lib/account';
 import scriptLoader from 'react-async-script-loader';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';

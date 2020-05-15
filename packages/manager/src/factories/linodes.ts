@@ -4,7 +4,7 @@ import {
   LinodeAlerts,
   LinodeBackups,
   LinodeSpecs
-} from 'linode-js-sdk/lib/linodes/types';
+} from '@linode/api-v4/lib/linodes/types';
 
 export const linodeAlertsFactory = Factory.Sync.makeFactory<LinodeAlerts>({
   cpu: 10,

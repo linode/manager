@@ -1,4 +1,4 @@
-import { NodeBalancerConfig } from 'linode-js-sdk/lib/nodebalancers';
+import { NodeBalancerConfig } from '@linode/api-v4/lib/nodebalancers';
 import { assoc } from 'ramda';
 import { Reducer } from 'redux';
 import { MappedEntityState } from 'src/store/types';
