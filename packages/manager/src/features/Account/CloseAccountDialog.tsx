@@ -27,7 +27,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const CloseAccountDialog: React.FC<CombinedProps> = props => {
-  const [isCancelling, setCancelling] = React.useState<boolean>(false);
+  const [isClosingAccount, setIsClosingAccount] = React.useState<boolean>(
+    false
+  );
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [comments, setComments] = React.useState<string>('');
   const [inputtedUsername, setUsername] = React.useState<string>('');
@@ -75,7 +77,7 @@ const CloseAccountDialog: React.FC<CombinedProps> = props => {
   );
 
   const handleCancelAccount = () => {
-    setCancelling(true);
+    setIsClosingAccount(true);
     return cancelAccount({
       /**
        * we don't care about soliciting comments from the user
@@ -84,12 +86,12 @@ const CloseAccountDialog: React.FC<CombinedProps> = props => {
       comments
     })
       .then(response => {
-        setCancelling(false);
+        setIsClosingAccount(false);
         /** shoot the user off to survey monkey to answer some questions */
         history.push('/cancel', { survey_link: response.survey_link });
       })
       .catch((e: APIError[]) => {
-        setCancelling(false);
+        setIsClosingAccount(false);
         setErrors(e);
       });
   };
@@ -107,7 +109,7 @@ const CloseAccountDialog: React.FC<CombinedProps> = props => {
       actions={
         <Actions
           onClose={props.closeDialog}
-          isCancelling={isCancelling}
+          isCancelling={isClosingAccount}
           onSubmit={handleCancelAccount}
           disabled={!canSubmit}
         />

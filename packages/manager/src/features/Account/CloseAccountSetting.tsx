@@ -4,7 +4,7 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import CloseAccountDialog from './CloseAccountDialog';
 
-const CancelAccountSetting: React.FC<{}> = () => {
+const CloseAccountSetting: React.FC<{}> = () => {
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
 
   return (
@@ -30,4 +30,4 @@ const CancelAccountSetting: React.FC<{}> = () => {
   );
 };
 
-export default React.memo(CancelAccountSetting);
+export default React.memo(CloseAccountSetting);
