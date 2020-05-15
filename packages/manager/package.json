@@ -214,6 +214,7 @@
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^3.0.0",
     "eslint-plugin-sonarjs": "^0.5.0",
+    "eslint-plugin-testing-library": "^3.1.2",
     "factory.ts": "^0.5.1",
     "file-loader": "^3.0.1",
     "fork-ts-checker-webpack-plugin": "^4.1.2",
