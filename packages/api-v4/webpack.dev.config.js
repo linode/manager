@@ -1,5 +1,5 @@
 const path = require('path');
-const NpmDtsPlugin = require('npm-dts-webpack-plugin')
+const NpmDtsPlugin = require('npm-dts-webpack-plugin');
 
 module.exports = {
   mode: 'development',
@@ -7,11 +7,11 @@ module.exports = {
   output: {
     filename: 'index.js',
     path: path.resolve(__dirname),
-    library: 'linode-js-sdk',
+    library: '@linode/api-v4',
     libraryTarget: 'umd'
   },
   devServer: {
-    contentBase: './lib',
+    contentBase: './lib'
   },
   devtool: 'inline-source-map',
   plugins: [
@@ -19,4 +19,4 @@ module.exports = {
       logLevel: 'warn'
     })
   ]
-}
+};

@@ -420,7 +420,7 @@ The first step in paginating things from Redux is to source the data
 
 ```js
 import { APIError } from "@linode/api-v4/lib/types";
-import { Volume } from "linode-js-sdk/lib/volumes";
+import { Volume } from "@linode/api-v4/lib/volumes";
 import { connect } from "react-redux";
 
 interface ReduxStateProps {

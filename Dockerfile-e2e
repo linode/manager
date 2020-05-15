@@ -11,7 +11,7 @@ USER node
 COPY --chown=node:node package.json tslint.json yarn.lock run_cypress_docker.sh scripts ./
 
 # Copy the rest of the files that don't require installation
-COPY --chown=node:node packages/linode-js-sdk  ./packages/linode-js-sdk/
+COPY --chown=node:node packages/@linode/api-v4  ./packages/@linode/api-v4/
 COPY --chown=node:node packages/manager ./packages/manager
 
 # Runs "yarn install" for all child packages
