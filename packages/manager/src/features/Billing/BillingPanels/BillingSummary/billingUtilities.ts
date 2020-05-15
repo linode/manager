@@ -1,7 +1,7 @@
 /**
  * Calculate the next cycle's balance, given:
  *   1. The current balance
- *   2. ./billingUtilities.tested balance
+ *   2. The current uninvoiced balance
  *   3. The remaining credit from an active promo (if any)
  *
  * ==== BALANCE ====
