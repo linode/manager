@@ -47,7 +47,7 @@ describe('Redux for Account settings', () => {
   it('should handle an update request', () => {
     const newState = reducer(
       { ...defaultState, data: accountSettings },
-      updateAccountSettingsActions.done({ result: accountSettings, params: {} })
+      updateAccountSettingsActions.done({ result: updatedSettings, params: {} })
     );
     expect(newState).toHaveProperty('data', updatedSettings);
     expect(newState).toHaveProperty('loading', false);
