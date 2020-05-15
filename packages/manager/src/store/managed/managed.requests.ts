@@ -28,7 +28,7 @@ const enableService = (params: MonitorPayload) => _enable(params.monitorID);
 const updateService = (params: MonitorPayload & ManagedServicePayload) =>
   _update(params.monitorID, omit(['monitorID'], params));
 
-const getAllServices = () => _getAll().then(({ data }) => data);
+const getAllServices = () => _getAll();
 
 export const requestManagedServices = createRequestThunk(
   requestServicesActions,
