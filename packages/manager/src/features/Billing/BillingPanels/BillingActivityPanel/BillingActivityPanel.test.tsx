@@ -3,6 +3,7 @@ import * as React from 'react';
 import { invoiceFactory, paymentFactory } from 'src/factories/billing';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import BillingActivityPanel, {
+  Props,
   invoiceToActivityFeedItem,
   paymentToActivityFeedItem,
   getCutoffFromDateRange,
@@ -43,15 +44,13 @@ jest.mock('linode-js-sdk/lib/account', () => {
 });
 jest.mock('src/components/EnhancedSelect/Select');
 
-// const mockOpenCloseAccountDialog = jest.fn();
-
-const setMostRecentInvoiceId = (id: number) => id;
+const props: Props = {
+  setMostRecentInvoiceId: jest.fn()
+};
 
 describe('BillingActivityPanel', () => {
   it('renders the header and appropriate rows', async () => {
-    const { getByText } = renderWithTheme(
-      <BillingActivityPanel setMostRecentInvoiceId={setMostRecentInvoiceId} />
-    );
+    const { getByText } = renderWithTheme(<BillingActivityPanel {...props} />);
     await wait(() => {
       getByText('Billing & Payment History');
       getByText('Description');
@@ -62,7 +61,7 @@ describe('BillingActivityPanel', () => {
 
   it('renders a row for each payment and invoice', async () => {
     const { getByText, getByTestId } = renderWithTheme(
-      <BillingActivityPanel setMostRecentInvoiceId={setMostRecentInvoiceId} />
+      <BillingActivityPanel {...props} />
     );
     await wait(() => {
       getByText('Invoice #0');
@@ -74,7 +73,7 @@ describe('BillingActivityPanel', () => {
 
   it('should filter by item type', async () => {
     const { queryAllByTestId, queryByText, queryByTestId } = renderWithTheme(
-      <BillingActivityPanel setMostRecentInvoiceId={setMostRecentInvoiceId} />
+      <BillingActivityPanel {...props} />
     );
 
     // Test selecting "Invoices"
@@ -98,7 +97,7 @@ describe('BillingActivityPanel', () => {
 
   it('should filter by transaction date', async () => {
     const { queryAllByTestId, queryByText, queryByTestId } = renderWithTheme(
-      <BillingActivityPanel setMostRecentInvoiceId={setMostRecentInvoiceId} />
+      <BillingActivityPanel {...props} />
     );
 
     await wait(() => {
@@ -112,12 +111,19 @@ describe('BillingActivityPanel', () => {
   });
 
   it('should display transaction selection components with defaults', async () => {
-    const { getByText } = renderWithTheme(
-      <BillingActivityPanel setMostRecentInvoiceId={setMostRecentInvoiceId} />
-    );
+    const { getByText } = renderWithTheme(<BillingActivityPanel {...props} />);
     await wait(() => {
       getByText('All Transaction Types');
       getByText('90 Days');
+    });
+  });
+
+  it('should display "Account active since"', async () => {
+    const { getByText } = renderWithTheme(
+      <BillingActivityPanel {...props} accountActiveSince="2018-01-01" />
+    );
+    await wait(() => {
+      getByText('Account active since 2018-01-01');
     });
   });
 });

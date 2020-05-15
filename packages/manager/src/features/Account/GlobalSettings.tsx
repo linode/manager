@@ -33,7 +33,7 @@ import EnableManaged from './EnableManaged';
 import EnableObjectStorage from './EnableObjectStorage';
 import ImportGroupsAsTags from './ImportGroupsAsTags';
 import NetworkHelper from './NetworkHelper';
-import CancelAccountSetting from './CancelAccountSetting';
+import CloseAccountSetting from './CloseAccountSetting';
 
 interface StateProps {
   loading: boolean;
@@ -45,7 +45,6 @@ interface StateProps {
   entitiesWithGroupsToImport: GroupedEntitiesForImport;
   isManaged: boolean;
   object_storage: AccountSettings['object_storage'];
-  activeSince?: string;
 }
 
 interface DispatchProps {
@@ -140,7 +139,7 @@ const GlobalSettings: React.FC<CombinedProps> = props => {
       {shouldDisplayGroupImport(entitiesWithGroupsToImport) && (
         <ImportGroupsAsTags openDrawer={openImportDrawer} />
       )}
-      <CancelAccountSetting activeSince={props.activeSince} />
+      <CloseAccountSetting />
 
       <TagImportDrawer />
     </div>
@@ -175,8 +174,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
     'disabled',
     ['__resources', 'accountSettings', 'data', 'object_storage'],
     state
-  ),
-  activeSince: state.__resources.account.data?.active_since
+  )
 });
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>

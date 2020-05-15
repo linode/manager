@@ -35,6 +35,7 @@ import useFlags from 'src/hooks/useFlags';
 import { useSet } from 'src/hooks/useSet';
 import { isAfter } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import formatDate from 'src/utilities/formatDate';
 import { getAll, getAllWithArguments } from 'src/utilities/getAll';
 import { getTaxID } from '../RecentPaymentsPanel/RecentPaymentsPanel';
 
@@ -167,12 +168,19 @@ const defaultDateRange: DateRange = '6 Months';
 // =============================================================================
 // <BillingActivityPanel />
 // =============================================================================
-interface Props {
+export interface Props {
   mostRecentInvoiceId?: number;
   setMostRecentInvoiceId: (id: number) => void;
+  accountActiveSince?: string;
 }
 
 export const BillingActivityPanel: React.FC<Props> = props => {
+  const {
+    mostRecentInvoiceId,
+    setMostRecentInvoiceId,
+    accountActiveSince
+  } = props;
+
   const classes = useStyles();
   const flags = useFlags();
   const { account } = useAccount();
@@ -206,8 +214,8 @@ export const BillingActivityPanel: React.FC<Props> = props => {
           setInvoices(invoices.data);
           setPayments(payments.data);
 
-          if (!props.mostRecentInvoiceId && invoices.data.length > 0) {
-            props.setMostRecentInvoiceId(invoices.data[0].id);
+          if (!mostRecentInvoiceId && invoices.data.length > 0) {
+            setMostRecentInvoiceId(invoices.data[0].id);
           }
         })
         .catch(_error => {
@@ -220,7 +228,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
           setLoading(false);
         });
     },
-    []
+    [mostRecentInvoiceId, setMostRecentInvoiceId]
   );
 
   // Request all invoices and payments when component mounts.
@@ -366,6 +374,16 @@ export const BillingActivityPanel: React.FC<Props> = props => {
       <div className={classes.headerContainer}>
         <Typography variant="h2">Billing &amp; Payment History</Typography>
         <div className={classes.headerRight}>
+          {accountActiveSince && (
+            <div className={classes.flexContainer}>
+              <Typography variant="body1" className={classes.activeSince}>
+                Account active since{' '}
+                {formatDate(accountActiveSince, {
+                  format: 'YYYY-MM-DD'
+                })}
+              </Typography>
+            </div>
+          )}
           <div className={classes.flexContainer}>
             <Select
               className={classes.transactionType}
