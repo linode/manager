@@ -1,9 +1,8 @@
-import * as React from 'react';
 import { ActivePromotion } from 'linode-js-sdk/lib/account/types';
+import * as React from 'react';
 import CreditCard from 'src/assets/icons/credit-card.svg';
 import Info from 'src/assets/icons/info.svg';
 import InvoiceIcon from 'src/assets/icons/invoice.svg';
-// import GiftBox from 'src/assets/icons/gift-box.svg';
 import Grid from 'src/components/core/Grid';
 import IconButton from 'src/components/core/IconButton';
 import Paper from 'src/components/core/Paper';
@@ -12,7 +11,10 @@ import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import IconTextLink from 'src/components/IconTextLink';
-
+import {
+  getNextCycleEstimatedBalance,
+  willPromotionBeApplied
+} from './billingUtilities';
 import PaymentDrawer from './PaymentDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -109,14 +111,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   promotion?: ActivePromotion;
-  uninvoicedBalance: number;
-  promotionAmount?: number;
+  balanceUninvoiced: number;
   balance: number;
   mostRecentInvoiceId?: number;
 }
 
 export const BillingSummary: React.FC<Props> = props => {
-  const { promotion, uninvoicedBalance, balance, mostRecentInvoiceId } = props;
+  const { promotion, balanceUninvoiced, balance, mostRecentInvoiceId } = props;
 
   const [paymentDrawerOpen, setPaymentDrawerOpen] = React.useState<boolean>(
     false
@@ -134,21 +135,15 @@ export const BillingSummary: React.FC<Props> = props => {
 
   const classes = useStyles();
 
-  // If balance is < 0 we apply it to the uninvoiced balance, otherwise only apply uninvoiced so a past due amount is not included in calculation.
-  const calculatedBalance =
-    balance < 0 ? uninvoicedBalance + balance : uninvoicedBalance;
+  const promoThisMonthCreditRemaining = promotion?.this_month_credit_remaining
+    ? Number(promotion?.this_month_credit_remaining)
+    : undefined;
 
-  const hasCredit = calculatedBalance < 0;
-
-  const convertedPromoCredit = promotion
-    ? parseInt(promotion.this_month_credit_remaining, 10)
-    : 0;
-
-  const totalBalance = hasCredit
-    ? calculatedBalance
-    : promotion && calculatedBalance >= convertedPromoCredit
-    ? Math.max(0, calculatedBalance - convertedPromoCredit)
-    : calculatedBalance;
+  const nextCycleEstimatedBalance = getNextCycleEstimatedBalance({
+    balance,
+    balanceUninvoiced,
+    promoThisMonthCreditRemaining
+  });
 
   const determinePaymentDisplay = (pastDueAmount: number) => {
     if (pastDueAmount > 0) {
@@ -236,45 +231,52 @@ export const BillingSummary: React.FC<Props> = props => {
               </Grid>
               <Grid item>
                 <Typography className={classes.field}>
-                  <Currency quantity={uninvoicedBalance} />
+                  <Currency quantity={balanceUninvoiced} />
                 </Typography>
               </Grid>
             </Grid>
             {/*
-            We check if a promotion even exists for the account
-            in addition to if the promotion amount will be applied.
+
             */}
-            {promotion && calculatedBalance >= convertedPromoCredit && (
-              <Grid item container justify="space-between" alignItems="center">
-                <Grid item xs={8}>
-                  <Typography className={classes.label}>
-                    Promotion {promotion.summary}
-                    <Tooltip
-                      title={promotion.description}
-                      enterTouchDelay={0}
-                      leaveTouchDelay={5000}
-                      placement={'bottom'}
-                    >
-                      <IconButton className={classes.infoIcon}>
-                        <Info />
-                      </IconButton>
-                    </Tooltip>
-                  </Typography>
+            {promotion &&
+              promoThisMonthCreditRemaining &&
+              willPromotionBeApplied({
+                balance,
+                balanceUninvoiced,
+                promoThisMonthCreditRemaining
+              }) && (
+                <Grid
+                  item
+                  container
+                  justify="space-between"
+                  alignItems="center"
+                >
+                  <Grid item xs={8}>
+                    <Typography className={classes.label}>
+                      Promotion {promotion.summary}
+                      <Tooltip
+                        title={promotion.description}
+                        enterTouchDelay={0}
+                        leaveTouchDelay={5000}
+                        placement={'bottom'}
+                      >
+                        <IconButton className={classes.infoIcon}>
+                          <Info />
+                        </IconButton>
+                      </Tooltip>
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography className={classes.field}>
+                      -
+                      <Currency
+                        quantity={promoThisMonthCreditRemaining}
+                        wrapInParentheses
+                      />
+                    </Typography>
+                  </Grid>
                 </Grid>
-                <Grid item>
-                  <Typography className={classes.field}>
-                    -
-                    <Currency
-                      quantity={parseInt(
-                        promotion.this_month_credit_remaining,
-                        10
-                      )}
-                      wrapInParentheses
-                    />
-                  </Typography>
-                </Grid>
-              </Grid>
-            )}
+              )}
 
             <Grid item container justify="space-between">
               <Grid item>
@@ -308,8 +310,8 @@ export const BillingSummary: React.FC<Props> = props => {
                 <Typography className={classes.field}>
                   {/* If there is credit left over post-calculation, display as negative in parens */}
                   <Currency
-                    quantity={totalBalance}
-                    wrapInParentheses={totalBalance < 0}
+                    quantity={nextCycleEstimatedBalance}
+                    wrapInParentheses={nextCycleEstimatedBalance < 0}
                   />
                 </Typography>
               </Grid>

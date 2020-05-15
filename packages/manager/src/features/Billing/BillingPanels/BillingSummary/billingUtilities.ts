@@ -1,7 +1,7 @@
 /**
  * Calculate the next cycle's balance, given:
  *   1. The current balance
- *   2. The current uninvoiced balance
+ *   2. ./billingUtilities.tested balance
  *   3. The remaining credit from an active promo (if any)
  *
  * ==== BALANCE ====
@@ -61,9 +61,7 @@
  * (balance = 0, balanceUninvoiced = 10, promoThisMonthCreditRemaining = 15)
  * total = 0
  */
-export const getNextCycleEstimatedBalance = (
-  values: GetNextCycleEstimatedBalanceArguments
-) => {
+export const getNextCycleEstimatedBalance = (values: NextCycleArguments) => {
   const { balanceUninvoiced, promoThisMonthCreditRemaining, balance } = values;
 
   // 1. Start with total = balanceUninvoiced.
@@ -85,7 +83,35 @@ export const getNextCycleEstimatedBalance = (
   return total;
 };
 
-interface GetNextCycleEstimatedBalanceArguments {
+/**
+ * Determines if a promotion will be applied to the next cycle, given:
+ *   1. The current balance
+ *   2. The current uninvoiced balance
+ *   3. The remaining credit from an active promo (if any)
+ *
+ * This function is similar to getNextCycleEstimatedBalance. It effectively returns TRUE if the
+ * condition at step #3 is TRUE and FALSE otherwise.
+ */
+export const willPromotionBeApplied = (values: NextCycleArguments) => {
+  const { balanceUninvoiced, promoThisMonthCreditRemaining, balance } = values;
+
+  // 0. Make sure there's a promotion to begin with.
+  if (!promoThisMonthCreditRemaining) {
+    return false;
+  }
+
+  // 1. Start with total = balanceUninvoiced.
+  let total = balanceUninvoiced;
+
+  // 2. If there is a credit (i.e. negative balance), add balance to total.
+  if (balance < 0) {
+    total += balance;
+  }
+  // 3. A promotion will be applied if total > 0.
+  return total > 0;
+};
+
+interface NextCycleArguments {
   // Corresponds to `/account .balance_uninvoiced`
   balanceUninvoiced: number;
   // Corresponds to `/account .promotion[0].this_month_credit_remaining`
