@@ -63,8 +63,8 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
   };
 
   const handleExpiryDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const expDate = e.target.value ? take(7, e.target.value) : '';
-    setExpDate(expDate);
+    const _expDate = e.target.value ? take(7, e.target.value) : '';
+    setExpDate(_expDate);
   };
 
   const handleCVVChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,10 +79,14 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
     // MM/YYYY
     const _date = expDate.match(/(\-?[0-9][0-9]?)\/?([0-9]+)/);
     const expiry_month = _date ? +_date[1] : -1;
-    const expiry_year = _date ? +_date?.[2] : -1;
+    let expiry_year = _date ? +_date?.[2] : -1;
 
     // Handles if the user tries to use two digit year
-    if (expiry_year < 1000) {
+    if (expiry_year < 100) {
+      expiry_year += 2000;
+    }
+
+    if (expiry_year > 100 && expiry_year < 1000) {
       setSubmitting(false);
       setErrors([
         {
@@ -93,7 +97,12 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
       return;
     }
 
-    saveCreditCard({ card_number: cardNumber, expiry_month, expiry_year, cvv })
+    saveCreditCard({
+      card_number: cardNumber,
+      expiry_month,
+      expiry_year,
+      cvv
+    })
       .then(() => {
         const credit_card = {
           last_four: takeLast(4, cardNumber),
@@ -105,6 +114,7 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
         props.saveCreditCard(credit_card);
         resetForm(true);
         setSubmitting(false);
+        onClose();
       })
       .catch(error => {
         setSubmitting(false);
@@ -166,12 +176,12 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
                 value={expDate}
                 onChange={handleExpiryDateChange}
                 errorText={hasErrorFor.expiry_month || hasErrorFor.expiry_year}
-                placeholder={'MM/YYYY'}
+                placeholder={'MM/YY'}
               />
             </Grid>
             <Grid item className={classes.fullWidthMobile}>
               <TextField
-                label="CVV"
+                label="CVV (optional)"
                 value={cvv}
                 onChange={handleCVVChange}
                 errorText={hasErrorFor.cvv}
