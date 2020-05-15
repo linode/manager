@@ -143,9 +143,12 @@ module.exports = {
               loader: '@svgr/webpack',
               options: {
                 svgoConfig: {
-                  plugins: {
-                    removeViewBox: false
-                  }
+                  plugins: [
+                    // by default preffixes classes with svg path or random string
+                    { prefixIds: false },
+                    // by default removes the viewbox attribute
+                    { removeViewBox: false }
+                  ]
                 }
               }
             }
