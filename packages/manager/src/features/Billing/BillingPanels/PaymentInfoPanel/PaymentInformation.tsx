@@ -26,7 +26,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(3)
   },
   edit: {
+    fontFamily: theme.font.normal,
     fontSize: '.875rem',
+    fontWeight: 700,
     marginBottom: theme.spacing(2),
     marginRight: theme.spacing(1),
     minWidth: 'auto',
