@@ -37,7 +37,7 @@ import { isAfter } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { getAll, getAllWithArguments } from 'src/utilities/getAll';
-import { getTaxID } from '../RecentPaymentsPanel/RecentPaymentsPanel';
+import { getTaxID } from '../../billingUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   headerContainer: {

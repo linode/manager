@@ -108,7 +108,7 @@ export const CreditCard: React.FC<Props> = props => {
             <Grid container direction="row" wrap="nowrap" alignItems="center">
               <Grid item className={classes.cardSection}>
                 <Typography className={classes.cardText}>
-                  Card ending with: {lastFour}
+                  Card ending in {lastFour}
                 </Typography>
                 {Boolean(expiry) && (
                   <Typography className={classes.cardText}>

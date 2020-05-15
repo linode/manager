@@ -7,7 +7,7 @@ import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 import styled from 'src/containers/SummaryPanels.styles';
 import CreditCard from './CreditCard';
-import UpdateCreditCardDrawer from '../../UpdateCreditCardDrawer';
+import UpdateCreditCardDrawer from './UpdateCreditCardDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
@@ -26,7 +26,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(3)
   },
   edit: {
+    fontFamily: theme.font.normal,
     fontSize: '.875rem',
+    fontWeight: 700,
     marginBottom: theme.spacing(2),
     marginRight: theme.spacing(1),
     minWidth: 'auto',
@@ -56,7 +58,7 @@ const PaymentInformation: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <Grid className={classes.root} item xs={6}>
+    <Grid className={classes.root} item xs={12} md={6}>
       <Paper
         className={`${classes.summarySection} ${classes.summarySectionHeight}`}
         data-qa-billing-summary
