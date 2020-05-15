@@ -1,6 +1,6 @@
 import { Event } from 'linode-js-sdk/lib/account';
-import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
+import { ExtendedVolume } from './types';
 import VolumeTableRow from './VolumeTableRow';
 
 export interface RenderVolumeDataProps {
@@ -32,9 +32,9 @@ export interface RenderVolumeDataProps {
   handleDelete: (volumeId: number, volumeLabel: string) => void;
 }
 
-const RenderData: React.FC<
-  { data: Volume[] } & RenderVolumeDataProps
-> = props => {
+const RenderData: React.FC<{
+  data: ExtendedVolume[];
+} & RenderVolumeDataProps> = props => {
   const {
     data,
     isVolumesLanding,
@@ -48,6 +48,7 @@ const RenderData: React.FC<
   } = props;
 
   return (
+    /* eslint-disable-next-line */
     <>
       {data.map((volume, idx: number) => (
         <VolumeTableRow

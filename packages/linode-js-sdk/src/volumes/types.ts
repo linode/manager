@@ -1,5 +1,3 @@
-import { Event } from '../account/types';
-
 export interface Volume {
   id: number;
   label: string;
@@ -10,7 +8,6 @@ export interface Volume {
   created: string;
   updated: string;
   filesystem_path: string;
-  recentEvent?: Event;
   tags: string[];
 }
 
