@@ -13,7 +13,7 @@ import Currency from 'src/components/Currency';
 import IconTextLink from 'src/components/IconTextLink';
 import {
   getNextCycleEstimatedBalance,
-  willPromotionBeApplied
+  willPromotionBeApplied as _willPromotionBeApplied
 } from './billingUtilities';
 import PaymentDrawer from './PaymentDrawer';
 
@@ -145,6 +145,15 @@ export const BillingSummary: React.FC<Props> = props => {
     promoThisMonthCreditRemaining
   });
 
+  const shouldDisplayPromotion =
+    Boolean(promotion) &&
+    promoThisMonthCreditRemaining !== undefined &&
+    _willPromotionBeApplied({
+      balance,
+      balanceUninvoiced,
+      promoThisMonthCreditRemaining
+    });
+
   const determinePaymentDisplay = (pastDueAmount: number) => {
     if (pastDueAmount > 0) {
       return (
@@ -238,45 +247,34 @@ export const BillingSummary: React.FC<Props> = props => {
             {/*
 
             */}
-            {promotion &&
-              promoThisMonthCreditRemaining &&
-              willPromotionBeApplied({
-                balance,
-                balanceUninvoiced,
-                promoThisMonthCreditRemaining
-              }) && (
-                <Grid
-                  item
-                  container
-                  justify="space-between"
-                  alignItems="center"
-                >
-                  <Grid item xs={8}>
-                    <Typography className={classes.label}>
-                      Promotion {promotion.summary}
-                      <Tooltip
-                        title={promotion.description}
-                        enterTouchDelay={0}
-                        leaveTouchDelay={5000}
-                        placement={'bottom'}
-                      >
-                        <IconButton className={classes.infoIcon}>
-                          <Info />
-                        </IconButton>
-                      </Tooltip>
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Typography className={classes.field}>
-                      -
-                      <Currency
-                        quantity={promoThisMonthCreditRemaining}
-                        wrapInParentheses
-                      />
-                    </Typography>
-                  </Grid>
+            {shouldDisplayPromotion && (
+              <Grid item container justify="space-between" alignItems="center">
+                <Grid item xs={8}>
+                  <Typography className={classes.label}>
+                    Promotion {promotion!.summary}
+                    <Tooltip
+                      title={promotion!.description}
+                      enterTouchDelay={0}
+                      leaveTouchDelay={5000}
+                      placement={'bottom'}
+                    >
+                      <IconButton className={classes.infoIcon}>
+                        <Info />
+                      </IconButton>
+                    </Tooltip>
+                  </Typography>
                 </Grid>
-              )}
+                <Grid item>
+                  <Typography className={classes.field}>
+                    -
+                    <Currency
+                      quantity={promoThisMonthCreditRemaining!}
+                      wrapInParentheses
+                    />
+                  </Typography>
+                </Grid>
+              </Grid>
+            )}
 
             <Grid item container justify="space-between">
               <Grid item>
