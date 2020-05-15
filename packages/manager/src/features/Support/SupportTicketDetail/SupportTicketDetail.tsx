@@ -1,7 +1,11 @@
 import * as Bluebird from 'bluebird';
 import * as classNames from 'classnames';
-import { SupportReply, SupportTicket } from 'linode-js-sdk/lib/account';
-import { getTicket, getTicketReplies } from 'linode-js-sdk/lib/support';
+import {
+  getTicket,
+  getTicketReplies,
+  SupportReply,
+  SupportTicket
+} from 'linode-js-sdk/lib/support';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { compose, isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
@@ -33,6 +37,7 @@ import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
 import TicketAttachmentList from '../TicketAttachmentList';
+import { ExtendedReply, ExtendedTicket } from '../types';
 import AttachmentError from './AttachmentError';
 import Reply from './TabbedReply';
 
@@ -117,8 +122,8 @@ interface State {
   loading: boolean;
   errors?: APIError[];
   attachmentErrors: AttachmentError[];
-  replies?: SupportReply[];
-  ticket?: SupportTicket;
+  replies?: ExtendedReply[];
+  ticket?: ExtendedTicket;
   ticketCloseSuccess: boolean;
 }
 
@@ -153,7 +158,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
     history.replace(location.pathname, {});
   }
 
-  componentDidUpdate(prevProps: CombinedProps, prevState: State) {
+  componentDidUpdate(prevProps: CombinedProps) {
     if (prevProps.match.params.ticketId !== this.props.match.params.ticketId) {
       this.setState({ loading: true, ticketCloseSuccess: false });
       this.loadTicketAndReplies();
@@ -240,8 +245,11 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
   onCreateReplySuccess = (newReply: SupportReply) => {
     const replies = pathOr([], ['replies'], this.state);
     getGravatarUrlFromHash(newReply.gravatar_id).then(url => {
-      newReply.gravatarUrl = url;
-      const updatedReplies = [...replies, ...[newReply]];
+      const replyWithGravatar: ExtendedReply = {
+        ...newReply,
+        gravatarUrl: url
+      };
+      const updatedReplies = [...replies, ...[replyWithGravatar]];
       this.setState({
         replies: updatedReplies,
         ticketCloseSuccess: false,
@@ -301,11 +309,11 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
     );
   };
 
-  renderReplies = (replies: SupportReply[]) => {
+  renderReplies = (replies: ExtendedReply[]) => {
     const { ticket } = this.state;
     return replies
       .filter(reply => reply.description.trim() !== '')
-      .map((reply: SupportReply, idx: number) => {
+      .map((reply: ExtendedReply, idx: number) => {
         return (
           <ExpandableTicketPanel
             key={idx}
@@ -474,7 +482,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 
 const matchGravatarURLToReply = (gravatarMap: { [key: string]: string }) => (
   reply: SupportReply
-) => ({
+): ExtendedReply => ({
   ...reply,
   gravatarUrl: pathOr('not found', [reply.gravatar_id], gravatarMap)
 });

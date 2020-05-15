@@ -1,9 +1,4 @@
-import { SupportReply, SupportTicket } from '../account';
-import { ResourcePage as Page } from '../types';
-import { createReplySchema, createSupportTicketSchema } from './support.schema';
-
 import { API_ROOT } from 'src/constants';
-
 import Request, {
   setData,
   setMethod,
@@ -11,7 +6,14 @@ import Request, {
   setURL,
   setXFilter
 } from '../request';
-import { ReplyRequest, TicketRequest } from './types';
+import { ResourcePage as Page } from '../types';
+import { createReplySchema, createSupportTicketSchema } from './support.schema';
+import {
+  ReplyRequest,
+  SupportReply,
+  SupportTicket,
+  TicketRequest
+} from './types';
 
 /**
  * getTickets

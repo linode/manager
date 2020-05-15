@@ -1,5 +1,8 @@
-import { SupportReply } from 'linode-js-sdk/lib/account';
-import { createReply, uploadAttachment } from 'linode-js-sdk/lib/support';
+import {
+  createReply,
+  SupportReply,
+  uploadAttachment
+} from 'linode-js-sdk/lib/support';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { lensPath, set } from 'ramda';
 import * as React from 'react';
@@ -98,7 +101,7 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
       .then(() => {
         /* Make sure the reply will go through before attaching files */
         /* Send each file */
-        files.map((file, idx) => {
+        files.forEach((file, idx) => {
           if (file.uploaded) {
             return;
           }

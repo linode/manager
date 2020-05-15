@@ -1,9 +1,10 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
+import { supportTicketFactory } from 'src/factories/support';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
-
-import { supportTicket } from 'src/__data__/supportTicket';
 import TicketRow from './TicketRow';
+
+const supportTicket = supportTicketFactory.build();
 
 window.matchMedia = jest.fn().mockImplementation(query => {
   return {

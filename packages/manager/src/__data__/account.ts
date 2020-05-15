@@ -24,8 +24,7 @@ export const account: Account = {
   tax_id: '',
   credit_card: {
     expiry: '07/2018',
-    last_four: '1111',
-    cvv: '123'
+    last_four: '1111'
   },
   state: 'PA',
   zip: '19020',
