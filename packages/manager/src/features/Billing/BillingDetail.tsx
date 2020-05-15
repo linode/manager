@@ -11,9 +11,9 @@ import { AccountsAndPasswords, BillingAndPayments } from 'src/documentation';
 import { useAccount } from 'src/hooks/useAccount';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import BillingActivityPanel from './BillingPanels/BillingActivityPanel';
-import BillingSummary from './BillingSummary';
-import ContactInfo from './BillingPanels/SummaryPanel/PanelCards/ContactInformation';
-import PaymentInformation from './BillingPanels/SummaryPanel/PanelCards/PaymentInformation';
+import BillingSummary from './BillingPanels/BillingSummary';
+import ContactInfo from './BillingPanels/ContactInfoPanel';
+import PaymentInformation from './BillingPanels/PaymentInfoPanel';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -80,7 +80,7 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
               uninvoicedBalance={account?.data?.balance_uninvoiced ?? 0}
               mostRecentInvoiceId={mostRecentInvoiceId}
             />
-            <Grid container direction="row" wrap="nowrap">
+            <Grid container direction="row">
               <ContactInfo
                 company={account.data.company}
                 firstName={account.data.first_name}
@@ -109,6 +109,7 @@ export const BillingDetail: React.FC<CombinedProps> = props => {
             <BillingActivityPanel
               mostRecentInvoiceId={mostRecentInvoiceId}
               setMostRecentInvoiceId={setMostRecentInvoiceId}
+              accountActiveSince={account?.data?.active_since}
             />
           </Grid>
         </Grid>
