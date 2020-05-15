@@ -13,7 +13,7 @@ import AccountContainer, {
 } from 'src/containers/account.container';
 import { v4 } from 'uuid';
 
-import CreditCard from './CreditCard';
+import CreditCard from './CreditCardPayment';
 import PayPal from './Paypal';
 
 const useStyles = makeStyles((theme: Theme) => ({

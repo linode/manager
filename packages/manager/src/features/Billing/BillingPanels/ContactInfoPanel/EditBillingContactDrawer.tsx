@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
-import UpdateContactInformationForm from 'src/features/Billing/BillingPanels/UpdateContactInformationPanel';
+import UpdateContactInformationForm from './UpdateContactInformationForm';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   drawer: {
     '& .MuiDrawer-paper': {
       overflowX: 'hidden'

@@ -100,7 +100,7 @@ const ContactInformation: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <Grid item xs={6}>
+    <Grid item xs={12} md={6}>
       <Paper className={classes.summarySection} data-qa-contact-summary>
         <Grid container spacing={2} className={classes.grid}>
           <Grid item className={classes.switchWrapper}>
