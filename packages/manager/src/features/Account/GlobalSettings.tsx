@@ -133,7 +133,6 @@ const GlobalSettings: React.FC<CombinedProps> = props => {
       <EnableManaged
         isManaged={isManaged}
         update={props.actions.updateAccountSettingsInStore}
-        push={props.history.push}
       />
       {shouldDisplayGroupImport(entitiesWithGroupsToImport) && (
         <ImportGroupsAsTags openDrawer={openImportDrawer} />
