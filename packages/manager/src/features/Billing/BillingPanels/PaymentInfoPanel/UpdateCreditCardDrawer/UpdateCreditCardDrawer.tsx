@@ -86,12 +86,12 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
       expiry_year += 2000;
     }
 
-    if (expiry_year > 100 && expiry_year < 1000) {
+    if (expiry_year >= 100 && expiry_year < 1000) {
       setSubmitting(false);
       setErrors([
         {
           field: 'expiry_year',
-          reason: 'Expiration date must have the format MM/YYYY.'
+          reason: 'Expiration date must have the format MM/YY.'
         }
       ]);
       return;
