@@ -11,9 +11,6 @@ export const PREFETCH_DELAY = 150;
  * 3. Once the timeout is complete, usePrefetch evaluates the specified condition
  * 4. If true, usePrefetch executes the given request function.
  *
- * The request function is only attempted ONCE during the life of the hook. This is so consumers
- * can call makeRequest() "onmouseenter" as well as "onfocus", since "onfocus" is called on click.
- *
  * Example usage:
  *
  * const { makeRequest, cancelRequest } = usePrefetch(requestDomains, !domainsLoading);
