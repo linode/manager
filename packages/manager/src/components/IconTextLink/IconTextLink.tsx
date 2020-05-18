@@ -11,7 +11,14 @@ import {
 } from 'src/components/core/styles';
 import SvgIcon from 'src/components/core/SvgIcon';
 
-type CSSClasses = 'root' | 'active' | 'disabled' | 'icon' | 'left' | 'label';
+type CSSClasses =
+  | 'root'
+  | 'active'
+  | 'disabled'
+  | 'icon'
+  | 'left'
+  | 'label'
+  | 'linkWrapper';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -63,6 +70,10 @@ const styles = (theme: Theme) =>
       whiteSpace: 'nowrap',
       position: 'relative',
       top: -1
+    },
+    linkWrapper: {
+      display: 'flex',
+      justifyContent: 'center'
     }
   });
 
@@ -97,7 +108,11 @@ const IconTextLink: React.StatelessComponent<FinalProps> = props => {
   return (
     <ConditionalWrapper
       condition={to !== undefined && !disabled}
-      wrapper={children => <Link to={to as string}>{children}</Link>}
+      wrapper={children => (
+        <Link className={classes.linkWrapper} to={to as string}>
+          {children}
+        </Link>
+      )}
     >
       <Button
         className={classNames(
