@@ -1,9 +1,8 @@
-import { SupportTicket } from "linode-js-sdk/lib/account";
+import { SupportTicket } from 'linode-js-sdk/lib/support';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
   createStyles,
-  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -20,7 +19,7 @@ interface Props {
 
 type ClassNames = 'summary' | 'regarding';
 
-const styles = (theme: Theme) =>
+const styles = () =>
   createStyles({
     summary: {
       lineHeight: 1.1
