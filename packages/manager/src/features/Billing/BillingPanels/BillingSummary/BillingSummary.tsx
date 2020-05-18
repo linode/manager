@@ -11,7 +11,7 @@ import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import IconTextLink from 'src/components/IconTextLink';
-import { getNextCycleEstimatedBalance, getSubtotal } from './billingUtilities';
+import { getNextCycleEstimatedBalance } from './billingUtilities';
 import PaymentDrawer from './PaymentDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -143,11 +143,7 @@ export const BillingSummary: React.FC<Props> = props => {
   });
 
   const shouldDisplayPromotion =
-    Boolean(promotion) &&
-    promoThisMonthCreditRemaining !== undefined &&
-    // If there is a remaining balance after any potential credits are applied, we show the promo.
-    // EVEN IF balance == 0, since users that haven't accrued charges still want to see their promo.
-    getSubtotal(balance, balanceUninvoiced) >= 0;
+    Boolean(promotion) && promoThisMonthCreditRemaining !== undefined;
 
   const determinePaymentDisplay = (pastDueAmount: number) => {
     if (pastDueAmount > 0) {

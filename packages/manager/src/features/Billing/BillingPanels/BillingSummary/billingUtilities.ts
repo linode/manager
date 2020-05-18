@@ -1,3 +1,12 @@
+interface GetNextCycleEstimatedBalanceArguments {
+  // Corresponds to `/account .balance_uninvoiced`
+  balanceUninvoiced: number;
+  // Corresponds to `/account .promotion[0].this_month_credit_remaining`
+  promoThisMonthCreditRemaining?: number;
+  // Corresponds to `/account .balance`
+  balance: number;
+}
+
 /**
  * Calculate the next cycle's balance, given:
  *   1. The current balance
@@ -61,51 +70,28 @@
  * (balance = 0, balanceUninvoiced = 10, promoThisMonthCreditRemaining = 15)
  * total = 0
  */
-export const getNextCycleEstimatedBalance = (values: NextCycleArguments) => {
+export const getNextCycleEstimatedBalance = (
+  values: GetNextCycleEstimatedBalanceArguments
+) => {
   const { balance, balanceUninvoiced, promoThisMonthCreditRemaining } = values;
 
-  // Steps 1-2
-  // Start with total = balanceUninvoiced.
-  // If there is a credit (i.e. negative balance), add balance to total.
-  let total = getSubtotal(balance, balanceUninvoiced);
+  // 1. Start with total = balanceUninvoiced.
+  let total = balanceUninvoiced;
 
-  // Step 3
-  // IF total <= 0 no promotion will be applied, so RETURN total.
+  // 2. If there is a credit (i.e. negative balance), add balance to total.
+  if (balance < 0) {
+    total += balance;
+  }
+
+  // 3. IF total <= 0 no promotion will be applied, so RETURN total.
   if (total <= 0 || !promoThisMonthCreditRemaining) {
     return total;
   }
 
-  // Step 4
-  // ELSE apply promoThisMonthCreditRemaining until total = 0.
+  // 4. ELSE apply promoThisMonthCreditRemaining until total = 0.
   total = Math.max(total - promoThisMonthCreditRemaining, 0);
 
   // Step 5
   // RETURN total
   return total;
 };
-
-/**
- * The subtotal is balanceUninvoiced + balance, if balance is negative (i.e. a credit).
- */
-export const getSubtotal = (balance: number, balanceUninvoiced: number) => {
-  // Step 1
-  // Start with total = balanceUninvoiced.
-  let total = balanceUninvoiced;
-
-  // Step 2
-  // If there is a credit (i.e. negative balance), add balance to total.
-  if (balance < 0) {
-    total += balance;
-  }
-
-  return total;
-};
-
-interface NextCycleArguments {
-  // Corresponds to `/account .balance_uninvoiced`
-  balanceUninvoiced: number;
-  // Corresponds to `/account .promotion[0].this_month_credit_remaining`
-  promoThisMonthCreditRemaining?: number;
-  // Corresponds to `/account .balance`
-  balance: number;
-}
