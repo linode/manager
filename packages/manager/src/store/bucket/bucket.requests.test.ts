@@ -1,4 +1,4 @@
-import { ObjectStorageBucket } from 'linode-js-sdk/lib/object-storage';
+import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { objectStorageBucketFactory } from 'src/factories/objectStorage';
@@ -16,7 +16,7 @@ const mockStore = configureMockStore([thunk]);
 const usEast1 = 'us-east-1';
 const euCentral1 = 'eu-central-1';
 
-jest.mock('linode-js-sdk/lib/object-storage', () => {
+jest.mock('@linode/api-v4/lib/object-storage', () => {
   const buckets1 = objectStorageBucketFactory.buildList(1, {
     cluster: usEast1
   });

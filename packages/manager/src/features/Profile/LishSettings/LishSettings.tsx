@@ -1,5 +1,5 @@
-import { Profile, TPAProvider } from 'linode-js-sdk/lib/profile';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { Profile, TPAProvider } from '@linode/api-v4/lib/profile';
+import { APIError } from '@linode/api-v4/lib/types';
 import { dec, lensPath, path, remove, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -186,7 +186,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
                     dataAttrs: {
                       'data-qa-mode-select': true
                     },
-                    tooltipText: tooltipText
+                    tooltipText
                   }}
                   options={modeOptions}
                   name="mode-select"
@@ -291,7 +291,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
     this.setState(set(lensPath(['authorizedKeys', idx]), e.target.value));
   };
 
-  onPublicKeyRemove = (idx: number) => (e: React.MouseEvent<HTMLElement>) => {
+  onPublicKeyRemove = (idx: number) => () => {
     this.setState({
       authorizedKeys: remove(idx, 1, this.state.authorizedKeys),
       authorizedKeysCount: dec(this.state.authorizedKeysCount)

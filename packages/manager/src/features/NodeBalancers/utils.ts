@@ -3,7 +3,7 @@ import {
   NodeBalancerConfigNode,
   NodeBalancerConfigNode2,
   NodeBalancerConfigNodeFields
-} from 'linode-js-sdk/lib/nodebalancers';
+} from '@linode/api-v4/lib/nodebalancers';
 import { clamp, compose, filter, isNil, toString } from 'ramda';
 
 import defaultNumeric from 'src/utilities/defaultNumeric';

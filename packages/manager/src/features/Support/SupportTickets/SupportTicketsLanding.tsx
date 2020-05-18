@@ -1,4 +1,4 @@
-import { SupportTicket } from 'linode-js-sdk/lib/support';
+import { SupportTicket } from '@linode/api-v4/lib/support';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';

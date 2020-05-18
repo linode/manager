@@ -1,4 +1,4 @@
-import { FirewallRuleType } from 'linode-js-sdk/lib/firewalls/types';
+import { FirewallRuleType } from '@linode/api-v4/lib/firewalls/types';
 import {
   allIPv4,
   allIPv6,

@@ -1,4 +1,4 @@
-import { ActivePromotion } from 'linode-js-sdk/lib/account/types';
+import { ActivePromotion } from '@linode/api-v4/lib/account/types';
 import * as React from 'react';
 import CreditCard from 'src/assets/icons/credit-card.svg';
 import Info from 'src/assets/icons/info.svg';

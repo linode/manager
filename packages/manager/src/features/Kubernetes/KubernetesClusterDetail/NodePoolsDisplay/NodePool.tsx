@@ -1,4 +1,4 @@
-import { PoolNodeResponse } from 'linode-js-sdk/lib/kubernetes';
+import { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes';
 import * as React from 'react';
 import Collapse from 'src/assets/icons/collapse.svg';
 // Not yet supported by the API:

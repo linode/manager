@@ -1,5 +1,5 @@
-import { Grant } from 'linode-js-sdk/lib/account';
-import { getVolumes, Volume } from 'linode-js-sdk/lib/volumes';
+import { Grant } from '@linode/api-v4/lib/account';
+import { getVolumes, Volume } from '@linode/api-v4/lib/volumes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';

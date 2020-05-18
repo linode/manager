@@ -8,7 +8,7 @@ import { BillingDetail } from './BillingDetail';
 
 afterEach(cleanup);
 
-jest.mock('linode-js-sdk/lib/account', () => {
+jest.mock('@linode/api-v4/lib/account', () => {
   return {
     getInvoices: jest.fn().mockResolvedValue({
       results: 2,

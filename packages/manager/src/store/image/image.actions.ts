@@ -1,5 +1,5 @@
-import { CreateImagePayload, Image } from 'linode-js-sdk/lib/images';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { CreateImagePayload, Image } from '@linode/api-v4/lib/images';
+import { APIError } from '@linode/api-v4/lib/types';
 import actionCreatorFactory from 'typescript-fsa';
 
 export const actionCreator = actionCreatorFactory(`@@manager/images`);

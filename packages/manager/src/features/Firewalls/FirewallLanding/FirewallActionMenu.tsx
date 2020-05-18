@@ -1,4 +1,4 @@
-import { FirewallStatus } from 'linode-js-sdk/lib/firewalls';
+import { FirewallStatus } from '@linode/api-v4/lib/firewalls';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 

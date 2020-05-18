@@ -1,10 +1,9 @@
-import { TPAProvider } from 'linode-js-sdk/lib/profile';
+import { TPAProvider } from '@linode/api-v4/lib/profile';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { LOGIN_ROOT } from 'src/constants';
-import { updateProfile as _updateProfile } from 'src/store/profile/profile.requests';
 import { ProviderOptions, providers } from './shared';
 import ThirdPartyDialog from './ThirdPartyDialog';
 

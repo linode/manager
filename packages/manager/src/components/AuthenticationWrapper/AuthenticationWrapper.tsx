@@ -2,10 +2,10 @@ import {
   Account,
   AccountSettings,
   Notification
-} from 'linode-js-sdk/lib/account';
-import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes';
-import { Profile } from 'linode-js-sdk/lib/profile';
-import { Region } from 'linode-js-sdk/lib/regions';
+} from '@linode/api-v4/lib/account';
+import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
+import { Profile } from '@linode/api-v4/lib/profile';
+import { Region } from '@linode/api-v4/lib/regions';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { Action } from 'redux';

@@ -1,9 +1,9 @@
-import { Profile, TPAProvider } from 'linode-js-sdk/lib/profile';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { Profile, TPAProvider } from '@linode/api-v4/lib/profile';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Notice from 'src/components/Notice';
@@ -18,7 +18,7 @@ import ThirdPartyContent from './ThirdPartyContent';
 import TrustedDevices from './TrustedDevices';
 import TwoFactor from './TwoFactor';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   inner: {
     paddingTop: 0
   }

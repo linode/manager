@@ -1,4 +1,4 @@
-import { KubernetesCluster } from 'linode-js-sdk/lib/kubernetes';
+import { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
 import { pool1 } from 'src/__data__/nodePools';
 
 export const clusters: KubernetesCluster[] = [

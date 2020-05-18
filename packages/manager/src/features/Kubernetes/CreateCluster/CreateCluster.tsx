@@ -3,8 +3,8 @@ import {
   getKubernetesVersions,
   KubernetesVersion,
   PoolNodeRequest
-} from 'linode-js-sdk/lib/kubernetes';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/kubernetes';
+import { APIError } from '@linode/api-v4/lib/types';
 import { pick, remove, update } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';

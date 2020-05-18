@@ -5,19 +5,19 @@ JavaScript client for the [Linode APIv4](https://developers.linode.com/api/v4)
 ## Installation
 
 ```
-$ npm install linode-js-sdk
+$ npm install @linode/api-v4
 ```
 
 or with yarn:
 
 ```
-$ yarn add linode-js-sdk
+$ yarn add @linode/api-v4
 ```
 
 or with a CDN:
 
 ```js
-<script src="https://unpkg.com/linode-js-sdk/index.js"></script>
+<script src="https://unpkg.com/@linode/api-v4/index.js"></script>
 ```
 
 ## Usage
@@ -36,7 +36,7 @@ If you would like more fine-grained control, this library is built on top of [th
 you can use to attach interceptors:
 
 ```js
-import { baseRequest } from 'linode-js-sdk/lib/request';
+import { baseRequest } from '@linode/api-v4/lib/request';
 
 /**
  * intercepts every request with the following config
@@ -59,7 +59,7 @@ baseRequest.interceptors.request.use(config => {
 /** index.js */
 
 import './request';
-import { getAccount } from 'linode-js-sdk/lib/account';
+import { getAccount } from '@linode/api-v4/lib/account';
 
 getAccount()
   .then(response => {
@@ -140,19 +140,19 @@ This library comes with TypeScript definitions so no need to write your own or f
 Most types can be imported from their corresponding pathname. For instance:
 
 ```js
-import { Linode } from 'linode-js-sdk/lib/linodes';
+import { Linode } from '@linode/api-v4/lib/linodes';
 ```
 
 More general types (such as the error shape that comes back from the Linode APIv4) can be found in the `/types` directory:
 
 ```js
-import { APIError } from 'linode-js-sdk/lib/types';
+import { APIError } from '@linode/api-v4/lib/types';
 ```
 
 You can also import from the root if preferred:
 
 ```js
-import { APIError, Linode } from 'linode-js-sdk';
+import { APIError, Linode } from '@linode/api-v4';
 ```
 
 ## Contributing

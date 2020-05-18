@@ -1,5 +1,5 @@
-import { Image } from 'linode-js-sdk/lib/images';
-import { StackScript } from 'linode-js-sdk/lib/stackscripts';
+import { Image } from '@linode/api-v4/lib/images';
+import { StackScript } from '@linode/api-v4/lib/stackscripts';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import {
