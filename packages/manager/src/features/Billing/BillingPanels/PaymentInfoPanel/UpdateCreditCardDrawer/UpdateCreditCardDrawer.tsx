@@ -76,32 +76,48 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
     setSubmitting(true);
     setErrors(undefined);
 
-    const expMonth = cleanExpiryDate(expDate).m;
-    const expYear = cleanExpiryDate(expDate).y;
+    // Checks to see if date matches the format MM/YY
+    // If not, don't submit
+    const clean = expDate.replace(/[^0-9]/g, '');
 
-    saveCreditCard({
-      card_number: cardNumber,
-      expiry_month: expMonth,
-      expiry_year: expYear,
-      cvv
-    })
-      .then(() => {
-        const credit_card = {
-          last_four: takeLast(4, cardNumber),
-          expiry: `${String(expMonth).padStart(2, '0')}/${expYear}`,
-          cvv
-        };
-        // Update Redux store so subscribed components will display updated
-        // information.
-        props.saveCreditCard(credit_card);
-        resetForm(true);
-        setSubmitting(false);
-        onClose();
+    if (clean.length < 3) {
+      setSubmitting(false);
+      setErrors([
+        {
+          field: 'expiry_year',
+          reason: 'Expiration date must have the format MM/YY.'
+        }
+      ]);
+    } else {
+      const expMonth = parseExpiryDate(expDate).expMonth;
+      const expYear = parseExpiryDate(expDate).expYear;
+
+      saveCreditCard({
+        card_number: cardNumber,
+        expiry_month: expMonth,
+        expiry_year: expYear,
+        cvv
       })
-      .catch(error => {
-        setSubmitting(false);
-        setErrors(getAPIErrorOrDefault(error, 'Unable to update credit card.'));
-      });
+        .then(() => {
+          const credit_card = {
+            last_four: takeLast(4, cardNumber),
+            expiry: `${String(expMonth).padStart(2, '0')}/${expYear}`,
+            cvv
+          };
+          // Update Redux store so subscribed components will display updated
+          // information.
+          props.saveCreditCard(credit_card);
+          resetForm(true);
+          setSubmitting(false);
+          onClose();
+        })
+        .catch(error => {
+          setSubmitting(false);
+          setErrors(
+            getAPIErrorOrDefault(error, 'Unable to update credit card.')
+          );
+        });
+    }
   };
 
   const resetForm = (_success: boolean | undefined) => {
@@ -190,14 +206,15 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
   );
 };
 
-export const cleanExpiryDate = (date: string) => {
+export const parseExpiryDate = (date: string) => {
   const clean = date.replace(/[^0-9]/g, '');
   const yearLength = clean.length > 4 ? 4 : 2;
   const month = +clean.substring(0, clean.length - yearLength);
   const year = +clean.substring(clean.length - yearLength);
+
   return {
-    y: year + (yearLength == 4 ? 0 : 2000),
-    m: month
+    expYear: year + (yearLength == 4 ? 0 : 2000),
+    expMonth: month
   };
 };
 
