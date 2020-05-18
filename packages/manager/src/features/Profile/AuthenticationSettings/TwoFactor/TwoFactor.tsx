@@ -125,7 +125,11 @@ export const TwoFactor: React.FC<CombinedProps> = props => {
   };
 
   const handleCancel = () => {
-    toggleTwoFactorEnabled(false);
+    if (twoFactorConfirmed) {
+      toggleHidden();
+    } else {
+      toggleTwoFactorEnabled(false);
+    }
   };
 
   const getToken = () => {
