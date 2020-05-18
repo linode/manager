@@ -76,37 +76,19 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
     setSubmitting(true);
     setErrors(undefined);
 
-    // MM/YYYY
-    const _date = expDate.match(/(\-?[0-9][0-9]?)\/?([0-9]+)/);
-    const expiry_month = _date ? +_date[1] : -1;
-    let expiry_year = _date ? +_date?.[2] : -1;
-
-    // Handles if the user tries to use two digit year
-    if (expiry_year < 100) {
-      expiry_year += 2000;
-    }
-
-    if (expiry_year >= 100 && expiry_year < 1000) {
-      setSubmitting(false);
-      setErrors([
-        {
-          field: 'expiry_year',
-          reason: 'Expiration date must have the format MM/YY.'
-        }
-      ]);
-      return;
-    }
+    const expMonth = cleanExpiryDate(expDate).m;
+    const expYear = cleanExpiryDate(expDate).y;
 
     saveCreditCard({
       card_number: cardNumber,
-      expiry_month,
-      expiry_year,
+      expiry_month: expMonth,
+      expiry_year: expYear,
       cvv
     })
       .then(() => {
         const credit_card = {
           last_four: takeLast(4, cardNumber),
-          expiry: `${String(expiry_month).padStart(2, '0')}/${expiry_year}`,
+          expiry: `${String(expMonth).padStart(2, '0')}/${expYear}`,
           cvv
         };
         // Update Redux store so subscribed components will display updated
@@ -206,6 +188,17 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
       </ActionsPanel>
     </Drawer>
   );
+};
+
+export const cleanExpiryDate = (date: string) => {
+  const clean = date.replace(/[^0-9]/g, '');
+  const yearLength = clean.length > 4 ? 4 : 2;
+  const month = +clean.substring(0, clean.length - yearLength);
+  const year = +clean.substring(clean.length - yearLength);
+  return {
+    y: year + (yearLength == 4 ? 0 : 2000),
+    m: month
+  };
 };
 
 export interface CreditCardFormProps extends NumberFormatProps {
