@@ -1,66 +1,55 @@
 import * as React from 'react';
 
+export const PREFETCH_DELAY = 150;
+
 /**
- * usePreFetch() accepts an array of dependencies and fetches them from the API if they are not
- * already in the Redux Store.
+ * usePrefetch() allows consumers to make a one-time, delayed, and cancellable request. It accepts
+ * a request function, which will be executed according to the following lifecycle:
  *
- * It's similar to useReduxLoad(), but it only fetches data if it hasn't been requested at all yet.
- * In other words, there's no refresh interval. It's meant to give a "head start", if for example
- * the user hovers over the "Domains" link, we want to request the data in the background because
- * they may end up clicking it. But if we already have some domains data, we don't re-fetch, since
- * that would trigger loading states, etc. We leave the ultimate authority to the consumers of the
- * data to decide when the data should be refreshed.
+ * 1. Consumer calls makeRequest()
+ * 2. usePrefetch sets a timeout for the specified delay duration
+ * 3. Once the timeout is complete, usePrefetch evaluates the specified condition
+ * 4. If true, usePrefetch executes the given request function.
+ *
+ * The request function is only attempted ONCE during the life of the hook. This is so consumers
+ * can call makeRequest() "onmouseenter" as well as "onfocus", since "onfocus" is called on click.
  *
  * Example usage:
- * const preFetch = usePreFetch();
  *
- * <div onmouseenter={() => preFetch(['linodes', 'images'])}>Linodes</div>
+ * const { makeRequest, cancelRequest } = usePrefetch(requestDomains, !domainsLoading);
+ * <div onmouseenter={makeRequest} onfocus={makeRequest} onmouseleave={cancelRequest}>Domains</div>
  */
 
-export const usePreFetch = (
+export const usePrefetch = (
   requestFn: () => void,
-  clearanceToMakeRequest: boolean,
+  prefetchCondition = true,
   delay = PREFETCH_DELAY
 ) => {
   const timeoutID = React.useRef<number | null>(null);
 
-  // We keep track of this so that the consumer can use `prefetch` on both onmouseenter and onfocus.
-  // Otherwise, `prefetch` would be called twice, since onfocus is fired on click as well.
-  const [hasQueuedForPreFetch, setHasQueuedForPreFetch] = React.useState<
-    boolean
-  >(false);
-
   // We must store this in a ref so the handler inside setTimeout can "see" the current value.
-  const clearanceToMakeRequestRef = React.useRef<boolean>(
-    clearanceToMakeRequest
-  );
+  const prefetchConditionRef = React.useRef<boolean>(prefetchCondition);
 
   // Update the ref when the values change.
   React.useEffect(() => {
-    clearanceToMakeRequestRef.current = clearanceToMakeRequest;
-  }, [clearanceToMakeRequest]);
+    prefetchConditionRef.current = prefetchCondition;
+  }, [prefetchCondition]);
 
-  const prefetch = () => {
+  const makeRequest = () => {
     timeoutID.current = window.setTimeout(() => {
-      if (!hasQueuedForPreFetch && clearanceToMakeRequestRef.current) {
-        setHasQueuedForPreFetch(true);
+      if (prefetchConditionRef.current) {
         requestFn();
       }
     }, delay);
-
-    // More entity types will go here.
   };
 
-  const clearTimeoutID = React.useCallback(() => {
+  const cancelRequest = React.useCallback(() => {
     if (timeoutID.current) {
       window.clearTimeout(timeoutID.current);
     }
   }, []);
 
-  return { prefetch, clearTimeoutID };
+  return { makeRequest, cancelRequest };
 };
 
-// Useful for consumers that may want to delay the prefetch request.
-export const PREFETCH_DELAY = 150;
-
-export default usePreFetch;
+export default usePrefetch;

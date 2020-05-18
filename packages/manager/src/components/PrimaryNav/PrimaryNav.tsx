@@ -25,7 +25,7 @@ import ListItemText from 'src/components/core/ListItemText';
 import Menu from 'src/components/core/Menu';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
-import usePreFetch from 'src/hooks/usePreFetch';
+import usePrefetch from 'src/hooks/usePreFetch';
 import { sendOneClickNavigationEvent } from 'src/utilities/ga';
 import AdditionalMenuItems from './AdditionalMenuItems';
 import useStyles from './PrimaryNav.styles';
@@ -59,7 +59,7 @@ interface PrimaryLink {
   onClick?: (e: React.ChangeEvent<any>) => void;
   hide?: boolean;
   prefetchRequestFn?: () => void;
-  prefetchRequestClearance?: boolean;
+  prefetchRequestCondition?: boolean;
 }
 
 export interface Props {
@@ -121,7 +121,7 @@ export const PrimaryNav: React.FC<Props> = props => {
         href: '/domains',
         icon: <Domain style={{ transform: 'scale(1.5)' }} />,
         prefetchRequestFn: requestDomains,
-        prefetchRequestClearance: !domains.loading && domains.lastUpdated === 0
+        prefetchRequestCondition: !domains.loading && domains.lastUpdated === 0
       },
 
       {
@@ -226,12 +226,15 @@ export const PrimaryNav: React.FC<Props> = props => {
             ...thisLink
           };
 
+          // PrefetchPrimaryLink and PrimaryLink are two separate components because invocation of
+          // hooks cannot be conditional. <PrefetchPrimaryLink /> is a wrapper around <PrimaryLink />
+          // that includes the usePrefetch hook.
           return thisLink.prefetchRequestFn &&
-            thisLink.prefetchRequestClearance !== undefined ? (
+            thisLink.prefetchRequestCondition !== undefined ? (
             <PrefetchPrimaryLink
               {...props}
               prefetchRequestFn={thisLink.prefetchRequestFn}
-              prefetchRequestClearance={thisLink.prefetchRequestClearance}
+              prefetchRequestCondition={thisLink.prefetchRequestCondition}
             />
           ) : (
             <PrimaryLink {...props} />
@@ -407,21 +410,22 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
 
 interface PrefetchPrimaryLinkProps {
   prefetchRequestFn: () => void;
-  prefetchRequestClearance: boolean;
+  prefetchRequestCondition: boolean;
 }
 
+// Wrapper around PrimaryLink that includes the usePrefetchHook.
 export const PrefetchPrimaryLink: React.FC<PrimaryLinkProps &
-  PrefetchPrimaryLinkProps> = props => {
-  const { prefetch, clearTimeoutID } = usePreFetch(
+  PrefetchPrimaryLinkProps> = React.memo(props => {
+  const { makeRequest, cancelRequest } = usePrefetch(
     props.prefetchRequestFn,
-    props.prefetchRequestClearance
+    props.prefetchRequestCondition
   );
 
   const prefetchProps: PrimaryLinkProps['prefetchProps'] = {
-    onMouseEnter: prefetch,
-    onFocus: prefetch,
-    onMouseLeave: clearTimeoutID
+    onMouseEnter: makeRequest,
+    onFocus: makeRequest,
+    onMouseLeave: cancelRequest
   };
 
   return <PrimaryLink {...props} prefetchProps={prefetchProps} />;
-};
+});
