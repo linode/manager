@@ -1,5 +1,5 @@
-import { Entity as EventEntity, Event } from 'linode-js-sdk/lib/account';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { Entity as EventEntity, Event } from '@linode/api-v4/lib/account';
+import { APIError } from '@linode/api-v4/lib/types';
 import { MapStateToProps as _MapStateToProps } from 'react-redux';
 import { Action, Dispatch } from 'redux';
 import { ThunkAction, ThunkDispatch as _ThunkDispatch } from 'redux-thunk';

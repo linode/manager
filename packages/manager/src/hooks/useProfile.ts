@@ -1,4 +1,4 @@
-import { Profile } from 'linode-js-sdk/lib/profile/types';
+import { Profile } from '@linode/api-v4/lib/profile/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { State } from 'src/store/profile/profile.reducer';

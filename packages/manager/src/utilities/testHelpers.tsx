@@ -1,6 +1,6 @@
 import { MatcherFunction, render, RenderResult } from '@testing-library/react';
 import { mergeDeepRight } from 'ramda';
-import { ResourcePage } from 'linode-js-sdk/lib/types';
+import { ResourcePage } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouterProps } from 'react-router';

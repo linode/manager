@@ -1,4 +1,4 @@
-import { APIError } from 'linode-js-sdk/lib/types';
+import { APIError } from '@linode/api-v4/lib/types';
 
 export const baseGaugeProps = {
   height: 110,

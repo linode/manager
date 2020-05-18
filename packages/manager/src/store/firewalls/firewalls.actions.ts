@@ -3,8 +3,8 @@ import {
   Firewall,
   FirewallRules,
   UpdateFirewallPayload
-} from 'linode-js-sdk/lib/firewalls';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/firewalls';
+import { APIError } from '@linode/api-v4/lib/types';
 import { GetAllData } from 'src/utilities/getAll';
 import actionCreatorFactory from 'typescript-fsa';
 

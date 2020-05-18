@@ -1,5 +1,5 @@
 import Edit from '@material-ui/icons/Edit';
-import { DomainRecord, getDomainRecords } from 'linode-js-sdk/lib/domains';
+import { DomainRecord, getDomainRecords } from '@linode/api-v4/lib/domains';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';

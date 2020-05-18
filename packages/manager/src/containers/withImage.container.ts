@@ -1,4 +1,4 @@
-import { Image } from 'linode-js-sdk/lib/images';
+import { Image } from '@linode/api-v4/lib/images';
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
 

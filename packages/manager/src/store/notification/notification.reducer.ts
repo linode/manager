@@ -1,4 +1,4 @@
-import { Notification } from 'linode-js-sdk/lib/account';
+import { Notification } from '@linode/api-v4/lib/account';
 import { Reducer } from 'redux';
 import { RequestableData } from 'src/store/types';
 import { Action, ERROR, LOAD, SUCCESS, UPDATE } from './notification.actions';

@@ -1,5 +1,5 @@
-import { getUsers } from 'linode-js-sdk/lib/account';
-import { getSSHKeys, SSHKey } from 'linode-js-sdk/lib/profile';
+import { getUsers } from '@linode/api-v4/lib/account';
+import { getSSHKeys, SSHKey } from '@linode/api-v4/lib/profile';
 import { assoc, clone, equals, map, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';

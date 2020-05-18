@@ -1,10 +1,10 @@
-import { GrantLevel } from 'linode-js-sdk/lib/account';
+import { GrantLevel } from '@linode/api-v4/lib/account';
 import {
   changeLinodeDiskPassword,
   Disk,
   getLinodeDisks
-} from 'linode-js-sdk/lib/linodes';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/linodes';
+import { APIError } from '@linode/api-v4/lib/types';
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
 

@@ -1,4 +1,4 @@
-import { Account } from 'linode-js-sdk/lib/account';
+import { Account } from '@linode/api-v4/lib/account';
 import { connect, InferableComponentEnhancerWithProps } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { saveCreditCard } from 'src/store/account/account.actions';

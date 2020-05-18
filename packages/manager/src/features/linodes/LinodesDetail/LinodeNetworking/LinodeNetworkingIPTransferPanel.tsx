@@ -1,5 +1,5 @@
-import { assignAddresses } from 'linode-js-sdk/lib/networking';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { assignAddresses } from '@linode/api-v4/lib/networking';
+import { APIError } from '@linode/api-v4/lib/types';
 import {
   both,
   compose,

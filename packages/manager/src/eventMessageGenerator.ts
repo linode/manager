@@ -1,4 +1,4 @@
-import { Event } from 'linode-js-sdk/lib/account';
+import { Event } from '@linode/api-v4/lib/account';
 import { path } from 'ramda';
 import { isProductionBuild } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';

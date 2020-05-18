@@ -2,7 +2,7 @@ import {
   Event,
   getEvents as _getEvents,
   markEventSeen
-} from 'linode-js-sdk/lib/account';
+} from '@linode/api-v4/lib/account';
 import * as moment from 'moment';
 import { dateFormat } from 'src/time';
 import { generatePollingFilter } from 'src/utilities/requestFilters';

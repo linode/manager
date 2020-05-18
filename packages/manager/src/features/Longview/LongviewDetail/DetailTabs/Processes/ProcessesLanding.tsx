@@ -1,4 +1,4 @@
-import { APIError } from 'linode-js-sdk/lib/types';
+import { APIError } from '@linode/api-v4/lib/types';
 import { prop, sortBy } from 'ramda';
 import * as React from 'react';
 import Box from 'src/components/core/Box';

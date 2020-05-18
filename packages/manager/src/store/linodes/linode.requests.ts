@@ -6,7 +6,7 @@ import {
   Linode,
   linodeReboot as _rebootLinode,
   updateLinode as _updateLinode
-} from 'linode-js-sdk/lib/linodes';
+} from '@linode/api-v4/lib/linodes';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';

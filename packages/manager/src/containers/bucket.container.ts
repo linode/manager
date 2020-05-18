@@ -1,4 +1,4 @@
-import { ObjectStorageBucket } from 'linode-js-sdk/lib/object-storage';
+import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import { connect, MapStateToProps } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { BucketError } from 'src/store/bucket/types';

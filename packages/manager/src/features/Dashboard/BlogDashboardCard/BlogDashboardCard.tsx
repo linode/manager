@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import { decode } from 'he';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { APIError } from '@linode/api-v4/lib/types';
 import { compose, map, pathOr, take } from 'ramda';
 import * as React from 'react';
 import * as sanitize from 'sanitize-html';

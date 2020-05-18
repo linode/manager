@@ -1,4 +1,4 @@
-import { KubernetesCluster } from 'linode-js-sdk/lib/kubernetes/types';
+import { KubernetesCluster } from '@linode/api-v4/lib/kubernetes/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { State } from 'src/store/kubernetes/kubernetes.reducer';

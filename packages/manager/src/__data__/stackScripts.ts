@@ -1,4 +1,4 @@
-import { StackScript } from 'linode-js-sdk/lib/stackscripts';
+import { StackScript } from '@linode/api-v4/lib/stackscripts';
 
 export const stackScripts: StackScript[] = [
   {

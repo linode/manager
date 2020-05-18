@@ -1,14 +1,14 @@
 {
-  "name": "linode-js-sdk",
+  "name": "@linode/api-v4",
   "version": "0.25.0-alpha.0",
-  "homepage": "https://github.com/linode/manager/tree/develop/packages/linode-js-sdk",
+  "homepage": "https://github.com/linode/manager/tree/develop/packages/api-v4",
   "bugs": {
     "url": "https://github.com/linode/manager/issues",
     "email": "feedback@linode.com"
   },
   "repository": {
     "type": "git",
-    "directory": "https://github.com/linode/manager/tree/develop/packages/linode-js-sdk"
+    "directory": "https://github.com/linode/manager/tree/develop/packages/api-v4"
   },
   "engines": {
     "node": ">= 10.16.0"

@@ -1,5 +1,5 @@
 import JSPDF from 'jspdf';
-import { Invoice, InvoiceItem, Payment } from 'linode-js-sdk/lib/account';
+import { Invoice, InvoiceItem, Payment } from '@linode/api-v4/lib/account';
 import { pathOr } from 'ramda';
 import formatDate from 'src/utilities/formatDate';
 

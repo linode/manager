@@ -1,7 +1,7 @@
-import { Image } from 'linode-js-sdk/lib/images';
-import { Linode } from 'linode-js-sdk/lib/linodes';
-import { StackScript } from 'linode-js-sdk/lib/stackscripts';
-import { ResourcePage } from 'linode-js-sdk/lib/types';
+import { Image } from '@linode/api-v4/lib/images';
+import { Linode } from '@linode/api-v4/lib/linodes';
+import { StackScript } from '@linode/api-v4/lib/stackscripts';
+import { ResourcePage } from '@linode/api-v4/lib/types';
 import { parse, stringify } from 'qs';
 import * as React from 'react';
 import { connect } from 'react-redux';

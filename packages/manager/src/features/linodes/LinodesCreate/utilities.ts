@@ -1,5 +1,5 @@
-import { Image } from 'linode-js-sdk/lib/images';
-import { Linode } from 'linode-js-sdk/lib/linodes';
+import { Image } from '@linode/api-v4/lib/images';
+import { Linode } from '@linode/api-v4/lib/linodes';
 import { displayType } from 'src/features/linodes/presentation';
 import { ExtendedType } from './SelectPlanPanel';
 import { ExtendedLinode } from './types';

@@ -1,5 +1,5 @@
-import { ObjectStorageCluster } from 'linode-js-sdk/lib/object-storage';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { ObjectStorageCluster } from '@linode/api-v4/lib/object-storage';
+import { APIError } from '@linode/api-v4/lib/types';
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
 

@@ -2,8 +2,8 @@
  * @todo Display the volume configuration information on success.
  */
 import { Form, Formik } from 'formik';
-import { APIError } from 'linode-js-sdk/lib/types';
-import { CreateVolumeSchema } from 'linode-js-sdk/lib/volumes';
+import { APIError } from '@linode/api-v4/lib/types';
+import { CreateVolumeSchema } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';

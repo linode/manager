@@ -1,4 +1,4 @@
-import { Linode } from 'linode-js-sdk/lib/linodes';
+import { Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { createHOCForConsumer } from 'src/requestableContext';
 import {

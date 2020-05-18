@@ -1,4 +1,4 @@
-import { LinodeIPsResponse } from 'linode-js-sdk/lib/linodes';
+import { LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
 
 export const ipResponse: LinodeIPsResponse = {
   ipv4: {

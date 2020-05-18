@@ -1,5 +1,5 @@
 import { FormikBag } from 'formik';
-import { AccountSettings } from 'linode-js-sdk/lib/account';
+import { AccountSettings } from '@linode/api-v4/lib/account';
 import {
   createObjectStorageKeys,
   getObjectStorageKeys,
@@ -7,7 +7,7 @@ import {
   ObjectStorageKeyRequest,
   revokeObjectStorageKey,
   updateObjectStorageKey
-} from 'linode-js-sdk/lib/object-storage';
+} from '@linode/api-v4/lib/object-storage';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';

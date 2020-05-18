@@ -1,6 +1,6 @@
 import AddCircle from '@material-ui/icons/AddCircle';
 import * as classNames from 'classnames';
-import { getTags } from 'linode-js-sdk/lib/tags';
+import { getTags } from '@linode/api-v4/lib/tags';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { clone } from 'ramda';
 import * as React from 'react';

@@ -1,5 +1,5 @@
 import * as Factory from 'factory.ts';
-import { LongviewSubscription } from 'linode-js-sdk/lib/longview/types';
+import { LongviewSubscription } from '@linode/api-v4/lib/longview/types';
 
 export const longviewSubscriptionFactory = Factory.Sync.makeFactory<
   LongviewSubscription

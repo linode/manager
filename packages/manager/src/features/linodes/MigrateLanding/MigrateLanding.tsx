@@ -1,14 +1,14 @@
-import { Event, Notification } from 'linode-js-sdk/lib/account';
-import { Image } from 'linode-js-sdk/lib/images';
+import { Event, Notification } from '@linode/api-v4/lib/account';
+import { Image } from '@linode/api-v4/lib/images';
 import {
   Disk,
   LinodeSpecs,
   LinodeStatus,
   LinodeType,
   scheduleOrQueueMigration
-} from 'linode-js-sdk/lib/linodes';
-import { APIError as APIErrorType } from 'linode-js-sdk/lib/types';
-import { Volume } from 'linode-js-sdk/lib/volumes';
+} from '@linode/api-v4/lib/linodes';
+import { APIError as APIErrorType } from '@linode/api-v4/lib/types';
+import { Volume } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';

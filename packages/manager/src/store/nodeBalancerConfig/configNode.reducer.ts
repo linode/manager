@@ -1,5 +1,5 @@
 import produce from 'immer';
-import { NodeBalancerConfigNode } from 'linode-js-sdk/lib/nodebalancers';
+import { NodeBalancerConfigNode } from '@linode/api-v4/lib/nodebalancers';
 import { Reducer } from 'redux';
 import { EntityError, EntityState } from 'src/store/types';
 import updateOrAdd from 'src/utilities/updateOrAdd';

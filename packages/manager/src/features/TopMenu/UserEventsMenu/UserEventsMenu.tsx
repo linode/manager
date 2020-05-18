@@ -1,4 +1,4 @@
-import { Event } from 'linode-js-sdk/lib/account';
+import { Event } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';

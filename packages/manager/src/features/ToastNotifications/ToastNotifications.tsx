@@ -1,4 +1,4 @@
-import { Event, EventStatus } from 'linode-js-sdk/lib/account/types';
+import { Event, EventStatus } from '@linode/api-v4/lib/account/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { curry } from 'ramda';
 import * as React from 'react';

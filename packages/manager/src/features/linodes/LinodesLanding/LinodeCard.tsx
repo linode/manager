@@ -1,10 +1,10 @@
-import { Event, Notification } from 'linode-js-sdk/lib/account';
+import { Event, Notification } from '@linode/api-v4/lib/account';
 import {
   Config,
   getLinodeConfigs,
   LinodeBackups,
   LinodeStatus
-} from 'linode-js-sdk/lib/linodes';
+} from '@linode/api-v4/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { Link } from 'react-router-dom';

@@ -1,5 +1,5 @@
-import { CreateLinodeRequest, Linode } from 'linode-js-sdk/lib/linodes';
-import { APIError, DeepPartial } from 'linode-js-sdk/lib/types';
+import { CreateLinodeRequest, Linode } from '@linode/api-v4/lib/linodes';
+import { APIError, DeepPartial } from '@linode/api-v4/lib/types';
 import { GetAllData } from 'src/utilities/getAll';
 import actionCreatorFactory from 'typescript-fsa';
 

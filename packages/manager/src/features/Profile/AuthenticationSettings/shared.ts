@@ -1,4 +1,4 @@
-import { TPAProvider } from 'linode-js-sdk/lib/profile';
+import { TPAProvider } from '@linode/api-v4/lib/profile';
 import GitHubIcon from 'src/assets/icons/providers/git-hub-logo.svg';
 
 export type ProviderOptions = Exclude<TPAProvider, 'password'>;

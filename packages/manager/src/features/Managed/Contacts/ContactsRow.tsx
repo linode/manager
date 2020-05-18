@@ -1,4 +1,4 @@
-import { ManagedContact } from 'linode-js-sdk/lib/managed';
+import { ManagedContact } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';

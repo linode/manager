@@ -1,6 +1,6 @@
-import { restoreBackup } from 'linode-js-sdk/lib/linodes';
-import { Profile } from 'linode-js-sdk/lib/profile';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { restoreBackup } from '@linode/api-v4/lib/linodes';
+import { Profile } from '@linode/api-v4/lib/profile';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';

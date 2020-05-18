@@ -1,5 +1,5 @@
 import { cleanup, fireEvent, wait } from '@testing-library/react';
-import { LongviewClient } from 'linode-js-sdk/lib/longview';
+import { LongviewClient } from '@linode/api-v4/lib/longview';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { accountSettingsFactory } from 'src/factories/accountSettings';

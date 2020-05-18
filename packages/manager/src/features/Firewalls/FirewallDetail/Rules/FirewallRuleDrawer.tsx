@@ -3,7 +3,7 @@ import { parse as parseIP, parseCIDR } from 'ipaddr.js';
 import {
   FirewallRuleProtocol,
   FirewallRuleType
-} from 'linode-js-sdk/lib/firewalls';
+} from '@linode/api-v4/lib/firewalls';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';

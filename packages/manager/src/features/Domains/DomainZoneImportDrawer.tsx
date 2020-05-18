@@ -1,5 +1,5 @@
-import { Domain, importZone } from 'linode-js-sdk/lib/domains';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { Domain, importZone } from '@linode/api-v4/lib/domains';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';

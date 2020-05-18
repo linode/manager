@@ -5,8 +5,8 @@ import {
   LinodeIPsResponse,
   LinodeIPsResponseIPV4,
   LinodeIPsResponseIPV6
-} from 'linode-js-sdk/lib/linodes';
-import { getIPs, IPAddress, IPRange } from 'linode-js-sdk/lib/networking';
+} from '@linode/api-v4/lib/linodes';
+import { getIPs, IPAddress, IPRange } from '@linode/api-v4/lib/networking';
 import { compose, head, isEmpty, path, pathOr, uniq, uniqBy } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';

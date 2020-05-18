@@ -1,6 +1,6 @@
 import { storiesOf } from '@storybook/react';
 import MockAdapter from 'axios-mock-adapter';
-import { baseRequest } from 'linode-js-sdk/lib/request';
+import { baseRequest } from '@linode/api-v4/lib/request';
 import * as React from 'react';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import TagsInput from './TagsInput';

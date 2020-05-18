@@ -1,5 +1,5 @@
 import { Form, Formik } from 'formik';
-import { UpdateVolumeSchema } from 'linode-js-sdk/lib/volumes';
+import { UpdateVolumeSchema } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Notice from 'src/components/Notice';

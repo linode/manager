@@ -1,4 +1,4 @@
-import { Linode } from 'linode-js-sdk/lib/linodes/types';
+import { Linode } from '@linode/api-v4/lib/linodes/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';

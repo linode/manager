@@ -1,5 +1,5 @@
 import produce from 'immer';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { APIError } from '@linode/api-v4/lib/types';
 import { useEffect, useState } from 'react';
 
 export interface UseAPIRequest<T> {

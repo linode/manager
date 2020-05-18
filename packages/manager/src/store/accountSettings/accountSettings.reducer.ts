@@ -1,5 +1,5 @@
 import produce from 'immer';
-import { AccountSettings } from 'linode-js-sdk/lib/account';
+import { AccountSettings } from '@linode/api-v4/lib/account';
 import { Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
 import { RequestableDataWithEntityError } from '../types';

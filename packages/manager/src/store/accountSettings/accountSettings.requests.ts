@@ -1,7 +1,7 @@
 import {
   getAccountSettings,
   updateAccountSettings as _update
-} from 'linode-js-sdk/lib/account';
+} from '@linode/api-v4/lib/account';
 import { createRequestThunk } from '../store.helpers';
 
 import {

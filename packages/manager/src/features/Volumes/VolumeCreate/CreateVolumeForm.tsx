@@ -1,7 +1,7 @@
 import { Form, Formik } from 'formik';
-import { Region } from 'linode-js-sdk/lib/regions';
-import { APIError } from 'linode-js-sdk/lib/types';
-import { CreateVolumeSchema } from 'linode-js-sdk/lib/volumes';
+import { Region } from '@linode/api-v4/lib/regions';
+import { APIError } from '@linode/api-v4/lib/types';
+import { CreateVolumeSchema } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';

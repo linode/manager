@@ -1,11 +1,11 @@
 import * as Bluebird from 'bluebird';
-import { Domain, getDomains } from 'linode-js-sdk/lib/domains';
-import { getLinodes, Linode } from 'linode-js-sdk/lib/linodes';
+import { Domain, getDomains } from '@linode/api-v4/lib/domains';
+import { getLinodes, Linode } from '@linode/api-v4/lib/linodes';
 import {
   getNodeBalancers,
   NodeBalancer
-} from 'linode-js-sdk/lib/nodebalancers';
-import { getVolumes, Volume } from 'linode-js-sdk/lib/volumes';
+} from '@linode/api-v4/lib/nodebalancers';
+import { getVolumes, Volume } from '@linode/api-v4/lib/volumes';
 import { range } from 'ramda';
 
 import { API_MAX_PAGE_SIZE } from 'src/constants';

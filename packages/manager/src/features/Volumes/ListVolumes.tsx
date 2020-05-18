@@ -1,4 +1,4 @@
-import { Volume } from 'linode-js-sdk/lib/volumes';
+import { Volume } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';

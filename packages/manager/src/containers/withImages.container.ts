@@ -1,4 +1,4 @@
-import { CreateImagePayload, Image } from 'linode-js-sdk/lib/images';
+import { CreateImagePayload, Image } from '@linode/api-v4/lib/images';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';

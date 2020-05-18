@@ -1,5 +1,5 @@
 import produce from 'immer';
-import { Image } from 'linode-js-sdk/lib/images';
+import { Image } from '@linode/api-v4/lib/images';
 import { equals, groupBy } from 'ramda';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';

@@ -419,8 +419,8 @@ If your data is being sourced from Redux state, it's safe to assume that the dat
 The first step in paginating things from Redux is to source the data
 
 ```js
-import { APIError } from "linode-js-sdk/lib/types";
-import { Volume } from "linode-js-sdk/lib/volumes";
+import { APIError } from "@linode/api-v4/lib/types";
+import { Volume } from "@linode/api-v4/lib/volumes";
 import { connect } from "react-redux";
 
 interface ReduxStateProps {
@@ -520,7 +520,7 @@ The first step is to wrap your base component in the HOC and tell Pagey what req
 
 ```js
 import { Pagey, PaginationProps } from "src/components/Pagey";
-import { getInvoices } from "linode-js-sdk/lib/account";
+import { getInvoices } from "@linode/api-v4/lib/account";
 
 interface OtherProps {
   someText: string;

@@ -1,5 +1,5 @@
-import { Disk, getLinodeDisks } from 'linode-js-sdk/lib/linodes';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { Disk, getLinodeDisks } from '@linode/api-v4/lib/linodes';
+import { APIError } from '@linode/api-v4/lib/types';
 import { equals } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';

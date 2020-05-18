@@ -1,7 +1,7 @@
 import {
   NodeBalancer,
   NodeBalancerConfigPort
-} from 'linode-js-sdk/lib/nodebalancers';
+} from '@linode/api-v4/lib/nodebalancers';
 
 export interface ExtendedNodeBalancer extends NodeBalancer {
   up: number;

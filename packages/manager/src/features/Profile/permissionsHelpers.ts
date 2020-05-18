@@ -1,4 +1,4 @@
-import { GlobalGrantTypes } from 'linode-js-sdk/lib/account';
+import { GlobalGrantTypes } from '@linode/api-v4/lib/account';
 import store, { ApplicationState } from 'src/store';
 
 export const isRestrictedUser = (_state?: ApplicationState) => {

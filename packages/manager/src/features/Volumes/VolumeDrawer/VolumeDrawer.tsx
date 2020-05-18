@@ -1,5 +1,5 @@
-import { Grant } from 'linode-js-sdk/lib/account';
-import { Region } from 'linode-js-sdk/lib/regions';
+import { Grant } from '@linode/api-v4/lib/account';
+import { Region } from '@linode/api-v4/lib/regions';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';

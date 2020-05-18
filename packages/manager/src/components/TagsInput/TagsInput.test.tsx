@@ -4,9 +4,9 @@ import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import TagsInput from './TagsInput';
 
-const request = require.requireMock('linode-js-sdk/lib/tags');
+const request = require.requireMock('@linode/api-v4/lib/tags');
 
-jest.mock('linode-js-sdk/lib/tags', () => ({
+jest.mock('@linode/api-v4/lib/tags', () => ({
   getTags: jest.fn()
 }));
 jest.mock('src/components/EnhancedSelect/Select');

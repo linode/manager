@@ -1,4 +1,4 @@
-import { Account } from 'linode-js-sdk/lib/account/types';
+import { Account } from '@linode/api-v4/lib/account/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { State } from 'src/store/account/account.reducer';

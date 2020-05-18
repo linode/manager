@@ -1,8 +1,8 @@
 import {
   KubernetesCluster,
   PoolNodeResponse
-} from 'linode-js-sdk/lib/kubernetes';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/kubernetes';
+import { APIError } from '@linode/api-v4/lib/types';
 
 export interface PoolNodeWithPrice extends ExtendedPoolNode {
   totalMonthlyPrice: number;

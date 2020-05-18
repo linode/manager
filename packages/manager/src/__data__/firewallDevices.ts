@@ -1,4 +1,4 @@
-import { FirewallDevice } from 'linode-js-sdk/lib/firewalls';
+import { FirewallDevice } from '@linode/api-v4/lib/firewalls';
 
 export const device: FirewallDevice = {
   id: 1,

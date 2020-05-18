@@ -1,5 +1,5 @@
-import { NotificationType } from 'linode-js-sdk/lib/account';
-import { scheduleOrQueueMigration } from 'linode-js-sdk/lib/linodes';
+import { NotificationType } from '@linode/api-v4/lib/account';
+import { scheduleOrQueueMigration } from '@linode/api-v4/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';

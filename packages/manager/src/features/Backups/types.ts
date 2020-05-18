@@ -1,4 +1,4 @@
-import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes';
+import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
 import { BackupError } from 'src/store/backupDrawer';
 
 export interface ExtendedLinode extends LinodeWithTypeInfo {

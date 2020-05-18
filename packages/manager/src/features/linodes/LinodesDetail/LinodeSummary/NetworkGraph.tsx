@@ -1,4 +1,4 @@
-import { Stats } from 'linode-js-sdk/lib/linodes';
+import { Stats } from '@linode/api-v4/lib/linodes';
 import { map, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';

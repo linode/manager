@@ -11,11 +11,11 @@ There is 3 `package.json` files, 1 for the root, and one for each folder in `pac
 
 Most of the time you will directly use the commands from this documentation. If you have to run a specific command the rule is:
 - To run a command in both sub packages `yarn workspace <command>`
-- To run a command in 1 subpackage `yarn workspace linode-js-sdk <command>`, or `yarn workspace linode-manager <command>`
+- To run a command in 1 subpackage `yarn workspace @linode/api-v4 <command>`, or `yarn workspace linode-manager <command>`
 
 Note the workspace names are defined in the root `package.json`
-- linode-js-sdk: /packages/linode-js-sdk
-- linode-js-sdk: /packages/linode-manager
+- @linode/api-v4: /packages/@linode/api-v4
+- @linode/api-v4: /packages/linode-manager
 
 ## Starting the App locally
 

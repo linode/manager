@@ -1,5 +1,5 @@
-import { Firewall, FirewallDevice } from 'linode-js-sdk/lib/firewalls';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { Firewall, FirewallDevice } from '@linode/api-v4/lib/firewalls';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';

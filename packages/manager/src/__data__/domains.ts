@@ -1,4 +1,4 @@
-import { Domain, DomainRecord } from 'linode-js-sdk/lib/domains';
+import { Domain, DomainRecord } from '@linode/api-v4/lib/domains';
 
 export const domain1: Domain = {
   master_ips: [],

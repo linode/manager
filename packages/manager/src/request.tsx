@@ -1,6 +1,6 @@
 import { AxiosError, AxiosResponse } from 'axios';
-import { baseRequest } from 'linode-js-sdk/lib/request';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { baseRequest } from '@linode/api-v4/lib/request';
+import { APIError } from '@linode/api-v4/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 

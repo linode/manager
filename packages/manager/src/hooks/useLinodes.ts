@@ -1,4 +1,4 @@
-import { Linode } from 'linode-js-sdk/lib/linodes/types';
+import { Linode } from '@linode/api-v4/lib/linodes/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import {

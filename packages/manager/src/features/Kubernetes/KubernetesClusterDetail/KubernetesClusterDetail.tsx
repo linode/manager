@@ -2,8 +2,8 @@ import {
   getKubeConfig,
   getKubernetesClusterEndpoints,
   KubernetesEndpointResponse
-} from 'linode-js-sdk/lib/kubernetes';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/kubernetes';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';

@@ -7,7 +7,7 @@ import {
   KubernetesCluster,
   updateKubernetesCluster as _updateCluster,
   updateNodePool as _updateNodePool
-} from 'linode-js-sdk/lib/kubernetes';
+} from '@linode/api-v4/lib/kubernetes';
 import { getAll, GetAllData } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';

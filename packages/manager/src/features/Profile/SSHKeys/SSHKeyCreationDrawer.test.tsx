@@ -2,7 +2,7 @@ import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
 import { SSHKeyCreationDrawer } from './SSHKeyCreationDrawer';
 
-jest.mock('linode-js-sdk/lib/profile');
+jest.mock('@linode/api-v4/lib/profile');
 
 const o = {
   labelField: `WithStyles(LinodeTextField)[data-qa-label-field=true]`,

@@ -1,4 +1,4 @@
-import { disableTwoFactor } from 'linode-js-sdk/lib/profile';
+import { disableTwoFactor } from '@linode/api-v4/lib/profile';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';

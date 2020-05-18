@@ -1,7 +1,7 @@
 import {
   FirewallDevice,
   FirewallDevicePayload
-} from 'linode-js-sdk/lib/firewalls/types';
+} from '@linode/api-v4/lib/firewalls/types';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';

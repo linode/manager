@@ -6,7 +6,7 @@ import IN from 'flag-icon-css/flags/4x3/in.svg';
 import JP from 'flag-icon-css/flags/4x3/jp.svg';
 import SG from 'flag-icon-css/flags/4x3/sg.svg';
 import US from 'flag-icon-css/flags/4x3/us.svg';
-import { Region } from 'linode-js-sdk/lib/regions';
+import { Region } from '@linode/api-v4/lib/regions';
 import { groupBy } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';

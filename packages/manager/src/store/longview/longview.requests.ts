@@ -4,7 +4,7 @@ import {
   getLongviewClients,
   LongviewClient,
   updateLongviewClient as update
-} from 'linode-js-sdk/lib/longview';
+} from '@linode/api-v4/lib/longview';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import {

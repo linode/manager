@@ -1,5 +1,5 @@
 import { Formik } from 'formik';
-import { CredentialPayload } from 'linode-js-sdk/lib/managed';
+import { CredentialPayload } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 
 import ActionsPanel from 'src/components/ActionsPanel';

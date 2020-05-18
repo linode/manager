@@ -1,5 +1,5 @@
 import * as Factory from 'factory.ts';
-import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers/types';
+import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers/types';
 
 export const nodeBalancerFactory = Factory.Sync.makeFactory<NodeBalancer>({
   id: Factory.each(id => id),

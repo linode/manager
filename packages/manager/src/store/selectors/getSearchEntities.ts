@@ -1,9 +1,9 @@
-import { Domain } from 'linode-js-sdk/lib/domains';
-import { Image } from 'linode-js-sdk/lib/images';
-import { KubernetesCluster } from 'linode-js-sdk/lib/kubernetes';
-import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes';
-import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
-import { Volume } from 'linode-js-sdk/lib/volumes';
+import { Domain } from '@linode/api-v4/lib/domains';
+import { Image } from '@linode/api-v4/lib/images';
+import { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
+import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
+import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
+import { Volume } from '@linode/api-v4/lib/volumes';
 import { createSelector } from 'reselect';
 import { displayType } from 'src/features/linodes/presentation';
 import {

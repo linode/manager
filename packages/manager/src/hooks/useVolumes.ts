@@ -1,4 +1,4 @@
-import { Volume } from 'linode-js-sdk/lib/volumes/types';
+import { Volume } from '@linode/api-v4/lib/volumes/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { State } from 'src/store/volume/volume.reducer';

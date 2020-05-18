@@ -3,7 +3,7 @@ import {
   Notification,
   NotificationSeverity,
   NotificationType
-} from 'linode-js-sdk/lib/account';
+} from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';

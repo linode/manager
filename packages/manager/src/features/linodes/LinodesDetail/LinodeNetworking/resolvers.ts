@@ -1,4 +1,4 @@
-import { ZoneName } from 'linode-js-sdk/lib/networking';
+import { ZoneName } from '@linode/api-v4/lib/networking';
 // @todo: In principle, everything in this file should be returned by the API.
 // We have no choice but to hard-code these at the moment.
 

@@ -1,4 +1,4 @@
-import { ManagedContact } from 'linode-js-sdk/lib/managed';
+import { ManagedContact } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 

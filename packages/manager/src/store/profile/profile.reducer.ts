@@ -1,5 +1,5 @@
-import { Profile } from 'linode-js-sdk/lib/profile';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { Profile } from '@linode/api-v4/lib/profile';
+import { APIError } from '@linode/api-v4/lib/types';
 import { Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
 import { EntityError, RequestableData } from '../types';

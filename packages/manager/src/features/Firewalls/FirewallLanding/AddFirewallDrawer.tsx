@@ -3,7 +3,7 @@ import {
   CreateFirewallPayload,
   CreateFirewallSchema,
   Firewall
-} from 'linode-js-sdk/lib/firewalls';
+} from '@linode/api-v4/lib/firewalls';
 import { equals } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';

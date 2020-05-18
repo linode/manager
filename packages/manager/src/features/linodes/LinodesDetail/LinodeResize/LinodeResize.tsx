@@ -1,11 +1,11 @@
-import { GrantLevel } from 'linode-js-sdk/lib/account';
+import { GrantLevel } from '@linode/api-v4/lib/account';
 import {
   Disk,
   LinodeStatus,
   LinodeType,
   resizeLinode
-} from 'linode-js-sdk/lib/linodes';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/linodes';
+import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';

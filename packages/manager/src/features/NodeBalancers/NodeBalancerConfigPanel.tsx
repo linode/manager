@@ -1,5 +1,5 @@
-import { NodeBalancerConfigNodeFields } from 'linode-js-sdk/lib/nodebalancers';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { NodeBalancerConfigNodeFields } from '@linode/api-v4/lib/nodebalancers';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';

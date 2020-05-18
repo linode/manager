@@ -1,4 +1,4 @@
-import { Volume } from 'linode-js-sdk/lib/volumes';
+import { Volume } from '@linode/api-v4/lib/volumes';
 import { connect } from 'react-redux';
 import {
   AttachVolumeParams,

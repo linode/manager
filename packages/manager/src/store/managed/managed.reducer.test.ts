@@ -1,7 +1,7 @@
 import {
   ManagedServiceMonitor,
   MonitorStatus
-} from 'linode-js-sdk/lib/managed';
+} from '@linode/api-v4/lib/managed';
 import { monitors } from 'src/__data__/serviceMonitors';
 
 import {

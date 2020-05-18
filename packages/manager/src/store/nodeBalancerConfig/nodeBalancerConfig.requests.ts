@@ -4,7 +4,7 @@ import {
   getNodeBalancerConfigs as _getNodeBalancerConfigs,
   NodeBalancerConfig,
   updateNodeBalancerConfig as _updateNodeBalancerConfig
-} from 'linode-js-sdk/lib/nodebalancers';
+} from '@linode/api-v4/lib/nodebalancers';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk, getAddRemoved } from '../store.helpers';
 import { ThunkActionCreator } from '../types';

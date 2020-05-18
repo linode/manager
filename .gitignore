@@ -2,8 +2,8 @@
 dist
 build
 lib
-**/linode-js-sdk/index.js
-**/linode-js-sdk/index.d.ts
+**/api-v4/index.js
+**/api-v4/index.d.ts
 
 # editor configuration
 .vscode

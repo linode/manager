@@ -2,7 +2,7 @@ import * as Factory from 'factory.ts';
 import {
   ObjectStorageBucket,
   ObjectStorageCluster
-} from 'linode-js-sdk/lib/object-storage/types';
+} from '@linode/api-v4/lib/object-storage/types';
 
 export const objectStorageBucketFactory = Factory.Sync.makeFactory<
   ObjectStorageBucket

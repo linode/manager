@@ -1,4 +1,4 @@
-import { ObjectStorageBucket } from 'linode-js-sdk/lib/object-storage';
+import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import { compose } from 'recompose';
 import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';

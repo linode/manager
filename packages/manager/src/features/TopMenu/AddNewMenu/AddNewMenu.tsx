@@ -1,5 +1,5 @@
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
-import { AccountCapability } from 'linode-js-sdk/lib/account';
+import { AccountCapability } from '@linode/api-v4/lib/account';
 
 import {
   Menu,

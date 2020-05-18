@@ -1,5 +1,5 @@
-import { Domain } from 'linode-js-sdk/lib/domains';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { Domain } from '@linode/api-v4/lib/domains';
+import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { equals, pathOr } from 'ramda';
 import * as React from 'react';

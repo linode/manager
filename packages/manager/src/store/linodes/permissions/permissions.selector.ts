@@ -1,5 +1,5 @@
-import { Grant, GrantLevel } from 'linode-js-sdk/lib/account';
-import { Profile } from 'linode-js-sdk/lib/profile';
+import { Grant, GrantLevel } from '@linode/api-v4/lib/account';
+import { Profile } from '@linode/api-v4/lib/profile';
 import { pathOr } from 'ramda';
 
 export const getPermissionsForLinode = (

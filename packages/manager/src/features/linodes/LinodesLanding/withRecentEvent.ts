@@ -1,4 +1,4 @@
-import { Event } from 'linode-js-sdk/lib/account';
+import { Event } from '@linode/api-v4/lib/account';
 import { connect } from 'react-redux';
 import recentEventForLinode from 'src/store/selectors/recentEventForLinode';
 import { MapState } from 'src/store/types';

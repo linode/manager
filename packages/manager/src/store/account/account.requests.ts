@@ -2,7 +2,7 @@ import {
   Account,
   getAccountInfo,
   updateAccountInfo
-} from 'linode-js-sdk/lib/account';
+} from '@linode/api-v4/lib/account';
 
 import { createRequestThunk } from '../store.helpers';
 import { requestAccountActions, updateAccountActions } from './account.actions';

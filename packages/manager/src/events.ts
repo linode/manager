@@ -10,7 +10,7 @@
  * The next step is to move this logic into a Redux connected component so we can more easily
  * access Redux and control the start of the event loop.
  */
-import { Event } from 'linode-js-sdk/lib/account';
+import { Event } from '@linode/api-v4/lib/account';
 import { Subject } from 'rxjs/Subject';
 import { DISABLE_EVENT_THROTTLE, INTERVAL } from 'src/constants';
 import {

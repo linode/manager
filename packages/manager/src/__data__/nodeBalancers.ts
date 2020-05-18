@@ -1,4 +1,4 @@
-import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
+import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { ExtendedNodeBalancer } from 'src/services/nodebalancers';
 
 export const extendedNodeBalancers: ExtendedNodeBalancer[] = [

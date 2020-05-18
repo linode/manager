@@ -1,4 +1,4 @@
-import { getStackScript, StackScript } from 'linode-js-sdk/lib/stackscripts';
+import { getStackScript, StackScript } from '@linode/api-v4/lib/stackscripts';
 import { path } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';

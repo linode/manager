@@ -2,7 +2,7 @@ import {
   CreateFirewallPayload,
   Firewall,
   FirewallRules
-} from 'linode-js-sdk/lib/firewalls';
+} from '@linode/api-v4/lib/firewalls';
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import {

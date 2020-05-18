@@ -1,6 +1,6 @@
-import { GrantLevel } from 'linode-js-sdk/lib/account';
-import { Config, rescueLinode } from 'linode-js-sdk/lib/linodes';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { GrantLevel } from '@linode/api-v4/lib/account';
+import { Config, rescueLinode } from '@linode/api-v4/lib/linodes';
+import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { assoc, clamp, pathOr } from 'ramda';
 import * as React from 'react';

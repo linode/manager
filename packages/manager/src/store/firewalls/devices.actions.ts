@@ -1,8 +1,8 @@
 import {
   FirewallDevice,
   FirewallDevicePayload
-} from 'linode-js-sdk/lib/firewalls';
-import { APIError, ResourcePage } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/firewalls';
+import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 
 import actionCreatorFactory from 'typescript-fsa';
 

@@ -1,5 +1,5 @@
 import { shallow } from 'enzyme';
-import { AccountSettings } from 'linode-js-sdk/lib/account';
+import { AccountSettings } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import { AccessKeyDrawer, MODES, Props } from './AccessKeyDrawer';
 

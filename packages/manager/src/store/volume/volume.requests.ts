@@ -1,4 +1,4 @@
-import { APIError } from 'linode-js-sdk/lib/types';
+import { APIError } from '@linode/api-v4/lib/types';
 import {
   attachVolume as _attachVolume,
   cloneVolume as _cloneVolume,
@@ -11,7 +11,7 @@ import {
   updateVolume as _updateVolume,
   Volume,
   VolumeRequestPayload as _VolumeRequestPayload
-} from 'linode-js-sdk/lib/volumes';
+} from '@linode/api-v4/lib/volumes';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers.tmp';
 import {

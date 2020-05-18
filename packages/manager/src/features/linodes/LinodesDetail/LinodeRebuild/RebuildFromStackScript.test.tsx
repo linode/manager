@@ -13,10 +13,10 @@ import {
   RebuildFromStackScript
 } from './RebuildFromStackScript';
 
-const request = jest.requireMock('linode-js-sdk/lib/account');
+const request = jest.requireMock('@linode/api-v4/lib/account');
 
 jest.mock('src/utilities/scrollErrorIntoView');
-jest.mock('linode-js-sdk/lib/account', () => ({
+jest.mock('@linode/api-v4/lib/account', () => ({
   getUsers: jest.fn()
 }));
 

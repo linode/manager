@@ -1,4 +1,4 @@
-import { EventAction, EventStatus } from 'linode-js-sdk/lib/account';
+import { EventAction, EventStatus } from '@linode/api-v4/lib/account';
 import { EventHandler } from 'src/store/types';
 import { ApplicationState } from '..';
 import { removeNodeBalancerConfigs } from '../nodeBalancerConfig/nodeBalancerConfig.actions';

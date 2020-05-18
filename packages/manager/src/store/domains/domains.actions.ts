@@ -2,8 +2,8 @@ import {
   CreateDomainPayload,
   Domain,
   UpdateDomainPayload
-} from 'linode-js-sdk/lib/domains';
-import { APIError, ResourcePage } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/domains';
+import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import actionCreatorFactory from 'typescript-fsa';
 
 import { GetAllData } from 'src/utilities/getAll';

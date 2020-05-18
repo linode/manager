@@ -1,4 +1,4 @@
-import { SupportTicket } from 'linode-js-sdk/lib/support';
+import { SupportTicket } from '@linode/api-v4/lib/support';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {

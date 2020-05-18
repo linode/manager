@@ -1,4 +1,4 @@
-import { Token } from 'linode-js-sdk/lib/profile';
+import { Token } from '@linode/api-v4/lib/profile';
 import * as React from 'react';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';

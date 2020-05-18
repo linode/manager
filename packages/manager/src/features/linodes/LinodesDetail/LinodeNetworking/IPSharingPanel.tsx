@@ -1,6 +1,6 @@
-import { Linode } from 'linode-js-sdk/lib/linodes';
-import { shareAddresses } from 'linode-js-sdk/lib/networking';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { Linode } from '@linode/api-v4/lib/linodes';
+import { shareAddresses } from '@linode/api-v4/lib/networking';
+import { APIError } from '@linode/api-v4/lib/types';
 import { clone, flatten, uniq } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';

@@ -1,4 +1,4 @@
-import { Domain } from 'linode-js-sdk/lib/domains/types';
+import { Domain } from '@linode/api-v4/lib/domains/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import {

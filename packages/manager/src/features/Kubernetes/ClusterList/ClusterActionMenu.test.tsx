@@ -2,12 +2,12 @@ import { cleanup, fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { ClusterActionMenu } from './ClusterActionMenu';
-const requests = require.requireMock('linode-js-sdk/lib/kubernetes');
+const requests = require.requireMock('@linode/api-v4/lib/kubernetes');
 
 import { includesActions, wrapWithTheme } from 'src/utilities/testHelpers';
 
 jest.mock('src/components/ActionMenu/ActionMenu');
-jest.mock('linode-js-sdk/lib/kubernetes', () => ({
+jest.mock('@linode/api-v4/lib/kubernetes', () => ({
   getKubeConfig: () => jest.fn()
 }));
 

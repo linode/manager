@@ -1,5 +1,5 @@
 import { shallow } from 'enzyme';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router-dom';

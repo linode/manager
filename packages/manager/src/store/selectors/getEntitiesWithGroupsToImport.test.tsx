@@ -1,4 +1,4 @@
-import { Domain } from 'linode-js-sdk/lib/domains';
+import { Domain } from '@linode/api-v4/lib/domains';
 import { domains, linodes } from 'src/__data__';
 import { apiResponseToMappedState } from 'src/store/store.helpers.tmp';
 import { entitiesWithGroupsToImport } from './getEntitiesWithGroupsToImport';

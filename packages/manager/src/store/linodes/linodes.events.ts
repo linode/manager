@@ -1,4 +1,4 @@
-import { EventAction, EventStatus } from 'linode-js-sdk/lib/account';
+import { EventAction, EventStatus } from '@linode/api-v4/lib/account';
 import * as moment from 'moment';
 import { Dispatch } from 'redux';
 import { ApplicationState } from 'src/store';

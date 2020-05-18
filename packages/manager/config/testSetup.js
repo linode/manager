@@ -1,6 +1,6 @@
 // Configure Enzyme Adapter
-const sdk = require('linode-js-sdk/lib/request');
-const preferences = require.requireMock('linode-js-sdk/lib/profile');
+const sdk = require('@linode/api-v4/lib/request');
+const preferences = require.requireMock('@linode/api-v4/lib/profile');
 const Enzyme = require('enzyme');
 const Adapter = require('enzyme-adapter-react-16');
 const React = require('react');
@@ -38,7 +38,7 @@ sdk.baseRequest.interceptors.request.use(request => {
 });
 
 // Our renderWithTheme helper includes a call to /preferences, mock that out
-jest.mock('linode-js-sdk/lib/profile', () => ({
+jest.mock('@linode/api-v4/lib/profile', () => ({
   getUserPreferences: jest.fn(),
   updateUserPreferences: jest.fn()
 }));

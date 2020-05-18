@@ -5,7 +5,7 @@ import { getVersionString } from 'src/utilities/getVersionString';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import SupportTicketDrawer, { Props } from './SupportTicketDrawer';
 
-const support = require.requireMock('linode-js-sdk/lib/support');
+const support = require.requireMock('@linode/api-v4/lib/support');
 
 const props: Props = {
   open: true,
@@ -16,7 +16,7 @@ const props: Props = {
 const supportTicket = supportTicketFactory.build();
 
 // Mock support services library
-jest.mock('linode-js-sdk/lib/support', () => ({
+jest.mock('@linode/api-v4/lib/support', () => ({
   createSupportTicket: jest.fn().mockResolvedValue(supportTicket)
 }));
 

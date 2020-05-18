@@ -1,5 +1,5 @@
-import { Event } from 'linode-js-sdk/lib/account';
-import { Linode } from 'linode-js-sdk/lib/linodes';
+import { Event } from '@linode/api-v4/lib/account';
+import { Linode } from '@linode/api-v4/lib/linodes';
 import { createSelector } from 'reselect';
 import { ApplicationState } from 'src/store';
 import inProgressEvents from './inProgressEvents';

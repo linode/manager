@@ -3,8 +3,8 @@ import {
   getObjectURL,
   ObjectStorageClusterID,
   ObjectStorageObject
-} from 'linode-js-sdk/lib/object-storage';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/object-storage';
+import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { prop, sortBy } from 'ramda';
 import * as React from 'react';

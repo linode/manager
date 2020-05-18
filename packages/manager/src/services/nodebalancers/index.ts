@@ -1,4 +1,4 @@
-import { getNodeBalancers as _getNodeBalancers } from 'linode-js-sdk/lib/nodebalancers';
+import { getNodeBalancers as _getNodeBalancers } from '@linode/api-v4/lib/nodebalancers';
 
 export const getNodeBalancers = _getNodeBalancers;
 

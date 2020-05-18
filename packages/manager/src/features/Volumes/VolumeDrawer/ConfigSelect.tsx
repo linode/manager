@@ -1,4 +1,4 @@
-import { getLinodeConfigs } from 'linode-js-sdk/lib/linodes';
+import { getLinodeConfigs } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
