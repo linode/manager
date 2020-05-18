@@ -8,8 +8,8 @@ import {
   CombinedProps
 } from './AuthenticationSettings';
 
-const requests = require.requireMock('linode-js-sdk/lib/profile');
-jest.mock('linode-js-sdk/lib/profile');
+const requests = require.requireMock('@linode/api-v4/lib/profile');
+jest.mock('@linode/api-v4/lib/profile');
 
 requests.updateProfile = jest.fn().mockResolvedValue([]);
 requests.getTrustedDevices = jest.fn().mockResolvedValue([]);
