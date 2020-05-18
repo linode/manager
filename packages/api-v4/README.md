@@ -58,13 +58,8 @@ baseRequest.interceptors.request.use(config => {
 ```js
 /** index.js */
 
-<<<<<<< HEAD:packages/api-v4/README.md
-import './request'
-import { getAccount } from '@linode/api-v4/lib/account'
-=======
 import './request';
-import { getAccount } from 'linode-js-sdk/lib/account';
->>>>>>> upstream/develop:packages/linode-js-sdk/README.md
+import { getAccount } from '@linode/api-v4/lib/account';
 
 getAccount()
   .then(response => {
@@ -167,7 +162,3 @@ This SDK aims to have a 1-to-1 relationship with the endpoints exposed from the 
 We'll do our best to publicize what work needs to be done in the GitHub issues and mark tickets as a _good first issue_. That way, it will be more apparent where the SDK needs work.
 
 When in doubt, look at the code that already exists and mimic that.
-
-```
-
-```
