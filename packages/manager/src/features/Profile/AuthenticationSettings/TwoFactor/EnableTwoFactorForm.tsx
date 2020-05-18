@@ -3,29 +3,20 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import { getErrorMap, getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import ConfirmToken from './ConfirmToken';
 import QRCodeForm from './QRCodeForm';
 
-type ClassNames = 'root' | 'divider';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    divider: {
-      margin: `${theme.spacing(3)}px 0`,
-      width: `calc(100% - ${theme.spacing(2)}px)`
-    }
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {},
+  divider: {
+    margin: `${theme.spacing(3)}px 0`,
+    width: `calc(100% - ${theme.spacing(2)}px)`
+  }
+}));
 
 interface Props {
   loading: boolean;
@@ -33,65 +24,43 @@ interface Props {
   username: string;
   twoFactorConfirmed: boolean;
   onSuccess: (scratchCode: string) => void;
+  onCancel: () => void;
   toggleDialog: () => void;
 }
 
-interface State {
-  errors?: APIError[];
-  submitting: boolean;
-  token: string;
-}
+type CombinedProps = Props;
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+export const EnableTwoFactorForm: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
 
-export class EnableTwoFactorForm extends React.Component<CombinedProps, State> {
-  mounted: boolean = false;
-  state = {
-    errors: undefined,
-    submitting: false,
-    token: ''
-  };
+  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
+  const [submitting, setSubmitting] = React.useState<boolean>(false);
+  const [token, setToken] = React.useState<string>('');
 
-  componentDidMount() {
-    this.mounted = true;
-  }
-
-  componentWillUnmount() {
-    this.mounted = false;
-  }
-
-  getSecretLink = () => {
-    const { secret, username } = this.props;
+  const getSecretLink = () => {
+    const { secret, username } = props;
     const issuer = 'Linode';
     return `otpauth://totp/${issuer}%3A${username}?secret=${secret}&issuer=${issuer}`;
   };
 
-  handleTokenInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ token: e.target.value });
+  const handleTokenInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setToken(e.target.value);
   };
 
-  onSubmit = () => {
-    const { token } = this.state;
+  const onSubmit = () => {
     const safeToken = token.replace(/ /g, '');
-    this.setState({ submitting: true });
+    setSubmitting(true);
     confirmTwoFactor(safeToken)
       .then(response => {
-        if (!this.mounted) {
-          return;
-        }
-        this.setState({
-          errors: undefined,
-          submitting: false,
-          token: ''
-        });
-        this.props.onSuccess(response.scratch);
-        /** toggle the scratch code dialog */
-        this.props.toggleDialog();
+        setErrors(undefined);
+        setSubmitting(false);
+        setToken('');
+        props.onSuccess(response.scratch);
+
+        /* Toggle the scratch code dialog */
+        props.toggleDialog();
       })
       .catch(error => {
-        if (!this.mounted) {
-          return;
-        }
         let APIErrors = getAPIErrorOrDefault(
           error,
           'Could not confirm code.',
@@ -105,66 +74,44 @@ export class EnableTwoFactorForm extends React.Component<CombinedProps, State> {
           );
         });
 
-        this.setState(
-          {
-            errors: APIErrors,
-            submitting: false,
-            token: ''
-          },
-          () => {
-            scrollErrorIntoView();
-          }
-        );
+        setErrors(APIErrors);
+        setSubmitting(false);
+        setToken('');
+        scrollErrorIntoView();
       });
   };
 
-  onCancel = () => {
-    // @todo should this mirror the behavior of toggling off TFA
-    // in TwoFactor.tsx?
-    this.setState({ token: '', errors: undefined });
-  };
+  const { loading, secret, twoFactorConfirmed } = props;
+  const secretLink = getSecretLink();
+  const hasErrorFor = getErrorMap(['tfa_code'], errors);
+  const tokenError = hasErrorFor.tfa_code;
+  const generalError = hasErrorFor.none;
 
-  render() {
-    const { classes, loading, secret, twoFactorConfirmed } = this.props;
-    const { errors, submitting, token } = this.state;
-    const secretLink = this.getSecretLink();
-    const hasErrorFor = getAPIErrorFor(
-      {
-        tfa_code: 'tfa_code'
-      },
-      errors
-    );
-    const tokenError = hasErrorFor('tfa_code');
-    const generalError = hasErrorFor('none');
-
-    return (
-      <React.Fragment>
-        {generalError && <Notice error text={generalError} />}
-        {loading ? (
-          <CircleProgress noTopMargin />
-        ) : (
-          <QRCodeForm
-            secret={secret}
-            secretLink={secretLink}
-            updateFor={[secret, secretLink, classes]}
-          />
-        )}
-        <Divider className={classes.divider} />
-        <ConfirmToken
-          error={tokenError}
-          token={token}
-          submitting={submitting}
-          twoFactorConfirmed={twoFactorConfirmed}
-          handleChange={this.handleTokenInputChange}
-          onCancel={this.onCancel}
-          onSubmit={this.onSubmit}
-          updateFor={[token, tokenError, submitting, classes]}
+  return (
+    <React.Fragment>
+      {generalError && <Notice error text={generalError} />}
+      {loading ? (
+        <CircleProgress noTopMargin />
+      ) : (
+        <QRCodeForm
+          secret={secret}
+          secretLink={secretLink}
+          updateFor={[secret, secretLink, classes]}
         />
-      </React.Fragment>
-    );
-  }
-}
+      )}
+      <Divider className={classes.divider} />
+      <ConfirmToken
+        error={tokenError}
+        token={token}
+        submitting={submitting}
+        twoFactorConfirmed={twoFactorConfirmed}
+        handleChange={handleTokenInputChange}
+        onCancel={props.onCancel}
+        onSubmit={onSubmit}
+        updateFor={[token, tokenError, submitting, classes]}
+      />
+    </React.Fragment>
+  );
+};
 
-const styled = withStyles(styles);
-
-export default styled(EnableTwoFactorForm);
+export default EnableTwoFactorForm;

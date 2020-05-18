@@ -599,7 +599,7 @@ export const paymentToActivityFeedItem = (
 ): ActivityFeedItem => {
   const { date, id, usd } = payment;
   // Refunds are issued as negative payments.
-  const label = usd < 0 ? 'Refund to Card' : `Payment #${payment.id}`;
+  const label = usd < 0 ? 'Refund' : `Payment #${payment.id}`;
 
   // Note: this is confusing.
   // We flip the polarity here, since we display a positive payment as e.g. "-($5.00)"
