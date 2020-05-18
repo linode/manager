@@ -349,6 +349,7 @@ interface PrimaryLinkProps extends PrimaryLink {
     onMouseEnter: LinkProps['onMouseEnter'];
     onMouseLeave: LinkProps['onMouseLeave'];
     onFocus: LinkProps['onFocus'];
+    onBlur: LinkProps['onBlur'];
   };
 }
 
@@ -424,7 +425,8 @@ export const PrefetchPrimaryLink: React.FC<PrimaryLinkProps &
   const prefetchProps: PrimaryLinkProps['prefetchProps'] = {
     onMouseEnter: makeRequest,
     onFocus: makeRequest,
-    onMouseLeave: cancelRequest
+    onMouseLeave: cancelRequest,
+    onBlur: cancelRequest
   };
 
   return <PrimaryLink {...props} prefetchProps={prefetchProps} />;
