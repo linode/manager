@@ -198,7 +198,7 @@ export class SupportTicketsLanding extends React.PureComponent<
                     className={classes.openTicketButton}
                     onKeyPress={e => {
                       if (e.keyCode === 13) {
-                        this.openDrawer;
+                        this.openDrawer();
                       }
                     }}
                   >
