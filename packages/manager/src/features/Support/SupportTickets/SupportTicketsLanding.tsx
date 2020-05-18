@@ -194,6 +194,11 @@ export class SupportTicketsLanding extends React.PureComponent<
                     onClick={this.openDrawer}
                     data-qa-open-ticket-link
                     className={classes.openTicketButton}
+                    onKeyPress={e => {
+                      if (e.keyCode === 13) {
+                        this.openDrawer();
+                      }
+                    }}
                   >
                     Open New Ticket
                   </Button>

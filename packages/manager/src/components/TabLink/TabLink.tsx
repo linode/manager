@@ -30,9 +30,7 @@ export const convertForAria = (str: string) => {
   return str
     .trim()
     .toLowerCase()
-    .replace(/([^A-Z0-9]+)(.)/gi, function(match) {
-      return arguments[2].toUpperCase();
-    });
+    .replace(/([^A-Z0-9]+)(.)/gi, (match, p1, p2) => p2.toUpperCase());
 };
 
 class TabLink extends React.Component<CombinedProps> {
