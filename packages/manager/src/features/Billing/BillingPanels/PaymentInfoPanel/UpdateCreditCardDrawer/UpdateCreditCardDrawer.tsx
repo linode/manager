@@ -81,10 +81,10 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
     const clean = expDate.replace(/[^0-9]/g, '');
 
     // Checks how many digits are after '/'
-    const year = expDate.match(/([^\/][\d]+$)/);
-    const yearLength = year?.length ? year.length : 0;
+    const year = expDate.match(/([^\/]+$)/);
+    const yearLength = year?.[0] ? year[0].length : 0;
 
-    if (clean.length < 3 || yearLength < 2) {
+    if (clean.length < 3 || (yearLength != 2 && yearLength != 4)) {
       setSubmitting(false);
       setErrors([
         {
