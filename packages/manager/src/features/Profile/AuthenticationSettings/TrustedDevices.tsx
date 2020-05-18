@@ -1,18 +1,8 @@
 import { getTrustedDevices, TrustedDevice } from '@linode/api-v4/lib/profile';
 import * as React from 'react';
-import {
-  compose,
-  lifecycle,
-  StateHandlerMap,
-  withStateHandlers
-} from 'recompose';
+import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -25,149 +15,108 @@ import ToggleState from 'src/components/ToggleState';
 import Dialog from './TrustedDevicesDialog';
 import TrustedDevicesTable from './TrustedDevicesTable';
 
-type ClassNames =
-  | 'root'
-  | 'title'
-  | 'deviceCell'
-  | 'ipCell'
-  | 'usedCell'
-  | 'expireCell';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      padding: theme.spacing(3),
-      paddingBottom: theme.spacing(3),
-      marginBottom: theme.spacing(3)
-    },
-    title: {
-      marginBottom: theme.spacing(2)
-    },
-    deviceCell: {},
-    ipCell: {},
-    usedCell: {
-      minWidth: 120
-    },
-    expireCell: {
-      minWidth: 100
+const useStyles = makeStyles((theme: Theme) => ({
+  title: {
+    marginBottom: theme.spacing(2)
+  },
+  deviceCell: {},
+  ipCell: {},
+  usedCell: {
+    minWidth: 120
+  },
+  expireCell: {
+    minWidth: 100
+  },
+  disabled: {
+    '& *': {
+      color: theme.color.disabledText
     }
-  });
+  }
+}));
 
-type CombinedProps = PaginationProps<TrustedDevice> &
-  WithStyles<ClassNames> &
-  StateUpdaters &
-  DialogState;
+interface Props {
+  disabled?: boolean;
+}
 
-class TrustedDevices extends React.PureComponent<CombinedProps, {}> {
-  refreshList = () => {
-    this.props.onDelete();
+type CombinedProps = Props & PaginationProps<TrustedDevice>;
+
+export const TrustedDevices: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+  const refreshList = () => {
+    props.onDelete();
   };
 
-  render() {
-    const {
-      classes,
-      loading,
-      data: devices,
-      count,
-      page,
-      error,
-      pageSize,
-      handlePageChange,
-      handlePageSizeChange,
-      selectedDeviceId,
-      setSelectedDevice
-    } = this.props;
-    return (
-      <ToggleState>
-        {({ open: dialogOpen, toggle: toggleDialog }) => (
-          <Paper className={classes.root}>
-            <Typography variant="h2" className={classes.title} data-qa-title>
-              Trusted Devices
-            </Typography>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell className={classes.deviceCell}>Device</TableCell>
-                  <TableCell className={classes.ipCell}>Last IP</TableCell>
-                  <TableCell className={classes.usedCell}>Last Used</TableCell>
-                  <TableCell className={classes.expireCell}>Expires</TableCell>
-                  <TableCell />
-                </TableRow>
-              </TableHead>
-              <TableBody>
+  React.useEffect(() => {
+    props.handleOrderChange('expiry', 'asc');
+  }, []);
+
+  const {
+    loading,
+    data: devices,
+    count,
+    page,
+    error,
+    pageSize,
+    handlePageChange,
+    handlePageSizeChange,
+    disabled
+  } = props;
+
+  const [selectedDeviceId, setSelectedDeviceId] = React.useState<number>(0);
+
+  return (
+    <ToggleState>
+      {({ open: dialogOpen, toggle: toggleDialog }) => (
+        <Paper className={disabled ? classes.disabled : ''}>
+          <Typography variant="h3" className={classes.title}>
+            Trusted Devices
+          </Typography>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell className={classes.deviceCell}>Device</TableCell>
+                <TableCell className={classes.ipCell}>Last IP</TableCell>
+                <TableCell className={classes.usedCell}>Last Used</TableCell>
+                <TableCell className={classes.expireCell}>Expires</TableCell>
+                <TableCell />
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {!disabled && (
                 <TrustedDevicesTable
                   error={error}
                   data={devices}
                   loading={loading}
                   toggleDialog={toggleDialog}
-                  setDevice={setSelectedDevice}
-                />
-              </TableBody>
-              {devices && devices.length > 0 && (
-                <PaginationFooter
-                  count={count}
-                  page={page}
-                  pageSize={pageSize}
-                  handlePageChange={handlePageChange}
-                  handleSizeChange={handlePageSizeChange}
-                  eventCategory="Trusted Devices Panel"
+                  setDevice={setSelectedDeviceId}
                 />
               )}
-            </Table>
-            <Dialog
-              open={dialogOpen}
-              closeDialog={toggleDialog}
-              deviceId={selectedDeviceId}
-              refreshListOfDevices={this.refreshList}
-            />
-          </Paper>
-        )}
-      </ToggleState>
-    );
-  }
-}
+            </TableBody>
+            {devices && devices.length > 0 && (
+              <PaginationFooter
+                count={count}
+                page={page}
+                pageSize={pageSize}
+                handlePageChange={handlePageChange}
+                handleSizeChange={handlePageSizeChange}
+                eventCategory="Trusted Devices Panel"
+              />
+            )}
+          </Table>
+          <Dialog
+            open={dialogOpen}
+            closeDialog={toggleDialog}
+            deviceId={selectedDeviceId}
+            refreshListOfDevices={refreshList}
+          />
+        </Paper>
+      )}
+    </ToggleState>
+  );
+};
 
 const paginated = Pagey((ownProps: {}, params: any, filter: any) =>
   getTrustedDevices(params, filter).then(response => response)
 );
 
-const styled = withStyles(styles);
-
-const withRequestOnMount = lifecycle<PaginationProps<TrustedDevice>, {}>({
-  componentDidMount() {
-    /** initial request for trusted devices, ordered by which ones expire first */
-    this.props.handleOrderChange('expiry', 'asc');
-  }
-});
-
-export interface DialogState {
-  selectedDeviceId?: number;
-}
-
-export interface StateUpdaters {
-  setSelectedDevice: (deviceId: number) => void;
-}
-
-type StateAndStateUpdaters = StateHandlerMap<DialogState> & StateUpdaters;
-
-const withDialogHandlers = withStateHandlers<
-  DialogState,
-  StateAndStateUpdaters,
-  {}
->(
-  {
-    selectedDeviceId: undefined
-  },
-  {
-    setSelectedDevice: () => (deviceId: number) => ({
-      selectedDeviceId: deviceId
-    })
-  }
-);
-
-export default compose<CombinedProps, {}>(
-  withDialogHandlers,
-  paginated,
-  withRequestOnMount,
-  styled
-)(TrustedDevices);
+export default compose<CombinedProps, Props>(paginated)(TrustedDevices);
