@@ -2,27 +2,19 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 
-type ClassNames = 'root' | 'warning';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    warning: {
-      marginTop: theme.spacing(2),
-      marginLeft: '0 !important'
-    }
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {},
+  warning: {
+    marginTop: theme.spacing(2),
+    marginLeft: '0 !important'
+  }
+}));
 
 interface Props {
   token: string;
@@ -34,11 +26,12 @@ interface Props {
   onSubmit: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & RenderGuardProps;
+type CombinedProps = Props & RenderGuardProps;
 
-const ConfirmToken: React.StatelessComponent<CombinedProps> = props => {
+const ConfirmToken: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+
   const {
-    classes,
     token,
     error,
     handleChange,
@@ -87,9 +80,6 @@ const ConfirmToken: React.StatelessComponent<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default compose<CombinedProps, Props & RenderGuardProps>(
-  styled,
-  RenderGuard
-)(ConfirmToken);
+export default compose<CombinedProps, Props & RenderGuardProps>(RenderGuard)(
+  ConfirmToken
+);
