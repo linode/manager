@@ -1,12 +1,19 @@
+import { Grants } from 'linode-js-sdk/lib/account/types';
 import { Profile } from 'linode-js-sdk/lib/profile';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { actionCreatorFactory } from 'typescript-fsa';
 
+export interface ExtendedProfile extends Profile {
+  grants?: Grants;
+}
+
 const actionCreator = actionCreatorFactory(`@@manager/profile`);
 
-export const getProfileActions = actionCreator.async<void, Profile, APIError[]>(
-  `request`
-);
+export const getProfileActions = actionCreator.async<
+  void,
+  ExtendedProfile,
+  APIError[]
+>(`request`);
 
 export const handleUpdateProfile = actionCreator.async<
   Partial<Profile>,
