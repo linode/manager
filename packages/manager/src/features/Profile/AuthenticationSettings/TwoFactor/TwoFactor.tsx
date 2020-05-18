@@ -25,7 +25,6 @@ import ScratchDialog from './ScratchCodeDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(3),
     paddingBottom: theme.spacing(2),
     marginBottom: theme.spacing(3)
   },
@@ -52,6 +51,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '1rem',
     marginLeft: theme.spacing(2),
     color: theme.palette.text.primary
+  },
+  disabled: {
+    '& *': {
+      color: theme.color.disabledText
+    }
   }
 }));
 
@@ -60,6 +64,7 @@ interface Props {
   twoFactor?: boolean;
   username?: string;
   updateProfile: (profile: Partial<Profile>) => Promise<Profile>;
+  disabled?: boolean;
 }
 
 type CombinedProps = Props & StateProps & DispatchProps;
@@ -67,7 +72,7 @@ type CombinedProps = Props & StateProps & DispatchProps;
 export const TwoFactor: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const { clearState, twoFactor, username } = props;
+  const { clearState, disabled, twoFactor, username } = props;
 
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -190,7 +195,11 @@ export const TwoFactor: React.FC<CombinedProps> = props => {
         <ToggleState>
           {({ open: scratchDialogOpen, toggle: toggleScratchDialog }) => (
             <React.Fragment>
-              <Paper className={classes.root}>
+              <Paper
+                className={`${classes.root} ${
+                  disabled ? classes.disabled : ''
+                }`}
+              >
                 {success && <Notice success text={success} />}
                 {generalError && <Notice error text={generalError} />}
                 <Typography
@@ -217,6 +226,7 @@ export const TwoFactor: React.FC<CombinedProps> = props => {
                     onChange={toggleTwoFactorEnabled}
                     toggleDisableDialog={toggleDisable2FA}
                     twoFactorConfirmed={twoFactorConfirmed}
+                    disabled={disabled}
                   />
                 )}
                 {twoFactorEnabled && (
@@ -314,10 +324,11 @@ interface ToggleProps {
   onChange: (value: boolean) => void;
   twoFactorEnabled: boolean;
   twoFactorConfirmed: boolean;
+  disabled?: boolean;
 }
 
 const TwoFactorToggle: React.FC<ToggleProps> = props => {
-  const { twoFactorEnabled } = props;
+  const { disabled, twoFactorEnabled } = props;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { twoFactorConfirmed, onChange } = props;
@@ -342,6 +353,7 @@ const TwoFactorToggle: React.FC<ToggleProps> = props => {
             checked={twoFactorEnabled}
             onChange={handleChange}
             data-qa-toggle-tfa={twoFactorEnabled}
+            disabled={disabled}
           />
         }
       />
