@@ -119,12 +119,6 @@ class LishSettings extends React.Component<CombinedProps, State> {
       authType
     } = this.state;
 
-    const thirdPartyEnabled = this.props.authType !== 'password';
-
-    const displayName =
-      providers.find(thisProvider => thisProvider.name === this.props.authType)
-        ?.displayName || '';
-
     const hasErrorFor = getAPIErrorFor(
       {
         lish_auth_method: 'authentication method',
@@ -173,12 +167,6 @@ class LishSettings extends React.Component<CombinedProps, State> {
             LISH
           </Typography>
           {success && <Notice success text={success} />}
-          {thirdPartyEnabled && (
-            <Notice warning>
-              Third-Party Authentication via {displayName} is enabled on your
-              account.
-            </Notice>
-          )}
           {authorizedKeysError && <Notice error text={authorizedKeysError} />}
           {generalError && <Notice error text={generalError} />}
           <Typography className={classes.intro}>
@@ -192,7 +180,9 @@ class LishSettings extends React.Component<CombinedProps, State> {
                   textFieldProps={{
                     dataAttrs: {
                       'data-qa-mode-select': true
-                    }
+                    },
+                    tooltipText:
+                      'Password is disabled because Third-Party Authentication has been enabled.'
                   }}
                   options={modeOptions}
                   name="mode-select"
