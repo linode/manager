@@ -254,7 +254,7 @@ class UpdateContactInformationForm extends React.Component<
           <Grid container>
             <Grid item xs={12}>
               <TextField
-                label="Company Name (optional)"
+                label="Company Name"
                 value={defaultTo(account.company, fields.company)}
                 errorText={errorMap.company}
                 onChange={this.updateCompany}
@@ -426,7 +426,7 @@ class UpdateContactInformationForm extends React.Component<
 
         <Grid
           item
-          xs={6}
+          xs={12}
           updateFor={[account.email, fields.email, errorMap.email, classes]}
         >
           <TextField
@@ -435,6 +435,8 @@ class UpdateContactInformationForm extends React.Component<
             type="email"
             value={defaultTo(account.email, fields.email)}
             errorText={errorMap.email}
+            helperText="All e-mails from Linode will be sent to this address."
+            helperTextPosition="top"
             onChange={this.updateEmail}
             data-qa-contact-email
           />
@@ -442,7 +444,7 @@ class UpdateContactInformationForm extends React.Component<
 
         <Grid
           item
-          xs={6}
+          xs={12}
           updateFor={[account.phone, fields.phone, errorMap.phone, classes]}
         >
           <TextField
