@@ -1,4 +1,4 @@
-import { Firewall } from 'linode-js-sdk/lib/firewalls';
+import { Firewall } from '@linode/api-v4/lib/firewalls';
 import { Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
 import {

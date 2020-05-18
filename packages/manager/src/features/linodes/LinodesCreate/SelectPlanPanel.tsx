@@ -1,5 +1,5 @@
 import * as classnames from 'classnames';
-import { LinodeType, LinodeTypeClass } from 'linode-js-sdk/lib/linodes';
+import { LinodeType, LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';

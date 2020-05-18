@@ -4,8 +4,8 @@ import {
   DomainRecord,
   DomainType,
   RecordType
-} from 'linode-js-sdk/lib/domains';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/domains';
+import { APIError } from '@linode/api-v4/lib/types';
 import {
   compose,
   equals,

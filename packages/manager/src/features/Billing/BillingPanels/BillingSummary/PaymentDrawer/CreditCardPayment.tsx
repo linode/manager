@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { makePayment } from 'linode-js-sdk/lib/account';
+import { makePayment } from '@linode/api-v4/lib/account';
 import Button from 'src/components/Button';
 import { Theme, makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';

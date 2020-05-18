@@ -3,7 +3,7 @@ import { ApplicationState } from 'src/store';
 import { State as ProfileState } from 'src/store/profile/profile.reducer';
 import { State as AccountState } from 'src/store/account/account.reducer';
 import { State as AccountSettingsState } from 'src/store/accountSettings/accountSettings.reducer';
-import { GlobalGrantTypes } from 'linode-js-sdk/lib/account';
+import { GlobalGrantTypes } from '@linode/api-v4/lib/account';
 
 export interface AccountManagementProps {
   account: AccountState;

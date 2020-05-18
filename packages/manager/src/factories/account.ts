@@ -1,5 +1,5 @@
 import * as Factory from 'factory.ts';
-import { Account, ActivePromotion } from 'linode-js-sdk/lib/account/types';
+import { Account, ActivePromotion } from '@linode/api-v4/lib/account/types';
 
 export const promoFactory = Factory.Sync.makeFactory<ActivePromotion>({
   image_url: '',

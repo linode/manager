@@ -23,16 +23,16 @@ jobs:
     - run: npm install -g yarn
     - run: yarn install:all
     - name: Unit tests
-      run: yarn workspace linode-js-sdk run test
+      run: yarn workspace @linode/api-v4 run test
     - name: Build SDK
-      run: yarn workspace linode-js-sdk build
+      run: yarn workspace @linode/api-v4 build
     - name: Archive production build artifacts
       uses: actions/upload-artifact@v2
       with:
         name: lib
-        path: packages/linode-js-sdk/lib
+        path: packages/@linode/api-v4/lib
     # - name: Publish
-    #   run: yarn workspace linode-js-sdk publish --dry-run
+    #   run: yarn workspace @linode/api-v4 publish --dry-run
     #   env:
     #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     #     NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}

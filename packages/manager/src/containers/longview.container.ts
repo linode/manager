@@ -1,4 +1,4 @@
-import { LongviewClient } from 'linode-js-sdk/lib/longview';
+import { LongviewClient } from '@linode/api-v4/lib/longview';
 import { connect, InferableComponentEnhancerWithProps } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { State } from 'src/store/longview/longview.reducer';

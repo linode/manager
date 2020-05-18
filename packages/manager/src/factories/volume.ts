@@ -1,5 +1,5 @@
 import * as Factory from 'factory.ts';
-import { Volume } from 'linode-js-sdk/lib/volumes/types';
+import { Volume } from '@linode/api-v4/lib/volumes/types';
 
 export const volumeFactory = Factory.Sync.makeFactory<Volume>({
   id: Factory.each(id => id),

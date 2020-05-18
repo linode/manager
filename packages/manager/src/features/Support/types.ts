@@ -1,4 +1,4 @@
-import { SupportReply, SupportTicket } from 'linode-js-sdk/lib/support/types';
+import { SupportReply, SupportTicket } from '@linode/api-v4/lib/support/types';
 
 export interface ExtendedTicket extends SupportTicket {
   gravatarUrl: string | undefined;
