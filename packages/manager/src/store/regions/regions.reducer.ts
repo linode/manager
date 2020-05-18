@@ -1,5 +1,5 @@
 import produce from 'immer';
-import { Region } from 'linode-js-sdk/lib/regions';
+import { Region } from '@linode/api-v4/lib/regions';
 import { Reducer } from 'redux';
 import regions from 'src/cachedData/regions.json';
 import { isProdAPI } from 'src/constants';

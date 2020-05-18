@@ -1,5 +1,5 @@
-import { saveCreditCard } from 'linode-js-sdk/lib/account';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { saveCreditCard } from '@linode/api-v4/lib/account';
+import { APIError } from '@linode/api-v4/lib/types';
 import { take, takeLast } from 'ramda';
 import * as React from 'react';
 import NumberFormat, { NumberFormatProps } from 'react-number-format';

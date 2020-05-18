@@ -1,4 +1,4 @@
-import { ManagedServiceMonitor } from 'linode-js-sdk/lib/managed';
+import { ManagedServiceMonitor } from '@linode/api-v4/lib/managed';
 import { Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
 

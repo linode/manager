@@ -1,5 +1,5 @@
-import { Notification } from 'linode-js-sdk/lib/account';
-import { Linode } from 'linode-js-sdk/lib/linodes';
+import { Notification } from '@linode/api-v4/lib/account';
+import { Linode } from '@linode/api-v4/lib/linodes';
 
 /**
  * _when_ is not guaranteed to exist if this is a maintenance notification

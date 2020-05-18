@@ -1,5 +1,5 @@
 import * as Factory from 'factory.ts';
-import { Entity, Event } from 'linode-js-sdk/lib/account/types';
+import { Entity, Event } from '@linode/api-v4/lib/account/types';
 
 export const entityFactory = Factory.Sync.makeFactory<Entity>({
   id: Factory.each(id => id),

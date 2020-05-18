@@ -2,8 +2,8 @@ import {
   ObjectStorageBucket,
   ObjectStorageBucketRequestPayload,
   ObjectStorageDeleteBucketRequestPayload
-} from 'linode-js-sdk/lib/object-storage';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/object-storage';
+import { APIError } from '@linode/api-v4/lib/types';
 import { actionCreatorFactory } from 'typescript-fsa';
 import { BucketError } from './types';
 

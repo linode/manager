@@ -1,4 +1,4 @@
-import { ObjectStorageCluster } from 'linode-js-sdk/lib/object-storage/types';
+import { ObjectStorageCluster } from '@linode/api-v4/lib/object-storage/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { State } from 'src/store/clusters/clusters.reducer';

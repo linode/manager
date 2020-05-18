@@ -2,7 +2,7 @@ import * as Factory from 'factory.ts';
 import {
   ManagedCredential,
   ManagedServiceMonitor
-} from 'linode-js-sdk/lib/managed/types';
+} from '@linode/api-v4/lib/managed/types';
 
 export const credentialFactory = Factory.Sync.makeFactory<ManagedCredential>({
   id: Factory.each(i => i),

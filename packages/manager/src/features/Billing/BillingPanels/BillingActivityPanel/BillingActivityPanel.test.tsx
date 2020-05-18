@@ -15,7 +15,7 @@ afterEach(cleanup);
 // Mock global Date object so Transaction Date tests are deterministic.
 global.Date.now = jest.fn(() => new Date('2020-01-02T00:00:00').getTime());
 
-jest.mock('linode-js-sdk/lib/account', () => {
+jest.mock('@linode/api-v4/lib/account', () => {
   const invoices = [
     // eslint-disable-next-line
     invoiceFactory.build({ date: '2020-01-01T00:00:00' }),
@@ -144,9 +144,9 @@ describe('paymentToActivityFeedItem', () => {
     expect(paymentToActivityFeedItem(payment).label).toBe('Payment #1');
   });
 
-  it('sets label as "Refund to Card" if usd < 0 ', () => {
+  it('sets label as "Refund" if usd < 0 ', () => {
     const payment = paymentFactory.build({ usd: -1 });
-    expect(paymentToActivityFeedItem(payment).label).toBe('Refund to Card');
+    expect(paymentToActivityFeedItem(payment).label).toBe('Refund');
   });
 
   it('sets total as -usd', () => {

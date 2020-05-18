@@ -1,7 +1,7 @@
 import * as classnames from 'classnames';
-import { AccountSettings } from 'linode-js-sdk/lib/account';
-import { LongviewSubscription } from 'linode-js-sdk/lib/longview/types';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { AccountSettings } from '@linode/api-v4/lib/account';
+import { LongviewSubscription } from '@linode/api-v4/lib/longview/types';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';

@@ -1,0 +1,28 @@
+diff a/packages/api-v4/index.js b/packages/api-v4/index.js	(rejected hunks)
+@@ -364 +364,2 @@
+-            'undefined' != typeof window && 'undefined' != typeof document
++            'undefined' != typeof window &&
++            'undefined' != typeof document
+@@ -530 +531,2 @@
+-                !this._typeCheck || this._typeCheck(e)
++                !this._typeCheck ||
++                this._typeCheck(e)
+@@ -1902 +1904,3 @@
+-          a.test(e) || !u.test(e) || (null != t && e in Object(t))
++          a.test(e) ||
++          !u.test(e) ||
++          (null != t && e in Object(t))
+@@ -3999,6 +4003,7 @@
+-                !T(e) &&
+-                  (1 === e.nodeType
+-                    ? !!e.length
+-                    : 0 === e.length ||
+-                      (e.length > 0 &&
+-                        e.hasOwnProperty(0) && e.hasOwnProperty(e.length - 1))))
++              !T(e) &&
++              (1 === e.nodeType
++                ? !!e.length
++                : 0 === e.length ||
++                  (e.length > 0 &&
++                    e.hasOwnProperty(0) &&
++                    e.hasOwnProperty(e.length - 1))))

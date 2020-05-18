@@ -1,4 +1,4 @@
-import { APIError } from 'linode-js-sdk/lib/types';
+import { APIError } from '@linode/api-v4/lib/types';
 import { parse } from 'querystring';
 import * as React from 'react';
 import AppBar from 'src/components/core/AppBar';

@@ -1,4 +1,4 @@
-import { EventStatus } from 'linode-js-sdk/lib/account';
+import { EventStatus } from '@linode/api-v4/lib/account';
 import { Dispatch } from 'redux';
 import { EventHandler } from 'src/store/types';
 import { deleteVolumeActions } from './volume.actions';

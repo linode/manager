@@ -1,5 +1,5 @@
-import { FirewallDevice } from 'linode-js-sdk/lib/firewalls/types';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { FirewallDevice } from '@linode/api-v4/lib/firewalls/types';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
