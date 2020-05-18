@@ -1,124 +1,116 @@
-import { Profile } from 'linode-js-sdk/lib/profile';
+import { Profile, TPAProvider } from 'linode-js-sdk/lib/profile';
 import { APIError } from 'linode-js-sdk/lib/types';
-import { lensPath, path, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Notice from 'src/components/Notice';
+import TabbedPanel from 'src/components/TabbedPanel';
 import { AccountsAndPasswords, SecurityControls } from 'src/documentation';
 import { updateProfile as _updateProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
 import ResetPassword from './ResetPassword';
 import SecuritySettings from './SecuritySettings';
+import ThirdParty from './ThirdParty';
+import ThirdPartyContent from './ThirdPartyContent';
 import TrustedDevices from './TrustedDevices';
 import TwoFactor from './TwoFactor';
 
-type ClassNames = 'root' | 'title';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      padding: theme.spacing(3),
-      paddingBottom: theme.spacing(3),
-      marginBottom: theme.spacing(3)
-    },
-    title: {
-      marginBottom: theme.spacing(2)
-    }
-  });
-
-interface State {
-  success?: string;
-}
-
-type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
-
-export class AuthenticationSettings extends React.Component<
-  CombinedProps,
-  State
-> {
-  /*
-   * @todo This logic can be removed when IP Whitelisting (legacy)
-   * has been fully deprecated.
-   */
-  state: State = {
-    success: undefined
-  };
-
-  // See above
-  clearState = () => {
-    this.setState(set(lensPath(['success']), undefined));
-  };
-
-  // See above
-  onWhitelistingDisable = () => {
-    this.setState(
-      set(
-        lensPath(['success']),
-        'IP whitelisting disabled. This feature cannot be re-enabled.'
-      )
-    );
-  };
-
-  render() {
-    const {
-      loading,
-      ipWhitelisting,
-      twoFactor,
-      username,
-      updateProfile
-    } = this.props;
-    const { success } = this.state;
-
-    return (
-      <div
-        id="tabpanel-passwordAuthentication"
-        role="tabpanel"
-        aria-labelledby="tab-passwordAuthentication"
-      >
-        <DocumentTitleSegment segment={`Password & Authentication`} />
-        {/* Remove when logic above is cleared */}
-        {success && <Notice success text={success} />}
-        {!loading && (
-          <React.Fragment>
-            <ResetPassword username={username} />
-            <TwoFactor
-              twoFactor={twoFactor}
-              username={username}
-              clearState={this.clearState}
-              updateProfile={updateProfile}
-            />
-            <TrustedDevices />
-            {ipWhitelisting && (
-              <SecuritySettings
-                updateProfile={updateProfile}
-                onSuccess={this.onWhitelistingDisable}
-                data-qa-whitelisting-form
-                updateProfileError={this.props.profileUpdateError}
-                ipWhitelistingEnabled={ipWhitelisting}
-              />
-            )}
-          </React.Fragment>
-        )}
-      </div>
-    );
+const useStyles = makeStyles((theme: Theme) => ({
+  inner: {
+    paddingTop: 0
   }
+}));
 
-  static docs = [AccountsAndPasswords, SecurityControls];
-}
+export type CombinedProps = StateProps & DispatchProps;
 
-const styled = withStyles(styles);
+export const AuthenticationSettings: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+  const {
+    loading,
+    authType,
+    ipWhitelisting,
+    twoFactor,
+    username,
+    updateProfile
+  } = props;
+
+  const [success, setSuccess] = React.useState<string | undefined>(undefined);
+
+  const thirdPartyEnabled = authType !== 'password';
+
+  const clearState = () => {
+    setSuccess(undefined);
+  };
+  const onWhitelistingDisable = () => {
+    setSuccess('IP whitelisting disabled. This feature cannot be re-enabled.');
+  };
+
+  const tabs = [
+    {
+      title: 'Linode Credentials',
+      render: () => (
+        <React.Fragment>
+          {thirdPartyEnabled && <ThirdParty authType={authType} />}
+          <ResetPassword username={username} disabled={thirdPartyEnabled} />
+          <TwoFactor
+            twoFactor={twoFactor}
+            username={username}
+            clearState={clearState}
+            updateProfile={updateProfile}
+            disabled={thirdPartyEnabled}
+          />
+          <TrustedDevices disabled={thirdPartyEnabled} />
+          {ipWhitelisting && (
+            <SecuritySettings
+              updateProfile={updateProfile}
+              onSuccess={onWhitelistingDisable}
+              updateProfileError={props.profileUpdateError}
+              ipWhitelistingEnabled={ipWhitelisting}
+              data-qa-whitelisting-form
+            />
+          )}
+        </React.Fragment>
+      )
+    },
+    {
+      title: 'Third-Party Authentication',
+      render: () => <ThirdPartyContent authType={authType} />
+    }
+  ];
+
+  const initialTab = 0;
+
+  return (
+    <div
+      id="tabpanel-passwordAuthentication"
+      role="tabpanel"
+      aria-labelledby="tab-passwordAuthentication"
+      data-testid="authSettings"
+    >
+      <DocumentTitleSegment segment={`Password & Authentication`} />
+      {/* Remove when logic above is cleared */}
+      {success && <Notice success text={success} />}
+      {!loading && (
+        <TabbedPanel
+          rootClass={`tabbedPanel`}
+          innerClass={`${classes.inner}`}
+          header={''}
+          tabs={tabs}
+          initTab={initialTab}
+        />
+      )}
+    </div>
+  );
+};
+
+const docs = [AccountsAndPasswords, SecurityControls];
 
 interface StateProps {
   loading: boolean;
+  authType: TPAProvider;
   ipWhitelisting: boolean;
   twoFactor?: boolean;
   username?: string;
@@ -130,10 +122,11 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
 
   return {
     loading: profile.loading,
-    ipWhitelisting: pathOr(false, ['data', 'ip_whitelist_enabled'], profile),
-    twoFactor: path(['data', 'two_factor_auth'], profile),
-    username: path(['data', 'username'], profile),
-    profileUpdateError: path<APIError[]>(['update'], profile.error)
+    authType: profile?.data?.authentication_type ?? 'password',
+    ipWhitelisting: profile?.data?.ip_whitelist_enabled ?? false,
+    twoFactor: profile?.data?.two_factor_auth,
+    username: profile?.data?.username,
+    profileUpdateError: profile.error?.update
   };
 };
 
@@ -147,10 +140,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced = compose<CombinedProps, {}>(
-  styled,
-  connected,
-  setDocs(AuthenticationSettings.docs)
-);
+const enhanced = compose<CombinedProps, {}>(connected, setDocs(docs));
 
 export default enhanced(AuthenticationSettings);
