@@ -12,7 +12,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props extends OptionProps<any> {
   value: number | string;
   attrs?: Record<string, string | boolean>;
-  selected: boolean;
 }
 
 const Option: React.StatelessComponent<Props> = props => {
@@ -23,7 +22,6 @@ const Option: React.StatelessComponent<Props> = props => {
       key={props.value}
       {...props.attrs}
       value={props.value}
-      selected={props.selected}
       role="option"
       className={classes.menuItem}
     >
