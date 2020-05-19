@@ -2,10 +2,10 @@ import {
   cloneDomain,
   createDomainRecord,
   Domain
-} from 'linode-js-sdk/lib/domains';
-import { Linode } from 'linode-js-sdk/lib/linodes';
-import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/domains';
+import { Linode } from '@linode/api-v4/lib/linodes';
+import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
+import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path } from 'ramda';
 import * as React from 'react';
@@ -533,30 +533,29 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
      * In this case, the user wants default domain records created, but
      * they haven't supplied a Linode or NodeBalancer
      */
-    if (defaultRecordsSetting === 'linode') {
-      if (!selectedDefaultLinode) {
-        return this.setState({
-          errors: [
-            {
-              reason: 'Please select a Linode.',
-              field: 'defaultLinode'
-            }
-          ]
-        });
-      }
+    if (defaultRecordsSetting === 'linode' && !selectedDefaultLinode) {
+      return this.setState({
+        errors: [
+          {
+            reason: 'Please select a Linode.',
+            field: 'defaultLinode'
+          }
+        ]
+      });
     }
 
-    if (defaultRecordsSetting === 'nodebalancer') {
-      if (!selectedDefaultNodeBalancer) {
-        return this.setState({
-          errors: [
-            {
-              reason: 'Please select a NodeBalancer.',
-              field: 'defaultNodeBalancer'
-            }
-          ]
-        });
-      }
+    if (
+      defaultRecordsSetting === 'nodebalancer' &&
+      !selectedDefaultNodeBalancer
+    ) {
+      return this.setState({
+        errors: [
+          {
+            reason: 'Please select a NodeBalancer.',
+            field: 'defaultNodeBalancer'
+          }
+        ]
+      });
     }
 
     const data =

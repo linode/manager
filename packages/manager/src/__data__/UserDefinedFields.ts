@@ -1,4 +1,4 @@
-import { UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
+import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 
 export const UserDefinedFields: UserDefinedField[] = [
   {

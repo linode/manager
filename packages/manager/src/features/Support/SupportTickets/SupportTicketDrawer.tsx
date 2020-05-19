@@ -2,8 +2,8 @@ import * as Bluebird from 'bluebird';
 import {
   createSupportTicket,
   uploadAttachment
-} from 'linode-js-sdk/lib/support';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/support';
+import { APIError } from '@linode/api-v4/lib/types';
 import { update } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
@@ -475,7 +475,15 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
             </a>
             .
           </Typography>
-
+          <TextField
+            label="Title"
+            placeholder="Enter a title for your ticket."
+            required
+            value={summary}
+            onChange={handleSummaryInputChange}
+            errorText={summaryError}
+            data-qa-ticket-summary
+          />
           {props.hideProductSelection ? null : (
             <React.Fragment>
               <Select
@@ -507,15 +515,6 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
               )}
             </React.Fragment>
           )}
-          <TextField
-            label="Title"
-            placeholder="Enter a title for your ticket."
-            required
-            value={summary}
-            onChange={handleSummaryInputChange}
-            errorText={summaryError}
-            data-qa-ticket-summary
-          />
           <TabbedReply
             required
             error={descriptionError}

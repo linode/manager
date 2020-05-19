@@ -9,7 +9,7 @@
  */
 import AddCircle from '@material-ui/icons/AddCircle';
 import * as classNames from 'classnames';
-import { getTags } from 'linode-js-sdk/lib/tags';
+import { getTags } from '@linode/api-v4/lib/tags';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { clone } from 'ramda';
 import * as React from 'react';
@@ -262,7 +262,7 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
               tagError: ''
             });
           })
-          .catch(e => {
+          .catch(_ => {
             this.props.enqueueSnackbar(`Could not delete Tag: ${label}`, {
               variant: 'error'
             });
@@ -373,7 +373,6 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
             hideLabel
             value={tagInputValue}
             createOptionPosition="first"
-            autoFocus
             className={classes.selectTag}
             blurInputOnSelect={false}
             menuIsOpen={!loading && !tagError}

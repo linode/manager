@@ -1,4 +1,4 @@
-import { closeSupportTicket } from 'linode-js-sdk/lib/support';
+import { closeSupportTicket } from '@linode/api-v4/lib/support';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';

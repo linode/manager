@@ -1,8 +1,8 @@
 import {
   NodeBalancer,
   NodeBalancerConfig
-} from 'linode-js-sdk/lib/nodebalancers';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/nodebalancers';
+import { APIError } from '@linode/api-v4/lib/types';
 import { path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';

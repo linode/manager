@@ -1,5 +1,5 @@
 import Axios, { AxiosError, AxiosPromise, AxiosResponse } from 'axios';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { APIError } from '@linode/api-v4/lib/types';
 import { compose, isEmpty, isNil, lensPath, not, omit, set, when } from 'ramda';
 import { ObjectSchema, ValidationError } from 'yup';
 

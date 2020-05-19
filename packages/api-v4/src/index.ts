@@ -30,4 +30,4 @@ export * from './tags';
 
 export * from './volumes';
 
-export { baseRequest } from './request';
+export { baseRequest, setToken } from './request';

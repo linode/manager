@@ -1,6 +1,6 @@
-import { Entity, Event } from 'linode-js-sdk/lib/account';
-import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { Entity, Event } from '@linode/api-v4/lib/account';
+import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
+import { APIError } from '@linode/api-v4/lib/types';
 import { compose, path, pathOr, prop, sortBy, take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';

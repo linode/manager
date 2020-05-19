@@ -1,4 +1,4 @@
-import { allocateIPAddress } from 'linode-js-sdk/lib/linodes';
+import { allocateIPAddress } from '@linode/api-v4/lib/linodes';
 
 export const allocatePublicIP = (linodeId: number) =>
   allocateIPAddress(linodeId, { type: 'ipv4', public: true });

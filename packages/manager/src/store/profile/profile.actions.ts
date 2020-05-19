@@ -1,6 +1,6 @@
-import { Grants } from 'linode-js-sdk/lib/account/types';
-import { Profile } from 'linode-js-sdk/lib/profile';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { Grants } from '@linode/api-v4/lib/account/types';
+import { Profile } from '@linode/api-v4/lib/profile';
+import { APIError } from '@linode/api-v4/lib/types';
 import { actionCreatorFactory } from 'typescript-fsa';
 
 export interface ExtendedProfile extends Profile {

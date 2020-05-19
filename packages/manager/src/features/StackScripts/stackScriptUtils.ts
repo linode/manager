@@ -1,10 +1,10 @@
-import { getUsers, Grant } from 'linode-js-sdk/lib/account';
+import { getUsers, Grant } from '@linode/api-v4/lib/account';
 import {
   getStackScript,
   getStackScripts,
   StackScript
-} from 'linode-js-sdk/lib/stackscripts';
-import { ResourcePage } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/stackscripts';
+import { ResourcePage } from '@linode/api-v4/lib/types';
 
 export type StackScriptCategory = 'account' | 'community';
 

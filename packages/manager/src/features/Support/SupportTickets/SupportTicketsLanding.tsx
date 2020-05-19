@@ -1,4 +1,4 @@
-import { SupportTicket } from 'linode-js-sdk/lib/support';
+import { SupportTicket } from '@linode/api-v4/lib/support';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -194,6 +194,11 @@ export class SupportTicketsLanding extends React.PureComponent<
                     onClick={this.openDrawer}
                     data-qa-open-ticket-link
                     className={classes.openTicketButton}
+                    onKeyPress={e => {
+                      if (e.keyCode === 13) {
+                        this.openDrawer();
+                      }
+                    }}
                   >
                     Open New Ticket
                   </Button>

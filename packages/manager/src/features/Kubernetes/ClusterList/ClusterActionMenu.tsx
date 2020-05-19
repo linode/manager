@@ -1,4 +1,4 @@
-import { getKubeConfig } from 'linode-js-sdk/lib/kubernetes';
+import { getKubeConfig } from '@linode/api-v4/lib/kubernetes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';

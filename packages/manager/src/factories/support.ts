@@ -1,5 +1,5 @@
 import * as Factory from 'factory.ts';
-import { SupportTicket } from 'linode-js-sdk/lib/support/types';
+import { SupportTicket } from '@linode/api-v4/lib/support/types';
 
 export const supportTicketFactory = Factory.Sync.makeFactory<SupportTicket>({
   updated_by: 'test-account',

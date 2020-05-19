@@ -8,8 +8,8 @@ import { NodePoolsDisplay, Props } from './NodePoolsDisplay';
 
 afterEach(cleanup);
 
-const request = require.requireMock('linode-js-sdk/lib/linodes');
-jest.mock('linode-js-sdk/lib/linodes');
+const request = require.requireMock('@linode/api-v4/lib/linodes');
+jest.mock('@linode/api-v4/lib/linodes');
 
 const mockLinodes = linodeFactory.buildList(3);
 

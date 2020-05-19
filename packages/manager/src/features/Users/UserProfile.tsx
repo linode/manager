@@ -1,5 +1,5 @@
-import { deleteUser } from 'linode-js-sdk/lib/account';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { deleteUser } from '@linode/api-v4/lib/account';
+import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path } from 'ramda';
 import * as React from 'react';

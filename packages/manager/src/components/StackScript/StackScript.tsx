@@ -1,5 +1,5 @@
-import { Image } from 'linode-js-sdk/lib/images';
-import { StackScript } from 'linode-js-sdk/lib/stackscripts';
+import { Image } from '@linode/api-v4/lib/images';
+import { StackScript as StackScriptType } from '@linode/api-v4/lib/stackscripts';
 import { stringify } from 'qs';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -75,7 +75,7 @@ const styles = (theme: Theme) =>
   });
 
 export interface Props {
-  data: StackScript;
+  data: StackScriptType;
 }
 
 export interface State {
@@ -85,7 +85,7 @@ export interface State {
 type CombinedProps = Props & WithImagesProps & WithStyles<CSSClasses>;
 
 /* tslint:disable-next-line */
-export class _StackScript extends React.Component<CombinedProps> {
+export class StackScript extends React.Component<CombinedProps> {
   render() {
     const {
       classes,
@@ -204,4 +204,4 @@ const enhanced = compose<CombinedProps, Props>(
     imagesLoading
   }))
 );
-export default enhanced(_StackScript);
+export default enhanced(StackScript);
