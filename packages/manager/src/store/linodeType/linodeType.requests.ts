@@ -30,9 +30,7 @@ export const requestTypes: RequestTypesThunk = () => dispatch => {
         result: allCachedTypes
       })
     );
-    return new Promise((resolve, _reject) => {
-      resolve(allCachedTypes);
-    });
+    return Promise.resolve(allCachedTypes);
   }
   dispatch(getLinodeTypesActions.started());
   return Promise.all([
