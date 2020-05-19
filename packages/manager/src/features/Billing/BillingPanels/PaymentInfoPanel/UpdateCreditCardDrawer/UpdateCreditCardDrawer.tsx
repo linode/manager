@@ -72,6 +72,16 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
     setCVV(_cvv);
   };
 
+  const handleWrongFormat = () => {
+    setSubmitting(false);
+    setErrors([
+      {
+        field: 'expiry_year',
+        reason: 'Expiration date must have the format MM/YY.'
+      }
+    ]);
+  };
+
   const submitForm = () => {
     setSubmitting(true);
     setErrors(undefined);
@@ -80,56 +90,67 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
     // If not, don't submit
     const clean = expDate.replace(/[^0-9]/g, '');
 
-    // Checks how many digits month consist of
-    const month = expDate.match(/^[\d]+/);
-    const monthLength = month?.[0] ? month[0].length : 0;
-
-    // Checks how many digits year consists of
-    const year = expDate.match(/([^\/]+$)/);
-    const yearLength = year?.[0] ? year[0].length : 0;
-
-    if (
-      clean.length < 3 ||
-      monthLength > 2 ||
-      (yearLength != 2 && yearLength != 4)
-    ) {
-      setSubmitting(false);
-      setErrors([
-        {
-          field: 'expiry_year',
-          reason: 'Expiration date must have the format MM/YY.'
-        }
-      ]);
-    } else {
-      const expMonth = parseExpiryDate(expDate).expMonth;
-      const expYear = parseExpiryDate(expDate).expYear;
-
-      saveCreditCard({
-        card_number: cardNumber,
-        expiry_month: expMonth,
-        expiry_year: expYear,
-        cvv
-      })
-        .then(() => {
-          const credit_card = {
-            last_four: takeLast(4, cardNumber),
-            expiry: `${String(expMonth).padStart(2, '0')}/${expYear}`,
-            cvv
-          };
-          // Update Redux store so subscribed components will display updated
-          // information.
-          props.saveCreditCard(credit_card);
-          resetForm(true);
-          setSubmitting(false);
-          onClose();
-        })
-        .catch(error => {
-          setSubmitting(false);
-          setErrors(
-            getAPIErrorOrDefault(error, 'Unable to update credit card.')
-          );
-        });
+    if (clean.length < 3) {
+      handleWrongFormat();
+      return;
     }
+
+    if (expDate.indexOf('/') != -1) {
+      // Checks how many digits month consist of
+      const month = expDate.match(/^[\d]+/);
+      const monthLength = month?.[0] ? month[0].length : 0;
+
+      // Checks how many digits year consists of
+      const year = expDate.match(/([^\/]+$)/);
+      const yearLength = year?.[0] ? year[0].length : 0;
+
+      if (monthLength > 2 || (yearLength != 2 && yearLength != 4)) {
+        handleWrongFormat();
+        return;
+      }
+    }
+
+    if (expDate.indexOf('/') == -1) {
+      if (clean.length == 7) {
+        handleWrongFormat();
+        return;
+      }
+      if (
+        clean.length == 6 &&
+        Number(clean.substr(0, 1)) != 0 &&
+        Number(clean.substr(0, 1)) != 1
+      ) {
+        handleWrongFormat();
+        return;
+      }
+    }
+
+    const expMonth = parseExpiryDate(expDate).expMonth;
+    const expYear = parseExpiryDate(expDate).expYear;
+
+    saveCreditCard({
+      card_number: cardNumber,
+      expiry_month: expMonth,
+      expiry_year: expYear,
+      cvv
+    })
+      .then(() => {
+        const credit_card = {
+          last_four: takeLast(4, cardNumber),
+          expiry: `${String(expMonth).padStart(2, '0')}/${expYear}`,
+          cvv
+        };
+        // Update Redux store so subscribed components will display updated
+        // information.
+        props.saveCreditCard(credit_card);
+        resetForm(true);
+        setSubmitting(false);
+        onClose();
+      })
+      .catch(error => {
+        setSubmitting(false);
+        setErrors(getAPIErrorOrDefault(error, 'Unable to update credit card.'));
+      });
   };
 
   const resetForm = (_success: boolean | undefined) => {
