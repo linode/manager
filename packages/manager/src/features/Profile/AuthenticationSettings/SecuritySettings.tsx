@@ -1,5 +1,5 @@
-import { Profile } from 'linode-js-sdk/lib/profile';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { Profile } from '@linode/api-v4/lib/profile';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
@@ -77,8 +77,8 @@ export class SecuritySettings extends React.Component<CombinedProps, {}> {
 
     return (
       <React.Fragment>
-        <Paper className={classes.root}>
-          <Typography variant="h2" className={classes.title} data-qa-title>
+        <Paper className={classes.root} data-testid="whitelisting-form">
+          <Typography variant="h2" className={classes.title}>
             IP Whitelisting (Legacy)
           </Typography>
           {generalError && <Notice error text={generalError} />}

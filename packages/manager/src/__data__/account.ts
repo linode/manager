@@ -2,7 +2,7 @@ import {
   Account,
   AccountSettings,
   ActivePromotion
-} from 'linode-js-sdk/lib/account';
+} from '@linode/api-v4/lib/account';
 
 export const activePromotions: ActivePromotion[] = [
   {
@@ -24,8 +24,7 @@ export const account: Account = {
   tax_id: '',
   credit_card: {
     expiry: '07/2018',
-    last_four: '1111',
-    cvv: '123'
+    last_four: '1111'
   },
   state: 'PA',
   zip: '19020',

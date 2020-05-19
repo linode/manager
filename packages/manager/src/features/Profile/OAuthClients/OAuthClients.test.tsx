@@ -1,5 +1,5 @@
 import { shallow, ShallowWrapper } from 'enzyme';
-import { OAuthClient } from 'linode-js-sdk/lib/account';
+import { OAuthClient } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 
 import { pageyProps } from 'src/__data__/pageyProps';

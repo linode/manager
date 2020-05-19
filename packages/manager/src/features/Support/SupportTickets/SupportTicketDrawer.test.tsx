@@ -1,28 +1,11 @@
 import { cleanup, fireEvent, wait } from '@testing-library/react';
-import { SupportTicket } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
+import { supportTicketFactory } from 'src/factories/support';
 import { getVersionString } from 'src/utilities/getVersionString';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import SupportTicketDrawer, { Props } from './SupportTicketDrawer';
 
-const support = require.requireMock('linode-js-sdk/lib/support');
-
-const supportTicket: SupportTicket = {
-  updated_by: 'test-account',
-  closed: null,
-  attachments: [],
-  summary: 'TEST Support Ticket',
-  gravatar_id: '0',
-  closable: false,
-  id: 0,
-  status: 'new',
-  description: 'TEST support ticket body',
-  opened_by: 'test-account',
-  entity: null,
-  opened: '2018-11-01T01:00:00',
-  updated: '2018-11-01T01:00:00',
-  gravatarUrl: 'not found'
-};
+const support = require.requireMock('@linode/api-v4/lib/support');
 
 const props: Props = {
   open: true,
@@ -30,8 +13,10 @@ const props: Props = {
   onSuccess: jest.fn()
 };
 
+const supportTicket = supportTicketFactory.build();
+
 // Mock support services library
-jest.mock('linode-js-sdk/lib/support', () => ({
+jest.mock('@linode/api-v4/lib/support', () => ({
   createSupportTicket: jest.fn().mockResolvedValue(supportTicket)
 }));
 

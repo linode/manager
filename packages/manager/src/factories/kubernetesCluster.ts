@@ -1,5 +1,5 @@
 import * as Factory from 'factory.ts';
-import { PoolNodeResponse } from 'linode-js-sdk/lib/kubernetes/types';
+import { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes/types';
 import {
   ExtendedCluster,
   PoolNodeWithPrice

@@ -1,4 +1,4 @@
-import { NodeBalancerWithConfigs } from 'linode-js-sdk/lib/nodebalancers';
+import { NodeBalancerWithConfigs } from '@linode/api-v4/lib/nodebalancers';
 import { compose } from 'ramda';
 import * as React from 'react';
 import {

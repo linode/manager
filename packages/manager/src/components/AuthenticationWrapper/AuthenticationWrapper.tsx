@@ -2,10 +2,10 @@ import {
   Account,
   AccountSettings,
   Notification
-} from 'linode-js-sdk/lib/account';
-import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes';
-import { Profile } from 'linode-js-sdk/lib/profile';
-import { Region } from 'linode-js-sdk/lib/regions';
+} from '@linode/api-v4/lib/account';
+import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
+import { Profile } from '@linode/api-v4/lib/profile';
+import { Region } from '@linode/api-v4/lib/regions';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { Action } from 'redux';
@@ -38,21 +38,30 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     isAuthenticated: false
   };
 
+  /**
+   * We make a series of requests for data on app load. The flow is:
+   * 1. App begins load; users see splash screen
+   * 2. Initial requests (in makeInitialRequests) are made (account, profile, etc.)
+   * 3. Initial requests complete; app is marked as done loading
+   * 4. As splash screen goes away, secondary requests (in makeSecondaryRequests -- Linodes, types, regions)
+   * are kicked off
+   */
   makeInitialRequests = async () => {
-    // When loading lish we avoid all this extra data loading
+    // When loading Lish we avoid all this extra data loading
     if (window.location?.pathname?.includes('/lish/')) {
       return;
     }
 
-    // Initial Requests
+    // Initial Requests: Things we need immediately (before rendering the app)
     const dataFetchingPromises: Promise<any>[] = [
+      // Grants/what a user has permission to view
       this.props.requestAccount(),
+
+      // Username and whether a user is restricted
       this.props.requestProfile(),
-      this.props.requestLinodes(),
-      this.props.requestNotifications(),
-      this.props.requestSettings(),
-      this.props.requestTypes(),
-      this.props.requestRegions()
+
+      // Is a user managed
+      this.props.requestSettings()
     ];
 
     // Start events polling
@@ -61,10 +70,30 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     try {
       await Promise.all(dataFetchingPromises);
       this.props.markAppAsDoneLoading();
+      this.makeSecondaryRequests();
     } catch {
       /** We choose to do nothing, relying on the Redux error state. */
       this.props.markAppAsDoneLoading();
+      this.makeSecondaryRequests();
     }
+  };
+
+  /** Secondary Requests (non-blocking)
+   * Make these once the user is past the
+   * splash screen, since they aren't needed
+   * for navigation, basic display, etc.
+   */
+  makeSecondaryRequests = () => {
+    this.props.requestLinodes();
+    this.props.requestTypes();
+    /**
+     * We have cached Regions data that can be used
+     * until the real data comes in; the only
+     * likely difference will be the status of each
+     * Region.
+     */
+    this.props.requestRegions();
+    this.props.requestNotifications();
   };
 
   componentDidMount() {
@@ -93,7 +122,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
    * and redux has now been synced with what is in local storage
    */
   componentDidUpdate(prevProps: CombinedProps) {
-    /** if we were previously not authed and now we are authed */
+    /** if we were previously not authenticated and now we are */
     if (
       !prevProps.isAuthenticated &&
       this.props.isAuthenticated &&
@@ -113,6 +142,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
   render() {
     const { children } = this.props;
     const { showChildren } = this.state;
+    // eslint-disable-next-line
     return <React.Fragment>{showChildren ? children : null}</React.Fragment>;
   }
 }

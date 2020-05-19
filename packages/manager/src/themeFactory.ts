@@ -199,7 +199,8 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       primaryNavActiveBG: '#272b31',
       primaryNavBorder: '#f4f4f4',
       primaryNavPaper: '#32363c',
-      topMenu: '#fff'
+      topMenu: '#fff',
+      billingHeader: '#f5f9ff'
     },
     color: {
       headline: primaryColors.headline,
@@ -234,7 +235,9 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       label: '#555',
       disabledText: '#c9cacb',
       kubeLabel: '#272b31',
-      primaryNavText: '#c9cacb'
+      primaryNavText: '#c9cacb',
+      borderBilling: '#cce2ff',
+      billingText: '#313335'
     },
     graphs: {
       load: `rgba(255, 220, 77, ${graphTransparency})`,
@@ -578,18 +581,6 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
             width: 12,
             height: 12,
             borderRadius: '50%'
-          },
-          [breakpoints.down('xs')]: {
-            marginLeft: 8,
-            marginRight: -8,
-            marginTop: -6,
-            color: 'white !important',
-            '& svg': {
-              width: 20,
-              height: 20,
-              borderRadius: '50%',
-              backgroundColor: primaryColors.main
-            }
           }
         }
       },

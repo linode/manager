@@ -1,39 +1,59 @@
-import { shallow } from 'enzyme';
+import { cleanup, render } from '@testing-library/react';
 import * as React from 'react';
 
-import { AuthenticationSettings } from './AuthenticationSettings';
+import { wrapWithTheme } from 'src/utilities/testHelpers';
+
+import {
+  AuthenticationSettings,
+  CombinedProps
+} from './AuthenticationSettings';
+
+const requests = require.requireMock('@linode/api-v4/lib/profile');
+jest.mock('@linode/api-v4/lib/profile');
+
+requests.updateProfile = jest.fn().mockResolvedValue([]);
+requests.getTrustedDevices = jest.fn().mockResolvedValue([]);
+
+afterEach(cleanup);
+
+const props: CombinedProps = {
+  loading: false,
+  authType: 'password',
+  ipWhitelisting: true,
+  twoFactor: true,
+  username: 'username',
+  updateProfile: jest.fn()
+};
 
 describe('Authentication settings profile tab', () => {
-  const update = jest.fn();
-
-  const component = shallow(
-    <AuthenticationSettings
-      loading={false}
-      ipWhitelisting={true}
-      twoFactor={true}
-      username={'username'}
-      updateProfile={update}
-      classes={{
-        root: '',
-        title: ''
-      }}
-    />
-  );
-
   it('should render', () => {
-    expect(component).toHaveLength(1);
+    const { getByTestId } = render(
+      wrapWithTheme(<AuthenticationSettings {...props} />)
+    );
+    expect(getByTestId('authSettings'));
   });
 
   it('should not render the whitelisting form when loading', () => {
-    expect(component.find('[data-qa-whitelisting-form]')).toHaveLength(1);
-    component.setProps({ loading: true });
-    expect(component.find('[data-qa-whitelisting-form]')).toHaveLength(0);
-    component.setProps({ loading: false });
+    const { getByTestId, queryAllByTestId, rerender } = render(
+      wrapWithTheme(<AuthenticationSettings {...props} />)
+    );
+    getByTestId('whitelisting-form');
+    rerender(
+      wrapWithTheme(<AuthenticationSettings {...props} loading={true} />)
+    );
+    expect(queryAllByTestId('whitelisting-form')).toHaveLength(0);
   });
 
   it('should not render the whitelisting form if the user does not have this setting enabled', () => {
-    expect(component.find('[data-qa-whitelisting-form]')).toHaveLength(1);
-    component.setProps({ ipWhitelisting: false });
-    expect(component.find('[data-qa-whitelisting-form]')).toHaveLength(0);
+    const { getByTestId, queryAllByTestId, rerender } = render(
+      wrapWithTheme(<AuthenticationSettings {...props} />)
+    );
+    getByTestId('whitelisting-form');
+    rerender(
+      wrapWithTheme(
+        <AuthenticationSettings {...props} ipWhitelisting={false} />
+      )
+    );
+    expect(queryAllByTestId('whitelisting-form')).toHaveLength(0);
   });
 });

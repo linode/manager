@@ -1,8 +1,8 @@
-import { Account, AccountCapability } from 'linode-js-sdk/lib/account';
-import { Image } from 'linode-js-sdk/lib/images';
-import { Linode } from 'linode-js-sdk/lib/linodes';
-import { Region } from 'linode-js-sdk/lib/regions';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { Account, AccountCapability } from '@linode/api-v4/lib/account';
+import { Image } from '@linode/api-v4/lib/images';
+import { Linode } from '@linode/api-v4/lib/linodes';
+import { Region } from '@linode/api-v4/lib/regions';
+import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';

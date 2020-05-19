@@ -1,4 +1,4 @@
-import { Grant } from "linode-js-sdk/lib/account";
+import { Grant } from "@linode/api-v4/lib/account";
 import { canUserModifyAccountStackScript } from './stackScriptUtils';
 
 describe('canUserModifyStackScript', () => {
