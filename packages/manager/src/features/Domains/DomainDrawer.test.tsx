@@ -9,7 +9,22 @@ const testLinode = linodeFactory.build({
   ipv6: null
 });
 
-jest.mock('linode-js-sdk/lib/domains');
+const request = require.requireMock('@linode/api-v4/lib/domains');
+jest.mock('@linode/api-v4/lib/domains');
+
+request.createDomainRecord = jest.fn().mockResolvedValue({
+  id: 2,
+  name: 'TestRecord',
+  port: 80,
+  priority: 1,
+  protocol: null,
+  service: null,
+  tag: null,
+  target: 'example.com',
+  ttl_sec: 100,
+  type: 'AAAA',
+  weight: 1
+});
 
 const testDomain = 'example.com';
 const testDomainID = testLinode.id;
