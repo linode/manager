@@ -58,6 +58,12 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
   const [expDate, setExpDate] = React.useState<string>('');
   const [cvv, setCVV] = React.useState<string>('');
 
+  React.useEffect(() => {
+    if (open) {
+      resetForm(undefined);
+    }
+  }, [open]);
+
   const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCardNumber(e.target.value ? take(19, e.target.value) : '');
   };
@@ -137,14 +143,7 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
   const generalError = hasErrorFor.none;
 
   return (
-    <Drawer
-      title="Edit Credit Card"
-      open={open}
-      onClose={() => {
-        resetForm(undefined);
-        onClose();
-      }}
-    >
+    <Drawer title="Edit Credit Card" open={open} onClose={onClose}>
       <Grid container className={classes.newccContainer}>
         <Grid item xs={12}>
           {generalError && (
