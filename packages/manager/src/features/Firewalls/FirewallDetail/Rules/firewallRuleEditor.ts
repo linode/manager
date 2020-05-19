@@ -170,6 +170,16 @@ export const stripExtendedFields = (
   rule: ExtendedFirewallRule
 ): FirewallRuleType => omit(['errors', 'status', 'index'], rule);
 
+// The API will return an error if a `ports` attribute is present on a payload for an ICMP rule,
+// so we do a bit of trickery here and delete it if necessary.
+export const removeICMPPort = (rules: ExtendedFirewallRule[]) =>
+  rules.map(thisRule => {
+    if (thisRule.protocol === 'ICMP' && thisRule.ports === '') {
+      delete thisRule.ports;
+    }
+    return thisRule;
+  });
+
 export const filterRulesPendingDeletion = (rules: ExtendedFirewallRule[]) =>
   rules.filter(thisRule => thisRule.status !== 'PENDING_DELETION');
 
@@ -177,6 +187,7 @@ export const appendIndex = (rules: ExtendedFirewallRule[]) =>
   rules.map((thisRule, index) => ({ ...thisRule, index }));
 
 export const prepareRules = compose(
+  removeICMPPort,
   filterRulesPendingDeletion,
   appendIndex,
   editorStateToRules
