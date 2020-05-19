@@ -92,7 +92,7 @@ class SearchSuggestion extends React.Component<CombinedProps> {
         ref={innerRef}
         onKeyPress={this.handleClick}
         {...innerProps}
-        // overriding the onCliuck passed in InnerProps ... Is it normal?
+        // overrides onClick from InnerProps
         onClick={this.handleClick}
         role="button"
         tabIndex={0}
