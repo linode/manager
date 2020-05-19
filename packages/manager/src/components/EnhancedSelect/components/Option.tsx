@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { components, OptionProps } from 'react-select';
+import { OptionProps } from 'react-select';
+import MenuItem from 'src/components/core/MenuItem';
 
 interface Props extends OptionProps<any> {
   value: number | string;
@@ -8,9 +9,15 @@ interface Props extends OptionProps<any> {
 
 const Option: React.StatelessComponent<Props> = props => {
   return (
-    <div data-qa-option={String(props.value)} {...props.attrs}>
-      <components.Option {...props} />
-    </div>
+    <MenuItem
+      data-qa-option={String(props.value)}
+      key={props.value}
+      value={props.value}
+      {...props.attrs}
+      role="option"
+    >
+      {props.children}
+    </MenuItem>
   );
 };
 

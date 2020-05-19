@@ -51,13 +51,13 @@ export interface NoOptionsMessageProps {
 // Will override the RS defaults.
 const _components = {
   Control,
+  DropdownIndicator,
   NoOptionsMessage,
   Placeholder,
   MultiValueLabel,
   MultiValueRemove,
   MenuList,
   Option,
-  DropdownIndicator,
   LoadingIndicator,
   Input
 };

@@ -26,6 +26,7 @@ const SelectControl: React.StatelessComponent<Props> = props => {
           : props.selectProps.placeholder
       }
       fullWidth
+      role="combobox"
       InputProps={{
         inputComponent,
         inputProps: {
