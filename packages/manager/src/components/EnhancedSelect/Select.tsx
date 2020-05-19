@@ -120,14 +120,14 @@ class Select extends React.PureComponent<CombinedProps, {}> {
   //
   // This essentially reverts the behavior of the v3 React-Select update. Long term, we should
   // probably re-write our component handlers to expect EITHER an array OR `null`.
-  _onChange = (selected: Item | Item[] | null) => {
+  _onChange = (selected: Item | Item[] | null, actionMeta?: ActionMeta) => {
     const { isMulti, onChange } = this.props;
 
     if (isMulti && !selected) {
-      return onChange([]);
+      return onChange([], actionMeta);
     }
 
-    onChange(selected);
+    onChange(selected, actionMeta);
   };
 
   render() {
