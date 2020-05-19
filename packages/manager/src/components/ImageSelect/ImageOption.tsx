@@ -41,6 +41,7 @@ export const ImageOption: React.FC<CombinedProps> = props => {
         [classes.focused]: props.isFocused
       })}
       value={data.value}
+      selected={props.isSelected}
       attrs={{ ['data-qa-region-select-item']: data.value }}
       {...props}
     >
