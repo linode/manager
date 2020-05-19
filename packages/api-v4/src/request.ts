@@ -4,18 +4,6 @@ import Axios, {
   AxiosRequestConfig,
   AxiosResponse
 } from 'axios';
-import {
-  compose,
-  isEmpty,
-  isNil,
-  lensPath,
-  mergeDeepLeft,
-  not,
-  omit,
-  over,
-  set,
-  when
-} from 'ramda';
 import { ObjectSchema, ValidationError } from 'yup';
 import { APIError } from './types';
 
@@ -47,31 +35,30 @@ export const setToken = (token: string) => {
   });
 };
 
-const L = {
-  url: lensPath(['url']),
-  method: lensPath(['method']),
-  params: lensPath(['params']),
-  data: lensPath(['data']),
-  xFilter: lensPath(['headers', 'X-Filter']),
-  validationErrors: lensPath(['validationErrors']),
-  headers: lensPath(['headers'])
+const set = (field: string, value: any) => (object: any) => {
+  return { ...object, [field]: value };
 };
 
-const isNotEmpty = compose(not, (v: any) => isEmpty(v) || isNil(v));
+const isNotEmpty = (v: any) =>
+  !(v === undefined || v === null || v.length === 0);
 
 /** URL */
-export const setURL = (url: string) => set(L.url, url);
+export const setURL = (url: string) => set('url', url);
 
 /** METHOD */
 export const setMethod = (method: 'GET' | 'POST' | 'PUT' | 'DELETE') =>
-  set(L.method, method);
+  set('method', method);
 
 /** Param */
-export const setParams = (params: any = {}) =>
-  when(() => isNotEmpty(params), set(L.params, params));
+export const setParams = (params: any = {}) => {
+  return isNotEmpty(params) ? set('params', params) : set('', '');
+};
 
-export const setHeaders = (headers: any = {}) =>
-  when(() => isNotEmpty(headers), over(L.headers, mergeDeepLeft(headers)));
+export const setHeaders = (newHeaders: any = {}) => (object: any) => {
+  return isNotEmpty(newHeaders)
+    ? { ...object, headers: { ...object.headers, ...newHeaders } }
+    : object;
+};
 
 /**
  * Validate and set data in the request configuration object.
@@ -91,7 +78,7 @@ export const setData = <T extends {}>(
   postValidationTransform?: (v: any) => any
 ) => {
   if (!schema) {
-    return set(L.data, data);
+    return set('data', data);
   }
 
   const updatedData =
@@ -101,15 +88,13 @@ export const setData = <T extends {}>(
 
   try {
     schema.validateSync(data, { abortEarly: false });
-    return set(L.data, updatedData);
+    return set('data', updatedData);
   } catch (error) {
-    return compose(
-      set(L.data, updatedData),
-      set(
-        L.validationErrors,
-        convertYupToLinodeErrors(error)
-      ) as () => APIError[]
-    );
+    return (object: any) => ({
+      ...object,
+      data: updatedData,
+      validationErrors: convertYupToLinodeErrors(error)
+    });
   }
 };
 
@@ -143,8 +128,14 @@ const mapYupToLinodeAPIError = ({
 });
 
 /** X-Filter */
-export const setXFilter = (xFilter: any) =>
-  when(() => isNotEmpty(xFilter), set(L.xFilter, JSON.stringify(xFilter)));
+export const setXFilter = (xFilter: any) => {
+  return isNotEmpty(xFilter)
+    ? (object: any) => ({
+        ...object,
+        headers: { ...object.headers, 'X-Filter': JSON.stringify(xFilter) }
+      })
+    : set('', '');
+};
 
 /**
  * Builds up a config starting from a default object and applying
@@ -269,7 +260,7 @@ export const CancellableRequest = <T>(
       cancel: () => null,
       request: () =>
         Promise.reject({
-          config: omit(['validationErrors'], config),
+          config: { ...config, validationErrors: undefined },
           response: { data: { errors: config.validationErrors } }
         })
     };
