@@ -431,6 +431,7 @@ class UpdateContactInformationForm extends React.Component<
         >
           <TextField
             label="Email"
+            required
             type="email"
             value={defaultTo(account.email, fields.email)}
             errorText={errorMap.email}
