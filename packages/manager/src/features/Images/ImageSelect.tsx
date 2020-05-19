@@ -143,8 +143,7 @@ const isDeprecated = (i: Image) => i.deprecated === true;
 const isRecommended = (i: Image) => isByLinode(i) && !isDeprecated(i);
 const isOlderImage = (i: Image) => isByLinode(i) && isDeprecated(i);
 
-export const groupImages: (i: Image[]) => GroupedImages;
-groupImages = groupBy(
+export const groupImages: (i: Image[]) => GroupedImages = groupBy(
   cond([
     [isRecentlyDeleted, always('deleted')],
     [isRecommended, always('recommended')],
