@@ -1,9 +1,10 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
+import { OptionProps } from 'react-select';
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
 import Typography from 'src/components/core/Typography';
-import { OptionProps } from 'react-select';
 import Option from 'src/components/EnhancedSelect/components/Option';
+import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
 interface Props extends OptionProps<any> {
   data: {
@@ -50,7 +51,7 @@ const SearchItem: React.StatelessComponent<Props> = props => {
           <div className={classes.row}>
             <div
               className={classes.label}
-              dangerouslySetInnerHTML={{ __html: getLabel() }}
+              dangerouslySetInnerHTML={{ __html: sanitizeHTML(getLabel()) }}
             />
             <Arrow className={classes.icon} />
           </div>
