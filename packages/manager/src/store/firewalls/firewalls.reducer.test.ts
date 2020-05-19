@@ -45,7 +45,7 @@ describe('Cloud Firewalls Reducer', () => {
         result: { data: baseFirewall, results: 3 }
       })
     );
-    expect(Object.values(newState.data)).toEqual(baseFirewall);
+    expect(Object.values(newState.itemsById)).toEqual(baseFirewall);
     expect(newState).toHaveProperty('loading', false);
     expect(newState.error!.read).toBeUndefined();
     expect(newState.results).toBe(3);
@@ -59,7 +59,7 @@ describe('Cloud Firewalls Reducer', () => {
         result: { data: [], results: 0 }
       })
     );
-    expect(newState.data).toEqual({});
+    expect(newState.itemsById).toEqual({});
     expect(newState).toHaveProperty('loading', false);
     expect(newState.error!.read).toBeUndefined();
     expect(newState.results).toBe(0);
@@ -76,7 +76,10 @@ describe('Cloud Firewalls Reducer', () => {
     );
 
     expect(newState.error.create).toBeUndefined();
-    expect(newState.data).toHaveProperty(String(newFirewall.id), newFirewall);
+    expect(newState.itemsById).toHaveProperty(
+      String(newFirewall.id),
+      newFirewall
+    );
   });
 
   it('should handle a failed Create action', () => {
@@ -100,7 +103,7 @@ describe('Cloud Firewalls Reducer', () => {
 
   it('should handle a successful deletion', () => {
     const stateWithFirewalls = addEntities();
-    const firewallToDelete = stateWithFirewalls.data[baseFirewall[1].id];
+    const firewallToDelete = stateWithFirewalls.itemsById[baseFirewall[1].id];
     const newState = reducer(
       stateWithFirewalls,
       deleteFirewallActions.done({
@@ -123,7 +126,7 @@ describe('Cloud Firewalls Reducer', () => {
       })
     );
     expect(newState.results).toBe(stateWithFirewalls.results);
-    expect(newState.data).toHaveProperty(String(firewallIDToDelete));
+    expect(newState.itemsById).toHaveProperty(String(firewallIDToDelete));
     expect(newState.lastUpdated).toBe(stateWithFirewalls.lastUpdated);
     expect(newState.error).toHaveProperty('delete', mockError);
   });
