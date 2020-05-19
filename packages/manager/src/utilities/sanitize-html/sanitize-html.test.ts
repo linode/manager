@@ -17,10 +17,13 @@ describe('sanitizeHTML', () => {
   });
 
   it('only allows "version" class, and only for spans', () => {
+    // safe
     expect(sanitizeHTML('<div class="version" />')).not.toContain('class');
+    // safe
     expect(sanitizeHTML('<div class="other-class" />')).not.toContain('class');
-
+    // safe
     expect(sanitizeHTML('<span class="version" />')).toContain('class');
+    // safe
     expect(sanitizeHTML('<span class="other-class" />')).not.toContain('class');
   });
 });
