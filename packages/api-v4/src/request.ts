@@ -11,6 +11,8 @@ interface RequestConfig extends AxiosRequestConfig {
   validationErrors?: APIError[];
 }
 
+type ConfigField = 'headers' | 'data' | 'params' | 'method' | 'url';
+
 export const baseRequest = Axios.create({
   baseURL: 'https://api.linode.com/v4'
 });
@@ -35,8 +37,8 @@ export const setToken = (token: string) => {
   });
 };
 
-const set = (field: string, value: any) => (object: any) => {
-  return { ...object, [field]: value };
+const set = (field: ConfigField, value: any) => (object: any) => {
+  return isNotEmpty(value) ? { ...object, [field]: value } : object;
 };
 
 const isNotEmpty = (v: any) =>
@@ -50,9 +52,7 @@ export const setMethod = (method: 'GET' | 'POST' | 'PUT' | 'DELETE') =>
   set('method', method);
 
 /** Param */
-export const setParams = (params: any = {}) => {
-  return isNotEmpty(params) ? set('params', params) : set('', '');
-};
+export const setParams = (params: any = {}) => set('params', params);
 
 export const setHeaders = (newHeaders: any = {}) => (object: any) => {
   return isNotEmpty(newHeaders)
@@ -129,12 +129,13 @@ const mapYupToLinodeAPIError = ({
 
 /** X-Filter */
 export const setXFilter = (xFilter: any) => {
-  return isNotEmpty(xFilter)
-    ? (object: any) => ({
-        ...object,
-        headers: { ...object.headers, 'X-Filter': JSON.stringify(xFilter) }
-      })
-    : set('', '');
+  return (object: any) =>
+    isNotEmpty(xFilter)
+      ? {
+          ...object,
+          headers: { ...object.headers, 'X-Filter': JSON.stringify(xFilter) }
+        }
+      : object;
 };
 
 /**
