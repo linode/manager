@@ -58,6 +58,8 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
   const [expDate, setExpDate] = React.useState<string>('');
   const [cvv, setCVV] = React.useState<string>('');
 
+  let isWrongFormat = true;
+
   const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCardNumber(e.target.value ? take(19, e.target.value) : '');
   };
@@ -72,28 +74,10 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
     setCVV(_cvv);
   };
 
-  const handleWrongFormat = () => {
-    setSubmitting(false);
-    setErrors([
-      {
-        field: 'expiry_year',
-        reason: 'Expiration date must have the format MM/YY.'
-      }
-    ]);
-  };
-
-  const submitForm = () => {
-    setSubmitting(true);
-    setErrors(undefined);
-
+  const checkFormat = () => {
     // Checks to see if date matches the format MM/YY
     // If not, don't submit
     const clean = expDate.replace(/[^0-9]/g, '');
-
-    if (clean.length < 3) {
-      handleWrongFormat();
-      return;
-    }
 
     if (expDate.indexOf('/') != -1) {
       // Checks how many digits month consist of
@@ -105,14 +89,14 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
       const yearLength = year?.[0] ? year[0].length : 0;
 
       if (monthLength > 2 || (yearLength != 2 && yearLength != 4)) {
-        handleWrongFormat();
+        isWrongFormat = true;
         return;
       }
     }
 
     if (expDate.indexOf('/') == -1) {
-      if (clean.length == 7) {
-        handleWrongFormat();
+      if (clean.length == 7 || clean.length < 3) {
+        isWrongFormat = true;
         return;
       }
       if (
@@ -120,37 +104,59 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
         Number(clean.substr(0, 1)) != 0 &&
         Number(clean.substr(0, 1)) != 1
       ) {
-        handleWrongFormat();
+        isWrongFormat = true;
         return;
       }
     }
 
-    const expMonth = parseExpiryDate(expDate).expMonth;
-    const expYear = parseExpiryDate(expDate).expYear;
+    isWrongFormat = false;
+    return;
+  };
 
-    saveCreditCard({
-      card_number: cardNumber,
-      expiry_month: expMonth,
-      expiry_year: expYear,
-      cvv
-    })
-      .then(() => {
-        const credit_card = {
-          last_four: takeLast(4, cardNumber),
-          expiry: `${String(expMonth).padStart(2, '0')}/${expYear}`,
-          cvv
-        };
-        // Update Redux store so subscribed components will display updated
-        // information.
-        props.saveCreditCard(credit_card);
-        resetForm(true);
-        setSubmitting(false);
-        onClose();
+  const submitForm = () => {
+    checkFormat();
+
+    if (!isWrongFormat) {
+      setSubmitting(true);
+      setErrors(undefined);
+
+      const expMonth = parseExpiryDate(expDate).expMonth;
+      const expYear = parseExpiryDate(expDate).expYear;
+
+      saveCreditCard({
+        card_number: cardNumber,
+        expiry_month: expMonth,
+        expiry_year: expYear,
+        cvv
       })
-      .catch(error => {
-        setSubmitting(false);
-        setErrors(getAPIErrorOrDefault(error, 'Unable to update credit card.'));
-      });
+        .then(() => {
+          const credit_card = {
+            last_four: takeLast(4, cardNumber),
+            expiry: `${String(expMonth).padStart(2, '0')}/${expYear}`,
+            cvv
+          };
+          // Update Redux store so subscribed components will display updated
+          // information.
+          props.saveCreditCard(credit_card);
+          resetForm(true);
+          setSubmitting(false);
+          onClose();
+        })
+        .catch(error => {
+          setSubmitting(false);
+          setErrors(
+            getAPIErrorOrDefault(error, 'Unable to update credit card.')
+          );
+        });
+    } else {
+      setSubmitting(false);
+      setErrors([
+        {
+          field: 'expiry_year',
+          reason: 'Expiration date must have the format MM/YY.'
+        }
+      ]);
+    }
   };
 
   const resetForm = (_success: boolean | undefined) => {
