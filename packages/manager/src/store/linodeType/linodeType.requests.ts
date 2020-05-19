@@ -20,11 +20,19 @@ export const requestTypes: RequestTypesThunk = () => dispatch => {
    * since it may not match dev/staging API data.
    */
   if (isProdAPI && cachedTypes.data && cachedDeprecatedTypes.data) {
-    return dispatch(
+    // AC: need to cast as the Class string cannot be assigned to a type enum in TS 3.9
+    const allCachedTypes: LinodeType[] = [
+      ...cachedTypes.data,
+      ...cachedDeprecatedTypes.data
+    ] as LinodeType[];
+    dispatch(
       getLinodeTypesActions.done({
-        result: [...cachedTypes.data, ...cachedDeprecatedTypes.data]
+        result: allCachedTypes
       })
     );
+    return new Promise((resolve, _reject) => {
+      resolve(allCachedTypes);
+    });
   }
   dispatch(getLinodeTypesActions.started());
   return Promise.all([
