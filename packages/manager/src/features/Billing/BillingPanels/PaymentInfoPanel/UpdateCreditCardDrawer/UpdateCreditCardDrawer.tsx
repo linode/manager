@@ -58,8 +58,6 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
   const [expDate, setExpDate] = React.useState<string>('');
   const [cvv, setCVV] = React.useState<string>('');
 
-  let isWrongFormat = true;
-
   const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCardNumber(e.target.value ? take(19, e.target.value) : '');
   };
@@ -74,12 +72,12 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
     setCVV(_cvv);
   };
 
-  const checkFormat = () => {
+  const checkFormat = (): boolean => {
     // Checks to see if date matches the format MM/YY
     // If not, don't submit
     const clean = expDate.replace(/[^0-9]/g, '');
 
-    if (expDate.indexOf('/') != -1) {
+    if (expDate.indexOf('/') !== -1) {
       // Checks how many digits month consist of
       const month = expDate.match(/^[\d]+/);
       const monthLength = month?.[0] ? month[0].length : 0;
@@ -88,40 +86,33 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
       const year = expDate.match(/([^\/]+$)/);
       const yearLength = year?.[0] ? year[0].length : 0;
 
-      if (monthLength > 2 || (yearLength != 2 && yearLength != 4)) {
-        isWrongFormat = true;
-        return;
+      if (monthLength > 2 || (yearLength !== 2 && yearLength !== 4)) {
+        return true;
       }
     }
 
-    if (expDate.indexOf('/') == -1) {
-      if (clean.length == 7 || clean.length < 3) {
-        isWrongFormat = true;
-        return;
+    if (expDate.indexOf('/') === -1) {
+      if (clean.length === 7 || clean.length < 3) {
+        return true;
       }
       if (
-        clean.length == 6 &&
-        Number(clean.substr(0, 1)) != 0 &&
-        Number(clean.substr(0, 1)) != 1
+        clean.length === 6 &&
+        Number(clean.substr(0, 1)) !== 0 &&
+        Number(clean.substr(0, 1)) !== 1
       ) {
-        isWrongFormat = true;
-        return;
+        return true;
       }
     }
 
-    isWrongFormat = false;
-    return;
+    return false;
   };
 
   const submitForm = () => {
-    checkFormat();
-
-    if (!isWrongFormat) {
+    if (!checkFormat()) {
       setSubmitting(true);
       setErrors(undefined);
 
-      const expMonth = parseExpiryDate(expDate).expMonth;
-      const expYear = parseExpiryDate(expDate).expYear;
+      const { expMonth, expYear } = parseExpiryDate(expDate);
 
       saveCreditCard({
         card_number: cardNumber,
@@ -252,7 +243,7 @@ export const parseExpiryDate = (date: string) => {
   const year = +clean.substring(clean.length - yearLength);
 
   return {
-    expYear: year + (yearLength == 4 ? 0 : 2000),
+    expYear: year + (yearLength === 4 ? 0 : 2000),
     expMonth: month
   };
 };
