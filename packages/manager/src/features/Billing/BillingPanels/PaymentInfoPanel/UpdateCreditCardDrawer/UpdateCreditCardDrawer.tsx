@@ -58,13 +58,19 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
   const [expDate, setExpDate] = React.useState<string>('');
   const [cvv, setCVV] = React.useState<string>('');
 
+  React.useEffect(() => {
+    if (open) {
+      resetForm(undefined);
+    }
+  }, [open]);
+
   const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCardNumber(e.target.value ? take(19, e.target.value) : '');
   };
 
   const handleExpiryDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const expDate = e.target.value ? take(7, e.target.value) : '';
-    setExpDate(expDate);
+    const _expDate = e.target.value ? take(7, e.target.value) : '';
+    setExpDate(_expDate);
   };
 
   const handleCVVChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,26 +84,35 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
 
     // MM/YYYY
     const _date = expDate.match(/(\-?[0-9][0-9]?)\/?([0-9]+)/);
-    const expiry_month = _date ? +_date[1] : -1;
-    const expiry_year = _date ? +_date?.[2] : -1;
+    const expMonth = _date ? +_date[1] : -1;
+    let expYear = _date ? +_date?.[2] : -1;
 
     // Handles if the user tries to use two digit year
-    if (expiry_year < 1000) {
+    if (expYear < 100) {
+      expYear += 2000;
+    }
+
+    if (expYear >= 100 && expYear < 1000) {
       setSubmitting(false);
       setErrors([
         {
           field: 'expiry_year',
-          reason: 'Expiration date must have the format MM/YYYY.'
+          reason: 'Expiration date must have the format MM/YY.'
         }
       ]);
       return;
     }
 
-    saveCreditCard({ card_number: cardNumber, expiry_month, expiry_year, cvv })
+    saveCreditCard({
+      card_number: cardNumber,
+      expiry_month: expMonth,
+      expiry_year: expYear,
+      cvv
+    })
       .then(() => {
         const credit_card = {
           last_four: takeLast(4, cardNumber),
-          expiry: `${String(expiry_month).padStart(2, '0')}/${expiry_year}`,
+          expiry: `${String(expMonth).padStart(2, '0')}/${expYear}`,
           cvv
         };
         // Update Redux store so subscribed components will display updated
@@ -105,6 +120,7 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
         props.saveCreditCard(credit_card);
         resetForm(true);
         setSubmitting(false);
+        onClose();
       })
       .catch(error => {
         setSubmitting(false);
@@ -127,14 +143,7 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
   const generalError = hasErrorFor.none;
 
   return (
-    <Drawer
-      title="Edit Credit Card"
-      open={open}
-      onClose={() => {
-        resetForm(undefined);
-        onClose();
-      }}
-    >
+    <Drawer title="Edit Credit Card" open={open} onClose={onClose}>
       <Grid container className={classes.newccContainer}>
         <Grid item xs={12}>
           {generalError && (
@@ -166,12 +175,12 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
                 value={expDate}
                 onChange={handleExpiryDateChange}
                 errorText={hasErrorFor.expiry_month || hasErrorFor.expiry_year}
-                placeholder={'MM/YYYY'}
+                placeholder={'MM/YY'}
               />
             </Grid>
             <Grid item className={classes.fullWidthMobile}>
               <TextField
-                label="CVV"
+                label="CVV (optional)"
                 value={cvv}
                 onChange={handleCVVChange}
                 errorText={hasErrorFor.cvv}
