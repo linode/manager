@@ -1,9 +1,16 @@
-import produce from 'immer';
-import { Firewall } from 'linode-js-sdk/lib/firewalls';
+import { Firewall } from '@linode/api-v4/lib/firewalls';
 import { Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
-import { apiResponseToMappedState } from '../store.helpers';
-import { EntitiesAsObjectState } from '../types';
+import {
+  createDefaultState,
+  onCreateOrUpdate,
+  onDeleteSuccess,
+  onError,
+  onGetAllSuccess,
+  onStart,
+  setError
+} from '../store.helpers.tmp';
+import { MappedEntityState2 as MappedEntityState } from '../types';
 import {
   createFirewallActions,
   deleteFirewallActions,
@@ -12,104 +19,88 @@ import {
   updateFirewallRulesActions
 } from './firewalls.actions';
 
-export type State = EntitiesAsObjectState<Firewall>;
+export type State = MappedEntityState<Firewall>;
 
-export const defaultState: State = {
-  loading: false,
-  lastUpdated: 0,
-  results: 0,
-  data: {},
-  error: {}
-};
+export const defaultState: State = createDefaultState();
 
 /**
  * Reducer
  */
 const reducer: Reducer<State> = (state = defaultState, action) => {
-  return produce(state, draft => {
-    if (isType(action, getFirewalls.started)) {
-      draft.loading = true;
-    }
+  if (isType(action, getFirewalls.started)) {
+    return onStart(state);
+  }
 
-    if (isType(action, getFirewalls.done)) {
-      const { result } = action.payload;
-      const data = apiResponseToMappedState<Firewall>(result.data);
-      draft.loading = false;
-      draft.lastUpdated = Date.now();
-      draft.data = data;
-      draft.results = result.results;
-    }
+  if (isType(action, getFirewalls.done)) {
+    const { result } = action.payload;
+    return onGetAllSuccess(result.data, state, result.results);
+  }
 
-    if (isType(action, getFirewalls.failed)) {
-      const { error } = action.payload;
+  if (isType(action, getFirewalls.failed)) {
+    const { error } = action.payload;
 
-      draft.loading = false;
-      draft.error.read = error;
-    }
+    return onError({ read: error }, state);
+  }
 
-    if (isType(action, createFirewallActions.started)) {
-      draft.error.create = undefined;
-    }
+  if (isType(action, createFirewallActions.started)) {
+    setError({ create: undefined }, state);
+  }
 
-    if (isType(action, createFirewallActions.done)) {
-      const newFirewall = action.payload.result;
-      draft.data[newFirewall.id] = newFirewall;
-      draft.results++;
-      draft.lastUpdated = Date.now();
-    }
+  if (isType(action, createFirewallActions.done)) {
+    const newFirewall = action.payload.result;
+    return onCreateOrUpdate(newFirewall, state);
+  }
 
-    if (isType(action, createFirewallActions.failed)) {
-      const { error } = action.payload;
+  if (isType(action, createFirewallActions.failed)) {
+    const { error } = action.payload;
 
-      draft.error.create = error;
-    }
+    return onError({ create: error }, state);
+  }
 
-    if (
-      isType(action, updateFirewallActions.started) ||
-      isType(action, updateFirewallRulesActions.started)
-    ) {
-      draft.error.update = undefined;
-    }
+  if (
+    isType(action, updateFirewallActions.started) ||
+    isType(action, updateFirewallRulesActions.started)
+  ) {
+    setError({ update: undefined }, state);
+  }
 
-    if (isType(action, updateFirewallActions.done)) {
-      const { result } = action.payload;
-      draft.data[result.id] = result;
-      draft.lastUpdated = Date.now();
-    }
+  if (isType(action, updateFirewallActions.done)) {
+    const { result } = action.payload;
+    return onCreateOrUpdate(result, state);
+  }
 
-    if (isType(action, updateFirewallRulesActions.done)) {
-      const { result, params } = action.payload;
-      let firewall = draft.data[params.firewallID];
-      firewall = { ...firewall, rules: result };
-      draft.lastUpdated = Date.now();
-    }
+  if (isType(action, updateFirewallRulesActions.done)) {
+    const { result, params } = action.payload;
+    let firewall = state.itemsById[params.firewallID];
+    firewall = { ...firewall, rules: result };
+    return onCreateOrUpdate(firewall, state);
+  }
 
-    if (
-      isType(action, updateFirewallActions.failed) ||
-      isType(action, updateFirewallRulesActions.failed)
-    ) {
-      const { error } = action.payload;
+  if (
+    isType(action, updateFirewallActions.failed) ||
+    isType(action, updateFirewallRulesActions.failed)
+  ) {
+    const { error } = action.payload;
 
-      draft.error.update = error;
-    }
+    return onError({ update: error }, state);
+  }
 
-    if (isType(action, deleteFirewallActions.started)) {
-      draft.error.delete = undefined;
-    }
+  if (isType(action, deleteFirewallActions.started)) {
+    return setError({ delete: undefined }, state);
+  }
 
-    if (isType(action, deleteFirewallActions.done)) {
-      const { firewallID } = action.payload.params;
-      delete draft.data[firewallID];
-      draft.results--;
-      draft.lastUpdated = Date.now();
-    }
+  if (isType(action, deleteFirewallActions.done)) {
+    const { firewallID } = action.payload.params;
+    return onDeleteSuccess(firewallID, state);
+  }
 
-    if (isType(action, deleteFirewallActions.failed)) {
-      const { error } = action.payload;
+  if (isType(action, deleteFirewallActions.failed)) {
+    const { error } = action.payload;
 
-      draft.error.delete = error;
-    }
-  });
+    return onError({ delete: error }, state);
+  }
+
+  return state;
 };
 
 export default reducer;

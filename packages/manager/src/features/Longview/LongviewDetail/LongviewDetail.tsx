@@ -1,4 +1,4 @@
-import { LongviewClient } from 'linode-js-sdk/lib/longview';
+import { LongviewClient } from '@linode/api-v4/lib/longview';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import {

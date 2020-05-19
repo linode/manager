@@ -1,5 +1,5 @@
-import { Image } from 'linode-js-sdk/lib/images';
-import { Config } from 'linode-js-sdk/lib/linodes';
+import { Image } from '@linode/api-v4/lib/images';
+import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Grid from 'src/components/Grid';

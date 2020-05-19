@@ -1,5 +1,5 @@
 import * as Factory from 'factory.ts';
-import { Account, ActivePromotion } from 'linode-js-sdk/lib/account/types';
+import { Account, ActivePromotion } from '@linode/api-v4/lib/account/types';
 
 export const promoFactory = Factory.Sync.makeFactory<ActivePromotion>({
   image_url: '',
@@ -27,8 +27,7 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
   tax_id: '111111111',
   credit_card: {
     last_four: '1111',
-    expiry: '01/2018',
-    cvv: '123'
+    expiry: '01/2018'
   },
   balance_uninvoiced: 0.0,
   active_since: '2018-07-03T12:15:25',

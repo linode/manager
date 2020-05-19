@@ -1,5 +1,5 @@
-import { getLongviewSubscriptions } from 'linode-js-sdk/lib/longview';
-import { LongviewSubscription } from 'linode-js-sdk/lib/longview/types';
+import { getLongviewSubscriptions } from '@linode/api-v4/lib/longview';
+import { LongviewSubscription } from '@linode/api-v4/lib/longview/types';
 import * as React from 'react';
 import {
   matchPath,

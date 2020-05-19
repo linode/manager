@@ -5,7 +5,7 @@ import {
   FirewallDeviceEntityType,
   FirewallRules,
   FirewallRuleType
-} from 'linode-js-sdk/lib/firewalls/types';
+} from '@linode/api-v4/lib/firewalls/types';
 
 export const firewallRuleFactory = Factory.Sync.makeFactory<FirewallRuleType>({
   ports: '22',

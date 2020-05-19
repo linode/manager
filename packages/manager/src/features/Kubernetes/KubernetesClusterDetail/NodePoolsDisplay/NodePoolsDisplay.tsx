@@ -1,7 +1,7 @@
 import {
   PoolNodeRequest,
   PoolNodeResponse
-} from 'linode-js-sdk/lib/kubernetes/types';
+} from '@linode/api-v4/lib/kubernetes/types';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import AddNewLink from 'src/components/AddNewLink';

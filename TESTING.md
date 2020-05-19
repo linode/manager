@@ -11,7 +11,7 @@ To run tests:
 **You must have built the JS SDK**
 
 ```
-yarn install:all && yarn workspace linode-js-sdk build
+yarn install:all && yarn workspace @linode/api-v4 build
 ```
 
 Then you can start the tests:
@@ -108,7 +108,7 @@ Jest has substantial built-in mocking capabilities, and we use many of the avail
 In general, components that make network requests should take any request handlers as props. Then testing is as simple as passing `someProp: jest.fn()` and making assertions normally. When that isn't possible, you can do the following:
 
 ```js
-jest.mock("linode-js-sdk/lib/kubernetes", () => ({
+jest.mock("@linode/api-v4/lib/kubernetes", () => ({
   getKubeConfig: () => jest.fn()
 }));
 ```

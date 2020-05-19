@@ -5,8 +5,8 @@ import {
   getInvoiceItems,
   Invoice,
   InvoiceItem
-} from 'linode-js-sdk/lib/account';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/account';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';

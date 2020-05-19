@@ -54,8 +54,9 @@ const summaryPanelStyles = (theme: Theme) =>
       marginBottom: theme.spacing(2)
     },
     summarySection: {
-      padding: theme.spacing(2),
-      marginBottom: theme.spacing(3)
+      padding: theme.spacing(2) + 4,
+      marginBottom: theme.spacing(3),
+      minHeight: '160px'
     },
     section: {
       marginBottom: theme.spacing(1),

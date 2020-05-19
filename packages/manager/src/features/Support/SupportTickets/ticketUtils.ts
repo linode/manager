@@ -1,4 +1,4 @@
-import { getTickets } from 'linode-js-sdk/lib/support';
+import { getTickets } from '@linode/api-v4/lib/support';
 
 /**
  * getStatusFilter

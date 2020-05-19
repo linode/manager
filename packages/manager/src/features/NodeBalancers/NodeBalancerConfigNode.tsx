@@ -1,4 +1,4 @@
-import { NodeBalancerConfigNodeFields } from 'linode-js-sdk/lib/nodebalancers';
+import { NodeBalancerConfigNodeFields } from '@linode/api-v4/lib/nodebalancers';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import ActionsPanel from 'src/components/ActionsPanel';

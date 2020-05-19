@@ -1,173 +1,123 @@
-import { Account, getAccountInfo } from 'linode-js-sdk/lib/account';
-import { lensPath, set, view } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
+import CircleProgress from 'src/components/CircleProgress';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import { AccountsAndPasswords, BillingAndPayments } from 'src/documentation';
-import { Requestable } from 'src/requestableContext';
-import composeState from 'src/utilities/composeState';
-import MakeAPaymentPanel from './BillingPanels/MakeAPaymentPanel';
-import PromotionsPanel from './BillingPanels/PromotionsPanel';
-import RecentInvoicesPanel from './BillingPanels/RecentInvoicesPanel';
-import RecentPaymentsPanel from './BillingPanels/RecentPaymentsPanel';
-import SummaryPanel from './BillingPanels/SummaryPanel';
-import UpdateContactInformationPanel from './BillingPanels/UpdateContactInformationPanel';
-import UpdateCreditCardPanel from './BillingPanels/UpdateCreditCardPanel';
-import { AccountProvider } from './context';
+import { useAccount } from 'src/hooks/useAccount';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import BillingActivityPanel from './BillingPanels/BillingActivityPanel';
+import BillingSummary from './BillingPanels/BillingSummary';
+import ContactInfo from './BillingPanels/ContactInfoPanel';
+import PaymentInformation from './BillingPanels/PaymentInfoPanel';
 
-type ClassNames = 'root' | 'main' | 'sidebar' | 'heading';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    main: {
-      [theme.breakpoints.up('md')]: {
-        order: 1
-      }
-    },
-    sidebar: {
-      [theme.breakpoints.up('md')]: {
-        order: 2
-      }
-    },
-    heading: {
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(2)
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {},
+  main: {
+    [theme.breakpoints.up('md')]: {
+      order: 1
     }
-  });
-
-interface PreloadedProps {
-  account: { response: Account };
-}
-
-interface State {
-  account: Requestable<Account>;
-}
-
-type CombinedProps = SetDocsProps &
-  PreloadedProps &
-  WithStyles<ClassNames> &
-  RouteComponentProps<{}>;
-
-const account = (path: string) => lensPath(['account', path]);
-
-const L = {
-  account: {
-    data: account('data'),
-    errors: account('errors'),
-    lastUpdated: account('lastUpdated'),
-    loading: account('loading')
+  },
+  heading: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(2)
   }
+}));
+
+type CombinedProps = SetDocsProps & RouteComponentProps<{}>;
+
+export const BillingDetail: React.FC<CombinedProps> = props => {
+  const { account, requestAccount } = useAccount();
+
+  const classes = useStyles();
+
+  const [mostRecentInvoiceId, setMostRecentInvoiceId] = React.useState<
+    number | undefined
+  >();
+
+  React.useEffect(() => {
+    if (account.loading && account.lastUpdated === 0) {
+      requestAccount();
+    }
+  }, [account.loading, account.lastUpdated, requestAccount]);
+
+  if (account.loading && account.lastUpdated === 0) {
+    return <CircleProgress />;
+  }
+
+  if (account.error.read) {
+    const errorText = getAPIErrorOrDefault(
+      account.error.read,
+      'There was an error retrieving your account data.'
+    )[0].reason;
+    return <ErrorState errorText={errorText} />;
+  }
+
+  /* This will never happen, /account is requested on app load
+  and the splash screen doesn't resolve until it succeeds */
+  if (!account.data) {
+    return null;
+  }
+
+  return (
+    <React.Fragment>
+      <DocumentTitleSegment segment={`Account & Billing`} />
+      <div
+        id="tabpanel-billingInfo"
+        role="tabpanel"
+        aria-labelledby="tab-billingInfo"
+        data-testid="billing-detail"
+      >
+        <Grid container>
+          <Grid item xs={12} md={12} lg={12} className={classes.main}>
+            <BillingSummary
+              balance={account?.data?.balance ?? 0}
+              promotion={account?.data?.active_promotions?.[0]}
+              balanceUninvoiced={account?.data?.balance_uninvoiced ?? 0}
+              mostRecentInvoiceId={mostRecentInvoiceId}
+            />
+            <Grid container direction="row">
+              <ContactInfo
+                company={account.data.company}
+                firstName={account.data.first_name}
+                lastName={account.data.last_name}
+                address1={account.data.address_1}
+                address2={account.data.address_2}
+                email={account.data.email}
+                phone={account.data.phone}
+                city={account.data.city}
+                state={account.data.state}
+                zip={account.data.zip}
+                history={props.history}
+                taxId={account.data.tax_id}
+              />
+              <PaymentInformation
+                balance={account?.data?.balance ?? 0}
+                balanceUninvoiced={account?.data?.balance_uninvoiced ?? 0}
+                expiry={account?.data?.credit_card?.expiry ?? ''}
+                lastFour={account?.data?.credit_card?.last_four ?? ''}
+                promoCredit={
+                  account?.data?.active_promotions?.[0]
+                    ?.this_month_credit_remaining
+                }
+              />
+            </Grid>
+            <BillingActivityPanel
+              mostRecentInvoiceId={mostRecentInvoiceId}
+              setMostRecentInvoiceId={setMostRecentInvoiceId}
+              accountActiveSince={account?.data?.active_since}
+            />
+          </Grid>
+        </Grid>
+      </div>
+    </React.Fragment>
+  );
 };
 
-export class BillingDetail extends React.Component<CombinedProps, State> {
-  static docs = [BillingAndPayments, AccountsAndPasswords];
+const docs = [BillingAndPayments, AccountsAndPasswords];
 
-  composeState = composeState;
-
-  getAccount = () => {
-    this.composeState([
-      set(L.account.loading, true),
-      set(L.account.errors, undefined)
-    ]);
-
-    return getAccountInfo()
-      .then(data => {
-        this.composeState([
-          set(L.account.data, data),
-          set(L.account.lastUpdated, Date.now()),
-          set(L.account.loading, false)
-        ]);
-      })
-      .catch(errors => {
-        this.composeState([
-          set(L.account.loading, false),
-          set(L.account.lastUpdated, Date.now()),
-          set(L.account.errors, [{ reason: 'Unable to load account details.' }])
-        ]);
-      });
-  };
-
-  state: State = {
-    account: {
-      lastUpdated: 0,
-      loading: true,
-      request: this.getAccount,
-      update: (updater: (s: Account) => Account) => {
-        const data = view<State, Account>(L.account.data, this.state);
-
-        if (!data) {
-          return;
-        }
-
-        this.composeState([set(L.account.data, updater(data))]);
-      }
-    }
-  };
-
-  mounted: boolean = false;
-
-  componentDidMount() {
-    this.mounted = true;
-    this.getAccount();
-  }
-
-  componentWillUnmount() {
-    this.mounted = false;
-  }
-
-  render() {
-    const { classes } = this.props;
-
-    return (
-      <React.Fragment>
-        <DocumentTitleSegment segment={`Account & Billing`} />
-        <AccountProvider value={this.state.account}>
-          <div
-            id="tabpanel-billingInfo"
-            role="tabpanel"
-            aria-labelledby="tab-billingInfo"
-          >
-            <Typography variant="h2" className={classes.heading}>
-              Billing
-            </Typography>
-            <Grid container>
-              <Grid item xs={12} md={8} lg={9} className={classes.main}>
-                <UpdateContactInformationPanel />
-                <UpdateCreditCardPanel />
-                <MakeAPaymentPanel />
-                <PromotionsPanel />
-                <RecentInvoicesPanel />
-                <RecentPaymentsPanel />
-              </Grid>
-              <Grid item xs={12} md={4} lg={3} className={classes.sidebar}>
-                <SummaryPanel
-                  data-qa-summary-panel
-                  history={this.props.history}
-                />
-              </Grid>
-            </Grid>
-          </div>
-        </AccountProvider>
-      </React.Fragment>
-    );
-  }
-}
-
-const styled = withStyles(styles);
-
-export default compose<CombinedProps, {}>(
-  styled,
-  setDocs(BillingDetail.docs)
-)(BillingDetail);
+export default compose<CombinedProps, {}>(setDocs(docs))(BillingDetail);

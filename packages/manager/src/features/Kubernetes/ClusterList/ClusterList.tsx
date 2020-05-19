@@ -1,4 +1,4 @@
-import { KubernetesCluster } from 'linode-js-sdk/lib/kubernetes';
+import { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
 import { path } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';

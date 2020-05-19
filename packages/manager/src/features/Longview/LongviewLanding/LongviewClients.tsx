@@ -1,7 +1,7 @@
 import {
   LongviewClient,
   LongviewSubscription
-} from 'linode-js-sdk/lib/longview/types';
+} from '@linode/api-v4/lib/longview/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';

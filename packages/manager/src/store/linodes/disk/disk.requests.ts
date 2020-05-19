@@ -10,7 +10,7 @@ import {
   getLinodeDisks as _getLinodeDisks,
   resizeLinodeDisk as _resizeLinodeDisk,
   updateLinodeDisk as _updateLinodeDisk
-} from 'linode-js-sdk/lib/linodes';
+} from '@linode/api-v4/lib/linodes';
 import { createRequestThunk } from 'src/store/store.helpers';
 import { getAll } from 'src/utilities/getAll';
 import {
