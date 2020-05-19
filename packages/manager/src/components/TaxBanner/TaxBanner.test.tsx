@@ -21,6 +21,7 @@ describe('Utility Functions', () => {
     );
 
     const container = queryByTestId('hello');
+    // safe
     expect(container).toContainHTML(
       '<div data-testid="hello">hello world <a href="/account/billing">I am</a> Marty</div>'
     );
@@ -50,6 +51,7 @@ describe('Utility Functions', () => {
     );
 
     const container = queryByTestId('hello');
+    // safe
     expect(container).toContainHTML(
       '<div data-testid="hello">Please see docs at <a href="https://linode.com" target="_blank" aria-describedby="external-site" rel="noopener noreferrer">this location</a>. And change <a href="/account/billing">your account</a>.</div>'
     );

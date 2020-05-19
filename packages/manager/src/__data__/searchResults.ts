@@ -1,3 +1,5 @@
+/* eslint-disable xss/no-mixed-html */
+
 export const community_question = {
   objectID: 'q_98',
   title: 'This is a community question.',
