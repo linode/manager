@@ -29,7 +29,7 @@ request.createDomainRecord = jest.fn().mockResolvedValue({
 const testDomain = 'example.com';
 const testDomainID = testLinode.id;
 const testIPv4 = testLinode.ipv4[0];
-const testIPv6 = testLinode.ipv6;
+const nullTestIPv6 = testLinode.ipv6;
 
 const notNullTestIPv6 = '2600:3c03:e000:3cb::2';
 
@@ -39,7 +39,7 @@ describe('Do not force IPv6 creation', () => {
       testDomain,
       testDomainID,
       testIPv4,
-      testIPv6
+      nullTestIPv6
     );
 
     // Because testIPv6 = null, generateDefaultDomainRecords() should only return the 3 baseIPv4Requests and skip the creation of the other 4 records for IPv6.
