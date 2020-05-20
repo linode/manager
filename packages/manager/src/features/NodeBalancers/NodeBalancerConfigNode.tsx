@@ -1,17 +1,17 @@
-import { NodeBalancerConfigNodeFields } from '@linode/api-v4/lib/nodebalancers';
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
 import MenuItem from 'src/components/core/MenuItem';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import SelectIP from './ConfigNodeIPSelect';
+import { NodeBalancerConfigNodeFields } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   divider: {
