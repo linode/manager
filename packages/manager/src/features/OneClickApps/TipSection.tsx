@@ -10,7 +10,6 @@ import {
 import Typography from 'src/components/core/Typography';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
-
 type ClassNames = 'root' | 'icon' | 'tip' | 'title';
 
 const styles = (theme: Theme) =>
@@ -68,8 +67,8 @@ export const TipSection: React.FunctionComponent<CombinedProps> = props => {
         {tips.map((tip, idx) => (
           <Grid item key={`${title}-tip-item-${idx}`}>
             <Typography
-            className={classes.title}
-            dangerouslySetInnerHTML={{ __html: sanitizeHTML(tip) }}
+              className={classes.title}
+              dangerouslySetInnerHTML={{ __html: sanitizeHTML(tip) }}
             />
           </Grid>
         ))}
