@@ -1,11 +1,22 @@
-import produce from 'immer';
 import { ManagedServiceMonitor } from '@linode/api-v4/lib/managed';
 import { Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
 
-import { EntityError, EntityState } from 'src/store/types';
+import {
+  EntityError,
+  MappedEntityState2 as MappedEntityState
+} from 'src/store/types';
+import {
+  createDefaultState,
+  onCreateOrUpdate,
+  onDeleteSuccess,
+  onError,
+  onGetAllSuccess,
+  onStart,
+  setError
+} from 'src/store/store.helpers.tmp';
+
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import updateOrAdd from 'src/utilities/updateOrAdd';
 import {
   createServiceMonitorActions,
   deleteServiceMonitorActions,
@@ -19,119 +30,99 @@ import {
  * State
  */
 
-export type State = EntityState<ManagedServiceMonitor, EntityError>;
+export type State = MappedEntityState<ManagedServiceMonitor, EntityError>;
 
-export const defaultState: State = {
-  results: [],
-  entities: [],
-  loading: false,
-  lastUpdated: 0,
-  error: {}
-};
-
+export const defaultState: State = createDefaultState();
 /**
  * Reducer
  */
 const reducer: Reducer<State> = (state = defaultState, action) => {
-  return produce(state, draft => {
-    if (isType(action, requestServicesActions.done)) {
-      const { result } = action.payload;
+  if (isType(action, requestServicesActions.done)) {
+    const { result } = action.payload;
 
-      draft.entities = result;
-      draft.results = result.map(s => s.id);
-      draft.loading = false;
-      draft.lastUpdated = Date.now();
-      draft.error!.read = undefined;
-    }
+    return onGetAllSuccess(result.data, state, result.results);
+  }
 
-    if (isType(action, requestServicesActions.started)) {
-      draft.loading = true;
-    }
+  if (isType(action, requestServicesActions.started)) {
+    return onStart(state);
+  }
 
-    if (isType(action, requestServicesActions.failed)) {
-      const { error } = action.payload;
+  if (isType(action, requestServicesActions.failed)) {
+    const { error } = action.payload;
 
-      draft.loading = false;
-      draft.error!.read = getAPIErrorOrDefault(
-        error,
-        'Error loading your Monitors.'
-      );
-    }
+    return onError(
+      { read: getAPIErrorOrDefault(error, 'Error loading your Monitors.') },
+      state
+    );
+  }
 
-    if (
-      isType(action, disableServiceMonitorActions.started) ||
-      isType(action, enableServiceMonitorActions.started)
-    ) {
-      draft.error!.update = undefined;
-    }
+  if (
+    isType(action, disableServiceMonitorActions.started) ||
+    isType(action, enableServiceMonitorActions.started)
+  ) {
+    return setError({ update: undefined }, state);
+  }
 
-    if (
-      isType(action, disableServiceMonitorActions.done) ||
-      isType(action, enableServiceMonitorActions.done)
-    ) {
-      const { result } = action.payload;
-      draft.entities = updateOrAdd(result, state.entities);
-      draft.results = draft.entities.map(m => m.id);
-    }
+  if (
+    isType(action, disableServiceMonitorActions.done) ||
+    isType(action, enableServiceMonitorActions.done)
+  ) {
+    const { result } = action.payload;
+    return onCreateOrUpdate(result, state);
+  }
 
-    if (
-      isType(action, disableServiceMonitorActions.failed) ||
-      isType(action, enableServiceMonitorActions.failed)
-    ) {
-      const { error } = action.payload;
-      draft.error!.update = error;
-    }
+  if (
+    isType(action, disableServiceMonitorActions.failed) ||
+    isType(action, enableServiceMonitorActions.failed)
+  ) {
+    const { error } = action.payload;
+    return onError({ update: error }, state);
+  }
 
-    if (isType(action, createServiceMonitorActions.started)) {
-      draft.error!.create = undefined;
-    }
+  if (isType(action, createServiceMonitorActions.started)) {
+    return setError({ create: undefined }, state);
+  }
 
-    if (isType(action, createServiceMonitorActions.done)) {
-      const { result } = action.payload;
-      draft.entities.push(result);
-      draft.results.push(result.id);
-    }
+  if (isType(action, createServiceMonitorActions.done)) {
+    const { result } = action.payload;
+    return onCreateOrUpdate(result, state);
+  }
 
-    if (isType(action, createServiceMonitorActions.failed)) {
-      const { error } = action.payload;
-      draft.error!.create = error;
-    }
+  if (isType(action, createServiceMonitorActions.failed)) {
+    const { error } = action.payload;
+    return onError({ create: error }, state);
+  }
 
-    if (isType(action, deleteServiceMonitorActions.started)) {
-      draft.error!.delete = undefined;
-    }
+  if (isType(action, deleteServiceMonitorActions.started)) {
+    return setError({ delete: undefined }, state);
+  }
 
-    if (isType(action, deleteServiceMonitorActions.done)) {
-      const { params: monitor } = action.payload;
-      draft.entities = state.entities.filter(
-        thisMonitor => thisMonitor.id !== monitor.monitorID
-      );
-      draft.results = draft.entities.map(m => m.id);
-    }
+  if (isType(action, deleteServiceMonitorActions.done)) {
+    const {
+      params: { monitorID }
+    } = action.payload;
+    return onDeleteSuccess(monitorID, state);
+  }
 
-    if (isType(action, deleteServiceMonitorActions.failed)) {
-      const { error } = action.payload;
-      draft.error!.delete = error;
-    }
+  if (isType(action, deleteServiceMonitorActions.failed)) {
+    const { error } = action.payload;
+    return onError({ delete: error }, state);
+  }
 
-    if (isType(action, updateServiceMonitorActions.started)) {
-      draft.error!.update = undefined;
-    }
+  if (isType(action, updateServiceMonitorActions.started)) {
+    return setError({ update: undefined }, state);
+  }
 
-    if (isType(action, updateServiceMonitorActions.done)) {
-      const { result } = action.payload;
-      draft.entities = updateOrAdd(result, state.entities);
-      draft.results = draft.entities.map(m => m.id);
-      draft.lastUpdated = Date.now();
-    }
+  if (isType(action, updateServiceMonitorActions.done)) {
+    const { result } = action.payload;
+    return onCreateOrUpdate(result, state);
+  }
 
-    if (isType(action, updateServiceMonitorActions.failed)) {
-      const { error } = action.payload;
-      draft.error!.update = error;
-    }
-
-    return draft;
-  });
+  if (isType(action, updateServiceMonitorActions.failed)) {
+    const { error } = action.payload;
+    return onError({ update: error }, state);
+  }
+  return state;
 };
 
 export default reducer;

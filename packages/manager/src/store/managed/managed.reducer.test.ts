@@ -2,7 +2,9 @@ import {
   ManagedServiceMonitor,
   MonitorStatus
 } from '@linode/api-v4/lib/managed';
-import { monitors } from 'src/__data__/serviceMonitors';
+import { monitorFactory } from 'src/factories/managed';
+
+const monitors = monitorFactory.buildList(5);
 
 import {
   deleteServiceMonitorActions,
@@ -15,7 +17,12 @@ import reducer, { defaultState } from './managed.reducer';
 const mockError = [{ reason: 'no reason' }];
 
 const addEntities = (entities: ManagedServiceMonitor[]) =>
-  reducer(defaultState, requestServicesActions.done({ result: entities }));
+  reducer(
+    defaultState,
+    requestServicesActions.done({
+      result: { data: entities, results: entities.length }
+    })
+  );
 
 describe('Managed services reducer', () => {
   it('should handle an initiated request for services', () => {
@@ -27,12 +34,14 @@ describe('Managed services reducer', () => {
   it('should handle a successful services request', () => {
     const newState = reducer(
       { ...defaultState, loading: true },
-      requestServicesActions.done({ result: monitors })
+      requestServicesActions.done({
+        result: { data: monitors, results: monitors.length }
+      })
     );
-    expect(newState).toHaveProperty('entities', monitors);
+    expect(Object.values(newState.itemsById)).toEqual(monitors);
     expect(newState).toHaveProperty('loading', false);
-    expect(newState.error!.read).toBeUndefined();
-    expect(newState.results).toHaveLength(monitors.length);
+    expect(newState.error.read).toBeUndefined();
+    expect(newState.results).toBe(monitors.length);
   });
 
   it('should handle a failed services request', () => {
@@ -40,7 +49,7 @@ describe('Managed services reducer', () => {
       { ...defaultState, loading: true },
       requestServicesActions.failed({ error: mockError })
     );
-    expect(newState.error!.read).toEqual(mockError);
+    expect(newState.error.read).toEqual(mockError);
     expect(newState).toHaveProperty('loading', false);
   });
 
@@ -57,12 +66,15 @@ describe('Managed services reducer', () => {
         result: disabledMonitor
       })
     );
-    expect(newState.entities[0]).toEqual(disabledMonitor);
-    expect(newState.results.length).toBe(withEntities.results.length);
-    expect(newState.entities).not.toContain(monitors[0]);
+    expect(Object.values(newState.itemsById)).toHaveProperty(
+      String(disabledMonitor.id),
+      disabledMonitor
+    );
+    expect(newState.results).toBe(withEntities.results);
+    expect(Object.keys(newState.itemsById)).not.toContain(monitors[0].id);
   });
 
-  it('should handle a failed disabled action', () => {
+  it('should handle a failed disable action', () => {
     const newState = reducer(
       defaultState,
       disableServiceMonitorActions.failed({
@@ -82,7 +94,8 @@ describe('Managed services reducer', () => {
         result: {}
       })
     );
-    expect(deletedState.results).toHaveLength(monitors.length - 1);
+    expect(Object.keys(deletedState.itemsById)).not.toContain(monitors[0].id);
+    expect(deletedState.results).toBe(monitors.length - 1);
   });
 
   it('should handle a failed delete action', () => {
@@ -94,7 +107,7 @@ describe('Managed services reducer', () => {
         params: { monitorID: 12345 }
       })
     );
-    expect(newState.error!.delete).toEqual(mockError);
+    expect(newState.error.delete).toEqual(mockError);
   });
 
   it('should handle an enable action', () => {
@@ -106,7 +119,10 @@ describe('Managed services reducer', () => {
         result: monitors[0]
       })
     );
-    expect(enabledState.entities[0]).toHaveProperty('status', 'pending');
+    expect(Object.values(enabledState.itemsById)[0]).toHaveProperty(
+      'status',
+      'pending'
+    );
   });
 
   it('should handle a failed enable action', () => {

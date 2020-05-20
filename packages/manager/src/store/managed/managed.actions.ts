@@ -4,6 +4,7 @@ import {
 } from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
 import actionCreatorFactory from 'typescript-fsa';
+import { GetAllData } from 'src/utilities/getAll';
 
 export const actionCreator = actionCreatorFactory(`@@manager/managed`);
 
@@ -13,7 +14,7 @@ export interface MonitorPayload {
 
 export const requestServicesActions = actionCreator.async<
   void,
-  ManagedServiceMonitor[],
+  GetAllData<ManagedServiceMonitor>,
   APIError[]
 >('request');
 
