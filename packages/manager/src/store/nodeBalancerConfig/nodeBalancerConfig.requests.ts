@@ -22,8 +22,7 @@ const getNodeBalancerConfigs = (nodeBalancerId: number) =>
 
 export const getAllNodeBalancerConfigs = createRequestThunk(
   getAllNodeBalancerConfigsActions,
-  ({ nodeBalancerId }) =>
-    getNodeBalancerConfigs(nodeBalancerId)().then(({ data }) => data)
+  ({ nodeBalancerId }) => getNodeBalancerConfigs(nodeBalancerId)()
 );
 
 export const createNodeBalancerConfig = createRequestThunk(
@@ -41,7 +40,7 @@ export const updateNodeBalancerConfig = createRequestThunk(
 export const deleteNodeBalancerConfig: ThunkActionCreator<
   Promise<{}>,
   { nodeBalancerConfigId: number; nodeBalancerId: number }
-> = params => (dispatch, getStore) => {
+> = params => dispatch => {
   const { nodeBalancerConfigId, nodeBalancerId } = params;
   const { started, done, failed } = deleteNodeBalancerConfigActions;
 
@@ -83,11 +82,16 @@ export const updateNodeBalancerConfigs: ThunkActionCreator<
     const [added, removed] = getAddRemoved(storedConfigs, data);
 
     if (removed.length > 0) {
-      dispatch(removeNodeBalancerConfigs(removed.map(({ id }) => id)));
+      dispatch(
+        removeNodeBalancerConfigs({
+          configIDs: removed.map(({ id }) => id),
+          nodeBalancerId
+        })
+      );
     }
 
     if (added.length > 0) {
-      dispatch(addNodeBalancerConfigs(added));
+      dispatch(addNodeBalancerConfigs({ configs: added, nodeBalancerId }));
     }
   });
 };

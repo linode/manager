@@ -98,7 +98,8 @@ export const addMany = <E extends Entity, O = APIError[] | undefined>(
   return {
     ...state,
     itemsById,
-    results: results ?? Object.keys(itemsById).length
+    results: results ?? Object.keys(itemsById).length,
+    lastUpdated: Date.now()
   };
 };
 

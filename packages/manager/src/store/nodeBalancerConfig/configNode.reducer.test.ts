@@ -18,7 +18,7 @@ const addEntities = () =>
   reducer(
     defaultState,
     requestNodeBalancerConfigNodesActions.done({
-      result: nodes,
+      result: { data: nodes, results: nodes.length },
       params: mockParams
     })
   );
@@ -28,14 +28,14 @@ describe('NB Config Node reducer', () => {
     const newState = reducer(
       defaultState,
       requestNodeBalancerConfigNodesActions.done({
-        result: nodes,
+        result: { data: nodes, results: nodes.length },
         params: mockParams
       })
-    );
-    expect(newState.entities).toEqual(nodes);
+    )[mockParams.configId];
+    expect(Object.values(newState.itemsById)).toEqual(nodes);
     expect(newState.lastUpdated).toBeGreaterThan(0);
     expect(newState.loading).toBe(false);
-    expect(newState.results).toHaveLength(nodes.length);
+    expect(newState.results).toBe(nodes.length);
   });
 
   it('should handle a failed request action', () => {
@@ -45,7 +45,7 @@ describe('NB Config Node reducer', () => {
         params: mockParams,
         error: mockError
       })
-    );
+    )[mockParams.configId];
     expect(newState.error).toHaveProperty('read', mockError);
   });
 
@@ -54,7 +54,7 @@ describe('NB Config Node reducer', () => {
       reducer(
         defaultState,
         requestNodeBalancerConfigNodesActions.started(mockParams)
-      )
+      )[mockParams.configId]
     ).toHaveProperty('loading', true);
   });
 
@@ -65,9 +65,9 @@ describe('NB Config Node reducer', () => {
         result: nodes[0],
         params: { ...mockParams, address: '', label: '' }
       })
-    );
-    expect(newState.entities[0]).toEqual(nodes[0]);
-    expect(newState.results).toEqual([nodes[0].id]);
+    )[mockParams.configId];
+    expect(Object.values(newState.itemsById)).toContain(nodes[0]);
+    expect(newState.results).toBe(1);
     expect(newState.lastUpdated).toBeGreaterThan(0);
   });
 
@@ -79,7 +79,7 @@ describe('NB Config Node reducer', () => {
         params: { ...mockParams, address: '', label: '' }
       })
     );
-    expect(newState.error!.create).toEqual(mockError);
+    expect(newState[mockParams.configId].error!.create).toEqual(mockError);
   });
 
   it('should handle node deletion', () => {
@@ -90,8 +90,10 @@ describe('NB Config Node reducer', () => {
         result: {},
         params: { ...mockParams, nodeId: nodes[0].id }
       })
+    )[mockParams.configId];
+    expect(newState.results).toBe(
+      Object.keys(withEntities[mockParams.configId].itemsById).length - 1
     );
-    expect(newState.entities).toHaveLength(withEntities.entities.length - 1);
   });
 
   it('should handle a failed node deletion', () => {
@@ -102,7 +104,7 @@ describe('NB Config Node reducer', () => {
         error: mockError
       })
     );
-    expect(newState.error!.delete).toEqual(mockError);
+    expect(newState[mockParams.configId].error!.delete).toEqual(mockError);
   });
 
   it('should handle a successful update', () => {
@@ -114,9 +116,11 @@ describe('NB Config Node reducer', () => {
         result: updatedNode,
         params: { ...mockParams, nodeId: nodes[1].id }
       })
+    )[mockParams.configId];
+    expect(Object.values(newState.itemsById)).toHaveLength(
+      Object.keys(withEntities[mockParams.configId].itemsById).length
     );
-    expect(newState.entities).toHaveLength(withEntities.entities.length);
-    expect(newState.entities[1]).toEqual(updatedNode);
+    expect(newState.itemsById[nodes[1].id]).toEqual(updatedNode);
   });
 
   it('should handle a failed update', () => {
@@ -127,6 +131,6 @@ describe('NB Config Node reducer', () => {
         params: { ...mockParams, nodeId: 123 }
       })
     );
-    expect(newState.error!.update).toEqual(mockError);
+    expect(newState[mockParams.configId].error!.update).toEqual(mockError);
   });
 });
