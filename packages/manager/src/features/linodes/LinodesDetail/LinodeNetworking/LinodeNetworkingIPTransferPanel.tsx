@@ -1,5 +1,5 @@
-import { assignAddresses } from 'linode-js-sdk/lib/networking';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { assignAddresses } from '@linode/api-v4/lib/networking';
+import { APIError } from '@linode/api-v4/lib/types';
 import {
   both,
   compose,
@@ -221,7 +221,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
 
           compose(
             /** We need to find and return the newly selected Linode's IPs. */
-            updateSelectedLinodesIPs(ip, (currentIPs: string[]) => {
+            updateSelectedLinodesIPs(ip, () => {
               const linode = this.props.linodes.find(
                 l => l.id === Number(e.value)
               );
@@ -232,14 +232,14 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
             }),
 
             /** We need to find the selected Linode's IPs and return the first. */
-            updateSelectedIP(ip, (currentIP: string) => {
+            updateSelectedIP(ip, () => {
               const linode = this.props.linodes.find(
                 l => l.id === Number(e.value)
               );
               if (linode) {
                 return linode.ips[0];
               }
-              return;
+              return undefined;
             })
           )
         )
@@ -307,7 +307,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
     );
   };
 
-  linodeSelect = ({ mode, sourceIP, selectedLinodeID }: Move) => {
+  linodeSelect = ({ sourceIP, selectedLinodeID }: Move) => {
     const { classes, readOnly } = this.props;
 
     const linodeList = this.props.linodes.map(l => {
@@ -512,7 +512,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
         <Grid container>
           {error && (
             <Grid item xs={12}>
-              {error.map(({ field, reason }, idx) => (
+              {error.map(({ reason }, idx) => (
                 <Notice key={idx} error text={reason} />
               ))}
             </Grid>
@@ -521,9 +521,9 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
             <Typography className={classes.networkActionText}>
               If you have two Linodes in the same data center, you can use the
               IP transfer feature to switch their IP addresses. This could be
-              useful in several situations. For example, if you’ve built a new
-              server to replace an old one, you could swap IP addresses instead
-              of updating the DNS records.
+              useful in several situations. For example, if you&#39;ve built a
+              new server to replace an old one, you could swap IP addresses
+              instead of updating the DNS records.
             </Typography>
           </Grid>
           <Grid item xs={12}>
@@ -541,8 +541,8 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
             </Grid>
             {this.props.linodes.length === 0 ? (
               <Typography className={classes.emptyStateText}>
-                You have no other linodes in this Linode's datacenter with which
-                to transfer IPs.
+                You have no other linodes in this Linode&#39;s datacenter with
+                which to transfer IPs.
               </Typography>
             ) : (
               Object.values(ips).map(this.ipRow)

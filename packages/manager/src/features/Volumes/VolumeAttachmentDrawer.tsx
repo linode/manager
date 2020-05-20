@@ -1,6 +1,6 @@
-import { Grant } from 'linode-js-sdk/lib/account';
-import { getLinodeConfigs } from 'linode-js-sdk/lib/linodes';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { Grant } from '@linode/api-v4/lib/account';
+import { getLinodeConfigs } from '@linode/api-v4/lib/linodes';
+import { APIError } from '@linode/api-v4/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';

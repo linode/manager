@@ -2,7 +2,7 @@ import {
   getDeprecatedLinodeTypes,
   getLinodeTypes,
   LinodeType
-} from 'linode-js-sdk/lib/linodes';
+} from '@linode/api-v4/lib/linodes';
 import cachedTypes from 'src/cachedData/types.json';
 import cachedDeprecatedTypes from 'src/cachedData/typesLegacy.json';
 import { isProdAPI } from 'src/constants';

@@ -18,7 +18,7 @@ There is one yarn lock in this repo at the root level, this is like `package-loc
 
 #### Change a dependency version, and the `yarn.lock`
 
-The best way is usually to manually modify the `package.json` in the correct workspace (root, linode-manager or linode-js-sdk),
+The best way is usually to manually modify the `package.json` in the correct workspace (root, linode-manager or @linode/api-v4),
 then run `yarn`. This should update the lockfile with only the required changes.
 
 If the resulting changes to `yarn.lock` are extensive (which can be the case if Yarn detects that it can resolve warnings in

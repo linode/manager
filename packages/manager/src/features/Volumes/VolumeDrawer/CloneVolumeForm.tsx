@@ -1,5 +1,5 @@
 import { Form, Formik } from 'formik';
-import { CloneVolumeSchema } from 'linode-js-sdk/lib/volumes';
+import { CloneVolumeSchema } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Typography from 'src/components/core/Typography';

@@ -3,8 +3,8 @@ import {
   ManagedCredential,
   ManagedServiceMonitor,
   ManagedServicePayload
-} from 'linode-js-sdk/lib/managed';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/managed';
+import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';

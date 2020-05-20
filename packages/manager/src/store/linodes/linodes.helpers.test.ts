@@ -1,4 +1,4 @@
-import { Notification } from 'linode-js-sdk/lib/account';
+import { Notification } from '@linode/api-v4/lib/account';
 import { linode1 } from 'src/__data__/linodes';
 import { addNotificationsToLinodes } from './linodes.helpers';
 

@@ -1,5 +1,5 @@
-import { NodeBalancerConfigNodeMode } from 'linode-js-sdk/lib/nodebalancers/types';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { NodeBalancerConfigNodeMode } from '@linode/api-v4/lib/nodebalancers/types';
+import { APIError } from '@linode/api-v4/lib/types';
 
 export interface ExtendedNodeBalancerConfigNode {
   id: number;

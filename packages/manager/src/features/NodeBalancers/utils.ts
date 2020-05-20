@@ -1,4 +1,4 @@
-import { NodeBalancerConfigNode } from 'linode-js-sdk/lib/nodebalancers';
+import { NodeBalancerConfigNode } from '@linode/api-v4/lib/nodebalancers';
 import { clamp, compose, filter, isNil, toString } from 'ramda';
 import {
   ExtendedNodeBalancerConfigNode,

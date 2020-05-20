@@ -1,10 +1,9 @@
-import { SupportTicket } from 'linode-js-sdk/lib/account';
+import { SupportTicket } from '@linode/api-v4/lib/support';
 import { compose } from 'ramda';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
-  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -37,7 +36,7 @@ type ClassNames =
   | 'cellUpdated'
   | 'cellUpdatedBy';
 
-const styles = (theme: Theme) =>
+const styles = () =>
   createStyles({
     root: {},
     cellSubject: {
@@ -76,7 +75,7 @@ export class TicketList extends React.Component<CombinedProps, {}> {
     this.props.request();
   }
 
-  componentDidUpdate(prevProps: Props, prevState: {}) {
+  componentDidUpdate(prevProps: Props) {
     if (prevProps.filterStatus !== this.props.filterStatus) {
       this.props.handlePageChange(1);
     }
@@ -131,91 +130,89 @@ export class TicketList extends React.Component<CombinedProps, {}> {
     const isActive = (label: string) => label === orderBy;
 
     return (
-      <React.Fragment>
-        <Paper
-          role="tabpanel"
-          aria-labelledby={`tab-${this.props.filterStatus}-tickets`}
-          id={`tabpanel-${this.props.filterStatus}-tickets`}
-        >
-          <Table aria-label="List of Tickets">
-            <TableHead>
-              <TableRow>
-                <TableSortCell
-                  label="summary"
-                  direction={order}
-                  handleClick={handleOrderChange}
-                  active={isActive('summary')}
-                  data-qa-support-subject-header
-                  noWrap
-                  className={classes.cellSubject}
-                >
-                  Subject
-                </TableSortCell>
-                <TableSortCell
-                  label="id"
-                  direction={order}
-                  handleClick={handleOrderChange}
-                  active={isActive('id')}
-                  data-qa-support-id-header
-                  noWrap
-                  className={classes.cellId}
-                >
-                  Ticket ID
-                </TableSortCell>
-                <TableCell
-                  data-qa-support-regarding-header
-                  className={classes.cellRegarding}
-                >
-                  Regarding
-                </TableCell>
-                <TableSortCell
-                  label="opened"
-                  direction={order}
-                  handleClick={handleOrderChange}
-                  active={isActive('opened')}
-                  data-qa-support-date-header
-                  noWrap
-                  className={classes.cellCreated}
-                >
-                  Date Created
-                </TableSortCell>
-                <TableSortCell
-                  label="updated"
-                  direction={order}
-                  handleClick={handleOrderChange}
-                  active={isActive('updated')}
-                  data-qa-support-updated-header
-                  noWrap
-                  className={classes.cellUpdated}
-                >
-                  Last Updated
-                </TableSortCell>
-                <TableSortCell
-                  label="updated_by"
-                  direction={order}
-                  handleClick={handleOrderChange}
-                  active={isActive('updated_by')}
-                  data-qa-support-updated-by-header
-                  noWrap
-                  className={classes.cellUpdatedBy}
-                >
-                  Updated By
-                </TableSortCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>{this.renderContent()}</TableBody>
-          </Table>
-          <PaginationFooter
-            count={count}
-            page={page}
-            pageSize={pageSize}
-            handlePageChange={this.props.handlePageChange}
-            handleSizeChange={this.props.handlePageSizeChange}
-            eventCategory="ticket list"
-            padded
-          />
-        </Paper>
-      </React.Fragment>
+      <Paper
+        role="tabpanel"
+        aria-labelledby={`tab-${this.props.filterStatus}-tickets`}
+        id={`tabpanel-${this.props.filterStatus}-tickets`}
+      >
+        <Table aria-label="List of Tickets">
+          <TableHead>
+            <TableRow>
+              <TableSortCell
+                label="summary"
+                direction={order}
+                handleClick={handleOrderChange}
+                active={isActive('summary')}
+                data-qa-support-subject-header
+                noWrap
+                className={classes.cellSubject}
+              >
+                Subject
+              </TableSortCell>
+              <TableSortCell
+                label="id"
+                direction={order}
+                handleClick={handleOrderChange}
+                active={isActive('id')}
+                data-qa-support-id-header
+                noWrap
+                className={classes.cellId}
+              >
+                Ticket ID
+              </TableSortCell>
+              <TableCell
+                data-qa-support-regarding-header
+                className={classes.cellRegarding}
+              >
+                Regarding
+              </TableCell>
+              <TableSortCell
+                label="opened"
+                direction={order}
+                handleClick={handleOrderChange}
+                active={isActive('opened')}
+                data-qa-support-date-header
+                noWrap
+                className={classes.cellCreated}
+              >
+                Date Created
+              </TableSortCell>
+              <TableSortCell
+                label="updated"
+                direction={order}
+                handleClick={handleOrderChange}
+                active={isActive('updated')}
+                data-qa-support-updated-header
+                noWrap
+                className={classes.cellUpdated}
+              >
+                Last Updated
+              </TableSortCell>
+              <TableSortCell
+                label="updated_by"
+                direction={order}
+                handleClick={handleOrderChange}
+                active={isActive('updated_by')}
+                data-qa-support-updated-by-header
+                noWrap
+                className={classes.cellUpdatedBy}
+              >
+                Updated By
+              </TableSortCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>{this.renderContent()}</TableBody>
+        </Table>
+        <PaginationFooter
+          count={count}
+          page={page}
+          pageSize={pageSize}
+          handlePageChange={this.props.handlePageChange}
+          handleSizeChange={this.props.handlePageSizeChange}
+          eventCategory="ticket list"
+          padded
+        />
+      </Paper>
     );
   }
 }

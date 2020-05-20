@@ -1,7 +1,7 @@
 import {
   ObjectStorageBucket,
   ObjectStorageClusterID
-} from 'linode-js-sdk/lib/object-storage/types';
+} from '@linode/api-v4/lib/object-storage/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { State } from 'src/store/bucket/bucket.reducer';

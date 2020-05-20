@@ -1,5 +1,5 @@
 import * as Factory from 'factory.ts';
-import { IPAddress } from 'linode-js-sdk/lib/networking';
+import { IPAddress } from '@linode/api-v4/lib/networking';
 
 export const ipAddressFactory = Factory.Sync.makeFactory<IPAddress>({
   address: Factory.each(id => `192.168.1.${id}`),

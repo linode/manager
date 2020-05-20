@@ -1,4 +1,4 @@
-import { Entity, EventAction } from 'linode-js-sdk/lib/account';
+import { Entity, EventAction } from '@linode/api-v4/lib/account';
 import { path } from 'ramda';
 import { nonClickEvents } from 'src/constants';
 import {
