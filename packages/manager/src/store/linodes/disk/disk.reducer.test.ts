@@ -40,7 +40,10 @@ describe('Disk reducer', () => {
       );
       expect(newState).toHaveProperty(String(mockDisk1.linode_id));
       expect(newState[mockDisk1.linode_id]).toHaveProperty('loading', true);
-      expect(newState[mockDisk1.linode_id]).toHaveProperty('error', undefined);
+      expect(newState[mockDisk1.linode_id].error).toHaveProperty(
+        'read',
+        undefined
+      );
     });
     it('should load data when the request has been completed', () => {
       const newState = reducer(
@@ -64,19 +67,22 @@ describe('Disk reducer', () => {
       );
       expect(newState).toHaveProperty(String(mockDisk1.linode_id));
       expect(newState[mockDisk1.linode_id]).toHaveProperty('loading', true);
-      expect(newState[mockDisk1.linode_id]).toHaveProperty('error', undefined);
+      expect(newState[mockDisk1.linode_id].error).toHaveProperty(
+        'read',
+        undefined
+      );
     });
     it('should load data when the request has been completed', () => {
       const newState = reducer(
         defaultState,
         getAllLinodeDisksActions.done({
           params: { linodeId: mockDisk1.linode_id },
-          result: [mockDisk1, mockDisk2]
+          result: { results: 2, data: [mockDisk1, mockDisk2] }
         })
       );
       verifyDisk(newState, mockDisk1);
       verifyDisk(newState, mockDisk2);
-      expect(newState[mockDisk1.linode_id].items.length).toBe(2);
+      expect(newState[mockDisk1.linode_id].results).toBe(2);
     });
     it('sets error.read when the request fails', () => {
       const errorMessage = 'An error occurred.';
@@ -132,16 +138,18 @@ describe('Disk reducer', () => {
   describe('deleteLinodeDiskActions', () => {
     const state: State = {
       [mockDisk1.linode_id]: {
-        items: [String(mockDisk1.id)],
+        results: 1,
         itemsById: { [mockDisk1.id]: mockDisk1 },
         lastUpdated: 1,
-        loading: false
+        loading: false,
+        error: {}
       },
       [mockDisk2.linode_id]: {
-        items: [String(mockDisk2.id)],
+        results: 1,
         itemsById: { [mockDisk2.id]: mockDisk2 },
         lastUpdated: 1,
-        loading: false
+        loading: false,
+        error: {}
       }
     };
 
@@ -169,7 +177,7 @@ describe('Disk reducer', () => {
       expect(
         newState[mockDisk1.linode_id].itemsById[mockDisk1.id]
       ).toBeUndefined();
-      expect(newState[mockDisk1.linode_id].items).toHaveLength(1);
+      expect(newState[mockDisk1.linode_id].results).toBe(1);
     });
   });
 
@@ -198,6 +206,8 @@ describe('Disk reducer', () => {
 
 const verifyDisk = (state: State, disk: Entity) => {
   expect(state[disk.linode_id].loading).toBe(false);
-  expect(state[disk.linode_id].items.includes(String(disk.id))).toBe(true);
+  expect(
+    Object.keys(state[disk.linode_id].itemsById).includes(String(disk.id))
+  ).toBe(true);
   expect(state[disk.linode_id].itemsById[disk.id]).toEqual(disk);
 };
