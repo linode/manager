@@ -1,4 +1,4 @@
-import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes';
+import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';

@@ -1,5 +1,5 @@
-import { UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';

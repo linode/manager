@@ -1,10 +1,10 @@
 import { Formik, FormikProps } from 'formik';
-import { GrantLevel } from 'linode-js-sdk/lib/account';
+import { GrantLevel } from '@linode/api-v4/lib/account';
 import {
   rebuildLinode,
   RebuildLinodeSchema,
   RebuildRequest
-} from 'linode-js-sdk/lib/linodes';
+} from '@linode/api-v4/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';

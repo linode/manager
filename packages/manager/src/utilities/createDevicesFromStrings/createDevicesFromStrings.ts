@@ -1,4 +1,4 @@
-import { Devices } from 'linode-js-sdk/lib/linodes';
+import { Devices } from '@linode/api-v4/lib/linodes';
 import { isNil, objOf, split } from 'ramda';
 
 type DiskRecord = Record<'disk_id', number>;

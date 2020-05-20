@@ -9,7 +9,7 @@ import {
   NodeBalancer,
   NodeBalancerConfig,
   updateNodeBalancer as _updateNodeBalancer
-} from 'linode-js-sdk/lib/nodebalancers';
+} from '@linode/api-v4/lib/nodebalancers';
 import { getAll } from 'src/utilities/getAll';
 import { addNodeBalancerConfigs } from '../nodeBalancerConfig/nodeBalancerConfig.actions';
 import { getAllNodeBalancerConfigs } from '../nodeBalancerConfig/nodeBalancerConfig.requests';

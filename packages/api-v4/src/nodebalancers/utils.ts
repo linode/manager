@@ -1,4 +1,4 @@
-import { NodeBalancerConfigNode2 } from './types';
+import { NodeBalancerConfigNodeWithPort } from './types';
 
 export const combineConfigNodeAddressAndPort = (data: any) => ({
   ...data,
@@ -23,7 +23,7 @@ export const combineNodeBalancerConfigNodeAddressAndPort = (data: any) => ({
   }))
 });
 
-export const mergeAddressAndPort = (node: NodeBalancerConfigNode2) => ({
+export const mergeAddressAndPort = (node: NodeBalancerConfigNodeWithPort) => ({
   ...node,
   address: `${node.address}:${node.port}`
 });

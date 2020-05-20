@@ -1,4 +1,4 @@
-import { ZoneName } from 'linode-js-sdk/lib/networking';
+import { ZoneName } from '@linode/api-v4/lib/networking';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';

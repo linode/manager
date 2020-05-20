@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "private": true,
   "engines": {
     "node": ">= 10.16.0"
@@ -41,7 +41,7 @@
     "jspdf": "^1.5.3",
     "jspdf-autotable": "^3.2.4",
     "launchdarkly-react-client-sdk": "2.11.0",
-    "linode-js-sdk": "^0.25.0-alpha.0",
+    "@linode/api-v4": "^0.26.0-alpha.0",
     "logic-query-parser": "^0.0.5",
     "md5": "^2.2.1",
     "memoizee": "^0.4.14",
@@ -213,8 +213,10 @@
     "eslint-plugin-ramda": "^2.5.1",
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^3.0.0",
+    "eslint-plugin-scanjs-rules": "^0.2.1",
     "eslint-plugin-sonarjs": "^0.5.0",
     "eslint-plugin-testing-library": "^3.1.2",
+    "eslint-plugin-xss": "^0.1.10",
     "factory.ts": "^0.5.1",
     "file-loader": "^3.0.1",
     "fork-ts-checker-webpack-plugin": "^4.1.2",

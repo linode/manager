@@ -1,4 +1,4 @@
-import { Domain } from 'linode-js-sdk/lib/domains';
+import { Domain } from '@linode/api-v4/lib/domains';
 import { Reducer } from 'redux';
 import {
   EntityError,

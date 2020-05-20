@@ -1,7 +1,7 @@
 import Settings from '@material-ui/icons/Settings';
 import * as classNames from 'classnames';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, LinkProps } from 'react-router-dom';
 import Kubernetes from 'src/assets/addnewmenu/kubernetes.svg';
 import OCA from 'src/assets/addnewmenu/oneclick.svg';
 import Account from 'src/assets/icons/account.svg';
@@ -25,13 +25,14 @@ import ListItemText from 'src/components/core/ListItemText';
 import Menu from 'src/components/core/Menu';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
+import usePrefetch from 'src/hooks/usePreFetch';
 import { sendOneClickNavigationEvent } from 'src/utilities/ga';
 import AdditionalMenuItems from './AdditionalMenuItems';
 import useStyles from './PrimaryNav.styles';
 import SpacingToggle from './SpacingToggle';
 import ThemeToggle from './ThemeToggle';
 import { linkIsActive } from './utils';
-import { useLocation } from 'react-router-dom';
+import useDomains from 'src/hooks/useDomains';
 
 type NavEntity =
   | 'Linodes'
@@ -57,6 +58,8 @@ interface PrimaryLink {
   activeLinks?: Array<string>;
   onClick?: (e: React.ChangeEvent<any>) => void;
   hide?: boolean;
+  prefetchRequestFn?: () => void;
+  prefetchRequestCondition?: boolean;
 }
 
 export interface Props {
@@ -76,6 +79,7 @@ export const PrimaryNav: React.FC<Props> = props => {
 
   const flags = useFlags();
   const location = useLocation();
+  const { domains, requestDomains } = useDomains();
 
   const {
     _hasAccountAccess,
@@ -115,7 +119,9 @@ export const PrimaryNav: React.FC<Props> = props => {
       {
         display: 'Domains',
         href: '/domains',
-        icon: <Domain style={{ transform: 'scale(1.5)' }} />
+        icon: <Domain style={{ transform: 'scale(1.5)' }} />,
+        prefetchRequestFn: requestDomains,
+        prefetchRequestCondition: !domains.loading && domains.lastUpdated === 0
       },
 
       {
@@ -167,7 +173,15 @@ export const PrimaryNav: React.FC<Props> = props => {
         activeLinks: ['/account/billing', '/account/users', '/account/settings']
       }
     ],
-    [flags.firewalls, _isManagedAccount, account.lastUpdated, _hasAccountAccess]
+    [
+      flags.firewalls,
+      _isManagedAccount,
+      account.lastUpdated,
+      _hasAccountAccess,
+      domains.loading,
+      domains.lastUpdated,
+      requestDomains
+    ]
   );
 
   const filteredLinks = primaryLinks.filter(thisLink => !thisLink.hide);
@@ -202,16 +216,30 @@ export const PrimaryNav: React.FC<Props> = props => {
           [classes.fadeContainer]: true
         })}
       >
-        {filteredLinks.map(thisLink => (
-          <PrimaryLink
-            key={thisLink.display}
-            closeMenu={closeMenu}
-            isCollapsed={isCollapsed}
-            locationSearch={location.search}
-            locationPathname={location.pathname}
-            {...thisLink}
-          />
-        ))}
+        {filteredLinks.map(thisLink => {
+          const props = {
+            key: thisLink.display,
+            closeMenu,
+            isCollapsed,
+            locationSearch: location.search,
+            locationPathname: location.pathname,
+            ...thisLink
+          };
+
+          // PrefetchPrimaryLink and PrimaryLink are two separate components because invocation of
+          // hooks cannot be conditional. <PrefetchPrimaryLink /> is a wrapper around <PrimaryLink />
+          // that includes the usePrefetch hook.
+          return thisLink.prefetchRequestFn &&
+            thisLink.prefetchRequestCondition !== undefined ? (
+            <PrefetchPrimaryLink
+              {...props}
+              prefetchRequestFn={thisLink.prefetchRequestFn}
+              prefetchRequestCondition={thisLink.prefetchRequestCondition}
+            />
+          ) : (
+            <PrimaryLink {...props} />
+          );
+        })}
 
         {/** menu items under the main navigation links */}
         <AdditionalMenuItems
@@ -317,6 +345,12 @@ interface PrimaryLinkProps extends PrimaryLink {
   isCollapsed: boolean;
   locationSearch: string;
   locationPathname: string;
+  prefetchProps?: {
+    onMouseEnter: LinkProps['onMouseEnter'];
+    onMouseLeave: LinkProps['onMouseLeave'];
+    onFocus: LinkProps['onFocus'];
+    onBlur: LinkProps['onBlur'];
+  };
 }
 
 const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
@@ -332,7 +366,8 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
     icon,
     display,
     locationSearch,
-    locationPathname
+    locationPathname,
+    prefetchProps
   } = props;
 
   return (
@@ -345,6 +380,7 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
             onClick(e);
           }
         }}
+        {...prefetchProps}
         {...attr}
         className={classNames({
           [classes.listItem]: true,
@@ -371,4 +407,27 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
       <Divider className={classes.divider} />
     </>
   );
+});
+
+interface PrefetchPrimaryLinkProps {
+  prefetchRequestFn: () => void;
+  prefetchRequestCondition: boolean;
+}
+
+// Wrapper around PrimaryLink that includes the usePrefetchHook.
+export const PrefetchPrimaryLink: React.FC<PrimaryLinkProps &
+  PrefetchPrimaryLinkProps> = React.memo(props => {
+  const { makeRequest, cancelRequest } = usePrefetch(
+    props.prefetchRequestFn,
+    props.prefetchRequestCondition
+  );
+
+  const prefetchProps: PrimaryLinkProps['prefetchProps'] = {
+    onMouseEnter: makeRequest,
+    onFocus: makeRequest,
+    onMouseLeave: cancelRequest,
+    onBlur: cancelRequest
+  };
+
+  return <PrimaryLink {...props} prefetchProps={prefetchProps} />;
 });
