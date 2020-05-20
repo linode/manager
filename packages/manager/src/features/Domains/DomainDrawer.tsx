@@ -100,11 +100,11 @@ type CombinedProps = WithStyles<ClassNames> &
   StateProps &
   WithSnackbarProps;
 
-const generateDefaultDomainRecords = (
+export const generateDefaultDomainRecords = (
   domain: string,
   domainID: number,
   ipv4?: string,
-  ipv6?: string
+  ipv6?: string | null
 ) => {
   /**
    * at this point, the IPv6 is including the prefix and we need to strip that
