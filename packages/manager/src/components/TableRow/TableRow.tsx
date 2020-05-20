@@ -216,7 +216,7 @@ export class TableRow extends React.Component<CombinedProps> {
         }
         hover={rowLink !== undefined}
         role={role}
-        aria-label={ariaLabel ? ariaLabel : `View Details`}
+        aria-label={ariaLabel ?? `View Details`}
         className={classNames(className, {
           [classes.root]: true,
           [classes.selected]: selected,

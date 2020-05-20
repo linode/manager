@@ -160,7 +160,11 @@ const NodeBalancersDashboardCard: React.FunctionComponent<CombinedProps> = props
 
   const renderData = () => {
     return data.map(({ id, label, region, hostname }) => (
-      <TableRow key={label} ariaLabel={label} rowLink={`/nodebalancers/${id}`}>
+      <TableRow
+        key={label}
+        ariaLabel={`NodeBalancer ${label}`}
+        rowLink={`/nodebalancers/${id}`}
+      >
         <TableCell className={classes.labelCol}>
           <Grid container wrap="nowrap" alignItems="center">
             <Grid item className="py0">

@@ -147,7 +147,7 @@ const LinodesDashboardCard: React.FC<CombinedProps> = props => {
       return (
         <TableRow
           key={label}
-          ariaLabel={label}
+          ariaLabel={`Linode ${label}`}
           rowLink={`/linodes/${id}`}
           data-qa-linode
         >
