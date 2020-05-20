@@ -1,5 +1,6 @@
 import { Disk } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import BarPercent from 'src/components/BarPercent';
 import Grid from 'src/components/core/Grid';
 import {
@@ -69,7 +70,7 @@ export class LinodeDiskSpace extends React.PureComponent<CombinedProps> {
     return (
       <React.Fragment>
         <Typography className={classes.header} variant="h3">
-          Disk Storage
+          Disk Allocation
         </Typography>
         <BarPercent
           className={classes.bar}
@@ -79,7 +80,7 @@ export class LinodeDiskSpace extends React.PureComponent<CombinedProps> {
         />
         <Grid container justify="space-between">
           <Grid item style={{ marginRight: 10 }}>
-            <Typography>{usedDiskSpace} MB Used</Typography>
+            <Typography>{usedDiskSpace} MB Allocated</Typography>
           </Grid>
           <Grid item>
             <Typography>{freeDiskSpace} MB Available</Typography>
@@ -92,8 +93,9 @@ export class LinodeDiskSpace extends React.PureComponent<CombinedProps> {
           {disks.length === 1 ? 'image' : 'images'}.
         </Typography>
         <Typography className={classes.text}>
-          <strong>Note: </strong> This section represents your plan's available
-          storage that has been allocated to your disks; run
+          <strong>Note: </strong> This section represents your plan&#39;s
+          available storage that has been allocated to your disks. Install{' '}
+          <Link to="/longview">Longview</Link> or run:
         </Typography>
         <pre className={classes.code}>df -h</pre>
         <Typography>
