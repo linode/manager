@@ -140,6 +140,7 @@ export interface Props {
   forceIndex?: boolean;
   highlight?: boolean;
   disabled?: boolean;
+  ariaLabel?: string;
 }
 
 export type CombinedProps = Props &
@@ -191,6 +192,7 @@ export class TableRow extends React.Component<CombinedProps> {
       forceIndex,
       highlight,
       disabled,
+      ariaLabel,
       ...rest
     } = this.props;
 
@@ -214,7 +216,7 @@ export class TableRow extends React.Component<CombinedProps> {
         }
         hover={rowLink !== undefined}
         role={role}
-        aria-label={rowLink ? `View Details` : undefined}
+        aria-label={ariaLabel ? ariaLabel : `View Details`}
         className={classNames(className, {
           [classes.root]: true,
           [classes.selected]: selected,
@@ -241,9 +243,6 @@ export class TableRow extends React.Component<CombinedProps> {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(
-  withRouter,
-  styled
-)(TableRow);
+const enhanced = compose<CombinedProps, Props>(withRouter, styled)(TableRow);
 
 export default enhanced;
