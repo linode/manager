@@ -69,10 +69,9 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
 
     try {
       await Promise.all(dataFetchingPromises);
-      this.props.markAppAsDoneLoading();
-      this.makeSecondaryRequests();
     } catch {
       /** We choose to do nothing, relying on the Redux error state. */
+    } finally {
       this.props.markAppAsDoneLoading();
       this.makeSecondaryRequests();
     }
@@ -83,17 +82,23 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
    * splash screen, since they aren't needed
    * for navigation, basic display, etc.
    */
-  makeSecondaryRequests = () => {
-    this.props.requestLinodes();
-    this.props.requestTypes();
-    /**
-     * We have cached Regions data that can be used
-     * until the real data comes in; the only
-     * likely difference will be the status of each
-     * Region.
-     */
-    this.props.requestRegions();
-    this.props.requestNotifications();
+  makeSecondaryRequests = async () => {
+    try {
+      await Promise.all([
+        this.props.requestLinodes(),
+        this.props.requestTypes(),
+        /**
+         * We have cached Regions data that can be used
+         * until the real data comes in; the only
+         * likely difference will be the status of each
+         * Region.
+         */
+        this.props.requestRegions(),
+        this.props.requestNotifications()
+      ]);
+    } catch {
+      /** We choose to do nothing, relying on the Redux error state. */
+    }
   };
 
   componentDidMount() {
