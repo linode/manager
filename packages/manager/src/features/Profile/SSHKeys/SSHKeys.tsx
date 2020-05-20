@@ -1,5 +1,5 @@
-import { getSSHKeys, SSHKey } from 'linode-js-sdk/lib/profile';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { getSSHKeys, SSHKey } from '@linode/api-v4/lib/profile';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as moment from 'moment-timezone';
 import * as React from 'react';
 import { compose } from 'recompose';

@@ -1,10 +1,9 @@
-import { SupportTicket } from 'linode-js-sdk/lib/account';
+import { SupportTicket } from '@linode/api-v4/lib/support';
 import { compose } from 'ramda';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
-  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -37,7 +36,7 @@ type ClassNames =
   | 'cellUpdated'
   | 'cellUpdatedBy';
 
-const styles = (theme: Theme) =>
+const styles = () =>
   createStyles({
     root: {},
     cellSubject: {
@@ -76,7 +75,7 @@ export class TicketList extends React.Component<CombinedProps, {}> {
     this.props.request();
   }
 
-  componentDidUpdate(prevProps: Props, prevState: {}) {
+  componentDidUpdate(prevProps: Props) {
     if (prevProps.filterStatus !== this.props.filterStatus) {
       this.props.handlePageChange(1);
     }

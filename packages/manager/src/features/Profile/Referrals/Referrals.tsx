@@ -58,7 +58,7 @@ class Referrals extends React.Component<CombinedProps, {}> {
           <Grid item xs={12}>
             <Typography>
               Referrals reward you when you refer people to Linode. If someone
-              signs up using your referral code, you'll receive a credit of
+              signs up using your referral code, you&apos;ll receive a credit of
               $20.00, so long as the person you referred remains an active
               customer for 90 days and spends a minimum of $15.
             </Typography>
@@ -70,7 +70,7 @@ class Referrals extends React.Component<CombinedProps, {}> {
               <Grid item>
                 <Typography variant="h3" className={classes.results}>
                   You have {total} total referrals: {completed} completed ($
-                  {credit} ) and {pending} pending.
+                  {credit}) and {pending} pending.
                 </Typography>
               </Grid>
               <Grid item xs={12}>

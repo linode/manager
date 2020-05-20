@@ -1,4 +1,4 @@
-import { Event } from 'linode-js-sdk/lib/account';
+import { Event } from '@linode/api-v4/lib/account';
 import * as moment from 'moment';
 
 let newLinodeEvents: (time: moment.Moment) => (event: Event) => boolean;

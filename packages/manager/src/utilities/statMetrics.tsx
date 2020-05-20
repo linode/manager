@@ -1,4 +1,4 @@
-import { StatsData } from 'linode-js-sdk/lib/linodes';
+import { StatsData } from '@linode/api-v4/lib/linodes';
 
 export interface Metrics {
   max: number;

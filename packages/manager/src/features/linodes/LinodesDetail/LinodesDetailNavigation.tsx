@@ -1,4 +1,4 @@
-import { Config } from 'linode-js-sdk/lib/linodes';
+import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';

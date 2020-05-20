@@ -188,7 +188,13 @@ export const styles = (theme: Theme) =>
       padding: 0,
       display: 'flex',
       color: theme.palette.text.primary,
-      cursor: 'pointer'
+      cursor: 'pointer',
+      // From the AutoSizeInput documentation: (https://github.com/JedWatson/react-input-autosize/blob/master/README.md#csp-and-the-ie-clear-indicator)
+      // "The input will automatically inject a stylesheet that hides IE/Edge's "clear" indicator,
+      // which otherwise breaks the UI. This has the downside of being incompatible with some CSP policies.
+      // To work around this, you can pass the injectStyles={false} prop, but if you do this I strongly
+      // recommend targeting the input element in your own stylesheet with the following rule:"
+      '::-ms-clear': { display: 'none' }
     },
     noOptionsMessage: {
       padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`

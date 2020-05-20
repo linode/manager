@@ -1,4 +1,4 @@
-import { DomainStatus } from 'linode-js-sdk/lib/domains';
+import { DomainStatus } from '@linode/api-v4/lib/domains';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -13,6 +13,7 @@ import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import ActionMenu, { Handlers } from './DomainActionMenu';
+import DateTimeDisplay from 'src/components/DateTimeDisplay';
 
 type ClassNames =
   | 'domain'
@@ -46,6 +47,7 @@ interface Props extends Handlers {
   id: number;
   status: DomainStatus;
   type: 'master' | 'slave';
+  lastModified: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -72,6 +74,7 @@ class DomainTableRow extends React.Component<CombinedProps> {
       id,
       type,
       status,
+      lastModified,
       onClone,
       onRemove,
       onEdit
@@ -120,6 +123,9 @@ class DomainTableRow extends React.Component<CombinedProps> {
         </TableCell>
         <TableCell parentColumn="Status" data-qa-domain-status>
           {humanizeDomainStatus(status)}
+        </TableCell>
+        <TableCell parentColumn="Last Modified" data-qa-domain-lastmodified>
+          <DateTimeDisplay value={lastModified} />
         </TableCell>
         <TableCell>
           <ActionMenu

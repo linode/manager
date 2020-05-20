@@ -33,7 +33,7 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
   const [updateError, setUpdateError] = React.useState<string | undefined>();
 
   // Find the Firewall in the store.
-  const thisFirewall = props.data[thisFirewallId];
+  const thisFirewall = props.itemsById[thisFirewallId];
 
   // If we're still fetching Firewalls, display a loading spinner. This will
   // probably only happen when navigating to a Firewall's Detail page directly

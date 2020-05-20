@@ -1,6 +1,6 @@
-import { getUser, updateUser } from 'linode-js-sdk/lib/account';
-import { updateProfile } from 'linode-js-sdk/lib/profile';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { getUser, updateUser } from '@linode/api-v4/lib/account';
+import { updateProfile } from '@linode/api-v4/lib/profile';
+import { APIError } from '@linode/api-v4/lib/types';
 import { clone, compose, path as pathRamda } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';

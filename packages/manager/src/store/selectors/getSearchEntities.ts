@@ -1,13 +1,19 @@
-import { Domain } from 'linode-js-sdk/lib/domains';
-import { Image } from 'linode-js-sdk/lib/images';
-import { KubernetesCluster } from 'linode-js-sdk/lib/kubernetes';
-import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes';
-import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
-import { Volume } from 'linode-js-sdk/lib/volumes';
+import { Domain } from '@linode/api-v4/lib/domains';
+import { Image } from '@linode/api-v4/lib/images';
+import { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
+import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
+import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
+import { Volume } from '@linode/api-v4/lib/volumes';
 import { createSelector } from 'reselect';
 import { displayType } from 'src/features/linodes/presentation';
+import {
+  extendCluster,
+  getDescriptionForCluster
+} from 'src/features/Kubernetes/kubeUtils';
+import { ExtendedCluster } from 'src/features/Kubernetes/types';
 import { SearchableItem } from 'src/features/Search/search.interfaces';
 import { ApplicationState } from 'src/store';
+import { ExtendedNodePool } from 'src/store/kubernetes/nodePools.actions';
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
 
 type State = ApplicationState['__resources'];
@@ -122,7 +128,7 @@ const nodeBalToSearchableItem = (nodebal: NodeBalancer): SearchableItem => ({
 });
 
 const kubernetesClusterToSearchableItem = (
-  kubernetesCluster: KubernetesCluster
+  kubernetesCluster: ExtendedCluster
 ): SearchableItem => ({
   label: kubernetesCluster.label,
   value: kubernetesCluster.id,
@@ -136,7 +142,8 @@ const kubernetesClusterToSearchableItem = (
     label: kubernetesCluster.label,
     region: kubernetesCluster.region,
     k8s_version: kubernetesCluster.k8s_version,
-    tags: kubernetesCluster.tags
+    tags: kubernetesCluster.tags,
+    description: getDescriptionForCluster(kubernetesCluster)
   }
 });
 
@@ -150,6 +157,7 @@ const domainSelector = (state: State) =>
 const typesSelector = (state: State) => state.types.entities;
 const kubernetesClusterSelector = (state: State) =>
   Object.values(state.kubernetes.itemsById);
+const kubePoolSelector = (state: State) => state.nodePools.entities;
 
 export default createSelector<
   State,
@@ -160,6 +168,7 @@ export default createSelector<
   NodeBalancer[],
   LinodeType[],
   KubernetesCluster[],
+  ExtendedNodePool[],
   SearchableItem[]
 >(
   linodeSelector,
@@ -169,6 +178,7 @@ export default createSelector<
   nodebalSelector,
   typesSelector,
   kubernetesClusterSelector,
+  kubePoolSelector,
   (
     linodes,
     volumes,
@@ -176,7 +186,8 @@ export default createSelector<
     domains,
     nodebalancers,
     types,
-    kubernetesClusters
+    kubernetesClusters,
+    nodePools
   ) => {
     const arrOfImages = Object.values(images);
     const searchableLinodes = linodes.map(linode =>
@@ -186,9 +197,14 @@ export default createSelector<
     const searchableImages = arrOfImages.reduce(imageReducer, []);
     const searchableDomains = domains.map(domainToSearchableItem);
     const searchableNodebalancers = nodebalancers.map(nodeBalToSearchableItem);
-    const searchableKubernetesClusters = kubernetesClusters.map(
-      kubernetesClusterToSearchableItem
-    );
+    const searchableKubernetesClusters = kubernetesClusters
+      .map(thisCluster => {
+        const pools = nodePools.filter(
+          thisPool => thisPool.clusterID === thisCluster.id
+        );
+        return extendCluster(thisCluster, pools, types);
+      })
+      .map(kubernetesClusterToSearchableItem);
 
     return [
       ...searchableLinodes,

@@ -1,4 +1,4 @@
-import { IPAddress } from 'linode-js-sdk/lib/networking';
+import { IPAddress } from '@linode/api-v4/lib/networking';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';

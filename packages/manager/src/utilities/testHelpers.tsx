@@ -1,5 +1,6 @@
-import { render, RenderResult } from '@testing-library/react';
-import { ResourcePage } from 'linode-js-sdk/lib/types';
+import { MatcherFunction, render, RenderResult } from '@testing-library/react';
+import { mergeDeepRight } from 'ramda';
+import { ResourcePage } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouterProps } from 'react-router';
@@ -8,7 +9,8 @@ import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-import store, { ApplicationState } from 'src/store';
+import store, { ApplicationState, defaultState } from 'src/store';
+import { DeepPartial } from 'redux';
 
 export const createPromiseLoaderResponse: <T>(
   r: T
@@ -24,7 +26,7 @@ export const createResourcePage: <T>(data: T[]) => ResourcePage<T> = data => ({
 
 interface Options {
   MemoryRouter?: MemoryRouterProps;
-  customStore?: Partial<ApplicationState>;
+  customStore?: DeepPartial<ApplicationState>;
 }
 
 /**
@@ -32,15 +34,10 @@ interface Options {
  * renderWithTheme() helper function, since the whole app is wrapped with
  * the TogglePreference component
  */
-export const baseStore = (customStore: Partial<ApplicationState> = {}) =>
-  configureStore<Partial<ApplicationState>>([thunk])({
-    preferences: {
-      data: {},
-      loading: false,
-      lastUpdated: 0
-    },
-    ...customStore
-  });
+export const baseStore = (customStore: DeepPartial<ApplicationState> = {}) =>
+  configureStore<DeepPartial<ApplicationState>>([thunk])(
+    mergeDeepRight(defaultState, customStore)
+  );
 
 export const wrapWithTheme = (ui: any, options: Options = {}) => {
   const { customStore } = options;
@@ -141,3 +138,15 @@ export const includesActions = (
       : expect(query(action)).not.toBeInTheDocument();
   }
 };
+
+type Query = (f: MatcherFunction) => HTMLElement;
+
+/** H/T to https://stackoverflow.com/questions/55509875/how-to-query-by-text-string-which-contains-html-tags-using-react-testing-library */
+export const withMarkup = (query: Query) => (text: string): HTMLElement =>
+  query((content: string, node: HTMLElement) => {
+    const hasText = (node: HTMLElement) => node.textContent === text;
+    const childrenDontHaveText = Array.from(node.children).every(
+      child => !hasText(child as HTMLElement)
+    );
+    return hasText(node) && childrenDontHaveText;
+  });

@@ -1,4 +1,4 @@
-import { LongviewClient } from 'linode-js-sdk/lib/longview/types';
+import { LongviewClient } from '@linode/api-v4/lib/longview/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';

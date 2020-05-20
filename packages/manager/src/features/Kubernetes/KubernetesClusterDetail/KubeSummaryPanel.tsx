@@ -1,5 +1,5 @@
-import { getKubeConfig, KubernetesCluster } from 'linode-js-sdk/lib/kubernetes';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { getKubeConfig, KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
+import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -164,8 +164,7 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
     return getKubeConfig(cluster.id).then(response => {
       // Convert to utf-8 from base64
       try {
-        const decodedFile = window.atob(response.kubeconfig);
-        return decodedFile;
+        return window.atob(response.kubeconfig);
       } catch (e) {
         reportException(e, {
           'Encoded response': response.kubeconfig
@@ -272,7 +271,7 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
   return (
     <React.Fragment>
       <Paper className={classes.root}>
-        <Grid 
+        <Grid
           container
           alignItems="flex-start"
           className={classes.mainGridContainer}

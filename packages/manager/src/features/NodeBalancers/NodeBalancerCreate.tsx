@@ -1,4 +1,4 @@
-import { APIError } from 'linode-js-sdk/lib/types';
+import { APIError } from '@linode/api-v4/lib/types';
 import {
   append,
   clone,
@@ -397,8 +397,33 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     );
   };
 
+  resetNodeAddresses = () => {
+    /** Reset the IP addresses of all nodes at once */
+    const { configs } = this.state.nodeBalancerFields;
+    const newConfigs = configs.reduce((accum, thisConfig) => {
+      return [
+        ...accum,
+        {
+          ...thisConfig,
+          nodes: [
+            ...thisConfig.nodes.map(thisNode => {
+              return { ...thisNode, address: '' };
+            })
+          ]
+        }
+      ];
+    }, []);
+    this.setState(set(lensPath(['nodeBalancerFields', 'configs']), newConfigs));
+  };
+
   regionChange = (region: string) => {
+    // No change; no need to update the state.
+    if (this.state.nodeBalancerFields.region === region) {
+      return;
+    }
     this.setState(set(lensPath(['nodeBalancerFields', 'region']), region));
+    // We just changed the region so any selected IP addresses are likely invalid
+    this.resetNodeAddresses();
   };
 
   onCloseConfirmation = () =>

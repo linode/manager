@@ -3,7 +3,7 @@ import {
   Event,
   EventAction,
   EventStatus
-} from 'linode-js-sdk/lib/account';
+} from '@linode/api-v4/lib/account';
 import * as moment from 'moment';
 import { compose, equals, findIndex, omit, take, update } from 'ramda';
 import updateRight from 'src/utilities/updateRight';

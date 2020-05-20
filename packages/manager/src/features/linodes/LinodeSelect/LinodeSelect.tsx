@@ -1,5 +1,5 @@
-import { Linode } from 'linode-js-sdk/lib/linodes';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { Linode } from '@linode/api-v4/lib/linodes';
+import { APIError } from '@linode/api-v4/lib/types';
 import { groupBy } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -40,6 +40,7 @@ interface Props {
   small?: boolean;
   noMarginTop?: boolean;
   value?: Item<any> | null;
+  inputId?: string;
 }
 
 type CombinedProps = Props & WithLinodesProps;
@@ -61,7 +62,8 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
     valueOverride,
     labelOverride,
     filterCondition,
-    value
+    value,
+    inputId
   } = props;
 
   const linodes = region
@@ -103,6 +105,7 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
       disabled={disabled}
       small={props.small}
       isLoading={linodesLoading}
+      inputId={inputId}
       onChange={(selected: Item<number>) => {
         return handleChange(selected.data);
       }}

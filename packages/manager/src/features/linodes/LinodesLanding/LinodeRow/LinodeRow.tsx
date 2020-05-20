@@ -1,6 +1,6 @@
 import * as classNames from 'classnames';
-import { Notification } from 'linode-js-sdk/lib/account';
-import { Config, LinodeBackups, LinodeStatus } from 'linode-js-sdk/lib/linodes';
+import { Notification } from '@linode/api-v4/lib/account';
+import { Config, LinodeBackups, LinodeStatus } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';

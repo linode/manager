@@ -1,6 +1,6 @@
 import { map as mapPromise } from 'bluebird';
-import { deleteUser, getUsers, User } from 'linode-js-sdk/lib/account';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { deleteUser, getUsers, User } from '@linode/api-v4/lib/account';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as memoize from 'memoizee';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';

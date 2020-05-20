@@ -1,5 +1,5 @@
 import * as Factory from 'factory.ts';
-import { Region } from 'linode-js-sdk/lib/regions/types';
+import { Region } from '@linode/api-v4/lib/regions/types';
 import { dcDisplayNames } from 'src/constants';
 
 export const regionFactory = Factory.Sync.makeFactory<Region>({

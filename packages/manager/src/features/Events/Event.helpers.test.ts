@@ -1,4 +1,4 @@
-import { EventAction } from 'linode-js-sdk/lib/account';
+import { EventAction } from '@linode/api-v4/lib/account';
 import { reduxEvent, uniqueEvents } from 'src/__data__/events';
 import {
   filterUniqueEvents,

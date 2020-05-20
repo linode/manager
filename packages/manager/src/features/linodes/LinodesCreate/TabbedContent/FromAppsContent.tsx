@@ -1,5 +1,5 @@
-import { Image } from 'linode-js-sdk/lib/images';
-import { UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
+import { Image } from '@linode/api-v4/lib/images';
+import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { assocPath, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
@@ -387,9 +387,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
               ]}
               password={password}
               handleChange={updatePassword}
-              users={
-                userSSHKeys.length > 0 && selectedImageID ? userSSHKeys : []
-              }
+              users={userSSHKeys}
               requestKeys={requestKeys}
             />
           </form>

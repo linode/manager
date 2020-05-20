@@ -42,6 +42,7 @@ interface Props {
   pageSize?: number;
   scrollToRef?: React.RefObject<any>;
   pageSizeSetter?: (v: number) => void;
+  shouldScroll?: boolean;
 }
 
 export default class Paginate extends React.Component<Props, State> {
@@ -51,8 +52,10 @@ export default class Paginate extends React.Component<Props, State> {
   };
 
   handlePageChange = (page: number) => {
-    const { scrollToRef } = this.props;
-    scrollTo(scrollToRef);
+    if (this.props.shouldScroll ?? true) {
+      const { scrollToRef } = this.props;
+      scrollTo(scrollToRef);
+    }
     this.setState({ page });
   };
 

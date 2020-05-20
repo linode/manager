@@ -1,41 +1,34 @@
-import { IPAddress, updateIP } from 'linode-js-sdk/lib/networking';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { IPAddress, updateIP } from '@linode/api-v4/lib/networking';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormHelperText from 'src/components/core/FormHelperText';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+
+import { makeStyles, Theme } from 'src/components/core/styles';
+
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import TextField from 'src/components/TextField';
-import { arePropsEqual } from 'src/utilities/arePropsEqual';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-type ClassNames = 'section' | 'header' | 'rdnsRecord' | 'ipv6Input';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    section: {
-      marginTop: theme.spacing(2),
-      borderTop: `1px solid ${theme.palette.divider}`
-    },
-    header: {
-      marginTop: theme.spacing(2)
-    },
-    rdnsRecord: {
-      marginTop: theme.spacing(2)
-    },
-    ipv6Input: {
-      marginBottom: theme.spacing(2)
-    }
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  section: {
+    marginTop: theme.spacing(2),
+    borderTop: `1px solid ${theme.palette.divider}`
+  },
+  header: {
+    marginTop: theme.spacing(2)
+  },
+  rdnsRecord: {
+    marginTop: theme.spacing(2)
+  },
+  ipv6Input: {
+    marginBottom: theme.spacing(2)
+  }
+}));
 
 interface Props {
   open: boolean;
@@ -47,208 +40,191 @@ interface Props {
   updateIPs?: (ip: IPAddress) => void;
 }
 
-interface State {
-  rdns?: string | null;
-  address?: string;
-  loading: boolean;
-  errors?: APIError[];
-  delayText: string | null;
-  ipv6Address?: string | null;
-}
+type CombinedProps = Props;
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+export const ViewRangeDrawer: React.FC<CombinedProps> = props => {
+  const { open, onClose, rdns, range, address, ips, updateIPs } = props;
 
-class ViewRangeDrawer extends React.Component<CombinedProps, State> {
-  state: State = {
-    rdns: this.props.rdns,
-    address: this.props.address,
-    loading: false,
-    delayText: null,
-    ipv6Address: this.props.range
-  };
+  const [currentRDNS, setRDNS] = React.useState<string | null | undefined>(
+    rdns
+  );
+  const [currentAddress, setCurrentAddress] = React.useState<
+    string | undefined
+  >(address);
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [delayText, setDelayText] = React.useState<string | null>(null);
+  const [ipv6Address, setIPv6Address] = React.useState<string | undefined>(
+    range
+  );
+  const [errors, setErrors] = React.useState<APIError[]>([]);
 
-  timer: any = undefined;
-  mounted: boolean = false;
+  const [mounted, setMounted] = React.useState<boolean>(false);
 
-  componentDidMount() {
-    this.mounted = true;
-  }
+  const classes = useStyles();
 
-  componentWillUnmount() {
-    this.mounted = false;
-    clearTimeout(this.timer);
-  }
+  let timer: number = 0;
 
-  errorResources = {
+  React.useEffect(() => {
+    setMounted(true);
+
+    return () => {
+      setMounted(false);
+      clearTimeout(timer);
+    };
+  }, [timer]);
+
+  React.useEffect(() => {
+    if (open) {
+      setRDNS(rdns);
+      setCurrentAddress(currentAddress);
+      setIPv6Address(range);
+      setErrors([]);
+    }
+  }, [open]);
+
+  const errorResources = {
     rdns: 'RDNS'
   };
 
-  UNSAFE_componentWillReceiveProps(nextProps: CombinedProps) {
-    // This is a hack fix. We need to refactor and replace all components with
-    // `componentWillReceiveProps`. @todo: do this.
-    // https://reactjs.org/docs/react-component.html#unsafe_componentwillreceiveprops
-    if (
-      !arePropsEqual<CombinedProps>(
-        ['rdns', 'address', 'range'],
-        this.props,
-        nextProps
-      )
-    ) {
-      this.setState({
-        rdns: nextProps.rdns,
-        address: nextProps.address,
-        ipv6Address: nextProps.range,
-        errors: undefined
-      });
-    }
-  }
-
-  showDelayText = () => {
-    if (!this.mounted) {
+  const showDelayText = () => {
+    if (!mounted) {
       return;
     }
-    this.setState({
-      delayText:
-        'Your request is still pending. Editing RDNS can take up to 30 seconds. Thank you for your patience.'
-    });
+
+    setDelayText(
+      'Your request is still pending. Editing RDNS can take up to 30 seconds. Thank you for your patience.'
+    );
   };
 
-  save = () => {
-    const { onClose, range } = this.props;
-    const { rdns, address, ipv6Address } = this.state;
-
+  const save = () => {
     const ipToUpdate = range ? ipv6Address : address;
 
     // If the field is blank, return an error.
     if (!ipToUpdate) {
-      return this.setState({
-        errors: [
-          { field: 'ipv6Address', reason: 'Please enter an IPv6 Address' }
-        ]
-      });
+      setErrors([
+        { field: 'ipv6Address', reason: 'Please enter an IPv6 Address' }
+      ]);
+
+      return;
     }
 
-    this.setState({ loading: true, errors: undefined });
-    this.timer = setTimeout(this.showDelayText, 5000);
+    setLoading(true);
+    setErrors([]);
 
-    updateIP(ipToUpdate, !rdns || rdns === '' ? null : rdns)
+    timer = window.setTimeout(showDelayText, 5000);
+
+    updateIP(
+      ipToUpdate,
+      !currentRDNS || currentRDNS === '' ? null : currentRDNS
+    )
       .then(ip => {
-        if (!this.mounted) {
+        if (!mounted) {
           return;
         }
-        clearTimeout(this.timer);
-        this.setState({ loading: false, delayText: null });
+
+        clearTimeout(timer);
+        setLoading(false);
+        setDelayText(null);
 
         // If we're updating a range, manually update the parent component.
-        if (range && this.props.updateIPs) {
-          this.props.updateIPs(ip);
+        if (range && updateIPs) {
+          updateIPs(ip);
         }
 
         onClose();
       })
       .catch(errResponse => {
-        if (!this.mounted) {
+        if (!mounted) {
           return;
         }
-        clearTimeout(this.timer);
-        this.setState(
-          {
-            errors: getAPIErrorOrDefault(errResponse),
-            loading: false,
-            delayText: null
-          },
-          () => {
-            scrollErrorIntoView();
-          }
-        );
+
+        clearTimeout(timer);
+
+        setErrors(getAPIErrorOrDefault(errResponse));
+        setLoading(false);
+        setDelayText(null);
+        scrollErrorIntoView();
       });
   };
 
-  handleChangeDomain = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ rdns: e.target.value });
+  const handleChangeDomain = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRDNS(e.target.value);
   };
 
-  handleChangeIPv6Address = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ ipv6Address: e.target.value });
+  const handleChangeIPv6Address = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIPv6Address(e.target.value);
   };
 
-  render() {
-    const { open, onClose, range, ips, classes } = this.props;
-    const { rdns, ipv6Address, delayText, errors, loading } = this.state;
+  const hasErrorFor = getAPIErrorsFor(errorResources, errors);
 
-    const hasErrorFor = getAPIErrorsFor(this.errorResources, errors);
+  return (
+    <Drawer open={open} onClose={onClose} title={`Edit Reverse DNS`}>
+      <React.Fragment>
+        {range && (
+          <div className={classes.ipv6Input}>
+            <TextField
+              placeholder="Enter an IPv6 address"
+              label="Enter an IPv6 address"
+              hideLabel
+              value={ipv6Address || ''}
+              errorText={hasErrorFor('ipv6Address')}
+              onChange={handleChangeIPv6Address}
+              data-qa-address-name
+            />
+          </div>
+        )}
+        <TextField
+          placeholder="Enter a domain name"
+          label="Enter a domain name"
+          hideLabel
+          value={currentRDNS || ''}
+          errorText={hasErrorFor('rdns')}
+          onChange={handleChangeDomain}
+          data-qa-domain-name
+        />
+        <Typography variant="body1">
+          Leave this field blank to reset RDNS
+        </Typography>
+        {hasErrorFor('none') && (
+          <FormHelperText error style={{ marginTop: 16 }} data-qa-error>
+            {hasErrorFor('none')}
+          </FormHelperText>
+        )}
+        <ActionsPanel style={{ marginTop: 16 }}>
+          <Button
+            buttonType="primary"
+            onClick={save}
+            loading={loading}
+            data-qa-submit
+          >
+            Save
+          </Button>
+          <Button
+            buttonType="secondary"
+            className="cancel"
+            onClick={onClose}
+            data-qa-cancel
+          >
+            Close
+          </Button>
+        </ActionsPanel>
+        <Typography variant="body1">{delayText}</Typography>
+        {range && ips && ips.length > 0 && (
+          <div className={classes.section}>
+            <Typography variant="h3" className={classes.header}>
+              Existing Records
+            </Typography>
+            {ips.map(ip => (
+              <div key={ip.address} className={classes.rdnsRecord}>
+                <Typography>{ip.address}</Typography>
+                <Typography>{ip.rdns || ''}</Typography>
+              </div>
+            ))}
+          </div>
+        )}
+      </React.Fragment>
+    </Drawer>
+  );
+};
 
-    return (
-      <Drawer open={open} onClose={onClose} title={`Edit Reverse DNS`}>
-        <React.Fragment>
-          {range && (
-            <div className={classes.ipv6Input}>
-              <TextField
-                placeholder="Enter an IPv6 address"
-                label="Enter an IPv6 address"
-                hideLabel
-                value={ipv6Address || ''}
-                errorText={hasErrorFor('ipv6Address')}
-                onChange={this.handleChangeIPv6Address}
-                data-qa-address-name
-              />
-            </div>
-          )}
-          <TextField
-            placeholder="Enter a domain name"
-            label="Enter a domain name"
-            hideLabel
-            value={rdns || ''}
-            errorText={hasErrorFor('rdns')}
-            onChange={this.handleChangeDomain}
-            data-qa-domain-name
-          />
-          <Typography variant="body1">
-            Leave this field blank to reset RDNS
-          </Typography>
-          {hasErrorFor('none') && (
-            <FormHelperText error style={{ marginTop: 16 }} data-qa-error>
-              {hasErrorFor('none')}
-            </FormHelperText>
-          )}
-          <ActionsPanel style={{ marginTop: 16 }}>
-            <Button
-              buttonType="primary"
-              onClick={this.save}
-              loading={loading}
-              data-qa-submit
-            >
-              Save
-            </Button>
-            <Button
-              buttonType="secondary"
-              className="cancel"
-              onClick={onClose}
-              data-qa-cancel
-            >
-              Close
-            </Button>
-          </ActionsPanel>
-          <Typography variant="body1">{delayText}</Typography>
-          {range && ips && ips.length > 0 && (
-            <div className={classes.section}>
-              <Typography variant="h3" className={classes.header}>
-                Existing Records
-              </Typography>
-              {ips.map(ip => (
-                <div key={ip.address} className={classes.rdnsRecord}>
-                  <Typography>{ip.address}</Typography>
-                  <Typography>{ip.rdns || ''}</Typography>
-                </div>
-              ))}
-            </div>
-          )}
-        </React.Fragment>
-      </Drawer>
-    );
-  }
-}
-
-const styled = withStyles(styles);
-
-export default styled(ViewRangeDrawer);
+export default React.memo(ViewRangeDrawer);

@@ -1,4 +1,4 @@
-import { revokeToken, Success } from 'linode-js-sdk/lib/authentication';
+import { revokeToken, Success } from '@linode/api-v4/lib/authentication';
 import { LOGIN_ROOT } from 'src/constants';
 import { ThunkActionCreator } from 'src/store/types';
 import { handleLogout as _handleLogout } from './authentication.actions';

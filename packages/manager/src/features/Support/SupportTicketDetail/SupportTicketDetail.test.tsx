@@ -3,7 +3,9 @@ import * as React from 'react';
 import { ClassNames, SupportTicketDetail } from './SupportTicketDetail';
 
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import { supportTicket } from 'src/__data__/supportTicket';
+import { supportTicketFactory } from 'src/factories/support';
+
+const supportTicket = supportTicketFactory.build();
 
 const classes: Record<ClassNames, string> = {
   title: '',

@@ -1,4 +1,4 @@
-import { Image } from 'linode-js-sdk/lib/images/types';
+import { Image } from '@linode/api-v4/lib/images/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { State } from 'src/store/image/image.reducer';

@@ -1,19 +1,12 @@
-import { Notification } from 'linode-js-sdk/lib/account';
-import { Linode } from 'linode-js-sdk/lib/linodes';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { Notification } from '@linode/api-v4/lib/account';
+import { Linode } from '@linode/api-v4/lib/linodes';
+import { APIError } from '@linode/api-v4/lib/types';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import AbuseTicketBanner from 'src/components/AbuseTicketBanner';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-  WithTheme
-} from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
@@ -36,13 +29,6 @@ import PromotionsBanner from './PromotionsBanner';
 import TransferDashboardCard from './TransferDashboardCard';
 import VolumesDashboardCard from './VolumesDashboardCard';
 
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
-
 interface StateProps {
   accountBackups: boolean;
   linodesWithoutBackups: Linode[];
@@ -61,11 +47,7 @@ interface DispatchProps {
   };
 }
 
-type CombinedProps = StateProps &
-  DispatchProps &
-  WithStyles<ClassNames> &
-  WithTheme &
-  RouteComponentProps<{}>;
+type CombinedProps = StateProps & DispatchProps & RouteComponentProps<{}>;
 
 export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
   const {
@@ -141,7 +123,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
   );
 };
 
-const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
+const mapStateToProps: MapState<StateProps, {}> = state => {
   const linodes = Object.values(state.__resources.linodes.itemsById);
   const notifications = state.__resources.notifications.data || [];
 
@@ -175,10 +157,7 @@ const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
-  dispatch,
-  ownProps
-) => {
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => {
   return {
     actions: {
       openBackupDrawer: () => dispatch(handleOpen())
@@ -188,8 +167,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const styled = withStyles(styles, { withTheme: true });
-
-const enhanced = compose<CombinedProps, {}>(styled, connected)(Dashboard);
+const enhanced = compose<CombinedProps, {}>(connected)(Dashboard);
 
 export default enhanced;

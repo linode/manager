@@ -3,7 +3,7 @@ import {
   getManagedContacts,
   ManagedContact,
   ManagedCredential
-} from 'linode-js-sdk/lib/managed';
+} from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 import {
   matchPath,

@@ -1,4 +1,4 @@
-import { Notification } from 'linode-js-sdk/lib/account';
+import { Notification } from '@linode/api-v4/lib/account';
 import { compose, path } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';

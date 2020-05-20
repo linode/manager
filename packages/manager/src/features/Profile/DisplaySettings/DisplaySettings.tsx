@@ -1,4 +1,4 @@
-import { Profile } from 'linode-js-sdk/lib/profile';
+import { Profile } from '@linode/api-v4/lib/profile';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';

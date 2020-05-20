@@ -2,7 +2,7 @@ import {
   getLinodeBackups,
   Linode,
   LinodeBackupsResponse
-} from 'linode-js-sdk/lib/linodes';
+} from '@linode/api-v4/lib/linodes';
 import { compose as ramdaCompose, pathOr } from 'ramda';
 import * as React from 'react';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
@@ -370,7 +370,6 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
             >
               <DisplaySectionList displaySections={displaySections} />
             </CheckoutBar>
-            );
           </Grid>
         )}
       </React.Fragment>

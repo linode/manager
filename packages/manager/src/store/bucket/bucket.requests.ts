@@ -4,10 +4,10 @@ import {
   getBucketsInCluster,
   ObjectStorageBucket,
   ObjectStorageBucketRequestPayload,
+  ObjectStorageClusterID,
   ObjectStorageDeleteBucketRequestPayload
-} from 'linode-js-sdk/lib/object-storage';
-import { APIError } from 'linode-js-sdk/lib/types';
-import { objectStorageClusterDisplay } from 'src/constants';
+} from '@linode/api-v4/lib/object-storage';
+import { APIError } from '@linode/api-v4/lib/types';
 import { GetAllData, getAllWithArguments } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';
@@ -47,20 +47,13 @@ const _getAllBucketsInCluster = getAllWithArguments<ObjectStorageBucket>(
  * This method requests all buckets from each cluster concurrently.
  *
  * Note: a slight oddity here is that in the case of failure, both the `done` and `failed` actions
- * will be dispatched. The reducer handles this and it should be OK, but handle with caution.
+ * will be dispatched. The reducer handles this and it should be OK, but proceed with caution.
  */
-export const getAllBucketsFromAllClusters: ThunkActionCreator<Promise<
-  ObjectStorageBucket[]
->> = () => dispatch => {
+export const getAllBucketsFromAllClusters: ThunkActionCreator<
+  Promise<ObjectStorageBucket[]>,
+  ObjectStorageClusterID[]
+> = clusterIds => dispatch => {
   dispatch(getAllBucketsForAllClustersActions.started());
-
-  // We use the cluster display map as the source of truth for cluster IDs.
-  // From a philosophical point of view, it would be better to first request
-  // `/object-storage/clusters` and use the result as the list of clusters to
-  // request. This would be a relatively big performance hit, however, and we
-  // have to maintain the cluster display map anyway, so it should always
-  // be kept up-to-date with region support for OBJ.
-  const clusterIds = Object.keys(objectStorageClusterDisplay);
 
   const promises = clusterIds.map(thisClusterId =>
     _getAllBucketsInCluster([thisClusterId]).catch(err => ({

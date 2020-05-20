@@ -1,6 +1,6 @@
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import * as React from 'react';
-import { IndicatorProps } from 'react-select/lib/components/indicators';
+import { IndicatorProps } from 'react-select';
 import {
   createStyles,
   Theme,

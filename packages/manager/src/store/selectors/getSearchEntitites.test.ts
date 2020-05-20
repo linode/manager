@@ -27,6 +27,9 @@ describe('getSearchEntities selector', () => {
     },
     kubernetes: {
       itemsById: apiResponseToMappedState(kubernetesClusterFactory.buildList(2))
+    },
+    nodePools: {
+      entities: []
     }
   };
   it('should return an array of SearchableItems', () => {

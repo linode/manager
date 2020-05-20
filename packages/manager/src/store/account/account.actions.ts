@@ -1,5 +1,5 @@
-import { Account } from 'linode-js-sdk/lib/account';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { Account } from '@linode/api-v4/lib/account';
+import { APIError } from '@linode/api-v4/lib/types';
 import { actionCreatorFactory } from 'typescript-fsa';
 
 /**
@@ -7,11 +7,11 @@ import { actionCreatorFactory } from 'typescript-fsa';
  */
 export const actionCreator = actionCreatorFactory(`@@manager/account`);
 
-export const profileRequest = actionCreator('request');
-
-export const profileRequestSuccess = actionCreator<Account>('success');
-
-export const profileRequestFail = actionCreator<APIError[]>('fail');
+export const requestAccountActions = actionCreator.async<
+  void,
+  Account,
+  APIError[]
+>('request');
 
 // Separate action to update credit card information, since updating this info
 // is accomplished with a separate endpoint that doesn't return the new credit

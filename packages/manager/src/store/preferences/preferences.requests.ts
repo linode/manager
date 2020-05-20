@@ -1,7 +1,7 @@
 import {
   getUserPreferences as _getUserPreferences,
   updateUserPreferences as _updateUserPreferences
-} from 'linode-js-sdk/lib/profile';
+} from '@linode/api-v4/lib/profile';
 import { ThunkActionCreator } from 'src/store/types';
 import {
   handleGetPreferences,

@@ -5,7 +5,7 @@ import {
   Invoice,
   InvoiceItem,
   Payment
-} from 'linode-js-sdk/lib/account';
+} from '@linode/api-v4/lib/account';
 import { splitEvery } from 'ramda';
 import { reportException } from 'src/exceptionReporting';
 import { FlagSet } from 'src/featureFlags';
