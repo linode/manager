@@ -17,7 +17,9 @@ const errorsToIgnore: string[] = [
 ];
 
 window.addEventListener('unhandledrejection', event => {
-  const stack: string = event?.reason?.stack ?? '';
+  const _stack = event?.reason?.stack;
+  // Enforce that `stack` is a string.
+  const stack = typeof _stack === 'string' ? _stack : '';
 
   if (stack.match(/launchdarkly/i)) {
     /**
@@ -27,7 +29,9 @@ window.addEventListener('unhandledrejection', event => {
     return;
   }
 
-  const firstReason = event.reason?.[0]?.reason ?? '';
+  const _firstReason = event.reason?.[0]?.reason;
+  // Enforce that `firstReason` is a string.
+  const firstReason = typeof _firstReason === 'string' ? _firstReason : '';
 
   /*
     if our error is an error we want to ignore, don't report to Sentry
@@ -64,11 +68,12 @@ export const reportException = (
 
   // Log the error to the console in non-production environments.
   if (process.env.NODE_ENV !== 'production') {
-    /* tslint:disable */
+    /* eslint-disable */
     console.error('====================================');
     console.error(error);
     console.log(extra);
     console.error('====================================');
+    /* eslint-enable */
   }
 
   // Create a local scope so we can add `extra` and `tags` to this specific
