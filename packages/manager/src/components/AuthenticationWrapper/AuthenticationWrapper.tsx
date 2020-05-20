@@ -69,10 +69,9 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
 
     try {
       await Promise.all(dataFetchingPromises);
-      this.props.markAppAsDoneLoading();
-      this.makeSecondaryRequests();
     } catch {
       /** We choose to do nothing, relying on the Redux error state. */
+    } finally {
       this.props.markAppAsDoneLoading();
       this.makeSecondaryRequests();
     }
