@@ -45,7 +45,7 @@ describe('PrimaryNav', () => {
   it('includes "Firewalls" link only when flag is on', () => {
     const { findByText } = renderWithTheme(<PrimaryNav {...props} />);
 
-    expect(findByText('Firewalls')).not.toBeInTheDocument;
+    expect(findByText('Firewalls')).resolves.not.toBeInTheDocument();
 
     (useFlags as any).mockReturnValue({
       firewalls: true
@@ -60,7 +60,7 @@ describe('PrimaryNav', () => {
       wrapWithTheme(<PrimaryNav {...props} />)
     );
 
-    expect(findByText('Managed')).not.toBeInTheDocument;
+    expect(findByText('Managed')).resolves.not.toBeInTheDocument();
 
     rerender(
       wrapWithTheme(<PrimaryNav {...props} />, {
@@ -82,7 +82,7 @@ describe('PrimaryNav', () => {
       wrapWithTheme(<PrimaryNav {...props} />)
     );
 
-    expect(findByText('Account')).not.toBeInTheDocument;
+    expect(findByText('Account')).resolves.not.toBeInTheDocument();
 
     rerender(
       wrapWithTheme(<PrimaryNav {...props} />, {
