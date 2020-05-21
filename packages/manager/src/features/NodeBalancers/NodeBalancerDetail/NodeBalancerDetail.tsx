@@ -16,7 +16,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import TabPanel from 'src/components/core/ReachTabPanel';
+import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import TabLinkList from 'src/components/TabLinkList';
@@ -313,7 +313,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
             <TabLinkList tabs={this.tabs} />
 
             <TabPanels>
-              <TabPanel>
+              <SafeTabPanel index={0}>
                 <NodeBalancerSummary
                   nodeBalancer={nodeBalancer}
                   errorResponses={pathOr(
@@ -322,16 +322,16 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
                     this.props
                   )}
                 />
-              </TabPanel>
+              </SafeTabPanel>
 
-              <TabPanel>
+              <SafeTabPanel index={1}>
                 <NodeBalancerConfigurations
                   nodeBalancerLabel={nodeBalancer.label}
                   nodeBalancerRegion={nodeBalancer.region}
                 />
-              </TabPanel>
+              </SafeTabPanel>
 
-              <TabPanel>
+              <SafeTabPanel index={2}>
                 <NodeBalancerSettings
                   nodeBalancerId={nodeBalancer.id}
                   nodeBalancerLabel={nodeBalancer.label}
@@ -339,7 +339,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
                     nodeBalancer.client_conn_throttle
                   }
                 />
-              </TabPanel>
+              </SafeTabPanel>
             </TabPanels>
           </Tabs>
         </React.Fragment>

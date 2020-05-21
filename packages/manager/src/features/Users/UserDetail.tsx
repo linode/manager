@@ -14,7 +14,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import TabPanel from 'src/components/core/ReachTabPanel';
+import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import TabLinkList from 'src/components/TabLinkList';
@@ -363,7 +363,7 @@ class UserDetail extends React.Component<CombinedProps> {
             />
           )}
           <TabPanels>
-            <TabPanel>
+            <SafeTabPanel index={0}>
               <UserProfile
                 username={username}
                 email={email}
@@ -379,14 +379,14 @@ class UserDetail extends React.Component<CombinedProps> {
                 profileErrors={profileErrors}
                 originalUsername={originalUsername}
               />
-            </TabPanel>
-            <TabPanel>
+            </SafeTabPanel>
+            <SafeTabPanel index={1}>
               <UserPermissions
                 currentUser={profileUsername}
                 username={username}
                 clearNewUser={this.clearNewUser}
               />
-            </TabPanel>
+            </SafeTabPanel>
           </TabPanels>
         </Tabs>
       </React.Fragment>

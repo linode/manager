@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
-import TabPanel from 'src/components/core/ReachTabPanel';
+import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import TabLinkList from 'src/components/TabLinkList';
@@ -76,30 +76,30 @@ class Profile extends React.Component<Props> {
 
           <React.Suspense fallback={<SuspenseLoader />}>
             <TabPanels>
-              <TabPanel>
+              <SafeTabPanel index={0}>
                 <DisplaySettings />
-              </TabPanel>
-              <TabPanel>
+              </SafeTabPanel>
+              <SafeTabPanel index={1}>
                 <AuthenticationSettings />
-              </TabPanel>
-              <TabPanel>
+              </SafeTabPanel>
+              <SafeTabPanel index={2}>
                 <SSHKeys />
-              </TabPanel>
-              <TabPanel>
+              </SafeTabPanel>
+              <SafeTabPanel index={3}>
                 <LishSettings />
-              </TabPanel>
-              <TabPanel>
+              </SafeTabPanel>
+              <SafeTabPanel index={4}>
                 <APITokens />
-              </TabPanel>
-              <TabPanel>
+              </SafeTabPanel>
+              <SafeTabPanel index={5}>
                 <OAuthClients />
-              </TabPanel>
-              <TabPanel>
+              </SafeTabPanel>
+              <SafeTabPanel index={6}>
                 <Referrals />
-              </TabPanel>
-              <TabPanel>
+              </SafeTabPanel>
+              <SafeTabPanel index={7}>
                 <Settings />
-              </TabPanel>
+              </SafeTabPanel>
             </TabPanels>
           </React.Suspense>
         </Tabs>
