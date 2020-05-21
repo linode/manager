@@ -1,5 +1,3 @@
-import { Grants } from '../account/types';
-
 export interface Referrals {
   code: string;
   url: string;
@@ -23,7 +21,6 @@ export interface Profile {
   authorized_keys: string[];
   two_factor_auth: boolean;
   restricted: boolean;
-  grants?: Grants;
 }
 
 export interface TokenRequest {
