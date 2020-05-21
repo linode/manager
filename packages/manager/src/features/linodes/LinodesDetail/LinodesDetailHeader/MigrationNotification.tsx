@@ -73,7 +73,7 @@ const MigrationNotification: React.FC<CombinedProps> = props => {
     <Notice important warning>
       {notificationMessage}
       {notificationType === 'migration_scheduled'
-        ? ' To enter the migration queue right now, please '
+        ? ' To start the migration process now, please '
         : ' To schedule your migration, please '}
       <Typography className={classes.migrationLink} onClick={migrate}>
         click here.
