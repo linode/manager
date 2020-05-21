@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
 import Paper from 'src/components/core/Paper';
@@ -17,7 +16,7 @@ interface Props {
   clientAPIKey: string;
 }
 
-type CombinedProps = RouteComponentProps & Props;
+type CombinedProps = Props;
 
 const Installation: React.FC<CombinedProps> = props => {
   const classes = useStyles();
