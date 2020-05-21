@@ -57,6 +57,7 @@ const TicketRow: React.StatelessComponent<CombinedProps> = props => {
       key={`ticket-${ticket.id}`}
       rowLink={`/support/tickets/${ticket.id}`}
       data-testid="ticket-row"
+      ariaLabel={`Ticket subject ${ticket.summary}`}
     >
       <TableCell parentColumn="Subject" data-qa-support-subject>
         <Link to={`/support/tickets/${ticket.id}`}>
