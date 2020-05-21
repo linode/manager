@@ -83,9 +83,13 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
    * for navigation, basic display, etc.
    */
   makeSecondaryRequests = async () => {
+    const { linodesLoading, linodesLastUpdated, requestLinodes } = this.props;
+    if (!linodesLoading && linodesLastUpdated === 0) {
+      // Only request Linodes if we haven't done that somewhere else already
+      requestLinodes().catch(_ => null);
+    }
     try {
       await Promise.all([
-        this.props.requestLinodes(),
         this.props.requestTypes(),
         /**
          * We have cached Regions data that can be used
@@ -154,10 +158,14 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
 
 interface StateProps {
   isAuthenticated: boolean;
+  linodesLoading: boolean;
+  linodesLastUpdated: number;
 }
 
 const mapStateToProps: MapState<StateProps, {}> = state => ({
-  isAuthenticated: Boolean(state.authentication.token)
+  isAuthenticated: Boolean(state.authentication.token),
+  linodesLoading: state.__resources.linodes.loading,
+  linodesLastUpdated: state.__resources.linodes.lastUpdated
 });
 
 interface DispatchProps {

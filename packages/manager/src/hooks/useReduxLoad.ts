@@ -90,7 +90,7 @@ export const useReduxLoad = (
     if (predicate && mountedRef.current) {
       requestDeps(state, dispatch, deps, refreshInterval, _setLoading);
     }
-  }, [predicate, mountedRef.current]);
+  }, [predicate, refreshInterval]);
 
   useEffect(() => {
     return () => {
@@ -117,7 +117,10 @@ export const requestDeps = (
       if (currentResource.lastUpdated === 0 && !currentResource.loading) {
         needsToLoad = true;
         requests.push(requestMap[deps[i]]);
-      } else if (Date.now() - currentResource.lastUpdated > refreshInterval) {
+      } else if (
+        Date.now() - currentResource.lastUpdated > refreshInterval &&
+        !currentResource.loading
+      ) {
         requests.push(requestMap[deps[i]]);
       }
     }

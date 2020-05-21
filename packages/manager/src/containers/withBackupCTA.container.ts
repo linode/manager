@@ -5,7 +5,7 @@ export interface BackupCTAProps {
   backupsCTA: boolean;
 }
 
-export default connect((state: ApplicationState, ownProps) => ({
+export default connect((state: ApplicationState) => ({
   backupsCTA:
     Object.values(state.__resources.linodes.itemsById).some(
       l => !l.backups.enabled
