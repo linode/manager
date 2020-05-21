@@ -25,4 +25,3 @@ else
     echo -e "\nExample: \"M3-111-Feature\"\n"
     exit 1
 fi
-gi
