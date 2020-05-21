@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [2020-05-19] - 1.9.0
+## [2020-05-21] - 1.9.0
 
 ### Added:
 
@@ -26,9 +26,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Fixed:
 
 - Keyboard access to open Support ticket creation drawer
-- Missing SSH keys in some flows for LInode creation
+- Missing SSH keys in some flows for Linode creation
 - Second column alignment for NodeBalancer on dashboard
 - Tag display on mobile viewport
+- Removed extra requests 
+- Prevent crashing for unactivated users
+- Remove duplicate instance requests
 
 ## [2020-05-04] - v1.8.0
 
