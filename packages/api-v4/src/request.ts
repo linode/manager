@@ -38,11 +38,16 @@ export const setToken = (token: string) => {
 };
 
 const set = (field: ConfigField, value: any) => (object: any) => {
-  return isNotEmpty(value) ? { ...object, [field]: value } : object;
+  return !isEmpty(value) ? { ...object, [field]: value } : object;
 };
 
-const isNotEmpty = (v: any) =>
-  !(v === undefined || v === null || v.length === 0);
+export const isEmpty = (v: any) =>
+  v === undefined ||
+  v === null ||
+  v.length === 0 ||
+  (typeof v === 'object' &&
+    Object.keys(v).length === 0 &&
+    v.constructor === Object);
 
 /** URL */
 export const setURL = (url: string) => set('url', url);
@@ -55,7 +60,7 @@ export const setMethod = (method: 'GET' | 'POST' | 'PUT' | 'DELETE') =>
 export const setParams = (params: any = {}) => set('params', params);
 
 export const setHeaders = (newHeaders: any = {}) => (object: any) => {
-  return isNotEmpty(newHeaders)
+  return !isEmpty(newHeaders)
     ? { ...object, headers: { ...object.headers, ...newHeaders } }
     : object;
 };
@@ -130,7 +135,7 @@ const mapYupToLinodeAPIError = ({
 /** X-Filter */
 export const setXFilter = (xFilter: any) => {
   return (object: any) =>
-    isNotEmpty(xFilter)
+    !isEmpty(xFilter)
       ? {
           ...object,
           headers: { ...object.headers, 'X-Filter': JSON.stringify(xFilter) }
