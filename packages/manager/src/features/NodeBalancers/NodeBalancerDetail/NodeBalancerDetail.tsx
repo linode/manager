@@ -332,7 +332,6 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
               </TabPanel>
 
               <TabPanel>
-                {' '}
                 <NodeBalancerSettings
                   nodeBalancerId={nodeBalancer.id}
                   nodeBalancerLabel={nodeBalancer.label}
