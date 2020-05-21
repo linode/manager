@@ -30,7 +30,7 @@ export type State = MappedEntityState2<
   EntityError
 >;
 
-export const defaultState: State = createDefaultState({}, {});
+export const defaultState: State = createDefaultState();
 
 /**
  * Reducer

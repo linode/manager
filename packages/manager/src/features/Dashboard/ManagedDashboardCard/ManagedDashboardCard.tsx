@@ -208,9 +208,6 @@ const LoadingErrorOrContent: React.FC<ContentProps> = props => {
   );
 };
 
-const enhanced = compose<CombinedProps, {}>(
-  withManaged(),
-  withManagedIssues()
-);
+const enhanced = compose<CombinedProps, {}>(withManaged(), withManagedIssues());
 
 export default enhanced(ManagedDashboardCard);

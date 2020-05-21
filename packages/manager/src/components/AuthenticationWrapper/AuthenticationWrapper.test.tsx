@@ -12,6 +12,8 @@ window.location.assign = jest.fn();
 const component = shallow<AuthenticationWrapper>(
   <AuthenticationWrapper
     isAuthenticated={false}
+    linodesLastUpdated={0}
+    linodesLoading={false}
     initSession={jest.fn()}
     requestAccount={jest.fn()}
     requestTypes={jest.fn()}

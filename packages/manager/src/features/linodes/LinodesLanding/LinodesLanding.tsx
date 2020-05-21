@@ -312,7 +312,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                               </Hidden>
 
                               <AddNewLink
-                                onClick={e => {
+                                onClick={_ => {
                                   this.props.history.push('/linodes/create');
                                 }}
                                 label="Add a Linode"
@@ -468,7 +468,7 @@ interface StateProps {
   someLinodesHaveScheduledMaintenance: boolean;
 }
 
-const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
+const mapStateToProps: MapState<StateProps, {}> = state => {
   const linodes = Object.values(state.__resources.linodes.itemsById);
   const notifications = state.__resources.notifications.data || [];
 
