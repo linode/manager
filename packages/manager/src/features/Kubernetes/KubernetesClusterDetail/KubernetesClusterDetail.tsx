@@ -185,7 +185,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
               response.data.map(thisEndpoint => thisEndpoint.endpoint)
             );
           })
-          .catch(error => {
+          .catch(_error => {
             // Do nothing since endpoint is null by default, and in the instances where this function is called, endpointAvailabilityInterval has been set in motion already.
           });
       };
@@ -306,7 +306,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
               scrollButtons="on"
               className={classes.tabBar}
             >
-              <Tab key="Summary" label="Summary" data-qa-tab="Summary" />}
+              <Tab key="Summary" label="Summary" data-qa-tab="Summary" />
             </Tabs>
           </AppBar>
         </Grid>
