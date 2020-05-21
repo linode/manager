@@ -1,6 +1,10 @@
 import * as classNames from 'classnames';
 import { Notification } from '@linode/api-v4/lib/account';
-import { Config, LinodeBackups, LinodeStatus } from '@linode/api-v4/lib/linodes';
+import {
+  Config,
+  LinodeBackups,
+  LinodeStatus
+} from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -141,7 +145,7 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
         data-qa-loading
         data-qa-linode={label}
         rowLink={`/linodes/${id}`}
-        aria-label={label}
+        ariaLabel={label}
       >
         {!loading && headCell}
         <TableCell

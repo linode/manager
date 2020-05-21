@@ -135,7 +135,7 @@ export class SelectPlanPanel extends React.Component<
         <Hidden smDown>
           <TableRow
             data-qa-plan-row={type.label}
-            aria-label={rowAriaLabel}
+            ariaLabel={rowAriaLabel}
             key={type.id}
             onClick={!isSamePlan ? this.onSelect(type.id) : undefined}
             rowLink={this.onSelect ? this.onSelect(type.id) : undefined}
