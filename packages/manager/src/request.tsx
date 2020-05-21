@@ -41,7 +41,6 @@ export const handleError = (error: AxiosError) => {
   }
 
   const url = pathOr('', ['response', 'config', 'url'], error);
-  const method = pathOr('', ['response', 'config', 'method'], error);
   const status: number = pathOr<number>(0, ['response', 'status'], error);
   const errors: APIError[] = pathOr<APIError[]>(
     [{ reason: DEFAULT_ERROR_MESSAGE }],
@@ -59,14 +58,6 @@ export const handleError = (error: AxiosError) => {
   const requestedLinodeType = pathOr('', ['type'], requestData);
 
   const interceptedErrors = interceptErrors(errors, [
-    {
-      replacementText: `You are not authorized to ${
-        !method || method.match(/get/i)
-          ? 'view this feature.'
-          : 'take this action.'
-      }`,
-      condition: () => status === 403
-    },
     {
       replacementText: <GPUError />,
       condition: e =>
