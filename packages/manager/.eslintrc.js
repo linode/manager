@@ -34,6 +34,7 @@ module.exports = {
     'ramda',
     'cypress',
     'prettier',
+    'testing-library'
     'scanjs-rules',
     'xss'
   ],
@@ -48,7 +49,8 @@ module.exports = {
     'plugin:sonarjs/recommended',
     'plugin:ramda/recommended',
     'plugin:cypress/recommended',
-    'plugin:prettier/recommended' // Enables eslint-plugin-prettier and eslint-config-prettier. This will display prettier errors as ESLint errors. Make sure this is always the last configuration in the extends array.
+    'plugin:prettier/recommended', // Enables eslint-plugin-prettier and eslint-config-prettier. This will display prettier errors as ESLint errors. Make sure this is always the last configuration in the extends array.
+    'plugin:testing-library/react'
   ],
   rules: {
     // prepend `_` to an arg you accept to ignore
@@ -182,7 +184,6 @@ module.exports = {
         '**/*.stories.js',
         'scripts/**',
         'config/**',
-        'config/**',
         'testServer.js',
         'cypress/**'
       ],
@@ -198,7 +199,9 @@ module.exports = {
       // scrips, config and cypress files can use console
       files: ['scripts/**', 'config/**', 'testServer.js', 'cypress/**'],
       rules: {
-        'no-console': 'off'
+        'no-console': 'off',
+        // here we get false positives as cypress self handles async/await
+        'testing-library/await-async-query': 'off'
       },
       env: {
         node: true,
