@@ -6,11 +6,12 @@ const isExternal = (href: string) => {
 };
 
 export const Link: React.FC<LinkProps> = props => {
-  return isExternal(props.to as string) ? (
+  const isLinkExternal = isExternal(props.to as string);
+  return isLinkExternal ? (
     <a
       href={props.to as string}
-      target={isExternal ? '_blank' : '_parent'}
-      aria-describedby={isExternal ? 'new-window' : undefined}
+      target="_blank"
+      aria-describedby="new-window"
       rel="noopener noreferrer"
       onClick={props.onClick}
       className={props.className}

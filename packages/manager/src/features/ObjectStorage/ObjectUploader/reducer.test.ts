@@ -18,14 +18,20 @@ describe('reducer', () => {
     lastModified: 0,
     size: 0,
     type: '',
-    slice: jest.fn()
+    slice: jest.fn(),
+    arrayBuffer: jest.fn(),
+    stream: jest.fn(),
+    text: jest.fn()
   };
   const file2: File = {
     name: 'my-file2',
     lastModified: 0,
     size: 0,
     type: '',
-    slice: jest.fn()
+    slice: jest.fn(),
+    arrayBuffer: jest.fn(),
+    stream: jest.fn(),
+    text: jest.fn()
   };
 
   it('enqueues new files and updates the count', () => {

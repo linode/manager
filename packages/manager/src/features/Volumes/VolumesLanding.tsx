@@ -527,16 +527,11 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
           return volumesAreGrouped ? (
             <ListGroupedVolumes
-              data={orderedData}
               {...orderProps}
               renderProps={{ ...renderProps }}
             />
           ) : (
-            <ListVolumes
-              data={orderedData}
-              {...orderProps}
-              renderProps={{ ...renderProps }}
-            />
+            <ListVolumes {...orderProps} renderProps={{ ...renderProps }} />
           );
         }}
       </OrderBy>

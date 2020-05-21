@@ -94,7 +94,6 @@ export const NGINXGraphs: React.FC<CombinedProps> = props => {
                 title="Connections"
                 subtitle="connections/s"
                 unit=" connections/s"
-                nativeLegend
                 data={[
                   {
                     label: 'Accepted',
@@ -115,7 +114,6 @@ export const NGINXGraphs: React.FC<CombinedProps> = props => {
             <Grid item xs={12} sm={6} className={classes.smallGraph}>
               <LongviewLineGraph
                 title="Workers"
-                nativeLegend
                 data={[
                   {
                     label: 'Waiting',

@@ -90,9 +90,10 @@ class SearchSuggestion extends React.Component<CombinedProps> {
         data-qa-suggestion
         data-qa-selected={Boolean(this.props.isFocused)}
         ref={innerRef}
-        onClick={this.handleClick}
         onKeyPress={this.handleClick}
         {...innerProps}
+        // overrides onClick from InnerProps
+        onClick={this.handleClick}
         role="button"
         tabIndex={0}
       >
