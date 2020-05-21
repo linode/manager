@@ -66,7 +66,7 @@ type CombinedProps = ConnectedProps & WithUpdatingLinodesProps & WithTypesProps;
 const LinodesDashboardCard: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const { _loading } = useReduxLoad(['images']);
+  const { _loading } = useReduxLoad(['linodes', 'images']);
 
   const renderAction = () => {
     return props.linodeCount > 5 ? (
