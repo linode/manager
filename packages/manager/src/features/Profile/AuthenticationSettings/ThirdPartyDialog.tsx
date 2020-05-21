@@ -87,13 +87,14 @@ const renderActions = (
         aria-describedby="external-site"
         buttonType="primary"
         loading={loading}
-        onClick={() =>
+        onClick={() => {
+          onClose();
           window.open(
             `${LOGIN_ROOT}/tpa/enable/` + `${provider}`,
             '_blank',
             'noopener'
-          )
-        }
+          );
+        }}
         data-qa-confirm
         data-testid={'dialog-confirm'}
       >
