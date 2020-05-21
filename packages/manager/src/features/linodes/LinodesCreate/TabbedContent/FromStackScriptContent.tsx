@@ -343,9 +343,10 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
               error={hasErrorFor('type')}
               types={typesData}
               onSelect={updateTypeID}
-              updateFor={[selectedTypeID, errors]}
+              updateFor={[selectedTypeID, errors, this.props.disabledClasses]}
               selectedID={selectedTypeID}
               disabled={disabled}
+              disabledClasses={this.props.disabledClasses}
             />
             <LabelAndTagsPanel
               labelFieldProps={{

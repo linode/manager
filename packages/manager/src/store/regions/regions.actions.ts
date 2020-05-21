@@ -32,7 +32,7 @@ export const requestRegions: RequestRegionsThunk = () => dispatch => {
  * One day soon, the API will return GPU as one of a region's capabilities.
  * Until that, we're faking it here.
  */
-const regionsWithGPUs = ['us-central'];
+const regionsWithGPUs = ['us-east'];
 const addGPUToRegion = (region: Region) =>
   regionsWithGPUs.includes(region.id)
     ? {

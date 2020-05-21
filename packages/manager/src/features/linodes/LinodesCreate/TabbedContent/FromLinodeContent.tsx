@@ -141,6 +141,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
     }
 
     return (
+      // eslint-disable-next-line
       <React.Fragment>
         {linodes && linodes.length === 0 ? (
           <Grid
@@ -199,8 +200,14 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
                 onSelect={this.props.updateTypeID}
                 selectedID={selectedTypeID}
                 selectedDiskSize={selectedDiskSize}
-                updateFor={[selectedDiskSize, selectedTypeID, errors]}
+                updateFor={[
+                  selectedDiskSize,
+                  selectedTypeID,
+                  errors,
+                  this.props.disabledClasses
+                ]}
                 disabled={userCannotCreateLinode}
+                disabledClasses={this.props.disabledClasses}
               />
               <LabelAndTagsPanel
                 labelFieldProps={{

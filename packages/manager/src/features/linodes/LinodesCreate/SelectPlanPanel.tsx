@@ -86,6 +86,7 @@ interface Props {
   disabled?: boolean;
   header?: string;
   copy?: string;
+  disabledClasses?: LinodeTypeClass[];
 }
 
 const getNanodes = (types: ExtendedType[]) =>
@@ -108,6 +109,11 @@ export class SelectPlanPanel extends React.Component<
 > {
   onSelect = (id: string) => () => this.props.onSelect(id);
 
+  getDisabledClass = (thisClass: LinodeTypeClass) => {
+    const disabledClasses = this.props.disabledClasses ?? [];
+    return disabledClasses.includes(thisClass);
+  };
+
   renderSelection = (type: ExtendedType, idx: number) => {
     const { selectedID, currentPlanHeading, disabled, classes } = this.props;
     const selectedDiskSize = this.props.selectedDiskSize
@@ -117,6 +123,7 @@ export class SelectPlanPanel extends React.Component<
     const planTooSmall = selectedDiskSize > type.disk;
     const isSamePlan = type.heading === currentPlanHeading;
     const isGPU = type.class === 'gpu';
+    const isDisabledClass = this.getDisabledClass(type.class);
 
     if (planTooSmall) {
       tooltip = `This plan is too small for the selected image.`;
@@ -137,11 +144,16 @@ export class SelectPlanPanel extends React.Component<
             data-qa-plan-row={type.label}
             aria-label={rowAriaLabel}
             key={type.id}
-            onClick={!isSamePlan ? this.onSelect(type.id) : undefined}
+            onClick={
+              !isSamePlan && !isDisabledClass
+                ? this.onSelect(type.id)
+                : undefined
+            }
             rowLink={this.onSelect ? this.onSelect(type.id) : undefined}
-            aria-disabled={isSamePlan || planTooSmall}
+            aria-disabled={isSamePlan || planTooSmall || isDisabledClass}
             className={classnames({
-              [classes.disabledRow]: isSamePlan || planTooSmall
+              [classes.disabledRow]:
+                isSamePlan || planTooSmall || isDisabledClass
             })}
           >
             <TableCell className={classes.radioCell}>
@@ -154,7 +166,7 @@ export class SelectPlanPanel extends React.Component<
                     <Radio
                       checked={!planTooSmall && type.id === String(selectedID)}
                       onChange={this.onSelect(type.id)}
-                      disabled={planTooSmall || disabled}
+                      disabled={planTooSmall || disabled || isDisabledClass}
                       id={type.id}
                     />
                   }
@@ -206,7 +218,7 @@ export class SelectPlanPanel extends React.Component<
             onClick={this.onSelect(type.id)}
             heading={type.heading}
             subheadings={type.subHeadings}
-            disabled={planTooSmall || isSamePlan || disabled}
+            disabled={planTooSmall || isSamePlan || disabled || isDisabledClass}
             tooltip={tooltip}
             variant={'check'}
           />
@@ -270,7 +282,7 @@ export class SelectPlanPanel extends React.Component<
             <>
               <Typography data-qa-nanode className={classes.copy}>
                 Nanode instances are good for low-duty workloads, where
-                performance isn't critical.
+                performance isn&#39;t critical.
               </Typography>
               {this.renderPlanContainer(nanodes)}
             </>
@@ -337,7 +349,11 @@ export class SelectPlanPanel extends React.Component<
     }
 
     if (!isEmpty(gpu)) {
-      const programInfo = (
+      const programInfo = this.getDisabledClass('gpu') ? (
+        <Typography>
+          GPU instances are not available in the selected region.
+        </Typography>
+      ) : (
         <Typography>
           This is a pilot program for Linode GPU Instances.
           <a

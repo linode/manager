@@ -350,6 +350,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
             updateFor={[selectedTypeID, errors]}
             selectedID={selectedTypeID}
             disabled={userCannotCreateLinode}
+            disabledClasses={this.props.disabledClasses}
           />
           <LabelAndTagsPanel
             labelFieldProps={{
