@@ -1,6 +1,5 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 const mockGetInvoices = data => {
-  cy.server();
   cy.route({
     method: 'GET',
     response: data,
@@ -31,16 +30,57 @@ const mockTwoInvoices = {
   pages: 1,
   results: 2
 };
+const timeZonesList = ['US/Eastern', 'GMT', 'Asia/Hong_Kong'];
+
+// cypress.moment does not support timezones
+import * as momentTz from 'moment-timezone';
+
+const localizeDate = (apiDate, timezone) => {
+  return momentTz
+    .utc(apiDate)
+    .tz(timezone)
+    .format('YYYY-MM-DD');
+};
+
+// here We precompute the response as it should be before we modify the timezone for these tests
+let cachedGetProfile = null;
+import { getProfile } from '../../support/api/account';
+beforeEach(() => {
+  cachedGetProfile = getProfile().then(resp => {
+    cachedGetProfile = resp.body;
+  });
+});
+
+const mockProfile = timezone => {
+  cy.route({
+    method: 'GET',
+    response: { ...cachedGetProfile, timezone },
+    url: '*/profile'
+  }).as('getProfile');
+};
+
+const checkInvoice = (invoice, tz) => {
+  cy.server();
+  mockGetInvoices(mockTwoInvoices);
+  mockProfile(tz);
+  cy.visitWithLogin('/account/billing');
+  cy.findByText(localizeDate(invoice.date, tz)).should('be.visible');
+  cy.findByText(invoice.label).should('be.visible');
+  cy.findByText(`$${invoice.total.toFixed(2)}`).should('be.visible');
+};
+
 describe('Billling Activity Feed', () => {
   describe('Lists Invoices', () => {
-    mockTwoInvoices.data.forEach(i => {
-      return it(`ID ${i.id}`, () => {
-        mockGetInvoices(mockTwoInvoices);
-        cy.visitWithLogin('/account/billing');
-        // cy.findByText(i.id).should('be.visible');
-        cy.findByText(i.date.split('T')[0]).should('be.visible');
-        cy.findByText(i.label).should('be.visible');
-        cy.findByText(`$${i.total.toFixed(2)}`).should('be.visible');
+    mockTwoInvoices.data.forEach(invoice => {
+      return it(`ID ${invoice.id}`, () => {
+        checkInvoice(invoice, timeZonesList[0]);
+      });
+    });
+  });
+  describe('Test different timezones', () => {
+    timeZonesList.forEach(tz => {
+      return it(`Check Invoice date with timezone ${tz}`, () => {
+        checkInvoice(mockTwoInvoices.data[0], tz);
       });
     });
   });
