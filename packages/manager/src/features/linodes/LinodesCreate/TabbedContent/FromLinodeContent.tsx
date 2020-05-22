@@ -191,7 +191,8 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
                 handleSelection={this.props.updateRegionID}
                 selectedID={selectedRegionID}
                 copy="Determine the best location for your Linode."
-                updateFor={[selectedRegionID, errors]}
+                updateFor={[selectedRegionID, errors, regions]}
+                helperText={this.props.regionHelperText}
                 disabled={userCannotCreateLinode}
               />
               <SelectPlanPanel

@@ -606,6 +606,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           })
         : regionsData;
 
+    const regionHelperText =
+      (filteredRegions?.length ?? 0) !== (regionsData?.length ?? 0)
+        ? 'Only regions that support your selected plan are displayed.'
+        : undefined;
+
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Create a Linode" />
@@ -640,6 +645,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             resetCreationState={this.clearCreationState}
             setBackupID={this.setBackupID}
             regionsData={filteredRegions}
+            regionHelperText={regionHelperText}
             {...restOfProps}
             {...restOfState}
           />

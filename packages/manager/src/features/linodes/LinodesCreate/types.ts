@@ -94,6 +94,7 @@ export interface BaseFormStateAndHandlers {
   updateImageID: (id: string) => void;
   selectedRegionID?: string;
   disabledClasses?: LinodeTypeClass[];
+  regionHelperText?: string;
   updateRegionID: (id: string) => void;
   selectedTypeID?: string;
   updateTypeID: (id: string) => void;
