@@ -2,7 +2,8 @@ import { last } from 'ramda';
 import { firewallRuleFactory } from 'src/factories/firewalls';
 import reducer, {
   editorStateToRules,
-  initRuleEditorState
+  initRuleEditorState,
+  prepareRules
 } from './firewallRuleEditor';
 
 const INITIAL_RULE_LENGTH = 2;
@@ -150,6 +151,21 @@ describe('Rule Editor', () => {
       rulesWithoutStatus.forEach(thisRule => {
         expect(thisRule).toBeDefined();
       });
+    });
+  });
+
+  describe('prepareRules', () => {
+    it('removes the `ports` field for ICMP rules if `ports` is an empty string', () => {
+      const rules = [
+        firewallRuleFactory.build({ protocol: 'ICMP', ports: '1234' }),
+        firewallRuleFactory.build({ protocol: 'ICMP', ports: '' }),
+        firewallRuleFactory.build({ protocol: 'TCP', ports: '' })
+      ];
+      const editorState = initRuleEditorState(rules);
+      const result = prepareRules(editorState);
+      expect(result[0]).toHaveProperty('ports', '1234');
+      expect(result[1]).not.toHaveProperty('ports');
+      expect(result[2]).toHaveProperty('ports', '');
     });
   });
 });

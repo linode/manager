@@ -108,12 +108,6 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
       addresses
     };
 
-    // The API will return an error if a `ports` attribute is present on a payload for an ICMP rule,
-    // so we do a bit of trickery here and delete it if necessary.
-    if (protocol === 'ICMP' && ports === '') {
-      delete payload.ports;
-    }
-
     props.onSubmit(category, payload);
     onClose();
   };
@@ -141,8 +135,8 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = props => {
         }}
       </Formik>
       <Typography variant="body1">
-        Rule changes don't take effect immediately. You can add or delete rules
-        before saving all your changes to this Firewall.
+        Rule changes don&apos;t take effect immediately. You can add or delete
+        rules before saving all your changes to this Firewall.
       </Typography>
     </Drawer>
   );
@@ -198,12 +192,13 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
   // Set form field errors for each error we have (except "addresses" errors, which are handled
   // by IP Error state).
   React.useEffect(() => {
+    // eslint-disable-next-line no-unused-expressions
     ruleErrors?.forEach(thisError => {
       if (thisError.formField !== 'addresses') {
         setFieldError(thisError.formField, thisError.reason);
       }
     });
-  }, [ruleErrors]);
+  }, [ruleErrors, setFieldError]);
 
   // These handlers are all memoized because the form was laggy when I tried them inline.
   const handleTypeChange = React.useCallback((item: Item | null) => {
@@ -237,7 +232,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
 
       setFieldValue('protocol', item?.value);
     },
-    [formTouched]
+    [formTouched, setFieldValue]
   );
 
   const handleAddressesChange = React.useCallback(
@@ -250,7 +245,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
       // Reset custom IPs
       setIPs([{ address: '' }]);
     },
-    [ips, formTouched]
+    [formTouched, setFieldValue, setFormTouched, setIPs]
   );
 
   const handlePortsChange = React.useCallback(
@@ -260,7 +255,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
       }
       handleChange(e);
     },
-    [formTouched]
+    [formTouched, handleChange]
   );
 
   const handleIPChange = React.useCallback(
@@ -270,7 +265,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
       }
       setIPs(_ips);
     },
-    [formTouched, ips]
+    [formTouched, setIPs]
   );
 
   const addressesValue = React.useMemo(() => {
@@ -284,7 +279,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(props => {
   const typeValue = React.useMemo(() => {
     const _type = deriveTypeFromValuesAndIPs(values, ips);
     return typeOptions.find(thisOption => thisOption.value === _type) || null;
-  }, [values, ips, typeOptions]);
+  }, [values, ips]);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -517,6 +512,7 @@ export const getInitialIPs = (
     ...addresses?.ipv6?.map(stringToExtendedIP)
   ];
 
+  // eslint-disable-next-line no-unused-expressions
   ruleToModify.errors?.forEach(thisError => {
     const { formField, ip } = thisError;
 
