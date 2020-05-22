@@ -194,6 +194,9 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     return null;
   }
 
+  // Determining true tab count for indexing based on tab display
+  const displayedTabs = tabs.filter(tab => tab.display === true);
+
   return (
     <React.Fragment>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
@@ -270,7 +273,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
             </SafeTabPanel>
 
             {client && client.apps.apache && (
-              <SafeTabPanel index={4}>
+              <SafeTabPanel index={client && client.apps.apache ? 4 : null}>
                 <Apache
                   timezone={timezone}
                   clientAPIKey={clientAPIKey}
@@ -281,7 +284,15 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
             )}
 
             {client && client.apps.nginx && (
-              <SafeTabPanel index={5}>
+              <SafeTabPanel
+                index={
+                  client.apps.nginx && client.apps.apache
+                    ? 5
+                    : client.apps.nginx && !client.apps.apache
+                    ? 4
+                    : null
+                }
+              >
                 <NGINX
                   timezone={timezone}
                   clientAPIKey={clientAPIKey}
@@ -292,7 +303,20 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
             )}
 
             {client && client.apps.mysql && (
-              <SafeTabPanel index={6}>
+              <SafeTabPanel
+                index={
+                  client.apps.mysql && client.apps.nginx && client.apps.apache
+                    ? 6
+                    : (client.apps.mysql && !client.apps.apache) ||
+                      !client.apps.nginx
+                    ? 5
+                    : client.apps.mysql &&
+                      !client.apps.apache &&
+                      !client.apps.nginx
+                    ? 4
+                    : null
+                }
+              >
                 <MySQLLanding
                   timezone={timezone}
                   clientAPIKey={clientAPIKey}
@@ -302,7 +326,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
               </SafeTabPanel>
             )}
 
-            <SafeTabPanel index={7}>
+            <SafeTabPanel index={Number(displayedTabs.length - 1)}>
               <Installation
                 clientInstallationKey={client.install_code}
                 clientAPIKey={client.api_key}
