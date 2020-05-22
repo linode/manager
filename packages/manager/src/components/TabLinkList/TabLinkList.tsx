@@ -8,24 +8,24 @@ const useStyles = makeStyles((theme: Theme) => ({
   tab: {
     '&[data-reach-tab]': {
       // This was copied over from our MuiTab styling in themeFactory. Some of this could probably be cleaned up.
-      color: theme.color.tableHeaderText,
-      minWidth: 50,
-      textTransform: 'inherit',
-      fontSize: '0.93rem',
-      padding: '6px 16px',
-      position: 'relative',
-      overflow: 'hidden',
-      maxWidth: 264,
-      boxSizing: 'border-box',
-      borderBottom: '2px solid transparent',
-      minHeight: theme.spacing(1) * 6,
-      flexShrink: 0,
       display: 'inline-flex',
       alignItems: 'center',
+      flexShrink: 0,
       verticalAlign: 'middle',
       justifyContent: 'center',
       appearance: 'none',
+      borderBottom: '2px solid transparent',
+      boxSizing: 'border-box',
+      color: theme.color.tableHeaderText,
+      fontSize: '0.93rem',
       lineHeight: 1.3,
+      maxWidth: 264,
+      minHeight: theme.spacing(1) * 6,
+      minWidth: 50,
+      overflow: 'hidden',
+      padding: '6px 16px',
+      position: 'relative',
+      textTransform: 'inherit',
       [theme.breakpoints.up('md')]: {
         minWidth: 75
       },
@@ -40,6 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   tabList: {
+    color: theme.color.tableHeaderText,
     '&[data-reach-tab-list]': {
       background: 'none !important',
       boxShadow: `inset 0 -1px 0 ${theme.color.border2}`,
@@ -48,6 +49,31 @@ const useStyles = makeStyles((theme: Theme) => ({
         overflowX: 'scroll',
         padding: 1
       }
+    }
+  },
+  lishTab: {
+    backgroundColor: theme.bg.offWhite,
+    color: theme.color.tableHeaderText,
+    '&[aria-selected="true"]': {
+      backgroundColor: theme.palette.primary.main,
+      borderBottom: 'none !important',
+      color: 'white !important',
+      '&:hover': {
+        backgroundColor: theme.palette.primary.light,
+        color: 'white'
+      }
+    }
+  },
+  lishTabList: {
+    display: 'flex',
+    backgroundColor: theme.bg.offWhite,
+    margin: 0,
+    overflow: 'hidden',
+    '& [role="tab"]': {
+      flexBasis: '50%',
+      margin: 0,
+      maxWidth: 'none !important',
+      transition: theme.transitions.create('background-color')
     }
   }
 }));
@@ -60,6 +86,7 @@ export interface Tab {
 interface Props {
   tabs: Tab[];
   [index: string]: any;
+  lish?: boolean;
 }
 
 type CombinedProps = Props;
@@ -70,10 +97,10 @@ export const TabLinkList: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   return (
-    <TabList className={classes.tabList}>
+    <TabList className={props.lish ? classes.lishTabList : classes.tabList}>
       {tabs.map((tab, _index) => (
         <Tab
-          className={classes.tab}
+          className={`${classes.tab} ${props.lish ? classes.lishTab : ''}`}
           key={`tab-${_index}`}
           as={Link}
           to={tab.routeName}

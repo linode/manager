@@ -4,22 +4,18 @@ import {
   Linode
 } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import {
-  matchPath,
-  Route,
-  RouteComponentProps,
-  Switch,
-  withRouter
-} from 'react-router-dom';
+import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
+import TabPanel from 'src/components/core/ReachTabPanel';
+import TabPanels from 'src/components/core/ReachTabPanels';
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Tab from 'src/components/core/Tab';
-import Tabs from 'src/components/core/Tabs';
+import Tabs from 'src/components/core/ReachTabs';
+import TabLinkList from 'src/components/TabLinkList';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import NotFound from 'src/components/NotFound';
@@ -27,28 +23,15 @@ import { convertForAria } from 'src/components/TabLink/TabLink';
 import Glish from './Glish';
 import Weblish from './Weblish';
 
-type ClassNames = 'tabs' | 'tabRoot' | 'progress' | 'notFound';
+type ClassNames = 'tabs' | 'progress' | 'notFound';
 
 const AUTH_POLLING_INTERVAL = 2000;
 
 const styles = (theme: Theme) =>
   createStyles({
     tabs: {
-      backgroundColor: theme.bg.offWhite,
+      backgroundColor: 'black',
       margin: 0
-    },
-    tabRoot: {
-      margin: 0,
-      flexBasis: '50%',
-      transition: theme.transitions.create('background-color'),
-      '&[aria-selected="true"]': {
-        backgroundColor: theme.palette.primary.main,
-        color: 'white',
-        '&:hover': {
-          backgroundColor: theme.palette.primary.light,
-          color: 'white'
-        }
-      }
     },
     progress: {
       height: 'auto'
@@ -199,42 +182,21 @@ class Lish extends React.Component<CombinedProps, State> {
 
   tabs = [
     /* NB: These must correspond to the routes inside the Switch */
-    { routeName: `${this.props.match.url}/weblish`, title: 'Weblish' },
-    { routeName: `${this.props.match.url}/glish`, title: 'Glish' }
+    {
+      title: 'Weblish',
+      routeName: `${this.props.match.url}/weblish`
+    },
+    {
+      title: 'Glish',
+      routeName: `${this.props.match.url}/glish`
+    }
   ];
 
   matches = (p: string) =>
     Boolean(matchPath(p, { path: this.props.location.pathname }));
 
-  renderWeblish = () => {
-    const { linode, token } = this.state;
-    if (linode && token) {
-      return (
-        <Weblish
-          token={token}
-          linode={linode}
-          refreshToken={this.refreshToken}
-        />
-      );
-    }
-    return null;
-  };
-
-  renderGlish = () => {
-    const { linode, token } = this.state;
-    if (linode && token) {
-      return (
-        <Glish token={token} linode={linode} refreshToken={this.refreshToken} />
-      );
-    }
-    return null;
-  };
-
   render() {
-    const {
-      classes,
-      match: { path }
-    } = this.props;
+    const { classes } = this.props;
     const { authenticated, loading, linode, token } = this.state;
 
     // If the window.close() logic above fails, we render an error state as a fallback
@@ -264,35 +226,36 @@ class Lish extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Tabs
-          value={this.tabs.findIndex(tab => this.matches(tab.routeName))}
-          onChange={this.handleTabChange}
           className={classes.tabs}
-          indicatorColor="primary"
-          textColor="primary"
-          scrollButtons="off"
+          defaultIndex={this.tabs.findIndex(tab => this.matches(tab.routeName))}
         >
-          {this.tabs.map(tab => (
-            <Tab
-              classes={{
-                root: classes.tabRoot
-              }}
-              key={tab.title}
-              label={tab.title}
-              data-qa-tab={tab.title}
-              {...tabA11yProps(tab.title)}
-            />
-          ))}
+          <TabLinkList lish tabs={this.tabs} />
+          <TabPanels>
+            <TabPanel data-qa-tab="Weblish" {...tabA11yProps('Weblish')}>
+              {linode && token && (
+                <Weblish
+                  token={token}
+                  linode={linode}
+                  refreshToken={this.refreshToken}
+                />
+              )}
+            </TabPanel>
+            <TabPanel data-qa-tab={'Glish'} {...tabA11yProps('Glish')}>
+              {linode && token && (
+                <Glish
+                  token={token}
+                  linode={linode}
+                  refreshToken={this.refreshToken}
+                />
+              )}
+            </TabPanel>
+            ))}
+          </TabPanels>
         </Tabs>
         {loading && <CircleProgress noInner className={classes.progress} />}
         {/* Only show 404 component if we are missing _both_ linode and token */}
         {!loading && !linode && !token && (
           <NotFound className={classes.notFound} />
-        )}
-        {!loading && token && linode && (
-          <Switch>
-            <Route exact path={`${path}/weblish`} render={this.renderWeblish} />
-            <Route exact path={`${path}/glish`} render={this.renderGlish} />
-          </Switch>
         )}
       </React.Fragment>
     );
