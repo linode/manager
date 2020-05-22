@@ -22,13 +22,7 @@ const Installation: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   return (
-    <Paper
-      data-testid="longview-clients"
-      className={classes.root}
-      id="tabpanel-installation"
-      role="tabpanel"
-      aria-labelledby="tab-installation"
-    >
+    <Paper data-testid="longview-clients" className={classes.root}>
       <Instructions
         data-qa-instructions
         APIKey={props.clientAPIKey}

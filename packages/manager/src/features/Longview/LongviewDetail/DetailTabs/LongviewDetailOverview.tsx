@@ -85,12 +85,7 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      <Grid
-        container
-        id="tabpanel-overview"
-        role="tabpanel"
-        aria-labelledby="tab-overview"
-      >
+      <Grid container>
         <Grid item xs={12}>
           <Paper className={classes.paperSection}>
             <Grid

@@ -110,7 +110,7 @@ const Disks: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <div id="tabpanel-disks" role="tabpanel" aria-labelledby="tab-disks">
+    <div>
       <Box display="flex" flexDirection="row" justifyContent="flex-end">
         <TimeRangeSelect
           small
