@@ -71,7 +71,13 @@ export const isKubernetesEnabledForEnvironment =
 export const DISABLE_EVENT_THROTTLE =
   Boolean(process.env.REACT_APP_DISABLE_EVENT_THROTTLE) || false;
 
-export const ISO_FORMAT = 'YYYY-MM-DD HH:mm:ss';
+
+// read about luxon formats https://moment.github.io/luxon/docs/manual/formatting.html
+// this format is not ISO 
+export const API_DATETIME_NO_TZ_FORMAT = 'yyyy-MM-dd HH:mm:ss';
+// ISO 8601 formats
+export const ISO_DATE_FORMAT = 'yyyy-MM-dd';
+export const ISO_DATETIME_NO_TZ_FORMAT = 'yyyy-MM-ddTHH:mm:ss';
 
 export const MAX_VOLUME_SIZE = 10240;
 

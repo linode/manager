@@ -3,8 +3,8 @@ import {
   getEvents as _getEvents,
   markEventSeen
 } from '@linode/api-v4/lib/account';
-import * as moment from 'moment';
-import { dateFormat } from 'src/time';
+import {DateTime} from 'luxon'
+import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { generatePollingFilter } from 'src/utilities/requestFilters';
 import { ThunkActionCreator } from '../types';
 import { addEvents, updateEventsAsSeen } from './event.actions';
@@ -34,7 +34,7 @@ export const getEvents: ThunkActionCreator<Promise<Event[]>> = () => (
   const neqIds: number[] = [];
   if (_events.length > 0) {
     _events.forEach(thisEvent => {
-      const thisEventCreated = moment.utc(thisEvent.created).valueOf();
+      const thisEventCreated = DateTime.fromISO(thisEvent.created, {zone:'utc'}).valueOf();
 
       if (
         thisEventCreated === mostRecentEventTime &&
@@ -46,7 +46,7 @@ export const getEvents: ThunkActionCreator<Promise<Event[]>> = () => (
   }
 
   const filters = generatePollingFilter(
-    moment.utc(mostRecentEventTime).format(dateFormat),
+    DateTime.fromMillis(mostRecentEventTime).toFormat(ISO_DATETIME_NO_TZ_FORMAT),
     inIds,
     neqIds
   );

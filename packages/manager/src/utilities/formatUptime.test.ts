@@ -1,4 +1,4 @@
-import * as moment from 'moment';
+import {Duration} from 'luxon'
 import { formatUptime } from './formatUptime';
 
 describe('Formatting uptime', () => {
@@ -33,9 +33,7 @@ describe('Formatting uptime', () => {
   it('should handle durations longer than a month', () => {
     expect(
       formatUptime(
-        moment
-          .duration({ years: 1, months: 2, days: 12, hours: 10, minutes: 15 })
-          .asSeconds()
+        Duration.fromObject({ years: 1, months: 2, days: 12, hours: 10, minutes: 15 }).as('seconds')
       )
     ).toMatch('438d 10h 15m');
   });
@@ -43,8 +41,7 @@ describe('Formatting uptime', () => {
   it('should ignore seconds for longer durations', () => {
     expect(
       formatUptime(
-        moment
-          .duration({
+        Duration.fromObject({
             years: 1,
             months: 2,
             days: 12,
@@ -52,7 +49,7 @@ describe('Formatting uptime', () => {
             minutes: 15,
             seconds: 54
           })
-          .asSeconds()
+          .as('seconds')
       )
     ).toMatch('438d 8h 15m');
   });

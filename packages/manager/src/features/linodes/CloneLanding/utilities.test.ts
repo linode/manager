@@ -309,18 +309,18 @@ describe('utilities', () => {
 
   describe('getEstimatedCloneTime', () => {
     it('gives a humanized estimate', () => {
-      expect(getEstimatedCloneTime(50000, 'sameDatacenter')).toBe('37 minutes');
+      expect(getEstimatedCloneTime(50000, 'sameDatacenter')).toBe('36 minutes');
     });
 
     it('gives a different result based on the DC mode', () => {
-      expect(getEstimatedCloneTime(70000, 'sameDatacenter')).toBe('an hour');
+      expect(getEstimatedCloneTime(70000, 'sameDatacenter')).toBe('52 minutes');
       expect(getEstimatedCloneTime(70000, 'differentDatacenter')).toBe(
         '11 hours'
       );
     });
 
     it('handles edge cases', () => {
-      expect(getEstimatedCloneTime(0, 'sameDatacenter')).toBe('a few seconds');
+      expect(getEstimatedCloneTime(0, 'sameDatacenter')).toBe('0 seconds');
       expect(getEstimatedCloneTime(40000000, 'sameDatacenter')).toBe('20 days');
     });
   });

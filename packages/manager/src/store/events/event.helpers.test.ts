@@ -1,5 +1,5 @@
 import { Event } from '@linode/api-v4/lib/account';
-import * as moment from 'moment';
+import {DateTime}from 'luxon'
 import {
   addToEvents,
   findInEvents,
@@ -83,9 +83,9 @@ describe('event.helpers', () => {
         mostRecentCreated(new Date(`1970-01-01T00:00:00`).getTime(), {
           created: `2018-12-03T22:37:20`
         })
-      ).toBe(moment.utc(`2018-12-03T22:37:20`).valueOf());
+      ).toBe(DateTime.fromISO(`2018-12-03T22:37:20`).valueOf());
 
-      const recentTime = moment.utc(`2018-12-03T23:37:20`).valueOf();
+      const recentTime = DateTime.fromISO(`2018-12-03T23:37:20`).valueOf();
       expect(
         mostRecentCreated(recentTime, { created: `2018-12-03T22:37:20` })
       ).toBe(recentTime);

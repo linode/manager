@@ -1,7 +1,7 @@
 import produce from 'immer';
 import { Config, Disk } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import * as moment from 'moment';
+import {DateTime} from 'luxon'
 import { append, compose, flatten, keys, map, pickBy, uniqBy } from 'ramda';
 
 /**
@@ -298,9 +298,11 @@ export const getEstimatedCloneTime = (
   const multiplier = mode === 'sameDatacenter' ? 0.75 : 10;
   const estimatedTimeInMinutes = Math.ceil((multiplier * sizeInMb) / 1024);
 
-  const humanizedEstimate = moment
-    .duration(estimatedTimeInMinutes, 'minutes')
-    .humanize();
-
+  let humanizedEstimate = DateTime.local()
+    .plus({minutes:estimatedTimeInMinutes}).toRelative();
+    const prefixHumanized ='in '
+  if(humanizedEstimate?.startsWith(prefixHumanized)){
+    humanizedEstimate = humanizedEstimate?.substring(prefixHumanized.length)
+  }
   return humanizedEstimate;
 };

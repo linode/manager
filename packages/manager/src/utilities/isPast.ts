@@ -1,4 +1,4 @@
-import * as moment from 'moment';
+import {DateTime} from 'luxon'
 
 export default (a: string) => (b: string): boolean =>
-  moment.utc(b).isAfter(moment.utc(a));
+  DateTime.fromISO(b,{zone:'utc'}) >= DateTime.fromISO(a, {zone:'utc'});

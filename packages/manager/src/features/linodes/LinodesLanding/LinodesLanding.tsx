@@ -1,6 +1,6 @@
 import { Config } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import * as moment from 'moment-timezone';
+import {DateTime} from 'luxon'
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { parse, stringify } from 'qs';
 import { path } from 'ramda';
@@ -402,7 +402,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                         : headers
                                     }
                                     filename={`linodes-${formatDate(
-                                      moment().format()
+                                      DateTime.local().toISO()
                                     )}.csv`}
                                     className={classes.CSVlink}
                                   >

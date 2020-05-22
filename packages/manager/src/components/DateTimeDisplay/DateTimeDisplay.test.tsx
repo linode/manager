@@ -1,5 +1,5 @@
 import { shallow } from 'enzyme';
-import * as moment from 'moment-timezone';
+import {DateTime} from 'luxon'
 import * as React from 'react';
 
 import { DateTimeDisplay } from './DateTimeDisplay';
@@ -24,7 +24,7 @@ describe('DateTimeDisplay component', () => {
   describe('Humanized dates', () => {
     it('should output humanized strings if the date is earlier than the cutoff', () => {
       component.setProps({
-        value: moment().subtract(5, 'minutes'),
+        value: DateTime.local().minus({minutes:5}),
         humanizeCutoff: 'day'
       });
       expect(
@@ -35,7 +35,7 @@ describe('DateTimeDisplay component', () => {
       ).toContain('5 minutes ago');
     });
     it('should output ISO strings if the date is older than the cutoff', () => {
-      const almostOneWeek = moment().subtract(6, 'days');
+      const almostOneWeek = DateTime.local().minus({days:6});
       component.setProps({
         value: almostOneWeek,
         humanizeCutoff: 'month'
@@ -52,10 +52,10 @@ describe('DateTimeDisplay component', () => {
           .find('WithStyles(ForwardRef(Typography))')
           .children()
           .text()
-      ).toContain(almostOneWeek.year());
+      ).toContain(almostOneWeek.year);
     });
     it('should always output formatted text if humanizedCutoff is set to never', () => {
-      const aLongTimeAgo = moment().subtract(10, 'years');
+      const aLongTimeAgo = DateTime.local().minus({years:10});
       component.setProps({
         value: aLongTimeAgo,
         humanizeCutoff: 'never'

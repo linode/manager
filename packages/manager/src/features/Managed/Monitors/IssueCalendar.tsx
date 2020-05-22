@@ -1,4 +1,4 @@
-import * as moment from 'moment';
+import {DateTime} from 'luxon'
 import * as React from 'react';
 import { ExtendedIssue } from 'src/store/managed/issues.actions';
 import useTimezone from 'src/utilities/useTimezone';
@@ -13,12 +13,11 @@ interface Props {
 export const createdOnTargetDay = (
   timezone: string,
   issue: ExtendedIssue,
-  targetDay: moment.Moment
+  targetDay: DateTime
 ) => {
-  return moment
-    .utc(issue.created)
-    .tz(timezone)
-    .isSame(targetDay, 'day');
+  return DateTime.fromISO(issue.created, {zone:'utc'})
+    .setZone(timezone)
+    .hasSame(targetDay, 'day');
 };
 
 interface CalendarDay {
@@ -39,7 +38,7 @@ export const generateCalendar = (timezone: string, issues: ExtendedIssue[]) => {
   const days: CalendarDay[] = [];
   let i = 0;
   // Start with today, since it will be at the top of our list.
-  const day = moment.utc().tz(timezone);
+  const day = DateTime.local().setZone(timezone);
   for (i; i < TOTAL_DAYS; i++) {
     /**
      * Iterate through the past 10 days
@@ -49,10 +48,10 @@ export const generateCalendar = (timezone: string, issues: ExtendedIssue[]) => {
     );
     days.push({
       issues: relevantIssues,
-      day: day.toISOString()
+      day: day.toISO()
     });
     // Move the calendar back a day
-    day.subtract(1, 'day');
+    day.minus({days:1});
   }
 
   return days;

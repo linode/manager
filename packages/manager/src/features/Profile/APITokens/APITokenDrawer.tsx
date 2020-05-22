@@ -1,5 +1,5 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import * as moment from 'moment';
+import {DateTime} from 'luxon'
 import { equals } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -22,7 +22,7 @@ import Radio from 'src/components/Radio';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TextField from 'src/components/TextField';
-import { dateFormat } from 'src/time';
+import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import {
   Permission,
@@ -36,31 +36,31 @@ export const genExpiryTups = (): Expiry[] => {
   return [
     [
       'In 6 months',
-      moment()
-        .add(6, 'months')
+      DateTime.local()
+        .plus({months:6})
         .startOf('day')
-        .format(dateFormat)
+        .toFormat(ISO_DATETIME_NO_TZ_FORMAT)
     ],
     [
       'In 3 months',
-      moment()
-        .add(3, 'months')
+      DateTime.local()
+        .plus({months:3})
         .startOf('day')
-        .format(dateFormat)
+        .toFormat(ISO_DATETIME_NO_TZ_FORMAT)
     ],
     [
       'In 1 month',
-      moment()
-        .add(1, 'months')
+      DateTime.local()
+        .plus({months:1})
         .startOf('day')
-        .format(dateFormat)
+        .toFormat(ISO_DATETIME_NO_TZ_FORMAT)
     ],
     [
       'Never',
-      moment()
-        .add(200, 'years')
+      DateTime.local()
+        .plus({years:200})
         .startOf('day')
-        .format(dateFormat)
+        .toFormat(ISO_DATETIME_NO_TZ_FORMAT)
     ]
   ];
 };

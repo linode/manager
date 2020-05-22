@@ -1,5 +1,5 @@
 import { Image } from '@linode/api-v4/lib/images';
-import * as moment from 'moment';
+import {DateTime} from 'luxon'
 import {
   always,
   compose,
@@ -31,7 +31,7 @@ export const sortCreatedDESC = compose<any, any, any>(
   reverse,
   sortBy(
     compose(
-      (created: string) => moment(created).format('x'),
+      (created: string) => DateTime.fromISO(created, {zone:'utc'}).toFormat('x'),
       prop('created')
     )
   )

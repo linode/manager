@@ -1,9 +1,8 @@
-import * as moment from 'moment';
-
+import {DateTime} from 'luxon'
 export const isBefore = (d1: string, d2: string) => {
-  return moment.utc(d1).isBefore(moment.utc(d2));
+  return DateTime.fromISO(d1)<DateTime.fromISO(d2);
 };
 
 export const isAfter = (d1: string, d2: string) => {
-  return moment.utc(d1).isAfter(moment.utc(d2));
+  return DateTime.fromISO(d1)>DateTime.fromISO(d2);
 };

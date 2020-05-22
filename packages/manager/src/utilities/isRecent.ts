@@ -1,12 +1,14 @@
-import * as moment from 'moment';
+import {DateTime} from 'luxon'
 
-// Returns true if "a" is within the previous 24 hours of "b"
-export const isRecent = (a: string, b: string) => {
-  const timeToCompare = moment.utc(a);
-  const twentyFourHoursBeforeB = moment.utc(b).subtract(24, 'hours');
+/**
+ * @returns true if "time" is within in ]timeToCompare - 24H ; timeToCompare]
+ * @param time ISO formatted Date
+ * @param timeToCompareTo ISO formatted Date
+ */
+export const isRecent = (time: string, timeToCompareTo: string) => {
 
-  return (
-    timeToCompare.isBefore(moment.utc(b)) &&
-    timeToCompare.isAfter(twentyFourHoursBeforeB)
-  );
+  const time_obj = DateTime.fromISO(time);
+  const end = DateTime.fromISO(timeToCompareTo);
+  const beginning = end.minus({hours:24});
+  return  time_obj <= end && time_obj > beginning;
 };

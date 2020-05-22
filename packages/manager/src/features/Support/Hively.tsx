@@ -1,4 +1,4 @@
-import * as moment from 'moment';
+import {DateTime} from 'luxon'
 import * as React from 'react';
 import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -49,12 +49,11 @@ export const shouldRenderHively = (
     if (username === 'Linode') {
       return false;
     }
-    const lastUpdated = moment(updated, 'YYYY-MM-DD HH:mm:ss');
-    if (!lastUpdated.isValid()) {
+    const lastUpdated = DateTime.fromISO(updated, {zone:'utc'});
+    if (!lastUpdated.isValid) {
       return true;
     }
-    const diff = moment.duration(moment().diff(lastUpdated));
-    return fromLinode && diff <= moment.duration(7, 'days');
+    return fromLinode && lastUpdated >= DateTime.local().minus({days:7});
   } catch {
     return true;
   }

@@ -1,14 +1,14 @@
-import * as moment from 'moment';
+import {DateTime}from 'luxon'
 
 import { shouldRenderHively } from './Hively';
 import { replaceVersionStringWithHTML } from './ExpandableTicketPanel';
 
-const recent = moment()
-  .subtract(6, 'days')
-  .format();
-const old = moment()
-  .subtract(3, 'months')
-  .format();
+const recent = DateTime.local()
+  .minus({days:6})
+  .toISO();
+const old = DateTime.local()
+.minus({months:3})
+.toISO();
 const user = 'Linode';
 
 describe('shouldRenderHively function', () => {
@@ -16,7 +16,8 @@ describe('shouldRenderHively function', () => {
     expect(shouldRenderHively(true, 'blah')).toBeTruthy();
   });
   it('should return true if the date is now', () => {
-    expect(shouldRenderHively(true, moment().format())).toBeTruthy();
+    expect(shouldRenderHively(true, DateTime.local()
+    .toISO())).toBeTruthy();
   });
   it('should return true if the date is within the past 7 days', () => {
     expect(shouldRenderHively(true, recent)).toBeTruthy();

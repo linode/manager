@@ -4,7 +4,7 @@ import {
   EventAction,
   EventStatus
 } from '@linode/api-v4/lib/account';
-import * as moment from 'moment';
+import {DateTime}from 'luxon'
 import { compose, equals, findIndex, omit, take, update } from 'ramda';
 import updateRight from 'src/utilities/updateRight';
 
@@ -128,7 +128,7 @@ export const mostRecentCreated = (
   latestTime: number,
   current: Pick<Event, 'created'>
 ) => {
-  const time: number = moment.utc(current.created).valueOf(); // Unix time (milliseconds)
+  const time: number = DateTime.fromISO(current.created).valueOf(); // Unix time (milliseconds)
   return latestTime > time ? latestTime : time;
 };
 

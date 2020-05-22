@@ -1,5 +1,4 @@
-import * as moment from 'moment';
-
+import {DateTime} from 'luxon'
 type SortOrder = 'asc' | 'desc';
 
 export const sortByString = (a: string, b: string, order: SortOrder) => {
@@ -16,11 +15,8 @@ export const sortByString = (a: string, b: string, order: SortOrder) => {
 };
 
 export const sortByUTFDate = (a: string, b: string, order: SortOrder) => {
-  const formattedDateA = moment(a).format();
-  const formattedDateB = moment(b).format();
-  const result = moment
-    .utc(moment.utc(formattedDateA))
-    .diff(moment.utc(formattedDateB));
+  console.error(a,b,order)
+  const result = DateTime.fromISO(a).diff(DateTime.fromISO(b)).valueOf()
   if (order === 'asc') {
     return result; // ascending order
   }

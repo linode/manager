@@ -1,5 +1,5 @@
 import { Volume } from '@linode/api-v4/lib/volumes';
-import moment from 'moment';
+import {DateTime} from 'luxon';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -94,7 +94,7 @@ const CautionNotice: React.FC<CombinedProps> = props => {
         </li>
         <li>
           When this migration begins, we estimate it will take approximately{' '}
-          {moment.duration(props.migrationTimeInMins, 'minutes').humanize()} to
+          {DateTime.local().plus({minutes:props.migrationTimeInMins}).toRelative()} to
           complete.
         </li>
       </ul>

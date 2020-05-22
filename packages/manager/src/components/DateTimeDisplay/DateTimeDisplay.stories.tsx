@@ -1,5 +1,5 @@
 import { storiesOf } from '@storybook/react';
-import * as moment from 'moment-timezone';
+import {DateTime} from 'luxon'
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
@@ -14,7 +14,7 @@ interface State {
 
 class Example extends React.Component<{}, State> {
   state: State = {
-    time: moment(),
+    time: DateTime.local(),
     cutoff: 'day'
   };
 
@@ -40,43 +40,41 @@ class Example extends React.Component<{}, State> {
         <p>
           {'You last checked Slack: '}
           <DateTimeDisplay
-            value={moment()
-              .subtract(5, 'minutes')
-              .format()}
+            value={DateTime.local()
+              .minus({minutes:5})
+              .toISO()}
             humanizeCutoff={this.state.cutoff}
           />
         </p>
         <p>
           {'Last Thursday was: '}
           <DateTimeDisplay
-            value={moment()
-              .day(-4)
-              .format()}
+            value={DateTime.local().minus({weeks:1}).set({weekday:4}).toISO()}
             humanizeCutoff={this.state.cutoff}
           />
         </p>
         <p>
           {'Three Wednesdays ago was: '}
           <DateTimeDisplay
-            value={moment()
-              .day(-25)
-              .format()}
+            value={DateTime.local()
+              .minus({weeks:3}).set({weekday:3})
+              .toISO()}
             humanizeCutoff={this.state.cutoff}
           />
         </p>
         <p>
           {'You were so young '}
           <DateTimeDisplay
-            value={moment()
-              .subtract(11, 'months')
-              .format()}
+            value={DateTime.local()
+              .minus({months:11})
+              .toISO()}
             humanizeCutoff={this.state.cutoff}
           />
         </p>
         <p>
           {'Elvis was born: '}
           <DateTimeDisplay
-            value={moment('1-8-1935').format()}
+            value={DateTime.fromSQL('1935-01-08').toISO()}
             humanizeCutoff={this.state.cutoff}
           />
         </p>

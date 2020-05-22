@@ -7,7 +7,7 @@ import {
   Payment
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
-import * as moment from 'moment';
+import {DateTime} from 'luxon'
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
@@ -25,13 +25,13 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import TableRow, { TableRowProps } from 'src/components/TableRow';
-import { ISO_FORMAT } from 'src/constants';
 import {
   printInvoice,
   printPayment
 } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { useAccount } from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
+import {ISO_DATE_FORMAT, API_DATETIME_NO_TZ_FORMAT}from 'src/constants'
 import { useSet } from 'src/hooks/useSet';
 import { isAfter } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -379,7 +379,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
               <Typography variant="body1" className={classes.activeSince}>
                 Account active since{' '}
                 {formatDate(accountActiveSince, {
-                  format: 'YYYY-MM-DD'
+                  format: ISO_DATE_FORMAT
                 })}
               </Typography>
             </div>
@@ -550,7 +550,7 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
       <TableRow {...rowProps} data-testid={`${type}-${id}`}>
         <TableCell parentColumn="Description">{label}</TableCell>
         <TableCell parentColumn="Date">
-          <DateTimeDisplay format="YYYY-MM-DD" value={date} />
+          <DateTimeDisplay format={ISO_DATE_FORMAT} value={date} />
         </TableCell>
         <TableCell parentColumn="Amount" className={classes.totalColumn}>
           <Currency quantity={total} wrapInParentheses={total < 0} />
@@ -615,35 +615,36 @@ export const paymentToActivityFeedItem = (
   };
 };
 
+
 export const getCutoffFromDateRange = (
   range: DateRange,
   currentDatetime?: string
 ) => {
-  const date = currentDatetime ? moment.utc(currentDatetime) : moment.utc();
+  const date = currentDatetime ? DateTime.fromISO(currentDatetime) : DateTime.utc();
 
-  let outputDate: moment.Moment;
+  let outputDate: DateTime;
   switch (range) {
     case '30 Days':
-      outputDate = date.subtract(30, 'days');
+      outputDate = date.minus({days:30});
       break;
     case '60 Days':
-      outputDate = date.subtract(60, 'days');
+      outputDate = date.minus({days:60});
       break;
     case '90 Days':
-      outputDate = date.subtract(90, 'days');
+      outputDate = date.minus({days:90});
       break;
     case '6 Months':
-      outputDate = date.subtract(6, 'months');
+      outputDate = date.minus({months:6});
       break;
     case '12 Months':
-      outputDate = date.subtract(12, 'months');
+      outputDate = date.minus({months:12});
       break;
     default:
-      outputDate = moment.utc('1970-01-01T00:00:00.000');
+      outputDate = DateTime.fromISO('1970-01-01T00:00:00.000');
       break;
   }
 
-  return outputDate.format(ISO_FORMAT);
+  return outputDate.toFormat(API_DATETIME_NO_TZ_FORMAT);
 };
 
 export const makeFilter = (endDate?: string) => {
@@ -653,7 +654,7 @@ export const makeFilter = (endDate?: string) => {
   };
 
   if (endDate) {
-    filter.date = { '+gte': moment.utc(endDate).format(ISO_FORMAT) };
+    filter.date = { '+gte': DateTime.fromISO(endDate).toFormat(API_DATETIME_NO_TZ_FORMAT) };
   }
 
   return filter;

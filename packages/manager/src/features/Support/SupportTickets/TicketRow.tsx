@@ -10,7 +10,7 @@ import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import { ISO_FORMAT } from 'src/constants';
+import { API_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 
 interface Props {
@@ -76,10 +76,10 @@ const TicketRow: React.StatelessComponent<CombinedProps> = props => {
         {renderEntityLink(ticket)}
       </TableCell>
       <TableCell parentColumn="Date Created" data-qa-support-date>
-        <DateTimeDisplay value={ticket.opened} format={ISO_FORMAT} />
+        <DateTimeDisplay value={ticket.opened} format={API_DATETIME_NO_TZ_FORMAT} />
       </TableCell>
       <TableCell parentColumn="Last Updated" data-qa-support-updated>
-        <DateTimeDisplay value={ticket.updated} format={ISO_FORMAT} />
+        <DateTimeDisplay value={ticket.updated} format={API_DATETIME_NO_TZ_FORMAT} />
       </TableCell>
       <TableCell parentColumn="Updated By" data-qa-support-updated-by>
         {ticket.updated_by}

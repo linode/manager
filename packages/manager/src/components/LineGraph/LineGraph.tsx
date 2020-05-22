@@ -1,7 +1,10 @@
-import * as moment from 'moment-timezone';
-import { clone, curry } from 'ramda';
+// import {DateTime} from 'luxon'
+import { /*clone, */curry } from 'ramda';
 import * as React from 'react';
-import { ChartData, Line } from 'react-chartjs-2';
+// import { ChartData, Line } from 'react-chartjs-2';
+import {ChartDataSets, ChartOptions, Chart, ChartTooltipItem, ChartData} from 'chart.js';
+// import 'chartjs-adapter-luxon'
+
 import LineChartIcon from 'src/assets/icons/line-chart.svg';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -35,7 +38,7 @@ export interface Props {
   data: DataSet[];
   timezone: string;
   rowHeaders?: Array<string>;
-  legendRows?: Array<ChartData<any>>;
+  legendRows?: Array<any>;
   unit?: string;
   nativeLegend?: boolean; // Display chart.js native legend
   formatData?: (value: number) => number | null;
@@ -48,63 +51,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   ...MetricDisplayStyles(theme)
 }));
 
-const chartOptions: any = {
-  maintainAspectRatio: false,
-  responsive: true,
-  animation: false,
-  legend: {
-    display: false
-  },
-  scales: {
-    yAxes: [
-      {
-        gridLines: {
-          borderDash: [3, 6],
-          zeroLineWidth: 1,
-          zeroLineBorderDashOffset: 2
-        },
-        ticks: {
-          beginAtZero: true,
-          callback(value: number, index: number) {
-            return humanizeLargeData(value);
-          }
-        }
-      }
-    ],
-    xAxes: [
-      {
-        type: 'time',
-        gridLines: {
-          display: false
-        },
-        time: {
-          displayFormats: {
-            hour: 'HH:00',
-            minute: 'HH:00'
-          }
-        }
-      }
-    ]
-  },
-  tooltips: {
-    cornerRadius: 0,
-    backgroundColor: '#fbfbfb',
-    bodyFontColor: '#32363C',
-    displayColors: false,
-    titleFontColor: '#606469',
-    xPadding: 16,
-    yPadding: 10,
-    borderWidth: 0.5,
-    borderColor: '#999',
-    caretPadding: 10,
-    position: 'nearest',
-    callbacks: {},
-    intersect: false,
-    mode: 'index'
-  }
-};
 
-const lineOptions: ChartData<any> = {
+const lineOptions: ChartDataSets = {
   borderWidth: 1,
   borderJoinStyle: 'miter',
   lineTension: 0,
@@ -112,9 +60,12 @@ const lineOptions: ChartData<any> = {
   pointHitRadius: 10
 };
 
-const parseInTimeZone = curry((timezone: string, utcMoment: any) => {
-  return moment(utcMoment).tz(timezone);
-});
+// const parseInTimeZone = curry((timezone: string, utcMoment: any) => {
+  
+//   const res =  DateTime.fromMillis(utcMoment);
+//   console.log('parseInTimeZone', utcMoment, res)
+//   return res
+// });
 
 const humanizeLargeData = (value: number) => {
   if (value >= 1000000) {
@@ -129,7 +80,8 @@ const humanizeLargeData = (value: number) => {
 const LineGraph: React.FC<CombinedProps> = props => {
   const inputEl: React.RefObject<any> = React.useRef(null);
   const [legendRendered, setLegendRendered] = React.useState(false);
-  const [, forceUpdate] = React.useState();
+  const [hiddenDatasets, setHiddenDatasets] = React.useState<Number[]>([]);
+  // const [, forceUpdate] = React.useState();
   const classes = useStyles();
   const {
     chartHeight,
@@ -137,69 +89,128 @@ const LineGraph: React.FC<CombinedProps> = props => {
     formatTooltip,
     suggestedMax,
     showToday,
-    timezone,
+    // timezone,
     data,
     rowHeaders,
     legendRows,
     nativeLegend,
-    unit,
-    ...rest
+    unit
+    // ...rest
   } = props;
+  console.log('data',data)
   const finalRowHeaders = rowHeaders ? rowHeaders : ['Max', 'Avg', 'Last'];
-
-  const handleLegendClick = (datasetIndex: number) => {
-    const chart = inputEl.current.chartInstance;
-    chart.getDatasetMeta(datasetIndex).hidden =
-      chart.getDatasetMeta(datasetIndex).hidden === null
-        ? true
-        : !chart.getDatasetMeta(datasetIndex).hidden;
-    chart.update(); // re-draw chart to hide dataset
-    forceUpdate({}); // re-draw component to update legend styles
-  };
-
+  // is undefined on linode/summary
+  console.log('nativeLegend', nativeLegend)
+  console.log('legendrows', legendRows)
+  //AC, after testing with and without this, 
+  //i do not see a difference, maybe could be removed at some point
   const plugins = [
     {
-      afterDatasetsDraw() {
+      afterDatasetsDraw:()=> {
         // hack to force re-render component in order to show legend
+        //tested this is called
+          // console.log('legend rendered ? set')
         if (!legendRendered) {
+          // console.log('legend rendered set')
           setLegendRendered(true);
         }
       }
     }
   ];
 
+  const handleLegendClick = (datasetIndex: number) => {
+    console.log('toggle dataset ', datasetIndex, hiddenDatasets)
+    if(hiddenDatasets.includes(datasetIndex)){
+      setHiddenDatasets( hiddenDatasets.filter(e=>e!==datasetIndex))
+    }else{
+      setHiddenDatasets([...hiddenDatasets, datasetIndex])
+    }
+    // chart.getDatasetMeta(datasetIndex).hidden =
+    //   chart.getDatasetMeta(datasetIndex).hidden === null
+    //     ? true
+    //     : !chart.getDatasetMeta(datasetIndex).hidden;
+    // chart.update(); // re-draw chart to hide dataset
+    // forceUpdate({}); // re-draw component to update legend styles
+  };
+
   const getChartOptions = (
     _suggestedMax?: number,
     _nativeLegend?: boolean,
     _tooltipUnit?: string
   ) => {
-    const finalChartOptions = clone(chartOptions);
-    const parser = parseInTimeZone(timezone || '');
-    finalChartOptions.scales.xAxes[0].time.parser = parser;
-    finalChartOptions.scales.xAxes[0].time.offset = moment
-      .tz(timezone || '')
-      .utcOffset();
+    let finalChartOptions: ChartOptions = {
+      maintainAspectRatio: false,
+      responsive: true,
+      animation: undefined,
+      legend: {
+        display: _nativeLegend,
+        position:_nativeLegend? 'bottom':undefined
+      },
+      scales: {
+        yAxes: [
+          {
+            gridLines: {
+              borderDash: [3, 6],
+              zeroLineWidth: 1,
+              zeroLineBorderDashOffset: 2
+            },
+            ticks: {
+              suggestedMax:_suggestedMax??undefined,
+              beginAtZero: true,
+              callback(value: number, index: number) {
+                return humanizeLargeData(value);
+              }
+            }
+          }
+        ],
+        xAxes: [
+          {
+            type: 'time',
+            gridLines: {
+              display: false
+            },
+            time: {
+              stepSize:showToday?3:5,
+              displayFormats: showToday?{
+                hour: 'HH:00',
+                minute: 'HH:mm'
+              }:{
+                hour:'MMM DD',
+                minute:'MMM DD'
+              }
+            }
+          }
+        ]
+      },
+      tooltips: {
+        cornerRadius: 0,
+        backgroundColor: '#fbfbfb',
+        bodyFontColor: '#32363C',
+        displayColors: false,
+        titleFontColor: '#606469',
+        xPadding: 16,
+        yPadding: 10,
+        borderWidth: 0.5,
+        borderColor: '#999',
+        caretPadding: 10,
+        position: 'nearest',
+        callbacks: {
+          label:_formatTooltip(
+            data,
+          formatTooltip,
+          _tooltipUnit
+          )
+        },
+        intersect: false,
+        mode: 'index'
+      }
+    };
+        // const parser = parseInTimeZone(timezone || '');
+    // finalChartOptions.scales.xAxes[0].time.parser = parser;
+    // AC, seems useless, it depends on our own modification of chartjs with a patch
+    // finalChartOptions.scales.xAxes[0].time.offset = DateTime.local()
+    //   .setZone(timezone || '').zone.offset();
 
-    if (showToday) {
-      finalChartOptions.scales.xAxes[0].time.displayFormats = {
-        hour: 'HH:00',
-        minute: 'HH:mm'
-      };
-    } else {
-      finalChartOptions.scales.xAxes[0].time.displayFormats = {
-        hour: 'MMM DD',
-        minute: 'MMM DD'
-      };
-    }
-
-    if (_suggestedMax) {
-      finalChartOptions.scales.yAxes[0].ticks.suggestedMax = _suggestedMax;
-    }
-
-    if (_nativeLegend) {
-      finalChartOptions.legend.display = true;
-      finalChartOptions.legend.position = 'bottom';
-    }
 
     /**
      * We've been given a max unit, which indicates that
@@ -216,17 +227,12 @@ const LineGraph: React.FC<CombinedProps> = props => {
      * However, in the tooltip, each individual value will be formatted according to
      * the most appropriate unit, if a unit is provided.
      */
-    finalChartOptions.tooltips.callbacks.label = _formatTooltip(
-      data,
-      formatTooltip,
-      _tooltipUnit
-    );
 
     return finalChartOptions;
   };
 
   const _formatData = () => {
-    return data.map(dataSet => {
+    return data.map((dataSet,idx) => {
       const timeData = dataSet.data.reduce((acc: any, point: any) => {
         acc.push({
           t: point[0],
@@ -241,15 +247,36 @@ const LineGraph: React.FC<CombinedProps> = props => {
         backgroundColor: dataSet.backgroundColor,
         data: timeData,
         fill: dataSet.fill,
+        hidden:hiddenDatasets.includes(idx),
         ...lineOptions
       };
     });
   };
 
+
+  React.useEffect(() => {
+    if (inputEl.current) {
+      new Chart(inputEl.current.getContext('2d'), {
+        type: "line",
+        data: {
+            datasets: _formatData()
+        },plugins,
+        options: getChartOptions(suggestedMax, nativeLegend, unit)
+      });
+
+
+    }
+  });
+console.log('ref',inputEl.current)
   return (
     <div className={classes.wrapper}>
       <div style={{ width: '100%' }}>
-        <Line
+      <canvas
+      height={chartHeight || 300}
+                    // id="myChart"
+                    ref={inputEl}
+                />
+        {/* <Line
           {...rest}
           height={chartHeight || 300}
           options={getChartOptions(suggestedMax, nativeLegend, unit)}
@@ -258,7 +285,7 @@ const LineGraph: React.FC<CombinedProps> = props => {
           data={{
             datasets: _formatData()
           }}
-        />
+        /> */}
       </div>
       {legendRendered && legendRows && (
         <div className={classes.container}>
@@ -282,7 +309,7 @@ const LineGraph: React.FC<CombinedProps> = props => {
                     className={classes.tableHeadInner}
                   >
                     <Typography variant="body2" className={classes.text}>
-                      {section}
+                      {section}CPU
                     </Typography>
                   </TableCell>
                 ))}
@@ -290,23 +317,28 @@ const LineGraph: React.FC<CombinedProps> = props => {
             </TableHead>
             <TableBody>
               <React.Fragment>
-                {legendRows &&
-                  inputEl.current.chartInstance.legend.legendItems.map(
-                    (tick: ChartData<any>, idx: number) => {
-                      const bgColor: string =
-                        typeof tick.fillStyle === 'string'
-                          ? tick.fillStyle
-                          : 'transparent';
+                {
+                  // legendRows && inputEl.current.chartInstance &&
+                  // inputEl.current.chartInstance.legend.legendItems.map(
+                    legendRows?.map(
+                    (tick: any, idx: number) => {
+                      console.log('render legent item', tick)
+                      const bgColor = data[idx].backgroundColor
+                      //  string =
+                      //   typeof tick.fillStyle === 'string'
+                      //     ? tick.fillStyle
+                      //     : 'transparent';
+                      const title = data[idx].label
                       const { data: metricsData, format } = legendRows[idx];
                       return (
                         <TableRow key={idx}>
                           <TableCell className={classes.legend}>
                             <Button
                               onClick={() =>
-                                handleLegendClick(tick.datasetIndex)
+                                handleLegendClick(idx)
                               }
                               data-qa-legend-title
-                              aria-label={`Toggle ${tick.text} visibility`}
+                              aria-label={`Toggle ${title} visibility`}
                               className={classes.toggleButton}
                             >
                               <div
@@ -323,7 +355,7 @@ const LineGraph: React.FC<CombinedProps> = props => {
                                   tick.hidden ? classes.crossedOut : ''
                                 }
                               >
-                                {tick.text}
+                                {title}
                               </span>
                             </Button>
                           </TableCell>
@@ -372,17 +404,18 @@ export const _formatTooltip = curry(
     data: any,
     formatter: ((v: number) => string) | undefined,
     unit: string | undefined,
-    t?: any,
-    d?: any
+    t: ChartTooltipItem,
+    d: ChartData
   ) => {
     /**
      * t and d are the params passed by chart.js to this component.
      * data and formatter should be partially applied before this function
      * is called directly by chart.js
      */
-    const dataset = data[t.datasetIndex];
+    // console.log('formattooltip', t.datasetIndex, data.length)
+    const dataset = data[t?.datasetIndex] ;
     const label = dataset.label;
-    const val = dataset.data[t.index][1] || 0;
+    const val = dataset.data[t?.index][1] || 0;
     const value = formatter ? formatter(val) : roundTo(val);
     return `${label}: ${value}${unit ? unit : ''}`;
   }
