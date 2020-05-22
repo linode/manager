@@ -173,7 +173,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     selectedTypeID: this.params.typeID,
     selectedRegionID: this.params.regionID,
     selectedImageID: this.params.imageID ?? DEFAULT_IMAGE,
-    // @todo: Abstract and test.
+    // @todo: Abstract and test. UPDATE 5/21/20: lol what does this mean
     selectedLinodeID: isNaN(+this.params.linodeID)
       ? undefined
       : +this.params.linodeID,
@@ -585,8 +585,27 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   };
 
   render() {
-    const { enqueueSnackbar, closeSnackbar, ...restOfProps } = this.props;
+    const {
+      enqueueSnackbar,
+      closeSnackbar,
+      regionsData,
+      ...restOfProps
+    } = this.props;
     const { label, udfs: selectedUDFs, ...restOfState } = this.state;
+
+    // If the selected type is a GPU plan, only display region
+    // options that support GPUs.
+    const selectedType = this.props.typesData?.find(
+      thisType => thisType.id === this.state.selectedTypeID
+    );
+
+    const filteredRegions =
+      selectedType?.class === 'gpu'
+        ? regionsData?.filter(thisRegion => {
+            return thisRegion.capabilities.includes('GPU');
+          })
+        : regionsData;
+
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Create a Linode" />
@@ -620,6 +639,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             handleSubmitForm={this.submitForm}
             resetCreationState={this.clearCreationState}
             setBackupID={this.setBackupID}
+            regionsData={filteredRegions}
             {...restOfProps}
             {...restOfState}
           />

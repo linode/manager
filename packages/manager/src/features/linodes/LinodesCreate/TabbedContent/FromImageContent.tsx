@@ -220,7 +220,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
               handleSelection={this.props.updateRegionID}
               selectedID={this.props.selectedRegionID}
               copy="Determine the best location for your Linode."
-              updateFor={[this.props.selectedRegionID, errors]}
+              updateFor={[this.props.selectedRegionID, regions, errors]}
               disabled={userCannotCreateLinode}
             />
             <SelectPlanPanel
