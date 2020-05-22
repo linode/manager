@@ -153,6 +153,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
           >
             <Paper>
               <Placeholder
+                data-qa-placeholder
                 icon={VolumeIcon}
                 renderAsSecondary
                 copy="You do not have any existing Linodes to clone from.
@@ -172,6 +173,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
             >
               <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
               <SelectLinodePanel
+                data-qa-linode-panel
                 error={hasErrorFor('linode_id')}
                 linodes={extendLinodes(linodes, images, types)}
                 selectedLinodeID={selectedLinodeID}
@@ -186,6 +188,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
                 }}
               />
               <SelectRegionPanel
+                data-qa-region-panel
                 error={hasErrorFor('region')}
                 regions={regions}
                 handleSelection={this.props.updateRegionID}
@@ -196,6 +199,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
                 disabled={userCannotCreateLinode}
               />
               <SelectPlanPanel
+                data-qa-select-plan-panel
                 error={hasErrorFor('type')}
                 types={types}
                 onSelect={this.props.updateTypeID}
@@ -211,6 +215,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
                 disabledClasses={this.props.disabledClasses}
               />
               <LabelAndTagsPanel
+                data-qa-label-panel
                 labelFieldProps={{
                   label: 'Linode Label',
                   value: label || '',
@@ -221,6 +226,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
                 updateFor={[label, errors]}
               />
               <AddonsPanel
+                data-qa-addons-panel
                 backups={backupsEnabled}
                 accountBackups={accountBackupsEnabled}
                 backupsMonthly={backupsMonthlyPrice}

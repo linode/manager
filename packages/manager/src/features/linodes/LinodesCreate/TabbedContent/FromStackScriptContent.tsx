@@ -279,6 +279,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
           <form>
             <CreateLinodeDisabled isDisabled={disabled} />
             <SelectStackScriptPanel
+              data-qa-select-stackscript
               error={hasErrorFor('stackscript_id')}
               header={header}
               selectedId={selectedStackScriptID}
@@ -293,6 +294,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
             />
             {!disabled && userDefinedFields && userDefinedFields.length > 0 && (
               <UserDefinedFieldsPanel
+                data-qa-udf-panel
                 errors={filterUDFErrors(errorResources, this.props.errors)}
                 selectedLabel={selectedStackScriptLabel || ''}
                 selectedUsername={selectedStackScriptUsername || ''}
@@ -331,6 +333,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
               </Paper>
             )}
             <SelectRegionPanel
+              data-qa-select-region-panel
               error={hasErrorFor('region')}
               regions={regionsData}
               handleSelection={updateRegionID}
@@ -341,6 +344,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
               disabled={disabled}
             />
             <SelectPlanPanel
+              data-qa-select-plan
               error={hasErrorFor('type')}
               types={typesData}
               onSelect={updateTypeID}
@@ -350,6 +354,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
               disabledClasses={this.props.disabledClasses}
             />
             <LabelAndTagsPanel
+              data-qa-label-panel
               labelFieldProps={{
                 label: 'Linode Label',
                 value: label || '',
@@ -366,6 +371,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
               updateFor={[tags, label, errors]}
             />
             <AccessPanel
+              data-qa-access-panel
               /* disable the password field if we haven't selected an image */
               disabled={!this.props.selectedImageID}
               disabledReason={
@@ -388,6 +394,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
               requestKeys={requestKeys}
             />
             <AddonsPanel
+              data-qa-addons-panel
               backups={backupsEnabled}
               accountBackups={accountBackupsEnabled}
               backupsMonthly={backupsMonthlyPrice}

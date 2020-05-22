@@ -435,6 +435,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
         copy={copy}
         tabs={tabs}
         initTab={initialTab}
+        data-qa-select-plan
       />
     );
   }
