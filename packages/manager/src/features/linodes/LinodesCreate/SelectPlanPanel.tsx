@@ -27,6 +27,11 @@ import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import { dcDisplayNames } from 'src/constants';
+import withRegions, {
+  DefaultProps as RegionsProps
+} from 'src/containers/regions.container';
+import arrayToList from 'src/utilities/arrayToCommaSeparatedList';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 export interface ExtendedType extends LinodeType {
@@ -104,14 +109,22 @@ const getDedicated = (types: ExtendedType[]) =>
 const getGPU = (types: ExtendedType[]) =>
   types.filter(t => /gpu/.test(t.class));
 
-export class SelectPlanPanel extends React.Component<
-  Props & WithStyles<ClassNames>
-> {
+type CombinedProps = Props & WithStyles<ClassNames> & RegionsProps;
+
+export class SelectPlanPanel extends React.Component<CombinedProps> {
   onSelect = (id: string) => () => this.props.onSelect(id);
 
   getDisabledClass = (thisClass: LinodeTypeClass) => {
     const disabledClasses = this.props.disabledClasses ?? [];
     return disabledClasses.includes(thisClass);
+  };
+
+  getRegionsWithGPU = () => {
+    const regions = this.props.regionsData ?? [];
+    const withGPU = regions
+      .filter(thisRegion => thisRegion.capabilities.includes('GPU'))
+      .map(thisRegion => dcDisplayNames[thisRegion.id]);
+    return arrayToList(withGPU);
   };
 
   renderSelection = (type: ExtendedType, idx: number) => {
@@ -351,7 +364,8 @@ export class SelectPlanPanel extends React.Component<
     if (!isEmpty(gpu)) {
       const programInfo = this.getDisabledClass('gpu') ? (
         <Typography>
-          GPU instances are not available in the selected region.
+          GPU instances are not available in the selected region. Currently
+          these plans are only available in {this.getRegionsWithGPU()}.
         </Typography>
       ) : (
         <Typography>
@@ -428,10 +442,8 @@ export class SelectPlanPanel extends React.Component<
 
 const styled = withStyles(styles);
 
-export default compose<
-  Props & WithStyles<ClassNames>,
-  Props & RenderGuardProps
->(
+export default compose<CombinedProps, Props & RenderGuardProps>(
   RenderGuard,
-  styled
+  styled,
+  withRegions()
 )(SelectPlanPanel);
