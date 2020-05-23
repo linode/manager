@@ -33,7 +33,7 @@ describe('Formatting uptime', () => {
   it('should handle durations longer than a month', () => {
     expect(
       formatUptime(
-        Duration.fromObject({ years: 1, months: 2, days: 12, hours: 10, minutes: 15 }).as('seconds')
+        Duration.fromObject({ days: 438, hours: 10, minutes: 15 }).as('seconds')
       )
     ).toMatch('438d 10h 15m');
   });
@@ -42,9 +42,7 @@ describe('Formatting uptime', () => {
     expect(
       formatUptime(
         Duration.fromObject({
-            years: 1,
-            months: 2,
-            days: 12,
+            days: 438,
             hours: 8,
             minutes: 15,
             seconds: 54
