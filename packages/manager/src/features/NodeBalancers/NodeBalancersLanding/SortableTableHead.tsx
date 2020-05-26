@@ -50,7 +50,7 @@ const styles = (theme: Theme) =>
 
 type CombinedProps = WithStyles<ClassNames> & Omit<OrderByProps, 'data'>;
 
-const SortableTableHead: React.StatelessComponent<CombinedProps> = props => {
+const SortableTableHead: React.FC<CombinedProps> = props => {
   const { classes, order, orderBy, handleOrderChange } = props;
 
   const isActive = (label: string) => label === orderBy;

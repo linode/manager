@@ -76,7 +76,7 @@ export const getLinodeLabel = (linodeId: number | null) => {
   return attachedLinode ? attachedLinode.label : null;
 };
 
-export const VolumeDashboardRow: React.StatelessComponent<CombinedProps> = props => {
+export const VolumeDashboardRow: React.FC<CombinedProps> = props => {
   const {
     classes,
     volume: { label, linode_id, region, size }

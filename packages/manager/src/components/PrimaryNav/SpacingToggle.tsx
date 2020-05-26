@@ -47,7 +47,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames> & WithTheme;
 
-export const SpacingToggle: React.StatelessComponent<CombinedProps> = props => {
+export const SpacingToggle: React.FC<CombinedProps> = props => {
   const { classes, toggleSpacing, theme } = props;
   const spacingMode =
     theme.spacing() === COMPACT_SPACING_UNIT ? 'compact' : 'normal';

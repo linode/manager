@@ -32,7 +32,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ActionPanel: React.StatelessComponent<CombinedProps> = props => {
+const ActionPanel: React.FC<CombinedProps> = props => {
   const { classes, className, style } = props;
 
   return (
@@ -52,7 +52,4 @@ const ActionPanel: React.StatelessComponent<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-export default compose<any, any, any>(
-  styled,
-  RenderGuard
-)(ActionPanel);
+export default compose<any, any, any>(styled, RenderGuard)(ActionPanel);

@@ -63,7 +63,7 @@ export type CombinedProps = Props &
   WithNotifications &
   StyleProps;
 
-export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
+export const LinodeRow: React.FC<CombinedProps> = props => {
   const {
     // linode props
     backups,
@@ -236,7 +236,7 @@ const enhanced = compose<CombinedProps, Props>(
 
 export default enhanced(LinodeRow);
 
-export const RenderFlag: React.StatelessComponent<{
+export const RenderFlag: React.FC<{
   mutationAvailable: boolean;
   linodeNotifications: Notification[];
   classes: any;

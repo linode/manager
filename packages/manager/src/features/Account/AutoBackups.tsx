@@ -54,7 +54,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const AutoBackups: React.StatelessComponent<CombinedProps> = props => {
+const AutoBackups: React.FC<CombinedProps> = props => {
   const {
     backups_enabled,
     classes,

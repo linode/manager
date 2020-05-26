@@ -16,6 +16,7 @@ interface Flags {
   firewalls: boolean;
   oneClickApps: OneClickApp;
   promotionalOffers: PromotionalOffer[];
+  thirdPartyAuth: boolean;
 }
 
 type PromotionalOfferFeature =
