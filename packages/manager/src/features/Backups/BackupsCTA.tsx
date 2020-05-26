@@ -54,7 +54,7 @@ type CombinedProps = StateProps &
   DispatchProps &
   WithStyles<ClassNames>;
 
-const BackupsCTA: React.StatelessComponent<CombinedProps> = props => {
+const BackupsCTA: React.FC<CombinedProps> = props => {
   const {
     classes,
     linodesWithoutBackups,
