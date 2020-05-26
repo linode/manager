@@ -386,7 +386,7 @@ export const metricsBySection = (data: Metrics): number[] => [
 
 export const _formatTooltip = curry(
   (
-    data: any,
+    data: DataSet[],
     formatter: ((v: number) => string) | undefined,
     unit: string | undefined,
     t: ChartTooltipItem,
@@ -397,10 +397,9 @@ export const _formatTooltip = curry(
      * data and formatter should be partially applied before this function
      * is called directly by chart.js
      */
-    
-    const dataset = data.get(t?.datasetIndex);
+    const dataset = t?.datasetIndex ? data[t?.datasetIndex] : data[0];
     const label = dataset.label;
-    const val = dataset.data.get(t?.index)[1] || 0;
+    const val = t?.index ? dataset.data[t?.index][1] || 0 : 0;
     const value = formatter ? formatter(val) : roundTo(val);
     return `${label}: ${value}${unit ? unit : ''}`;
   }
