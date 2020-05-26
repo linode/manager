@@ -985,6 +985,9 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
             color: primaryColors.main,
             opacity: 1
           },
+          '&$dense': {
+            padding: 0
+          },
           '&:hover': {
             backgroundColor: primaryColors.main,
             color: 'white'

@@ -4,8 +4,15 @@ import MenuItem from 'src/components/core/MenuItem';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  root: { padding: 0 },
   menuItem: {
-    padding: 0
+    padding: '0 !important',
+    '&:hover': {
+      backgroundColor: 'transparent !important'
+    },
+    '& $focused': {
+      backgroundColor: 'transparent !important'
+    }
   }
 }));
 
@@ -24,6 +31,9 @@ const Option: React.StatelessComponent<Props> = props => {
       value={props.value}
       role="option"
       className={classes.menuItem}
+      dense
+      disableGutters
+      {...props}
     >
       <components.Option {...props} />
     </MenuItem>
