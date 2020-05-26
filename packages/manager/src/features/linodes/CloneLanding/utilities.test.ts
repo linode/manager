@@ -309,7 +309,7 @@ describe('utilities', () => {
 
   describe('getEstimatedCloneTime', () => {
     it('gives a humanized estimate', () => {
-      expect(getEstimatedCloneTime(50000, 'sameDatacenter')).toBe('37 minutes');
+      expect(getEstimatedCloneTime(50000, 'sameDatacenter')).toBe('36 minutes');
     });
 
     it('gives a different result based on the DC mode', () => {
