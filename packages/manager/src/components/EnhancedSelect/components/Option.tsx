@@ -1,20 +1,6 @@
 import * as React from 'react';
 import { components, OptionProps } from 'react-select';
 import MenuItem from 'src/components/core/MenuItem';
-import { makeStyles, Theme } from 'src/components/core/styles';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: { padding: 0 },
-  menuItem: {
-    padding: '0 !important',
-    '&:hover': {
-      backgroundColor: 'transparent !important'
-    },
-    '& $focused': {
-      backgroundColor: 'transparent !important'
-    }
-  }
-}));
 
 interface Props extends OptionProps<any> {
   value: number | string;
@@ -22,7 +8,6 @@ interface Props extends OptionProps<any> {
 }
 
 const Option: React.StatelessComponent<Props> = props => {
-  const classes = useStyles();
   return (
     <MenuItem
       data-qa-option={String(props.value)}
@@ -30,9 +15,11 @@ const Option: React.StatelessComponent<Props> = props => {
       {...props.attrs}
       value={props.value}
       role="option"
-      className={classes.menuItem}
       dense
       disableGutters
+      selected={props.isSelected}
+      disabled={props.isDisabled}
+      // Adding this causes console errors, but is the only way to get the menu to scroll and follow focused item.
       {...props}
     >
       <components.Option {...props} />

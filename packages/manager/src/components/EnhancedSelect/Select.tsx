@@ -71,7 +71,7 @@ interface ModifiedTextFieldProps extends Omit<TextFieldProps, 'label'> {
 }
 
 export interface BaseSelectProps
-  extends Omit<SelectProps<any>, 'onChange' | 'value' | 'onFocus'> {
+  extends Omit<SelectProps<any>, 'onChange' | 'value'> {
   classes?: any;
   /*
    textFieldProps isn't native to react-select
