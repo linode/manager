@@ -13,6 +13,7 @@ import {
 } from 'src/components/core/styles';
 import Typography, { TypographyProps } from 'src/components/core/Typography';
 import Grid, { GridProps } from 'src/components/Grid';
+import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
 type ClassNames =
   | 'root'
@@ -149,7 +150,7 @@ interface Props extends GridProps {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const Notice: React.StatelessComponent<CombinedProps> = props => {
+const Notice: React.FC<CombinedProps> = props => {
   const {
     classes,
     className,
@@ -173,7 +174,10 @@ const Notice: React.StatelessComponent<CombinedProps> = props => {
   } = props;
 
   const c = html ? (
-    <Typography {...typeProps} dangerouslySetInnerHTML={{ __html: html }} />
+    <Typography
+      {...typeProps}
+      dangerouslySetInnerHTML={{ __html: sanitizeHTML(html) }}
+    />
   ) : (
     <Typography
       {...typeProps}
@@ -181,8 +185,8 @@ const Notice: React.StatelessComponent<CombinedProps> = props => {
       onClick={onClick}
       className={`${classes.noticeText} noticeText`}
     >
-      {text && text}
-      {children && children}
+      {Boolean(text) && text}
+      {Boolean(children) && children}
     </Typography>
   );
 

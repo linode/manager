@@ -51,6 +51,7 @@ export const MonitorTableContent: React.FC<CombinedProps> = props => {
   }
 
   return (
+    // eslint-disable-next-line
     <>
       {monitors.map((monitor: ManagedServiceMonitor, idx: number) => (
         <MonitorRow

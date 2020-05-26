@@ -1,12 +1,9 @@
 import {
-  createNodePool as _createNodePool,
   deleteKubernetesCluster as _deleteCluster,
-  deleteNodePool as _deleteNodePool,
   getKubernetesCluster,
   getKubernetesClusters,
   KubernetesCluster,
-  updateKubernetesCluster as _updateCluster,
-  updateNodePool as _updateNodePool
+  updateKubernetesCluster as _updateCluster
 } from '@linode/api-v4/lib/kubernetes';
 import { getAll, GetAllData } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';

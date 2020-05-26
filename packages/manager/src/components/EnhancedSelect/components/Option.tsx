@@ -7,7 +7,7 @@ interface Props extends OptionProps<any> {
   attrs?: Record<string, string | boolean>;
 }
 
-const Option: React.StatelessComponent<Props> = props => {
+const Option: React.FC<Props> = props => {
   return (
     <MenuItem
       data-qa-option={String(props.value)}
