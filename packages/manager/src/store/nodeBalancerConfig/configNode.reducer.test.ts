@@ -68,7 +68,6 @@ describe('NB Config Node reducer', () => {
     )[mockParams.configId];
     expect(Object.values(newState.itemsById)).toContain(nodes[0]);
     expect(newState.results).toBe(1);
-    expect(newState.lastUpdated).toBeGreaterThan(0);
   });
 
   it('should handle a failed creation', () => {
