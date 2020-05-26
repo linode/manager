@@ -9,19 +9,22 @@ Here are a list of all the required and optional environment variables the Manag
 ## Required Variables
 
 `REACT_APP_APP_ROOT`: The root location where you will be running the app
-* e.g. `http://localhost:3000`
+
+- e.g. `http://localhost:3000`
 
 `REACT_APP_LOGIN_ROOT`: The root location where users will authenticate
-* e.g. `https://login.linode.com`
+
+- e.g. `https://login.linode.com`
 
 `REACT_APP_API_ROOT`: The root location where API requests will be made
-* e.g. `https://api.linode.com/v4`
+
+- e.g. `https://api.linode.com/v4`
 
 `REACT_APP_LISH_ROOT`: The root location of LISH, Linode's web-based console
-* e.g. `webconsole.linode.com`
+
+- e.g. `webconsole.linode.com`
 
 `REACT_APP_CLIENT_ID`: The Client ID you create by following [these steps](./CREATE_CLIENT.md)
-
 
 ## Optional Variables
 
@@ -38,7 +41,8 @@ Here are a list of all the required and optional environment variables the Manag
 `REACT_APP_GTM_ID`: The ID that matches with a configured Google Tag Manager property
 
 `REACT_APP_ACCESS_TOKEN`: Access Token that overrides the token received from the Login service.
-* e.g `Bearer 1232313` or `Admin 1231423`
+
+- e.g `Bearer 1232313` or `Admin 1231423`
 
 `REACT_APP_DISABLE_EVENT_THROTTLE`: <Boolean> Whether the app should poll the `/events` endpoint at provided intervals
 
@@ -67,4 +71,4 @@ alternatively, with Docker
 
 `yarn docker:local`
 
-At this point, the app should load on `localhost:3000` and you should be prompted to login and then can start browsing the app.
+At this point, the app should load on `localhost:3000` and you should be prompted to log in and then can start browsing the app.
