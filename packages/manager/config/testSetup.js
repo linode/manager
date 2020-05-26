@@ -70,9 +70,8 @@ class Line extends React.Component {
   }
 }
 
-jest.mock('react-chartjs-2', () => ({
-  Doughnut: () => null,
-  Line,
+jest.mock('chart.js', ()=>({
+  Chart:jest.fn(),
   defaults: {
     global: {
       defaultFontFamily: '',
@@ -80,7 +79,7 @@ jest.mock('react-chartjs-2', () => ({
       defaultFontStyle: ''
     }
   }
-}));
+}))
 
 jest.mock('highlight.js/lib/highlight', () => ({
   default: {

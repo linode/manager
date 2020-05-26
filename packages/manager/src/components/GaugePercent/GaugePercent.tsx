@@ -7,7 +7,7 @@ import {
   WithTheme
 } from 'src/components/core/styles';
 
-import { Doughnut } from 'react-chartjs-2';
+import {Chart} from 'chart.js';
 
 interface Options {
   width: number | string;
@@ -73,51 +73,68 @@ const GaugePercent: React.FC<CombinedProps> = props => {
       ? 0
       : props.max - props.value;
 
+
+  const graphDatasets = [
+          {
+            borderWidth: 0,
+            hoverBackgroundColor: [
+              props.filledInColor || props.theme.color.blue,
+              props.nonFilledInColor || props.theme.color.grey2
+            ],
+            /** so basically, index 0 is the filled in, index 1 is the full graph percentage */
+            data: [props.value, finalMax],
+            backgroundColor: [
+              props.filledInColor || props.theme.color.blue,
+              props.nonFilledInColor || props.theme.color.grey2
+            ]
+          }
+        ]
+    const graphOptions ={
+        animation: {
+          animateRotate: false,
+          animateScale: false
+        },
+        maintainAspectRatio: false,
+        rotation: -1.25 * Math.PI,
+        circumference: 1.5 * Math.PI,
+        cutoutPercentage: 70,
+        responsive: true,
+        /** get rid of all hover events with events: [] */
+        events: [],
+        legend: {
+          display: false
+        }
+      }
+
+  const graphRef: React.RefObject<any> = React.useRef(null);
+
+
+  React.useEffect(() => {
+    if (graphRef.current) {
+      new Chart(graphRef.current.getContext('2d'), {
+        type: "doughnut",
+        data: {
+            datasets: graphDatasets
+        },
+        options: graphOptions
+      });
+
+
+    }
+  });
   return (
-    <React.Fragment>
+
       <div
         className={classes.gaugeWrapper}
         style={{
           width,
           height: height + props.theme.spacing(3.75)
         }}
-      >
-        <Doughnut
-          data={{
-            datasets: [
-              {
-                borderWidth: 0,
-                hoverBackgroundColor: [
-                  props.filledInColor || props.theme.color.blue,
-                  props.nonFilledInColor || props.theme.color.grey2
-                ],
-                /** so basically, index 0 is the filled in, index 1 is the full graph percentage */
-                data: [props.value, finalMax],
-                backgroundColor: [
-                  props.filledInColor || props.theme.color.blue,
-                  props.nonFilledInColor || props.theme.color.grey2
-                ]
-              }
-            ]
-          }}
-          height={height}
-          options={{
-            animation: {
-              animateRotate: false,
-              animateScale: false
-            },
-            maintainAspectRatio: false,
-            rotation: -1.25 * Math.PI,
-            circumference: 1.5 * Math.PI,
-            cutoutPercentage: 70,
-            responsive: true,
-            /** get rid of all hover events with events: [] */
-            events: [],
-            legend: {
-              display: false
-            }
-          }}
-        />
+      >      <canvas
+      height={height}
+                    // id="myChart"
+                    ref={graphRef}
+                />
         {props.innerText && (
           <div data-testid="gauge-innertext" className={classes.innerText}>
             {props.innerText}
@@ -129,7 +146,6 @@ const GaugePercent: React.FC<CombinedProps> = props => {
           </div>
         )}
       </div>
-    </React.Fragment>
   );
 };
 

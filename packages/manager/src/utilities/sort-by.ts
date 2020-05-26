@@ -15,7 +15,6 @@ export const sortByString = (a: string, b: string, order: SortOrder) => {
 };
 
 export const sortByUTFDate = (a: string, b: string, order: SortOrder) => {
-  console.error(a,b,order)
   const result = DateTime.fromISO(a).diff(DateTime.fromISO(b)).valueOf()
   if (order === 'asc') {
     return result; // ascending order

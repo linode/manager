@@ -326,9 +326,9 @@ export const BillingActivityPanel: React.FC<Props> = props => {
       pdfLoading.clear();
 
       const earliestInvoiceDate =
-        invoices[invoices.length - 1]?.date || new Date().toISOString();
+        invoices[invoices.length - 1]?.date || DateTime.utc().toFormat(API_DATETIME_NO_TZ_FORMAT);
       const earliestPaymentDate =
-        payments[payments.length - 1]?.date || new Date().toISOString();
+        payments[payments.length - 1]?.date || DateTime.utc().toFormat(API_DATETIME_NO_TZ_FORMAT);
       const dateCutoff = getCutoffFromDateRange(item.value);
 
       // If the data we already have falls within the selected date range,
@@ -363,12 +363,16 @@ export const BillingActivityPanel: React.FC<Props> = props => {
           : true;
 
       const dateCutoff = getCutoffFromDateRange(selectedTransactionDate);
+
       const matchesDate = isAfter(thisBillingItem.date, dateCutoff);
+
+  console.log('matchesDate', matchesDate,'date', thisBillingItem.date, 'dateCutoff', dateCutoff,'cutoff', selectedTransactionDate)
 
       return matchesType && matchesDate;
     });
   }, [selectedTransactionType, selectedTransactionDate, combinedData]);
-
+  console.log('combinedData', combinedData)
+  console.log('filteredData', filteredData)
   return (
     <>
       <div className={classes.headerContainer}>
@@ -531,7 +535,7 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
       hasError,
       isLoading
     } = props;
-
+    console.log('render activity feed item', date, label, id)
     const rowProps: TableRowProps = {};
     if (type === 'invoice' && !isLoading) {
       rowProps.rowLink = `/account/billing/invoices/${id}`;
@@ -643,11 +647,12 @@ export const getCutoffFromDateRange = (
       outputDate = DateTime.fromISO('1970-01-01T00:00:00.000');
       break;
   }
-
+  // console.log('cutoffdate',outputDate.toFormat(API_DATETIME_NO_TZ_FORMAT) )
   return outputDate.toFormat(API_DATETIME_NO_TZ_FORMAT);
 };
 
 export const makeFilter = (endDate?: string) => {
+  // console.log('makefilter',endDate )
   const filter: any = {
     '+order_by': 'date',
     '+order': 'desc'

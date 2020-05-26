@@ -1,10 +1,6 @@
-// import {DateTime} from 'luxon'
-import { /*clone, */curry } from 'ramda';
+import { curry } from 'ramda';
 import * as React from 'react';
-// import { ChartData, Line } from 'react-chartjs-2';
 import {ChartDataSets, ChartOptions, Chart, ChartTooltipItem, ChartData} from 'chart.js';
-// import 'chartjs-adapter-luxon'
-
 import LineChartIcon from 'src/assets/icons/line-chart.svg';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -97,11 +93,8 @@ const LineGraph: React.FC<CombinedProps> = props => {
     unit
     // ...rest
   } = props;
-  console.log('data',data)
   const finalRowHeaders = rowHeaders ? rowHeaders : ['Max', 'Avg', 'Last'];
   // is undefined on linode/summary
-  console.log('nativeLegend', nativeLegend)
-  console.log('legendrows', legendRows)
   //AC, after testing with and without this, 
   //i do not see a difference, maybe could be removed at some point
   const plugins = [
@@ -119,18 +112,11 @@ const LineGraph: React.FC<CombinedProps> = props => {
   ];
 
   const handleLegendClick = (datasetIndex: number) => {
-    console.log('toggle dataset ', datasetIndex, hiddenDatasets)
     if(hiddenDatasets.includes(datasetIndex)){
       setHiddenDatasets( hiddenDatasets.filter(e=>e!==datasetIndex))
     }else{
       setHiddenDatasets([...hiddenDatasets, datasetIndex])
     }
-    // chart.getDatasetMeta(datasetIndex).hidden =
-    //   chart.getDatasetMeta(datasetIndex).hidden === null
-    //     ? true
-    //     : !chart.getDatasetMeta(datasetIndex).hidden;
-    // chart.update(); // re-draw chart to hide dataset
-    // forceUpdate({}); // re-draw component to update legend styles
   };
 
   const getChartOptions = (
@@ -267,7 +253,6 @@ const LineGraph: React.FC<CombinedProps> = props => {
 
     }
   });
-console.log('ref',inputEl.current)
   return (
     <div className={classes.wrapper}>
       <div style={{ width: '100%' }}>
@@ -322,8 +307,8 @@ console.log('ref',inputEl.current)
                   // inputEl.current.chartInstance.legend.legendItems.map(
                     legendRows?.map(
                     (tick: any, idx: number) => {
-                      console.log('render legent item', tick)
                       const bgColor = data[idx].backgroundColor
+                      // AC removed in refactor seems useless
                       //  string =
                       //   typeof tick.fillStyle === 'string'
                       //     ? tick.fillStyle
@@ -412,10 +397,10 @@ export const _formatTooltip = curry(
      * data and formatter should be partially applied before this function
      * is called directly by chart.js
      */
-    // console.log('formattooltip', t.datasetIndex, data.length)
-    const dataset = data[t?.datasetIndex] ;
+    
+    const dataset = data.get(t?.datasetIndex);
     const label = dataset.label;
-    const val = dataset.data[t?.index][1] || 0;
+    const val = dataset.data.get(t?.index)[1] || 0;
     const value = formatter ? formatter(val) : roundTo(val);
     return `${label}: ${value}${unit ? unit : ''}`;
   }
