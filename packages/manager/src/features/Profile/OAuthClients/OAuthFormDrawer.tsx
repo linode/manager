@@ -27,7 +27,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = props => {
+const OAuthCreationDrawer: React.FC<CombinedProps> = props => {
   const {
     label,
     redirect_uri,

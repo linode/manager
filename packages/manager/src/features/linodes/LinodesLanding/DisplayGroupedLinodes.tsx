@@ -81,7 +81,7 @@ interface Props {
 
 type CombinedProps = Props & OrderByProps & WithStyles<ClassNames>;
 
-const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = props => {
+const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
   const {
     data,
     display,

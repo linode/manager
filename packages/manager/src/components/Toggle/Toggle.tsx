@@ -29,7 +29,7 @@ interface Props {
 
 type CombinedProps = Props & SwitchProps & WithStyles<CSSClasses>;
 
-const LinodeSwitchControl: React.StatelessComponent<CombinedProps> = props => {
+const LinodeSwitchControl: React.FC<CombinedProps> = props => {
   const { classes, tooltipText, interactive, ...rest } = props;
 
   return (

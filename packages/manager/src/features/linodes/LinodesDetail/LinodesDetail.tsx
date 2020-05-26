@@ -52,7 +52,7 @@ const styles = (theme: Theme) =>
     }
   });
 
-const LinodeDetail: React.StatelessComponent<CombinedProps> = props => {
+const LinodeDetail: React.FC<CombinedProps> = props => {
   const {
     dispatch,
     linode,

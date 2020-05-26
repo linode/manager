@@ -22,7 +22,7 @@ interface Props {
 
 type CombinedProps = Props & PaginationProps;
 
-export const ListView: React.StatelessComponent<CombinedProps> = props => {
+export const ListView: React.FC<CombinedProps> = props => {
   const { data, openDeleteDialog, openPowerActionDialog } = props;
   return (
     <>

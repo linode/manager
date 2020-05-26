@@ -11,9 +11,7 @@ interface RebuildDialogProps {
   handleSubmit: () => void;
 }
 
-export const RebuildDialog: React.StatelessComponent<
-  RebuildDialogProps
-> = props => {
+export const RebuildDialog: React.FC<RebuildDialogProps> = props => {
   const { isOpen, isLoading, handleClose, handleSubmit } = props;
 
   const actions = () => (

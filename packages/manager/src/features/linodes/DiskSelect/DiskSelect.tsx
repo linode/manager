@@ -30,7 +30,7 @@ const diskFromValue = (
   return thisDisk ? thisDisk : null;
 };
 
-const DiskSelect: React.StatelessComponent<CombinedProps> = props => {
+const DiskSelect: React.FC<CombinedProps> = props => {
   const {
     disabled,
     disks,

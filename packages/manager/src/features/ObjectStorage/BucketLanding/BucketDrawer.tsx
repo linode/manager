@@ -13,7 +13,7 @@ interface Props {
 
 type CombinedProps = Props & StateProps & DispatchProps;
 
-export const BucketDrawer: React.StatelessComponent<CombinedProps> = props => {
+export const BucketDrawer: React.FC<CombinedProps> = props => {
   const { isOpen, isRestrictedUser, closeBucketDrawer } = props;
 
   return (

@@ -47,7 +47,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
-export const EventRow: React.StatelessComponent<CombinedProps> = props => {
+export const EventRow: React.FC<CombinedProps> = props => {
   const { event, entityId, classes } = props;
   const type = pathOr<string>('linode', ['entity', 'type'], event);
   const id = pathOr<string | number>(-1, ['entity', 'id'], event);
@@ -87,7 +87,7 @@ export interface RowProps extends WithStyles<ClassNames> {
   duration: Event['duration'];
 }
 
-export const Row: React.StatelessComponent<RowProps> = props => {
+export const Row: React.FC<RowProps> = props => {
   const {
     action,
     classes,

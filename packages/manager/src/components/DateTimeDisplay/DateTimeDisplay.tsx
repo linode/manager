@@ -12,9 +12,7 @@ export interface Props {
 
 type CombinedProps = Props;
 
-export const DateTimeDisplay: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const DateTimeDisplay: React.FC<CombinedProps> = props => {
   const { format, humanizeCutoff, value, className } = props;
   return (
     <React.Fragment>

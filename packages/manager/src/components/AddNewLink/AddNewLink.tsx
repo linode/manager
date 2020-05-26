@@ -16,7 +16,7 @@ export interface Props extends Omit<TooltipProps, 'children' | 'title'> {
 
 type CombinedProps = Props;
 
-const AddNewLink: React.StatelessComponent<CombinedProps> = props => {
+const AddNewLink: React.FC<CombinedProps> = props => {
   const {
     onClick,
     label,

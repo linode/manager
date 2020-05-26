@@ -88,7 +88,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const UserEventsButton: React.StatelessComponent<CombinedProps> = ({
+const UserEventsButton: React.FC<CombinedProps> = ({
   classes,
   count,
   onClick,

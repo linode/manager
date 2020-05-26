@@ -35,7 +35,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ImageRow: React.StatelessComponent<CombinedProps> = props => {
+const ImageRow: React.FC<CombinedProps> = props => {
   const { classes, image, ...rest } = props;
   return (
     <TableRow key={image.id} data-qa-image-cell={image.id}>

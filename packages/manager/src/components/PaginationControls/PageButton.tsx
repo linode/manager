@@ -55,9 +55,7 @@ const styled = withStyles(styles);
 /* tslint:disable-next-line */
 export interface Props extends ButtonProps {}
 
-const PageButton: React.StatelessComponent<
-  Props & WithStyles<CSSClasses>
-> = props => {
+const PageButton: React.FC<Props & WithStyles<CSSClasses>> = props => {
   const { classes, children, ...rest } = props;
 
   return (

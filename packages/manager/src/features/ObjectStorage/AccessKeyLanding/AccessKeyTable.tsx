@@ -56,7 +56,7 @@ export type CombinedProps = Props &
   WithStyles<ClassNames> &
   PaginationProps<ObjectStorageKey>;
 
-export const AccessKeyTable: React.StatelessComponent<CombinedProps> = props => {
+export const AccessKeyTable: React.FC<CombinedProps> = props => {
   const {
     classes,
     data,

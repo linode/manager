@@ -59,7 +59,7 @@ const styled = withStyles(styles);
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const StrengthIndicator: React.StatelessComponent<CombinedProps> = props => {
+const StrengthIndicator: React.FC<CombinedProps> = props => {
   const { classes, strength, hideStrengthLabel } = props;
 
   return (

@@ -50,7 +50,7 @@ interface Props extends MenuItemProps {
 
 type FinalProps = Props & WithStyles<ClassNames>;
 
-const EventListItem: React.StatelessComponent<FinalProps> = props => {
+const EventListItem: React.FC<FinalProps> = props => {
   const {
     classes,
     title,
@@ -72,7 +72,7 @@ const EventListItem: React.StatelessComponent<FinalProps> = props => {
       })}
       role="menu"
       {...rest}
-      {...onClick && { onClick, onKeyPress: onClick }}
+      {...(onClick && { onClick, onKeyPress: onClick })}
       divider={true}
     >
       <ListItemText primary={title} secondary={content} />

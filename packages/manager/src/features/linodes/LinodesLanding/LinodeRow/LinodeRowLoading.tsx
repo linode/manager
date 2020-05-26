@@ -42,7 +42,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const LinodeRowLoading: React.StatelessComponent<CombinedProps> = props => {
+const LinodeRowLoading: React.FC<CombinedProps> = props => {
   const {
     classes,
     linodeId,
@@ -73,7 +73,7 @@ const styled = withStyles(styles);
 
 export default styled(LinodeRowLoading);
 
-const ProgressDisplay: React.StatelessComponent<{
+const ProgressDisplay: React.FC<{
   progress: null | number;
 }> = props => {
   const { progress } = props;

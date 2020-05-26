@@ -55,7 +55,7 @@ export interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames> & StateProps;
 
-const StackScriptsSection: React.StatelessComponent<CombinedProps> = props => {
+const StackScriptsSection: React.FC<CombinedProps> = props => {
   const {
     data,
     isSorting,

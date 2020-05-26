@@ -26,11 +26,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const TableHeader: React.StatelessComponent<CombinedProps> = ({
-  classes,
-  title,
-  action
-}) => {
+const TableHeader: React.FC<CombinedProps> = ({ classes, title, action }) => {
   return (
     <Grid container justify="space-between" alignItems="flex-end">
       <Grid item>

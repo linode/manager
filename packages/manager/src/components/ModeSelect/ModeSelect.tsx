@@ -16,7 +16,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const ModeSelect: React.StatelessComponent<CombinedProps> = ({
+export const ModeSelect: React.FC<CombinedProps> = ({
   modes,
   onChange,
   selected

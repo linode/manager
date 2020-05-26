@@ -52,7 +52,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const NodeBalancersLandingTableRows: React.StatelessComponent<CombinedProps> = props => {
+const NodeBalancersLandingTableRows: React.FC<CombinedProps> = props => {
   const { classes, data, toggleDialog } = props;
 
   return (

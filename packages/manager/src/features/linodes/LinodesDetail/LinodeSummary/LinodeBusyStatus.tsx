@@ -34,7 +34,7 @@ interface LinodeDetailContextProps {
 
 type CombinedProps = LinodeDetailContextProps & WithStyles<ClassNames>;
 
-const LinodeBusyStatus: React.StatelessComponent<CombinedProps> = props => {
+const LinodeBusyStatus: React.FC<CombinedProps> = props => {
   const { classes, status, linodeEvents, linodeId } = props;
 
   const firstEventWithProgress = (linodeEvents || []).find(

@@ -32,7 +32,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ViewIPDrawer: React.StatelessComponent<CombinedProps> = props => {
+const ViewIPDrawer: React.FC<CombinedProps> = props => {
   const { classes } = props;
 
   return (

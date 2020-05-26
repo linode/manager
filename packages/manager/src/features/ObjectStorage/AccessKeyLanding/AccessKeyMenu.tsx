@@ -16,7 +16,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const AccessKeyMenu: React.StatelessComponent<CombinedProps> = props => {
+const AccessKeyMenu: React.FC<CombinedProps> = props => {
   const createActions = () => {
     const { openRevokeDialog, objectStorageKey, openDrawerForEditing } = props;
 

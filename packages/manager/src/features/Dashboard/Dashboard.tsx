@@ -49,7 +49,7 @@ interface DispatchProps {
 
 type CombinedProps = StateProps & DispatchProps & RouteComponentProps<{}>;
 
-export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
+export const Dashboard: React.FC<CombinedProps> = props => {
   const {
     accountBackups,
     actions: { openBackupDrawer },

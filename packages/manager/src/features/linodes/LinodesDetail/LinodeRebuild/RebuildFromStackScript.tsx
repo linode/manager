@@ -95,7 +95,7 @@ const initialValues: RebuildFromStackScriptForm = {
   stackscript_id: ''
 };
 
-export const RebuildFromStackScript: React.StatelessComponent<CombinedProps> = props => {
+export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
   const {
     classes,
     imagesData,

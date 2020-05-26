@@ -26,7 +26,7 @@ interface Props {
 
 type CombinedProps = WithImagesProps & PaginationProps & Props;
 
-const CardView: React.StatelessComponent<CombinedProps> = props => {
+const CardView: React.FC<CombinedProps> = props => {
   const { data, imagesData, openDeleteDialog, openPowerActionDialog } = props;
 
   return (

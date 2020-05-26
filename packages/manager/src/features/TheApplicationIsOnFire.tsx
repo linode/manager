@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-const TheApplicationIsOnFire: React.StatelessComponent<{}> = props => {
+const TheApplicationIsOnFire: React.FC<{}> = props => {
   return (
     <Dialog
       open

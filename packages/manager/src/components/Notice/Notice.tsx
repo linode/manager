@@ -150,7 +150,7 @@ interface Props extends GridProps {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const Notice: React.StatelessComponent<CombinedProps> = props => {
+const Notice: React.FC<CombinedProps> = props => {
   const {
     classes,
     className,

@@ -49,7 +49,7 @@ const renderContent = (
   return renderMainContent();
 };
 
-const ExtendedExpansionPanel: React.StatelessComponent<Props> = props => {
+const ExtendedExpansionPanel: React.FC<Props> = props => {
   const {
     error,
     heading,

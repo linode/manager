@@ -67,7 +67,7 @@ type CombinedProps = Props &
   RouteComponentProps<{}> &
   WithStyles<ClassNames>;
 
-const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
+const LinodeControls: React.FC<CombinedProps> = props => {
   const {
     classes,
     linode,

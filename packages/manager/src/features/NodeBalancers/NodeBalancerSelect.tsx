@@ -45,7 +45,7 @@ const nodeBalancerFromItems = (
   );
 };
 
-const NodeBalancerSelect: React.StatelessComponent<CombinedProps> = props => {
+const NodeBalancerSelect: React.FC<CombinedProps> = props => {
   const {
     disabled,
     generalError,

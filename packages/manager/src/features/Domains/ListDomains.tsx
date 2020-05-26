@@ -37,7 +37,7 @@ interface Props extends Handlers {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ListDomains: React.StatelessComponent<CombinedProps> = props => {
+const ListDomains: React.FC<CombinedProps> = props => {
   const { data, orderBy, order, handleOrderChange, classes } = props;
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();

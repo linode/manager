@@ -67,7 +67,7 @@ type CombinedProps = Props &
   ReduxStateProps &
   DispatchProps;
 
-export const CreateBucketForm: React.StatelessComponent<CombinedProps> = props => {
+export const CreateBucketForm: React.FC<CombinedProps> = props => {
   const {
     isRestrictedUser,
     onClose,

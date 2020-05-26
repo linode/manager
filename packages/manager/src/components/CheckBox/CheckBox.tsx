@@ -76,7 +76,7 @@ interface Props extends CheckboxProps {
 
 type FinalProps = Props & WithStyles<CSSClasses>;
 
-const LinodeCheckBox: React.StatelessComponent<FinalProps> = props => {
+const LinodeCheckBox: React.FC<FinalProps> = props => {
   const { toolTipText, text, classes, ...rest } = props;
 
   const classnames = classNames({

@@ -58,9 +58,7 @@ export const addIconsToAttachments = (attachments: string[] = []) => {
   });
 };
 
-export const TicketAttachmentList: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const TicketAttachmentList: React.FC<CombinedProps> = props => {
   const { attachments, classes, showMoreAttachments, toggle } = props;
 
   if (isEmpty(attachments)) {

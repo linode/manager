@@ -50,9 +50,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const TicketAttachmentRow: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const TicketAttachmentRow: React.FC<CombinedProps> = props => {
   const { attachments, classes, icons } = props;
   return (
     <Grid item>

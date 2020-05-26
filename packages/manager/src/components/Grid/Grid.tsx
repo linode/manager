@@ -5,7 +5,7 @@ import RenderGuard from 'src/components/RenderGuard';
 /* tslint:disable-next-line */
 export interface Props extends GridProps {}
 
-const WrappedGrid: React.StatelessComponent<Props> = props => {
+const WrappedGrid: React.FC<Props> = props => {
   const updatedProps: GridProps = {
     ...props,
     /** re: https://github.com/mui-org/material-ui/pull/10768 */

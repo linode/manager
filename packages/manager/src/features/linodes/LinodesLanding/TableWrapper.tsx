@@ -29,7 +29,7 @@ type CombinedProps = Omit<OrderByProps, 'data'> &
   WithStyles<ClassNames> &
   Props;
 
-const TableWrapper: React.StatelessComponent<CombinedProps> = props => {
+const TableWrapper: React.FC<CombinedProps> = props => {
   const { order, orderBy, handleOrderChange, dataLength, classes } = props;
 
   return (

@@ -308,7 +308,7 @@ export default compose<CombinedProps, Props>(
   withSnackbar
 )(LinodeCard) as React.ComponentType<Props>;
 
-const ProgressDisplay: React.StatelessComponent<{
+const ProgressDisplay: React.FC<{
   progress: null | number;
   text: string;
   classes: {
@@ -338,7 +338,7 @@ const ProgressDisplay: React.StatelessComponent<{
   );
 };
 
-export const RenderTitle: React.StatelessComponent<{
+export const RenderTitle: React.FC<{
   classes: {
     linkWrapper: string;
     StatusIndicatorWrapper: string;
@@ -395,7 +395,7 @@ export const RenderTitle: React.StatelessComponent<{
 
 RenderTitle.displayName = `RenderTitle`;
 
-export const RenderFlag: React.StatelessComponent<{
+export const RenderFlag: React.FC<{
   mutationAvailable: boolean;
   linodeNotifications: Notification[];
   classes: any;
