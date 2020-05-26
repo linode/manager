@@ -3,6 +3,7 @@ import {
   getLinodeLishToken,
   Linode
 } from '@linode/api-v4/lib/linodes';
+import { TabsKeyboardActivation } from '@reach/tabs';
 import * as React from 'react';
 import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
@@ -19,7 +20,6 @@ import TabLinkList from 'src/components/TabLinkList';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import NotFound from 'src/components/NotFound';
-import { convertForAria } from 'src/components/TabLink/TabLink';
 import Glish from './Glish';
 import Weblish from './Weblish';
 
@@ -171,15 +171,6 @@ class Lish extends React.Component<CombinedProps, State> {
       });
   };
 
-  handleTabChange = (
-    event: React.ChangeEvent<HTMLDivElement>,
-    value: number
-  ) => {
-    const { history } = this.props;
-    const routeName = this.tabs[value].routeName;
-    history.push(`${routeName}`);
-  };
-
   tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     {
@@ -213,25 +204,16 @@ class Lish extends React.Component<CombinedProps, State> {
       );
     }
 
-    const tabA11yProps = (idName: string) => {
-      const ariaVal = convertForAria(idName);
-
-      return {
-        id: `tab-${ariaVal}`,
-        role: 'tab',
-        'aria-controls': `tabpanel-${ariaVal}`
-      };
-    };
-
     return (
       <React.Fragment>
         <Tabs
           className={classes.tabs}
           defaultIndex={this.tabs.findIndex(tab => this.matches(tab.routeName))}
+          keyboardActivation={TabsKeyboardActivation.Manual}
         >
           <TabLinkList lish tabs={this.tabs} />
           <TabPanels>
-            <TabPanel data-qa-tab="Weblish" {...tabA11yProps('Weblish')}>
+            <TabPanel data-qa-tab="Weblish">
               {linode && token && (
                 <Weblish
                   token={token}
@@ -240,7 +222,7 @@ class Lish extends React.Component<CombinedProps, State> {
                 />
               )}
             </TabPanel>
-            <TabPanel data-qa-tab={'Glish'} {...tabA11yProps('Glish')}>
+            <TabPanel data-qa-tab={'Glish'}>
               {linode && token && (
                 <Glish
                   token={token}
