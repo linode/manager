@@ -82,7 +82,7 @@ interface Props {
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
-const ListGroupedNodeBalancers: React.StatelessComponent<CombinedProps> = props => {
+const ListGroupedNodeBalancers: React.FC<CombinedProps> = props => {
   const {
     classes,
     data,

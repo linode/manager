@@ -28,7 +28,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const LinodeRowBackupCell: React.StatelessComponent<CombinedProps> = props => {
+const LinodeRowBackupCell: React.FC<CombinedProps> = props => {
   const { classes, mostRecentBackup, backupsEnabled, linodeId } = props;
 
   return (

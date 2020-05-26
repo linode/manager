@@ -44,7 +44,7 @@ const options = [
   { value: 'fromAccountStackScript', label: 'From Account StackScript' }
 ];
 
-const LinodeRebuild: React.StatelessComponent<CombinedProps> = props => {
+const LinodeRebuild: React.FC<CombinedProps> = props => {
   const { classes, linodeLabel, permissions } = props;
   const disabled = permissions === 'read_only';
 
