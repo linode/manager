@@ -7,7 +7,6 @@ import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import DocumentationButton from 'src/components/DocumentationButton';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import withFirewalls, {
   Props as FireProps
@@ -70,7 +69,6 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
   return (
     <React.Fragment>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
-        <DocumentTitleSegment segment="List of Firewalls" />
         <Breadcrumb pathname={props.location.pathname} labelTitle="Firewalls" />
         <DocumentationButton href={'https://google.com'} />
       </Box>
