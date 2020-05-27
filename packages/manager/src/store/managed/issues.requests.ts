@@ -1,7 +1,7 @@
 import * as Bluebird from 'bluebird';
 import { getManagedIssues, ManagedIssue } from '@linode/api-v4/lib/managed';
 import { getTicket } from '@linode/api-v4/lib/support';
-import {DateTime} from 'luxon'
+import { DateTime } from 'luxon';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import { ExtendedIssue, requestManagedIssuesActions } from './issues.actions';
@@ -22,7 +22,8 @@ export const extendIssues = async (issues: ManagedIssue[]) => {
    * every case will be enough. Did it this way to be safe.
    */
   const recentIssues = issues.filter(
-    thisIssue => DateTime.fromISO(thisIssue.created).diff(DateTime.local()).days < 30
+    thisIssue =>
+      DateTime.fromISO(thisIssue.created).diff(DateTime.local()).days < 30
   );
   return await Bluebird.map(recentIssues, thisIssue => {
     /**

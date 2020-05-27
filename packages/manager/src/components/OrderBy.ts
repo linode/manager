@@ -1,4 +1,4 @@
-import {DateTime} from 'luxon'
+import { DateTime } from 'luxon';
 import { pathOr, sort, splitAt } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';

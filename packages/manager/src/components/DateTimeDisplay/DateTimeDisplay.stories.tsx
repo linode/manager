@@ -1,5 +1,5 @@
 import { storiesOf } from '@storybook/react';
-import {DateTime} from 'luxon'
+import { DateTime } from 'luxon';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
@@ -41,7 +41,7 @@ class Example extends React.Component<{}, State> {
           {'You last checked Slack: '}
           <DateTimeDisplay
             value={DateTime.local()
-              .minus({minutes:5})
+              .minus({ minutes: 5 })
               .toISO()}
             humanizeCutoff={this.state.cutoff}
           />
@@ -49,7 +49,10 @@ class Example extends React.Component<{}, State> {
         <p>
           {'Last Thursday was: '}
           <DateTimeDisplay
-            value={DateTime.local().minus({weeks:1}).set({weekday:4}).toISO()}
+            value={DateTime.local()
+              .minus({ weeks: 1 })
+              .set({ weekday: 4 })
+              .toISO()}
             humanizeCutoff={this.state.cutoff}
           />
         </p>
@@ -57,7 +60,8 @@ class Example extends React.Component<{}, State> {
           {'Three Wednesdays ago was: '}
           <DateTimeDisplay
             value={DateTime.local()
-              .minus({weeks:3}).set({weekday:3})
+              .minus({ weeks: 3 })
+              .set({ weekday: 3 })
               .toISO()}
             humanizeCutoff={this.state.cutoff}
           />
@@ -66,7 +70,7 @@ class Example extends React.Component<{}, State> {
           {'You were so young '}
           <DateTimeDisplay
             value={DateTime.local()
-              .minus({months:11})
+              .minus({ months: 11 })
               .toISO()}
             humanizeCutoff={this.state.cutoff}
           />

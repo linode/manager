@@ -1,5 +1,5 @@
 import { Image } from '@linode/api-v4/lib/images';
-import {DateTime} from 'luxon'
+import { parseAPIDate } from 'src/utilities/date';
 import {
   always,
   compose,
@@ -31,7 +31,7 @@ export const sortCreatedDESC = compose<any, any, any>(
   reverse,
   sortBy(
     compose(
-      (created: string) => DateTime.fromISO(created, {zone:'utc'}).toFormat('x'),
+      (created: string) => parseAPIDate(created).toFormat('x'),
       prop('created')
     )
   )

@@ -1,4 +1,4 @@
-import {DateTime} from 'luxon'
+import { DateTime } from 'luxon';
 type SortOrder = 'asc' | 'desc';
 
 export const sortByString = (a: string, b: string, order: SortOrder) => {
@@ -15,7 +15,9 @@ export const sortByString = (a: string, b: string, order: SortOrder) => {
 };
 
 export const sortByUTFDate = (a: string, b: string, order: SortOrder) => {
-  const result = DateTime.fromISO(a).diff(DateTime.fromISO(b)).valueOf()
+  const result = DateTime.fromISO(a)
+    .diff(DateTime.fromISO(b))
+    .valueOf();
   if (order === 'asc') {
     return result; // ascending order
   }

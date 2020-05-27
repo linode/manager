@@ -1,5 +1,5 @@
 import { Event } from '@linode/api-v4/lib/account';
-import {DateTime}from 'luxon'
+import { DateTime } from 'luxon';
 import {
   addToEvents,
   findInEvents,

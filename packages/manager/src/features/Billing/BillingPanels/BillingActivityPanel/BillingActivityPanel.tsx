@@ -7,7 +7,7 @@ import {
   Payment
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
-import {DateTime} from 'luxon'
+import { DateTime } from 'luxon';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
@@ -31,7 +31,7 @@ import {
 } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { useAccount } from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
-import {ISO_DATE_FORMAT, API_DATETIME_NO_TZ_FORMAT}from 'src/constants'
+import { ISO_DATE_FORMAT, API_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { useSet } from 'src/hooks/useSet';
 import { isAfter } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -326,9 +326,11 @@ export const BillingActivityPanel: React.FC<Props> = props => {
       pdfLoading.clear();
 
       const earliestInvoiceDate =
-        invoices[invoices.length - 1]?.date || DateTime.utc().toFormat(API_DATETIME_NO_TZ_FORMAT);
+        invoices[invoices.length - 1]?.date ||
+        DateTime.utc().toFormat(API_DATETIME_NO_TZ_FORMAT);
       const earliestPaymentDate =
-        payments[payments.length - 1]?.date || DateTime.utc().toFormat(API_DATETIME_NO_TZ_FORMAT);
+        payments[payments.length - 1]?.date ||
+        DateTime.utc().toFormat(API_DATETIME_NO_TZ_FORMAT);
       const dateCutoff = getCutoffFromDateRange(item.value);
 
       // If the data we already have falls within the selected date range,
@@ -366,13 +368,20 @@ export const BillingActivityPanel: React.FC<Props> = props => {
 
       const matchesDate = isAfter(thisBillingItem.date, dateCutoff);
 
-  console.log('matchesDate', matchesDate,'date', thisBillingItem.date, 'dateCutoff', dateCutoff,'cutoff', selectedTransactionDate)
+      console.log(
+        'matchesDate',
+        matchesDate,
+        'date',
+        thisBillingItem.date,
+        'dateCutoff',
+        dateCutoff,
+        'cutoff',
+        selectedTransactionDate
+      );
 
       return matchesType && matchesDate;
     });
   }, [selectedTransactionType, selectedTransactionDate, combinedData]);
-  console.log('combinedData', combinedData)
-  console.log('filteredData', filteredData)
   return (
     <>
       <div className={classes.headerContainer}>
@@ -535,7 +544,7 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
       hasError,
       isLoading
     } = props;
-    console.log('render activity feed item', date, label, id)
+    console.log('render activity feed item', date, label, id);
     const rowProps: TableRowProps = {};
     if (type === 'invoice' && !isLoading) {
       rowProps.rowLink = `/account/billing/invoices/${id}`;
@@ -619,29 +628,30 @@ export const paymentToActivityFeedItem = (
   };
 };
 
-
 export const getCutoffFromDateRange = (
   range: DateRange,
   currentDatetime?: string
 ) => {
-  const date = currentDatetime ? DateTime.fromISO(currentDatetime) : DateTime.utc();
+  const date = currentDatetime
+    ? DateTime.fromISO(currentDatetime)
+    : DateTime.utc();
 
   let outputDate: DateTime;
   switch (range) {
     case '30 Days':
-      outputDate = date.minus({days:30});
+      outputDate = date.minus({ days: 30 });
       break;
     case '60 Days':
-      outputDate = date.minus({days:60});
+      outputDate = date.minus({ days: 60 });
       break;
     case '90 Days':
-      outputDate = date.minus({days:90});
+      outputDate = date.minus({ days: 90 });
       break;
     case '6 Months':
-      outputDate = date.minus({months:6});
+      outputDate = date.minus({ months: 6 });
       break;
     case '12 Months':
-      outputDate = date.minus({months:12});
+      outputDate = date.minus({ months: 12 });
       break;
     default:
       outputDate = DateTime.fromISO('1970-01-01T00:00:00.000');
@@ -659,7 +669,9 @@ export const makeFilter = (endDate?: string) => {
   };
 
   if (endDate) {
-    filter.date = { '+gte': DateTime.fromISO(endDate).toFormat(API_DATETIME_NO_TZ_FORMAT) };
+    filter.date = {
+      '+gte': DateTime.fromISO(endDate).toFormat(API_DATETIME_NO_TZ_FORMAT)
+    };
   }
 
   return filter;

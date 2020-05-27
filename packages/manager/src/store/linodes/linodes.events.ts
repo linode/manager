@@ -1,5 +1,5 @@
 import { EventAction, EventStatus } from '@linode/api-v4/lib/account';
-import {DateTime} from 'luxon'
+import { DateTime } from 'luxon';
 import { Dispatch } from 'redux';
 import { ApplicationState } from 'src/store';
 import { getAllLinodeConfigs } from 'src/store/linodes/config/config.requests';
@@ -252,7 +252,8 @@ export const shouldRequestNotifications = (
   return (
     eventsWithRelevantNotifications.includes(lastEventAction) &&
     // if the event was created after the last time notifications were updated
-    DateTime.fromISO(lastEventCreated) > DateTime.fromMillis(notificationsLastUpdated)
+    DateTime.fromISO(lastEventCreated) >
+      DateTime.fromMillis(notificationsLastUpdated)
   );
 };
 

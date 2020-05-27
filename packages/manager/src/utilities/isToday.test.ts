@@ -1,4 +1,4 @@
-import {DateTime} from 'luxon'
+import { DateTime } from 'luxon';
 import { isToday } from './isToday';
 
 describe('isToday helper utility', () => {
@@ -7,16 +7,19 @@ describe('isToday helper utility', () => {
       isToday(
         DateTime.local().valueOf() / 1000,
         DateTime.local()
-          .plus({hours:5})
+          .plus({ hours: 5 })
           .valueOf() / 1000
       )
     ).toBe(true);
   });
 
   it('should return true if start and end are the same', () => {
-    expect(isToday(DateTime.local().valueOf() / 1000, DateTime.local().valueOf() / 1000)).toBe(
-      true
-    );
+    expect(
+      isToday(
+        DateTime.local().valueOf() / 1000,
+        DateTime.local().valueOf() / 1000
+      )
+    ).toBe(true);
   });
 
   it('should return false if start is more than 24 hours before end', () => {
@@ -24,7 +27,7 @@ describe('isToday helper utility', () => {
       isToday(
         DateTime.local().valueOf() / 1000,
         DateTime.local()
-          .plus({hours:25})
+          .plus({ hours: 25 })
           .valueOf() / 1000
       )
     ).toBe(false);
@@ -32,7 +35,7 @@ describe('isToday helper utility', () => {
       isToday(
         DateTime.local().valueOf() / 1000,
         DateTime.local()
-          .plus({months:1})
+          .plus({ months: 1 })
           .valueOf() / 1000
       )
     ).toBe(false);

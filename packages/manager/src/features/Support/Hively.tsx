@@ -1,5 +1,6 @@
-import {DateTime} from 'luxon'
 import * as React from 'react';
+import { DateTime } from 'luxon';
+import { parseAPIDate } from 'src/utilities/date';
 import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -49,11 +50,11 @@ export const shouldRenderHively = (
     if (username === 'Linode') {
       return false;
     }
-    const lastUpdated = DateTime.fromISO(updated, {zone:'utc'});
+    const lastUpdated = parseAPIDate(updated);
     if (!lastUpdated.isValid) {
       return true;
     }
-    return fromLinode && lastUpdated >= DateTime.local().minus({days:7});
+    return fromLinode && lastUpdated >= DateTime.local().minus({ days: 7 });
   } catch {
     return true;
   }

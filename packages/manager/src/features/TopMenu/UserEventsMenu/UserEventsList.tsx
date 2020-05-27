@@ -1,5 +1,5 @@
 import { Event } from '@linode/api-v4/lib/account';
-import {DateTime}from 'luxon'
+import { parseAPIDate } from 'src/utilities/date';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -26,7 +26,7 @@ export const UserEventsList: React.StatelessComponent<CombinedProps> = props => 
       {(events as ExtendedEvent[])
         .reduce((result, event): UserEventsListItemProps[] => {
           const title = eventMessageGenerator(event);
-          let content = DateTime.fromISO(event.created, {zone:'utc'}).toRelative() || '';
+          let content = parseAPIDate(event.created).toRelative() || '';
 
           if (event.username) {
             content += ` by ${event.username}`;

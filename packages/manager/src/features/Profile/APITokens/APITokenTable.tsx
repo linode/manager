@@ -9,7 +9,7 @@ import {
   updatePersonalAccessToken
 } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
-import {DateTime} from 'luxon'
+import { DateTime } from 'luxon';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -676,7 +676,9 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
  * return true if the given time is past 100 year in the future
  */
 export const isWayInTheFuture = (time: string) => {
-  const wayInTheFuture = DateTime.local().plus({years:100}).toISO()
+  const wayInTheFuture = DateTime.local()
+    .plus({ years: 100 })
+    .toISO();
   return isPast(wayInTheFuture)(time);
 };
 

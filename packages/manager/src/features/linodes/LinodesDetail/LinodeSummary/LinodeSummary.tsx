@@ -7,7 +7,7 @@ import {
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Volume } from '@linode/api-v4/lib/volumes';
-import {DateTime} from 'luxon'
+import { DateTime } from 'luxon';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -47,7 +47,7 @@ import NetworkGraph from './NetworkGraph';
 import StatsPanel from './StatsPanel';
 import SummaryPanel from './SummaryPanel';
 import { ChartProps } from './types';
-import {ISO_DATE_FORMAT}from 'src/constants'
+import { parseAPIDate } from 'src/utilities/date';
 
 setUpCharts();
 
@@ -178,21 +178,14 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     }
 
     const options: [string, string][] = [['24', 'Last 24 Hours']];
-    const createdDate = DateTime.fromISO(linodeCreated, {zone:'utc'})
-    // const [createMonth, createYear] = [
-    //   // prepend "0" to the month if it's only 1 digit
-    //   // otherwise, console complains the date isn't in
-    //   // ISO or RFC2822 format
-    //   createdDate.toFormat('MM'),
-    //   createdDate.toFormat('yyyy')
-    // ];
-    const currentTime = DateTime.local()
-    const currentMonth = currentTime.month
-    const currentYear = currentTime.year
+    const createdDate = parseAPIDate(linodeCreated);
+    const currentTime = DateTime.local();
+    const currentMonth = currentTime.month;
+    const currentYear = currentTime.year;
 
     const creationFirstOfMonth = createdDate.startOf('month');
     let [testMonth, testYear] = [currentMonth, currentYear];
-    let formattedTestDate;
+    let testDate;
     do {
       // When we request Linode stats for the CURRENT month/year, the data we get back is
       // from the last 30 days. We want the options to reflect this.
@@ -201,8 +194,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       const optionDisplay =
         testYear === currentYear && testMonth === currentMonth
           ? 'Last 30 Days'
-          : currentTime.set({month:testMonth})
-              .toFormat('MMM yyyy');
+          : currentTime.set({ month: testMonth }).toFormat('MMM yyyy');
 
       options.push([
         `${testYear} ${testMonth.toString().padStart(2, '0')}`,
@@ -217,11 +209,12 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       }
       // same comment as above. Month needs to be prepended with a "0"
       // if it's only one digit to appease moment.js
-      formattedTestDate =
-        testMonth.toString().length === 1
-          ? `${testYear}-0${testMonth}-01`
-          : `${testYear}-${testMonth}-01`;
-    } while (DateTime.fromString(formattedTestDate, ISO_DATE_FORMAT) >= creationFirstOfMonth);
+      testDate = DateTime.fromObject({
+        month: testMonth,
+        year: testYear,
+        day: 1
+      });
+    } while (testDate >= creationFirstOfMonth);
     this.rangeSelectOptions = options.map(option => {
       return { label: option[1], value: option[0] };
     });
@@ -246,8 +239,8 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     // Stats will not be available for a Linode for at least 5 minutes after
     // it's been created, so no need to do an expensive `/stats` request until
     // 5 minutes have passed.
-    const fiveMinutesAgo = DateTime.local().minus({minutes:5});
-    if (DateTime.fromISO(linodeCreated, {zone:'utc'}) > fiveMinutesAgo) {
+    const fiveMinutesAgo = DateTime.local().minus({ minutes: 5 });
+    if (DateTime.fromISO(linodeCreated, { zone: 'utc' }) > fiveMinutesAgo) {
       return this.setState({
         dataIsLoading: false,
         isTooEarlyForGraphData: true
@@ -325,7 +318,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
     return (
       <div className={classes.chart}>
-    <LineGraph
+        <LineGraph
           timezone={timezone}
           chartHeight={chartHeight}
           showToday={rangeSelection === '24'}

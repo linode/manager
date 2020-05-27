@@ -13,7 +13,7 @@ import {
   Window
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import {DateTime} from 'luxon'
+import { DateTime } from 'luxon';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path, pathOr, sortBy } from 'ramda';
 import * as React from 'react';
@@ -273,7 +273,9 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
 
   initWindows(timezone: string) {
     let windows = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map(hour => {
-      const start = DateTime.fromObject({hour,zone:'utc'}).setZone(timezone);
+      const start = DateTime.fromObject({ hour, zone: 'utc' }).setZone(
+        timezone
+      );
       const finish = start.plus({ hours: 2 });
       return [
         `${start.toFormat('HH:mm')} - ${finish.toFormat('HH:mm')}`,

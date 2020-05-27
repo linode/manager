@@ -1,5 +1,5 @@
 import { getLinodeTransfer } from '@linode/api-v4/lib/linodes';
-import {DateTime} from 'luxon'
+import { DateTime } from 'luxon';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';

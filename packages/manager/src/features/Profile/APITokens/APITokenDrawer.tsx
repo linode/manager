@@ -1,5 +1,5 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import {DateTime} from 'luxon'
+import { DateTime } from 'luxon';
 import { equals } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -37,28 +37,28 @@ export const genExpiryTups = (): Expiry[] => {
     [
       'In 6 months',
       DateTime.local()
-        .plus({months:6})
+        .plus({ months: 6 })
         .startOf('day')
         .toFormat(ISO_DATETIME_NO_TZ_FORMAT)
     ],
     [
       'In 3 months',
       DateTime.local()
-        .plus({months:3})
+        .plus({ months: 3 })
         .startOf('day')
         .toFormat(ISO_DATETIME_NO_TZ_FORMAT)
     ],
     [
       'In 1 month',
       DateTime.local()
-        .plus({months:1})
+        .plus({ months: 1 })
         .startOf('day')
         .toFormat(ISO_DATETIME_NO_TZ_FORMAT)
     ],
     [
       'Never',
       DateTime.local()
-        .plus({years:200})
+        .plus({ years: 200 })
         .startOf('day')
         .toFormat(ISO_DATETIME_NO_TZ_FORMAT)
     ]

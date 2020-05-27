@@ -4,7 +4,7 @@ import {
   EventAction,
   EventStatus
 } from '@linode/api-v4/lib/account';
-import {DateTime}from 'luxon'
+import { DateTime } from 'luxon';
 import { compose, equals, findIndex, omit, take, update } from 'ramda';
 import updateRight from 'src/utilities/updateRight';
 

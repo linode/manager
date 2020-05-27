@@ -1,5 +1,5 @@
 import { LinodeBackup } from '@linode/api-v4/lib/linodes';
-import {DateTime} from 'luxon'
+import { DateTime } from 'luxon';
 import * as React from 'react';
 import TableRow from 'src/components/core/TableRow';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
@@ -36,7 +36,9 @@ const BackupTableRow: React.StatelessComponent<Props> = props => {
         <DateTimeDisplay value={backup.created} />
       </TableCell>
       <TableCell parentColumn="Duration">
-        {DateTime.fromISO(backup.finished).toRelative({base:DateTime.fromISO(backup.created)})}
+        {DateTime.fromISO(backup.finished).toRelative({
+          base: DateTime.fromISO(backup.created)
+        })}
       </TableCell>
       <TableCell parentColumn="Disks" data-qa-backup-disks>
         {backup.disks.map((disk, idx) => (

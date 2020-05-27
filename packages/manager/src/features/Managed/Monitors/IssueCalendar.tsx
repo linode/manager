@@ -1,4 +1,4 @@
-import {DateTime} from 'luxon'
+import { DateTime } from 'luxon';
 import * as React from 'react';
 import { ExtendedIssue } from 'src/store/managed/issues.actions';
 import useTimezone from 'src/utilities/useTimezone';
@@ -15,7 +15,7 @@ export const createdOnTargetDay = (
   issue: ExtendedIssue,
   targetDay: DateTime
 ) => {
-  return DateTime.fromISO(issue.created, {zone:'utc'})
+  return DateTime.fromISO(issue.created, { zone: 'utc' })
     .setZone(timezone)
     .hasSame(targetDay, 'day');
 };
@@ -51,7 +51,7 @@ export const generateCalendar = (timezone: string, issues: ExtendedIssue[]) => {
       day: day.toISO()
     });
     // Move the calendar back a day
-    day.minus({days:1});
+    day.minus({ days: 1 });
   }
 
   return days;

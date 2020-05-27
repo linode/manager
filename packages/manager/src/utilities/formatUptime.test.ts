@@ -1,4 +1,4 @@
-import {Duration} from 'luxon'
+import { Duration } from 'luxon';
 import { formatUptime } from './formatUptime';
 
 describe('Formatting uptime', () => {
@@ -42,12 +42,11 @@ describe('Formatting uptime', () => {
     expect(
       formatUptime(
         Duration.fromObject({
-            days: 438,
-            hours: 8,
-            minutes: 15,
-            seconds: 54
-          })
-          .as('seconds')
+          days: 438,
+          hours: 8,
+          minutes: 15,
+          seconds: 54
+        }).as('seconds')
       )
     ).toMatch('438d 8h 15m');
   });
