@@ -145,7 +145,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
         data-qa-loading
         data-qa-linode={label}
         rowLink={`/linodes/${id}`}
-        aria-label={label}
+        ariaLabel={label}
       >
         {!loading && headCell}
         <TableCell

@@ -50,6 +50,7 @@ export const BucketTableRow: React.FC<CombinedProps> = props => {
       rowLink={`/object-storage/buckets/${cluster}/${label}`}
       data-qa-bucket-cell={label}
       className={`${classes.bucketRow} ${'fade-in-table'}`}
+      ariaLabel={label}
     >
       <TableCell parentColumn="Name">
         <Grid container wrap="nowrap" alignItems="center">

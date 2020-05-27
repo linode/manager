@@ -114,6 +114,7 @@ export const Row: React.FC<RowProps> = props => {
     <TableRow
       rowLink={entityId ? undefined : (linkTarget as any)}
       data-qa-event-row
+      ariaLabel={`Event ${displayedMessage}`}
     >
       {/** We don't use the event argument, so typing isn't critical here. */}
       {/* Only display entity icon on the Global EventsLanding page */}

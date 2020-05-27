@@ -17,6 +17,7 @@ export const FirewallDeviceRow: React.FC<CombinedProps> = props => {
     <TableRow
       rowLink={`/linodes/${entityID}`}
       data-testid={`firewall-device-row-${deviceID}`}
+      ariaLabel={`Device ${deviceLabel}`}
     >
       <TableCell>{deviceLabel}</TableCell>
       <TableCell>
