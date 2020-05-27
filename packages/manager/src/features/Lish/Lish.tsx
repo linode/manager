@@ -47,6 +47,7 @@ const styles = (theme: Theme) =>
 interface State {
   loading: boolean;
   authenticated: boolean;
+  tabIndex?: number;
   linode?: Linode;
   token?: string;
 }
@@ -57,7 +58,8 @@ type CombinedProps = WithStyles<ClassNames> &
 class Lish extends React.Component<CombinedProps, State> {
   state: State = {
     loading: true,
-    authenticated: true
+    authenticated: true,
+    tabIndex: 0
   };
 
   interval: number;
@@ -171,6 +173,11 @@ class Lish extends React.Component<CombinedProps, State> {
       });
   };
 
+  handleTabsChange = (index: number) => {
+    console.log('tab change');
+    this.setState({ tabIndex: index });
+  };
+
   tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     {
@@ -188,7 +195,7 @@ class Lish extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes } = this.props;
-    const { authenticated, loading, linode, token } = this.state;
+    const { authenticated, loading, tabIndex, linode, token } = this.state;
 
     // If the window.close() logic above fails, we render an error state as a fallback
     if (!authenticated) {
@@ -208,8 +215,9 @@ class Lish extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Tabs
           className={classes.tabs}
-          defaultIndex={this.tabs.findIndex(tab => this.matches(tab.routeName))}
-          keyboardActivation={TabsKeyboardActivation.Manual}
+          index={tabIndex}
+          onChange={this.handleTabsChange}
+          // keyboardActivation={TabsKeyboardActivation.Manual}
         >
           <TabLinkList lish tabs={this.tabs} />
           <TabPanels>
@@ -222,7 +230,7 @@ class Lish extends React.Component<CombinedProps, State> {
                 />
               )}
             </TabPanel>
-            <TabPanel data-qa-tab={'Glish'}>
+            <TabPanel data-qa-tab="Glish">
               {linode && token && (
                 <Glish
                   token={token}

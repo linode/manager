@@ -96,6 +96,15 @@ export const TabLinkList: React.FC<CombinedProps> = props => {
 
   const classes = useStyles();
 
+  const h1Header = React.useRef<HTMLDivElement>(null);
+  const selected = document.querySelector('data-selected');
+
+  React.useEffect(() => {
+    if (selected) {
+      selected.focus();
+    }
+  }, [selected]);
+
   return (
     <TabList className={props.lish ? classes.lishTabList : classes.tabList}>
       {tabs.map((tab, _index) => (
@@ -104,6 +113,7 @@ export const TabLinkList: React.FC<CombinedProps> = props => {
           key={`tab-${_index}`}
           as={Link}
           to={tab.routeName}
+          // innerRef={h1Header}
         >
           {tab.title}
         </Tab>
