@@ -34,9 +34,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   return produce(state, draft => {
     if (isType(action, getAllNodeBalancerConfigsActions.started)) {
       const { nodeBalancerId } = action.payload;
-      draft = ensureInitializedNestedState(draft, nodeBalancerId, {
-        results: 0
-      });
+      draft = ensureInitializedNestedState(draft, nodeBalancerId);
 
       draft[nodeBalancerId] = onStart(draft[nodeBalancerId]);
     }
@@ -44,9 +42,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     if (isType(action, getAllNodeBalancerConfigsActions.done)) {
       const { result } = action.payload;
       const { nodeBalancerId } = action.payload.params;
-      draft = ensureInitializedNestedState(draft, nodeBalancerId, {
-        results: 0
-      });
+      draft = ensureInitializedNestedState(draft, nodeBalancerId);
 
       draft[nodeBalancerId] = onGetAllSuccess(
         result.data,
@@ -59,9 +55,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       const { error } = action.payload;
       const { nodeBalancerId } = action.payload.params;
 
-      draft = ensureInitializedNestedState(draft, nodeBalancerId, {
-        results: 0
-      });
+      draft = ensureInitializedNestedState(draft, nodeBalancerId);
 
       draft[nodeBalancerId] = onError({ read: error }, draft[nodeBalancerId]);
     }
@@ -71,9 +65,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     if (isType(action, createNodeBalancerConfigActions.started)) {
       const { nodeBalancerId } = action.payload;
 
-      draft = ensureInitializedNestedState(draft, nodeBalancerId, {
-        results: 0
-      });
+      draft = ensureInitializedNestedState(draft, nodeBalancerId);
       draft[nodeBalancerId].error.create = undefined;
     }
 
@@ -81,9 +73,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       const { result } = action.payload;
       const { nodeBalancerId } = action.payload.params;
 
-      draft = ensureInitializedNestedState(draft, nodeBalancerId, {
-        results: 0
-      });
+      draft = ensureInitializedNestedState(draft, nodeBalancerId);
       draft[nodeBalancerId] = onCreateOrUpdate(result, draft[nodeBalancerId]);
     }
 
@@ -91,18 +81,14 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       const { error } = action.payload;
       const { nodeBalancerId } = action.payload.params;
 
-      draft = ensureInitializedNestedState(draft, nodeBalancerId, {
-        results: 0
-      });
+      draft = ensureInitializedNestedState(draft, nodeBalancerId);
       draft[nodeBalancerId].error.create = error;
     }
 
     /** Update */
     if (isType(action, updateNodeBalancerConfigActions.started)) {
       const { nodeBalancerId } = action.payload;
-      draft = ensureInitializedNestedState(draft, nodeBalancerId, {
-        results: 0
-      });
+      draft = ensureInitializedNestedState(draft, nodeBalancerId);
       draft[nodeBalancerId].error.update = undefined;
     }
 
@@ -126,9 +112,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     if (isType(action, deleteNodeBalancerConfigActions.started)) {
       const { nodeBalancerId } = action.payload;
 
-      draft = ensureInitializedNestedState(draft, nodeBalancerId, {
-        results: 0
-      });
+      draft = ensureInitializedNestedState(draft, nodeBalancerId);
       draft[nodeBalancerId].error.delete = undefined;
     }
 
