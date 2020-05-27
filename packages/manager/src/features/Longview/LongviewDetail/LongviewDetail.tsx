@@ -1,28 +1,22 @@
 import { LongviewClient } from '@linode/api-v4/lib/longview';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import {
-  matchPath,
-  Redirect,
-  Route,
-  RouteComponentProps,
-  Switch
-} from 'react-router-dom';
+import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
-import AppBar from 'src/components/core/AppBar';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Tab from 'src/components/core/Tab';
-import Tabs from 'src/components/core/Tabs';
+import SafeTabPanel from 'src/components/SafeTabPanel';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
+import TabLinkList from 'src/components/TabLinkList';
 import DocumentationButton from 'src/components/DocumentationButton';
 import ErrorState from 'src/components/ErrorState';
 import NotFound from 'src/components/NotFound';
 import Notice from 'src/components/Notice';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import TabLink from 'src/components/TabLink';
 import withLongviewClients, {
   DispatchProps,
   Props as LVProps
@@ -167,15 +161,6 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
   // Filtering out conditional tabs if they don't exist on client
   const tabs = tabOptions.filter(tab => tab.display === true);
 
-  const handleTabChange = (
-    _: React.ChangeEvent<HTMLDivElement>,
-    value: number
-  ) => {
-    const routeName = tabs[value].routeName;
-    props.history.push(`${routeName}`);
-  };
-
-  const url = props.match.url;
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
@@ -209,6 +194,9 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     return null;
   }
 
+  // Determining true tab count for indexing based on tab display
+  const displayedTabs = tabs.filter(tab => tab.display === true);
+
   return (
     <React.Fragment>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
@@ -231,148 +219,21 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
           text={thisNotification.TEXT}
         />
       ))}
-      <AppBar position="static" color="default" role="tablist">
-        <Tabs
-          value={tabs.findIndex(tab => matches(tab.routeName)) || 0}
-          onChange={handleTabChange}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="scrollable"
-          scrollButtons="on"
-          className={classes.tabList}
-        >
-          {tabs.map(tab => (
-            <Tab
-              key={tab.title}
-              data-qa-tab={tab.title}
-              component={React.forwardRef((forwardedProps, ref) => (
-                <TabLink
-                  to={tab.routeName}
-                  title={tab.title}
-                  {...forwardedProps}
-                  ref={ref}
-                />
-              ))}
-            />
-          ))}
-        </Tabs>
-      </AppBar>
-      <React.Suspense fallback={<SuspenseLoader />}>
-        <Switch>
-          <Route
-            exact
-            strict
-            path={`${url}/processes`}
-            render={() => {
-              return (
-                <ProcessesLanding
-                  clientID={client.id}
-                  clientAPIKey={client.api_key}
-                  lastUpdated={lastUpdated}
-                  lastUpdatedError={lastUpdatedError}
-                  timezone={timezone}
-                />
-              );
-            }}
-          />
-          <Route
-            exact
-            strict
-            path={`${url}/network`}
-            render={() => (
-              <NetworkLanding
-                clientAPIKey={client.api_key}
-                lastUpdated={lastUpdated}
-                lastUpdatedError={lastUpdatedError}
-                timezone={timezone}
-              />
-            )}
-          />
-          <Route
-            exact
-            strict
-            path={`${url}/disks`}
-            render={routerProps => (
-              <Disks
-                clientID={client.id}
-                clientAPIKey={client.api_key}
-                lastUpdated={lastUpdated}
-                clientLastUpdated={lastUpdated}
-                lastUpdatedError={lastUpdatedError}
-                timezone={props.timezone}
-                {...routerProps}
-              />
-            )}
-          />
-          <Route
-            exact
-            strict
-            path={`${url}/apache`}
-            render={() => {
-              return (
-                <Apache
-                  timezone={timezone}
-                  clientAPIKey={clientAPIKey}
-                  lastUpdated={lastUpdated}
-                  lastUpdatedError={lastUpdatedError}
-                />
-              );
-            }}
-          />
-          <Route
-            exact
-            strict
-            path={`${url}/nginx`}
-            render={() => {
-              return (
-                <NGINX
-                  timezone={timezone}
-                  clientAPIKey={clientAPIKey}
-                  lastUpdated={lastUpdated}
-                  lastUpdatedError={lastUpdatedError}
-                />
-              );
-            }}
-          />
-          <Route
-            exact
-            strict
-            path={`${url}/mysql`}
-            render={() => {
-              return (
-                <MySQLLanding
-                  timezone={timezone}
-                  clientAPIKey={clientAPIKey}
-                  lastUpdated={lastUpdated}
-                  lastUpdatedError={lastUpdatedError}
-                />
-              );
-            }}
-          />
-          <Route
-            exact
-            strict
-            path={`${url}/installation`}
-            render={routerProps => (
-              <Installation
-                clientInstallationKey={client.install_code}
-                clientAPIKey={client.api_key}
-                {...routerProps}
-              />
-            )}
-          />
-          <Route
-            strict
-            exact
-            path={`${url}/overview`}
-            render={routerProps => (
+      <Tabs
+        defaultIndex={tabs.findIndex(tab => matches(tab.routeName)) || 0}
+        className={classes.tabList}
+      >
+        <TabLinkList tabs={tabs} />
+
+        <React.Suspense fallback={<SuspenseLoader />}>
+          <TabPanels>
+            <SafeTabPanel index={0}>
               <Overview
                 client={client.label}
                 clientID={client.id}
                 clientAPIKey={client.api_key}
                 longviewClientData={longviewClientData}
                 timezone={timezone}
-                {...routerProps}
                 topProcessesData={topProcesses.data}
                 topProcessesLoading={topProcesses.loading}
                 topProcessesError={topProcesses.error}
@@ -382,11 +243,144 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
                 lastUpdatedError={lastUpdatedError}
                 lastUpdated={lastUpdated}
               />
+            </SafeTabPanel>
+            <SafeTabPanel index={1}>
+              <ProcessesLanding
+                clientID={client.id}
+                clientAPIKey={client.api_key}
+                lastUpdated={lastUpdated}
+                lastUpdatedError={lastUpdatedError}
+                timezone={timezone}
+              />
+            </SafeTabPanel>
+            <SafeTabPanel index={2}>
+              <NetworkLanding
+                clientAPIKey={client.api_key}
+                lastUpdated={lastUpdated}
+                lastUpdatedError={lastUpdatedError}
+                timezone={timezone}
+              />
+            </SafeTabPanel>
+            <SafeTabPanel index={3}>
+              <Disks
+                clientID={client.id}
+                clientAPIKey={client.api_key}
+                lastUpdated={lastUpdated}
+                clientLastUpdated={lastUpdated}
+                lastUpdatedError={lastUpdatedError}
+                timezone={props.timezone}
+              />
+<<<<<<< HEAD
             )}
           />
-          <Redirect to={`${url}/overview`} />
-        </Switch>
-      </React.Suspense>
+          <Route
+            exact
+            strict
+            path={`${url}/apache`}
+            render={() => {
+              return (
+=======
+            </SafeTabPanel>
+
+            {client && client.apps.apache && (
+              <SafeTabPanel index={client && client.apps.apache ? 4 : null}>
+>>>>>>> M3-4128 Refactor User details, NodeBalancer details, Profile, Longview landing and details (#6423)
+                <Apache
+                  timezone={timezone}
+                  clientAPIKey={clientAPIKey}
+                  lastUpdated={lastUpdated}
+                  lastUpdatedError={lastUpdatedError}
+                />
+<<<<<<< HEAD
+              );
+            }}
+          />
+          <Route
+            exact
+            strict
+            path={`${url}/nginx`}
+            render={() => {
+              return (
+=======
+              </SafeTabPanel>
+            )}
+
+            {client && client.apps.nginx && (
+              <SafeTabPanel
+                index={
+                  client.apps.nginx && client.apps.apache
+                    ? 5
+                    : client.apps.nginx && !client.apps.apache
+                    ? 4
+                    : null
+                }
+              >
+>>>>>>> M3-4128 Refactor User details, NodeBalancer details, Profile, Longview landing and details (#6423)
+                <NGINX
+                  timezone={timezone}
+                  clientAPIKey={clientAPIKey}
+                  lastUpdated={lastUpdated}
+                  lastUpdatedError={lastUpdatedError}
+                />
+<<<<<<< HEAD
+              );
+            }}
+          />
+          <Route
+            exact
+            strict
+            path={`${url}/mysql`}
+            render={() => {
+              return (
+=======
+              </SafeTabPanel>
+            )}
+
+            {client && client.apps.mysql && (
+              <SafeTabPanel
+                index={
+                  client.apps.mysql && client.apps.nginx && client.apps.apache
+                    ? 6
+                    : (client.apps.mysql && !client.apps.apache) ||
+                      !client.apps.nginx
+                    ? 5
+                    : client.apps.mysql &&
+                      !client.apps.apache &&
+                      !client.apps.nginx
+                    ? 4
+                    : null
+                }
+              >
+>>>>>>> M3-4128 Refactor User details, NodeBalancer details, Profile, Longview landing and details (#6423)
+                <MySQLLanding
+                  timezone={timezone}
+                  clientAPIKey={clientAPIKey}
+                  lastUpdated={lastUpdated}
+                  lastUpdatedError={lastUpdatedError}
+                />
+<<<<<<< HEAD
+              );
+            }}
+          />
+          <Route
+            exact
+            strict
+            path={`${url}/installation`}
+            render={routerProps => (
+=======
+              </SafeTabPanel>
+            )}
+
+            <SafeTabPanel index={Number(displayedTabs.length - 1)}>
+>>>>>>> M3-4128 Refactor User details, NodeBalancer details, Profile, Longview landing and details (#6423)
+              <Installation
+                clientInstallationKey={client.install_code}
+                clientAPIKey={client.api_key}
+              />
+            </SafeTabPanel>
+          </TabPanels>
+        </React.Suspense>
+      </Tabs>
     </React.Fragment>
   );
 };

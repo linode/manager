@@ -1096,11 +1096,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     } = this.state;
 
     return (
-      <div
-        role="tabpanel"
-        id="tabpanel--configurations"
-        aria-labelledby="tab-configurations"
-      >
+      <div>
         <DocumentTitleSegment
           segment={`${nodeBalancerLabel} - Configurations`}
         />
