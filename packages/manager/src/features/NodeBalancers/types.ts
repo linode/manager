@@ -1,4 +1,8 @@
-import { NodeBalancerConfigNodeMode } from '@linode/api-v4/lib/nodebalancers/types';
+import {
+  NodeBalancer,
+  NodeBalancerConfigPort,
+  NodeBalancerConfigNodeMode
+} from '@linode/api-v4/lib/nodebalancers/types';
 import { APIError } from '@linode/api-v4/lib/types';
 
 export interface ExtendedNodeBalancerConfigNode {
@@ -47,4 +51,9 @@ export interface NodeBalancerConfigNodeFields {
   modifyStatus?: 'new' | 'delete' | 'update';
   errors?: APIError[];
   status?: 'UP' | 'DOWN' | 'unknown';
+}
+export interface ExtendedNodeBalancer extends NodeBalancer {
+  up: number;
+  down: number;
+  configPorts: NodeBalancerConfigPort[];
 }

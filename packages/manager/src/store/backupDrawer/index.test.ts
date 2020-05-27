@@ -1,10 +1,10 @@
+import { APIError } from '@linode/api-v4/lib/types';
 import backups, * as B from './index';
 
 import { linode1 } from 'src/__data__/linodes';
-import { mockAPIFieldErrors } from 'src/services/';
 
 const error: B.BackupError = { linodeId: 123456, reason: 'Error' };
-const apiError = mockAPIFieldErrors([]);
+const apiError: APIError[] = [];
 
 describe('Redux backups', () => {
   describe('reducer', () => {
