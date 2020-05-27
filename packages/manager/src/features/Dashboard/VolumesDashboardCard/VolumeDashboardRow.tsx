@@ -85,7 +85,7 @@ export const VolumeDashboardRow: React.FC<CombinedProps> = props => {
   const attachedLinodeLabel = getLinodeLabel(linode_id);
 
   return (
-    <TableRow key={label} data-qa-volume={label}>
+    <TableRow key={label} ariaLabel={`Volume ${label}`} data-qa-volume={label}>
       <TableCell className={classes.labelCol}>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item className="py0">

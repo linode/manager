@@ -39,6 +39,7 @@ export const CredentialRow: React.FunctionComponent<CombinedProps> = props => {
       data-qa-credential-cell={credential.id}
       data-testid={'credential-row'}
       className={classes.credentialRow}
+      ariaLabel={`Credential ${credential.label}`}
     >
       <TableCell parentColumn="Credential" data-qa-credential-label>
         <Typography variant="h3">{credential.label}</Typography>

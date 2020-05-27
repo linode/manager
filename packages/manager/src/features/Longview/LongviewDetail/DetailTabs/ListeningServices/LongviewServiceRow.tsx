@@ -10,7 +10,7 @@ interface Props {
 export const LongviewServiceRow: React.FC<Props> = props => {
   const { service } = props;
   return (
-    <TableRow data-testid="longview-service-row">
+    <TableRow ariaLabel={service.name} data-testid="longview-service-row">
       <TableCell parentColumn="Process" data-qa-service-process>
         {service.name}
       </TableCell>

@@ -85,6 +85,7 @@ class DomainTableRow extends React.Component<CombinedProps> {
         key={id}
         data-qa-domain-cell={domain}
         className={`${classes.domainRow} ${'fade-in-table'}`}
+        ariaLabel={`Domain ${domain}`}
         rowLink={
           type === 'slave'
             ? e => this.handleRowClick(e, id, domain, type)

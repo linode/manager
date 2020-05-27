@@ -203,6 +203,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
         key={user.username}
         data-qa-user-row
         rowLink={`/account/users/${user.username}/profile`}
+        ariaLabel={`User ${user.username}`}
       >
         <TableCell parentColumn="Username" data-qa-username>
           <Grid container alignItems="center">

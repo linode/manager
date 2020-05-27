@@ -10,7 +10,7 @@ interface Props {
 export const ConnectionRow: React.FC<Props> = props => {
   const { connection } = props;
   return (
-    <TableRow data-testid="longview-connection-row">
+    <TableRow ariaLabel={connection.name} data-testid="longview-connection-row">
       <TableCell parentColumn="Name" data-qa-active-connection-name>
         {connection.name}
       </TableCell>

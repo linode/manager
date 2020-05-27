@@ -128,7 +128,12 @@ const LinodesDashboardCard: React.FC<CombinedProps> = props => {
     return data.map(linode => {
       const { id, label, region } = linode;
       return (
-        <TableRow key={label} rowLink={`/linodes/${id}`} data-qa-linode>
+        <TableRow
+          key={label}
+          ariaLabel={`Linode ${label}`}
+          rowLink={`/linodes/${id}`}
+          data-qa-linode
+        >
           <LinodeRowHeadCell
             loading={false}
             recentEvent={linode.recentEvent}

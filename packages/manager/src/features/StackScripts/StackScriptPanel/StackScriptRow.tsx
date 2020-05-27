@@ -81,7 +81,7 @@ export class StackScriptRow extends React.Component<CombinedProps, {}> {
 
     return (
       <React.Fragment>
-        <TableRow data-qa-table-row={label}>
+        <TableRow data-qa-table-row={label} ariaLabel={label}>
           <TableCell data-qa-stackscript-title parentColumn="StackScript">
             {renderLabel()}
           </TableCell>
