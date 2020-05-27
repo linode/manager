@@ -144,7 +144,7 @@ const getDisabledClasses = (regionID: string, regions: Region[] = []) => {
   /** This approach is fine for just GPUs, which is all we have capability info for at this time.
    *  Refactor to a switch or .map() if additional support is needed.
    */
-  return selectedRegion?.capabilities.includes('GPU')
+  return selectedRegion?.capabilities.includes('GPU Linodes')
     ? []
     : (['gpu'] as LinodeTypeClass[]);
 };
@@ -602,7 +602,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     const filteredRegions =
       selectedType?.class === 'gpu'
         ? regionsData?.filter(thisRegion => {
-            return thisRegion.capabilities.includes('GPU');
+            return thisRegion.capabilities.includes('GPU Linodes');
           })
         : regionsData;
 

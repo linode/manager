@@ -37,6 +37,6 @@ const addGPUToRegion = (region: Region) =>
   regionsWithGPUs.includes(region.id)
     ? {
         ...region,
-        capabilities: [...region.capabilities, 'GPU'] as Capabilities[]
+        capabilities: [...region.capabilities, 'GPU Linodes'] as Capabilities[]
       }
     : region;

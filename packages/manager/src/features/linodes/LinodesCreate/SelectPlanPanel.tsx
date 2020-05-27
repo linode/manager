@@ -122,7 +122,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
   getRegionsWithGPU = () => {
     const regions = this.props.regionsData ?? [];
     const withGPU = regions
-      .filter(thisRegion => thisRegion.capabilities.includes('GPU'))
+      .filter(thisRegion => thisRegion.capabilities.includes('GPU Linodes'))
       .map(thisRegion => dcDisplayNames[thisRegion.id]);
     return arrayToList(withGPU);
   };
