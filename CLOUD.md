@@ -8,43 +8,43 @@ Here are a list of all the required and optional environment variables the Manag
 
 ## Required Variables
 
-`REACT_APP_APP_ROOT`: The root location where you will be running the app
+`REACT_APP_APP_ROOT`: The root location where you will be running the app.
 
 - e.g. `http://localhost:3000`
 
-`REACT_APP_LOGIN_ROOT`: The root location where users will authenticate
+`REACT_APP_LOGIN_ROOT`: The root location where users will authenticate.
 
 - e.g. `https://login.linode.com`
 
-`REACT_APP_API_ROOT`: The root location where API requests will be made
+`REACT_APP_API_ROOT`: The root location where API requests will be made.
 
 - e.g. `https://api.linode.com/v4`
 
-`REACT_APP_LISH_ROOT`: The root location of LISH, Linode's web-based console
+`REACT_APP_LISH_ROOT`: The root location of LISH, Linode's web-based console.
 
 - e.g. `webconsole.linode.com`
 
-`REACT_APP_CLIENT_ID`: The Client ID you create by following [these steps](./CREATE_CLIENT.md)
+`REACT_APP_CLIENT_ID`: The Client ID you create by following [these steps](./CREATE_CLIENT.md).
 
 ## Optional Variables
 
 `REACT_APP_LAUNCH_DARKLY_ID`: The Client ID that matches up with the Launch Darkly Service. Contact a team member for this.
 
-`REACT_APP_ALGOLIA_APPLICATION_ID`: Client ID for Linode's Algolia account
+`REACT_APP_ALGOLIA_APPLICATION_ID`: Client ID for Linode's Algolia account.
 
-`REACT_APP_SEARCH_KEY`: API key for Linode's Algolia account
+`REACT_APP_SEARCH_KEY`: API key for Linode's Algolia account.
 
-`REACT_APP_SENTRY_URL`: The URL to a configured Sentry environment
+`REACT_APP_SENTRY_URL`: The URL to a configured Sentry environment.
 
-`REACT_APP_GA_ID`: The ID that matches with a configured Google Analytics property
+`REACT_APP_GA_ID`: The ID that matches with a configured Google Analytics property.
 
-`REACT_APP_GTM_ID`: The ID that matches with a configured Google Tag Manager property
+`REACT_APP_GTM_ID`: The ID that matches with a configured Google Tag Manager property.
 
 `REACT_APP_ACCESS_TOKEN`: Access Token that overrides the token received from the Login service.
 
 - e.g `Bearer 1232313` or `Admin 1231423`
 
-`REACT_APP_DISABLE_EVENT_THROTTLE`: <Boolean> Whether the app should poll the `/events` endpoint at provided intervals
+`REACT_APP_DISABLE_EVENT_THROTTLE`: <Boolean> Whether the app should poll the `/events` endpoint at provided intervals.
 
 `REACT_APP_LOG_PERFORMANCE_METRICS`: Set to `'true'` to log performance metrics to the console. Only works in development mode (i.e. while running `yarn start`).
 

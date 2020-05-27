@@ -22,7 +22,7 @@ The workspace names are defined in the root `package.json`
 ## Starting the App locally
 
 1. Fork or clone this repository.
-2. Log into cloud.linode.com and [create an OAuth client](./CREATE_CLIENT.md)
+2. Log into cloud.linode.com and [create an OAuth client](./CREATE_CLIENT.md).
 3. [Create an .env file for Cloud Manager](./CLOUD.md) and place it in the `packages/manager` directory.
 4. Make sure you are using a supported version of Node.js (10.16 is recommended). Installing Node with Homebrew
    will result in a more recent version that can cause problems with our automation. We recommend using [NVM](https://github.com/nvm-sh/nvm):
@@ -51,7 +51,7 @@ See [this document](./TESTING.md)
 
 ## Helper Scripts and other commands
 
-To learn more about the available commands read [COMMANDS]](./COMMANDS.md)
+To learn more about the available commands read [COMMANDS](./COMMANDS.md)
 
 ## Okay. I've got my development server running. So how do I contribute?
 
