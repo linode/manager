@@ -3,6 +3,7 @@ import { object, string } from 'yup';
 
 import request, {
   baseRequest,
+  isEmpty,
   setData,
   setHeaders,
   setMethod,
@@ -143,6 +144,35 @@ describe('Linode JS SDK', () => {
 
         expect(spy).toHaveBeenCalledTimes(1);
         expect(mock.history.get).toHaveLength(0);
+      });
+    });
+  });
+
+  describe('Helpers', () => {
+    describe('isEmpty', () => {
+      it('returns true for undefined and null', () => {
+        expect(isEmpty(undefined)).toBe(true);
+        expect(isEmpty(null)).toBe(true);
+      });
+
+      it('returns true for an empty array', () => {
+        expect(isEmpty([])).toBe(true);
+      });
+
+      it('returns true for an empty object', () => {
+        expect(isEmpty({})).toBe(true);
+      });
+
+      it('returns true for an empty string', () => {
+        expect(isEmpty('')).toBe(true);
+      });
+
+      it('returns false for non-empty objects', () => {
+        expect(isEmpty(1)).toBe(false);
+        expect(isEmpty('five')).toBe(false);
+        expect(isEmpty([undefined, undefined, undefined])).toBe(false);
+        expect(isEmpty({ fruits: ['apple', 'orange'] })).toBe(false);
+        expect(isEmpty(new Date())).toBe(false);
       });
     });
   });
