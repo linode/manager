@@ -62,7 +62,7 @@ export class DisplaySettings extends React.Component<CombinedProps, State> {
     }
 
     return (
-      <div id="tabpanel-display" role="tabpanel" aria-labelledby="tab-display">
+      <div>
         <DocumentTitleSegment segment="Display" />
         {!loading && (
           <React.Fragment>
@@ -119,10 +119,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
   updateProfile: (v: Profile) => dispatch(handleUpdateProfile(v) as any)
 });
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const enhanced = recompose<CombinedProps, {}>(
   styled,
