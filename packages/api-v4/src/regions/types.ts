@@ -4,7 +4,7 @@ export type Capabilities =
   | 'Block Storage'
   | 'Object Storage'
   | 'Kubernetes'
-  | 'GPU';
+  | 'GPU Linodes';
 
 export type RegionStatus = 'ok' | 'outage';
 
