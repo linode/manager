@@ -26,7 +26,6 @@ import {
   getErrorMap,
   getErrorStringOrDefault
 } from 'src/utilities/errorUtils';
-import { getVersionString } from 'src/utilities/getVersionString';
 import { storage } from 'src/utilities/storage';
 import AttachFileForm from '../AttachFileForm';
 import { FileAttachment } from '../index';
@@ -387,13 +386,8 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
     setErrors(undefined);
     setSubmitting(true);
 
-    const versionString = getVersionString();
-    const updatedDescription = versionString
-      ? description + '\n\n' + versionString
-      : description;
-
     createSupportTicket({
-      description: updatedDescription,
+      description,
       summary,
       [entityType]: Number(entityID)
     })

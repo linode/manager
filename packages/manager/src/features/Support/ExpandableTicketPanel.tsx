@@ -10,7 +10,6 @@ import {
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
-import { versionStringRegex } from 'src/utilities/getVersionString';
 
 import { ExtendedReply, ExtendedTicket } from './types';
 import { Hively, shouldRenderHively } from './Hively';
@@ -225,10 +224,7 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
                   </Typography>
                 </Grid>
               </Grid>
-              <TicketDetailBody
-                open={open}
-                text={replaceVersionStringWithHTML(data.description)}
-              />
+              <TicketDetailBody open={open} text={data.description} />
               {shouldRenderHively(
                 data.from_linode,
                 data.updated,
@@ -254,11 +250,3 @@ export default compose<CombinedProps, Props>(
   React.memo,
   styled
 )(ExpandableTicketPanel);
-
-// Descriptions of Tickets (not replies) opened by users will end with the version string.
-// We'd like to apply a CSS class, so we insert it into a span.
-export const replaceVersionStringWithHTML = (description: string) => {
-  return description.replace(versionStringRegex, match => {
-    return `<span class="version">${match}</span>`;
-  });
-};
