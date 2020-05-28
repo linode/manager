@@ -10,7 +10,7 @@ import { Region } from '@linode/api-v4/lib/regions';
 import { groupBy } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import Select, {
   BaseSelectProps,
@@ -28,6 +28,7 @@ interface Props extends Omit<BaseSelectProps, 'onChange'> {
   handleSelection: (id: string) => void;
   selectedID: string | null;
   label: string;
+  helperText?: string;
 }
 
 export const flags = {
@@ -52,7 +53,7 @@ export const flags = {
 export const selectStyles = {
   menuList: (base: any) => ({ ...base, maxHeight: `40vh !important` })
 };
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     '& svg': {
       '& g': {
@@ -138,6 +139,7 @@ const SelectRegionPanel: React.FC<Props> = props => {
     label,
     disabled,
     handleSelection,
+    helperText,
     regions,
     selectedID,
     styles,
@@ -160,6 +162,9 @@ const SelectRegionPanel: React.FC<Props> = props => {
         onChange={(selection: RegionItem) => handleSelection(selection.value)}
         components={{ Option: RegionOption, SingleValue }}
         styles={styles || selectStyles}
+        textFieldProps={{
+          tooltipText: helperText
+        }}
         {...restOfReactSelectProps}
       />
     </div>

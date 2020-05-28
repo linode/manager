@@ -2,8 +2,10 @@ import { Image } from '@linode/api-v4/lib/images';
 import {
   cloneLinode,
   CreateLinodeRequest,
-  Linode
+  Linode,
+  LinodeTypeClass
 } from '@linode/api-v4/lib/linodes';
+import { Region } from '@linode/api-v4/lib/regions';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
@@ -100,6 +102,7 @@ interface State {
   appInstances?: StackScript[];
   appInstancesLoading: boolean;
   appInstancesError?: string;
+  disabledClasses?: LinodeTypeClass[];
 }
 
 type CombinedProps = WithSnackbarProps &
@@ -136,6 +139,16 @@ const defaultState: State = {
   appInstancesLoading: false
 };
 
+const getDisabledClasses = (regionID: string, regions: Region[] = []) => {
+  const selectedRegion = regions.find(thisRegion => thisRegion.id === regionID);
+  /** This approach is fine for just GPUs, which is all we have capability info for at this time.
+   *  Refactor to a switch or .map() if additional support is needed.
+   */
+  return selectedRegion?.capabilities.includes('GPU Linodes')
+    ? []
+    : (['gpu'] as LinodeTypeClass[]);
+};
+
 const trimOneClickFromLabel = (script: StackScript) => {
   return {
     ...script,
@@ -160,13 +173,14 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     selectedTypeID: this.params.typeID,
     selectedRegionID: this.params.regionID,
     selectedImageID: this.params.imageID ?? DEFAULT_IMAGE,
-    // @todo: Abstract and test.
+    // @todo: Abstract and test. UPDATE 5/21/20: lol what does this mean
     selectedLinodeID: isNaN(+this.params.linodeID)
       ? undefined
       : +this.params.linodeID,
     selectedBackupID: isNaN(+this.params.backupID)
       ? undefined
-      : +this.params.backupID
+      : +this.params.backupID,
+    disabledClasses: []
   };
 
   componentDidUpdate(prevProps: CombinedProps) {
@@ -242,7 +256,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     this.setState({ selectedBackupID: id });
   };
 
-  setRegionID = (id: string) => this.setState({ selectedRegionID: id });
+  setRegionID = (id: string) => {
+    const disabledClasses = getDisabledClasses(id, this.props.regionsData);
+    this.setState({ selectedRegionID: id, disabledClasses });
+  };
 
   setTypeID = (id: string) => this.setState({ selectedTypeID: id });
 
@@ -508,11 +525,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
      * safe to ignore possibility of "undefined"
      * null checking happens in CALinodeCreate
      */
-    const typeInfo = this.reshapeTypeInfo(
+    return this.reshapeTypeInfo(
       this.props.typesData!.find(type => type.id === selectedTypeID)
     );
-
-    return typeInfo;
   };
 
   reshapeTypeInfo = (type?: ExtendedType): TypeInfo | undefined => {
@@ -570,8 +585,32 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   };
 
   render() {
-    const { enqueueSnackbar, closeSnackbar, ...restOfProps } = this.props;
+    const {
+      enqueueSnackbar,
+      closeSnackbar,
+      regionsData,
+      ...restOfProps
+    } = this.props;
     const { label, udfs: selectedUDFs, ...restOfState } = this.state;
+
+    // If the selected type is a GPU plan, only display region
+    // options that support GPUs.
+    const selectedType = this.props.typesData?.find(
+      thisType => thisType.id === this.state.selectedTypeID
+    );
+
+    const filteredRegions =
+      selectedType?.class === 'gpu'
+        ? regionsData?.filter(thisRegion => {
+            return thisRegion.capabilities.includes('GPU Linodes');
+          })
+        : regionsData;
+
+    const regionHelperText =
+      (filteredRegions?.length ?? 0) !== (regionsData?.length ?? 0)
+        ? 'Only regions that support your selected plan are displayed.'
+        : undefined;
+
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Create a Linode" />
@@ -605,6 +644,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             handleSubmitForm={this.submitForm}
             resetCreationState={this.clearCreationState}
             setBackupID={this.setBackupID}
+            regionsData={filteredRegions}
+            regionHelperText={regionHelperText}
             {...restOfProps}
             {...restOfState}
           />

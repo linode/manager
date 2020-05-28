@@ -3,7 +3,8 @@ export type Capabilities =
   | 'NodeBalancers'
   | 'Block Storage'
   | 'Object Storage'
-  | 'Kubernetes';
+  | 'Kubernetes'
+  | 'GPU Linodes';
 
 export type RegionStatus = 'ok' | 'outage';
 

@@ -145,7 +145,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
             stackScript.user_defined_fields
           );
         })
-        .catch(e => {
+        .catch(_ => {
           this.setState({ stackScriptLoading: false, stackScriptError: true });
         });
     }
@@ -177,6 +177,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
               noOverflow={true}
               tableClass={classes.table}
               stickyHeader
+              data-qa-select-stackscript
             >
               <StackScriptTableHead
                 currentFilterType={null}
