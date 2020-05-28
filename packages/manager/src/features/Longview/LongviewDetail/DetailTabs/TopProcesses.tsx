@@ -158,7 +158,7 @@ export const TopProcessRow: React.FC<TopProcessRowProps> = React.memo(props => {
   const memInBytes = mem * 1024;
 
   return (
-    <TableRow data-testid="longview-top-process-row">
+    <TableRow ariaLabel={name} data-testid="longview-top-process-row">
       <TableCell parentColumn="Process" data-qa-top-process-process>
         {name}
       </TableCell>

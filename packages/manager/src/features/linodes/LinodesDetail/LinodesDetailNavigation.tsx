@@ -32,7 +32,7 @@ type CombinedProps = ContextProps &
     linodeId: string;
   }>;
 
-const LinodesDetailNavigation: React.StatelessComponent<CombinedProps> = props => {
+const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
   const {
     match: { url },
     linodeLabel,

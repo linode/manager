@@ -54,7 +54,7 @@ type CombinedProps = StateProps &
   DispatchProps &
   WithStyles<ClassNames>;
 
-const BackupsCTA: React.StatelessComponent<CombinedProps> = props => {
+const BackupsCTA: React.FC<CombinedProps> = props => {
   const {
     classes,
     linodesWithoutBackups,
@@ -81,8 +81,8 @@ const BackupsCTA: React.StatelessComponent<CombinedProps> = props => {
         </Grid>
         <Grid item>
           <Typography>
-            We've got your back! Click below to enable Backups for all Linodes,
-            and be sure to read our guide on Backups{` `}
+            We&#39;ve got your back! Click below to enable Backups for all
+            Linodes, and be sure to read our guide on Backups{` `}
             <a
               target="_blank"
               aria-describedby="external-site"
@@ -129,15 +129,12 @@ interface DispatchProps {
   };
 }
 
-const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => ({
+const mapStateToProps: MapState<StateProps, {}> = state => ({
   linodesWithoutBackups: getLinodesWithoutBackups(state.__resources),
   managed: state?.__resources?.accountSettings?.data?.managed ?? false
 });
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
-  dispatch,
-  ownProps
-) => {
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => {
   return {
     actions: {
       openBackupsDrawer: () => dispatch(handleOpen())

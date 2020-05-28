@@ -1,11 +1,14 @@
-import { Profile } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
 import { EntityError, RequestableData } from '../types';
-import { getProfileActions, handleUpdateProfile } from './profile.actions';
+import {
+  ExtendedProfile,
+  getProfileActions,
+  handleUpdateProfile
+} from './profile.actions';
 
-export type State = RequestableData<Profile, EntityError>;
+export type State = RequestableData<ExtendedProfile, EntityError>;
 
 interface Action<T> {
   type: string;
@@ -22,7 +25,7 @@ export const defaultState: State = {
 
 const reducer: Reducer<State> = (
   state: State = defaultState,
-  action: Action<Profile>
+  action: Action<ExtendedProfile>
 ) => {
   if (isType(action, getProfileActions.started)) {
     /** only set loading if we don't have any data */

@@ -71,7 +71,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const userNotificationButton: React.StatelessComponent<CombinedProps> = ({
+const userNotificationButton: React.FC<CombinedProps> = ({
   classes,
   onClick,
   className,

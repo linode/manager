@@ -142,7 +142,11 @@ const DomainsDashboardCard: React.FC<CombinedProps> = props => {
     const { classes } = props;
 
     return data.map(({ id, domain, type, status }) => (
-      <TableRow key={domain} rowLink={`/domains/${id}`}>
+      <TableRow
+        key={domain}
+        ariaLabel={`Domain ${domain}`}
+        rowLink={`/domains/${id}`}
+      >
         <TableCell className={classes.labelCol}>
           <Grid container wrap="nowrap" alignItems="center">
             <Grid item className="py0">

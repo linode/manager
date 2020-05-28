@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-const NullComponent: React.StatelessComponent = () => {
+const NullComponent: React.FC = () => {
   return null;
 };
 

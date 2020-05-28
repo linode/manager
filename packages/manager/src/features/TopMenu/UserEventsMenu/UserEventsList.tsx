@@ -18,7 +18,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<void>;
 
-export const UserEventsList: React.StatelessComponent<CombinedProps> = props => {
+export const UserEventsList: React.FC<CombinedProps> = props => {
   const { events, closeMenu } = props;
 
   return (

@@ -29,9 +29,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const NodeBalancerCreationError: React.StatelessComponent<
-  CombinedProps
-> = props => {
+const NodeBalancerCreationError: React.FC<CombinedProps> = props => {
   const { errors } = props;
 
   return !errors || errors.length === 0 ? null : (

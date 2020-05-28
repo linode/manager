@@ -1,10 +1,10 @@
-import {
-  NodeBalancerConfigFields,
-  NodeBalancerConfigNode,
-  NodeBalancerConfigNode2,
-  NodeBalancerConfigNodeFields
-} from '@linode/api-v4/lib/nodebalancers';
+import { NodeBalancerConfigNode } from '@linode/api-v4/lib/nodebalancers';
 import { clamp, compose, filter, isNil, toString } from 'ramda';
+import {
+  ExtendedNodeBalancerConfigNode,
+  NodeBalancerConfigNodeFields,
+  NodeBalancerConfigFields
+} from './types';
 
 import defaultNumeric from 'src/utilities/defaultNumeric';
 
@@ -14,10 +14,8 @@ export interface NodeBalancerConfigFieldsWithStatus
 }
 
 export const clampNumericString = (low: number, hi: number) =>
-  compose(
-    toString,
-    clamp(low, hi),
-    (value: number) => defaultNumeric(0, value)
+  compose(toString, clamp(low, hi), (value: number) =>
+    defaultNumeric(0, value)
   ) as (value: any) => string;
 
 export const createNewNodeBalancerConfigNode = (): NodeBalancerConfigNodeFields => ({
@@ -59,7 +57,7 @@ export const nodeForRequest = (node: NodeBalancerConfigNodeFields) => ({
   mode: node.mode
 });
 
-export const formatAddress = (node: NodeBalancerConfigNode2) => ({
+export const formatAddress = (node: ExtendedNodeBalancerConfigNode) => ({
   ...node,
   address: `${node.address}:${node.port}`
 });

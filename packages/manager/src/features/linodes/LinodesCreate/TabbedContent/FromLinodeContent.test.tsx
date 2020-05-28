@@ -48,42 +48,28 @@ describe('FromImageContent', () => {
   );
 
   it('should render a Placeholder when linodes prop has no length', () => {
-    expect(
-      componentWithoutLinodes.find('WithStyles(Placeholder)')
-    ).toHaveLength(1);
+    expect(componentWithoutLinodes.find('[data-qa-placeholder]')).toHaveLength(
+      1
+    );
   });
 
   it('should render SelectLinode panel', () => {
-    expect(
-      component.find(
-        'WithTheme(WithRenderGuard(WithStyles(SelectLinodePanel)))'
-      )
-    ).toHaveLength(1);
+    expect(component.find('[data-qa-linode-panel]')).toHaveLength(1);
   });
 
   it('should render SelectRegion panel', () => {
-    expect(
-      component.find(
-        'WithTheme(WithRenderGuard(WithStyles(SelectRegionPanel)))'
-      )
-    ).toHaveLength(1);
+    expect(component.find('[data-qa-region-panel]')).toHaveLength(1);
   });
 
   it('should render SelectPlan panel', () => {
-    expect(
-      component.find('WithTheme(WithRenderGuard(WithStyles(SelectPlanPanel)))')
-    ).toHaveLength(1);
+    expect(component.find('[data-qa-select-plan-panel]')).toHaveLength(1);
   });
 
   it('should render SelectLabel panel', () => {
-    expect(
-      component.find('WithTheme(WithRenderGuard(WithStyles(InfoPanel)))')
-    ).toHaveLength(1);
+    expect(component.find('[data-qa-label-panel]')).toHaveLength(1);
   });
 
   it('should render SelectAddOns panel', () => {
-    expect(
-      component.find('WithTheme(WithRenderGuard(WithStyles(AddonsPanel)))')
-    ).toHaveLength(1);
+    expect(component.find('[data-qa-addons-panel]')).toHaveLength(1);
   });
 });

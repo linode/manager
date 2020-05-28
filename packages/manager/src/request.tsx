@@ -40,7 +40,6 @@ export const handleError = (error: AxiosError) => {
   }
   const config = error.response?.config ?? {};
   const url = config.url ?? '';
-  const method = config.method ?? '';
   const status: number = error.response?.status ?? 0;
   const errors: APIError[] = error.response?.data?.errors ?? [
     { reason: DEFAULT_ERROR_MESSAGE }
@@ -56,14 +55,6 @@ export const handleError = (error: AxiosError) => {
   const requestedLinodeType = requestData?.type ?? '';
 
   const interceptedErrors = interceptErrors(errors, [
-    {
-      replacementText: `You are not authorized to ${
-        !method || method.match(/get/i)
-          ? 'view this feature.'
-          : 'take this action.'
-      }`,
-      condition: () => status === 403
-    },
     {
       replacementText: (
         <VerificationError

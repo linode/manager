@@ -1,5 +1,9 @@
 import { Image } from '@linode/api-v4/lib/images';
-import { CreateLinodeRequest, Linode } from '@linode/api-v4/lib/linodes';
+import {
+  CreateLinodeRequest,
+  Linode,
+  LinodeTypeClass
+} from '@linode/api-v4/lib/linodes';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
 import { ExtendedRegion } from 'src/components/EnhancedSelect/variants/RegionSelect';
@@ -89,6 +93,8 @@ export interface BaseFormStateAndHandlers {
   selectedImageID?: string;
   updateImageID: (id: string) => void;
   selectedRegionID?: string;
+  disabledClasses?: LinodeTypeClass[];
+  regionHelperText?: string;
   updateRegionID: (id: string) => void;
   selectedTypeID?: string;
   updateTypeID: (id: string) => void;

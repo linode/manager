@@ -4,16 +4,46 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-05-21] - 1.9.0
+
+### Added:
+
+- @-expansion for Target field in Domain records
+- “Last Modified” column to Domains landing page
+- Support for Third-Party Authentication
+
+### Changed:
+
+- Default support ticket option to 'General'
+- Defer requests to Linodes and Images until after app has loaded
+- Redesign Billing section of app
+- Request Domains when hovering over Primary Nav link
+- Update behavior for TFA cancel button
+- Rename linode-js-sdk to @linode/api-v4 to prepare for NPM publication
+- Update @linode/api-v4 documentation
+- Lazy load Linodes on BackupsDashboardCard
+
+### Fixed:
+
+- Keyboard access to open Support ticket creation drawer
+- Missing SSH keys in some flows for Linode creation
+- Second column alignment for NodeBalancer on dashboard
+- Tag display on mobile viewport
+- Removed extra requests 
+- Prevent crashing for unactivated users
+- Remove duplicate instance requests
+
 ## [2020-05-04] - v1.8.0
 
 ### Changed:
+
 - "Node Status" is now "Backend Status" on NodeBalancers list and detail view
 - Minimum payment placeholder text
 - Hide Recycle Node in the LKE Node action menu
 - Provide cluster summary information for LKE search results
 
-
 ### Fixed:
+
 - Remove invalid credits
 - NodeBalancer Error Handling (SSL)
 - Xterm flow control errors
@@ -22,14 +52,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [2020-04-20] - v1.7.0
 
 ### Added:
+
 - Firewalls: Client-side form validation
 
 ### Changed:
+
 - Make LKE available regardless of customer account response
--  Request OBJ Buckets per-cluster
+- Request OBJ Buckets per-cluster
 - Theming performance optimizations
 
 ### Fixed:
+
 - Correct alignment for “Date Created” field on mobile invoice table
 - NodeBalancer error handling
 - Current size of pool was updating along with target size when resizing a Node Pool.
