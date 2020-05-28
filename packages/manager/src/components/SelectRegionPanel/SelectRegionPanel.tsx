@@ -37,6 +37,7 @@ interface Props {
   handleSelection: (id: string) => void;
   selectedID?: string;
   disabled?: boolean;
+  helperText?: string;
 }
 
 const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = props => {
@@ -46,6 +47,7 @@ const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = props => {
     disabled,
     error,
     handleSelection,
+    helperText,
     regions,
     selectedID
   } = props;
@@ -55,37 +57,36 @@ const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = props => {
   }
 
   return (
-    <>
-      <Paper className={classes.root}>
-        <Typography variant="h2" data-qa-tp="Region">
-          Region
+    <Paper className={classes.root}>
+      <Typography variant="h2" data-qa-tp="Region">
+        Region
+      </Typography>
+      {copy && (
+        <Typography variant="body1">
+          {copy}
+          {` `}
+          <a
+            target="_blank"
+            aria-describedby="external-site"
+            rel="noopener noreferrer"
+            href="https://www.linode.com/speedtest"
+          >
+            Use our speedtest page
+          </a>
+          {` `}
+          to find the best region for your current location.
         </Typography>
-        {copy && (
-          <Typography variant="body1">
-            {copy}
-            {` `}
-            <a
-              target="_blank"
-              aria-describedby="external-site"
-              rel="noopener noreferrer"
-              href="https://www.linode.com/speedtest"
-            >
-              Use our speedtest page
-            </a>
-            {` `}
-            to find the best region for your current location.
-          </Typography>
-        )}
-        <RegionSelect
-          errorText={error}
-          disabled={disabled}
-          handleSelection={handleSelection}
-          regions={regions}
-          selectedID={selectedID || null}
-          label="Select a Region"
-        />
-      </Paper>
-    </>
+      )}
+      <RegionSelect
+        errorText={error}
+        disabled={disabled}
+        handleSelection={handleSelection}
+        regions={regions}
+        selectedID={selectedID || null}
+        label="Select a Region"
+        helperText={helperText}
+      />
+    </Paper>
   );
 };
 
