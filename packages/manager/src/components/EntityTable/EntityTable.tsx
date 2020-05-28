@@ -1,12 +1,9 @@
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import TableCell from 'src/components/core/TableCell';
 import OrderBy from 'src/components/OrderBy';
 import TableSortCell from 'src/components/TableSortCell';
 import GroupedEntitiesByTag from './GroupedEntitiesByTag';
 import ListEntities from './ListEntities';
-
-const useStyles = makeStyles((theme: Theme) => ({}));
 
 interface Props {
   data: any[];
@@ -26,8 +23,8 @@ export const LandingTable: React.FC<Props> = props => {
         const headerCells = headers.map((thisCell: HeaderCell) => {
           return thisCell.sortable ? (
             <TableSortCell
-              active={orderBy === thisCell.label}
-              label={'entity:label'}
+              active={orderBy === thisCell.dataColumn}
+              label={thisCell.dataColumn}
               direction={order}
               handleClick={handleOrderChange}
               style={{ width: thisCell.widthPercent }}

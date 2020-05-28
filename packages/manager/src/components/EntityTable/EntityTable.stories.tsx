@@ -1,7 +1,7 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import Grid from 'src/components/Grid';
-import LandingTable, { HeaderCell } from './LandingTable';
+import EntityTable, { HeaderCell } from './EntityTable';
 import { Provider } from 'react-redux';
 import store from 'src/store';
 
@@ -43,10 +43,10 @@ const headers: HeaderCell[] = [
   }
 ];
 
-storiesOf('LandingPage', module).add('default', () => (
+storiesOf('EntityTable', module).add('default', () => (
   <Provider store={store}>
     <Grid spacing={8}>
-      <LandingTable
+      <EntityTable
         entity="domains"
         headers={headers}
         data={domains}

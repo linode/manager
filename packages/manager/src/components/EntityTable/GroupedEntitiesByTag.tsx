@@ -1,19 +1,16 @@
-import * as React from 'react';
 import { compose } from 'ramda';
-import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
+import * as React from 'react';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import TableBody from 'src/components/core/TableBody';
+import TableRow from 'src/components/core/TableRow';
+import Typography from 'src/components/core/Typography';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter, {
   MIN_PAGE_SIZE
 } from 'src/components/PaginationFooter';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Paper from 'src/components/core/Paper';
-import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
-import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import TableCell from 'src/components/TableCell';
-import TableContentWrapper from 'src/components/TableContentWrapper';
-import Typography from 'src/components/core/Typography';
+import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
+import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},

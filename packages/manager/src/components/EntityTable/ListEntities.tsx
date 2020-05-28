@@ -7,9 +7,6 @@ import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableContentWrapper from 'src/components/TableContentWrapper';
-import { makeStyles, Theme } from 'src/components/core/styles';
-
-const useStyles = makeStyles((theme: Theme) => ({}));
 
 interface Props {
   entity: string;
