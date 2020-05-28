@@ -121,11 +121,7 @@ const Contacts: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      <div
-        id="tabpanel-contacts"
-        role="tabpanel"
-        aria-labelledby="tab-contacts"
-      >
+      <div>
         <DocumentTitleSegment segment="Contacts" />
         <Typography variant="subtitle1" className={classes.copy}>
           You can assign contact groups to monitors so we know who to talk to in

@@ -202,11 +202,7 @@ export const CredentialList: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      <div
-        id="tabpanel-credentials"
-        role="tabpanel"
-        aria-labelledby="tab-credentials"
-      >
+      <div>
         <DocumentTitleSegment segment="Credentials" />
         <Grid
           container
