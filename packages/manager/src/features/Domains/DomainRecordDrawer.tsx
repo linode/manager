@@ -540,9 +540,10 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       ...this.filterDataByType(fields, type)
     };
 
-    // Replace a single @ with a reference to the Domain
-    const data = resolveAlias(_data, domain, type);
-
+    // Expand @ to the Domain in appropriate fields
+    let data = resolveAlias(_data, domain, type);
+    // Convert string values to numeric, replacing '' with undefined
+    data = castFormValuesToNumeric(data);
     updateDomainRecord(domainId, id, data)
       .then(this.handleRecordSubmissionSuccess)
       .catch(this.handleSubmissionErrors);
