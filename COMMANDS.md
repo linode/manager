@@ -2,8 +2,8 @@
 
 ## yarn
 
-We use Yarn for this repository (v1.21 and above), with NodeJs v8 and above (tested and working on NodeJs v12).
-For NodeJs we recommend using [`nvm`](https://github.com/nvm-sh/nvm)
+We use Yarn for this repository (v1.21 and above), with Node.js v10 and above.
+For Node.js we recommend using [`nvm`](https://github.com/nvm-sh/nvm)
 
 ### yarn.lock
 
