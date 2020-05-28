@@ -47,6 +47,7 @@ export const LandingTable: React.FC<Props> = props => {
               data={data}
               RowComponent={RowComponent}
               headerCells={headerCells}
+              entity={entity}
             />
           );
         }

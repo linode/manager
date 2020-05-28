@@ -8,7 +8,9 @@ import store from 'src/store';
 import { domainFactory } from 'src/factories/domain';
 import DomainRow from 'src/features/Domains/DomainTableRow';
 
-const domains = domainFactory.buildList(25);
+const domains1 = domainFactory.buildList(10, { tags: ['tag1'] });
+const domains2 = domainFactory.buildList(10, { tags: ['tag2'] });
+const domains = [...domains1, ...domains2];
 
 const headers: HeaderCell[] = [
   {
@@ -50,7 +52,7 @@ storiesOf('EntityTable', module).add('default', () => (
         entity="domains"
         headers={headers}
         data={domains}
-        groupByTag={false}
+        groupByTag={true}
         RowComponent={DomainRow}
       />
     </Grid>

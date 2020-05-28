@@ -17,7 +17,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const _: React.FC<Props> = props => {
+export const ListEntities: React.FC<Props> = props => {
   const { data, entity, headerCells, RowComponent } = props;
   return (
     <Paginate data={data}>
@@ -63,4 +63,4 @@ export const _: React.FC<Props> = props => {
   );
 };
 
-export default _;
+export default ListEntities;

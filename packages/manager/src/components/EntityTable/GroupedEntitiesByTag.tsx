@@ -2,12 +2,14 @@ import { compose } from 'ramda';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
+import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter, {
   MIN_PAGE_SIZE
 } from 'src/components/PaginationFooter';
+import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
@@ -48,6 +50,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
+  entity: string;
   data: any[];
   RowComponent: React.ComponentType;
   headerCells: JSX.Element[];
@@ -56,14 +59,16 @@ interface Props {
 export type CombinedProps = Props;
 
 export const GroupedEntitiesByTag: React.FC<Props> = props => {
-  const { data, RowComponent } = props;
+  const { data, entity, headerCells, RowComponent } = props;
   const groupedEntities = compose(sortGroups, groupByTags)(data);
   const classes = useStyles();
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
 
   return (
-    // eslint-disable-next-line
-    <>
+    <Table aria-label={`List of ${entity}`}>
+      <TableHead>
+        <TableRow>{headerCells}</TableRow>
+      </TableHead>
       {groupedEntities.map(([tag, domains]: [string, any[]]) => {
         return (
           <React.Fragment key={tag}>
@@ -124,7 +129,7 @@ export const GroupedEntitiesByTag: React.FC<Props> = props => {
           </React.Fragment>
         );
       })}
-    </>
+    </Table>
   );
 };
 
