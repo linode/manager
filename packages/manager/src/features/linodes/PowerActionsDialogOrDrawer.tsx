@@ -8,6 +8,9 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 
+import * as classNames from 'classnames';
+import CautionIcon from 'src/assets/icons/caution.svg';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
@@ -17,6 +20,12 @@ import { resetEventsPolling } from 'src/eventsPolling';
 import LinodeConfigDrawer from 'src/features/LinodeConfigSelectionDrawer';
 
 export type Action = 'Reboot' | 'Power Off' | 'Power On';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  copy: {
+    marginTop: theme.spacing(1)
+  }
+}));
 
 interface Props {
   action?: Action;
@@ -43,6 +52,7 @@ export const selectDefaultConfig = (configs?: Config[]) =>
 
 const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = props => {
   const { linodeConfigs } = props;
+  const classes = useStyles();
   const [isTakingAction, setTakingAction] = React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [selectedConfigID, selectConfigID] = React.useState<number | undefined>(
@@ -137,23 +147,32 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = props => {
         />
       }
     >
-      <Typography>
-        Are you sure you want to {props.action.toLowerCase()} your Linode?
-      </Typography>
-      <Typography>
-        <strong>Warning:</strong> Powered down Linodes will still accrue
-        charges. See the
-        <a
-          href="https://www.linode.com/docs/platform/billing-and-support/how-linode-billing-works/#if-my-linode-is-powered-off-will-i-be-billed"
-          target="_blank"
-          aria-describedby="external-site"
-          rel="noopener noreferrer"
-          className="h-u"
-        >
-          Billing and Payments documentation
-        </a>
-        for more information.
-      </Typography>
+      <React.Fragment>
+        <Typography className={classes.copy}>
+          Are you sure you want to {props.action.toLowerCase()} your Linode?
+        </Typography>
+        <Typography className={classes.copy}>
+          <CautionIcon
+            width={25}
+            height={25}
+            className={classNames({
+              [classes.copy]: true
+            })}
+          />
+          <strong>&nbsp;Warning:</strong> Powered down Linodes will still accrue
+          charges. See the&nbsp;
+          <a
+            href="https://www.linode.com/docs/platform/billing-and-support/how-linode-billing-works/#if-my-linode-is-powered-off-will-i-be-billed"
+            target="_blank"
+            aria-describedby="external-site"
+            rel="noopener noreferrer"
+            className="h-u"
+          >
+            Billing and Payments documentation
+          </a>
+          &nbsp;for more information.
+        </Typography>
+      </React.Fragment>
     </Dialog>
   );
 };
