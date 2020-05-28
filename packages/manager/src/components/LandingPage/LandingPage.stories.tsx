@@ -1,0 +1,58 @@
+import { storiesOf } from '@storybook/react';
+import * as React from 'react';
+import Grid from 'src/components/Grid';
+import LandingTable, { HeaderCell } from './LandingTable';
+import { Provider } from 'react-redux';
+import store from 'src/store';
+
+import { domainFactory } from 'src/factories/domain';
+import DomainRow from 'src/features/Domains/DomainTableRow';
+
+const domains = domainFactory.buildList(25);
+
+const headers: HeaderCell[] = [
+  {
+    label: 'Domain',
+    dataColumn: 'domain',
+    sortable: true,
+    widthPercent: 25
+  },
+  {
+    label: 'Type',
+    dataColumn: 'type',
+    sortable: true,
+    widthPercent: 15
+  },
+  {
+    label: 'Status',
+    dataColumn: 'status',
+    sortable: false,
+    widthPercent: 25
+  },
+  {
+    label: 'Last Modified',
+    dataColumn: 'updated',
+    sortable: true,
+    widthPercent: 25
+  },
+  {
+    label: '',
+    dataColumn: '',
+    sortable: false,
+    widthPercent: 5
+  }
+];
+
+storiesOf('LandingPage', module).add('default', () => (
+  <Provider store={store}>
+    <Grid spacing={8}>
+      <LandingTable
+        entity="domains"
+        headers={headers}
+        data={domains}
+        groupByTag={false}
+        RowComponent={DomainRow}
+      />
+    </Grid>
+  </Provider>
+));
