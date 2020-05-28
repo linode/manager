@@ -140,6 +140,20 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = props => {
       <Typography>
         Are you sure you want to {props.action.toLowerCase()} your Linode?
       </Typography>
+      <Typography>
+        <strong>Warning:</strong> Powered down Linodes will still accrue
+        charges. See the
+        <a
+          href="https://www.linode.com/docs/platform/billing-and-support/how-linode-billing-works/#if-my-linode-is-powered-off-will-i-be-billed"
+          target="_blank"
+          aria-describedby="external-site"
+          rel="noopener noreferrer"
+          className="h-u"
+        >
+          Billing and Payments documentation
+        </a>
+        for more information.
+      </Typography>
     </Dialog>
   );
 };
