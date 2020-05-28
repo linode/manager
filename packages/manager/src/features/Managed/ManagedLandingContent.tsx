@@ -9,7 +9,7 @@ import { matchPath, RouteComponentProps } from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';
 
 import Box from 'src/components/core/Box';
-import TabPanel from 'src/components/core/ReachTabPanel';
+import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import TabLinkList from 'src/components/TabLinkList';
@@ -115,7 +115,7 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
 
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
-            <TabPanel>
+            <SafeTabPanel index={0}>
               <Monitors
                 credentials={credentials.data}
                 loading={
@@ -127,20 +127,20 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
                   credentials.error || contacts.error || undefined
                 }
               />
-            </TabPanel>
+            </SafeTabPanel>
 
-            <TabPanel>
+            <SafeTabPanel index={1}>
               <SSHAccess />
-            </TabPanel>
-            <TabPanel>
+            </SafeTabPanel>
+            <SafeTabPanel index={2}>
               <Credentials
                 loading={credentials.loading && credentials.lastUpdated === 0}
                 error={credentialsError}
                 credentials={credentials.data}
                 update={credentials.update}
               />
-            </TabPanel>
-            <TabPanel>
+            </SafeTabPanel>
+            <SafeTabPanel index={3}>
               <Contacts
                 contacts={contacts.data}
                 loading={contacts.loading && contacts.lastUpdated === 0}
@@ -149,7 +149,7 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
                 transformData={contacts.transformData}
                 update={contacts.update}
               />
-            </TabPanel>
+            </SafeTabPanel>
           </TabPanels>
         </React.Suspense>
       </Tabs>
