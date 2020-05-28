@@ -33,9 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       display: 'none'
     }
   },
-  copy: {
-    marginTop: theme.spacing(1)
-  },
+  copy: {},
   contactsTable: {
     marginTop: theme.spacing(4)
   },

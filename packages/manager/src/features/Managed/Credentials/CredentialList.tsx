@@ -39,7 +39,6 @@ import UpdateCredentialDrawer from './UpdateCredentialDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   subHeader: {
-    marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2)
   },
   credCell: {
