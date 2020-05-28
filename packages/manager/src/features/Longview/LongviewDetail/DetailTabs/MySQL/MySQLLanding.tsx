@@ -87,13 +87,7 @@ export const MySQLLanding: React.FC<Props> = props => {
   }
 
   return (
-    <Grid
-      container
-      id="tabpanel-mysql"
-      role="tabpanel"
-      aria-labelledby="tab-mysql"
-      direction="column"
-    >
+    <Grid container direction="column">
       <DocumentTitleSegment segment={'MySQL'} />
       <Grid item xs={12}>
         <Box

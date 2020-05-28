@@ -73,7 +73,7 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
 
   render() {
     return (
-      <div id="tabpanel-sshKeys" role="tabpanel" aria-labelledby="tab-sshKeys">
+      <div>
         <TableHeader title="SSH Keys" action={this.headerAction} />
         <Paper>
           <Table>
@@ -227,9 +227,6 @@ const updatedRequest = (ownProps: any, params: any, filters: any) =>
 
 const paginated = paginate(updatedRequest);
 
-const enhanced = compose<CombinedProps, {}>(
-  paginated,
-  documented
-);
+const enhanced = compose<CombinedProps, {}>(paginated, documented);
 
 export default enhanced(SSHKeys);
