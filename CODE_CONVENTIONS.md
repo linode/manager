@@ -119,9 +119,9 @@ const Component: React.FC<{}> = props => {
 };
 ```
 
-- Styles for light mode are located in `manager/packages/manager/src/themeFactory.ts`.
-- Styles for dark mode are located in `manager/packages/manager/src/themes.ts`.
-- Utility classes are located in `manager/packages/manager/src/index.css`.
+- Styles for light mode are located in `manager/packages/manager/src/themeFactory.ts`
+- Styles for dark mode are located in `manager/packages/manager/src/themes.ts`
+- Utility classes are located in `manager/packages/manager/src/index.css`
 
 ## Avoid instance methods that could be made into components.
 
