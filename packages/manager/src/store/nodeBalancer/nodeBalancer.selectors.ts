@@ -11,7 +11,9 @@ export const nodeBalancersWithConfigs = createSelector(
   (nodeBalancers, nodeBalancerConfigs) => {
     return Object.values(nodeBalancers).map(nodeBalancer => ({
       ...nodeBalancer,
-      configs: Object.values(nodeBalancerConfigs[nodeBalancer.id].itemsById)
+      configs: Object.values(
+        nodeBalancerConfigs[nodeBalancer.id]?.itemsById ?? {}
+      )
     }));
   }
 );
