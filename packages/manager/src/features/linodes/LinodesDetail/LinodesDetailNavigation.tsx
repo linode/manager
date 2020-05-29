@@ -99,7 +99,11 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
     <>
       <AppBar position="static" color="default" role="tablist">
         <Tabs
-          value={tabs.findIndex(tab => matches(tab.routeName))}
+          // Prevent console error for -1 as invalid tab index if we're redirecting from e.g. /linodes/invalid-route
+          value={Math.max(
+            tabs.findIndex(tab => matches(tab.routeName)),
+            0
+          )}
           onChange={handleTabChange}
           indicatorColor="primary"
           textColor="primary"

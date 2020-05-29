@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   matchPath,
+  Redirect,
   Route,
   RouteComponentProps,
   Switch,
@@ -41,45 +42,46 @@ class Profile extends React.Component<Props> {
     /* NB: These must correspond to the routes inside the Switch */
     {
       title: 'Display',
-      routeName: `${this.props.match.url}/display`
+      routeName: `${this.props.match.path}/display`
     },
     {
       title: 'Password & Authentication',
-      routeName: `${this.props.match.url}/auth`
+      routeName: `${this.props.match.path}/auth`
     },
     {
       title: 'SSH Keys',
-      routeName: `${this.props.match.url}/keys`
+      routeName: `${this.props.match.path}/keys`
     },
     {
       title: 'LISH',
-      routeName: `${this.props.match.url}/lish`
+      routeName: `${this.props.match.path}/lish`
     },
     {
       title: 'API Tokens',
-      routeName: `${this.props.match.url}/tokens`
+      routeName: `${this.props.match.path}/tokens`
     },
     {
       title: 'OAuth Apps',
-      routeName: `${this.props.match.url}/clients`
+      routeName: `${this.props.match.path}/clients`
     },
     {
       title: 'Referrals',
-      routeName: `${this.props.match.url}/referrals`
+      routeName: `${this.props.match.path}/referrals`
     },
     {
       title: 'Settings',
-      routeName: `${this.props.match.url}/settings`
+      routeName: `${this.props.match.path}/settings`
     }
   ];
+
+  matches = (p: string) => {
+    return Boolean(matchPath(p, { path: this.props.location.pathname }));
+  };
 
   render() {
     const {
       match: { url }
     } = this.props;
-    const matches = (p: string) => {
-      return Boolean(matchPath(p, { path: this.props.location.pathname }));
-    };
 
     return (
       <React.Fragment>
@@ -87,7 +89,11 @@ class Profile extends React.Component<Props> {
         <H1Header title="My Profile" data-qa-profile-header />
         <AppBar position="static" color="default" role="tablist">
           <Tabs
-            value={this.tabs.findIndex(tab => matches(tab.routeName))}
+            // Prevent console error for -1 as invalid tab index if we're redirecting from e.g. /profile/invalid-route
+            value={Math.max(
+              0,
+              this.tabs.findIndex(tab => this.matches(tab.routeName))
+            )}
             onChange={this.handleTabChange}
             indicatorColor="primary"
             textColor="primary"
@@ -124,7 +130,8 @@ class Profile extends React.Component<Props> {
             <Route exact path={`${url}/lish`} component={LishSettings} />
             <Route exact path={`${url}/referrals`} component={Referrals} />
             <Route exact path={`${url}/keys`} component={SSHKeys} />
-            <Route path={`${url}`} component={DisplaySettings} />
+            <Route exact path={`${url}/display`} component={DisplaySettings} />
+            <Redirect to={`${url}/display`} />
           </Switch>
         </React.Suspense>
       </React.Fragment>
