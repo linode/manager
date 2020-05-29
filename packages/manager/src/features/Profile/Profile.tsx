@@ -28,115 +28,113 @@ const APITokens = React.lazy(() => import('./APITokens'));
 
 type Props = RouteComponentProps<{}>;
 
-class Profile extends React.Component<Props> {
-  handleTabChange = (
-    event: React.ChangeEvent<HTMLDivElement>,
-    value: number
-  ) => {
-    const { history } = this.props;
-    const routeName = this.tabs[value].routeName;
-    history.push(`${routeName}`);
-  };
+const Profile: React.FC<Props> = props => {
+  const {
+    match: { url }
+  } = props;
 
-  tabs = [
+  const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     {
       title: 'Display',
-      routeName: `${this.props.match.path}/display`
+      routeName: `${url}/display`
     },
     {
       title: 'Password & Authentication',
-      routeName: `${this.props.match.path}/auth`
+      routeName: `${url}/auth`
     },
     {
       title: 'SSH Keys',
-      routeName: `${this.props.match.path}/keys`
+      routeName: `${url}/keys`
     },
     {
       title: 'LISH',
-      routeName: `${this.props.match.path}/lish`
+      routeName: `${url}/lish`
     },
     {
       title: 'API Tokens',
-      routeName: `${this.props.match.path}/tokens`
+      routeName: `${url}/tokens`
     },
     {
       title: 'OAuth Apps',
-      routeName: `${this.props.match.path}/clients`
+      routeName: `${url}/clients`
     },
     {
       title: 'Referrals',
-      routeName: `${this.props.match.path}/referrals`
+      routeName: `${url}/referrals`
     },
     {
       title: 'Settings',
-      routeName: `${this.props.match.path}/settings`
+      routeName: `${url}/settings`
     }
   ];
 
-  matches = (p: string) => {
-    return Boolean(matchPath(p, { path: this.props.location.pathname }));
+  const handleTabChange = (
+    event: React.ChangeEvent<HTMLDivElement>,
+    value: number
+  ) => {
+    const { history } = props;
+    const routeName = tabs[value].routeName;
+    history.push(`${routeName}`);
   };
 
-  render() {
-    const {
-      match: { url }
-    } = this.props;
+  const matches = (p: string) => {
+    return Boolean(matchPath(p, { path: props.location.pathname }));
+  };
 
-    return (
-      <React.Fragment>
-        <DocumentTitleSegment segment="My Profile" />
-        <H1Header title="My Profile" data-qa-profile-header />
-        <AppBar position="static" color="default" role="tablist">
-          <Tabs
-            // Prevent console error for -1 as invalid tab index if we're redirecting from e.g. /profile/invalid-route
-            value={Math.max(
-              0,
-              this.tabs.findIndex(tab => this.matches(tab.routeName))
-            )}
-            onChange={this.handleTabChange}
-            indicatorColor="primary"
-            textColor="primary"
-            variant="scrollable"
-            scrollButtons="on"
-            data-qa-tabs
-          >
-            {this.tabs.map(tab => (
-              <Tab
-                key={tab.title}
-                data-qa-tab={tab.title}
-                component={React.forwardRef((props, ref) => (
-                  <TabLink
-                    to={tab.routeName}
-                    title={tab.title}
-                    {...props}
-                    ref={ref}
-                  />
-                ))}
-              />
-            ))}
-          </Tabs>
-        </AppBar>
-        <React.Suspense fallback={<SuspenseLoader />}>
-          <Switch>
-            <Route exact path={`${url}/settings`} component={Settings} />
-            <Route
-              exact
-              path={`${url}/auth`}
-              component={AuthenticationSettings}
+  return (
+    <React.Fragment>
+      <DocumentTitleSegment segment="My Profile" />
+      <H1Header title="My Profile" data-qa-profile-header />
+      <AppBar position="static" color="default" role="tablist">
+        <Tabs
+          // Prevent console error for -1 as invalid tab index if we're redirecting from e.g. /profile/invalid-route
+          value={Math.max(
+            0,
+            tabs.findIndex(tab => matches(tab.routeName))
+          )}
+          onChange={handleTabChange}
+          indicatorColor="primary"
+          textColor="primary"
+          variant="scrollable"
+          scrollButtons="on"
+          data-qa-tabs
+        >
+          {tabs.map(tab => (
+            <Tab
+              key={tab.title}
+              data-qa-tab={tab.title}
+              component={React.forwardRef((props, ref) => (
+                <TabLink
+                  to={tab.routeName}
+                  title={tab.title}
+                  {...props}
+                  ref={ref}
+                />
+              ))}
             />
-            <Route exact path={`${url}/tokens`} component={APITokens} />
-            <Route exact path={`${url}/clients`} component={OAuthClients} />
-            <Route exact path={`${url}/lish`} component={LishSettings} />
-            <Route exact path={`${url}/referrals`} component={Referrals} />
-            <Route exact path={`${url}/keys`} component={SSHKeys} />
-            <Route exact path={`${url}/display`} component={DisplaySettings} />
-            <Redirect to={`${url}/display`} />
-          </Switch>
-        </React.Suspense>
-      </React.Fragment>
-    );
-  }
-}
+          ))}
+        </Tabs>
+      </AppBar>
+      <React.Suspense fallback={<SuspenseLoader />}>
+        <Switch>
+          <Route exact path={`${url}/settings`} component={Settings} />
+          <Route
+            exact
+            path={`${url}/auth`}
+            component={AuthenticationSettings}
+          />
+          <Route exact path={`${url}/tokens`} component={APITokens} />
+          <Route exact path={`${url}/clients`} component={OAuthClients} />
+          <Route exact path={`${url}/lish`} component={LishSettings} />
+          <Route exact path={`${url}/referrals`} component={Referrals} />
+          <Route exact path={`${url}/keys`} component={SSHKeys} />
+          <Route exact path={`${url}/display`} component={DisplaySettings} />
+          <Redirect to={`${url}/display`} />
+        </Switch>
+      </React.Suspense>
+    </React.Fragment>
+  );
+};
 
 export default withRouter(Profile);
