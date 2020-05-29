@@ -72,8 +72,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& [role="tab"]': {
       flexBasis: '50%',
       margin: 0,
-      maxWidth: 'none !important',
-      transition: theme.transitions.create('background-color')
+      maxWidth: 'none !important'
     }
   }
 }));
@@ -95,15 +94,14 @@ export const TabLinkList: React.FC<CombinedProps> = props => {
   const { tabs } = props;
 
   const classes = useStyles();
-
-  const h1Header = React.useRef<HTMLDivElement>(null);
-  const selected = document.querySelector('data-selected');
+  // TODO: Change type 'any' to a more appropriate type
+  const ref = React.useRef<any>(null);
 
   React.useEffect(() => {
-    if (selected) {
-      selected.focus();
+    if (ref.current !== null) {
+      ref.current.focus();
     }
-  }, [selected]);
+  }, []);
 
   return (
     <TabList className={props.lish ? classes.lishTabList : classes.tabList}>
@@ -113,7 +111,7 @@ export const TabLinkList: React.FC<CombinedProps> = props => {
           key={`tab-${_index}`}
           as={Link}
           to={tab.routeName}
-          // innerRef={h1Header}
+          ref={props.lish && _index == 0 ? ref : null}
         >
           {tab.title}
         </Tab>

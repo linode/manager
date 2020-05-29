@@ -3,7 +3,6 @@ import {
   getLinodeLishToken,
   Linode
 } from '@linode/api-v4/lib/linodes';
-import { TabsKeyboardActivation } from '@reach/tabs';
 import * as React from 'react';
 import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
@@ -47,7 +46,6 @@ const styles = (theme: Theme) =>
 interface State {
   loading: boolean;
   authenticated: boolean;
-  tabIndex?: number;
   linode?: Linode;
   token?: string;
 }
@@ -58,8 +56,7 @@ type CombinedProps = WithStyles<ClassNames> &
 class Lish extends React.Component<CombinedProps, State> {
   state: State = {
     loading: true,
-    authenticated: true,
-    tabIndex: 0
+    authenticated: true
   };
 
   interval: number;
@@ -173,11 +170,6 @@ class Lish extends React.Component<CombinedProps, State> {
       });
   };
 
-  handleTabsChange = (index: number) => {
-    console.log('tab change');
-    this.setState({ tabIndex: index });
-  };
-
   tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     {
@@ -195,7 +187,7 @@ class Lish extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes } = this.props;
-    const { authenticated, loading, tabIndex, linode, token } = this.state;
+    const { authenticated, loading, linode, token } = this.state;
 
     // If the window.close() logic above fails, we render an error state as a fallback
     if (!authenticated) {
@@ -213,12 +205,7 @@ class Lish extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Tabs
-          className={classes.tabs}
-          index={tabIndex}
-          onChange={this.handleTabsChange}
-          // keyboardActivation={TabsKeyboardActivation.Manual}
-        >
+        <Tabs className={classes.tabs}>
           <TabLinkList lish tabs={this.tabs} />
           <TabPanels>
             <TabPanel data-qa-tab="Weblish">
