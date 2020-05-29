@@ -1,6 +1,7 @@
 import { LinodeConfigCreationData } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { actionCreatorFactory } from 'typescript-fsa';
+import { GetAllData } from 'src/utilities/getAll';
 import { Entity } from './config.types';
 
 const actionCreator = actionCreatorFactory(`@@manager/linodeConfigs`);
@@ -26,9 +27,9 @@ export type GetLinodeConfigsRequest = (
   params: GetLinodeConfigsParams
 ) => GetLinodeConfigsResponse;
 
-export const getLinodeConfigsActions = actionCreator.async<
+export const getLinodeConfigsPageActions = actionCreator.async<
   GetLinodeConfigsParams,
-  Entity[],
+  GetAllData<Entity>,
   APIError[]
 >(`get-page`);
 
@@ -43,7 +44,7 @@ export type GetAllLinodeConfigsRequest = (
 
 export const getAllLinodeConfigsActions = actionCreator.async<
   GetAllLinodeConfigsParams,
-  Entity[],
+  GetAllData<Entity>,
   APIError[]
 >(`get-all`);
 
