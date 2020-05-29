@@ -137,9 +137,21 @@ module.exports = {
             }
           },
           {
-            test: [/\.svg$/],
-            exclude: [/font-logos\/assets/],
-            loader: ['svgr/webpack']
+            test: /\.svg$/,
+            exclude: [/font-logos.svg$/],
+            use: {
+              loader: '@svgr/webpack',
+              options: {
+                svgoConfig: {
+                  plugins: [
+                    // by default preffixes classes with svg path or random string
+                    { prefixIds: false },
+                    // by default removes the viewbox attribute
+                    { removeViewBox: false }
+                  ]
+                }
+              }
+            }
           },
           // Compile .tsx?
           {
