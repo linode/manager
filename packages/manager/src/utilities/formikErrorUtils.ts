@@ -30,7 +30,10 @@ export const handleGeneralErrors = (
 
   const generalError = _apiErrors
     .reduce(
-      (result, { field, reason }) => (field ? result : [...result, reason]),
+      (result, { field, reason }) =>
+        field && !_apiErrors[0].reason.includes("Couldn't find room")
+          ? result
+          : [...result, reason],
       []
     )
     .join(',');
