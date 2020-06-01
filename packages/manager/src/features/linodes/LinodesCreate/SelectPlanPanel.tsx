@@ -60,7 +60,8 @@ const styles = (theme: Theme) =>
     },
     disabledRow: {
       backgroundColor: theme.bg.tableHeader,
-      cursor: 'not-allowed'
+      cursor: 'not-allowed',
+      opacity: 0.4
     },
     headingCellContainer: {
       display: 'flex',
@@ -155,7 +156,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
         <Hidden smDown>
           <TableRow
             data-qa-plan-row={type.label}
-            ariaLabel={rowAriaLabel}
+            aria-label={rowAriaLabel}
             key={type.id}
             onClick={
               !isSamePlan && !isDisabledClass

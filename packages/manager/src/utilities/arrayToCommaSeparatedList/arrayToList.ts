@@ -1,4 +1,7 @@
 export default (input: string[]): string => {
+  if (!Array.isArray(input) || input.length === 0) {
+    return '';
+  }
   if (input.length === 1) {
     return input[0];
   }

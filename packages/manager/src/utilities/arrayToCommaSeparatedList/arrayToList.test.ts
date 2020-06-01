@@ -18,4 +18,8 @@ describe('Array to comma-separated list', () => {
       'apples, peas, carrots, and peaches'
     );
   });
+
+  it('should handle undefined input', () => {
+    expect(arrayToList(undefined as any)).toEqual('');
+  });
 });
