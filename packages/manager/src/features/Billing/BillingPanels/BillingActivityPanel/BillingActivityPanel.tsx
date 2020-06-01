@@ -368,17 +368,6 @@ export const BillingActivityPanel: React.FC<Props> = props => {
 
       const matchesDate = isAfter(thisBillingItem.date, dateCutoff);
 
-      console.log(
-        'matchesDate',
-        matchesDate,
-        'date',
-        thisBillingItem.date,
-        'dateCutoff',
-        dateCutoff,
-        'cutoff',
-        selectedTransactionDate
-      );
-
       return matchesType && matchesDate;
     });
   }, [selectedTransactionType, selectedTransactionDate, combinedData]);
@@ -544,7 +533,6 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
       hasError,
       isLoading
     } = props;
-    console.log('render activity feed item', date, label, id);
     const rowProps: TableRowProps = {};
     if (type === 'invoice' && !isLoading) {
       rowProps.rowLink = `/account/billing/invoices/${id}`;
@@ -627,7 +615,10 @@ export const paymentToActivityFeedItem = (
     type: 'payment'
   };
 };
-
+/** 
+ * @param currentDatetime ISO format date
+ * @returns ISO format beginning of the range date 
+ */
 export const getCutoffFromDateRange = (
   range: DateRange,
   currentDatetime?: string
@@ -657,20 +648,21 @@ export const getCutoffFromDateRange = (
       outputDate = DateTime.fromISO('1970-01-01T00:00:00.000');
       break;
   }
-  // console.log('cutoffdate',outputDate.toFormat(API_DATETIME_NO_TZ_FORMAT) )
-  return outputDate.toFormat(API_DATETIME_NO_TZ_FORMAT);
+  return outputDate.toISO();
 };
 
+/**
+ * @param endDate in ISO format
+ */
 export const makeFilter = (endDate?: string) => {
-  // console.log('makefilter',endDate )
   const filter: any = {
     '+order_by': 'date',
     '+order': 'desc'
   };
-
   if (endDate) {
+    const filterEndDate = DateTime.fromISO(endDate);
     filter.date = {
-      '+gte': DateTime.fromISO(endDate).toFormat(API_DATETIME_NO_TZ_FORMAT)
+      '+gte': filterEndDate.toFormat(API_DATETIME_NO_TZ_FORMAT)
     };
   }
 

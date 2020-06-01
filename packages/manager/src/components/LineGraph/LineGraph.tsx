@@ -7,6 +7,7 @@ import {
   ChartTooltipItem,
   ChartData
 } from 'chart.js';
+import 'chartjs-adapter-luxon';
 import LineChartIcon from 'src/assets/icons/line-chart.svg';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -20,6 +21,7 @@ import { setUpCharts } from 'src/utilities/charts';
 import roundTo from 'src/utilities/roundTo';
 import { Metrics } from 'src/utilities/statMetrics';
 import MetricDisplayStyles from './NewMetricDisplay.styles';
+import {DateTime} from 'luxon'
 setUpCharts();
 
 export interface DataSet {
@@ -61,13 +63,6 @@ const lineOptions: ChartDataSets = {
   pointHitRadius: 10
 };
 
-// const parseInTimeZone = curry((timezone: string, utcMoment: any) => {
-
-//   const res =  DateTime.fromMillis(utcMoment);
-//   console.log('parseInTimeZone', utcMoment, res)
-//   return res
-// });
-
 const humanizeLargeData = (value: number) => {
   if (value >= 1000000) {
     return value / 1000000 + 'M';
@@ -82,7 +77,7 @@ const LineGraph: React.FC<CombinedProps> = props => {
   const inputEl: React.RefObject<any> = React.useRef(null);
   const [legendRendered, setLegendRendered] = React.useState(false);
   const [hiddenDatasets, setHiddenDatasets] = React.useState<Number[]>([]);
-  // const [, forceUpdate] = React.useState();
+
   const classes = useStyles();
   const {
     chartHeight,
@@ -90,7 +85,7 @@ const LineGraph: React.FC<CombinedProps> = props => {
     formatTooltip,
     suggestedMax,
     showToday,
-    // timezone,
+    timezone,
     data,
     rowHeaders,
     legendRows,
@@ -171,7 +166,11 @@ const LineGraph: React.FC<CombinedProps> = props => {
                     hour: 'MMM DD',
                     minute: 'MMM DD'
                   }
-            }
+            },adapters: {
+							date: {
+								zone: timezone
+							}
+						},
           }
         ]
       },
@@ -221,9 +220,11 @@ const LineGraph: React.FC<CombinedProps> = props => {
 
   const _formatData = () => {
     return data.map((dataSet, idx) => {
+      // console.log(dataSet.data[0])
       const timeData = dataSet.data.reduce((acc: any, point: any) => {
+
         acc.push({
-          t: point[0],
+          t: point[0] ,
           y: formatData ? formatData(point[1]) : point[1]
         });
         return acc;
