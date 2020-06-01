@@ -186,33 +186,35 @@ export class App extends React.Component<CombinedProps, State> {
           euuid={this.props.euuid}
         />
         <DocumentTitleSegment segment="Linode Manager" />
-        {this.props.flags.cmr ? (
-          <MainContent_CMR
-            accountCapabilities={accountCapabilities}
-            accountError={accountError}
-            accountLoading={accountLoading}
-            history={this.props.history}
-            location={this.props.location}
-            toggleSpacing={toggleSpacing}
-            toggleTheme={toggleTheme}
-            appIsLoading={this.props.appIsLoading}
-            isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
-            username={username}
-          />
-        ) : (
-          <MainContent
-            accountCapabilities={accountCapabilities}
-            accountError={accountError}
-            accountLoading={accountLoading}
-            history={this.props.history}
-            location={this.props.location}
-            toggleSpacing={toggleSpacing}
-            toggleTheme={toggleTheme}
-            appIsLoading={this.props.appIsLoading}
-            isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
-            username={username}
-          />
-        )}
+        {this.state.flagsLoaded ? (
+          this.props.flags.cmr ? (
+            <MainContent_CMR
+              accountCapabilities={accountCapabilities}
+              accountError={accountError}
+              accountLoading={accountLoading}
+              history={this.props.history}
+              location={this.props.location}
+              toggleSpacing={toggleSpacing}
+              toggleTheme={toggleTheme}
+              appIsLoading={this.props.appIsLoading}
+              isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
+              username={username}
+            />
+          ) : (
+            <MainContent
+              accountCapabilities={accountCapabilities}
+              accountError={accountError}
+              accountLoading={accountLoading}
+              history={this.props.history}
+              location={this.props.location}
+              toggleSpacing={toggleSpacing}
+              toggleTheme={toggleTheme}
+              appIsLoading={this.props.appIsLoading}
+              isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
+              username={username}
+            />
+          )
+        ) : null}
       </React.Fragment>
     );
   }
