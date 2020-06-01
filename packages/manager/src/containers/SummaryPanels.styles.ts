@@ -43,7 +43,7 @@ const summaryPanelStyles = (theme: Theme) =>
     root: {
       [theme.breakpoints.up('md')]: {
         paddingLeft: theme.spacing(1),
-        paddingTop: theme.spacing(1)
+        paddingTop: 0
       },
       [theme.breakpoints.up('lg')]: {
         padding: theme.spacing(1),
