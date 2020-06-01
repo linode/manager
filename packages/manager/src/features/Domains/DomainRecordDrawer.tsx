@@ -857,9 +857,12 @@ export const resolveAlias = (
 };
 
 const numericFields = ['port', 'weight', 'priority'];
-export const castFormValuesToNumeric = (data: Record<string, any>) => {
+export const castFormValuesToNumeric = (
+  data: Record<string, any>,
+  fieldNames: string[] = numericFields
+) => {
   return produce(data, draft => {
-    numericFields.forEach(thisField => {
+    fieldNames.forEach(thisField => {
       draft[thisField] = maybeCastToNumber(draft[thisField]);
     });
   });
