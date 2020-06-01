@@ -77,7 +77,7 @@ const styles = (theme: Theme) =>
       }
     },
     headerWrapper: {
-      marginTop: theme.spacing(1),
+      marginTop: 0,
       marginBottom: theme.spacing(2)
     },
     chart: {
@@ -440,12 +440,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <DocumentTitleSegment segment={`${linode.label} - Summary`} />
 
-        <Grid
-          container
-          id="tabpanel-summary"
-          role="tabpanel"
-          aria-labelledby="tab-summary"
-        >
+        <Grid container>
           <Grid item xs={12} md={8} lg={9} className={classes.main}>
             <Grid
               container
