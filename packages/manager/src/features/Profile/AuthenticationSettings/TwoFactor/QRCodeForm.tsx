@@ -39,7 +39,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const QRCodeForm: React.StatelessComponent<CombinedProps> = props => {
+const QRCodeForm: React.FC<CombinedProps> = props => {
   const { classes, secret, secretLink } = props;
   return (
     <React.Fragment>
@@ -70,7 +70,4 @@ const QRCodeForm: React.StatelessComponent<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-export default compose<any, any, any>(
-  styled,
-  RenderGuard
-)(QRCodeForm);
+export default compose<any, any, any>(styled, RenderGuard)(QRCodeForm);

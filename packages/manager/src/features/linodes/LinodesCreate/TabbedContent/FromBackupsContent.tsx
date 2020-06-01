@@ -325,8 +325,14 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                 onSelect={updateTypeID}
                 selectedID={selectedTypeID}
                 selectedDiskSize={selectedDiskSize}
-                updateFor={[selectedTypeID, selectedDiskSize, errors]}
+                updateFor={[
+                  selectedTypeID,
+                  selectedDiskSize,
+                  errors,
+                  this.props.disabledClasses
+                ]}
                 disabled={disabled}
+                disabledClasses={this.props.disabledClasses}
               />
               <LabelAndTagsPanel
                 labelFieldProps={{

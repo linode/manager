@@ -14,11 +14,10 @@ import summaryPanelStyles, {
   StyleProps
 } from 'src/containers/SummaryPanels.styles';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
+import { ExtendedNodeBalancer } from 'src/features/NodeBalancers/types';
 import { formatRegion } from 'src/utilities';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { NodeBalancerConsumer } from '../context';
-
-import { ExtendedNodeBalancer } from 'src/services/nodebalancers';
 
 type ClassNames =
   | 'NBsummarySection'
@@ -53,7 +52,7 @@ interface Props {
 
 type CombinedProps = Props & StyleProps & WithStyles<ClassNames>;
 
-const SummaryPanel: React.StatelessComponent<CombinedProps> = props => {
+const SummaryPanel: React.FC<CombinedProps> = props => {
   const { nodeBalancer, classes } = props;
 
   return (

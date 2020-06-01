@@ -18,7 +18,7 @@ const typeMap = {
   snapshot: 'Manual'
 };
 
-const BackupTableRow: React.StatelessComponent<Props> = props => {
+const BackupTableRow: React.FC<Props> = props => {
   const onDeploy = () => {
     props.handleDeploy(props.backup);
   };

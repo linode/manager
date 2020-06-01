@@ -65,7 +65,9 @@ export const initSentry = () => {
         'bmi_SafeAddOnload',
         'EBCallBackMessageReceived',
         // See http://toolbar.conduit.com/Developer/HtmlAndGadget/Methods/JSInjection.aspx
-        'conduitPage'
+        'conduitPage',
+        // Don't report client network errors.
+        'ChunkLoadError'
       ],
       whitelistUrls: [
         /** anything from either *.linode.com/* or localhost:3000 */

@@ -52,7 +52,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const NodeBalancersLandingTableRows: React.StatelessComponent<CombinedProps> = props => {
+const NodeBalancersLandingTableRows: React.FC<CombinedProps> = props => {
   const { classes, data, toggleDialog } = props;
 
   return (
@@ -75,7 +75,7 @@ const NodeBalancersLandingTableRows: React.StatelessComponent<CombinedProps> = p
             data-qa-nodebalancer-cell={nodeBalancer.label}
             rowLink={`/nodebalancers/${nodeBalancer.id}`}
             className="fade-in-table"
-            aria-label={nodeBalancer.label}
+            ariaLabel={nodeBalancer.label}
           >
             <TableCell parentColumn="Name" data-qa-nodebalancer-label>
               <Grid container wrap="nowrap" alignItems="center">
