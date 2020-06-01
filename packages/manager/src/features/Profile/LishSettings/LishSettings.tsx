@@ -159,6 +159,8 @@ class LishSettings extends React.Component<CombinedProps, State> {
       }
     });
 
+    console.log(authorizedKeysCount);
+
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Lish" />
@@ -211,12 +213,14 @@ class LishSettings extends React.Component<CombinedProps, State> {
                     className={classes.keyTextarea}
                     data-qa-public-key
                   />
-                  <Button
-                    buttonType="remove"
-                    onClick={this.onPublicKeyRemove(idx)}
-                    className={classes.remove}
-                    data-qa-remove
-                  />
+                  {authorizedKeys[idx] && (
+                    <Button
+                      buttonType="remove"
+                      onClick={this.onPublicKeyRemove(idx)}
+                      className={classes.remove}
+                      data-qa-remove
+                    />
+                  )}
                 </div>
               ))}
               <AddNewLink
