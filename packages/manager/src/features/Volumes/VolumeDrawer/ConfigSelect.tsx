@@ -98,7 +98,7 @@ class ConfigSelect extends React.Component<CombinedProps, State> {
     const { error, onChange, name, onBlur, value, ...rest } = this.props;
     const { loading, configs } = this.state;
 
-    if (!loading && configs.length <= 1) {
+    if (!loading && configs.length < 1) {
       return null;
     }
 

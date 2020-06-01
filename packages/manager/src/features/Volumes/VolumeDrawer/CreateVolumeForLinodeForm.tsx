@@ -146,8 +146,11 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
          * This form doesn't have a region select (the region is auto-populated)
          * so if the API returns an error with field === 'region' the field mapping
          * logic will pass over it. Explicitly use general error Notice in this case.
+         * If a config_id error is set, set the general error Notice to that.
          */
-        const generalError = status ? status.generalError : errors.region;
+        const generalError = status
+          ? status.generalError
+          : errors.config_id ?? errors.region;
 
         return (
           <Form>
@@ -303,10 +306,7 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
   origin: state.volumeDrawer.origin
 });
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const enhanced = compose<CombinedProps, Props>(
   styled,
