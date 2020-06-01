@@ -40,7 +40,7 @@ interface FormState {
   label: string;
 }
 
-export const AccessKeyDrawer: React.StatelessComponent<CombinedProps> = props => {
+export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
   const {
     isRestrictedUser,
     open,

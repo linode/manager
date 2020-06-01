@@ -69,9 +69,7 @@ const initialValues: RebuildFromImageForm = {
   root_pass: ''
 };
 
-export const RebuildFromImage: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const RebuildFromImage: React.FC<CombinedProps> = props => {
   const {
     classes,
     imagesData,

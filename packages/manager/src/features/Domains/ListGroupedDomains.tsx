@@ -73,7 +73,7 @@ interface Props extends Handlers {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ListGroupedDomains: React.StatelessComponent<CombinedProps> = props => {
+const ListGroupedDomains: React.FC<CombinedProps> = props => {
   const {
     data,
     onClone,

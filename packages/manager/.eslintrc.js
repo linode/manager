@@ -34,7 +34,7 @@ module.exports = {
     'ramda',
     'cypress',
     'prettier',
-    'testing-library'
+    'testing-library',
     'scanjs-rules',
     'xss'
   ],

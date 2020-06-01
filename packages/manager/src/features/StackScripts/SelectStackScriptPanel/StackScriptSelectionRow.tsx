@@ -65,9 +65,7 @@ export class StackScriptSelectionRow extends React.Component<
               {stackScriptUsername && (
                 <label
                   htmlFor={`${stackScriptID}`}
-                  className={`${classes.libRadioLabel} ${
-                    classes.stackScriptUsername
-                  }`}
+                  className={`${classes.libRadioLabel} ${classes.stackScriptUsername}`}
                 >
                   {stackScriptUsername} /&nbsp;
                 </label>
@@ -103,6 +101,7 @@ export class StackScriptSelectionRow extends React.Component<
         <TableRow
           data-qa-table-row={label}
           rowLink={onSelect ? e => onSelect(e, !checked) : undefined}
+          ariaLabel={label}
         >
           <TableCell>
             <Radio
@@ -135,10 +134,7 @@ const mapDispatchToProps: MapDispatchToProps<
 };
 
 export default recompose<CombinedProps, Props & RenderGuardProps>(
-  connect(
-    undefined,
-    mapDispatchToProps
-  ),
+  connect(undefined, mapDispatchToProps),
   RenderGuard,
   withStyles(styles)
 )(StackScriptSelectionRow);

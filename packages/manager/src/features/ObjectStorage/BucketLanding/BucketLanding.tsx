@@ -246,17 +246,17 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
   );
 };
 
-const RenderLoading: React.StatelessComponent<{}> = () => {
+const RenderLoading: React.FC<{}> = () => {
   return <CircleProgress data-testid="loading-state" />;
 };
 
-const RenderError: React.StatelessComponent<{}> = () => {
+const RenderError: React.FC<{}> = () => {
   return (
     <ErrorState errorText="There was an error retrieving your buckets. Please reload and try again." />
   );
 };
 
-const RenderEmpty: React.StatelessComponent<{
+const RenderEmpty: React.FC<{
   onClick: () => void;
 }> = props => {
   return (

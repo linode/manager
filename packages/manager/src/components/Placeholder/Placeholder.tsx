@@ -103,7 +103,7 @@ export interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const Placeholder: React.StatelessComponent<CombinedProps> = props => {
+const Placeholder: React.FC<CombinedProps> = props => {
   const {
     animate,
     classes,

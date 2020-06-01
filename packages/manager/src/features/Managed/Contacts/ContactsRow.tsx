@@ -15,7 +15,7 @@ export const ContactsRow: React.FunctionComponent<Props> = props => {
   const { contact, updateOrAdd, openDrawer, openDialog } = props;
 
   return (
-    <TableRow key={contact.id}>
+    <TableRow ariaLabel={`Contact ${contact.id}`} key={contact.id}>
       <TableCell parentColumn="Name">{contact.name}</TableCell>
       <TableCell parentColumn="Group">{contact.group}</TableCell>
       <TableCell parentColumn="E-mail">{contact.email}</TableCell>

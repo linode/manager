@@ -63,7 +63,7 @@ interface HandlerProps {
 
 type CombinedProps = Props & HandlerProps & WithStyles<ClassNames>;
 
-export const ResultGroup: React.StatelessComponent<CombinedProps> = props => {
+export const ResultGroup: React.FC<CombinedProps> = props => {
   const { entity, classes, groupSize, results, toggle, showMore } = props;
 
   if (isEmpty(results)) {

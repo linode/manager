@@ -11,7 +11,7 @@ import Notifications from './Notifications';
 
 type CombinedProps = LinodeContext;
 
-const LinodeDetailHeader: React.StatelessComponent<CombinedProps> = props => {
+const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   const { linodeEvents, linodeStatus, linodeDisks } = props;
   const firstEventWithProgress = (linodeEvents || []).find(
     eachEvent => typeof eachEvent.percent_complete === 'number'
