@@ -23,8 +23,9 @@ import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
-import SideMenu from 'src/components/SideMenu';
 import SuspenseLoader from 'src/components/SuspenseLoader';
+// @cmr
+import PrimaryNav_CMR from 'src/components/PrimaryNav/PrimaryNav_CMR';
 
 import withGlobalErrors, {
   Props as GlobalErrorProps
@@ -54,14 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   content: {
-    flex: 1,
-    transition: 'margin-left .1s linear',
-    [theme.breakpoints.up('md')]: {
-      marginLeft: theme.spacing(14) + 103 // 215
-    },
-    [theme.breakpoints.up('xl')]: {
-      marginLeft: theme.spacing(22) + 99 // 275
-    }
+    flex: 1
   },
   fullWidthContent: {
     marginLeft: 0,
@@ -155,7 +149,7 @@ const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const MainContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const [menuIsOpen, toggleMenu] = React.useState<boolean>(false);
+  const [, toggleMenu] = React.useState<boolean>(false);
 
   /**
    * this is the case where the user has successfully completed signup
@@ -224,9 +218,9 @@ const MainContent: React.FC<CombinedProps> = props => {
               [classes.hidden]: props.appIsLoading
             })}
           >
-            <SideMenu
-              open={menuIsOpen}
-              desktopOpen={desktopMenuIsOpen || false}
+            {/* @cmr */}
+            <PrimaryNav_CMR
+              isCollapsed={false}
               closeMenu={() => toggleMenu(false)}
               toggleTheme={props.toggleTheme}
               toggleSpacing={props.toggleSpacing}
@@ -307,7 +301,6 @@ const MainContent: React.FC<CombinedProps> = props => {
                 </Grid>
               </main>
             </div>
-
             <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
             <ToastNotifications />
             <DomainDrawer />

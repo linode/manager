@@ -2,38 +2,34 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   menuGrid: {
-    minHeight: 64,
+    minHeight: 50,
     width: '100%',
     height: '100%',
     margin: 0,
     padding: 0,
-    [theme.breakpoints.up('sm')]: {
-      minHeight: 72
-    },
-    [theme.breakpoints.up('md')]: {
-      minHeight: 80
+    backgroundColor: theme.bg.primaryNavPaper,
+    borderColor: theme.bg.primaryNavBorder,
+    left: 'inherit',
+    boxShadow: 'none',
+    transition: 'width linear .1s',
+    overflowX: 'scroll',
+    alignItems: 'center',
+    justifyContent: 'center',
+    [theme.breakpoints.down('md')]: {
+      justifyContent: 'left'
     }
   },
+  // @todo: better name for this container
   fadeContainer: {
-    width: '100%',
-    height: 'calc(100% - 90px)',
+    marginLeft: 8,
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   logoItem: {
-    minHeight: 64,
     position: 'relative',
     display: 'flex',
-    alignItems: 'center',
-    padding: `
-        ${theme.spacing(2) - 2}px
-        0
-        ${theme.spacing(1) + theme.spacing(1) / 2}px
-        ${theme.spacing(4)}px
-      `,
-    '& svg': {
-      maxWidth: theme.spacing(3) + 91
-    }
+    alignItems: 'center'
   },
   logoCollapsed: {
     '& .logoLetters': {
@@ -45,52 +41,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     position: 'relative',
     cursor: 'pointer',
-    maxHeight: 42,
-    transition: theme.transitions.create(['background-color']),
-    padding: `
-        ${theme.spacing(1.5)}px
-        ${theme.spacing(4) - 2}px
-        ${theme.spacing(1.5) - 1}px
-        ${theme.spacing(4) + 1}px
-      `,
-    '&:hover': {
-      backgroundColor: theme.bg.primaryNavActiveBG,
-      '& $linkItem': {
-        color: 'white'
-      },
-      '& svg': {
-        fill: 'white',
-        '& *': {
-          stroke: 'white'
-        }
-      }
-    },
-    '& .icon': {
-      marginRight: theme.spacing(2),
-      '& svg': {
-        width: 26,
-        height: 26,
-        transform: 'scale(1.75)',
-        fill: theme.color.primaryNavText,
-        transition: theme.transitions.create(['fill']),
-        '&.small': {
-          transform: 'scale(1)'
-        },
-        '&:not(.wBorder) circle, & .circle': {
-          display: 'none'
-        },
-        '& *': {
-          transition: theme.transitions.create(['stroke']),
-          stroke: theme.color.primaryNavText
-        }
-      }
-    }
+    // temporary:
+    padding: `0 18px 0 18px`,
+    fontSize: '1rem'
   },
   listItemCollapsed: {},
   collapsible: {
     fontSize: '0.9rem'
   },
   linkItem: {
+    height: '100%',
     transition: theme.transitions.create(['color']),
     color: theme.color.primaryNavText,
     opacity: 1,
@@ -100,48 +60,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       opacity: 0
     }
   },
-  active: {
-    backgroundColor: theme.bg.primaryNavActiveBG,
-    '&:before': {
-      content: "''",
-      borderStyle: 'solid',
-      borderWidth: `
-          ${theme.spacing(1) + 11}px
-          ${theme.spacing(1) + 6}px
-          ${theme.spacing(1) + 11}px
-          0
-        `,
-      borderColor: `transparent ${theme.bg.primaryNavActive} transparent transparent`,
-      position: 'absolute',
-      right: 0,
-      top: theme.spacing(1) === 8 ? 2 : 0
-    },
-    '&:hover': {
-      '&:before': {
-        content: "''",
-        borderColor: `transparent ${theme.bg.primaryNavActive} transparent transparent`
-      }
-    },
-    [theme.breakpoints.down('sm')]: {
-      '&:before': {
-        display: 'none'
-      }
-    },
-    '&.listItemCollapsed': {
-      '&:before': {
-        top: theme.spacing(1) === 8 ? 2 : 4
-      }
-    }
-  },
-  spacer: {
-    padding: 25
-  },
   divider: {
     backgroundColor: 'rgba(0, 0, 0, 0.12)'
   },
   settings: {
-    width: 30,
-    margin: `auto auto 16px`,
     alignItems: 'center',
     justifyContent: 'center',
     display: 'flex',

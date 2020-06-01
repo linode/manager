@@ -28,10 +28,9 @@ import useFlags from 'src/hooks/useFlags';
 import usePrefetch from 'src/hooks/usePreFetch';
 import { sendOneClickNavigationEvent } from 'src/utilities/ga';
 import AdditionalMenuItems from './AdditionalMenuItems';
-import useStyles from './PrimaryNav.styles';
+import useStyles from './PrimaryNav_CMR.styles';
 import SpacingToggle from './SpacingToggle';
 import ThemeToggle from './ThemeToggle';
-import { linkIsActive } from './utils';
 import useDomains from 'src/hooks/useDomains';
 
 type NavEntity =
@@ -145,28 +144,33 @@ export const PrimaryNav: React.FC<Props> = props => {
         icon: <Longview className="small" />
       },
       {
+        hide: true,
         display: 'Kubernetes',
         href: '/kubernetes/clusters',
         icon: <Kubernetes />
       },
       {
-        hide: !_isManagedAccount,
+        hide: true,
+        // hide: !_isManagedAccount,
         display: 'Managed',
         href: '/managed',
         icon: <Managed />
       },
       {
+        hide: true,
         display: 'StackScripts',
         href: '/stackscripts?type=account',
         icon: <StackScript />
       },
       {
+        hide: true,
         display: 'Images',
         href: '/images',
         icon: <Image className="small" />
       },
       {
-        hide: account.lastUpdated === 0 || !_hasAccountAccess,
+        hide: true,
+        // hide: account.lastUpdated === 0 || !_hasAccountAccess,
         display: 'Account',
         href: '/account/billing',
         icon: <Account className="small" />,
@@ -192,7 +196,7 @@ export const PrimaryNav: React.FC<Props> = props => {
       container
       alignItems="flex-start"
       justify="flex-start"
-      direction="column"
+      direction="row"
       wrap="nowrap"
       spacing={0}
       component="nav"
@@ -206,7 +210,7 @@ export const PrimaryNav: React.FC<Props> = props => {
           })}
         >
           <Link to={`/dashboard`} onClick={closeMenu} title="Dashboard">
-            <Logo width={115} height={43} />
+            <Logo width={101} height={29} />
           </Link>
         </div>
       </Grid>
@@ -243,12 +247,9 @@ export const PrimaryNav: React.FC<Props> = props => {
 
         {/** menu items under the main navigation links */}
         <AdditionalMenuItems
-          linkClasses={(href?: string) =>
+          linkClasses={() =>
             classNames({
-              [classes.listItem]: true,
-              [classes.active]: href
-                ? linkIsActive(href, location.search, location.pathname)
-                : false
+              [classes.listItem]: true
             })
           }
           listItemClasses={classNames({
@@ -265,15 +266,7 @@ export const PrimaryNav: React.FC<Props> = props => {
             to="/profile/display"
             onClick={closeMenu}
             data-qa-nav-item="/profile/display"
-            className={classNames({
-              [classes.listItem]: true,
-              [classes.active]:
-                linkIsActive(
-                  '/profile/display',
-                  location.search,
-                  location.pathname
-                ) === true
-            })}
+            className={classes.listItem}
           >
             <ListItemText
               primary="My Profile"
@@ -300,7 +293,6 @@ export const PrimaryNav: React.FC<Props> = props => {
             />
           </Link>
         </Hidden>
-        <div className={classes.spacer} />
         <IconButton
           onClick={(event: React.MouseEvent<HTMLElement>) => {
             setAnchorEl(event.currentTarget);
@@ -362,11 +354,11 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
     href,
     onClick,
     attr,
-    activeLinks,
+    // activeLinks,
     icon,
     display,
-    locationSearch,
-    locationPathname,
+    // locationSearch,
+    // locationPathname,
     prefetchProps
   } = props;
 
@@ -382,16 +374,7 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
         }}
         {...prefetchProps}
         {...attr}
-        className={classNames({
-          [classes.listItem]: true,
-          [classes.active]: linkIsActive(
-            href,
-            locationSearch,
-            locationPathname,
-            activeLinks
-          ),
-          listItemCollapsed: isCollapsed
-        })}
+        className={classes.listItem}
       >
         {icon && isCollapsed && <div className="icon">{icon}</div>}
         <ListItemText
