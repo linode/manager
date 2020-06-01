@@ -77,7 +77,6 @@ export const PrimaryNav: React.FC<Props> = props => {
   >();
 
   const flags = useFlags();
-  const location = useLocation();
   const { domains, requestDomains } = useDomains();
 
   const {
@@ -225,8 +224,6 @@ export const PrimaryNav: React.FC<Props> = props => {
             key: thisLink.display,
             closeMenu,
             isCollapsed,
-            locationSearch: location.search,
-            locationPathname: location.pathname,
             ...thisLink
           };
 
@@ -335,8 +332,6 @@ export default React.memo(PrimaryNav);
 interface PrimaryLinkProps extends PrimaryLink {
   closeMenu: () => void;
   isCollapsed: boolean;
-  locationSearch: string;
-  locationPathname: string;
   prefetchProps?: {
     onMouseEnter: LinkProps['onMouseEnter'];
     onMouseLeave: LinkProps['onMouseLeave'];
@@ -354,11 +349,8 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
     href,
     onClick,
     attr,
-    // activeLinks,
     icon,
     display,
-    // locationSearch,
-    // locationPathname,
     prefetchProps
   } = props;
 
