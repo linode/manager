@@ -90,7 +90,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
       initialValues={initialValues}
       validationSchema={CreateVolumeSchema}
       onSubmit={(values, { setSubmitting, setStatus, setErrors }) => {
-        const { label, size, configId, tags } = values;
+        const { label, size, config_id, tags } = values;
 
         setSubmitting(true);
 
@@ -101,7 +101,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
           label,
           size: maybeCastToNumber(size),
           linode_id: maybeCastToNumber(linodeId),
-          config_id: maybeCastToNumber(configId),
+          config_id: maybeCastToNumber(config_id),
           tags: tags.map(v => v.value)
         })
           .then(({ label: newLabel, filesystem_path }) => {
@@ -148,9 +148,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
          * logic will pass over it. Explicitly use general error Notice in this case.
          * If a config_id error is set, set the general error Notice to that.
          */
-        const generalError = status
-          ? status.generalError
-          : errors.config_id ?? errors.region;
+        const generalError = status ? status.generalError : errors.region;
 
         return (
           <Form>
@@ -209,12 +207,12 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
             />
 
             <ConfigSelect
-              error={touched.configId ? errors.configId : undefined}
+              error={touched.config_id ? errors.config_id : undefined}
               linodeId={linodeId}
               name="configId"
               onBlur={handleBlur}
-              onChange={(id: number) => setFieldValue('configId', id)}
-              value={values.configId}
+              onChange={(id: number) => setFieldValue('config_id', id)}
+              value={values.config_id}
               disabled={disabled}
             />
 
@@ -258,7 +256,7 @@ interface FormState {
   size: number;
   region: string;
   linodeId: number;
-  configId: number;
+  config_id: number;
   tags: Tag[];
 }
 
@@ -267,7 +265,7 @@ const initialValues: FormState = {
   size: 20,
   region: 'none',
   linodeId: -1,
-  configId: -1,
+  config_id: -1,
   tags: []
 };
 
