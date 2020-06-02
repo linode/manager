@@ -9,14 +9,34 @@ export interface BreadCrumbProps {
   title: string;
   iconType: Variant;
   parentLink?: string;
+  parentText?: string;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
   headerWithLink: {
-    background: `
-      linearGradient(135deg, transparent 15px, #58a 0) top left,
-      linearGradient(-135deg, transparent 15px, #58a 0) top right
-      `
+    position: 'relative',
+    backgroundColor: theme.bg.lightBlue,
+    marginRight: theme.spacing(2),
+    '&:before': {
+      content: '""',
+      position: 'absolute',
+      left: '100%',
+      top: 0,
+      width: 15,
+      height: '50%',
+      background: `linear-gradient(to right top, ${theme.bg.lightBlue} 0%, ${theme.bg.lightBlue} 45%, transparent 46.1%)`,
+      zIndex: 1
+    },
+    '&:after': {
+      content: '""',
+      position: 'absolute',
+      left: '100%',
+      bottom: 0,
+      width: 15,
+      height: '50%',
+      background: `linear-gradient(to right bottom, ${theme.bg.lightBlue} 0%, ${theme.bg.lightBlue} 45%, transparent 46.1%)`,
+      zIndex: 1
+    }
   },
   parentLinkText: {
     color: theme.color.blue
@@ -24,26 +44,21 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const HeaderBreadCrumb: React.FC<BreadCrumbProps> = props => {
-  const { iconType, parentLink, title } = props;
+  const { iconType, parentLink, parentText, title } = props;
   const classes = useStyles();
 
   if (parentLink) {
     return (
       <>
-        <Grid item>
-          <Grid
-            container
-            className={classes.headerWithLink}
-            alignItems="center"
-            justify="center"
-          >
+        <Grid item className={classes.headerWithLink}>
+          <Grid container alignItems="center" justify="center">
             <Grid item>
               <EntityIcon variant={iconType} />
             </Grid>
             <Grid item>
               <Link to={parentLink}>
                 <Typography variant="h2" className={classes.parentLinkText}>
-                  {iconType}s
+                  {parentText}
                 </Typography>
               </Link>
             </Grid>

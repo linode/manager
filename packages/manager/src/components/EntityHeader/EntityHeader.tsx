@@ -11,7 +11,7 @@ export interface HeaderProps extends BreadCrumbProps {
 }
 
 export const LandingHeader: React.FC<HeaderProps> = props => {
-  const { actions, iconType, parentLink, title } = props;
+  const { actions, iconType, parentLink, parentText, title } = props;
   const classes = useStyles();
 
   return (
@@ -27,6 +27,7 @@ export const LandingHeader: React.FC<HeaderProps> = props => {
             iconType={iconType}
             title={title}
             parentLink={parentLink}
+            parentText={parentText}
           />
           {props.children && <Grid item>{props.children}</Grid>}
         </Grid>

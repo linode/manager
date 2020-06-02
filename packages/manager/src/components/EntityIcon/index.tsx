@@ -1,1 +1,4 @@
-export { default, Variant } from './EntityIcon';
+import EntityIcon, { Variant as _Variant } from './EntityIcon';
+
+export default EntityIcon;
+export type Variant = _Variant;

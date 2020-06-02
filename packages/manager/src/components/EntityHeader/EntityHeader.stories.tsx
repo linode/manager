@@ -58,6 +58,7 @@ storiesOf('EntityHeader', module)
       <EntityHeader
         title="My-linode-12345"
         parentLink="/linodes"
+        parentText="Linodes"
         iconType="linode"
         actions={
           <ActionMenu ariaLabel="linode-detail" createActions={() => []} />
