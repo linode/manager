@@ -175,7 +175,7 @@ export const reducer: EventsReducer = (state, action) => {
   }
 };
 
-export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
+export const EventsLanding: React.FC<CombinedProps> = props => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [loadMoreEvents, setLoadMoreEvents] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>(undefined);

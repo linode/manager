@@ -23,9 +23,7 @@ interface RevokeKeysDialogProps {
   errors?: APIError[];
 }
 
-export const RevokeAccessKeyDialog: React.StatelessComponent<
-  RevokeKeysDialogProps
-> = props => {
+export const RevokeAccessKeyDialog: React.FC<RevokeKeysDialogProps> = props => {
   const {
     label,
     isOpen,

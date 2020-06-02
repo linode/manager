@@ -471,7 +471,11 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     const { title, type } = this.props;
 
     return tokens.map((token: Token) => (
-      <TableRow key={token.id} data-qa-table-row={token.label}>
+      <TableRow
+        ariaLabel={token.label}
+        key={token.id}
+        data-qa-table-row={token.label}
+      >
         <TableCell parentColumn="Label">
           <Typography variant="h3" data-qa-token-label>
             {token.label}

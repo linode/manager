@@ -15,7 +15,7 @@ interface Props {
 }
 
 type CombinedProps = Props & StateProps;
-export const ClusterSelect: React.StatelessComponent<CombinedProps> = props => {
+export const ClusterSelect: React.FC<CombinedProps> = props => {
   const {
     selectedCluster,
     error,

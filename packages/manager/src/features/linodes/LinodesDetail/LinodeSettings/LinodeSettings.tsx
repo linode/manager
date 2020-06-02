@@ -27,7 +27,7 @@ const styles = (theme: Theme) =>
 
 type CombinedProps = WithStyles<ClassNames>;
 
-const LinodeSettings: React.StatelessComponent<CombinedProps> = props => {
+const LinodeSettings: React.FC<CombinedProps> = props => {
   const { classes } = props;
 
   return (

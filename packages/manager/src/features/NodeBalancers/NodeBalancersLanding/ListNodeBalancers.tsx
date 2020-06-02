@@ -48,7 +48,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ListNodeBalancers: React.StatelessComponent<CombinedProps> = props => {
+const ListNodeBalancers: React.FC<CombinedProps> = props => {
   const { data, orderBy, order, handleOrderChange, toggleDialog } = props;
 
   const dataLength = data.length;

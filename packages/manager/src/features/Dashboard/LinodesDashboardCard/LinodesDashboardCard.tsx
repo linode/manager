@@ -8,12 +8,7 @@ import { Link } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import Table from 'src/components/core/Table';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
@@ -40,48 +35,36 @@ interface EntityEvent extends Omit<Event, 'entity'> {
   entity: Entity;
 }
 
-type ClassNames =
-  | 'root'
-  | 'linodeWrapper'
-  | 'labelCol'
-  | 'moreCol'
-  | 'actionsCol'
-  | 'wrapHeader';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      marginTop: 0
-    },
-    linodeWrapper: {
-      display: 'inline-flex',
-      width: 'auto'
-    },
-    labelCol: {
-      width: '60%'
-    },
-    moreCol: {
-      width: '30%'
-    },
-    actionsCol: {
-      width: '10%'
-    },
-    wrapHeader: {
-      whiteSpace: 'nowrap'
-    }
-  });
+const useStyles = makeStyles(() => ({
+  root: {
+    marginTop: 0
+  },
+  linodeWrapper: {
+    display: 'inline-flex',
+    width: 'auto'
+  },
+  labelCol: {
+    width: '60%'
+  },
+  moreCol: {
+    width: '30%'
+  },
+  actionsCol: {
+    width: '10%'
+  },
+  wrapHeader: {
+    whiteSpace: 'nowrap'
+  }
+}));
 
 interface ConnectedProps {
   types: LinodeType[];
 }
 
-type CombinedProps = ConnectedProps &
-  WithUpdatingLinodesProps &
-  WithTypesProps &
-  WithStyles<ClassNames>;
+type CombinedProps = ConnectedProps & WithUpdatingLinodesProps & WithTypesProps;
 
 const LinodesDashboardCard: React.FC<CombinedProps> = props => {
-  const { classes } = props;
+  const classes = useStyles();
 
   const { _loading } = useReduxLoad(['linodes', 'images']);
 
@@ -145,7 +128,12 @@ const LinodesDashboardCard: React.FC<CombinedProps> = props => {
     return data.map(linode => {
       const { id, label, region } = linode;
       return (
-        <TableRow key={label} rowLink={`/linodes/${id}`} data-qa-linode>
+        <TableRow
+          key={label}
+          ariaLabel={`Linode ${label}`}
+          rowLink={`/linodes/${id}`}
+          data-qa-linode
+        >
           <LinodeRowHeadCell
             loading={false}
             recentEvent={linode.recentEvent}
@@ -193,13 +181,12 @@ const LinodesDashboardCard: React.FC<CombinedProps> = props => {
     </DashboardCard>
   );
 };
-const styled = withStyles(styles);
 
 interface WithTypesProps {
   typesData: LinodeType[];
 }
 
-const withTypes = connect((state: ApplicationState, ownProps) => ({
+const withTypes = connect((state: ApplicationState) => ({
   typesData: state.__resources.types.entities
 }));
 
@@ -214,7 +201,7 @@ interface WithUpdatingLinodesProps {
   error?: APIError[];
 }
 
-const withUpdatingLinodes = connect((state: ApplicationState, ownProps: {}) => {
+const withUpdatingLinodes = connect((state: ApplicationState) => {
   const linodes = Object.values(state.__resources.linodes.itemsById);
   const notifications = state.__resources.notifications.data || [];
 
@@ -260,10 +247,6 @@ const isWantedEvent = (e: Event): e is EntityEvent => {
   return false;
 };
 
-const enhanced = recompose<CombinedProps, {}>(
-  withUpdatingLinodes,
-  styled,
-  withTypes
-);
+const enhanced = recompose<CombinedProps, {}>(withUpdatingLinodes, withTypes);
 
 export default enhanced(LinodesDashboardCard) as React.ComponentType<{}>;
