@@ -1,56 +1,41 @@
 import * as React from 'react';
 
-import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
-import Typography from 'src/components/core/Typography';
 import Button from 'src/components/Button';
 import DocumentationButton from 'src/components/CMR_DocumentationButton';
+import EntityHeader, { HeaderProps } from 'src/components/EntityHeader';
 
-const useStyles = makeStyles((theme: Theme) => ({ root: {} }));
-
-export interface HeaderProps {
-  title: string;
-  iconType: string;
-  onAddNew?: () => void;
-  docsLink?: string;
+interface Props extends Omit<HeaderProps, 'actions'> {
+  docsLink: string;
+  onAddNew?: () => any;
 }
 
-export const LandingHeader: React.FC<HeaderProps> = props => {
-  const { docsLink, onAddNew, title } = props;
-  const classes = useStyles();
+/**
+ * This component is essentially a variant of the more abstract EntityHeader
+ * component, included as its own component because it will be used in
+ * essentially this form across all entity landing pages.
+ */
 
-  return (
-    <Grid
-      container
-      alignItems="center"
-      justify="space-between"
-      className={classes.root}
-    >
-      <Grid item>
-        <Grid container direction="row" alignItems="center">
+export const LandingHeader: React.FC<Props> = props => {
+  const { docsLink, onAddNew, title } = props;
+
+  const actions = React.useMemo(
+    () => (
+      <Grid container direction="row" alignItems="center" justify="center">
+        {onAddNew && (
           <Grid item>
-            <i />
+            <Button buttonType="primary" onClick={onAddNew}>
+              Create a {title}
+            </Button>
           </Grid>
-          <Grid item>
-            <Typography variant="h2">{title}s</Typography>
-          </Grid>
-          {props.children && <Grid item>{props.children}</Grid>}
-        </Grid>
+        )}
+        {docsLink && <DocumentationButton href={docsLink} />}
       </Grid>
-      <Grid item>
-        <Grid container direction="row" alignItems="center" justify="center">
-          {onAddNew && (
-            <Grid item>
-              <Button buttonType="primary" onClick={onAddNew}>
-                Create a {title}
-              </Button>
-            </Grid>
-          )}
-          {docsLink && <DocumentationButton href={docsLink} />}
-        </Grid>
-      </Grid>
-    </Grid>
+    ),
+    [docsLink, title, onAddNew]
   );
+
+  return <EntityHeader actions={actions} {...props} />;
 };
 
 export default LandingHeader;
