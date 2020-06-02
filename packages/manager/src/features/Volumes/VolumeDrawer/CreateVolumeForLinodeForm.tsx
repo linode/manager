@@ -101,7 +101,9 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
           label,
           size: maybeCastToNumber(size),
           linode_id: maybeCastToNumber(linodeId),
-          config_id: maybeCastToNumber(config_id),
+          config_id:
+            // config_id still set to default value of -1? make it undefined, so volume gets created on back-end according to the API logic
+            config_id === -1 ? undefined : maybeCastToNumber(config_id),
           tags: tags.map(v => v.value)
         })
           .then(({ label: newLabel, filesystem_path }) => {
@@ -146,9 +148,16 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
          * This form doesn't have a region select (the region is auto-populated)
          * so if the API returns an error with field === 'region' the field mapping
          * logic will pass over it. Explicitly use general error Notice in this case.
-         * If a config_id error is set, set the general error Notice to that.
+         * If configs are not available, set the general error Notice to the config_id error (so that the error still shows in the UI instead of creation failing silently).
          */
-        const generalError = status ? status.generalError : errors.region;
+
+        const { config_id } = values;
+
+        const generalError = status
+          ? status.generalError
+          : config_id === -1
+          ? errors.config_id
+          : errors.region;
 
         return (
           <Form>
