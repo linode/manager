@@ -63,6 +63,18 @@ storiesOf('EntityHeader', module)
         actions={
           <ActionMenu ariaLabel="linode-detail" createActions={() => []} />
         }
-      />
+      >
+        <Chip
+          style={{
+            backgroundColor: '#00b159',
+            color: 'white',
+            fontSize: '1.1 rem',
+            padding: '10px'
+          }}
+          label={'RUNNING'}
+          component="span"
+          clickable={false}
+        />{' '}
+      </EntityHeader>
     </div>
   ));
