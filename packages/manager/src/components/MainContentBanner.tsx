@@ -45,4 +45,4 @@ const MainContentBanner: React.FC<Props> = props => {
   );
 };
 
-export default MainContentBanner;
+export default React.memo(MainContentBanner);

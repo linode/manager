@@ -4,6 +4,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 import { compose } from 'recompose';
+import { isEmpty } from 'ramda';
 import MainContentBanner from 'src/components/MainContentBanner';
 import Box from 'src/components/core/Box';
 import {
@@ -239,7 +240,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                 }
               `}
             >
-              {Boolean(flags.mainContentBanner?.text) && (
+              {!isEmpty(flags.mainContentBanner) && (
                 <MainContentBanner
                   bannerText={flags.mainContentBanner?.text ?? ''}
                   url={flags.mainContentBanner?.link?.url ?? ''}
