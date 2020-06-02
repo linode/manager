@@ -44,7 +44,7 @@ export const formatDate = (
 ): string => {
   let time;
 
-  /** get the timezone from redux and use it as the moment timezone */
+  /** get the timezone from redux and use it as the timezone */
   const state = store.getState();
   const userTimezone = state.__resources?.profile?.data?.timezone ?? 'GMT';
 
