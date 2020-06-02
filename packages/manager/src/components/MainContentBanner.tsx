@@ -37,9 +37,11 @@ const MainContentBanner: React.FC<Props> = props => {
     <Grid className={classes.bannerOuter} item xs={12}>
       <Typography variant="h2" className={classes.header}>
         {bannerText}&nbsp;
-        <Link to={url} className={classes.link}>
-          {linkText}
-        </Link>
+        {linkText && url && (
+          <Link to={url} className={classes.link}>
+            {linkText}
+          </Link>
+        )}
       </Typography>
     </Grid>
   );
