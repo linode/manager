@@ -15,9 +15,7 @@ export interface HeaderProps {
   docsLink?: string;
 }
 
-export type CombinedProps = HeaderProps;
-
-export const LandingHeader: React.FC<CombinedProps> = props => {
+export const LandingHeader: React.FC<HeaderProps> = props => {
   const { docsLink, onAddNew, title } = props;
   const classes = useStyles();
 
@@ -36,9 +34,9 @@ export const LandingHeader: React.FC<CombinedProps> = props => {
           <Grid item>
             <Typography variant="h2">{title}s</Typography>
           </Grid>
+          {props.children && <Grid item>{props.children}</Grid>}
         </Grid>
       </Grid>
-      {props.children && <Grid item>{props.children}</Grid>}
       <Grid item>
         <Grid container direction="row" alignItems="center" justify="center">
           {onAddNew && (
@@ -55,4 +53,4 @@ export const LandingHeader: React.FC<CombinedProps> = props => {
   );
 };
 
-export default React.memo(LandingHeader);
+export default LandingHeader;
