@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { makeStyles, Theme } from 'src/components/core/styles';
+import EntityIcon, { Variant } from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import Typography from 'src/components/core/Typography';
 
@@ -8,12 +9,12 @@ const useStyles = makeStyles((theme: Theme) => ({ root: {} }));
 
 export interface HeaderProps {
   title: string;
-  iconType: string;
+  iconType: Variant;
   actions: JSX.Element;
 }
 
 export const LandingHeader: React.FC<HeaderProps> = props => {
-  const { actions, title } = props;
+  const { actions, iconType, title } = props;
   const classes = useStyles();
 
   return (
@@ -26,7 +27,7 @@ export const LandingHeader: React.FC<HeaderProps> = props => {
       <Grid item>
         <Grid container direction="row" alignItems="center">
           <Grid item>
-            <i />
+            <EntityIcon variant={iconType} />
           </Grid>
           <Grid item>
             <Typography variant="h2">{title}s</Typography>

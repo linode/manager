@@ -1,1 +1,1 @@
-export { default } from './EntityIcon';
+export { default, Variant } from './EntityIcon';
