@@ -4,6 +4,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 import { compose } from 'recompose';
+import BLMBanner from 'src/components/BLMBanner';
 import Box from 'src/components/core/Box';
 import {
   makeStyles,
@@ -242,6 +243,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                 }
               `}
             >
+              <BLMBanner />
               <TopMenu
                 openSideMenu={() => toggleMenu(true)}
                 desktopMenuToggle={desktopMenuToggle}
