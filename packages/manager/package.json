@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.9.1",
+  "version": "1.10.0",
   "private": true,
   "engines": {
     "node": ">= 10.16.0"
@@ -41,7 +41,7 @@
     "jspdf": "^1.5.3",
     "jspdf-autotable": "^3.2.4",
     "launchdarkly-react-client-sdk": "2.11.0",
-    "@linode/api-v4": "^0.26.0-alpha.0",
+    "@linode/api-v4": "^0.27.0-alpha.0",
     "logic-query-parser": "^0.0.5",
     "md5": "^2.2.1",
     "memoizee": "^0.4.14",
@@ -134,6 +134,7 @@
     "@storybook/addon-storyshots": "~5.3.7",
     "@storybook/addons": "~5.3.7",
     "@storybook/react": "~5.3.7",
+    "@svgr/webpack": "^4.3.3",
     "@testing-library/cypress": "^5.3.0",
     "@testing-library/jest-dom": "^4.2.3",
     "@testing-library/react": "^8.0.7",
@@ -248,7 +249,6 @@
     "source-map-loader": "^0.2.4",
     "storybook-react-router": "~1.0.8",
     "style-loader": "^0.23.1",
-    "svgr": "^1.9.0",
     "sw-precache-webpack-plugin": "^0.11.5",
     "ts-jest": "^24.1.0",
     "ts-loader": "^7.0.1",

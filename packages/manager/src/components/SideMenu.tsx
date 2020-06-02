@@ -21,7 +21,7 @@ const styles = (theme: Theme) =>
       height: '100%',
       width: theme.spacing(14) + 103, // 215
       backgroundColor: theme.bg.primaryNavPaper,
-      borderColor: theme.bg.primaryNavBorder,
+      borderRight: 'none',
       left: 'inherit',
       boxShadow: 'none',
       transition: 'width linear .1s',

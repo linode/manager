@@ -1,7 +1,7 @@
 # This workflow run unit tests for the SDK as well as a build. It will then
 # run npm publish if the preceding steps succeeded.
 
-name: Linode JS SDK
+name: Linode JS Client
 
 on:
   push:
@@ -30,7 +30,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: lib
-        path: packages/@linode/api-v4/lib
+        path: packages/api-v4
     # - name: Publish
     #   run: yarn workspace @linode/api-v4 publish --dry-run
     #   env:

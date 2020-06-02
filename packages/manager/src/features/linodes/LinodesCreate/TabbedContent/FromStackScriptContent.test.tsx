@@ -57,27 +57,15 @@ describe('FromImageContent', () => {
   );
 
   it('should render SelectStackScript panel', () => {
-    expect(
-      component.find(
-        'Connect(WithTheme(WithRenderGuard(WithStyles(SelectStackScriptPanel))))'
-      )
-    ).toHaveLength(1);
+    expect(component.find('[data-qa-select-stackscript]')).toHaveLength(1);
   });
 
   it('should render UserDefinedFields panel', () => {
-    expect(
-      componentWithUDFs.find(
-        'WithTheme(WithRenderGuard(WithStyles(UserDefinedFieldsPanel)))'
-      )
-    ).toHaveLength(1);
+    expect(componentWithUDFs.find('[data-qa-udf-panel]')).toHaveLength(1);
   });
 
   it('should not render UserDefinedFields panel if no UDFs', () => {
-    expect(
-      component.find(
-        'WithTheme(WithRenderGuard(WithStyles(UserDefinedFieldsPanel)))'
-      )
-    ).toHaveLength(0);
+    expect(component.find('[data-qa-udf-panel]')).toHaveLength(0);
   });
 
   it('should not render SelectImage panel if no compatibleImages', () => {
@@ -91,34 +79,22 @@ describe('FromImageContent', () => {
   });
 
   it('should render SelectRegion panel', () => {
-    expect(
-      component.find(
-        'WithTheme(WithRenderGuard(WithStyles(SelectRegionPanel)))'
-      )
-    ).toHaveLength(1);
+    expect(component.find('[data-qa-select-region-panel]')).toHaveLength(1);
   });
 
   it('should render SelectPlan panel', () => {
-    expect(
-      component.find('WithTheme(WithRenderGuard(WithStyles(SelectPlanPanel)))')
-    ).toHaveLength(1);
+    expect(component.find('[data-qa-select-plan]')).toHaveLength(1);
   });
 
   it('should render SelectLabel panel', () => {
-    expect(
-      component.find('WithTheme(WithRenderGuard(WithStyles(InfoPanel)))')
-    ).toHaveLength(1);
+    expect(component.find('[data-qa-label-panel]')).toHaveLength(1);
   });
 
   it('should render SelectPassword panel', () => {
-    expect(
-      component.find('WithTheme(WithRenderGuard(WithStyles(AccessPanel)))')
-    ).toHaveLength(1);
+    expect(component.find('[data-qa-access-panel]')).toHaveLength(1);
   });
 
   it('should render SelectAddOns panel', () => {
-    expect(
-      component.find('WithTheme(WithRenderGuard(WithStyles(AddonsPanel)))')
-    ).toHaveLength(1);
+    expect(component.find('[data-qa-addons-panel]')).toHaveLength(1);
   });
 });

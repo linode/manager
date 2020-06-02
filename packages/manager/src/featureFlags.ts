@@ -18,6 +18,7 @@ interface Flags {
   promotionalOffers: PromotionalOffer[];
   thirdPartyAuth: boolean;
   cmr: boolean;
+  mainContentBanner: MainContentBanner;
 }
 
 type PromotionalOfferFeature =
@@ -49,3 +50,11 @@ export interface PromotionalOffer {
  * (from withFeatureFlagConsumer or useFlags) will be an empty object.
  */
 export type FlagSet = Partial<Flags>;
+
+export interface MainContentBanner {
+  link: {
+    text: string;
+    url: string;
+  };
+  text: string;
+}
