@@ -1,9 +1,18 @@
 import MoreHoriz from '@material-ui/icons/MoreHoriz';
+import {
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+  MenuList,
+  MenuLink,
+  MenuPopover
+} from '@reach/menu-button';
+import '@reach/menu-button/styles.css';
 import * as React from 'react';
-import IconButton from 'src/components/core/IconButton';
-import Menu from 'src/components/core/Menu';
+// import Menu from 'src/components/core/Menu';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import MenuItem from 'src/components/MenuItem';
+import MUIMenuItem from 'src/components/MenuItem';
 
 export interface Action {
   title: string;
@@ -101,51 +110,29 @@ const ActionMenu: React.FC<CombinedProps> = props => {
   }
 
   return (
-    <div className={`${classes.root} action-menu ${props.className ?? ''}`}>
-      <IconButton
-        disabled={disabled}
-        aria-owns={anchorEl ? 'action-menu' : undefined}
-        aria-expanded={anchorEl ? true : undefined}
-        aria-haspopup="true"
-        onClick={handleClick}
-        className={classes.button}
-        data-qa-action-menu
-        aria-label={ariaLabel}
-      >
+    <Menu>
+      <MenuButton aria-label={ariaLabel}>
         <MoreHoriz type="primary" className="kebob" />
-      </IconButton>
-      <Menu
-        id="action-menu"
-        className={classes.menu}
-        anchorEl={anchorEl}
-        getContentAnchorEl={undefined}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-        BackdropProps={{
-          style: {
-            backgroundColor: 'transparent'
-          }
-        }}
-      >
-        {(actions as Action[]).map((a, idx) => (
-          <MenuItem
-            key={idx}
-            onClick={a.onClick}
-            className={classes.item}
-            data-qa-action-menu-item={a.title}
-            disabled={a.disabled}
-            tooltip={a.tooltip}
-            isLoading={a.isLoading}
-            aria-describedby={a.ariaDescribedBy}
-            role="menuitem"
-          >
-            {a.title}
-          </MenuItem>
-        ))}
-      </Menu>
-    </div>
+      </MenuButton>
+      <MenuPopover className={classes.menuPopover} portal={false}>
+        <MenuItems>
+          {(actions as Action[]).map((a, idx) => (
+            <MenuItem
+              key={idx}
+              as={MUIMenuItem}
+              onClick={a.onClick}
+              className={classes.item}
+              data-qa-action-menu-item={a.title}
+              disabled={a.disabled}
+              tooltip={a.tooltip}
+              isLoading={a.isLoading}
+            >
+              {a.title}
+            </MenuItem>
+          ))}
+        </MenuItems>
+      </MenuPopover>
+    </Menu>
   );
 };
 
