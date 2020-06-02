@@ -1,1 +1,2 @@
-export { default, HeaderProps } from './EntityHeader';
+export { default } from './EntityHeader';
+export { HeaderProps } from './EntityHeader';
