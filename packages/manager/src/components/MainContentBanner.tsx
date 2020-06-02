@@ -22,22 +22,27 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-const BLMBanner: React.FC = () => {
+interface Props {
+  bannerText: string;
+  url: string;
+  linkText: string;
+}
+
+const MainContentBanner: React.FC<Props> = props => {
+  const { bannerText, url, linkText } = props;
+
   const classes = useStyles();
 
   return (
     <Grid className={classes.bannerOuter} item xs={12}>
       <Typography variant="h2" className={classes.header}>
-        Black Lives Matter.&nbsp;
-        <Link
-          to="https://support.eji.org/give/153413/#!/donation/checkout"
-          className={classes.link}
-        >
-          Support the Equal Justice Initiative.
+        {bannerText}&nbsp;
+        <Link to={url} className={classes.link}>
+          {linkText}
         </Link>
       </Typography>
     </Grid>
   );
 };
 
-export default BLMBanner;
+export default MainContentBanner;

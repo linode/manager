@@ -4,7 +4,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 import { compose } from 'recompose';
-import BLMBanner from 'src/components/BLMBanner';
+import MainContentBanner from 'src/components/MainContentBanner';
 import Box from 'src/components/core/Box';
 import {
   makeStyles,
@@ -20,6 +20,7 @@ import Footer from 'src/features/Footer';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
+import useFlags from 'src/hooks/useFlags';
 
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
@@ -30,9 +31,6 @@ import SuspenseLoader from 'src/components/SuspenseLoader';
 import withGlobalErrors, {
   Props as GlobalErrorProps
 } from 'src/containers/globalErrors.container';
-import withFeatureFlags, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container.ts';
 
 import Logo from 'src/assets/logo/logo-text.svg';
 
@@ -116,10 +114,7 @@ interface Props {
   isLoggedInAsCustomer: boolean;
 }
 
-type CombinedProps = Props &
-  GlobalErrorProps &
-  WithTheme &
-  FeatureFlagConsumerProps;
+type CombinedProps = Props & GlobalErrorProps & WithTheme;
 
 const Account = React.lazy(() => import('src/features/Account'));
 const LinodesRoutes = React.lazy(() => import('src/features/linodes'));
@@ -155,6 +150,7 @@ const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 
 const MainContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const flags = useFlags();
 
   const [menuIsOpen, toggleMenu] = React.useState<boolean>(false);
 
@@ -243,7 +239,13 @@ const MainContent: React.FC<CombinedProps> = props => {
                 }
               `}
             >
-              <BLMBanner />
+              {Boolean(flags.mainContentBanner?.text) && (
+                <MainContentBanner
+                  bannerText={flags.mainContentBanner?.text ?? ''}
+                  url={flags.mainContentBanner?.link?.url ?? ''}
+                  linkText={flags.mainContentBanner?.link?.text ?? ''}
+                />
+              )}
               <TopMenu
                 openSideMenu={() => toggleMenu(true)}
                 desktopMenuToggle={desktopMenuToggle}
@@ -298,7 +300,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                           component={SupportSearchLanding}
                         />
                         <Route path="/events" component={EventsLanding} />
-                        {props.flags.firewalls && (
+                        {flags.firewalls && (
                           <Route path="/firewalls" component={Firewalls} />
                         )}
                         <Redirect exact from="/" to="/dashboard" />
@@ -325,6 +327,5 @@ const MainContent: React.FC<CombinedProps> = props => {
 export default compose<CombinedProps, Props>(
   React.memo,
   withGlobalErrors(),
-  withTheme,
-  withFeatureFlags
+  withTheme
 )(MainContent);
