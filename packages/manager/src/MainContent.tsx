@@ -240,7 +240,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                 }
               `}
             >
-              {!isEmpty(flags.mainContentBanner) && (
+              {flags.mainContentBanner && !isEmpty(flags.mainContentBanner) && (
                 <MainContentBanner
                   bannerText={flags.mainContentBanner?.text ?? ''}
                   url={flags.mainContentBanner?.link?.url ?? ''}
