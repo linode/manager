@@ -40,6 +40,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   parentLinkText: {
     color: theme.color.blue
+  },
+  titleText: {
+    paddingRight: theme.spacing(2) - 2
   }
 }));
 
@@ -65,7 +68,9 @@ export const HeaderBreadCrumb: React.FC<BreadCrumbProps> = props => {
           </Grid>
         </Grid>
         <Grid item>
-          <Typography variant="h2">{title}</Typography>
+          <Typography variant="h2" className={classes.titleText}>
+            {title}
+          </Typography>
         </Grid>
       </>
     );
@@ -76,7 +81,9 @@ export const HeaderBreadCrumb: React.FC<BreadCrumbProps> = props => {
         <EntityIcon variant={iconType} />
       </Grid>
       <Grid item>
-        <Typography variant="h2">{title}s</Typography>
+        <Typography variant="h2" className={classes.titleText}>
+          {title}s
+        </Typography>
       </Grid>
     </>
   );
