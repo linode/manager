@@ -4,10 +4,12 @@ import {
   ChartDataSets,
   ChartOptions,
   Chart,
+  ChartXAxe,
   ChartTooltipItem,
   ChartData
 } from 'chart.js';
 import 'chartjs-adapter-luxon';
+
 import LineChartIcon from 'src/assets/icons/line-chart.svg';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -21,7 +23,6 @@ import { setUpCharts } from 'src/utilities/charts';
 import roundTo from 'src/utilities/roundTo';
 import { Metrics } from 'src/utilities/statMetrics';
 import MetricDisplayStyles from './NewMetricDisplay.styles';
-import {DateTime} from 'luxon'
 setUpCharts();
 
 export interface DataSet {
@@ -73,10 +74,10 @@ const humanizeLargeData = (value: number) => {
   return value;
 };
 
-const LineGraph: React.FC<CombinedProps> = props => {
+const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
   const inputEl: React.RefObject<any> = React.useRef(null);
   const [legendRendered, setLegendRendered] = React.useState(false);
-  const [hiddenDatasets, setHiddenDatasets] = React.useState<Number[]>([]);
+  const [hiddenDatasets, setHiddenDatasets] = React.useState<number[]>([]);
 
   const classes = useStyles();
   const {
@@ -91,17 +92,16 @@ const LineGraph: React.FC<CombinedProps> = props => {
     legendRows,
     nativeLegend,
     unit
-    // ...rest
   } = props;
   const finalRowHeaders = rowHeaders ? rowHeaders : ['Max', 'Avg', 'Last'];
   // is undefined on linode/summary
-  //AC, after testing with and without this,
-  //i do not see a difference, maybe could be removed at some point
+  // AC, after testing with and without this,
+  // i do not see a difference, maybe could be removed at some point
   const plugins = [
     {
       afterDatasetsDraw: () => {
         // hack to force re-render component in order to show legend
-        //tested this is called
+        // tested this is called
         // console.log('legend rendered ? set')
         if (!legendRendered) {
           // console.log('legend rendered set')
@@ -124,7 +124,7 @@ const LineGraph: React.FC<CombinedProps> = props => {
     _nativeLegend?: boolean,
     _tooltipUnit?: string
   ) => {
-    let finalChartOptions: ChartOptions = {
+    const finalChartOptions: ChartOptions = {
       maintainAspectRatio: false,
       responsive: true,
       animation: undefined,
@@ -143,7 +143,7 @@ const LineGraph: React.FC<CombinedProps> = props => {
             ticks: {
               suggestedMax: _suggestedMax ?? undefined,
               beginAtZero: true,
-              callback(value: number, index: number) {
+              callback(value: number, _index: number) {
                 return humanizeLargeData(value);
               }
             }
@@ -166,12 +166,14 @@ const LineGraph: React.FC<CombinedProps> = props => {
                     hour: 'MMM DD',
                     minute: 'MMM DD'
                   }
-            },adapters: {
-							date: {
-								zone: timezone
-							}
-						},
-          }
+            },
+            adapters: {
+              date: {
+                zone: timezone
+              }
+            }
+            // This cast is because the type definition does not include adapters
+          } as ChartXAxe
         ]
       },
       tooltips: {
@@ -193,11 +195,6 @@ const LineGraph: React.FC<CombinedProps> = props => {
         mode: 'index'
       }
     };
-    // const parser = parseInTimeZone(timezone || '');
-    // finalChartOptions.scales.xAxes[0].time.parser = parser;
-    // AC, seems useless, it depends on our own modification of chartjs with a patch
-    // finalChartOptions.scales.xAxes[0].time.offset = DateTime.local()
-    //   .setZone(timezone || '').zone.offset();
 
     /**
      * We've been given a max unit, which indicates that
@@ -215,16 +212,14 @@ const LineGraph: React.FC<CombinedProps> = props => {
      * the most appropriate unit, if a unit is provided.
      */
 
-    return finalChartOptions;
+    return finalChartOptions as ChartOptions;
   };
 
   const _formatData = () => {
     return data.map((dataSet, idx) => {
-      // console.log(dataSet.data[0])
       const timeData = dataSet.data.reduce((acc: any, point: any) => {
-
         acc.push({
-          t: point[0] ,
+          t: point[0],
           y: formatData ? formatData(point[1]) : point[1]
         });
         return acc;
@@ -257,21 +252,7 @@ const LineGraph: React.FC<CombinedProps> = props => {
   return (
     <div className={classes.wrapper}>
       <div style={{ width: '100%' }}>
-        <canvas
-          height={chartHeight || 300}
-          // id="myChart"
-          ref={inputEl}
-        />
-        {/* <Line
-          {...rest}
-          height={chartHeight || 300}
-          options={getChartOptions(suggestedMax, nativeLegend, unit)}
-          plugins={plugins}
-          ref={inputEl}
-          data={{
-            datasets: _formatData()
-          }}
-        /> */}
+        <canvas height={chartHeight || 300} ref={inputEl} />
       </div>
       {legendRendered && legendRows && (
         <div className={classes.container}>
@@ -302,65 +283,54 @@ const LineGraph: React.FC<CombinedProps> = props => {
               </TableRow>
             </TableHead>
             <TableBody>
-              <React.Fragment>
-                {// legendRows && inputEl.current.chartInstance &&
-                // inputEl.current.chartInstance.legend.legendItems.map(
-                legendRows?.map((tick: any, idx: number) => {
-                  const bgColor = data[idx].backgroundColor;
-                  // AC removed in refactor seems useless
-                  //  string =
-                  //   typeof tick.fillStyle === 'string'
-                  //     ? tick.fillStyle
-                  //     : 'transparent';
-                  const title = data[idx].label;
-                  const { data: metricsData, format } = legendRows[idx];
-                  return (
-                    <TableRow key={idx}>
-                      <TableCell className={classes.legend}>
-                        <Button
-                          onClick={() => handleLegendClick(idx)}
-                          data-qa-legend-title
-                          aria-label={`Toggle ${title} visibility`}
-                          className={classes.toggleButton}
-                        >
-                          <div
-                            className={`${classes.legendIcon} ${tick.hidden &&
-                              classes.crossedOut}`}
-                            style={{
-                              background: bgColor,
-                              borderColor: bgColor
-                            }}
-                          />
-                          <span
-                            className={tick.hidden ? classes.crossedOut : ''}
+              {legendRows?.map((tick: any, idx: number) => {
+                const bgColor = data[idx].backgroundColor;
+                const title = data[idx].label;
+                const { data: metricsData, format } = legendRows[idx];
+                return (
+                  <TableRow key={idx}>
+                    <TableCell className={classes.legend}>
+                      <Button
+                        onClick={() => handleLegendClick(idx)}
+                        data-qa-legend-title
+                        aria-label={`Toggle ${title} visibility`}
+                        className={classes.toggleButton}
+                      >
+                        <div
+                          className={`${classes.legendIcon} ${tick.hidden &&
+                            classes.crossedOut}`}
+                          style={{
+                            background: bgColor,
+                            borderColor: bgColor
+                          }}
+                        />
+                        <span className={tick.hidden ? classes.crossedOut : ''}>
+                          {title}
+                        </span>
+                      </Button>
+                    </TableCell>
+                    {metricsData &&
+                      metricsBySection(metricsData).map((section, i) => {
+                        return (
+                          <TableCell
+                            key={i}
+                            parentColumn={
+                              rowHeaders ? rowHeaders[idx] : undefined
+                            }
+                            data-qa-body-cell
                           >
-                            {title}
-                          </span>
-                        </Button>
-                      </TableCell>
-                      {metricsData &&
-                        metricsBySection(metricsData).map((section, i) => {
-                          return (
-                            <TableCell
-                              key={i}
-                              parentColumn={
-                                rowHeaders ? rowHeaders[idx] : undefined
-                              }
-                              data-qa-body-cell
+                            <Typography
+                              variant="body2"
+                              className={classes.text}
                             >
-                              <Typography
-                                variant="body2"
-                                className={classes.text}
-                              >
-                                {format(section)}
-                              </Typography>
-                            </TableCell>
-                          );
-                        })}
-                    </TableRow>
-                  );
-                })}
-              </React.Fragment>
+                              {format(section)}
+                            </Typography>
+                          </TableCell>
+                        );
+                      })}
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </div>
@@ -383,7 +353,7 @@ export const _formatTooltip = curry(
     formatter: ((v: number) => string) | undefined,
     unit: string | undefined,
     t: ChartTooltipItem,
-    d: ChartData
+    _d: ChartData
   ) => {
     /**
      * t and d are the params passed by chart.js to this component.
