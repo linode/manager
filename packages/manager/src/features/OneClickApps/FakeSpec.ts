@@ -366,8 +366,8 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Nextcloud',
-    description: `Nextcloud is an open source solution to hosting your own content online. In addition to the total control users gain over their own files, Nextcloud offers customizable security features that allow the user to take control of sharing and access privileges.`,
-    summary: `A file sharing service that allows you to store your important documents and images in one centralized location`,
+    description: `Nextcloud is an open source solution to file hosting and sharing. With NextCloud, you can synchronize files from your local computer to your Linode server and share them with your collaborators. Nextcloud’s customizable security features and intuitive user interface help keep your files safe and easy to manage.`,
+    summary: `A file sharing service that allows you to store your important documents and images in one centralized location.`,
     related_guides: [
       {
         title: 'Use a Block Storage Volume with Nextcloud',
