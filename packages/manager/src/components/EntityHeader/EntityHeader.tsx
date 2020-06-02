@@ -4,30 +4,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import HeaderBreadCrumb, { BreadCrumbProps } from './HeaderBreadCrumb';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
-  actions: {
-    '& button.primary': {
-      borderRadius: 3,
-      height: 40,
-      padding: 0,
-      width: 152
-    },
-    '& .iconTextLink': {
-      alignItems: 'center',
-      borderLeft: '1px solid #f4f5f6',
-      height: 50,
-      marginRight: theme.spacing(2),
-      paddingLeft: theme.spacing(2),
-
-      minWidth: 'auto',
-      padding: 0,
-      '& svg': {
-        marginRight: theme.spacing(1.5)
-      }
-    }
-  }
-}));
+const useStyles = makeStyles((theme: Theme) => ({ root: {} }));
 
 export interface HeaderProps extends BreadCrumbProps {
   actions: JSX.Element;
@@ -55,9 +32,7 @@ export const LandingHeader: React.FC<HeaderProps> = props => {
           {props.children && <Grid item>{props.children}</Grid>}
         </Grid>
       </Grid>
-      <Grid className={classes.actions} item>
-        {actions}
-      </Grid>
+      <Grid item>{actions}</Grid>
     </Grid>
   );
 };

@@ -5,12 +5,19 @@ import IconTextLink from '../IconTextLink';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: `0 ${theme.spacing(1) + 4}px`,
-    marginBottom: 0,
+    alignItems: 'center',
+    borderLeft: '1px solid #f4f5f6',
+    height: 50,
     lineHeight: 'normal',
+    marginBottom: 0,
+    marginRight: theme.spacing(2),
+    paddingLeft: theme.spacing(2),
+    minWidth: 'auto',
+    padding: 0,
     '& svg': {
       width: 24,
-      height: 22
+      height: 22,
+      marginRight: theme.spacing(1.5)
     },
     '& .insidePath': {
       fill: 'none',
