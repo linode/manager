@@ -222,6 +222,13 @@ const MainContent: React.FC<CombinedProps> = props => {
               [classes.hidden]: props.appIsLoading
             })}
           >
+            {flags.mainContentBanner && !isEmpty(flags.mainContentBanner) && (
+              <MainContentBanner
+                bannerText={flags.mainContentBanner?.text ?? ''}
+                url={flags.mainContentBanner?.link?.url ?? ''}
+                linkText={flags.mainContentBanner?.link?.text ?? ''}
+              />
+            )}
             <SideMenu
               open={menuIsOpen}
               desktopOpen={desktopMenuIsOpen || false}
@@ -240,13 +247,6 @@ const MainContent: React.FC<CombinedProps> = props => {
                 }
               `}
             >
-              {flags.mainContentBanner && !isEmpty(flags.mainContentBanner) && (
-                <MainContentBanner
-                  bannerText={flags.mainContentBanner?.text ?? ''}
-                  url={flags.mainContentBanner?.link?.url ?? ''}
-                  linkText={flags.mainContentBanner?.link?.text ?? ''}
-                />
-              )}
               <TopMenu
                 openSideMenu={() => toggleMenu(true)}
                 desktopMenuToggle={desktopMenuToggle}
