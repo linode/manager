@@ -390,6 +390,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                       </Grid>
                       <Grid item className="pt0">
                         <AddNewLink
+                          data-testid="create-domain"
                           onClick={this.openCreateDomainDrawer}
                           label="Add a Domain"
                         />
