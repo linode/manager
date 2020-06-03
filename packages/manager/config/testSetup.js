@@ -64,11 +64,6 @@ HTMLCanvasElement.prototype.getContext = () => {
  * reminding us that function components can't
  * have Refs.
  */
-// class Line extends React.Component {
-//   render() {
-//     return null;
-//   }
-// }
 
 jest.mock('chart.js', () => ({
   Chart: jest.fn(),
