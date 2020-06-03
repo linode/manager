@@ -1,7 +1,8 @@
+import { Domain } from '@linode/api-v4/lib/domains/types';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import Grid from 'src/components/Grid';
-import EntityTable, { HeaderCell } from './EntityTable';
+import EntityTable, { EntityTableRow, HeaderCell } from './EntityTable';
 import { Provider } from 'react-redux';
 import store from 'src/store';
 
@@ -46,15 +47,19 @@ const headers: HeaderCell[] = [
   }
 ];
 
+const domainRow: EntityTableRow<Domain> = {
+  Component: DomainRow as any,
+  data: domains
+};
+
 storiesOf('EntityTable', module).add('default', () => (
   <Provider store={store}>
     <Grid spacing={8}>
       <EntityTable
         entity="domains"
         headers={headers}
-        data={domains}
+        row={domainRow}
         groupByTag={true}
-        RowComponent={DomainRow}
       />
     </Grid>
   </Provider>

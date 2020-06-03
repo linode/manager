@@ -11,21 +11,25 @@ const useStyles = makeStyles((theme: Theme) => ({
   hiddenHeaderCell: theme.visually.hidden
 }));
 
+export interface EntityTableRow<T> {
+  Component: React.ComponentType<T>;
+  data: T[];
+}
+
 interface Props {
-  data: any[];
   entity: string;
   headers: HeaderCell[];
   groupByTag: boolean;
-  RowComponent: React.ComponentType;
+  row: EntityTableRow<any>;
 }
 
 export type CombinedProps = Props;
 
 export const LandingTable: React.FC<Props> = props => {
-  const { data, entity, headers, groupByTag, RowComponent } = props;
+  const { entity, headers, groupByTag, row } = props;
   const classes = useStyles();
   return (
-    <OrderBy data={data} orderBy={'label'} order={'asc'}>
+    <OrderBy data={row.data} orderBy={'label'} order={'asc'}>
       {({ data: orderedData, handleOrderChange, order, orderBy }) => {
         const headerCells = headers.map((thisCell: HeaderCell) => {
           return thisCell.sortable ? (
@@ -57,7 +61,7 @@ export const LandingTable: React.FC<Props> = props => {
 
         const tableProps = {
           data: orderedData,
-          RowComponent,
+          RowComponent: row.Component,
           headerCells,
           entity
         };
