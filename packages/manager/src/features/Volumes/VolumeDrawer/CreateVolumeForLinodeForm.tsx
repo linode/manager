@@ -56,7 +56,7 @@ const styles = (theme: Theme) =>
 
 interface Props {
   onClose: () => void;
-  linodeId: number;
+  linode_id: number;
   linodeLabel: string;
   linodeRegion: string;
   onSuccess: (
@@ -76,7 +76,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
   const {
     onClose,
     onSuccess,
-    linodeId,
+    linode_id,
     linodeLabel,
     linodeRegion,
     actions,
@@ -100,9 +100,9 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
         createVolume({
           label,
           size: maybeCastToNumber(size),
-          linode_id: maybeCastToNumber(linodeId),
+          linode_id: maybeCastToNumber(linode_id),
           config_id:
-            // config_id still set to default value of -1? make it undefined, so volume gets created on back-end according to the API logic
+            // If the config_id still set to default value of -1, set this to undefined, so volume gets created on back-end according to the API logic
             config_id === -1 ? undefined : maybeCastToNumber(config_id),
           tags: tags.map(v => v.value)
         })
@@ -217,7 +217,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
 
             <ConfigSelect
               error={touched.config_id ? errors.config_id : undefined}
-              linodeId={linodeId}
+              linodeId={linode_id}
               name="configId"
               onBlur={handleBlur}
               onChange={(id: number) => setFieldValue('config_id', id)}
@@ -264,7 +264,7 @@ interface FormState {
   label: string;
   size: number;
   region: string;
-  linodeId: number;
+  linode_id: number;
   config_id: number;
   tags: Tag[];
 }
@@ -273,7 +273,7 @@ const initialValues: FormState = {
   label: '',
   size: 20,
   region: 'none',
-  linodeId: -1,
+  linode_id: -1,
   config_id: -1,
   tags: []
 };
@@ -294,7 +294,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
     switchToAttaching: () =>
       dispatch(
         openForAttaching(
-          ownProps.linodeId,
+          ownProps.linode_id,
           ownProps.linodeRegion,
           ownProps.linodeLabel
         )
