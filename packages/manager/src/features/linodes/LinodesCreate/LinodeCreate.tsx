@@ -35,8 +35,11 @@ import {
 } from './types';
 import TabbedPanel, { Tab } from 'src/components/TabbedPanel';
 
+import AddonsPanel from './AddonsPanel';
+
 interface Props {
   history: any;
+  createType: CreateTypes;
 }
 
 type CombinedProps = Props &
@@ -140,20 +143,23 @@ export class LinodeCreate extends React.PureComponent<
           ...rest
         } = this.props;
         return (
-          <FromImageContent
-            variant="public"
-            imagePanelTitle="Choose a Distribution"
-            showGeneralError={true}
-            imagesData={imagesData!}
-            regionsData={regionsData!}
-            typesData={typesData!}
-            {...rest}
-          />
+          <React.Fragment>
+            <FromImageContent
+              variant="public"
+              imagePanelTitle="Choose a Distribution"
+              showGeneralError={true}
+              imagesData={imagesData!}
+              regionsData={regionsData!}
+              typesData={typesData!}
+              {...rest}
+            />
+            <div>end</div>
+          </React.Fragment>
         );
       }
     },
     {
-      title: 'One-Click',
+      title: 'Marketplace',
       // type: 'fromApp',
       // name: 'parent-one-click',
       render: () => {
@@ -168,6 +174,12 @@ export class LinodeCreate extends React.PureComponent<
           // />
           <div>test</div>
         );
+      }
+    },
+    {
+      title: 'StackScripts',
+      render: () => {
+        return <div>test</div>;
       }
     },
     {
@@ -186,6 +198,18 @@ export class LinodeCreate extends React.PureComponent<
           // />
           <div>test</div>
         );
+      }
+    },
+    {
+      title: 'Backups',
+      render: () => {
+        return <div>test</div>;
+      }
+    },
+    {
+      title: 'Clones',
+      render: () => {
+        return <div>test</div>;
       }
     }
   ];
@@ -460,7 +484,9 @@ export class LinodeCreate extends React.PureComponent<
       regionsError,
       linodesError,
       typesError,
-      typesLoading
+      typesLoading,
+      backupsMonthlyPrice,
+      userCannotCreateLinode
     } = this.props;
 
     if (regionsLoading || imagesLoading || linodesLoading || typesLoading) {
@@ -509,6 +535,22 @@ export class LinodeCreate extends React.PureComponent<
             </Tabs>
           </AppBar> */}
           <TabbedPanel header={''} tabs={this.tabs} />
+          <AddonsPanel
+            data-qa-addons-panel
+            backups={this.props.backupsEnabled}
+            accountBackups={this.props.accountBackupsEnabled}
+            backupsMonthly={backupsMonthlyPrice}
+            privateIP={this.props.privateIPEnabled}
+            changeBackups={this.props.toggleBackupsEnabled}
+            changePrivateIP={this.props.togglePrivateIPEnabled}
+            updateFor={[
+              this.props.privateIPEnabled,
+              this.props.backupsEnabled,
+              this.props.selectedTypeID
+            ]}
+            disabled={userCannotCreateLinode}
+            hidePrivateIP={this.props.createType === 'fromLinode'}
+          />
         </Grid>
         {tabRender()}
       </React.Fragment>

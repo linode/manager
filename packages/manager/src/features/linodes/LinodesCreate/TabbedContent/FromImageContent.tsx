@@ -272,21 +272,6 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
               users={userSSHKeys}
               requestKeys={requestKeys}
             />
-            <AddonsPanel
-              data-qa-addons-panel
-              backups={this.props.backupsEnabled}
-              accountBackups={this.props.accountBackupsEnabled}
-              backupsMonthly={backupsMonthlyPrice}
-              privateIP={this.props.privateIPEnabled}
-              changeBackups={this.props.toggleBackupsEnabled}
-              changePrivateIP={this.props.togglePrivateIPEnabled}
-              updateFor={[
-                this.props.privateIPEnabled,
-                this.props.backupsEnabled,
-                this.props.selectedTypeID
-              ]}
-              disabled={userCannotCreateLinode}
-            />
           </form>
         </Grid>
         <Grid

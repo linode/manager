@@ -212,17 +212,6 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
                 }}
                 updateFor={[label, errors]}
               />
-              <AddonsPanel
-                backups={backupsEnabled}
-                accountBackups={accountBackupsEnabled}
-                backupsMonthly={backupsMonthlyPrice}
-                privateIP={privateIPEnabled}
-                changeBackups={this.props.toggleBackupsEnabled}
-                changePrivateIP={this.props.togglePrivateIPEnabled}
-                updateFor={[privateIPEnabled, backupsEnabled, selectedTypeID]}
-                disabled={userCannotCreateLinode}
-                hidePrivateIP
-              />
             </Grid>
             <Grid item className={`${classes.sidebar} mlSidebar`}>
               <CheckoutBar

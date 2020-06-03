@@ -344,16 +344,6 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                 }}
                 updateFor={[tags, label, errors]}
               />
-              <AddonsPanel
-                backups={backupsEnabled}
-                accountBackups={accountBackupsEnabled}
-                changeBackups={toggleBackupsEnabled}
-                changePrivateIP={togglePrivateIPEnabled}
-                backupsMonthly={backupsMonthlyPrice}
-                privateIP={privateIPEnabled}
-                updateFor={[privateIPEnabled, backupsEnabled, selectedTypeID]}
-                disabled={disabled}
-              />
             </React.Fragment>
           )}
         </Grid>

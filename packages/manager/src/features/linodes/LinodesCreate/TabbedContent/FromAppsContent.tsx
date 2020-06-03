@@ -391,16 +391,6 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
               requestKeys={requestKeys}
             />
           </form>
-          <AddonsPanel
-            backups={backupsEnabled}
-            accountBackups={accountBackupsEnabled}
-            backupsMonthly={backupsMonthlyPrice}
-            privateIP={privateIPEnabled}
-            changeBackups={toggleBackupsEnabled}
-            changePrivateIP={togglePrivateIPEnabled}
-            updateFor={[privateIPEnabled, backupsEnabled, selectedTypeID]}
-            disabled={userCannotCreateLinode}
-          />
         </Grid>
         <Grid item className={`${classes.sidebar} mlSidebar`}>
           <CheckoutBar

@@ -385,16 +385,6 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
               users={userSSHKeys}
               requestKeys={requestKeys}
             />
-            <AddonsPanel
-              backups={backupsEnabled}
-              accountBackups={accountBackupsEnabled}
-              backupsMonthly={backupsMonthlyPrice}
-              privateIP={privateIPEnabled}
-              changeBackups={toggleBackupsEnabled}
-              changePrivateIP={togglePrivateIPEnabled}
-              updateFor={[privateIPEnabled, backupsEnabled, selectedTypeID]}
-              disabled={disabled}
-            />
           </form>
         </Grid>
         <Grid item className={`${classes.sidebar} mlSidebar`}>
