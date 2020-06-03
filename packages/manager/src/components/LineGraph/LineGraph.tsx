@@ -95,16 +95,12 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
   } = props;
   const finalRowHeaders = rowHeaders ? rowHeaders : ['Max', 'Avg', 'Last'];
   // is undefined on linode/summary
-  // AC, after testing with and without this,
-  // i do not see a difference, maybe could be removed at some point
   const plugins = [
     {
       afterDatasetsDraw: () => {
         // hack to force re-render component in order to show legend
         // tested this is called
-        // console.log('legend rendered ? set')
         if (!legendRendered) {
-          // console.log('legend rendered set')
           setLegendRendered(true);
         }
       }
