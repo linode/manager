@@ -38,7 +38,8 @@ const headers: HeaderCell[] = [
     widthPercent: 25
   },
   {
-    label: '',
+    label: 'Action Menu',
+    visuallyHidden: true,
     dataColumn: '',
     sortable: false,
     widthPercent: 5
