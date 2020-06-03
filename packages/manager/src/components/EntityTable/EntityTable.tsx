@@ -41,24 +41,18 @@ export const LandingTable: React.FC<Props> = props => {
             </TableCell>
           );
         });
+
+        const tableProps = {
+          data,
+          RowComponent,
+          headerCells,
+          entity
+        };
+
         if (groupByTag) {
-          return (
-            <GroupedEntitiesByTag
-              data={data}
-              RowComponent={RowComponent}
-              headerCells={headerCells}
-              entity={entity}
-            />
-          );
+          return <GroupedEntitiesByTag {...tableProps} />;
         }
-        return (
-          <ListEntities
-            data={orderedData}
-            headerCells={headerCells}
-            entity={entity}
-            RowComponent={RowComponent}
-          />
-        );
+        return <ListEntities {...tableProps} />;
       }}
     </OrderBy>
   );
