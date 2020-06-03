@@ -32,9 +32,7 @@ export const createDomainSchema = domainSchemaBase.shape({
       /([a-zA-Z0-9-_]+\.)+([a-zA-Z]{2,3}\.)?([a-zA-Z]{2,16}|XN--[a-zA-Z0-9]+)/,
       'Domain is not valid.'
     ),
-  tags: array()
-    .of(string())
-    .required(),
+  tags: array().of(string()),
   type: mixed()
     .required()
     .oneOf(['master', 'slave']),
