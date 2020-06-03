@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed
 
-Remove required from createDomain validation schema
+- Remove required from createDomain validation schema
 
 ## [2020-06-02] - v1.10.0
 
