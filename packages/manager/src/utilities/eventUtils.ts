@@ -1,4 +1,4 @@
-import { Event, EventAction } from 'linode-js-sdk/lib/account'
+import { Event, EventAction } from '@linode/api-v4/lib/account'
 
 // Removes events we don't want to display.
 export const removeBlacklistedEvents = (

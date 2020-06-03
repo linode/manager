@@ -7,6 +7,9 @@ export const sanitizeHTML = (text: string) =>
     allowedAttributes: {
       '*': allowedHTMLAttr
     },
+    allowedClasses: {
+      span: ['version']
+    },
     transformTags: {
       a: (tagName, attribs) => {
         const href = attribs.href ?? '';

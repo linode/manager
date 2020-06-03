@@ -1,5 +1,5 @@
-import { Domain } from 'linode-js-sdk/lib/domains';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { Domain } from '@linode/api-v4/lib/domains';
+import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { equals, pathOr } from 'ramda';
 import * as React from 'react';
@@ -477,11 +477,11 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
   }
 }
 
-const RenderLoading: React.StatelessComponent<{}> = () => {
+const RenderLoading: React.FC<{}> = () => {
   return <CircleProgress />;
 };
 
-const RenderError: React.StatelessComponent<{}> = () => {
+const RenderError: React.FC<{}> = () => {
   return (
     <ErrorState errorText="There was an error retrieving your domains. Please reload and try again." />
   );
@@ -516,7 +516,7 @@ const EmptyCopy = () => (
   </>
 );
 
-const RenderEmpty: React.StatelessComponent<{
+const RenderEmpty: React.FC<{
   onCreateDomain: () => void;
   onImportZone: () => void;
 }> = props => {

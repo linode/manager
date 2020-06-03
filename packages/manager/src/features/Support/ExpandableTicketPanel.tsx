@@ -1,5 +1,3 @@
-import { SupportReply, SupportTicket } from 'linode-js-sdk/lib/account';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import UserIcon from 'src/assets/icons/user.svg';
@@ -13,6 +11,7 @@ import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 
+import { ExtendedReply, ExtendedTicket } from './types';
 import { Hively, shouldRenderHively } from './Hively';
 import TicketDetailBody from './TicketDetailText';
 
@@ -104,8 +103,8 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  reply?: SupportReply;
-  ticket?: SupportTicket;
+  reply?: ExtendedReply;
+  ticket?: ExtendedTicket;
   open?: boolean;
   isCurrentUser: boolean;
   parentTicket?: number;
@@ -148,7 +147,7 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
         ticket_id: String(ticket.id),
         reply_id: '',
         gravatar_id: ticket.gravatar_id,
-        gravatarUrl: pathOr('not found', ['gravatarUrl'], ticket),
+        gravatarUrl: ticket.gravatarUrl ?? 'not found',
         date: ticket.opened,
         description: ticket.description,
         username: ticket.opened_by,
@@ -160,7 +159,7 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
         ticket_id: parentTicket ? String(parentTicket) : '',
         reply_id: String(reply.id),
         gravatar_id: reply.gravatar_id,
-        gravatarUrl: pathOr('not found', ['gravatarUrl'], reply),
+        gravatarUrl: reply.gravatarUrl ?? 'not found',
         date: reply.created,
         description: reply.description,
         username: reply.created_by,
@@ -168,7 +167,7 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
         updated: ticketUpdated!
       });
     }
-  }, []);
+  }, [parentTicket, reply, ticket, ticketUpdated]);
 
   const renderAvatar = (url: string) => {
     return url !== 'not found' ? (

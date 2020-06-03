@@ -1,5 +1,5 @@
 import * as classNames from 'classnames';
-import { NotificationSeverity } from 'linode-js-sdk/lib/account';
+import { NotificationSeverity } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import IconButton from 'src/components/core/IconButton';
 import {
@@ -71,7 +71,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const userNotificationButton: React.StatelessComponent<CombinedProps> = ({
+const userNotificationButton: React.FC<CombinedProps> = ({
   classes,
   onClick,
   className,

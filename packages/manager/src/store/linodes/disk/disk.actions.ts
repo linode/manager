@@ -1,7 +1,8 @@
-import { LinodeDiskCreationData } from 'linode-js-sdk/lib/linodes';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { LinodeDiskCreationData } from '@linode/api-v4/lib/linodes';
+import { APIError } from '@linode/api-v4/lib/types';
 import { actionCreatorFactory } from 'typescript-fsa';
 import { Entity } from './disk.types';
+import { GetAllData } from 'src/utilities/getAll';
 
 const actionCreator = actionCreatorFactory(`@@manager/linodeDisks`);
 
@@ -22,7 +23,7 @@ export interface LinodeDiskUpdateFields {
 /** Get Linode Disk (page) */
 export type GetLinodeDisksParams = LinodeIdParam;
 
-export type GetLinodeDisksResponse = Promise<Entity[]>;
+export type GetLinodeDisksResponse = Promise<GetAllData<Entity>>;
 
 export type GetLinodeDisksRequest = (
   params: GetLinodeDisksParams
@@ -30,14 +31,14 @@ export type GetLinodeDisksRequest = (
 
 export const getLinodeDisksActions = actionCreator.async<
   GetLinodeDisksParams,
-  Entity[],
+  GetAllData<Entity>,
   APIError[]
 >(`get-page`);
 
 /** Get Linode Disks (all) */
 export type GetAllLinodeDisksParams = GetLinodeDisksParams;
 
-export type GetAllLinodeDisksResponse = Promise<Entity[]>;
+export type GetAllLinodeDisksResponse = GetAllData<Entity>;
 
 export type GetAllLinodeDisksRequest = (
   params: GetAllLinodeDisksParams
@@ -45,7 +46,7 @@ export type GetAllLinodeDisksRequest = (
 
 export const getAllLinodeDisksActions = actionCreator.async<
   GetAllLinodeDisksParams,
-  Entity[],
+  GetAllData<Entity>,
   APIError[]
 >(`get-all`);
 

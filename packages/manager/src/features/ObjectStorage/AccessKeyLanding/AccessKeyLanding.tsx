@@ -1,5 +1,5 @@
 import { FormikBag } from 'formik';
-import { AccountSettings } from 'linode-js-sdk/lib/account';
+import { AccountSettings } from '@linode/api-v4/lib/account';
 import {
   createObjectStorageKeys,
   getObjectStorageKeys,
@@ -7,7 +7,7 @@ import {
   ObjectStorageKeyRequest,
   revokeObjectStorageKey,
   updateObjectStorageKey
-} from 'linode-js-sdk/lib/object-storage';
+} from '@linode/api-v4/lib/object-storage';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -70,9 +70,7 @@ type CombinedProps = Props &
   ReduxStateProps &
   DispatchProps;
 
-export const AccessKeyLanding: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const AccessKeyLanding: React.FC<CombinedProps> = props => {
   const {
     classes,
     object_storage,
@@ -351,15 +349,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced = compose<CombinedProps, Props>(
-  styled,
-  paginated,
-  connected
-);
+const enhanced = compose<CombinedProps, Props>(styled, paginated, connected);
 
 export default enhanced(AccessKeyLanding);

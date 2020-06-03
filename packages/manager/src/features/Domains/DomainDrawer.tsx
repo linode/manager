@@ -2,10 +2,10 @@ import {
   cloneDomain,
   createDomainRecord,
   Domain
-} from 'linode-js-sdk/lib/domains';
-import { Linode } from 'linode-js-sdk/lib/linodes';
-import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/domains';
+import { Linode } from '@linode/api-v4/lib/linodes';
+import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
+import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path } from 'ramda';
 import * as React from 'react';
@@ -100,11 +100,11 @@ type CombinedProps = WithStyles<ClassNames> &
   StateProps &
   WithSnackbarProps;
 
-const generateDefaultDomainRecords = (
+export const generateDefaultDomainRecords = (
   domain: string,
   domainID: number,
   ipv4?: string,
-  ipv6?: string
+  ipv6?: string | null
 ) => {
   /**
    * at this point, the IPv6 is including the prefix and we need to strip that

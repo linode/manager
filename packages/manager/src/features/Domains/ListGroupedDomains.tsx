@@ -1,4 +1,4 @@
-import { Domain } from 'linode-js-sdk/lib/domains';
+import { Domain } from '@linode/api-v4/lib/domains';
 import { compose } from 'ramda';
 import * as React from 'react';
 import {
@@ -73,7 +73,7 @@ interface Props extends Handlers {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ListGroupedDomains: React.StatelessComponent<CombinedProps> = props => {
+const ListGroupedDomains: React.FC<CombinedProps> = props => {
   const {
     data,
     onClone,

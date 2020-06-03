@@ -1,5 +1,5 @@
-import { InvoiceItem } from 'linode-js-sdk/lib/account';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { InvoiceItem } from '@linode/api-v4/lib/account';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -20,7 +20,7 @@ interface Props {
   items?: InvoiceItem[];
 }
 
-const InvoiceTable: React.StatelessComponent<Props> = props => {
+const InvoiceTable: React.FC<Props> = props => {
   const { loading, errors, items } = props;
   return (
     <Table border aria-label="Invoice Details">
@@ -58,7 +58,7 @@ const renderUnitPrice = (v: null | number) => (v ? `$${v}` : null);
 
 const renderQuantity = (v: null | number) => (v ? v : null);
 
-const RenderData: React.StatelessComponent<{
+const RenderData: React.FC<{
   items: InvoiceItem[];
 }> = props => {
   const { items } = props;
@@ -126,11 +126,11 @@ const RenderData: React.StatelessComponent<{
   );
 };
 
-const RenderLoading: React.StatelessComponent<{}> = () => {
+const RenderLoading: React.FC<{}> = () => {
   return <TableRowLoading colSpan={8} />;
 };
 
-const RenderErrors: React.StatelessComponent<{
+const RenderErrors: React.FC<{
   errors: APIError[];
 }> = props => {
   return (
@@ -138,11 +138,11 @@ const RenderErrors: React.StatelessComponent<{
   );
 };
 
-const RenderEmpty: React.StatelessComponent<{}> = () => {
+const RenderEmpty: React.FC<{}> = () => {
   return <TableRowEmptyState colSpan={8} />;
 };
 
-const MaybeRenderContent: React.StatelessComponent<{
+const MaybeRenderContent: React.FC<{
   loading: boolean;
   errors?: APIError[];
   items?: any[];

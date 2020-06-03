@@ -1,9 +1,9 @@
 import { Form, Formik } from 'formik';
-import { AccountSettings } from 'linode-js-sdk/lib/account';
+import { AccountSettings } from '@linode/api-v4/lib/account';
 import {
   CreateBucketSchema,
   ObjectStorageBucket
-} from 'linode-js-sdk/lib/object-storage';
+} from '@linode/api-v4/lib/object-storage';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -67,7 +67,7 @@ type CombinedProps = Props &
   ReduxStateProps &
   DispatchProps;
 
-export const CreateBucketForm: React.StatelessComponent<CombinedProps> = props => {
+export const CreateBucketForm: React.FC<CombinedProps> = props => {
   const {
     isRestrictedUser,
     onClose,

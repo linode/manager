@@ -1,4 +1,4 @@
-import { LinodeBackup } from 'linode-js-sdk/lib/linodes';
+import { LinodeBackup } from '@linode/api-v4/lib/linodes';
 import * as moment from 'moment-timezone';
 import * as React from 'react';
 import TableRow from 'src/components/core/TableRow';
@@ -18,7 +18,7 @@ const typeMap = {
   snapshot: 'Manual'
 };
 
-const BackupTableRow: React.StatelessComponent<Props> = props => {
+const BackupTableRow: React.FC<Props> = props => {
   const onDeploy = () => {
     props.handleDeploy(props.backup);
   };

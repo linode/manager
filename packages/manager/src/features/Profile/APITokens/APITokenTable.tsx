@@ -1,4 +1,4 @@
-import { AccountCapability } from 'linode-js-sdk/lib/account';
+import { AccountCapability } from '@linode/api-v4/lib/account';
 import {
   createPersonalAccessToken,
   deleteAppToken,
@@ -7,8 +7,8 @@ import {
   getPersonalAccessTokens,
   Token,
   updatePersonalAccessToken
-} from 'linode-js-sdk/lib/profile';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/profile';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as moment from 'moment';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -471,7 +471,11 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     const { title, type } = this.props;
 
     return tokens.map((token: Token) => (
-      <TableRow key={token.id} data-qa-table-row={token.label}>
+      <TableRow
+        ariaLabel={token.label}
+        key={token.id}
+        data-qa-table-row={token.label}
+      >
         <TableCell parentColumn="Label">
           <Typography variant="h3" data-qa-token-label>
             {token.label}

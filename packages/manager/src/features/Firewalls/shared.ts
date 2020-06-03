@@ -2,7 +2,7 @@ import {
   FirewallRuleProtocol,
   FirewallRules,
   FirewallRuleType
-} from 'linode-js-sdk/lib/firewalls/types';
+} from '@linode/api-v4/lib/firewalls/types';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { truncateAndJoinList } from 'src/utilities/stringUtils';
 

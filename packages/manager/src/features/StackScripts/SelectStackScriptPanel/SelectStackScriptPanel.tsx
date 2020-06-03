@@ -1,12 +1,12 @@
-import { Grant } from 'linode-js-sdk/lib/account';
-import { Image } from 'linode-js-sdk/lib/images';
-import { Linode } from 'linode-js-sdk/lib/linodes';
+import { Grant } from '@linode/api-v4/lib/account';
+import { Image } from '@linode/api-v4/lib/images';
+import { Linode } from '@linode/api-v4/lib/linodes';
 import {
   getStackScript,
   StackScript,
   UserDefinedField
-} from 'linode-js-sdk/lib/stackscripts';
-import { ResourcePage } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/stackscripts';
+import { ResourcePage } from '@linode/api-v4/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -145,7 +145,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
             stackScript.user_defined_fields
           );
         })
-        .catch(e => {
+        .catch(_ => {
           this.setState({ stackScriptLoading: false, stackScriptError: true });
         });
     }
@@ -177,6 +177,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
               noOverflow={true}
               tableClass={classes.table}
               stickyHeader
+              data-qa-select-stackscript
             >
               <StackScriptTableHead
                 currentFilterType={null}

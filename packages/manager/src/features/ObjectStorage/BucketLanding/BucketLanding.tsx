@@ -1,4 +1,4 @@
-import { ObjectStorageBucket } from 'linode-js-sdk/lib/object-storage';
+import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import { compose } from 'recompose';
 import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
@@ -246,17 +246,17 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
   );
 };
 
-const RenderLoading: React.StatelessComponent<{}> = () => {
+const RenderLoading: React.FC<{}> = () => {
   return <CircleProgress data-testid="loading-state" />;
 };
 
-const RenderError: React.StatelessComponent<{}> = () => {
+const RenderError: React.FC<{}> = () => {
   return (
     <ErrorState errorText="There was an error retrieving your buckets. Please reload and try again." />
   );
 };
 
-const RenderEmpty: React.StatelessComponent<{
+const RenderEmpty: React.FC<{
   onClick: () => void;
 }> = props => {
   return (

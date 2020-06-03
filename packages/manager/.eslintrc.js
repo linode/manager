@@ -33,7 +33,10 @@ module.exports = {
     'sonarjs',
     'ramda',
     'cypress',
-    'prettier'
+    'prettier',
+    'testing-library',
+    'scanjs-rules',
+    'xss'
   ],
   extends: [
     // disables a few of the recommended rules from the previous set that we know are already covered by TypeScript's typechecker
@@ -46,7 +49,8 @@ module.exports = {
     'plugin:sonarjs/recommended',
     'plugin:ramda/recommended',
     'plugin:cypress/recommended',
-    'plugin:prettier/recommended' // Enables eslint-plugin-prettier and eslint-config-prettier. This will display prettier errors as ESLint errors. Make sure this is always the last configuration in the extends array.
+    'plugin:prettier/recommended', // Enables eslint-plugin-prettier and eslint-config-prettier. This will display prettier errors as ESLint errors. Make sure this is always the last configuration in the extends array.
+    'plugin:testing-library/react'
   ],
   rules: {
     // prepend `_` to an arg you accept to ignore
@@ -115,7 +119,41 @@ module.exports = {
     'spaced-comment': 'warn',
     'object-shorthand': 'warn',
     // make prettier issues warnings
-    'prettier/prettier': 'warn'
+    'prettier/prettier': 'warn',
+    'scanjs-rules/assign_to_hostname': 'warn',
+    'scanjs-rules/assign_to_href': 'warn',
+    'scanjs-rules/assign_to_location': 'warn',
+    'scanjs-rules/assign_to_onmessage': 'warn',
+    'scanjs-rules/assign_to_pathname': 'warn',
+    'scanjs-rules/assign_to_protocol': 'error',
+    'scanjs-rules/assign_to_search': 'warn',
+    'scanjs-rules/assign_to_src': 'warn',
+    'scanjs-rules/call_addEventListener': 'warn',
+    'scanjs-rules/call_Function': 'error',
+    'scanjs-rules/call_parseFromString': 'error',
+    'scanjs-rules/new_Function': 'error',
+    'scanjs-rules/property_crypto': 'error',
+    'scanjs-rules/property_geolocation': 'error',
+    // Prevent patterns susceptible to XSS, like '<div>' + userInput + '</div>'.
+    // https://github.com/Rantanen/eslint-plugin-xss/blob/master/docs/rules/no-mixed-html.md
+    'xss/no-mixed-html': [
+      'error',
+      {
+        // It's only valid to assign HTML to variables/attributes named "_html" (for React's
+        // dangerouslySetInnerHTML) and /sanitize/i (regex matching).
+        htmlVariableRules: ['__html', 'sanitize/i'],
+        functions: {
+          // Declare "sanitizeHTML" as a function that accepts HTML as input and output, and that
+          // it's "safe", meaning callers can trust the output (but the output still can only be
+          // assigned to a variable with the naming convention above).
+          sanitizeHTML: {
+            htmlInput: true,
+            htmlOutput: true,
+            safe: true
+          }
+        }
+      }
+    ]
   },
   env: {
     browser: true
@@ -146,7 +184,6 @@ module.exports = {
         '**/*.stories.js',
         'scripts/**',
         'config/**',
-        'config/**',
         'testServer.js',
         'cypress/**'
       ],
@@ -162,7 +199,9 @@ module.exports = {
       // scrips, config and cypress files can use console
       files: ['scripts/**', 'config/**', 'testServer.js', 'cypress/**'],
       rules: {
-        'no-console': 'off'
+        'no-console': 'off',
+        // here we get false positives as cypress self handles async/await
+        'testing-library/await-async-query': 'off'
       },
       env: {
         node: true,

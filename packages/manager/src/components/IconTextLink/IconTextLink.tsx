@@ -1,6 +1,8 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import Button from 'src/components/Button';
+import ConditionalWrapper from 'src/components/ConditionalWrapper';
 import {
   createStyles,
   Theme,
@@ -9,7 +11,14 @@ import {
 } from 'src/components/core/styles';
 import SvgIcon from 'src/components/core/SvgIcon';
 
-type CSSClasses = 'root' | 'active' | 'disabled' | 'icon' | 'left' | 'label';
+type CSSClasses =
+  | 'root'
+  | 'active'
+  | 'disabled'
+  | 'icon'
+  | 'left'
+  | 'label'
+  | 'linkWrapper';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -61,23 +70,28 @@ const styles = (theme: Theme) =>
       whiteSpace: 'nowrap',
       position: 'relative',
       top: -1
+    },
+    linkWrapper: {
+      display: 'flex',
+      justifyContent: 'center'
     }
   });
 
 export interface Props {
   SideIcon: typeof SvgIcon | React.ComponentClass;
   text: string;
-  onClick: () => void;
-  active?: Boolean;
-  disabled?: Boolean;
+  onClick?: () => void;
+  active?: boolean;
+  disabled?: boolean;
   title: string;
   left?: boolean;
   className?: any;
+  to?: string;
 }
 
 type FinalProps = Props & WithStyles<CSSClasses>;
 
-const IconTextLink: React.StatelessComponent<FinalProps> = props => {
+const IconTextLink: React.FC<FinalProps> = props => {
   const {
     SideIcon,
     classes,
@@ -87,28 +101,38 @@ const IconTextLink: React.StatelessComponent<FinalProps> = props => {
     disabled,
     title,
     left,
-    className
+    className,
+    to
   } = props;
 
   return (
-    <Button
-      className={classNames(
-        {
-          [classes.root]: true,
-          [classes.disabled]: disabled === true,
-          [classes.active]: active === true,
-          [classes.left]: left === true,
-          iconTextLink: true
-        },
-        className
+    <ConditionalWrapper
+      condition={to !== undefined && !disabled}
+      wrapper={children => (
+        <Link className={classes.linkWrapper} to={to as string}>
+          {children}
+        </Link>
       )}
-      title={title}
-      onClick={onClick}
-      data-qa-icon-text-link={title}
     >
-      <SideIcon className={classes.icon} />
-      <span className={classes.label}>{text}</span>
-    </Button>
+      <Button
+        className={classNames(
+          {
+            [classes.root]: true,
+            [classes.disabled]: disabled === true,
+            [classes.active]: active === true,
+            [classes.left]: left === true,
+            iconTextLink: true
+          },
+          className
+        )}
+        title={title}
+        onClick={onClick}
+        data-qa-icon-text-link={title}
+      >
+        <SideIcon className={classes.icon} />
+        <span className={classes.label}>{text}</span>
+      </Button>
+    </ConditionalWrapper>
   );
 };
 

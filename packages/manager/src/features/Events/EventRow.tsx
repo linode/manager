@@ -1,4 +1,4 @@
-import { Event, EventAction } from 'linode-js-sdk/lib/account';
+import { Event, EventAction } from '@linode/api-v4/lib/account';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -47,7 +47,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
-export const EventRow: React.StatelessComponent<CombinedProps> = props => {
+export const EventRow: React.FC<CombinedProps> = props => {
   const { event, entityId, classes } = props;
   const type = pathOr<string>('linode', ['entity', 'type'], event);
   const id = pathOr<string | number>(-1, ['entity', 'id'], event);
@@ -87,7 +87,7 @@ export interface RowProps extends WithStyles<ClassNames> {
   duration: Event['duration'];
 }
 
-export const Row: React.StatelessComponent<RowProps> = props => {
+export const Row: React.FC<RowProps> = props => {
   const {
     action,
     classes,
@@ -114,6 +114,7 @@ export const Row: React.StatelessComponent<RowProps> = props => {
     <TableRow
       rowLink={entityId ? undefined : (linkTarget as any)}
       data-qa-event-row
+      ariaLabel={`Event ${displayedMessage}`}
     >
       {/** We don't use the event argument, so typing isn't critical here. */}
       {/* Only display entity icon on the Global EventsLanding page */}

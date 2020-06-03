@@ -1,5 +1,5 @@
-import { Linode } from 'linode-js-sdk/lib/linodes';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { Linode } from '@linode/api-v4/lib/linodes';
+import { APIError } from '@linode/api-v4/lib/types';
 import { groupBy } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -45,7 +45,7 @@ interface Props {
 
 type CombinedProps = Props & WithLinodesProps;
 
-const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
+const LinodeSelect: React.FC<CombinedProps> = props => {
   const {
     disabled,
     generalError,

@@ -2,8 +2,8 @@ import * as Bluebird from 'bluebird';
 import {
   createSupportTicket,
   uploadAttachment
-} from 'linode-js-sdk/lib/support';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/support';
+import { APIError } from '@linode/api-v4/lib/types';
 import { update } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
@@ -26,7 +26,6 @@ import {
   getErrorMap,
   getErrorStringOrDefault
 } from 'src/utilities/errorUtils';
-import { getVersionString } from 'src/utilities/getVersionString';
 import { storage } from 'src/utilities/storage';
 import AttachFileForm from '../AttachFileForm';
 import { FileAttachment } from '../index';
@@ -387,13 +386,8 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
     setErrors(undefined);
     setSubmitting(true);
 
-    const versionString = getVersionString();
-    const updatedDescription = versionString
-      ? description + '\n\n' + versionString
-      : description;
-
     createSupportTicket({
-      description: updatedDescription,
+      description,
       summary,
       [entityType]: Number(entityID)
     })
@@ -475,7 +469,15 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
             </a>
             .
           </Typography>
-
+          <TextField
+            label="Title"
+            placeholder="Enter a title for your ticket."
+            required
+            value={summary}
+            onChange={handleSummaryInputChange}
+            errorText={summaryError}
+            data-qa-ticket-summary
+          />
           {props.hideProductSelection ? null : (
             <React.Fragment>
               <Select
@@ -507,15 +509,6 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
               )}
             </React.Fragment>
           )}
-          <TextField
-            label="Title"
-            placeholder="Enter a title for your ticket."
-            required
-            value={summary}
-            onChange={handleSummaryInputChange}
-            errorText={summaryError}
-            data-qa-ticket-summary
-          />
           <TabbedReply
             required
             error={descriptionError}

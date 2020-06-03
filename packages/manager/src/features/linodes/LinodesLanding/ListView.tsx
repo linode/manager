@@ -1,5 +1,5 @@
-import { Image } from 'linode-js-sdk/lib/images';
-import { Config } from 'linode-js-sdk/lib/linodes';
+import { Image } from '@linode/api-v4/lib/images';
+import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { PaginationProps } from 'src/components/Paginate';
 import LinodeRow from './LinodeRow/LinodeRow';
@@ -22,7 +22,7 @@ interface Props {
 
 type CombinedProps = Props & PaginationProps;
 
-export const ListView: React.StatelessComponent<CombinedProps> = props => {
+export const ListView: React.FC<CombinedProps> = props => {
   const { data, openDeleteDialog, openPowerActionDialog } = props;
   return (
     <>

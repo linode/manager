@@ -6,10 +6,9 @@ import {
   getNodeBalancerConfigs,
   NodeBalancerConfig,
   NodeBalancerConfigNode,
-  NodeBalancerConfigNodeFields,
   updateNodeBalancerConfigNode
-} from 'linode-js-sdk/lib/nodebalancers';
-import { APIError, ResourcePage } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/nodebalancers';
+import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import {
   append,
   clone,
@@ -49,6 +48,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import NodeBalancerConfigPanel from '../NodeBalancerConfigPanel';
 import { lensFrom } from '../NodeBalancerCreate';
+import { NodeBalancerConfigNodeFields } from '../types';
 import {
   clampNumericString,
   createNewNodeBalancerConfig,

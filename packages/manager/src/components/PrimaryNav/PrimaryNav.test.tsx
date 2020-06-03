@@ -1,203 +1,104 @@
-import { shallow, ShallowWrapper } from 'enzyme';
+import { cleanup, render } from '@testing-library/react';
 import * as React from 'react';
-import ldClient from 'src/__data__/ldClient';
-import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import { light } from 'src/themes';
-import { PrimaryNav } from './PrimaryNav';
-import { ClassNames } from './PrimaryNav.styles';
+import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
+import PrimaryNav, { Props } from './PrimaryNav';
+import useFlags from 'src/hooks/useFlags';
 
-const findLinkIn = (w: ShallowWrapper) => (s: string) => {
-  return w.find(`[data-qa-nav-item="${s}"]`);
-};
-const mockClasses: Record<ClassNames, string> = {
-  active: '',
-  activeLink: '',
-  arrow: '',
-  collapsible: '',
-  divider: '',
-  fadeContainer: '',
-  linkItem: '',
-  listItem: '',
-  listItemAccount: '',
-  logoItem: '',
-  logoCollapsed: '',
-  logoItemCompact: '',
-  menuGrid: '',
-  spacer: '',
-  sublink: '',
-  sublinkActive: '',
-  sublinkPanel: '',
-  settings: '',
-  settingsCollapsed: '',
-  settingsBackdrop: '',
-  activeSettings: '',
-  menu: '',
-  paper: ''
+afterEach(cleanup);
+
+jest.mock('src/hooks/useFlags', () => ({
+  default: jest.fn().mockReturnValue({})
+}));
+
+const mockCloseMenu = jest.fn();
+const mockToggleSpacing = jest.fn();
+const mockToggleTheme = jest.fn();
+
+const props: Props = {
+  closeMenu: mockCloseMenu,
+  isCollapsed: false,
+  toggleSpacing: mockToggleSpacing,
+  toggleTheme: mockToggleTheme
 };
 
 describe('PrimaryNav', () => {
-  describe('default', () => {
-    let wrapper;
-    let findLinkInPrimaryNav: Function;
-
-    beforeAll(() => {
-      wrapper = shallow(
-        <PrimaryNav
-          classes={mockClasses}
-          theme={light(4)}
-          toggleSpacing={jest.fn()}
-          closeMenu={jest.fn()}
-          flags={{}}
-          ldClient={ldClient}
-          toggleTheme={jest.fn()}
-          hasAccountAccess={false}
-          accountCapabilities={[]}
-          accountLastUpdated={0}
-          isManagedAccount={true}
-          isCollapsed={false}
-          {...reactRouterProps}
-        />
-      );
-
-      findLinkInPrimaryNav = findLinkIn(wrapper);
-    });
-
-    it('should have a dashboard link', () => {
-      expect(findLinkInPrimaryNav('dashboard')).toHaveLength(1);
-    });
-
-    it('should have a linodes link', () => {
-      expect(findLinkInPrimaryNav('linodes')).toHaveLength(1);
-    });
-
-    it('should have a volumes link', () => {
-      expect(findLinkInPrimaryNav('volumes')).toHaveLength(1);
-    });
-
-    it('should have a nodebalancers link', () => {
-      expect(findLinkInPrimaryNav('nodebalancers')).toHaveLength(1);
-    });
-
-    it('should have a domains link', () => {
-      expect(findLinkInPrimaryNav('domains')).toHaveLength(1);
-    });
-
-    it('should have a longview link', () => {
-      expect(findLinkInPrimaryNav('longview')).toHaveLength(1);
-    });
-
-    it('should have a stackscripts link', () => {
-      expect(findLinkInPrimaryNav('stackscripts')).toHaveLength(1);
-    });
-
-    it('should have an images link', () => {
-      expect(findLinkInPrimaryNav('images')).toHaveLength(1);
-    });
-
-    it('should not have a account link', () => {
-      expect(findLinkInPrimaryNav('account')).toHaveLength(0);
-    });
-
-    it('should have a managed link', () => {
-      expect(findLinkInPrimaryNav('managed')).toHaveLength(1);
+  it('includes all unhidden links', () => {
+    const { getByText } = renderWithTheme(<PrimaryNav {...props} />);
+    [
+      'Dashboard',
+      'Linodes',
+      'Volumes',
+      'Object Storage',
+      'NodeBalancers',
+      'Domains',
+      'Marketplace',
+      'Longview',
+      'Kubernetes',
+      'StackScripts',
+      'Images',
+      'Get Help'
+    ].forEach(link => {
+      getByText(link);
     });
   });
 
-  describe('when user has account access', () => {
-    let wrapper;
-    let findLinkInPrimaryNav: Function;
+  it('includes "Firewalls" link only when flag is on', () => {
+    const { findByText } = renderWithTheme(<PrimaryNav {...props} />);
 
-    beforeAll(() => {
-      wrapper = shallow(
-        <PrimaryNav
-          classes={mockClasses}
-          theme={light(4)}
-          toggleSpacing={jest.fn()}
-          closeMenu={jest.fn()}
-          flags={{}}
-          ldClient={ldClient}
-          toggleTheme={jest.fn()}
-          hasAccountAccess={true}
-          accountCapabilities={[]}
-          accountLastUpdated={0}
-          isManagedAccount={true}
-          isCollapsed={false}
-          {...reactRouterProps}
-        />
-      );
+    expect(findByText('Firewalls')).resolves.not.toBeInTheDocument();
 
-      findLinkInPrimaryNav = findLinkIn(wrapper);
+    (useFlags as any).mockReturnValue({
+      firewalls: true
     });
 
-    it('should have a account link', () => {
-      expect(findLinkInPrimaryNav('account')).toHaveLength(1);
-    });
+    const { getByText } = renderWithTheme(<PrimaryNav {...props} />);
+    getByText('Firewalls');
   });
 
-  describe('when account is managed', () => {
-    let wrapper;
-    let findLinkInPrimaryNav: Function;
+  it('includes "Managed" link only when the account is Managed', () => {
+    const { findByText, rerender, getByText } = render(
+      wrapWithTheme(<PrimaryNav {...props} />)
+    );
 
-    beforeAll(() => {
-      wrapper = shallow(
-        <PrimaryNav
-          classes={mockClasses}
-          theme={light(4)}
-          toggleSpacing={jest.fn()}
-          closeMenu={jest.fn()}
-          flags={{}}
-          ldClient={ldClient}
-          toggleTheme={jest.fn()}
-          hasAccountAccess={false}
-          accountCapabilities={[]}
-          accountLastUpdated={0}
-          isManagedAccount={true}
-          isCollapsed={false}
-          {...reactRouterProps}
-        />
-      );
+    expect(findByText('Managed')).resolves.not.toBeInTheDocument();
 
-      findLinkInPrimaryNav = findLinkIn(wrapper);
-    });
+    rerender(
+      wrapWithTheme(<PrimaryNav {...props} />, {
+        customStore: {
+          __resources: {
+            accountSettings: {
+              data: { managed: true } as any
+            }
+          }
+        }
+      })
+    );
 
-    it('should have a managed link', () => {
-      expect(findLinkInPrimaryNav('managed')).toHaveLength(1);
-    });
+    getByText('Managed');
   });
 
-  describe('when customer has OBJ access', () => {
-    let wrapper;
-    let findLinkInPrimaryNav: Function;
+  it('includes "Account" link only when the user has account access', () => {
+    const { findByText, getByText, rerender } = render(
+      wrapWithTheme(<PrimaryNav {...props} />)
+    );
 
-    beforeAll(() => {
-      wrapper = shallow(
-        <PrimaryNav
-          classes={mockClasses}
-          theme={light(4)}
-          toggleSpacing={jest.fn()}
-          closeMenu={jest.fn()}
-          flags={{}}
-          ldClient={ldClient}
-          toggleTheme={jest.fn()}
-          hasAccountAccess={false}
-          accountCapabilities={[
-            'Linodes',
-            'NodeBalancers',
-            'Block Storage',
-            'Object Storage'
-          ]}
-          accountLastUpdated={0}
-          isManagedAccount={true}
-          isCollapsed={false}
-          {...reactRouterProps}
-        />
-      );
+    expect(findByText('Account')).resolves.not.toBeInTheDocument();
 
-      findLinkInPrimaryNav = findLinkIn(wrapper);
-    });
+    rerender(
+      wrapWithTheme(<PrimaryNav {...props} />, {
+        customStore: {
+          __resources: {
+            profile: {
+              data: { restricted: false } as any
+            },
+            account: {
+              lastUpdated: 1
+            }
+          }
+        }
+      })
+    );
 
-    it('should have an object storage link', () => {
-      expect(findLinkInPrimaryNav('object-storage')).toHaveLength(1);
-    });
+    getByText('Account');
   });
 });

@@ -2,9 +2,9 @@ import { Formik, FormikProps } from 'formik';
 import {
   rebuildLinode,
   RebuildLinodeFromStackScriptSchema
-} from 'linode-js-sdk/lib/linodes';
-import { UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/linodes';
+import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
+import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
@@ -95,7 +95,7 @@ const initialValues: RebuildFromStackScriptForm = {
   stackscript_id: ''
 };
 
-export const RebuildFromStackScript: React.StatelessComponent<CombinedProps> = props => {
+export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
   const {
     classes,
     imagesData,

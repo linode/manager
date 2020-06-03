@@ -1,4 +1,4 @@
-import { AccountSettings } from 'linode-js-sdk/lib/account';
+import { AccountSettings } from '@linode/api-v4/lib/account';
 import { connect, InferableComponentEnhancerWithProps } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { updateSettingsInStore } from 'src/store/accountSettings/accountSettings.actions';

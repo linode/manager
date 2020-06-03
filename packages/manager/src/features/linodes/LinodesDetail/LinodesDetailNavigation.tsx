@@ -1,4 +1,4 @@
-import { Config } from 'linode-js-sdk/lib/linodes';
+import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import {
   matchPath,
@@ -32,7 +32,7 @@ type CombinedProps = ContextProps &
     linodeId: string;
   }>;
 
-const LinodesDetailNavigation: React.StatelessComponent<CombinedProps> = props => {
+const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
   const {
     match: { url },
     linodeLabel,
@@ -99,7 +99,11 @@ const LinodesDetailNavigation: React.StatelessComponent<CombinedProps> = props =
     <>
       <AppBar position="static" color="default" role="tablist">
         <Tabs
-          value={tabs.findIndex(tab => matches(tab.routeName))}
+          // Prevent console error for -1 as invalid tab index if we're redirecting from e.g. /linodes/invalid-route
+          value={Math.max(
+            tabs.findIndex(tab => matches(tab.routeName)),
+            0
+          )}
           onChange={handleTabChange}
           indicatorColor="primary"
           textColor="primary"

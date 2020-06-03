@@ -1,4 +1,4 @@
-import { LinodeStatus } from 'linode-js-sdk/lib/linodes';
+import { LinodeStatus } from '@linode/api-v4/lib/linodes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { OptionProps } from 'react-select';
@@ -90,9 +90,10 @@ class SearchSuggestion extends React.Component<CombinedProps> {
         data-qa-suggestion
         data-qa-selected={Boolean(this.props.isFocused)}
         ref={innerRef}
-        onClick={this.handleClick}
         onKeyPress={this.handleClick}
         {...innerProps}
+        // overrides onClick from InnerProps
+        onClick={this.handleClick}
         role="button"
         tabIndex={0}
       >

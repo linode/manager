@@ -1,4 +1,4 @@
-import { DomainStatus } from 'linode-js-sdk/lib/domains';
+import { DomainStatus } from '@linode/api-v4/lib/domains';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -85,6 +85,7 @@ class DomainTableRow extends React.Component<CombinedProps> {
         key={id}
         data-qa-domain-cell={domain}
         className={`${classes.domainRow} ${'fade-in-table'}`}
+        ariaLabel={`Domain ${domain}`}
         rowLink={
           type === 'slave'
             ? e => this.handleRowClick(e, id, domain, type)

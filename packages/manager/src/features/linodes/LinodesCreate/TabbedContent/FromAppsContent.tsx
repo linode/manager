@@ -1,5 +1,5 @@
-import { Image } from 'linode-js-sdk/lib/images';
-import { UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
+import { Image } from '@linode/api-v4/lib/images';
+import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { assocPath, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
@@ -339,7 +339,8 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
             regions={regionsData}
             handleSelection={updateRegionID}
             selectedID={selectedRegionID}
-            updateFor={[selectedRegionID, errors]}
+            updateFor={[selectedRegionID, errors, regionsData]}
+            helperText={this.props.regionHelperText}
             copy="Determine the best location for your Linode."
             disabled={userCannotCreateLinode}
           />
@@ -350,6 +351,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
             updateFor={[selectedTypeID, errors]}
             selectedID={selectedTypeID}
             disabled={userCannotCreateLinode}
+            disabledClasses={this.props.disabledClasses}
           />
           <LabelAndTagsPanel
             labelFieldProps={{
@@ -387,9 +389,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
               ]}
               password={password}
               handleChange={updatePassword}
-              users={
-                userSSHKeys.length > 0 && selectedImageID ? userSSHKeys : []
-              }
+              users={userSSHKeys}
               requestKeys={requestKeys}
             />
           </form>

@@ -1,4 +1,4 @@
-import { APIError } from 'linode-js-sdk/lib/types';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -27,7 +27,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = props => {
+const OAuthCreationDrawer: React.FC<CombinedProps> = props => {
   const {
     label,
     redirect_uri,

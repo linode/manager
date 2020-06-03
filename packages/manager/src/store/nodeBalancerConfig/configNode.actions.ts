@@ -2,9 +2,10 @@ import {
   CreateNodeBalancerConfigNode,
   NodeBalancerConfigNode,
   UpdateNodeBalancerConfigNode
-} from 'linode-js-sdk/lib/nodebalancers';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/nodebalancers';
+import { APIError } from '@linode/api-v4/lib/types';
 import { actionCreatorFactory } from 'typescript-fsa';
+import { GetAllData } from 'src/utilities/getAll';
 import { BalancerParams } from '../nodeBalancer/nodeBalancer.actions';
 
 export interface ConfigParams extends BalancerParams {
@@ -20,7 +21,7 @@ const actionCreator = actionCreatorFactory(`@@manager/nodeBalancerConfigNode`);
 export type GetAllConfigNodesParams = ConfigParams;
 export const requestNodeBalancerConfigNodesActions = actionCreator.async<
   GetAllConfigNodesParams,
-  NodeBalancerConfigNode[],
+  GetAllData<NodeBalancerConfigNode>,
   APIError[]
 >(`get-all`);
 

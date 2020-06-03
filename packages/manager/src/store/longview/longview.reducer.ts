@@ -1,4 +1,4 @@
-import { LongviewClient } from 'linode-js-sdk/lib/longview';
+import { LongviewClient } from '@linode/api-v4/lib/longview';
 import { clone } from 'ramda';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { EntitiesAsObjectState } from '../types';

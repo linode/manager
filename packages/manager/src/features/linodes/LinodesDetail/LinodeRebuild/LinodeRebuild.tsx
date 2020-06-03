@@ -1,4 +1,4 @@
-import { GrantLevel } from 'linode-js-sdk/lib/account';
+import { GrantLevel } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
@@ -44,7 +44,7 @@ const options = [
   { value: 'fromAccountStackScript', label: 'From Account StackScript' }
 ];
 
-const LinodeRebuild: React.StatelessComponent<CombinedProps> = props => {
+const LinodeRebuild: React.FC<CombinedProps> = props => {
   const { classes, linodeLabel, permissions } = props;
   const disabled = permissions === 'read_only';
 

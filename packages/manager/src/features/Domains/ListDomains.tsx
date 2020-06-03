@@ -1,4 +1,4 @@
-import { Domain } from 'linode-js-sdk/lib/domains';
+import { Domain } from '@linode/api-v4/lib/domains';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import {
@@ -37,7 +37,7 @@ interface Props extends Handlers {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ListDomains: React.StatelessComponent<CombinedProps> = props => {
+const ListDomains: React.FC<CombinedProps> = props => {
   const { data, orderBy, order, handleOrderChange, classes } = props;
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();

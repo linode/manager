@@ -1,4 +1,4 @@
-import { ManagedCredential } from 'linode-js-sdk/lib/managed';
+import { ManagedCredential } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 import { createStyles, makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -39,6 +39,7 @@ export const CredentialRow: React.FunctionComponent<CombinedProps> = props => {
       data-qa-credential-cell={credential.id}
       data-testid={'credential-row'}
       className={classes.credentialRow}
+      ariaLabel={`Credential ${credential.label}`}
     >
       <TableCell parentColumn="Credential" data-qa-credential-label>
         <Typography variant="h3">{credential.label}</Typography>

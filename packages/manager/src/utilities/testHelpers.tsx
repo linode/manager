@@ -1,6 +1,6 @@
-import { render, RenderResult } from '@testing-library/react';
+import { MatcherFunction, render, RenderResult } from '@testing-library/react';
 import { mergeDeepRight } from 'ramda';
-import { ResourcePage } from 'linode-js-sdk/lib/types';
+import { ResourcePage } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouterProps } from 'react-router';
@@ -138,3 +138,15 @@ export const includesActions = (
       : expect(query(action)).not.toBeInTheDocument();
   }
 };
+
+type Query = (f: MatcherFunction) => HTMLElement;
+
+/** H/T to https://stackoverflow.com/questions/55509875/how-to-query-by-text-string-which-contains-html-tags-using-react-testing-library */
+export const withMarkup = (query: Query) => (text: string): HTMLElement =>
+  query((content: string, node: HTMLElement) => {
+    const hasText = (node: HTMLElement) => node.textContent === text;
+    const childrenDontHaveText = Array.from(node.children).every(
+      child => !hasText(child as HTMLElement)
+    );
+    return hasText(node) && childrenDontHaveText;
+  });

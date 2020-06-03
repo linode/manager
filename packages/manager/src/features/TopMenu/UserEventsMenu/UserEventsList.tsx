@@ -1,4 +1,4 @@
-import { Event } from 'linode-js-sdk/lib/account';
+import { Event } from '@linode/api-v4/lib/account';
 import * as moment from 'moment';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -18,7 +18,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<void>;
 
-export const UserEventsList: React.StatelessComponent<CombinedProps> = props => {
+export const UserEventsList: React.FC<CombinedProps> = props => {
   const { events, closeMenu } = props;
 
   return (

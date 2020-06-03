@@ -1,9 +1,8 @@
-import { SupportTicket } from "linode-js-sdk/lib/account";
+import { SupportTicket } from '@linode/api-v4/lib/support';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
   createStyles,
-  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -20,7 +19,7 @@ interface Props {
 
 type ClassNames = 'summary' | 'regarding';
 
-const styles = (theme: Theme) =>
+const styles = () =>
   createStyles({
     summary: {
       lineHeight: 1.1
@@ -50,7 +49,7 @@ const renderEntityLink = (ticket: SupportTicket) => {
   null;
 };
 
-const TicketRow: React.StatelessComponent<CombinedProps> = props => {
+const TicketRow: React.FC<CombinedProps> = props => {
   const { ticket, classes } = props;
   return (
     <TableRow
@@ -58,6 +57,7 @@ const TicketRow: React.StatelessComponent<CombinedProps> = props => {
       key={`ticket-${ticket.id}`}
       rowLink={`/support/tickets/${ticket.id}`}
       data-testid="ticket-row"
+      ariaLabel={`Ticket subject ${ticket.summary}`}
     >
       <TableCell parentColumn="Subject" data-qa-support-subject>
         <Link to={`/support/tickets/${ticket.id}`}>

@@ -1,4 +1,4 @@
-import { IPRange } from 'linode-js-sdk/lib/networking';
+import { IPRange } from '@linode/api-v4/lib/networking';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -32,7 +32,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ViewRangeDrawer: React.StatelessComponent<CombinedProps> = props => {
+const ViewRangeDrawer: React.FC<CombinedProps> = props => {
   const { classes, range } = props;
   const region = (range && range.region) || '';
 

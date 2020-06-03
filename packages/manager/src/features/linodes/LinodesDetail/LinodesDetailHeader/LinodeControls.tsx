@@ -1,4 +1,4 @@
-import { APIError } from 'linode-js-sdk/lib/types';
+import { APIError } from '@linode/api-v4/lib/types';
 import { last } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -67,7 +67,7 @@ type CombinedProps = Props &
   RouteComponentProps<{}> &
   WithStyles<ClassNames>;
 
-const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
+const LinodeControls: React.FC<CombinedProps> = props => {
   const {
     classes,
     linode,

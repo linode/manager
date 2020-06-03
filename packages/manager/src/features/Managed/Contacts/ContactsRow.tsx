@@ -1,4 +1,4 @@
-import { ManagedContact } from 'linode-js-sdk/lib/managed';
+import { ManagedContact } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -15,7 +15,7 @@ export const ContactsRow: React.FunctionComponent<Props> = props => {
   const { contact, updateOrAdd, openDrawer, openDialog } = props;
 
   return (
-    <TableRow key={contact.id}>
+    <TableRow ariaLabel={`Contact ${contact.id}`} key={contact.id}>
       <TableCell parentColumn="Name">{contact.name}</TableCell>
       <TableCell parentColumn="Group">{contact.group}</TableCell>
       <TableCell parentColumn="E-mail">{contact.email}</TableCell>

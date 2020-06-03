@@ -143,7 +143,7 @@ const getColor = cond([
 // Add invariant warning if loading destructive cancel
 // Add invariant warning if destructive cancel
 
-const wrappedButton: React.StatelessComponent<CombinedProps> = props => {
+const wrappedButton: React.FC<CombinedProps> = props => {
   const {
     classes,
     loading,

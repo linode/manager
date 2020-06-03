@@ -2,15 +2,29 @@ import { isURLValid, sanitizeHTML } from './sanitizeHTML';
 
 describe('sanitizeHTML', () => {
   it('should escape non-whitelisted tags', () => {
+    // safe
     expect(sanitizeHTML('<script>')).not.toContain('<script>');
   });
 
   it('should strip non-whitelisted attributes', () => {
+    // safe
     expect(sanitizeHTML('<a onmouseover>')).not.toContain('onmouseover');
   });
 
   it('should strip invalid href values', () => {
+    // safe
     expect(sanitizeHTML('<a href="javascript:void"/>')).not.toContain('href');
+  });
+
+  it('only allows "version" class, and only for spans', () => {
+    // safe
+    expect(sanitizeHTML('<div class="version" />')).not.toContain('class');
+    // safe
+    expect(sanitizeHTML('<div class="other-class" />')).not.toContain('class');
+    // safe
+    expect(sanitizeHTML('<span class="version" />')).toContain('class');
+    // safe
+    expect(sanitizeHTML('<span class="other-class" />')).not.toContain('class');
   });
 });
 

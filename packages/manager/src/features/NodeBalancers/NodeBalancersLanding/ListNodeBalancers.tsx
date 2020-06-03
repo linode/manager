@@ -1,4 +1,4 @@
-import { NodeBalancerWithConfigs } from 'linode-js-sdk/lib/nodebalancers';
+import { NodeBalancerWithConfigs } from '@linode/api-v4/lib/nodebalancers';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import {
@@ -48,7 +48,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ListNodeBalancers: React.StatelessComponent<CombinedProps> = props => {
+const ListNodeBalancers: React.FC<CombinedProps> = props => {
   const { data, orderBy, order, handleOrderChange, toggleDialog } = props;
 
   const dataLength = data.length;

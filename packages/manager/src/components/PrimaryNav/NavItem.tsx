@@ -46,8 +46,8 @@ const NavItem: React.SFC<CombinedProps> = props => {
   }
 
   return (
-    /* 
-     href takes priority here. So if an href and onClick 
+    /*
+     href takes priority here. So if an href and onClick
      are provided, the onClick will not be applied
     */
     <React.Fragment>
@@ -58,7 +58,7 @@ const NavItem: React.SFC<CombinedProps> = props => {
           data-qa-nav-item={QAKey}
           className={classNames({
             [linkClasses(href)]: true,
-            listItemCollpased: isCollapsed
+            listItemCollapsed: isCollapsed
           })}
         >
           {icon && isCollapsed && <div className="icon">{icon}</div>}
@@ -73,26 +73,24 @@ const NavItem: React.SFC<CombinedProps> = props => {
           />
         </Link>
       ) : (
-        <React.Fragment>
-          <Tooltip title={isDisabled ? isDisabled() : ''} placement="left-end">
-            <ListItem
-              onClick={e => {
-                props.closeMenu();
-                /* disregarding undefined is fine here because of the error handling thrown above */
-                onClick!();
-              }}
-              disabled={!!isDisabled ? !!isDisabled() : false}
-              data-qa-nav-item={QAKey}
-              className={linkClasses()}
-            >
-              <ListItemText
-                primary={display}
-                disableTypography={true}
-                className={listItemClasses}
-              />
-            </ListItem>
-          </Tooltip>
-        </React.Fragment>
+        <Tooltip title={isDisabled ? isDisabled() : ''} placement="left-end">
+          <ListItem
+            onClick={e => {
+              props.closeMenu();
+              /* disregarding undefined is fine here because of the error handling thrown above */
+              onClick!();
+            }}
+            disabled={!!isDisabled ? !!isDisabled() : false}
+            data-qa-nav-item={QAKey}
+            className={linkClasses()}
+          >
+            <ListItemText
+              primary={display}
+              disableTypography={true}
+              className={listItemClasses}
+            />
+          </ListItem>
+        </Tooltip>
       )}
       <Divider className={props.dividerClasses} />
     </React.Fragment>

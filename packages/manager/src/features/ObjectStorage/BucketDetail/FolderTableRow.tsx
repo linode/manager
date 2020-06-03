@@ -48,6 +48,7 @@ const FolderTableRow: React.FC<Props> = props => {
       className={manuallyCreated ? classes.manuallyCreated : ''}
       key={folderName}
       rowLink={handleClick}
+      ariaLabel={`Folder ${displayName}`}
     >
       <TableCell parentColumn="Object">
         <Grid container wrap="nowrap" alignItems="center">

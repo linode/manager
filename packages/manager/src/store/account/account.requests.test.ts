@@ -6,7 +6,7 @@ import thunk from 'redux-thunk';
 
 const mockStore = configureMockStore([thunk]);
 
-jest.mock('linode-js-sdk/lib/account', () => {
+jest.mock('@linode/api-v4/lib/account', () => {
   const goodPromo = promoFactory.build();
   const badPromo = promoFactory.build({ expire_dt: null });
   const mockAccount = accountFactory.build({

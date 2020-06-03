@@ -1,4 +1,4 @@
-import { ObjectStorageCluster } from 'linode-js-sdk/lib/object-storage';
+import { ObjectStorageCluster } from '@linode/api-v4/lib/object-storage';
 import { Reducer } from 'redux';
 import { EntityState } from 'src/store/types';
 import { isType } from 'typescript-fsa';

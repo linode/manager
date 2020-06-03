@@ -1,4 +1,4 @@
-import { Event } from 'linode-js-sdk/lib/account';
+import { Event } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import {
   createStyles,
@@ -32,7 +32,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const ActivityRow: React.StatelessComponent<CombinedProps> = props => {
+export const ActivityRow: React.FC<CombinedProps> = props => {
   const { classes, event } = props;
 
   const message = eventMessageGenerator(event);

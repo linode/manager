@@ -2,7 +2,7 @@ import {
   Linode,
   LinodeBackup,
   LinodeBackupsResponse
-} from 'linode-js-sdk/lib/linodes';
+} from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';

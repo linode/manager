@@ -1,4 +1,4 @@
-import { ManagedServiceMonitor } from 'linode-js-sdk/lib/managed';
+import { ManagedServiceMonitor } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import TicketIcon from 'src/assets/icons/ticket.svg';
@@ -85,6 +85,7 @@ export const monitorRow: React.FunctionComponent<CombinedProps> = props => {
       data-qa-monitor-cell={monitor.id}
       data-testid={'monitor-row'}
       className={classes.monitorRow}
+      ariaLabel={`Monitor ${monitor.label}`}
     >
       <TableCell
         parentColumn="Monitor"

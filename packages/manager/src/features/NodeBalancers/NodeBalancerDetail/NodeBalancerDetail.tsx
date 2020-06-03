@@ -1,8 +1,8 @@
 import {
   getNodeBalancer,
   getNodeBalancerConfigs
-} from 'linode-js-sdk/lib/nodebalancers';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/nodebalancers';
+import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { any, last, pathOr } from 'ramda';
 import * as React from 'react';
@@ -19,7 +19,6 @@ import CircleProgress from 'src/components/CircleProgress';
 import AppBar from 'src/components/core/AppBar';
 import {
   createStyles,
-  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -45,16 +44,15 @@ import {
   getErrorStringOrDefault
 } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { ExtendedNodeBalancer } from '../types';
 import { NodeBalancerProvider } from './context';
 import NodeBalancerConfigurations from './NodeBalancerConfigurations';
 import NodeBalancerSettings from './NodeBalancerSettings';
 import NodeBalancerSummary from './NodeBalancerSummary';
 
-import { ExtendedNodeBalancer } from 'src/services/nodebalancers';
-
 type ClassNames = 'root' | 'backButton';
 
-const styles = (theme: Theme) =>
+const styles = () =>
   createStyles({
     root: {},
     backButton: {

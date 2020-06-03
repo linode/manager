@@ -1,8 +1,8 @@
 import {
   CreateNodeBalancerPayload,
   NodeBalancer
-} from 'linode-js-sdk/lib/nodebalancers';
-import { APIError, ResourcePage } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/nodebalancers';
+import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { actionCreatorFactory } from 'typescript-fsa';
 
 import { GetAllData } from 'src/utilities/getAll';

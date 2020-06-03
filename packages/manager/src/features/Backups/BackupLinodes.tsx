@@ -1,4 +1,4 @@
-import { LinodeType } from 'linode-js-sdk/lib/linodes';
+import { LinodeType } from '@linode/api-v4/lib/linodes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import {
@@ -42,7 +42,7 @@ const getLabel = (type?: LinodeType) => pathOr('Unknown', ['label'], type);
 const getPrice = (type?: LinodeType) =>
   pathOr('Unavailable', ['addons', 'backups', 'price', 'monthly'], type);
 
-export const BackupLinodes: React.StatelessComponent<CombinedProps> = props => {
+export const BackupLinodes: React.FC<CombinedProps> = props => {
   const { classes, linodes } = props;
   return (
     <React.Fragment>

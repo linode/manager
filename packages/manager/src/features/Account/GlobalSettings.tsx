@@ -1,6 +1,6 @@
-import { AccountSettings } from 'linode-js-sdk/lib/account';
-import { Linode } from 'linode-js-sdk/lib/linodes';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { AccountSettings } from '@linode/api-v4/lib/account';
+import { Linode } from '@linode/api-v4/lib/linodes';
+import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
@@ -33,6 +33,7 @@ import EnableManaged from './EnableManaged';
 import EnableObjectStorage from './EnableObjectStorage';
 import ImportGroupsAsTags from './ImportGroupsAsTags';
 import NetworkHelper from './NetworkHelper';
+import CloseAccountSetting from './CloseAccountSetting';
 
 interface StateProps {
   loading: boolean;
@@ -138,6 +139,8 @@ const GlobalSettings: React.FC<CombinedProps> = props => {
       {shouldDisplayGroupImport(entitiesWithGroupsToImport) && (
         <ImportGroupsAsTags openDrawer={openImportDrawer} />
       )}
+      <CloseAccountSetting />
+
       <TagImportDrawer />
     </div>
   );

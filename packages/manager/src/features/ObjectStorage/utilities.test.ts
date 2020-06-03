@@ -1,4 +1,4 @@
-import { ObjectStorageObject } from 'linode-js-sdk/lib/object-storage';
+import { ObjectStorageObject } from '@linode/api-v4/lib/object-storage';
 import {
   basename,
   confirmObjectStorage,

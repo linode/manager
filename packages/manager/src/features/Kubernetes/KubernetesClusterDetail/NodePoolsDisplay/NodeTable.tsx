@@ -1,5 +1,5 @@
-import { PoolNodeResponse } from 'linode-js-sdk/lib/kubernetes';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -208,7 +208,7 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo(props => {
   const displayIP = ip ?? '';
 
   return (
-    <TableRow rowLink={rowLink} aria-label={label}>
+    <TableRow rowLink={rowLink} ariaLabel={label}>
       <TableCell>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item>

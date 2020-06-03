@@ -4,8 +4,8 @@ import {
   DomainRecord,
   DomainType,
   RecordType
-} from 'linode-js-sdk/lib/domains';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/domains';
+import { APIError } from '@linode/api-v4/lib/types';
 import {
   compose,
   equals,
@@ -241,7 +241,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       .then(() => {
         this.props.updateRecords();
 
-        this.updateConfirmDialog(c => ({
+        this.updateConfirmDialog(_ => ({
           open: false,
           submitting: false,
           errors: undefined,
@@ -260,7 +260,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   };
 
   handleOpenSOADrawer = (d: Domain) => {
-    d.type === 'master'
+    return d.type === 'master'
       ? this.openForEditMasterDomain(d)
       : this.openForEditSlaveDomain(d);
   };
@@ -421,7 +421,10 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         r => typeEq('AAAA', r) || typeEq('A', r)
       ),
       columns: [
-        { title: 'Hostname', render: (r: DomainRecord) => r.name },
+        {
+          title: 'Hostname',
+          render: (r: DomainRecord) => r.name || this.props.domain.domain
+        },
         { title: 'IP Address', render: (r: DomainRecord) => r.target },
         { title: 'TTL', render: getTTL },
         {
@@ -435,7 +438,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 ttl_sec
               }}
               onEdit={this.openForEditARecord}
-              label={name}
+              label={name || this.props.domain.domain}
               deleteData={{
                 recordID: id,
                 onDelete: this.confirmDeletion
@@ -523,7 +526,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { title: 'Name', render: (r: DomainRecord) => r.name },
         {
           title: 'Domain',
-          render: (r: DomainRecord) => this.props.domain.domain
+          render: () => this.props.domain.domain
         },
         {
           title: 'Priority',
@@ -695,7 +698,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 order={type.order}
                 orderBy={type.orderBy}
               >
-                {({ data: orderedData, handleOrderChange, order, orderBy }) => {
+                {({ data: orderedData }) => {
                   return (
                     <Paginate
                       data={orderedData}
@@ -800,6 +803,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         </ConfirmationDialog>
         <Drawer
           open={drawer.open}
+          domain={this.props.domain.domain}
           domainId={this.props.domain.id}
           onClose={this.resetDrawer}
           mode={drawer.mode}

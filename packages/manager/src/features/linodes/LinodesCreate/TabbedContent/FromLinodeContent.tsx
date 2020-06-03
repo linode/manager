@@ -141,6 +141,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
     }
 
     return (
+      // eslint-disable-next-line
       <React.Fragment>
         {linodes && linodes.length === 0 ? (
           <Grid
@@ -152,6 +153,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
           >
             <Paper>
               <Placeholder
+                data-qa-placeholder
                 icon={VolumeIcon}
                 renderAsSecondary
                 copy="You do not have any existing Linodes to clone from.
@@ -171,6 +173,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
             >
               <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
               <SelectLinodePanel
+                data-qa-linode-panel
                 error={hasErrorFor('linode_id')}
                 linodes={extendLinodes(linodes, images, types)}
                 selectedLinodeID={selectedLinodeID}
@@ -185,24 +188,34 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
                 }}
               />
               <SelectRegionPanel
+                data-qa-region-panel
                 error={hasErrorFor('region')}
                 regions={regions}
                 handleSelection={this.props.updateRegionID}
                 selectedID={selectedRegionID}
                 copy="Determine the best location for your Linode."
-                updateFor={[selectedRegionID, errors]}
+                updateFor={[selectedRegionID, errors, regions]}
+                helperText={this.props.regionHelperText}
                 disabled={userCannotCreateLinode}
               />
               <SelectPlanPanel
+                data-qa-select-plan-panel
                 error={hasErrorFor('type')}
                 types={types}
                 onSelect={this.props.updateTypeID}
                 selectedID={selectedTypeID}
                 selectedDiskSize={selectedDiskSize}
-                updateFor={[selectedDiskSize, selectedTypeID, errors]}
+                updateFor={[
+                  selectedDiskSize,
+                  selectedTypeID,
+                  errors,
+                  this.props.disabledClasses
+                ]}
                 disabled={userCannotCreateLinode}
+                disabledClasses={this.props.disabledClasses}
               />
               <LabelAndTagsPanel
+                data-qa-label-panel
                 labelFieldProps={{
                   label: 'Linode Label',
                   value: label || '',
@@ -213,6 +226,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
                 updateFor={[label, errors]}
               />
               <AddonsPanel
+                data-qa-addons-panel
                 backups={backupsEnabled}
                 accountBackups={accountBackupsEnabled}
                 backupsMonthly={backupsMonthlyPrice}

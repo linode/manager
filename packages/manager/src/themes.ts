@@ -78,7 +78,8 @@ const darkThemeOptions = {
     primaryNavActiveBG: '#464c53',
     primaryNavBorder: '#303235',
     primaryNavPaper: '#3a3f45',
-    topMenu: '#33383d'
+    topMenu: '#33383d',
+    billingHeader: '#222'
   },
   color: {
     headline: primaryColors.headline,
@@ -111,7 +112,9 @@ const darkThemeOptions = {
     label: '#c9cacb',
     disabledText: '#c9cacb',
     kubeLabel: '#fff',
-    primaryNavText: '#fff'
+    primaryNavText: '#fff',
+    borderBilling: primaryColors.light,
+    billingText: '#fff'
   },
   animateCircleIcon: {
     ...iconCircleAnimation

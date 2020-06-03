@@ -1,6 +1,6 @@
-import { Grant } from 'linode-js-sdk/lib/account';
-import { Image } from 'linode-js-sdk/lib/images';
-import { StackScript } from 'linode-js-sdk/lib/stackscripts';
+import { Grant } from '@linode/api-v4/lib/account';
+import { Image } from '@linode/api-v4/lib/images';
+import { StackScript } from '@linode/api-v4/lib/stackscripts';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -55,7 +55,7 @@ export interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames> & StateProps;
 
-const StackScriptsSection: React.StatelessComponent<CombinedProps> = props => {
+const StackScriptsSection: React.FC<CombinedProps> = props => {
   const {
     data,
     isSorting,

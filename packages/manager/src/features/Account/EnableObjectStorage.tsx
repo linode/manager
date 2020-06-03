@@ -1,6 +1,6 @@
-import { AccountSettings } from 'linode-js-sdk/lib/account';
-import { cancelObjectStorage } from 'linode-js-sdk/lib/object-storage';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { AccountSettings } from '@linode/api-v4/lib/account';
+import { cancelObjectStorage } from '@linode/api-v4/lib/object-storage';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';

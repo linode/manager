@@ -1,4 +1,4 @@
-import { ObjectStorageBucket } from 'linode-js-sdk/lib/object-storage';
+import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
@@ -38,7 +38,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const BucketTable: React.StatelessComponent<CombinedProps> = props => {
+export const BucketTable: React.FC<CombinedProps> = props => {
   const {
     data,
     orderBy,
@@ -124,7 +124,7 @@ interface RenderDataProps {
   onRemove: (bucket: ObjectStorageBucket) => void;
 }
 
-const RenderData: React.StatelessComponent<RenderDataProps> = props => {
+const RenderData: React.FC<RenderDataProps> = props => {
   const { data, onRemove } = props;
 
   return (

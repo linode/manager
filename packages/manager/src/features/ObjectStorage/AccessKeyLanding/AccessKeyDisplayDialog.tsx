@@ -1,4 +1,4 @@
-import { ObjectStorageKey } from 'linode-js-sdk/lib/object-storage';
+import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
@@ -33,9 +33,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const AccessKeyDisplayDialog: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const AccessKeyDisplayDialog: React.FC<CombinedProps> = props => {
   const { classes, objectStorageKey, isOpen, close } = props;
 
   // This should never happen, but just in case.

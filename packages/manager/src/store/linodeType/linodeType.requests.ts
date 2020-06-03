@@ -2,7 +2,7 @@ import {
   getDeprecatedLinodeTypes,
   getLinodeTypes,
   LinodeType
-} from 'linode-js-sdk/lib/linodes';
+} from '@linode/api-v4/lib/linodes';
 import cachedTypes from 'src/cachedData/types.json';
 import cachedDeprecatedTypes from 'src/cachedData/typesLegacy.json';
 import { isProdAPI } from 'src/constants';
@@ -20,11 +20,17 @@ export const requestTypes: RequestTypesThunk = () => dispatch => {
    * since it may not match dev/staging API data.
    */
   if (isProdAPI && cachedTypes.data && cachedDeprecatedTypes.data) {
-    return dispatch(
+    // AC: need to cast as the Class string cannot be assigned to a type enum in TS 3.9
+    const allCachedTypes: LinodeType[] = [
+      ...cachedTypes.data,
+      ...cachedDeprecatedTypes.data
+    ] as LinodeType[];
+    dispatch(
       getLinodeTypesActions.done({
-        result: [...cachedTypes.data, ...cachedDeprecatedTypes.data]
+        result: allCachedTypes
       })
     );
+    return Promise.resolve(allCachedTypes);
   }
   dispatch(getLinodeTypesActions.started());
   return Promise.all([

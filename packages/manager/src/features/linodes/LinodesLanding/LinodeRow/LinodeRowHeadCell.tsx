@@ -1,5 +1,5 @@
-import { Event } from 'linode-js-sdk/lib/account';
-import { LinodeBackups, LinodeStatus } from 'linode-js-sdk/lib/linodes';
+import { Event } from '@linode/api-v4/lib/account';
+import { LinodeBackups, LinodeStatus } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -131,7 +131,7 @@ type CombinedProps = Props &
   Pick<WithImages, 'imagesData'> &
   WithStyles<ClassNames>;
 
-const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
+const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
   const {
     // linode props
     label,
@@ -243,7 +243,7 @@ const enhanced = compose<CombinedProps, Props>(
 
 export default enhanced(LinodeRowHeadCell);
 
-const ProgressDisplay: React.StatelessComponent<{
+const ProgressDisplay: React.FC<{
   className: string;
   progress: null | number;
   text: string;

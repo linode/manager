@@ -1,5 +1,5 @@
-import { Event, getEvents } from 'linode-js-sdk/lib/account';
-import { ResourcePage } from 'linode-js-sdk/lib/types';
+import { Event, getEvents } from '@linode/api-v4/lib/account';
+import { ResourcePage } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { compose as rCompose, concat, uniq } from 'ramda';
 import * as React from 'react';
@@ -175,7 +175,7 @@ export const reducer: EventsReducer = (state, action) => {
   }
 };
 
-export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
+export const EventsLanding: React.FC<CombinedProps> = props => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [loadMoreEvents, setLoadMoreEvents] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>(undefined);

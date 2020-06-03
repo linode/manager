@@ -1,6 +1,6 @@
 import { map as mapPromise } from 'bluebird';
-import { deleteUser, getUsers, User } from 'linode-js-sdk/lib/account';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { deleteUser, getUsers, User } from '@linode/api-v4/lib/account';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as memoize from 'memoizee';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
@@ -203,6 +203,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
         key={user.username}
         data-qa-user-row
         rowLink={`/account/users/${user.username}/profile`}
+        ariaLabel={`User ${user.username}`}
       >
         <TableCell parentColumn="Username" data-qa-username>
           <Grid container alignItems="center">

@@ -32,7 +32,8 @@ type ClassNames =
   | 'noTransform'
   | 'selectSmall'
   | 'wrapper'
-  | 'tiny';
+  | 'tiny'
+  | 'absolute';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -85,10 +86,10 @@ const styles = (theme: Theme) =>
       width: '3.6em'
     },
     errorText: {
-      color: theme.color.red,
-      '&$editable': {
-        position: 'absolute'
-      }
+      color: theme.color.red
+    },
+    absolute: {
+      position: 'absolute'
     },
     editable: {
       wordBreak: 'keep-all',
@@ -125,6 +126,7 @@ interface BaseProps {
   noMarginTop?: boolean;
   loading?: boolean;
   hideLabel?: boolean;
+  hasAbsoluteError?: boolean;
   inputId?: string;
 }
 
@@ -165,7 +167,9 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
      * type matches a number type
      */
     const cleanedValue =
-      minAndMaxExist && numberTypes.some(eachType => eachType === type)
+      minAndMaxExist &&
+      numberTypes.some(eachType => eachType === type) &&
+      e.target.value !== ''
         ? clamp(min, max, +e.target.value)
         : e.target.value;
 
@@ -234,6 +238,7 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
       noMarginTop,
       label,
       loading,
+      hasAbsoluteError,
       inputId,
       ...textFieldProps
     } = this.props;
@@ -249,7 +254,11 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
     const maybeRequiredLabel = !!this.props.required
       ? `${label} (required)`
       : label;
-
+    const validInputId =
+      inputId ||
+      (this.props.label
+        ? convertToKebabCase(`${this.props.label}`)
+        : undefined);
     return (
       <div
         className={classNames({
@@ -265,13 +274,9 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
               [classes.noTransform]: true,
               'visually-hidden': hideLabel
             })}
-            htmlFor={
-              this.props.label
-                ? convertToKebabCase(`${this.props.label}`)
-                : undefined
-            }
+            htmlFor={validInputId}
           >
-            {maybeRequiredLabel || ''}
+            {maybeRequiredLabel}
           </InputLabel>
         )}
         {helperText && helperTextPosition === 'top' && (
@@ -312,11 +317,7 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
             }}
             inputProps={{
               'data-testid': 'textfield-input',
-              id:
-                inputId ||
-                (this.props.label
-                  ? convertToKebabCase(`${this.props.label}`)
-                  : undefined),
+              id: validInputId,
               ...inputProps
             }}
             InputProps={{
@@ -369,9 +370,11 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
           {tooltipText && <HelpIcon text={tooltipText} />}
           {errorText && (
             <FormHelperText
-              className={`${classes.errorText} ${
-                editable ? classes.editable : ''
-              }`}
+              className={classNames({
+                [classes.errorText]: true,
+                [classes.editable]: editable,
+                [classes.absolute]: editable || hasAbsoluteError
+              })}
               data-qa-textfield-error-text={this.props.label}
               role="alert"
             >
