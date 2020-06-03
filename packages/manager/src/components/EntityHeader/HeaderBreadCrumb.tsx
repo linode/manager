@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       top: 0,
       width: 15,
       height: '50%',
-      background: `linear-gradient(to right top, ${theme.bg.lightBlue} 0%, ${theme.bg.lightBlue} 45%, transparent 46.1%)`,
+      background: `linear-gradient(to right top, ${theme.bg.lightBlue} 0%, ${theme.bg.lightBlue} 50%, transparent 46.1%)`,
       zIndex: 1
     },
     '&:after': {
@@ -34,12 +34,38 @@ const useStyles = makeStyles((theme: Theme) => ({
       bottom: 0,
       width: 15,
       height: '50%',
-      background: `linear-gradient(to right bottom, ${theme.bg.lightBlue} 0%, ${theme.bg.lightBlue} 45%, transparent 46.1%)`,
+      background: `linear-gradient(to right bottom, ${theme.bg.lightBlue} 0%, ${theme.bg.lightBlue} 50%, transparent 46.1%)`,
       zIndex: 1
+    }
+  },
+  border: {
+    borderTop: '1px solid #f4f5f6',
+    height: '50%',
+    width: theme.spacing(4),
+    position: 'absolute',
+    top: 6.5,
+    right: -theme.spacing() - 4,
+    transform: 'rotate(61.5deg)',
+    zIndex: 1,
+
+    '&:before': {
+      content: '""',
+      borderTop: '1px solid #f4f5f6',
+      height: '50%',
+      width: theme.spacing(4),
+      bottom: theme.spacing(0.5),
+      right: -19.5,
+      position: 'absolute',
+      transform: 'rotate(56.75deg)'
     }
   },
   parentLinkText: {
     color: theme.color.blue
+  },
+  parentTitleText: {
+    color: '#3683dc',
+    paddingLeft: theme.spacing(),
+    paddingRight: theme.spacing(2) - 2
   },
   titleText: {
     paddingRight: theme.spacing(2) - 2
@@ -66,9 +92,10 @@ export const HeaderBreadCrumb: React.FC<BreadCrumbProps> = props => {
               </Link>
             </Grid>
           </Grid>
+          <div className={classes.border}></div>
         </Grid>
         <Grid item>
-          <Typography variant="h2" className={classes.titleText}>
+          <Typography variant="h2" className={classes.parentTitleText}>
             {title}
           </Typography>
         </Grid>
