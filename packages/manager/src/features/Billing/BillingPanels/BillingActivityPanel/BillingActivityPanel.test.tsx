@@ -9,6 +9,7 @@ import BillingActivityPanel, {
   getCutoffFromDateRange,
   makeFilter
 } from './BillingActivityPanel';
+import { DateTime } from 'luxon';
 
 afterEach(cleanup);
 
@@ -160,24 +161,30 @@ describe('paymentToActivityFeedItem', () => {
 
   describe('getCutoffFromDateRange', () => {
     it('returns the datetime of the range relative to given date', () => {
-      const testDate = '2020-01-01T00:00:00';
-      expect(getCutoffFromDateRange('30 Days', testDate)).toBe(
-        '2019-12-02 00:00:00'
+      const testDate = DateTime.fromObject({
+        year: 2020,
+        month: 1,
+        day: 1,
+        zone: 'utc'
+      });
+      const testDateISO = testDate.toISO();
+      expect(getCutoffFromDateRange('30 Days', testDateISO)).toBe(
+        testDate.minus({ days: 30 }).toISO()
       );
-      expect(getCutoffFromDateRange('60 Days', testDate)).toBe(
-        '2019-11-02 00:00:00'
+      expect(getCutoffFromDateRange('60 Days', testDateISO)).toBe(
+        testDate.minus({ days: 60 }).toISO()
       );
-      expect(getCutoffFromDateRange('90 Days', testDate)).toBe(
-        '2019-10-03 00:00:00'
+      expect(getCutoffFromDateRange('90 Days', testDateISO)).toBe(
+        testDate.minus({ days: 90 }).toISO()
       );
-      expect(getCutoffFromDateRange('6 Months', testDate)).toBe(
-        '2019-07-01 00:00:00'
+      expect(getCutoffFromDateRange('6 Months', testDateISO)).toBe(
+        testDate.minus({ months: 6 }).toISO()
       );
-      expect(getCutoffFromDateRange('12 Months', testDate)).toBe(
-        '2019-01-01 00:00:00'
+      expect(getCutoffFromDateRange('12 Months', testDateISO)).toBe(
+        testDate.minus({ months: 12 }).toISO()
       );
-      expect(getCutoffFromDateRange('All Time', testDate)).toBe(
-        '1970-01-01 00:00:00'
+      expect(getCutoffFromDateRange('All Time', testDateISO)).toBe(
+        DateTime.fromMillis(0, { zone: 'utc' }).toISO()
       );
     });
   });

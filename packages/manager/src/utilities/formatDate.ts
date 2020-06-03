@@ -3,7 +3,7 @@ import { reportException } from 'src/exceptionReporting';
 
 import store from 'src/store';
 import { API_DATETIME_NO_TZ_FORMAT } from 'src/constants';
-import { parseAPIDate } from 'src/utilities/date';
+import { parseISOOrAPIDate } from 'src/utilities/date';
 export type TimeInterval = 'day' | 'week' | 'month' | 'year' | 'never';
 
 const durationMap = {
@@ -37,20 +37,23 @@ interface FormatDateOptions {
   humanizeCutoff?: TimeInterval;
   format?: string;
 }
-
+/**
+ *
+ * @param date SQL Date Format
+ * @param options
+ */
 export const formatDate = (
   date: string,
   options: FormatDateOptions = {}
 ): string => {
   let time;
-
   /** get the timezone from redux and use it as the timezone */
   const state = store.getState();
   const userTimezone = state.__resources?.profile?.data?.timezone ?? 'GMT';
 
   try {
     // Unknown error was causing this to crash in rare situations.
-    time = parseAPIDate(date).setZone(userTimezone);
+    time = parseISOOrAPIDate(date).setZone(userTimezone);
   } catch (e) {
     // Better to return a blank date than an error or incorrect information.
     reportException(e);

@@ -1,12 +1,13 @@
 import { DateTime } from 'luxon';
+import { API_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { shouldRenderHively } from './Hively';
 
-const recent = DateTime.local()
+const recent = DateTime.utc()
   .minus({ days: 6 })
-  .toISO();
-const old = DateTime.local()
+  .toFormat(API_DATETIME_NO_TZ_FORMAT);
+const old = DateTime.utc()
   .minus({ months: 3 })
-  .toISO();
+  .toFormat(API_DATETIME_NO_TZ_FORMAT);
 const user = 'Linode';
 
 describe('shouldRenderHively function', () => {
@@ -14,7 +15,12 @@ describe('shouldRenderHively function', () => {
     expect(shouldRenderHively(true, 'blah')).toBeTruthy();
   });
   it('should return true if the date is now', () => {
-    expect(shouldRenderHively(true, DateTime.local().toISO())).toBeTruthy();
+    expect(
+      shouldRenderHively(
+        true,
+        DateTime.utc().toFormat(API_DATETIME_NO_TZ_FORMAT)
+      )
+    ).toBeTruthy();
   });
   it('should return true if the date is within the past 7 days', () => {
     expect(shouldRenderHively(true, recent)).toBeTruthy();

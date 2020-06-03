@@ -253,7 +253,7 @@ export const shouldRequestNotifications = (
     eventsWithRelevantNotifications.includes(lastEventAction) &&
     // if the event was created after the last time notifications were updated
     DateTime.fromISO(lastEventCreated) >
-      DateTime.fromMillis(notificationsLastUpdated)
+      DateTime.fromMillis(notificationsLastUpdated, { zone: 'utc' })
   );
 };
 

@@ -615,16 +615,16 @@ export const paymentToActivityFeedItem = (
     type: 'payment'
   };
 };
-/** 
+/**
  * @param currentDatetime ISO format date
- * @returns ISO format beginning of the range date 
+ * @returns ISO format beginning of the range date
  */
 export const getCutoffFromDateRange = (
   range: DateRange,
   currentDatetime?: string
 ) => {
   const date = currentDatetime
-    ? DateTime.fromISO(currentDatetime)
+    ? DateTime.fromISO(currentDatetime).setZone('utc')
     : DateTime.utc();
 
   let outputDate: DateTime;
@@ -645,7 +645,7 @@ export const getCutoffFromDateRange = (
       outputDate = date.minus({ months: 12 });
       break;
     default:
-      outputDate = DateTime.fromISO('1970-01-01T00:00:00.000');
+      outputDate = DateTime.fromMillis(0, { zone: 'utc' });
       break;
   }
   return outputDate.toISO();

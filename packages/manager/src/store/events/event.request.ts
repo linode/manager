@@ -46,7 +46,7 @@ export const getEvents: ThunkActionCreator<Promise<Event[]>> = () => (
   }
 
   const filters = generatePollingFilter(
-    DateTime.fromMillis(mostRecentEventTime).toFormat(
+    DateTime.fromMillis(mostRecentEventTime, { zone: 'utc' }).toFormat(
       ISO_DATETIME_NO_TZ_FORMAT
     ),
     inIds,
