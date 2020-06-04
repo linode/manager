@@ -6,6 +6,7 @@ import OrderBy from 'src/components/OrderBy';
 import TableSortCell from 'src/components/TableSortCell';
 import GroupedEntitiesByTag from './GroupedEntitiesByTag';
 import ListEntities from './ListEntities';
+import { Handlers } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   hiddenHeaderCell: theme.visually.hidden
@@ -21,12 +22,13 @@ interface Props {
   headers: HeaderCell[];
   groupByTag: boolean;
   row: EntityTableRow<any>;
+  handlers?: Handlers;
 }
 
 export type CombinedProps = Props;
 
 export const LandingTable: React.FC<Props> = props => {
-  const { entity, headers, groupByTag, row } = props;
+  const { entity, handlers, headers, groupByTag, row } = props;
   const classes = useStyles();
   return (
     <OrderBy data={row.data} orderBy={'label'} order={'asc'}>
@@ -63,7 +65,8 @@ export const LandingTable: React.FC<Props> = props => {
           data: orderedData,
           RowComponent: row.Component,
           headerCells,
-          entity
+          entity,
+          handlers
         };
 
         if (groupByTag) {
