@@ -67,8 +67,12 @@ const LinodeRebuild: React.FC<CombinedProps> = props => {
         <Typography data-qa-rebuild-desc>
           If you can't rescue an existing disk, it's time to rebuild your
           Linode. There are a couple of different ways you can do this: either
-          restore from a backup or start over with a fresh Linux distribution.
-          Rebuilding will destroy all data on all existing disks on this Linode.
+          restore from a backup or start over with a fresh Linux
+          distribution.&nbsp;
+          <b>
+            Rebuilding will destroy all data on all existing disks on this
+            Linode.
+          </b>
         </Typography>
         <EnhancedSelect
           options={options}

@@ -243,6 +243,8 @@ class LinodeSettingsPasswordPanel extends React.Component<
                   ? "You don't have permissions to modify this Linode"
                   : undefined
               }
+              helperText="You may change your root password here for this Linode if it is fully powered down."
+              helperTextPosition="bottom"
             />
           </React.Suspense>
         </form>
