@@ -142,6 +142,7 @@ export const storage: Storage = {
   stackScriptInProgress: {
     get: () =>
       getStorage(STACKSCRIPT, {
+        id: -1,
         script: '',
         label: '',
         images: []
