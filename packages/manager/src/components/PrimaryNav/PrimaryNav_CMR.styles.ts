@@ -98,6 +98,101 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   settingsBackdrop: {
     backgroundColor: 'rgba(0,0,0,.3)'
+  },
+  button: {
+    '&[data-reach-menu-button]': {
+      textTransform: 'inherit',
+      borderRadius: 0,
+      fontSize: '1rem',
+      lineHeight: 1,
+      fontFamily: theme.spacing() === 4 ? theme.font.normal : theme.font.bold,
+      backgroundColor: theme.bg.primaryNavPaper,
+      color: theme.color.primaryNavText,
+      paddingRight: 8,
+      position: 'relative',
+
+      cursor: 'pointer',
+      border: 'none',
+      [theme.breakpoints.down('sm')]: {
+        padding: '6px 34px 7px 11px',
+        maxHeight: 50,
+        minWidth: 105
+      },
+      '&:hover': {
+        backgroundColor: theme.bg.primaryNavActiveBG
+      },
+      '&:focus': {
+        backgroundColor: theme.bg.primaryNavActiveBG
+      },
+      '&[aria-expanded="true"]': {
+        backgroundColor: theme.bg.primaryNavActiveBG,
+        '& $caret': {
+          transform: 'rotate(180deg)'
+        }
+      }
+    }
+  },
+  menuItemLink: {
+    '&[data-reach-menu-item]': {
+      height: '100%',
+      transition: theme.transitions.create(['color']),
+      color: theme.color.primaryNavText,
+      opacity: 1,
+      whiteSpace: 'nowrap',
+      fontFamily: 'LatoWebBold', // we keep this bold at all times
+      '&.hiddenWhenCollapsed': {
+        opacity: 0
+      },
+      cursor: 'pointer'
+    },
+    '&[data-reach-menu-item] [data-selected]': {
+      background: theme.bg.main
+      // '& svg': {
+      //   ...theme.addCircleHoverEffect,
+      //   backgroundColor: theme.bg.primaryNavPaper,
+      //   color: theme.color.primaryNavText
+      // }
+    }
+  },
+  menuItemList: {
+    '&[data-reach-menu-items]': {
+      zIndex: 10000,
+      padding: 0,
+      border: 'none',
+      whiteSpace: 'normal',
+      boxShadow: `0 0 5px ${theme.color.boxShadow}`,
+      backgroundColor: theme.bg.primaryNavPaper
+    }
+  },
+  menuPopover: {
+    '&[data-reach-menu], &[data-reach-menu-popover]': {
+      width: 350,
+      [theme.breakpoints.up('md')]: {
+        top: 12,
+        right: 0
+      }
+    }
+  },
+  caret: {
+    color: theme.bg.primaryNavActiveBG,
+    fontSize: 24
+    // position: 'absolute',
+    // right: theme.spacing(2) + 2,
+    // top: theme.spacing(1) + 5,
+    // [theme.breakpoints.down('sm')]: {
+    //   right: 5
+    // }
+  },
+  menuWrapper: {
+    position: 'relative',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+    // order: 3,
+    // marginRight: theme.spacing(1),
+    // [theme.breakpoints.down('sm')]: {
+    // flex: 1
+    // }
   }
 }));
 

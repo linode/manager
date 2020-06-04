@@ -196,7 +196,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       pureWhite: '#fff',
       tableHeader: '#fbfbfb',
       primaryNavActive: '#f4f4f4',
-      primaryNavActiveBG: '#272b31',
+      primaryNavActiveBG: '#515861',
       primaryNavBorder: '#f4f4f4',
       primaryNavPaper: '#32363c',
       topMenu: '#fff',
@@ -235,7 +235,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       label: '#555',
       disabledText: '#c9cacb',
       kubeLabel: '#272b31',
-      primaryNavText: '#c9cacb',
+      primaryNavText: '#fff',
       borderBilling: '#cce2ff',
       billingText: '#313335'
     },
