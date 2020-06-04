@@ -297,14 +297,14 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
           return (
             <>
               <Typography data-qa-standard className={classes.copy}>
-                Shared instances are good for medium-duty workloads and are a
-                good mix of performance, resources, and price.
+                Shared CPU instances are good for medium-duty workloads and are
+                a good mix of performance, resources, and price.
               </Typography>
               {this.renderPlanContainer(shared)}
             </>
           );
         },
-        title: 'Shared'
+        title: 'Shared CPU'
       });
       tabOrder.push('standard');
     }
