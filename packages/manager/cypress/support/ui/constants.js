@@ -1,20 +1,16 @@
+import { createYield } from 'typescript';
+
+/* eslint-disable sonarjs/no-duplicate-string */
 export const routes = {
   createLinode: '/linodes/create',
+  createLinodeOCA: '/linodes/create?type=One-Click',
   support: '/support',
   account: '/account',
   supportTickets: '/support/tickets',
   profile: '/profile'
 };
 
-const goToByTabText = (url, text, isSelector = false) => {
-  cy.visit(url);
-
-  (isSelector ? cy.get : cy.findByText)(text)
-    .should('be.visible')
-    .click();
-};
-
-/// List of Routes and validator of the route
+// List of Routes and validator of the route
 export const pages = [
   {
     name: 'Linode/Create/Distribution',
@@ -24,32 +20,47 @@ export const pages = [
     goWithUI: [
       {
         name: 'Tab',
-        go: () => goToByTabText(routes.createLinode, 'Distributions')
+        go: () => {
+          cy.visit(routes.createLinodeOCA);
+          cy.findByText('Create From:');
+          cy.findByText('Distributions').click();
+        }
       }
     ]
   },
   {
     name: 'Linode/Create/OCA',
-    url: `${routes.createLinode}?type=One-Click`,
+    url: routes.createLinodeOCA,
     assertIsLoaded: () => cy.findByText('Select App').should('be.visible'),
     goWithUI: [
       {
         name: 'Tab',
-        go: () => goToByTabText(routes.createLinode, 'One-Click')
+        go: () => {
+          cy.visit(routes.createLinode);
+          cy.findByText('Choose a Distribution');
+          cy.findByText('One-Click').click();
+        }
       },
       {
         name: 'Create Button',
         go: () => {
           cy.visit('/');
-          //   cy.get
-          cy.get('[data-qa-add-new-menu-button="true"]').click();
-          cy.get('[data-qa-one-click-add-new="true"').click();
+          // wait until the page is really loaded
+          cy.findByText('View All');
+          cy.get('[data-qa-add-new-menu-button="true"]')
+            .should('be.visible')
+            .click();
+          cy.get('[data-qa-one-click-add-new="true"]')
+            .should('be.visible')
+            .click();
         }
       },
       {
         name: 'Nav',
         go: () => {
           cy.visit('/');
+          // wait until the page is really loaded
+          cy.findByText('View All');
           cy.get('[data-qa-one-click-nav-btn="true"]').click();
         }
       }
@@ -71,7 +82,6 @@ export const pages = [
     assertIsLoaded: () =>
       cy.findByText('Select Linode to Clone From').should('be.visible')
   },
-  // '/linodes/create?type=My%20Images&subtype=Account%20StackScripts'
   {
     name: 'Profile',
     url: `${routes.profile}`,
@@ -85,17 +95,18 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          goToByTabText(
-            `${routes.profile}/auth`,
-            '[data-qa-tab="Display"]',
-            true
-          );
+          const url = `${routes.profile}/auth`;
+          cy.visit(url);
+          cy.findByText('Password Reset').should('be.visible');
+          cy.findByText('Display').click();
         }
       },
       {
         name: 'User Profile Button',
         go: () => {
           cy.visit('/');
+          // wait until the page is really loaded
+          cy.findByText('View All');
           cy.get('[data-qa-user-menu="true"]').click();
           cy.findByText('My Profile').click();
         }
@@ -111,12 +122,9 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          // goToByTabText(routes.profile, 'Password & Authentication');
-          goToByTabText(
-            routes.profile,
-            '[data-qa-tab="Password & Authentication"]',
-            true
-          );
+          cy.visit(routes.profile);
+          cy.findByText('Username').should('be.visible');
+          cy.get('[data-qa-tab="Password & Authentication"]').click();
         }
       }
     ]
@@ -129,9 +137,9 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          // goToByTabText(routes.profile, 'SSH Keys');
-
-          goToByTabText(routes.profile, '[data-qa-tab="SSH Keys"]', true);
+          cy.visit(routes.profile);
+          cy.findByText('Username');
+          cy.findByText('SSH Keys').click();
         }
       }
     ]
@@ -145,8 +153,9 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          // goToByTabText(routes.profile, 'LISH');
-          goToByTabText(routes.profile, '[data-qa-tab="LISH"]', true);
+          cy.visit(routes.profile);
+          cy.findByText('Username');
+          cy.findByText('LISH').click();
         }
       }
     ]
@@ -160,8 +169,9 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          // goToByTabText(routes.profile, 'API Tokens');
-          goToByTabText(routes.profile, '[data-qa-tab="API Tokens"]', true);
+          cy.visit(routes.profile);
+          cy.findByText('Username');
+          cy.findByText('API Tokens').click();
         }
       }
     ]
@@ -185,7 +195,8 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          goToByTabText(routes.supportTickets, 'Open Tickets');
+          cy.visit(routes.supportTickets);
+          cy.findByText('Open Tickets').click();
         }
       }
     ]
@@ -197,9 +208,10 @@ export const pages = [
     assertIsLoaded: () => cy.findByText('Open New Ticket').should('be.visible'),
     goWithUI: [
       {
-        name: 'Create Button',
+        name: 'Tab',
         go: () => {
-          goToByTabText(routes.supportTickets, 'Closed Tickets');
+          cy.visit(routes.supportTickets);
+          cy.findByText('Closed Tickets').click();
         }
       }
     ]
@@ -218,11 +230,11 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          goToByTabText(
-            `${routes.account}/users`,
-            '[data-qa-tab="Billing Info"]',
-            true
-          );
+          cy.visit(`${routes.account}/users`);
+          cy.findByText('Username');
+          cy.findByText('Billing Info')
+            .should('be.visible')
+            .click();
         }
       }
     ]
@@ -235,7 +247,9 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          goToByTabText(routes.account, '[data-qa-tab="Users"]', true);
+          cy.visit(routes.account);
+          cy.findByText('Billing Contact');
+          cy.findByText('Users').click();
         }
       }
     ]
@@ -249,7 +263,9 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          goToByTabText(routes.account, '[data-qa-tab="Settings"]', true);
+          cy.visit(routes.account);
+          cy.findByText('Billing Contact');
+          cy.findByText('Settings').click();
         }
       }
     ]

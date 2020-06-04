@@ -7,7 +7,7 @@ describe('smoke - deep link', () => {
     if (!page.goWithUI) {
       return;
     }
-    describe.skip(`Got to ${page.name}`, () => {
+    describe(`Got to ${page.name}`, () => {
       // Here we use login to /null here
       // so this is independant from what is coded in constants and which path are skipped
       beforeEach(() => {
