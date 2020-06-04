@@ -52,15 +52,28 @@ const domainRow: EntityTableRow<Domain> = {
   data: domains
 };
 
-storiesOf('EntityTable', module).add('default', () => (
-  <Provider store={store}>
-    <Grid spacing={8}>
-      <EntityTable
-        entity="domains"
-        headers={headers}
-        row={domainRow}
-        groupByTag={true}
-      />
-    </Grid>
-  </Provider>
-));
+storiesOf('EntityTable', module)
+  .add('list view', () => (
+    <Provider store={store}>
+      <Grid spacing={8}>
+        <EntityTable
+          entity="domains"
+          headers={headers}
+          row={domainRow}
+          groupByTag={false}
+        />
+      </Grid>
+    </Provider>
+  ))
+  .add('grouped by tag', () => (
+    <Provider store={store}>
+      <Grid spacing={8}>
+        <EntityTable
+          entity="domains"
+          headers={headers}
+          row={domainRow}
+          groupByTag={true}
+        />
+      </Grid>
+    </Provider>
+  ));
