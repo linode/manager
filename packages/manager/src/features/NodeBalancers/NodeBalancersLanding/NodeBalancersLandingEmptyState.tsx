@@ -8,9 +8,7 @@ import Placeholder from 'src/components/Placeholder';
 
 type CombinedProps = RouteComponentProps<any>;
 
-const NodeBalancerLandingEmptyState: React.StatelessComponent<
-  CombinedProps
-> = props => {
+const NodeBalancerLandingEmptyState: React.FC<CombinedProps> = props => {
   const { history } = props;
   return (
     <React.Fragment>

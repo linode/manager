@@ -6,7 +6,7 @@
     "audit-ci": "^2.4.2",
     "husky": "^3.0.1",
     "postinstall": "^0.6.0",
-    "typescript": "~3.7.3",
+    "typescript": "~3.9.2",
     "wait-on": "^4.0.0"
   },
   "husky": {

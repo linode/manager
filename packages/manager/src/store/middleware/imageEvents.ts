@@ -10,10 +10,14 @@ const imageEventsHandler: EventHandler = (event, dispatch) => {
       return dispatch(removeImage(event.entity.id));
 
     /**
-     * I don't love this, but we dont have a choice. disk_imagize entity is the Linode
+     * I don't love this, but we don't have a choice. disk_imagize entity is the Linode
      * where the disk resides, not the image (as one would expect).
      */
     case 'disk_imagize':
+      if (event.status === 'failed' && event.secondary_entity) {
+        return dispatch(removeImage(event.secondary_entity.id));
+      }
+
       if (['finished', 'notification'].includes(event.status)) {
         return dispatch(requestImages());
       }

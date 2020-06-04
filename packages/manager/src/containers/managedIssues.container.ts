@@ -32,24 +32,21 @@ export default <TInner extends {}, TOuter extends {}>(
     issuesError?: EntityError
   ) => TInner
 ) =>
-  connect(
-    (state: ApplicationState, ownProps: TOuter) => {
-      const issues = state.__resources.managedIssues.entities;
-      const issuesLoading = state.__resources.managedIssues.loading;
-      const issuesError = state.__resources.managedIssues.error;
-      const issuesLastUpdated = state.__resources.managedIssues.lastUpdated;
+  connect((state: ApplicationState, ownProps: TOuter) => {
+    const issues = Object.values(state.__resources.managedIssues.itemsById);
+    const issuesLoading = state.__resources.managedIssues.loading;
+    const issuesError = state.__resources.managedIssues.error;
+    const issuesLastUpdated = state.__resources.managedIssues.lastUpdated;
 
-      if (mapManagedIssuesToProps) {
-        return mapManagedIssuesToProps(
-          ownProps,
-          issuesLoading,
-          issuesLastUpdated,
-          issues,
-          issuesError
-        );
-      }
+    if (mapManagedIssuesToProps) {
+      return mapManagedIssuesToProps(
+        ownProps,
+        issuesLoading,
+        issuesLastUpdated,
+        issues,
+        issuesError
+      );
+    }
 
-      return { issuesLoading, issuesLastUpdated, issues, issuesError };
-    },
-    mapDispatchToProps
-  );
+    return { issuesLoading, issuesLastUpdated, issues, issuesError };
+  }, mapDispatchToProps);

@@ -167,7 +167,9 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
      * type matches a number type
      */
     const cleanedValue =
-      minAndMaxExist && numberTypes.some(eachType => eachType === type)
+      minAndMaxExist &&
+      numberTypes.some(eachType => eachType === type) &&
+      e.target.value !== ''
         ? clamp(min, max, +e.target.value)
         : e.target.value;
 
@@ -252,7 +254,11 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
     const maybeRequiredLabel = !!this.props.required
       ? `${label} (required)`
       : label;
-
+    const validInputId =
+      inputId ||
+      (this.props.label
+        ? convertToKebabCase(`${this.props.label}`)
+        : undefined);
     return (
       <div
         className={classNames({
@@ -268,13 +274,9 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
               [classes.noTransform]: true,
               'visually-hidden': hideLabel
             })}
-            htmlFor={
-              this.props.label
-                ? convertToKebabCase(`${this.props.label}`)
-                : undefined
-            }
+            htmlFor={validInputId}
           >
-            {maybeRequiredLabel || ''}
+            {maybeRequiredLabel}
           </InputLabel>
         )}
         {helperText && helperTextPosition === 'top' && (
@@ -315,11 +317,7 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
             }}
             inputProps={{
               'data-testid': 'textfield-input',
-              id:
-                inputId ||
-                (this.props.label
-                  ? convertToKebabCase(`${this.props.label}`)
-                  : undefined),
+              id: validInputId,
               ...inputProps
             }}
             InputProps={{

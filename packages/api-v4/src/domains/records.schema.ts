@@ -1,4 +1,4 @@
-import { number, object, string } from 'yup';
+import { mixed, number, object, string } from 'yup';
 
 const recordBaseSchema = object().shape({
   name: string().max(100, 'Record name must be 100 characters or less.'),
@@ -27,11 +27,9 @@ const validRecordTypes: string[] = [
 ];
 
 export const createRecordSchema = recordBaseSchema.shape({
-  type: string()
+  type: mixed()
     .required('Type is required.')
     .oneOf(validRecordTypes)
 });
 
-export const updateRecordSchema = recordBaseSchema.shape({
-  type: string().oneOf(validRecordTypes)
-});
+export const updateRecordSchema = recordBaseSchema.shape({});

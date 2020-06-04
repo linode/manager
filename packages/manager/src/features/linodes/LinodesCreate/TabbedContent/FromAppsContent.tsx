@@ -336,7 +336,8 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
             regions={regionsData}
             handleSelection={updateRegionID}
             selectedID={selectedRegionID}
-            updateFor={[selectedRegionID, errors]}
+            updateFor={[selectedRegionID, errors, regionsData]}
+            helperText={this.props.regionHelperText}
             copy="Determine the best location for your Linode."
             disabled={userCannotCreateLinode}
           />
@@ -347,6 +348,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
             updateFor={[selectedTypeID, errors]}
             selectedID={selectedTypeID}
             disabled={userCannotCreateLinode}
+            disabledClasses={this.props.disabledClasses}
           />
         </Grid>
         <Grid item className={`${classes.sidebar} mlSidebar`}>

@@ -1,54 +1,93 @@
-# Contributing to Linode UI
+# Getting Started
 
-This document explains the instructions for setting up Linode UI locally, step-by-step. 
+Set up and run Linode's UI packages locally.
 
 ## Preface
 
 This repository uses [Yarn Workspaces](https://legacy.yarnpkg.com/lang/en/docs/workspaces/), a solution to transform JavaScript-based repositories
-into one, combined monorepo. This is useful because it allows us to maintain multiple different projects in one place, with shared dependencies.
+into a single monorepo. This is useful because it allows us to maintain multiple projects in one place, with shared dependencies.
 
-There is 3 `package.json` files, 1 for the root, and one for each folder in `packages/`. running `yarn` will install everything, and "hoist" as much as possible in the root `node_modules` folder. There is also 1 unique `yarn.lock` at the root.
+There are 3 `package.json` files: 1 for the root, and one for each folder in `packages/`. Running `yarn` will install everything, and "hoist" as much as possible into the root `node_modules` folder. There is a single `yarn.lock` in the root directory.
 
 Most of the time you will directly use the commands from this documentation. If you have to run a specific command the rule is:
-- To run a command in both sub packages `yarn workspace <command>`
-- To run a command in 1 subpackage `yarn workspace @linode/api-v4 <command>`, or `yarn workspace linode-manager <command>`
 
-Note the workspace names are defined in the root `package.json`
-- @linode/api-v4: /packages/@linode/api-v4
-- @linode/api-v4: /packages/linode-manager
+- To run a command in both packages: `yarn workspace <command>`
+- To run a command in a single package `yarn workspace @linode/api-v4 <command>`, or `yarn workspace linode-manager <command>`
+
+The workspace names are defined in the root `package.json`
+
+- @linode/api-v4: `/packages/@linode/api-v4`
+- linode-manager: `/packages/linode-manager`
 
 ## Starting the App locally
 
-If your intention is to start a development server for all projects, you have a few different options. First, we recommend checking out the [creating an OAuth client](./CREATE_CLIENT.md) and [creating an .env file for Cloud Manager](./CLOUD.md) docs, as you'll most likely need an OAuth Client and `.env` file for projects such as the Cloud Manager.
+1. Fork or clone this repository.
+2. Log into cloud.linode.com and [create an OAuth client](./CREATE_CLIENT.md).
+3. [Create an .env file for Cloud Manager](./CLOUD.md) and place it in the `packages/manager` directory.
+4. Make sure you are using a supported version of Node.js (10.16 is recommended). Installing Node with Homebrew
+   will result in a more recent version that can cause problems with our automation. We recommend using [NVM](https://github.com/nvm-sh/nvm):
 
-To start all projects run `yarn up`.
+   ```bash
+   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/<NVM-LATEST-VERSION>/install.sh | bash
+   ## Follow the instructions to add NVM to your .*rc file, or open a new terminal window
+   nvm install 10.16
+   nvm use 10.16
+   node --version
+   ## v10.16.0
+   ```
 
-You can also use Docker without building any image:
-`docker run --rm -v $(pwd):/usr/src/ -w /usr/src/ -p 3000:3000 node:10-slim yarn up`
+5. Make sure you have a recent version of Yarn (1.22+):
+
+   ```bash
+   yarn --version
+   npm install -g yarn --upgrade
+   ```
+
+6. Start Cloud Manager and the JS client with `yarn up`.
 
 ## Testing
+
 See [this document](./TESTING.md)
 
 ## Helper Scripts and other commands
 
-To learn more about all commands read [COMMANDS]](./COMMANDS.md) 
+To learn more about the available commands read [COMMANDS](./COMMANDS.md)
 
 ## Okay. I've got my development server running. So how do I contribute?
 
 Please see our [contributing](./CONTRIBUTING.md) and [code conventions](./CODE_CONVENTIONS.md) guides for instructions on how to get started with contributing to this project.
 
-## Just serving the built app
-### legacy solution
-You can use the command `yarn docker:local` which will build a container based on the `Dockerfile` and starts the manager server. *this operation is slow*
+## Serving a Build of Cloud Manager:
 
-### Better solution
-Although, you can also do it with a small nginx container.
-You probably already have done this.
+### Using yarn build
+
+Since Cloud Manager was generated using Create React App, `yarn build` can be used to generate an optimized production bundle:
+
 ```bash
 yarn install:all
-yarn build
+yarn workspace linode-manager build
 ```
-Just start a small nginx container
+
+You can then serve these files however you prefer, for example:
+
+```bash
+npm install -g http-server
+cd packages/manager/build
+http-server .
+```
+
+### Docker
+
+We also provide two ways to serve the build app using Docker:
+
+Build a container based on the `Dockerfile` and starts the manager server (_this operation is slow_):
+
+```bash
+yarn docker:local
+```
+
+Start a small NGINX container to serve the files:
+
 ```bash
 yarn start:nginx
 ```

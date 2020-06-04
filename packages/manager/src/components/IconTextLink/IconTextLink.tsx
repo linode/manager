@@ -91,7 +91,7 @@ export interface Props {
 
 type FinalProps = Props & WithStyles<CSSClasses>;
 
-const IconTextLink: React.StatelessComponent<FinalProps> = props => {
+const IconTextLink: React.FC<FinalProps> = props => {
   const {
     SideIcon,
     classes,

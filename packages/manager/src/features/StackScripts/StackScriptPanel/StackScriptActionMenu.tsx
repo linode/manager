@@ -30,9 +30,7 @@ interface ProfileProps {
 
 type CombinedProps = Props & RouteComponentProps<{}> & ProfileProps;
 
-const StackScriptActionMenu: React.StatelessComponent<
-  CombinedProps
-> = props => {
+const StackScriptActionMenu: React.FC<CombinedProps> = props => {
   const {
     stackScriptID,
     stackScriptUsername,

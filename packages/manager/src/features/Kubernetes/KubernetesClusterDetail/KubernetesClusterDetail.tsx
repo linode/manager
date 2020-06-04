@@ -235,7 +235,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
               response.data.map(thisEndpoint => thisEndpoint.endpoint)
             );
           })
-          .catch(error => {
+          .catch(_error => {
             // Do nothing since endpoint is null by default, and in the instances where this function is called, endpointAvailabilityInterval has been set in motion already.
           });
       };

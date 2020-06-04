@@ -269,6 +269,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
           <form>
             <CreateLinodeDisabled isDisabled={disabled} />
             <SelectStackScriptPanel
+              data-qa-select-stackscript
               error={hasErrorFor('stackscript_id')}
               header={header}
               selectedId={selectedStackScriptID}
@@ -283,6 +284,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
             />
             {!disabled && userDefinedFields && userDefinedFields.length > 0 && (
               <UserDefinedFieldsPanel
+                data-qa-udf-panel
                 errors={filterUDFErrors(errorResources, this.props.errors)}
                 selectedLabel={selectedStackScriptLabel || ''}
                 selectedUsername={selectedStackScriptUsername || ''}
@@ -321,23 +323,28 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
               </Paper>
             )}
             <SelectRegionPanel
+              data-qa-select-region-panel
               error={hasErrorFor('region')}
               regions={regionsData}
               handleSelection={updateRegionID}
               selectedID={selectedRegionID}
-              updateFor={[selectedRegionID, errors]}
+              updateFor={[selectedRegionID, errors, regionsData]}
+              helperText={this.props.regionHelperText}
               copy="Determine the best location for your Linode."
               disabled={disabled}
             />
             <SelectPlanPanel
+              data-qa-select-plan
               error={hasErrorFor('type')}
               types={typesData}
               onSelect={updateTypeID}
-              updateFor={[selectedTypeID, errors]}
+              updateFor={[selectedTypeID, errors, this.props.disabledClasses]}
               selectedID={selectedTypeID}
               disabled={disabled}
+              disabledClasses={this.props.disabledClasses}
             />
             <LabelAndTagsPanel
+              data-qa-label-panel
               labelFieldProps={{
                 label: 'Linode Label',
                 value: label || '',

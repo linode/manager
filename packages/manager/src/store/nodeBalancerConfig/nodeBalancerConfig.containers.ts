@@ -31,17 +31,14 @@ export interface WithNodeBalancerConfigActions {
   };
 }
 
-export const withNodeBalancerConfigActions = connect(
-  undefined,
-  dispatch => ({
-    nodeBalancerConfigActions: bindActionCreators(
-      {
-        getAllNodeBalancerConfigs,
-        createNodeBalancerConfig,
-        updateNodeBalancerConfig,
-        deleteNodeBalancerConfig
-      },
-      dispatch
-    )
-  })
-);
+export const withNodeBalancerConfigActions = connect(undefined, dispatch => ({
+  nodeBalancerConfigActions: bindActionCreators(
+    {
+      getAllNodeBalancerConfigs,
+      createNodeBalancerConfig,
+      updateNodeBalancerConfig,
+      deleteNodeBalancerConfig
+    },
+    dispatch
+  )
+}));

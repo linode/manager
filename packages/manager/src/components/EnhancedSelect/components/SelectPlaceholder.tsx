@@ -26,7 +26,7 @@ interface Props extends PlaceholderProps<any> {}
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const SelectPlaceholder: React.StatelessComponent<CombinedProps> = props => {
+const SelectPlaceholder: React.FC<CombinedProps> = props => {
   return (
     <Typography
       className={props.classes.root}

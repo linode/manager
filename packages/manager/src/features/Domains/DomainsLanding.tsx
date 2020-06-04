@@ -390,6 +390,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                       </Grid>
                       <Grid item className="pt0">
                         <AddNewLink
+                          data-testid="create-domain"
                           onClick={this.openCreateDomainDrawer}
                           label="Add a Domain"
                         />
@@ -477,11 +478,11 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
   }
 }
 
-const RenderLoading: React.StatelessComponent<{}> = () => {
+const RenderLoading: React.FC<{}> = () => {
   return <CircleProgress />;
 };
 
-const RenderError: React.StatelessComponent<{}> = () => {
+const RenderError: React.FC<{}> = () => {
   return (
     <ErrorState errorText="There was an error retrieving your domains. Please reload and try again." />
   );
@@ -516,7 +517,7 @@ const EmptyCopy = () => (
   </>
 );
 
-const RenderEmpty: React.StatelessComponent<{
+const RenderEmpty: React.FC<{
   onCreateDomain: () => void;
   onImportZone: () => void;
 }> = props => {
