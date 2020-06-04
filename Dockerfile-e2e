@@ -8,7 +8,7 @@ RUN chown -R node:node /home/node/app
 USER node
 
 # Copy the root level package.json and run yarn if anything changes
-COPY --chown=node:node package.json tslint.json yarn.lock run_cypress_docker.sh scripts ./
+COPY --chown=node:node package.json yarn.lock run_cypress_docker.sh scripts ./
 
 # Copy the rest of the files that don't require installation
 COPY --chown=node:node packages/api-v4  ./packages/api-v4/
