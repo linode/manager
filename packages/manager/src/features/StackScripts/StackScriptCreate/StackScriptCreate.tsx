@@ -4,7 +4,7 @@ import {
   StackScript
 } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
-import { assoc, path } from 'ramda';
+import { path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -59,9 +59,9 @@ const styles = (theme: Theme) =>
   });
 
 interface State {
-  labelText: string;
-  descriptionText: string;
-  selectedImages: string[];
+  label: string;
+  description: string;
+  images: string[];
   script: string;
   revisionNote: string;
   isSubmitting: boolean;
@@ -83,9 +83,9 @@ const errorResources = {
 
 export class StackScriptCreate extends React.Component<CombinedProps, State> {
   state: State = {
-    labelText: '',
-    descriptionText: '',
-    selectedImages: [],
+    label: '',
+    description: '',
+    images: [],
     /* available images to select from in the dropdown */
     script: '',
     revisionNote: '',
@@ -101,9 +101,9 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     this.mounted = true;
     const valuesFromStorage = storage.stackScriptInProgress.get();
     this.setState({
-      labelText: valuesFromStorage.label ?? '',
-      descriptionText: valuesFromStorage.description ?? '',
-      selectedImages: valuesFromStorage.images ?? [],
+      label: valuesFromStorage.label ?? '',
+      description: valuesFromStorage.description ?? '',
+      images: valuesFromStorage.images ?? [],
       script: valuesFromStorage.script ?? '',
       revisionNote: valuesFromStorage.rev_note ?? ''
     });
@@ -113,46 +113,55 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
-  setStorageValue = (key: string, value: string | string[]) => {
-    const currentValues = {
-      label: this.state.labelText,
-      description: this.state.descriptionText,
-      revisionNote: this.state.revisionNote,
-      images: this.state.selectedImages,
-      script: this.state.script
-    };
-    const newValues = assoc(key, value, currentValues);
-    storage.stackScriptInProgress.set(newValues);
+  _saveStateToLocalStorage = () => {
+    const {
+      label,
+      description,
+      script,
+      images,
+      revisionNote: rev_note
+    } = this.state;
+    storage.stackScriptInProgress.set({
+      label,
+      description,
+      script,
+      images,
+      rev_note
+    });
   };
 
-  debouncedSetStorage = debounce(1000, this.setStorageValue);
+  saveStateToLocalStorage = debounce(1000, this._saveStateToLocalStorage);
 
   handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.debouncedSetStorage('label', e.target.value);
-    this.setState({ labelText: e.target.value });
+    this.setState({ label: e.target.value }, this.saveStateToLocalStorage);
   };
 
   handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.debouncedSetStorage('description', e.target.value);
-    this.setState({ descriptionText: e.target.value });
+    this.setState(
+      { description: e.target.value },
+      this.saveStateToLocalStorage
+    );
   };
 
   handleChooseImage = (images: Item<string>[]) => {
     const imageList = images.map(image => image.value);
-    this.debouncedSetStorage('images', imageList);
-    this.setState({
-      selectedImages: imageList
-    });
+    this.setState(
+      {
+        images: imageList
+      },
+      this.saveStateToLocalStorage
+    );
   };
 
   handleChangeScript = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.debouncedSetStorage('script', e.target.value);
-    this.setState({ script: e.target.value });
+    this.setState({ script: e.target.value }, this.saveStateToLocalStorage);
   };
 
   handleChangeRevisionNote = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.debouncedSetStorage('rev_note', e.target.value);
-    this.setState({ revisionNote: e.target.value });
+    this.setState(
+      { revisionNote: e.target.value },
+      this.saveStateToLocalStorage
+    );
   };
 
   resetAllFields = () => {
@@ -160,31 +169,25 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     this.setState(
       {
         script: '',
-        labelText: '',
-        selectedImages: [],
-        descriptionText: '',
+        label: '',
+        images: [],
+        description: '',
         revisionNote: ''
       },
-      () => this.setStorageValue('', '')
+      this.saveStateToLocalStorage
     );
   };
 
   handleCreateStackScript = () => {
-    const {
-      script,
-      labelText,
-      selectedImages,
-      descriptionText,
-      revisionNote
-    } = this.state;
+    const { script, label, images, description, revisionNote } = this.state;
 
     const { history } = this.props;
 
     const payload = {
       script,
-      label: labelText,
-      images: selectedImages,
-      description: descriptionText,
+      label,
+      images,
+      description,
       is_public: false,
       rev_note: revisionNote
     };
@@ -201,6 +204,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           return;
         }
         this.setState({ isSubmitting: false });
+        this.resetAllFields();
         history.push('/stackscripts?type=account', {
           successMessage: `${stackScript.label} successfully created`
         });
@@ -278,10 +282,10 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       imagesData
     } = this.props;
     const {
-      selectedImages,
+      images,
       script,
-      labelText,
-      descriptionText,
+      label,
+      description,
       revisionNote,
       errors,
       isSubmitting
@@ -290,7 +294,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     const generalError = hasErrorFor('none');
 
     const availableImages = Object.keys(imagesData).reduce((acc, eachKey) => {
-      if (!this.state.selectedImages.includes(eachKey)) {
+      if (!this.state.images.includes(eachKey)) {
         acc[eachKey] = imagesData[eachKey];
       }
       return acc;
@@ -336,14 +340,14 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           disabled={userCannotCreateStackScripts}
           images={{
             available: availableImages,
-            selected: selectedImages
+            selected: images
           }}
           label={{
-            value: labelText,
+            value: label,
             handler: this.handleLabelChange
           }}
           description={{
-            value: descriptionText,
+            value: description,
             handler: this.handleDescriptionChange
           }}
           revision={{
