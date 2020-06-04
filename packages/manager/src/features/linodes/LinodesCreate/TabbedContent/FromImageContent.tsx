@@ -266,7 +266,11 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
               }
               error={hasErrorFor.root_pass}
               sshKeyError={sshError}
-              password={this.props.password}
+              password={
+                hasErrorFor.none?.match(/support ticket/i) // If the user receives an error instructing them to open a support ticket, clear the password field
+                  ? ''
+                  : this.props.password
+              }
               handleChange={this.props.updatePassword}
               updateFor={[
                 this.props.password,
