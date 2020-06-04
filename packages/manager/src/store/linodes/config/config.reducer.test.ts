@@ -38,8 +38,8 @@ describe('config reducer', () => {
       );
       expect(newState).toHaveProperty(String(mockConfig1.linode_id));
       expect(newState[mockConfig1.linode_id]).toHaveProperty('loading', true);
-      expect(newState[mockConfig1.linode_id]).toHaveProperty(
-        'error',
+      expect(newState[mockConfig1.linode_id].error).toHaveProperty(
+        'read',
         undefined
       );
     });
@@ -65,8 +65,8 @@ describe('config reducer', () => {
       );
       expect(newState).toHaveProperty(String(mockConfig1.linode_id));
       expect(newState[mockConfig1.linode_id]).toHaveProperty('loading', true);
-      expect(newState[mockConfig1.linode_id]).toHaveProperty(
-        'error',
+      expect(newState[mockConfig1.linode_id].error).toHaveProperty(
+        'read',
         undefined
       );
     });
@@ -75,12 +75,12 @@ describe('config reducer', () => {
         defaultState,
         getAllLinodeConfigsActions.done({
           params: { linodeId: mockConfig1.linode_id },
-          result: [mockConfig1, mockConfig2]
+          result: { data: [mockConfig1, mockConfig2], results: 2 }
         })
       );
       verifyConfig(newState, mockConfig1);
       verifyConfig(newState, mockConfig2);
-      expect(newState[mockConfig1.linode_id].items.length).toBe(2);
+      expect(newState[mockConfig1.linode_id].results).toBe(2);
     });
     it('sets error.read when the request fails', () => {
       const errorMessage = 'An error occurred.';
@@ -138,16 +138,18 @@ describe('config reducer', () => {
   describe('deleteLinodeConfigActions', () => {
     const state: State = {
       [mockConfig1.linode_id]: {
-        items: [String(mockConfig1.id)],
+        results: 1,
         itemsById: { [mockConfig1.id]: mockConfig1 },
         lastUpdated: 1,
-        loading: false
+        loading: false,
+        error: {}
       },
       [mockConfig2.linode_id]: {
-        items: [String(mockConfig2.id)],
+        results: 1,
         itemsById: { [mockConfig2.id]: mockConfig2 },
         lastUpdated: 1,
-        loading: false
+        loading: false,
+        error: {}
       }
     };
 
@@ -175,7 +177,7 @@ describe('config reducer', () => {
       expect(
         newState[mockConfig1.linode_id].itemsById[mockConfig1.id]
       ).toBeUndefined();
-      expect(newState[mockConfig1.linode_id].items).toHaveLength(1);
+      expect(newState[mockConfig1.linode_id].results).toBe(1);
     });
   });
 
@@ -204,6 +206,8 @@ describe('config reducer', () => {
 
 const verifyConfig = (state: State, config: Entity) => {
   expect(state[config.linode_id].loading).toBe(false);
-  expect(state[config.linode_id].items.includes(String(config.id))).toBe(true);
+  expect(state[config.linode_id].results).toBe(
+    Object.keys(state[config.linode_id].itemsById).length
+  );
   expect(state[config.linode_id].itemsById[config.id]).toEqual(config);
 };

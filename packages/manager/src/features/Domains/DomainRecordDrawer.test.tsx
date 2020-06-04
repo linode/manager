@@ -1,4 +1,9 @@
-import { resolve, resolveAlias, shouldResolve } from './DomainRecordDrawer';
+import {
+  castFormValuesToNumeric,
+  resolve,
+  resolveAlias,
+  shouldResolve
+} from './DomainRecordDrawer';
 
 const exampleDomain = 'example.com';
 
@@ -49,6 +54,26 @@ describe('Domain record helper methods', () => {
         'target',
         resolve(payload.target, exampleDomain)
       );
+    });
+  });
+
+  describe('castFormValuesToNumeric helper', () => {
+    it('should convert string values to numeric for all target fields', () => {
+      const formValues = { apple: '1', bear: '2', cat: '3' };
+      const result = castFormValuesToNumeric(formValues, ['apple', 'bear']);
+      expect(result).toEqual({
+        apple: 1,
+        bear: 2,
+        cat: '3'
+      });
+    });
+
+    it('should convert to undefined if the value is an empty string', () => {
+      const formValues = { apple: '' };
+      const result = castFormValuesToNumeric(formValues, ['apple']);
+      expect(result).toEqual({
+        apple: undefined
+      });
     });
   });
 });

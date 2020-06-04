@@ -32,8 +32,4 @@ export const createRecordSchema = recordBaseSchema.shape({
     .oneOf(validRecordTypes)
 });
 
-export const updateRecordSchema = recordBaseSchema.shape({
-  type: mixed()
-    .required('Type is required.')
-    .oneOf(validRecordTypes)
-});
+export const updateRecordSchema = recordBaseSchema.shape({});

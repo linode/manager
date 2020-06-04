@@ -1,7 +1,5 @@
 import * as moment from 'moment';
-
 import { shouldRenderHively } from './Hively';
-import { replaceVersionStringWithHTML } from './ExpandableTicketPanel';
 
 const recent = moment()
   .subtract(6, 'days')
@@ -29,29 +27,5 @@ describe('shouldRenderHively function', () => {
   });
   it('should return false if the user is Linode', () => {
     expect(shouldRenderHively(false, recent, user)).toBeFalsy();
-  });
-});
-
-describe('replaceVersionStringWithHTML', () => {
-  it('should insert the version string into a <span />', () => {
-    expect(
-      replaceVersionStringWithHTML('Hello. Cloud Manager Version: 1.0.0')
-    ).toBe('Hello. <span class="version">Cloud Manager Version: 1.0.0</span>');
-  });
-
-  it('only affects the last occurrence of a version string', () => {
-    expect(
-      replaceVersionStringWithHTML(
-        'Hello. Cloud Manager Version: 1.0.0. World. Cloud Manager Version: 1.0.0'
-      )
-    ).toBe(
-      'Hello. Cloud Manager Version: 1.0.0. World. <span class="version">Cloud Manager Version: 1.0.0</span>'
-    );
-  });
-
-  it('leaves descriptions without a version string alone', () => {
-    expect(
-      replaceVersionStringWithHTML('This is a reply with no version string.')
-    ).toBe('This is a reply with no version string.');
   });
 });

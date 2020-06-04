@@ -1,17 +1,12 @@
-import * as Bluebird from 'bluebird';
 import {
   createNodeBalancer as _createNodeBalancer,
   deleteNodeBalancer as _deleteNodeBalancer,
   getNodeBalancer as _getNodeBalancer,
-  getNodeBalancerConfigs,
-  getNodeBalancerConfigs as _getNodeBalancerConfigs,
   getNodeBalancers,
   NodeBalancer,
-  NodeBalancerConfig,
   updateNodeBalancer as _updateNodeBalancer
 } from '@linode/api-v4/lib/nodebalancers';
 import { getAll } from 'src/utilities/getAll';
-import { addNodeBalancerConfigs } from '../nodeBalancerConfig/nodeBalancerConfig.actions';
 import { getAllNodeBalancerConfigs } from '../nodeBalancerConfig/nodeBalancerConfig.requests';
 import { createRequestThunk } from '../store.helpers.tmp';
 import { ThunkActionCreator } from '../types';
@@ -99,19 +94,12 @@ export const getAllNodeBalancersWithConfigs: ThunkActionCreator<Promise<
 
   try {
     const result = await getAllNodeBalancersRequest();
+    result.data.forEach(thisBalancer => {
+      dispatch(getAllNodeBalancerConfigs({ nodeBalancerId: thisBalancer.id }))
+        // Errors will be added to the Redux state for each individual set of configs
+        .catch(_ => null);
+    });
 
-    const nodeBalancerConfigs = await Bluebird.reduce(
-      result.data,
-      async (configResult: NodeBalancerConfig[], nodeBalancer) => {
-        const { data: configs } = await getAll<NodeBalancerConfig>(() =>
-          _getNodeBalancerConfigs(nodeBalancer.id)
-        )();
-        return [...configResult, ...configs];
-      },
-      []
-    );
-
-    dispatch(addNodeBalancerConfigs(nodeBalancerConfigs));
     dispatch(done({ result }));
   } catch (error) {
     dispatch(failed({ error }));
@@ -121,23 +109,20 @@ export const getAllNodeBalancersWithConfigs: ThunkActionCreator<Promise<
 export const getNodeBalancerWithConfigs: ThunkActionCreator<
   Promise<NodeBalancer>,
   GetNodeBalancerWithConfigsParams
-> = params => async dispatch => {
+> = params => dispatch => {
   const { nodeBalancerId } = params;
   const { started, done, failed } = getNodeBalancerWithConfigsActions;
 
   dispatch(started(params));
-
-  try {
-    const nodeBalancer = await _getNodeBalancer(nodeBalancerId);
-    const { data: nodeBalancerConfigs } = await getAll<NodeBalancerConfig>(() =>
-      getNodeBalancerConfigs(nodeBalancerId)
-    )();
-    dispatch(addNodeBalancerConfigs(nodeBalancerConfigs));
-    dispatch(done({ params, result: nodeBalancer }));
-
-    return nodeBalancer;
-  } catch (error) {
-    dispatch(failed({ params, error }));
-    return error;
-  }
+  // This can be done in parallel.
+  dispatch(getAllNodeBalancerConfigs({ nodeBalancerId })).catch(_ => null);
+  return _getNodeBalancer(nodeBalancerId)
+    .then(nodeBalancer => {
+      dispatch(done({ params, result: nodeBalancer }));
+      return nodeBalancer;
+    })
+    .catch(error => {
+      dispatch(failed({ params, error }));
+      return error;
+    });
 };

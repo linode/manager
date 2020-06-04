@@ -241,7 +241,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       .then(() => {
         this.props.updateRecords();
 
-        this.updateConfirmDialog(c => ({
+        this.updateConfirmDialog(_ => ({
           open: false,
           submitting: false,
           errors: undefined,
@@ -260,7 +260,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   };
 
   handleOpenSOADrawer = (d: Domain) => {
-    d.type === 'master'
+    return d.type === 'master'
       ? this.openForEditMasterDomain(d)
       : this.openForEditSlaveDomain(d);
   };
@@ -698,7 +698,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 order={type.order}
                 orderBy={type.orderBy}
               >
-                {({ data: orderedData, handleOrderChange, order, orderBy }) => {
+                {({ data: orderedData }) => {
                   return (
                     <Paginate
                       data={orderedData}

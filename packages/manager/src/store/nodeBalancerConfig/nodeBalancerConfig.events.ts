@@ -1,22 +1,19 @@
 import { EventHandler } from 'src/store/types';
-import { updateNodeBalancerConfigs } from './nodeBalancerConfig.requests';
+import { getAllNodeBalancerConfigs } from './nodeBalancerConfig.requests';
 
 /**
- * Since the API provided event only returns the ID of the affected NodeBalancer, we have diff
- * the STORE and the API for the added/removed config and take action based on it's response.
+ * The entity for these events is the NB the config belongs to.
+ * When a create/delete config event comes in, request the updated
+ * configs for that NB to update our store.
  */
-const nodeBalancerConfigEventHandler: EventHandler = (
-  event,
-  dispatch,
-  getState
-) => {
+const nodeBalancerConfigEventHandler: EventHandler = (event, dispatch) => {
   const { action, entity } = event;
   const { id } = entity;
 
   switch (action) {
     case 'nodebalancer_config_delete':
     case 'nodebalancer_config_create':
-      return dispatch(updateNodeBalancerConfigs(id));
+      return dispatch(getAllNodeBalancerConfigs({ nodeBalancerId: id }));
     default:
       return;
   }

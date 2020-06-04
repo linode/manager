@@ -310,6 +310,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
           label="Domain"
           onChange={this.updateLabel}
           data-qa-domain-name
+          data-testid="domain-name-input"
         />
         {mode === CLONING && (
           <TextField
@@ -328,6 +329,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
             label="SOA Email Address"
             onChange={this.updateEmailAddress}
             data-qa-soa-email
+            data-testid="soa-email-input"
             disabled={disabled}
           />
         )}
@@ -446,6 +448,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
             buttonType="primary"
             onClick={this.submit}
             data-qa-submit
+            data-testid="create-domain-submit"
             loading={submitting}
             disabled={disabled}
           >
@@ -533,30 +536,29 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
      * In this case, the user wants default domain records created, but
      * they haven't supplied a Linode or NodeBalancer
      */
-    if (defaultRecordsSetting === 'linode') {
-      if (!selectedDefaultLinode) {
-        return this.setState({
-          errors: [
-            {
-              reason: 'Please select a Linode.',
-              field: 'defaultLinode'
-            }
-          ]
-        });
-      }
+    if (defaultRecordsSetting === 'linode' && !selectedDefaultLinode) {
+      return this.setState({
+        errors: [
+          {
+            reason: 'Please select a Linode.',
+            field: 'defaultLinode'
+          }
+        ]
+      });
     }
 
-    if (defaultRecordsSetting === 'nodebalancer') {
-      if (!selectedDefaultNodeBalancer) {
-        return this.setState({
-          errors: [
-            {
-              reason: 'Please select a NodeBalancer.',
-              field: 'defaultNodeBalancer'
-            }
-          ]
-        });
-      }
+    if (
+      defaultRecordsSetting === 'nodebalancer' &&
+      !selectedDefaultNodeBalancer
+    ) {
+      return this.setState({
+        errors: [
+          {
+            reason: 'Please select a NodeBalancer.',
+            field: 'defaultNodeBalancer'
+          }
+        ]
+      });
     }
 
     const data =

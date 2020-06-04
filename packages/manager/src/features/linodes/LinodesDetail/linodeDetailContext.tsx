@@ -118,7 +118,8 @@ export const linodeDetailContextFactory = (
     /** Linode Config actions */
     getLinodeConfig: configId =>
       dispatch(_getLinodeConfig({ linodeId, configId })),
-    getLinodeConfigs: () => dispatch(_getLinodeConfigs({ linodeId })),
+    getLinodeConfigs: () =>
+      dispatch(_getLinodeConfigs({ linodeId })).then(({ data }) => data),
     updateLinodeConfig: (configId, data) =>
       dispatch(_updateLinodeConfig({ linodeId, configId, ...data })),
     createLinodeConfig: data =>

@@ -15,6 +15,9 @@ lib
 # local restart script with keys
 restart.sh
 
+# local switch script with client IDs
+switch.sh
+
 # dotenv environment variables file
 .env*
 *env.
