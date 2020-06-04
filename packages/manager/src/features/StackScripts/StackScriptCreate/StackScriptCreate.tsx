@@ -1,7 +1,10 @@
 import { Image } from '@linode/api-v4/lib/images';
-import { createStackScript, StackScript } from '@linode/api-v4/lib/stackscripts';
+import {
+  createStackScript,
+  StackScript
+} from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
-import { path } from 'ramda';
+import { assoc, path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -33,6 +36,8 @@ import ScriptForm from 'src/features/StackScripts/StackScriptForm';
 import { MapState } from 'src/store/types';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { storage } from 'src/utilities/storage';
+import { debounce } from 'throttle-debounce';
 
 import { filterImagesByType } from 'src/store/image/image.helpers';
 
@@ -94,44 +99,74 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
+    const valuesFromStorage = storage.stackScriptInProgress.get();
+    this.setState({
+      labelText: valuesFromStorage.label ?? '',
+      descriptionText: valuesFromStorage.description ?? '',
+      selectedImages: valuesFromStorage.images ?? [],
+      script: valuesFromStorage.script ?? '',
+      revisionNote: valuesFromStorage.rev_note ?? ''
+    });
   }
 
   componentWillUnmount() {
     this.mounted = false;
   }
 
+  setStorageValue = (key: string, value: string | string[]) => {
+    const currentValues = {
+      label: this.state.labelText,
+      description: this.state.descriptionText,
+      revisionNote: this.state.revisionNote,
+      images: this.state.selectedImages,
+      script: this.state.script
+    };
+    const newValues = assoc(key, value, currentValues);
+    storage.stackScriptInProgress.set(newValues);
+  };
+
+  debouncedSetStorage = debounce(1000, this.setStorageValue);
+
   handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.debouncedSetStorage('label', e.target.value);
     this.setState({ labelText: e.target.value });
   };
 
   handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.debouncedSetStorage('description', e.target.value);
     this.setState({ descriptionText: e.target.value });
   };
 
   handleChooseImage = (images: Item<string>[]) => {
     const imageList = images.map(image => image.value);
+    this.debouncedSetStorage('images', imageList);
     this.setState({
       selectedImages: imageList
     });
   };
 
   handleChangeScript = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.debouncedSetStorage('script', e.target.value);
     this.setState({ script: e.target.value });
   };
 
   handleChangeRevisionNote = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.debouncedSetStorage('rev_note', e.target.value);
     this.setState({ revisionNote: e.target.value });
   };
 
   resetAllFields = () => {
     this.handleCloseDialog();
-    this.setState({
-      script: '',
-      labelText: '',
-      selectedImages: [],
-      descriptionText: '',
-      revisionNote: ''
-    });
+    this.setState(
+      {
+        script: '',
+        labelText: '',
+        selectedImages: [],
+        descriptionText: '',
+        revisionNote: ''
+      },
+      () => this.setStorageValue('', '')
+    );
   };
 
   handleCreateStackScript = () => {
