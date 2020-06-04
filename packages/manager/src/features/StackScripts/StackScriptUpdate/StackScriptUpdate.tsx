@@ -18,7 +18,6 @@ import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import {
   createStyles,
-  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -43,7 +42,7 @@ import { filterImagesByType } from 'src/store/image/image.helpers';
 
 type ClassNames = 'backButton' | 'createTitle';
 
-const styles = (theme: Theme) =>
+const styles = () =>
   createStyles({
     backButton: {
       margin: '5px 0 0 -16px',
@@ -64,9 +63,9 @@ interface PreloadedProps {
 interface State {
   stackScript: StackScript;
   retrievalError?: Error; // error retrieving the stackscript
-  labelText: string;
-  descriptionText: string;
-  selectedImages: string[];
+  label: string;
+  description: string;
+  images: string[];
   availableImages: Record<string, Image>;
   script: string;
   revisionNote: string;
@@ -103,17 +102,13 @@ const errorResources = {
 
 export class StackScriptUpdate extends React.Component<CombinedProps, State> {
   defaultStackScriptValues = {
-    labelText: pathOr(undefined, ['response', 'label'], this.props.stackScript),
-    descriptionText: pathOr(
+    label: pathOr(undefined, ['response', 'label'], this.props.stackScript),
+    description: pathOr(
       undefined,
       ['response', 'description'],
       this.props.stackScript
     ),
-    selectedImages: pathOr(
-      undefined,
-      ['response', 'images'],
-      this.props.stackScript
-    ),
+    images: pathOr(undefined, ['response', 'images'], this.props.stackScript),
     script: pathOr(undefined, ['response', 'script'], this.props.stackScript),
     revisionNote: pathOr(
       undefined,
@@ -128,9 +123,9 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
     this.state = {
       stackScript: pathOr(undefined, ['response'], this.props.stackScript),
       retrievalError: pathOr(undefined, ['error'], this.props.stackScript),
-      labelText: this.defaultStackScriptValues.labelText,
-      descriptionText: this.defaultStackScriptValues.descriptionText,
-      selectedImages: this.defaultStackScriptValues.selectedImages,
+      label: this.defaultStackScriptValues.label,
+      description: this.defaultStackScriptValues.description,
+      images: this.defaultStackScriptValues.images,
       /* available images to select from in the dropdown */
       availableImages: this.props.imagesData,
       script: this.defaultStackScriptValues.script,
@@ -153,16 +148,16 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
   }
 
   handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ labelText: e.target.value });
+    this.setState({ label: e.target.value });
   };
 
   handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ descriptionText: e.target.value });
+    this.setState({ description: e.target.value });
   };
 
   handleChooseImage = (images: Item<string>[]) => {
     this.setState({
-      selectedImages: images.map(image => image.value)
+      images: images.map(image => image.value)
     });
   };
 
@@ -183,13 +178,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
   };
 
   handleUpdateStackScript = () => {
-    const {
-      script,
-      labelText,
-      selectedImages,
-      descriptionText,
-      revisionNote
-    } = this.state;
+    const { script, label, images, description, revisionNote } = this.state;
 
     const { stackScript } = this.props;
 
@@ -197,9 +186,9 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
 
     const payload = {
       script,
-      label: labelText,
-      images: selectedImages,
-      description: descriptionText,
+      label,
+      images,
+      description,
       rev_note: revisionNote
     };
 
@@ -214,6 +203,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
           return;
         }
         this.setState({ isSubmitting: false });
+        this.resetAllFields();
         history.push('/stackscripts?type=account', {
           successMessage: `${updatedStackScript.label} successfully updated`
         });
@@ -291,10 +281,10 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
     } = this.props;
     const {
       availableImages,
-      selectedImages,
+      images,
       script,
-      labelText,
-      descriptionText,
+      label,
+      description,
       revisionNote,
       errors,
       isSubmitting
@@ -316,7 +306,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment
-          segment={`${this.defaultStackScriptValues.labelText} - Edit`}
+          segment={`${this.defaultStackScriptValues.label} - Edit`}
         />
         {generalError && <Notice error text={generalError} />}
         <Grid container justify="space-between">
@@ -330,7 +320,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
                   position: 1,
                   label: 'StackScripts'
                 },
-                { position: 2, label: this.defaultStackScriptValues.labelText }
+                { position: 2, label: this.defaultStackScriptValues.label }
               ]}
             />
           </Grid>
@@ -357,14 +347,14 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
             disabled={userCannotModifyStackScript}
             images={{
               available: availableImages,
-              selected: selectedImages
+              selected: images
             }}
             label={{
-              value: labelText,
+              value: label,
               handler: this.handleLabelChange
             }}
             description={{
-              value: descriptionText,
+              value: description,
               handler: this.handleDescriptionChange
             }}
             revision={{

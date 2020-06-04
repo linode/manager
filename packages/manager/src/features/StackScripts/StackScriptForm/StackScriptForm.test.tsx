@@ -5,6 +5,10 @@ import { StackScriptForm } from './StackScriptForm';
 
 import { normalizedImages as images } from 'src/__data__/images';
 
+jest.mock('src/components/core/styles', () => ({
+  useStyles: () => jest.fn().mockReturnValue({})
+}));
+
 describe('StackScriptCreate', () => {
   const component = shallow(
     <StackScriptForm
