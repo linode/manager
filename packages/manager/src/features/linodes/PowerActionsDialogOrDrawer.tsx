@@ -147,32 +147,30 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = props => {
         />
       }
     >
-      <React.Fragment>
-        <Typography className={classes.copy}>
-          Are you sure you want to {props.action.toLowerCase()} your Linode?
-        </Typography>
-        <Typography className={classes.copy}>
-          <CautionIcon
-            width={25}
-            height={25}
-            className={classNames({
-              [classes.copy]: true
-            })}
-          />
-          <strong>&nbsp;Warning:</strong> Powered down Linodes will still accrue
-          charges. See the&nbsp;
-          <a
-            href="https://www.linode.com/docs/platform/billing-and-support/how-linode-billing-works/#if-my-linode-is-powered-off-will-i-be-billed"
-            target="_blank"
-            aria-describedby="external-site"
-            rel="noopener noreferrer"
-            className="h-u"
-          >
-            Billing and Payments documentation
-          </a>
-          &nbsp;for more information.
-        </Typography>
-      </React.Fragment>
+      <Typography className={classes.copy}>
+        Are you sure you want to {props.action.toLowerCase()} your Linode?
+      </Typography>
+      <Typography className={classes.copy}>
+        <CautionIcon
+          width={25}
+          height={25}
+          className={classNames({
+            [classes.copy]: true
+          })}
+        />
+        <strong>&nbsp;Warning:</strong> Powered down Linodes will still accrue
+        charges. See the&nbsp;
+        <a
+          href="https://www.linode.com/docs/platform/billing-and-support/how-linode-billing-works/#if-my-linode-is-powered-off-will-i-be-billed"
+          target="_blank"
+          aria-describedby="external-site"
+          rel="noopener noreferrer"
+          className="h-u"
+        >
+          Billing and Payments documentation
+        </a>
+        &nbsp;for more information.
+      </Typography>
     </Dialog>
   );
 };
