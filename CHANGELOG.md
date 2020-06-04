@@ -4,6 +4,35 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-06-03] - @linode/api-v4 v.0.27.1
+
+### Fixed
+
+- Remove required from createDomain validation schema
+
+## [2020-06-02] - v1.10.0
+
+### Added:
+
+- Progress bar for newly-created Images
+
+### Changed:
+
+- Improve UX for GPU selection
+- Add a link to Support in all “Verification is required” errors
+- Allow clearable numeric inputs in Domain Records Drawer
+- Remove Cloud Manager version tag from Support Tickets
+
+### Fixed:
+
+- Broken SVG combination when creating a Linode
+- Profile routing didn’t handle incorrect routes
+- Firewall document title
+- ICMP port bug when editing Firewall rules
+- Update textfield to use input id for "for" attribute
+- Copy fix for Profile -> Referrals
+- Accessibility of Dashboard “View Details” links
+
 ## [2020-05-21] - 1.9.0
 
 ### Added:
@@ -29,7 +58,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Missing SSH keys in some flows for Linode creation
 - Second column alignment for NodeBalancer on dashboard
 - Tag display on mobile viewport
-- Removed extra requests 
+- Removed extra requests
 - Prevent crashing for unactivated users
 - Remove duplicate instance requests
 

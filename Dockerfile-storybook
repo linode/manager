@@ -12,7 +12,7 @@ RUN chown -R seluser:seluser /home/seluser
 USER seluser
 
 # Copy the root level package.json and run yarn if anything changesz
-COPY --chown=seluser:seluser package.json tslint.json run_storybook_docker.sh yarn.lock scripts ./
+COPY --chown=seluser:seluser package.json run_storybook_docker.sh yarn.lock scripts ./
 
 # Copy the rest of the files that don't require installation
 COPY --chown=seluser:seluser packages/api-v4  ./packages/api-v4/
