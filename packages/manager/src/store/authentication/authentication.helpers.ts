@@ -1,4 +1,8 @@
-import { authentication, supportText } from 'src/utilities/storage';
+import {
+  authentication,
+  stackScriptInProgress,
+  supportText
+} from 'src/utilities/storage';
 
 export const clearLocalStorage = () => {
   authentication.token.set('');
@@ -12,4 +16,5 @@ export const clearUserInput = () => {
   // Support ticket title/description.
 
   supportText.set({ title: '', description: '' });
+  stackScriptInProgress.set({ label: '', script: '', images: [] });
 };

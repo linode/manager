@@ -140,13 +140,15 @@ export const storage: Storage = {
       getStorage(STACKSCRIPT, {
         script: '',
         label: '',
-        images: [],
-        description: '',
-        is_public: false,
-        rev_note: ''
+        images: []
       }),
     set: s => setStorage(STACKSCRIPT, JSON.stringify(s))
   }
 };
 
-export const { authentication, BackupsCtaDismissed, supportText } = storage;
+export const {
+  authentication,
+  BackupsCtaDismissed,
+  stackScriptInProgress,
+  supportText
+} = storage;
