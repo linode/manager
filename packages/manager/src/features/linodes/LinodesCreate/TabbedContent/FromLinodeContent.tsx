@@ -16,7 +16,6 @@ import Placeholder from 'src/components/Placeholder';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import AddonsPanel from '../AddonsPanel';
 import SelectLinodePanel from '../SelectLinodePanel';
 import SelectPlanPanel from '../SelectPlanPanel';
 import { renderBackupsDisplaySection } from './utils';

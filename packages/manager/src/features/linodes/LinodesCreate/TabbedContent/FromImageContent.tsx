@@ -1,7 +1,6 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import AccessPanel from 'src/components/AccessPanel';
 import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
 import {
@@ -14,12 +13,10 @@ import Typography from 'src/components/core/Typography';
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
-import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import { getErrorMap } from 'src/utilities/errorUtils';
-import AddonsPanel from '../AddonsPanel';
 import SelectPlanPanel from '../SelectPlanPanel';
 import { renderBackupsDisplaySection } from './utils';
 
@@ -231,46 +228,6 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
               selectedID={this.props.selectedTypeID}
               updateFor={[this.props.selectedTypeID, errors]}
               disabled={userCannotCreateLinode}
-            />
-            <LabelAndTagsPanel
-              data-qa-label-and-tags-panel
-              labelFieldProps={{
-                label: 'Linode Label',
-                value: this.props.label || '',
-                onChange: this.props.updateLabel,
-                errorText: hasErrorFor.label,
-                disabled: userCannotCreateLinode
-              }}
-              tagsInputProps={{
-                value: this.props.tags || [],
-                onChange: this.props.updateTags,
-                tagError: hasErrorFor.tags,
-                disabled: userCannotCreateLinode
-              }}
-              updateFor={[this.props.tags, this.props.label, errors]}
-            />
-            <AccessPanel
-              /* disable the password field if we haven't selected an image */
-              data-qa-access-panel
-              disabled={!this.props.selectedImageID}
-              disabledReason={
-                !this.props.selectedImageID
-                  ? 'You must select an image to set a root password'
-                  : ''
-              }
-              error={hasErrorFor.root_pass}
-              sshKeyError={sshError}
-              password={this.props.password}
-              handleChange={this.props.updatePassword}
-              updateFor={[
-                this.props.password,
-                errors,
-                sshError,
-                userSSHKeys,
-                this.props.selectedImageID
-              ]}
-              users={userSSHKeys}
-              requestKeys={requestKeys}
             />
           </form>
         </Grid>

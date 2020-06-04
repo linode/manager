@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
+import AccessPanel from 'src/components/AccessPanel';
 import CircleProgress from 'src/components/CircleProgress';
-// import AppBar from 'src/components/core/AppBar';
-// import MUITab from 'src/components/core/Tab';
-// import Tabs from 'src/components/core/Tabs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import { WithImages } from 'src/containers/withImages.container';
 import {
   getCommunityStackscripts,
@@ -16,9 +15,10 @@ import {
   handleChangeCreateType
 } from 'src/store/linodeCreate/linodeCreate.actions';
 import { getInitialType } from 'src/store/linodeCreate/linodeCreate.reducer';
+import { getErrorMap } from 'src/utilities/errorUtils';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import { safeGetTabRender } from 'src/utilities/safeGetTabRender';
-// import SubTabs, { Tab } from './LinodeCreateSubTabs';
+import AddonsPanel from './AddonsPanel';
 import FromAppsContent from './TabbedContent/FromAppsContent';
 import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
@@ -35,12 +35,21 @@ import {
 } from './types';
 import TabbedPanel, { Tab } from 'src/components/TabbedPanel';
 
-import AddonsPanel from './AddonsPanel';
-
 interface Props {
   history: any;
   createType: CreateTypes;
 }
+
+const errorMap = [
+  'backup_id',
+  'linode_id',
+  'stackscript_id',
+  'region',
+  'type',
+  'root_pass',
+  'label',
+  'image'
+];
 
 type CombinedProps = Props &
   WithImages &
@@ -153,7 +162,6 @@ export class LinodeCreate extends React.PureComponent<
               typesData={typesData!}
               {...rest}
             />
-            <div>end</div>
           </React.Fragment>
         );
       }
@@ -485,9 +493,19 @@ export class LinodeCreate extends React.PureComponent<
       linodesError,
       typesError,
       typesLoading,
+      label,
+      updateLabel,
+      tags,
+      updateTags,
+      errors,
+      sshError,
+      userSSHKeys,
+      requestKeys,
       backupsMonthlyPrice,
       userCannotCreateLinode
     } = this.props;
+
+    const hasErrorFor = getErrorMap(errorMap, errors);
 
     if (regionsLoading || imagesLoading || linodesLoading || typesLoading) {
       return <CircleProgress />;
@@ -535,6 +553,43 @@ export class LinodeCreate extends React.PureComponent<
             </Tabs>
           </AppBar> */}
           <TabbedPanel header={''} tabs={this.tabs} />
+          <LabelAndTagsPanel
+            labelFieldProps={{
+              label: 'Linode Label',
+              value: label || '',
+              onChange: updateLabel,
+              errorText: hasErrorFor.label,
+              disabled: userCannotCreateLinode
+            }}
+            tagsInputProps={{
+              value: tags || [],
+              onChange: updateTags,
+              tagError: hasErrorFor.tags,
+              disabled: userCannotCreateLinode
+            }}
+            updateFor={[tags, label, errors]}
+          />
+          <AccessPanel
+            disabled={!this.props.selectedImageID}
+            disabledReason={
+              !this.props.selectedImageID
+                ? 'You must select an image to set a root password'
+                : ''
+            }
+            error={hasErrorFor.root_pass}
+            sshKeyError={sshError}
+            password={this.props.password}
+            handleChange={this.props.updatePassword}
+            updateFor={[
+              this.props.password,
+              errors,
+              sshError,
+              userSSHKeys,
+              this.props.selectedImageID
+            ]}
+            users={userSSHKeys}
+            requestKeys={requestKeys}
+          />
           <AddonsPanel
             data-qa-addons-panel
             backups={this.props.backupsEnabled}
@@ -552,7 +607,7 @@ export class LinodeCreate extends React.PureComponent<
             hidePrivateIP={this.props.createType === 'fromLinode'}
           />
         </Grid>
-        {tabRender()}
+        {/* {tabRender()} */}
       </React.Fragment>
     );
   }

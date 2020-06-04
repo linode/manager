@@ -4,7 +4,6 @@ import { assocPath, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { compose } from 'recompose';
-import AccessPanel from 'src/components/AccessPanel';
 import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
 import {
@@ -19,13 +18,11 @@ import DocsSidebar from 'src/components/DocsSidebar';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
-import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
 import { AppDetailDrawer } from 'src/features/OneClickApps';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
-import AddonsPanel from '../AddonsPanel';
 import SelectAppPanel from '../SelectAppPanel';
 import SelectPlanPanel from '../SelectPlanPanel';
 
@@ -351,46 +348,6 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
             selectedID={selectedTypeID}
             disabled={userCannotCreateLinode}
           />
-          <LabelAndTagsPanel
-            labelFieldProps={{
-              label: 'Linode Label',
-              value: label || '',
-              onChange: updateLabel,
-              errorText: hasErrorFor('label'),
-              disabled: userCannotCreateLinode
-            }}
-            tagsInputProps={{
-              value: tags || [],
-              onChange: updateTags,
-              tagError: hasErrorFor('tags'),
-              disabled: userCannotCreateLinode
-            }}
-            updateFor={[tags, label, errors]}
-          />
-          <form>
-            <AccessPanel
-              /* disable the password field if we haven't selected an image */
-              disabled={!selectedImageID}
-              disabledReason={
-                !selectedImageID
-                  ? 'You must select an image to set a root password'
-                  : ''
-              }
-              error={hasErrorFor('root_pass')}
-              sshKeyError={sshError}
-              updateFor={[
-                password,
-                errors,
-                userSSHKeys,
-                selectedImageID,
-                sshError
-              ]}
-              password={password}
-              handleChange={updatePassword}
-              users={userSSHKeys}
-              requestKeys={requestKeys}
-            />
-          </form>
         </Grid>
         <Grid item className={`${classes.sidebar} mlSidebar`}>
           <CheckoutBar

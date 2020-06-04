@@ -4,7 +4,6 @@ import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { ResourcePage } from '@linode/api-v4/lib/types';
 import { assocPath, pathOr } from 'ramda';
 import * as React from 'react';
-import AccessPanel from 'src/components/AccessPanel';
 import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
 import {
@@ -25,7 +24,6 @@ import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptP
 import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import AddonsPanel from '../AddonsPanel';
 import SelectPlanPanel from '../SelectPlanPanel';
 
 import { filterUDFErrors } from './formUtilities';
@@ -190,24 +188,16 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
       selectedStackScriptID,
       selectedTypeID,
       typeDisplayInfo,
-      privateIPEnabled,
       tags,
       backupsEnabled,
-      password,
       imagesData,
-      userSSHKeys,
-      sshError,
       userCannotCreateLinode: disabled,
       selectedStackScriptUsername,
       selectedStackScriptLabel,
       label,
       request,
-      requestKeys,
       header,
-      toggleBackupsEnabled,
-      togglePrivateIPEnabled,
       updateImageID,
-      updatePassword,
       updateRegionID,
       updateTags,
       updateTypeID,
@@ -362,28 +352,6 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
                 disabled
               }}
               updateFor={[tags, label, errors]}
-            />
-            <AccessPanel
-              /* disable the password field if we haven't selected an image */
-              disabled={!this.props.selectedImageID}
-              disabledReason={
-                !this.props.selectedImageID
-                  ? 'You must select an image to set a root password'
-                  : ''
-              }
-              error={hasErrorFor('root_pass')}
-              sshKeyError={sshError}
-              updateFor={[
-                password,
-                errors,
-                userSSHKeys,
-                selectedImageID,
-                sshError
-              ]}
-              password={password}
-              handleChange={updatePassword}
-              users={userSSHKeys}
-              requestKeys={requestKeys}
             />
           </form>
         </Grid>
