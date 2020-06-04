@@ -44,13 +44,12 @@ export class DomainActionMenu extends React.Component<CombinedProps> {
     onClone(domain, id);
   };
 
-  createActions = () => (closeMenu: Function): Action[] => {
+  createActions = () => (): Action[] => {
     const baseActions = [
       {
         title: 'Edit',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           this.handleEdit();
-          closeMenu();
           e.preventDefault();
         }
       },
@@ -58,7 +57,6 @@ export class DomainActionMenu extends React.Component<CombinedProps> {
         title: 'Clone',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           this.handleClone();
-          closeMenu();
           e.preventDefault();
         }
       },
@@ -79,7 +77,7 @@ export class DomainActionMenu extends React.Component<CombinedProps> {
              */
             sendDomainStatusChangeEvent('Enable');
           }
-          closeMenu();
+
           e.preventDefault();
         }
       },
@@ -87,7 +85,6 @@ export class DomainActionMenu extends React.Component<CombinedProps> {
         title: 'Delete',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           this.handleRemove();
-          closeMenu();
           e.preventDefault();
         }
       }
@@ -99,7 +96,6 @@ export class DomainActionMenu extends React.Component<CombinedProps> {
           title: 'Edit DNS Records',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             this.goToDomain();
-            closeMenu();
             e.preventDefault();
           }
         },

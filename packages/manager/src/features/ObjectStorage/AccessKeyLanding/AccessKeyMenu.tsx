@@ -20,20 +20,18 @@ const AccessKeyMenu: React.FC<CombinedProps> = props => {
   const createActions = () => {
     const { openRevokeDialog, objectStorageKey, openDrawerForEditing } = props;
 
-    return (closeMenu: Function): Action[] => {
+    return (): Action[] => {
       return [
         {
           title: 'Rename Access Key',
           onClick: () => {
             openDrawerForEditing(objectStorageKey);
-            closeMenu();
           }
         },
         {
           title: 'Revoke',
           onClick: () => {
             openRevokeDialog(objectStorageKey);
-            closeMenu();
           }
         }
       ];

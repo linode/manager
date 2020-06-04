@@ -8,14 +8,13 @@ export interface Props {
 }
 
 export const ObjectActionMenu: React.FC<Props> = props => {
-  const createActions = () => (closeMenu: Function): Action[] => {
+  const createActions = () => (): Action[] => {
     return [
       {
         title: 'Download',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           const shouldOpenInNewTab = true;
           props.handleClickDownload(props.objectName, shouldOpenInNewTab);
-          closeMenu();
           e.preventDefault();
         }
       },
@@ -23,7 +22,6 @@ export const ObjectActionMenu: React.FC<Props> = props => {
         title: 'Delete',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           props.handleClickDelete(props.objectName);
-          closeMenu();
           e.preventDefault();
         }
       }

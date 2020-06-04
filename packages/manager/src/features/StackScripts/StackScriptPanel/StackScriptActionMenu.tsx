@@ -53,7 +53,7 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
   };
 
   const createActions = () => {
-    return (closeMenu: Function): Action[] => {
+    return (): Action[] => {
       const actions: Action[] = [
         {
           title: 'Deploy New Linode',
@@ -75,7 +75,6 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
           title: 'Delete',
           ...readonlyProps,
           onClick: e => {
-            closeMenu();
             triggerDelete(stackScriptID, stackScriptLabel);
           }
         });
@@ -101,7 +100,7 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
           ...readonlyProps,
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             // open a modal here as well
-            closeMenu();
+
             triggerMakePublic(stackScriptID, stackScriptLabel);
           }
         });

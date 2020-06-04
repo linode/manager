@@ -2,17 +2,13 @@ import MoreHoriz from '@material-ui/icons/MoreHoriz';
 import {
   Menu,
   MenuButton,
-  MenuItem,
   MenuItems,
-  MenuList,
   MenuLink,
   MenuPopover
 } from '@reach/menu-button';
 import '@reach/menu-button/styles.css';
 import * as React from 'react';
-// import Menu from 'src/components/core/Menu';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import MUIMenuItem from 'src/components/MenuItem';
 
 export interface Action {
   title: string;
@@ -24,51 +20,58 @@ export interface Action {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end'
-  },
-  item: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-    paddingTop: theme.spacing(1) * 1.5,
-    paddingBottom: theme.spacing(1) * 1.5,
-    fontFamily: 'LatoWeb',
-    fontSize: '.9rem',
-    color: theme.color.blueDTwhite,
-    transition: `
-      ${'color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, '}
-      ${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}
-    `,
-    '&:hover, &:focus': {
-      backgroundColor: theme.palette.primary.main,
-      color: '#fff'
-    }
+  wrapper: {
+    display: 'inline-block',
+    position: 'relative'
   },
   button: {
-    width: 26,
-    padding: 0,
-    '& svg': {
-      fontSize: '28px'
-    },
-    '&[aria-expanded="true"] .kebob': {
-      fill: theme.palette.primary.dark
+    '&[data-reach-menu-button]': {
+      background: 'none',
+      border: 'none',
+      padding: theme.spacing(1) + 2,
+      color: '#3683dc',
+      cursor: 'pointer',
+      '&[aria-expanded="true"]': {
+        backgroundColor: '#3683dc',
+        color: '#fff'
+      }
     }
   },
-  actionSingleLink: {
-    marginRight: theme.spacing(1),
-    whiteSpace: 'nowrap',
-    float: 'right',
-    fontFamily: theme.font.bold
+  icon: {},
+  popover: {
+    '&[data-reach-menu-popover]': {
+      right: 0,
+      // Need this to 'merge the button and items wrapper due to the borderRadius on the wrapper
+      marginTop: -3
+    }
   },
-  menu: {
-    maxWidth: theme.spacing(25)
+  itemsOuter: {
+    '&[data-reach-menu-items]': {
+      padding: 0,
+      width: 200,
+      backgroundColor: '#3683dc',
+      borderRadius: 3,
+      border: 'none',
+      fontSize: 14,
+      color: '#fff',
+      textAlign: 'left'
+    }
+  },
+  item: {
+    '&[data-reach-menu-item]': {
+      padding: theme.spacing(1) + 2,
+      borderBottom: '1px solid #5294e0',
+      color: '#fff',
+      borderRadius: 3
+    },
+    '&[data-reach-menu-item][data-selected]': {
+      backgroundColor: '#226dc3'
+    }
   }
 }));
 
 export interface Props {
-  createActions: (closeMenu: Function) => Action[];
+  createActions: () => Action[];
   toggleOpenCallback?: () => void;
   // we want to require using aria label for these buttons
   // as they don't have text (just an icon)
@@ -84,55 +87,41 @@ const ActionMenu: React.FC<CombinedProps> = props => {
   const { createActions } = props;
 
   const [actions, setActions] = React.useState<Action[]>([]);
-  const [anchorEl, setAnchorEl] = React.useState<
-    (EventTarget & HTMLElement) | undefined
-  >(undefined);
 
   React.useEffect(() => {
-    setActions(createActions(handleClose));
+    setActions(createActions());
   }, [createActions]);
 
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    if (props.toggleOpenCallback) {
-      props.toggleOpenCallback();
-    }
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(undefined);
-  };
-
-  const { ariaLabel, disabled } = props;
+  const { ariaLabel } = props;
 
   if (typeof actions === 'undefined') {
     return null;
   }
 
   return (
-    <Menu>
-      <MenuButton aria-label={ariaLabel}>
-        <MoreHoriz type="primary" className="kebob" />
-      </MenuButton>
-      <MenuPopover className={classes.menuPopover} portal={false}>
-        <MenuItems>
-          {(actions as Action[]).map((a, idx) => (
-            <MenuItem
-              key={idx}
-              as={MUIMenuItem}
-              onClick={a.onClick}
-              className={classes.item}
-              data-qa-action-menu-item={a.title}
-              disabled={a.disabled}
-              tooltip={a.tooltip}
-              isLoading={a.isLoading}
-            >
-              {a.title}
-            </MenuItem>
-          ))}
-        </MenuItems>
-      </MenuPopover>
-    </Menu>
+    <div className={classes.wrapper}>
+      <Menu>
+        <MenuButton className={classes.button} aria-label={ariaLabel}>
+          <MoreHoriz className={classes.icon} type="primary" />
+        </MenuButton>
+        <MenuPopover className={classes.popover} portal={false}>
+          <MenuItems className={classes.itemsOuter}>
+            {(actions as Action[]).map((a, idx) => (
+              <MenuLink
+                key={idx}
+                as="a"
+                href="#"
+                className={classes.item}
+                onClick={a.onClick}
+                data-qa-action-menu-item={a.title}
+              >
+                {a.title}
+              </MenuLink>
+            ))}
+          </MenuItems>
+        </MenuPopover>
+      </Menu>
+    </div>
   );
 };
 

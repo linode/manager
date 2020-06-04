@@ -15,14 +15,13 @@ class NodeBalancerActionMenu extends React.Component<CombinedProps> {
   createLinodeActions = () => {
     const { nodeBalancerId, history, toggleDialog, label } = this.props;
 
-    return (closeMenu: Function): Action[] => {
+    return (): Action[] => {
       const actions = [
         {
           title: 'Summary',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             history.push(`/nodebalancers/${nodeBalancerId}/summary`);
             e.preventDefault();
-            closeMenu();
           }
         },
         {
@@ -30,7 +29,6 @@ class NodeBalancerActionMenu extends React.Component<CombinedProps> {
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             history.push(`/nodebalancers/${nodeBalancerId}/configurations`);
             e.preventDefault();
-            closeMenu();
           }
         },
         {
@@ -38,7 +36,6 @@ class NodeBalancerActionMenu extends React.Component<CombinedProps> {
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             history.push(`/nodebalancers/${nodeBalancerId}/settings`);
             e.preventDefault();
-            closeMenu();
           }
         },
         {
@@ -46,7 +43,6 @@ class NodeBalancerActionMenu extends React.Component<CombinedProps> {
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             e.preventDefault();
             toggleDialog(nodeBalancerId, label);
-            closeMenu();
           }
         }
       ];

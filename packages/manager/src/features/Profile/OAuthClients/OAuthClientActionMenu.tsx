@@ -21,26 +21,23 @@ type CombinedProps = Props;
 class OAuthClientActionMenu extends React.Component<CombinedProps> {
   createActions = () => {
     const { label, redirectUri, isPublic, clientID } = this.props;
-    return (closeMenu: Function): Action[] => {
+    return (): Action[] => {
       const actions = [
         {
           title: 'Edit',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             this.props.openEditDrawer(isPublic, redirectUri, label, clientID);
-            closeMenu();
           }
         },
         {
           title: 'Reset Secret',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            closeMenu();
             this.props.openSecretModal(clientID, label);
           }
         },
         {
           title: 'Delete',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            closeMenu();
             this.props.openDeleteModal(clientID, label);
           }
         }

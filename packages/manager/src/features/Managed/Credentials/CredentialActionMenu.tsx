@@ -17,20 +17,18 @@ export class CredentialActionMenu extends React.Component<CombinedProps, {}> {
   createActions = () => {
     const { label, credentialID, openDialog, openForEdit } = this.props;
 
-    return (closeMenu: Function): Action[] => {
+    return (): Action[] => {
       const actions = [
         {
           title: 'Edit',
           onClick: () => {
             openForEdit(credentialID);
-            closeMenu();
           }
         },
         {
           title: 'Delete',
           onClick: () => {
             openDialog(credentialID, label);
-            closeMenu();
           }
         }
       ];

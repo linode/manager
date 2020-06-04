@@ -14,13 +14,12 @@ class SSHKeyActionMenu extends React.Component<CombinedProps> {
   createActions = () => {
     const { id, label, onDelete } = this.props;
 
-    return (closeMenu: Function): Action[] => {
+    return (): Action[] => {
       const actions = [
         {
           title: 'Delete',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             onDelete(id, label);
-            closeMenu();
             e.preventDefault();
           }
         }

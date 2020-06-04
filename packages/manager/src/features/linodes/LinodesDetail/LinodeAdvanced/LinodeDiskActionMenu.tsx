@@ -18,7 +18,7 @@ interface Props {
 type CombinedProps = Props & RouteComponentProps;
 
 class DiskActionMenu extends React.Component<CombinedProps> {
-  createActions = () => (closeMenu: Function): Action[] => {
+  createActions = () => (): Action[] => {
     const { linodeStatus, linodeId, readOnly, history, diskId } = this.props;
     let tooltip;
     tooltip =
@@ -40,7 +40,6 @@ class DiskActionMenu extends React.Component<CombinedProps> {
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           e.preventDefault();
           this.props.onRename();
-          closeMenu();
         },
         ...(readOnly ? disabledProps : {})
       },
@@ -49,7 +48,6 @@ class DiskActionMenu extends React.Component<CombinedProps> {
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           e.preventDefault();
           this.props.onResize();
-          closeMenu();
         },
         ...disabledProps
       },
@@ -58,7 +56,6 @@ class DiskActionMenu extends React.Component<CombinedProps> {
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           e.preventDefault();
           this.props.onImagize();
-          closeMenu();
         },
         ...(readOnly ? disabledProps : {})
       },
@@ -66,7 +63,6 @@ class DiskActionMenu extends React.Component<CombinedProps> {
         title: 'Clone',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           e.preventDefault();
-          closeMenu();
           history.push(
             `/linodes/${linodeId}/clone/disks?selectedDisk=${diskId}`
           );
@@ -78,7 +74,6 @@ class DiskActionMenu extends React.Component<CombinedProps> {
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           e.preventDefault();
           this.props.onDelete();
-          closeMenu();
         },
         ...(readOnly ? disabledProps : {})
       }

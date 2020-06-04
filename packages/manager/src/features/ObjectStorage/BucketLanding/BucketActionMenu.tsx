@@ -7,13 +7,12 @@ export interface Props {
 }
 
 export const BucketActionMenu: React.FC<Props> = props => {
-  const createActions = () => (closeMenu: Function): Action[] => {
+  const createActions = () => (): Action[] => {
     return [
       {
         title: 'Delete',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           props.onRemove();
-          closeMenu();
           e.preventDefault();
         }
       }

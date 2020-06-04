@@ -9,33 +9,29 @@ interface Props {
 type CombinedProps = Props;
 
 class StoryActionMenu extends React.Component<CombinedProps> {
-  createActions = () => (closeMenu: Function): Action[] => {
+  createActions = () => (): Action[] => {
     return [
       {
         title: 'First Action',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
-          closeMenu();
           e.preventDefault();
         }
       },
       {
         title: 'Action 1',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
-          closeMenu();
           e.preventDefault();
         }
       },
       {
         title: 'Action 3',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
-          closeMenu();
           e.preventDefault();
         }
       },
       {
         title: 'Last Action',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
-          closeMenu();
           e.preventDefault();
         }
       }
@@ -50,19 +46,17 @@ class StoryActionMenu extends React.Component<CombinedProps> {
 }
 
 class StoryActionMenuWithTooltip extends React.Component<CombinedProps> {
-  createActions = () => (closeMenu: Function): Action[] => {
+  createActions = () => (): Action[] => {
     return [
       {
         title: 'First Action',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
-          closeMenu();
           e.preventDefault();
         }
       },
       {
         title: 'Another Action',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
-          closeMenu();
           e.preventDefault();
         }
       },
@@ -70,7 +64,6 @@ class StoryActionMenuWithTooltip extends React.Component<CombinedProps> {
         title: 'Disabled Action',
         disabled: true,
         onClick: (e: React.MouseEvent<HTMLElement>) => {
-          closeMenu();
           e.preventDefault();
         },
         tooltip: 'An explanation as to why this item is disabled'
@@ -86,7 +79,7 @@ class StoryActionMenuWithTooltip extends React.Component<CombinedProps> {
 }
 
 class StoryActionMenuWithOneAction extends React.Component<CombinedProps> {
-  createActions = () => (closeMenu: Function): Action[] => {
+  createActions = () => (): Action[] => {
     return [
       {
         title: 'Single Action',
@@ -105,17 +98,17 @@ class StoryActionMenuWithOneAction extends React.Component<CombinedProps> {
 
 storiesOf('Action Menu', module)
   .add('Action Menu', () => (
-    <div style={{ float: 'left' }}>
+    <div style={{ textAlign: 'center' }}>
       <StoryActionMenu />
     </div>
   ))
   .add('Action Menu with disabled menu item & tooltip', () => (
-    <div style={{ float: 'left' }}>
+    <div style={{ textAlign: 'center' }}>
       <StoryActionMenuWithTooltip />
     </div>
   ))
   .add('Action Menu with one menu item', () => (
-    <div style={{ float: 'left' }}>
+    <div style={{ textAlign: 'center' }}>
       <StoryActionMenuWithOneAction />
     </div>
   ));

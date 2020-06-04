@@ -80,13 +80,13 @@ export class VolumesActionMenu extends React.Component<CombinedProps> {
   createActions = () => {
     const { attached, poweredOff } = this.props;
 
-    return (closeMenu: Function): Action[] => {
+    return (): Action[] => {
       const actions = [
         {
           title: 'Show Configuration',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             this.handleShowConfig();
-            closeMenu();
+
             e.preventDefault();
           }
         },
@@ -94,7 +94,7 @@ export class VolumesActionMenu extends React.Component<CombinedProps> {
           title: 'Edit Volume',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             this.handleOpenEdit();
-            closeMenu();
+
             e.preventDefault();
           }
         },
@@ -102,7 +102,7 @@ export class VolumesActionMenu extends React.Component<CombinedProps> {
           title: 'Resize',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             this.handleResize();
-            closeMenu();
+
             e.preventDefault();
           }
         },
@@ -110,7 +110,7 @@ export class VolumesActionMenu extends React.Component<CombinedProps> {
           title: 'Clone',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             this.handleClone();
-            closeMenu();
+
             e.preventDefault();
           }
         }
@@ -121,7 +121,7 @@ export class VolumesActionMenu extends React.Component<CombinedProps> {
           title: 'Attach',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             this.handleAttach();
-            closeMenu();
+
             e.preventDefault();
           }
         });
@@ -130,7 +130,7 @@ export class VolumesActionMenu extends React.Component<CombinedProps> {
           title: 'Detach',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             this.handleDetach();
-            closeMenu();
+
             e.preventDefault();
           }
         });
@@ -141,7 +141,7 @@ export class VolumesActionMenu extends React.Component<CombinedProps> {
           title: 'Delete',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             this.handleDelete();
-            closeMenu();
+
             e.preventDefault();
           }
         });

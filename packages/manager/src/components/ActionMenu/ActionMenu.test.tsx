@@ -5,7 +5,7 @@ import ActionMenu from './ActionMenu';
 
 describe('ActionMenu', () => {
   const action = { title: 'whatever', onClick: () => undefined };
-  const createActionsMany = (closeMenu: Function) => {
+  const createActionsMany = () => {
     return [action, action, action];
   };
 

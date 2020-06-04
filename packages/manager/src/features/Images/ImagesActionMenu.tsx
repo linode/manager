@@ -18,13 +18,12 @@ class ImagesActionMenu extends React.Component<CombinedProps> {
   createActions = () => {
     const { onRestore, onDeploy, onEdit, onDelete, image } = this.props;
 
-    return (closeMenu: Function): Action[] => {
+    return (): Action[] => {
       const actions = [
         {
           title: 'Restore to Existing Linode',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             onRestore(image.id);
-            closeMenu();
             e.preventDefault();
           }
         },
@@ -40,7 +39,6 @@ class ImagesActionMenu extends React.Component<CombinedProps> {
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             const description = image.description ? image.description : ' ';
             onEdit(image.label, description, image.id);
-            closeMenu();
             e.preventDefault();
           }
         },
@@ -48,7 +46,6 @@ class ImagesActionMenu extends React.Component<CombinedProps> {
           title: 'Delete',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             onDelete(image.label, image.id);
-            closeMenu();
             e.preventDefault();
           }
         }

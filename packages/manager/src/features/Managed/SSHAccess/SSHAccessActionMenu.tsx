@@ -27,7 +27,7 @@ export const SSHAccessActionMenu: React.FC<CombinedProps> = props => {
     enqueueSnackbar(errMessage[0].reason, { variant: 'error' });
   };
 
-  const createActions = (closeMenu: Function): Action[] => {
+  const createActions = (): Action[] => {
     const actions = [
       isEnabled
         ? {
@@ -48,7 +48,6 @@ export const SSHAccessActionMenu: React.FC<CombinedProps> = props => {
                     err
                   );
                 });
-              closeMenu();
             }
           }
         : {
@@ -69,13 +68,11 @@ export const SSHAccessActionMenu: React.FC<CombinedProps> = props => {
                     err
                   );
                 });
-              closeMenu();
             }
           },
       {
         title: 'Edit',
         onClick: () => {
-          closeMenu();
           openDrawer(linodeId);
         }
       }

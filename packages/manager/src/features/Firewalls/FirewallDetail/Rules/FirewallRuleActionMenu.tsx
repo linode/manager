@@ -18,18 +18,16 @@ const FirewallRuleActionMenu: React.FC<CombinedProps> = props => {
   } = props;
 
   const createActions = React.useCallback(() => {
-    return (closeMenu: Function): Action[] => [
+    return (): Action[] => [
       {
         title: 'Edit',
         onClick: () => {
-          closeMenu();
           triggerOpenRuleDrawerForEditing(idx);
         }
       },
       {
         title: 'Delete',
         onClick: () => {
-          closeMenu();
           triggerDeleteFirewallRule(idx);
         }
       }

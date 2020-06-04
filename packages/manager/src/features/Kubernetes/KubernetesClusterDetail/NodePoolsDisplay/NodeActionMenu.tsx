@@ -11,7 +11,7 @@ export const NodeActionMenu: React.FC<Props> = props => {
   const { instanceId, instanceLabel, openRecycleNodeDialog } = props;
 
   const createActions = () => {
-    return (closeMenu: Function): Action[] => {
+    return (): Action[] => {
       const actions = [
         {
           title: 'Recycle',
@@ -20,7 +20,7 @@ export const NodeActionMenu: React.FC<Props> = props => {
               return;
             }
             openRecycleNodeDialog(instanceId!, instanceLabel!);
-            closeMenu();
+
             e.preventDefault();
           },
           disabled: !instanceId || !instanceLabel

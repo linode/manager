@@ -17,12 +17,11 @@ const FirewallDeviceActionMenu: React.FC<CombinedProps> = props => {
   const { deviceID, deviceLabel, triggerRemoveDevice } = props;
 
   const createActions = () => {
-    return (closeMenu: Function): Action[] => [
+    return (): Action[] => [
       {
         title: 'Remove',
         onClick: () => {
           triggerRemoveDevice(deviceID, deviceLabel);
-          closeMenu();
         }
       }
     ];

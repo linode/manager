@@ -136,7 +136,7 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
 
     const noConfigs = hasMadeConfigsRequest && configs.length === 0;
 
-    return (closeMenu: Function): Action[] => {
+    return (): Action[] => {
       const actions: Action[] = [
         {
           title: 'Launch Console',
@@ -224,7 +224,6 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
             e.preventDefault();
             e.stopPropagation();
             openDeleteDialog(linodeId, linodeLabel);
-            closeMenu();
           },
           ...readOnlyProps
         }
@@ -250,7 +249,6 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
               linodeLabel,
               this.state.configs
             );
-            closeMenu();
           }
         });
       }
@@ -276,7 +274,6 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
                 linodeLabel,
                 this.state.configs
               );
-              closeMenu();
             },
             ...readOnlyProps
           },
@@ -287,7 +284,6 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
               e.preventDefault();
               e.stopPropagation();
               openPowerActionDialog('Power Off', linodeId, linodeLabel, []);
-              closeMenu();
             },
             ...readOnlyProps
           }

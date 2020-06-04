@@ -36,13 +36,12 @@ class LinodeNetworkingActionMenu extends React.Component<CombinedProps> {
       readOnly
     } = this.props;
 
-    return (closeMenu: Function): Action[] => {
+    return (): Action[] => {
       const actions: Action[] = [
         {
           title: 'View',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             onView();
-            closeMenu();
             e.preventDefault();
           }
         }
@@ -63,7 +62,6 @@ class LinodeNetworkingActionMenu extends React.Component<CombinedProps> {
           title: 'Edit RDNS',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             onEdit(ipAddress);
-            closeMenu();
             e.preventDefault();
           },
           disabled: readOnly,
@@ -78,7 +76,7 @@ class LinodeNetworkingActionMenu extends React.Component<CombinedProps> {
           title: 'Delete IP',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             onRemove(ipAddress);
-            closeMenu();
+
             e.preventDefault();
           },
           disabled: readOnly,

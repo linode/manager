@@ -21,12 +21,11 @@ class UsersActionMenu extends React.Component<CombinedProps> {
       history: { push }
     } = this.props;
 
-    return (closeMenu: Function): Action[] => {
+    return (): Action[] => {
       const actions = [
         {
           title: 'User Profile',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            closeMenu();
             push(`/account/users/${username}`);
             e.preventDefault();
           }
@@ -34,7 +33,6 @@ class UsersActionMenu extends React.Component<CombinedProps> {
         {
           title: 'User Permissions',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            closeMenu();
             push(`/account/users/${username}/permissions`);
             e.preventDefault();
           }
@@ -44,7 +42,7 @@ class UsersActionMenu extends React.Component<CombinedProps> {
           title: 'Delete',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             onDelete(username);
-            closeMenu();
+
             e.preventDefault();
           },
           tooltip:

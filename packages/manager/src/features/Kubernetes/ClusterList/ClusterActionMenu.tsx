@@ -17,9 +17,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}> & WithSnackbarProps;
 
-export const ClusterActionMenu: React.FunctionComponent<
-  CombinedProps
-> = props => {
+export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = props => {
   const {
     clusterId,
     clusterLabel,
@@ -29,13 +27,13 @@ export const ClusterActionMenu: React.FunctionComponent<
   } = props;
 
   const createActions = () => {
-    return (closeMenu: Function): Action[] => {
+    return (): Action[] => {
       const actions = [
         {
           title: 'Download kubeconfig',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             downloadKubeConfig();
-            closeMenu();
+
             e.preventDefault();
           }
         },
@@ -54,7 +52,7 @@ export const ClusterActionMenu: React.FunctionComponent<
           title: 'Delete',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             openDialog();
-            closeMenu();
+
             e.preventDefault();
           }
         }
@@ -98,9 +96,6 @@ export const ClusterActionMenu: React.FunctionComponent<
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(
-  withSnackbar,
-  withRouter
-);
+const enhanced = compose<CombinedProps, Props>(withSnackbar, withRouter);
 
 export default enhanced(ClusterActionMenu);

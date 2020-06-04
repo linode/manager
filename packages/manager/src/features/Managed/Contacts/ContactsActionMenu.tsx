@@ -15,12 +15,11 @@ export type CombinedProps = Props;
 export const ContactsActionMenu: React.FC<CombinedProps> = props => {
   const { contactId, openDrawer, openDialog } = props;
 
-  const createActions = (closeMenu: Function): Action[] => {
+  const createActions = (): Action[] => {
     const actions = [
       {
         title: 'Edit',
         onClick: () => {
-          closeMenu();
           openDrawer(contactId);
         }
       },
@@ -28,7 +27,6 @@ export const ContactsActionMenu: React.FC<CombinedProps> = props => {
         title: 'Delete',
         onClick: () => {
           openDialog(contactId);
-          closeMenu();
         }
       }
     ];

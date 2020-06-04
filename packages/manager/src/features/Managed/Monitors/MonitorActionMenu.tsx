@@ -40,7 +40,7 @@ export class MonitorActionMenu extends React.Component<CombinedProps, {}> {
       enqueueSnackbar(errMessage[0].reason, { variant: 'error' });
     };
 
-    return (closeMenu: Function): Action[] => {
+    return (): Action[] => {
       const actions = [
         status === 'disabled'
           ? {
@@ -55,7 +55,6 @@ export class MonitorActionMenu extends React.Component<CombinedProps, {}> {
                   .catch(e => {
                     handleError('Error enabling this Service Monitor.', e);
                   });
-                closeMenu();
               }
             }
           : {
@@ -70,28 +69,24 @@ export class MonitorActionMenu extends React.Component<CombinedProps, {}> {
                   .catch(e => {
                     handleError('Error disabling this Service Monitor.', e);
                   });
-                closeMenu();
               }
             },
         {
           title: 'View Issue History',
           onClick: () => {
             openHistoryDrawer(monitorID, label);
-            closeMenu();
           }
         },
         {
           title: 'Edit',
           onClick: () => {
             openMonitorDrawer(monitorID, 'edit');
-            closeMenu();
           }
         },
         {
           title: 'Delete',
           onClick: () => {
             openDialog(monitorID, label);
-            closeMenu();
           }
         }
       ];

@@ -30,7 +30,7 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
   const history = useHistory();
 
   const createActions = () => {
-    return (closeMenu: Function): Action[] => [
+    return (): Action[] => [
       {
         title: firewallStatus === 'disabled' ? 'Enable' : 'Disable',
         onClick: () => {
@@ -40,14 +40,11 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
               : triggerDisableFirewall(firewallID, firewallLabel);
 
           request();
-
-          closeMenu();
         }
       },
       {
         title: 'Edit',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
-          closeMenu();
           history.push(`/firewalls/${firewallID}/rules`);
           e.preventDefault();
           e.stopPropagation();
@@ -56,7 +53,6 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
       {
         title: 'Delete',
         onClick: () => {
-          closeMenu();
           triggerDeleteFirewall(firewallID, firewallLabel);
         }
       }
