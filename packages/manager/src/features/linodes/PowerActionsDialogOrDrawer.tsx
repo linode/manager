@@ -22,8 +22,15 @@ import LinodeConfigDrawer from 'src/features/LinodeConfigSelectionDrawer';
 export type Action = 'Reboot' | 'Power Off' | 'Power On';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  copy: {
-    marginTop: theme.spacing(1)
+  root: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1)
+  },
+  icon: {
+    marginTop: theme.spacing(0.5),
+    marginRight: theme.spacing(0.5),
+    float: 'left',
+    verticalAlign: 'middle'
   }
 }));
 
@@ -147,18 +154,18 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = props => {
         />
       }
     >
-      <Typography className={classes.copy}>
+      <Typography className={classes.root}>
         Are you sure you want to {props.action.toLowerCase()} your Linode?
       </Typography>
-      <Typography className={classes.copy}>
+      <Typography className={classes.root}>
         <CautionIcon
           width={25}
           height={25}
           className={classNames({
-            [classes.copy]: true
+            [classes.icon]: true
           })}
         />
-        <strong>&nbsp;Warning:</strong> Powered down Linodes will still accrue
+        <strong>Warning:</strong> Powered down Linodes will still accrue
         charges. See the&nbsp;
         <a
           href="https://www.linode.com/docs/platform/billing-and-support/how-linode-billing-works/#if-my-linode-is-powered-off-will-i-be-billed"
