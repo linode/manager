@@ -198,7 +198,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       primaryNavActive: '#f4f4f4',
       primaryNavActiveBG: '#515861',
       primaryNavBorder: '#f4f4f4',
-      primaryNavPaper: '#32363c',
+      primaryNavPaper: '#3a3f46',
       topMenu: '#fff',
       billingHeader: '#f5f9ff'
     },

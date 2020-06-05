@@ -417,21 +417,20 @@ export const NavGroup: React.FC<NavGroupProps> = props => {
   return (
     <div className={classes.menuWrapper}>
       <ReachMenu>
-        <MenuButton
-          className={`${classes.button} ${classes.listItem} ${classes.linkItem}`}
-        >
+        <MenuButton className={`${classes.menuButton} ${classes.linkItem}`}>
           {group}
+          <KeyboardArrowDown className={classes.caret} />
         </MenuButton>
-        <KeyboardArrowDown className={classes.caret} />
         <MenuPopover className={classes.menuPopover} portal={false}>
-          <MenuItems className={classes.menuItemList}>
+          {/* <MenuItems className={classes.menuItemList}> */}
+          <MenuItems>
             {filteredLinks.map(thisFilteredLink => {
               return (
                 <MenuLink
                   as="a"
                   key={thisFilteredLink.display}
                   href={thisFilteredLink.href}
-                  className={`${classes.menuItemLink} ${classes.linkItem}`}
+                  // className={`${classes.menuItemLink} ${classes.linkItem}`}
                 >
                   {thisFilteredLink.display}
                 </MenuLink>
@@ -489,8 +488,7 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
           disableTypography={true}
           className={classNames({
             [classes.linkItem]: true,
-            primaryNavLink: true,
-            hiddenWhenCollapsed: isCollapsed
+            primaryNavLink: true
           })}
         />
       </Link>
