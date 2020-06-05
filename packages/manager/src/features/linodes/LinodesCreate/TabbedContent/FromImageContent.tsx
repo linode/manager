@@ -36,11 +36,13 @@ const styles = (theme: Theme) =>
     root: {},
     main: {},
     sidebarPrivate: {
+      background: 'red',
       [theme.breakpoints.up('md')]: {
         marginTop: '-130px !important'
       }
     },
     sidebarPublic: {
+      background: 'red',
       [theme.breakpoints.up('md')]: {
         marginTop: '0 !important'
       }

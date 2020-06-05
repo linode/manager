@@ -607,6 +607,26 @@ export class LinodeCreate extends React.PureComponent<
             hidePrivateIP={this.props.createType === 'fromLinode'}
           />
         </Grid>
+        <Grid
+          item
+          className={
+            'mlSidebar ' +
+            (variant === 'private'
+              ? classes.sidebarPrivate
+              : classes.sidebarPublic)
+          }
+        >
+          <CheckoutBar
+            data-qa-checkout-bar
+            heading="Linode Summary"
+            calculatedPrice={calculatedPrice}
+            isMakingRequest={this.props.formIsSubmitting}
+            disabled={this.props.formIsSubmitting || userCannotCreateLinode}
+            onDeploy={this.createLinode}
+          >
+            <DisplaySectionList displaySections={displaySections} />
+          </CheckoutBar>
+        </Grid>
         {/* {tabRender()} */}
       </React.Fragment>
     );
