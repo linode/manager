@@ -160,8 +160,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: 0,
       border: 'none',
       whiteSpace: 'normal',
-      backgroundColor: theme.bg.primaryNavPaper,
-      boxShadowTop: 'none'
+      backgroundColor: theme.bg.primaryNavPaper
     },
     '& :last-child': {
       height: 54
@@ -171,7 +170,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&[data-reach-menu], &[data-reach-menu-popover]': {
       zIndex: 3000,
       position: 'absolute',
-      top: 50
+      top: 50,
+      // Hack solution to have something semi-working on mobile.
+      [theme.breakpoints.down('md')]: {
+        left: 0
+      }
     }
   },
   caret: {
