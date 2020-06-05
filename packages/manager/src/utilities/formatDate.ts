@@ -2,8 +2,8 @@ import { DateTime, Duration } from 'luxon';
 import { reportException } from 'src/exceptionReporting';
 
 import store from 'src/store';
-import { API_DATETIME_NO_TZ_FORMAT } from 'src/constants';
-import { parseISOOrAPIDate } from 'src/utilities/date';
+import { DATETIME_DISPLAY_FORMAT } from 'src/constants';
+import { parseAPIDate } from 'src/utilities/date';
 export type TimeInterval = 'day' | 'week' | 'month' | 'year' | 'never';
 
 const durationMap = {
@@ -53,19 +53,21 @@ export const formatDate = (
 
   try {
     // Unknown error was causing this to crash in rare situations.
-    time = parseISOOrAPIDate(date).setZone(userTimezone);
+    time = parseAPIDate(date).setZone(userTimezone);
   } catch (e) {
     // Better to return a blank date than an error or incorrect information.
     reportException(e);
     return 'Error getting date';
   }
 
-  const expectedFormat = options.format || API_DATETIME_NO_TZ_FORMAT;
+  const expectedFormat = options.format || DATETIME_DISPLAY_FORMAT;
 
   const formattedTime = shouldHumanize(time, options.humanizeCutoff)
     ? time.toRelative()
     : time.toFormat(expectedFormat);
-  return formattedTime ?? DateTime.fromISO(date).toFormat(expectedFormat);
+
+  // console.log(date, userTimezone, time.toISO(), formattedTime)
+  return formattedTime ?? time.toFormat(expectedFormat);
 };
 
 export default formatDate;

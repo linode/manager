@@ -3,9 +3,9 @@ import { cleanup } from '@testing-library/react';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { DateTimeDisplay, Props } from './DateTimeDisplay';
-import { API_DATETIME_NO_TZ_FORMAT } from 'src/constants';
+import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 
-const APIDate = '2018-07-20 04:23:17';
+const APIDate = '2018-07-20T04:23:17';
 
 beforeEach(cleanup);
 
@@ -24,7 +24,7 @@ describe('DateTimeDisplay component', () => {
       const props = {
         value: DateTime.utc()
           .minus({ minutes: 5 })
-          .toFormat(API_DATETIME_NO_TZ_FORMAT),
+          .toFormat(ISO_DATETIME_NO_TZ_FORMAT),
         humanizeCutoff: 'day'
       } as Props;
       const { getByText } = renderWithTheme(<DateTimeDisplay {...props} />);
@@ -41,7 +41,7 @@ describe('DateTimeDisplay component', () => {
     describe('should output ISO strings if the date is older than the cutoff', () => {
       const almostOneWeek = DateTime.utc().minus({ days: 6 });
       const almostOneWeekString = almostOneWeek.toFormat(
-        API_DATETIME_NO_TZ_FORMAT
+        ISO_DATETIME_NO_TZ_FORMAT
       );
       it('cutoff month', () => {
         const props = {
@@ -64,7 +64,7 @@ describe('DateTimeDisplay component', () => {
     it('should always output formatted text if humanizedCutoff is set to never', () => {
       const aLongTimeAgo = DateTime.utc()
         .minus({ years: 10 })
-        .toFormat(API_DATETIME_NO_TZ_FORMAT);
+        .toFormat(ISO_DATETIME_NO_TZ_FORMAT);
       const props = {
         value: aLongTimeAgo,
         humanizeCutoff: 'never'

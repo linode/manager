@@ -31,7 +31,7 @@ import {
 } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { useAccount } from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
-import { ISO_DATE_FORMAT, API_DATETIME_NO_TZ_FORMAT } from 'src/constants';
+import { ISO_DATE_FORMAT, ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { useSet } from 'src/hooks/useSet';
 import { isAfter } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -327,10 +327,10 @@ export const BillingActivityPanel: React.FC<Props> = props => {
 
       const earliestInvoiceDate =
         invoices[invoices.length - 1]?.date ||
-        DateTime.utc().toFormat(API_DATETIME_NO_TZ_FORMAT);
+        DateTime.utc().toFormat(ISO_DATETIME_NO_TZ_FORMAT);
       const earliestPaymentDate =
         payments[payments.length - 1]?.date ||
-        DateTime.utc().toFormat(API_DATETIME_NO_TZ_FORMAT);
+        DateTime.utc().toFormat(ISO_DATETIME_NO_TZ_FORMAT);
       const dateCutoff = getCutoffFromDateRange(item.value);
 
       // If the data we already have falls within the selected date range,
@@ -662,7 +662,7 @@ export const makeFilter = (endDate?: string) => {
   if (endDate) {
     const filterEndDate = DateTime.fromISO(endDate);
     filter.date = {
-      '+gte': filterEndDate.toFormat(API_DATETIME_NO_TZ_FORMAT)
+      '+gte': filterEndDate.toFormat(ISO_DATETIME_NO_TZ_FORMAT)
     };
   }
 

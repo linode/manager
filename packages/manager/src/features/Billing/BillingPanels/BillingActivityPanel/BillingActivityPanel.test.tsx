@@ -201,7 +201,7 @@ describe('paymentToActivityFeedItem', () => {
     it('includes a date filter only if given an endDate', () => {
       expect(makeFilter()).not.toHaveProperty('date');
       expect(makeFilter(endDate)).toHaveProperty('date', {
-        '+gte': '2020-01-01 00:00:00'
+        '+gte': '2020-01-01T00:00:00'
       });
     });
   });

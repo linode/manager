@@ -1,13 +1,13 @@
 import { DateTime } from 'luxon';
-import { API_DATETIME_NO_TZ_FORMAT } from 'src/constants';
+import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { shouldRenderHively } from './Hively';
 
 const recent = DateTime.utc()
   .minus({ days: 6 })
-  .toFormat(API_DATETIME_NO_TZ_FORMAT);
+  .toFormat(ISO_DATETIME_NO_TZ_FORMAT);
 const old = DateTime.utc()
   .minus({ months: 3 })
-  .toFormat(API_DATETIME_NO_TZ_FORMAT);
+  .toFormat(ISO_DATETIME_NO_TZ_FORMAT);
 const user = 'Linode';
 
 describe('shouldRenderHively function', () => {
@@ -18,7 +18,7 @@ describe('shouldRenderHively function', () => {
     expect(
       shouldRenderHively(
         true,
-        DateTime.utc().toFormat(API_DATETIME_NO_TZ_FORMAT)
+        DateTime.utc().toFormat(ISO_DATETIME_NO_TZ_FORMAT)
       )
     ).toBeTruthy();
   });
