@@ -79,6 +79,8 @@ interface Props {
   small?: boolean;
   isOptional?: boolean;
   hideHelperText?: boolean;
+  passwordHelperText?: string;
+  passwordHelperTextPosition?: 'top' | 'bottom' | undefined;
 }
 
 export interface UserSSHKeyObject {
@@ -112,6 +114,8 @@ class AccessPanel extends React.Component<CombinedProps> {
       small,
       isOptional,
       hideHelperText,
+      passwordHelperText,
+      passwordHelperTextPosition,
       requestKeys
     } = this.props;
 
@@ -142,6 +146,8 @@ class AccessPanel extends React.Component<CombinedProps> {
               onChange={this.handleChange}
               hideStrengthLabel={hideStrengthLabel}
               hideHelperText={hideHelperText}
+              helperText={passwordHelperText}
+              helperTextPosition={passwordHelperTextPosition}
             />
           </React.Suspense>
           {users && (
