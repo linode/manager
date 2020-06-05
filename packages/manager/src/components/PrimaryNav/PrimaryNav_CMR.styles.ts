@@ -45,7 +45,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 50,
     fontSize: '1rem',
     paddingRight: 15,
-    paddingLeft: 15
+    paddingLeft: 15,
+    '&:hover': {
+      backgroundColor: theme.bg.primaryNavActiveBG
+    },
+    '&:focus': {
+      backgroundColor: theme.bg.primaryNavActiveBG
+    }
   },
   listItemCollapsed: {},
   collapsible: {
@@ -120,42 +126,45 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingLeft: 15
     },
     '&:hover': {
-      backgroundColor: 'inherit'
+      backgroundColor: theme.bg.primaryNavActiveBG
     },
     '&:focus': {
-      backgroundColor: 'inherit'
+      backgroundColor: theme.bg.primaryNavActiveBG
     }
   },
   menuItemLink: {
     '&[data-reach-menu-item]': {
-      height: '100%',
-      transition: theme.transitions.create(['color']),
-      color: theme.color.primaryNavText,
-      opacity: 1,
-      whiteSpace: 'nowrap',
-      fontFamily: theme.font.normal,
-      '&.hiddenWhenCollapsed': {
-        opacity: 0
+      cursor: 'pointer',
+      height: 50,
+      fontSize: '1rem',
+      paddingTop: 12,
+      paddingRight: 40,
+      paddingBottom: 12,
+      '&:hover': {
+        backgroundColor: theme.bg.primaryNavActiveBG
       },
-      cursor: 'pointer'
+      '&:focus': {
+        backgroundColor: theme.bg.primaryNavActiveBG
+      },
+      display: 'flex',
+      alignItems: 'center',
+      color: theme.color.primaryNavText
     },
-    '&[data-reach-menu-item] [data-selected]': {
-      background: theme.bg.main
-      // '& svg': {
-      //   ...theme.addCircleHoverEffect,
-      //   backgroundColor: theme.bg.primaryNavPaper,
-      //   color: theme.color.primaryNavText
-      // }
-    }
+    '&[data-reach-menu-item][data-selected]': {
+      backgroundColor: theme.bg.primaryNavActiveBG
+    },
+    lineHeight: 1
   },
   menuItemList: {
     '&[data-reach-menu-items]': {
-      zIndex: 10000,
       padding: 0,
       border: 'none',
       whiteSpace: 'normal',
-      // boxShadow: `0 0 5px ${theme.color.boxShadow}`,
-      backgroundColor: theme.bg.primaryNavPaper
+      backgroundColor: theme.bg.primaryNavPaper,
+      boxShadowTop: 'none'
+    },
+    '& :last-child': {
+      height: 54
     }
   },
   menuPopover: {

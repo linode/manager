@@ -5,10 +5,8 @@ import {
   MenuButton,
   MenuLink,
   MenuItems,
-  MenuList,
   MenuPopover
 } from '@reach/menu-button';
-import '@reach/menu-button/styles.css';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link, LinkProps } from 'react-router-dom';
@@ -422,15 +420,14 @@ export const NavGroup: React.FC<NavGroupProps> = props => {
           <KeyboardArrowDown className={classes.caret} />
         </MenuButton>
         <MenuPopover className={classes.menuPopover} portal={false}>
-          {/* <MenuItems className={classes.menuItemList}> */}
-          <MenuItems>
+          <MenuItems className={classes.menuItemList}>
             {filteredLinks.map(thisFilteredLink => {
               return (
                 <MenuLink
                   as="a"
                   key={thisFilteredLink.display}
                   href={thisFilteredLink.href}
-                  // className={`${classes.menuItemLink} ${classes.linkItem}`}
+                  className={`${classes.menuItemLink}`}
                 >
                   {thisFilteredLink.display}
                 </MenuLink>
