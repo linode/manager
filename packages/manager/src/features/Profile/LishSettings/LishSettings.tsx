@@ -92,7 +92,6 @@ interface State {
   authorizedKeysCount: number;
   authType: TPAProvider;
   provider: ProviderOptions;
-  isSSHKeyEmpty: boolean;
 }
 
 type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
@@ -106,8 +105,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
       ? this.props.authorizedKeys.length
       : 1,
     authType: this.props.authType,
-    provider: providers[0].name,
-    isSSHKeyEmpty: true
+    provider: providers[0].name
   };
 
   render() {
@@ -118,8 +116,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
       authorizedKeysCount,
       success,
       errors,
-      authType,
-      isSSHKeyEmpty
+      authType
     } = this.state;
 
     const thirdPartyEnabled = this.props.authType !== 'password';
@@ -214,7 +211,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
                     className={classes.keyTextarea}
                     data-qa-public-key
                   />
-                  {typeof authorizedKeys[idx] !== 'undefined' && (
+                  {typeof authorizedKeys[0] !== 'undefined' && (
                     <Button
                       buttonType="remove"
                       onClick={this.onPublicKeyRemove(idx)}
@@ -224,14 +221,12 @@ class LishSettings extends React.Component<CombinedProps, State> {
                   )}
                 </div>
               ))}
-              {!isSSHKeyEmpty && (
-                <AddNewLink
-                  onClick={this.addSSHPublicKeyField}
-                  label="Add SSH Public Key"
-                  left
-                  className={classes.addNew}
-                />
-              )}
+              <AddNewLink
+                onClick={this.addSSHPublicKeyField}
+                label="Add SSH Public Key"
+                left
+                className={classes.addNew}
+              />
             </React.Fragment>
           )}
           <ActionsPanel>
@@ -296,12 +291,6 @@ class LishSettings extends React.Component<CombinedProps, State> {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     this.setState(set(lensPath(['authorizedKeys', idx]), e.target.value));
-
-    if (e.target.value == '') {
-      this.setState({ isSSHKeyEmpty: true });
-    } else {
-      this.setState({ isSSHKeyEmpty: false });
-    }
   };
 
   onPublicKeyRemove = (idx: number) => () => {
