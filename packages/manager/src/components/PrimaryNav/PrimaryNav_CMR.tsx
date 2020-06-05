@@ -3,13 +3,14 @@ import Settings from '@material-ui/icons/Settings';
 import {
   Menu as ReachMenu,
   MenuButton,
-  MenuLink,
   MenuItems,
+  MenuLink,
+  MenuLinkProps,
   MenuPopover
 } from '@reach/menu-button';
 import * as classNames from 'classnames';
 import * as React from 'react';
-import { Link, LinkProps } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Kubernetes from 'src/assets/addnewmenu/kubernetes.svg';
 import OCA from 'src/assets/addnewmenu/oneclick.svg';
 import Account from 'src/assets/icons/account.svg';
@@ -35,7 +36,6 @@ import useAccountManagement from 'src/hooks/useAccountManagement';
 import useDomains from 'src/hooks/useDomains';
 import useFlags from 'src/hooks/useFlags';
 import usePrefetch from 'src/hooks/usePreFetch';
-import { sendOneClickNavigationEvent } from 'src/utilities/ga';
 import AdditionalMenuItems from './AdditionalMenuItems';
 import usePrimaryNavStyles from './PrimaryNav_CMR.styles';
 import SpacingToggle from './SpacingToggle';
@@ -64,12 +64,12 @@ type NavGroup =
   | 'Monitors'
   | 'Marketplace'
   | 'Help & Support'
-  | 'Community';
+  | 'Community'
+  | 'None';
 
 interface PrimaryLink {
   display: NavEntity;
   href: string;
-  group?: NavGroup;
   attr?: { [key: string]: any };
   icon?: JSX.Element;
   activeLinks?: Array<string>;
@@ -79,14 +79,17 @@ interface PrimaryLink {
   prefetchRequestCondition?: boolean;
 }
 
-export interface Props {
+// =============================================================================
+// PrimaryNav
+// =============================================================================
+export interface PrimaryNavProps {
   closeMenu: () => void;
   toggleTheme: () => void;
   toggleSpacing: () => void;
   isCollapsed: boolean;
 }
 
-export const PrimaryNav: React.FC<Props> = props => {
+export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
   const { closeMenu, isCollapsed, toggleTheme, toggleSpacing } = props;
   const classes = usePrimaryNavStyles();
 
@@ -103,123 +106,133 @@ export const PrimaryNav: React.FC<Props> = props => {
     account
   } = useAccountManagement();
 
-  const primaryLinkGroups: PrimaryLink[][] = React.useMemo(
+  const primaryLinkGroups: {
+    group: NavGroup;
+    links: PrimaryLink[];
+  }[] = React.useMemo(
     () => [
-      [
-        {
-          display: 'Dashboard',
-          href: '/dashboard',
-          icon: <Dashboard className="small" />
-        }
-      ],
-      [
-        {
-          group: 'Compute',
-          display: 'Linodes',
-          href: '/linodes',
-          activeLinks: ['/linodes', '/linodes/create'],
-          icon: <Linode />
-        },
-        {
-          group: 'Compute',
-          display: 'NodeBalancers',
-          href: '/nodebalancers',
-          icon: <NodeBalancer />
-        },
-        {
-          group: 'Compute',
-          display: 'Kubernetes',
-          href: '/kubernetes/clusters',
-          icon: <Kubernetes />
-        },
-        {
-          group: 'Compute',
-          display: 'StackScripts',
-          href: '/stackscripts?type=account',
-          icon: <StackScript />
-        },
-        {
-          group: 'Compute',
-          display: 'Images',
-          href: '/images',
-          icon: <Image className="small" />
-        }
-      ],
-      [
-        {
-          group: 'Network',
-          display: 'Domains',
-          href: '/domains',
-          icon: <Domain style={{ transform: 'scale(1.5)' }} />,
-          prefetchRequestFn: requestDomains,
-          prefetchRequestCondition:
-            !domains.loading && domains.lastUpdated === 0
-        },
-        {
-          group: 'Network',
-          display: 'Firewalls',
-          href: '/firewalls',
-          icon: <Firewall />,
-          hide: !flags.firewalls
-        }
-      ],
-      [
-        {
-          group: 'Storage',
-          display: 'Volumes',
-          href: '/volumes',
-          icon: <Volume />
-        },
-        {
-          group: 'Storage',
-          display: 'Object Storage',
-          href: '/object-storage/buckets',
-          activeLinks: [
-            '/object-storage/buckets',
-            '/object-storage/access-keys'
-          ],
-          icon: <Storage />
-        }
-      ],
-      [
-        {
-          group: 'Monitors',
-          display: 'Longview',
-          href: '/longview',
-          icon: <Longview className="small" />
-        },
-        {
-          group: 'Monitors',
-          display: 'Managed',
-          href: '/managed',
-          icon: <Managed />,
-          hide: !_isManagedAccount
-        }
-      ],
-      [
-        {
-          display: 'Marketplace',
-          href: '/linodes/create?type=One-Click',
-          attr: { 'data-qa-one-click-nav-btn': true },
-          icon: <OCA />,
-          onClick: () => {
-            sendOneClickNavigationEvent('Primary Nav');
+      {
+        group: 'None',
+        links: [
+          {
+            display: 'Dashboard',
+            href: '/dashboard',
+            icon: <Dashboard className="small" />
           }
-        }
-      ],
-      [
-        {
-          display: 'Account',
-          href: '/account/billing',
-          icon: <Account className="small" />,
-          activeLinks: [
-            '/account/billing',
-            '/account/users',
-            '/account/settings'
-          ],
-          hide: account.lastUpdated === 0 || !_hasAccountAccess
-        }
-      ]
+        ]
+      },
+      {
+        group: 'Compute',
+        links: [
+          {
+            display: 'Linodes',
+            href: '/linodes',
+            activeLinks: ['/linodes', '/linodes/create'],
+            icon: <Linode />
+          },
+          {
+            display: 'NodeBalancers',
+            href: '/nodebalancers',
+            icon: <NodeBalancer />
+          },
+          {
+            display: 'Kubernetes',
+            href: '/kubernetes/clusters',
+            icon: <Kubernetes />
+          },
+          {
+            display: 'StackScripts',
+            href: '/stackscripts?type=account',
+            icon: <StackScript />
+          },
+          {
+            display: 'Images',
+            href: '/images',
+            icon: <Image className="small" />
+          }
+        ]
+      },
+      {
+        group: 'Network',
+        links: [
+          {
+            display: 'Domains',
+            href: '/domains',
+            icon: <Domain style={{ transform: 'scale(1.5)' }} />,
+            prefetchRequestFn: requestDomains,
+            prefetchRequestCondition:
+              !domains.loading && domains.lastUpdated === 0
+          },
+          {
+            display: 'Firewalls',
+            href: '/firewalls',
+            icon: <Firewall />,
+            hide: !flags.firewalls
+          }
+        ]
+      },
+      {
+        group: 'Storage',
+        links: [
+          {
+            display: 'Volumes',
+            href: '/volumes',
+            icon: <Volume />
+          },
+          {
+            display: 'Object Storage',
+            href: '/object-storage/buckets',
+            activeLinks: [
+              '/object-storage/buckets',
+              '/object-storage/access-keys'
+            ],
+            icon: <Storage />
+          }
+        ]
+      },
+      {
+        group: 'Monitors',
+        links: [
+          {
+            display: 'Longview',
+            href: '/longview',
+            icon: <Longview className="small" />
+          },
+          {
+            display: 'Managed',
+            href: '/managed',
+            icon: <Managed />,
+            hide: !_isManagedAccount
+          }
+        ]
+      },
+      {
+        group: 'None',
+        links: [
+          {
+            display: 'Marketplace',
+            href: '/linodes/create?type=One-Click',
+            attr: { 'data-qa-one-click-nav-btn': true },
+            icon: <OCA />
+          }
+        ]
+      },
+      {
+        group: 'None',
+        links: [
+          {
+            display: 'Account',
+            href: '/account/billing',
+            icon: <Account className="small" />,
+            activeLinks: [
+              '/account/billing',
+              '/account/users',
+              '/account/settings'
+            ],
+            hide: account.lastUpdated === 0 || !_hasAccountAccess
+          }
+        ]
+      }
     ],
     [
       flags.firewalls,
@@ -264,54 +277,42 @@ export const PrimaryNav: React.FC<Props> = props => {
           [classes.fadeContainer]: true
         })}
       >
-        {primaryLinkGroups.map(thisPrimaryLinkGroup => {
-          if (thisPrimaryLinkGroup.length === 1) {
-            const link = thisPrimaryLinkGroup[0];
+        {primaryLinkGroups.map(thisGroup => {
+          // For each group, filter out hidden links.
+          const filteredLinks = thisGroup.links.filter(
+            thisLink => !thisLink.hide
+          );
 
-            const props = {
-              key: link.display,
-              closeMenu,
-              isCollapsed,
-              ...link
-            };
+          if (filteredLinks.length === 0) {
+            return null;
+          }
 
-            return link.prefetchRequestFn &&
-              link.prefetchRequestCondition !== undefined ? (
-              <PrefetchPrimaryLink
-                {...props}
+          // Render a singular PrimaryNavLink for links without a group.
+          if (thisGroup.group === 'None' && filteredLinks.length === 1) {
+            const link = filteredLinks[0];
+
+            return (
+              <PrimaryNavLink
+                key={link.display}
+                href={link.href}
+                display={link.display}
+                closeMenu={closeMenu}
+                isCollapsed={isCollapsed}
                 prefetchRequestFn={link.prefetchRequestFn}
                 prefetchRequestCondition={link.prefetchRequestCondition}
               />
-            ) : (
-              <PrimaryLink {...props} />
             );
           }
 
+          // Otherwise return a NavGroup (dropdown menu).
           return (
             <NavGroup
-              key={thisPrimaryLinkGroup[0].group}
-              group={thisPrimaryLinkGroup[0].group!}
-              links={thisPrimaryLinkGroup}
+              key={thisGroup.group}
+              group={thisGroup.group}
+              links={filteredLinks}
             />
           );
         })}
-        {/* {filteredLinks.map(thisLink => {
-
-
-          // PrefetchPrimaryLink and PrimaryLink are two separate components because invocation of
-          // hooks cannot be conditional. <PrefetchPrimaryLink /> is a wrapper around <PrimaryLink />
-          // that includes the usePrefetch hook.
-          return thisLink.prefetchRequestFn &&
-            thisLink.prefetchRequestCondition !== undefined ? (
-            <PrefetchPrimaryLink
-              {...props}
-              prefetchRequestFn={thisLink.prefetchRequestFn}
-              prefetchRequestCondition={thisLink.prefetchRequestCondition}
-            />
-          ) : (
-            <PrimaryLink {...props} />
-          );
-        })} */}
 
         {/** menu items under the main navigation links */}
         <AdditionalMenuItems
@@ -400,6 +401,9 @@ export const PrimaryNav: React.FC<Props> = props => {
 
 export default React.memo(PrimaryNav);
 
+// =============================================================================
+// NavGroup
+// =============================================================================
 interface NavGroupProps {
   group: NavGroup;
   links: PrimaryLink[];
@@ -410,8 +414,6 @@ export const NavGroup: React.FC<NavGroupProps> = props => {
 
   const classes = usePrimaryNavStyles();
 
-  const filteredLinks = links.filter(thisLink => thisLink.group === group);
-
   return (
     <div className={classes.menuWrapper}>
       <ReachMenu>
@@ -421,16 +423,24 @@ export const NavGroup: React.FC<NavGroupProps> = props => {
         </MenuButton>
         <MenuPopover className={classes.menuPopover} portal={false}>
           <MenuItems className={classes.menuItemList}>
-            {filteredLinks.map(thisFilteredLink => {
+            {links.map(thisLink => {
+              const {
+                href,
+                display,
+                prefetchRequestCondition,
+                prefetchRequestFn
+              } = thisLink;
+
               return (
-                <MenuLink
-                  as="a"
-                  key={thisFilteredLink.display}
-                  href={thisFilteredLink.href}
-                  className={`${classes.menuItemLink}`}
+                <PrimaryNavMenuLink
+                  key={display}
+                  to={href}
+                  display={display}
+                  prefetchRequestFn={prefetchRequestFn}
+                  prefetchRequestCondition={prefetchRequestCondition}
                 >
-                  {thisFilteredLink.display}
-                </MenuLink>
+                  {display}
+                </PrimaryNavMenuLink>
               );
             })}
           </MenuItems>
@@ -440,30 +450,63 @@ export const NavGroup: React.FC<NavGroupProps> = props => {
   );
 };
 
-interface PrimaryLinkProps extends PrimaryLink {
-  closeMenu: () => void;
-  isCollapsed: boolean;
-  prefetchProps?: {
-    onMouseEnter: LinkProps['onMouseEnter'];
-    onMouseLeave: LinkProps['onMouseLeave'];
-    onFocus: LinkProps['onFocus'];
-    onBlur: LinkProps['onBlur'];
-  };
+// =============================================================================
+// PrimaryNavMenuLink
+// =============================================================================
+interface PrimaryNavMenuLinkProps extends MenuLinkProps {
+  display: string;
+  prefetchRequestFn?: () => void;
+  prefetchRequestCondition?: boolean;
 }
 
-const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
+export const PrimaryNavMenuLink: React.FC<PrimaryNavMenuLinkProps> = React.memo(
+  props => {
+    const classes = usePrimaryNavStyles();
+
+    const {
+      display,
+      prefetchRequestFn,
+      prefetchRequestCondition,
+      ...rest
+    } = props;
+
+    const { handlers } = usePrefetch(
+      prefetchRequestFn,
+      prefetchRequestCondition
+    );
+
+    return (
+      <MenuLink
+        as={Link}
+        className={classes.menuItemLink}
+        {...handlers}
+        {...rest}
+      >
+        {display}
+      </MenuLink>
+    );
+  }
+);
+
+// =============================================================================
+// PrimaryNavLink
+// =============================================================================
+interface PrimaryNavLink extends PrimaryLink {
+  closeMenu: () => void;
+  isCollapsed: boolean;
+  prefetchRequestFn?: () => void;
+  prefetchRequestCondition?: boolean;
+}
+
+const PrimaryNavLink: React.FC<PrimaryNavLink> = React.memo(props => {
   const classes = usePrimaryNavStyles();
 
-  const {
-    isCollapsed,
-    closeMenu,
-    href,
-    onClick,
-    attr,
-    icon,
-    display,
-    prefetchProps
-  } = props;
+  const { handlers } = usePrefetch(
+    props.prefetchRequestFn,
+    props.prefetchRequestCondition
+  );
+
+  const { isCollapsed, closeMenu, href, onClick, attr, icon, display } = props;
 
   return (
     <>
@@ -475,7 +518,7 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
             onClick(e);
           }
         }}
-        {...prefetchProps}
+        {...handlers}
         {...attr}
         className={classes.listItem}
       >
@@ -492,27 +535,4 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
       <Divider className={classes.divider} />
     </>
   );
-});
-
-interface PrefetchPrimaryLinkProps {
-  prefetchRequestFn: () => void;
-  prefetchRequestCondition: boolean;
-}
-
-// Wrapper around PrimaryLink that includes the usePrefetchHook.
-export const PrefetchPrimaryLink: React.FC<PrimaryLinkProps &
-  PrefetchPrimaryLinkProps> = React.memo(props => {
-  const { makeRequest, cancelRequest } = usePrefetch(
-    props.prefetchRequestFn,
-    props.prefetchRequestCondition
-  );
-
-  const prefetchProps: PrimaryLinkProps['prefetchProps'] = {
-    onMouseEnter: makeRequest,
-    onFocus: makeRequest,
-    onMouseLeave: cancelRequest,
-    onBlur: cancelRequest
-  };
-
-  return <PrimaryLink {...props} prefetchProps={prefetchProps} />;
 });
