@@ -245,8 +245,6 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
     ]
   );
 
-  // const filteredLinks = primaryLinks.filter(thisLink => !thisLink.hide);
-
   return (
     <Grid
       className={classes.menuGrid}
