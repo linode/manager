@@ -211,7 +211,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
                     className={classes.keyTextarea}
                     data-qa-public-key
                   />
-                  {typeof authorizedKeys[0] !== 'undefined' && (
+                  {idx !== 0 && authorizedKeys[0] !== 'undefined' && (
                     <Button
                       buttonType="remove"
                       onClick={this.onPublicKeyRemove(idx)}
