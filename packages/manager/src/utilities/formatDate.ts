@@ -66,7 +66,6 @@ export const formatDate = (
     ? time.toRelative()
     : time.toFormat(expectedFormat);
 
-  // console.log(date, userTimezone, time.toISO(), formattedTime)
   return formattedTime ?? time.toFormat(expectedFormat);
 };
 
