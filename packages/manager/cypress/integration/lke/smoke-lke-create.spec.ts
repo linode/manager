@@ -1,5 +1,28 @@
 import { makeTestLabel } from '../../support/api/common';
 
+const multipleClick = (
+  subject: Cypress.Chainable,
+  n: number
+): Cypress.Chainable => {
+  if (n == 1) {
+    return subject.click();
+  }
+  return multipleClick(subject.click(), n - 1);
+};
+
+const addNodes = (plan: string, nb: number) => {
+  const extraNb = Math.ceil(Math.random() * 5);
+  cy.get(`[data-qa-plan-row="${plan}"`).within(_card => {
+    multipleClick(cy.get('[data-testid="increment-button"]'), extraNb + nb);
+    multipleClick(cy.get('[data-testid="decrement-button"]'), extraNb);
+
+    cy.findByRole('textbox')
+      .invoke('val')
+      .should('be', `${nb}`);
+    cy.findByText('Add').click();
+  });
+};
+
 describe('LKE Create Cluster', () => {
   it('Simple Page Check', () => {
     const lkeId = Math.ceil(Math.random() * 9999);
@@ -23,25 +46,13 @@ describe('LKE Create Cluster', () => {
       .click()
       .clear()
       .type('1.17{enter}');
-    cy.get('[data-qa-plan-row="Linode 2GB"').within(_card => {
-      cy.get('[data-testid="increment-button"]')
-        .click()
-        .click()
-        .click()
-        .click();
-      cy.get('[data-testid="decrement-button"]')
-        .click()
-        .click();
 
-      cy.findByRole('textbox')
-        .invoke('val')
-        .should('be', '2');
-      cy.findByText('Add').click();
-    });
+    const kNb2Gb = 2;
+    addNodes('Linode 2GB', kNb2Gb);
+
     // wait for change to reflect on Checkout bar
 
     cy.findByText('Linode 2GB Plan');
-
     cy.get('[data-testid="kube-checkout-bar"]').within(_bar => {
       cy.findByText('Linode 2GB Plan');
       cy.get('[data-testid="remove-pool-button"]');

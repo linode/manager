@@ -1,16 +1,13 @@
 {
     "compilerOptions": {
+      "allowJs": true,
+      "checkJs": false,
       "strict": true,
-      "baseUrl": "../../../",
+      "skipLibCheck": true,
       "target": "es5",
       "lib": ["es5", "dom"],
-      "types": ["cypress", "@types/testing-library__cypress"],
-      "skipLibCheck": true
+      "baseUrl": "../../../node_modules",
+      "types": ["cypress", "@types/testing-library__cypress"]
     },
-    "include": [
-      "**/*.ts"
-    ],
-    "exclude": [
-      "node_modules/**/*"
-    ]
-  }
+    "include": ["**/*.*"]
+}
