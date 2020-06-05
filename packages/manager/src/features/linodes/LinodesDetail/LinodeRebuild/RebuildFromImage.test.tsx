@@ -33,7 +33,6 @@ const props: CombinedProps = {
   enqueueSnackbar: jest.fn(),
   permissions: 'read_write',
   passwordHelperText: '',
-  passwordHelperTextPosition: undefined,
   requestKeys: jest.fn(),
   ...reactRouterProps
 };

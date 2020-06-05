@@ -68,10 +68,10 @@ const LinodeRebuild: React.FC<CombinedProps> = props => {
           If you can&#39;t rescue an existing disk, it&#39;s time to rebuild
           your Linode. There are a couple of different ways you can do restore
           from a backup or start over with a fresh Linux distribution.&nbsp;
-          <b>
+          <strong>
             Rebuilding will destroy all data on all existing disks on this
             Linode.
-          </b>
+          </strong>
         </Typography>
         <EnhancedSelect
           options={options}
@@ -84,16 +84,19 @@ const LinodeRebuild: React.FC<CombinedProps> = props => {
         />
       </Paper>
       {mode === 'fromImage' && (
-        <RebuildFromImage
-          passwordHelperText="Set a password for your rebuilt Linode."
-          passwordHelperTextPosition="bottom"
-        />
+        <RebuildFromImage passwordHelperText="Set a password for your rebuilt Linode." />
       )}
       {mode === 'fromCommunityStackScript' && (
-        <RebuildFromStackScript type="community" />
+        <RebuildFromStackScript
+          type="community"
+          passwordHelperText="Set a password for your rebuilt Linode."
+        />
       )}
       {mode === 'fromAccountStackScript' && (
-        <RebuildFromStackScript type="account" />
+        <RebuildFromStackScript
+          type="account"
+          passwordHelperText="Set a password for your rebuilt Linode."
+        />
       )}
     </div>
   );

@@ -54,7 +54,6 @@ interface ContextProps {
 
 interface Props {
   passwordHelperText: string;
-  passwordHelperTextPosition: 'top' | 'bottom' | undefined;
 }
 
 export type CombinedProps = Props &
@@ -87,8 +86,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
     enqueueSnackbar,
     history,
     permissions,
-    passwordHelperText,
-    passwordHelperTextPosition
+    passwordHelperText
   } = props;
 
   const disabled = permissions === 'read_only';
@@ -207,7 +205,6 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
                   : undefined
               }
               passwordHelperText={passwordHelperText}
-              passwordHelperTextPosition={passwordHelperTextPosition}
             />
             <ActionsPanel>
               <Button
@@ -240,7 +237,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   permissions: linode._permissions
 }));
 
-const enhanced = compose<CombinedProps, {}>(
+const enhanced = compose<CombinedProps, Props>(
   linodeContext,
   withImages(),
   userSSHKeyHoc,

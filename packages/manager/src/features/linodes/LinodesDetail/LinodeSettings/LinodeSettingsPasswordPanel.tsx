@@ -230,7 +230,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
           <React.Suspense fallback={<SuspenseLoader />}>
             <PasswordInput
               autoComplete="new-password"
-              label="Password"
+              label="New Root Password"
               value={this.state.value}
               onChange={this.handlePasswordChange}
               errorText={passwordError}
@@ -243,8 +243,6 @@ class LinodeSettingsPasswordPanel extends React.Component<
                   ? "You don't have permissions to modify this Linode"
                   : undefined
               }
-              helperText="You may change your root password here for this Linode if it is fully powered down."
-              helperTextPosition="bottom"
             />
           </React.Suspense>
         </form>
