@@ -730,7 +730,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         ),
         (idx: number) => <this.TagField key={idx} />,
         (idx: number) => (
-          <this.NameOrTargetField label="Value" field="name" key={idx} />
+          <this.NameOrTargetField label="Value" field="target" key={idx} />
         ),
         (idx: number) => <this.TTLField key={idx} />
       ]
