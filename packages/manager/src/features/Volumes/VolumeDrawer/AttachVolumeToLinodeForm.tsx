@@ -1,10 +1,11 @@
-import { Form, Formik } from 'formik';
+import { Formik } from 'formik';
 import { Grant } from '@linode/api-v4/lib/account';
 import { attachVolume } from '@linode/api-v4/lib/volumes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
+import Form from 'src/components/core/Form';
 import withVolumesRequests, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
@@ -99,7 +100,7 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = props => {
         } = formikProps;
 
         return (
-          <Form translate="yes">
+          <Form>
             {status && !disabled && (
               <NoticePanel
                 success={status.success}

@@ -1,7 +1,8 @@
-import { Form, Formik } from 'formik';
+import { Formik } from 'formik';
 import { ResizeVolumeSchema } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
 import { compose } from 'recompose';
+import Form from 'src/components/core/Form';
 import Notice from 'src/components/Notice';
 import withVolumesRequests, {
   VolumesRequests
@@ -84,7 +85,7 @@ const ResizeVolumeForm: React.FC<CombinedProps> = props => {
         } = formikProps;
 
         return (
-          <Form translate="yes">
+          <Form>
             {status && (
               <NoticePanel
                 success={status.success}

@@ -1,4 +1,4 @@
-import { Form, Formik } from 'formik';
+import { Formik } from 'formik';
 import { AccountSettings } from '@linode/api-v4/lib/account';
 import {
   CreateBucketSchema,
@@ -10,6 +10,7 @@ import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+import Form from 'src/components/core/Form';
 import {
   createStyles,
   Theme,
@@ -166,7 +167,7 @@ export const CreateBucketForm: React.FC<CombinedProps> = props => {
 
         return (
           <>
-            <Form translate="yes">
+            <Form>
               {/* `status` holds generalError messages */}
               {status && <Notice error>{status.generalError}</Notice>}
 

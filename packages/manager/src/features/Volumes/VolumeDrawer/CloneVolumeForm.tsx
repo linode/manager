@@ -1,7 +1,8 @@
-import { Form, Formik } from 'formik';
+import { Formik } from 'formik';
 import { CloneVolumeSchema } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
 import { compose } from 'recompose';
+import Form from 'src/components/core/Form';
 import Typography from 'src/components/core/Typography';
 import withVolumesRequests, {
   VolumesRequests
@@ -75,7 +76,7 @@ const CloneVolumeForm: React.FC<CombinedProps> = props => {
         values
       }) => {
         return (
-          <Form translate="yes">
+          <Form>
             <Typography variant="body2">{`The newly created volume will be an exact clone of ${volumeLabel}. It will have a size of ${volumeSize} GiB and be available in ${volumeRegion}.`}</Typography>
             {status && (
               <NoticePanel
