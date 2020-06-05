@@ -44,6 +44,8 @@ const options = [
   { value: 'fromAccountStackScript', label: 'From Account StackScript' }
 ];
 
+const passwordHelperText = 'Set a password for your rebuilt Linode.';
+
 const LinodeRebuild: React.FC<CombinedProps> = props => {
   const { classes, linodeLabel, permissions } = props;
   const disabled = permissions === 'read_only';
@@ -84,18 +86,18 @@ const LinodeRebuild: React.FC<CombinedProps> = props => {
         />
       </Paper>
       {mode === 'fromImage' && (
-        <RebuildFromImage passwordHelperText="Set a password for your rebuilt Linode." />
+        <RebuildFromImage passwordHelperText={passwordHelperText} />
       )}
       {mode === 'fromCommunityStackScript' && (
         <RebuildFromStackScript
           type="community"
-          passwordHelperText="Set a password for your rebuilt Linode."
+          passwordHelperText={passwordHelperText}
         />
       )}
       {mode === 'fromAccountStackScript' && (
         <RebuildFromStackScript
           type="account"
-          passwordHelperText="Set a password for your rebuilt Linode."
+          passwordHelperText={passwordHelperText}
         />
       )}
     </div>
