@@ -66,7 +66,7 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = props => {
           linode_id: linodeId,
           config_id: values.config_id
         })
-          .then(response => {
+          .then(_ => {
             onClose();
             resetEventsPolling();
           })
@@ -99,7 +99,7 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = props => {
         } = formikProps;
 
         return (
-          <Form>
+          <Form translate="yes">
             {status && !disabled && (
               <NoticePanel
                 success={status.success}
@@ -190,14 +190,8 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
   )
 });
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced = compose<CombinedProps, Props>(
-  connected,
-  withVolumesRequests
-);
+const enhanced = compose<CombinedProps, Props>(connected, withVolumesRequests);
 
 export default enhanced(AttachVolumeToLinodeForm);

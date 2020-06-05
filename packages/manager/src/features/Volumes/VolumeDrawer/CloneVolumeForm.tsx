@@ -44,7 +44,7 @@ const CloneVolumeForm: React.FC<CombinedProps> = props => {
       validationSchema={validationScheme}
       onSubmit={(values, { setSubmitting, setStatus, setErrors }) => {
         cloneVolume({ volumeId, label: values.label })
-          .then(response => {
+          .then(__webpack_require__ => {
             onClose();
             resetEventsPolling();
           })
@@ -75,7 +75,7 @@ const CloneVolumeForm: React.FC<CombinedProps> = props => {
         values
       }) => {
         return (
-          <Form>
+          <Form translate="yes">
             <Typography variant="body2">{`The newly created volume will be an exact clone of ${volumeLabel}. It will have a size of ${volumeSize} GiB and be available in ${volumeRegion}.`}</Typography>
             {status && (
               <NoticePanel

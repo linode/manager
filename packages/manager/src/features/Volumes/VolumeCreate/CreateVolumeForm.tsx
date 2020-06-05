@@ -116,7 +116,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
           tags: tags.map(v => v.value)
         })
           .then(({ filesystem_path, label: volumeLabel }) => {
-            resetForm(initialValues);
+            resetForm({ values: initialValues });
             setStatus({ success: `Volume scheduled for creation.` });
             setSubmitting(false);
             onSuccess(
@@ -191,7 +191,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
         }
 
         return (
-          <Form className={classes.form}>
+          <Form className={classes.form} translate="yes">
             {status && (
               <NoticePanel
                 success={status.success}

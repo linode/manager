@@ -60,7 +60,7 @@ const RenameVolumeForm: React.FC<CombinedProps> = props => {
           label,
           tags: tags.map(v => v.value)
         })
-          .then(response => {
+          .then(_ => {
             resetForm();
             updateVolumes$.next(true);
             onClose();
@@ -94,7 +94,7 @@ const RenameVolumeForm: React.FC<CombinedProps> = props => {
           values
         } = formikProps;
         return (
-          <Form>
+          <Form translate="yes">
             {status && (
               <NoticePanel
                 success={status.success}

@@ -106,7 +106,7 @@ export const CreateBucketForm: React.FC<CombinedProps> = props => {
           cluster
         })
           .then(({ label: bucketLabel }) => {
-            resetForm(initialValues);
+            resetForm({ values: initialValues });
             setSubmitting(false);
             onSuccess(bucketLabel);
 
@@ -166,7 +166,7 @@ export const CreateBucketForm: React.FC<CombinedProps> = props => {
 
         return (
           <>
-            <Form>
+            <Form translate="yes">
               {/* `status` holds generalError messages */}
               {status && <Notice error>{status.generalError}</Notice>}
 

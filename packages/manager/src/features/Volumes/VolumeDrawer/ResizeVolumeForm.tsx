@@ -50,8 +50,8 @@ const ResizeVolumeForm: React.FC<CombinedProps> = props => {
         setSubmitting(true);
 
         resizeVolume({ volumeId, size: Number(values.size) })
-          .then(response => {
-            resetForm(initialValues);
+          .then(_ => {
+            resetForm({ values: initialValues });
             setSubmitting(false);
             resetEventsPolling();
             onSuccess(volumeLabel, `Volume scheduled to be resized.`);
@@ -84,7 +84,7 @@ const ResizeVolumeForm: React.FC<CombinedProps> = props => {
         } = formikProps;
 
         return (
-          <Form>
+          <Form translate="yes">
             {status && (
               <NoticePanel
                 success={status.success}

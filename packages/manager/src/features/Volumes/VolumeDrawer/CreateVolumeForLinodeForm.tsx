@@ -160,7 +160,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
           : errors.region;
 
         return (
-          <Form>
+          <Form translate="yes">
             {generalError && <NoticePanel error={generalError} />}
             {status && <NoticePanel success={status.success} />}
             {disabled && (
