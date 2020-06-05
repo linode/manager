@@ -20,7 +20,6 @@ import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Placeholder from 'src/components/Placeholder';
 import { reportException } from 'src/exceptionReporting';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import AddonsPanel from '../AddonsPanel';
 import SelectBackupPanel from '../SelectBackupPanel';
 import SelectLinodePanel from '../SelectLinodePanel';
 import SelectPlanPanel from '../SelectPlanPanel';
@@ -201,14 +200,11 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       errors,
       imagesData,
       linodesData,
-      privateIPEnabled,
       selectedBackupID,
       selectedDiskSize,
       selectedLinodeID,
       selectedTypeID,
       setBackupID,
-      togglePrivateIPEnabled,
-      toggleBackupsEnabled,
       regionDisplayInfo,
       typeDisplayInfo,
       disabled,
@@ -217,7 +213,6 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       typesData,
       updateTypeID,
       updateTags,
-      backupsMonthlyPrice,
       backupsEnabled,
       updateLabel
     } = this.props;
