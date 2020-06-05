@@ -49,9 +49,11 @@ const makeDomainCreateReq = domain => {
   });
 };
 
-// / Use this method if you do not need to get the request detail
-// if linode is undefined, will create default test debian linode in us-east
-// / @param linode {label:'', tags:[],type:'',region:'',image:'',root_pass:''}
+/**
+ * Use this method if you do not need to get the request detail
+ * @param domain if undefined will use default
+ * @returns domain object
+ */
 export const createDomain = (domain = undefined) => {
   return makeDomainCreateReq(domain).then(resp => {
     apiCheckErrors(resp);
