@@ -15,9 +15,7 @@ import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
-import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import { getErrorMap } from 'src/utilities/errorUtils';
-import SelectPlanPanel from '../SelectPlanPanel';
 import { renderBackupsDisplaySection } from './utils';
 
 import { filterImagesByType } from 'src/store/image/image.helpers';
@@ -34,15 +32,17 @@ type ClassNames = 'root' | 'main' | 'sidebarPrivate' | 'sidebarPublic';
 const styles = (theme: Theme) =>
   createStyles({
     root: {},
-    main: {},
+    main: {
+      [theme.breakpoints.up('md')]: {
+        maxWidth: '100%'
+      }
+    },
     sidebarPrivate: {
-      background: 'red',
       [theme.breakpoints.up('md')]: {
         marginTop: '-130px !important'
       }
     },
     sidebarPublic: {
-      background: 'red',
       [theme.breakpoints.up('md')]: {
         marginTop: '0 !important'
       }
@@ -208,34 +208,9 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
               disabled={userCannotCreateLinode}
               data-qa-select-image-panel
             />
-            <SelectRegionPanel
-              error={hasErrorFor.region}
-              regions={regions}
-              data-qa-select-region-panel
-              handleSelection={this.props.updateRegionID}
-              selectedID={this.props.selectedRegionID}
-              copy="Determine the best location for your Linode."
-              updateFor={[this.props.selectedRegionID, regions, errors]}
-              disabled={userCannotCreateLinode}
-              helperText={this.props.regionHelperText}
-            />
-            <SelectPlanPanel
-              error={hasErrorFor.type}
-              types={types}
-              data-qa-select-plan-panel
-              onSelect={this.props.updateTypeID}
-              selectedID={this.props.selectedTypeID}
-              updateFor={[
-                this.props.selectedTypeID,
-                this.props.disabledClasses,
-                errors
-              ]}
-              disabled={userCannotCreateLinode}
-              disabledClasses={this.props.disabledClasses}
-            />
           </form>
         </Grid>
-        <Grid
+        {/* <Grid
           item
           className={
             'mlSidebar ' +
@@ -254,7 +229,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
           >
             <DisplaySectionList displaySections={displaySections} />
           </CheckoutBar>
-        </Grid>
+        </Grid> */}
       </React.Fragment>
     );
   }

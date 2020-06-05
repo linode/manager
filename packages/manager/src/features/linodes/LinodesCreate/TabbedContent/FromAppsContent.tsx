@@ -319,7 +319,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
               </Typography>
             </Paper>
           )}
-          <SelectRegionPanel
+          {/* <SelectRegionPanel
             error={hasErrorFor('region')}
             regions={regionsData}
             handleSelection={updateRegionID}
@@ -333,13 +333,13 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
             error={hasErrorFor('type')}
             types={typesData}
             onSelect={updateTypeID}
-            updateFor={[selectedTypeID, errors]}
+            updateFor={[selectedTypeID, errors]} <-- @todo ask
             selectedID={selectedTypeID}
             disabled={userCannotCreateLinode}
             disabledClasses={this.props.disabledClasses}
-          />
+          /> */}
         </Grid>
-        <Grid item className={`${classes.sidebar} mlSidebar`}>
+        {/* <Grid item className={`${classes.sidebar} mlSidebar`}>
           <CheckoutBar
             heading="Linode Summary"
             calculatedPrice={calculatedPrice}
@@ -357,7 +357,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
           open={this.state.detailDrawerOpen}
           stackscriptID={this.state.selectedScriptForDrawer}
           onClose={this.closeDrawer}
-        />
+        /> */}
       </React.Fragment>
     );
   }

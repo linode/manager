@@ -1,11 +1,19 @@
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
+import { compose as recompose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
+import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import { WithImages } from 'src/containers/withImages.container';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts
@@ -19,6 +27,7 @@ import { getErrorMap } from 'src/utilities/errorUtils';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import { safeGetTabRender } from 'src/utilities/safeGetTabRender';
 import AddonsPanel from './AddonsPanel';
+import SelectPlanPanel from './SelectPlanPanel';
 import FromAppsContent from './TabbedContent/FromAppsContent';
 import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
@@ -35,6 +44,18 @@ import {
 } from './types';
 import TabbedPanel, { Tab } from 'src/components/TabbedPanel';
 
+type ClassNames = 'root';
+
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      backgroundColor: '#F4F4F4',
+
+      '& > :first-child': {
+        padding: 0
+      }
+    }
+  });
 interface Props {
   history: any;
   createType: CreateTypes;
@@ -52,6 +73,7 @@ const errorMap = [
 ];
 
 type CombinedProps = Props &
+  WithStyles<ClassNames> &
   WithImages &
   WithLinodesProps &
   WithRegionsProps &
@@ -152,17 +174,15 @@ export class LinodeCreate extends React.PureComponent<
           ...rest
         } = this.props;
         return (
-          <React.Fragment>
-            <FromImageContent
-              variant="public"
-              imagePanelTitle="Choose a Distribution"
-              showGeneralError={true}
-              imagesData={imagesData!}
-              regionsData={regionsData!}
-              typesData={typesData!}
-              {...rest}
-            />
-          </React.Fragment>
+          <FromImageContent
+            variant="public"
+            imagePanelTitle="Choose a Distribution"
+            showGeneralError={true}
+            imagesData={imagesData!}
+            regionsData={regionsData!}
+            typesData={typesData!}
+            {...rest}
+          />
         );
       }
     },
@@ -171,6 +191,22 @@ export class LinodeCreate extends React.PureComponent<
       // type: 'fromApp',
       // name: 'parent-one-click',
       render: () => {
+        const {
+          setTab,
+          linodesData,
+          linodesError,
+          linodesLoading,
+          typesData,
+          typesError,
+          typesLoading,
+          regionsData,
+          regionsError,
+          regionsLoading,
+          imagesData,
+          imagesError,
+          imagesLoading,
+          ...rest
+        } = this.props;
         return (
           // <SubTabs
           //   history={this.props.history}
@@ -180,7 +216,12 @@ export class LinodeCreate extends React.PureComponent<
           //   handleClick={this.props.setTab}
           //   errors={this.props.errors}
           // />
-          <div>test</div>
+          <FromAppsContent
+            imagesData={imagesData!}
+            regionsData={regionsData!}
+            typesData={typesData!}
+            {...rest}
+          />
         );
       }
     },
@@ -485,6 +526,7 @@ export class LinodeCreate extends React.PureComponent<
     const { selectedTab } = this.state;
 
     const {
+      classes,
       regionsLoading,
       imagesLoading,
       linodesLoading,
@@ -493,6 +535,8 @@ export class LinodeCreate extends React.PureComponent<
       linodesError,
       typesError,
       typesLoading,
+      regionsData,
+      typesData,
       label,
       updateLabel,
       tags,
@@ -552,7 +596,29 @@ export class LinodeCreate extends React.PureComponent<
               ))}
             </Tabs>
           </AppBar> */}
-          <TabbedPanel header={''} tabs={this.tabs} />
+          <TabbedPanel header={''} tabs={this.tabs} rootClass={classes.root} />
+          <SelectRegionPanel
+            error={hasErrorFor.region}
+            regions={regionsData!}
+            handleSelection={this.props.updateRegionID}
+            selectedID={this.props.selectedRegionID}
+            copy="Determine the best location for your Linode."
+            updateFor={[this.props.selectedRegionID, regionsData, errors]}
+            disabled={userCannotCreateLinode}
+          />
+          <SelectPlanPanel
+            error={hasErrorFor.type}
+            types={typesData!}
+            onSelect={this.props.updateTypeID}
+            selectedID={this.props.selectedTypeID}
+            updateFor={[
+              this.props.selectedTypeID,
+              this.props.disabledClasses,
+              errors
+            ]}
+            disabled={userCannotCreateLinode}
+            disabledClasses={this.props.disabledClasses}
+          />
           <LabelAndTagsPanel
             labelFieldProps={{
               label: 'Linode Label',
@@ -607,26 +673,7 @@ export class LinodeCreate extends React.PureComponent<
             hidePrivateIP={this.props.createType === 'fromLinode'}
           />
         </Grid>
-        <Grid
-          item
-          className={
-            'mlSidebar ' +
-            (variant === 'private'
-              ? classes.sidebarPrivate
-              : classes.sidebarPublic)
-          }
-        >
-          <CheckoutBar
-            data-qa-checkout-bar
-            heading="Linode Summary"
-            calculatedPrice={calculatedPrice}
-            isMakingRequest={this.props.formIsSubmitting}
-            disabled={this.props.formIsSubmitting || userCannotCreateLinode}
-            onDeploy={this.createLinode}
-          >
-            <DisplaySectionList displaySections={displaySections} />
-          </CheckoutBar>
-        </Grid>
+        <Grid item>test</Grid>
         {/* {tabRender()} */}
       </React.Fragment>
     );
@@ -644,6 +691,10 @@ const mapDispatchToProps: MapDispatchToProps<
   setTab: value => dispatch(handleChangeCreateType(value))
 });
 
+const styled = withStyles(styles);
+
 const connected = connect(undefined, mapDispatchToProps);
 
-export default connected(LinodeCreate);
+const enhanced = recompose<CombinedProps, {}>(connected, styled);
+
+export default enhanced(LinodeCreate);
