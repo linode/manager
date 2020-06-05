@@ -44,7 +44,7 @@ const CloneVolumeForm: React.FC<CombinedProps> = props => {
       validationSchema={validationScheme}
       onSubmit={(values, { setSubmitting, setStatus, setErrors }) => {
         cloneVolume({ volumeId, label: values.label })
-          .then(__webpack_require__ => {
+          .then(_ => {
             onClose();
             resetEventsPolling();
           })
