@@ -7,9 +7,8 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
+import Notice from 'src/components/Notice';
 
-import * as classNames from 'classnames';
-import CautionIcon from 'src/assets/icons/caution.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -24,14 +23,11 @@ export type Action = 'Reboot' | 'Power Off' | 'Power On';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1)
-  },
-  icon: {
-    marginTop: theme.spacing(0.5),
-    marginRight: theme.spacing(0.5),
-    float: 'left',
-    verticalAlign: 'middle'
+    marginTop: theme.spacing(1.25),
+    marginBottom: theme.spacing(1.25),
+    display: 'flex',
+    alignItems: 'center',
+    lineHeight: '1.25rem'
   }
 }));
 
@@ -158,21 +154,19 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = props => {
       <Typography className={classes.root}>
         Are you sure you want to {props.action.toLowerCase()} your Linode?
       </Typography>
-      <Typography className={classes.icon}>
-        <CautionIcon
-          width={25}
-          height={25}
-          className={classNames({
-            [classes.icon]: true
-          })}
-        />
-        <strong>Warning:</strong> Powered down Linodes will still accrue
-        charges. See the&nbsp;
-        <ExternalLink
-          link="https://www.linode.com/docs/platform/billing-and-support/how-linode-billing-works/#if-my-linode-is-powered-off-will-i-be-billed"
-          text="Billing and Payments documentation"
-        />
-        &nbsp;for more information.
+      <Typography className={classes.root}>
+        <span>
+          <Notice warning important>
+            <strong>Warning: </strong>
+            Powered down Linodes will still accrue charges. See the
+            <ExternalLink
+              link="https://www.linode.com/docs/platform/billing-and-support/how-linode-billing-works/#if-my-linode-is-powered-off-will-i-be-billed"
+              text="Billing and Payments documentation"
+              hideIcon
+            />
+            &nbsp;for more information.
+          </Notice>
+        </span>
       </Typography>
     </Dialog>
   );
