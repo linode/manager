@@ -16,6 +16,9 @@ import {
 } from 'src/components/DocumentTitle';
 
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
+import withFeatureFlagConsumer, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container';
 import { events$ } from 'src/events';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 
@@ -24,6 +27,7 @@ import { MapState } from './store/types';
 
 import IdentifyUser from './IdentifyUser';
 import MainContent from './MainContent';
+import MainContent_CMR from './MainContent_CMR';
 
 interface Props {
   toggleTheme: () => void;
@@ -42,7 +46,8 @@ interface State {
 type CombinedProps = Props &
   StateProps &
   RouteComponentProps &
-  WithSnackbarProps;
+  WithSnackbarProps &
+  FeatureFlagConsumerProps;
 
 export class App extends React.Component<CombinedProps, State> {
   composeState = composeState;
@@ -181,18 +186,33 @@ export class App extends React.Component<CombinedProps, State> {
           euuid={this.props.euuid}
         />
         <DocumentTitleSegment segment="Linode Manager" />
-        <MainContent
-          accountCapabilities={accountCapabilities}
-          accountError={accountError}
-          accountLoading={accountLoading}
-          history={this.props.history}
-          location={this.props.location}
-          toggleSpacing={toggleSpacing}
-          toggleTheme={toggleTheme}
-          appIsLoading={this.props.appIsLoading}
-          isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
-          username={username}
-        />
+        {this.props.flags.cmr ? (
+          <MainContent_CMR
+            accountCapabilities={accountCapabilities}
+            accountError={accountError}
+            accountLoading={accountLoading}
+            history={this.props.history}
+            location={this.props.location}
+            toggleSpacing={toggleSpacing}
+            toggleTheme={toggleTheme}
+            appIsLoading={this.props.appIsLoading}
+            isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
+            username={username}
+          />
+        ) : (
+          <MainContent
+            accountCapabilities={accountCapabilities}
+            accountError={accountError}
+            accountLoading={accountLoading}
+            history={this.props.history}
+            location={this.props.location}
+            toggleSpacing={toggleSpacing}
+            toggleTheme={toggleTheme}
+            appIsLoading={this.props.appIsLoading}
+            isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
+            username={username}
+          />
+        )}
       </React.Fragment>
     );
   }
@@ -278,7 +298,8 @@ export default compose(
   connected,
   withDocumentTitleProvider,
   withSnackbar,
-  withFeatureFlagProvider
+  withFeatureFlagProvider,
+  withFeatureFlagConsumer
 )(App);
 
 export const hasOauthError = (...args: (Error | APIError[] | undefined)[]) => {
