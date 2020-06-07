@@ -15,6 +15,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
+import ExternalLink from 'src/components/ExternalLink';
 
 import { resetEventsPolling } from 'src/eventsPolling';
 import LinodeConfigDrawer from 'src/features/LinodeConfigSelectionDrawer';
@@ -157,7 +158,7 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = props => {
       <Typography className={classes.root}>
         Are you sure you want to {props.action.toLowerCase()} your Linode?
       </Typography>
-      <Typography className={classes.root}>
+      <Typography className={classes.icon}>
         <CautionIcon
           width={25}
           height={25}
@@ -167,15 +168,10 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = props => {
         />
         <strong>Warning:</strong> Powered down Linodes will still accrue
         charges. See the&nbsp;
-        <a
-          href="https://www.linode.com/docs/platform/billing-and-support/how-linode-billing-works/#if-my-linode-is-powered-off-will-i-be-billed"
-          target="_blank"
-          aria-describedby="external-site"
-          rel="noopener noreferrer"
-          className="h-u"
-        >
-          Billing and Payments documentation
-        </a>
+        <ExternalLink
+          link="https://www.linode.com/docs/platform/billing-and-support/how-linode-billing-works/#if-my-linode-is-powered-off-will-i-be-billed"
+          text="Billing and Payments documentation"
+        />
         &nbsp;for more information.
       </Typography>
     </Dialog>
