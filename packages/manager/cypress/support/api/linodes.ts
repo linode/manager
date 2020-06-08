@@ -79,9 +79,11 @@ const makeLinodeCreateReq = linode => {
   });
 };
 
-// / Use this method if you do not need to get the request detail
-// if linode is undefined, will create default test debian linode in us-east
-// / @param linode {label:'', tags:[],type:'',region:'',image:'',root_pass:''}
+/**
+ *  Use this method if you do not need to get the request detail
+ * if linode is undefined, will create default test debian linode in us-east
+ * @param linode {label:'', tags:[],type:'',region:'',image:'',root_pass:''}
+ */
 export const createLinode = (linode = undefined) => {
   return makeLinodeCreateReq(linode).then(resp => {
     apiCheckErrors(resp);
@@ -92,7 +94,7 @@ export const createLinode = (linode = undefined) => {
 
 export const getLinodes = () => getAll('linode/instances');
 
-export const deleteLinodeById = linodeId =>
+export const deleteLinodeById = (linodeId: number) =>
   deleteById('linode/instances', linodeId);
 
 export const deleteLinodeByLabel = (label = undefined) => {

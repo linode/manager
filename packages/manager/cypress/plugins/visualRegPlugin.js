@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const Jimp = require('jimp');
 function compareSnapshotsPlugin(args) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, _reject) => {
     /* eslint-disable func-names */
     const expectedImage = path.resolve(args.expectedImage);
     const actualImage = path.resolve(args.actualImage);

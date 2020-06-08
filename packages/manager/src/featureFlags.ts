@@ -17,6 +17,7 @@ interface Flags {
   oneClickApps: OneClickApp;
   promotionalOffers: PromotionalOffer[];
   thirdPartyAuth: boolean;
+  cmr: boolean;
   mainContentBanner: MainContentBanner;
 }
 
