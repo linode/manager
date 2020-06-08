@@ -13,7 +13,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Kubernetes from 'src/assets/addnewmenu/kubernetes.svg';
 import OCA from 'src/assets/addnewmenu/oneclick.svg';
-import Account from 'src/assets/icons/account.svg';
+import Community from 'src/assets/community.svg';
 import Dashboard from 'src/assets/icons/dashboard.svg';
 import Storage from 'src/assets/icons/entityIcons/bucket.svg';
 import Domain from 'src/assets/icons/entityIcons/domain.svg';
@@ -26,17 +26,17 @@ import Volume from 'src/assets/icons/entityIcons/volume.svg';
 import Longview from 'src/assets/icons/longview.svg';
 import Managed from 'src/assets/icons/managednav.svg';
 import Logo from 'src/assets/logo/new-logo.svg';
+import Help from 'src/assets/primary-nav-help.svg';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
-import Hidden from 'src/components/core/Hidden';
 import IconButton from 'src/components/core/IconButton';
 import ListItemText from 'src/components/core/ListItemText';
 import Menu from 'src/components/core/Menu';
+import UserMenu from 'src/features/TopMenu/UserMenu/UserMenu';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useDomains from 'src/hooks/useDomains';
 import useFlags from 'src/hooks/useFlags';
 import usePrefetch from 'src/hooks/usePreFetch';
-import AdditionalMenuItems from './AdditionalMenuItems';
 import usePrimaryNavStyles from './PrimaryNav_CMR.styles';
 import SpacingToggle from './SpacingToggle';
 import ThemeToggle from './ThemeToggle';
@@ -55,7 +55,9 @@ type NavEntity =
   | 'Firewalls'
   | 'Account'
   | 'Dashboard'
-  | 'StackScripts';
+  | 'StackScripts'
+  | 'Help & Support'
+  | 'Community';
 
 type NavGroup =
   | 'Compute'
@@ -216,22 +218,6 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
             icon: <OCA />
           }
         ]
-      },
-      {
-        group: 'None',
-        links: [
-          {
-            display: 'Account',
-            href: '/account/billing',
-            icon: <Account className="small" />,
-            activeLinks: [
-              '/account/billing',
-              '/account/users',
-              '/account/settings'
-            ],
-            hide: account.lastUpdated === 0 || !_hasAccountAccess
-          }
-        ]
       }
     ],
     [
@@ -312,54 +298,26 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
           );
         })}
 
-        {/** menu items under the main navigation links */}
-        <AdditionalMenuItems
-          linkClasses={() =>
-            classNames({
-              [classes.listItem]: true
-            })
-          }
-          listItemClasses={classNames({
-            [classes.linkItem]: true
-          })}
+        <Divider orientation="vertical" className={classes.verticalDivider} />
+
+        <PrimaryNavLink
+          key="Help & Support"
+          href={'/support'}
+          icon={Help}
+          display="Help & Support"
           closeMenu={closeMenu}
-          dividerClasses={classes.divider}
           isCollapsed={isCollapsed}
         />
 
-        <Hidden mdUp>
-          <Divider className={classes.divider} />
-          <Link
-            to="/profile/display"
-            onClick={closeMenu}
-            data-qa-nav-item="/profile/display"
-            className={classes.listItem}
-          >
-            <ListItemText
-              primary="My Profile"
-              disableTypography={true}
-              className={classNames({
-                [classes.linkItem]: true
-              })}
-            />
-          </Link>
-          <Link
-            to="/logout"
-            onClick={closeMenu}
-            data-qa-nav-item="/logout"
-            className={classNames({
-              [classes.listItem]: true
-            })}
-          >
-            <ListItemText
-              primary="Log Out"
-              disableTypography={true}
-              className={classNames({
-                [classes.linkItem]: true
-              })}
-            />
-          </Link>
-        </Hidden>
+        <PrimaryNavLink
+          key="Community"
+          href="https://www.linode.com/community"
+          display="Community"
+          icon={Community}
+          closeMenu={closeMenu}
+          isCollapsed={isCollapsed}
+        />
+
         <IconButton
           onClick={(event: React.MouseEvent<HTMLElement>) => {
             setAnchorEl(event.currentTarget);
@@ -373,6 +331,8 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
         >
           <Settings />
         </IconButton>
+
+        <UserMenu />
         <Menu
           id="settings-menu"
           anchorEl={anchorEl}
@@ -510,31 +470,29 @@ const PrimaryNavLink: React.FC<PrimaryNavLink> = React.memo(props => {
 
   const { isCollapsed, closeMenu, href, onClick, attr, icon, display } = props;
 
+  // @todo: handle external link
   return (
-    <>
-      <Link
-        to={href}
-        onClick={(e: React.ChangeEvent<any>) => {
-          closeMenu();
-          if (onClick) {
-            onClick(e);
-          }
-        }}
-        {...handlers}
-        {...attr}
-        className={classes.listItem}
-      >
-        {icon && isCollapsed && <div className="icon">{icon}</div>}
-        <ListItemText
-          primary={display}
-          disableTypography={true}
-          className={classNames({
-            [classes.linkItem]: true,
-            primaryNavLink: true
-          })}
-        />
-      </Link>
-      <Divider className={classes.divider} />
-    </>
+    <Link
+      to={href}
+      onClick={(e: React.ChangeEvent<any>) => {
+        closeMenu();
+        if (onClick) {
+          onClick(e);
+        }
+      }}
+      {...handlers}
+      {...attr}
+      className={classes.listItem}
+    >
+      {icon && isCollapsed && <div className="icon">{icon}</div>}
+      <ListItemText
+        primary={display}
+        disableTypography={true}
+        className={classNames({
+          [classes.linkItem]: true,
+          primaryNavLink: true
+        })}
+      />
+    </Link>
   );
 });

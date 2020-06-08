@@ -67,6 +67,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   divider: {
     backgroundColor: 'rgba(0, 0, 0, 0.12)'
   },
+  verticalDivider: {
+    backgroundColor: '#5c6470',
+    height: 30,
+    width: 1
+  },
   settings: {
     alignItems: 'center',
     justifyContent: 'center',
