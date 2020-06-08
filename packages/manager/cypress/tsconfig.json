@@ -4,6 +4,7 @@
       "checkJs": false,
       "strict": true,
       "skipLibCheck": true,
+      "noImplicitAny": false,
       "target": "es5",
       "lib": ["es5", "dom"],
       "baseUrl": "../../../node_modules",
