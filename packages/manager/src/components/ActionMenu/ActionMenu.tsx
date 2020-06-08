@@ -1,5 +1,4 @@
 import * as classNames from 'classnames';
-import HelpOutline from '@material-ui/icons/HelpOutline';
 import MoreHoriz from '@material-ui/icons/MoreHoriz';
 import {
   Menu,
@@ -10,7 +9,7 @@ import {
 } from '@reach/menu-button';
 import '@reach/menu-button/styles.css';
 import * as React from 'react';
-import IconButton from 'src/components/core/IconButton';
+import HelpIcon from 'src/components/HelpIcon';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
 export interface Action {
@@ -82,7 +81,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&[data-reach-menu-item]': {
       color: '#93bcec',
       cursor: 'auto'
+    },
+    '&[data-reach-menu-item][data-selected]': {
+      background: '#3683dc'
     }
+  },
+  tooltip: {
+    color: '#fff',
+    padding: '0 12px'
   }
 }));
 
@@ -134,19 +140,17 @@ const ActionMenu: React.FC<CombinedProps> = props => {
                 })}
                 onClick={a.onClick}
                 data-qa-action-menu-item={a.title}
-                // disabled={a.disabled}
+                disabled={a.disabled}
               >
                 {a.title}
                 {a.tooltip && (
-                  <IconButton
-                    // className={classes.helpButton}
-                    // onClick={handleClick}
+                  <HelpIcon
                     data-qa-tooltip-icon
-                  >
-                    <HelpOutline />
-                  </IconButton>
+                    text={a.tooltip}
+                    tooltipPosition="right"
+                    className={classes.tooltip}
+                  />
                 )}
-                {/* {a.tooltip && <span data-qa-tooltip>{a.tooltip}</span>} */}
               </MenuLink>
             ))}
           </MenuItems>
