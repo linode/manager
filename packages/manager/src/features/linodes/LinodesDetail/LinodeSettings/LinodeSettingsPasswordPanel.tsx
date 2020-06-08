@@ -230,7 +230,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
           <React.Suspense fallback={<SuspenseLoader />}>
             <PasswordInput
               autoComplete="new-password"
-              label="Password"
+              label="New Root Password"
               value={this.state.value}
               onChange={this.handlePasswordChange}
               errorText={passwordError}
