@@ -71,6 +71,7 @@ interface State {
   isSubmitting: boolean;
   errors?: APIError[];
   dialogOpen: boolean;
+  apiResponse?: StackScript;
 }
 
 interface Props {
@@ -133,7 +134,8 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
               description: response.description,
               images: response.images,
               revisionNote: response.rev_note,
-              script: response.script
+              script: response.script,
+              apiResponse: response // Saved for use when resetting the form
             });
           }
         })
@@ -176,6 +178,8 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       }
     } = this.props;
 
+    // Use the euuid if we're creating to avoid loading another user's data
+    // (if an expired token has left stale values in local storage)
     const id = mode === 'create' ? euuid : +stackScriptID;
 
     storage.stackScriptInProgress.set({
@@ -224,16 +228,16 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 
   resetAllFields = () => {
     this.handleCloseDialog();
-    this.setState(
-      {
-        script: '',
-        label: '',
-        images: [],
-        description: '',
-        revisionNote: ''
-      },
-      this.saveStateToLocalStorage
-    );
+    this.setState((prevState: State) => {
+      const scriptFromAPI = prevState.apiResponse ?? ({} as StackScript);
+      return {
+        script: scriptFromAPI.script ?? '',
+        label: scriptFromAPI.label ?? '',
+        images: scriptFromAPI.images ?? [],
+        description: scriptFromAPI.description ?? '',
+        revisionNote: scriptFromAPI.rev_note ?? ''
+      };
+    }, this.saveStateToLocalStorage);
   };
 
   handleError = (errors: APIError[]) => {
