@@ -5,6 +5,7 @@ import { LAUNCH_DARKLY_API_KEY } from 'src/constants';
 import { useLDClient } from 'src/containers/withFeatureFlagProvider.container';
 import { initGTMUser } from './analytics';
 import { configureErrorReportingUser } from './exceptionReporting';
+import useFeatureFlagsLoad from './hooks/useFeatureFlagLoad';
 
 interface Props {
   accountCountry?: string;
@@ -12,7 +13,6 @@ interface Props {
   userID?: number;
   username?: string;
   taxID?: string;
-  setFlagsLoaded: () => void;
   euuid?: string;
 }
 
@@ -25,7 +25,6 @@ interface Props {
 
 export const IdentifyUser: React.FC<Props> = props => {
   const {
-    setFlagsLoaded,
     userID,
     accountCountry,
     accountError,
@@ -34,6 +33,8 @@ export const IdentifyUser: React.FC<Props> = props => {
     euuid
   } = props;
   const client = useLDClient();
+
+  const { setFeatureFlagsLoaded } = useFeatureFlagsLoad();
 
   // Configure user for error reporting once we have the info we need.
   React.useEffect(() => {
@@ -57,7 +58,7 @@ export const IdentifyUser: React.FC<Props> = props => {
        * our loading state and move on - we'll render the app
        * without any context of feature flags.
        */
-      setFlagsLoaded();
+      setFeatureFlagsLoaded();
     } else {
       /**
        * returns unknown if:
@@ -86,13 +87,13 @@ export const IdentifyUser: React.FC<Props> = props => {
               taxID: _taxID
             }
           })
-          .then(() => setFlagsLoaded())
+          .then(() => setFeatureFlagsLoaded())
           /**
            * We could handle this in other ways, but for now don't let a
            * LD bung-up block the app from loading.
            */
 
-          .catch(() => setFlagsLoaded());
+          .catch(() => setFeatureFlagsLoaded());
       }
     }
   }, [client, userID, accountCountry, username, taxID]);
