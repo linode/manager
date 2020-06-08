@@ -198,7 +198,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
           id={`tabpanel-${determineIDName}`}
           aria-labelledby={`tab-${determineIDName}`}
         >
-          <form>
+          <form autoComplete="off">
             {hasErrorFor.none && !!showGeneralError && (
               <Notice error spacingTop={8} text={hasErrorFor.none} />
             )}
@@ -266,11 +266,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
               }
               error={hasErrorFor.root_pass}
               sshKeyError={sshError}
-              password={
-                hasErrorFor.none?.match(/support ticket/i) // If the user receives an error instructing them to open a support ticket, clear the password field
-                  ? ''
-                  : this.props.password
-              }
+              password={this.props.password}
               handleChange={this.props.updatePassword}
               updateFor={[
                 this.props.password,
