@@ -1,5 +1,8 @@
 import { Image } from '@linode/api-v4/lib/images';
-import { createStackScript, StackScript } from '@linode/api-v4/lib/stackscripts';
+import {
+  createStackScript,
+  StackScript
+} from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
 import { path } from 'ramda';
 import * as React from 'react';
@@ -33,6 +36,8 @@ import ScriptForm from 'src/features/StackScripts/StackScriptForm';
 import { MapState } from 'src/store/types';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { storage } from 'src/utilities/storage';
+import { debounce } from 'throttle-debounce';
 
 import { filterImagesByType } from 'src/store/image/image.helpers';
 
@@ -54,9 +59,9 @@ const styles = (theme: Theme) =>
   });
 
 interface State {
-  labelText: string;
-  descriptionText: string;
-  selectedImages: string[];
+  label: string;
+  description: string;
+  images: string[];
   script: string;
   revisionNote: string;
   isSubmitting: boolean;
@@ -78,9 +83,9 @@ const errorResources = {
 
 export class StackScriptCreate extends React.Component<CombinedProps, State> {
   state: State = {
-    labelText: '',
-    descriptionText: '',
-    selectedImages: [],
+    label: '',
+    description: '',
+    images: [],
     /* available images to select from in the dropdown */
     script: '',
     revisionNote: '',
@@ -94,62 +99,95 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
+    const valuesFromStorage = storage.stackScriptInProgress.get();
+    this.setState({
+      label: valuesFromStorage.label ?? '',
+      description: valuesFromStorage.description ?? '',
+      images: valuesFromStorage.images ?? [],
+      script: valuesFromStorage.script ?? '',
+      revisionNote: valuesFromStorage.rev_note ?? ''
+    });
   }
 
   componentWillUnmount() {
     this.mounted = false;
   }
 
+  _saveStateToLocalStorage = () => {
+    const {
+      label,
+      description,
+      script,
+      images,
+      revisionNote: rev_note
+    } = this.state;
+    storage.stackScriptInProgress.set({
+      label,
+      description,
+      script,
+      images,
+      rev_note
+    });
+  };
+
+  saveStateToLocalStorage = debounce(1000, this._saveStateToLocalStorage);
+
   handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ labelText: e.target.value });
+    this.setState({ label: e.target.value }, this.saveStateToLocalStorage);
   };
 
   handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ descriptionText: e.target.value });
+    this.setState(
+      { description: e.target.value },
+      this.saveStateToLocalStorage
+    );
   };
 
   handleChooseImage = (images: Item<string>[]) => {
     const imageList = images.map(image => image.value);
-    this.setState({
-      selectedImages: imageList
-    });
+    this.setState(
+      {
+        images: imageList
+      },
+      this.saveStateToLocalStorage
+    );
   };
 
   handleChangeScript = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ script: e.target.value });
+    this.setState({ script: e.target.value }, this.saveStateToLocalStorage);
   };
 
   handleChangeRevisionNote = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ revisionNote: e.target.value });
+    this.setState(
+      { revisionNote: e.target.value },
+      this.saveStateToLocalStorage
+    );
   };
 
   resetAllFields = () => {
     this.handleCloseDialog();
-    this.setState({
-      script: '',
-      labelText: '',
-      selectedImages: [],
-      descriptionText: '',
-      revisionNote: ''
-    });
+    this.setState(
+      {
+        script: '',
+        label: '',
+        images: [],
+        description: '',
+        revisionNote: ''
+      },
+      this.saveStateToLocalStorage
+    );
   };
 
   handleCreateStackScript = () => {
-    const {
-      script,
-      labelText,
-      selectedImages,
-      descriptionText,
-      revisionNote
-    } = this.state;
+    const { script, label, images, description, revisionNote } = this.state;
 
     const { history } = this.props;
 
     const payload = {
       script,
-      label: labelText,
-      images: selectedImages,
-      description: descriptionText,
+      label,
+      images,
+      description,
       is_public: false,
       rev_note: revisionNote
     };
@@ -166,6 +204,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           return;
         }
         this.setState({ isSubmitting: false });
+        this.resetAllFields();
         history.push('/stackscripts?type=account', {
           successMessage: `${stackScript.label} successfully created`
         });
@@ -243,10 +282,10 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       imagesData
     } = this.props;
     const {
-      selectedImages,
+      images,
       script,
-      labelText,
-      descriptionText,
+      label,
+      description,
       revisionNote,
       errors,
       isSubmitting
@@ -255,7 +294,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     const generalError = hasErrorFor('none');
 
     const availableImages = Object.keys(imagesData).reduce((acc, eachKey) => {
-      if (!this.state.selectedImages.includes(eachKey)) {
+      if (!this.state.images.includes(eachKey)) {
         acc[eachKey] = imagesData[eachKey];
       }
       return acc;
@@ -301,14 +340,14 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           disabled={userCannotCreateStackScripts}
           images={{
             available: availableImages,
-            selected: selectedImages
+            selected: images
           }}
           label={{
-            value: labelText,
+            value: label,
             handler: this.handleLabelChange
           }}
           description={{
-            value: descriptionText,
+            value: description,
             handler: this.handleDescriptionChange
           }}
           revision={{

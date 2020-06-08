@@ -379,7 +379,11 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
           </Paper>
         </div>
       </Grid>
-      <Grid item className={`${classes.sidebar} mlSidebar`}>
+      <Grid
+        item
+        className={`${classes.sidebar} mlSidebar`}
+        data-testid="kube-checkout-bar"
+      >
         <KubeCheckoutBar
           pools={nodePools}
           createCluster={createCluster}
