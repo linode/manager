@@ -1,8 +1,13 @@
 import * as React from 'react';
+import Close from '@material-ui/icons/Close';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/core/Grid';
 import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
+import withPreferences, {
+  Props as PreferencesProps
+} from 'src/containers/preferences.container';
+import { compose } from 'recompose';
 
 const useStyles = makeStyles((theme: Theme) => ({
   bannerOuter: {
@@ -10,7 +15,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(2),
     position: 'sticky',
     top: 0,
-    zIndex: 1110
+    zIndex: 1110,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   header: {
     color: '#fff',
@@ -19,6 +27,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   link: {
     color: '#fff',
     textDecoration: 'underline'
+  },
+  closeIcon: {
+    position: 'absolute',
+    right: 4,
+    cursor: 'pointer',
+    border: 'none',
+    color: theme.palette.text.primary,
+    backgroundColor: 'transparent'
   }
 }));
 
@@ -26,12 +42,34 @@ interface Props {
   bannerText: string;
   url: string;
   linkText: string;
+  bannerKey: string;
 }
 
-const MainContentBanner: React.FC<Props> = props => {
-  const { bannerText, url, linkText } = props;
+type CombinedProps = Props & PreferencesProps;
+
+const MainContentBanner: React.FC<CombinedProps> = props => {
+  const {
+    bannerText,
+    url,
+    linkText,
+    bannerKey,
+    getUserPreferences,
+    updateUserPreferences
+  } = props;
 
   const classes = useStyles();
+
+  const dismiss = () => {
+    getUserPreferences().then(preferences => {
+      updateUserPreferences({
+        ...preferences,
+        mainContentBannerDismissal: {
+          ...preferences.mainContentBannerDismissal,
+          [bannerKey]: true
+        }
+      });
+    });
+  };
 
   return (
     <Grid className={classes.bannerOuter} item xs={12}>
@@ -43,8 +81,13 @@ const MainContentBanner: React.FC<Props> = props => {
           </Link>
         )}
       </Typography>
+      <button className={classes.closeIcon} onClick={dismiss}>
+        <Close />
+      </button>
     </Grid>
   );
 };
 
-export default React.memo(MainContentBanner);
+const enhanced = compose<CombinedProps, Props>(React.memo, withPreferences());
+
+export default enhanced(MainContentBanner);

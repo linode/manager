@@ -32,6 +32,9 @@ import SuspenseLoader from 'src/components/SuspenseLoader';
 import withGlobalErrors, {
   Props as GlobalErrorProps
 } from 'src/containers/globalErrors.container';
+import withPreferences, {
+  Props as PreferencesProps
+} from 'src/containers/preferences.container';
 
 import Logo from 'src/assets/logo/logo-text.svg';
 
@@ -115,7 +118,7 @@ interface Props {
   isLoggedInAsCustomer: boolean;
 }
 
-type CombinedProps = Props & GlobalErrorProps & WithTheme;
+type CombinedProps = Props & GlobalErrorProps & WithTheme & PreferencesProps;
 
 const Account = React.lazy(() => import('src/features/Account'));
 const LinodesRoutes = React.lazy(() => import('src/features/linodes'));
@@ -200,6 +203,15 @@ const MainContent: React.FC<CombinedProps> = props => {
     );
   }
 
+  // @todo: clean this up.
+  const shouldDisplayMainContentBanner =
+    flags.mainContentBanner &&
+    !isEmpty(flags.mainContentBanner) &&
+    flags.mainContentBanner.key &&
+    !props.preferences?.mainContentBannerDismissal?.[
+      flags?.mainContentBanner?.key ?? 'mainContentBannerKey'
+    ];
+
   /**
    * otherwise just show the rest of the app.
    */
@@ -222,11 +234,12 @@ const MainContent: React.FC<CombinedProps> = props => {
               [classes.hidden]: props.appIsLoading
             })}
           >
-            {flags.mainContentBanner && !isEmpty(flags.mainContentBanner) && (
+            {shouldDisplayMainContentBanner && (
               <MainContentBanner
                 bannerText={flags.mainContentBanner?.text ?? ''}
                 url={flags.mainContentBanner?.link?.url ?? ''}
                 linkText={flags.mainContentBanner?.link?.text ?? ''}
+                bannerKey={flags.mainContentBanner?.key ?? ''}
               />
             )}
             <SideMenu
@@ -328,5 +341,6 @@ const MainContent: React.FC<CombinedProps> = props => {
 export default compose<CombinedProps, Props>(
   React.memo,
   withGlobalErrors(),
-  withTheme
+  withTheme,
+  withPreferences()
 )(MainContent);

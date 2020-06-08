@@ -24,6 +24,7 @@ export interface UserPreferences {
   spacing?: SpacingChoice;
   desktop_sidebar_open?: boolean;
   sortKeys?: Partial<Record<SortKey, OrderSet>>;
+  mainContentBannerDismissal?: Record<string, boolean>;
 }
 
 export const handleGetPreferences = actionCreator.async<
