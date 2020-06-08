@@ -1,4 +1,6 @@
-import { createYield } from 'typescript';
+import { waitForAppLoad } from './common';
+
+const loadAppNoLogin = path => waitForAppLoad(path, false);
 
 /* eslint-disable sonarjs/no-duplicate-string */
 export const routes = {
@@ -21,7 +23,7 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          cy.visit(routes.createLinodeOCA);
+          loadAppNoLogin(routes.createLinodeOCA);
           cy.findByText('Create From:');
           cy.findByText('Distributions').click();
         }
@@ -36,7 +38,7 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          cy.visit(routes.createLinode);
+          loadAppNoLogin(routes.createLinode);
           cy.findByText('Choose a Distribution');
           cy.findByText('One-Click').click();
         }
@@ -44,9 +46,7 @@ export const pages = [
       {
         name: 'Create Button',
         go: () => {
-          cy.visit('/');
-          // wait until the page is really loaded
-          cy.findByText('View All');
+          loadAppNoLogin(routes.profile);
           cy.get('[data-qa-add-new-menu-button="true"]')
             .should('be.visible')
             .click();
@@ -58,9 +58,7 @@ export const pages = [
       {
         name: 'Nav',
         go: () => {
-          cy.visit('/');
-          // wait until the page is really loaded
-          cy.findByText('View All');
+          loadAppNoLogin(routes.support);
           cy.get('[data-qa-one-click-nav-btn="true"]').click();
         }
       }
@@ -96,17 +94,15 @@ export const pages = [
         name: 'Tab',
         go: () => {
           const url = `${routes.profile}/auth`;
-          cy.visit(url);
+          loadAppNoLogin(url);
           cy.findByText('Password Reset').should('be.visible');
-          cy.findByText('Display').click();
+          cy.findByText('Display').should('be.visible').click();
         }
       },
       {
         name: 'User Profile Button',
         go: () => {
-          cy.visit('/');
-          // wait until the page is really loaded
-          cy.findByText('View All');
+          loadAppNoLogin(routes.support);
           cy.get('[data-qa-user-menu="true"]').click();
           cy.findByText('My Profile').click();
         }
@@ -122,7 +118,7 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          cy.visit(routes.profile);
+          loadAppNoLogin(routes.profile);
           cy.findByText('Username').should('be.visible');
           cy.get('[data-qa-tab="Password & Authentication"]').click();
         }
@@ -137,7 +133,7 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          cy.visit(routes.profile);
+          loadAppNoLogin(routes.profile);
           cy.findByText('Username');
           cy.findByText('SSH Keys').click();
         }
@@ -153,7 +149,7 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          cy.visit(routes.profile);
+          loadAppNoLogin(routes.profile);
           cy.findByText('Username');
           cy.findByText('LISH').click();
         }
@@ -169,7 +165,7 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          cy.visit(routes.profile);
+          loadAppNoLogin(routes.profile);
           cy.findByText('Username');
           cy.findByText('API Tokens').click();
         }
@@ -195,7 +191,7 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          cy.visit(routes.supportTickets);
+          loadAppNoLogin(routes.supportTickets);
           cy.findByText('Open Tickets').click();
         }
       }
@@ -210,7 +206,7 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          cy.visit(routes.supportTickets);
+          loadAppNoLogin(routes.supportTickets);
           cy.findByText('Closed Tickets').click();
         }
       }
@@ -230,7 +226,7 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          cy.visit(`${routes.account}/users`);
+          loadAppNoLogin(`${routes.account}/users`);
           cy.findByText('Username');
           cy.findByText('Billing Info')
             .should('be.visible')
@@ -247,7 +243,7 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          cy.visit(routes.account);
+          loadAppNoLogin(routes.account);
           cy.findByText('Billing Contact');
           cy.findByText('Users').click();
         }
@@ -263,7 +259,7 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          cy.visit(routes.account);
+          loadAppNoLogin(routes.account);
           cy.findByText('Billing Contact');
           cy.findByText('Settings').click();
         }
