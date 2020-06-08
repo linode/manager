@@ -226,18 +226,18 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     );
   };
 
-  resetAllFields = () => {
+  resetAllFields = (payload?: StackScript) => {
     this.handleCloseDialog();
-    this.setState((prevState: State) => {
-      const scriptFromAPI = prevState.apiResponse ?? ({} as StackScript);
-      return {
-        script: scriptFromAPI.script ?? '',
-        label: scriptFromAPI.label ?? '',
-        images: scriptFromAPI.images ?? [],
-        description: scriptFromAPI.description ?? '',
-        revisionNote: scriptFromAPI.rev_note ?? ''
-      };
-    }, this.saveStateToLocalStorage);
+    this.setState(
+      {
+        script: payload?.script ?? '',
+        label: payload?.label ?? '',
+        images: payload?.images ?? [],
+        description: payload?.description ?? '',
+        revisionNote: payload?.rev_note ?? ''
+      },
+      this.saveStateToLocalStorage
+    );
   };
 
   handleError = (errors: APIError[]) => {
@@ -270,7 +270,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           return;
         }
         this.setState({ isSubmitting: false });
-        this.resetAllFields();
+        this.resetAllFields(updatedStackScript);
         history.push('/stackscripts?type=account', {
           successMessage: `${updatedStackScript.label} successfully updated`
         });
@@ -342,7 +342,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         <Button
           buttonType="secondary"
           destructive
-          onClick={this.resetAllFields}
+          onClick={() => this.resetAllFields(this.state.apiResponse)}
           data-qa-confirm-cancel
         >
           Reset
