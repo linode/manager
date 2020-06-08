@@ -146,7 +146,6 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
             e.preventDefault();
             e.stopPropagation();
           },
-          // ariaDescribedBy: 'new-window',
           ...readOnlyProps
         },
         {
@@ -233,7 +232,6 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
         actions.unshift({
           title: 'Power On',
           disabled: !hasMadeConfigsRequest || noConfigs || readOnly,
-          // isLoading: !hasMadeConfigsRequest,
           tooltip: this.state.configsError
             ? 'Could not load configs for this Linode.'
             : noConfigs
@@ -258,7 +256,6 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
           {
             title: 'Reboot',
             disabled: !hasMadeConfigsRequest || readOnly,
-            // isLoading: !hasMadeConfigsRequest,
             tooltip: readOnly
               ? "You don't have permission to modify this Linode."
               : this.state.configsError
