@@ -78,7 +78,7 @@ class StoryActionMenuWithTooltip extends React.Component<CombinedProps> {
   }
 }
 
-class StoryActionMenuWithOneAction extends React.Component<CombinedProps> {
+class StoryActionMenuWithInlineLabel extends React.Component<CombinedProps> {
   createActions = () => (): Action[] => {
     return [
       {
@@ -91,7 +91,11 @@ class StoryActionMenuWithOneAction extends React.Component<CombinedProps> {
   };
   render() {
     return (
-      <ActionMenu createActions={this.createActions()} ariaLabel="label" />
+      <ActionMenu
+        createActions={this.createActions()}
+        ariaLabel="label"
+        inlineLabel="More Actions"
+      />
     );
   }
 }
@@ -107,8 +111,8 @@ storiesOf('Action Menu', module)
       <StoryActionMenuWithTooltip />
     </div>
   ))
-  .add('Action Menu with one menu item', () => (
+  .add('Action Menu with inline label', () => (
     <div style={{ textAlign: 'center' }}>
-      <StoryActionMenuWithOneAction />
+      <StoryActionMenuWithInlineLabel />
     </div>
   ));

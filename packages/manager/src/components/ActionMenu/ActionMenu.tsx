@@ -1,3 +1,5 @@
+import * as classNames from 'classnames';
+import HelpOutline from '@material-ui/icons/HelpOutline';
 import MoreHoriz from '@material-ui/icons/MoreHoriz';
 import {
   Menu,
@@ -8,14 +10,13 @@ import {
 } from '@reach/menu-button';
 import '@reach/menu-button/styles.css';
 import * as React from 'react';
+import IconButton from 'src/components/core/IconButton';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
 export interface Action {
   title: string;
   disabled?: boolean;
   tooltip?: string;
-  isLoading?: boolean;
-  ariaDescribedBy?: string;
   onClick: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
@@ -26,7 +27,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   button: {
     '&[data-reach-menu-button]': {
+      display: 'flex',
+      alignItems: 'center',
       background: 'none',
+      fontSize: '1rem',
+      fontWeight: 'bold',
       border: 'none',
       padding: theme.spacing(1) + 2,
       color: '#3683dc',
@@ -37,19 +42,23 @@ const useStyles = makeStyles((theme: Theme) => ({
       }
     }
   },
+  buttonLabel: {
+    margin: `0 0 0 ${theme.spacing()}px`
+  },
   icon: {},
   popover: {
     '&[data-reach-menu-popover]': {
       right: 0,
       // Need this to 'merge the button and items wrapper due to the borderRadius on the wrapper
-      marginTop: -3
+      marginTop: -3,
+      zIndex: 1
     }
   },
   itemsOuter: {
     '&[data-reach-menu-items]': {
       padding: 0,
       width: 200,
-      backgroundColor: '#3683dc',
+      background: '#3683dc',
       borderRadius: 3,
       border: 'none',
       fontSize: 14,
@@ -61,11 +70,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&[data-reach-menu-item]': {
       padding: theme.spacing(1) + 2,
       borderBottom: '1px solid #5294e0',
+      background: '#3683dc',
       color: '#fff',
       borderRadius: 3
     },
     '&[data-reach-menu-item][data-selected]': {
-      backgroundColor: '#226dc3'
+      background: '#226dc3'
+    }
+  },
+  disabled: {
+    '&[data-reach-menu-item]': {
+      color: '#93bcec',
+      cursor: 'auto'
     }
   }
 }));
@@ -78,6 +94,8 @@ export interface Props {
   ariaLabel: string;
   className?: string;
   disabled?: boolean;
+  // Displays inline next to the button icon
+  inlineLabel?: string;
 }
 
 type CombinedProps = Props;
@@ -92,7 +110,7 @@ const ActionMenu: React.FC<CombinedProps> = props => {
     setActions(createActions());
   }, [createActions]);
 
-  const { ariaLabel } = props;
+  const { ariaLabel, inlineLabel } = props;
 
   if (typeof actions === 'undefined') {
     return null;
@@ -102,20 +120,33 @@ const ActionMenu: React.FC<CombinedProps> = props => {
     <div className={classes.wrapper}>
       <Menu>
         <MenuButton className={classes.button} aria-label={ariaLabel}>
-          <MoreHoriz className={classes.icon} type="primary" />
+          <MoreHoriz aria-hidden className={classes.icon} type="primary" />
+          {inlineLabel && <p className={classes.buttonLabel}>{inlineLabel}</p>}
         </MenuButton>
         <MenuPopover className={classes.popover} portal={false}>
           <MenuItems className={classes.itemsOuter}>
             {(actions as Action[]).map((a, idx) => (
               <MenuLink
                 key={idx}
-                as="a"
-                href="#"
-                className={classes.item}
+                className={classNames({
+                  [classes.item]: true,
+                  [classes.disabled]: a.disabled
+                })}
                 onClick={a.onClick}
                 data-qa-action-menu-item={a.title}
+                // disabled={a.disabled}
               >
                 {a.title}
+                {a.tooltip && (
+                  <IconButton
+                    // className={classes.helpButton}
+                    // onClick={handleClick}
+                    data-qa-tooltip-icon
+                  >
+                    <HelpOutline />
+                  </IconButton>
+                )}
+                {/* {a.tooltip && <span data-qa-tooltip>{a.tooltip}</span>} */}
               </MenuLink>
             ))}
           </MenuItems>
