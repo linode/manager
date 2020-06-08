@@ -45,11 +45,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     const {
       payload: { result }
     } = action;
-    return onGetAllSuccess(
-      result.data.map(thisLinode => ({ ...thisLinode, status: 'stopped' })),
-      state,
-      result.results
-    );
+    return onGetAllSuccess(result.data, state, result.results);
   }
 
   if (isType(action, getLinodesActions.failed)) {
