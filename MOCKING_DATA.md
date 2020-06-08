@@ -1,4 +1,4 @@
-# Mocking data
+# Mocking Data
 
 This guide covers various methods of mocking data while developing or testing Cloud Manager.
 
@@ -17,15 +17,16 @@ To run Cloud Manager without feature flags enabled, either:
 
 To run Cloud Manager with _specific values_ assigned to feature flags:
 
-1. Open `src/containers/withFeatureFlagProvider.container.ts`.
-2. Supply an `options.bootstrap` map to `withLDProvider`.
+1. Run Cloud Manager without feature flags using a method listed above.
+2. Open `src/containers/withFeatureFlagProvider.container.ts`.
+3. Supply an `options.bootstrap` map to `withLDProvider`.
 
 **Example:**
 
 ```js
 options: {
   bootstrap: {
-    isFeatureEnabled: false; // <-- Supply flags here.
+    isFeatureEnabled: true; // <-- Mocked flags here.
   }
 }
 ```
