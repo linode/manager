@@ -174,9 +174,7 @@ export const StackScriptForm: React.FC<CombinedProps> = props => {
             data-qa-stackscript-description
           />
           <ImageSelect
-            images={Object.keys(images.available).map(
-              eachKey => images.available[eachKey]
-            )}
+            images={Object.values(images.available)}
             onSelect={onSelectChange}
             required
             value={selectedImages}

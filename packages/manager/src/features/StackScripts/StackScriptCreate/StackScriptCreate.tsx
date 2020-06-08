@@ -111,7 +111,8 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     const {
       match: {
         params: { stackScriptID }
-      }
+      },
+      euuid
     } = this.props;
     const valuesFromStorage = storage.stackScriptInProgress.get();
 
@@ -139,7 +140,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         .catch(error => {
           this.setState({ errors: error });
         });
-    } else if (valuesFromStorage.id === -1) {
+    } else if (valuesFromStorage.id === euuid) {
       /**
        * We're creating a stackscript and we have cached
        * data from a user that was creating a stackscript,
@@ -168,13 +169,14 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       revisionNote: rev_note
     } = this.state;
     const {
+      euuid,
       mode,
       match: {
         params: { stackScriptID }
       }
     } = this.props;
 
-    const id = mode === 'create' ? -1 : +stackScriptID;
+    const id = mode === 'create' ? euuid : +stackScriptID;
 
     storage.stackScriptInProgress.set({
       id,
@@ -464,6 +466,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 }
 
 interface StateProps {
+  euuid: string;
   username?: string;
   userCannotCreateStackScripts: boolean;
   userCannotModifyStackScript: boolean;
@@ -483,6 +486,7 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (
 
   return {
     username: path(['data', 'username'], state.__resources.profile),
+    euuid: state.__resources.account.data?.euuid ?? '',
     userCannotCreateStackScripts:
       isRestrictedUser(state) && !hasGrant(state, 'add_stackscripts'),
     userCannotModifyStackScript:

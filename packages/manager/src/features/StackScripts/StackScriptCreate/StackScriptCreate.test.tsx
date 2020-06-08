@@ -23,6 +23,7 @@ describe('StackScriptCreate', () => {
       clearDocs={jest.fn()}
       userCannotCreateStackScripts={false}
       userCannotModifyStackScript={false}
+      euuid="a-very-random-and-secure-id-string-123"
     />
   );
   xit('should render a title that reads "Create New StackScript', () => {

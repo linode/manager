@@ -61,7 +61,7 @@ interface SupportText {
 }
 
 interface StackScriptData extends StackScriptPayload {
-  id: number;
+  id: number | string;
 }
 
 export interface Storage {
