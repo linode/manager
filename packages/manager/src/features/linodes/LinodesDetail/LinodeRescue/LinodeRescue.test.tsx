@@ -38,6 +38,7 @@ describe('LinodeRescue', () => {
         volumesLastUpdated={1}
         linodeLabel=""
         permissions="read_write"
+        linodeStatus="running"
       />
     );
     const rescueComponentProps = component.instance().props;
