@@ -131,7 +131,7 @@ const { getByTestId } = renderWithTheme(<MyComponent />, {
 });
 ```
 
-The `customStore` prop is of type `DeepPartial<ApplicationState>`, so only the fields needed to satifsy the conditions of your test are needed.
+The `customStore` prop is of type `DeepPartial<ApplicationState>`, so only the fields needed to satisfy the conditions of your test are needed.
 
 Several helpers are available in `src/utilities/testHelpersStore.ts` to simulate common scenarios (withManaged, withRestrictedUser, etc).
 
