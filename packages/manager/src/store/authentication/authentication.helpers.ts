@@ -16,5 +16,12 @@ export const clearUserInput = () => {
   // Support ticket title/description.
 
   supportText.set({ title: '', description: '' });
-  stackScriptInProgress.set({ id: -1, label: '', script: '', images: [] });
+  stackScriptInProgress.set({
+    id: -9999,
+    label: '',
+    script: '',
+    rev_note: '',
+    description: '',
+    images: []
+  });
 };
