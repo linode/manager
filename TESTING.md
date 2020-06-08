@@ -119,6 +119,34 @@ Some components, such as our ActionMenu, don't lend themselves well to unit test
 
 Any `<ActionMenu>`s rendered by the test will be simplified versions that are easier to work with.
 
+#### Mocking Redux State
+
+The `wrapWithTheme` and `renderWithTheme` helper functions take a `customStore` option, used as follows:
+
+```tsx
+import { renderWithTheme } from 'src/utilities/testHelpers.ts`;
+
+const { getByTestId } = renderWithTheme(<MyComponent />, {
+  customStore: {} // <-- Redux store specified here
+});
+```
+
+The `customStore` prop is of type `DeepPartial<ApplicationState>`, so only the fields needed to satifsy the conditions of your test are needed.
+
+Several helpers are available in `src/utilities/testHelpersStore.ts` to simulate common scenarios (withManaged, withRestrictedUser, etc).
+
+#### Mocking Feature Flags
+
+Another option the `wrapWithTheme` and `renderWithTheme` helper functions exposes is `flags`, to supply custom feature flags:
+
+```tsx
+import { renderWithTheme } from 'src/utilities/testHelpers.ts`;
+
+const { getByTestId } = renderWithTheme(<MyComponent />, {
+  flags: { myFeature: true } // <-- Feature Flags specified here
+});
+```
+
 ## End-to-End Tests
 
 E2E tests use [Cypress](https://cypress.io).
