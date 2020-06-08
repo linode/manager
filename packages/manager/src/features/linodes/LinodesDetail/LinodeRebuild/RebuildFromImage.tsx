@@ -52,7 +52,12 @@ interface ContextProps {
   permissions: GrantLevel;
 }
 
-export type CombinedProps = WithImages &
+interface Props {
+  passwordHelperText: string;
+}
+
+export type CombinedProps = Props &
+  WithImages &
   WithStyles<ClassNames> &
   ContextProps &
   UserSSHKeyProps &
@@ -80,7 +85,8 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
     linodeId,
     enqueueSnackbar,
     history,
-    permissions
+    permissions,
+    passwordHelperText
   } = props;
 
   const disabled = permissions === 'read_only';
@@ -198,6 +204,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
                   ? "You don't have permissions to modify this Linode"
                   : undefined
               }
+              passwordHelperText={passwordHelperText}
             />
             <ActionsPanel>
               <Button
@@ -230,7 +237,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   permissions: linode._permissions
 }));
 
-const enhanced = compose<CombinedProps, {}>(
+const enhanced = compose<CombinedProps, Props>(
   linodeContext,
   withImages(),
   userSSHKeyHoc,

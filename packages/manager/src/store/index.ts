@@ -145,6 +145,10 @@ import initialLoad, {
   defaultState as initialLoadState,
   State as InitialLoadState
 } from './initialLoad/initialLoad.reducer';
+import featureFlagsLoad, {
+  defaultState as featureFlagsLoadState,
+  State as FeatureFlagsLoadState
+} from './featureFlagsLoad/featureFlagsLoad.reducer';
 import diskEvents from './linodes/disk/disk.events';
 import combineEventsMiddleware from './middleware/combineEventsMiddleware';
 import imageEvents from './middleware/imageEvents';
@@ -226,6 +230,7 @@ export interface ApplicationState {
   createLinode: LinodeCreateState;
   preferences: PreferencesState;
   initialLoad: InitialLoadState;
+  featureFlagsLoad: FeatureFlagsLoadState;
   firewalls: FirewallState;
   firewallDevices: FirewallDevicesState;
   globalErrors: GlobalErrorState;
@@ -247,6 +252,7 @@ export const defaultState: ApplicationState = {
   createLinode: linodeCreateDefaultState,
   preferences: preferencesState,
   initialLoad: initialLoadState,
+  featureFlagsLoad: featureFlagsLoadState,
   firewalls: defaultFirewallState,
   firewallDevices: defaultFirewallDevicesState,
   globalErrors: defaultGlobalErrorState,
@@ -294,6 +300,7 @@ const reducers = combineReducers<ApplicationState>({
   createLinode: linodeCreateReducer,
   preferences,
   initialLoad,
+  featureFlagsLoad,
   firewalls,
   firewallDevices,
   globalErrors,
