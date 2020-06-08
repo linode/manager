@@ -49,6 +49,7 @@ const styles = (theme: Theme) =>
 
 interface Props {
   disabled: boolean;
+  passwordHelperText: string;
 }
 
 interface ContextProps {
@@ -85,7 +86,8 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
     requestKeys,
     linodeId,
     enqueueSnackbar,
-    history
+    history,
+    passwordHelperText
   } = props;
 
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
@@ -197,6 +199,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
               requestKeys={requestKeys}
               data-qa-access-panel
               disabled={disabled}
+              passwordHelperText={passwordHelperText}
             />
             <ActionsPanel>
               <Button

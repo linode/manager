@@ -40,6 +40,7 @@ it('renders without crashing.', () => {
             linodesLoading={false}
             accountSettingsLoading={false}
             ldClient={{} as any}
+            featureFlagsLoading={false}
             flags={{}}
           />
         </StaticRouter>

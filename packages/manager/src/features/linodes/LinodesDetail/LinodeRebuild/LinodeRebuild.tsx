@@ -47,6 +47,8 @@ const options = [
   { value: 'fromAccountStackScript', label: 'From Account StackScript' }
 ];
 
+const passwordHelperText = 'Set a password for your rebuilt Linode.';
+
 const LinodeRebuild: React.FC<CombinedProps> = props => {
   const { classes, linodeLabel, linodeStatus, permissions } = props;
   const hostMaintenance = linodeStatus === 'stopped';
@@ -72,10 +74,12 @@ const LinodeRebuild: React.FC<CombinedProps> = props => {
         </Typography>
         <Typography data-qa-rebuild-desc>
           If you can&#39;t rescue an existing disk, it&#39;s time to rebuild
-          your Linode. There are a couple of different ways you can do this:
-          either restore from a backup or start over with a fresh Linux
-          distribution. Rebuilding will destroy all data on all existing disks
-          on this Linode.
+          your Linode. There are a couple of different ways you can do restore
+          from a backup or start over with a fresh Linux distribution.&nbsp;
+          <strong>
+            Rebuilding will destroy all data on all existing disks on this
+            Linode.
+          </strong>
         </Typography>
         <EnhancedSelect
           options={options}
@@ -87,12 +91,25 @@ const LinodeRebuild: React.FC<CombinedProps> = props => {
           hideLabel
         />
       </Paper>
-      {mode === 'fromImage' && <RebuildFromImage disabled={disabled} />}
+      {mode === 'fromImage' && (
+        <RebuildFromImage
+          passwordHelperText={passwordHelperText}
+          disabled={disabled}
+        />
+      )}
       {mode === 'fromCommunityStackScript' && (
-        <RebuildFromStackScript type="community" disabled={disabled} />
+        <RebuildFromStackScript
+          type="community"
+          passwordHelperText={passwordHelperText}
+          disabled={disabled}
+        />
       )}
       {mode === 'fromAccountStackScript' && (
-        <RebuildFromStackScript type="account" disabled={disabled} />
+        <RebuildFromStackScript
+          type="account"
+          passwordHelperText={passwordHelperText}
+          disabled={disabled}
+        />
       )}
     </div>
   );
