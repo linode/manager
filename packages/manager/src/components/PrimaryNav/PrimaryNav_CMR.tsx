@@ -415,7 +415,10 @@ export const NavGroup: React.FC<NavGroupProps> = props => {
   return (
     <div className={classes.menuWrapper}>
       <ReachMenu>
-        <MenuButton className={`${classes.menuButton} ${classes.linkItem}`}>
+        <MenuButton
+          className={`${classes.menuButton} ${classes.linkItem}`}
+          data-testid={`nav-group-${group}`}
+        >
           {group}
           <KeyboardArrowDown className={classes.caret} />
         </MenuButton>
@@ -477,6 +480,7 @@ export const PrimaryNavMenuLink: React.FC<PrimaryNavMenuLinkProps> = React.memo(
       <MenuLink
         as={Link}
         className={classes.menuItemLink}
+        data-testid={`menu-item-${display}`}
         {...handlers}
         {...rest}
       >
