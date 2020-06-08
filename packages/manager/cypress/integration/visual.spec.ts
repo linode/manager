@@ -1,5 +1,5 @@
 describe('visual regressions', () => {
-  it('should display the nav bar correcly', () => {
+  xit('should display the nav bar correcly', () => {
     cy.visitWithLogin('/support');
     cy.get('nav')
       .should('be.visible')
