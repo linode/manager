@@ -57,4 +57,5 @@ export interface MainContentBanner {
     url: string;
   };
   text: string;
+  key: string;
 }
