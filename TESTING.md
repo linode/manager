@@ -137,7 +137,7 @@ Several helpers are available in `src/utilities/testHelpersStore.ts` to simulate
 
 #### Mocking Feature Flags
 
-Another option the `wrapWithTheme` and `renderWithTheme` helper functions exposes is `flags`, to supply custom feature flags:
+Another option the `wrapWithTheme` and `renderWithTheme` helper functions expose is `flags`, to supply custom feature flags:
 
 ```tsx
 import { renderWithTheme } from 'src/utilities/testHelpers.ts`;
