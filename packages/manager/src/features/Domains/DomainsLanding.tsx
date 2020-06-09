@@ -141,7 +141,7 @@ const headers: HeaderCell[] = [
   {
     label: 'Status',
     dataColumn: 'status',
-    sortable: false,
+    sortable: true,
     widthPercent: 25
   },
   {
