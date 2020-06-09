@@ -108,6 +108,7 @@ interface Props {
   onSelectChange: (image: Item<string>[]) => void;
   isSubmitting: boolean;
   disabled?: boolean;
+  mode: 'create' | 'edit';
 }
 
 type CombinedProps = Props;
@@ -133,6 +134,7 @@ export const StackScriptForm: React.FC<CombinedProps> = props => {
     onCancel,
     isSubmitting,
     images,
+    mode,
     disabled
   } = props;
 
@@ -234,7 +236,7 @@ export const StackScriptForm: React.FC<CombinedProps> = props => {
           disabled={disabled}
           data-qa-save
         >
-          Save
+          {mode === 'edit' ? 'Save Changes' : 'Save'}
         </Button>
         <Button
           onClick={onCancel}

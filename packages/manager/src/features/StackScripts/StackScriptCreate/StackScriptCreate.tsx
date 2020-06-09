@@ -451,6 +451,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         <ScriptForm
           currentUser={username}
           disabled={userCannotCreateStackScripts}
+          mode={mode}
           images={{
             available: availableImages,
             selected: images

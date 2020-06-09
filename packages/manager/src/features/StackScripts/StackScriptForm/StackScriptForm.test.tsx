@@ -34,7 +34,8 @@ const props = {
   errors: [],
   onSubmit: jest.fn(),
   onCancel: jest.fn(),
-  isSubmitting: false
+  isSubmitting: false,
+  mode: 'create' as any
 };
 
 describe('StackScriptCreate', () => {
