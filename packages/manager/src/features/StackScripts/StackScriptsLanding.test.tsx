@@ -27,7 +27,7 @@ describe('StackScripts Landing', () => {
     )
   );
 
-  it('icon text link text should read "Create New StackScript"', () => {
+  it.skip('icon text link text should read "Create New StackScript"', () => {
     getByText(/create new stackscript/i);
   });
 });
