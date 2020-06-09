@@ -2,11 +2,11 @@ import * as React from 'react';
 
 import Grid from 'src/components/Grid';
 import Button from 'src/components/Button';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import EntityHeader, { HeaderProps } from 'src/components/EntityHeader';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   button: {
     borderRadius: 3,
     height: 40,
@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props extends Omit<HeaderProps, 'actions'> {
+  body: JSX.Element;
   docsLink: string;
   onAddNew?: () => any;
 }
@@ -47,7 +48,7 @@ export const LandingHeader: React.FC<Props> = props => {
         {docsLink && <DocumentationButton href={docsLink} />}
       </Grid>
     ),
-    [docsLink, title, onAddNew]
+    [docsLink, title, onAddNew, classes.button]
   );
 
   return <EntityHeader actions={actions} {...props} />;

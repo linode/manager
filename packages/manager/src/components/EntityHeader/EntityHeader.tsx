@@ -6,10 +6,11 @@ import HeaderBreadCrumb, { BreadCrumbProps } from './HeaderBreadCrumb';
 
 export interface HeaderProps extends BreadCrumbProps {
   actions: JSX.Element;
+  body: JSX.Element;
 }
 
 export const EntityHeader: React.FC<HeaderProps> = props => {
-  const { actions, iconType, parentLink, parentText, title } = props;
+  const { actions, body, iconType, parentLink, parentText, title } = props;
 
   return (
     <Paper>
@@ -22,7 +23,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
               parentLink={parentLink}
               parentText={parentText}
             />
-            {props.children && <Grid item>{props.children}</Grid>}
+            {body && <Grid item>{body}</Grid>}
           </Grid>
         </Grid>
         <Grid item>{actions}</Grid>

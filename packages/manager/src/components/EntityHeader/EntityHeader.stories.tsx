@@ -14,43 +14,44 @@ storiesOf('EntityHeader', module)
         onAddNew={() => null}
         iconType="linode"
         docsLink="https://linode.com/docs"
-      >
-        <Grid item>
-          <Chip
-            style={{
-              backgroundColor: '#00b159',
-              color: 'white',
-              fontSize: '1.1 rem',
-              padding: '10px'
-            }}
-            label={'2447 RUNNING'}
-            component="span"
-            clickable={false}
-          />
-          <Chip
-            style={{
-              backgroundColor: '#ffb31a',
-              fontSize: '1.1 rem',
-              color: 'white',
-              padding: '10px'
-            }}
-            label={'46 PENDING'}
-            component="span"
-            clickable={false}
-          />
-          <Chip
-            style={{
-              backgroundColor: '#9ea4ae',
-              color: 'white',
-              fontSize: '1.1 rem',
-              padding: '10px'
-            }}
-            label={'7 OFFLINE'}
-            component="span"
-            clickable={false}
-          />
-        </Grid>
-      </LandingHeader>
+        body={
+          <Grid item>
+            <Chip
+              style={{
+                backgroundColor: '#00b159',
+                color: 'white',
+                fontSize: '1.1 rem',
+                padding: '10px'
+              }}
+              label={'2447 RUNNING'}
+              component="span"
+              clickable={false}
+            />
+            <Chip
+              style={{
+                backgroundColor: '#ffb31a',
+                fontSize: '1.1 rem',
+                color: 'white',
+                padding: '10px'
+              }}
+              label={'46 PENDING'}
+              component="span"
+              clickable={false}
+            />
+            <Chip
+              style={{
+                backgroundColor: '#9ea4ae',
+                color: 'white',
+                fontSize: '1.1 rem',
+                padding: '10px'
+              }}
+              label={'7 OFFLINE'}
+              component="span"
+              clickable={false}
+            />
+          </Grid>
+        }
+      />
     </div>
   ))
   .add('detail', () => (
@@ -63,18 +64,19 @@ storiesOf('EntityHeader', module)
         actions={
           <ActionMenu ariaLabel="linode-detail" createActions={() => []} />
         }
-      >
-        <Chip
-          style={{
-            backgroundColor: '#00b159',
-            color: 'white',
-            fontSize: '1.1 rem',
-            padding: '10px'
-          }}
-          label={'RUNNING'}
-          component="span"
-          clickable={false}
-        />{' '}
-      </EntityHeader>
+        body={
+          <Chip
+            style={{
+              backgroundColor: '#00b159',
+              color: 'white',
+              fontSize: '1.1 rem',
+              padding: '10px'
+            }}
+            label={'RUNNING'}
+            component="span"
+            clickable={false}
+          />
+        }
+      />
     </div>
   ));
