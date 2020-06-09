@@ -71,6 +71,8 @@ const RenderData: React.FC<{
 }> = props => {
   const { items, isNegative } = props;
 
+  const MIN_PAGE_SIZE = 25;
+
   return (
     <Paginate data={items} pageSize={25}>
       {({
@@ -112,7 +114,7 @@ const RenderData: React.FC<{
               </TableRow>
             )
           )}
-          {count > pageSize && (
+          {count > MIN_PAGE_SIZE && (
             <TableRow>
               <TableCell
                 style={{
