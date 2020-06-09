@@ -16,6 +16,7 @@ import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
+import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import {
   createStyles,
@@ -72,6 +73,7 @@ interface State {
   errors?: APIError[];
   dialogOpen: boolean;
   apiResponse?: StackScript;
+  isLoadingStackScript: boolean;
 }
 
 interface Props {
@@ -100,7 +102,8 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     script: '',
     revisionNote: '',
     isSubmitting: false,
-    dialogOpen: false
+    dialogOpen: false,
+    isLoadingStackScript: false
   };
 
   static docs = [StackScripts];
@@ -118,6 +121,9 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     const valuesFromStorage = storage.stackScriptInProgress.get();
 
     if (stackScriptID) {
+      // If we have a stackScriptID we're in the edit flow and
+      // should request the stackscript.
+      this.setState({ isLoadingStackScript: true });
       getStackScript(+stackScriptID)
         .then(response => {
           if (response.id === valuesFromStorage.id) {
@@ -126,7 +132,9 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
               description: valuesFromStorage.description ?? '',
               images: valuesFromStorage.images ?? [],
               script: valuesFromStorage.script ?? '',
-              revisionNote: valuesFromStorage.rev_note ?? ''
+              revisionNote: valuesFromStorage.rev_note ?? '',
+              isLoadingStackScript: false,
+              apiResponse: response
             });
           } else {
             this.setState({
@@ -135,12 +143,13 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
               images: response.images,
               revisionNote: response.rev_note,
               script: response.script,
-              apiResponse: response // Saved for use when resetting the form
+              apiResponse: response, // Saved for use when resetting the form
+              isLoadingStackScript: false
             });
           }
         })
         .catch(error => {
-          this.setState({ errors: error });
+          this.setState({ errors: error, isLoadingStackScript: false });
         });
     } else if (valuesFromStorage.id === euuid) {
       /**
@@ -384,7 +393,8 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       description,
       revisionNote,
       errors,
-      isSubmitting
+      isSubmitting,
+      isLoadingStackScript
     } = this.state;
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
@@ -400,6 +410,10 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       return (
         <ErrorState errorText="An error has occurred. Please try again." />
       );
+    }
+
+    if (isLoadingStackScript) {
+      return <CircleProgress />;
     }
 
     const pageTitle =
