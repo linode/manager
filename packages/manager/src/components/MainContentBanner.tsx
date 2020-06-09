@@ -22,7 +22,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   header: {
     color: '#fff',
-    textAlign: 'center'
+    textAlign: 'center',
+    [theme.breakpoints.only('xs')]: {
+      paddingRight: 30
+    }
   },
   link: {
     color: '#fff',
