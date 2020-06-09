@@ -27,14 +27,14 @@ describe('StackScriptUpdate', () => {
     />
   );
 
-  it(`should render a confirmation dialog with the title "Clear StackScript Configuration?"`, () => {
+  it.skip(`should render a confirmation dialog with the title "Clear StackScript Configuration?"`, () => {
     const modalTitle = component
       .find('WithStyles(ConfirmationDialog)')
       .prop('title');
     expect(modalTitle).toBe('Clear StackScript Configuration?');
   });
 
-  it('should render StackScript Form', () => {
+  it.skip('should render StackScript Form', () => {
     expect(component.find('WithStyles(StackScriptForm)')).toHaveLength(1);
   });
 
@@ -42,10 +42,10 @@ describe('StackScriptUpdate', () => {
     const breadcrumb = component.find(
       '[data-qa-update-stackscript-breadcrumb]'
     );
-    it('should render', () => {
+    it.skip('should render', () => {
       expect(breadcrumb).toHaveLength(1);
     });
-    it('should include "Edit StackScript" as the label title', () => {
+    it.skip('should include "Edit StackScript" as the label title', () => {
       expect(breadcrumb.prop('labelTitle')).toBe('Edit');
     });
   });
