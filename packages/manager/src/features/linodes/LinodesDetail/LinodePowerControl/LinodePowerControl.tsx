@@ -60,7 +60,7 @@ const styles = (theme: Theme) =>
       marginLeft: theme.spacing(1)
     },
     caret: {
-      color: theme.palette.primary.main,
+      color: 'inherit',
       transition: theme.transitions.create(['color']),
       position: 'relative',
       top: 2,
