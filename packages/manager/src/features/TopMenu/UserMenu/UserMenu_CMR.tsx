@@ -213,17 +213,19 @@ export const UserMenu: React.FC<{}> = () => {
         </MenuButton>
         <MenuPopover className={classes.menuPopover} portal={false}>
           <MenuItems className={classes.menuItemList}>
-            {menuLinks.map(menuLink => (
-              <MenuLink
-                key={menuLink.display}
-                as={Link}
-                to={menuLink.href}
-                className={classes.menuItemLink}
-                data-testid={`menu-item-${menuLink.display}`}
-              >
-                {menuLink.display}
-              </MenuLink>
-            ))}
+            {menuLinks.map(menuLink =>
+              menuLink.hide ? null : (
+                <MenuLink
+                  key={menuLink.display}
+                  as={Link}
+                  to={menuLink.href}
+                  className={classes.menuItemLink}
+                  data-testid={`menu-item-${menuLink.display}`}
+                >
+                  {menuLink.display}
+                </MenuLink>
+              )
+            )}
           </MenuItems>
         </MenuPopover>
       </ReachMenu>
