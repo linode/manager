@@ -87,7 +87,11 @@ const MainContentBanner: React.FC<CombinedProps> = props => {
           </Link>
         )}
       </Typography>
-      <button className={classes.closeIcon} onClick={dismiss}>
+      <button
+        className={classes.closeIcon}
+        onClick={dismiss}
+        aria-label="Close"
+      >
         <Close />
       </button>
     </Grid>
