@@ -5,6 +5,7 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { assoc, clamp, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
@@ -83,9 +84,10 @@ interface State {
   counter: number;
 }
 
-type CombinedProps = VolumesProps &
+export type CombinedProps = VolumesProps &
   StateProps &
   ContextProps &
+  RouteComponentProps &
   WithStyles<ClassNames> &
   WithSnackbarProps;
 
@@ -165,7 +167,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
   };
 
   onSubmit = () => {
-    const { linodeId, enqueueSnackbar } = this.props;
+    const { linodeId, enqueueSnackbar, history } = this.props;
     const { rescueDevices } = this.state;
 
     rescueLinode(linodeId, createDevicesFromStrings(rescueDevices))
@@ -174,6 +176,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
           variant: 'info'
         });
         resetEventsPolling();
+        history.push(`/linodes/${linodeId}/summary`);
       })
       .catch(errorResponse => {
         getAPIErrorOrDefault(
@@ -315,7 +318,7 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (
 
 const connected = connect(mapStateToProps);
 
-export default compose<CombinedProps, {}>(
+export default compose<CombinedProps, RouteComponentProps>(
   linodeContext,
   SectionErrorBoundary,
   styled,
@@ -344,5 +347,6 @@ export default compose<CombinedProps, {}>(
       };
     }
   ),
+  withRouter,
   connected
 )(LinodeRescue);
