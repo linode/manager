@@ -109,6 +109,7 @@ interface Props {
   isSubmitting: boolean;
   disabled?: boolean;
   mode: 'create' | 'edit';
+  disableSubmit: boolean;
 }
 
 type CombinedProps = Props;
@@ -135,7 +136,8 @@ export const StackScriptForm: React.FC<CombinedProps> = props => {
     isSubmitting,
     images,
     mode,
-    disabled
+    disabled,
+    disableSubmit
   } = props;
 
   const classes = useStyles();
@@ -233,7 +235,7 @@ export const StackScriptForm: React.FC<CombinedProps> = props => {
           onClick={onSubmit}
           buttonType="primary"
           loading={isSubmitting}
-          disabled={disabled}
+          disabled={disabled || disableSubmit}
           data-qa-save
         >
           {mode === 'edit' ? 'Save Changes' : 'Save'}

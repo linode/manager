@@ -8,7 +8,7 @@ import {
   updateStackScript
 } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
-import { path } from 'ramda';
+import { equals, path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -303,12 +303,10 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       .catch(this.handleError);
   };
 
-  handleSubmit = () => {
+  generatePayload = () => {
     const { script, label, images, description, revisionNote } = this.state;
 
-    const { mode } = this.props;
-
-    const payload = {
+    return {
       script,
       label,
       images,
@@ -316,6 +314,38 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       is_public: false,
       rev_note: revisionNote
     };
+  };
+
+  hasUnsavedChanges = () => {
+    const {
+      apiResponse,
+      script,
+      label,
+      images,
+      description,
+      revisionNote
+    } = this.state;
+    if (!apiResponse) {
+      // Create flow; return true if there's any input anywhere
+      return (
+        script || label || images.length > 0 || description || revisionNote
+      );
+    } else {
+      // Edit flow; return true if anything has changes
+      return (
+        script !== apiResponse.script ||
+        label !== apiResponse.label ||
+        !equals(images, apiResponse.images) ||
+        description !== apiResponse.description ||
+        revisionNote !== apiResponse.rev_note
+      );
+    }
+  };
+
+  handleSubmit = () => {
+    const { mode } = this.props;
+
+    const payload = this.generatePayload();
 
     if (!this.mounted) {
       return;
@@ -395,9 +425,13 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       errors,
       isSubmitting,
       isLoadingStackScript
+      // apiResponse
     } = this.state;
+
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
+
+    const hasUnsavedChanges = this.hasUnsavedChanges();
 
     const availableImages = Object.keys(imagesData).reduce((acc, eachKey) => {
       if (!this.state.images.includes(eachKey)) {
@@ -450,6 +484,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         )}
         <ScriptForm
           currentUser={username}
+          disableSubmit={!hasUnsavedChanges}
           disabled={userCannotCreateStackScripts}
           mode={mode}
           images={{
