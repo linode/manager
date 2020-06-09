@@ -434,12 +434,9 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 
     const hasUnsavedChanges = this.hasUnsavedChanges();
 
-    const availableImages = Object.keys(imagesData).reduce((acc, eachKey) => {
-      if (!this.state.images.includes(eachKey)) {
-        acc[eachKey] = imagesData[eachKey];
-      }
-      return acc;
-    }, {});
+    const availableImages = Object.values(imagesData).filter(
+      thisImage => !this.state.images.includes(thisImage.id)
+    );
 
     if (!username) {
       return (

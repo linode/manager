@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { StackScriptForm } from './StackScriptForm';
 
-import { normalizedImages as images } from 'src/__data__/images';
+import { images } from 'src/__data__/images';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 afterEach(cleanup);

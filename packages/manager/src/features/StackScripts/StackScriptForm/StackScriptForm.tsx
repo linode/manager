@@ -90,7 +90,7 @@ interface TextFieldHandler {
 
 interface Images {
   // available to select in the dropdown
-  available: Record<string, Image>;
+  available: Image[];
   // image ids that are already selected
   selected: string[];
 }
@@ -178,7 +178,7 @@ export const StackScriptForm: React.FC<CombinedProps> = props => {
             data-qa-stackscript-description
           />
           <ImageSelect
-            images={Object.values(images.available)}
+            images={images.available}
             onSelect={onSelectChange}
             required
             value={selectedImages}
