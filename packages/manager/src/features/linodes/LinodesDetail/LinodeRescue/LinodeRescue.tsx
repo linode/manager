@@ -170,12 +170,6 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
 
     rescueLinode(linodeId, createDevicesFromStrings(rescueDevices))
       .then(_ => {
-        const counter = getDefaultDeviceMapAndCounter(
-          this.props.linodeDisks || []
-        )[1];
-        this.setState({
-          counter
-        });
         enqueueSnackbar('Linode rescue started.', {
           variant: 'info'
         });
