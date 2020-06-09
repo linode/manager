@@ -32,7 +32,6 @@
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",
     "typecheck": "tsc --noEmit true --emitDeclarationOnly false",
-    "prepublishOnly": "yarn lint && yarn typecheck && yarn format && yarn build",
     "precommit": "lint-staged"
   },
   "files": [

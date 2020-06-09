@@ -96,7 +96,9 @@ export const pages = [
           const url = `${routes.profile}/auth`;
           loadAppNoLogin(url);
           cy.findByText('Password Reset').should('be.visible');
-          cy.findByText('Display').should('be.visible').click();
+          cy.findByText('Display')
+            .should('be.visible')
+            .click();
         }
       },
       {

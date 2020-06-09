@@ -46,11 +46,24 @@ export const waitForAppLoad = (path = '/', withLogin = true) => {
 
   cy.route({
     method: 'GET',
+    url: '*/account/settings'
+  }).as('getAccountSettings');
+
+  cy.route({
+    method: 'GET',
+    url: '*/profile/preferences'
+  }).as('getProfilePreferences');
+
+  cy.route({
+    method: 'GET',
     url: '*/account/notifications'
   }).as('getNotifications');
+
   withLogin ? cy.visitWithLogin(path) : cy.visit(path);
   cy.wait('@getLinodes');
   cy.wait('@getAccount');
+  cy.wait('@getAccountSettings');
+  cy.wait('@getProfilePreferences');
   cy.wait('@getProfile');
   cy.wait('@getNotifications');
 };
