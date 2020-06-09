@@ -111,56 +111,54 @@ const ListGroupedDomains: React.FC<CombinedProps> = props => {
                 count
               }) => {
                 return (
-                  <React.Fragment>
-                    <TableBody
-                      className={classes.groupContainer}
-                      data-qa-tag-header={tag}
-                    >
-                      <TableRow className={classes.tagHeaderRow} role="cell">
-                        <TableCell colSpan={7}>
-                          <Typography
-                            variant="h2"
-                            component="h3"
-                            className={classes.tagHeader}
-                          >
-                            {tag}
-                          </Typography>
+                  <TableBody
+                    className={classes.groupContainer}
+                    data-qa-tag-header={tag}
+                  >
+                    <TableRow className={classes.tagHeaderRow} role="cell">
+                      <TableCell colSpan={7}>
+                        <Typography
+                          variant="h2"
+                          component="h3"
+                          className={classes.tagHeader}
+                        >
+                          {tag}
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                    {paginatedData.map(domain => (
+                      <DomainTableRow
+                        key={domain.domain}
+                        domain={domain.domain}
+                        id={domain.id}
+                        onClone={onClone}
+                        onEdit={onEdit}
+                        onRemove={onRemove}
+                        type={domain.type}
+                        status={domain.status}
+                        lastModified={domain.updated}
+                        onDisableOrEnable={props.onDisableOrEnable}
+                      />
+                    ))}
+                    {count > MIN_PAGE_SIZE && (
+                      <TableRow>
+                        <TableCell
+                          colSpan={7}
+                          className={classes.paginationCell}
+                        >
+                          <PaginationFooter
+                            count={count}
+                            handlePageChange={handlePageChange}
+                            handleSizeChange={handlePageSizeChange}
+                            pageSize={pageSize}
+                            page={page}
+                            eventCategory={'domains landing'}
+                            showAll
+                          />
                         </TableCell>
                       </TableRow>
-                      {paginatedData.map(domain => (
-                        <DomainTableRow
-                          key={domain.domain}
-                          domain={domain.domain}
-                          id={domain.id}
-                          onClone={onClone}
-                          onEdit={onEdit}
-                          onRemove={onRemove}
-                          type={domain.type}
-                          status={domain.status}
-                          lastModified={domain.updated}
-                          onDisableOrEnable={props.onDisableOrEnable}
-                        />
-                      ))}
-                      {count > MIN_PAGE_SIZE && (
-                        <TableRow>
-                          <TableCell
-                            colSpan={7}
-                            className={classes.paginationCell}
-                          >
-                            <PaginationFooter
-                              count={count}
-                              handlePageChange={handlePageChange}
-                              handleSizeChange={handlePageSizeChange}
-                              pageSize={pageSize}
-                              page={page}
-                              eventCategory={'domains landing'}
-                              showAll
-                            />
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </React.Fragment>
+                    )}
+                  </TableBody>
                 );
               }}
             </Paginate>
