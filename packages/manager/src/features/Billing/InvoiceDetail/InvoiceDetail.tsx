@@ -13,12 +13,7 @@ import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import IconButton from 'src/components/IconButton';
@@ -35,71 +30,65 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import InvoiceTable from './InvoiceTable';
 
-type ClassNames = 'root' | 'backButton' | 'titleWrapper' | 'totals' | 'm2';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`
-    },
-    totals: {
-      display: 'flex',
-      flexDirection: 'column',
-      textAlign: 'right',
-      '& h2': {
-        margin: theme.spacing(1)
-      }
-    },
-    titleWrapper: {
-      display: 'flex',
-      alignItems: 'center'
-    },
-    backButton: {
-      margin: '5px 0 0 -16px',
-      '& svg': {
-        width: 34,
-        height: 34
-      }
-    },
-    m2: {
-      margin: theme.spacing()
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`
+  },
+  totals: {
+    display: 'flex',
+    flexDirection: 'column',
+    textAlign: 'right',
+    '& h2': {
+      margin: theme.spacing(1)
     }
-  });
-
-interface State {
-  invoice?: Invoice;
-  items?: InvoiceItem[];
-  loading: boolean;
-  errors?: APIError[];
-  pdfGenerationError?: any;
-  isNegative: boolean;
-}
+  },
+  titleWrapper: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  backButton: {
+    margin: '5px 0 0 -16px',
+    '& svg': {
+      width: 34,
+      height: 34
+    }
+  },
+  m2: {
+    margin: theme.spacing()
+  }
+}));
 
 type CombinedProps = RouteComponentProps<{ invoiceId: string }> &
   StateProps &
-  FeatureFlagConsumerProps &
-  WithStyles<ClassNames>;
+  FeatureFlagConsumerProps;
 
-class InvoiceDetail extends React.Component<CombinedProps, State> {
-  state: State = {
-    loading: false,
-    pdfGenerationError: undefined,
-    isNegative: false
-  };
+export const InvoiceDetail: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
 
-  mounted: boolean = false;
+  const { data } = props;
 
-  requestData = () => {
+  const [invoice, setInvoice] = React.useState<Invoice | undefined>(undefined);
+  const [items, setItems] = React.useState<InvoiceItem[] | undefined>(
+    undefined
+  );
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [errors, setErrors] = React.useState<APIError[] | undefined>();
+  const [pdfGenerationError, setPDFGenerationError] = React.useState<any>(
+    undefined
+  );
+  const [isNegative, setIsNegative] = React.useState<boolean>(false);
+
+  const requestData = () => {
     const {
       match: {
         params: { invoiceId }
       },
       data
-    } = this.props;
-    this.setState({ loading: true });
+    } = props;
+    setLoading(true);
 
     if (!data) {
-      this.props.requestAccount();
+      props.requestAccount();
     }
 
     const getAllInvoiceItems = getAll<InvoiceItem>((params, filter) =>
@@ -108,145 +97,129 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
 
     Promise.all([getInvoice(+invoiceId), getAllInvoiceItems()])
       .then(([invoice, { data: items }]) => {
-        this.setState({
-          loading: false,
-          invoice,
-          items,
-          isNegative: invoice.total < 0
-        });
+        setLoading(false);
+        setInvoice(invoice);
+        setItems(items);
+        setIsNegative(invoice.total < 0);
       })
       .catch(errorResponse => {
-        this.setState({
-          errors: getAPIErrorOrDefault(
+        setErrors(
+          getAPIErrorOrDefault(
             errorResponse,
             'Unable to retrieve invoice details. '
           )
-        });
+        );
       });
   };
 
-  componentDidMount() {
-    this.mounted = true;
-    this.requestData();
-  }
+  React.useEffect(() => {
+    requestData();
+  }, []);
 
-  componentWillUnmount() {
-    this.mounted = false;
-  }
-
-  printInvoice(account: Account, invoice: Invoice, items: InvoiceItem[]) {
-    const taxBanner = this.props.flags.taxBanner;
+  const printInvoicePDF = (
+    account: Account,
+    invoice: Invoice,
+    items: InvoiceItem[]
+  ) => {
+    const taxBanner = props.flags.taxBanner;
     const result = printInvoice(account, invoice, items, taxBanner);
-    this.setState({
-      pdfGenerationError: result.status === 'error' ? result.error : undefined
-    });
-  }
 
-  render() {
-    const { classes, data } = this.props;
-    const {
-      invoice,
-      loading,
-      errors,
-      items,
-      pdfGenerationError,
-      isNegative
-    } = this.state;
+    setPDFGenerationError(result.status === 'error' ? result.error : undefined);
+  };
 
-    return (
-      <Paper className={classes.root}>
-        <Grid container>
-          <Grid item xs={12}>
-            <Grid container justify="space-between">
-              <Grid item className={classes.titleWrapper} style={{ flex: 1 }}>
-                <Link to={`/account/billing`}>
-                  <IconButton
-                    className={classes.backButton}
-                    data-qa-back-to-billing
-                  >
-                    <KeyboardArrowLeft />
-                  </IconButton>
-                </Link>
-                {invoice && (
-                  <Typography variant="h2" data-qa-invoice-id>
-                    Invoice #{invoice.id}
-                  </Typography>
-                )}
-              </Grid>
-              <Grid
-                item
-                className={classes.titleWrapper}
-                data-qa-printable-invoice
-              >
-                {data && invoice && items && (
-                  <Button
-                    buttonType="primary"
-                    onClick={() => this.printInvoice(data, invoice, items)}
-                  >
-                    Download PDF
-                  </Button>
-                )}
-              </Grid>
-              <Grid item className={`${classes.titleWrapper} ${classes.m2}`}>
-                {invoice && (
-                  <Typography variant="h2" data-qa-total={invoice.total}>
-                    Total:{' '}
-                    {isNegative
-                      ? '-($' + Number(invoice.total * -1).toFixed(2) + ')'
-                      : '$' + Number(invoice.total).toFixed(2)}
-                  </Typography>
-                )}
-              </Grid>
+  return (
+    <Paper className={classes.root}>
+      <Grid container>
+        <Grid item xs={12}>
+          <Grid container justify="space-between">
+            <Grid item className={classes.titleWrapper} style={{ flex: 1 }}>
+              <Link to={`/account/billing`}>
+                <IconButton
+                  className={classes.backButton}
+                  data-qa-back-to-billing
+                >
+                  <KeyboardArrowLeft />
+                </IconButton>
+              </Link>
+              {invoice && (
+                <Typography variant="h2" data-qa-invoice-id>
+                  Invoice #{invoice.id}
+                </Typography>
+              )}
+            </Grid>
+            <Grid
+              item
+              className={classes.titleWrapper}
+              data-qa-printable-invoice
+            >
+              {data && invoice && items && (
+                <Button
+                  buttonType="primary"
+                  onClick={() => printInvoicePDF(data, invoice, items)}
+                >
+                  Download PDF
+                </Button>
+              )}
+            </Grid>
+            <Grid item className={`${classes.titleWrapper} ${classes.m2}`}>
+              {invoice && (
+                <Typography variant="h2" data-qa-total={invoice.total}>
+                  Total:{' '}
+                  {isNegative
+                    ? '-($' + Number(invoice.total * -1).toFixed(2) + ')'
+                    : '$' + Number(invoice.total).toFixed(2)}
+                </Typography>
+              )}
             </Grid>
           </Grid>
-          <Grid item xs={12}>
-            {pdfGenerationError && (
-              <Notice
-                error={true}
-                html={`Failed generating PDF. <a href="${createMailto(
-                  pdfGenerationError.stack
-                )}"
-            > Send report</a>`}
-              />
-            )}
-            <InvoiceTable
-              loading={loading}
-              items={items}
-              errors={errors}
-              isNegative={isNegative}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            {invoice && (
-              <Grid container justify="flex-end">
-                <Grid item className={classes.totals}>
-                  <Typography variant="h2">
-                    Subotal:{' '}
-                    {isNegative
-                      ? '-($' + Number(invoice.subtotal * -1).toFixed(2) + ')'
-                      : '$' + Number(invoice.subtotal).toFixed(2)}
-                  </Typography>
-                  <Typography variant="h2">
-                    Tax:{' '}
-                    {isNegative
-                      ? '-($' + Number(invoice.tax * -1).toFixed(2) + ')'
-                      : '$' + Number(invoice.tax).toFixed(2)}
-                  </Typography>
-                  <Typography variant="h2">
-                    Total:{' '}
-                    {isNegative
-                      ? '-($' + Number(invoice.total * -1).toFixed(2) + ')'
-                      : '$' + Number(invoice.total).toFixed(2)}
-                  </Typography>
-                </Grid>
-              </Grid>
-            )}
-          </Grid>
         </Grid>
-      </Paper>
-    );
-  }
-}
+        <Grid item xs={12}>
+          {pdfGenerationError && (
+            <Notice
+              error={true}
+              html={`Failed generating PDF. <a href="${createMailto(
+                pdfGenerationError.stack
+              )}"
+          > Send report</a>`}
+            />
+          )}
+          <InvoiceTable
+            loading={loading}
+            items={items}
+            errors={errors}
+            isNegative={isNegative}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          {invoice && (
+            <Grid container justify="flex-end">
+              <Grid item className={classes.totals}>
+                <Typography variant="h2">
+                  Subotal:{' '}
+                  {isNegative
+                    ? '-($' + Number(invoice.subtotal * -1).toFixed(2) + ')'
+                    : '$' + Number(invoice.subtotal).toFixed(2)}
+                </Typography>
+                <Typography variant="h2">
+                  Tax:{' '}
+                  {isNegative
+                    ? '-($' + Number(invoice.tax * -1).toFixed(2) + ')'
+                    : '$' + Number(invoice.tax).toFixed(2)}
+                </Typography>
+                <Typography variant="h2">
+                  Total:{' '}
+                  {isNegative
+                    ? '-($' + Number(invoice.total * -1).toFixed(2) + ')'
+                    : '$' + Number(invoice.total).toFixed(2)}
+                </Typography>
+              </Grid>
+            </Grid>
+          )}
+        </Grid>
+      </Grid>
+    </Paper>
+  );
+};
 
 type S = ApplicationState['__resources']['account'];
 
@@ -261,13 +234,6 @@ const connected = connect(
   })
 );
 
-const styled = withStyles(styles);
-
-const enhanced = compose<CombinedProps, {}>(
-  connected,
-  styled,
-  withRouter,
-  withFlags
-);
+const enhanced = compose<CombinedProps, {}>(connected, withRouter, withFlags);
 
 export default enhanced(InvoiceDetail);
