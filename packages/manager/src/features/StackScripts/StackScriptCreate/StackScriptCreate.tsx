@@ -411,6 +411,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     const {
       username,
       userCannotCreateStackScripts,
+      userCannotModifyStackScript,
       classes,
       location,
       imagesData,
@@ -473,11 +474,9 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             />
           </Grid>
         </Grid>
-        {userCannotCreateStackScripts && (
+        {(userCannotCreateStackScripts || userCannotModifyStackScript) && (
           <Notice
-            text={
-              "You don't have permissions to create a new StackScript. Please contact an account administrator for details."
-            }
+            text={`You don't have permission to ${mode} StackScripts. Please contact an account administrator for details.`}
             error={true}
             important
           />
