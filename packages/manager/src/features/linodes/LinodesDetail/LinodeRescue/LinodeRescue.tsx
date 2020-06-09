@@ -5,7 +5,7 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { assoc, clamp, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
@@ -84,7 +84,7 @@ interface State {
   counter: number;
 }
 
-export type CombinedProps = VolumesProps &
+type CombinedProps = VolumesProps &
   StateProps &
   ContextProps &
   RouteComponentProps &
@@ -318,7 +318,7 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (
 
 const connected = connect(mapStateToProps);
 
-export default compose<CombinedProps, RouteComponentProps>(
+export default compose<CombinedProps, {}>(
   linodeContext,
   SectionErrorBoundary,
   styled,
@@ -347,6 +347,5 @@ export default compose<CombinedProps, RouteComponentProps>(
       };
     }
   ),
-  withRouter,
   connected
 )(LinodeRescue);
