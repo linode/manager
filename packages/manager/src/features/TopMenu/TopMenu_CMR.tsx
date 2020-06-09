@@ -14,7 +14,6 @@ import Typography from 'src/components/core/Typography';
 import AddNewMenu from './AddNewMenu';
 import SearchBar from './SearchBar';
 import UserEventsMenu from './UserEventsMenu';
-import UserMenu from './UserMenu';
 import UserNotificationsMenu from './UserNotificationsMenu';
 
 type ClassNames = 'root' | 'flex' | 'appBar' | 'toolbar' | 'navIconHide';
@@ -112,7 +111,6 @@ class TopMenu extends React.Component<PropsWithStyles> {
             </Hidden>
             <SearchBar />
             <AddNewMenu />
-            <UserMenu />
             <UserNotificationsMenu />
             <UserEventsMenu />
           </Toolbar>

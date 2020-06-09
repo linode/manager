@@ -1,251 +1,234 @@
-import { pathOr } from 'ramda';
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
-import UserIcon from 'src/assets/icons/user.svg';
-import ButtonBase from 'src/components/core/ButtonBase';
-import Hidden from 'src/components/core/Hidden';
-import Menu from 'src/components/core/Menu';
-import MenuItem from 'src/components/core/MenuItem';
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
-import { MapState } from 'src/store/types';
+  Menu as ReachMenu,
+  MenuButton,
+  MenuItems,
+  MenuLink,
+  MenuPopover
+} from '@reach/menu-button';
+import * as React from 'react';
+import { Link } from 'react-router-dom';
+import UserIcon from 'src/assets/icons/user.svg';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import useAccountManagement from 'src/hooks/useAccountManagement';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 
 interface MenuLink {
   display: string;
   href: string;
+  hide?: boolean;
 }
 
-const menuLinks: MenuLink[] = [
-  { display: 'My Profile', href: '/profile/display' },
-  { display: 'Log Out', href: '/logout' }
-];
-
-type CSSClasses =
-  | 'menu'
-  | 'button'
-  | 'userWrapper'
-  | 'leftIcon'
-  | 'username'
-  | 'menuItem'
-  | 'hidden';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    menu: {
-      transform: `translateY(${theme.spacing(1)}px)`
+const useStyles = makeStyles((theme: Theme) => ({
+  menu: {
+    transform: `translateY(${theme.spacing(1)}px)`
+  },
+  button: {
+    padding: theme.spacing(1),
+    borderRadius: 30,
+    order: 4,
+    '&:hover, &.active': {
+      '& $username': {
+        color: theme.palette.primary.main
+      },
+      '& $userWrapper': {
+        boxShadow: '0 0 10px #bbb'
+      }
     },
-    button: {
-      padding: theme.spacing(1),
-      borderRadius: 30,
-      order: 4,
-      marginRight: -theme.spacing(1),
-      '&:hover, &.active': {
-        '& $username': {
-          color: theme.palette.primary.main
-        },
-        '& $userWrapper': {
-          boxShadow: '0 0 10px #bbb'
+    '&:focus': {
+      '& $username': {
+        color: theme.palette.primary.main
+      }
+    }
+  },
+  userWrapper: {
+    borderRadius: '50%',
+    width: '40px',
+    height: '40px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: theme.transitions.create(['box-shadow']),
+    [theme.breakpoints.down('md')]: {
+      margin: 0,
+      width: '28px',
+      height: '28px'
+    }
+  },
+  leftIcon: {
+    width: 30,
+    height: 30,
+    borderRadius: '50%'
+  },
+  username: {
+    transition: theme.transitions.create(['color']),
+    [theme.breakpoints.down('md')]: {
+      display: 'none'
+    }
+  },
+  menuItem: {
+    fontSize: '.9rem',
+    fontFamily: 'LatoWeb',
+    '&:hover, &:focus': {
+      backgroundColor: theme.palette.primary.main,
+      color: 'white'
+    }
+  },
+  hidden: {
+    ...theme.visually.hidden
+  },
+  menuButton: {
+    display: 'flex',
+    alignItems: 'center',
+    lineHeight: 1,
+    '&[data-reach-menu-button]': {
+      textTransform: 'inherit',
+      borderRadius: 0,
+      fontSize: '1rem',
+      backgroundColor: theme.bg.primaryNavPaper,
+      color: theme.color.primaryNavText,
+      cursor: 'pointer',
+      border: 'none',
+      '&[aria-expanded="true"]': {
+        backgroundColor: theme.bg.primaryNavActiveBG,
+        '& $caret': {
+          transform: 'rotate(180deg)'
         }
       },
+      height: 50,
+      padding: `0px 3px 0px 3px`
+    },
+    '&:hover': {
+      backgroundColor: theme.bg.primaryNavActiveBG
+    },
+    '&:focus': {
+      backgroundColor: theme.bg.primaryNavActiveBG
+    }
+  },
+  menuItemLink: {
+    '&[data-reach-menu-item]': {
+      cursor: 'pointer',
+      fontSize: '1rem',
+      paddingTop: 12,
+      paddingRight: 40,
+      paddingBottom: 12,
+      '&:hover': {
+        backgroundColor: theme.bg.primaryNavActiveBG
+      },
       '&:focus': {
-        '& $username': {
-          color: theme.palette.primary.main
-        }
-      }
+        backgroundColor: theme.bg.primaryNavActiveBG
+      },
+      display: 'flex',
+      alignItems: 'center',
+      color: theme.color.primaryNavText
     },
-    userWrapper: {
-      marginRight: theme.spacing(1),
-      borderRadius: '50%',
-      width: '40px',
-      height: '40px',
-      transition: theme.transitions.create(['box-shadow']),
+    '&[data-reach-menu-item][data-selected]': {
+      backgroundColor: theme.bg.primaryNavActiveBG
+    },
+    lineHeight: 1
+  },
+  menuItemList: {
+    '&[data-reach-menu-items]': {
+      padding: 0,
+      border: 'none',
+      whiteSpace: 'normal',
+      backgroundColor: theme.bg.primaryNavPaper
+    }
+  },
+  menuPopover: {
+    '&[data-reach-menu], &[data-reach-menu-popover]': {
+      zIndex: 3000,
+      position: 'absolute',
+      top: 50,
+      // Hack solution to have something semi-working on mobile.
       [theme.breakpoints.down('md')]: {
-        margin: 0,
-        width: '28px',
-        height: '28px'
+        left: 0
       }
-    },
-    leftIcon: {
-      width: '100%',
-      height: '100%',
-      borderRadius: '50%'
-    },
-    username: {
-      transition: theme.transitions.create(['color']),
-      [theme.breakpoints.down('md')]: {
-        display: 'none'
-      }
-    },
-    menuItem: {
-      fontSize: '.9rem',
-      fontFamily: 'LatoWeb',
-      '&:hover, &:focus': {
-        backgroundColor: theme.palette.primary.main,
-        color: 'white'
-      }
-    },
-    hidden: {
-      ...theme.visually.hidden
     }
-  });
-
-export type CombinedProps = StateProps & WithStyles<CSSClasses>;
-
-interface State {
-  anchorEl?: HTMLElement;
-  gravatarUrl: string | undefined;
-}
-
-export class UserMenu extends React.Component<CombinedProps, State> {
-  state = {
-    anchorEl: undefined,
-    gravatarUrl: undefined
-  };
-
-  constructor(props: CombinedProps) {
-    super(props);
+  },
+  caret: {
+    fontSize: 26,
+    marginTop: 4,
+    color: '#9ea4ae',
+    marginLeft: 2
   }
+}));
 
-  mounted: boolean = false;
+export const UserMenu: React.FC<{}> = () => {
+  const classes = useStyles();
 
-  handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    this.setState({ anchorEl: event.currentTarget });
-  };
+  const [gravatarURL, setGravatarURL] = React.useState<string | undefined>();
+  const [gravatarLoading, setGravatarLoading] = React.useState<boolean>(false);
 
-  handleClose = () => {
-    this.setState({ anchorEl: undefined });
-  };
+  const { _hasAccountAccess, profile, account } = useAccountManagement();
 
-  renderMenuLink(menuLink: MenuLink) {
-    const { classes } = this.props;
-    return (
-      <Link
-        role="menuitem"
-        to={menuLink.href}
-        className={classes.menuItem}
-        data-qa-menu-link={menuLink.display}
-        key={menuLink.display}
-        onClick={this.handleClose}
-      >
-        <MenuItem key={menuLink.display}>{menuLink.display}</MenuItem>
-      </Link>
-    );
-  }
+  const userEmail = profile.data?.email;
 
-  setGravatarUrl(email: string) {
-    getGravatarUrl(email).then(url => {
-      this.setState({ gravatarUrl: url });
-    });
-  }
-
-  UNSAFE_componentWillReceiveProps(nextProps: StateProps) {
-    /** 2018-09-06: Should this be in componentDidUpdate? */
-    const { userEmail: currentUserEmail } = this.props;
-    const { userEmail } = nextProps;
-
-    if (userEmail && userEmail !== currentUserEmail) {
-      this.setGravatarUrl(userEmail);
-    }
-  }
-
-  renderAvatar() {
-    const { classes } = this.props;
-    const { gravatarUrl } = this.state;
-    if (!gravatarUrl) {
-      return null;
-    }
-    return gravatarUrl !== 'not found' ? (
-      <div className={classes.userWrapper}>
-        <img src={gravatarUrl} className={classes.leftIcon} alt="Gravatar" />
-      </div>
-    ) : (
-      <div className={classes.userWrapper}>
-        <UserIcon className={classes.leftIcon} />
-      </div>
-    );
-  }
-
-  componentDidMount() {
-    this.mounted = true;
-
-    const { userEmail } = this.props;
-
+  React.useEffect(() => {
     if (userEmail) {
-      this.setGravatarUrl(userEmail);
+      setGravatarLoading(true);
+      getGravatarUrl(userEmail).then(url => {
+        setGravatarLoading(false);
+        setGravatarURL(url);
+      });
     }
-  }
+  }, [userEmail]);
 
-  componentWillUnmount() {
-    this.mounted = false;
-  }
+  const menuLinks: MenuLink[] = React.useMemo(
+    () => [
+      {
+        display: 'Account',
+        href: '/account',
+        hide: account.loading || !_hasAccountAccess
+      },
+      { display: 'My Profile', href: '/profile/display' },
+      { display: 'Log Out', href: '/logout' }
+    ],
+    [account.loading, _hasAccountAccess]
+  );
 
-  render() {
-    const { classes, username } = this.props;
-    const { anchorEl } = this.state;
-    const open = Boolean(anchorEl);
+  return (
+    <div>
+      <ReachMenu>
+        <MenuButton
+          className={classes.menuButton}
+          data-testid="nav-group-profile"
+        >
+          {gravatarLoading ? (
+            <div className={classes.userWrapper} />
+          ) : gravatarURL === 'not found' ? (
+            <div className={classes.userWrapper}>
+              <UserIcon className={classes.leftIcon} />
+            </div>
+          ) : (
+            <div className={classes.userWrapper}>
+              <img
+                src={gravatarURL}
+                className={classes.leftIcon}
+                alt="Gravatar"
+              />
+            </div>
+          )}
+          <KeyboardArrowDown className={classes.caret} />
+        </MenuButton>
+        <MenuPopover className={classes.menuPopover} portal={false}>
+          <MenuItems className={classes.menuItemList}>
+            {menuLinks.map(menuLink => (
+              <MenuLink
+                key={menuLink.display}
+                as={Link}
+                to={menuLink.href}
+                className={classes.menuItemLink}
+                data-testid={`menu-item-${menuLink.display}`}
+              >
+                {menuLink.display}
+              </MenuLink>
+            ))}
+          </MenuItems>
+        </MenuPopover>
+      </ReachMenu>
+    </div>
+  );
+};
 
-    return (
-      <React.Fragment>
-        <Hidden smDown>
-          <ButtonBase
-            onClick={this.handleMenu}
-            className={` ${classes.button} ${anchorEl && 'active'}`}
-            data-qa-user-menu
-            aria-label="User Menu"
-          >
-            {username && (
-              <React.Fragment>
-                {this.renderAvatar()}
-                <span className={classes.username}>{username && username}</span>
-              </React.Fragment>
-            )}
-          </ButtonBase>
-          <Menu
-            anchorEl={anchorEl}
-            getContentAnchorEl={undefined}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right'
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right'
-            }}
-            open={open}
-            onClose={this.handleClose}
-            className={classes.menu}
-          >
-            {/* <MenuItem
-              key="placeholder"
-              aria-hidden
-              className={classes.hidden}
-            /> */}
-            {menuLinks.map(menuLink => this.renderMenuLink(menuLink))}
-          </Menu>
-        </Hidden>
-      </React.Fragment>
-    );
-  }
-}
-
-interface StateProps {
-  userEmail: string;
-  username: string;
-}
-
-const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => ({
-  userEmail: pathOr('', ['data', 'email'], state.__resources.profile),
-  username: pathOr('', ['data', 'username'], state.__resources.profile)
-});
-
-export default compose<CombinedProps, {}>(
-  connect(mapStateToProps),
-  withStyles(styles)
-)(UserMenu);
+export default React.memo(UserMenu);
