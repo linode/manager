@@ -11,7 +11,14 @@ export const routes = {
   supportTickets: '/support/tickets',
   profile: '/profile'
 };
-
+/**
+ * due 2 rerender of the page that i could not deterministically check i added this wait
+ * @todo find a better way
+ */
+const waitDoubleRerender = () => {
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(500);
+};
 // List of Routes and validator of the route
 export const pages = [
   {
@@ -46,7 +53,8 @@ export const pages = [
       {
         name: 'Create Button',
         go: () => {
-          loadAppNoLogin(routes.profile);
+          // going to a page that loads easily, not dashboard for faster test
+          loadAppNoLogin(routes.support);
           cy.get('[data-qa-add-new-menu-button="true"]')
             .should('be.visible')
             .click();
@@ -96,6 +104,7 @@ export const pages = [
           const url = `${routes.profile}/auth`;
           loadAppNoLogin(url);
           cy.findByText('Password Reset').should('be.visible');
+          waitDoubleRerender();
           cy.findByText('Display')
             .should('be.visible')
             .click();
@@ -122,7 +131,10 @@ export const pages = [
         go: () => {
           loadAppNoLogin(routes.profile);
           cy.findByText('Username').should('be.visible');
-          cy.get('[data-qa-tab="Password & Authentication"]').click();
+          waitDoubleRerender();
+          cy.findByText('Password & Authentication')
+            .should('be.visible')
+            .click();
         }
       }
     ]
@@ -137,6 +149,7 @@ export const pages = [
         go: () => {
           loadAppNoLogin(routes.profile);
           cy.findByText('Username');
+          waitDoubleRerender();
           cy.findByText('SSH Keys').click();
         }
       }
@@ -153,6 +166,7 @@ export const pages = [
         go: () => {
           loadAppNoLogin(routes.profile);
           cy.findByText('Username');
+          waitDoubleRerender();
           cy.findByText('LISH').click();
         }
       }
@@ -169,6 +183,7 @@ export const pages = [
         go: () => {
           loadAppNoLogin(routes.profile);
           cy.findByText('Username');
+          waitDoubleRerender();
           cy.findByText('API Tokens').click();
         }
       }
@@ -230,6 +245,7 @@ export const pages = [
         go: () => {
           loadAppNoLogin(`${routes.account}/users`);
           cy.findByText('Username');
+          waitDoubleRerender();
           cy.findByText('Billing Info')
             .should('be.visible')
             .click();
@@ -247,6 +263,7 @@ export const pages = [
         go: () => {
           loadAppNoLogin(routes.account);
           cy.findByText('Billing Contact');
+          waitDoubleRerender();
           cy.findByText('Users').click();
         }
       }
@@ -263,6 +280,7 @@ export const pages = [
         go: () => {
           loadAppNoLogin(routes.account);
           cy.findByText('Billing Contact');
+          waitDoubleRerender();
           cy.findByText('Settings').click();
         }
       }
