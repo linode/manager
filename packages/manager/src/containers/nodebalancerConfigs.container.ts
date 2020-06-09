@@ -9,16 +9,21 @@ export interface StateProps {
   configsError?: Error | APIError[];
 }
 
-const mapStateToProps: MapStateToProps<
-  StateProps,
-  {},
-  ApplicationState
-> = state => ({
-  configs: state.__resources.nodeBalancerConfigs.items.map(
-    thisId => state.__resources.nodeBalancerConfigs.itemsById[thisId]
-  ),
-  configsLoading: state.__resources.nodeBalancerConfigs.loading,
-  configsError: state.__resources.nodeBalancerConfigs.error
-});
+const container = (nodeBalancerId: number) => {
+  const mapStateToProps: MapStateToProps<
+    StateProps,
+    {},
+    ApplicationState
+  > = state => {
+    const thisNBConfigState =
+      state.__resources.nodeBalancerConfigs[nodeBalancerId];
+    return {
+      configs: Object.values(thisNBConfigState.itemsById ?? {}),
+      configsLoading: thisNBConfigState.loading ?? false,
+      configsError: thisNBConfigState.error?.read ?? []
+    };
+  };
+  return connect(mapStateToProps);
+};
 
-export default connect(mapStateToProps);
+export default container;
