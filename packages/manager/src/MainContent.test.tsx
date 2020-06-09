@@ -7,7 +7,7 @@ const mainContentBanner = {
   text: 'Test Text',
   link: {
     text: 'Test anchor text',
-    url: 'https://linode.com/change'
+    url: 'https://linode.com'
   },
   key: 'Test Text Key'
 };
