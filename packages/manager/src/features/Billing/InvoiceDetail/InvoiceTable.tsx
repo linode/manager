@@ -23,6 +23,7 @@ interface Props {
 
 const InvoiceTable: React.FC<Props> = props => {
   const { loading, errors, items, isNegative } = props;
+
   return (
     <Table border aria-label="Invoice Details">
       <TableHead>
@@ -69,6 +70,7 @@ const RenderData: React.FC<{
   isNegative: boolean;
 }> = props => {
   const { items, isNegative } = props;
+
   return (
     <Paginate data={items} pageSize={25}>
       {({
@@ -110,23 +112,25 @@ const RenderData: React.FC<{
               </TableRow>
             )
           )}
-          <TableRow>
-            <TableCell
-              style={{
-                paddingTop: 2
-              }}
-              colSpan={8}
-            >
-              <PaginationFooter
-                eventCategory="invoice_items"
-                count={count}
-                page={page}
-                pageSize={pageSize}
-                handlePageChange={handlePageChange}
-                handleSizeChange={handlePageSizeChange}
-              />
-            </TableCell>
-          </TableRow>
+          {count > pageSize && (
+            <TableRow>
+              <TableCell
+                style={{
+                  paddingTop: 2
+                }}
+                colSpan={8}
+              >
+                <PaginationFooter
+                  eventCategory="invoice_items"
+                  count={count}
+                  page={page}
+                  pageSize={pageSize}
+                  handlePageChange={handlePageChange}
+                  handleSizeChange={handlePageSizeChange}
+                />
+              </TableCell>
+            </TableRow>
+          )}
         </React.Fragment>
       )}
     </Paginate>
