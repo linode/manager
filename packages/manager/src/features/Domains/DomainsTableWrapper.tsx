@@ -2,7 +2,6 @@ import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
-  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -13,7 +12,7 @@ import SortableTableHead from './SortableTableHead';
 
 type ClassNames = 'root' | 'paperWrapper';
 
-const styles = (theme: Theme) =>
+const styles = () =>
   createStyles({
     root: {},
     paperWrapper: {
