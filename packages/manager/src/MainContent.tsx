@@ -37,6 +37,8 @@ import withPreferences, {
 } from 'src/containers/preferences.container';
 
 import Logo from 'src/assets/logo/logo-text.svg';
+import { FlagSet } from './featureFlags';
+import { UserPreferences } from './store/preferences/preferences.actions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appFrame: {
@@ -158,6 +160,8 @@ const MainContent: React.FC<CombinedProps> = props => {
 
   const [menuIsOpen, toggleMenu] = React.useState<boolean>(false);
 
+  const [bannerDismissed, setBannerDismissed] = React.useState<boolean>(false);
+
   /**
    * this is the case where the user has successfully completed signup
    * but needs a manual review from Customer Support. In this case,
@@ -203,14 +207,13 @@ const MainContent: React.FC<CombinedProps> = props => {
     );
   }
 
-  // @todo: clean this up.
   const shouldDisplayMainContentBanner =
-    flags.mainContentBanner &&
-    !isEmpty(flags.mainContentBanner) &&
-    flags.mainContentBanner.key &&
-    !props.preferences?.mainContentBannerDismissal?.[
-      flags?.mainContentBanner?.key ?? 'mainContentBannerKey'
-    ];
+    !bannerDismissed &&
+    checkFlagsForMainContentBanner(flags) &&
+    !checkPreferencesForBannerDismissal(
+      props.preferences,
+      flags?.mainContentBanner?.key
+    );
 
   /**
    * otherwise just show the rest of the app.
@@ -240,6 +243,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                 url={flags.mainContentBanner?.link?.url ?? ''}
                 linkText={flags.mainContentBanner?.link?.text ?? ''}
                 bannerKey={flags.mainContentBanner?.key ?? ''}
+                onClose={() => setBannerDismissed(true)}
               />
             )}
             <SideMenu
@@ -344,3 +348,21 @@ export default compose<CombinedProps, Props>(
   withTheme,
   withPreferences()
 )(MainContent);
+
+// =============================================================================
+// Utilities
+// =============================================================================
+export const checkFlagsForMainContentBanner = (flags: FlagSet) => {
+  return Boolean(
+    flags.mainContentBanner &&
+      !isEmpty(flags.mainContentBanner) &&
+      flags.mainContentBanner.key
+  );
+};
+
+export const checkPreferencesForBannerDismissal = (
+  preferences: UserPreferences,
+  key = 'defaultKey'
+) => {
+  return Boolean(preferences?.main_content_banner_dismissal?.[key]);
+};

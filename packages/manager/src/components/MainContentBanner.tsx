@@ -43,6 +43,7 @@ interface Props {
   url: string;
   linkText: string;
   bannerKey: string;
+  onClose: () => void;
 }
 
 type CombinedProps = Props & PreferencesProps;
@@ -54,21 +55,26 @@ const MainContentBanner: React.FC<CombinedProps> = props => {
     linkText,
     bannerKey,
     getUserPreferences,
-    updateUserPreferences
+    updateUserPreferences,
+    onClose
   } = props;
 
   const classes = useStyles();
 
   const dismiss = () => {
-    getUserPreferences().then(preferences => {
-      updateUserPreferences({
-        ...preferences,
-        mainContentBannerDismissal: {
-          ...preferences.mainContentBannerDismissal,
-          [bannerKey]: true
-        }
-      });
-    });
+    onClose();
+    getUserPreferences()
+      .then(preferences => {
+        updateUserPreferences({
+          ...preferences,
+          main_content_banner_dismissal: {
+            ...preferences.main_content_banner_dismissal,
+            [bannerKey]: true
+          }
+        });
+      })
+      // It's OK if this fails (the banner is still dismissed in the UI due to local state).
+      .catch(_ => null);
   };
 
   return (
