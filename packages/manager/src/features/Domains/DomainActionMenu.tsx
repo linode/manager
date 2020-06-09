@@ -13,6 +13,7 @@ export interface Handlers {
   ) => void;
   onClone: (domain: string, id: number) => void;
   onEdit: (domain: string, id: number) => void;
+  [index: string]: any;
 }
 
 interface Props extends Handlers {

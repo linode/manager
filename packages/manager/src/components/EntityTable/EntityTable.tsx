@@ -13,8 +13,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface EntityTableRow<T> {
-  Component: React.ComponentType<T>;
+  Component: React.ComponentType;
   data: T[];
+  handlers?: Handlers;
 }
 
 interface Props {
@@ -22,13 +23,12 @@ interface Props {
   headers: HeaderCell[];
   groupByTag: boolean;
   row: EntityTableRow<any>;
-  handlers?: Handlers;
 }
 
 export type CombinedProps = Props;
 
 export const LandingTable: React.FC<Props> = props => {
-  const { entity, handlers, headers, groupByTag, row } = props;
+  const { entity, headers, groupByTag, row } = props;
   const classes = useStyles();
   return (
     <OrderBy data={row.data} orderBy={'label'} order={'asc'}>
@@ -66,7 +66,7 @@ export const LandingTable: React.FC<Props> = props => {
           RowComponent: row.Component,
           headerCells,
           entity,
-          handlers
+          handlers: row.handlers
         };
 
         if (groupByTag) {

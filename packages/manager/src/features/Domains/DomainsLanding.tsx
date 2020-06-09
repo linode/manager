@@ -23,6 +23,10 @@ import {
 import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import EntityTable, {
+  EntityTableRow,
+  HeaderCell
+} from 'src/components/EntityTable';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -42,14 +46,10 @@ import {
 } from 'src/store/domainDrawer';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
+import { Handlers as DomainHandlers } from './DomainActionMenu';
 import DisableDomainDialog from './DisableDomainDialog';
-import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 import DomainRow from './DomainTableRow';
-
-import EntityTable, {
-  EntityTableRow,
-  HeaderCell
-} from 'src/components/EntityTable';
+import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
 type ClassNames =
   | 'root'
@@ -323,9 +323,17 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       linodesLoading
     } = this.props;
 
+    const handlers: DomainHandlers = {
+      onClone: this.props.openForCloning,
+      onEdit: this.props.openForEditing,
+      onRemove: this.openRemoveDialog,
+      onDisableOrEnable: this.handleClickEnableOrDisableDomain
+    };
+
     const domainRow: EntityTableRow<Domain> = {
       Component: DomainRow,
-      data: domainsData ?? []
+      data: domainsData ?? [],
+      handlers
     };
 
     if (domainsLoading) {
@@ -469,12 +477,6 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                     groupByTag={domainsAreGrouped}
                     row={domainRow}
                     headers={headers}
-                    handlers={{
-                      onClone: this.props.openForCloning,
-                      onEdit: this.props.openForEditing,
-                      onRemove: this.openRemoveDialog,
-                      onDisableOrEnable: this.handleClickEnableOrDisableDomain
-                    }}
                   />
                 </Grid>
               </React.Fragment>
