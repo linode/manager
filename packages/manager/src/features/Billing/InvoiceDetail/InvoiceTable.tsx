@@ -18,10 +18,11 @@ interface Props {
   loading: boolean;
   errors?: APIError[];
   items?: InvoiceItem[];
+  isNegative: boolean;
 }
 
 const InvoiceTable: React.FC<Props> = props => {
-  const { loading, errors, items } = props;
+  const { loading, errors, items, isNegative } = props;
   return (
     <Table border aria-label="Invoice Details">
       <TableHead>
@@ -39,7 +40,12 @@ const InvoiceTable: React.FC<Props> = props => {
         </TableRow>
       </TableHead>
       <TableBody>
-        <MaybeRenderContent loading={loading} errors={errors} items={items} />
+        <MaybeRenderContent
+          loading={loading}
+          errors={errors}
+          items={items}
+          isNegative={isNegative}
+        />
       </TableBody>
     </Table>
   );
@@ -60,8 +66,9 @@ const renderQuantity = (v: null | number) => (v ? v : null);
 
 const RenderData: React.FC<{
   items: InvoiceItem[];
+  isNegative: boolean;
 }> = props => {
-  const { items } = props;
+  const { items, isNegative } = props;
   return (
     <Paginate data={items} pageSize={25}>
       {({
@@ -92,13 +99,13 @@ const RenderData: React.FC<{
                   {renderUnitPrice(unit_price)}
                 </TableCell>
                 <TableCell parentColumn="Amount (USD)" data-qa-amount>
-                  ${amount}
+                  {isNegative ? '-($' + amount * -1 + ')' : '$' + amount}
                 </TableCell>
                 <TableCell parentColumn="Tax (USD)" data-qa-tax>
-                  ${tax}
+                  {isNegative ? '-($' + tax * -1 + ')' : '$' + tax}
                 </TableCell>
                 <TableCell parentColumn="Total (USD)" data-qa-total>
-                  ${total}
+                  {isNegative ? '-($' + total * -1 + ')' : '$' + total}
                 </TableCell>
               </TableRow>
             )
@@ -146,8 +153,9 @@ const MaybeRenderContent: React.FC<{
   loading: boolean;
   errors?: APIError[];
   items?: any[];
+  isNegative: boolean;
 }> = props => {
-  const { loading, errors, items } = props;
+  const { loading, errors, items, isNegative } = props;
 
   if (loading) {
     return <RenderLoading />;
@@ -158,7 +166,7 @@ const MaybeRenderContent: React.FC<{
   }
 
   if (items && items.length > 0) {
-    return <RenderData items={items} />;
+    return <RenderData items={items} isNegative={isNegative} />;
   }
 
   return <RenderEmpty />;

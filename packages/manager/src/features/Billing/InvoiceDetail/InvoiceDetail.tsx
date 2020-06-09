@@ -35,7 +35,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import InvoiceTable from './InvoiceTable';
 
-type ClassNames = 'root' | 'backButton' | 'titleWrapper' | 'totals';
+type ClassNames = 'root' | 'backButton' | 'titleWrapper' | 'totals' | 'm2';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -60,6 +60,9 @@ const styles = (theme: Theme) =>
         width: 34,
         height: 34
       }
+    },
+    m2: {
+      margin: theme.spacing()
     }
   });
 
@@ -69,6 +72,7 @@ interface State {
   loading: boolean;
   errors?: APIError[];
   pdfGenerationError?: any;
+  isNegative: boolean;
 }
 
 type CombinedProps = RouteComponentProps<{ invoiceId: string }> &
@@ -79,7 +83,8 @@ type CombinedProps = RouteComponentProps<{ invoiceId: string }> &
 class InvoiceDetail extends React.Component<CombinedProps, State> {
   state: State = {
     loading: false,
-    pdfGenerationError: undefined
+    pdfGenerationError: undefined,
+    isNegative: false
   };
 
   mounted: boolean = false;
@@ -106,7 +111,8 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
         this.setState({
           loading: false,
           invoice,
-          items
+          items,
+          isNegative: invoice.total < 0
         });
       })
       .catch(errorResponse => {
@@ -138,7 +144,14 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes, data } = this.props;
-    const { invoice, loading, errors, items, pdfGenerationError } = this.state;
+    const {
+      invoice,
+      loading,
+      errors,
+      items,
+      pdfGenerationError,
+      isNegative
+    } = this.state;
 
     return (
       <Paper className={classes.root}>
@@ -174,10 +187,13 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
                   </Button>
                 )}
               </Grid>
-              <Grid item className={classes.titleWrapper}>
+              <Grid item className={`${classes.titleWrapper} ${classes.m2}`}>
                 {invoice && (
                   <Typography variant="h2" data-qa-total={invoice.total}>
-                    Total: ${Number(invoice.total).toFixed(2)}
+                    Total:{' '}
+                    {isNegative
+                      ? '-($' + Number(invoice.total * -1).toFixed(2) + ')'
+                      : '$' + Number(invoice.total).toFixed(2)}
                   </Typography>
                 )}
               </Grid>
@@ -193,20 +209,34 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
             > Send report</a>`}
               />
             )}
-            <InvoiceTable loading={loading} items={items} errors={errors} />
+            <InvoiceTable
+              loading={loading}
+              items={items}
+              errors={errors}
+              isNegative={isNegative}
+            />
           </Grid>
           <Grid item xs={12}>
             {invoice && (
               <Grid container justify="flex-end">
                 <Grid item className={classes.totals}>
                   <Typography variant="h2">
-                    Subtotal: ${Number(invoice.subtotal).toFixed(2)}
+                    Subotal:{' '}
+                    {isNegative
+                      ? '-($' + Number(invoice.subtotal * -1).toFixed(2) + ')'
+                      : '$' + Number(invoice.subtotal).toFixed(2)}
                   </Typography>
                   <Typography variant="h2">
-                    Tax: ${Number(invoice.tax).toFixed(2)}
+                    Tax:{' '}
+                    {isNegative
+                      ? '-($' + Number(invoice.tax * -1).toFixed(2) + ')'
+                      : '$' + Number(invoice.tax).toFixed(2)}
                   </Typography>
                   <Typography variant="h2">
-                    Total: ${Number(invoice.total).toFixed(2)}
+                    Total:{' '}
+                    {isNegative
+                      ? '-($' + Number(invoice.total * -1).toFixed(2) + ')'
+                      : '$' + Number(invoice.total).toFixed(2)}
                   </Typography>
                 </Grid>
               </Grid>
