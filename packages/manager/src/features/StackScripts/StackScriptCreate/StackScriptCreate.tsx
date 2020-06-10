@@ -438,6 +438,10 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       thisImage => !this.state.images.includes(thisImage.id)
     );
 
+    const shouldDisable =
+      (mode === 'edit' && userCannotModifyStackScript) ||
+      (mode === 'create' && userCannotCreateStackScripts);
+
     if (!username) {
       return (
         <ErrorState errorText="An error has occurred. Please try again." />
@@ -471,7 +475,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             />
           </Grid>
         </Grid>
-        {(userCannotCreateStackScripts || userCannotModifyStackScript) && (
+        {shouldDisable && (
           <Notice
             text={`You don't have permission to ${
               mode === 'create'
@@ -485,7 +489,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         <ScriptForm
           currentUser={username}
           disableSubmit={!hasUnsavedChanges}
-          disabled={userCannotCreateStackScripts || userCannotModifyStackScript}
+          disabled={shouldDisable}
           mode={mode}
           images={{
             available: availableImages,
@@ -544,9 +548,8 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (
     userCannotCreateStackScripts:
       isRestrictedUser(state) && !hasGrant(state, 'add_stackscripts'),
     userCannotModifyStackScript:
-      isRestrictedUser(state) ||
-      Boolean(grantsForThisStackScript) ||
-      grantsForThisStackScript?.permissions === 'read_only'
+      isRestrictedUser(state) &&
+      grantsForThisStackScript?.permissions !== 'read_write'
   };
 };
 
