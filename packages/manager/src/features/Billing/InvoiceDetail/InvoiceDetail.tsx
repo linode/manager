@@ -15,14 +15,13 @@ import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Currency from 'src/components/Currency';
 import Grid from 'src/components/Grid';
 import IconButton from 'src/components/IconButton';
 import Notice from 'src/components/Notice';
-import withFlags, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import createMailto from 'src/features/Footer/createMailto';
+import useFlags from 'src/hooks/useFlags';
 import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
 import { ThunkDispatch } from 'src/store/types';
@@ -58,9 +57,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-type CombinedProps = RouteComponentProps<{ invoiceId: string }> &
-  StateProps &
-  FeatureFlagConsumerProps;
+type CombinedProps = RouteComponentProps<{ invoiceId: string }> & StateProps;
 
 export const InvoiceDetail: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -77,6 +74,8 @@ export const InvoiceDetail: React.FC<CombinedProps> = props => {
     undefined
   );
   const [isNegative, setIsNegative] = React.useState<boolean>(false);
+
+  const flags = useFlags();
 
   const requestData = () => {
     const {
@@ -121,7 +120,7 @@ export const InvoiceDetail: React.FC<CombinedProps> = props => {
     invoice: Invoice,
     items: InvoiceItem[]
   ) => {
-    const taxBanner = props.flags.taxBanner;
+    const taxBanner = flags.taxBanner;
     const result = printInvoice(account, invoice, items, taxBanner);
 
     setPDFGenerationError(result.status === 'error' ? result.error : undefined);
@@ -165,9 +164,10 @@ export const InvoiceDetail: React.FC<CombinedProps> = props => {
               {invoice && (
                 <Typography variant="h2" data-qa-total={invoice.total}>
                   Total:{' '}
-                  {isNegative
-                    ? '-($' + Number(invoice.total * -1).toFixed(2) + ')'
-                    : '$' + Number(invoice.total).toFixed(2)}
+                  <Currency
+                    wrapInParentheses={isNegative}
+                    quantity={invoice.total}
+                  />
                 </Typography>
               )}
             </Grid>
@@ -196,21 +196,20 @@ export const InvoiceDetail: React.FC<CombinedProps> = props => {
               <Grid item className={classes.totals}>
                 <Typography variant="h2">
                   Subotal:{' '}
-                  {isNegative
-                    ? '-($' + Number(invoice.subtotal * -1).toFixed(2) + ')'
-                    : '$' + Number(invoice.subtotal).toFixed(2)}
+                  <Currency
+                    wrapInParentheses={isNegative}
+                    quantity={invoice.subtotal}
+                  />
                 </Typography>
                 <Typography variant="h2">
-                  Tax:{' '}
-                  {isNegative
-                    ? '-($' + Number(invoice.tax * -1).toFixed(2) + ')'
-                    : '$' + Number(invoice.tax).toFixed(2)}
+                  Tax: <Currency quantity={invoice.tax} />
                 </Typography>
                 <Typography variant="h2">
                   Total:{' '}
-                  {isNegative
-                    ? '-($' + Number(invoice.total * -1).toFixed(2) + ')'
-                    : '$' + Number(invoice.total).toFixed(2)}
+                  <Currency
+                    wrapInParentheses={isNegative}
+                    quantity={invoice.total}
+                  />
                 </Typography>
               </Grid>
             </Grid>
@@ -234,6 +233,6 @@ const connected = connect(
   })
 );
 
-const enhanced = compose<CombinedProps, {}>(connected, withRouter, withFlags);
+const enhanced = compose<CombinedProps, {}>(connected, withRouter);
 
 export default enhanced(InvoiceDetail);

@@ -4,6 +4,7 @@ import * as React from 'react';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
+import Currency from 'src/components/Currency';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
@@ -103,13 +104,13 @@ const RenderData: React.FC<{
                   {renderUnitPrice(unit_price)}
                 </TableCell>
                 <TableCell parentColumn="Amount (USD)" data-qa-amount>
-                  {isNegative ? '-($' + amount * -1 + ')' : '$' + amount}
+                  <Currency wrapInParentheses={isNegative} quantity={amount} />
                 </TableCell>
                 <TableCell parentColumn="Tax (USD)" data-qa-tax>
-                  {isNegative ? '-($' + tax * -1 + ')' : '$' + tax}
+                  <Currency quantity={tax} />
                 </TableCell>
                 <TableCell parentColumn="Total (USD)" data-qa-total>
-                  {isNegative ? '-($' + total * -1 + ')' : '$' + total}
+                  <Currency wrapInParentheses={isNegative} quantity={total} />
                 </TableCell>
               </TableRow>
             )
