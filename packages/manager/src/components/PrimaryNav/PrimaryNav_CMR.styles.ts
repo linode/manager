@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     left: 'inherit',
     boxShadow: 'none',
     transition: 'width linear .1s',
-    overflowX: 'scroll',
+    overflowX: 'auto',
     alignItems: 'center',
     justifyContent: 'center',
     [theme.breakpoints.down('md')]: {
