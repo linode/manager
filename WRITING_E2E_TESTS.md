@@ -129,8 +129,8 @@ getTab1().click();
 cy.findByText('tab 2').should('be.visible');
 ```
 
-# Working with your API requests
-## Mocking API responses
+## Working with your API requests
+### Mocking API responses
 **this only works on requests on the same path as your app**
 
 This is quite easy to read, here i mock a path GET method and always return a response specified by response.
@@ -144,7 +144,7 @@ cy.route({
 })
 ```
 
-## waiting for an api request to be done
+### waiting for an api request to be done
 You may want to do this to wait for data to be available or because you want to check the response status
 Example, Checking if the creation of an object is successful:
 
@@ -162,12 +162,53 @@ Example, Checking if the creation of an object is successful:
           .should('be', 200);
 ```
 
-# making XHR requests
-## to our API
-Our api is behind `cloud.linode.com/api/v4` 
+### making XHR requests directly
+Using `cy.request` is much faster and lightweight than request launched by the browser.
 
-# Other
-## Visual regression tests
+Although, They are not wrapped by the `cy.server` and cannot be mocked.
+
+If you need to make an external call (not behind `cloud.linode.com/api/v4`) then you HAVE TO use    cy.request`
+
+## Tools usable with Cypress
+### testing-library
+https://testing-library.com/docs/cypress-testing-library/intro
+
+gives us great patterns for testing such as `findByText` or `findByLabelText`.
+**Why**
+Because we want our test to not rely on non semantic HTML, and be easity readable. (learn more)[https://testing-library.com/docs/intro]
+
+### assertion
+*we added `chai-string` to the supported assertions*
+There is 2 ways of executing tests, using `except(obj)` or `cypressObj.should(<assertionString>)`
+These approach are equivalent, although it is very often natiural to use `should` as `cy.get` calls return a Cypress wrapped object asynchronously.
+
+```js
+cy.get('#id').should('be.visible')
+// often easier than
+cy.get('#id').then(element => expect(element).to.be.visible()
+```
+
+*the disavantage of this approch is the risk of mistyping that string, and the repetition of this string*
+
+(learn)[https://docs.cypress.io/guides/references/assertions.html#Chai]
+
+### momentJs
+Is built in cypress if you need to parse, format dates
+
+## Configuration and environment
+The configuration is set by a few files:
+- `cypress.json`
+    - specifies the base URL of the app and some general settings
+- `.env`
+    - MANAGER_OAUTH = personal access token to api in your cloud profile Access token
+    - REACT_APP_CLIENT_ID = id of the oauth app for the development server of the app, see (GETTING_STARTED)[GETTING_STARTED.md]
+    - REACT_APP_API_ROOT = `http://localhost:3000`
+    - REACT_APP_LOGIN_ROOT = `https://login.linode.com`
+    - REACT_APP_API_ROOT = `https://api.linode.com/v4`
+
+
+## Other
+### Visual regression tests
 
 When you write a new Visual regression test with cypress and used `checkSnapshot()` you need to record the correct snapshot.
 
