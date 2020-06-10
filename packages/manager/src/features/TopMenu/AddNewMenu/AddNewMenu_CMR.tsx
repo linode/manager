@@ -67,7 +67,7 @@ const styles = (theme: Theme) =>
         cursor: 'pointer',
         border: 'none',
         [theme.breakpoints.down('sm')]: {
-          marginLeft: theme.spacing(2),
+          marginLeft: theme.spacing(),
           maxHeight: 34,
           minWidth: 100
         },
@@ -109,7 +109,7 @@ const styles = (theme: Theme) =>
     menuPopover: {
       '&[data-reach-menu], &[data-reach-menu-popover]': {
         width: 350,
-        left: theme.spacing(2),
+        left: theme.spacing(),
         [theme.breakpoints.up('md')]: {
           left: 0
         }
