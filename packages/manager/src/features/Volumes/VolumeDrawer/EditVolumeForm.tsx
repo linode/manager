@@ -1,7 +1,8 @@
-import { Form, Formik } from 'formik';
+import { Formik } from 'formik';
 import { UpdateVolumeSchema } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
 import { compose } from 'recompose';
+import Form from 'src/components/core/Form';
 import Notice from 'src/components/Notice';
 import TagsInput, { Tag } from 'src/components/TagsInput';
 import withVolumesRequest, {
@@ -60,7 +61,7 @@ const RenameVolumeForm: React.FC<CombinedProps> = props => {
           label,
           tags: tags.map(v => v.value)
         })
-          .then(response => {
+          .then(_ => {
             resetForm();
             updateVolumes$.next(true);
             onClose();
