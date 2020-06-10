@@ -135,13 +135,13 @@ class AccessPanel extends React.Component<CombinedProps> {
               required={required}
               disabled={disabled}
               disabledReason={disabledReason || ''}
+              autoComplete="off"
               value={this.props.password || ''}
               label={label || 'Root Password'}
               placeholder={placeholder || 'Enter a password.'}
               onChange={this.handleChange}
               hideStrengthLabel={hideStrengthLabel}
               hideHelperText={hideHelperText}
-              autoComplete="off"
             />
           </React.Suspense>
           {users && (
