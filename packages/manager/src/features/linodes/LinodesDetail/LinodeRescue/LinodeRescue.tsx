@@ -5,6 +5,7 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { assoc, clamp, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
@@ -86,6 +87,7 @@ interface State {
 type CombinedProps = VolumesProps &
   StateProps &
   ContextProps &
+  RouteComponentProps &
   WithStyles<ClassNames> &
   WithSnackbarProps;
 
@@ -165,22 +167,16 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
   };
 
   onSubmit = () => {
-    const { linodeId, enqueueSnackbar } = this.props;
+    const { linodeId, enqueueSnackbar, history } = this.props;
     const { rescueDevices } = this.state;
 
     rescueLinode(linodeId, createDevicesFromStrings(rescueDevices))
       .then(_ => {
-        const [diskMap, counter] = getDefaultDeviceMapAndCounter(
-          this.props.linodeDisks || []
-        );
-        this.setState({
-          counter,
-          rescueDevices: diskMap
-        });
         enqueueSnackbar('Linode rescue started.', {
           variant: 'info'
         });
         resetEventsPolling();
+        history.push(`/linodes/${linodeId}/summary`);
       })
       .catch(errorResponse => {
         getAPIErrorOrDefault(
