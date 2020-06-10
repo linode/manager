@@ -1,4 +1,3 @@
-import { omit } from 'ramda';
 import { API_ROOT } from 'src/constants';
 import Request, { setData, setMethod, setURL } from '../request';
 import { RebuildLinodeSchema } from './linodes.schema';
@@ -130,12 +129,15 @@ export const rebuildLinode = (linodeId: number, data: RebuildRequest) =>
 export const rescueLinode = (
   linodeId: number,
   devices: RescueRequestObject
-): Promise<{}> =>
-  Request<{}>(
+): Promise<{}> => {
+  const _devices = { ...devices };
+  delete _devices['sdh'];
+  return Request<{}>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/rescue`),
     setMethod('POST'),
-    setData({ devices: omit(['sdh'], devices) })
+    setData({ devices: _devices })
   );
+};
 
 /**
  * cloneLinode
