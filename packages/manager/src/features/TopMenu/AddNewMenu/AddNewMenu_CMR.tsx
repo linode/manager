@@ -67,8 +67,8 @@ const styles = (theme: Theme) =>
         cursor: 'pointer',
         border: 'none',
         [theme.breakpoints.down('sm')]: {
-          padding: '6px 34px 7px 11px',
-          maxHeight: 50,
+          marginLeft: theme.spacing(2),
+          maxHeight: 34,
           minWidth: 100
         },
         '&:hover': {
@@ -78,10 +78,7 @@ const styles = (theme: Theme) =>
           backgroundColor: theme.palette.primary.light
         },
         '&[aria-expanded="true"]': {
-          backgroundColor: theme.palette.primary.light,
-          '& $caret': {
-            transform: 'rotate(180deg)'
-          }
+          backgroundColor: theme.palette.primary.light
         }
       }
     },
@@ -112,6 +109,7 @@ const styles = (theme: Theme) =>
     menuPopover: {
       '&[data-reach-menu], &[data-reach-menu-popover]': {
         width: 350,
+        left: theme.spacing(2),
         [theme.breakpoints.up('md')]: {
           left: 0
         }
