@@ -151,39 +151,15 @@ const { getByTestId } = renderWithTheme(<MyComponent />, {
 
 E2E tests use [Cypress](https://cypress.io).
 
-### Setup
-
-Cypress uses a configuration file in `packages/manager/config/`
-The file can be `development.json` when running `cy:e2e`
-
-This file should look like this:
-
-```
-{
-    "env": {
-      "oauthtoken": "xxxx",
-      "apiroot": "https://api.linode.com",
-      "loginUrl": "https://login.linode.com/login",
-      "loginRoot": "https://login.linode.com"
-    }
-}
-```
-
-To get your OAuth token, go to https://cloud.linode.com/profile/tokens and click "Add a Personal Access Token.
-
-This file is read by Cypress, and used to configure environment setting for the execution.
-See cypress documentation on how to check this in the UI: https://docs.cypress.io/guides/references/configuration.html#Browser
-
 ### Run Cypress e2e tests
 
 #### set up your environment
 
 Cypress will read your env variables from `.env` in `/packages/manager`.
 It uses `MANAGER_OAUTH`, `REACT_APP_LOGIN_ROOT` and `REACT_APP_API_ROOT`.
+See the [_Getting Started_ documentation.](GETTING_STARTED.md) to setup your `.env` file
 
-#### Dependencies
-
-Run `yarn install:all && yarn run cypress verify`.
+To get your OAuth token, go to https://cloud.linode.com/profile/tokens and click "Add a Personal Access Token.
 
 #### How to run locally without Docker
 
@@ -196,41 +172,25 @@ Run:
 
 ##### Commands
 
-Run tests headless with the electron browser:
+Run the E2E in headless mode:
 
 ```bash
-## Run tests on localhost
 yarn cy:e2e
-
-## Run tests against staging
-yarn cy:stage2e
 ```
 
-Run tests with the Chrome browser:
-
-```bash
-yarn cy.e2e --browser chrome
-yarn cy:stage2e --browser chrome
-```
-
-To use the debugging mode and see the test runner:
-
+To use the debugging mode and the interactive interface:
 ```bash
 yarn cy:debug
-yarn cy:stagedebug
 ```
 
 #### How to run with Docker
 
 Check that Docker is installed.
-Run `yarn docker:cy` or `docker build -t cloudcy -f Dockerfile-e2e . && docker run --rm cloudcy`
+Run `yarn docker:cy`
 
-#### Record Screenshots for visual regression
+#### How to contribute to E2E tests
 
-When you write a new Visual regression test with cypress and used `checkSnapshot()` you need to record the correct snapshot.
-
-1. run `yarn cy:rec-snap` which launches Cypress with the Dashboard, run the tests for which you need to record snapshots
-2. Commit the `screenshots/<your test>/record-*.png`
+Read the [_Writing E2E Tests_ documentation.](WRITING_E2E_TESTS.md)
 
 ### Run Storybook UI Components e2e tests
 
