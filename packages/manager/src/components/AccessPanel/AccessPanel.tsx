@@ -141,6 +141,7 @@ class AccessPanel extends React.Component<CombinedProps> {
               onChange={this.handleChange}
               hideStrengthLabel={hideStrengthLabel}
               hideHelperText={hideHelperText}
+              autoComplete="off"
             />
           </React.Suspense>
           {users && (

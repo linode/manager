@@ -48,6 +48,7 @@ class HideShowText extends React.Component<Props, State> {
             />
           )
         }}
+        autoComplete="off"
       />
     );
   }
