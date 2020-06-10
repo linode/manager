@@ -299,7 +299,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         <DocumentTitleSegment segment={`${linodeLabel} - Resize`} />
         <Paper className={classes.root}>
           {unauthorized && <LinodePermissionsError />}
-          {disabled && <HostMaintenanceError />}
+          {hostMaintenance && <HostMaintenanceError />}
           <Typography
             role="heading"
             aria-level={2}
