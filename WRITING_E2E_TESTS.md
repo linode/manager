@@ -4,16 +4,16 @@
 
 Cypress is a framework using multiple tools such as pupeteer, JQuery, SinonJS, Chai etc.
 In very short its parts are:
-- a Runner (main process in NodeJs)
-- an Interative dashboard **Only in Debug: `yarn cy:debug`**
-- It launches a browser and runs tests by manipulating the browser through Pupeteer
-- It can run background tasks in NodeJs (the plugins)
+  - a Runner (main process in NodeJs)
+  - an Interative dashboard **Only in Debug: `yarn cy:debug`**
+  - It launches a browser and runs tests by manipulating the browser through Pupeteer
+  - It can run background tasks in NodeJs (the plugins)
 
 **Important point for the developer**
-- the integration tests are running in the browser side (and dependencies: fixtures, Cypress commands)
-- the plugins are executed in NodeJs in independant process
-- **`cy.get` or equivalent function are Async and return Cypress wrapped objects and AWAIT should not be used with it**
-- Do not do `const el = cy.get('#element')` and use it later in the code it will probably not work, see **dettached from DOM**
+  - the integration tests are running in the browser side (and dependencies: fixtures, Cypress commands)
+  - the plugins are executed in NodeJs in independant process
+  - **`cy.get` or equivalent function are Async and return Cypress wrapped objects and AWAIT should not be used with it**
+  - Do not do `const el = cy.get('#element')` and use it later in the code it will probably not work, see **dettached from DOM**
 
 ## Visiting a page
 You can only visit under the path of your base RUL `cloud.linode.com` or `localhost:3000`
@@ -26,8 +26,8 @@ Visiting with Login: `cy.visitWithLogin(url)` to automatically reinject the logi
 ## waiting for a UI element to be visible
 
 When you get an element you will use `cy.get` or variants:
-- `cy.findByText`
-- `cy.findByLabelText`
+  - `cy.findByText`
+  - `cy.findByLabelText`
 
 This returns a Cypress Wrapped object which works somewhat like a chainable promise and has methods to execute assertions, accessors on the DOM Element.
 
@@ -149,17 +149,17 @@ You may want to do this to wait for data to be available or because you want to 
 Example, Checking if the creation of an object is successful:
 
 ```js
-        cy.server();
-        // create an alias on a request
-        cy.route({
-          method: 'POST',
-          url: '/v4/domains/*/record*'
-        }).as('apiCreateRecord');
-        // go to the page and trigger a domain record creation
-        // Using the name `@alias` we wait for the request top complete
-        cy.wait('@apiCreateRecord')
-          .its('status')
-          .should('be', 200);
+cy.server();
+// create an alias on a request
+cy.route({
+    method: 'POST',
+    url: '/v4/domains/*/record*'
+}).as('apiCreateRecord');
+// go to the page and trigger a domain record creation
+// Using the name `@alias` we wait for the request top complete
+cy.wait('@apiCreateRecord')
+    .its('status')
+    .should('be', 200);
 ```
 
 ### making XHR requests directly
@@ -198,13 +198,13 @@ Is built in cypress if you need to parse, format dates
 ## Configuration and environment
 The configuration is set by a few files:
 - `cypress.json`
-    - specifies the base URL of the app and some general settings
+  - specifies the base URL of the app and some general settings
 - `.env`
-    - MANAGER_OAUTH = personal access token to api in your cloud profile Access token
-    - REACT_APP_CLIENT_ID = id of the oauth app for the development server of the app, see (GETTING_STARTED)[GETTING_STARTED.md]
-    - REACT_APP_API_ROOT = `http://localhost:3000`
-    - REACT_APP_LOGIN_ROOT = `https://login.linode.com`
-    - REACT_APP_API_ROOT = `https://api.linode.com/v4`
+  - MANAGER_OAUTH = personal access token to api in your cloud profile Access token
+  - REACT_APP_CLIENT_ID = id of the oauth app for the development server of the app, see (GETTING_STARTED)[GETTING_STARTED.md]
+  - REACT_APP_API_ROOT = `http://localhost:3000`
+  - REACT_APP_LOGIN_ROOT = `https://login.linode.com`
+  - REACT_APP_API_ROOT = `https://api.linode.com/v4`
 
 
 ## Other
@@ -218,11 +218,11 @@ When you write a new Visual regression test with cypress and used `checkSnapshot
 **WARNING**
 Visual regression tests are run on Chrome, and may not work accross browsers,
 When writing a visual regression trest make sure that:
-- the section you check is well withing the viewport
-- that it may not be rendered differently in the CI/CD pipeline
-- That you ran the tests on docker `yarn cy:docker` at least once
-- DO NOT commit `diff-*.png` or `actual-*.png` files
-- **If you rename a test, rename the folder/files with the snapshots to match the new test file and test name**
+  - the section you check is well withing the viewport
+  - that it may not be rendered differently in the CI/CD pipeline
+  - That you ran the tests on docker `yarn cy:docker` at least once
+  - DO NOT commit `diff-*.png` or `actual-*.png` files
+  - **If you rename a test, rename the folder/files with the snapshots to match the new test file and test name**
 
 
 ## Important other technical points to know
