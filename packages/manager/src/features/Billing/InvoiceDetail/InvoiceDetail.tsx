@@ -73,7 +73,6 @@ export const InvoiceDetail: React.FC<CombinedProps> = props => {
   const [pdfGenerationError, setPDFGenerationError] = React.useState<any>(
     undefined
   );
-  const [isNegative, setIsNegative] = React.useState<boolean>(false);
 
   const flags = useFlags();
 
@@ -99,7 +98,6 @@ export const InvoiceDetail: React.FC<CombinedProps> = props => {
         setLoading(false);
         setInvoice(invoice);
         setItems(items);
-        setIsNegative(invoice.total < 0);
       })
       .catch(errorResponse => {
         setErrors(
@@ -165,7 +163,7 @@ export const InvoiceDetail: React.FC<CombinedProps> = props => {
                 <Typography variant="h2" data-qa-total={invoice.total}>
                   Total:{' '}
                   <Currency
-                    wrapInParentheses={isNegative}
+                    wrapInParentheses={invoice.total < 0}
                     quantity={invoice.total}
                   />
                 </Typography>
@@ -183,12 +181,7 @@ export const InvoiceDetail: React.FC<CombinedProps> = props => {
           > Send report</a>`}
             />
           )}
-          <InvoiceTable
-            loading={loading}
-            items={items}
-            errors={errors}
-            isNegative={isNegative}
-          />
+          <InvoiceTable loading={loading} items={items} errors={errors} />
         </Grid>
         <Grid item xs={12}>
           {invoice && (
@@ -197,7 +190,7 @@ export const InvoiceDetail: React.FC<CombinedProps> = props => {
                 <Typography variant="h2">
                   Subotal:{' '}
                   <Currency
-                    wrapInParentheses={isNegative}
+                    wrapInParentheses={invoice.subtotal < 0}
                     quantity={invoice.subtotal}
                   />
                 </Typography>
@@ -207,7 +200,7 @@ export const InvoiceDetail: React.FC<CombinedProps> = props => {
                 <Typography variant="h2">
                   Total:{' '}
                   <Currency
-                    wrapInParentheses={isNegative}
+                    wrapInParentheses={invoice.total < 0}
                     quantity={invoice.total}
                   />
                 </Typography>
