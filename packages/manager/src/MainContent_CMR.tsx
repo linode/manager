@@ -17,7 +17,7 @@ import BackupDrawer from 'src/features/Backups';
 import DomainDrawer from 'src/features/Domains/DomainDrawer';
 import Footer from 'src/features/Footer';
 import ToastNotifications from 'src/features/ToastNotifications';
-import TopMenu from 'src/features/TopMenu';
+import TopMenu from 'src/features/TopMenu/TopMenu_CMR';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 
 import Grid from 'src/components/Grid';
@@ -237,8 +237,6 @@ const MainContent: React.FC<CombinedProps> = props => {
               `}
             >
               <TopMenu
-                openSideMenu={() => toggleMenu(true)}
-                desktopMenuToggle={desktopMenuToggle}
                 isLoggedInAsCustomer={props.isLoggedInAsCustomer}
                 username={props.username}
               />
