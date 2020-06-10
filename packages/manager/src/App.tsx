@@ -160,11 +160,12 @@ export class App extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         {/** Accessibility helpers */}
-        <a href="#main-content" className="visually-hidden">
-          Skip to main content
-        </a>
+        {/* TODO these should become visible on focus as per: https://www.w3.org/TR/WCAG20-TECHS/G1 */}
         <a href="#main-navigation" className="visually-hidden">
           Skip to main navigation
+        </a>
+        <a href="#main-content" className="visually-hidden">
+          Skip to main content
         </a>
         <div hidden>
           <span id="new-window">Opens in a new window</span>
