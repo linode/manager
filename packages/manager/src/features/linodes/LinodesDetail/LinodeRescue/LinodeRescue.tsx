@@ -1,5 +1,5 @@
 import { GrantLevel } from '@linode/api-v4/lib/account';
-import { Config, rescueLinode } from '@linode/api-v4/lib/linodes';
+import { Config, LinodeStatus, rescueLinode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { assoc, clamp, pathOr } from 'ramda';
@@ -29,6 +29,7 @@ import createDevicesFromStrings, {
   DevicesAsStrings
 } from 'src/utilities/createDevicesFromStrings';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import HostMaintenanceError from '../HostMaintenanceError';
 import LinodePermissionsError from '../LinodePermissionsError';
 import DeviceSelection, {
   ExtendedDisk,
@@ -60,6 +61,7 @@ interface ContextProps {
   linodeRegion?: string;
   linodeLabel: string;
   linodeDisks?: ExtendedDisk[];
+  linodeStatus: LinodeStatus;
   permissions: GrantLevel;
 }
 
@@ -210,91 +212,91 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
       volumesError,
       classes,
       linodeLabel,
+      linodeStatus,
       permissions
     } = this.props;
-    const disabled = permissions === 'read_only';
+
+    const unauthorized = permissions === 'read_only';
+    const hostMaintenance = linodeStatus === 'stopped';
+
+    const disabled = unauthorized || hostMaintenance;
 
     if (diskError) {
       return (
-        <React.Fragment>
-          <div
-            id="tabpanel-linode-detail-rescue"
-            role="tabpanel"
-            aria-labelledby="tab-linode-detail-rescue"
-          >
-            <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
-            <ErrorState errorText="There was an error retrieving Disks information." />
-          </div>
-        </React.Fragment>
+        <div
+          id="tabpanel-linode-detail-rescue"
+          role="tabpanel"
+          aria-labelledby="tab-linode-detail-rescue"
+        >
+          <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
+          <ErrorState errorText="There was an error retrieving Disks information." />
+        </div>
       );
     }
 
     if (volumesError) {
       return (
-        <React.Fragment>
-          <div
-            id="tabpanel-linode-detail-rescue"
-            role="tabpanel"
-            aria-labelledby="tab-linode-detail-rescue"
-          >
-            <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
-            <ErrorState errorText="There was an error retrieving Volumes information." />
-          </div>
-        </React.Fragment>
+        <div
+          id="tabpanel-linode-detail-rescue"
+          role="tabpanel"
+          aria-labelledby="tab-linode-detail-rescue"
+        >
+          <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
+          <ErrorState errorText="There was an error retrieving Volumes information." />
+        </div>
       );
     }
 
     return (
-      <React.Fragment>
-        <div id="tabpanel-rescue" role="tabpanel" aria-labelledby="tab-rescue">
-          <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
-          <Paper className={classes.root}>
-            {disabled && <LinodePermissionsError />}
-            <Typography
-              role="heading"
-              aria-level={2}
-              variant="h2"
-              className={classes.title}
-              data-qa-title
-            >
-              Rescue
-            </Typography>
-            <Typography className={classes.intro}>
-              If you suspect that your primary filesystem is corrupt, use the
-              Linode Manager to boot your Linode into Rescue Mode. This is a
-              safe environment for performing many system recovery and disk
-              management tasks.
-            </Typography>
-            <DeviceSelection
-              slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}
-              devices={devices}
-              onChange={this.onChange}
-              getSelected={slot =>
-                pathOr('', ['rescueDevices', slot], this.state)
-              }
-              counter={this.state.counter}
-              rescue
+      <div id="tabpanel-rescue" role="tabpanel" aria-labelledby="tab-rescue">
+        <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
+        <Paper className={classes.root}>
+          {unauthorized && <LinodePermissionsError />}
+          {hostMaintenance && <HostMaintenanceError />}
+          <Typography
+            role="heading"
+            aria-level={2}
+            variant="h2"
+            className={classes.title}
+            data-qa-title
+          >
+            Rescue
+          </Typography>
+          <Typography className={classes.intro}>
+            If you suspect that your primary filesystem is corrupt, use the
+            Linode Manager to boot your Linode into Rescue Mode. This is a safe
+            environment for performing many system recovery and disk management
+            tasks.
+          </Typography>
+          <DeviceSelection
+            slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}
+            devices={devices}
+            onChange={this.onChange}
+            getSelected={slot =>
+              pathOr('', ['rescueDevices', slot], this.state)
+            }
+            counter={this.state.counter}
+            rescue
+            disabled={disabled}
+          />
+          <AddNewLink
+            onClick={this.incrementCounter}
+            label="Add Disk"
+            disabled={disabled || this.state.counter >= 6}
+            left
+          />
+          <ActionsPanel>
+            <Button
+              onClick={this.onSubmit}
+              buttonType="primary"
+              data-qa-submit
               disabled={disabled}
-            />
-            <AddNewLink
-              onClick={this.incrementCounter}
-              label="Add Disk"
-              disabled={disabled || this.state.counter >= 6}
-              left
-            />
-            <ActionsPanel>
-              <Button
-                onClick={this.onSubmit}
-                buttonType="primary"
-                data-qa-submit
-                disabled={disabled}
-              >
-                Reboot into Rescue Mode
-              </Button>
-            </ActionsPanel>
-          </Paper>
-        </div>
-      </React.Fragment>
+            >
+              Reboot into Rescue Mode
+            </Button>
+          </ActionsPanel>
+        </Paper>
+      </div>
     );
   }
 }
@@ -305,6 +307,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeId: linode.id,
   linodeRegion: linode.region,
   linodeLabel: linode.label,
+  linodeStatus: linode.status,
   linodeDisks: linode._disks.map(disk => assoc('_id', `disk-${disk.id}`, disk)),
   permissions: linode._permissions
 }));
