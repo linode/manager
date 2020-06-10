@@ -16,6 +16,9 @@ import {
 } from 'src/components/DocumentTitle';
 
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
+import withFeatureFlagConsumer, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container';
 import { events$ } from 'src/events';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 
@@ -24,6 +27,7 @@ import { MapState } from './store/types';
 
 import IdentifyUser from './IdentifyUser';
 import MainContent from './MainContent';
+import MainContent_CMR from './MainContent_CMR';
 
 interface Props {
   toggleTheme: () => void;
@@ -36,13 +40,13 @@ interface State {
   menuOpen: boolean;
   welcomeBanner: boolean;
   hasError: boolean;
-  flagsLoaded: boolean;
 }
 
 type CombinedProps = Props &
   StateProps &
   RouteComponentProps &
-  WithSnackbarProps;
+  WithSnackbarProps &
+  FeatureFlagConsumerProps;
 
 export class App extends React.Component<CombinedProps, State> {
   composeState = composeState;
@@ -52,12 +56,7 @@ export class App extends React.Component<CombinedProps, State> {
   state: State = {
     menuOpen: false,
     welcomeBanner: false,
-    hasError: false,
-    flagsLoaded: false
-  };
-
-  setFlagsLoaded = () => {
-    this.setState({ flagsLoaded: true });
+    hasError: false
   };
 
   componentDidCatch() {
@@ -174,25 +173,39 @@ export class App extends React.Component<CombinedProps, State> {
         <IdentifyUser
           userID={userId}
           username={username}
-          setFlagsLoaded={this.setFlagsLoaded}
           accountError={accountError}
           accountCountry={accountData ? accountData.country : undefined}
           taxID={accountData ? accountData.tax_id : undefined}
           euuid={this.props.euuid}
         />
         <DocumentTitleSegment segment="Linode Manager" />
-        <MainContent
-          accountCapabilities={accountCapabilities}
-          accountError={accountError}
-          accountLoading={accountLoading}
-          history={this.props.history}
-          location={this.props.location}
-          toggleSpacing={toggleSpacing}
-          toggleTheme={toggleTheme}
-          appIsLoading={this.props.appIsLoading}
-          isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
-          username={username}
-        />
+        {this.props.featureFlagsLoading ? null : this.props.flags.cmr ? (
+          <MainContent_CMR
+            accountCapabilities={accountCapabilities}
+            accountError={accountError}
+            accountLoading={accountLoading}
+            history={this.props.history}
+            location={this.props.location}
+            toggleSpacing={toggleSpacing}
+            toggleTheme={toggleTheme}
+            appIsLoading={this.props.appIsLoading}
+            isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
+            username={username}
+          />
+        ) : (
+          <MainContent
+            accountCapabilities={accountCapabilities}
+            accountError={accountError}
+            accountLoading={accountLoading}
+            history={this.props.history}
+            location={this.props.location}
+            toggleSpacing={toggleSpacing}
+            toggleTheme={toggleTheme}
+            appIsLoading={this.props.appIsLoading}
+            isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
+            username={username}
+          />
+        )}
       </React.Fragment>
     );
   }
@@ -228,6 +241,7 @@ interface StateProps {
   regionsError?: APIError[];
   appIsLoading: boolean;
   euuid?: string;
+  featureFlagsLoading: boolean;
 }
 
 const mapStateToProps: MapState<StateProps, Props> = state => ({
@@ -269,6 +283,7 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
   accountError: path(['read'], state.__resources.account.error),
   nodeBalancersError: path(['read'], state.__resources.nodeBalancers.error),
   appIsLoading: state.initialLoad.appIsLoading,
+  featureFlagsLoading: state.featureFlagsLoad.featureFlagsLoading,
   euuid: state.__resources.account.data?.euuid
 });
 
@@ -278,7 +293,8 @@ export default compose(
   connected,
   withDocumentTitleProvider,
   withSnackbar,
-  withFeatureFlagProvider
+  withFeatureFlagProvider,
+  withFeatureFlagConsumer
 )(App);
 
 export const hasOauthError = (...args: (Error | APIError[] | undefined)[]) => {

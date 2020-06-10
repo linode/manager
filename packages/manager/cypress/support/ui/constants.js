@@ -14,7 +14,8 @@ const goToByTabText = (url, text, isSelector = false) => {
     .click();
 };
 
-/// List of Routes and validator of the route
+/** List of Routes and validator of the route
+ */
 export const pages = [
   {
     name: 'Linode/Create/Distribution',

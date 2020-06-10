@@ -1,4 +1,4 @@
-import { Formik, FormikActions } from 'formik';
+import { Formik, FormikHelpers } from 'formik';
 import {
   ContactPayload,
   createContact,
@@ -56,7 +56,7 @@ const ContactsDrawer: React.FC<CombinedProps> = props => {
 
   const onSubmit = (
     values: ContactPayload,
-    { setErrors, setSubmitting, setStatus }: FormikActions<ContactPayload>
+    { setErrors, setSubmitting, setStatus }: FormikHelpers<ContactPayload>
   ) => {
     setStatus(undefined);
 
