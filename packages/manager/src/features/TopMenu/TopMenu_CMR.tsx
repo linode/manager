@@ -4,7 +4,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Toolbar from 'src/components/core/Toolbar';
 import Typography from 'src/components/core/Typography';
 import AddNewMenu from './AddNewMenu/AddNewMenu_CMR';
-import SearchBar from './SearchBar';
+import SearchBar from './SearchBar/SearchBar_CMR';
 import UserEventsMenu from './UserEventsMenu';
 import UserMenu from './UserMenu';
 import UserNotificationsMenu from './UserNotificationsMenu';
@@ -18,7 +18,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: '0 !important'
   },
   toolbar: {
-    padding: `${theme.spacing(1)}px 0`,
+    padding: 0,
+    height: `50px !important`,
     [theme.breakpoints.up('md')]: {
       paddingLeft: theme.spacing(1),
       paddingRight: theme.spacing(1)
@@ -58,7 +59,7 @@ const TopMenu: React.FC<PropsWithStyles> = props => {
         </div>
       )}
       <AppBar className={classes.appBar}>
-        <Toolbar className={classes.toolbar}>
+        <Toolbar className={classes.toolbar} variant="dense">
           <AddNewMenu />
           <SearchBar />
           <UserMenu />
