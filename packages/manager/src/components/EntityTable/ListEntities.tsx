@@ -7,18 +7,12 @@ import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableContentWrapper from 'src/components/TableContentWrapper';
+import { ListProps } from './types';
 
-interface Props {
-  entity: string;
-  data: any[];
-  headerCells: JSX.Element[];
-  RowComponent: React.ComponentType;
-}
+export type CombinedProps = ListProps;
 
-export type CombinedProps = Props;
-
-export const ListEntities: React.FC<Props> = props => {
-  const { data, entity, headerCells, RowComponent } = props;
+export const ListEntities: React.FC<CombinedProps> = props => {
+  const { data, entity, handlers, headerCells, RowComponent } = props;
   return (
     <Paginate data={data}>
       {({
@@ -43,7 +37,11 @@ export const ListEntities: React.FC<Props> = props => {
                   lastUpdated={100}
                 >
                   {paginatedAndOrderedData.map(thisEntity => (
-                    <RowComponent key={thisEntity.id} {...thisEntity} />
+                    <RowComponent
+                      key={thisEntity.id}
+                      {...thisEntity}
+                      {...handlers}
+                    />
                   ))}
                 </TableContentWrapper>
               </TableBody>

@@ -13,6 +13,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
+import { ListProps } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -49,17 +50,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface Props {
-  entity: string;
-  data: any[];
-  RowComponent: React.ComponentType;
-  headerCells: JSX.Element[];
-}
+export type CombinedProps = ListProps;
 
-export type CombinedProps = Props;
-
-export const GroupedEntitiesByTag: React.FC<Props> = props => {
-  const { data, entity, headerCells, RowComponent } = props;
+export const GroupedEntitiesByTag: React.FC<CombinedProps> = props => {
+  const { data, entity, handlers, headerCells, RowComponent } = props;
   const groupedEntities = compose(sortGroups, groupByTags)(data);
   const classes = useStyles();
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
@@ -102,7 +96,11 @@ export const GroupedEntitiesByTag: React.FC<Props> = props => {
                       </TableCell>
                     </TableRow>
                     {paginatedData.map(thisEntity => (
-                      <RowComponent key={thisEntity.id} {...thisEntity} />
+                      <RowComponent
+                        key={thisEntity.id}
+                        {...thisEntity}
+                        {...handlers}
+                      />
                     ))}
                     {count > MIN_PAGE_SIZE && (
                       <TableRow>
