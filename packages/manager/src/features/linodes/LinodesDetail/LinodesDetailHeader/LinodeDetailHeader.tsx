@@ -5,6 +5,7 @@ import { compose } from 'recompose';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import LinodeBusyStatus from '../LinodeSummary/LinodeBusyStatus';
+import HostMaintenance from './HostMaintenance';
 import LinodeControls from './LinodeControls';
 import MutationNotification from './MutationNotification';
 import Notifications from './Notifications';
@@ -19,6 +20,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
+      <HostMaintenance linodeStatus={linodeStatus} />
       <MutationNotification disks={linodeDisks} />
       <Notifications />
       <LinodeControls />
