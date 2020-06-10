@@ -16,16 +16,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 0,
     '& svg': {
       width: 24,
-      height: 22,
-      marginRight: theme.spacing(1.5)
-    },
-    '& .insidePath': {
-      fill: 'none',
-      fillRule: 'evenodd',
-      stroke: '#3683DC',
-      strokeLinecap: 'round',
-      strokeLinejoin: 'round',
-      strokeWidth: '1.5'
+      height: 150,
+      marginRight: theme.spacing(1.5),
+      color: `${theme.palette.primary.main} !important` // @help
     }
   }
 }));
