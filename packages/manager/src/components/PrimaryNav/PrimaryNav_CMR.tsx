@@ -256,6 +256,7 @@ export const PrimaryNav: React.FC<PrimaryNavProps> = props => {
       spacing={0}
       component="nav"
       role="navigation"
+      id="main-navigation"
     >
       <Grid item>
         <div

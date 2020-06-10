@@ -160,8 +160,11 @@ export class App extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         {/** Accessibility helpers */}
-        <a href="#main-content" hidden>
+        <a href="#main-content" className="visually-hidden">
           Skip to main content
+        </a>
+        <a href="#main-navigation" className="visually-hidden">
+          Skip to main navigation
         </a>
         <div hidden>
           <span id="new-window">Opens in a new window</span>
