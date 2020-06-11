@@ -1,7 +1,9 @@
-import { getLinodeConfigs } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import { ApplicationState } from 'src/store';
+import { getAllLinodeConfigs } from 'src/store/linodes/config/config.requests';
+import { useSelector, useDispatch } from 'react-redux';
 
 interface Props {
   error?: string;
@@ -13,105 +15,37 @@ interface Props {
   disabled?: boolean;
 }
 
-type ConfigTuple = [number, string];
-interface State {
-  configs: ConfigTuple[];
-}
-
 type CombinedProps = Props;
 
-class ConfigSelect extends React.Component<CombinedProps, State> {
-  state: State = {
-    configs: []
-  };
+const ConfigSelect: React.FC<CombinedProps> = props => {
+  const { error, onChange, onBlur, linodeId, name, value, ...rest } = props;
 
-  setInitialState = () => {
-    /**
-     * Configs is [configId, configLabel][].
-     * We select the first config's ID and call onChange to automatically select the first config
-     */
-    const { onChange } = this.props;
-    const [firstConfig] = this.state.configs;
+  const { lastUpdated, itemsById } = useSelector((state: ApplicationState) => {
+    return state.__resources.linodeConfigs[linodeId] ?? {};
+  });
 
-    if (firstConfig) {
-      const [id] = firstConfig;
-      return onChange(id);
+  const configs = Object.values(itemsById ?? {});
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    if (lastUpdated === 0) {
+      dispatch(() => getAllLinodeConfigs({ linodeId }));
     }
+  }, [linodeId, lastUpdated, dispatch]);
 
-    /**
-     * We are unable to setup the initial state because there are no configs. We're setting the
-     * config Id to something unrealistic so we can key off that for validation.
-     */
-    onChange(-9999);
-  };
+  const configList = configs.map(config => {
+    return { label: config.label, value: config.id };
+  });
 
-  updateConfigs(linodeId: number) {
-    const { onChange } = this.props;
-
-    /**
-     * If we have a 'none' value, we dont need to make the request.
-     */
-    if (linodeId === -1) {
-      this.setState({ configs: [] });
-      return onChange(-1);
-    }
-
-    getLinodeConfigs(linodeId)
-      .then(({ data }) => {
-        this.setState(
-          {
-            configs: data.map(
-              config => [config.id, config.label] as ConfigTuple
-            )
-          },
-          () => {
-            this.setInitialState();
-          }
-        );
-      })
-      .catch(() => {
-        /*
-         * @note: If we can't get configs for the Linode, then the user can
-         * still create the volume, so we probably shouldn't show any error
-         * state if this fails.
-         */
-      });
-  }
-
-  componentDidMount() {
-    this.updateConfigs(this.props.linodeId);
-  }
-
-  componentDidUpdate(prevProps: CombinedProps) {
-    const { linodeId } = this.props;
-    /**
-     * If we have a new Linode Id we need to get the configs for said linode.
-     */
-    if (linodeId !== prevProps.linodeId) {
-      this.updateConfigs(Number(linodeId));
-    }
-  }
-
-  render() {
-    const { error, onChange, name, onBlur, value, ...rest } = this.props;
-    const { configs } = this.state;
-
-    if (configs.length < 1) {
-      return null;
-    }
-
-    const configList =
-      configs &&
-      configs.map(([v, label]) => {
-        return { label, value: v };
-      });
-
+  if (configs.length < 1) {
+    return null;
+  } else {
     return (
       <FormControl fullWidth>
         <Select
           options={configList}
           name={name}
-          defaultValue={configList[0]}
+          value={configList.find(thisConfig => thisConfig.value === value)}
           onChange={(e: Item) => {
             onChange(+e.value);
           }}
@@ -127,6 +61,6 @@ class ConfigSelect extends React.Component<CombinedProps, State> {
       </FormControl>
     );
   }
-}
+};
 
-export default ConfigSelect;
+export default React.memo(ConfigSelect);
