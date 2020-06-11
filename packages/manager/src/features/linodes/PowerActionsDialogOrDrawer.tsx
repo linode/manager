@@ -159,20 +159,24 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = props => {
       <Typography className={classes.root}>
         Are you sure you want to {props.action.toLowerCase()} your Linode?
       </Typography>
-      <Typography className={classes.root}>
-        <span>
-          <Notice warning important>
-            <strong>Warning: </strong>
-            Powered down Linodes will still accrue charges. See the
-            <ExternalLink
-              link="https://www.linode.com/docs/platform/billing-and-support/how-linode-billing-works/#if-my-linode-is-powered-off-will-i-be-billed"
-              text="Billing and Payments documentation"
-              hideIcon
-            />
-            &nbsp;for more information.
-          </Notice>
-        </span>
-      </Typography>
+      {props.action === 'Power Off' ? (
+        <Typography className={classes.root}>
+          <span>
+            <Notice warning important>
+              <strong>Warning: </strong>
+              Powered down Linodes will still accrue charges. See the
+              <ExternalLink
+                link="https://www.linode.com/docs/platform/billing-and-support/how-linode-billing-works/#if-my-linode-is-powered-off-will-i-be-billed"
+                text="Billing and Payments documentation"
+                hideIcon
+              />
+              &nbsp;for more information.
+            </Notice>
+          </span>
+        </Typography>
+      ) : (
+        ''
+      )}
     </Dialog>
   );
 };
