@@ -17,8 +17,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& svg': {
       width: 24,
       height: 150,
-      marginRight: theme.spacing(1.5),
-      color: `${theme.palette.primary.main} !important` // @help
+      marginRight: theme.spacing(1.5)
+    },
+    '&:hover svg': {
+      color: theme.palette.primary.main
     }
   }
 }));
