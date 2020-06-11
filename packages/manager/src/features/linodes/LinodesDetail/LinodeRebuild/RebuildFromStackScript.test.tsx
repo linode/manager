@@ -39,8 +39,10 @@ const props: CombinedProps = {
   imagesError: {},
   imagesLastUpdated: 0,
   userSSHKeys: [],
+  disabled: false,
   closeSnackbar: jest.fn(),
   enqueueSnackbar: jest.fn(),
+  passwordHelperText: '',
   ...reactRouterProps
 };
 
