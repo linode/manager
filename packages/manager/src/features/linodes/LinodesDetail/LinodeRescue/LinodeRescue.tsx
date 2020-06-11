@@ -223,32 +223,28 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
 
     if (diskError) {
       return (
-        <div
-          id="tabpanel-linode-detail-rescue"
-          role="tabpanel"
-          aria-labelledby="tab-linode-detail-rescue"
-        >
-          <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
-          <ErrorState errorText="There was an error retrieving Disks information." />
-        </div>
+        <React.Fragment>
+          <div>
+            <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
+            <ErrorState errorText="There was an error retrieving Disks information." />
+          </div>
+        </React.Fragment>
       );
     }
 
     if (volumesError) {
       return (
-        <div
-          id="tabpanel-linode-detail-rescue"
-          role="tabpanel"
-          aria-labelledby="tab-linode-detail-rescue"
-        >
-          <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
-          <ErrorState errorText="There was an error retrieving Volumes information." />
-        </div>
+        <React.Fragment>
+          <div>
+            <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
+            <ErrorState errorText="There was an error retrieving Volumes information." />
+          </div>
+        </React.Fragment>
       );
     }
 
     return (
-      <div id="tabpanel-rescue" role="tabpanel" aria-labelledby="tab-rescue">
+      <div>
         <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
         <Paper className={classes.root}>
           {unauthorized && <LinodePermissionsError />}

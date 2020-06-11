@@ -58,7 +58,7 @@ const LinodeRebuild: React.FC<CombinedProps> = props => {
   const [mode, setMode] = React.useState<MODES>('fromImage');
 
   return (
-    <div id="tabpanel-rebuild" role="tabpanel" aria-labelledby="tab-rebuild">
+    <div>
       <DocumentTitleSegment segment={`${linodeLabel} - Rebuild`} />
       <Paper className={classes.root}>
         {unauthorized && <LinodePermissionsError />}

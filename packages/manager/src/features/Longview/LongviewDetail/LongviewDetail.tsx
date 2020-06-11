@@ -270,38 +270,16 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
                 lastUpdatedError={lastUpdatedError}
                 timezone={props.timezone}
               />
-<<<<<<< HEAD
-            )}
-          />
-          <Route
-            exact
-            strict
-            path={`${url}/apache`}
-            render={() => {
-              return (
-=======
             </SafeTabPanel>
 
             {client && client.apps.apache && (
               <SafeTabPanel index={client && client.apps.apache ? 4 : null}>
->>>>>>> M3-4128 Refactor User details, NodeBalancer details, Profile, Longview landing and details (#6423)
                 <Apache
                   timezone={timezone}
                   clientAPIKey={clientAPIKey}
                   lastUpdated={lastUpdated}
                   lastUpdatedError={lastUpdatedError}
                 />
-<<<<<<< HEAD
-              );
-            }}
-          />
-          <Route
-            exact
-            strict
-            path={`${url}/nginx`}
-            render={() => {
-              return (
-=======
               </SafeTabPanel>
             )}
 
@@ -315,24 +293,12 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
                     : null
                 }
               >
->>>>>>> M3-4128 Refactor User details, NodeBalancer details, Profile, Longview landing and details (#6423)
                 <NGINX
                   timezone={timezone}
                   clientAPIKey={clientAPIKey}
                   lastUpdated={lastUpdated}
                   lastUpdatedError={lastUpdatedError}
                 />
-<<<<<<< HEAD
-              );
-            }}
-          />
-          <Route
-            exact
-            strict
-            path={`${url}/mysql`}
-            render={() => {
-              return (
-=======
               </SafeTabPanel>
             )}
 
@@ -351,28 +317,16 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
                     : null
                 }
               >
->>>>>>> M3-4128 Refactor User details, NodeBalancer details, Profile, Longview landing and details (#6423)
                 <MySQLLanding
                   timezone={timezone}
                   clientAPIKey={clientAPIKey}
                   lastUpdated={lastUpdated}
                   lastUpdatedError={lastUpdatedError}
                 />
-<<<<<<< HEAD
-              );
-            }}
-          />
-          <Route
-            exact
-            strict
-            path={`${url}/installation`}
-            render={routerProps => (
-=======
               </SafeTabPanel>
             )}
 
             <SafeTabPanel index={Number(displayedTabs.length - 1)}>
->>>>>>> M3-4128 Refactor User details, NodeBalancer details, Profile, Longview landing and details (#6423)
               <Installation
                 clientInstallationKey={client.install_code}
                 clientAPIKey={client.api_key}
