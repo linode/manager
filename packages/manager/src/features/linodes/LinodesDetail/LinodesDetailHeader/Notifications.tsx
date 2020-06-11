@@ -18,7 +18,7 @@ type CombinedProps = ProfileProps &
     requestNotifications: () => void;
   };
 
-const Notifications: React.StatelessComponent<CombinedProps> = props => {
+const Notifications: React.FC<CombinedProps> = props => {
   const {
     requestNotifications,
     linodeNotifications,
@@ -69,6 +69,7 @@ const Notifications: React.StatelessComponent<CombinedProps> = props => {
   };
 
   return (
+    // eslint-disable-next-line
     <>
       {linodeNotifications.map((n, idx) => {
         return (

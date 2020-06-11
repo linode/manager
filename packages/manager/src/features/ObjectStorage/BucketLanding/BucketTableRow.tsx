@@ -41,7 +41,7 @@ interface BucketTableRowProps extends ObjectStorageBucket {
 
 type CombinedProps = BucketTableRowProps & WithStyles<ClassNames>;
 
-export const BucketTableRow: React.StatelessComponent<CombinedProps> = props => {
+export const BucketTableRow: React.FC<CombinedProps> = props => {
   const { classes, label, cluster, hostname, created, onRemove } = props;
 
   return (
@@ -50,6 +50,7 @@ export const BucketTableRow: React.StatelessComponent<CombinedProps> = props => 
       rowLink={`/object-storage/buckets/${cluster}/${label}`}
       data-qa-bucket-cell={label}
       className={`${classes.bucketRow} ${'fade-in-table'}`}
+      ariaLabel={label}
     >
       <TableCell parentColumn="Name">
         <Grid container wrap="nowrap" alignItems="center">

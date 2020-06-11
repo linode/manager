@@ -2,7 +2,7 @@ import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import TabPanel from 'src/components/core/ReachTabPanel';
+import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import TabLinkList from 'src/components/TabLinkList';
@@ -26,7 +26,7 @@ type CombinedProps = ContextProps &
     linodeId: string;
   }>;
 
-const LinodesDetailNavigation: React.StatelessComponent<CombinedProps> = props => {
+const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
   const {
     match: { url },
     linodeLabel,
@@ -81,15 +81,20 @@ const LinodesDetailNavigation: React.StatelessComponent<CombinedProps> = props =
   ];
 
   return (
-    <Tabs defaultIndex={tabs.findIndex(tab => matches(tab.routeName))}>
+    <Tabs
+      defaultIndex={Math.max(
+        tabs.findIndex(tab => matches(tab.routeName)),
+        0
+      )}
+    >
       <TabLinkList tabs={tabs} />
 
       <React.Suspense fallback={<SuspenseLoader />}>
         <TabPanels>
-          <TabPanel>
+          <SafeTabPanel index={0}>
             <LinodeSummary />
-          </TabPanel>
-          <TabPanel>
+          </SafeTabPanel>
+          <SafeTabPanel index={1}>
             <VolumesLanding
               linodeId={linodeId}
               linodeLabel={linodeLabel}
@@ -99,39 +104,39 @@ const LinodesDetailNavigation: React.StatelessComponent<CombinedProps> = props =
               fromLinodes
               removeBreadCrumb
             />
-          </TabPanel>
+          </SafeTabPanel>
 
-          <TabPanel>
+          <SafeTabPanel index={2}>
             <LinodeNetworking />
-          </TabPanel>
+          </SafeTabPanel>
 
-          <TabPanel>
+          <SafeTabPanel index={3}>
             <LinodeResize />
-          </TabPanel>
+          </SafeTabPanel>
 
-          <TabPanel>
+          <SafeTabPanel index={4}>
             <LinodeRescue />
-          </TabPanel>
+          </SafeTabPanel>
 
-          <TabPanel>
+          <SafeTabPanel index={5}>
             <LinodeRebuild />
-          </TabPanel>
+          </SafeTabPanel>
 
-          <TabPanel>
+          <SafeTabPanel index={6}>
             <LinodeBackup />
-          </TabPanel>
+          </SafeTabPanel>
 
-          <TabPanel>
+          <SafeTabPanel index={7}>
             <LinodeActivity />
-          </TabPanel>
+          </SafeTabPanel>
 
-          <TabPanel>
+          <SafeTabPanel index={8}>
             <LinodeSettings />
-          </TabPanel>
+          </SafeTabPanel>
 
-          <TabPanel>
+          <SafeTabPanel index={9}>
             <LinodeAdvanced />
-          </TabPanel>
+          </SafeTabPanel>
         </TabPanels>
       </React.Suspense>
     </Tabs>

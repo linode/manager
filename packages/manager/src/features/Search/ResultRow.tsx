@@ -130,7 +130,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const ResultRow: React.StatelessComponent<CombinedProps> = props => {
+export const ResultRow: React.FC<CombinedProps> = props => {
   const { classes, result } = props;
   const icon = pathOr<string>('default', ['data', 'icon'], result);
   const status = result.data.status;
@@ -139,6 +139,7 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = props => {
       className={classes.root}
       rowLink={result.data.path}
       data-qa-result-row={result.label}
+      ariaLabel={result.label}
     >
       <Hidden smDown>
         <TableCell className={classes.iconTableCell}>

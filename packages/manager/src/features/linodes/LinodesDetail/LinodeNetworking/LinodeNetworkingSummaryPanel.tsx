@@ -28,7 +28,6 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      marginTop: theme.spacing(2),
       padding: theme.spacing(3),
       paddingBottom: theme.spacing(2) + theme.spacing(1) / 2
     },
@@ -60,7 +59,7 @@ interface Props {
 
 type CombinedProps = Props & StateProps & WithStyles<ClassNames>;
 
-const SummarySection: React.StatelessComponent<any> = props => {
+const SummarySection: React.FC<any> = props => {
   const { title, renderValue, classes, ...rest } = props;
 
   return (
@@ -83,7 +82,7 @@ const SummarySection: React.StatelessComponent<any> = props => {
 
 const StyledSummarySection = styled(SummarySection);
 
-const LinodeNetworkingSummaryPanel: React.StatelessComponent<CombinedProps> = props => {
+const LinodeNetworkingSummaryPanel: React.FC<CombinedProps> = props => {
   const { classes, sshIPAddress, username, linodeRegion, linodeLabel } = props;
 
   const v4Resolvers = getIPv4DNSResolvers(linodeRegion);

@@ -27,9 +27,7 @@ interface Props {
 
 type CombinedProps = Props & ContextProps & WithImages;
 
-export const ImageAndPassword: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const ImageAndPassword: React.FC<CombinedProps> = props => {
   const {
     imagesData,
     imagesError,

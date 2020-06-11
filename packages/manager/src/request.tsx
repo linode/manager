@@ -1,15 +1,14 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { baseRequest } from '@linode/api-v4/lib/request';
 import { APIError } from '@linode/api-v4/lib/types';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import { ACCESS_TOKEN, DEFAULT_ERROR_MESSAGE } from 'src/constants';
 import { interceptErrors } from 'src/utilities/interceptAPIError';
 
 import { AccountActivationError } from 'src/components/AccountActivation';
-import { GPUError } from 'src/components/GPUError';
 import { MigrateError } from 'src/components/MigrateError';
+import { VerificationError } from 'src/components/VerificationError';
 
 import store from 'src/store';
 import { handleLogout } from 'src/store/authentication/authentication.actions';
@@ -30,7 +29,7 @@ const handleSuccess: <T extends AxiosResponse<any>>(
 
 export const handleError = (error: AxiosError) => {
   if (
-    !!error.config.headers['x-maintenance-mode'] ||
+    !!error.config?.headers['x-maintenance-mode'] ||
     (error.response && error.response.status === 401)
   ) {
     /**
@@ -39,39 +38,34 @@ export const handleError = (error: AxiosError) => {
      */
     store.dispatch(handleLogout());
   }
-
-  const url = pathOr('', ['response', 'config', 'url'], error);
-  const method = pathOr('', ['response', 'config', 'method'], error);
-  const status: number = pathOr<number>(0, ['response', 'status'], error);
-  const errors: APIError[] = pathOr<APIError[]>(
-    [{ reason: DEFAULT_ERROR_MESSAGE }],
-    ['response', 'data', 'errors'],
-    error
-  );
+  const config = error.response?.config ?? {};
+  const url = config.url ?? '';
+  const status: number = error.response?.status ?? 0;
+  const errors: APIError[] = error.response?.data?.errors ?? [
+    { reason: DEFAULT_ERROR_MESSAGE }
+  ];
 
   /** AxiosError contains the original POST data as stringified JSON */
   let requestData;
   try {
-    requestData = JSON.parse(pathOr('', ['config', 'data'], error));
+    requestData = JSON.parse(error.config?.data ?? '');
   } catch {
     requestData = {};
   }
-  const requestedLinodeType = pathOr('', ['type'], requestData);
+  const requestedLinodeType = requestData?.type ?? '';
 
   const interceptedErrors = interceptErrors(errors, [
     {
-      replacementText: `You are not authorized to ${
-        !method || method.match(/get/i)
-          ? 'view this feature.'
-          : 'take this action.'
-      }`,
-      condition: () => status === 403
-    },
-    {
-      replacementText: <GPUError />,
-      condition: e =>
-        !!e.reason.match(/verification is required/i) &&
-        requestedLinodeType.match(/gpu/i)
+      replacementText: (
+        <VerificationError
+          title={
+            requestedLinodeType.match(/gpu/i)
+              ? 'GPU Request'
+              : 'Verification Request'
+          }
+        />
+      ),
+      condition: e => !!e.reason.match(/verification is required/i)
     },
     {
       /**
@@ -103,7 +97,7 @@ export const handleError = (error: AxiosError) => {
       condition: e => {
         return (
           !!e.reason.match(/migrations are currently disabled/i) &&
-          url.match(/migrate/i)
+          !!url.match(/migrate/i)
         );
       }
     }
@@ -116,7 +110,7 @@ export const handleError = (error: AxiosError) => {
 baseRequest.interceptors.request.use(config => {
   const state = store.getState();
   /** Will end up being "Admin: 1234" or "Bearer 1234" */
-  const token = ACCESS_TOKEN || pathOr('', ['authentication', 'token'], state);
+  const token = ACCESS_TOKEN || (state.authentication?.token ?? '');
 
   let finalUrl = '';
 

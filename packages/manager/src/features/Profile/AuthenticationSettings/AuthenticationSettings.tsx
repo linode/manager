@@ -9,6 +9,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Notice from 'src/components/Notice';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { AccountsAndPasswords, SecurityControls } from 'src/documentation';
+import useFlags from 'src/hooks/useFlags';
 import { updateProfile as _updateProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
 import ResetPassword from './ResetPassword';
@@ -36,6 +37,8 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
     username,
     updateProfile
   } = props;
+
+  const flags = useFlags();
 
   const [success, setSuccess] = React.useState<string | undefined>(undefined);
 
@@ -74,22 +77,20 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
           )}
         </React.Fragment>
       )
-    },
-    {
-      title: 'Third-Party Authentication',
-      render: () => <ThirdPartyContent authType={authType} />
     }
   ];
+
+  if (flags.thirdPartyAuth) {
+    tabs.push({
+      title: 'Third-Party Authentication',
+      render: () => <ThirdPartyContent authType={authType} />
+    });
+  }
 
   const initialTab = 0;
 
   return (
-    <div
-      id="tabpanel-passwordAuthentication"
-      role="tabpanel"
-      aria-labelledby="tab-passwordAuthentication"
-      data-testid="authSettings"
-    >
+    <div data-testid="authSettings">
       <DocumentTitleSegment segment={`Password & Authentication`} />
       {/* Remove when logic above is cleared */}
       {success && <Notice success text={success} />}

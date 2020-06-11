@@ -70,9 +70,7 @@ type CombinedProps = Props &
   ReduxStateProps &
   DispatchProps;
 
-export const AccessKeyLanding: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const AccessKeyLanding: React.FC<CombinedProps> = props => {
   const {
     classes,
     object_storage,
@@ -269,11 +267,7 @@ export const AccessKeyLanding: React.StatelessComponent<
   };
 
   return (
-    <div
-      id="tabpanel-accessKeys"
-      role="tabpanel"
-      aria-labelledby="tab-accessKeys"
-    >
+    <div>
       <DocumentTitleSegment segment="Access Keys" />
       <Grid container justify="flex-end">
         <Grid item>
@@ -351,15 +345,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced = compose<CombinedProps, Props>(
-  styled,
-  paginated,
-  connected
-);
+const enhanced = compose<CombinedProps, Props>(styled, paginated, connected);
 
 export default enhanced(AccessKeyLanding);

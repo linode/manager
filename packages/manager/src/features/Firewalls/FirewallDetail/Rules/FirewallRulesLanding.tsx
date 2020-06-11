@@ -30,7 +30,6 @@ import { Category, parseFirewallRuleError } from './shared';
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
     fontSize: '1em',
-    paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(1)
   },
   table: {

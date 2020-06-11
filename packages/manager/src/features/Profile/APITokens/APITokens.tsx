@@ -2,13 +2,9 @@ import * as React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import APITokenTable from './APITokenTable';
 
-export const APITokens: React.StatelessComponent = () => {
+export const APITokens: React.FC = () => {
   return (
-    <div
-      id="tabpanel-apiTokens"
-      role="tabpanel"
-      aria-labelledby="tab-apiTokens"
-    >
+    <div>
       <DocumentTitleSegment segment="API Tokens" />
 
       <APITokenTable

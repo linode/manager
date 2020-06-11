@@ -5,4 +5,3 @@ export * from './types';
 export * from './LinodesWithBackups';
 export * from './ExtendedType';
 export * from './volumes';
-export * from './nodeBalancers';

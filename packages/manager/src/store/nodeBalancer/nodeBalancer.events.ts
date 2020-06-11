@@ -105,7 +105,12 @@ const handleNodeBalancerDelete: NodeBalancerActionHandler = (
         []
       );
 
-      dispatch(removeNodeBalancerConfigs(configsToDelete));
+      dispatch(
+        removeNodeBalancerConfigs({
+          configIDs: configsToDelete,
+          nodeBalancerId
+        })
+      );
       dispatch(
         deleteNodeBalancerActions.done({
           params: { nodeBalancerId },

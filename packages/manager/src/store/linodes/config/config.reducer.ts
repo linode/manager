@@ -8,8 +8,8 @@ import {
   onError,
   onGetAllSuccess,
   onStart
-} from 'src/store/store.helpers';
-import { EntityError, MappedEntityState } from 'src/store/types';
+} from 'src/store/store.helpers.tmp';
+import { EntityError, RelationalMappedEntityState } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import { deleteLinode, deleteLinodeActions } from '../linodes.actions';
 import {
@@ -17,12 +17,12 @@ import {
   deleteLinodeConfigActions,
   getAllLinodeConfigsActions,
   getLinodeConfigActions,
-  getLinodeConfigsActions,
+  getLinodeConfigsPageActions,
   updateLinodeConfigActions
 } from './config.actions';
 import { Entity } from './config.types';
 
-export type State = Record<number, MappedEntityState<Entity, EntityError>>;
+export type State = RelationalMappedEntityState<Entity, EntityError>;
 
 export const defaultState: State = {};
 
@@ -32,7 +32,7 @@ const reducer: Reducer<State> = (state = defaultState, action) =>
     // getAllLinodeConfigActions
     if (
       isType(action, getLinodeConfigActions.started) ||
-      isType(action, getLinodeConfigsActions.started) ||
+      isType(action, getLinodeConfigsPageActions.started) ||
       isType(action, getAllLinodeConfigsActions.started)
     ) {
       const { linodeId } = action.payload;
@@ -41,13 +41,13 @@ const reducer: Reducer<State> = (state = defaultState, action) =>
       draft[linodeId] = onStart(draft[linodeId]);
     }
 
-    if (isType(action, getLinodeConfigsActions.done)) {
+    if (isType(action, getLinodeConfigsPageActions.done)) {
       const { result } = action.payload;
       const { linodeId } = action.payload.params;
       draft = ensureInitializedNestedState(draft, linodeId);
 
       draft[linodeId].loading = false;
-      draft[linodeId] = addMany(result, draft[linodeId]);
+      draft[linodeId] = addMany(result.data, draft[linodeId], result.results);
     }
 
     if (isType(action, getAllLinodeConfigsActions.done)) {
@@ -55,7 +55,11 @@ const reducer: Reducer<State> = (state = defaultState, action) =>
       const { linodeId } = action.payload.params;
       draft = ensureInitializedNestedState(draft, linodeId);
 
-      draft[linodeId] = onGetAllSuccess(result, draft[linodeId]);
+      draft[linodeId] = onGetAllSuccess(
+        result.data,
+        draft[linodeId],
+        result.results
+      );
     }
 
     if (isType(action, getAllLinodeConfigsActions.failed)) {
@@ -64,10 +68,7 @@ const reducer: Reducer<State> = (state = defaultState, action) =>
 
       draft = ensureInitializedNestedState(draft, linodeId);
 
-      draft[linodeId] = onError<
-        MappedEntityState<Entity, EntityError>,
-        EntityError
-      >(
+      draft[linodeId] = onError(
         {
           read: error
         },

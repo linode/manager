@@ -204,7 +204,7 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Buckets" />
-      <div id="tabpanel-buckets" role="tabpanel" aria-labelledby="tab-buckets">
+      <div>
         <Grid container justify="flex-end">
           <Grid item>
             <AddNewLink onClick={openBucketDrawer} label="Add a Bucket" />
@@ -246,17 +246,17 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
   );
 };
 
-const RenderLoading: React.StatelessComponent<{}> = () => {
+const RenderLoading: React.FC<{}> = () => {
   return <CircleProgress data-testid="loading-state" />;
 };
 
-const RenderError: React.StatelessComponent<{}> = () => {
+const RenderError: React.FC<{}> = () => {
   return (
     <ErrorState errorText="There was an error retrieving your buckets. Please reload and try again." />
   );
 };
 
-const RenderEmpty: React.StatelessComponent<{
+const RenderEmpty: React.FC<{
   onClick: () => void;
 }> = props => {
   return (

@@ -8,7 +8,9 @@ import { ExtendedIssue, requestManagedIssuesActions } from './issues.actions';
 
 const _getAllIssues = getAll<ManagedIssue>(getManagedIssues);
 const getAllIssues = () =>
-  _getAllIssues().then(({ data }) => extendIssues(data));
+  _getAllIssues()
+    .then(({ data }) => extendIssues(data))
+    .then(data => ({ data, results: data.length }));
 
 export const extendIssues = async (issues: ManagedIssue[]) => {
   /**

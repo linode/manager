@@ -69,6 +69,8 @@ const styles = (theme: Theme) =>
 
 interface Props {
   type: 'community' | 'account';
+  disabled: boolean;
+  passwordHelperText: string;
 }
 
 interface ContextProps {
@@ -95,7 +97,7 @@ const initialValues: RebuildFromStackScriptForm = {
   stackscript_id: ''
 };
 
-export const RebuildFromStackScript: React.StatelessComponent<CombinedProps> = props => {
+export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
   const {
     classes,
     imagesData,
@@ -104,7 +106,8 @@ export const RebuildFromStackScript: React.StatelessComponent<CombinedProps> = p
     requestKeys,
     linodeId,
     enqueueSnackbar,
-    history
+    history,
+    passwordHelperText
   } = props;
 
   const [
@@ -346,6 +349,7 @@ export const RebuildFromStackScript: React.StatelessComponent<CombinedProps> = p
                 sshKeyError={sshError}
                 requestKeys={requestKeys}
                 data-qa-access-panel
+                passwordHelperText={passwordHelperText}
               />
             </form>
             <ActionsPanel>

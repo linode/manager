@@ -36,7 +36,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const DashboardCard: React.StatelessComponent<CombinedProps> = props => {
+const DashboardCard: React.FC<CombinedProps> = props => {
   const {
     alignHeader,
     title,

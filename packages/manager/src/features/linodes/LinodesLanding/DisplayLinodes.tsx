@@ -25,7 +25,7 @@ interface Props {
 
 type CombinedProps = Props & OrderByProps;
 
-const DisplayLinodes: React.StatelessComponent<CombinedProps> = props => {
+const DisplayLinodes: React.FC<CombinedProps> = props => {
   const {
     data,
     display,

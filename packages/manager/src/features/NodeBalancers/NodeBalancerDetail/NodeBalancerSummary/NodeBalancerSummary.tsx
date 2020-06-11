@@ -7,13 +7,12 @@ import {
 } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
+import { ExtendedNodeBalancer } from '../../types';
 import NodeBalancerCreationErrors, {
   ConfigOrNodeErrorResponse
 } from './NodeBalancerCreationErrors';
 import SummaryPanel from './SummaryPanel';
 import TablesPanel from './TablesPanel';
-
-import { ExtendedNodeBalancer } from 'src/services/nodebalancers';
 
 type ClassNames = 'main' | 'sidebar';
 
@@ -38,10 +37,10 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const NodeBalancerSummary: React.StatelessComponent<CombinedProps> = props => {
+const NodeBalancerSummary: React.FC<CombinedProps> = props => {
   const { nodeBalancer, errorResponses, classes } = props;
   return (
-    <div role="tabpanel" id="tabpanel-summary" aria-labelledby="tab-summary">
+    <div>
       <DocumentTitleSegment segment={`${nodeBalancer.label} - Summary`} />
       <NodeBalancerCreationErrors errors={errorResponses} />
       <Grid container>

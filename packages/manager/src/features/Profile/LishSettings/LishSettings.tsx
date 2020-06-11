@@ -162,12 +162,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Lish" />
-        <Paper
-          className={classes.root}
-          id="tabpanel-lish"
-          role="tabpanel"
-          aria-labelledby="tab-lish"
-        >
+        <Paper className={classes.root}>
           <Typography variant="h2" className={classes.title} data-qa-title>
             LISH
           </Typography>
@@ -211,12 +206,15 @@ class LishSettings extends React.Component<CombinedProps, State> {
                     className={classes.keyTextarea}
                     data-qa-public-key
                   />
-                  <Button
-                    buttonType="remove"
-                    onClick={this.onPublicKeyRemove(idx)}
-                    className={classes.remove}
-                    data-qa-remove
-                  />
+                  {((idx === 0 && typeof authorizedKeys[0] !== 'undefined') ||
+                    idx > 0) && (
+                    <Button
+                      buttonType="remove"
+                      onClick={this.onPublicKeyRemove(idx)}
+                      className={classes.remove}
+                      data-qa-remove
+                    />
+                  )}
                 </div>
               ))}
               <AddNewLink

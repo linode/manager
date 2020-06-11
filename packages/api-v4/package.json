@@ -1,6 +1,6 @@
 {
   "name": "@linode/api-v4",
-  "version": "0.26.0-alpha.0",
+  "version": "0.27.1",
   "homepage": "https://github.com/linode/manager/tree/develop/packages/api-v4",
   "bugs": {
     "url": "https://github.com/linode/manager/issues",
@@ -23,7 +23,6 @@
   "dependencies": {
     "axios": "~0.19.0",
     "querystring": "^0.2.0",
-    "ramda": "^0.26.1",
     "yup": "^0.27.0"
   },
   "scripts": {
@@ -33,7 +32,6 @@
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",
     "typecheck": "tsc --noEmit true --emitDeclarationOnly false",
-    "prepublishOnly": "yarn lint && yarn typecheck && yarn format && yarn build",
     "precommit": "lint-staged"
   },
   "files": [
@@ -53,7 +51,6 @@
     "@babel/preset-typescript": "^7.6.0",
     "@types/jest": "^24.0.23",
     "@types/node": "^12.7.1",
-    "@types/ramda": "^0.26.33",
     "@types/yup": "^0.26.22",
     "axios-mock-adapter": "^1.18.1",
     "babel-plugin-module-resolver": "^3.2.0",
