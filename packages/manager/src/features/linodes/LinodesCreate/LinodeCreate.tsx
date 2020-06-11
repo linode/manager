@@ -142,7 +142,7 @@ export class LinodeCreate extends React.PureComponent<
     {
       title: 'Distributions',
       // name: 'distro-create',
-      type: 'fromImage',
+      // type: 'fromImage',
       render: () => {
         /** ...rest being all the form state props and display data */
         const {
@@ -682,7 +682,7 @@ export class LinodeCreate extends React.PureComponent<
             header={''}
             tabs={this.tabs}
             rootClass={classes.root}
-            handleClick={this.props.setTab}
+            handleTabChange={this.handleTabChange}
           />
           <SelectRegionPanel
             error={hasErrorFor.region}

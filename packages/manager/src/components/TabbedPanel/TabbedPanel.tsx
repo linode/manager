@@ -95,7 +95,7 @@ interface Props {
   initTab?: number;
   bodyClass?: string;
   noPadding?: boolean;
-  handleTabChange?: (value?: number) => void;
+  handleTabChange?: (e: any, value: number) => void;
   value?: number;
 }
 
