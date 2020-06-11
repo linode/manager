@@ -169,7 +169,7 @@ const EntityIcon: React.FC<CombinedProps> = props => {
         },
         className
       )}
-      style={{ top: marginTop && marginTop }}
+      style={{ top: marginTop }}
       data-qa-icon={variant}
       data-qa-entity-status={status || 'undefined'}
       data-qa-is-loading={loading || 'false'}
