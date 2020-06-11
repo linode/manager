@@ -23,10 +23,15 @@ export type Action = 'Reboot' | 'Power Off' | 'Power On';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginBottom: theme.spacing(1.25),
     display: 'flex',
     alignItems: 'center',
     lineHeight: '1.25rem'
+  },
+  dialog: {
+    '& .dialog-content': {
+      paddingTop: 0,
+      paddingBottom: 0
+    }
   }
 }));
 
@@ -135,6 +140,7 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = props => {
 
   return (
     <Dialog
+      className={classes.dialog}
       open={props.isOpen}
       title={`Are you sure you want to ${props.action.toLowerCase()} ${
         props.linodeLabel
