@@ -1,4 +1,5 @@
 import { APIError } from '@linode/api-v4/lib/types';
+import { useFormik } from 'formik';
 import * as React from 'react';
 import { UserSSHKeyObject } from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -25,11 +26,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
+type FileSystem = 'raw' | 'swap' | 'ext3' | 'ext4' | 'initrd' | '_none_';
+
 interface EditableFields {
-  label: string;
-  filesystem: string;
-  size: number;
-  password?: string;
+  // label: string;
+  // filesystem: string;
+  // size: number;
+  // password?: string;
   passwordError?: string;
   userSSHKeys?: UserSSHKeyObject[];
   requestKeys?: () => void;
@@ -42,13 +45,13 @@ interface Props extends EditableFields {
   maximumSize: number;
   submitting: boolean;
   onClose: () => void;
-  onSubmit: () => void;
-  onLabelChange: (value: string) => void;
-  onFilesystemChange: (value: string) => void;
-  onSizeChange: (value: number | string) => void;
-  onImageChange: (selected: string | undefined) => void;
-  onPasswordChange: (password: string) => void;
-  onResetImageMode: () => void;
+  onSubmit: (values: any) => void;
+  // onLabelChange: (value: string) => void;
+  // onFilesystemChange: (value: string) => void;
+  // onSizeChange: (value: number | string) => void;
+  // onImageChange: (selected: string | undefined) => void;
+  // onPasswordChange: (password: string) => void;
+  // onResetImageMode: () => void;
 }
 
 type CombinedProps = Props;
@@ -91,9 +94,20 @@ const getTitle = (v: 'create' | 'rename' | 'resize') => {
 };
 
 export const LinodeDiskDrawer: React.FC<CombinedProps> = props => {
-  const { open, mode, submitting, password, userSSHKeys, requestKeys } = props;
+  const { open, mode, submitting, onSubmit, userSSHKeys, requestKeys } = props;
 
   const classes = useStyles();
+
+  const formik = useFormik({
+    initialValues: {
+      label: '',
+      filesystem: '_none_' as FileSystem,
+      size: 0,
+      image: '',
+      password: ''
+    },
+    onSubmit
+  });
 
   const [selectedMode, setSelectedMode] = React.useState<string>(modes.EMPTY);
 
@@ -112,91 +126,30 @@ export const LinodeDiskDrawer: React.FC<CombinedProps> = props => {
   //   };
   // }
 
-  const onLabelChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    props.onLabelChange(e.target.value);
+  // const onLabelChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+  //   props.onLabelChange(e.target.value);
 
-  const onSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { valueAsNumber } = e.target;
-    if (isNaN(valueAsNumber)) {
-      return props.onSizeChange('');
-    }
+  // const onSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { valueAsNumber } = e.target;
+  //   if (isNaN(valueAsNumber)) {
+  //     return props.onSizeChange('');
+  //   }
 
-    props.onSizeChange(valueAsNumber);
-  };
+  //   props.onSizeChange(valueAsNumber);
+  // };
 
-  const onFilesystemChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    props.onFilesystemChange(e.target.value);
+  // const onFilesystemChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+  //   props.onFilesystemChange(e.target.value);
 
-  const onModeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedMode(e.target.value as diskMode);
-    props.onResetImageMode(); // Reset image and root_pass
-  };
+  // const onModeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setSelectedMode(e.target.value as diskMode);
+  //   props.onResetImageMode(); // Reset image and root_pass
+  // };
 
-  const onImageChange = (selected: Item<string>) => {
-    props.onImageChange(selected ? selected.value : undefined);
-  };
-
-  const getErrors = (key: string) => '';
-
-  const labelField = () => (
-    <TextField
-      disabled={['resize'].includes(props.mode)}
-      label="Label"
-      required
-      value={props.label}
-      onChange={onLabelChange}
-      errorText={getErrors('label')}
-      errorGroup="linode-disk-drawer"
-      data-qa-label
-    />
-  );
-
-  const filesystemField = () => (
-    <TextField
-      disabled={['resize', 'rename'].includes(props.mode)}
-      label="Filesystem"
-      select
-      value={props.filesystem}
-      onChange={onFilesystemChange}
-      errorText={getErrors('filesystem')}
-      errorGroup="linode-disk-drawer"
-    >
-      <MenuItem value="_none_">
-        <em>Select a Filesystem</em>
-      </MenuItem>
-      {['raw', 'swap', 'ext3', 'ext4', 'initrd'].map(fs => (
-        <MenuItem value={fs} key={fs}>
-          {fs}
-        </MenuItem>
-      ))}
-    </TextField>
-  );
-
-  const sizeField = () => (
-    <React.Fragment>
-      <TextField
-        disabled={['rename'].includes(props.mode)}
-        label="Size"
-        type="number"
-        required
-        value={props.size}
-        onChange={onSizeChange}
-        errorText={getErrors('size')}
-        errorGroup="linode-disk-drawer"
-        InputProps={{
-          endAdornment: <InputAdornment position="end">MB</InputAdornment>
-        }}
-        data-qa-disk-size
-      />
-      <FormHelperText style={{ marginTop: 8 }}>
-        Maximum Size: {props.maximumSize} MB
-      </FormHelperText>
-    </React.Fragment>
-  );
-
+  // const onImageChange = (selected: Item<string>) => {
+  //   props.onImageChange(selected ? selected.value : undefined);
+  // };
   const generalError = ''; // this.getErrors('none');
-  const passwordError = ''; // this.getErrors('root_pass');
-  const imageFieldError = ''; // this.getErrors('image');
 
   return (
     <Drawer title={getTitle(mode)} open={open} onClose={props.onClose}>
@@ -206,7 +159,7 @@ export const LinodeDiskDrawer: React.FC<CombinedProps> = props => {
             <ModeSelect
               modes={modeList}
               selected={selectedMode}
-              onChange={onModeChange}
+              onChange={e => setSelectedMode(e.target.value)}
             />
           </Grid>
         )}
@@ -222,26 +175,73 @@ export const LinodeDiskDrawer: React.FC<CombinedProps> = props => {
         </Grid>
         <Grid item xs={12} className={classes.section}>
           <form>
-            {labelField()}
-            {selectedMode === modes.EMPTY && filesystemField()}
-            {selectedMode === modes.IMAGE && (
+            <TextField
+              disabled={['resize'].includes(props.mode)}
+              label="Label"
+              name="label"
+              required
+              value={formik.values.label}
+              onChange={formik.handleChange}
+              errorText={formik.errors.label?.[0]}
+              errorGroup="linode-disk-drawer"
+              data-qa-label
+            />
+            {selectedMode === modes.EMPTY && (
+              <TextField
+                disabled={['resize', 'rename'].includes(props.mode)}
+                label="Filesystem"
+                name="filesystem"
+                select
+                value={formik.values.filesystem}
+                onChange={formik.handleChange}
+                errorText={formik.errors.filesystem?.[0]}
+                errorGroup="linode-disk-drawer"
+              >
+                <MenuItem value="_none_">
+                  <em>Select a Filesystem</em>
+                </MenuItem>
+                {['raw', 'swap', 'ext3', 'ext4', 'initrd'].map(fs => (
+                  <MenuItem value={fs} key={fs}>
+                    {fs}
+                  </MenuItem>
+                ))}
+              </TextField>
+            )}
+            {/* {selectedMode === modes.IMAGE && (
               <ImageAndPassword
-                onImageChange={onImageChange}
+                onImageChange={(selected: Item) => formik.handleChange('image')}
                 imageFieldError={imageFieldError}
-                password={password || ''}
+                password={formik.values.password}
                 passwordError={passwordError}
-                onPasswordChange={props.onPasswordChange}
+                onPasswordChange={() => null}
                 userSSHKeys={userSSHKeys || []}
                 requestKeys={requestKeys || (() => null)}
               />
-            )}
-            {sizeField()}
+            )} */}
+            <TextField
+              disabled={['rename'].includes(props.mode)}
+              label="Size"
+              type="number"
+              name="size"
+              required
+              value={formik.values.size}
+              onChange={formik.handleChange}
+              errorText={formik.errors.size?.[0]}
+              errorGroup="linode-disk-drawer"
+              InputProps={{
+                endAdornment: <InputAdornment position="end">MB</InputAdornment>
+              }}
+              data-qa-disk-size
+            />
+            <FormHelperText style={{ marginTop: 8 }}>
+              Maximum Size: {props.maximumSize} MB
+            </FormHelperText>
           </form>
         </Grid>
         <Grid item className={classes.section}>
           <ActionsPanel>
             <Button
-              onClick={props.onSubmit}
+              onClick={() => formik.handleSubmit()}
               buttonType="primary"
               loading={submitting}
               data-qa-disk-submit

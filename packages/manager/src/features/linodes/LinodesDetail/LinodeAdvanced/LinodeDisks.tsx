@@ -87,8 +87,6 @@ const styles = (theme: Theme) =>
     }
   });
 
-type Filesystem = 'raw' | 'swap' | 'ext3' | 'ext4' | 'initrd' | '_none_';
-
 interface ConfirmDeleteState {
   open: boolean;
   submitting: boolean;
@@ -104,13 +102,6 @@ interface DrawerState {
   errors?: APIError[];
   diskId?: number;
   maximumSize: number;
-  fields: {
-    label: string;
-    filesystem: Filesystem;
-    size: number;
-    image?: string;
-    password?: string;
-  };
 }
 
 interface ImagizeDrawerState {
@@ -136,12 +127,7 @@ const defaultDrawerState: DrawerState = {
   submitting: false,
   mode: 'create',
   errors: undefined,
-  maximumSize: 0,
-  fields: {
-    label: '',
-    filesystem: 'ext4',
-    size: 0
-  }
+  maximumSize: 0
 };
 
 const defaultImagizeDrawerState: ImagizeDrawerState = {
@@ -405,14 +391,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   };
 
   drawer = () => {
-    const {
-      mode,
-      open,
-      errors,
-      submitting,
-      maximumSize,
-      fields: { label, size, filesystem, password } // Image is handled internally by React Select
-    } = this.state.drawer;
+    const { mode, open, errors, submitting, maximumSize } = this.state.drawer;
 
     return (
       <LinodeDiskDrawer
@@ -420,74 +399,62 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
         mode={mode}
         open={open}
         errors={errors}
-        label={label}
-        filesystem={filesystem}
-        size={size}
-        password={password}
         maximumSize={maximumSize}
-        onLabelChange={this.onLabelChange}
-        onSizeChange={this.onSizeChange}
-        onFilesystemChange={this.onFilesystemChange}
         onClose={this.closeDrawer}
         onSubmit={this.onDrawerSubmit}
-        onImageChange={this.onImageChange}
-        onPasswordChange={this.onPasswordChange}
-        onResetImageMode={this.onResetImageMode}
         userSSHKeys={this.props.userSSHKeys}
         requestKeys={this.props.requestKeys}
       />
     );
   };
 
-  onLabelChange = (label: string) => {
-    const { fields } = this.state.drawer;
-    this.setDrawer({ fields: { ...fields, label } });
-  };
+  // onLabelChange = (label: string) => {
+  //   const { fields } = this.state.drawer;
+  //   this.setDrawer({ fields: { ...fields, label } });
+  // };
 
-  onSizeChange = (size: number) => {
-    const { fields } = this.state.drawer;
-    this.setDrawer({ fields: { ...fields, size } });
-  };
+  // onSizeChange = (size: number) => {
+  //   const { fields } = this.state.drawer;
+  //   this.setDrawer({ fields: { ...fields, size } });
+  // };
 
-  onFilesystemChange = (filesystem: Filesystem) => {
-    const { fields } = this.state.drawer;
-    this.setDrawer({ fields: { ...fields, filesystem } });
-  };
+  // onFilesystemChange = (filesystem: Filesystem) => {
+  //   const { fields } = this.state.drawer;
+  //   this.setDrawer({ fields: { ...fields, filesystem } });
+  // };
 
-  onImageChange = (image: string | undefined) => {
-    const { fields } = this.state.drawer;
-    this.setDrawer({ fields: { ...fields, image } });
-  };
+  // onImageChange = (image: string | undefined) => {
+  //   const { fields } = this.state.drawer;
+  //   this.setDrawer({ fields: { ...fields, image } });
+  // };
 
-  onPasswordChange = (password: string) => {
-    const { fields } = this.state.drawer;
-    this.setDrawer({ fields: { ...fields, password } });
-  };
+  // onPasswordChange = (password: string) => {
+  //   const { fields } = this.state.drawer;
+  //   this.setDrawer({ fields: { ...fields, password } });
+  // };
 
-  onResetImageMode = () => {
-    const { fields } = this.state.drawer;
-    this.setDrawer({
-      fields: { ...fields, image: undefined, password: undefined }
-    });
-  };
+  // onResetImageMode = () => {
+  //   const { fields } = this.state.drawer;
+  //   this.setDrawer({
+  //     fields: { ...fields, image: undefined, password: undefined }
+  //   });
+  // };
 
-  onDrawerSubmit = () => {
+  onDrawerSubmit = (values: any) => {
+    console.log(values);
     switch (this.state.drawer.mode) {
       case 'create':
-        return this.createDisk();
+        return this.createDisk(values);
       case 'rename':
-        return this.renameDisk();
+        return this.renameDisk(values.label);
       case 'resize':
-        return this.resizeDisk();
+        return this.resizeDisk(values.size);
     }
   };
 
-  resizeDisk = () => {
+  resizeDisk = (size: number) => {
     const { linodeId, resizeLinodeDisk } = this.props;
-    const {
-      diskId,
-      fields: { size }
-    } = this.state.drawer;
+    const { diskId } = this.state.drawer;
     if (!linodeId || !diskId) {
       return;
     }
@@ -510,15 +477,9 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       });
   };
 
-  createDisk = () => {
+  createDisk = (values: any) => {
     const { linodeId, userSSHKeys, createLinodeDisk } = this.props;
-    const {
-      label,
-      size,
-      filesystem,
-      image,
-      password
-    } = this.state.drawer.fields;
+    const { label, size, filesystem, image, password } = values;
     if (!linodeId) {
       return;
     }
@@ -546,12 +507,9 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       });
   };
 
-  renameDisk = () => {
+  renameDisk = (label: string) => {
     const { linodeId, updateLinodeDisk } = this.props;
-    const {
-      diskId,
-      fields: { label }
-    } = this.state.drawer;
+    const { diskId } = this.state.drawer;
     if (!linodeId || !diskId) {
       return;
     }
@@ -594,41 +552,22 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       });
   };
 
-  openDrawerForRename = ({
-    id: diskId,
-    filesystem,
-    label,
-    size
-  }: Disk) => () => {
+  openDrawerForRename = ({ id: diskId }: Disk) => () => {
     this.setDrawer({
       diskId,
       errors: undefined,
-      fields: {
-        filesystem,
-        label,
-        size
-      },
       mode: 'rename',
       open: true,
       submitting: false
     });
   };
 
-  openDrawerForResize = ({
-    id: diskId,
-    filesystem,
-    label,
-    size
-  }: Disk) => () => {
+  openDrawerForResize = ({ id: diskId, size }: Disk) => () => {
     this.setDrawer({
       diskId,
       errors: undefined,
       maximumSize: Math.max(size, this.calculateDiskFree(diskId)),
-      fields: {
-        filesystem,
-        label,
-        size
-      },
+
       mode: 'resize',
       open: true,
       submitting: false
@@ -642,11 +581,6 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       diskId: undefined,
       errors: undefined,
       maximumSize,
-      fields: {
-        filesystem: 'ext4',
-        label: '',
-        size: maximumSize
-      },
       mode: 'create',
       open: true,
       submitting: false
