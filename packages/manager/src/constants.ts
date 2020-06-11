@@ -193,7 +193,8 @@ export const objectStorageClusterDisplay: Record<
   string
 > = {
   'us-east-1': 'Newark, NJ',
-  'eu-central-1': 'Frankfurt, DE'
+  'eu-central-1': 'Frankfurt, DE',
+  'ap-south-1': 'Singapore, SG'
 };
 
 export type ContinentKey = 'NA' | 'EU' | 'AS';

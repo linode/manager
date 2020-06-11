@@ -49,7 +49,10 @@ export interface ObjectStorageObjectURLOptions {
 }
 
 // Enum containing IDs for each Cluster
-export type ObjectStorageClusterID = 'us-east-1' | 'eu-central-1';
+export type ObjectStorageClusterID =
+  | 'us-east-1'
+  | 'eu-central-1'
+  | 'ap-south-1';
 
 export interface ObjectStorageCluster {
   region: string;
