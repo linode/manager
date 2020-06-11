@@ -37,6 +37,7 @@ import { linodeInTransition } from 'src/features/linodes/transitions';
 import { ApplicationState } from 'src/store';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import HostMaintenanceError from '../HostMaintenanceError';
 import LinodePermissionsError from '../LinodePermissionsError';
 import ResizeConfirmation from './ResizeConfirmationDialog';
 
@@ -264,13 +265,17 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       linodeLabel,
       permissions,
       classes,
-      linodeDisks
+      linodeDisks,
+      linodeStatus
     } = this.props;
     const type = [...currentTypesData, ...deprecatedTypesData].find(
       t => t.id === linodeType
     );
 
-    const disabled = permissions === 'read_only';
+    const hostMaintenance = linodeStatus === 'stopped';
+    const unauthorized = permissions === 'read_only';
+
+    const disabled = hostMaintenance || unauthorized;
 
     const currentPlanHeading = linodeType
       ? type
@@ -293,7 +298,8 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       <div id="tabpanel-resize" role="tabpanel" aria-labelledby="tab-resize">
         <DocumentTitleSegment segment={`${linodeLabel} - Resize`} />
         <Paper className={classes.root}>
-          {disabled && <LinodePermissionsError />}
+          {unauthorized && <LinodePermissionsError />}
+          {hostMaintenance && <HostMaintenanceError />}
           <Typography
             role="heading"
             aria-level={2}

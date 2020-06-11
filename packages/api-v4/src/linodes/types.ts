@@ -143,7 +143,8 @@ export type LinodeStatus =
   | 'deleting'
   | 'migrating'
   | 'cloning'
-  | 'restoring';
+  | 'restoring'
+  | 'stopped';
 
 export interface Config {
   id: number;

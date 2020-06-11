@@ -1,4 +1,4 @@
-import { Form, Formik } from 'formik';
+import { Formik } from 'formik';
 import { Region } from '@linode/api-v4/lib/regions';
 import { APIError } from '@linode/api-v4/lib/types';
 import { CreateVolumeSchema } from '@linode/api-v4/lib/volumes';
@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
+import Form from 'src/components/core/Form';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Paper from 'src/components/core/Paper';
 import {
@@ -116,7 +117,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
           tags: tags.map(v => v.value)
         })
           .then(({ filesystem_path, label: volumeLabel }) => {
-            resetForm(initialValues);
+            resetForm({ values: initialValues });
             setStatus({ success: `Volume scheduled for creation.` });
             setSubmitting(false);
             onSuccess(

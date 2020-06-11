@@ -5,7 +5,7 @@ import { StackScriptForm } from './StackScriptForm';
 
 import { normalizedImages as images } from 'src/__data__/images';
 
-describe('StackScriptCreate', () => {
+describe.skip('StackScriptCreate', () => {
   const component = shallow(
     <StackScriptForm
       images={{

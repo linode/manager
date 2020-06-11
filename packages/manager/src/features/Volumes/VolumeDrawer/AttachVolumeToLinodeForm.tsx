@@ -1,10 +1,11 @@
-import { Form, Formik } from 'formik';
+import { Formik } from 'formik';
 import { Grant } from '@linode/api-v4/lib/account';
 import { attachVolume } from '@linode/api-v4/lib/volumes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
+import Form from 'src/components/core/Form';
 import withVolumesRequests, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
@@ -66,7 +67,7 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = props => {
           linode_id: linodeId,
           config_id: values.config_id
         })
-          .then(response => {
+          .then(_ => {
             onClose();
             resetEventsPolling();
           })
@@ -190,14 +191,8 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
   )
 });
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced = compose<CombinedProps, Props>(
-  connected,
-  withVolumesRequests
-);
+const enhanced = compose<CombinedProps, Props>(connected, withVolumesRequests);
 
 export default enhanced(AttachVolumeToLinodeForm);

@@ -32,8 +32,13 @@ import SuspenseLoader from 'src/components/SuspenseLoader';
 import withGlobalErrors, {
   Props as GlobalErrorProps
 } from 'src/containers/globalErrors.container';
+import withPreferences, {
+  Props as PreferencesProps
+} from 'src/containers/preferences.container';
 
 import Logo from 'src/assets/logo/logo-text.svg';
+import { FlagSet } from './featureFlags';
+import { UserPreferences } from './store/preferences/preferences.actions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appFrame: {
@@ -115,7 +120,7 @@ interface Props {
   isLoggedInAsCustomer: boolean;
 }
 
-type CombinedProps = Props & GlobalErrorProps & WithTheme;
+type CombinedProps = Props & GlobalErrorProps & WithTheme & PreferencesProps;
 
 const Account = React.lazy(() => import('src/features/Account'));
 const LinodesRoutes = React.lazy(() => import('src/features/linodes'));
@@ -154,6 +159,8 @@ const MainContent: React.FC<CombinedProps> = props => {
   const flags = useFlags();
 
   const [menuIsOpen, toggleMenu] = React.useState<boolean>(false);
+
+  const [bannerDismissed, setBannerDismissed] = React.useState<boolean>(false);
 
   /**
    * this is the case where the user has successfully completed signup
@@ -200,6 +207,14 @@ const MainContent: React.FC<CombinedProps> = props => {
     );
   }
 
+  const shouldDisplayMainContentBanner =
+    !bannerDismissed &&
+    checkFlagsForMainContentBanner(flags) &&
+    !checkPreferencesForBannerDismissal(
+      props.preferences,
+      flags?.mainContentBanner?.key
+    );
+
   /**
    * otherwise just show the rest of the app.
    */
@@ -222,11 +237,13 @@ const MainContent: React.FC<CombinedProps> = props => {
               [classes.hidden]: props.appIsLoading
             })}
           >
-            {flags.mainContentBanner && !isEmpty(flags.mainContentBanner) && (
+            {shouldDisplayMainContentBanner && (
               <MainContentBanner
                 bannerText={flags.mainContentBanner?.text ?? ''}
                 url={flags.mainContentBanner?.link?.url ?? ''}
                 linkText={flags.mainContentBanner?.link?.text ?? ''}
+                bannerKey={flags.mainContentBanner?.key ?? ''}
+                onClose={() => setBannerDismissed(true)}
               />
             )}
             <SideMenu
@@ -328,5 +345,24 @@ const MainContent: React.FC<CombinedProps> = props => {
 export default compose<CombinedProps, Props>(
   React.memo,
   withGlobalErrors(),
-  withTheme
+  withTheme,
+  withPreferences()
 )(MainContent);
+
+// =============================================================================
+// Utilities
+// =============================================================================
+export const checkFlagsForMainContentBanner = (flags: FlagSet) => {
+  return Boolean(
+    flags.mainContentBanner &&
+      !isEmpty(flags.mainContentBanner) &&
+      flags.mainContentBanner.key
+  );
+};
+
+export const checkPreferencesForBannerDismissal = (
+  preferences: UserPreferences,
+  key = 'defaultKey'
+) => {
+  return Boolean(preferences?.main_content_banner_dismissal?.[key]);
+};
