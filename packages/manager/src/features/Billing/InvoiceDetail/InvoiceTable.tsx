@@ -94,7 +94,7 @@ const RenderData: React.FC<{
                   {renderQuantity(quantity)}
                 </TableCell>
                 <TableCell parentColumn="Unit Price" data-qa-unit-price>
-                  {renderUnitPrice(unit_price)}
+                  {unit_price !== 'None' && renderUnitPrice(unit_price)}
                 </TableCell>
                 <TableCell parentColumn="Amount (USD)" data-qa-amount>
                   <Currency wrapInParentheses={amount < 0} quantity={amount} />
