@@ -126,15 +126,6 @@ export const LinodeDiskDrawer: React.FC<CombinedProps> = props => {
   //   };
   // }
 
-  // const onLabelChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-  //   props.onLabelChange(e.target.value);
-
-  // const onSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { valueAsNumber } = e.target;
-  //   if (isNaN(valueAsNumber)) {
-  //     return props.onSizeChange('');
-  //   }
-
   //   props.onSizeChange(valueAsNumber);
   // };
 
@@ -146,9 +137,6 @@ export const LinodeDiskDrawer: React.FC<CombinedProps> = props => {
   //   props.onResetImageMode(); // Reset image and root_pass
   // };
 
-  // const onImageChange = (selected: Item<string>) => {
-  //   props.onImageChange(selected ? selected.value : undefined);
-  // };
   const generalError = ''; // this.getErrors('none');
 
   return (
@@ -207,17 +195,21 @@ export const LinodeDiskDrawer: React.FC<CombinedProps> = props => {
                 ))}
               </TextField>
             )}
-            {/* {selectedMode === modes.IMAGE && (
+            {selectedMode === modes.IMAGE && (
               <ImageAndPassword
-                onImageChange={(selected: Item) => formik.handleChange('image')}
-                imageFieldError={imageFieldError}
+                onImageChange={(selected: Item) =>
+                  formik.setFieldValue('image', selected.value)
+                }
+                imageFieldError={formik.errors.image?.[0]}
                 password={formik.values.password}
-                passwordError={passwordError}
-                onPasswordChange={() => null}
+                passwordError={formik.errors.password?.[0]}
+                onPasswordChange={(password: string) =>
+                  formik.setFieldValue('password', password)
+                }
                 userSSHKeys={userSSHKeys || []}
                 requestKeys={requestKeys || (() => null)}
               />
-            )} */}
+            )}
             <TextField
               disabled={['rename'].includes(props.mode)}
               label="Size"
