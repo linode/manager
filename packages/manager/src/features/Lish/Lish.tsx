@@ -6,14 +6,15 @@ import {
 import * as React from 'react';
 import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
-import TabPanel from 'src/components/core/ReachTabPanel';
-import TabPanels from 'src/components/core/ReachTabPanels';
+// import TabPanel from 'src/components/core/ReachTabPanel';
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import SafeTabPanel from 'src/components/SafeTabPanel';
+import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import TabLinkList from 'src/components/TabLinkList';
 import Typography from 'src/components/core/Typography';
@@ -43,6 +44,10 @@ const styles = (theme: Theme) =>
     }
   });
 
+export interface Props extends Lish {
+  className?: string;
+}
+
 interface State {
   loading: boolean;
   authenticated: boolean;
@@ -50,7 +55,8 @@ interface State {
   token?: string;
 }
 
-type CombinedProps = WithStyles<ClassNames> &
+type CombinedProps = Props &
+  WithStyles<ClassNames> &
   RouteComponentProps<{ linodeId?: string }>;
 
 class Lish extends React.Component<CombinedProps, State> {
@@ -208,25 +214,24 @@ class Lish extends React.Component<CombinedProps, State> {
         <Tabs className={classes.tabs}>
           <TabLinkList lish tabs={this.tabs} />
           <TabPanels>
-            <TabPanel data-qa-tab="Weblish">
-              {linode && token && (
+            {linode && token && (
+              <SafeTabPanel index={0} data-qa-tab="Weblish">
                 <Weblish
                   token={token}
                   linode={linode}
                   refreshToken={this.refreshToken}
                 />
-              )}
-            </TabPanel>
-            <TabPanel data-qa-tab="Glish">
-              {linode && token && (
+              </SafeTabPanel>
+            )}
+            {linode && token && (
+              <SafeTabPanel index={1} data-qa-tab="Glish">
                 <Glish
                   token={token}
                   linode={linode}
                   refreshToken={this.refreshToken}
                 />
-              )}
-            </TabPanel>
-            ))}
+              </SafeTabPanel>
+            )}
           </TabPanels>
         </Tabs>
         {loading && <CircleProgress noInner className={classes.progress} />}
