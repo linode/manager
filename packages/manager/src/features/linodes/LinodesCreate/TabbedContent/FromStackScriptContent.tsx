@@ -4,7 +4,7 @@ import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { ResourcePage } from '@linode/api-v4/lib/types';
 import { assocPath, pathOr } from 'ramda';
 import * as React from 'react';
-import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
+// import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -16,15 +16,14 @@ import Typography from 'src/components/core/Typography';
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
-import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
+
 import Notice from 'src/components/Notice';
-import SelectRegionPanel from 'src/components/SelectRegionPanel';
+
 import { Tag } from 'src/components/TagsInput';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel';
 import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import SelectPlanPanel from '../SelectPlanPanel';
 
 import { filterUDFErrors } from './formUtilities';
 import { renderBackupsDisplaySection } from './utils';
@@ -178,17 +177,16 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
       accountBackupsEnabled,
       errors,
       backupsMonthlyPrice,
-      regionsData,
-      typesData,
+
       classes,
       imageDisplayInfo,
       regionDisplayInfo,
       selectedImageID,
-      selectedRegionID,
+
       selectedStackScriptID,
-      selectedTypeID,
+
       typeDisplayInfo,
-      tags,
+
       backupsEnabled,
       imagesData,
       userCannotCreateLinode: disabled,
@@ -198,9 +196,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
       request,
       header,
       updateImageID,
-      updateRegionID,
-      updateTags,
-      updateTypeID,
+
       availableUserDefinedFields: userDefinedFields,
       availableStackScriptImages: compatibleImages,
       selectedUDFs: udf_data
@@ -251,7 +247,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
       );
     }
 
-    let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
+    // let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
     if (hasBackups && typeDisplayInfo && backupsMonthlyPrice) {
       calculatedPrice += backupsMonthlyPrice;
     }
@@ -322,47 +318,9 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
                 </Typography>
               </Paper>
             )}
-            <SelectRegionPanel
-              data-qa-select-region-panel
-              error={hasErrorFor('region')}
-              regions={regionsData}
-              handleSelection={updateRegionID}
-              selectedID={selectedRegionID}
-              updateFor={[selectedRegionID, errors, regionsData]}
-              helperText={this.props.regionHelperText}
-              copy="Determine the best location for your Linode."
-              disabled={disabled}
-            />
-            <SelectPlanPanel
-              data-qa-select-plan
-              error={hasErrorFor('type')}
-              types={typesData}
-              onSelect={updateTypeID}
-              updateFor={[selectedTypeID, errors, this.props.disabledClasses]}
-              selectedID={selectedTypeID}
-              disabled={disabled}
-              disabledClasses={this.props.disabledClasses}
-            />
-            <LabelAndTagsPanel
-              data-qa-label-panel
-              labelFieldProps={{
-                label: 'Linode Label',
-                value: label || '',
-                onChange: this.props.updateLabel,
-                errorText: hasErrorFor('label'),
-                disabled
-              }}
-              tagsInputProps={{
-                value: tags || [],
-                onChange: updateTags,
-                tagError: hasErrorFor('tags'),
-                disabled
-              }}
-              updateFor={[tags, label, errors]}
-            />
           </form>
         </Grid>
-        <Grid item className={`${classes.sidebar} mlSidebar`}>
+        {/* <Grid item className={`${classes.sidebar} mlSidebar`}>
           <CheckoutBar
             heading="Linode Summary"
             calculatedPrice={calculatedPrice}
@@ -372,7 +330,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
           >
             <DisplaySectionList displaySections={displaySections} />
           </CheckoutBar>
-        </Grid>
+        </Grid> */}
         <StackScriptDrawer />
       </React.Fragment>
     );

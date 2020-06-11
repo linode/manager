@@ -16,7 +16,7 @@ export const apiCheckErrors = (resp, failOnError = true) => {
   return errs;
 };
 
-export const getAll = path => {
+export const getAll = (path: string) => {
   return cy.request({
     method: 'GET',
     url: `${apiroot}${path}`,
@@ -25,7 +25,7 @@ export const getAll = path => {
     }
   });
 };
-export const deleteById = (path, id) => {
+export const deleteById = (path: string, id: number) => {
   return cy.request({
     method: 'DELETE',
     url: `${apiroot}${path}/${id}`,
