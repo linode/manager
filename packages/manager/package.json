@@ -186,7 +186,7 @@
     "@wdio/sync": "^5.18.6",
     "autoprefixer": "^9.4.8",
     "axe-core": "^3.5.1",
-    "babel-core": "^6.26.3",
+    "babel-core": "^7.0.0-bridge",
     "babel-jest": "^26.0.1",
     "babel-loader": "^8.1.0",
     "babel-preset-react-app": "^9.1.2",
