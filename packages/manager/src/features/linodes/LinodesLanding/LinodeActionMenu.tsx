@@ -130,9 +130,17 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
     const readOnlyProps = readOnly
       ? {
           disabled: true,
-          tooltip: readOnly && "You don't have permission to modify this Linode"
+          tooltip: "You don't have permission to modify this Linode"
         }
       : {};
+
+    const hasHostMaintenance = linodeStatus === 'stopped';
+    const maintenanceProps = {
+      disabled: hasHostMaintenance,
+      tooltip: hasHostMaintenance
+        ? 'This action is unavailable while your Linode is undergoing host maintenance.'
+        : undefined
+    };
 
     const noConfigs = hasMadeConfigsRequest && configs.length === 0;
 
@@ -160,7 +168,8 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
             e.preventDefault();
             e.stopPropagation();
           },
-          ...readOnlyProps
+          ...readOnlyProps,
+          ...maintenanceProps
         },
         {
           title: 'Migrate',
@@ -183,7 +192,8 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
             e.preventDefault();
             e.stopPropagation();
           },
-          ...readOnlyProps
+          ...readOnlyProps,
+          ...maintenanceProps
         },
         linodeBackups.enabled
           ? {
