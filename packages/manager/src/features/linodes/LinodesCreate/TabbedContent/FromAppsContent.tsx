@@ -46,6 +46,11 @@ type ClassNames = 'sidebar' | 'emptyImagePanel' | 'emptyImagePanelText';
 
 const styles = (theme: Theme) =>
   createStyles({
+    main: {
+      [theme.breakpoints.up('md')]: {
+        maxWidth: '100%'
+      }
+    },
     sidebar: {
       [theme.breakpoints.up('md')]: {
         marginTop: '-130px !important'
@@ -261,7 +266,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
       <React.Fragment>
         <Grid
           item
-          className={`mlMain py0`}
+          className={`${classes.main} mlMain py0`}
           role="tabpanel"
           id="tabpanel-one-click-apps-create"
           aria-labelledby="tab-one-click-apps-create"

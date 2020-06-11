@@ -124,6 +124,7 @@ export class LinodeCreate extends React.PureComponent<
     event: React.ChangeEvent<HTMLDivElement>,
     value: number
   ) => {
+    console.log(value);
     this.props.resetCreationState();
 
     /** set the tab in redux state */
@@ -141,7 +142,7 @@ export class LinodeCreate extends React.PureComponent<
     {
       title: 'Distributions',
       // name: 'distro-create',
-      // type: 'fromImage',
+      type: 'fromImage',
       render: () => {
         /** ...rest being all the form state props and display data */
         const {
@@ -232,21 +233,60 @@ export class LinodeCreate extends React.PureComponent<
       }
     },
     {
-      title: 'My Images',
+      title: 'Images',
       // type: 'fromImage',
       // name: 'images-create',
       render: () => {
+        const {
+          history,
+          linodesData,
+          linodesError,
+          linodesLoading,
+          typesData,
+          typesError,
+          typesLoading,
+          regionsData,
+          regionsError,
+          regionsLoading,
+          imagesData,
+          imagesError,
+          imagesLoading,
+          handleSelectUDFs,
+          selectedUDFs,
+          updateStackScript,
+          availableStackScriptImages,
+          availableUserDefinedFields,
+          selectedStackScriptID,
+          selectedDiskSize,
+          selectedStackScriptUsername,
+          selectedStackScriptLabel,
+          selectedLinodeID,
+          appInstances,
+          appInstancesError,
+          appInstancesLoading,
+          ...rest
+        } = this.props;
+
         return (
-          // <SubTabs
-          //   reset={this.props.resetCreationState}
-          //   name="images-create"
-          //   history={this.props.history}
-          //   tabs={this.myImagesTabs()}
-          //   handleClick={this.props.setTab}
-          //   errors={this.props.errors}
-          // />
-          <div>test</div>
+          <FromImageContent
+            variant={'private'}
+            imagePanelTitle="Choose an Image"
+            imagesData={imagesData}
+            regionsData={regionsData!}
+            typesData={typesData!}
+            {...rest}
+          />
         );
+        // return (
+        //   <SubTabs
+        //     reset={this.props.resetCreationState}
+        //     name="images-create"
+        //     history={this.props.history}
+        //     tabs={this.myImagesTabs()}
+        //     handleClick={this.props.setTab}
+        //     errors={this.props.errors}
+        //   />
+        // );
       }
     },
     {
@@ -258,7 +298,42 @@ export class LinodeCreate extends React.PureComponent<
     {
       title: 'Clones',
       render: () => {
-        return <div>test</div>;
+        /**
+         * rest being just the props that FromLinodeContent needs
+         * AKA CloneFormStateHandlers, WithLinodesImagesTypesAndRegions,
+         * and WithDisplayData
+         */
+        const {
+          handleSelectUDFs,
+          selectedUDFs,
+          selectedStackScriptID,
+          updateStackScript,
+          appInstances,
+          appInstancesError,
+          appInstancesLoading,
+          linodesData,
+          linodesError,
+          linodesLoading,
+          typesData,
+          typesError,
+          typesLoading,
+          regionsData,
+          regionsError,
+          regionsLoading,
+          imagesData,
+          imagesError,
+          imagesLoading,
+          ...rest
+        } = this.props;
+        return (
+          <FromLinodeContent
+            imagesData={imagesData!}
+            regionsData={regionsData!}
+            typesData={typesData!}
+            linodesData={linodesData!}
+            {...rest}
+          />
+        );
       }
     }
   ];
@@ -572,6 +647,13 @@ export class LinodeCreate extends React.PureComponent<
     // if this bombs the app shouldn't crash
     const tabRender = safeGetTabRender(this.tabs, selectedTab);
 
+    const tagsInputProps = {
+      value: tags || [],
+      onChange: updateTags,
+      tagError: hasErrorFor.tags,
+      disabled: userCannotCreateLinode
+    };
+
     return (
       <React.Fragment>
         <Grid item className={`mlMain py0`}>
@@ -596,7 +678,12 @@ export class LinodeCreate extends React.PureComponent<
               ))}
             </Tabs>
           </AppBar> */}
-          <TabbedPanel header={''} tabs={this.tabs} rootClass={classes.root} />
+          <TabbedPanel
+            header={''}
+            tabs={this.tabs}
+            rootClass={classes.root}
+            handleClick={this.props.setTab}
+          />
           <SelectRegionPanel
             error={hasErrorFor.region}
             regions={regionsData!}
@@ -619,6 +706,8 @@ export class LinodeCreate extends React.PureComponent<
             disabled={userCannotCreateLinode}
             disabledClasses={this.props.disabledClasses}
           />
+
+          {console.log(this.props.createType)}
           <LabelAndTagsPanel
             labelFieldProps={{
               label: 'Linode Label',
@@ -627,12 +716,11 @@ export class LinodeCreate extends React.PureComponent<
               errorText: hasErrorFor.label,
               disabled: userCannotCreateLinode
             }}
-            tagsInputProps={{
-              value: tags || [],
-              onChange: updateTags,
-              tagError: hasErrorFor.tags,
-              disabled: userCannotCreateLinode
-            }}
+            tagsInputProps={
+              this.props.createType !== 'fromLinode'
+                ? tagsInputProps
+                : undefined
+            }
             updateFor={[tags, label, errors]}
           />
           <AccessPanel

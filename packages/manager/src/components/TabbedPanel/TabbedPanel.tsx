@@ -148,6 +148,7 @@ export const TabbedPanel: React.FC<CombinedProps> = props => {
             {tabs.map((tab, idx) => (
               <TabPanel
                 className={classes.tabPanel}
+                onChange={handleTabChange}
                 key={`tabs-panel-${tab.title}-${idx}`}
               >
                 {tab.render(rest.children)}
