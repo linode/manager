@@ -23,7 +23,6 @@ export type Action = 'Reboot' | 'Power Off' | 'Power On';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(1.25),
     marginBottom: theme.spacing(1.25),
     display: 'flex',
     alignItems: 'center',
@@ -134,67 +133,42 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = props => {
     return null;
   }
 
-  if (props.action === 'Power Off') {
-    return (
-      <Dialog
-        open={props.isOpen}
-        title={`Are you sure you want to ${props.action.toLowerCase()} ${
-          props.linodeLabel
-        }?`}
-        onClose={props.close}
-        error={errors ? errors[0].reason : ''}
-        actions={
-          <Actions
-            onClose={props.close}
-            loading={isTakingAction}
-            onSubmit={handleSubmit}
-            action={props.action}
-          />
-        }
-      >
-        <Typography className={classes.root}>
-          Are you sure you want to {props.action.toLowerCase()} your Linode?
-        </Typography>
-        <Typography className={classes.root}>
-          <span>
-            <Notice warning important>
-              <strong>Warning: </strong>
-              Powered down Linodes will still accrue charges. See the
-              <ExternalLink
-                link="https://www.linode.com/docs/platform/billing-and-support/how-linode-billing-works/#if-my-linode-is-powered-off-will-i-be-billed"
-                text="Billing and Payments documentation"
-                hideIcon
-              />
-              &nbsp;for more information.
-            </Notice>
-          </span>
-        </Typography>
-      </Dialog>
-    );
-  } else {
-    return (
-      <Dialog
-        open={props.isOpen}
-        title={`Are you sure you want to ${props.action.toLowerCase()} ${
-          props.linodeLabel
-        }?`}
-        onClose={props.close}
-        error={errors ? errors[0].reason : ''}
-        actions={
-          <Actions
-            onClose={props.close}
-            loading={isTakingAction}
-            onSubmit={handleSubmit}
-            action={props.action}
-          />
-        }
-      >
-        <Typography className={classes.root}>
-          Are you sure you want to {props.action.toLowerCase()} your Linode?
-        </Typography>
-      </Dialog>
-    );
-  }
+  return (
+    <Dialog
+      open={props.isOpen}
+      title={`Are you sure you want to ${props.action.toLowerCase()} ${
+        props.linodeLabel
+      }?`}
+      onClose={props.close}
+      error={errors ? errors[0].reason : ''}
+      actions={
+        <Actions
+          onClose={props.close}
+          loading={isTakingAction}
+          onSubmit={handleSubmit}
+          action={props.action}
+        />
+      }
+    >
+      <Typography className={classes.root}>
+        Are you sure you want to {props.action.toLowerCase()} your Linode?
+      </Typography>
+      <Typography className={classes.root}>
+        <span>
+          <Notice warning important>
+            <strong>Warning: </strong>
+            Powered down Linodes will still accrue charges. See the
+            <ExternalLink
+              link="https://www.linode.com/docs/platform/billing-and-support/how-linode-billing-works/#if-my-linode-is-powered-off-will-i-be-billed"
+              text="Billing and Payments documentation"
+              hideIcon
+            />
+            &nbsp;for more information.
+          </Notice>
+        </span>
+      </Typography>
+    </Dialog>
+  );
 };
 
 interface ActionsProps {
