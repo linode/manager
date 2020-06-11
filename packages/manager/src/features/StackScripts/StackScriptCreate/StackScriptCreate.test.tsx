@@ -11,6 +11,7 @@ describe('StackScriptCreate', () => {
   const component = shallow(
     <StackScriptCreate
       {...reactRouterProps}
+      mode="create"
       classes={{
         backButton: '',
         createTitle: ''
@@ -21,6 +22,8 @@ describe('StackScriptCreate', () => {
       setDocs={jest.fn()}
       clearDocs={jest.fn()}
       userCannotCreateStackScripts={false}
+      userCannotModifyStackScript={false}
+      euuid="a-very-random-and-secure-id-string-123"
     />
   );
   xit('should render a title that reads "Create New StackScript', () => {
@@ -41,7 +44,7 @@ describe('StackScriptCreate', () => {
   });
 
   xit('should render StackScript Form', () => {
-    expect(component.find('WithStyles(StackScriptForm)')).toHaveLength(1);
+    expect(component.find('StackScriptForm')).toHaveLength(1);
   });
 
   describe('Back Arrow Icon Button', () => {
