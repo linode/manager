@@ -1,7 +1,5 @@
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -16,7 +14,6 @@ import ImageSelect from 'src/components/ImageSelect';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import { getErrorMap } from 'src/utilities/errorUtils';
-import { renderBackupsDisplaySection } from './utils';
 
 import { filterImagesByType } from 'src/store/image/image.helpers';
 
@@ -75,35 +72,29 @@ export type CombinedProps = Props &
 
 export class FromImageContent extends React.PureComponent<CombinedProps> {
   /** create the Linode */
-  createLinode = () => {
-    this.props.handleSubmitForm({
-      type: this.props.selectedTypeID,
-      region: this.props.selectedRegionID,
-      image: this.props.selectedImageID,
-      root_pass: this.props.password,
-      tags: this.props.tags
-        ? this.props.tags.map(eachTag => eachTag.label)
-        : [],
-      backups_enabled: this.props.backupsEnabled,
-      booted: true,
-      label: this.props.label,
-      private_ip: this.props.privateIPEnabled,
-      authorized_users: this.props.userSSHKeys
-        .filter(u => u.selected)
-        .map(u => u.username)
-    });
-  };
+  // createLinode = () => {
+  //   this.props.handleSubmitForm({
+  //     type: this.props.selectedTypeID,
+  //     region: this.props.selectedRegionID,
+  //     image: this.props.selectedImageID,
+  //     root_pass: this.props.password,
+  //     tags: this.props.tags
+  //       ? this.props.tags.map(eachTag => eachTag.label)
+  //       : [],
+  //     backups_enabled: this.props.backupsEnabled,
+  //     booted: true,
+  //     label: this.props.label,
+  //     private_ip: this.props.privateIPEnabled,
+  //     authorized_users: this.props.userSSHKeys
+  //       .filter(u => u.selected)
+  //       .map(u => u.username)
+  //   });
+  // };
 
   render() {
     const {
-      accountBackupsEnabled,
       classes,
-      typesData: types,
-      regionsData: regions,
       imagesData: images,
-      imageDisplayInfo,
-      regionDisplayInfo,
-      typeDisplayInfo,
       userCannotCreateLinode,
       errors,
       imagePanelTitle,
@@ -111,7 +102,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
       variant
     } = this.props;
 
-    const hasBackups = this.props.backupsEnabled || accountBackupsEnabled;
+    // const hasBackups = this.props.backupsEnabled || accountBackupsEnabled;
     const privateImages = filterImagesByType(images, 'private');
 
     if (variant === 'private' && Object.keys(privateImages).length === 0) {
@@ -144,71 +135,63 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
      */
     const hasErrorFor = getErrorMap(errorMap, errors);
 
-    const determineIDName =
-      variant === 'private' ? 'image-private-create' : 'distro-create';
+    // const determineIDName =
+    //   variant === 'private' ? 'image-private-create' : 'distro-create';
 
-    const displaySections = [];
-    if (imageDisplayInfo) {
-      displaySections.push(imageDisplayInfo);
-    }
+    // const displaySections = [];
+    // if (imageDisplayInfo) {
+    //   displaySections.push(imageDisplayInfo);
+    // }
 
-    if (regionDisplayInfo) {
-      displaySections.push({
-        title: regionDisplayInfo.title,
-        details: regionDisplayInfo.details
-      });
-    }
+    // if (regionDisplayInfo) {
+    //   displaySections.push({
+    //     title: regionDisplayInfo.title,
+    //     details: regionDisplayInfo.details
+    //   });
+    // }
 
-    if (typeDisplayInfo) {
-      displaySections.push(typeDisplayInfo);
-    }
+    // if (typeDisplayInfo) {
+    //   displaySections.push(typeDisplayInfo);
+    // }
 
-    if (this.props.label) {
-      displaySections.push({
-        title: 'Linode Label',
-        details: this.props.label
-      });
-    }
+    // if (this.props.label) {
+    //   displaySections.push({
+    //     title: 'Linode Label',
+    //     details: this.props.label
+    //   });
+    // }
 
-    if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
-      displaySections.push(
-        renderBackupsDisplaySection(
-          accountBackupsEnabled,
-          typeDisplayInfo.backupsMonthly
-        )
-      );
-    }
+    // if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
+    //   displaySections.push(
+    //     renderBackupsDisplaySection(
+    //       accountBackupsEnabled,
+    //       typeDisplayInfo.backupsMonthly
+    //     )
+    //   );
+    // }
 
-    let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
-    if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
-      calculatedPrice += typeDisplayInfo.backupsMonthly;
-    }
+    // let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
+    // if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
+    //   calculatedPrice += typeDisplayInfo.backupsMonthly;
+    // }
 
     return (
       <React.Fragment>
-        <Grid
-          item
-          className={`${classes.main} mlMain py0`}
-          role="tabpanel"
-          id={`tabpanel-${determineIDName}`}
-          aria-labelledby={`tab-${determineIDName}`}
-        >
-          <form>
-            {hasErrorFor.none && !!showGeneralError && (
-              <Notice error spacingTop={8} text={hasErrorFor.none} />
-            )}
-            <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
-            <ImageSelect
-              title={imagePanelTitle || 'Choose an Image'}
-              images={Object.keys(images).map(eachKey => images[eachKey])}
-              handleSelectImage={this.props.updateImageID}
-              selectedImageID={this.props.selectedImageID}
-              error={hasErrorFor.image}
-              variant={variant}
-              disabled={userCannotCreateLinode}
-              data-qa-select-image-panel
-            />
-          </form>
+        <Grid item className={`${classes.main} mlMain py0`}>
+          {hasErrorFor.none && !!showGeneralError && (
+            <Notice error spacingTop={8} text={hasErrorFor.none} />
+          )}
+          <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
+          <ImageSelect
+            title={imagePanelTitle || 'Choose an Image'}
+            images={Object.keys(images).map(eachKey => images[eachKey])}
+            handleSelectImage={this.props.updateImageID}
+            selectedImageID={this.props.selectedImageID}
+            error={hasErrorFor.image}
+            variant={variant}
+            disabled={userCannotCreateLinode}
+            data-qa-select-image-panel
+          />
         </Grid>
         {/* <Grid
           item

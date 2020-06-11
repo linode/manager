@@ -46,7 +46,11 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     root: {},
-    main: {},
+    main: {
+      [theme.breakpoints.up('md')]: {
+        maxWidth: '100%'
+      }
+    },
     sidebar: {
       [theme.breakpoints.up('md')]: {
         marginTop: '-130px !important'

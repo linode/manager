@@ -1,5 +1,7 @@
 import * as React from 'react';
+import { pathOr } from 'ramda';
 import { connect, MapDispatchToProps } from 'react-redux';
+import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import { compose as recompose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import CircleProgress from 'src/components/CircleProgress';
@@ -25,7 +27,6 @@ import {
 import { getInitialType } from 'src/store/linodeCreate/linodeCreate.reducer';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
-import { safeGetTabRender } from 'src/utilities/safeGetTabRender';
 import AddonsPanel from './AddonsPanel';
 import SelectPlanPanel from './SelectPlanPanel';
 import FromAppsContent from './TabbedContent/FromAppsContent';
@@ -33,7 +34,7 @@ import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
 import FromLinodeContent from './TabbedContent/FromLinodeContent';
 import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
-import { matchPath, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import {
   AllFormStateAndHandlers,
   AppsData,
@@ -47,8 +48,9 @@ import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import TabLinkList, { Tab } from 'src/components/TabLinkList';
+import { renderBackupsDisplaySection } from './TabbedContent/utils';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'form';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -58,6 +60,9 @@ const styles = (theme: Theme) =>
       '& > :first-child': {
         padding: 0
       }
+    },
+    form: {
+      display: 'flex'
     }
   });
 interface Props {
@@ -165,7 +170,7 @@ export class LinodeCreate extends React.PureComponent<
       routeName: `${this.props.match.url}?type=Backups`
     },
     {
-      title: 'Clones',
+      title: 'Clone Linode',
       routeName: `${this.props.match.url}?type=Clones`
     }
   ];
@@ -173,6 +178,25 @@ export class LinodeCreate extends React.PureComponent<
   componentWillUnmount() {
     this.mounted = false;
   }
+
+  createLinode = () => {
+    this.props.handleSubmitForm({
+      type: this.props.selectedTypeID,
+      region: this.props.selectedRegionID,
+      image: this.props.selectedImageID,
+      root_pass: this.props.password,
+      tags: this.props.tags
+        ? this.props.tags.map(eachTag => eachTag.label)
+        : [],
+      backups_enabled: this.props.backupsEnabled,
+      booted: true,
+      label: this.props.label,
+      private_ip: this.props.privateIPEnabled,
+      authorized_users: this.props.userSSHKeys
+        .filter(u => u.selected)
+        .map(u => u.username)
+    });
+  };
 
   render() {
     const { selectedTab } = this.state;
@@ -202,6 +226,10 @@ export class LinodeCreate extends React.PureComponent<
       backupsMonthlyPrice,
       userCannotCreateLinode,
       location,
+      typeDisplayInfo,
+      regionDisplayInfo,
+      imageDisplayInfo,
+      accountBackupsEnabled,
       ...rest
     } = this.props;
 
@@ -226,10 +254,6 @@ export class LinodeCreate extends React.PureComponent<
       return null;
     }
 
-    const matches = (p: string) => {
-      return Boolean(matchPath(p, { path: this.props.location.pathname }));
-    };
-
     const tagsInputProps = {
       value: tags || [],
       onChange: updateTags,
@@ -237,172 +261,204 @@ export class LinodeCreate extends React.PureComponent<
       disabled: userCannotCreateLinode
     };
 
+    const hasBackups = Boolean(
+      this.props.backupsEnabled || accountBackupsEnabled
+    );
+
+    let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
+    if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
+      calculatedPrice += typeDisplayInfo.backupsMonthly;
+    }
+
+    const displaySections = [];
+    if (imageDisplayInfo) {
+      displaySections.push(imageDisplayInfo);
+    }
+
+    if (regionDisplayInfo) {
+      displaySections.push({
+        title: regionDisplayInfo.title,
+        details: regionDisplayInfo.details
+      });
+    }
+
+    if (typeDisplayInfo) {
+      displaySections.push(typeDisplayInfo);
+    }
+
+    if (this.props.label) {
+      displaySections.push({
+        title: 'Linode Label',
+        details: this.props.label
+      });
+    }
+
+    if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
+      displaySections.push(
+        renderBackupsDisplaySection(
+          accountBackupsEnabled,
+          typeDisplayInfo.backupsMonthly
+        )
+      );
+    }
+
     return (
       <React.Fragment>
-        <Grid item className={`mlMain py0`}>
-          <Tabs defaultIndex={selectedTab}>
-            <TabLinkList tabs={this.tabs} />
-            <TabPanels>
-              <SafeTabPanel index={0}>
-                <FromImageContent
-                  variant="public"
-                  imagePanelTitle="Choose a Distribution"
-                  showGeneralError={true}
-                  imagesData={imagesData!}
-                  regionsData={regionsData!}
-                  typesData={typesData!}
-                  {...rest}
-                />
-              </SafeTabPanel>
-              <SafeTabPanel index={1}>
-                <FromAppsContent
-                  imagesData={imagesData!}
-                  regionsData={regionsData!}
-                  typesData={typesData!}
-                  {...rest}
-                />
-              </SafeTabPanel>
-              <SafeTabPanel index={2}>
-                <FromStackScriptContent
-                  category="account"
-                  accountBackupsEnabled={this.props.accountBackupsEnabled}
-                  userCannotCreateLinode={this.props.userCannotCreateLinode}
-                  request={getMineAndAccountStackScripts}
-                  header={'Select a StackScript'}
-                  imagesData={imagesData!}
-                  regionsData={regionsData!}
-                  typesData={typesData!}
-                  {...rest}
-                />
-              </SafeTabPanel>
-              <SafeTabPanel index={3}>
-                <FromImageContent
-                  //variant={'private'}
-                  imagePanelTitle="Choose an Image"
-                  imagesData={imagesData}
-                  regionsData={regionsData!}
-                  typesData={typesData!}
-                  {...rest}
-                />
-              </SafeTabPanel>
-              <SafeTabPanel index={4}>
-                <FromBackupsContent
-                  imagesData={imagesData!}
-                  regionsData={regionsData!}
-                  typesData={typesData!}
-                  linodesData={linodesData!}
-                  {...rest}
-                />
-              </SafeTabPanel>
-              <SafeTabPanel index={5}>
-                <FromLinodeContent
-                  imagesData={imagesData!}
-                  regionsData={regionsData!}
-                  typesData={typesData!}
-                  linodesData={linodesData!}
-                  {...rest}
-                />
-              </SafeTabPanel>
-            </TabPanels>
-          </Tabs>
+        <form className={classes.form}>
+          <Grid item className={`mlMain py0`}>
+            <Tabs defaultIndex={selectedTab}>
+              <TabLinkList tabs={this.tabs} />
+              <TabPanels>
+                <SafeTabPanel index={0}>
+                  <FromImageContent
+                    variant="public"
+                    imagePanelTitle="Choose a Distribution"
+                    showGeneralError={true}
+                    imagesData={imagesData!}
+                    regionsData={regionsData!}
+                    typesData={typesData!}
+                    {...rest}
+                  />
+                </SafeTabPanel>
+                <SafeTabPanel index={1}>
+                  <FromAppsContent
+                    imagesData={imagesData!}
+                    regionsData={regionsData!}
+                    typesData={typesData!}
+                    {...rest}
+                  />
+                </SafeTabPanel>
+                <SafeTabPanel index={2}>
+                  <FromStackScriptContent
+                    category="community"
+                    accountBackupsEnabled={this.props.accountBackupsEnabled}
+                    userCannotCreateLinode={this.props.userCannotCreateLinode}
+                    request={getCommunityStackscripts}
+                    header={'Select a StackScript'}
+                    imagesData={imagesData!}
+                    regionsData={regionsData!}
+                    typesData={typesData!}
+                    {...rest}
+                  />
+                </SafeTabPanel>
+                <SafeTabPanel index={3}>
+                  <FromImageContent
+                    variant={'private'}
+                    imagePanelTitle="Choose an Image"
+                    imagesData={imagesData}
+                    regionsData={regionsData!}
+                    typesData={typesData!}
+                  />
+                </SafeTabPanel>
+                <SafeTabPanel index={4}>
+                  <FromBackupsContent
+                    imagesData={imagesData!}
+                    regionsData={regionsData!}
+                    typesData={typesData!}
+                    linodesData={linodesData!}
+                  />
+                </SafeTabPanel>
+                <SafeTabPanel index={5}>
+                  <FromLinodeContent
+                    imagesData={imagesData!}
+                    regionsData={regionsData!}
+                    typesData={typesData!}
+                    linodesData={linodesData!}
+                    {...rest}
+                  />
+                </SafeTabPanel>
+              </TabPanels>
+            </Tabs>
 
-          <SelectRegionPanel
-            error={hasErrorFor.region}
-            regions={regionsData!}
-            handleSelection={this.props.updateRegionID}
-            selectedID={this.props.selectedRegionID}
-            copy="Determine the best location for your Linode."
-            updateFor={[this.props.selectedRegionID, regionsData, errors]}
-            disabled={userCannotCreateLinode}
-          />
-          <SelectPlanPanel
-            error={hasErrorFor.type}
-            types={typesData!}
-            onSelect={this.props.updateTypeID}
-            selectedID={this.props.selectedTypeID}
-            updateFor={[
-              this.props.selectedTypeID,
-              this.props.disabledClasses,
-              errors
-            ]}
-            disabled={userCannotCreateLinode}
-            disabledClasses={this.props.disabledClasses}
-          />
+            <SelectRegionPanel
+              error={hasErrorFor.region}
+              regions={regionsData!}
+              handleSelection={this.props.updateRegionID}
+              selectedID={this.props.selectedRegionID}
+              copy="Determine the best location for your Linode."
+              updateFor={[this.props.selectedRegionID, regionsData, errors]}
+              disabled={userCannotCreateLinode}
+            />
+            <SelectPlanPanel
+              error={hasErrorFor.type}
+              types={typesData!}
+              onSelect={this.props.updateTypeID}
+              selectedID={this.props.selectedTypeID}
+              updateFor={[
+                this.props.selectedTypeID,
+                this.props.disabledClasses,
+                errors
+              ]}
+              disabled={userCannotCreateLinode}
+              disabledClasses={this.props.disabledClasses}
+            />
 
-          <LabelAndTagsPanel
-            labelFieldProps={{
-              label: 'Linode Label',
-              value: label || '',
-              onChange: updateLabel,
-              errorText: hasErrorFor.label,
-              disabled: userCannotCreateLinode
-            }}
-            tagsInputProps={
-              this.props.createType !== 'fromLinode'
-                ? tagsInputProps
-                : undefined
-            }
-            updateFor={[tags, label, errors]}
-          />
-          <AccessPanel
-            disabled={!this.props.selectedImageID}
-            disabledReason={
-              !this.props.selectedImageID
-                ? 'You must select an image to set a root password'
-                : ''
-            }
-            error={hasErrorFor.root_pass}
-            sshKeyError={sshError}
-            password={this.props.password}
-            handleChange={this.props.updatePassword}
-            updateFor={[
-              this.props.password,
-              errors,
-              sshError,
-              userSSHKeys,
-              this.props.selectedImageID
-            ]}
-            users={userSSHKeys}
-            requestKeys={requestKeys}
-          />
-          <AddonsPanel
-            data-qa-addons-panel
-            backups={this.props.backupsEnabled}
-            accountBackups={this.props.accountBackupsEnabled}
-            backupsMonthly={backupsMonthlyPrice}
-            privateIP={this.props.privateIPEnabled}
-            changeBackups={this.props.toggleBackupsEnabled}
-            changePrivateIP={this.props.togglePrivateIPEnabled}
-            updateFor={[
-              this.props.privateIPEnabled,
-              this.props.backupsEnabled,
-              this.props.selectedTypeID
-            ]}
-            disabled={userCannotCreateLinode}
-            hidePrivateIP={this.props.createType === 'fromLinode'}
-          />
-        </Grid>
-        <Grid item>test</Grid>
-        {/* <Grid
-          item
-          className={
-            'mlSidebar ' +
-            (variant === 'private'
-              ? classes.sidebarPrivate
-              : classes.sidebarPublic)
-          }
-        >
-          <CheckoutBar
-            data-qa-checkout-bar
-            heading="Linode Summary"
-            calculatedPrice={calculatedPrice}
-            isMakingRequest={this.props.formIsSubmitting}
-            disabled={this.props.formIsSubmitting || userCannotCreateLinode}
-            onDeploy={this.createLinode}
-          >
-            <DisplaySectionList displaySections={displaySections} />
-          </CheckoutBar>
-        </Grid> */}
+            <LabelAndTagsPanel
+              labelFieldProps={{
+                label: 'Linode Label',
+                value: label || '',
+                onChange: updateLabel,
+                errorText: hasErrorFor.label,
+                disabled: userCannotCreateLinode
+              }}
+              tagsInputProps={
+                this.props.createType !== 'fromLinode'
+                  ? tagsInputProps
+                  : undefined
+              }
+              updateFor={[tags, label, errors]}
+            />
+            <AccessPanel
+              disabled={!this.props.selectedImageID}
+              disabledReason={
+                !this.props.selectedImageID
+                  ? 'You must select an image to set a root password'
+                  : ''
+              }
+              error={hasErrorFor.root_pass}
+              sshKeyError={sshError}
+              password={this.props.password}
+              handleChange={this.props.updatePassword}
+              updateFor={[
+                this.props.password,
+                errors,
+                sshError,
+                userSSHKeys,
+                this.props.selectedImageID
+              ]}
+              users={userSSHKeys}
+              requestKeys={requestKeys}
+            />
+            <AddonsPanel
+              data-qa-addons-panel
+              backups={this.props.backupsEnabled}
+              accountBackups={this.props.accountBackupsEnabled}
+              backupsMonthly={backupsMonthlyPrice}
+              privateIP={this.props.privateIPEnabled}
+              changeBackups={this.props.toggleBackupsEnabled}
+              changePrivateIP={this.props.togglePrivateIPEnabled}
+              updateFor={[
+                this.props.privateIPEnabled,
+                this.props.backupsEnabled,
+                this.props.selectedTypeID
+              ]}
+              disabled={userCannotCreateLinode}
+              hidePrivateIP={this.props.createType === 'fromLinode'}
+            />
+          </Grid>
+          <Grid item className="mlSidebar">
+            <CheckoutBar
+              data-qa-checkout-bar
+              heading="Linode Summary"
+              calculatedPrice={calculatedPrice}
+              isMakingRequest={this.props.formIsSubmitting}
+              disabled={this.props.formIsSubmitting || userCannotCreateLinode}
+              onDeploy={this.createLinode}
+            >
+              <DisplaySectionList displaySections={displaySections} />
+            </CheckoutBar>
+          </Grid>
+        </form>
       </React.Fragment>
     );
   }

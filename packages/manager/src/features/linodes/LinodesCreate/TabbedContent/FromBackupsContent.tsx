@@ -6,7 +6,7 @@ import {
 import { compose as ramdaCompose, pathOr } from 'ramda';
 import * as React from 'react';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
-import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
+// import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -16,13 +16,13 @@ import {
 } from 'src/components/core/styles';
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import Grid from 'src/components/Grid';
-import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
+// import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Placeholder from 'src/components/Placeholder';
 import { reportException } from 'src/exceptionReporting';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import SelectBackupPanel from '../SelectBackupPanel';
 import SelectLinodePanel from '../SelectLinodePanel';
-import SelectPlanPanel from '../SelectPlanPanel';
+// import SelectPlanPanel from '../SelectPlanPanel';
 import {
   BackupFormStateHandlers,
   Info,
@@ -37,15 +37,14 @@ export interface LinodeWithBackups extends Linode {
   currentBackups: LinodeBackupsResponse;
 }
 
-type ClassNames = 'root' | 'main' | 'sidebar';
+type ClassNames = 'root' | 'main';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {},
-    main: {},
-    sidebar: {
+    main: {
       [theme.breakpoints.up('md')]: {
-        marginTop: '-130px !important'
+        maxWidth: '100%'
       }
     }
   });
@@ -201,20 +200,14 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       imagesData,
       linodesData,
       selectedBackupID,
-      selectedDiskSize,
       selectedLinodeID,
-      selectedTypeID,
       setBackupID,
       regionDisplayInfo,
       typeDisplayInfo,
       disabled,
       label,
-      tags,
       typesData,
-      updateTypeID,
-      updateTags,
-      backupsEnabled,
-      updateLabel
+      backupsEnabled
     } = this.props;
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
 
@@ -260,13 +253,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Grid
-          item
-          className={`${classes.main} mlMain py0`}
-          id="tabpanel-backup-create"
-          role="tabpanel"
-          aria-labelledby="tab-backup-create"
-        >
+        <Grid item className={`${classes.main} mlMain py0`}>
           {!userHasBackups ? (
             <Paper>
               <Placeholder
@@ -314,7 +301,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                 ]}
                 loading={isGettingBackups}
               />
-              <SelectPlanPanel
+              {/* <SelectPlanPanel
                 error={hasErrorFor('type')}
                 types={typesData}
                 onSelect={updateTypeID}
@@ -344,11 +331,11 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                   disabled
                 }}
                 updateFor={[tags, label, errors]}
-              />
+              /> */}
             </React.Fragment>
           )}
         </Grid>
-        {!userHasBackups ? (
+        {/* {!userHasBackups ? (
           <React.Fragment />
         ) : (
           <Grid item className={`${classes.sidebar} mlSidebar`}>
@@ -362,7 +349,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
               <DisplaySectionList displaySections={displaySections} />
             </CheckoutBar>
           </Grid>
-        )}
+        )} */}
       </React.Fragment>
     );
   }
