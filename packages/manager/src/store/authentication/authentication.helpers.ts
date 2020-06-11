@@ -17,6 +17,7 @@ export const clearUserInput = () => {
 
   supportText.set({ title: '', description: '' });
   stackScriptInProgress.set({
+    id: '',
     label: '',
     script: '',
     rev_note: '',

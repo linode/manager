@@ -60,6 +60,10 @@ interface SupportText {
   description: string;
 }
 
+interface StackScriptData extends StackScriptPayload {
+  id: number | string;
+}
+
 export interface Storage {
   authentication: {
     token: AuthGetAndSet;
@@ -84,8 +88,8 @@ export interface Storage {
     set: (v: SupportText) => void;
   };
   stackScriptInProgress: {
-    get: () => StackScriptPayload;
-    set: (s: StackScriptPayload) => void;
+    get: () => StackScriptData;
+    set: (s: StackScriptData) => void;
   };
 }
 
@@ -138,6 +142,7 @@ export const storage: Storage = {
   stackScriptInProgress: {
     get: () =>
       getStorage(STACKSCRIPT, {
+        id: -1,
         script: '',
         label: '',
         images: []

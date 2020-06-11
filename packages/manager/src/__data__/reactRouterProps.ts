@@ -31,7 +31,7 @@ export const history: History = {
   createHref: jest.fn()
 };
 
-export const reactRouterProps: RouteComponentProps<{}> = {
+export const reactRouterProps: RouteComponentProps<any> = {
   history,
   location: mockLocation,
   match,
