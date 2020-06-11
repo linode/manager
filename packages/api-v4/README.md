@@ -27,7 +27,7 @@ Most APIv4 endpoints require authentication, either with an OAuth Token or Perso
 Once you have your token, authenticating involves adding an Authorization header to each request. We provide a helper setToken function for this purpose:
 
 ```js
-import { setToken } from 'linode-js-sdk';
+import { setToken } from '@linode/api-v4';
 
 setToken('my-access-token');
 ```
@@ -73,11 +73,11 @@ getAccount()
 Or using Node.js:
 
 ```js
-const { setToken, getProfile } = require('linode-js-sdk');
+const { setToken, getProfile } = require('@linode/api-v4');
 
 setToken('access-token');
 
-getProfile.then(response => {
+getProfile().then(response => {
   return response.username;
 });
 ```
@@ -93,8 +93,8 @@ Other examples:
 All methods are exposed from the SDK root, but we also support tree shaking:
 
 ```js
-import { getLinodes } from 'linode-js-sdk'; // This is fine
-import { getLinodes } from 'linode-js-sdk/lib/linodes'; // This works too
+import { getLinodes } from '@linode/api-v4'; // This is fine
+import { getLinodes } from '@linode/api-v4/lib/linodes'; // This works too
 ```
 
 ### Pagination and Filtering
@@ -103,7 +103,7 @@ APIv4 supports [pagination](https://developers.linode.com/api/v4/#pagination) an
 of pages, and total number of results in the response:
 
 ```js
-import { getLinodes } from 'linode-js-sdk/lib/linodes';
+import { getLinodes } from '@linode/api-v4/lib/linodes';
 
 getLinodes().then(response => {
   console.log(response);
