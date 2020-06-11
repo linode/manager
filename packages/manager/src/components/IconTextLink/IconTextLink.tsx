@@ -34,7 +34,7 @@ const styles = (theme: Theme) =>
       '&:hover': {
         color: theme.palette.primary.light,
         backgroundColor: 'transparent',
-        '& $icon': {
+        '& svg': {
           fill: theme.palette.primary.light,
           color: 'white'
         },

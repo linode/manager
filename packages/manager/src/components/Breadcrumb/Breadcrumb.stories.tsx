@@ -28,19 +28,17 @@ class InteractiveEditableBreadcrumb extends React.Component<Props, {}> {
 
   render() {
     return (
-      <React.Fragment>
-        <Breadcrumb
-          pathname={customCrumbs}
-          labelOptions={{
-            linkTo: this.props.labelLink
-          }}
-          onEditHandlers={{
-            editableTextTitle: this.state.text,
-            onEdit: this.onEdit,
-            onCancel: this.onCancel
-          }}
-        />
-      </React.Fragment>
+      <Breadcrumb
+        pathname={customCrumbs}
+        labelOptions={{
+          linkTo: this.props.labelLink
+        }}
+        onEditHandlers={{
+          editableTextTitle: this.state.text,
+          onEdit: this.onEdit,
+          onCancel: this.onCancel
+        }}
+      />
     );
   }
 }
