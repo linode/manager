@@ -1,5 +1,5 @@
 import { LinodeBackup } from '@linode/api-v4/lib/linodes';
-import { DateTime } from 'luxon';
+import { DateTime, Duration } from 'luxon';
 import * as React from 'react';
 import TableRow from 'src/components/core/TableRow';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
@@ -16,6 +16,25 @@ interface Props {
 const typeMap = {
   auto: 'Automatic',
   snapshot: 'Manual'
+};
+
+const humanizeDuration = (duration: Duration) => {
+  const hours = duration.as('hours');
+  if (hours >= 1) {
+    const dur = duration.shiftTo('hours', 'minutes');
+    return `${dur.hours} hour${dur.hours > 1 ? 's' : ''} ${
+      dur.minutes
+    } minute${dur.minutes ?? 's'}`;
+  }
+  const minutes = duration.as('minutes');
+  if (minutes >= 1) {
+    const dur = duration.shiftTo('minutes', 'seconds');
+    return `${dur.minutes} minute${dur.minutes > 1 ? 's' : ''} ${
+      dur.seconds
+    } second${dur.seconds ? 's' : ''}`;
+  }
+  const seconds = duration.as('seconds');
+  return `${seconds} hour${seconds >= 2 ?? 's'}`;
 };
 
 const BackupTableRow: React.FC<Props> = props => {
@@ -36,9 +55,12 @@ const BackupTableRow: React.FC<Props> = props => {
         <DateTimeDisplay value={backup.created} />
       </TableCell>
       <TableCell parentColumn="Duration">
-        {DateTime.fromISO(backup.finished).toRelative({
-          base: DateTime.fromISO(backup.created)
-        })}
+        {humanizeDuration(
+          Duration.fromMillis(
+            DateTime.fromISO(backup.finished).toMillis() -
+              DateTime.fromISO(backup.created).toMillis()
+          )
+        )}
       </TableCell>
       <TableCell parentColumn="Disks" data-qa-backup-disks>
         {backup.disks.map((disk, idx) => (
