@@ -30,14 +30,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '0.875rem'
   },
   dialog: {
-    fontSize: '0.875rem',
     '& .dialog-content': {
       paddingTop: 0,
       paddingBottom: 0
     }
   },
   notice: {
-    fontSize: '0.875rem !important'
+    '& .noticeText': {
+      fontSize: '0.875rem !important'
+    }
   }
 }));
 
