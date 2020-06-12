@@ -27,14 +27,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     lineHeight: '1.25rem',
-    fontSize: '.875rem'
+    fontSize: '0.875rem'
   },
   dialog: {
-    fontSize: '.875rem',
+    fontSize: '0.875rem',
     '& .dialog-content': {
       paddingTop: 0,
       paddingBottom: 0
     }
+  },
+  notice: {
+    fontSize: '0.875rem !important'
   }
 }));
 
@@ -164,9 +167,9 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = props => {
       </Typography>
       {props.action === 'Power Off' && (
         <span>
-          <Notice warning important>
+          <Notice warning important className={classes.notice}>
             <strong>Warning: </strong>
-            Powered down Linodes will still accrue charges. See the
+            Powered down Linodes will still accrue charges. See the&nbsp;
             <ExternalLink
               link="https://www.linode.com/docs/platform/billing-and-support/how-linode-billing-works/#if-my-linode-is-powered-off-will-i-be-billed"
               text="Billing and Payments documentation"
