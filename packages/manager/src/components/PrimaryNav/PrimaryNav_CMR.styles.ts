@@ -192,7 +192,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       position: 'absolute',
       top: 50,
       // Hack solution to have something semi-working on mobile.
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('sm')]: {
         left: 0
       }
     }
