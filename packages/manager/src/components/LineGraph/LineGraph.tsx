@@ -234,6 +234,9 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
   };
 
   React.useEffect(() => {
+    // Here we need to wait for the Canvas element to exist to attach a chart to it
+    // we use a reference to access it.
+    // https://dev.to/vcanales/using-chart-js-in-a-function-component-with-react-hooks-246l
     if (inputEl.current) {
       new Chart(inputEl.current.getContext('2d'), {
         type: 'line',

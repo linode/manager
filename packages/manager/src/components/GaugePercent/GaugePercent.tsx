@@ -108,6 +108,9 @@ const GaugePercent: React.FC<CombinedProps> = props => {
   const graphRef: React.RefObject<any> = React.useRef(null);
 
   React.useEffect(() => {
+    // Here we need to wait for the Canvas element to exist to attach a chart to it
+    // we use a reference to access it.
+    // https://dev.to/vcanales/using-chart-js-in-a-function-component-with-react-hooks-246l
     if (graphRef.current) {
       new Chart(graphRef.current.getContext('2d'), {
         type: 'doughnut',
@@ -126,12 +129,7 @@ const GaugePercent: React.FC<CombinedProps> = props => {
         height: height + props.theme.spacing(3.75)
       }}
     >
-      {' '}
-      <canvas
-        height={height}
-        // id="myChart"
-        ref={graphRef}
-      />
+      <canvas height={height} ref={graphRef} />
       {props.innerText && (
         <div data-testid="gauge-innertext" className={classes.innerText}>
           {props.innerText}
