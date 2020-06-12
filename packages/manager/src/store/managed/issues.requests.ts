@@ -5,7 +5,7 @@ import { DateTime } from 'luxon';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import { ExtendedIssue, requestManagedIssuesActions } from './issues.actions';
-
+import { parseAPIDate } from 'src/utilities/date';
 const _getAllIssues = getAll<ManagedIssue>(getManagedIssues);
 const getAllIssues = () =>
   _getAllIssues()
@@ -23,7 +23,7 @@ export const extendIssues = async (issues: ManagedIssue[]) => {
    */
   const recentIssues = issues.filter(
     thisIssue =>
-      DateTime.fromISO(thisIssue.created).diff(DateTime.local()).days < 30
+      parseAPIDate(thisIssue.created).diff(DateTime.local()).days < 30
   );
   return await Bluebird.map(recentIssues, thisIssue => {
     /**

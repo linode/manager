@@ -240,7 +240,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     // it's been created, so no need to do an expensive `/stats` request until
     // 5 minutes have passed.
     const fiveMinutesAgo = DateTime.local().minus({ minutes: 5 });
-    if (DateTime.fromISO(linodeCreated, { zone: 'utc' }) > fiveMinutesAgo) {
+    if (parseAPIDate(linodeCreated) > fiveMinutesAgo) {
       return this.setState({
         dataIsLoading: false,
         isTooEarlyForGraphData: true

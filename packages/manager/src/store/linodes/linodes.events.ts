@@ -8,6 +8,7 @@ import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
 import { EventHandler } from 'src/store/types';
 import { requestNotifications } from '../notification/notification.requests';
 import { deleteLinode } from './linodes.actions';
+import { parseAPIDate } from 'src/utilities/date';
 
 const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
   const { action, entity, percent_complete, status } = event;
@@ -252,7 +253,7 @@ export const shouldRequestNotifications = (
   return (
     eventsWithRelevantNotifications.includes(lastEventAction) &&
     // if the event was created after the last time notifications were updated
-    DateTime.fromISO(lastEventCreated) >
+    parseAPIDate(lastEventCreated) >
       DateTime.fromMillis(notificationsLastUpdated, { zone: 'utc' })
   );
 };

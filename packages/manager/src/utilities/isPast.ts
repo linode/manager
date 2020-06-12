@@ -1,4 +1,4 @@
-import { DateTime } from 'luxon';
+import { parseAPIDate } from './date';
 
 export default (a: string) => (b: string): boolean =>
-  DateTime.fromISO(b, { zone: 'utc' }) >= DateTime.fromISO(a, { zone: 'utc' });
+  parseAPIDate(b) >= parseAPIDate(a);

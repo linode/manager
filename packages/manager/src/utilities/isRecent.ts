@@ -1,4 +1,4 @@
-import { DateTime } from 'luxon';
+import { parseAPIDate } from 'src/utilities/date';
 
 /**
  * @returns true if "time" is within in ]timeToCompare - 24H ; timeToCompare]
@@ -6,8 +6,8 @@ import { DateTime } from 'luxon';
  * @param timeToCompareTo ISO formatted Date
  */
 export const isRecent = (time: string, timeToCompareTo: string) => {
-  const time_obj = DateTime.fromISO(time);
-  const end = DateTime.fromISO(timeToCompareTo);
+  const time_obj = parseAPIDate(time);
+  const end = parseAPIDate(timeToCompareTo);
   const beginning = end.minus({ hours: 24 });
   return time_obj <= end && time_obj > beginning;
 };

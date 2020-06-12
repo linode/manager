@@ -3,6 +3,7 @@ import * as React from 'react';
 import { ExtendedIssue } from 'src/store/managed/issues.actions';
 import useTimezone from 'src/utilities/useTimezone';
 import IssueDay from './IssueDay';
+import { parseAPIDate } from 'src/utilities/date';
 
 const TOTAL_DAYS = 10;
 
@@ -15,7 +16,7 @@ export const createdOnTargetDay = (
   issue: ExtendedIssue,
   targetDay: DateTime
 ) => {
-  return DateTime.fromISO(issue.created, { zone: 'utc' })
+  return parseAPIDate(issue.created)
     .setZone(timezone)
     .hasSame(targetDay, 'day');
 };

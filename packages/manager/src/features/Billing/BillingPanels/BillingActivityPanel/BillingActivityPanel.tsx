@@ -8,6 +8,7 @@ import {
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import { DateTime } from 'luxon';
+import { parseAPIDate } from 'src/utilities/date';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
@@ -623,9 +624,7 @@ export const getCutoffFromDateRange = (
   range: DateRange,
   currentDatetime?: string
 ) => {
-  const date = currentDatetime
-    ? DateTime.fromISO(currentDatetime).setZone('utc')
-    : DateTime.utc();
+  const date = currentDatetime ? parseAPIDate(currentDatetime) : DateTime.utc();
 
   let outputDate: DateTime;
   switch (range) {

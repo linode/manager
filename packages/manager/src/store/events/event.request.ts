@@ -9,6 +9,7 @@ import { generatePollingFilter } from 'src/utilities/requestFilters';
 import { ThunkActionCreator } from '../types';
 import { addEvents, updateEventsAsSeen } from './event.actions';
 import { epoch, isInProgressEvent } from './event.helpers';
+import { parseAPIDate } from 'src/utilities/date';
 
 /**
  * Will send a filtered request for events which have been created on or after the most recent existing
@@ -34,7 +35,7 @@ export const getEvents: ThunkActionCreator<Promise<Event[]>> = () => (
   const neqIds: number[] = [];
   if (_events.length > 0) {
     _events.forEach(thisEvent => {
-      const thisEventCreated = DateTime.fromISO(thisEvent.created).valueOf();
+      const thisEventCreated = parseAPIDate(thisEvent.created).valueOf();
 
       if (
         thisEventCreated === mostRecentEventTime &&
