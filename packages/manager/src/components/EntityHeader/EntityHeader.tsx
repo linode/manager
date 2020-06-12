@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import Grid from 'src/components/Grid';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import HeaderBreadCrumb, { BreadCrumbProps } from './HeaderBreadCrumb';
 
 export interface HeaderProps extends BreadCrumbProps {
@@ -10,7 +10,7 @@ export interface HeaderProps extends BreadCrumbProps {
   body: JSX.Element;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   chip: {
     '& .MuiChip-root': {
       height: 30,
