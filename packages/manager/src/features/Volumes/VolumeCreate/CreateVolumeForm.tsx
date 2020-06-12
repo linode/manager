@@ -100,7 +100,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
         values,
         { resetForm, setSubmitting, setStatus, setErrors }
       ) => {
-        const { label, size, region, linodeId, configId, tags } = values;
+        const { label, size, region, linode_id, config_id, tags } = values;
 
         setSubmitting(true);
 
@@ -112,8 +112,10 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
           size: maybeCastToNumber(size),
           region:
             isNilOrEmpty(region) || region === 'none' ? undefined : region,
-          linode_id: linodeId === -1 ? undefined : linodeId,
-          config_id: configId === -1 ? undefined : configId,
+          linode_id:
+            linode_id === -1 ? undefined : maybeCastToNumber(linode_id),
+          config_id:
+            config_id === -1 ? undefined : maybeCastToNumber(config_id),
           tags: tags.map(v => v.value)
         })
           .then(({ filesystem_path, label: volumeLabel }) => {
@@ -156,14 +158,21 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
           touched
         } = formikProps;
 
+        const { region, linode_id, tags, config_id } = values;
+
         const linodeError =
-          values.configId === -9999
+          config_id === -9999
             ? 'This Linode has no valid configurations.'
-            : touched.linodeId
-            ? errors.linodeId
+            : touched.linode_id
+            ? errors.linode_id
             : undefined;
 
-        const { region, linodeId, tags } = values;
+        const generalError = status
+          ? status.generalError
+          : config_id === -1
+          ? errors.config_id
+          : undefined;
+
         const displaySections = [];
         if (region) {
           displaySections.push({
@@ -177,8 +186,8 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
               .join()
           });
         }
-        if (linodeId !== -1) {
-          const linodeObject: any = getEntityByIDFromStore('linode', linodeId);
+        if (linode_id !== -1) {
+          const linodeObject: any = getEntityByIDFromStore('linode', linode_id);
           displaySections.push({
             title: 'Attach To',
             details: linodeObject ? linodeObject.label : null
@@ -193,12 +202,8 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
 
         return (
           <Form className={classes.form}>
-            {status && (
-              <NoticePanel
-                success={status.success}
-                error={status.generalError}
-              />
-            )}
+            {generalError && <NoticePanel error={generalError} />}
+            {status && <NoticePanel success={status.success} />}
             {disabled && (
               <Notice
                 text={
@@ -247,6 +252,16 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
                     disabled={disabled}
                   />
 
+                  <ConfigSelect
+                    error={touched.config_id ? errors.config_id : undefined}
+                    linodeId={linode_id}
+                    name="configId"
+                    onBlur={handleBlur}
+                    onChange={(id: number) => setFieldValue('config_id', id)}
+                    value={config_id}
+                    disabled={disabled}
+                  />
+
                   <RegionSelect
                     errorText={touched.region ? errors.region : undefined}
                     regions={props.regions
@@ -282,7 +297,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
                     error={linodeError}
                     name="linodeId"
                     onBlur={handleBlur}
-                    onChange={(id: number) => setFieldValue('linodeId', id)}
+                    onChange={(id: number) => setFieldValue('linode_id', id)}
                     region={values.region}
                     shouldOnlyDisplayRegionsWithBlockStorage={true}
                     disabled={disabled}
@@ -306,16 +321,6 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
                     value={values.tags}
                     menuPlacement="top"
                   />
-
-                  <ConfigSelect
-                    error={touched.configId ? errors.configId : undefined}
-                    linodeId={values.linodeId}
-                    name="configId"
-                    onBlur={handleBlur}
-                    onChange={(id: number) => setFieldValue('configId', id)}
-                    value={values.configId}
-                    disabled={disabled}
-                  />
                 </Paper>
               </Grid>
               <Grid item className={`${classes.sidebar} mlSidebar`}>
@@ -323,7 +328,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
                   heading={`${values.label || 'Volume'} Summary`}
                   onDeploy={handleSubmit}
                   calculatedPrice={values.size / 10}
-                  disabled={values.configId === -9999 || disabled}
+                  disabled={values.config_id === -9999 || disabled}
                   isMakingRequest={isSubmitting}
                 >
                   <DisplaySectionList displaySections={displaySections} />
@@ -341,8 +346,8 @@ interface FormState {
   label: string;
   size: number;
   region: string;
-  linodeId: number;
-  configId: number;
+  linode_id: number;
+  config_id: number;
   tags: _Tag[];
 }
 
@@ -350,8 +355,8 @@ const initialValues: FormState = {
   label: '',
   size: 20,
   region: 'none',
-  linodeId: -1,
-  configId: -1,
+  linode_id: -1,
+  config_id: -1,
   tags: []
 };
 
