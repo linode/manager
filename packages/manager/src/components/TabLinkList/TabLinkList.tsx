@@ -50,30 +50,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         padding: 1
       }
     }
-  },
-  lishTab: {
-    backgroundColor: theme.bg.offWhite,
-    color: theme.color.tableHeaderText,
-    '&[aria-selected="true"]': {
-      backgroundColor: theme.palette.primary.main,
-      borderBottom: 'none !important',
-      color: 'white !important',
-      '&:hover': {
-        backgroundColor: theme.palette.primary.light,
-        color: 'white'
-      }
-    }
-  },
-  lishTabList: {
-    display: 'flex',
-    backgroundColor: theme.bg.offWhite,
-    margin: 0,
-    overflow: 'hidden',
-    '& [role="tab"]': {
-      flexBasis: '50%',
-      margin: 0,
-      maxWidth: 'none !important'
-    }
   }
 }));
 
@@ -85,33 +61,22 @@ export interface Tab {
 interface Props {
   tabs: Tab[];
   [index: string]: any;
-  lish?: boolean;
 }
 
 type CombinedProps = Props;
 
 export const TabLinkList: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
   const { tabs } = props;
 
-  const classes = useStyles();
-  // TODO: Change type 'any' to a more appropriate type
-  const ref = React.useRef<any>(null);
-
-  React.useEffect(() => {
-    if (ref.current !== null) {
-      ref.current.focus();
-    }
-  }, []);
-
   return (
-    <TabList className={props.lish ? classes.lishTabList : classes.tabList}>
+    <TabList className={classes.tabList}>
       {tabs.map((tab, _index) => (
         <Tab
-          className={`${classes.tab} ${props.lish ? classes.lishTab : ''}`}
+          className={classes.tab}
           key={`tab-${_index}`}
           as={Link}
           to={tab.routeName}
-          ref={props.lish && _index == 0 ? ref : null}
         >
           {tab.title}
         </Tab>

@@ -23,7 +23,7 @@ import NotFound from 'src/components/NotFound';
 import Glish from './Glish';
 import Weblish from './Weblish';
 
-type ClassNames = 'tabs' | 'progress' | 'notFound';
+type ClassNames = 'tabs' | 'progress' | 'notFound' | 'lish';
 
 const AUTH_POLLING_INTERVAL = 2000;
 
@@ -31,7 +31,29 @@ const styles = (theme: Theme) =>
   createStyles({
     tabs: {
       backgroundColor: 'black',
-      margin: 0
+      margin: 0,
+      '& [role="tablist"]': {
+        display: 'flex',
+        backgroundColor: theme.bg.offWhite,
+        margin: 0,
+        overflow: 'hidden'
+      },
+      '& [role="tab"]': {
+        backgroundColor: theme.bg.offWhite,
+        color: theme.color.tableHeaderText,
+        flexBasis: '50%',
+        margin: 0,
+        maxWidth: 'none !important',
+        '&[aria-selected="true"]': {
+          backgroundColor: theme.palette.primary.main,
+          borderBottom: 'none !important',
+          color: 'white !important',
+          '&:hover': {
+            backgroundColor: theme.palette.primary.light,
+            color: 'white'
+          }
+        }
+      }
     },
     progress: {
       height: 'auto'
@@ -44,10 +66,6 @@ const styles = (theme: Theme) =>
     }
   });
 
-export interface Props extends Lish {
-  className?: string;
-}
-
 interface State {
   loading: boolean;
   authenticated: boolean;
@@ -55,8 +73,7 @@ interface State {
   token?: string;
 }
 
-type CombinedProps = Props &
-  WithStyles<ClassNames> &
+type CombinedProps = WithStyles<ClassNames> &
   RouteComponentProps<{ linodeId?: string }>;
 
 class Lish extends React.Component<CombinedProps, State> {
@@ -212,7 +229,7 @@ class Lish extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Tabs className={classes.tabs}>
-          <TabLinkList lish tabs={this.tabs} />
+          <TabLinkList className={classes.lish} tabs={this.tabs} />
           <TabPanels>
             {linode && token && (
               <SafeTabPanel index={0} data-qa-tab="Weblish">
