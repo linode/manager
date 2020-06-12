@@ -1,4 +1,5 @@
 import { MatcherFunction, render, RenderResult } from '@testing-library/react';
+import { Provider as LDProvider } from 'launchdarkly-react-client-sdk/lib/context';
 import { mergeDeepRight } from 'ramda';
 import { ResourcePage } from '@linode/api-v4/lib/types';
 import * as React from 'react';
@@ -11,6 +12,7 @@ import { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import store, { ApplicationState, defaultState } from 'src/store';
 import { DeepPartial } from 'redux';
+import { FlagSet } from 'src/featureFlags';
 
 export const createPromiseLoaderResponse: <T>(
   r: T
@@ -27,6 +29,7 @@ export const createResourcePage: <T>(data: T[]) => ResourcePage<T> = data => ({
 interface Options {
   MemoryRouter?: MemoryRouterProps;
   customStore?: DeepPartial<ApplicationState>;
+  flags?: FlagSet;
 }
 
 /**
@@ -45,7 +48,9 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
   return (
     <Provider store={storeToPass}>
       <LinodeThemeWrapper theme="dark" spacing="normal">
-        <MemoryRouter {...options.MemoryRouter}>{ui}</MemoryRouter>
+        <LDProvider value={{ flags: options.flags ?? {} }}>
+          <MemoryRouter {...options.MemoryRouter}>{ui}</MemoryRouter>
+        </LDProvider>
       </LinodeThemeWrapper>
     </Provider>
   );

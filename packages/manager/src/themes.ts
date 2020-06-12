@@ -77,7 +77,7 @@ const darkThemeOptions = {
     primaryNavActive: '#303235',
     primaryNavActiveBG: '#464c53',
     primaryNavBorder: '#303235',
-    primaryNavPaper: '#3a3f45',
+    primaryNavPaper: '#3a3f46',
     topMenu: '#33383d',
     billingHeader: '#222'
   },

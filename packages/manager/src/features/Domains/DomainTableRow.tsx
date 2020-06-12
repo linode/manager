@@ -1,4 +1,4 @@
-import { DomainStatus } from '@linode/api-v4/lib/domains';
+import { Domain, DomainStatus } from '@linode/api-v4/lib/domains';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -42,15 +42,7 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface Props extends Handlers {
-  domain: string;
-  id: number;
-  status: DomainStatus;
-  type: 'master' | 'slave';
-  lastModified: string;
-}
-
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Domain & Handlers & WithStyles<ClassNames>;
 
 class DomainTableRow extends React.Component<CombinedProps> {
   handleRowClick = (
@@ -74,7 +66,7 @@ class DomainTableRow extends React.Component<CombinedProps> {
       id,
       type,
       status,
-      lastModified,
+      updated,
       onClone,
       onRemove,
       onEdit
@@ -126,7 +118,7 @@ class DomainTableRow extends React.Component<CombinedProps> {
           {humanizeDomainStatus(status)}
         </TableCell>
         <TableCell parentColumn="Last Modified" data-qa-domain-lastmodified>
-          <DateTimeDisplay value={lastModified} />
+          <DateTimeDisplay value={updated} />
         </TableCell>
         <TableCell>
           <ActionMenu

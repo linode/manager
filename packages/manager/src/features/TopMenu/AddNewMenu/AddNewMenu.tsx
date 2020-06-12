@@ -248,10 +248,7 @@ interface StateProps {
   accountCapabilities: AccountCapability[];
 }
 
-const mapStateToProps: MapState<StateProps, CombinedProps> = (
-  state,
-  ownProps
-) => {
+const mapStateToProps: MapState<StateProps, CombinedProps> = state => {
   return {
     accountCapabilities: state?.__resources?.account?.data?.capabilities ?? []
   };

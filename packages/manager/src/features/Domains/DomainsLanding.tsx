@@ -23,10 +23,13 @@ import {
 import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import EntityTable, {
+  EntityTableRow,
+  HeaderCell
+} from 'src/components/EntityTable';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import OrderBy from 'src/components/OrderBy';
 import Placeholder from 'src/components/Placeholder';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import Toggle from 'src/components/Toggle';
@@ -34,8 +37,6 @@ import domainsContainer, {
   Props as DomainProps
 } from 'src/containers/domains.container';
 import { Domains } from 'src/documentation';
-import ListDomains from 'src/features/Domains/ListDomains';
-import ListGroupedDomains from 'src/features/Domains/ListGroupedDomains';
 import { ApplicationState } from 'src/store';
 import {
   openForCloning,
@@ -45,7 +46,9 @@ import {
 } from 'src/store/domainDrawer';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
+import { Handlers as DomainHandlers } from './DomainActionMenu';
 import DisableDomainDialog from './DisableDomainDialog';
+import DomainRow from './DomainTableRow';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
 type ClassNames =
@@ -121,6 +124,40 @@ export type CombinedProps = DomainProps &
   StateProps &
   DispatchProps &
   WithSnackbarProps;
+
+const headers: HeaderCell[] = [
+  {
+    label: 'Domain',
+    dataColumn: 'domain',
+    sortable: true,
+    widthPercent: 25
+  },
+  {
+    label: 'Type',
+    dataColumn: 'type',
+    sortable: true,
+    widthPercent: 15
+  },
+  {
+    label: 'Status',
+    dataColumn: 'status',
+    sortable: true,
+    widthPercent: 25
+  },
+  {
+    label: 'Last Modified',
+    dataColumn: 'updated',
+    sortable: true,
+    widthPercent: 25
+  },
+  {
+    label: 'Action Menu',
+    visuallyHidden: true,
+    dataColumn: '',
+    sortable: false,
+    widthPercent: 5
+  }
+];
 
 export class DomainsLanding extends React.Component<CombinedProps, State> {
   state: State = {
@@ -286,6 +323,19 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       linodesLoading
     } = this.props;
 
+    const handlers: DomainHandlers = {
+      onClone: this.props.openForCloning,
+      onEdit: this.props.openForEditing,
+      onRemove: this.openRemoveDialog,
+      onDisableOrEnable: this.handleClickEnableOrDisableDomain
+    };
+
+    const domainRow: EntityTableRow<Domain> = {
+      Component: DomainRow,
+      data: domainsData ?? [],
+      handlers
+    };
+
     if (domainsLoading) {
       return <RenderLoading />;
     }
@@ -404,9 +454,9 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                       Your DNS zones are not being served.
                     </Typography>
                     <Typography>
-                      Your domains will not be served by Linode's nameservers
-                      unless you have at least one active Linode on your
-                      account.
+                      Your domains will not be served by Linode&#39;s
+                      nameservers unless you have at least one active Linode on
+                      your account.
                       <Link to="/linodes/create">
                         {' '}
                         You can create one here.
@@ -422,32 +472,12 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                     />
                   )}
                 <Grid item xs={12}>
-                  {/* Duplication starts here. How can we refactor this? */}
-                  <OrderBy data={domainsData} order={'asc'} orderBy={'domain'}>
-                    {({
-                      data: orderedData,
-                      handleOrderChange,
-                      order,
-                      orderBy
-                    }) => {
-                      const props = {
-                        orderBy,
-                        order,
-                        handleOrderChange,
-                        data: orderedData,
-                        onClone: this.props.openForCloning,
-                        onEdit: this.props.openForEditing,
-                        onRemove: this.openRemoveDialog,
-                        onDisableOrEnable: this.handleClickEnableOrDisableDomain
-                      };
-
-                      return domainsAreGrouped ? (
-                        <ListGroupedDomains {...props} />
-                      ) : (
-                        <ListDomains {...props} />
-                      );
-                    }}
-                  </OrderBy>
+                  <EntityTable
+                    entity="domain"
+                    groupByTag={domainsAreGrouped}
+                    row={domainRow}
+                    headers={headers}
+                  />
                 </Grid>
               </React.Fragment>
             );
