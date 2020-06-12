@@ -2,7 +2,7 @@ import { cleanup } from '@testing-library/react';
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { LinodeDiskDrawer, modes } from './LinodeDiskDrawer';
+import LinodeDiskDrawer, { modes } from './LinodeDiskDrawer';
 
 afterEach(cleanup);
 

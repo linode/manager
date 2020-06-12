@@ -1,4 +1,4 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { Disk } from '@linode/api-v4/lib/linodes/types';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import { UserSSHKeyObject } from 'src/components/AccessPanel';
@@ -14,6 +14,10 @@ import Grid from 'src/components/Grid';
 import ModeSelect, { Mode } from 'src/components/ModeSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
+import {
+  handleFieldErrors,
+  handleGeneralErrors
+} from 'src/utilities/formikErrorUtils';
 
 import ImageAndPassword from '../LinodeSettings/ImageAndPassword';
 
@@ -28,30 +32,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type FileSystem = 'raw' | 'swap' | 'ext3' | 'ext4' | 'initrd' | '_none_';
 
-interface EditableFields {
-  // label: string;
-  // filesystem: string;
-  // size: number;
-  // password?: string;
+interface Props {
+  mode: 'create' | 'rename' | 'resize';
+  disk?: Disk;
+  open: boolean;
+  maximumSize: number;
+  onClose: () => void;
+  onSubmit: (values: any) => Promise<any>;
   passwordError?: string;
   userSSHKeys?: UserSSHKeyObject[];
   requestKeys?: () => void;
-}
-
-interface Props extends EditableFields {
-  mode: 'create' | 'rename' | 'resize';
-  open: boolean;
-  errors?: APIError[];
-  maximumSize: number;
-  submitting: boolean;
-  onClose: () => void;
-  onSubmit: (values: any) => void;
-  // onLabelChange: (value: string) => void;
-  // onFilesystemChange: (value: string) => void;
-  // onSizeChange: (value: number | string) => void;
-  // onImageChange: (selected: string | undefined) => void;
-  // onPasswordChange: (password: string) => void;
-  // onResetImageMode: () => void;
 }
 
 type CombinedProps = Props;
@@ -93,20 +83,29 @@ const getTitle = (v: 'create' | 'rename' | 'resize') => {
   }
 };
 
-export const LinodeDiskDrawer: React.FC<CombinedProps> = props => {
-  const { open, mode, submitting, onSubmit, userSSHKeys, requestKeys } = props;
+export const DiskDrawer: React.FC<CombinedProps> = props => {
+  const {
+    disk,
+    open,
+    maximumSize,
+    mode,
+    onClose,
+    onSubmit,
+    userSSHKeys,
+    requestKeys
+  } = props;
 
   const classes = useStyles();
 
-  const formik = useFormik({
+  const { resetForm, ...formik } = useFormik({
     initialValues: {
-      label: '',
-      filesystem: '_none_' as FileSystem,
-      size: 0,
+      label: disk?.label ?? '',
+      filesystem: disk?.filesystem ?? ('ext4' as FileSystem),
+      size: disk?.size || maximumSize || 0,
       image: '',
       password: ''
     },
-    onSubmit
+    onSubmit: values => submitForm(values)
   });
 
   const [selectedMode, setSelectedMode] = React.useState<string>(modes.EMPTY);
@@ -114,30 +113,37 @@ export const LinodeDiskDrawer: React.FC<CombinedProps> = props => {
   React.useEffect(() => {
     if (open) {
       setSelectedMode(modes.EMPTY);
+      resetForm();
     }
-  }, [open]);
+  }, [open, resetForm]);
 
-  // static getDerivedStateFromProps(props: CombinedProps, state: State) {
-  //   return {
-  //     hasErrorFor: getAPIErrorsFor(
-  //       { label: 'label', size: 'size', root_pass: 'root_pass' },
-  //       props.errors || []
-  //     )
-  //   };
-  // }
+  const submitForm = (values: any) => {
+    // Clear drawer error state
+    formik.setStatus(undefined);
+    formik.setErrors({});
 
-  //   props.onSizeChange(valueAsNumber);
-  // };
+    if (values.label === '') {
+      values.label = undefined;
+    }
 
-  // const onFilesystemChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-  //   props.onFilesystemChange(e.target.value);
+    onSubmit(values)
+      .then(() => {
+        formik.setSubmitting(false);
+        onClose();
+      })
+      .catch(err => {
+        const mapErrorToStatus = (generalError: string) =>
+          formik.setStatus({ generalError });
 
-  // const onModeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setSelectedMode(e.target.value as diskMode);
-  //   props.onResetImageMode(); // Reset image and root_pass
-  // };
-
-  const generalError = ''; // this.getErrors('none');
+        formik.setSubmitting(false);
+        handleFieldErrors(formik.setErrors, err);
+        handleGeneralErrors(
+          mapErrorToStatus,
+          err,
+          'An unexpected error occurred.'
+        );
+      });
+  };
 
   return (
     <Drawer title={getTitle(mode)} open={open} onClose={props.onClose}>
@@ -152,12 +158,12 @@ export const LinodeDiskDrawer: React.FC<CombinedProps> = props => {
           </Grid>
         )}
         <Grid item xs={12}>
-          {generalError && (
+          {formik.status && (
             <Notice
               error
               spacingBottom={8}
               errorGroup="linode-disk-drawer"
-              text={generalError}
+              text={formik.status.generalError}
             />
           )}
         </Grid>
@@ -170,7 +176,7 @@ export const LinodeDiskDrawer: React.FC<CombinedProps> = props => {
               required
               value={formik.values.label}
               onChange={formik.handleChange}
-              errorText={formik.errors.label?.[0]}
+              errorText={formik.errors.label}
               errorGroup="linode-disk-drawer"
               data-qa-label
             />
@@ -182,7 +188,7 @@ export const LinodeDiskDrawer: React.FC<CombinedProps> = props => {
                 select
                 value={formik.values.filesystem}
                 onChange={formik.handleChange}
-                errorText={formik.errors.filesystem?.[0]}
+                errorText={formik.errors.filesystem}
                 errorGroup="linode-disk-drawer"
               >
                 <MenuItem value="_none_">
@@ -200,9 +206,9 @@ export const LinodeDiskDrawer: React.FC<CombinedProps> = props => {
                 onImageChange={(selected: Item) =>
                   formik.setFieldValue('image', selected.value)
                 }
-                imageFieldError={formik.errors.image?.[0]}
+                imageFieldError={formik.errors.image}
                 password={formik.values.password}
-                passwordError={formik.errors.password?.[0]}
+                passwordError={formik.errors.password}
                 onPasswordChange={(password: string) =>
                   formik.setFieldValue('password', password)
                 }
@@ -218,7 +224,7 @@ export const LinodeDiskDrawer: React.FC<CombinedProps> = props => {
               required
               value={formik.values.size}
               onChange={formik.handleChange}
-              errorText={formik.errors.size?.[0]}
+              errorText={formik.errors.size}
               errorGroup="linode-disk-drawer"
               InputProps={{
                 endAdornment: <InputAdornment position="end">MB</InputAdornment>
@@ -235,7 +241,7 @@ export const LinodeDiskDrawer: React.FC<CombinedProps> = props => {
             <Button
               onClick={() => formik.handleSubmit()}
               buttonType="primary"
-              loading={submitting}
+              loading={formik.isSubmitting}
               data-qa-disk-submit
             >
               {submitLabelMap[mode]}
@@ -255,4 +261,4 @@ export const LinodeDiskDrawer: React.FC<CombinedProps> = props => {
   );
 };
 
-export default React.memo(LinodeDiskDrawer);
+export default React.memo(DiskDrawer);

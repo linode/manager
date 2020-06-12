@@ -37,7 +37,6 @@ import userSSHKeyHoc, {
   UserSSHKeyProps
 } from 'src/features/linodes/userSSHKeyHoc';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import LinodeDiskActionMenu from './LinodeDiskActionMenu';
 import LinodeDiskDrawer from './LinodeDiskDrawer';
 
@@ -97,9 +96,7 @@ interface ConfirmDeleteState {
 
 interface DrawerState {
   open: boolean;
-  submitting: boolean;
   mode: 'create' | 'rename' | 'resize';
-  errors?: APIError[];
   diskId?: number;
   maximumSize: number;
 }
@@ -124,9 +121,7 @@ type CombinedProps = UserSSHKeyProps &
 
 const defaultDrawerState: DrawerState = {
   open: false,
-  submitting: false,
   mode: 'create',
-  errors: undefined,
   maximumSize: 0
 };
 
@@ -391,14 +386,14 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   };
 
   drawer = () => {
-    const { mode, open, errors, submitting, maximumSize } = this.state.drawer;
+    const { diskId, mode, open, maximumSize } = this.state.drawer;
+    const { disks } = this.props;
 
     return (
       <LinodeDiskDrawer
-        submitting={submitting}
         mode={mode}
         open={open}
-        errors={errors}
+        disk={disks.find(thisDisk => thisDisk.id === diskId)}
         maximumSize={maximumSize}
         onClose={this.closeDrawer}
         onSubmit={this.onDrawerSubmit}
@@ -408,40 +403,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     );
   };
 
-  // onLabelChange = (label: string) => {
-  //   const { fields } = this.state.drawer;
-  //   this.setDrawer({ fields: { ...fields, label } });
-  // };
-
-  // onSizeChange = (size: number) => {
-  //   const { fields } = this.state.drawer;
-  //   this.setDrawer({ fields: { ...fields, size } });
-  // };
-
-  // onFilesystemChange = (filesystem: Filesystem) => {
-  //   const { fields } = this.state.drawer;
-  //   this.setDrawer({ fields: { ...fields, filesystem } });
-  // };
-
-  // onImageChange = (image: string | undefined) => {
-  //   const { fields } = this.state.drawer;
-  //   this.setDrawer({ fields: { ...fields, image } });
-  // };
-
-  // onPasswordChange = (password: string) => {
-  //   const { fields } = this.state.drawer;
-  //   this.setDrawer({ fields: { ...fields, password } });
-  // };
-
-  // onResetImageMode = () => {
-  //   const { fields } = this.state.drawer;
-  //   this.setDrawer({
-  //     fields: { ...fields, image: undefined, password: undefined }
-  //   });
-  // };
-
-  onDrawerSubmit = (values: any) => {
-    console.log(values);
+  onDrawerSubmit = (values: any): Promise<any> => {
     switch (this.state.drawer.mode) {
       case 'create':
         return this.createDisk(values);
@@ -456,76 +418,46 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     const { linodeId, resizeLinodeDisk } = this.props;
     const { diskId } = this.state.drawer;
     if (!linodeId || !diskId) {
-      return;
+      // Safety check; should never happen.
+      return Promise.reject({ reason: 'Invalid disk or Linode' });
     }
 
-    this.setDrawer({ submitting: true, errors: undefined });
-
-    resizeLinodeDisk(diskId, size)
-      .then(_ => {
-        this.setDrawer(defaultDrawerState);
-        this.props.enqueueSnackbar(`Disk queued for resizing.`, {
-          variant: 'info'
-        });
-        resetEventsPolling();
-      })
-      .catch(error => {
-        const errors = getAPIErrorOrDefault(error);
-        this.setDrawer({ errors, submitting: false }, () => {
-          scrollErrorIntoView('linode-disk-drawer');
-        });
+    return resizeLinodeDisk(diskId, size).then(_ => {
+      this.props.enqueueSnackbar(`Disk queued for resizing.`, {
+        variant: 'info'
       });
+      resetEventsPolling();
+    });
   };
 
   createDisk = (values: any) => {
     const { linodeId, userSSHKeys, createLinodeDisk } = this.props;
     const { label, size, filesystem, image, password } = values;
     if (!linodeId) {
-      return;
+      // Safety check; should never happen.
+      return Promise.reject({ reason: 'Invalid Linode' });
     }
 
-    this.setDrawer({ submitting: true, errors: undefined });
-
-    createLinodeDisk({
+    return createLinodeDisk({
       label,
       size,
       filesystem: filesystem === '_none_' ? undefined : filesystem,
-      image,
-      root_pass: password,
+      image: Boolean(image) ? image : undefined,
+      root_pass: Boolean(password) ? password : undefined,
       authorized_users: userSSHKeys
         ? userSSHKeys.filter(u => u.selected).map(u => u.username)
         : undefined
-    })
-      .then(_ => {
-        this.setDrawer(defaultDrawerState);
-      })
-      .catch(error => {
-        const errors = getAPIErrorOrDefault(error);
-        this.setDrawer({ errors, submitting: false }, () => {
-          scrollErrorIntoView('linode-disk-drawer');
-        });
-      });
+    });
   };
 
   renameDisk = (label: string) => {
     const { linodeId, updateLinodeDisk } = this.props;
     const { diskId } = this.state.drawer;
     if (!linodeId || !diskId) {
-      return;
+      // Safety check; should never happen.
+      return Promise.reject({ reason: 'Invalid disk or Linode' });
     }
-
-    this.setDrawer({ submitting: true, errors: undefined });
-
-    updateLinodeDisk(diskId, { label })
-      .then(_ => {
-        this.setDrawer(defaultDrawerState);
-      })
-      .catch(error => {
-        const errors = getAPIErrorOrDefault(error);
-        this.setDrawer({ errors, submitting: false }, () => {
-          scrollErrorIntoView('linode-disk-drawer');
-        });
-      });
+    return updateLinodeDisk(diskId, { label });
   };
 
   deleteDisk = () => {
@@ -555,22 +487,17 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   openDrawerForRename = ({ id: diskId }: Disk) => () => {
     this.setDrawer({
       diskId,
-      errors: undefined,
       mode: 'rename',
-      open: true,
-      submitting: false
+      open: true
     });
   };
 
   openDrawerForResize = ({ id: diskId, size }: Disk) => () => {
     this.setDrawer({
       diskId,
-      errors: undefined,
       maximumSize: Math.max(size, this.calculateDiskFree(diskId)),
-
       mode: 'resize',
-      open: true,
-      submitting: false
+      open: true
     });
   };
 
@@ -579,11 +506,9 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
 
     this.setDrawer({
       diskId: undefined,
-      errors: undefined,
       maximumSize,
       mode: 'create',
-      open: true,
-      submitting: false
+      open: true
     });
   };
 
