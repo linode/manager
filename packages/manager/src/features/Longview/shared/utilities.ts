@@ -320,11 +320,11 @@ export const generateNetworkUnits = (
   /** Thanks to http://www.matisse.net/bitcalc/ */
   const networkUsedToKilobits = (networkUsedInBytes * 8) / 1024;
   if (networkUsedToKilobits <= 1) {
-    return 'b';
+    return 'bit';
   } else if (networkUsedToKilobits <= 1000) {
-    return 'Kibit';
+    return 'Kbit';
   } else {
-    return 'Mibit';
+    return 'Mbit';
   }
 };
 
@@ -332,16 +332,16 @@ export const convertNetworkToUnit = (
   valueInBits: number,
   maxUnit: NetworkUnit
 ) => {
-  if (maxUnit === 'Mibit') {
+  if (maxUnit === 'Mbit') {
     // If the unit we're using for the graph is Mb, return the output in Mb.
     const valueInMegabits = valueInBits / 1024 / 1024;
     return valueInMegabits;
-  } else if (maxUnit === 'Kibit') {
+  } else if (maxUnit === 'Kbit') {
     // If the unit we're using for the graph is Kb, return the output in Kb.
     const valueInKilobits = valueInBits / 1024;
     return valueInKilobits;
   } else {
-    // Unit is 'b' so just return the unformatted value, rounded to the nearest bit.
+    // Unit is 'bit' so just return the unformatted value, rounded to the nearest bit.
     return Math.round(valueInBits);
   }
 };
