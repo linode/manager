@@ -28,8 +28,8 @@ const ConfigSelect: React.FC<CombinedProps> = props => {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    if (lastUpdated === 0) {
-      dispatch(() => getAllLinodeConfigs({ linodeId }));
+    if (lastUpdated === 0 || lastUpdated === undefined) {
+      dispatch(getAllLinodeConfigs({ linodeId }));
     }
   }, [linodeId, lastUpdated, dispatch]);
 
