@@ -23,11 +23,14 @@ export type Action = 'Reboot' | 'Power Off' | 'Power On';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    marginBottom: theme.spacing(1.25),
     display: 'flex',
     alignItems: 'center',
-    lineHeight: '1.25rem'
+    lineHeight: '1.25rem',
+    fontSize: '.875rem'
   },
   dialog: {
+    fontSize: '.875rem',
     '& .dialog-content': {
       paddingTop: 0,
       paddingBottom: 0
@@ -159,23 +162,19 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = props => {
       <Typography className={classes.root}>
         Are you sure you want to {props.action.toLowerCase()} your Linode?
       </Typography>
-      {props.action === 'Power Off' ? (
-        <Typography className={classes.root}>
-          <span>
-            <Notice warning important>
-              <strong>Warning: </strong>
-              Powered down Linodes will still accrue charges. See the
-              <ExternalLink
-                link="https://www.linode.com/docs/platform/billing-and-support/how-linode-billing-works/#if-my-linode-is-powered-off-will-i-be-billed"
-                text="Billing and Payments documentation"
-                hideIcon
-              />
-              &nbsp;for more information.
-            </Notice>
-          </span>
-        </Typography>
-      ) : (
-        ''
+      {props.action === 'Power Off' && (
+        <span>
+          <Notice warning important>
+            <strong>Warning: </strong>
+            Powered down Linodes will still accrue charges. See the
+            <ExternalLink
+              link="https://www.linode.com/docs/platform/billing-and-support/how-linode-billing-works/#if-my-linode-is-powered-off-will-i-be-billed"
+              text="Billing and Payments documentation"
+              hideIcon
+            />
+            &nbsp;for more information.
+          </Notice>
+        </span>
       )}
     </Dialog>
   );
