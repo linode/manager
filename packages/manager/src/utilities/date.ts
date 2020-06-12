@@ -11,7 +11,9 @@ export const parseAPIDate = (date: string) => {
   throw new Error(`invalid date format: ${date}`);
 };
 export const isBefore = (d1: string, d2: string) => {
-  return DateTime.fromISO(d1) < DateTime.fromISO(d2);
+  const date1 = parseAPIDate(d1);
+  const date2 = parseAPIDate(d2);
+  return date1 < date2;
 };
 
 export const isAfter = (d1: string, d2: string) => {
