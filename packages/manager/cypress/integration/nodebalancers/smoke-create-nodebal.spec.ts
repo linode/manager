@@ -54,7 +54,7 @@ describe('create NodeBalancer', () => {
       createNodeBalancerWithUI(nodeBal);
       cy.wait('@createNodeBalancer')
         .its('status')
-        .should('be', 200);
+        .should('eq', 200);
 
       deleteNodeBalancerByLabel(nodeBal.label);
       deleteLinodeById(linode.id);

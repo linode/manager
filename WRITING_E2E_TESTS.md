@@ -159,7 +159,7 @@ cy.route({
 // Using the name `@alias` we wait for the request top complete
 cy.wait('@apiCreateRecord')
     .its('status')
-    .should('be', 200);
+    .should('eq', 200);
 ```
 
 ### making XHR requests directly
