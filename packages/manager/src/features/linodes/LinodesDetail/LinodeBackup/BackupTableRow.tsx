@@ -5,7 +5,7 @@ import TableRow from 'src/components/core/TableRow';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import TableCell from 'src/components/TableCell';
 import LinodeBackupActionMenu from './LinodeBackupActionMenu';
-
+import { formatDuration } from 'src/utilities/formatDuration';
 interface Props {
   backup: LinodeBackup;
   disabled: boolean;
@@ -16,25 +16,6 @@ interface Props {
 const typeMap = {
   auto: 'Automatic',
   snapshot: 'Manual'
-};
-
-const humanizeDuration = (duration: Duration) => {
-  const hours = duration.as('hours');
-  if (hours >= 1) {
-    const dur = duration.shiftTo('hours', 'minutes');
-    return `${dur.hours} hour${dur.hours > 1 ? 's' : ''} ${
-      dur.minutes
-    } minute${dur.minutes ?? 's'}`;
-  }
-  const minutes = duration.as('minutes');
-  if (minutes >= 1) {
-    const dur = duration.shiftTo('minutes', 'seconds');
-    return `${dur.minutes} minute${dur.minutes > 1 ? 's' : ''} ${
-      dur.seconds
-    } second${dur.seconds ? 's' : ''}`;
-  }
-  const seconds = duration.as('seconds');
-  return `${seconds} hour${seconds >= 2 ?? 's'}`;
 };
 
 const BackupTableRow: React.FC<Props> = props => {
@@ -55,7 +36,7 @@ const BackupTableRow: React.FC<Props> = props => {
         <DateTimeDisplay value={backup.created} />
       </TableCell>
       <TableCell parentColumn="Duration">
-        {humanizeDuration(
+        {formatDuration(
           Duration.fromMillis(
             DateTime.fromISO(backup.finished).toMillis() -
               DateTime.fromISO(backup.created).toMillis()
