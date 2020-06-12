@@ -122,10 +122,6 @@ export const DiskDrawer: React.FC<CombinedProps> = props => {
     formik.setStatus(undefined);
     formik.setErrors({});
 
-    if (values.label === '') {
-      values.label = undefined;
-    }
-
     onSubmit(values)
       .then(() => {
         formik.setSubmitting(false);
@@ -242,7 +238,7 @@ export const DiskDrawer: React.FC<CombinedProps> = props => {
               onClick={() => formik.handleSubmit()}
               buttonType="primary"
               loading={formik.isSubmitting}
-              data-qa-disk-submit
+              data-testid="submit-disk-form"
             >
               {submitLabelMap[mode]}
             </Button>
