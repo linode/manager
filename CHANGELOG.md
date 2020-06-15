@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-06-16] - v1.12.0
+
+### Added:
+- Support for OBJ Singapore
+
+### Changed:
+- Move Nanode to “Standard” tab, change label to “Shared CPU”
+- Handle host maintenance status
+- Improve handling of negative amount on invoice details 
+- Upon rebooting Linode into Rescue Mode, prevent dropdown from reverting to "None"
+- Save StackScript progress when creating or editing a script
+
 ## [2020-06-09] - v1.11.0
 
 ### Changed:
