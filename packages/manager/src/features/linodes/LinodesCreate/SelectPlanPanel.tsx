@@ -410,6 +410,11 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
       types.find(type => type.heading === currentPlanHeading)
     );
 
+    // We don't have a "Nanodes" tab anymore, so use `standard` (labeled as "Shared CPU").
+    if (selectedTypeClass === 'nanode') {
+      selectedTypeClass = 'standard';
+    }
+
     const initialTab = tabOrder.indexOf(selectedTypeClass);
 
     return (
@@ -419,7 +424,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
         header={header || 'Linode Plan'}
         copy={copy}
         tabs={tabs}
-        initTab={initialTab}
+        initTab={initialTab >= 0 ? initialTab : 0}
         data-qa-select-plan
       />
     );
