@@ -533,19 +533,17 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       MuiChip: {
         root: {
           backgroundColor: '#f4f4f4',
-          height: 30,
+          height: 20,
           display: 'inline-flex',
           alignItems: 'center',
-          borderRadius: 15,
-          marginTop: 1,
+          borderRadius: 4,
+          marginTop: 2,
           marginBottom: 2,
-          marginRight: 10,
+          marginRight: 4,
           paddingLeft: 2,
           paddingRight: 2,
           color: primaryColors.text,
-          fontSize: '.875rem',
-          letterSpacing: '.5px',
-          minWidth: 140,
+          fontSize: '.8rem',
           '&:last-child': {
             marginRight: 0
           },
