@@ -311,15 +311,15 @@ export class SelectPlanPanel extends React.Component<
             <>
               {isOnCreate && (
                 <Typography data-qa-standard className={classes.copy}>
-                  Standard instances are good for medium-duty workloads and are
-                  a good mix of performance, resources, and price.
+                  Shared CPU instances are good for medium-duty workloads and
+                  are a good mix of performance, resources, and price.
                 </Typography>
               )}
               {this.renderPlanContainer(standards)}
             </>
           );
         },
-        title: 'Standard'
+        title: 'Shared CPU'
       });
       tabOrder.push('standard');
     }
@@ -353,7 +353,7 @@ export class SelectPlanPanel extends React.Component<
                 <Typography data-qa-highmem className={classes.copy}>
                   High Memory instances favor RAM over other resources, and can
                   be good for memory hungry use cases like caching and in-memory
-                  databases.
+                  databases. All High Memory plans contain dedicated CPU cores.
                 </Typography>
               )}
               {this.renderPlanContainer(highmem)}
