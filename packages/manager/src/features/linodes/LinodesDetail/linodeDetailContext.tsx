@@ -105,7 +105,7 @@ export interface LinodeDetailContext {
  * required Linode ID.
  */
 export const linodeDetailContextFactory = (
-  linode: ExtendedLinode | undefined,
+  linode: ExtendedLinode,
   dispatch: ThunkDispatch
 ): LinodeDetailContext => {
   const { id: linodeId } = linode;

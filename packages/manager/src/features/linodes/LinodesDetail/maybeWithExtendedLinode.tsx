@@ -37,7 +37,7 @@ export const mapStateToProps: MapStateToProps<
   const { linodeId } = ownProps;
   const linode = state.__resources.linodes.itemsById[linodeId];
   if (!linode) {
-    return { linode: undefined };
+    return { linode: { id: -1, type: null } as ExtendedLinode };
   }
   const { type } = linode;
 
