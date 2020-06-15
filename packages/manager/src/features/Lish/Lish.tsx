@@ -6,7 +6,6 @@ import {
 import * as React from 'react';
 import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
-// import TabPanel from 'src/components/core/ReachTabPanel';
 import {
   createStyles,
   Theme,
