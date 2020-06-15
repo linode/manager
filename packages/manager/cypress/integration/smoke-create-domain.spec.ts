@@ -1,4 +1,7 @@
-import { deleteAllTestDomains, makeDomainLabel } from '../support/api/domains';
+import {
+  deleteAllTestDomains,
+  makeDomainLabel
+} from '../../support/api/domains';
 
 describe('Create a Domain', () => {
   before(deleteAllTestDomains);

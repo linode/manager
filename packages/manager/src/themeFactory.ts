@@ -196,9 +196,9 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       pureWhite: '#fff',
       tableHeader: '#fbfbfb',
       primaryNavActive: '#f4f4f4',
-      primaryNavActiveBG: '#272b31',
+      primaryNavActiveBG: '#515861',
       primaryNavBorder: '#f4f4f4',
-      primaryNavPaper: '#32363c',
+      primaryNavPaper: '#3a3f46',
       topMenu: '#fff',
       billingHeader: '#f5f9ff'
     },
@@ -235,7 +235,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       label: '#555',
       disabledText: '#c9cacb',
       kubeLabel: '#272b31',
-      primaryNavText: '#c9cacb',
+      primaryNavText: '#fff',
       borderBilling: '#cce2ff',
       billingText: '#313335'
     },
@@ -533,17 +533,19 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       MuiChip: {
         root: {
           backgroundColor: '#f4f4f4',
-          height: 20,
+          height: 30,
           display: 'inline-flex',
           alignItems: 'center',
-          borderRadius: 4,
-          marginTop: 2,
+          borderRadius: 15,
+          marginTop: 1,
           marginBottom: 2,
-          marginRight: 4,
+          marginRight: 10,
           paddingLeft: 2,
           paddingRight: 2,
           color: primaryColors.text,
-          fontSize: '.8rem',
+          fontSize: '.875rem',
+          letterSpacing: '.5px',
+          minWidth: 140,
           '&:last-child': {
             marginRight: 0
           },

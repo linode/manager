@@ -259,14 +259,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      <Grid
-        container
-        className={classes.headingWrapper}
-        alignItems="center"
-        id="tabpanel-clients"
-        role="tabpanel"
-        aria-labelledby="tab-clients"
-      >
+      <Grid container className={classes.headingWrapper} alignItems="center">
         <Grid item className={`py0 ${classes.searchbar}`}>
           <Search
             placeholder="Filter by client label or hostname"

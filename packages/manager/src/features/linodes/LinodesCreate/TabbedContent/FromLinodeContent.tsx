@@ -1,7 +1,6 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
-import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -11,13 +10,10 @@ import {
 } from 'src/components/core/styles';
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import Grid from 'src/components/Grid';
-import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Placeholder from 'src/components/Placeholder';
-import SelectRegionPanel from 'src/components/SelectRegionPanel';
 
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import SelectLinodePanel from '../SelectLinodePanel';
-import SelectPlanPanel from '../SelectPlanPanel';
 import { renderBackupsDisplaySection } from './utils';
 
 import { extendLinodes } from '../utilities';
@@ -94,14 +90,9 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
       linodesData: linodes,
       imagesData: images,
       typesData: types,
-      regionsData: regions,
       regionDisplayInfo: regionInfo,
       typeDisplayInfo: typeInfo,
-      selectedTypeID,
-      selectedRegionID,
-      selectedLinodeID,
-      selectedDiskSize,
-      label
+      selectedLinodeID
     } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
@@ -120,12 +111,12 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
       displaySections.push(typeInfo);
     }
 
-    if (label) {
-      displaySections.push({
-        title: 'Linode Label',
-        details: label
-      });
-    }
+    // if (label) {
+    //   displaySections.push({
+    //     title: 'Linode Label',
+    //     details: label
+    //   });
+    // }
 
     if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
       displaySections.push(
@@ -136,10 +127,10 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
       );
     }
 
-    let calculatedPrice = pathOr(0, ['monthly'], typeInfo);
-    if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
-      calculatedPrice += typeInfo.backupsMonthly;
-    }
+    // let calculatedPrice = pathOr(0, ['monthly'], typeInfo);
+    // if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
+    //   calculatedPrice += typeInfo.backupsMonthly;
+    // }
 
     return (
       // eslint-disable-next-line
@@ -165,13 +156,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
           </Grid>
         ) : (
           <React.Fragment>
-            <Grid
-              item
-              className={`${classes.main} mlMain py0`}
-              id="tabpanel-clone-create"
-              role="tabpanel"
-              aria-labelledby="tab-clone-create"
-            >
+            <Grid item className={`${classes.main} mlMain py0`}>
               <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
               <SelectLinodePanel
                 data-qa-linode-panel
@@ -188,7 +173,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
                           the same password and SSH Keys (if any) as the original Linode.`
                 }}
               />
-              <SelectRegionPanel
+              {/* <SelectRegionPanel
                 data-qa-region-panel
                 error={hasErrorFor('region')}
                 regions={regions}
@@ -198,8 +183,8 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
                 updateFor={[selectedRegionID, errors, regions]}
                 helperText={this.props.regionHelperText}
                 disabled={userCannotCreateLinode}
-              />
-              <SelectPlanPanel
+              /> */}
+              {/* <SelectPlanPanel
                 data-qa-select-plan-panel
                 error={hasErrorFor('type')}
                 types={types}
@@ -225,9 +210,9 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
                   disabled: userCannotCreateLinode
                 }}
                 updateFor={[label, errors]}
-              />
+              /> */}
             </Grid>
-            <Grid item className={`${classes.sidebar} mlSidebar`}>
+            {/* <Grid item className={`${classes.sidebar} mlSidebar`}>
               <CheckoutBar
                 heading="Linode Summary"
                 calculatedPrice={calculatedPrice}
@@ -237,7 +222,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
               >
                 <DisplaySectionList displaySections={displaySections} />
               </CheckoutBar>
-            </Grid>
+            </Grid> */}
           </React.Fragment>
         )}
       </React.Fragment>

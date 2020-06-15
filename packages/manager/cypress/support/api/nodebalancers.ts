@@ -12,12 +12,12 @@ export const makeNodeBalCreateReq = nodeBal => {
   const nodeBalData = nodeBal
     ? nodeBal
     : {
-    client_conn_throttle: 0,
-    label: makeNodeBalLabel(),
-    tags: [testNodeBalTag],
-    region: "us-east",
-    configs:[]
-  };
+        client_conn_throttle: 0,
+        label: makeNodeBalLabel(),
+        tags: [testNodeBalTag],
+        region: 'us-east',
+        configs: []
+      };
 
   return cy.request({
     method: 'POST',
@@ -34,12 +34,11 @@ export const getNodeBalancers = () => getAll('nodebalancers');
 export const deleteNodeBalancerById = nodeBalId =>
   deleteById('nodebalancers', nodeBalId);
 
-
 export const deleteNodeBalancerByLabel = (label = undefined) => {
   getNodeBalancers().then(resp => {
-    cy.log('get all nb',resp.body.data);
+    cy.log('get all nb', resp.body.data);
     const nodeBalToDelete = resp.body.data.find(nb => nb.label === label);
-    cy.log('to delete',nodeBalToDelete)
+    cy.log('to delete', nodeBalToDelete);
     deleteNodeBalancerById(nodeBalToDelete.id);
   });
 };
