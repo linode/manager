@@ -161,23 +161,23 @@ export class TableRow extends React.Component<CombinedProps> {
     const isAnchor = e.target.tagName === 'A' || e.target.closest('a');
 
     if (
-      body.getAttribute('style') === null ||
-      body.getAttribute('style').indexOf('overflow: hidden') !== 0 ||
-      body.getAttribute('style') === ''
+      (body.getAttribute('style') === null ||
+        body.getAttribute('style').indexOf('overflow: hidden') !== 0 ||
+        body.getAttribute('style') === '') &&
+      !isButton &&
+      !isAnchor
     ) {
-      if (!isButton && !isAnchor) {
-        e.stopPropagation();
-        // return if no modal is open
-        if (typeof target === 'string') {
-          !ev.metaKey && !ev.ctrlKey
-            ? // if no meta or ctrl key is pressed (new tab)
-              this.props.history.push(target)
-            : // else open in new tab/window
-              window.open(target, '_blank', 'noopener');
-        }
-        if (typeof target === 'function') {
-          target(e);
-        }
+      e.stopPropagation();
+      // return if no modal is open
+      if (typeof target === 'string') {
+        !ev.metaKey && !ev.ctrlKey
+          ? // if no meta or ctrl key is pressed (new tab)
+            this.props.history.push(target)
+          : // else open in new tab/window
+            window.open(target, '_blank', 'noopener');
+      }
+      if (typeof target === 'function') {
+        target(e);
       }
     }
   };
