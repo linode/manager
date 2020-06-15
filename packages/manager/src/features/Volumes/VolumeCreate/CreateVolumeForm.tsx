@@ -252,16 +252,6 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
                     disabled={disabled}
                   />
 
-                  <ConfigSelect
-                    error={touched.config_id ? errors.config_id : undefined}
-                    linodeId={linode_id}
-                    name="configId"
-                    onBlur={handleBlur}
-                    onChange={(id: number) => setFieldValue('config_id', id)}
-                    value={config_id}
-                    disabled={disabled}
-                  />
-
                   <RegionSelect
                     errorText={touched.region ? errors.region : undefined}
                     regions={props.regions
@@ -300,6 +290,16 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
                     onChange={(id: number) => setFieldValue('linode_id', id)}
                     region={values.region}
                     shouldOnlyDisplayRegionsWithBlockStorage={true}
+                    disabled={disabled}
+                  />
+
+                  <ConfigSelect
+                    error={touched.config_id ? errors.config_id : undefined}
+                    linodeId={linode_id}
+                    name="configId"
+                    onBlur={handleBlur}
+                    onChange={(id: number) => setFieldValue('config_id', id)}
+                    value={config_id}
                     disabled={disabled}
                   />
 
