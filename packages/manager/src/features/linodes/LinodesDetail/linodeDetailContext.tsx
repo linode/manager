@@ -101,11 +101,11 @@ export interface LinodeDetailContext {
 }
 
 /**
- * Create the Linode Detail Context including handlers preconfigured with the
+ * Create the Linode Detail Context including handlers pre-configured with the
  * required Linode ID.
  */
 export const linodeDetailContextFactory = (
-  linode: ExtendedLinode,
+  linode: ExtendedLinode | undefined,
   dispatch: ThunkDispatch
 ): LinodeDetailContext => {
   const { id: linodeId } = linode;
