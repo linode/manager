@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-06-16] - v1.12.1
+
+Fix:
+
+- 404 logic for Linodes Detail crashing for some Linodes
+
 ## [2020-06-16] - v1.12.0
 
 ### Added:
