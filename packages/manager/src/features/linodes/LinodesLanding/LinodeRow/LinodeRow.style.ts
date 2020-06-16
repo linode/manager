@@ -14,7 +14,6 @@ type ClassNames =
   | 'bodyRow'
   | 'statusCell'
   | 'statusCellMaintenance'
-  | 'statusIcon'
   | 'statusHelpIcon'
   | 'ipCell'
   | 'ipCellWrapper'
@@ -30,7 +29,6 @@ const styles = (theme: Theme) =>
       width: '5%',
       textAlign: 'right',
       '& button': {
-        maxHeight: 20,
         width: 30
       },
       [theme.breakpoints.down('sm')]: {
@@ -102,16 +100,6 @@ const styles = (theme: Theme) =>
         }
       }
     },
-    statusIcon: {
-      display: 'inline-block',
-      backgroundColor: theme.color.green,
-      borderRadius: '50%',
-      height: '16px',
-      width: '16px',
-      marginRight: theme.spacing(),
-      position: 'relative',
-      top: 2
-    },
     statusHelpIcon: {
       position: 'relative',
       top: -2
@@ -124,11 +112,7 @@ const styles = (theme: Theme) =>
     },
     ipCellWrapper: {
       display: 'inline-flex',
-      flexDirection: 'column',
-
-      '& *': {
-        fontSize: '.875rem'
-      }
+      flexDirection: 'column'
     },
     planCell: {
       width: '14%',

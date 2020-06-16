@@ -7,7 +7,7 @@ import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
-import TableWrapper from './TableWrapper_CMR';
+import TableWrapper from './TableWrapper';
 
 interface Props {
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
