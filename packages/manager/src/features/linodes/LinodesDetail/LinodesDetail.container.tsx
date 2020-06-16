@@ -21,6 +21,6 @@ export default compose<InnerProps, OuterProps>(
   initLinodeConfigs,
   initLinodeDisks,
   maybeRenderError,
-  maybeWithExtendedLinode,
-  maybeRenderLoading
+  maybeRenderLoading,
+  maybeWithExtendedLinode
 );
