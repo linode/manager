@@ -65,7 +65,7 @@ const LinodeDetail: React.FC<CombinedProps> = props => {
    * Other portions of loading state handled by maybeRenderLoading
    * (Linode info, configs, disks, etc.)
    */
-  const { _loading } = useReduxLoad(['volumes', 'images', 'linodes']);
+  const { _loading } = useReduxLoad(['volumes', 'images']);
 
   if (props.loading || _loading) {
     return <CircleProgress />;
