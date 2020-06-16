@@ -14,6 +14,7 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       borderTop: 'none',
+      padding: '10px 15px',
       width: '14%',
       [theme.breakpoints.down('sm')]: {
         width: '100%'

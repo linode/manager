@@ -309,10 +309,22 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
   };
 
   render() {
+    const { linodeId, linodeLabel, openPowerActionDialog } = this.props;
+
     return (
       <>
-        <Link to="">Details</Link>
-        <Link to="">Power Off</Link>
+        <Link to={`/linodes/${linodeId}`}>Details</Link>
+        <Link
+          to=""
+          onClick={e => {
+            sendLinodeActionMenuItemEvent('Power Off Linode');
+            e.preventDefault();
+            e.stopPropagation();
+            openPowerActionDialog('Power Off', linodeId, linodeLabel, []);
+          }}
+        >
+          Power Off
+        </Link>
         <ActionMenu
           toggleOpenCallback={this.toggleOpenActionMenu}
           createActions={this.createLinodeActions()}
