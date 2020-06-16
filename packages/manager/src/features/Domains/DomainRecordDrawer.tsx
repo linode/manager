@@ -757,10 +757,17 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
 
   render() {
     const { submitting } = this.state;
-    const { open, mode, type } = this.props;
+    const { open, mode, type, records } = this.props;
     const { fields } = this.types[type];
     const isCreating = mode === 'create';
     const isDomain = type === 'master' || type === 'slave';
+
+    const recordsTypeA = records.filter(
+      record => record.type === 'A' || record.type === 'AAAA'
+    ); // Filter for & store any A/AAAA records. If populated and a user tries to add an NS record, they'll see a warning message asking them to add an A/AAAA record.
+
+    const noARecordsNoticeText =
+      'Please create an A/AAAA record for this domain.';
 
     const buttonProps: ButtonProps = {
       buttonType: 'primary',
@@ -790,6 +797,10 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
             return <Notice error key={index} text={err} />;
           })}
         {fields.map((field: any, idx: number) => field(idx))}
+
+        {recordsTypeA.length < 1 && type === 'NS' ? (
+          <Notice warning spacingTop={8} text={noARecordsNoticeText} />
+        ) : null}
         <ActionsPanel>
           <Button {...buttonProps} data-qa-record-save />
           <Button
