@@ -284,38 +284,18 @@ export class SelectPlanPanel extends React.Component<
 
     const tabOrder: LinodeTypeClass[] = [];
 
-    if (!isEmpty(nanodes)) {
-      tabs.push({
-        render: () => {
-          return (
-            <>
-              {isOnCreate && (
-                <Typography data-qa-nanode className={classes.copy}>
-                  Nanode instances are good for low-duty workloads, where
-                  performance isn't critical.
-                </Typography>
-              )}
-              {this.renderPlanContainer(nanodes)}
-            </>
-          );
-        },
-        title: 'Nanode'
-      });
-      tabOrder.push('nanode');
-    }
+    const shared = [...nanodes, ...standards];
 
-    if (!isEmpty(standards)) {
+    if (!isEmpty(shared)) {
       tabs.push({
         render: () => {
           return (
             <>
-              {isOnCreate && (
-                <Typography data-qa-standard className={classes.copy}>
-                  Shared CPU instances are good for medium-duty workloads and
-                  are a good mix of performance, resources, and price.
-                </Typography>
-              )}
-              {this.renderPlanContainer(standards)}
+              <Typography data-qa-standard className={classes.copy}>
+                Shared CPU instances are good for medium-duty workloads and are
+                a good mix of performance, resources, and price.
+              </Typography>
+              {this.renderPlanContainer(shared)}
             </>
           );
         },
@@ -414,18 +394,26 @@ export class SelectPlanPanel extends React.Component<
       header,
       types,
       resetValues,
-      currentPlanHeading
+      currentPlanHeading,
+      selectedID
     } = this.props;
 
     const [tabs, tabOrder] = this.createTabs();
 
     // Determine initial plan category tab based on current plan selection
     // (if there is one).
-    const selectedTypeClass: LinodeTypeClass = pathOr(
+    let selectedTypeClass: LinodeTypeClass = pathOr(
       'standard', // Use `standard` by default
       ['class'],
-      types.find(type => type.heading === currentPlanHeading)
+      types.find(
+        type => type.id === selectedID || type.heading === currentPlanHeading
+      )
     );
+
+    // We don't have a "Nanodes" tab anymore, so use `standard` (labeled as "Shared CPU").
+    if (selectedTypeClass === 'nanode') {
+      selectedTypeClass = 'standard';
+    }
 
     const initialTab = tabOrder.indexOf(selectedTypeClass);
 
@@ -436,7 +424,7 @@ export class SelectPlanPanel extends React.Component<
         header={header || ' '}
         copy={copy}
         tabs={tabs}
-        initTab={initialTab}
+        initTab={initialTab >= 0 ? initialTab : 0}
         handleTabChange={() => resetValues()}
       />
     );
