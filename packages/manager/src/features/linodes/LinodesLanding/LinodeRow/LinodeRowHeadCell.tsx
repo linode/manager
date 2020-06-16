@@ -204,6 +204,7 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
                 </Typography>
               </Link>
             </div>
+            <Typography>{description}</Typography>
           </div>
           {maintenance && dateTime && isDashboard && (
             <div className={classes.maintenanceContainer}>
