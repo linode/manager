@@ -164,7 +164,11 @@ const MutationNotification: React.FC<CombinedProps> = props => {
         <span
           className={classes.pendingMutationLink}
           onClick={openMutationDrawer}
-          onKeyDown={openMutationDrawer}
+          onKeyDown={e => {
+            if (e.key === 'Enter') {
+              openMutationDrawer();
+            }
+          }}
           role="button"
           tabIndex={0}
         >
