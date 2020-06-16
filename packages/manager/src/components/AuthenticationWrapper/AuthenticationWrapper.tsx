@@ -86,7 +86,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     const { linodesLoading, linodesLastUpdated, requestLinodes } = this.props;
     if (!linodesLoading && linodesLastUpdated === 0) {
       // Only request Linodes if we haven't done that somewhere else already
-      requestLinodes().catch(_ => null);
+      // requestLinodes().catch(_ => null);
     }
     try {
       await Promise.all([

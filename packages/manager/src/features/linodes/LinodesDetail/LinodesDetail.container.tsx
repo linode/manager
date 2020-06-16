@@ -1,26 +1,33 @@
-import { compose } from 'recompose';
-// import initLinode from './initLinode';
-import initLinodeConfigs from './initLinodeConfigs';
-import initLinodeDisks from './initLinodeDisks';
-import maybeRenderError from './maybeRenderError';
-import maybeRenderLoading from './maybeRenderLoading';
-import maybeWithExtendedLinode from './maybeWithExtendedLinode';
-import { ExtendedLinode } from './types';
+import * as React from 'react';
+import { useParams } from 'react-router-dom';
+import { useLinodes } from 'src/hooks/useLinodes';
+import CircleProgress from 'src/components/CircleProgress';
+import LinodesDetail from './LinodesDetail';
+import useReduxLoad from 'src/hooks/useReduxLoad';
 
-interface OuterProps {
-  linodeId: number;
-}
+/**
+ * We want to hold off loading this screen until Linode data is available.
+ * If we have recently requested all Linode data, we're good. If not,
+ * we show a loading spinner until the request is complete.
+ */
+export const LinodesDetailContainer: React.FC<{}> = _ => {
+  const { linodes, getLinode } = useLinodes();
+  const params = useParams();
+  const { _loading } = useReduxLoad(['images', 'volumes']);
 
-export interface InnerProps {
-  linode: ExtendedLinode;
-  loading: boolean;
-}
+  React.useEffect(() => {
+    const linodeId = params.linodeId;
+    if (!linodes.loading && linodes.lastUpdated === 0) {
+      // We haven't requested Linodes yet. Ask for the one we're interested in.
+      getLinode(linodeId);
+    }
+  }, []);
 
-export default compose<InnerProps, OuterProps>(
-  // initLinode,
-  initLinodeConfigs,
-  initLinodeDisks,
-  maybeRenderError,
-  maybeRenderLoading,
-  maybeWithExtendedLinode
-);
+  if (linodes.loading || _loading) {
+    return <CircleProgress />;
+  }
+
+  return <div>{JSON.stringify(linodes.itemsById[params.linodeId])}</div>;
+};
+
+export default React.memo(LinodesDetailContainer);
