@@ -309,22 +309,46 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { linodeId, linodeLabel, openPowerActionDialog } = this.props;
+    const {
+      linodeId,
+      linodeLabel,
+      linodeStatus,
+      openPowerActionDialog
+    } = this.props;
 
     return (
       <>
         <Link to={`/linodes/${linodeId}`}>Details</Link>
-        <Link
-          to=""
-          onClick={e => {
-            sendLinodeActionMenuItemEvent('Power Off Linode');
-            e.preventDefault();
-            e.stopPropagation();
-            openPowerActionDialog('Power Off', linodeId, linodeLabel, []);
-          }}
-        >
-          Power Off
-        </Link>
+        {linodeStatus === 'running' && (
+          <Link
+            to=""
+            onClick={e => {
+              sendLinodeActionMenuItemEvent('Power Off Linode');
+              e.preventDefault();
+              e.stopPropagation();
+              openPowerActionDialog('Power Off', linodeId, linodeLabel, []);
+            }}
+          >
+            Power Off
+          </Link>
+        )}
+        {/* @todo: onClick doesn't work */}
+        {linodeStatus === 'offline' && (
+          <Link
+            to=""
+            onClick={e => {
+              sendLinodeActionMenuItemEvent('Power On Linode');
+              openPowerActionDialog(
+                'Power On',
+                linodeId,
+                linodeLabel,
+                this.state.configs
+              );
+            }}
+          >
+            Power On
+          </Link>
+        )}
         <ActionMenu
           toggleOpenCallback={this.toggleOpenActionMenu}
           createActions={this.createLinodeActions()}

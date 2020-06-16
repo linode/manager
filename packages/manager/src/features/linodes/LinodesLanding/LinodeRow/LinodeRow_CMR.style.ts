@@ -15,6 +15,9 @@ type ClassNames =
   | 'statusCell'
   | 'statusCellMaintenance'
   | 'statusIcon'
+  | 'statusIconRunning'
+  | 'statusIconOffline'
+  | 'statusIconOther'
   | 'statusHelpIcon'
   | 'ipCell'
   | 'ipCellWrapper'
@@ -108,13 +111,21 @@ const styles = (theme: Theme) =>
     },
     statusIcon: {
       display: 'inline-block',
-      backgroundColor: theme.color.green,
       borderRadius: '50%',
       height: '16px',
       width: '16px',
       marginRight: theme.spacing(),
       position: 'relative',
       top: 2
+    },
+    statusIconRunning: {
+      backgroundColor: theme.color.green
+    },
+    statusIconOffline: {
+      backgroundColor: theme.color.grey6
+    },
+    statusIconOther: {
+      backgroundColor: '#ffb31a'
     },
     statusHelpIcon: {
       position: 'relative',

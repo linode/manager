@@ -105,13 +105,18 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     );
   };
 
-  const showStatus = (displayStatus: string) => {
+  const showStatus = (status: LinodeStatus) => {
     return (
       <>
-        {displayStatus === 'running' && (
-          <div className={classes.statusIcon}></div>
-        )}
-        {capitalize(displayStatus)}
+        <div
+          className={classNames({
+            [classes.statusIcon]: true,
+            [classes.statusIconRunning]: status === 'running',
+            [classes.statusIconOffline]: status === 'offline',
+            [classes.statusIconOther]: status !== ('running' || 'offline')
+          })}
+        ></div>
+        {capitalize(status)}
       </>
     );
   };
@@ -168,11 +173,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
           data-qa-status
         >
           {!maintenanceStartTime ? (
-            loading ? (
-              'Busy'
-            ) : (
-              showStatus(displayStatus)
-            )
+            showStatus(status)
           ) : (
             <>
               <div>
