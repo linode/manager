@@ -9,7 +9,8 @@ const stackscript_data = array()
 const rootPasswordValidation = string().test(
   'is-strong-password',
   'Password does not meet strength requirements.',
-  (value: string) => zxcvbn(value).score >= MINIMUM_PASSWORD_STRENGTH
+  (value: string) =>
+    Boolean(value) && zxcvbn(value).score >= MINIMUM_PASSWORD_STRENGTH
 );
 
 export const ResizeLinodeDiskSchema = object({
