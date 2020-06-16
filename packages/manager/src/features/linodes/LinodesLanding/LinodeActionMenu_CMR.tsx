@@ -311,8 +311,8 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
   render() {
     return (
       <>
-        <Link>Details</Link>
-        <Link>Power Off</Link>
+        <Link to="">Details</Link>
+        <Link to="">Power Off</Link>
         <ActionMenu
           toggleOpenCallback={this.toggleOpenActionMenu}
           createActions={this.createLinodeActions()}
