@@ -394,7 +394,8 @@ export class SelectPlanPanel extends React.Component<
       header,
       types,
       resetValues,
-      currentPlanHeading
+      currentPlanHeading,
+      selectedID
     } = this.props;
 
     const [tabs, tabOrder] = this.createTabs();
@@ -404,7 +405,9 @@ export class SelectPlanPanel extends React.Component<
     let selectedTypeClass: LinodeTypeClass = pathOr(
       'standard', // Use `standard` by default
       ['class'],
-      types.find(type => type.heading === currentPlanHeading)
+      types.find(
+        type => type.id === selectedID || type.heading === currentPlanHeading
+      )
     );
 
     // We don't have a "Nanodes" tab anymore, so use `standard` (labeled as "Shared CPU").
