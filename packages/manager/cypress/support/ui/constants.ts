@@ -1,21 +1,25 @@
+import { waitForAppLoad } from './common';
+
+const loadAppNoLogin = path => waitForAppLoad(path, false);
+
+/* eslint-disable sonarjs/no-duplicate-string */
 export const routes = {
   createLinode: '/linodes/create',
+  createLinodeOCA: '/linodes/create?type=One-Click',
   support: '/support',
   account: '/account',
   supportTickets: '/support/tickets',
   profile: '/profile'
 };
-
-const goToByTabText = (url, text, isSelector = false) => {
-  cy.visit(url);
-
-  (isSelector ? cy.get : cy.findByText)(text)
-    .should('be.visible')
-    .click();
-};
-
-/** List of Routes and validator of the route
+/**
+ * due 2 rerender of the page that i could not deterministically check i added this wait
+ * @todo find a better way
  */
+const waitDoubleRerender = () => {
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(500);
+};
+// List of Routes and validator of the route
 export const pages = [
   {
     name: 'Linode/Create/Distribution',
@@ -25,32 +29,44 @@ export const pages = [
     goWithUI: [
       {
         name: 'Tab',
-        go: () => goToByTabText(routes.createLinode, 'Distributions')
+        go: () => {
+          loadAppNoLogin(routes.createLinodeOCA);
+          cy.findByText('Create From:');
+          cy.findByText('Distributions').click();
+        }
       }
     ]
   },
   {
     name: 'Linode/Create/OCA',
-    url: `${routes.createLinode}?type=One-Click`,
+    url: routes.createLinodeOCA,
     assertIsLoaded: () => cy.findByText('Select App').should('be.visible'),
     goWithUI: [
       {
         name: 'Tab',
-        go: () => goToByTabText(routes.createLinode, 'One-Click')
+        go: () => {
+          loadAppNoLogin(routes.createLinode);
+          cy.findByText('Choose a Distribution');
+          cy.findByText('One-Click').click();
+        }
       },
       {
         name: 'Create Button',
         go: () => {
-          cy.visit('/');
-          //   cy.get
-          cy.get('[data-qa-add-new-menu-button="true"]').click();
-          cy.get('[data-qa-one-click-add-new="true"').click();
+          // going to a page that loads easily, not dashboard for faster test
+          loadAppNoLogin(routes.support);
+          cy.get('[data-qa-add-new-menu-button="true"]')
+            .should('be.visible')
+            .click();
+          cy.get('[data-qa-one-click-add-new="true"]')
+            .should('be.visible')
+            .click();
         }
       },
       {
         name: 'Nav',
         go: () => {
-          cy.visit('/');
+          loadAppNoLogin(routes.support);
           cy.get('[data-qa-one-click-nav-btn="true"]').click();
         }
       }
@@ -72,7 +88,6 @@ export const pages = [
     assertIsLoaded: () =>
       cy.findByText('Select Linode to Clone From').should('be.visible')
   },
-  // '/linodes/create?type=My%20Images&subtype=Account%20StackScripts'
   {
     name: 'Profile',
     url: `${routes.profile}`,
@@ -86,17 +101,19 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          goToByTabText(
-            `${routes.profile}/auth`,
-            '[data-qa-tab="Display"]',
-            true
-          );
+          const url = `${routes.profile}/auth`;
+          loadAppNoLogin(url);
+          cy.findByText('Password Reset').should('be.visible');
+          waitDoubleRerender();
+          cy.findByText('Display')
+            .should('be.visible')
+            .click();
         }
       },
       {
         name: 'User Profile Button',
         go: () => {
-          cy.visit('/');
+          loadAppNoLogin(routes.support);
           cy.get('[data-qa-user-menu="true"]').click();
           cy.findByText('My Profile').click();
         }
@@ -112,12 +129,12 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          // goToByTabText(routes.profile, 'Password & Authentication');
-          goToByTabText(
-            routes.profile,
-            '[data-qa-tab="Password & Authentication"]',
-            true
-          );
+          loadAppNoLogin(routes.profile);
+          cy.findByText('Username').should('be.visible');
+          waitDoubleRerender();
+          cy.findByText('Password & Authentication')
+            .should('be.visible')
+            .click();
         }
       }
     ]
@@ -130,9 +147,10 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          // goToByTabText(routes.profile, 'SSH Keys');
-
-          goToByTabText(routes.profile, '[data-qa-tab="SSH Keys"]', true);
+          loadAppNoLogin(routes.profile);
+          cy.findByText('Username');
+          waitDoubleRerender();
+          cy.findByText('SSH Keys').click();
         }
       }
     ]
@@ -146,8 +164,10 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          // goToByTabText(routes.profile, 'LISH');
-          goToByTabText(routes.profile, '[data-qa-tab="LISH"]', true);
+          loadAppNoLogin(routes.profile);
+          cy.findByText('Username');
+          waitDoubleRerender();
+          cy.findByText('LISH').click();
         }
       }
     ]
@@ -161,8 +181,10 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          // goToByTabText(routes.profile, 'API Tokens');
-          goToByTabText(routes.profile, '[data-qa-tab="API Tokens"]', true);
+          loadAppNoLogin(routes.profile);
+          cy.findByText('Username');
+          waitDoubleRerender();
+          cy.findByText('API Tokens').click();
         }
       }
     ]
@@ -186,7 +208,8 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          goToByTabText(routes.supportTickets, 'Open Tickets');
+          loadAppNoLogin(routes.supportTickets);
+          cy.findByText('Open Tickets').click();
         }
       }
     ]
@@ -198,9 +221,10 @@ export const pages = [
     assertIsLoaded: () => cy.findByText('Open New Ticket').should('be.visible'),
     goWithUI: [
       {
-        name: 'Create Button',
+        name: 'Tab',
         go: () => {
-          goToByTabText(routes.supportTickets, 'Closed Tickets');
+          loadAppNoLogin(routes.supportTickets);
+          cy.findByText('Closed Tickets').click();
         }
       }
     ]
@@ -219,11 +243,12 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          goToByTabText(
-            `${routes.account}/users`,
-            '[data-qa-tab="Billing Info"]',
-            true
-          );
+          loadAppNoLogin(`${routes.account}/users`);
+          cy.findByText('Username');
+          waitDoubleRerender();
+          cy.findByText('Billing Info')
+            .should('be.visible')
+            .click();
         }
       }
     ]
@@ -236,7 +261,10 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          goToByTabText(routes.account, '[data-qa-tab="Users"]', true);
+          loadAppNoLogin(routes.account);
+          cy.findByText('Billing Contact');
+          waitDoubleRerender();
+          cy.findByText('Users').click();
         }
       }
     ]
@@ -250,7 +278,10 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          goToByTabText(routes.account, '[data-qa-tab="Settings"]', true);
+          loadAppNoLogin(routes.account);
+          cy.findByText('Billing Contact');
+          waitDoubleRerender();
+          cy.findByText('Settings').click();
         }
       }
     ]
