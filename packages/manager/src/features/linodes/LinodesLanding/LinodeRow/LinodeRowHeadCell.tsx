@@ -14,7 +14,7 @@ import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
-import TableCell from 'src/components/TableCell/TableCell';
+import TableCell from 'src/components/TableCell';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import {
   linodeInTransition,
@@ -194,7 +194,7 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
               />
             )}
             <div className={classes.labelStatusWrapper}>
-              <Link className={classes.link} to={`/linodes/${id}`} tabIndex={0}>
+              <Link to={`/linodes/${id}`} tabIndex={0}>
                 <Typography
                   variant="h3"
                   className={classes.wrapHeader}

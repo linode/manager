@@ -11,8 +11,8 @@ import { compose } from 'recompose';
 import Flag from 'src/assets/icons/flag.svg';
 import Tooltip from 'src/components/core/Tooltip';
 import HelpIcon from 'src/components/HelpIcon';
-import TableCell from 'src/components/TableCell/TableCell';
-import TableRow from 'src/components/TableRow/TableRow';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import hasMutationAvailable, {
   HasMutationAvailable
