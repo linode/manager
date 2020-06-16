@@ -2,7 +2,7 @@ import { Image } from '@linode/api-v4/lib/images';
 import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { PaginationProps } from 'src/components/Paginate';
-import LinodeRow from './LinodeRow/LinodeRow';
+import LinodeRow_CMR from './LinodeRow/LinodeRow_CMR';
 
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
@@ -27,7 +27,7 @@ export const ListView: React.FC<CombinedProps> = props => {
   return (
     <>
       {data.map((linode, idx: number) => (
-        <LinodeRow
+        <LinodeRow_CMR
           backups={linode.backups}
           id={linode.id}
           ipv4={linode.ipv4}
