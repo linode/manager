@@ -2,71 +2,111 @@ import * as React from 'react';
 import { makeStyles } from 'src/components/core/styles';
 import '@reach/menu-button/styles.css';
 import Settings from '@material-ui/icons/Settings';
-import {
-  Listbox,
-  ListboxPopover,
-  ListboxButton,
-  ListboxList,
-  ListboxOption,
-  ListboxGroup
-} from '@reach/listbox';
-import '@reach/listbox/styles.css';
+import Popover from '@material-ui/core/Popover';
+import IconButton from '@material-ui/core/IconButton';
 
 const useStyles = makeStyles(() => ({
-  listbox: {
-    position: 'relative'
+  optionOuter: {
+    '&:focus': {
+      border: '2px solid red'
+    }
   }
 }));
 
-interface ColumnOption {
+interface Option {
   label: string;
   selected?: boolean;
 }
 
 interface Props {
-  columnOptions: ColumnOption[];
+  options: Option[];
+  ariaLabel: string;
+  optionsTitle: string;
 }
 
 export type CombinedProps = Props;
 
 const TableEditor: React.FC<CombinedProps> = props => {
-  const { columnOptions } = props;
+  const { options, ariaLabel, optionsTitle } = props;
   const classes = useStyles();
+
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
+    null
+  );
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
   return (
     <div>
-      <span aria-live="assertive" className="visually-hidden"></span>
+      <span aria-live="assertive" className="visually-hidden">
+        EXAMPLES ONLY Element 1 grabbed. Current position 1 of 4", "Element 1
+        moved, new positon 2 of 4", and "Element 1 dropped, final position 2 of
+        4".
+      </span>
       <span id="operation" className="visually-hidden">
+        // DON"T use space bar to toggle- this is how the checkboxes are checked
         Press space bar to toggle drag drop mode, use arrow keys to move
         selected elements.
       </span>
 
-      <Listbox className={classes.listbox}>
-        <ListboxButton aria-label="Display settings">
-          <Settings />
-        </ListboxButton>
-        <ListboxPopover portal={false}>
-          <ListboxList aria-describedby="operation">
-            <ListboxOption value={'detailed list'} draggable={false}>
-              Show detailed list view
-            </ListboxOption>
-            <ListboxOption value={'group by tag'} draggable={false}>
-              Group by tag
-            </ListboxOption>
-            <ListboxGroup label="Display columns:">
-              {columnOptions.map(option => {
-                return (
-                  <ListboxOption value={option.label} draggable={true}>
-                    <span>*</span>
-                    <input type="checkbox" />
-                    {option.label}
-                  </ListboxOption>
-                );
-              })}
-            </ListboxGroup>
-          </ListboxList>
-        </ListboxPopover>
-      </Listbox>
+      <IconButton
+        aria-describedby={'operation'}
+        aria-label={ariaLabel}
+        onClick={handleClick}
+        disableFocusRipple
+        disableRipple
+      >
+        <Settings />
+      </IconButton>
+
+      <Popover
+        id={id}
+        aria-describedby={'operation'}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right'
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right'
+        }}
+      >
+        <form>
+          <fieldset>
+            <legend>{optionsTitle}</legend>
+            {options.map(option => {
+              return (
+                <div
+                  draggable={true}
+                  key={option.label}
+                  className={classes.optionOuter}
+                >
+                  <span aria-hidden>*</span>
+                  <input
+                    type="checkbox"
+                    id={option.label}
+                    // Allow for checks by default in addition to check changes: checked={option.selected}
+                    className={classes.optionOuter}
+                  />
+                  <label htmlFor={option.label}>{option.label}</label>
+                </div>
+              );
+            })}
+          </fieldset>
+        </form>
+      </Popover>
     </div>
   );
 };

@@ -88,7 +88,11 @@ export const Dashboard: React.FC<CombinedProps> = props => {
         />
       )}
       <Grid container spacing={3}>
-        <TableEditor columnOptions={linodeTableColumns} />
+        <TableEditor
+          ariaLabel={'Options to edit table'}
+          optionsTitle={'Display columns:'}
+          options={linodeTableColumns}
+        />
         <AbuseTicketBanner />
         <TaxBanner location={location} marginBottom={8} />
         <DocumentTitleSegment segment="Dashboard" />
