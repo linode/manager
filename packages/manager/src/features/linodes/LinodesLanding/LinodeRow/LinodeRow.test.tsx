@@ -18,7 +18,8 @@ describe('LinodeRow', () => {
     iconGridCell: '',
     statusCell: '',
     statusCellMaintenance: '',
-    statusHelpIcon: ''
+    statusHelpIcon: '',
+    statusIcon: ''
   };
 
   const mockProps: CombinedProps = {

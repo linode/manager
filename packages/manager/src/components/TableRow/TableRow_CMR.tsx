@@ -210,11 +210,6 @@ export class TableRow extends React.Component<CombinedProps> {
 
     return (
       <_TableRow
-        onClick={(e: any) => rowLink && this.rowClick(e, e, rowLink)} // same argument, different methods (one to stop propagation, one to add the listener for meta/ctrl key)
-        onKeyUp={(e: any) =>
-          rowLink && e.keyCode === 13 && this.rowClick(e, e, rowLink)
-        }
-        hover={rowLink !== undefined}
         role={role}
         aria-label={ariaLabel ?? `View Details`}
         className={classNames(className, {

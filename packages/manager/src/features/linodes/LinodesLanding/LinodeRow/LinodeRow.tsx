@@ -11,8 +11,8 @@ import { compose } from 'recompose';
 import Flag from 'src/assets/icons/flag.svg';
 import Tooltip from 'src/components/core/Tooltip';
 import HelpIcon from 'src/components/HelpIcon';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import TableCell_CMR from 'src/components/TableCell/TableCell_CMR';
+import TableRow_CMR from 'src/components/TableRow/TableRow_CMR';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import hasMutationAvailable, {
   HasMutationAvailable
@@ -105,6 +105,17 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     );
   };
 
+  const showStatus = (displayStatus: string) => {
+    return (
+      <>
+        {displayStatus === 'running' && (
+          <div className={classes.statusIcon}></div>
+        )}
+        {capitalize(displayStatus)}
+      </>
+    );
+  };
+
   const headCell = (
     <LinodeRowHeadCell
       loading={loading}
@@ -139,7 +150,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
           {headCell}
         </LinodeRowLoading>
       )}
-      <TableRow
+      <TableRow_CMR
         key={id}
         className={classes.bodyRow}
         data-qa-loading
@@ -148,7 +159,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
         ariaLabel={label}
       >
         {!loading && headCell}
-        <TableCell
+        <TableCell_CMR
           parentColumn="Status"
           className={classNames({
             [classes.statusCell]: true,
@@ -160,7 +171,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
             loading ? (
               'Busy'
             ) : (
-              capitalize(displayStatus)
+              showStatus(displayStatus)
             )
           ) : (
             <>
@@ -180,8 +191,8 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
               />
             </>
           )}
-        </TableCell>
-        <TableCell
+        </TableCell_CMR>
+        <TableCell_CMR
           parentColumn="IP Address"
           className={classes.ipCell}
           data-qa-ips
@@ -189,20 +200,20 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
           <div className={classes.ipCellWrapper}>
             <IPAddress ips={ipv4} copyRight showCopyOnHover />
           </div>
-        </TableCell>
-        <TableCell
+        </TableCell_CMR>
+        <TableCell_CMR
           parentColumn="Region"
           className={classes.regionCell}
           data-qa-region
         >
           <RegionIndicator region={region} />
-        </TableCell>
+        </TableCell_CMR>
         <LinodeRowBackupCell
           linodeId={id}
           backupsEnabled={backups.enabled || false}
           mostRecentBackup={mostRecentBackup || ''}
         />
-        <TableCell className={classes.actionCell} data-qa-notifications>
+        <TableCell_CMR className={classes.actionCell} data-qa-notifications>
           <div className={classes.actionInner}>
             <RenderFlag
               mutationAvailable={mutationAvailable}
@@ -221,8 +232,8 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
               noImage={!image}
             />
           </div>
-        </TableCell>
-      </TableRow>
+        </TableCell_CMR>
+      </TableRow_CMR>
     </React.Fragment>
   );
 };

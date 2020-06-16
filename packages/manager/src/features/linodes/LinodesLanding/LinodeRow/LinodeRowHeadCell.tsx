@@ -10,17 +10,15 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
-import TableCell from 'src/components/TableCell';
+import TableCell_CMR from 'src/components/TableCell/TableCell_CMR';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import {
   linodeInTransition,
   transitionText
 } from 'src/features/linodes/transitions';
-import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import withDisplayType, { WithDisplayType } from '../withDisplayType';
 
 import { filterImagesByType } from 'src/store/image/image.helpers';
@@ -42,13 +40,18 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     link: {
-      display: 'block'
+      display: 'block',
+      fontFamily: theme.font.bold,
+      fontSize: '.875rem',
+      lineHeight: '1.125rem',
+      textDecoration: 'underline'
     },
     labelWrapper: {
       minHeight: 50,
       paddingTop: theme.spacing(1) / 4
     },
     root: {
+      padding: '10px 15px',
       '& h3': {
         transition: theme.transitions.create(['color'])
       },
@@ -136,30 +139,15 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
     // linode props
     label,
     status,
-    memory,
-    disk,
-    vcpus,
     id,
-    image,
     // other props
     classes,
     loading,
     recentEvent,
-    displayType,
-    imagesData,
     width,
     maintenance,
     isDashboard
   } = props;
-
-  const description = getLinodeDescription(
-    displayType,
-    memory,
-    disk,
-    vcpus,
-    image,
-    imagesData
-  );
 
   const style = width ? { width: `${width}%` } : {};
   const dateTime = maintenance && maintenance.split(' ');
@@ -174,16 +162,12 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <TableCell className={classes.root} style={style} rowSpan={loading ? 2 : 1}>
+    <TableCell_CMR
+      className={classes.root}
+      style={style}
+      rowSpan={loading ? 2 : 1}
+    >
       <Grid container wrap="nowrap" alignItems="center">
-        <Grid item className="py0">
-          <EntityIcon
-            variant="linode"
-            status={status}
-            loading={linodeInTransition(status, recentEvent)}
-            marginTop={1}
-          />
-        </Grid>
         <Grid item>
           <div className={loading ? classes.labelWrapper : ''}>
             {recentEvent && linodeInTransition(status, recentEvent) && (
@@ -194,17 +178,10 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
               />
             )}
             <div className={classes.labelStatusWrapper}>
-              <Link to={`/linodes/${id}`} tabIndex={0}>
-                <Typography
-                  variant="h3"
-                  className={classes.wrapHeader}
-                  data-qa-label
-                >
-                  {label}
-                </Typography>
+              <Link className={classes.link} to={`/linodes/${id}`} tabIndex={0}>
+                {label}
               </Link>
             </div>
-            <Typography>{description}</Typography>
           </div>
           {maintenance && dateTime && isDashboard && (
             <div className={classes.maintenanceContainer}>
@@ -227,7 +204,7 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
           )}
         </Grid>
       </Grid>
-    </TableCell>
+    </TableCell_CMR>
   );
 };
 

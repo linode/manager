@@ -19,7 +19,10 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
+    root: {
+      fontSize: '.875rem',
+      lineHeight: '1rem'
+    },
     noWrap: {
       whiteSpace: 'nowrap'
     },
