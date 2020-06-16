@@ -18,6 +18,12 @@ export const ResizeLinodeDiskSchema = object({
     .min(1)
 });
 
+export const UpdateLinodePasswordSchema = object({
+  password: string()
+    .required('Password is required.')
+    .concat(rootPasswordValidation)
+});
+
 export const CreateLinodeSchema = object({
   type: string()
     .ensure()
