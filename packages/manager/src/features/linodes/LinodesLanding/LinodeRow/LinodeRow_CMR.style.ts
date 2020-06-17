@@ -30,6 +30,8 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     actionCell: {
+      paddingTop: 0,
+      paddingBottom: 0,
       width: '25%',
       textAlign: 'right',
       '& button': {
@@ -44,8 +46,7 @@ const styles = (theme: Theme) =>
       display: 'flex',
       justifyContent: 'flex-end',
       '& a': {
-        lineHeight: '1.25rem',
-        marginRight: 20
+        lineHeight: '1.25rem'
       }
     },
     bodyRow: {

@@ -105,7 +105,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     );
   };
 
-  const showStatus = (status: LinodeStatus) => {
+  const showStatus = (status: string) => {
     return (
       <>
         <div
@@ -173,7 +173,11 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
           data-qa-status
         >
           {!maintenanceStartTime ? (
-            showStatus(status)
+            loading ? (
+              showStatus('Busy')
+            ) : (
+              showStatus(displayStatus)
+            )
           ) : (
             <>
               <div>

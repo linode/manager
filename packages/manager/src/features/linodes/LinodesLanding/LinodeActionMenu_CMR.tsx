@@ -9,28 +9,36 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
-
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
 import { lishLaunch } from 'src/features/Lish/lishUtils';
-
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
-
-import {
-  sendLinodeActionEvent,
-  sendLinodeActionMenuItemEvent
-} from 'src/utilities/ga';
-
+import { makeStyles, Theme } from 'src/components/core/styles';
 import regionsContainer, {
   DefaultProps as WithRegionsProps
 } from 'src/containers/regions.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
+import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector.ts';
 import { MapState } from 'src/store/types';
+import {
+  sendLinodeActionEvent,
+  sendLinodeActionMenuItemEvent,
+  sendMigrationNavigationEvent
+} from 'src/utilities/ga';
 
-import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-
-import { sendMigrationNavigationEvent } from 'src/utilities/ga';
+const useStyles = makeStyles((theme: Theme) => ({
+  link: {
+    padding: '10px 15px',
+    '&:hover': {
+      backgroundColor: '#3683dc',
+      color: 'white'
+    }
+  },
+  action: {
+    marginLeft: 10
+  }
+}));
 
 export interface Props {
   linodeId: number;
@@ -56,6 +64,8 @@ export type CombinedProps = Props &
   WithRegionsProps;
 
 export const LinodeActionMenu: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+
   const [configs, setConfigs] = React.useState<Config[]>([]);
   const [configsError, setConfigsError] = React.useState<
     APIError[] | undefined
@@ -296,9 +306,12 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      <Link to={`/linodes/${linodeId}`}>Details</Link>
+      <Link className={classes.link} to={`/linodes/${linodeId}`}>
+        Details
+      </Link>
       {linodeStatus === 'running' && (
         <Link
+          className={classes.link}
           to=""
           onClick={e => {
             sendLinodeActionMenuItemEvent('Power Off Linode');
@@ -310,12 +323,14 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           Power Off
         </Link>
       )}
-      {/* @todo: onClick doesn't work */}
       {linodeStatus === 'offline' && (
         <Link
+          className={classes.link}
           to=""
           onClick={e => {
             sendLinodeActionMenuItemEvent('Power On Linode');
+            e.preventDefault();
+            e.stopPropagation();
             openPowerActionDialog('Power On', linodeId, linodeLabel, configs);
           }}
         >
@@ -323,6 +338,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         </Link>
       )}
       <ActionMenu
+        className={classes.action}
         toggleOpenCallback={toggleOpenActionMenu}
         createActions={createLinodeActions()}
         ariaLabel={`Action menu for Linode ${props.linodeLabel}`}
