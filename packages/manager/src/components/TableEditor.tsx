@@ -6,6 +6,8 @@ import Settings from '@material-ui/icons/Settings';
 import Draggable from 'src/assets/icons/draggable-icon.svg';
 import Popover from '@material-ui/core/Popover';
 import IconButton from '@material-ui/core/IconButton';
+import SvgIcon from 'src/components/core/SvgIcon';
+import { convertForAria } from 'src/components/TabLink/TabLink';
 
 const useStyles = makeStyles(() => ({
   popover: {
@@ -14,14 +16,25 @@ const useStyles = makeStyles(() => ({
     width: 200,
     border: '1px solid #a8c9f0',
     borderRadius: 3,
+    overflowX: 'unset',
+    overflowY: 'unset',
     '&:before': {
       content: "''",
-      top: 0,
-      right: 0,
+      top: -15,
+      right: 6,
       position: 'absolute',
-      borderColor: '#f4f4f4 transparent transparent transparent',
-      borderStyle: 'solid',
-      borderWidth: '0 0 15px 0'
+      borderLeft: '15px solid transparent',
+      borderRight: '15px solid transparent',
+      borderBottom: '15px solid #a8c9f0'
+    },
+    '&:after': {
+      content: "''",
+      top: -13,
+      right: 8,
+      position: 'absolute',
+      borderLeft: '13px solid transparent',
+      borderRight: '13px solid transparent',
+      borderBottom: '13px solid #fff'
     }
   },
   form: {
@@ -41,7 +54,10 @@ const useStyles = makeStyles(() => ({
     marginBottom: 10,
     display: 'flex',
     alignItems: 'center',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    '&:last-of-type': {
+      marginBottom: 0
+    }
   },
   draggableIcon: {
     marginRight: 10
@@ -54,6 +70,7 @@ const useStyles = makeStyles(() => ({
     height: 15,
     border: '1px solid #1f61ad',
     borderRadius: 3,
+    cursor: 'pointer',
     '&:checked:after': {
       content: "''",
       position: 'absolute',
@@ -68,7 +85,8 @@ const useStyles = makeStyles(() => ({
   optionLabel: {
     marginLeft: 12,
     fontSize: 14,
-    color: '#1f61ad'
+    color: '#1f61ad',
+    cursor: 'pointer'
   }
 }));
 
@@ -81,12 +99,13 @@ interface Props {
   options: Option[];
   ariaLabel: string;
   optionsTitle: string;
+  buttonIcon?: typeof SvgIcon | React.ComponentClass;
 }
 
 export type CombinedProps = Props;
 
 const TableEditor: React.FC<CombinedProps> = props => {
-  const { options, ariaLabel, optionsTitle } = props;
+  const { options, ariaLabel, optionsTitle, buttonIcon } = props;
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
@@ -112,25 +131,24 @@ const TableEditor: React.FC<CombinedProps> = props => {
         4".
       </span>
       <span id="operation" className="visually-hidden">
-        Press Enter key to toggle drag drop mode, use arrow keys to move
-        selected elements.
+        To reorder and customize table display, press Enter key to toggle drag
+        drop mode, use arrow keys to move selected elements.
       </span>
 
       <IconButton
         aria-label={ariaLabel}
         onClick={handleClick}
-        disableFocusRipple
         disableRipple
         aria-haspopup={true}
         aria-controls={id}
         aria-expanded={open}
+        aria-describedby="operation"
       >
-        <Settings />
+        {buttonIcon ? buttonIcon : <Settings />}
       </IconButton>
 
       <Popover
         id={id}
-        aria-describedby={'operation'}
         open={open}
         anchorEl={anchorEl}
         onClose={handleClose}
@@ -143,10 +161,15 @@ const TableEditor: React.FC<CombinedProps> = props => {
           horizontal: 'right'
         }}
         PaperProps={{ className: classes.popover }}
+        aria-labelledby={`legend-${convertForAria(optionsTitle)}`}
+        aria-activedescendant={`legend-${convertForAria(optionsTitle)}`}
       >
         <form className={classes.form}>
           <fieldset className={classes.fieldset}>
-            <legend className={classes.legendTitle}>
+            <legend
+              id={`legend-${convertForAria(optionsTitle)}`}
+              className={classes.legendTitle}
+            >
               <Typography variant="body1">{optionsTitle}</Typography>
             </legend>
             {options.map(option => {
@@ -159,11 +182,15 @@ const TableEditor: React.FC<CombinedProps> = props => {
                   <Draggable className={classes.draggableIcon} aria-hidden />
                   <input
                     type="checkbox"
-                    id={option.label}
-                    // Allow for checks by default in addition to check changes: checked={option.selected}
+                    id={`option-${convertForAria(option.label)}`}
+                    // Allow for checks by default in addition to check changes:
+                    // checked={option.selected}
                     className={classes.optionCheckbox}
                   />
-                  <label className={classes.optionLabel} htmlFor={option.label}>
+                  <label
+                    className={classes.optionLabel}
+                    htmlFor={`option-${convertForAria(option.label)}`}
+                  >
                     {option.label}
                   </label>
                 </div>

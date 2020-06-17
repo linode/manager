@@ -28,7 +28,6 @@ import NodeBalancersDashboardCard from './NodeBalancersDashboardCard';
 import PromotionsBanner from './PromotionsBanner';
 import TransferDashboardCard from './TransferDashboardCard';
 import VolumesDashboardCard from './VolumesDashboardCard';
-import TableEditor from 'src/components/TableEditor';
 
 interface StateProps {
   accountBackups: boolean;
@@ -67,17 +66,6 @@ export const Dashboard: React.FC<CombinedProps> = props => {
     promo => promo.displayOnDashboard
   );
 
-  const linodeTableColumns = [
-    { label: 'Status', id: 'linode-status', selected: true },
-    { label: 'CPU', id: 'linode-cpu', selected: false },
-    { label: 'Ram', id: 'linode-ram', selected: false },
-    { label: 'Storage', id: 'linode-storage', selected: false },
-    { label: 'IP Address', id: 'linode-ips', selected: true },
-    { label: 'Last Backup', id: 'linode-backups', selected: true },
-    { label: 'Region', id: 'linode-region', selected: false },
-    { label: 'Tags', id: 'linode-tags', selected: true }
-  ];
-
   return (
     <React.Fragment>
       {props.someLinodesHaveScheduledMaintenance && (
@@ -88,11 +76,6 @@ export const Dashboard: React.FC<CombinedProps> = props => {
         />
       )}
       <Grid container spacing={3}>
-        <TableEditor
-          ariaLabel={'Options to edit table'}
-          optionsTitle={'Display columns:'}
-          options={linodeTableColumns}
-        />
         <AbuseTicketBanner />
         <TaxBanner location={location} marginBottom={8} />
         <DocumentTitleSegment segment="Dashboard" />
