@@ -1,11 +1,15 @@
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useLinodes } from 'src/hooks/useLinodes';
 import CircleProgress from 'src/components/CircleProgress';
 import LinodesDetail from './LinodesDetail';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { getLinode as _getLinode } from 'src/store/linodes/linode.requests';
+import { ApplicationState } from 'src/store';
+import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
+import { getAllLinodeConfigs } from 'src/store/linodes/config/config.requests';
+import { shouldRequestEntity } from 'src/utilities/shouldRequestEntity';
 
 /**
  * We want to hold off loading this screen until Linode data is available.
@@ -16,12 +20,30 @@ export const LinodesDetailContainer: React.FC<{}> = _ => {
   const { linodes } = useLinodes();
   const dispatch = useDispatch();
   const params = useParams<{ linodeId: string }>();
-  const { _loading } = useReduxLoad(['images', 'volumes']);
-
   const linodeId = params.linodeId;
+
+  const { _loading } = useReduxLoad(['images', 'volumes']);
+  const { configs, disks } = useSelector((state: ApplicationState) => {
+    const disks = state.__resources.linodeDisks[linodeId];
+    const configs = state.__resources.linodeConfigs[linodeId];
+    return { disks, configs };
+  });
+
   React.useEffect(() => {
+    // Unconditionally request data for the Linode being viewed
     dispatch(_getLinode({ linodeId: +linodeId }));
   }, [linodeId, dispatch]);
+
+  React.useEffect(() => {
+    // Make sure we've requested config and disk information for this Linode
+    if (shouldRequestEntity(configs)) {
+      dispatch(getAllLinodeConfigs({ linodeId: +linodeId }));
+    }
+
+    if (shouldRequestEntity(disks)) {
+      dispatch(getAllLinodeDisks({ linodeId: +linodeId }));
+    }
+  }, [dispatch, configs, disks, linodeId]);
 
   if (linodes.loading || _loading) {
     return <CircleProgress />;
