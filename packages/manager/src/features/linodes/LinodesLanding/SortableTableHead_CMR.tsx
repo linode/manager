@@ -1,33 +1,27 @@
 import * as React from 'react';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableHead from 'src/components/core/TableHead';
 import { OrderByProps } from 'src/components/OrderBy';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableSortCell from 'src/components/TableSortCell';
 
-type ClassNames = 'root' | 'label' | 'tagHeader';
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {},
+  label: {
+    paddingLeft: theme.spacing(2) + 49
+  },
+  tagHeader: {
+    textAlign: 'center'
+  }
+}));
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    label: {
-      paddingLeft: theme.spacing(2) + 49
-    },
-    tagHeader: {
-      textAlign: 'center'
-    }
-  });
+type CombinedProps = Omit<OrderByProps, 'data'>;
 
-type combinedProps = Omit<OrderByProps, 'data'> & WithStyles<ClassNames>;
+const SortableTableHead: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
 
-const SortableTableHead: React.FC<combinedProps> = props => {
-  const { order, orderBy, handleOrderChange, classes } = props;
+  const { order, orderBy, handleOrderChange } = props;
 
   const isActive = (label: string) =>
     label.toLowerCase() === orderBy.toLowerCase();
@@ -86,6 +80,4 @@ const SortableTableHead: React.FC<combinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(SortableTableHead);
+export default SortableTableHead;

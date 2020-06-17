@@ -3,17 +3,12 @@ import { LinodeBackups, LinodeStatus } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
-import TableCell_CMR from 'src/components/TableCell/TableCell_CMR';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import {
   linodeInTransition,
@@ -23,88 +18,73 @@ import withDisplayType, { WithDisplayType } from '../withDisplayType';
 
 import { filterImagesByType } from 'src/store/image/image.helpers';
 
-type ClassNames =
-  | 'root'
-  | 'link'
-  | 'loadingStatus'
-  | 'labelWrapper'
-  | 'status'
-  | 'labelRow'
-  | 'labelStatusWrapper'
-  | 'dashboard'
-  | 'wrapHeader'
-  | 'maintenanceContainer'
-  | 'maintenanceNotice'
-  | 'helpIcon';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    link: {
-      display: 'block',
-      fontFamily: theme.font.bold,
-      fontSize: '.875rem',
-      lineHeight: '1.125rem',
-      textDecoration: 'underline'
+const useStyles = makeStyles((theme: Theme) => ({
+  link: {
+    display: 'block',
+    fontFamily: theme.font.bold,
+    fontSize: '.875rem',
+    lineHeight: '1.125rem',
+    textDecoration: 'underline'
+  },
+  labelWrapper: {
+    minHeight: 50,
+    paddingTop: theme.spacing(1) / 4
+  },
+  root: {
+    padding: '10px 15px',
+    '& h3': {
+      transition: theme.transitions.create(['color'])
     },
-    labelWrapper: {
-      minHeight: 50,
-      paddingTop: theme.spacing(1) / 4
+    [theme.breakpoints.up('lg')]: {
+      width: '20%'
     },
-    root: {
-      padding: '10px 15px',
-      '& h3': {
-        transition: theme.transitions.create(['color'])
-      },
-      [theme.breakpoints.up('lg')]: {
-        width: '20%'
-      },
-      [theme.breakpoints.up('xl')]: {
-        width: '35%'
-      }
-    },
-    dashboard: {
-      width: '70%'
-    },
-    status: {
-      marginLeft: theme.spacing(1) / 2,
-      position: 'relative',
-      top: 0,
-      lineHeight: '0.8rem'
-    },
-    labelRow: {
-      display: 'flex',
-      flexFlow: 'row nowrap',
-      alignItems: 'center'
-    },
-    loadingStatus: {
-      marginBottom: theme.spacing(1) / 2
-    },
-    labelStatusWrapper: {
-      display: 'flex',
-      flexFlow: 'row nowrap',
-      alignItems: 'center'
-    },
-    wrapHeader: {
-      wordBreak: 'break-all'
-    },
-    maintenanceContainer: {},
-    maintenanceNotice: {
-      paddingTop: 0,
-      paddingBottom: 0,
-      '& .noticeText': {
-        display: 'flex',
-        alignItems: 'center',
-        fontSize: '.9rem',
-        '& br': {
-          display: 'none'
-        }
-      }
-    },
-    helpIcon: {
-      paddingTop: 0,
-      paddingBottom: 0
+    [theme.breakpoints.up('xl')]: {
+      width: '35%'
     }
-  });
+  },
+  dashboard: {
+    width: '70%'
+  },
+  status: {
+    marginLeft: theme.spacing(1) / 2,
+    position: 'relative',
+    top: 0,
+    lineHeight: '0.8rem'
+  },
+  labelRow: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center'
+  },
+  loadingStatus: {
+    marginBottom: theme.spacing(1) / 2
+  },
+  labelStatusWrapper: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center'
+  },
+  wrapHeader: {
+    wordBreak: 'break-all'
+  },
+  maintenanceContainer: {},
+  maintenanceNotice: {
+    paddingTop: 0,
+    paddingBottom: 0,
+    '& .noticeText': {
+      display: 'flex',
+      alignItems: 'center',
+      fontSize: '.9rem',
+      '& br': {
+        display: 'none'
+      }
+    }
+  },
+  helpIcon: {
+    paddingTop: 0,
+    paddingBottom: 0
+  }
+}));
 
 interface Props {
   backups: LinodeBackups;
@@ -129,19 +109,17 @@ interface Props {
   isDashboard?: boolean;
 }
 
-type CombinedProps = Props &
-  WithDisplayType &
-  Pick<WithImages, 'imagesData'> &
-  WithStyles<ClassNames>;
+type CombinedProps = Props & WithDisplayType & Pick<WithImages, 'imagesData'>;
 
 const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
+
   const {
     // linode props
     label,
     status,
     id,
     // other props
-    classes,
     loading,
     recentEvent,
     width,
@@ -162,11 +140,7 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <TableCell_CMR
-      className={classes.root}
-      style={style}
-      rowSpan={loading ? 2 : 1}
-    >
+    <TableCell className={classes.root} style={style} rowSpan={loading ? 2 : 1}>
       <Grid container wrap="nowrap" alignItems="center">
         <Grid item>
           <div className={loading ? classes.labelWrapper : ''}>
@@ -204,18 +178,16 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
           )}
         </Grid>
       </Grid>
-    </TableCell_CMR>
+    </TableCell>
   );
 };
 
-const styled = withStyles(styles);
 const enhanced = compose<CombinedProps, Props>(
   withDisplayType,
   withImages((ownProps, imagesData) => ({
     ...ownProps,
     imagesData: filterImagesByType(imagesData, 'public')
-  })),
-  styled
+  }))
 );
 
 export default enhanced(LinodeRowHeadCell);
