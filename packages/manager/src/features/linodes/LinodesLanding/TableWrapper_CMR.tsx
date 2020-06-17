@@ -7,16 +7,6 @@ import Table from 'src/components/Table';
 import SortableTableHead_CMR from './SortableTableHead_CMR';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    '& th:first-child': {
-      borderRight: '1px solid #f4f4f4'
-    },
-    '& th': {
-      borderLeft: '1px solid #f4f4f4',
-      paddingLeft: 15,
-      paddingRight: 15
-    }
-  },
   paperWrapper: {
     backgroundColor: 'transparent'
   }
@@ -38,7 +28,6 @@ const TableWrapper: React.FC<CombinedProps> = props => {
       <Grid container className="my0">
         <Grid item xs={12} className="py0">
           <Table
-            className={classes.root}
             aria-label="List of Linodes"
             rowCount={dataLength}
             colCount={5}
