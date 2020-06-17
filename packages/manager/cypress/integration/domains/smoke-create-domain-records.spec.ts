@@ -76,7 +76,7 @@ describe('Creates Domains record with Form', () => {
           .click();
         cy.wait('@apiCreateRecord')
           .its('status')
-          .should('be', 200);
+          .should('eq', 200);
         cy.get(`[aria-label="${rec.tableAriaLabel}"]`).within(_table => {
           rec.fields.forEach(f => {
             if (f.skipCheck) {

@@ -18,7 +18,7 @@ const addNodes = (plan: string, nb: number) => {
 
     cy.get('[data-testid="textfield-input"]')
       .invoke('val')
-      .should('be', `${nb}`);
+      .should('eq', `${nb}`);
     cy.findByText('Add').click();
   });
 };

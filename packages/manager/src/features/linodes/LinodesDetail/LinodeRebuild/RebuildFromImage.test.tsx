@@ -34,6 +34,7 @@ const props: CombinedProps = {
   permissions: 'read_write',
   passwordHelperText: '',
   requestKeys: jest.fn(),
+  disabled: false,
   ...reactRouterProps
 };
 

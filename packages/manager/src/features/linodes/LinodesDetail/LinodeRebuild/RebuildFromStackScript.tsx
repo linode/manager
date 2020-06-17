@@ -69,6 +69,7 @@ const styles = (theme: Theme) =>
 
 interface Props {
   type: 'community' | 'account';
+  disabled: boolean;
   passwordHelperText: string;
 }
 

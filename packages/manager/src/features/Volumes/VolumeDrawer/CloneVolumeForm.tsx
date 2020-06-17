@@ -1,7 +1,8 @@
-import { Form, Formik } from 'formik';
+import { Formik } from 'formik';
 import { CloneVolumeSchema } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
 import { compose } from 'recompose';
+import Form from 'src/components/core/Form';
 import Typography from 'src/components/core/Typography';
 import withVolumesRequests, {
   VolumesRequests
@@ -44,7 +45,7 @@ const CloneVolumeForm: React.FC<CombinedProps> = props => {
       validationSchema={validationScheme}
       onSubmit={(values, { setSubmitting, setStatus, setErrors }) => {
         cloneVolume({ volumeId, label: values.label })
-          .then(response => {
+          .then(_ => {
             onClose();
             resetEventsPolling();
           })
