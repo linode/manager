@@ -762,12 +762,12 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     const isCreating = mode === 'create';
     const isDomain = type === 'master' || type === 'slave';
 
-    const recordsTypeA = records.filter(
-      record => record.type === 'A' || record.type === 'AAAA'
-    ); // Filter for & store any A/AAAA records. If populated and a user tries to add an NS record, they'll see a warning message asking them to add an A/AAAA record.
+    const hasARecords = records.find(thisRecord =>
+      ['A', 'AAAA'].includes(thisRecord.type)
+    ); // If there are no A/AAAA records and a user tries to add an NS record, they'll see a warning message asking them to add an A/AAAA record.
 
     const noARecordsNoticeText =
-      'Please create an A/AAAA record for this domain.';
+      'Please create an A/AAAA record for this domain to avoid a Zone File invalidation.';
 
     const buttonProps: ButtonProps = {
       buttonType: 'primary',
@@ -796,11 +796,11 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
           otherErrors.map((err, index) => {
             return <Notice error key={index} text={err} />;
           })}
-        {fields.map((field: any, idx: number) => field(idx))}
-
-        {recordsTypeA.length < 1 && type === 'NS' ? (
+        {!hasARecords && type === 'NS' ? (
           <Notice warning spacingTop={8} text={noARecordsNoticeText} />
         ) : null}
+        {fields.map((field: any, idx: number) => field(idx))}
+
         <ActionsPanel>
           <Button {...buttonProps} data-qa-record-save />
           <Button
