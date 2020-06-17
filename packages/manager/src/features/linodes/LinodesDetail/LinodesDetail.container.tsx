@@ -35,6 +35,10 @@ export const LinodesDetailContainer: React.FC<{}> = _ => {
   }, [linodeId, dispatch]);
 
   React.useEffect(() => {
+    if (!linodes.itemsById[linodeId]) {
+      // Most likely a 404
+      return;
+    }
     // Make sure we've requested config and disk information for this Linode
     if (shouldRequestEntity(configs)) {
       dispatch(getAllLinodeConfigs({ linodeId: +linodeId }));
@@ -43,7 +47,7 @@ export const LinodesDetailContainer: React.FC<{}> = _ => {
     if (shouldRequestEntity(disks)) {
       dispatch(getAllLinodeDisks({ linodeId: +linodeId }));
     }
-  }, [dispatch, configs, disks, linodeId]);
+  }, [dispatch, configs, disks, linodeId, linodes]);
 
   if (linodes.loading || _loading) {
     return <CircleProgress />;
