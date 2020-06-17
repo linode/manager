@@ -10,6 +10,8 @@ import _TableRow, {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    borderLeft: '1px solid #f4f4f4',
+    borderRight: '1px solid #f4f4f4',
     transition: theme.transitions.create(['box-shadow']),
     [theme.breakpoints.up('md')]: {
       boxShadow: `inset 3px 0 0 transparent`

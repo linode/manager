@@ -31,7 +31,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: theme.spacing(1) / 4
   },
   root: {
-    padding: '10px 15px',
     '& h3': {
       transition: theme.transitions.create(['color'])
     },

@@ -1,44 +1,20 @@
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import TableHead from 'src/components/core/TableHead';
 import { OrderByProps } from 'src/components/OrderBy';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    '& th:hover': {
-      backgroundColor: '#3683dc',
-      cursor: 'pointer',
-      '& span': {
-        color: 'white'
-      },
-      '& .MuiTableSortLabel-icon': {
-        color: 'white !important'
-      }
-    }
-  },
-  label: {
-    paddingLeft: theme.spacing(2) + 49
-  },
-  tagHeader: {
-    textAlign: 'center'
-  }
-}));
-
 type CombinedProps = Omit<OrderByProps, 'data'>;
 
 const SortableTableHead: React.FC<CombinedProps> = props => {
-  const classes = useStyles();
-
   const { handleOrderChange, order, orderBy } = props;
 
   const isActive = (label: string) =>
     label.toLowerCase() === orderBy.toLowerCase();
 
   return (
-    <TableHead className={classes.root} role="rowgroup" data-qa-table-head>
+    <TableHead role="rowgroup" data-qa-table-head>
       <TableRow>
         <TableSortCell
           label="label"
@@ -46,7 +22,6 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
           active={isActive('label')}
           handleClick={handleOrderChange}
           data-qa-sort-label={order}
-          className={classes.label}
         >
           Label
         </TableSortCell>

@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -8,6 +9,19 @@ import Sort from 'src/assets/icons/sort.svg';
 import SortUp from 'src/assets/icons/sortUp.svg';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    padding: '10px 15px',
+    '&:hover': {
+      backgroundColor: '#3683dc',
+      cursor: 'pointer',
+      '& span': {
+        color: 'white'
+      },
+      '& .MuiTableSortLabel-icon': {
+        color: 'white !important'
+      }
+    }
+  },
   label: {
     color: theme.palette.text.primary,
     minHeight: 20
@@ -53,7 +67,10 @@ export const TableSortCell: React.FC<CombinedProps> = props => {
 
   return (
     <TableCell
-      className={noWrap ? `${classes.noWrap}` : ''}
+      className={classNames({
+        [classes.root]: true,
+        [classes.noWrap]: noWrap
+      })}
       {...rest}
       sortDirection={direction}
       role="columnheader"
@@ -62,7 +79,6 @@ export const TableSortCell: React.FC<CombinedProps> = props => {
       <TableSortLabel
         active={active}
         direction={direction}
-        // onClick={onHandleClick}
         className={classes.label}
         IconComponent={SortUp}
         hideSortIcon={true}
