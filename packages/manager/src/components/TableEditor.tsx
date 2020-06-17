@@ -1,15 +1,74 @@
 import * as React from 'react';
 import { makeStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import '@reach/menu-button/styles.css';
 import Settings from '@material-ui/icons/Settings';
+import Draggable from 'src/assets/icons/draggable-icon.svg';
 import Popover from '@material-ui/core/Popover';
 import IconButton from '@material-ui/core/IconButton';
 
 const useStyles = makeStyles(() => ({
-  optionOuter: {
-    '&:focus': {
-      border: '2px solid red'
+  popover: {
+    position: 'relative',
+    minWidth: 200,
+    width: 200,
+    border: '1px solid #a8c9f0',
+    borderRadius: 3,
+    '&:before': {
+      content: "''",
+      top: 0,
+      right: 0,
+      position: 'absolute',
+      borderColor: '#f4f4f4 transparent transparent transparent',
+      borderStyle: 'solid',
+      borderWidth: '0 0 15px 0'
     }
+  },
+  form: {
+    padding: 14
+  },
+  fieldset: {
+    border: 'none',
+    margin: 0,
+    padding: 0
+  },
+  legendTitle: {
+    marginBottom: 14,
+    fontSize: 14,
+    color: '#32363c'
+  },
+  optionOuter: {
+    marginBottom: 10,
+    display: 'flex',
+    alignItems: 'center',
+    cursor: 'pointer'
+  },
+  draggableIcon: {
+    marginRight: 10
+  },
+  optionCheckbox: {
+    appearance: 'none',
+    position: 'relative',
+    margin: 0,
+    width: 15,
+    height: 15,
+    border: '1px solid #1f61ad',
+    borderRadius: 3,
+    '&:checked:after': {
+      content: "''",
+      position: 'absolute',
+      top: 1,
+      left: 1,
+      width: 11,
+      height: 11,
+      background: '#75aef0',
+      borderRadius: 2
+    }
+  },
+  optionLabel: {
+    marginLeft: 12,
+    fontSize: 14,
+    color: '#1f61ad'
   }
 }));
 
@@ -53,17 +112,18 @@ const TableEditor: React.FC<CombinedProps> = props => {
         4".
       </span>
       <span id="operation" className="visually-hidden">
-        // DON"T use space bar to toggle- this is how the checkboxes are checked
-        Press space bar to toggle drag drop mode, use arrow keys to move
+        Press Enter key to toggle drag drop mode, use arrow keys to move
         selected elements.
       </span>
 
       <IconButton
-        aria-describedby={'operation'}
         aria-label={ariaLabel}
         onClick={handleClick}
         disableFocusRipple
         disableRipple
+        aria-haspopup={true}
+        aria-controls={id}
+        aria-expanded={open}
       >
         <Settings />
       </IconButton>
@@ -82,10 +142,13 @@ const TableEditor: React.FC<CombinedProps> = props => {
           vertical: 'top',
           horizontal: 'right'
         }}
+        PaperProps={{ className: classes.popover }}
       >
-        <form>
-          <fieldset>
-            <legend>{optionsTitle}</legend>
+        <form className={classes.form}>
+          <fieldset className={classes.fieldset}>
+            <legend className={classes.legendTitle}>
+              <Typography variant="body1">{optionsTitle}</Typography>
+            </legend>
             {options.map(option => {
               return (
                 <div
@@ -93,14 +156,16 @@ const TableEditor: React.FC<CombinedProps> = props => {
                   key={option.label}
                   className={classes.optionOuter}
                 >
-                  <span aria-hidden>*</span>
+                  <Draggable className={classes.draggableIcon} aria-hidden />
                   <input
                     type="checkbox"
                     id={option.label}
                     // Allow for checks by default in addition to check changes: checked={option.selected}
-                    className={classes.optionOuter}
+                    className={classes.optionCheckbox}
                   />
-                  <label htmlFor={option.label}>{option.label}</label>
+                  <label className={classes.optionLabel} htmlFor={option.label}>
+                    {option.label}
+                  </label>
                 </div>
               );
             })}
