@@ -4,7 +4,6 @@ import { Route, Switch, useLocation } from 'react-router-dom';
 import { compose } from 'recompose';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
-// import reloadableWithRouter from './reloadableWithRouter';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import NotFound from 'src/components/NotFound';
 import {
@@ -66,15 +65,6 @@ const LinodeDetail: React.FC<CombinedProps> = props => {
     </LinodeDetailContextProvider>
   );
 };
-
-// const reloadable = reloadableWithRouter<CombinedProps, MatchProps>(
-//   (routePropsOld, routePropsNew) => {
-//     return (
-//       routePropsOld.match.params.linodeId !==
-//       routePropsNew.match.params.linodeId
-//     );
-//   }
-// );
 
 const enhanced = compose<CombinedProps, Props>(LinodeDetailErrorBoundary);
 
