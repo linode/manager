@@ -200,9 +200,12 @@ export const apiResponseToMappedState = <T extends Entity>(data: T[]) => {
   }, {});
 };
 
-export const onGetOneSuccess = <E extends Entity, S>(entity: E, state: S): S =>
+export const onGetOneSuccess = <E extends Entity>(
+  entity: E,
+  state: MappedEntityState<E>
+): MappedEntityState<E> =>
   Object.assign({}, state, {
     loading: false,
-    results: state.results + 1,
+    results: Object.keys(state.itemsById).length,
     itemsById: { ...state.itemsById, [entity.id]: entity }
   });

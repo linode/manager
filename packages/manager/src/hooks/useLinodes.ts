@@ -12,7 +12,7 @@ import { Dispatch } from './types';
 export interface LinodesProps {
   linodes: State;
   requestLinodes: () => Promise<Linode[]>;
-  requestLinode: (linodeId: number) => Promise<Linode>;
+  getLinode: (linodeId: number) => Promise<Linode>;
   deleteLinode: (linodeId: number) => Promise<{}>;
 }
 

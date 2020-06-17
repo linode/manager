@@ -1,10 +1,17 @@
 import * as React from 'react';
-import { Route, RouteComponentProps, Switch } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { Route, Switch, useLocation } from 'react-router-dom';
 import { compose } from 'recompose';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
-import reloadableWithRouter from './reloadableWithRouter';
-import { useLinodes } from 'src/hooks/useLinodes';
+// import reloadableWithRouter from './reloadableWithRouter';
+import useExtendedLinode from 'src/hooks/useExtendedLinode';
+import NotFound from 'src/components/NotFound';
+import {
+  LinodeDetailContext,
+  linodeDetailContextFactory as createLinodeDetailContext,
+  LinodeDetailContextProvider
+} from './linodeDetailContext';
 
 const CloneLanding = React.lazy(() => import('../CloneLanding'));
 const LinodesDetailHeader = React.lazy(() => import('./LinodesDetailHeader'));
@@ -17,53 +24,58 @@ interface Props {
   linodeId: string;
 }
 
-type RouteProps = RouteComponentProps<MatchProps>;
-
 type CombinedProps = Props;
 
 const LinodeDetail: React.FC<CombinedProps> = props => {
   const { linodeId } = props;
+  const dispatch = useDispatch();
+  const linode = useExtendedLinode(+linodeId);
+  const location = useLocation();
 
-  const { linodes } = useLinodes();
+  if (!linode) {
+    return <NotFound />;
+  }
 
-  const linode = linodes.itemsById[linodeId];
+  const ctx: LinodeDetailContext = createLinodeDetailContext(linode, dispatch);
 
   return (
-    <React.Suspense fallback={<SuspenseLoader />}>
-      <Switch>
-        {/*
+    <LinodeDetailContextProvider value={ctx}>
+      <React.Suspense fallback={<SuspenseLoader />}>
+        <Switch>
+          {/*
           Currently, the "Clone Configs and Disks" feature exists OUTSIDE of LinodeDetail.
           Or... at least it appears that way to the user. We would like it to live WITHIN
           LinodeDetail, though, because we'd like to use the same context, so we don't
           have to reload all the configs, disks, etc. once we get to the CloneLanding page.
           */}
-        <Route path={`${path}/clone`} component={CloneLanding} />
-        <Route path={`${path}/migrate`} component={MigrateLanding} />
-        <Route
-          render={() => (
-            <React.Fragment>
-              <LinodesDetailHeader />
-              <LinodesDetailNavigation />
-            </React.Fragment>
-          )}
-        />
-      </Switch>
-    </React.Suspense>
+          <Route path={`${location.pathname}/clone`} component={CloneLanding} />
+          <Route
+            path={`${location.pathname}/migrate`}
+            component={MigrateLanding}
+          />
+          <Route
+            render={() => (
+              <React.Fragment>
+                <LinodesDetailHeader />
+                <LinodesDetailNavigation />
+              </React.Fragment>
+            )}
+          />
+        </Switch>
+      </React.Suspense>
+    </LinodeDetailContextProvider>
   );
 };
 
-const reloadable = reloadableWithRouter<CombinedProps, MatchProps>(
-  (routePropsOld, routePropsNew) => {
-    return (
-      routePropsOld.match.params.linodeId !==
-      routePropsNew.match.params.linodeId
-    );
-  }
-);
+// const reloadable = reloadableWithRouter<CombinedProps, MatchProps>(
+//   (routePropsOld, routePropsNew) => {
+//     return (
+//       routePropsOld.match.params.linodeId !==
+//       routePropsNew.match.params.linodeId
+//     );
+//   }
+// );
 
-const enhanced = compose<CombinedProps, Props>(
-  reloadable,
-  LinodeDetailErrorBoundary
-);
+const enhanced = compose<CombinedProps, Props>(LinodeDetailErrorBoundary);
 
 export default enhanced(LinodeDetail);

@@ -1,9 +1,11 @@
 import * as React from 'react';
+import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useLinodes } from 'src/hooks/useLinodes';
 import CircleProgress from 'src/components/CircleProgress';
 import LinodesDetail from './LinodesDetail';
 import useReduxLoad from 'src/hooks/useReduxLoad';
+import { getLinode as _getLinode } from 'src/store/linodes/linode.requests';
 
 /**
  * We want to hold off loading this screen until Linode data is available.
@@ -11,23 +13,21 @@ import useReduxLoad from 'src/hooks/useReduxLoad';
  * we show a loading spinner until the request is complete.
  */
 export const LinodesDetailContainer: React.FC<{}> = _ => {
-  const { linodes, getLinode } = useLinodes();
-  const params = useParams();
+  const { linodes } = useLinodes();
+  const dispatch = useDispatch();
+  const params = useParams<{ linodeId: string }>();
   const { _loading } = useReduxLoad(['images', 'volumes']);
 
+  const linodeId = params.linodeId;
   React.useEffect(() => {
-    const linodeId = params.linodeId;
-    if (!linodes.loading && linodes.lastUpdated === 0) {
-      // We haven't requested Linodes yet. Ask for the one we're interested in.
-      getLinode(linodeId);
-    }
-  }, []);
+    dispatch(_getLinode({ linodeId: +linodeId }));
+  }, [linodeId, dispatch]);
 
   if (linodes.loading || _loading) {
     return <CircleProgress />;
   }
 
-  return <div>{JSON.stringify(linodes.itemsById[params.linodeId])}</div>;
+  return <LinodesDetail linodeId={linodeId} />;
 };
 
 export default React.memo(LinodesDetailContainer);
