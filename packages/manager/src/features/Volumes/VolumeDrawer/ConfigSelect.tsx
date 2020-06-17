@@ -27,15 +27,24 @@ const ConfigSelect: React.FC<CombinedProps> = props => {
   const configs = Object.values(itemsById ?? {});
   const dispatch = useDispatch();
 
+  const configList = configs.map(config => {
+    return { label: config.label, value: config.id };
+  });
+
   React.useEffect(() => {
     if (lastUpdated === 0 || lastUpdated === undefined) {
       dispatch(getAllLinodeConfigs({ linodeId }));
     }
   }, [linodeId, lastUpdated, dispatch]);
 
-  const configList = configs.map(config => {
-    return { label: config.label, value: config.id };
-  });
+  React.useEffect(() => {
+    if (configList.length === 1) {
+      const newValue = configList[0].value;
+      if (value !== newValue) {
+        onChange(configList[0].value);
+      }
+    }
+  }, [configList, onChange, value]);
 
   if (configs.length < 1) {
     return null;

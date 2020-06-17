@@ -160,12 +160,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
 
         const { region, linode_id, tags, config_id } = values;
 
-        const linodeError =
-          config_id === -9999
-            ? 'This Linode has no valid configurations.'
-            : touched.linode_id
-            ? errors.linode_id
-            : undefined;
+        const linodeError = touched.linode_id ? errors.linode_id : undefined;
 
         const generalError = status
           ? status.generalError
@@ -328,7 +323,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
                   heading={`${values.label || 'Volume'} Summary`}
                   onDeploy={handleSubmit}
                   calculatedPrice={values.size / 10}
-                  disabled={values.config_id === -9999 || disabled}
+                  disabled={disabled}
                   isMakingRequest={isSubmitting}
                 >
                   <DisplaySectionList displaySections={displaySections} />
