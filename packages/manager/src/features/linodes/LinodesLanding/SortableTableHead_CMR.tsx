@@ -4,10 +4,21 @@ import TableHead from 'src/components/core/TableHead';
 import { OrderByProps } from 'src/components/OrderBy';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
-import TableSortCell from 'src/components/TableSortCell';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
+  root: {
+    '& th:hover': {
+      backgroundColor: '#3683dc',
+      cursor: 'pointer',
+      '& span': {
+        color: 'white'
+      },
+      '& .MuiTableSortLabel-icon': {
+        color: 'white !important'
+      }
+    }
+  },
   label: {
     paddingLeft: theme.spacing(2) + 49
   },
@@ -27,7 +38,7 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
     label.toLowerCase() === orderBy.toLowerCase();
 
   return (
-    <TableHead data-qa-table-head role="rowgroup">
+    <TableHead className={classes.root} role="rowgroup" data-qa-table-head>
       <TableRow>
         <TableSortCell
           label="label"
