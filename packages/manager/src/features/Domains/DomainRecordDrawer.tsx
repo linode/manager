@@ -796,9 +796,9 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
           otherErrors.map((err, index) => {
             return <Notice error key={index} text={err} />;
           })}
-        {!hasARecords && type === 'NS' ? (
+        {!hasARecords && type === 'NS' && (
           <Notice warning spacingTop={8} text={noARecordsNoticeText} />
-        ) : null}
+        )}
         {fields.map((field: any, idx: number) => field(idx))}
 
         <ActionsPanel>
