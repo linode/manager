@@ -6,7 +6,6 @@ import Typography from 'src/components/core/Typography';
 import AddNewMenu from './AddNewMenu/AddNewMenu_CMR';
 import SearchBar from './SearchBar/SearchBar_CMR';
 import UserEventsMenu from './UserEventsMenu';
-import UserMenu from './UserMenu';
 import UserNotificationsMenu from './UserNotificationsMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
