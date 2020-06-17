@@ -11,7 +11,6 @@ import SuspenseLoader from 'src/components/SuspenseLoader';
 const StackScriptsDetail = React.lazy(() => import('./StackScriptsDetail'));
 const StackScriptsLanding = React.lazy(() => import('./StackScriptsLanding'));
 const StackScriptCreate = React.lazy(() => import('./StackScriptCreate'));
-const StackScriptUpdate = React.lazy(() => import('./StackScriptUpdate'));
 
 type Props = RouteComponentProps<{}>;
 
@@ -25,9 +24,13 @@ class NodeBalancers extends React.Component<Props> {
       <React.Suspense fallback={<SuspenseLoader />}>
         <Switch>
           <Route component={StackScriptsLanding} path={path} exact />
-          <Route component={StackScriptCreate} path={`${path}/create`} exact />
           <Route
-            component={StackScriptUpdate}
+            render={() => <StackScriptCreate mode="create" />}
+            path={`${path}/create`}
+            exact
+          />
+          <Route
+            render={() => <StackScriptCreate mode="edit" />}
             path={`${path}/:stackScriptID/edit`}
             exact
           />
