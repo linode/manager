@@ -25,7 +25,7 @@ type CombinedProps = Props;
 const LinodeRowBackupCell: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const { mostRecentBackup, backupsEnabled, linodeId } = props;
+  const { linodeId, backupsEnabled, mostRecentBackup } = props;
 
   return (
     <TableCell parentColumn="Last Backup" className={classes.root}>

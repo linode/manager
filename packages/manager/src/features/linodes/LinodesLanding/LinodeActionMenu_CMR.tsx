@@ -55,30 +55,25 @@ export type CombinedProps = Props &
   WithTypesProps &
   WithRegionsProps;
 
-interface State {
-  configs: Config[];
-  hasMadeConfigsRequest: boolean;
-  configsError?: APIError[];
-}
+export const LinodeActionMenu: React.FC<CombinedProps> = props => {
+  const [configs, setConfigs] = React.useState<Config[]>([]);
+  const [configsError, setConfigsError] = React.useState<
+    APIError[] | undefined
+  >(undefined);
+  const [hasMadeConfigsRequest, setHasMadeConfigsRequest] = React.useState<
+    boolean
+  >(false);
 
-export class LinodeActionMenu extends React.Component<CombinedProps, State> {
-  state: State = {
-    configs: [],
-    hasMadeConfigsRequest: false,
-    configsError: undefined
-  };
-
-  toggleOpenActionMenu = () => {
-    getLinodeConfigs(this.props.linodeId)
+  const toggleOpenActionMenu = () => {
+    getLinodeConfigs(props.linodeId)
       .then(configs => {
-        this.setState({
-          configs: configs.data,
-          hasMadeConfigsRequest: true,
-          configsError: undefined
-        });
+        setConfigs(configs.data);
+        setConfigsError(undefined);
+        setHasMadeConfigsRequest(true);
       })
       .catch(err => {
-        this.setState({ hasMadeConfigsRequest: true, configsError: err });
+        setConfigsError(err);
+        setHasMadeConfigsRequest(true);
       });
 
     sendLinodeActionEvent();
@@ -86,14 +81,14 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
 
   // When we clone a Linode from the action menu, we pass in several query string
   // params so everything is selected for us when we get to the Create flow.
-  buildQueryStringForLinodeClone = () => {
+  const buildQueryStringForLinodeClone = () => {
     const {
       linodeId,
       linodeRegion,
       linodeType,
       typesData,
       regionsData
-    } = this.props;
+    } = props;
 
     const params: Record<string, string> = {
       type: 'My Images',
@@ -114,7 +109,7 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
     return stringify(params);
   };
 
-  createLinodeActions = () => {
+  const createLinodeActions = () => {
     const {
       linodeId,
       linodeLabel,
@@ -124,8 +119,7 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
       openPowerActionDialog,
       history: { push },
       readOnly
-    } = this.props;
-    const { configs, hasMadeConfigsRequest } = this.state;
+    } = props;
 
     const readOnlyProps = readOnly
       ? {
@@ -163,7 +157,7 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
             sendLinodeActionMenuItemEvent('Clone');
             push({
               pathname: '/linodes/create',
-              search: this.buildQueryStringForLinodeClone()
+              search: buildQueryStringForLinodeClone()
             });
             e.preventDefault();
             e.stopPropagation();
@@ -245,7 +239,7 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
           title: 'Power On',
           disabled: !hasMadeConfigsRequest || noConfigs || readOnly,
           isLoading: !hasMadeConfigsRequest,
-          tooltip: this.state.configsError
+          tooltip: configsError
             ? 'Could not load configs for this Linode.'
             : noConfigs
             ? 'A config needs to be added before powering on a Linode'
@@ -254,12 +248,7 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
             : undefined,
           onClick: e => {
             sendLinodeActionMenuItemEvent('Power On Linode');
-            openPowerActionDialog(
-              'Power On',
-              linodeId,
-              linodeLabel,
-              this.state.configs
-            );
+            openPowerActionDialog('Power On', linodeId, linodeLabel, configs);
             closeMenu();
           }
         });
@@ -273,19 +262,14 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
             isLoading: !hasMadeConfigsRequest,
             tooltip: readOnly
               ? "You don't have permission to modify this Linode."
-              : this.state.configsError
+              : configsError
               ? 'Could not load configs for this Linode.'
               : undefined,
             onClick: (e: React.MouseEvent<HTMLElement>) => {
               sendLinodeActionMenuItemEvent('Reboot Linode');
               e.preventDefault();
               e.stopPropagation();
-              openPowerActionDialog(
-                'Reboot',
-                linodeId,
-                linodeLabel,
-                this.state.configs
-              );
+              openPowerActionDialog('Reboot', linodeId, linodeLabel, configs);
               closeMenu();
             },
             ...readOnlyProps
@@ -308,56 +292,44 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
     };
   };
 
-  render() {
-    const {
-      linodeId,
-      linodeLabel,
-      linodeStatus,
-      openPowerActionDialog
-    } = this.props;
+  const { linodeId, linodeLabel, linodeStatus, openPowerActionDialog } = props;
 
-    return (
-      <>
-        <Link to={`/linodes/${linodeId}`}>Details</Link>
-        {linodeStatus === 'running' && (
-          <Link
-            to=""
-            onClick={e => {
-              sendLinodeActionMenuItemEvent('Power Off Linode');
-              e.preventDefault();
-              e.stopPropagation();
-              openPowerActionDialog('Power Off', linodeId, linodeLabel, []);
-            }}
-          >
-            Power Off
-          </Link>
-        )}
-        {/* @todo: onClick doesn't work */}
-        {linodeStatus === 'offline' && (
-          <Link
-            to=""
-            onClick={e => {
-              sendLinodeActionMenuItemEvent('Power On Linode');
-              openPowerActionDialog(
-                'Power On',
-                linodeId,
-                linodeLabel,
-                this.state.configs
-              );
-            }}
-          >
-            Power On
-          </Link>
-        )}
-        <ActionMenu
-          toggleOpenCallback={this.toggleOpenActionMenu}
-          createActions={this.createLinodeActions()}
-          ariaLabel={`Action menu for Linode ${this.props.linodeLabel}`}
-        />
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <Link to={`/linodes/${linodeId}`}>Details</Link>
+      {linodeStatus === 'running' && (
+        <Link
+          to=""
+          onClick={e => {
+            sendLinodeActionMenuItemEvent('Power Off Linode');
+            e.preventDefault();
+            e.stopPropagation();
+            openPowerActionDialog('Power Off', linodeId, linodeLabel, []);
+          }}
+        >
+          Power Off
+        </Link>
+      )}
+      {/* @todo: onClick doesn't work */}
+      {linodeStatus === 'offline' && (
+        <Link
+          to=""
+          onClick={e => {
+            sendLinodeActionMenuItemEvent('Power On Linode');
+            openPowerActionDialog('Power On', linodeId, linodeLabel, configs);
+          }}
+        >
+          Power On
+        </Link>
+      )}
+      <ActionMenu
+        toggleOpenCallback={toggleOpenActionMenu}
+        createActions={createLinodeActions()}
+        ariaLabel={`Action menu for Linode ${props.linodeLabel}`}
+      />
+    </>
+  );
+};
 
 interface StateProps {
   readOnly: boolean;

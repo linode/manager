@@ -21,7 +21,7 @@ type CombinedProps = Omit<OrderByProps, 'data'>;
 const SortableTableHead: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const { order, orderBy, handleOrderChange } = props;
+  const { handleOrderChange, order, orderBy } = props;
 
   const isActive = (label: string) =>
     label.toLowerCase() === orderBy.toLowerCase();
