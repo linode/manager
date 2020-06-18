@@ -40,6 +40,8 @@ describe('ListLinodes', () => {
           backupsCTA={false}
           deleteLinode={jest.fn()}
           {...reactRouterProps}
+          ldClient={{} as any}
+          flags={{}}
         />
       )
     );
