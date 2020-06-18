@@ -332,7 +332,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                 </Grid>
                               }
                             />
-                            <Grid
+                            {/*<Grid
                               container
                               alignItems="center"
                               justify="space-between"
@@ -340,7 +340,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                               xs={12}
                               style={{ paddingBottom: 0 }}
                             >
-                              {/* <Grid item className={classes.title}>
+                               <Grid item className={classes.title}>
                                 <Breadcrumb
                                   pathname={location.pathname}
                                   data-qa-title
@@ -376,9 +376,9 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                 }}
                                 label="Add a Linode"
                                 className={classes.addNewLink}
-                              /> */}
-                            </Grid>
-                            <Grid item xs={12}>
+                              />
+                            </Grid>*/}
+                            <Grid item xs={12} className={'px0'}>
                               <OrderBy
                                 data={linodesData.map(linode => {
                                   return {
