@@ -1,4 +1,10 @@
-import { Disk } from '@linode/api-v4/lib/linodes/types';
+import {
+  Disk,
+  CreateLinodeDiskSchema,
+  CreateLinodeDiskFromImageSchema,
+  ResizeLinodeDiskSchema,
+  UpdateLinodeDiskSchema
+} from '@linode/api-v4/lib/linodes';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import { UserSSHKeyObject } from 'src/components/AccessPanel';
@@ -32,8 +38,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type FileSystem = 'raw' | 'swap' | 'ext3' | 'ext4' | 'initrd' | '_none_';
 
+type DrawerMode = 'create' | 'rename' | 'resize';
+
 interface Props {
-  mode: 'create' | 'rename' | 'resize';
+  mode: DrawerMode;
   disk?: Disk;
   open: boolean;
   maximumSize: number;
@@ -70,7 +78,7 @@ const submitLabelMap = {
   resize: 'Resize'
 };
 
-const getTitle = (v: 'create' | 'rename' | 'resize') => {
+const getTitle = (v: DrawerMode) => {
   switch (v) {
     case 'create':
       return 'Add Disk';
@@ -80,6 +88,19 @@ const getTitle = (v: 'create' | 'rename' | 'resize') => {
 
     case 'resize':
       return 'Resize Disk';
+  }
+};
+
+const getSchema = (mode: DrawerMode, diskMode: diskMode) => {
+  switch (mode) {
+    case 'create':
+      return diskMode === 'from_image'
+        ? CreateLinodeDiskFromImageSchema
+        : CreateLinodeDiskSchema;
+    case 'rename':
+      return UpdateLinodeDiskSchema;
+    case 'resize':
+      return ResizeLinodeDiskSchema;
   }
 };
 
@@ -96,6 +117,7 @@ export const DiskDrawer: React.FC<CombinedProps> = props => {
   } = props;
 
   const classes = useStyles();
+  const [selectedMode, setSelectedMode] = React.useState<diskMode>(modes.EMPTY);
 
   const { resetForm, ...formik } = useFormik({
     initialValues: {
@@ -105,10 +127,9 @@ export const DiskDrawer: React.FC<CombinedProps> = props => {
       image: '',
       password: ''
     },
+    validationSchema: getSchema(mode, selectedMode),
     onSubmit: values => submitForm(values)
   });
-
-  const [selectedMode, setSelectedMode] = React.useState<string>(modes.EMPTY);
 
   React.useEffect(() => {
     if (open) {
@@ -149,7 +170,7 @@ export const DiskDrawer: React.FC<CombinedProps> = props => {
             <ModeSelect
               modes={modeList}
               selected={selectedMode}
-              onChange={e => setSelectedMode(e.target.value)}
+              onChange={e => setSelectedMode(e.target.value as diskMode)}
             />
           </Grid>
         )}

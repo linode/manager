@@ -247,3 +247,16 @@ export const CreateLinodeDiskSchema = object({
   stackscript_id: number(),
   stackscript_data
 });
+
+export const UpdateLinodeDiskSchema = object({
+  label: string()
+    .notRequired()
+    .min(1, 'Label must be between 1 and 48 characters.')
+    .max(48, 'Label must be between 1 and 48 characters.')
+});
+
+export const CreateLinodeDiskFromImageSchema = CreateLinodeDiskSchema.clone().shape(
+  {
+    image: string().required('An image is required.')
+  }
+);
