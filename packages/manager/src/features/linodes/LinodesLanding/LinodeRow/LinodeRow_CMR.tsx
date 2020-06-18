@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import Flag from 'src/assets/icons/flag.svg';
 import Tooltip from 'src/components/core/Tooltip';
+import Typography from 'src/components/core/Typography';
 import HelpIcon from 'src/components/HelpIcon';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
@@ -25,9 +26,9 @@ import withRecentEvent, { WithRecentEvent } from '../withRecentEvent';
 import styled, { StyleProps } from './LinodeRow_CMR.style';
 import LinodeRowBackupCell from './LinodeRowBackupCell_CMR';
 import LinodeRowHeadCell from './LinodeRowHeadCell_CMR';
-import LinodeRowLoading from './LinodeRowLoading';
 
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import { transitionText } from 'src/features/linodes/transitions';
 import { capitalize } from 'src/utilities/capitalize';
 import { parseMaintenanceStartTime } from '../utils';
 
@@ -107,17 +108,14 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
 
   const showStatus = (status: string) => {
     return (
-      <>
-        <div
-          className={classNames({
-            [classes.statusIcon]: true,
-            [classes.statusIconRunning]: status === 'running',
-            [classes.statusIconOffline]: status === 'offline',
-            [classes.statusIconOther]: status !== ('running' || 'offline')
-          })}
-        ></div>
-        {capitalize(status)}
-      </>
+      <div
+        className={classNames({
+          [classes.statusIcon]: true,
+          [classes.statusIconRunning]: status === 'running',
+          [classes.statusIconOffline]: status === 'offline',
+          [classes.statusIconOther]: status !== ('running' || 'offline')
+        })}
+      ></div>
     );
   };
 
@@ -146,15 +144,6 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      {loading && (
-        <LinodeRowLoading
-          linodeStatus={status}
-          linodeId={id}
-          linodeRecentEvent={recentEvent}
-        >
-          {headCell}
-        </LinodeRowLoading>
-      )}
       <TableRow
         key={id}
         className={classes.bodyRow}
@@ -163,7 +152,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
         rowLink={`/linodes/${id}`}
         ariaLabel={label}
       >
-        {!loading && headCell}
+        {headCell}
         <TableCell
           parentColumn="Status"
           className={classNames({
@@ -174,9 +163,17 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
         >
           {!maintenanceStartTime ? (
             loading ? (
-              showStatus('Busy')
+              recentEvent && [
+                showStatus('Busy'),
+                <ProgressDisplay
+                  key={id}
+                  className={classes.progressDisplay}
+                  progress={recentEvent.percent_complete}
+                  text={transitionText(status, id, recentEvent)}
+                />
+              ]
             ) : (
-              showStatus(displayStatus)
+              [showStatus(displayStatus), capitalize(status)]
             )
           ) : (
             <>
@@ -286,3 +283,18 @@ export const RenderFlag: React.FC<{
 };
 
 RenderFlag.displayName = `RenderFlag`;
+
+const ProgressDisplay: React.FC<{
+  className?: string;
+  progress: null | number;
+  text: string;
+}> = props => {
+  const { progress, text, className } = props;
+  const displayProgress = progress ? `${progress}%` : `scheduled`;
+
+  return (
+    <Typography variant="body2" className={className}>
+      {text}: {displayProgress}
+    </Typography>
+  );
+};

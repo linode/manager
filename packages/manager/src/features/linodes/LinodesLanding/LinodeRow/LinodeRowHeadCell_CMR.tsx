@@ -4,16 +4,11 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import withImages, { WithImages } from 'src/containers/withImages.container';
-import {
-  linodeInTransition,
-  transitionText
-} from 'src/features/linodes/transitions';
 import withDisplayType, { WithDisplayType } from '../withDisplayType';
 
 import { filterImagesByType } from 'src/store/image/image.helpers';
@@ -116,11 +111,9 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
   const {
     // linode props
     label,
-    status,
     id,
     // other props
     loading,
-    recentEvent,
     width,
     maintenance,
     isDashboard
@@ -139,17 +132,10 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <TableCell className={classes.root} style={style} rowSpan={loading ? 2 : 1}>
+    <TableCell className={classes.root} style={style}>
       <Grid container wrap="nowrap" alignItems="center">
         <Grid item>
           <div className={loading ? classes.labelWrapper : ''}>
-            {recentEvent && linodeInTransition(status, recentEvent) && (
-              <ProgressDisplay
-                className={classes.loadingStatus}
-                text={transitionText(status, id, recentEvent)}
-                progress={recentEvent.percent_complete}
-              />
-            )}
             <div className={classes.labelStatusWrapper}>
               <Link className={classes.link} to={`/linodes/${id}`} tabIndex={0}>
                 {label}
@@ -190,18 +176,3 @@ const enhanced = compose<CombinedProps, Props>(
 );
 
 export default enhanced(LinodeRowHeadCell);
-
-const ProgressDisplay: React.FC<{
-  className: string;
-  progress: null | number;
-  text: string;
-}> = props => {
-  const { progress, text, className } = props;
-  const displayProgress = progress ? `${progress}%` : `scheduled`;
-
-  return (
-    <Typography variant="body2" className={className}>
-      {text}: {displayProgress}
-    </Typography>
-  );
-};

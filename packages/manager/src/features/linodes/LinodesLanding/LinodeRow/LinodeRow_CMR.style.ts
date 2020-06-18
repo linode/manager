@@ -22,6 +22,7 @@ type ClassNames =
   | 'ipCell'
   | 'ipCellWrapper'
   | 'planCell'
+  | 'progressDisplay'
   | 'regionCell'
   | 'iconTableCell'
   | 'icon'
@@ -77,6 +78,9 @@ const styles = (theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       padding: 4
+    },
+    progressDisplay: {
+      display: 'inline-block'
     },
     statusCell: {
       width: '14%',
