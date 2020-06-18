@@ -22,6 +22,7 @@ export const UserEventsList: React.FC<CombinedProps> = props => {
   const { events, closeMenu } = props;
 
   return (
+    // eslint-disable-next-line
     <React.Fragment>
       {(events as ExtendedEvent[])
         .reduce((result, event): UserEventsListItemProps[] => {
