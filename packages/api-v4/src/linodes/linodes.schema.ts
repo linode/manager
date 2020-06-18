@@ -33,7 +33,7 @@ const rootPasswordValidation = string()
 
 export const ResizeLinodeDiskSchema = object({
   size: number()
-    .required()
+    .required('Size is required.')
     .min(1)
 });
 
