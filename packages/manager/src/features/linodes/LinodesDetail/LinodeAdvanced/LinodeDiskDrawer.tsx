@@ -125,9 +125,10 @@ export const DiskDrawer: React.FC<CombinedProps> = props => {
       filesystem: disk?.filesystem ?? ('ext4' as FileSystem),
       size: disk?.size || maximumSize || 0,
       image: '',
-      password: ''
+      root_pass: ''
     },
     validationSchema: getSchema(mode, selectedMode),
+    validateOnChange: true,
     onSubmit: values => submitForm(values)
   });
 
@@ -193,7 +194,8 @@ export const DiskDrawer: React.FC<CombinedProps> = props => {
               required
               value={formik.values.label}
               onChange={formik.handleChange}
-              errorText={formik.errors.label}
+              onBlur={formik.handleBlur}
+              errorText={formik.touched.label ? formik.errors.label : undefined}
               errorGroup="linode-disk-drawer"
               data-qa-label
             />
@@ -205,7 +207,12 @@ export const DiskDrawer: React.FC<CombinedProps> = props => {
                 select
                 value={formik.values.filesystem}
                 onChange={formik.handleChange}
-                errorText={formik.errors.filesystem}
+                onBlur={formik.handleBlur}
+                errorText={
+                  formik.touched.filesystem
+                    ? formik.errors.filesystem
+                    : undefined
+                }
                 errorGroup="linode-disk-drawer"
               >
                 <MenuItem value="_none_">
@@ -223,11 +230,15 @@ export const DiskDrawer: React.FC<CombinedProps> = props => {
                 onImageChange={(selected: Item) =>
                   formik.setFieldValue('image', selected.value)
                 }
-                imageFieldError={formik.errors.image}
-                password={formik.values.password}
-                passwordError={formik.errors.password}
-                onPasswordChange={(password: string) =>
-                  formik.setFieldValue('password', password)
+                imageFieldError={
+                  formik.touched.image ? formik.errors.image : undefined
+                }
+                password={formik.values.root_pass}
+                passwordError={
+                  formik.touched.root_pass ? formik.errors.root_pass : undefined
+                }
+                onPasswordChange={(root_pass: string) =>
+                  formik.setFieldValue('root_pass', root_pass)
                 }
                 userSSHKeys={userSSHKeys || []}
                 requestKeys={requestKeys || (() => null)}
@@ -241,7 +252,8 @@ export const DiskDrawer: React.FC<CombinedProps> = props => {
               required
               value={formik.values.size}
               onChange={formik.handleChange}
-              errorText={formik.errors.size}
+              onBlur={formik.handleBlur}
+              errorText={formik.touched.size ? formik.errors.size : undefined}
               errorGroup="linode-disk-drawer"
               InputProps={{
                 endAdornment: <InputAdornment position="end">MB</InputAdornment>
