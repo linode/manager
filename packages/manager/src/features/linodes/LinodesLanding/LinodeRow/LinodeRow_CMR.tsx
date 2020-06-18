@@ -294,7 +294,7 @@ const ProgressDisplay: React.FC<{
 
   return (
     <Typography variant="body2" className={className}>
-      {text}: {displayProgress}
+      {text}: {displayProgress === 'scheduled' ? '0%' : displayProgress}
     </Typography>
   );
 };

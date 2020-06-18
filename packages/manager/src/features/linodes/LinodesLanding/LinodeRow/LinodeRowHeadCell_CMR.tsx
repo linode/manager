@@ -21,10 +21,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: '1.125rem',
     textDecoration: 'underline'
   },
-  labelWrapper: {
-    minHeight: 50,
-    paddingTop: theme.spacing(1) / 4
-  },
   root: {
     '& h3': {
       transition: theme.transitions.create(['color'])
@@ -113,7 +109,6 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
     label,
     id,
     // other props
-    loading,
     width,
     maintenance,
     isDashboard
@@ -135,12 +130,10 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
     <TableCell className={classes.root} style={style}>
       <Grid container wrap="nowrap" alignItems="center">
         <Grid item>
-          <div className={loading ? classes.labelWrapper : ''}>
-            <div className={classes.labelStatusWrapper}>
-              <Link className={classes.link} to={`/linodes/${id}`} tabIndex={0}>
-                {label}
-              </Link>
-            </div>
+          <div className={classes.labelStatusWrapper}>
+            <Link className={classes.link} to={`/linodes/${id}`} tabIndex={0}>
+              {label}
+            </Link>
           </div>
           {maintenance && dateTime && isDashboard && (
             <div className={classes.maintenanceContainer}>
