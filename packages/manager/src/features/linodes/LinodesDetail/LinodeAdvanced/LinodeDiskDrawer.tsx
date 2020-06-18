@@ -2,8 +2,7 @@ import {
   Disk,
   CreateLinodeDiskSchema,
   CreateLinodeDiskFromImageSchema,
-  ResizeLinodeDiskSchema,
-  UpdateLinodeDiskSchema
+  ResizeLinodeDiskSchema
 } from '@linode/api-v4/lib/linodes';
 import { useFormik } from 'formik';
 import * as React from 'react';
@@ -24,6 +23,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors
 } from 'src/utilities/formikErrorUtils';
+import { object, string } from 'yup';
 
 import ImageAndPassword from '../LinodeSettings/ImageAndPassword';
 
@@ -35,6 +35,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: `calc(100% - ${theme.spacing(2)}px)`
   }
 }));
+
+/**
+ * This is a situation-specific schemas that doesn't correspond to
+ * an API endpoint, which is why it lives here and not in api-v4.
+ *
+ */
+const RenameDiskSchema = object({
+  label: string()
+    .required('Label is required.')
+    .min(3, 'Label must contain between 3 and 32 characters.')
+    .max(32, 'Label must contain between 3 and 32 characters.')
+});
 
 type FileSystem = 'raw' | 'swap' | 'ext3' | 'ext4' | 'initrd' | '_none_';
 
@@ -98,7 +110,7 @@ const getSchema = (mode: DrawerMode, diskMode: diskMode) => {
         ? CreateLinodeDiskFromImageSchema
         : CreateLinodeDiskSchema;
     case 'rename':
-      return UpdateLinodeDiskSchema;
+      return RenameDiskSchema;
     case 'resize':
       return ResizeLinodeDiskSchema;
   }
