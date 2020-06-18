@@ -21,7 +21,7 @@ const useStyles = makeStyles(() => ({
     '&:before': {
       content: "''",
       top: -15,
-      right: 6,
+      right: 8,
       position: 'absolute',
       borderLeft: '15px solid transparent',
       borderRight: '15px solid transparent',
@@ -30,7 +30,7 @@ const useStyles = makeStyles(() => ({
     '&:after': {
       content: "''",
       top: -13,
-      right: 8,
+      right: 10,
       position: 'absolute',
       borderLeft: '13px solid transparent',
       borderRight: '13px solid transparent',

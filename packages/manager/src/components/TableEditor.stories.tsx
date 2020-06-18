@@ -14,7 +14,7 @@ const linodeTableColumns = [
 ];
 
 storiesOf('Table Editor', module).add('Default', () => (
-  <div style={{ float: 'right' }}>
+  <div style={{ textAlign: 'center' }}>
     <TableEditor
       ariaLabel={'Options to edit table'}
       optionsTitle={'Display columns:'}
