@@ -757,10 +757,17 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
 
   render() {
     const { submitting } = this.state;
-    const { open, mode, type } = this.props;
+    const { open, mode, type, records } = this.props;
     const { fields } = this.types[type];
     const isCreating = mode === 'create';
     const isDomain = type === 'master' || type === 'slave';
+
+    const hasARecords = records.find(thisRecord =>
+      ['A', 'AAAA'].includes(thisRecord.type)
+    ); // If there are no A/AAAA records and a user tries to add an NS record, they'll see a warning message asking them to add an A/AAAA record.
+
+    const noARecordsNoticeText =
+      'Please create an A/AAAA record for this domain to avoid a Zone File invalidation.';
 
     const buttonProps: ButtonProps = {
       buttonType: 'primary',
@@ -789,7 +796,11 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
           otherErrors.map((err, index) => {
             return <Notice error key={index} text={err} />;
           })}
+        {!hasARecords && type === 'NS' && (
+          <Notice warning spacingTop={8} text={noARecordsNoticeText} />
+        )}
         {fields.map((field: any, idx: number) => field(idx))}
+
         <ActionsPanel>
           <Button {...buttonProps} data-qa-record-save />
           <Button
