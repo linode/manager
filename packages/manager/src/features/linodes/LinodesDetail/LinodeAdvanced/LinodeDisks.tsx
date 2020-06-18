@@ -432,7 +432,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
 
   createDisk = (values: any) => {
     const { linodeId, userSSHKeys, createLinodeDisk } = this.props;
-    const { label, size, filesystem, image, password } = values;
+    const { label, size, filesystem, image, root_pass } = values;
     if (!linodeId) {
       // Safety check; should never happen.
       return Promise.reject({ reason: 'Invalid Linode' });
@@ -443,7 +443,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       size,
       filesystem: filesystem === '_none_' ? undefined : filesystem,
       image: Boolean(image) ? image : undefined,
-      root_pass: Boolean(password) ? password : undefined,
+      root_pass: Boolean(root_pass) ? root_pass : undefined,
       authorized_users: userSSHKeys
         ? userSSHKeys.filter(u => u.selected).map(u => u.username)
         : undefined
