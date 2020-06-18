@@ -1,6 +1,11 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
-import { Route, Switch, useLocation } from 'react-router-dom';
+import {
+  Route,
+  Switch,
+  RouteComponentProps,
+  withRouter
+} from 'react-router-dom';
 import { compose } from 'recompose';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
@@ -23,13 +28,15 @@ interface Props {
   linodeId: string;
 }
 
-type CombinedProps = Props;
+type CombinedProps = Props & RouteComponentProps<{ linodeId: string }>;
 
 const LinodeDetail: React.FC<CombinedProps> = props => {
-  const { linodeId } = props;
+  const {
+    linodeId,
+    match: { path }
+  } = props;
   const dispatch = useDispatch();
   const linode = useExtendedLinode(+linodeId);
-  const location = useLocation();
 
   if (!linode) {
     return <NotFound />;
@@ -47,11 +54,8 @@ const LinodeDetail: React.FC<CombinedProps> = props => {
           LinodeDetail, though, because we'd like to use the same context, so we don't
           have to reload all the configs, disks, etc. once we get to the CloneLanding page.
           */}
-          <Route path={`${location.pathname}/clone`} component={CloneLanding} />
-          <Route
-            path={`${location.pathname}/migrate`}
-            component={MigrateLanding}
-          />
+          <Route path={`${path}/clone`} component={CloneLanding} />
+          <Route path={`${path}/migrate`} component={MigrateLanding} />
           <Route
             render={() => (
               <React.Fragment>
@@ -66,6 +70,9 @@ const LinodeDetail: React.FC<CombinedProps> = props => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(LinodeDetailErrorBoundary);
+const enhanced = compose<CombinedProps, Props>(
+  withRouter,
+  LinodeDetailErrorBoundary
+);
 
 export default enhanced(LinodeDetail);
