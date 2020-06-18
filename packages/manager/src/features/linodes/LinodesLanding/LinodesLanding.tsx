@@ -57,6 +57,8 @@ import PowerDialogOrDrawer, { Action } from '../PowerActionsDialogOrDrawer';
 import DeleteDialog from './DeleteDialog';
 
 import CSVLink from 'src/components/DownloadCSV';
+import Chip from 'src/components/core/Chip';
+import LandingHeader from 'src/components/LandingHeader';
 
 interface State {
   powerDialogOpen: boolean;
@@ -221,6 +223,18 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       { label: 'Tags', key: 'tags' }
     ];
 
+    const linodesRunningCount = linodesData.filter(
+      linode => linode.status === 'running'
+    ).length;
+
+    const linodesPendingCount = linodesData.filter(
+      linode => linode.status !== 'running' && linode.status !== 'offline'
+    ).length;
+
+    const linodesOfflineCount = linodesData.filter(
+      linode => linode.status === 'offline'
+    ).length;
+
     return (
       <React.Fragment>
         {this.props.someLinodesHaveScheduledMaintenance && (
@@ -273,6 +287,51 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                       }: ToggleProps<'list' | 'grid'>) => {
                         return (
                           <React.Fragment>
+                            <LandingHeader
+                              title="Linode"
+                              onAddNew={() =>
+                                this.props.history.push('/linodes/create')
+                              }
+                              iconType="linode"
+                              docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
+                              body={
+                                <Grid item>
+                                  <Chip
+                                    style={{
+                                      backgroundColor: '#00b159',
+                                      color: 'white',
+                                      fontSize: '1.1 rem',
+                                      padding: '10px'
+                                    }}
+                                    label={`${linodesRunningCount} RUNNING`}
+                                    component="span"
+                                    clickable={false}
+                                  />
+                                  <Chip
+                                    style={{
+                                      backgroundColor: '#ffb31a',
+                                      fontSize: '1.1 rem',
+                                      color: 'white',
+                                      padding: '10px'
+                                    }}
+                                    label={`${linodesPendingCount} PENDING`}
+                                    component="span"
+                                    clickable={false}
+                                  />
+                                  <Chip
+                                    style={{
+                                      backgroundColor: '#9ea4ae',
+                                      color: 'white',
+                                      fontSize: '1.1 rem',
+                                      padding: '10px'
+                                    }}
+                                    label={`${linodesOfflineCount} OFFLINE`}
+                                    component="span"
+                                    clickable={false}
+                                  />
+                                </Grid>
+                              }
+                            />
                             <Grid
                               container
                               alignItems="center"
@@ -281,7 +340,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                               xs={12}
                               style={{ paddingBottom: 0 }}
                             >
-                              <Grid item className={classes.title}>
+                              {/* <Grid item className={classes.title}>
                                 <Breadcrumb
                                   pathname={location.pathname}
                                   data-qa-title
@@ -317,7 +376,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                 }}
                                 label="Add a Linode"
                                 className={classes.addNewLink}
-                              />
+                              /> */}
                             </Grid>
                             <Grid item xs={12}>
                               <OrderBy
