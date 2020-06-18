@@ -27,7 +27,6 @@ export const baseApps = {
   '401703': 'Rust - Latest One-Click',
   '401700': 'CS:GO - Latest One-Click',
   '401702': 'MERN One-Click',
-  '401698': 'Drupal - Latest One-Click',
   '401707': 'GitLab - Latest One-Click',
   '401708': 'WooCommerce - Latest One-Click',
   '401706': 'WireGuard - Latest One-Click',
