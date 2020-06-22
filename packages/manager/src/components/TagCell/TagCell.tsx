@@ -10,7 +10,6 @@ import Grid from 'src/components/Grid'; // Have to use the MUI variant to get ar
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    overflow: 'hidden',
     height: '40px',
     position: 'relative'
   },
@@ -34,9 +33,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   tagList: {
+    overflow: 'hidden',
     position: 'relative',
-    height: '50px',
-    width: '100%'
+    display: 'flex',
+    flexWrap: 'nowrap'
   },
   tagListOverflow: {
     '&:before': {
@@ -50,9 +50,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   menu: {
-    position: 'absolute',
-    right: 5,
-    top: 5,
     width: '30px',
     height: '30px',
     display: 'flex',
@@ -74,7 +71,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   tags: string[];
-  width: string; // Required so we can fade out after a certain point
+  width: number; // Required so we can fade out after a certain point
   addTag: (newTag: string) => void;
 }
 
@@ -85,8 +82,6 @@ const checkOverflow = (el: any) => {
   if (!curOverflow || curOverflow === 'visible') {
     el.style.overflow = 'hidden';
   }
-
-  console.table({ cw: el.clientWidth, sw: el.scrollWidth });
 
   const isOverflowing = el.clientWidth < el.scrollWidth;
 
@@ -115,37 +110,38 @@ export const TagCell: React.FC<Props> = props => {
   );
 
   return (
-    <TableCell className={classes.root} style={{ width }}>
-      <div ref={overflowRef}>
-        <Grid container direction="row" alignItems="center" wrap="nowrap">
-          <Grid item className={classes.addTag}>
-            <Plus />
-          </Grid>
-          <Grid container wrap="nowrap" direction="row">
-            <Grid
-              item
-              className={classnames({
-                [classes.tagList]: true,
-                [classes.tagListOverflow]: hasOverflow
-              })}
-            >
-              {tags.map(thisTag => (
-                <Tag
-                  key={`tag-item-${thisTag}`}
-                  colorVariant="lightBlue"
-                  label={thisTag}
-                  onDelete={() => null}
-                />
-              ))}
-            </Grid>
-          </Grid>
+    <TableCell className={classes.root} style={{ width: `${width}px` }}>
+      <Grid container direction="row" alignItems="center" wrap="nowrap">
+        <Grid item className={classes.addTag}>
+          <Plus />
         </Grid>
-      </div>
-      {hasOverflow && (
-        <div className={classes.menu}>
-          <MoreHoriz />
-        </div>
-      )}
+        <Grid item>
+          <div
+            ref={overflowRef}
+            style={{ width: `${width - 100}px` }}
+            className={classnames({
+              [classes.tagList]: true,
+              [classes.tagListOverflow]: hasOverflow
+            })}
+          >
+            {tags.map(thisTag => (
+              <Tag
+                key={`tag-item-${thisTag}`}
+                colorVariant="lightBlue"
+                label={thisTag}
+                onDelete={() => null}
+              />
+            ))}
+          </div>
+        </Grid>
+        {hasOverflow && (
+          <Grid item>
+            <div className={classes.menu}>
+              <MoreHoriz />
+            </div>
+          </Grid>
+        )}
+      </Grid>
     </TableCell>
   );
 };
