@@ -16,6 +16,7 @@ const useStyles = makeStyles(() => ({
     width: 200,
     border: '1px solid #a8c9f0',
     borderRadius: 3,
+    // overflow: 'scroll',
     overflowX: 'unset',
     overflowY: 'unset',
     '&:before': {
@@ -126,9 +127,9 @@ const TableEditor: React.FC<CombinedProps> = props => {
   return (
     <div>
       <span aria-live="assertive" className="visually-hidden">
-        EXAMPLES ONLY Element 1 grabbed. Current position 1 of 4", "Element 1
-        moved, new positon 2 of 4", and "Element 1 dropped, final position 2 of
-        4".
+        EXAMPLES ONLY Element 1 grabbed. Current position 1 of 4, Element 1
+        moved, new position 2 of 4, and Element 1 dropped, final position 2 of
+        4.
       </span>
       <span id="operation" className="visually-hidden">
         To reorder and customize table display, press Enter key to toggle drag

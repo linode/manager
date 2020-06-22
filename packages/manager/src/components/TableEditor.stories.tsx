@@ -5,7 +5,7 @@ import TableEditor from './TableEditor';
 const linodeTableColumns = [
   { label: 'Status', id: 'linode-status', selected: true },
   { label: 'CPU', id: 'linode-cpu', selected: false },
-  { label: 'Ram', id: 'linode-ram', selected: false },
+  { label: 'RAM', id: 'linode-ram', selected: false },
   { label: 'Storage', id: 'linode-storage', selected: false },
   { label: 'IP Address', id: 'linode-ips', selected: true },
   { label: 'Last Backup', id: 'linode-backups', selected: true },
