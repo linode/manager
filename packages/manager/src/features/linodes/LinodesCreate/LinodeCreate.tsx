@@ -5,6 +5,7 @@ import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import { compose as recompose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import CircleProgress from 'src/components/CircleProgress';
+import Paper from 'src/components/core/Paper';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
@@ -50,7 +51,7 @@ import Tabs from 'src/components/core/ReachTabs';
 import TabLinkList, { Tab } from 'src/components/TabLinkList';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
 
-type ClassNames = 'root' | 'form';
+type ClassNames = 'root' | 'form' | 'stackScriptWrapper' | 'imageSelect';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -63,6 +64,17 @@ const styles = (theme: Theme) =>
     },
     form: {
       display: 'flex'
+    },
+    stackScriptWrapper: {
+      padding: theme.spacing(3),
+      '& [role="tablist"]': {
+        marginBottom: theme.spacing
+      }
+    },
+    imageSelect: {
+      '& .MuiPaper-root': {
+        padding: 0
+      }
     }
   });
 interface Props {
@@ -175,6 +187,17 @@ export class LinodeCreate extends React.PureComponent<
     }
   ];
 
+  stackScriptTabs: Tab[] = [
+    {
+      title: 'Account StackScripts',
+      routeName: `${this.props.match.url}?type=StackScripts/Account`
+    },
+    {
+      title: 'Community StackScripts',
+      routeName: `${this.props.match.url}?type=StackScripts/Community`
+    }
+  ];
+
   componentWillUnmount() {
     this.mounted = false;
   }
@@ -214,8 +237,10 @@ export class LinodeCreate extends React.PureComponent<
       regionsData,
       typesData,
       imagesData,
+      updateImageID,
       label,
       linodesData,
+      selectedImageID,
       updateLabel,
       tags,
       updateTags,
@@ -329,17 +354,47 @@ export class LinodeCreate extends React.PureComponent<
                   />
                 </SafeTabPanel>
                 <SafeTabPanel index={2}>
-                  <FromStackScriptContent
-                    category="community"
-                    accountBackupsEnabled={this.props.accountBackupsEnabled}
-                    userCannotCreateLinode={this.props.userCannotCreateLinode}
-                    request={getCommunityStackscripts}
-                    header={'Select a StackScript'}
-                    imagesData={imagesData!}
-                    regionsData={regionsData!}
-                    typesData={typesData!}
-                    {...rest}
-                  />
+                  <Tabs defaultIndex={0}>
+                    <Paper className={classes.stackScriptWrapper}>
+                      <TabLinkList tabs={this.stackScriptTabs} />
+                      <TabPanels className={classes.imageSelect}>
+                        <SafeTabPanel index={0}>
+                          <FromStackScriptContent
+                            category="account"
+                            accountBackupsEnabled={
+                              this.props.accountBackupsEnabled
+                            }
+                            userCannotCreateLinode={
+                              this.props.userCannotCreateLinode
+                            }
+                            request={getMineAndAccountStackScripts}
+                            header={'Select a StackScript'}
+                            imagesData={imagesData!}
+                            regionsData={regionsData!}
+                            typesData={typesData!}
+                            {...rest}
+                          />
+                        </SafeTabPanel>
+                        <SafeTabPanel index={1}>
+                          <FromStackScriptContent
+                            category="community"
+                            accountBackupsEnabled={
+                              this.props.accountBackupsEnabled
+                            }
+                            userCannotCreateLinode={
+                              this.props.userCannotCreateLinode
+                            }
+                            request={getCommunityStackscripts}
+                            header={'Select a StackScript'}
+                            imagesData={imagesData!}
+                            regionsData={regionsData!}
+                            typesData={typesData!}
+                            {...rest}
+                          />
+                        </SafeTabPanel>
+                      </TabPanels>
+                    </Paper>
+                  </Tabs>
                 </SafeTabPanel>
                 <SafeTabPanel index={3}>
                   <FromImageContent

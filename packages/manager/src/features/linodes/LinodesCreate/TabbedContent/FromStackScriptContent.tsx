@@ -2,7 +2,7 @@ import { Grant } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { ResourcePage } from '@linode/api-v4/lib/types';
-import { assocPath, pathOr } from 'ramda';
+import { assocPath } from 'ramda';
 import * as React from 'react';
 // import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
@@ -47,6 +47,10 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     main: {
+      // @todo: hacky way to access the SelectStackScriptPanel component
+      '& form > div > div': {
+        padding: 0
+      },
       [theme.breakpoints.up('md')]: {
         maxWidth: '100%'
       }
@@ -252,9 +256,9 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
     }
 
     // let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
-    if (hasBackups && typeDisplayInfo && backupsMonthlyPrice) {
-      calculatedPrice += backupsMonthlyPrice;
-    }
+    // if (hasBackups && typeDisplayInfo && backupsMonthlyPrice) {
+    //   calculatedPrice += backupsMonthlyPrice;
+    // }
 
     return (
       <React.Fragment>
