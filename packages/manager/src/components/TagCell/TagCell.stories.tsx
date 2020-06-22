@@ -1,11 +1,10 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-
-import Table from 'src/components/Table';
-import TableRow from 'src/components/TableRow';
-import TableHead from 'src/components/core/TableHead';
 import TableBody from 'src/components/core/TableBody';
+import TableHead from 'src/components/core/TableHead';
+import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import TagCell from './TagCell';
 import TagDrawer from './TagDrawer';
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import Drawer from 'src/components/Drawer';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Drawer from 'src/components/Drawer';
 import Tag from 'src/components/Tag';
 
 const useStyles = makeStyles((theme: Theme) => ({ tag: {} }));

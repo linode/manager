@@ -1,11 +1,11 @@
+import MoreHoriz from '@material-ui/icons/MoreHoriz';
 import * as classnames from 'classnames';
 import * as React from 'react';
 import Plus from 'src/assets/icons/plusSign.svg';
-import MoreHoriz from '@material-ui/icons/MoreHoriz';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import Tag from 'src/components/Tag/Tag_CMR';
-import Grid from 'src/components/Grid';
 import AddTag from './AddTag';
 
 const useStyles = makeStyles((theme: Theme) => ({
