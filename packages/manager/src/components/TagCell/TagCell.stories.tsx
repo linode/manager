@@ -7,6 +7,7 @@ import TableHead from 'src/components/core/TableHead';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/TableCell';
 import TagCell from './TagCell';
+import TagDrawer from './TagDrawer';
 
 const tags = [
   'tag1',
@@ -20,6 +21,7 @@ const tags = [
 
 const TagTableCellStory: React.FC<{}> = _ => {
   const [_tags, setTags] = React.useState<string[]>(tags);
+  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
 
   const deleteTag = (thisTag: string) => {
     setTags((currentTags: string[]) => {
@@ -32,13 +34,22 @@ const TagTableCellStory: React.FC<{}> = _ => {
   };
 
   return (
-    <TagCell
-      tags={_tags}
-      addTag={addTag}
-      deleteTag={deleteTag}
-      listAllTags={allTags => alert(allTags)}
-      width={500}
-    />
+    <>
+      <TagCell
+        tags={_tags}
+        addTag={addTag}
+        deleteTag={deleteTag}
+        listAllTags={() => setDrawerOpen(true)}
+        width={500}
+      />
+      <TagDrawer
+        entityLabel="MyLinode"
+        open={drawerOpen}
+        tags={_tags}
+        deleteTag={deleteTag}
+        onClose={() => setDrawerOpen(false)}
+      />
+    </>
   );
 };
 
