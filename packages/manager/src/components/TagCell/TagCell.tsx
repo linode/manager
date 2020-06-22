@@ -10,7 +10,6 @@ import AddTag from './AddTag';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    height: '40px',
     position: 'relative'
   },
   addTag: {

@@ -18,8 +18,8 @@ const tags = [
   'tagggg'
 ];
 
-const TagTableCellStory: React.FC<{}> = _ => {
-  const [_tags, setTags] = React.useState<string[]>(tags);
+const TagTableCellStory: React.FC<{ tags: string[] }> = props => {
+  const [_tags, setTags] = React.useState<string[]>(props.tags);
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
 
   const deleteTag = (thisTag: string) => {
@@ -33,14 +33,25 @@ const TagTableCellStory: React.FC<{}> = _ => {
   };
 
   return (
-    <>
-      <TagCell
-        tags={_tags}
-        addTag={addTag}
-        deleteTag={deleteTag}
-        listAllTags={() => setDrawerOpen(true)}
-        width={500}
-      />
+    <div style={{ width: '500px', margin: 'auto' }}>
+      <Table>
+        <TableHead title="Tag cell story">
+          <TableRow>
+            <TableCell>Tags</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            <TagCell
+              tags={_tags}
+              addTag={addTag}
+              deleteTag={deleteTag}
+              listAllTags={() => setDrawerOpen(true)}
+              width={500}
+            />
+          </TableRow>
+        </TableBody>
+      </Table>
       <TagDrawer
         entityLabel="MyLinode"
         open={drawerOpen}
@@ -48,23 +59,12 @@ const TagTableCellStory: React.FC<{}> = _ => {
         deleteTag={deleteTag}
         onClose={() => setDrawerOpen(false)}
       />
-    </>
+    </div>
   );
 };
 
-storiesOf('TagCell', module).add('small number of tags', () => (
-  <div style={{ width: '500px', margin: 'auto' }}>
-    <Table>
-      <TableHead title="Tag cell story">
-        <TableRow>
-          <TableCell>Tags</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        <TableRow>
-          <TagTableCellStory />
-        </TableRow>
-      </TableBody>
-    </Table>
-  </div>
-));
+storiesOf('TagCell', module)
+  .add('Large number of tags (overflow state)', () => (
+    <TagTableCellStory tags={tags} />
+  ))
+  .add('Fewer tags', () => <TagTableCellStory tags={tags.slice(0, 2)} />);

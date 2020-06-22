@@ -30,7 +30,11 @@ export const AddTag: React.FC<Props> = props => {
           label: thisTag.label
         }))
       )
-      .then(tags => setAccountTags(tags));
+      .then(tags => setAccountTags(tags))
+      // @todo should we toast for this? If we swallow the error the only
+      // thing we lose is preexisting tabs as options; the add tag flow
+      // should still work.
+      .catch(_ => null);
   }, []);
 
   const tagOptions = accountTags.filter(
