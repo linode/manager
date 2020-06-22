@@ -95,7 +95,7 @@ const checkOverflow = (el: any) => {
 export type CombinedProps = Props;
 
 export const TagCell: React.FC<Props> = props => {
-  const { tags, width } = props;
+  const { addTag, tags, width } = props;
   const [hasOverflow, setOverflow] = React.useState<boolean>(false);
   const [addingTag, setAddingTag] = React.useState<boolean>(false);
   const classes = useStyles();
@@ -116,8 +116,12 @@ export const TagCell: React.FC<Props> = props => {
     <TableCell className={classes.root} style={{ width: `${width}px` }}>
       <Grid container direction="row" alignItems="center" wrap="nowrap">
         {addingTag ? (
-          <Grid item>
-            <AddTag tags={tags} onClose={() => setAddingTag(false)} />
+          <Grid item xs={12}>
+            <AddTag
+              tags={tags}
+              onClose={() => setAddingTag(false)}
+              addTag={addTag}
+            />
           </Grid>
         ) : (
           <>

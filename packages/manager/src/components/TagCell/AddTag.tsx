@@ -4,19 +4,24 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 
 import { makeStyles, Theme } from 'src/components/core/styles';
 
-const useStyles = makeStyles((theme: Theme) => ({}));
+const useStyles = makeStyles((_: Theme) => ({
+  root: {
+    width: '100%'
+  }
+}));
 
 interface Props {
   tags: string[];
   onClose: () => void;
+  addTag: (tag: string) => void;
 }
 
 export type CombinedProps = Props;
 
 export const AddTag: React.FC<Props> = props => {
-  const { onClose, tags } = props;
+  const classes = useStyles();
+  const { addTag, onClose, tags } = props;
   const [accountTags, setAccountTags] = React.useState<Item<string>[]>([]);
-  const [tagInputValue, setTagInputValue] = React.useState<string>('');
   React.useEffect(() => {
     getTags()
       .then(response =>
@@ -27,19 +32,27 @@ export const AddTag: React.FC<Props> = props => {
       )
       .then(tags => setAccountTags(tags));
   }, []);
+
+  const tagOptions = accountTags.filter(
+    thisTag => !tags.includes(thisTag.value)
+  );
+
+  const handleAddTag = (newTag: Item<string>) => {
+    addTag(newTag.value);
+    onClose();
+  };
   return (
     <Select
-      onChange={(input: string) => setTagInputValue(input)}
-      options={accountTags}
+      className={classes.root}
+      onChange={handleAddTag}
+      options={tagOptions}
       variant="creatable"
       onBlur={onClose}
       placeholder="Create or Select a Tag"
       label="Create or Select a Tag"
       hideLabel
-      value={tagInputValue}
       createOptionPosition="first"
-      autoFocus
-      blurInputOnSelect={false}
+      blurInputOnSelect={true}
     />
   );
 };
