@@ -8,15 +8,7 @@ import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/TableCell';
 import TagCell from './TagCell';
 
-const tags = [
-  'tag1',
-  'tag2',
-  'tagwithextremelylongname',
-  'tag3',
-  'tag4',
-  'tag5',
-  'yet another tag with a very long name'
-];
+const tags = ['tag1', 'tag2', 'tag2.5', 'tag3'];
 
 storiesOf('TagCell', module).add('small number of tags', () => (
   <div style={{ width: '500px', margin: 'auto' }}>
