@@ -19,6 +19,7 @@ import hasMutationAvailable, {
 } from '../hasMutationAvailable';
 import IPAddress from '../IPAddress';
 import LinodeActionMenu from '../LinodeActionMenu';
+import LinodeActionMenu_CMR from '../LinodeActionMenu_CMR';
 import RegionIndicator from '../RegionIndicator';
 import withNotifications, { WithNotifications } from '../withNotifications';
 import withRecentEvent, { WithRecentEvent } from '../withRecentEvent';
@@ -30,6 +31,7 @@ import LinodeRowLoading from './LinodeRowLoading';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { capitalize } from 'src/utilities/capitalize';
 import { parseMaintenanceStartTime } from '../utils';
+import useFlags from 'src/hooks/useFlags';
 
 interface Props {
   backups: LinodeBackups;
@@ -91,6 +93,8 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     recentEvent,
     mutationAvailable
   } = props;
+
+  const flags = useFlags();
 
   const loading = linodeInTransition(status, recentEvent);
   const dateTime = parseMaintenanceStartTime(maintenanceStartTime).split(' ');
@@ -209,17 +213,31 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
               linodeNotifications={linodeNotifications}
               classes={classes}
             />
-            <LinodeActionMenu
-              linodeId={id}
-              linodeLabel={label}
-              linodeRegion={region}
-              linodeType={type}
-              linodeStatus={status}
-              linodeBackups={backups}
-              openDeleteDialog={openDeleteDialog}
-              openPowerActionDialog={openPowerActionDialog}
-              noImage={!image}
-            />
+            {flags.cmr ? (
+              <LinodeActionMenu_CMR
+                linodeId={id}
+                linodeLabel={label}
+                linodeRegion={region}
+                linodeType={type}
+                linodeStatus={status}
+                linodeBackups={backups}
+                openDeleteDialog={openDeleteDialog}
+                openPowerActionDialog={openPowerActionDialog}
+                noImage={!image}
+              />
+            ) : (
+              <LinodeActionMenu
+                linodeId={id}
+                linodeLabel={label}
+                linodeRegion={region}
+                linodeType={type}
+                linodeStatus={status}
+                linodeBackups={backups}
+                openDeleteDialog={openDeleteDialog}
+                openPowerActionDialog={openPowerActionDialog}
+                noImage={!image}
+              />
+            )}
           </div>
         </TableCell>
       </TableRow>

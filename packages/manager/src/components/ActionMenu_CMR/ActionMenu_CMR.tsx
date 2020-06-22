@@ -37,7 +37,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       cursor: 'pointer',
       '&[aria-expanded="true"]': {
         backgroundColor: '#3683dc',
-        color: '#fff'
+        color: '#fff',
+        width: '100%'
       }
     }
   },
@@ -48,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   popover: {
     '&[data-reach-menu-popover]': {
       right: 0,
-      // Need this to 'merge the button and items wrapper due to the borderRadius on the wrapper
+      // Need this to merge the button and items wrapper due to the borderRadius on the wrapper
       marginTop: -3,
       zIndex: 1
     }
@@ -129,7 +130,7 @@ const ActionMenu: React.FC<CombinedProps> = props => {
           <MoreHoriz aria-hidden className={classes.icon} type="primary" />
           {inlineLabel && <p className={classes.buttonLabel}>{inlineLabel}</p>}
         </MenuButton>
-        <MenuPopover className={classes.popover} portal={false}>
+        <MenuPopover className={classes.popover} portal={true}>
           <MenuItems className={classes.itemsOuter}>
             {(actions as Action[]).map((a, idx) => (
               <MenuLink
