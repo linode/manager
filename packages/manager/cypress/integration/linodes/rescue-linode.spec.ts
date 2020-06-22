@@ -10,7 +10,7 @@ describe('rescue linode', () => {
     cy.visitWithLogin('/support');
     createLinode().then(linode => {
       cy.server();
-      //mock 200 response
+      // mock 200 response
       cy.route({
         method: 'POST',
         url: '*/linode/instances/*/rescue',
@@ -19,7 +19,7 @@ describe('rescue linode', () => {
       const rescueUrl = `/linodes/${linode.id}/rescue`;
       cy.visit(rescueUrl);
       rebootInRescueMode();
-      //check mocked response and make sure UI responded correctly
+      // check mocked response and make sure UI responded correctly
       cy.wait('@postRebootInRescueMode')
         .its('status')
         .should('eq', 200);
@@ -33,7 +33,7 @@ describe('rescue linode', () => {
     cy.visitWithLogin('/support');
     createLinode().then(linode => {
       cy.server();
-      //not mocking response here
+      // not mocking response here
       cy.route({
         method: 'POST',
         url: '*/linode/instances/*/rescue'
@@ -41,7 +41,7 @@ describe('rescue linode', () => {
       const rescueUrl = `/linodes/${linode.id}/rescue`;
       cy.visit(rescueUrl);
       rebootInRescueMode();
-      //check response, verify bad request and UI response (toast)
+      // check response, verify bad request and UI response (toast)
       cy.wait('@postRebootInRescueMode')
         .its('status')
         .should('eq', 400);
