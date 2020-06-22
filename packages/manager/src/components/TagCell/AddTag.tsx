@@ -55,6 +55,8 @@ export const AddTag: React.FC<Props> = props => {
       placeholder="Create or Select a Tag"
       label="Create or Select a Tag"
       hideLabel
+      // eslint-disable-next-line
+      autoFocus
       createOptionPosition="first"
       blurInputOnSelect={true}
     />
