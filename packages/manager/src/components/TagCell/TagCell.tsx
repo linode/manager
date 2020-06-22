@@ -73,6 +73,8 @@ interface Props {
   tags: string[];
   width: number; // Required so we can fade out after a certain point
   addTag: (newTag: string) => void;
+  deleteTag: (tagToDelete: string) => void;
+  listAllTags: (tags: string[]) => void;
 }
 
 // https://stackoverflow.com/questions/143815/determine-if-an-html-elements-content-overflows
@@ -129,14 +131,20 @@ export const TagCell: React.FC<Props> = props => {
                 key={`tag-item-${thisTag}`}
                 colorVariant="lightBlue"
                 label={thisTag}
-                onDelete={() => null}
+                onDelete={() => props.deleteTag(thisTag)}
               />
             ))}
           </div>
         </Grid>
         {hasOverflow && (
           <Grid item>
-            <div className={classes.menu}>
+            <div
+              className={classes.menu}
+              role="button"
+              tabIndex={0}
+              onKeyPress={() => props.listAllTags(tags)}
+              onClick={() => props.listAllTags(tags)}
+            >
               <MoreHoriz />
             </div>
           </Grid>

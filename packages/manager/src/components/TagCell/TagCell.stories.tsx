@@ -14,9 +14,33 @@ const tags = [
   'tag2.5',
   'tag3',
   'tagtagtagtagtagtag',
-  'tag3',
+  'tag4',
   'tagggg'
 ];
+
+const TagTableCellStory: React.FC<{}> = _ => {
+  const [_tags, setTags] = React.useState<string[]>(tags);
+
+  const deleteTag = (thisTag: string) => {
+    setTags((currentTags: string[]) => {
+      return currentTags.filter(currentTag => currentTag !== thisTag);
+    });
+  };
+
+  const addTag = (newTag: string) => {
+    setTags([..._tags, newTag]);
+  };
+
+  return (
+    <TagCell
+      tags={_tags}
+      addTag={addTag}
+      deleteTag={deleteTag}
+      listAllTags={allTags => alert(allTags)}
+      width={500}
+    />
+  );
+};
 
 storiesOf('TagCell', module).add('small number of tags', () => (
   <div style={{ width: '500px', margin: 'auto' }}>
@@ -28,7 +52,7 @@ storiesOf('TagCell', module).add('small number of tags', () => (
       </TableHead>
       <TableBody>
         <TableRow>
-          <TagCell tags={tags} addTag={() => null} width={500} />
+          <TagTableCellStory />
         </TableRow>
       </TableBody>
     </Table>
