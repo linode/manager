@@ -13,9 +13,9 @@ const Option: React.FC<Props> = props => {
       data-qa-option={String(props.value)}
       key={props.value}
       {...props.attrs}
-      value={props.value}
       role="option"
       dense
+      component="div"
       disableGutters
       selected={props.isSelected}
       disabled={props.isDisabled}

@@ -38,9 +38,10 @@ export const RegionOption: React.FC<CombinedProps> = props => {
       value={data.value}
       attrs={{ ['data-qa-region-select-item']: data.value }}
       {...props}
+      aria-label={label}
     >
       <Grid container direction="row" alignItems="center" justify="flex-start">
-        <Grid item className="py0">
+        <Grid item className="py0" aria-hidden>
           {data.flag && data.flag()}
         </Grid>
         <Grid item>{label}</Grid>
