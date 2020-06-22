@@ -1,5 +1,5 @@
 import MoreHoriz from '@material-ui/icons/MoreHoriz';
-import * as classnames from 'classnames';
+import * as classNames from 'classnames';
 import * as React from 'react';
 import Plus from 'src/assets/icons/plusSign.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -12,13 +12,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     position: 'relative'
   },
-  addTag: {
+  menuItem: {
+    width: '30px',
+    height: '30px',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    width: '30px',
-    height: '30px',
-    marginRight: theme.spacing(),
     backgroundColor: theme.bg.lightBlue,
     '& svg': {
       color: theme.palette.primary.main
@@ -30,6 +29,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         color: 'white'
       }
     }
+  },
+  addTag: {
+    marginRight: theme.spacing()
   },
   tagList: {
     overflow: 'hidden',
@@ -46,24 +48,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       left: 0,
       top: 0,
       background: `linear-gradient(to right, transparent 300px, white)`
-    }
-  },
-  menu: {
-    width: '30px',
-    height: '30px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: theme.bg.lightBlue,
-    '& svg': {
-      color: theme.palette.primary.main
-    },
-    '&:hover': {
-      backgroundColor: theme.palette.primary.main,
-      color: 'white',
-      '& svg': {
-        color: 'white'
-      }
     }
   }
 }));
@@ -126,7 +110,10 @@ export const TagCell: React.FC<Props> = props => {
           <>
             <Grid
               item
-              className={classes.addTag}
+              className={classNames({
+                [classes.addTag]: true,
+                [classes.menuItem]: true
+              })}
               onClick={() => setAddingTag(true)}
             >
               <Plus />
@@ -135,7 +122,7 @@ export const TagCell: React.FC<Props> = props => {
               <div
                 ref={overflowRef}
                 style={{ width: `${width - 100}px` }}
-                className={classnames({
+                className={classNames({
                   [classes.tagList]: true,
                   [classes.tagListOverflow]: hasOverflow
                 })}
@@ -153,7 +140,7 @@ export const TagCell: React.FC<Props> = props => {
             {hasOverflow && (
               <Grid item>
                 <div
-                  className={classes.menu}
+                  className={classes.menuItem}
                   role="button"
                   tabIndex={0}
                   onKeyPress={() => props.listAllTags(tags)}
