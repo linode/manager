@@ -13,7 +13,11 @@ describe('ListLinodes', () => {
     tagGroup: '',
     CSVlinkContainer: '',
     CSVlink: '',
-    addNewLink: ''
+    addNewLink: '',
+    chip: '',
+    chipRunning: '',
+    chipPending: '',
+    chipOffline: ''
   };
 
   it('renders without error', () => {

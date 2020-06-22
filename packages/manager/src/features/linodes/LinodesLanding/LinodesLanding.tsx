@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import { Config } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as moment from 'moment-timezone';
@@ -25,7 +26,6 @@ import withBackupCta, {
   BackupCTAProps
 } from 'src/containers/withBackupCTA.container';
 import withImages, { WithImages } from 'src/containers/withImages.container';
-import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import withFeatureFlagConsumer, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container';
@@ -233,12 +233,22 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     ).length;
 
     const linodesPendingCount = linodesData.filter(
-      linode => linode.status !== 'running' && linode.status !== 'offline'
+      linode =>
+        linode.status !== 'running' &&
+        linode.status !== 'offline' &&
+        linode.status !== 'stopped'
     ).length;
 
     const linodesOfflineCount = linodesData.filter(
-      linode => linode.status === 'offline'
+      linode => linode.status === 'offline' || linode.status === 'stopped'
     ).length;
+
+    const chipProps = () => {
+      return {
+        component: 'span',
+        clickable: false
+      };
+    };
 
     return (
       <React.Fragment>
@@ -303,37 +313,28 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                 body={
                                   <Grid item>
                                     <Chip
-                                      style={{
-                                        backgroundColor: '#00b159',
-                                        color: 'white',
-                                        fontSize: '1.1 rem',
-                                        padding: '10px'
-                                      }}
+                                      className={classNames({
+                                        [classes.chip]: true,
+                                        [classes.chipRunning]: true
+                                      })}
                                       label={`${linodesRunningCount} RUNNING`}
-                                      component="span"
-                                      clickable={false}
+                                      {...chipProps}
                                     />
                                     <Chip
-                                      style={{
-                                        backgroundColor: '#ffb31a',
-                                        fontSize: '1.1 rem',
-                                        color: 'white',
-                                        padding: '10px'
-                                      }}
+                                      className={classNames({
+                                        [classes.chip]: true,
+                                        [classes.chipPending]: true
+                                      })}
                                       label={`${linodesPendingCount} PENDING`}
-                                      component="span"
-                                      clickable={false}
+                                      {...chipProps}
                                     />
                                     <Chip
-                                      style={{
-                                        backgroundColor: '#9ea4ae',
-                                        color: 'white',
-                                        fontSize: '1.1 rem',
-                                        padding: '10px'
-                                      }}
+                                      className={classNames({
+                                        [classes.chip]: true,
+                                        [classes.chipOffline]: true
+                                      })}
                                       label={`${linodesOfflineCount} OFFLINE`}
-                                      component="span"
-                                      clickable={false}
+                                      {...chipProps}
                                     />
                                   </Grid>
                                 }
@@ -591,7 +592,6 @@ export const enhanced = compose<CombinedProps, {}>(
   withImages(),
   withBackupCta,
   styled,
-  withFeatureFlagProvider,
   withFeatureFlagConsumer
 );
 
