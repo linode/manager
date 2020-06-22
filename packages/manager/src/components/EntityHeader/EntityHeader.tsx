@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: theme.bg.white
   },
-  chip: {
+  contentOuter: {
     '& .MuiChip-root': {
       height: 30,
       borderRadius: 15,
@@ -47,7 +47,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
             parentText={parentText}
           />
           {body && (
-            <Grid className={classes.chip} item>
+            <Grid className={classes.contentOuter} item>
               {body}
             </Grid>
           )}
