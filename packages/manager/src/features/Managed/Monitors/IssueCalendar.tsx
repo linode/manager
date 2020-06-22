@@ -37,10 +37,10 @@ export const generateCalendar = (timezone: string, issues: ExtendedIssue[]) => {
    * so imo it would be ineffective to memoize this computation.
    */
   const days: CalendarDay[] = [];
-  let i = 0;
+
   // Start with today, since it will be at the top of our list.
   const day = DateTime.local().setZone(timezone);
-  for (i; i < TOTAL_DAYS; i++) {
+  for (let i = 0; i < TOTAL_DAYS; i++) {
     /**
      * Iterate through the past 10 days
      */
@@ -49,10 +49,8 @@ export const generateCalendar = (timezone: string, issues: ExtendedIssue[]) => {
     );
     days.push({
       issues: relevantIssues,
-      day: day.toISO()
+      day: day.minus({ days: i }).toISO()
     });
-    // Move the calendar back a day
-    day.minus({ days: 1 });
   }
 
   return days;

@@ -31,12 +31,6 @@ describe('DateTimeDisplay component', () => {
 
       getByText('5 minutes ago');
 
-      // expect(
-      //   component
-      //     .find('WithStyles(ForwardRef(Typography))')
-      //     .children()
-      //     .text()
-      // ).toContain('5 minutes ago');
     });
     describe('should output ISO strings if the date is older than the cutoff', () => {
       const almostOneWeek = DateTime.utc().minus({ days: 6 });
