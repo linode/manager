@@ -1,5 +1,8 @@
 import { renderHook } from '@testing-library/react-hooks';
+import * as React from 'react';
+import { Provider } from 'react-redux';
 import { imageFactory } from 'src/factories/images';
+import store from 'src/store';
 import { apiResponseToMappedState } from 'src/store/store.helpers';
 import { filterImages, useImages } from './useImages';
 
@@ -33,7 +36,10 @@ describe('useHooks', () => {
     it('returns the correct data from Redux', () => {
       // This test only works because of the cached Images data we use to
       // initialize the store.
-      const { result } = renderHook(() => useImages());
+      const wrapper = ({ children }: any) => (
+        <Provider store={store}>{children}</Provider>
+      );
+      const { result } = renderHook(() => useImages(), { wrapper });
       expect(result.current.images.lastUpdated).toBe(0);
     });
   });
