@@ -1,3 +1,4 @@
+import { StackScriptPayload } from '@linode/api-v4/lib/stackscripts/types';
 const localStorageCache = {};
 
 export const getStorage = (key: string, fallback?: any) => {
@@ -45,6 +46,7 @@ const NONCE = 'authentication/nonce';
 const SCOPES = 'authentication/scopes';
 const EXPIRE = 'authentication/expire';
 const SUPPORT = 'support';
+const STACKSCRIPT = 'stackscript';
 
 export type PageSize = number;
 
@@ -56,6 +58,10 @@ interface AuthGetAndSet {
 interface SupportText {
   title: string;
   description: string;
+}
+
+interface StackScriptData extends StackScriptPayload {
+  id: number | string;
 }
 
 export interface Storage {
@@ -80,6 +86,10 @@ export interface Storage {
   supportText: {
     get: () => SupportText;
     set: (v: SupportText) => void;
+  };
+  stackScriptInProgress: {
+    get: () => StackScriptData;
+    set: (s: StackScriptData) => void;
   };
 }
 
@@ -128,7 +138,22 @@ export const storage: Storage = {
   supportText: {
     get: () => getStorage(SUPPORT, { title: '', description: '' }),
     set: v => setStorage(SUPPORT, JSON.stringify(v))
+  },
+  stackScriptInProgress: {
+    get: () =>
+      getStorage(STACKSCRIPT, {
+        id: -1,
+        script: '',
+        label: '',
+        images: []
+      }),
+    set: s => setStorage(STACKSCRIPT, JSON.stringify(s))
   }
 };
 
-export const { authentication, BackupsCtaDismissed, supportText } = storage;
+export const {
+  authentication,
+  BackupsCtaDismissed,
+  stackScriptInProgress,
+  supportText
+} = storage;

@@ -47,12 +47,18 @@ const styles = (theme: Theme) =>
     }
   });
 
+interface Props {
+  disabled: boolean;
+  passwordHelperText: string;
+}
+
 interface ContextProps {
   linodeId: number;
   permissions: GrantLevel;
 }
 
-export type CombinedProps = WithImages &
+export type CombinedProps = Props &
+  WithImages &
   WithStyles<ClassNames> &
   ContextProps &
   UserSSHKeyProps &
@@ -72,6 +78,7 @@ const initialValues: RebuildFromImageForm = {
 export const RebuildFromImage: React.FC<CombinedProps> = props => {
   const {
     classes,
+    disabled,
     imagesData,
     imagesError,
     userSSHKeys,
@@ -80,10 +87,8 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
     linodeId,
     enqueueSnackbar,
     history,
-    permissions
+    passwordHelperText
   } = props;
-
-  const disabled = permissions === 'read_only';
 
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
 
@@ -181,6 +186,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
               handleChange={input => setFieldValue('root_pass', input)}
               updateFor={[
                 classes,
+                disabled,
                 values.root_pass,
                 errors,
                 sshError,
@@ -193,11 +199,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
               requestKeys={requestKeys}
               data-qa-access-panel
               disabled={disabled}
-              disabledReason={
-                disabled
-                  ? "You don't have permissions to modify this Linode"
-                  : undefined
-              }
+              passwordHelperText={passwordHelperText}
             />
             <ActionsPanel>
               <Button
@@ -230,7 +232,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   permissions: linode._permissions
 }));
 
-const enhanced = compose<CombinedProps, {}>(
+const enhanced = compose<CombinedProps, Props>(
   linodeContext,
   withImages(),
   userSSHKeyHoc,

@@ -289,38 +289,22 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
 
     const tabOrder: LinodeTypeClass[] = [];
 
-    if (!isEmpty(nanodes)) {
-      tabs.push({
-        render: () => {
-          return (
-            <>
-              <Typography data-qa-nanode className={classes.copy}>
-                Nanode instances are good for low-duty workloads, where
-                performance isn&#39;t critical.
-              </Typography>
-              {this.renderPlanContainer(nanodes)}
-            </>
-          );
-        },
-        title: 'Nanode'
-      });
-      tabOrder.push('nanode');
-    }
+    const shared = [...nanodes, ...standards];
 
-    if (!isEmpty(standards)) {
+    if (!isEmpty(shared)) {
       tabs.push({
         render: () => {
           return (
             <>
               <Typography data-qa-standard className={classes.copy}>
-                Standard instances are good for medium-duty workloads and are a
-                good mix of performance, resources, and price.
+                Shared CPU instances are good for medium-duty workloads and are
+                a good mix of performance, resources, and price.
               </Typography>
-              {this.renderPlanContainer(standards)}
+              {this.renderPlanContainer(shared)}
             </>
           );
         },
-        title: 'Standard'
+        title: 'Shared CPU'
       });
       tabOrder.push('standard');
     }
@@ -351,7 +335,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
               <Typography data-qa-highmem className={classes.copy}>
                 High Memory instances favor RAM over other resources, and can be
                 good for memory hungry use cases like caching and in-memory
-                databases.
+                databases. All High Memory plans contain dedicated CPU cores.
               </Typography>
               {this.renderPlanContainer(highmem)}
             </>

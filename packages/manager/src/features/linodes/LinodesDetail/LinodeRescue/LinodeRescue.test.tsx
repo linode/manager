@@ -6,6 +6,7 @@ import { volumes } from 'src/__data__/volumes';
 
 import { ExtendedVolume } from './DeviceSelection';
 import { getDefaultDeviceMapAndCounter, LinodeRescue } from './LinodeRescue';
+import { reactRouterProps } from 'src/__data__/reactRouterProps';
 
 describe('LinodeRescue', () => {
   describe('volumes', () => {
@@ -24,6 +25,7 @@ describe('LinodeRescue', () => {
 
     const component = shallow<LinodeRescue>(
       <LinodeRescue
+        {...reactRouterProps}
         closeSnackbar={jest.fn()}
         enqueueSnackbar={jest.fn()}
         classes={{
@@ -38,6 +40,7 @@ describe('LinodeRescue', () => {
         volumesLastUpdated={1}
         linodeLabel=""
         permissions="read_write"
+        linodeStatus="running"
       />
     );
     const rescueComponentProps = component.instance().props;

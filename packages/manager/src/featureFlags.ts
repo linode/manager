@@ -17,6 +17,7 @@ interface Flags {
   oneClickApps: OneClickApp;
   promotionalOffers: PromotionalOffer[];
   thirdPartyAuth: boolean;
+  cmr: boolean;
   mainContentBanner: MainContentBanner;
 }
 
@@ -56,4 +57,5 @@ export interface MainContentBanner {
     url: string;
   };
   text: string;
+  key: string;
 }

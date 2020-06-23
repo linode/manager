@@ -18,7 +18,7 @@ export const PREFETCH_DELAY = 150;
  */
 
 export const usePrefetch = (
-  requestFn: () => void,
+  requestFn?: () => void,
   prefetchCondition = true,
   delay = PREFETCH_DELAY
 ) => {
@@ -34,7 +34,7 @@ export const usePrefetch = (
 
   const makeRequest = () => {
     timeoutID.current = window.setTimeout(() => {
-      if (prefetchConditionRef.current) {
+      if (prefetchConditionRef.current && requestFn) {
         requestFn();
       }
     }, delay);
@@ -46,7 +46,14 @@ export const usePrefetch = (
     }
   }, []);
 
-  return { makeRequest, cancelRequest };
+  const handlers = {
+    onMouseEnter: makeRequest,
+    onFocus: makeRequest,
+    onMouseLeave: cancelRequest,
+    onBlur: cancelRequest
+  };
+
+  return { makeRequest, cancelRequest, handlers };
 };
 
 export default usePrefetch;

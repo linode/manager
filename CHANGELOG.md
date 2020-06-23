@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-06-09] - v1.11.0
+
+### Changed:
+- Clarify Linode password fields in Reset Root Password vs. Rebuild
+- Hide SSH key remove button for LISH settings when no keys are present
+- Make main content banner dismissible
+- Show error when Volumes limit has been reached but attempt is made to add a new Volume
+
+### Fixed:
+- CAA record input duplicating name/value
+
+## [2020-06-03] - @linode/api-v4 v.0.27.1
+
+### Fixed
+
+- Remove required from createDomain validation schema
+
 ## [2020-06-02] - v1.10.0
 
 ### Added:

@@ -4,6 +4,7 @@ import * as React from 'react';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
+import Currency from 'src/components/Currency';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
@@ -22,6 +23,7 @@ interface Props {
 
 const InvoiceTable: React.FC<Props> = props => {
   const { loading, errors, items } = props;
+
   return (
     <Table border aria-label="Invoice Details">
       <TableHead>
@@ -62,6 +64,9 @@ const RenderData: React.FC<{
   items: InvoiceItem[];
 }> = props => {
   const { items } = props;
+
+  const MIN_PAGE_SIZE = 25;
+
   return (
     <Paginate data={items} pageSize={25}>
       {({
@@ -89,37 +94,39 @@ const RenderData: React.FC<{
                   {renderQuantity(quantity)}
                 </TableCell>
                 <TableCell parentColumn="Unit Price" data-qa-unit-price>
-                  {renderUnitPrice(unit_price)}
+                  {unit_price !== 'None' && renderUnitPrice(unit_price)}
                 </TableCell>
                 <TableCell parentColumn="Amount (USD)" data-qa-amount>
-                  ${amount}
+                  <Currency wrapInParentheses={amount < 0} quantity={amount} />
                 </TableCell>
                 <TableCell parentColumn="Tax (USD)" data-qa-tax>
-                  ${tax}
+                  <Currency quantity={tax} />
                 </TableCell>
                 <TableCell parentColumn="Total (USD)" data-qa-total>
-                  ${total}
+                  <Currency wrapInParentheses={total < 0} quantity={total} />
                 </TableCell>
               </TableRow>
             )
           )}
-          <TableRow>
-            <TableCell
-              style={{
-                paddingTop: 2
-              }}
-              colSpan={8}
-            >
-              <PaginationFooter
-                eventCategory="invoice_items"
-                count={count}
-                page={page}
-                pageSize={pageSize}
-                handlePageChange={handlePageChange}
-                handleSizeChange={handlePageSizeChange}
-              />
-            </TableCell>
-          </TableRow>
+          {count > MIN_PAGE_SIZE && (
+            <TableRow>
+              <TableCell
+                style={{
+                  paddingTop: 2
+                }}
+                colSpan={8}
+              >
+                <PaginationFooter
+                  eventCategory="invoice_items"
+                  count={count}
+                  page={page}
+                  pageSize={pageSize}
+                  handlePageChange={handlePageChange}
+                  handleSizeChange={handlePageSizeChange}
+                />
+              </TableCell>
+            </TableRow>
+          )}
         </React.Fragment>
       )}
     </Paginate>

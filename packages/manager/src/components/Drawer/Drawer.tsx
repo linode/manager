@@ -85,6 +85,7 @@ const DDrawer: React.FC<CombinedProps> = props => {
         disableBackdropClick: true
       }}
       data-qa-drawer
+      data-testid="drawer"
       role="dialog"
       aria-labelledby={titleID}
     >
