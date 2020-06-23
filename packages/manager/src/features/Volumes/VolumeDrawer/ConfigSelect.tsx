@@ -17,14 +17,19 @@ interface Props {
 
 type CombinedProps = Props;
 
+export const initialValueDefaultId = -1;
+
 const ConfigSelect: React.FC<CombinedProps> = props => {
   const { error, onChange, onBlur, linodeId, name, value, ...rest } = props;
 
-  const { lastUpdated, itemsById } = useSelector((state: ApplicationState) => {
-    return state.__resources.linodeConfigs[linodeId] ?? {};
-  });
+  const { lastUpdated, error: configsError, loading, itemsById } = useSelector(
+    (state: ApplicationState) => {
+      return state.__resources.linodeConfigs[linodeId] ?? { error: {} };
+    }
+  );
 
   const configs = Object.values(itemsById ?? {});
+
   const dispatch = useDispatch();
 
   const configList = configs.map(config => {
@@ -32,10 +37,18 @@ const ConfigSelect: React.FC<CombinedProps> = props => {
   });
 
   React.useEffect(() => {
-    if (lastUpdated === 0 || lastUpdated === undefined) {
+    if (linodeId === initialValueDefaultId) {
+      return;
+    }
+
+    if (configsError?.read) {
+      return;
+    }
+
+    if (!loading && !lastUpdated) {
       dispatch(getAllLinodeConfigs({ linodeId }));
     }
-  }, [linodeId, lastUpdated, dispatch]);
+  }, [linodeId, lastUpdated, dispatch, loading, configsError]);
 
   React.useEffect(() => {
     if (configList.length === 1) {

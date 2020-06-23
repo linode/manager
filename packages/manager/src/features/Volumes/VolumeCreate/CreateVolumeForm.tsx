@@ -3,7 +3,7 @@ import { Region } from '@linode/api-v4/lib/regions';
 import { APIError } from '@linode/api-v4/lib/types';
 import { CreateVolumeSchema } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
@@ -41,11 +41,14 @@ import { sendCreateVolumeEvent } from 'src/utilities/ga';
 import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
 import isNilOrEmpty from 'src/utilities/isNilOrEmpty';
 import maybeCastToNumber from 'src/utilities/maybeCastToNumber';
-import ConfigSelect from '../VolumeDrawer/ConfigSelect';
+import ConfigSelect, {
+  initialValueDefaultId
+} from '../VolumeDrawer/ConfigSelect';
 import LabelField from '../VolumeDrawer/LabelField';
 import LinodeSelect from '../VolumeDrawer/LinodeSelect';
 import NoticePanel from '../VolumeDrawer/NoticePanel';
 import SizeField from '../VolumeDrawer/SizeField';
+import { ApplicationState } from 'src/store';
 
 type ClassNames = 'form' | 'container' | 'sidebar' | 'copy';
 
@@ -92,6 +95,18 @@ type CombinedProps = Props &
 
 const CreateVolumeForm: React.FC<CombinedProps> = props => {
   const { onSuccess, classes, createVolume, disabled, origin, history } = props;
+
+  const [linodeId, setLinodeId] = React.useState<number>(initialValueDefaultId);
+
+  // This is to keep track of this linodeId's errors so we can select it from the Redux store for the error message.
+  const { error: configsError } = useSelector((state: ApplicationState) => {
+    return state.__resources.linodeConfigs[linodeId] ?? { error: {} };
+  });
+
+  const configErrorMessage = configsError?.read?.[0].reason
+    ? 'Unable to load Configs for this Linode.' // More specific than the API error message
+    : undefined;
+
   return (
     <Formik
       initialValues={initialValues}
@@ -113,9 +128,13 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
           region:
             isNilOrEmpty(region) || region === 'none' ? undefined : region,
           linode_id:
-            linode_id === -1 ? undefined : maybeCastToNumber(linode_id),
+            linode_id === initialValueDefaultId
+              ? undefined
+              : maybeCastToNumber(linode_id),
           config_id:
-            config_id === -1 ? undefined : maybeCastToNumber(config_id),
+            config_id === initialValueDefaultId
+              ? undefined
+              : maybeCastToNumber(config_id),
           tags: tags.map(v => v.value)
         })
           .then(({ filesystem_path, label: volumeLabel }) => {
@@ -164,7 +183,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
 
         const generalError = status
           ? status.generalError
-          : config_id === -1
+          : config_id === initialValueDefaultId
           ? errors.config_id
           : undefined;
 
@@ -181,7 +200,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
               .join()
           });
         }
-        if (linode_id !== -1) {
+        if (linode_id !== initialValueDefaultId) {
           const linodeObject: any = getEntityByIDFromStore('linode', linode_id);
           displaySections.push({
             title: 'Attach To',
@@ -279,10 +298,13 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
                   </FormHelperText>
 
                   <LinodeSelect
-                    error={linodeError}
+                    error={linodeError || configErrorMessage}
                     name="linodeId"
                     onBlur={handleBlur}
-                    onChange={(id: number) => setFieldValue('linode_id', id)}
+                    onChange={(id: number) => {
+                      setFieldValue('linode_id', id);
+                      setLinodeId(id);
+                    }}
                     region={values.region}
                     shouldOnlyDisplayRegionsWithBlockStorage={true}
                     disabled={disabled}
@@ -350,8 +372,8 @@ const initialValues: FormState = {
   label: '',
   size: 20,
   region: 'none',
-  linode_id: -1,
-  config_id: -1,
+  linode_id: initialValueDefaultId,
+  config_id: initialValueDefaultId,
   tags: []
 };
 
