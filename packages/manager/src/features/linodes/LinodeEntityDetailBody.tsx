@@ -10,6 +10,9 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { dcDisplayNames } from 'src/constants';
 import { pluralize } from 'src/utilities/pluralize';
+import { Linode } from '@linode/api-v4/lib/linodes/types';
+import List from 'src/components/core/List';
+import ListItem from 'src/components/core/ListItem';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -72,6 +75,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   iconTextOuter: {
     flexBasis: '72%',
     minWidth: 115
+  },
+  ipLabel: {
+    fontWeight: 'bold'
+  },
+  ipList: {
+    marginTop: 4,
+    '& li': {
+      paddingTop: 2,
+      paddingRight: 0,
+      paddingBottom: 2,
+      paddingLeft: 0
+    }
   }
 }));
 
@@ -82,10 +97,21 @@ export interface LinodeEntityDetailBodyProps {
   distro: string;
   numVolumes: number;
   region: string;
+  ipv4: Linode['ipv4'];
+  ipv6: Linode['ipv6'];
 }
 
 export const LinodeEntityDetailBody: React.FC<LinodeEntityDetailBodyProps> = props => {
-  const { numCPUs, gbRAM, gbStorage, distro, numVolumes, region } = props;
+  const {
+    numCPUs,
+    gbRAM,
+    gbStorage,
+    distro,
+    numVolumes,
+    region,
+    ipv4,
+    ipv6
+  } = props;
 
   const classes = useStyles();
   return (
@@ -200,7 +226,15 @@ export const LinodeEntityDetailBody: React.FC<LinodeEntityDetailBodyProps> = pro
             </Grid>
           </Grid>
         </div>
-        <Grid item>IP Addresses</Grid>
+        <Grid item>
+          <Typography className={classes.ipLabel}>IP Addresses</Typography>
+          <List className={classes.ipList}>
+            {ipv4.map(thisIP => {
+              return <ListItem key={thisIP}>{thisIP}</ListItem>;
+            })}
+            {ipv6 && <ListItem>{ipv6}</ListItem>}
+          </List>
+        </Grid>
         <Grid item>Access details</Grid>
       </Grid>
     </Grid>
