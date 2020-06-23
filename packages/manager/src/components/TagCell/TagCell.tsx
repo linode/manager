@@ -2,6 +2,7 @@ import MoreHoriz from '@material-ui/icons/MoreHoriz';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import Plus from 'src/assets/icons/plusSign.svg';
+import IconButton from 'src/components/core/IconButton';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
@@ -10,7 +11,8 @@ import AddTag from './AddTag';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    position: 'relative'
+    position: 'relative',
+    overflow: 'hidden'
   },
   menuItem: {
     width: '30px',
@@ -34,21 +36,26 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: theme.spacing()
   },
   tagList: {
-    overflow: 'hidden',
+    overflow: 'scroll',
+    whiteSpace: 'nowrap',
     position: 'relative',
     display: 'flex',
     flexWrap: 'nowrap'
   },
   tagListOverflow: {
+    position: 'relative',
     '&:before': {
       content: '""',
-      width: '100%',
+      width: 50,
       height: '100%',
       position: 'absolute',
-      left: 0,
+      left: -50,
       top: 0,
-      background: `linear-gradient(to right, transparent 300px, white)`
+      background: 'linear-gradient(to right, transparent, #fff 100%)'
     }
+  },
+  button: {
+    padding: 0
   }
 }));
 
@@ -96,7 +103,7 @@ export const TagCell: React.FC<Props> = props => {
   );
 
   return (
-    <TableCell className={classes.root} style={{ width: `${width}px` }}>
+    <TableCell className={classes.root}>
       <Grid container direction="row" alignItems="center" wrap="nowrap">
         {addingTag ? (
           <Grid item xs={12}>
@@ -123,8 +130,8 @@ export const TagCell: React.FC<Props> = props => {
                 ref={overflowRef}
                 style={{ width: `${width - 100}px` }}
                 className={classNames({
-                  [classes.tagList]: true,
-                  [classes.tagListOverflow]: hasOverflow
+                  [classes.tagList]: true
+                  // [classes.tagListOverflow]: hasOverflow
                 })}
               >
                 {tags.map(thisTag => (
@@ -138,16 +145,21 @@ export const TagCell: React.FC<Props> = props => {
               </div>
             </Grid>
             {hasOverflow && (
-              <Grid item>
-                <div
-                  className={classes.menuItem}
-                  role="button"
-                  tabIndex={0}
+              <Grid
+                item
+                className={classNames({
+                  [classes.tagListOverflow]: hasOverflow
+                })}
+              >
+                <IconButton
                   onKeyPress={() => props.listAllTags(tags)}
                   onClick={() => props.listAllTags(tags)}
+                  className={classes.button}
+                  disableRipple
+                  aria-label="see all tags"
                 >
                   <MoreHoriz />
-                </div>
+                </IconButton>
               </Grid>
             )}
           </>
