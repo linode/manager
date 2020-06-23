@@ -33,7 +33,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   addTag: {
-    marginRight: theme.spacing()
+    marginRight: theme.spacing(),
+    cursor: 'pointer'
   },
   tagList: {
     overflow: 'scroll',
@@ -42,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexWrap: 'nowrap'
   },
-  tagListOverflow: {
+  displayAllOuter: {
     position: 'relative',
     '&:before': {
       content: '""',
@@ -125,38 +126,31 @@ export const TagCell: React.FC<Props> = props => {
             >
               <Plus />
             </Grid>
-            <Grid item>
-              <div
-                ref={overflowRef}
-                style={{ width: `${width - 100}px` }}
-                className={classNames({
-                  [classes.tagList]: true
-                  // [classes.tagListOverflow]: hasOverflow
-                })}
-              >
-                {tags.map(thisTag => (
-                  <Tag
-                    key={`tag-item-${thisTag}`}
-                    colorVariant="lightBlue"
-                    label={thisTag}
-                    onDelete={() => props.deleteTag(thisTag)}
-                  />
-                ))}
-              </div>
-            </Grid>
+            <div
+              ref={overflowRef}
+              style={{ width: `${width - 100}px` }}
+              className={classNames({
+                [classes.tagList]: true
+              })}
+            >
+              {tags.map(thisTag => (
+                <Tag
+                  key={`tag-item-${thisTag}`}
+                  colorVariant="lightBlue"
+                  label={thisTag}
+                  onDelete={() => props.deleteTag(thisTag)}
+                />
+              ))}
+            </div>
+
             {hasOverflow && (
-              <Grid
-                item
-                className={classNames({
-                  [classes.tagListOverflow]: hasOverflow
-                })}
-              >
+              <Grid item className={classes.displayAllOuter}>
                 <IconButton
                   onKeyPress={() => props.listAllTags(tags)}
                   onClick={() => props.listAllTags(tags)}
                   className={classes.button}
                   disableRipple
-                  aria-label="see all tags"
+                  aria-label="Display all tags"
                 >
                   <MoreHoriz />
                 </IconButton>
