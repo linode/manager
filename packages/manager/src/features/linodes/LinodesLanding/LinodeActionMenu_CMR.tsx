@@ -244,8 +244,11 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         },
         {
           title: 'Rescue',
-          onClick: () => {
-            console.log('Add Rescue functionality');
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            sendLinodeActionMenuItemEvent('Navigate to Rescue Page');
+            push(`/linodes/${linodeId}/rescue`);
+            e.preventDefault();
+            e.stopPropagation();
           },
           ...readOnlyProps,
           ...maintenanceProps
