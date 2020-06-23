@@ -14,7 +14,7 @@ import { shouldRequestEntity } from 'src/utilities/shouldRequestEntity';
 /**
  * We want to hold off loading this screen until Linode data is available.
  * If we have recently requested all Linode data, we're good. If not,
- * we show a loading spinner until the request is complete.
+ * we show a loading spinner until the requests are complete.
  */
 export const LinodesDetailContainer: React.FC<{}> = _ => {
   const { linodes } = useLinodes();
@@ -39,6 +39,12 @@ export const LinodesDetailContainer: React.FC<{}> = _ => {
       // Most likely a 404
       return;
     }
+
+    if (configs?.error.read || disks?.error.read) {
+      // We don't want an infinite loop.
+      return;
+    }
+
     // Make sure we've requested config and disk information for this Linode
     if (shouldRequestEntity(configs)) {
       dispatch(getAllLinodeConfigs({ linodeId: +linodeId }));
