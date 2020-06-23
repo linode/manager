@@ -10,7 +10,9 @@ export interface ImagesProps {
   requestImages: () => Promise<Image[]>;
 }
 
-export const useImages = () => {
+export type Filter = 'public' | 'private' | 'all';
+
+export const useImages = (filter: Filter = 'all') => {
   const dispatch: Dispatch = useDispatch();
   const images = useSelector(
     (state: ApplicationState) => state.__resources.images
@@ -18,6 +20,23 @@ export const useImages = () => {
   const requestImages = () => dispatch(_request());
 
   return { images, requestImages };
+};
+
+export const filterImages = (
+  filter: Filter,
+  images: Record<string, Image>
+): Record<string, Image> => {
+  if (filter === 'all') {
+    return images;
+  }
+
+  const isPublic = filter === 'public';
+
+  return Object.values(images).reduce((accum, thisImage) => {
+    return thisImage.is_public === isPublic
+      ? { ...accum, [thisImage.id]: thisImage }
+      : accum;
+  }, {});
 };
 
 export default useImages;
