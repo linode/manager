@@ -8,7 +8,7 @@ export const formatDuration = (duration: Duration) => {
   if (hours >= 1) {
     const dur = duration.shiftTo('hours', 'minutes');
     const mins = Math.round(dur.minutes);
-    return `${dur.hours} hour${dur.hours > 1 ? 's' : ''} ${mins} minute${
+    return `${dur.hours} hour${dur.hours > 1 ? 's' : ''}, ${mins} minute${
       mins >= 2 ? 's' : ''
     }`;
   }
@@ -16,7 +16,7 @@ export const formatDuration = (duration: Duration) => {
   if (minutes >= 1) {
     const dur = duration.shiftTo('minutes', 'seconds');
     const secs = Math.round(dur.seconds);
-    return `${dur.minutes} minute${dur.minutes > 1 ? 's' : ''} ${secs} second${
+    return `${dur.minutes} minute${dur.minutes > 1 ? 's' : ''}, ${secs} second${
       secs >= 2 ? 's' : ''
     }`;
   }
