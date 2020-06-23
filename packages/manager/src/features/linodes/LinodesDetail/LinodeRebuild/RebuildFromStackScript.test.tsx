@@ -70,7 +70,7 @@ describe('RebuildFromStackScript', () => {
       () => [
         getByText('A StackScript is required.'),
         getByText('An image is required.'),
-        getByText('Password cannot be blank.')
+        getByText('Password is required.')
       ],
       {}
     );
