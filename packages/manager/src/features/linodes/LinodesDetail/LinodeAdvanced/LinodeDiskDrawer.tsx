@@ -240,7 +240,7 @@ export const DiskDrawer: React.FC<CombinedProps> = props => {
             {selectedMode === modes.IMAGE && (
               <ImageAndPassword
                 onImageChange={(selected: Item) =>
-                  formik.setFieldValue('image', selected.value)
+                  formik.setFieldValue('image', selected?.value ?? null)
                 }
                 imageFieldError={
                   formik.touched.image ? formik.errors.image : undefined
