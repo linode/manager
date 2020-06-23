@@ -233,17 +233,22 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         },
         {
           title: 'Rebuild',
-          onClick: () => {
-            console.log('Add Rebuild functionality');
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            sendLinodeActionMenuItemEvent('Navigate to Rebuild Page');
+            push(`/linodes/${linodeId}/rebuild`);
+            e.preventDefault();
+            e.stopPropagation();
           },
-          ...readOnlyProps
+          ...readOnlyProps,
+          ...maintenanceProps
         },
         {
           title: 'Rescue',
           onClick: () => {
             console.log('Add Rescue functionality');
           },
-          ...readOnlyProps
+          ...readOnlyProps,
+          ...maintenanceProps
         },
         {
           title: 'Migrate',
