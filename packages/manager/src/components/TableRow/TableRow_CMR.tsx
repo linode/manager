@@ -146,21 +146,8 @@ export const TableRow: React.FC<CombinedProps> = props => {
     ...rest
   } = props;
 
-  let role;
-  switch (typeof rowLink) {
-    case 'string':
-      role = 'link';
-      break;
-    case 'function':
-      role = 'button';
-      break;
-    default:
-      role = undefined;
-  }
-
   return (
     <_TableRow
-      role={role}
       aria-label={ariaLabel ?? `View Details`}
       className={classNames(className, {
         [classes.root]: true,
@@ -170,7 +157,6 @@ export const TableRow: React.FC<CombinedProps> = props => {
         [classes.disabled]: disabled
       })}
       {...rest}
-      tabIndex={rowLink || forceIndex ? 0 : -1}
     >
       {props.children}
       {selected && (

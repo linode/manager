@@ -126,11 +126,11 @@ const styles = (theme: Theme) =>
     statusIconRunning: {
       backgroundColor: theme.color.green
     },
-    statusIconOffline: {
-      backgroundColor: theme.color.grey6
-    },
     statusIconOther: {
       backgroundColor: '#ffb31a'
+    },
+    statusIconOffline: {
+      backgroundColor: theme.color.grey6
     },
     statusHelpIcon: {
       position: 'relative',
