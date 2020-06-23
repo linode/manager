@@ -4,6 +4,7 @@ import { reportException } from 'src/exceptionReporting';
 import store from 'src/store';
 import { DATETIME_DISPLAY_FORMAT } from 'src/constants';
 import { parseAPIDate } from 'src/utilities/date';
+
 export type TimeInterval = 'day' | 'week' | 'month' | 'year' | 'never';
 
 const durationMap = {
@@ -61,9 +62,12 @@ export const formatDate = (
   }
 
   const expectedFormat = options.format || DATETIME_DISPLAY_FORMAT;
-
+  const now = DateTime.local();
+  const isFewSecondsAgo = time.plus({ seconds: 30 }) > now && time <= now;
   const formattedTime = shouldHumanize(time, options.humanizeCutoff)
-    ? time.toRelative()
+    ? isFewSecondsAgo
+      ? 'a few seconds ago'
+      : time.toRelative()
     : time.toFormat(expectedFormat);
 
   return formattedTime ?? time.toFormat(expectedFormat);

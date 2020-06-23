@@ -34,6 +34,16 @@ describe('formatDate utility', () => {
   });
 
   describe('Humanized Dates', () => {
+    it('should output a few seconds ago for less than 30 secs', () => {
+      // the time has to be in UTC if we want to use API time format as it is not localized
+      const thirtySecsAgo = DateTime.utc()
+        .minus({ seconds: 20 })
+        .toFormat(ISO_DATETIME_NO_TZ_FORMAT);
+      const formattedDate = formatDate(thirtySecsAgo, {
+        humanizeCutoff: 'day'
+      });
+      expect(formattedDate).toBe('a few seconds ago');
+    });
     it('should output humanized strings if the date is earlier than the cutoff', () => {
       // the time has to be in UTC if we want to use API time format as it is not localized
       const fiveMinutesAgo = DateTime.utc()
