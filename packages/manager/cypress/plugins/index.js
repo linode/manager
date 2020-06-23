@@ -20,7 +20,9 @@ function getConfiguration() {
     path: dotenvPath
   });
   if (conf.error) {
-    throw `Could not load .env from Cypress plugin/index.js: ${conf.error}`;
+    throw Error(
+      `Could not load .env from Cypress plugin/index.js: ${conf.error}`
+    );
   }
   return { env: conf.parsed };
 }
@@ -33,7 +35,7 @@ function checkNodeVersionRequiredByLinode() {
   }
 }
 
-module.exports = (on, config) => {
+module.exports = (on, _config) => {
   registerVisualRegTasks(on);
   checkNodeVersionRequiredByLinode();
 
