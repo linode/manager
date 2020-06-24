@@ -243,11 +243,9 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       linode => linode.status === 'offline' || linode.status === 'stopped'
     ).length;
 
-    const chipProps = () => {
-      return {
-        component: 'span',
-        clickable: false
-      };
+    const chipProps = {
+      component: 'span',
+      clickable: false
     };
 
     return (

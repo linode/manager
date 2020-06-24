@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: 10,
       fontSize: '.875rem',
       letterSpacing: '.5px',
-      minWidth: 140
+      minWidth: 120
     }
   }
 }));
