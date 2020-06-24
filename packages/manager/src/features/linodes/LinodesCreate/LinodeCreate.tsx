@@ -239,7 +239,6 @@ export class LinodeCreate extends React.PureComponent<
       imagesData,
       label,
       linodesData,
-      selectedImageID,
       updateLabel,
       tags,
       updateTags,

@@ -292,8 +292,8 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
                 udf_data={udf_data || {}}
               />
             )}
+            {console.log(selectedImageID)}
             {!disabled && compatibleImages && compatibleImages.length > 0 ? (
-              // @todo: selectedImageID is not actually getting the image
               <ImageSelect
                 data-qa-select-image-panel
                 title="Select an Image"
