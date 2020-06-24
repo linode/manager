@@ -130,6 +130,7 @@ class AccessPanel extends React.Component<CombinedProps> {
           {error && <Notice text={error} error />}
           <React.Suspense fallback={<SuspenseLoader />}>
             <PasswordInput
+              name="password"
               data-qa-password-input
               className={classes.passwordInputOuter}
               required={required}
