@@ -365,6 +365,19 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/mysql_color.svg'
   },
   {
+    name: 'Nextcloud',
+    description: `Nextcloud is an open source solution to file hosting and sharing. With NextCloud, you can synchronize files from your local computer to your Linode server and share them with your collaborators. Nextcloud’s customizable security features and intuitive user interface help keep your files safe and easy to manage.`,
+    summary: `A file sharing service that allows you to store your important documents and images in one centralized location.`,
+    related_guides: [
+      {
+        title: 'Use a Block Storage Volume with Nextcloud',
+        href:
+          'https://www.linode.com/docs/applications/cloud-storage/use-block-storage-volume-with-nextcloud/'
+      }
+    ],
+    logo_url: 'assets/nextcloud_color.svg'
+  },
+  {
     name: 'Plesk',
     description: `Plesk is a leading WordPress and website management platform and control panel. Plesk lets you build and manage multiple websites from a single dashboard to configure web services, email, and other applications. Plesk features hundreds of extensions, plus a complete WordPress toolkit. Use the Plesk One-Click App to manage websites hosted on your Linode.`,
     summary:
