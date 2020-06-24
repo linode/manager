@@ -3,7 +3,7 @@ import {
   Event,
   EventAction,
   EventStatus
-} from 'linode-js-sdk/lib/account';
+} from '@linode/api-v4/lib/account';
 import * as moment from 'moment';
 import { compose, equals, findIndex, omit, take, update } from 'ramda';
 import updateRight from 'src/utilities/updateRight';
@@ -19,7 +19,7 @@ export const epoch = new Date(`1970-01-01T00:00:00.000`).getTime();
  * Returns `true` if the event:
  *   a) has _delete in its action (so it's a deletion event)
  *   b) is not a special case (see below).
- *   c) the event indicates a completed deletion action (its status is finished or notification)
+ *   c) the event indicates a non-failed deletion action
  *
  * If these conditions are met, the entity that the event is attached to
  * is assumed to no longer exist in the database.
@@ -39,9 +39,7 @@ export const isRelevantDeletionEvent = (
   if (ignoredDeletionEvents.includes(action)) {
     return false;
   }
-  return (
-    action.includes(`_delete`) && ['finished', 'notification'].includes(status)
-  );
+  return action.includes(`_delete`) && status !== 'failed';
 };
 
 /**
@@ -102,7 +100,7 @@ export const updateEvents = compose(
 
   /** Nested compose to get around Ramda's shotty typing. */
   compose(
-    /** Take only the last 25 events. */
+    /** Take only the last 100 events. */
     updateRight<Event[], Event[]>((prevEvents, events) => take(100, events)),
 
     /** Marked events "_deleted". */

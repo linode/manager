@@ -1,4 +1,4 @@
-import { APIError } from 'linode-js-sdk/lib/types';
+import { APIError } from '@linode/api-v4/lib/types';
 import { actionCreatorFactory } from 'typescript-fsa';
 
 import { Order } from 'src/components/Pagey';
@@ -24,6 +24,7 @@ export interface UserPreferences {
   spacing?: SpacingChoice;
   desktop_sidebar_open?: boolean;
   sortKeys?: Partial<Record<SortKey, OrderSet>>;
+  main_content_banner_dismissal?: Record<string, boolean>;
 }
 
 export const handleGetPreferences = actionCreator.async<

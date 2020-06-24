@@ -1,12 +1,11 @@
 import * as Bluebird from 'bluebird';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useStore } from 'react-redux';
 import { Dispatch } from 'redux';
 import { REFRESH_INTERVAL } from 'src/constants';
 import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
-import { getAllBuckets } from 'src/store/bucket/bucket.requests';
 import { requestDomains } from 'src/store/domains/domains.requests';
 import { getEvents } from 'src/store/events/event.request';
 import { getAllFirewalls } from 'src/store/firewalls/firewalls.requests';
@@ -22,6 +21,7 @@ import { requestNotifications } from 'src/store/notification/notification.reques
 import { requestProfile } from 'src/store/profile/profile.requests';
 import { requestRegions } from 'src/store/regions/regions.actions';
 import { getAllVolumes } from 'src/store/volume/volume.requests';
+import { requestClusters } from 'src/store/clusters/clusters.actions';
 
 interface UseReduxPreload {
   _loading: boolean;
@@ -42,10 +42,10 @@ export type ReduxEntity =
   | 'profile'
   | 'regions'
   | 'types'
-  | 'buckets'
   | 'events'
   | 'longview'
-  | 'firewalls';
+  | 'firewalls'
+  | 'clusters';
 
 type RequestMap = Record<ReduxEntity, any>;
 const requestMap: RequestMap = {
@@ -57,7 +57,6 @@ const requestMap: RequestMap = {
   nodeBalancers: getAllNodeBalancers,
   images: requestImages,
   events: getEvents,
-  buckets: getAllBuckets,
   profile: requestProfile,
   regions: requestRegions,
   types: requestTypes,
@@ -66,7 +65,8 @@ const requestMap: RequestMap = {
   managedIssues: requestManagedIssues,
   kubernetes: requestKubernetesClusters,
   longview: getAllLongviewClients,
-  firewalls: getAllFirewalls
+  firewalls: getAllFirewalls,
+  clusters: requestClusters
 };
 
 export const useReduxLoad = (
@@ -78,11 +78,25 @@ export const useReduxLoad = (
   const dispatch = useDispatch();
   const state = useStore<ApplicationState>().getState();
 
-  useEffect(() => {
-    if (predicate) {
-      requestDeps(state, dispatch, deps, refreshInterval, setLoading);
+  const mountedRef = useRef<boolean>(true);
+
+  const _setLoading = (val: boolean) => {
+    if (mountedRef.current) {
+      setLoading(val);
     }
-  }, [predicate]);
+  };
+
+  useEffect(() => {
+    if (predicate && mountedRef.current) {
+      requestDeps(state, dispatch, deps, refreshInterval, _setLoading);
+    }
+  }, [predicate, refreshInterval]);
+
+  useEffect(() => {
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   return { _loading };
 };
@@ -103,7 +117,10 @@ export const requestDeps = (
       if (currentResource.lastUpdated === 0 && !currentResource.loading) {
         needsToLoad = true;
         requests.push(requestMap[deps[i]]);
-      } else if (Date.now() - currentResource.lastUpdated > refreshInterval) {
+      } else if (
+        Date.now() - currentResource.lastUpdated > refreshInterval &&
+        !currentResource.loading
+      ) {
         requests.push(requestMap[deps[i]]);
       }
     }

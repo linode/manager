@@ -5,8 +5,8 @@ import {
   OAuthClient,
   resetOAuthClientSecret,
   updateOAuthClient
-} from 'linode-js-sdk/lib/account';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/account';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
@@ -308,7 +308,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
 
   renderRows = (data: OAuthClient[]) => {
     return data.map(({ id, label, redirect_uri, public: isPublic, status }) => (
-      <TableRow key={id} data-qa-table-row={label}>
+      <TableRow ariaLabel={label} key={id} data-qa-table-row={label}>
         <TableCell parentColumn="Label" data-qa-oauth-label>
           {label}
         </TableCell>
@@ -386,7 +386,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
                 <TableCell style={{ width: '20%' }}>Access</TableCell>
                 <TableCell style={{ width: '20%' }}>ID</TableCell>
                 <TableCell style={{ width: '20%' }}>Callback URL</TableCell>
-                <TableCell style={{ width: '20%' }} />
+                <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>{this.renderContent()}</TableBody>

@@ -4,9 +4,9 @@ import {
   Linode,
   LinodeType,
   Stats
-} from 'linode-js-sdk/lib/linodes';
-import { APIError } from 'linode-js-sdk/lib/types';
-import { Volume } from 'linode-js-sdk/lib/volumes';
+} from '@linode/api-v4/lib/linodes';
+import { APIError } from '@linode/api-v4/lib/types';
+import { Volume } from '@linode/api-v4/lib/volumes';
 import * as moment from 'moment';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -325,31 +325,29 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     const format = formatPercentage;
 
     return (
-      <React.Fragment>
-        <div className={classes.chart}>
-          <LineGraph
-            timezone={timezone}
-            chartHeight={chartHeight}
-            showToday={rangeSelection === '24'}
-            data={[
-              {
-                borderColor: 'transparent',
-                backgroundColor: theme.graphs.cpu.percent,
-                data,
-                label: 'CPU %'
-              }
-            ]}
-            legendRows={[
-              {
-                legendTitle: 'CPU %',
-                legendColor: 'blue',
-                data: metrics,
-                format
-              }
-            ]}
-          />
-        </div>
-      </React.Fragment>
+      <div className={classes.chart}>
+        <LineGraph
+          timezone={timezone}
+          chartHeight={chartHeight}
+          showToday={rangeSelection === '24'}
+          data={[
+            {
+              borderColor: 'transparent',
+              backgroundColor: theme.graphs.cpu.percent,
+              data,
+              label: 'CPU %'
+            }
+          ]}
+          legendRows={[
+            {
+              legendTitle: 'CPU %',
+              legendColor: 'blue',
+              data: metrics,
+              format
+            }
+          ]}
+        />
+      </div>
     );
   };
 
@@ -365,39 +363,37 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     const format = formatNumber;
 
     return (
-      <React.Fragment>
-        <div className={`${classes.chart}`}>
-          <LineGraph
-            timezone={timezone}
-            chartHeight={chartHeight}
-            showToday={rangeSelection === '24'}
-            data={[
-              {
-                borderColor: 'transparent',
-                backgroundColor: theme.graphs.diskIO.read,
-                data: data.io,
-                label: 'I/O Rate'
-              },
-              {
-                borderColor: 'transparent',
-                backgroundColor: theme.graphs.diskIO.swap,
-                data: data.swap,
-                label: 'Swap Rate'
-              }
-            ]}
-            legendRows={[
-              {
-                data: getMetrics(data.io),
-                format
-              },
-              {
-                data: getMetrics(data.swap),
-                format
-              }
-            ]}
-          />
-        </div>
-      </React.Fragment>
+      <div className={`${classes.chart}`}>
+        <LineGraph
+          timezone={timezone}
+          chartHeight={chartHeight}
+          showToday={rangeSelection === '24'}
+          data={[
+            {
+              borderColor: 'transparent',
+              backgroundColor: theme.graphs.diskIO.read,
+              data: data.io,
+              label: 'I/O Rate'
+            },
+            {
+              borderColor: 'transparent',
+              backgroundColor: theme.graphs.diskIO.swap,
+              data: data.swap,
+              label: 'Swap Rate'
+            }
+          ]}
+          legendRows={[
+            {
+              data: getMetrics(data.io),
+              format
+            },
+            {
+              data: getMetrics(data.swap),
+              format
+            }
+          ]}
+        />
+      </div>
     );
   };
 
@@ -511,14 +507,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
               renderBody={this.renderCPUChart}
               {...chartProps}
             />
-
-            <NetworkGraph
-              stats={this.state.stats}
-              rangeSelection={this.state.rangeSelection}
-              timezone={this.props.timezone}
-              {...chartProps}
-            />
-
+            <NetworkGraph stats={this.state.stats} {...chartProps} />
             <StatsPanel
               title="Disk IO (blocks/s)"
               renderBody={this.renderDiskIOChart}
@@ -552,7 +541,7 @@ interface WithTypesProps {
   mostRecentEventTime: string;
 }
 
-const withTypes = connect((state: ApplicationState, ownProps) => ({
+const withTypes = connect((state: ApplicationState, _ownProps) => ({
   typesData: state.__resources.types.entities,
   timezone: pathOr(
     'UTC',

@@ -1,12 +1,11 @@
-import { Grant } from 'linode-js-sdk/lib/account';
-import { Image } from 'linode-js-sdk/lib/images';
-import { StackScript, UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
-import { ResourcePage } from 'linode-js-sdk/lib/types';
+import { Grant } from '@linode/api-v4/lib/account';
+import { Image } from '@linode/api-v4/lib/images';
+import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
+import { ResourcePage } from '@linode/api-v4/lib/types';
 import { assocPath, pathOr } from 'ramda';
 import * as React from 'react';
-import { Sticky, StickyProps } from 'react-sticky';
 import AccessPanel from 'src/components/AccessPanel';
-import CheckoutBar from 'src/components/CheckoutBar';
+import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -226,6 +225,47 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
         ? 'community-stackscript-create'
         : 'account-stackscript-create';
 
+    const displaySections = [];
+
+    if (selectedStackScriptUsername && selectedStackScriptLabel) {
+      displaySections.push({
+        title: selectedStackScriptUsername + ' / ' + selectedStackScriptLabel
+      });
+    }
+
+    if (imageDisplayInfo) {
+      displaySections.push(imageDisplayInfo);
+    }
+
+    if (regionDisplayInfo) {
+      displaySections.push({
+        title: regionDisplayInfo.title,
+        details: regionDisplayInfo.details
+      });
+    }
+
+    if (typeDisplayInfo) {
+      displaySections.push(typeDisplayInfo);
+    }
+
+    if (label) {
+      displaySections.push({
+        title: 'Linode Label',
+        details: label
+      });
+    }
+
+    if (hasBackups && typeDisplayInfo && backupsMonthlyPrice) {
+      displaySections.push(
+        renderBackupsDisplaySection(accountBackupsEnabled, backupsMonthlyPrice)
+      );
+    }
+
+    let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
+    if (hasBackups && typeDisplayInfo && backupsMonthlyPrice) {
+      calculatedPrice += backupsMonthlyPrice;
+    }
+
     return (
       <React.Fragment>
         <Grid
@@ -239,6 +279,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
           <form>
             <CreateLinodeDisabled isDisabled={disabled} />
             <SelectStackScriptPanel
+              data-qa-select-stackscript
               error={hasErrorFor('stackscript_id')}
               header={header}
               selectedId={selectedStackScriptID}
@@ -253,6 +294,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
             />
             {!disabled && userDefinedFields && userDefinedFields.length > 0 && (
               <UserDefinedFieldsPanel
+                data-qa-udf-panel
                 errors={filterUDFErrors(errorResources, this.props.errors)}
                 selectedLabel={selectedStackScriptLabel || ''}
                 selectedUsername={selectedStackScriptUsername || ''}
@@ -291,23 +333,28 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
               </Paper>
             )}
             <SelectRegionPanel
+              data-qa-select-region-panel
               error={hasErrorFor('region')}
               regions={regionsData}
               handleSelection={updateRegionID}
               selectedID={selectedRegionID}
-              updateFor={[selectedRegionID, errors]}
+              updateFor={[selectedRegionID, errors, regionsData]}
+              helperText={this.props.regionHelperText}
               copy="Determine the best location for your Linode."
               disabled={disabled}
             />
             <SelectPlanPanel
+              data-qa-select-plan
               error={hasErrorFor('type')}
               types={typesData}
               onSelect={updateTypeID}
-              updateFor={[selectedTypeID, errors]}
+              updateFor={[selectedTypeID, errors, this.props.disabledClasses]}
               selectedID={selectedTypeID}
               disabled={disabled}
+              disabledClasses={this.props.disabledClasses}
             />
             <LabelAndTagsPanel
+              data-qa-label-panel
               labelFieldProps={{
                 label: 'Linode Label',
                 value: label || '',
@@ -324,6 +371,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
               updateFor={[tags, label, errors]}
             />
             <AccessPanel
+              data-qa-access-panel
               /* disable the password field if we haven't selected an image */
               disabled={!this.props.selectedImageID}
               disabledReason={
@@ -342,12 +390,11 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
               ]}
               password={password}
               handleChange={updatePassword}
-              users={
-                userSSHKeys.length > 0 && selectedImageID ? userSSHKeys : []
-              }
+              users={userSSHKeys}
               requestKeys={requestKeys}
             />
             <AddonsPanel
+              data-qa-addons-panel
               backups={backupsEnabled}
               accountBackups={accountBackupsEnabled}
               backupsMonthly={backupsMonthlyPrice}
@@ -360,68 +407,15 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
           </form>
         </Grid>
         <Grid item className={`${classes.sidebar} mlSidebar`}>
-          <Sticky topOffset={-24} disableCompensation>
-            {(props: StickyProps) => {
-              const displaySections = [];
-
-              if (selectedStackScriptUsername && selectedStackScriptLabel) {
-                displaySections.push({
-                  title:
-                    selectedStackScriptUsername +
-                    ' / ' +
-                    selectedStackScriptLabel
-                });
-              }
-
-              if (imageDisplayInfo) {
-                displaySections.push(imageDisplayInfo);
-              }
-
-              if (regionDisplayInfo) {
-                displaySections.push({
-                  title: regionDisplayInfo.title,
-                  details: regionDisplayInfo.details
-                });
-              }
-
-              if (typeDisplayInfo) {
-                displaySections.push(typeDisplayInfo);
-              }
-
-              if (label) {
-                displaySections.push({
-                  title: 'Linode Label',
-                  details: label
-                });
-              }
-
-              if (hasBackups && typeDisplayInfo && backupsMonthlyPrice) {
-                displaySections.push(
-                  renderBackupsDisplaySection(
-                    accountBackupsEnabled,
-                    backupsMonthlyPrice
-                  )
-                );
-              }
-
-              let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
-              if (hasBackups && typeDisplayInfo && backupsMonthlyPrice) {
-                calculatedPrice += backupsMonthlyPrice;
-              }
-
-              return (
-                <CheckoutBar
-                  heading="Linode Summary"
-                  calculatedPrice={calculatedPrice}
-                  isMakingRequest={this.props.formIsSubmitting}
-                  disabled={this.props.formIsSubmitting || disabled}
-                  onDeploy={this.handleCreateLinode}
-                  displaySections={displaySections}
-                  {...props}
-                />
-              );
-            }}
-          </Sticky>
+          <CheckoutBar
+            heading="Linode Summary"
+            calculatedPrice={calculatedPrice}
+            isMakingRequest={this.props.formIsSubmitting}
+            disabled={this.props.formIsSubmitting || disabled}
+            onDeploy={this.handleCreateLinode}
+          >
+            <DisplaySectionList displaySections={displaySections} />
+          </CheckoutBar>
         </Grid>
         <StackScriptDrawer />
       </React.Fragment>

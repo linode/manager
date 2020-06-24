@@ -1,4 +1,4 @@
-import { NodeBalancerWithConfigs } from 'linode-js-sdk/lib/nodebalancers';
+import { NodeBalancerWithConfigs } from '@linode/api-v4/lib/nodebalancers';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -52,10 +52,11 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const NodeBalancersLandingTableRows: React.StatelessComponent<CombinedProps> = props => {
+const NodeBalancersLandingTableRows: React.FC<CombinedProps> = props => {
   const { classes, data, toggleDialog } = props;
 
   return (
+    /* eslint-disable-next-line */
     <>
       {data.map(nodeBalancer => {
         const configs = nodeBalancer.configs || [];
@@ -74,7 +75,7 @@ const NodeBalancersLandingTableRows: React.StatelessComponent<CombinedProps> = p
             data-qa-nodebalancer-cell={nodeBalancer.label}
             rowLink={`/nodebalancers/${nodeBalancer.id}`}
             className="fade-in-table"
-            aria-label={nodeBalancer.label}
+            ariaLabel={nodeBalancer.label}
           >
             <TableCell parentColumn="Name" data-qa-nodebalancer-label>
               <Grid container wrap="nowrap" alignItems="center">
@@ -88,7 +89,7 @@ const NodeBalancersLandingTableRows: React.StatelessComponent<CombinedProps> = p
                 </Grid>
               </Grid>
             </TableCell>
-            <TableCell parentColumn="Node Status" data-qa-node-status>
+            <TableCell parentColumn="Backend Status" data-qa-node-status>
               <span>{nodesUp} up</span> - <span>{nodesDown} down</span>
             </TableCell>
             <TableCell parentColumn="Transferred" data-qa-transferred>

@@ -44,20 +44,20 @@ const _getEntityByIDFromStore = (
   } = _store.__resources;
   switch (entityType) {
     case 'linode':
-      return linodes.entities.find(linode => entityID === linode.id);
+      return linodes.itemsById[entityID];
     case 'image':
       return (images.data || {})[entityID];
     case 'nodebalancer':
       return nodeBalancers.itemsById[entityID];
     case 'domain':
-      if (!domains.data) {
+      if (!domains.itemsById) {
         return;
       }
-      return domains.data.find(domain => entityID === domain.id);
+      return domains.itemsById[entityID];
     case 'volume':
       return volumes.itemsById[entityID];
     case 'kubeCluster':
-      return kubernetes.entities.find(cluster => cluster.id === entityID);
+      return kubernetes.itemsById[entityID];
     default:
       return;
   }

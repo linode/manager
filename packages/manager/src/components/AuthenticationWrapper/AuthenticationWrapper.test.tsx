@@ -12,17 +12,17 @@ window.location.assign = jest.fn();
 const component = shallow<AuthenticationWrapper>(
   <AuthenticationWrapper
     isAuthenticated={false}
+    linodesLastUpdated={0}
+    linodesLoading={false}
     initSession={jest.fn()}
     requestAccount={jest.fn()}
     requestTypes={jest.fn()}
-    requestClusters={jest.fn()}
-    requestDomains={jest.fn()}
-    requestImages={jest.fn()}
     requestLinodes={jest.fn()}
     requestNotifications={jest.fn()}
     requestProfile={jest.fn()}
     requestRegions={jest.fn()}
     requestSettings={jest.fn()}
+    markAppAsDoneLoading={jest.fn()}
   >
     <div />
   </AuthenticationWrapper>
@@ -40,7 +40,7 @@ describe('AuthenticationWrapper', () => {
     expect(component.instance().props.initSession).toHaveBeenCalledTimes(1);
   });
 
-  it('should set showChildren state to true when the isAuhenticated prop goes from false to true', () => {
+  it('should set showChildren state to true when the isAuthenticated prop goes from false to true', () => {
     component.setState({ showChildren: false });
     component.setProps({ isAuthenticated: true });
     expect(component.state('showChildren')).toBeTruthy();

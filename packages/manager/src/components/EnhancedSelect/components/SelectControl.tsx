@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ControlProps } from 'react-select/lib/components/Control';
+import { ControlProps } from 'react-select';
 
 import TextField from 'src/components/TextField';
 
@@ -8,16 +8,13 @@ interface SelectProps {
   props: any;
 }
 
-const inputComponent: React.StatelessComponent<SelectProps> = ({
-  inputRef,
-  ...props
-}) => {
+const inputComponent: React.FC<SelectProps> = ({ inputRef, ...props }) => {
   return <div ref={inputRef} {...props} />;
 };
 
 interface Props extends ControlProps<any> {}
 
-const SelectControl: React.StatelessComponent<Props> = props => {
+const SelectControl: React.FC<Props> = props => {
   return (
     <TextField
       data-qa-enhanced-select={

@@ -1,4 +1,4 @@
-import { Event } from 'linode-js-sdk/lib/account';
+import { Event } from '@linode/api-v4/lib/account';
 import {
   cloneLinode,
   cloneLinodeDisk,
@@ -6,8 +6,8 @@ import {
   Disk,
   Linode,
   LinodeStatus
-} from 'linode-js-sdk/lib/linodes';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/linodes';
+import { APIError } from '@linode/api-v4/lib/types';
 import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -27,9 +27,9 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import Typography from 'src/components/core/Typography';
-import DefaultLoader from 'src/components/DefaultLoader';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLink from 'src/components/TabLink';
 import withLinodes from 'src/containers/withLinodes.container';
 import { resetEventsPolling } from 'src/eventsPolling';
@@ -50,13 +50,8 @@ import {
   defaultState
 } from './utilities';
 
-const Configs = DefaultLoader({
-  loader: () => import('./Configs')
-});
-
-const Disks = DefaultLoader({
-  loader: () => import('./Disks')
-});
+const Configs = React.lazy(() => import('./Configs'));
+const Disks = React.lazy(() => import('./Disks'));
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -447,7 +442,9 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
           />
         </Grid>
       </Grid>
-      <Switch />
+      <React.Suspense fallback={<SuspenseLoader />}>
+        <Switch />
+      </React.Suspense>
     </React.Fragment>
   );
 };
@@ -484,10 +481,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-const connected = connect(
-  undefined,
-  mapDispatchToProps
-);
+const connected = connect(undefined, mapDispatchToProps);
 
 const enhanced = compose<CombinedProps, {}>(
   connected,

@@ -1,27 +1,33 @@
-import { ObjectStorageBucket } from 'linode-js-sdk/lib/object-storage';
+import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import { Reducer } from 'redux';
 import { RequestableRequiredData } from 'src/store/types';
 import { isType } from 'typescript-fsa';
-import { onStart } from '../store.helpers';
 import {
   createBucketActions,
   deleteBucketActions,
-  getAllBucketsActions
+  getAllBucketsForAllClustersActions
 } from './bucket.actions';
+import { BucketError } from './types';
 
 /**
  * State
  */
 
-// We are unable to use the "EntityState" pattern we've adopted, since IDs
-// do not exist on buckets.
-export type State = RequestableRequiredData<ObjectStorageBucket[]>;
+// BucketState is an unusual case for two reasons:
+// 1. Bucket IDs do not exist.
+// 2. Buckets are requested per-cluster, and their errors are handled individually.
+export type State = Omit<
+  RequestableRequiredData<ObjectStorageBucket[]>,
+  'error'
+> & {
+  bucketErrors?: BucketError[];
+};
 
 export const defaultState: State = {
   data: [],
-  loading: true,
+  loading: false,
   lastUpdated: 0,
-  error: undefined
+  bucketErrors: undefined
 };
 
 /**
@@ -42,16 +48,16 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   }
 
   /*
-   * Get All Buckets
+   * Get All Buckets from All Clusters
    **/
 
   // START
-  if (isType(action, getAllBucketsActions.started)) {
-    return onStart(state);
+  if (isType(action, getAllBucketsForAllClustersActions.started)) {
+    return { ...state, loading: true, bucketErrors: undefined };
   }
 
   // DONE
-  if (isType(action, getAllBucketsActions.done)) {
+  if (isType(action, getAllBucketsForAllClustersActions.done)) {
     const { result } = action.payload;
     return {
       ...state,
@@ -62,12 +68,12 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   }
 
   // FAILED
-  if (isType(action, getAllBucketsActions.failed)) {
+  if (isType(action, getAllBucketsForAllClustersActions.failed)) {
     const { error } = action.payload;
     return {
       ...state,
       loading: false,
-      error
+      bucketErrors: error
     };
   }
 

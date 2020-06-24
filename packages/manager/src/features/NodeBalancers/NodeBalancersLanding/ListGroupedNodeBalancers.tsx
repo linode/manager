@@ -1,4 +1,4 @@
-import { NodeBalancerWithConfigs } from 'linode-js-sdk/lib/nodebalancers';
+import { NodeBalancerWithConfigs } from '@linode/api-v4/lib/nodebalancers';
 import { compose } from 'ramda';
 import * as React from 'react';
 import {
@@ -82,7 +82,7 @@ interface Props {
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
-const ListGroupedNodeBalancers: React.StatelessComponent<CombinedProps> = props => {
+const ListGroupedNodeBalancers: React.FC<CombinedProps> = props => {
   const {
     classes,
     data,

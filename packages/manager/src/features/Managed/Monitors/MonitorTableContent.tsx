@@ -1,5 +1,5 @@
-import { ManagedServiceMonitor } from 'linode-js-sdk/lib/managed';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { ManagedServiceMonitor } from '@linode/api-v4/lib/managed';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import TableRowEmpty from 'src/components/TableRowEmptyState';
@@ -51,6 +51,7 @@ export const MonitorTableContent: React.FC<CombinedProps> = props => {
   }
 
   return (
+    // eslint-disable-next-line
     <>
       {monitors.map((monitor: ManagedServiceMonitor, idx: number) => (
         <MonitorRow

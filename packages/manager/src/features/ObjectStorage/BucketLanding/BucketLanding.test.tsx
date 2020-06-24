@@ -1,45 +1,83 @@
-import { shallow } from 'enzyme';
+import { cleanup } from '@testing-library/react';
 import * as React from 'react';
-import { buckets } from 'src/__data__/buckets';
-import { BucketLanding } from './BucketLanding';
+import {
+  objectStorageBucketFactory,
+  objectStorageClusterFactory
+} from 'src/factories/objectStorage';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+import BucketLanding, { CombinedProps } from './BucketLanding';
+
+afterEach(cleanup);
+
+const mockCloseBucketDrawer = jest.fn();
+const mockOpenBucketDrawer = jest.fn();
+
+const props: CombinedProps = {
+  isRestrictedUser: false,
+  openBucketDrawer: mockOpenBucketDrawer,
+  closeBucketDrawer: mockCloseBucketDrawer
+};
 
 describe('ObjectStorageLanding', () => {
-  const wrapper = shallow(
-    <BucketLanding
-      createBucket={jest.fn()}
-      bucketsData={buckets}
-      bucketsLoading={false}
-      openBucketDrawer={jest.fn()}
-      closeBucketDrawer={jest.fn()}
-      classes={{ copy: '' }}
-      deleteBucket={jest.fn()}
-      isRestrictedUser={false}
-    />
-  );
-
-  it('renders without crashing', () => {
-    expect(wrapper).toHaveLength(1);
+  it('renders a loading state', () => {
+    const { getByTestId } = renderWithTheme(<BucketLanding {...props} />);
+    getByTestId('loading-state');
   });
 
-  it('renders an "OrderBy" component, ordered by label', () => {
-    expect(wrapper.find('Connect(OrderBy)').prop('orderBy')).toBe('label');
-  });
-
-  it('renders a loading state when the data is loading', () => {
-    wrapper.setProps({ bucketsLoading: true });
-    expect(wrapper.find('[data-qa-loading-state]')).toHaveLength(1);
-  });
-
-  it('renders an empty state when there is no data', () => {
-    wrapper.setProps({ bucketsData: [], bucketsLoading: false });
-    expect(wrapper.find('[data-qa-empty-state]')).toHaveLength(1);
-  });
-
-  it('renders an error state when there is an error', () => {
-    wrapper.setProps({
-      bucketsError: [{ reason: 'An error occurred.' }],
-      bucketsLoading: false
+  it('renders an empty state', () => {
+    const { getByTestId } = renderWithTheme(<BucketLanding {...props} />, {
+      customStore: { __resources: { buckets: { data: [], lastUpdated: 1 } } }
     });
-    expect(wrapper.find('[data-qa-error-state]')).toHaveLength(1);
+    getByTestId('placeholder-button');
+  });
+
+  it('renders per-cluster errors', () => {
+    const { getByText } = renderWithTheme(<BucketLanding {...props} />, {
+      customStore: {
+        __resources: {
+          buckets: {
+            loading: false,
+            lastUpdated: 1,
+            bucketErrors: [
+              { clusterId: 'us-east-1', error: { reason: 'An error occurred' } }
+            ]
+          }
+        }
+      }
+    });
+    getByText(/^There was an error loading buckets in Newark, NJ/);
+  });
+
+  it('renders general error state', () => {
+    const { getByText } = renderWithTheme(<BucketLanding {...props} />, {
+      customStore: {
+        __resources: {
+          buckets: {
+            loading: false,
+            lastUpdated: 1,
+            bucketErrors: [
+              { clusterId: 'us-east-1', error: { reason: 'An error occurred' } }
+            ]
+          },
+          clusters: {
+            entities: [objectStorageClusterFactory.build()]
+          }
+        }
+      }
+    });
+    getByText(/^There was an error retrieving your buckets/);
+  });
+
+  it('renders rows for each Bucket', () => {
+    const buckets = objectStorageBucketFactory.buildList(2);
+    const { getByText } = renderWithTheme(<BucketLanding {...props} />, {
+      customStore: {
+        __resources: {
+          buckets: { data: buckets, lastUpdated: 1 }
+        }
+      }
+    });
+    getByText(buckets[0].label);
+    getByText(buckets[1].label);
   });
 });

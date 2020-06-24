@@ -1,5 +1,5 @@
-import { Grant } from 'linode-js-sdk/lib/account';
-import { Region } from 'linode-js-sdk/lib/regions';
+import { Grant } from '@linode/api-v4/lib/account';
+import { Region } from '@linode/api-v4/lib/regions';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -88,7 +88,7 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
           linodeLabel !== undefined &&
           linodeRegion !== undefined && (
             <CreateVolumeForLinodeForm
-              linodeId={linodeId}
+              linode_id={linodeId}
               linodeLabel={linodeLabel}
               linodeRegion={linodeRegion}
               onSuccess={actions.openForConfig}
@@ -248,9 +248,6 @@ const titleFromState = (state: ApplicationState['volumeDrawer']) => {
   }
 };
 
-const connected = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export default connected(VolumeDrawer);

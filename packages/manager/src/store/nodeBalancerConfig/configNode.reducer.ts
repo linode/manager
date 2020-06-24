@@ -1,8 +1,15 @@
 import produce from 'immer';
-import { NodeBalancerConfigNode } from 'linode-js-sdk/lib/nodebalancers';
+import { NodeBalancerConfigNode } from '@linode/api-v4/lib/nodebalancers';
 import { Reducer } from 'redux';
-import { EntityError, EntityState } from 'src/store/types';
-import updateOrAdd from 'src/utilities/updateOrAdd';
+import {
+  ensureInitializedNestedState,
+  onCreateOrUpdate,
+  onDeleteSuccess,
+  onError,
+  onGetAllSuccess,
+  onStart
+} from 'src/store/store.helpers.tmp';
+import { EntityError, RelationalMappedEntityState } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import {
   createNodeBalancerConfigNodeActions,
@@ -15,15 +22,12 @@ import {
  * State
  */
 
-export type State = EntityState<NodeBalancerConfigNode, EntityError>;
+export type State = RelationalMappedEntityState<
+  NodeBalancerConfigNode,
+  EntityError
+>;
 
-export const defaultState: State = {
-  results: [],
-  entities: [],
-  loading: false,
-  lastUpdated: 0,
-  error: {}
-};
+export const defaultState: State = {};
 
 /**
  * Reducer
@@ -31,71 +35,96 @@ export const defaultState: State = {
 const reducer: Reducer<State> = (state = defaultState, action) => {
   return produce(state, draft => {
     if (isType(action, requestNodeBalancerConfigNodesActions.started)) {
-      draft.loading = true;
-      draft.error!.read = undefined;
+      const { configId } = action.payload;
+      draft = ensureInitializedNestedState(draft, configId, { results: 0 });
+      draft[configId] = onStart(draft[configId]);
     }
 
     if (isType(action, requestNodeBalancerConfigNodesActions.done)) {
       const { result } = action.payload;
-      draft.loading = false;
-      draft.entities = result;
-      draft.results = result.map(n => n.id);
-      draft.lastUpdated = Date.now();
+      const { configId } = action.payload.params;
+      draft = ensureInitializedNestedState(draft, configId, { results: 0 });
+
+      draft[configId] = onGetAllSuccess(
+        result.data,
+        draft[configId],
+        result.results
+      );
     }
 
     if (isType(action, requestNodeBalancerConfigNodesActions.failed)) {
       const { error } = action.payload;
-      draft.loading = false;
-      draft.error!.read = error;
+      const { configId } = action.payload.params;
+      draft = ensureInitializedNestedState(draft, configId, { results: 0 });
+
+      draft[configId] = onError({ read: error }, draft[configId]);
     }
 
     if (isType(action, createNodeBalancerConfigNodeActions.started)) {
-      draft.error!.create = undefined;
+      const { configId } = action.payload;
+
+      draft = ensureInitializedNestedState(draft, configId, { results: 0 });
+      draft[configId].error.create = undefined;
     }
 
     if (isType(action, createNodeBalancerConfigNodeActions.done)) {
       const { result } = action.payload;
-      draft.entities.push(result);
-      draft.results.push(result.id);
-      draft.lastUpdated = Date.now();
+      const { configId } = action.payload.params;
+
+      draft = ensureInitializedNestedState(draft, configId, { results: 0 });
+      draft[configId] = onCreateOrUpdate(result, draft[configId]);
     }
 
     if (isType(action, createNodeBalancerConfigNodeActions.failed)) {
       const { error } = action.payload;
-      draft.error!.create = error;
+      const { configId } = action.payload.params;
+
+      draft = ensureInitializedNestedState(draft, configId, { results: 0 });
+      draft[configId].error.create = error;
     }
 
     if (isType(action, updateNodeBalancerConfigNodeActions.started)) {
-      draft.error!.update = undefined;
+      const { configId } = action.payload;
+
+      draft = ensureInitializedNestedState(draft, configId, { results: 0 });
+      draft[configId].error.update = undefined;
     }
 
     if (isType(action, updateNodeBalancerConfigNodeActions.done)) {
       const { result } = action.payload;
-      draft.entities = updateOrAdd(result, state.entities);
-      draft.lastUpdated = Date.now();
+      const { configId } = action.payload.params;
+
+      draft = ensureInitializedNestedState(draft, configId, { results: 0 });
+      draft[configId] = onCreateOrUpdate(result, draft[configId]);
     }
 
     if (isType(action, updateNodeBalancerConfigNodeActions.failed)) {
       const { error } = action.payload;
-      draft.error!.update = error;
+      const { configId } = action.payload.params;
+
+      draft = ensureInitializedNestedState(draft, configId, { results: 0 });
+      draft[configId].error.update = error;
     }
 
     if (isType(action, deleteNodeBalancerConfigNodeActions.started)) {
-      draft.error!.delete = undefined;
+      const { configId } = action.payload;
+
+      draft = ensureInitializedNestedState(draft, configId, { results: 0 });
+      draft[configId].error.delete = undefined;
     }
 
     if (isType(action, deleteNodeBalancerConfigNodeActions.done)) {
-      const { params } = action.payload;
-      draft.entities = state.entities.filter(
-        thisNode => thisNode.id !== params.nodeId
-      );
-      draft.results = state.results.filter(n => n !== params.nodeId);
-      draft.lastUpdated = Date.now();
+      const { nodeId, configId } = action.payload.params;
+
+      draft[configId] = onDeleteSuccess(nodeId, draft[configId]);
     }
 
     if (isType(action, deleteNodeBalancerConfigNodeActions.failed)) {
       const { error } = action.payload;
-      draft.error!.delete = error;
+      const { configId } = action.payload.params;
+
+      draft = ensureInitializedNestedState(draft, configId, { results: 0 });
+      draft[configId].error.delete = error;
     }
   });
 };

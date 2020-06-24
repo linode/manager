@@ -2,11 +2,13 @@ import * as Bluebird from 'bluebird';
 import {
   createSupportTicket,
   uploadAttachment
-} from 'linode-js-sdk/lib/support';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/support';
+import { APIError } from '@linode/api-v4/lib/types';
 import { update } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
+import { debounce } from 'throttle-debounce';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormHelperText from 'src/components/core/FormHelperText';
@@ -24,7 +26,7 @@ import {
   getErrorMap,
   getErrorStringOrDefault
 } from 'src/utilities/errorUtils';
-import { getVersionString } from 'src/utilities/getVersionString';
+import { storage } from 'src/utilities/storage';
 import AttachFileForm from '../AttachFileForm';
 import { FileAttachment } from '../index';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
@@ -126,15 +128,26 @@ export const entitiesToItems = (type: string, entities: any) => {
   });
 };
 
+export const getInitialValue = (
+  fromProps?: string,
+  fromStorage?: string
+): string => {
+  return fromProps ?? fromStorage ?? '';
+};
+
 export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
-  const { open, onClose, prefilledDescription, prefilledTitle } = props;
+  const { open, prefilledDescription, prefilledTitle } = props;
+
+  const valuesFromStorage = storage.supportText.get();
 
   // Ticket information
-  const [summary, setSummary] = React.useState<string>(prefilledTitle ?? '');
-  const [description, setDescription] = React.useState<string>(
-    prefilledDescription ?? ''
+  const [summary, setSummary] = React.useState<string>(
+    getInitialValue(prefilledTitle, valuesFromStorage.title)
   );
-  const [entityType, setEntityType] = React.useState<EntityType>('none');
+  const [description, setDescription] = React.useState<string>(
+    getInitialValue(prefilledDescription, valuesFromStorage.description)
+  );
+  const [entityType, setEntityType] = React.useState<EntityType>('general');
   const [entityID, setEntityID] = React.useState<string>('');
 
   // Entities for populating dropdown
@@ -155,6 +168,18 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
       resetDrawer();
     }
   }, [open]);
+
+  const saveText = (_title: string, _description: string) => {
+    storage.supportText.set({ title: _title, description: _description });
+  };
+
+  // Has to be a ref or else the timeout is redone with each render
+  const debouncedSave = React.useRef(debounce(500, false, saveText)).current;
+
+  React.useEffect(() => {
+    // Store in-progress work to localStorage
+    debouncedSave(summary, description);
+  }, [summary, description]);
 
   const handleSetOrRequestEntities = (
     _entity: Entity<any>,
@@ -213,16 +238,26 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
     }
   };
 
-  const resetTicket = () => {
-    setSummary(prefilledTitle ?? '');
-    setDescription(prefilledDescription ?? '');
+  const resetTicket = (clearValues: boolean = false) => {
+    /**
+     * Clear the drawer completely if clearValues is passed (as in when closing the drawer)
+     * or reset to the default values (from props or localStorage) otherwise.
+     */
+    const _summary = clearValues
+      ? ''
+      : getInitialValue(prefilledTitle, valuesFromStorage.title);
+    const _description = clearValues
+      ? ''
+      : getInitialValue(prefilledDescription, valuesFromStorage.description);
+    setSummary(_summary);
+    setDescription(_description);
     setEntityID('');
-    setEntityType('none');
+    setEntityType('general');
   };
 
-  const resetDrawer = () => {
+  const resetDrawer = (clearValues: boolean = false) => {
     setData([]);
-    resetTicket();
+    resetTicket(clearValues);
     setFiles([]);
   };
 
@@ -266,7 +301,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
 
   const close = () => {
     props.onClose();
-    resetDrawer();
+    resetDrawer(true);
   };
 
   const updateFiles = (newFiles: FileAttachment[]) => {
@@ -351,13 +386,8 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
     setErrors(undefined);
     setSubmitting(true);
 
-    const versionString = getVersionString();
-    const updatedDescription = versionString
-      ? description + '\n\n' + versionString
-      : description;
-
     createSupportTicket({
-      description: updatedDescription,
+      description,
       summary,
       [entityType]: Number(entityID)
     })
@@ -408,8 +438,8 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
   const hasNoEntitiesMessage = getHasNoEntitiesMessage();
 
   const topicOptions = [
-    ...renderEntityTypes(),
-    { label: 'None/General', value: 'general' }
+    { label: 'General/Account/Billing', value: 'general' },
+    ...renderEntityTypes()
   ];
 
   const selectedTopic = topicOptions.find(eachTopic => {
@@ -420,7 +450,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
     data.find(thisEntity => String(thisEntity.value) === entityID) || null;
 
   return (
-    <Drawer open={open} onClose={onClose} title="Open a Support Ticket">
+    <Drawer open={open} onClose={close} title="Open a Support Ticket">
       {props.children || (
         <React.Fragment>
           {generalError && <Notice error text={generalError} data-qa-notice />}
@@ -439,7 +469,15 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
             </a>
             .
           </Typography>
-
+          <TextField
+            label="Title"
+            placeholder="Enter a title for your ticket."
+            required
+            value={summary}
+            onChange={handleSummaryInputChange}
+            errorText={summaryError}
+            data-qa-ticket-summary
+          />
           {props.hideProductSelection ? null : (
             <React.Fragment>
               <Select
@@ -448,7 +486,6 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
                 value={selectedTopic}
                 onChange={handleEntityTypeChange}
                 data-qa-ticket-entity-type
-                placeholder="Choose a Product"
                 isClearable={false}
               />
               {!['none', 'general'].includes(entityType) && (
@@ -472,15 +509,6 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
               )}
             </React.Fragment>
           )}
-          <TextField
-            label="Title"
-            placeholder="Enter a title for your ticket."
-            required
-            value={summary}
-            onChange={handleSummaryInputChange}
-            errorText={summaryError}
-            data-qa-ticket-summary
-          />
           <TabbedReply
             required
             error={descriptionError}

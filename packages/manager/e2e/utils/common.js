@@ -6,9 +6,7 @@ const {
   getPrivateImages,
   removeImage,
   getPublicKeys,
-  removePublicKey,
-  updateUserProfile,
-  getUserProfile
+  removePublicKey
 } = require('../setup/setup');
 
 import ConfigureLinode from '../pageobjects/configure-linode';

@@ -1,11 +1,11 @@
-import { Linode } from 'linode-js-sdk/lib/linodes';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { Linode } from '@linode/api-v4/lib/linodes';
+import { APIError } from '@linode/api-v4/lib/types';
 import { path } from 'ramda';
 import { connect, InferableComponentEnhancerWithProps } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
-import { LinodeWithMaintenance as L } from 'src/store/linodes/linodes.helpers';
 import { State } from 'src/store/linodes/linodes.reducer';
+import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
 import { ThunkDispatch } from 'src/store/types';
 import { GetAllData } from 'src/utilities/getAll';
 
@@ -13,13 +13,11 @@ export interface DispatchProps {
   getLinodes: (params?: any, filters?: any) => Promise<GetAllData<Linode>>;
 }
 
-export type LinodeWithMaintenance = L;
-
 /* tslint:disable-next-line */
 export interface StateProps {
   linodesError?: APIError[];
   linodesLoading: State['loading'];
-  linodesData: State['entities'];
+  linodesData: LinodeWithMaintenanceAndDisplayStatus[];
   linodesLastUpdated: State['lastUpdated'];
   linodesResults: State['results'];
 }
@@ -59,14 +57,15 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
       const {
         loading,
         error,
-        entities,
+        itemsById,
         lastUpdated,
         results
       } = state.__resources.linodes;
+      const linodes = Object.values(itemsById);
       if (mapStateToProps) {
         return mapStateToProps(
           ownProps,
-          entities,
+          linodes,
           loading,
           path(['read'], error)
         );
@@ -75,7 +74,7 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
       return {
         linodesError: path(['read'], error),
         linodesLoading: loading,
-        linodesData: entities,
+        linodesData: linodes,
         linodesResults: results,
         linodesLastUpdated: lastUpdated
       };

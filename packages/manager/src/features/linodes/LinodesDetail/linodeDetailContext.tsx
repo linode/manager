@@ -1,4 +1,4 @@
-import { Linode } from 'linode-js-sdk/lib/linodes';
+import { Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { createHOCForConsumer } from 'src/requestableContext';
 import {
@@ -118,7 +118,8 @@ export const linodeDetailContextFactory = (
     /** Linode Config actions */
     getLinodeConfig: configId =>
       dispatch(_getLinodeConfig({ linodeId, configId })),
-    getLinodeConfigs: () => dispatch(_getLinodeConfigs({ linodeId })),
+    getLinodeConfigs: () =>
+      dispatch(_getLinodeConfigs({ linodeId })).then(({ data }) => data),
     updateLinodeConfig: (configId, data) =>
       dispatch(_updateLinodeConfig({ linodeId, configId, ...data })),
     createLinodeConfig: data =>

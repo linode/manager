@@ -1,6 +1,6 @@
-import { Notification } from 'linode-js-sdk/lib/account';
-import { LinodeStatus } from 'linode-js-sdk/lib/linodes';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { Notification } from '@linode/api-v4/lib/account';
+import { LinodeStatus } from '@linode/api-v4/lib/linodes';
+import { APIError } from '@linode/api-v4/lib/types';
 import { path } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -18,7 +18,7 @@ type CombinedProps = ProfileProps &
     requestNotifications: () => void;
   };
 
-const Notifications: React.StatelessComponent<CombinedProps> = props => {
+const Notifications: React.FC<CombinedProps> = props => {
   const {
     requestNotifications,
     linodeNotifications,
@@ -69,6 +69,7 @@ const Notifications: React.StatelessComponent<CombinedProps> = props => {
   };
 
   return (
+    // eslint-disable-next-line
     <>
       {linodeNotifications.map((n, idx) => {
         return (

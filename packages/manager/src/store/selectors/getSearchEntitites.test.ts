@@ -1,28 +1,31 @@
 import { assocPath } from 'ramda';
-import {
-  domains,
-  images,
-  linodes,
-  nodeBalancers,
-  types,
-  volumes
-} from 'src/__data__';
+import { domains, images, linodes, types, volumes } from 'src/__data__';
+import { kubernetesClusterFactory } from 'src/factories/kubernetesCluster';
+import { nodeBalancerFactory } from 'src/factories/nodebalancer';
+import { apiResponseToMappedState } from 'src/store/store.helpers.tmp';
 import getSearchEntities from './getSearchEntities';
+
+const nodeBalancers = nodeBalancerFactory.buildList(5);
 
 describe('getSearchEntities selector', () => {
   const mockState: any = {
-    linodes: { entities: linodes },
-    domains: { entities: domains },
+    domains: { itemsById: apiResponseToMappedState(domains) },
+    linodes: {
+      itemsById: apiResponseToMappedState(linodes)
+    },
     images: { entities: images },
     types: { entities: types },
     volumes: {
       itemsById: volumes.reduce((result, c) => ({ ...result, [c.id]: c }), {})
     },
     nodeBalancers: {
-      itemsById: nodeBalancers.reduce(
-        (result, c) => ({ ...result, [c.id]: c }),
-        {}
-      )
+      itemsById: apiResponseToMappedState(nodeBalancers)
+    },
+    kubernetes: {
+      itemsById: apiResponseToMappedState(kubernetesClusterFactory.buildList(2))
+    },
+    nodePools: {
+      entities: []
     }
   };
   it('should return an array of SearchableItems', () => {
@@ -36,13 +39,18 @@ describe('getSearchEntities selector', () => {
   });
   it('should recompute objects if the list of entities changes.', () => {
     getSearchEntities.resetRecomputations();
-    getSearchEntities({ ...mockState, linodes: { entities: [] } });
+    getSearchEntities({ ...mockState, linodes: { itemsById: {} } });
     expect(getSearchEntities.recomputations()).toEqual(1);
   });
   it('should recompute if an entry in entities is updated', () => {
     getSearchEntities.resetRecomputations();
     const updatedLinodes = assocPath([0, 'label'], 'newlabel', linodes);
-    getSearchEntities({ ...mockState, linodes: { entities: updatedLinodes } });
+    getSearchEntities({
+      ...mockState,
+      linodes: {
+        itemsById: apiResponseToMappedState(updatedLinodes)
+      }
+    });
     expect(getSearchEntities.recomputations()).toEqual(1);
   });
 });

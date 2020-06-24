@@ -1,4 +1,4 @@
-import { Config, Linode } from 'linode-js-sdk/lib/linodes';
+import { Config, Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import TableBody from 'src/components/core/TableBody';
 import Grid from 'src/components/Grid';
@@ -25,7 +25,7 @@ interface Props {
 
 type CombinedProps = Props & OrderByProps;
 
-const DisplayLinodes: React.StatelessComponent<CombinedProps> = props => {
+const DisplayLinodes: React.FC<CombinedProps> = props => {
   const {
     data,
     display,

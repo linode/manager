@@ -1,4 +1,4 @@
-import { LinodeType } from 'linode-js-sdk/lib/linodes';
+import { LinodeType } from '@linode/api-v4/lib/linodes';
 
 export const types: LinodeType[] = [
   {
@@ -9,7 +9,7 @@ export const types: LinodeType[] = [
       hourly: 0.015
     },
     id: 'g5-standard-1',
-    label: 'Linode 2048',
+    label: 'Linode 2GB',
     class: 'standard',
     addons: {
       backups: {
@@ -22,7 +22,7 @@ export const types: LinodeType[] = [
     successor: null,
     memory: 2048,
     vcpus: 1,
-    disk: 30720
+    disk: 50 * 1024
   },
   {
     transfer: 3000,
@@ -45,7 +45,7 @@ export const types: LinodeType[] = [
     successor: null,
     memory: 4096,
     vcpus: 2,
-    disk: 49152
+    disk: 80 * 1024
   },
   {
     transfer: 4000,

@@ -60,7 +60,7 @@ module.exports = {
     filename: 'static/js/[name].[chunkhash:8].js',
     chunkFilename: 'static/js/[name].[chunkhash:8].chunk.js',
     // We inferred the "public path" (such as / or /my-project) from homepage.
-    publicPath: publicPath,
+    publicPath,
     // Point sourcemap entries to original disk location (format as URL on Windows)
     devtoolModuleFilenameTemplate: info =>
       path.relative(paths.appSrc, info.absoluteResourcePath).replace(/\\/g, '/')
@@ -137,9 +137,21 @@ module.exports = {
             }
           },
           {
-            test: [/\.svg$/],
-            exclude: [/font-logos\/assets/],
-            loader: ['svgr/webpack']
+            test: /\.svg$/,
+            exclude: [/font-logos.svg$/],
+            use: {
+              loader: '@svgr/webpack',
+              options: {
+                svgoConfig: {
+                  plugins: [
+                    // by default prefixes classes with svg path or random string
+                    { prefixIds: { prefixIds: true, prefixClassNames: false } },
+                    // by default removes the viewbox attribute
+                    { removeViewBox: false }
+                  ]
+                }
+              }
+            }
           },
           // Compile .tsx?
           {
@@ -169,7 +181,7 @@ module.exports = {
           // tags. If you use code splitting, however, any async bundles will still
           // use the "style" loader inside the async code so CSS from them won't be
           // in the main CSS file.
-          /**********************************************************
+          /** ********************************************************
            * Start Temporary Solution
            * re: https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/456
            **********************************************************/
@@ -208,7 +220,7 @@ module.exports = {
               'css-loader'
             ]
           },
-          /**********************************************************
+          /** ********************************************************
            * End Temporary Solution.
            **********************************************************/
           // "file" loader makes sure assets end up in the `build` folder.
@@ -305,7 +317,7 @@ module.exports = {
       async: false,
       memoryLimit: 4096,
       tsconfig: paths.appTsConfig,
-      tslint: paths.appTsLint
+      eslint: paths.appEsLintConfig
     }),
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
@@ -345,9 +357,9 @@ module.exports = {
   // See https://webpack.js.org/configuration/performance/
   performance: {
     hints: 'error',
-    maxEntrypointSize: 1180000, // ~1.12 MiB
-    maxAssetSize: 1180000, // ~1.12 MiB
-    assetFilter: function(assetFilename) {
+    maxEntrypointSize: 2000000, // ~1.9 MiB
+    maxAssetSize: 2000000, // ~1.9 MiB
+    assetFilter(assetFilename) {
       return !(
         assetFilename.endsWith('.chunk.js') || assetFilename.endsWith('.map')
       );

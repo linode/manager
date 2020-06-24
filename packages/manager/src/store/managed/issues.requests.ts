@@ -1,6 +1,6 @@
 import * as Bluebird from 'bluebird';
-import { getManagedIssues, ManagedIssue } from 'linode-js-sdk/lib/managed';
-import { getTicket } from 'linode-js-sdk/lib/support';
+import { getManagedIssues, ManagedIssue } from '@linode/api-v4/lib/managed';
+import { getTicket } from '@linode/api-v4/lib/support';
 import * as moment from 'moment';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
@@ -8,7 +8,9 @@ import { ExtendedIssue, requestManagedIssuesActions } from './issues.actions';
 
 const _getAllIssues = getAll<ManagedIssue>(getManagedIssues);
 const getAllIssues = () =>
-  _getAllIssues().then(({ data }) => extendIssues(data));
+  _getAllIssues()
+    .then(({ data }) => extendIssues(data))
+    .then(data => ({ data, results: data.length }));
 
 export const extendIssues = async (issues: ManagedIssue[]) => {
   /**

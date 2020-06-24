@@ -1,11 +1,11 @@
 import * as Bluebird from 'bluebird';
-import { Domain, getDomains } from 'linode-js-sdk/lib/domains';
-import { getLinodes, Linode } from 'linode-js-sdk/lib/linodes';
+import { Domain, getDomains } from '@linode/api-v4/lib/domains';
+import { getLinodes, Linode } from '@linode/api-v4/lib/linodes';
 import {
   getNodeBalancers,
   NodeBalancer
-} from 'linode-js-sdk/lib/nodebalancers';
-import { getVolumes, Volume } from 'linode-js-sdk/lib/volumes';
+} from '@linode/api-v4/lib/nodebalancers';
+import { getVolumes, Volume } from '@linode/api-v4/lib/volumes';
 import { range } from 'ramda';
 
 import { API_MAX_PAGE_SIZE } from 'src/constants';
@@ -132,43 +132,6 @@ export const getAllWithArguments: <T>(
               results
             };
           })
-      );
-    }
-  );
-};
-
-export const getAllFromEntity: (
-  getter: GetFromEntity
-) => (params?: any, filter?: any) => Promise<any> = getter => (
-  entityId: number,
-  params?: any,
-  filter?: any
-) => {
-  const pagination = { ...params, page_size: 100 };
-  return getter(entityId, pagination, filter).then(
-    ({ data: firstPageData, page, pages }) => {
-      // If we only have one page, return it.
-      if (page === pages) {
-        return firstPageData;
-      }
-
-      // Create an iterable list of the remaining pages.
-      const remainingPages = range(page + 1, pages + 1);
-
-      //
-      return (
-        Bluebird.map(remainingPages, nextPage =>
-          getter({ ...pagination, page: nextPage }, filter).then(
-            response => response.data
-          )
-        )
-          /** We're given NodeBalancer[][], so we flatten that, and append the first page response. */
-          .then(resultPages =>
-            resultPages.reduce(
-              (result, nextPage) => [...result, ...nextPage],
-              firstPageData
-            )
-          )
       );
     }
   );

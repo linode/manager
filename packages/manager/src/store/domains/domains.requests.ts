@@ -6,8 +6,8 @@ import {
   getDomain,
   getDomains,
   updateDomain as _updateDomain
-} from 'linode-js-sdk/lib/domains';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/domains';
+import { APIError } from '@linode/api-v4/lib/types';
 import { Dispatch } from 'redux';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
@@ -18,6 +18,7 @@ import {
   deleteDomainActions,
   DomainId,
   getDomainsActions,
+  getDomainsPageActions,
   updateDomainActions,
   UpdateDomainParams,
   upsertDomain
@@ -50,7 +51,7 @@ export const requestDomains: ThunkActionCreator<Promise<Domain[]>> = () => (
   return getAll<Domain>(getDomains)()
     .then(domains => {
       dispatch(getDomainsActions.done({ result: domains }));
-      return domains;
+      return domains.data;
     })
     .catch(err => {
       const errors = getAPIErrorOrDefault(
@@ -63,20 +64,16 @@ export const requestDomains: ThunkActionCreator<Promise<Domain[]>> = () => (
 };
 
 type RequestDomainForStoreThunk = ThunkActionCreator<void, number>;
-export const requestDomainForStore: RequestDomainForStoreThunk = id => (
-  dispatch,
-  getState
-) => {
-  const { data } = getState().__resources.domains;
-
-  const ids = data ? data.map(domain => domain.id) : [];
-
-  getDomain(id)
-    .then(response => response)
-    .then(domain => {
-      if (ids.includes(id)) {
-        return dispatch(upsertDomain(domain));
-      }
-      return dispatch(upsertDomain(domain));
-    });
+export const requestDomainForStore: RequestDomainForStoreThunk = id => dispatch => {
+  getDomain(id).then(domain => {
+    return dispatch(upsertDomain(domain));
+  });
 };
+
+/**
+ * Single page of Domains (for use on Dashboard etc.)
+ */
+export const getDomainsPage = createRequestThunk(
+  getDomainsPageActions,
+  ({ params, filters }) => getDomains(params, filters)
+);

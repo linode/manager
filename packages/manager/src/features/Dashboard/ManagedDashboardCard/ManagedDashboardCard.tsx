@@ -1,4 +1,4 @@
-import { getManagedStats, ManagedStatsData } from 'linode-js-sdk/lib/managed';
+import { getManagedStats, ManagedStatsData } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -208,9 +208,6 @@ const LoadingErrorOrContent: React.FC<ContentProps> = props => {
   );
 };
 
-const enhanced = compose<CombinedProps, {}>(
-  withManaged(),
-  withManagedIssues()
-);
+const enhanced = compose<CombinedProps, {}>(withManaged(), withManagedIssues());
 
 export default enhanced(ManagedDashboardCard);

@@ -1,4 +1,4 @@
-import { APIError } from 'linode-js-sdk/lib/types';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
@@ -193,7 +193,7 @@ export const ProcessesTableRow: React.FC<ProcessTableRowProps> = React.memo(
         selected={isSelected}
         data-testid="longview-service-row"
         forceIndex
-        aria-label={`${name} for ${user}`}
+        ariaLabel={`${name} for ${user}`}
       >
         <TableCell data-testid={`name-${name}`}>
           <div className={classes.processName}>{name}</div>

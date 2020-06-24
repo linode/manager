@@ -1,7 +1,5 @@
 import * as React from 'react';
-import SingleValue, {
-  SingleValueProps
-} from 'react-select/lib/components/SingleValue';
+import { components, SingleValueProps } from 'react-select';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -23,17 +21,17 @@ interface Props extends SingleValueProps<any> {}
 
 type CombinedProps = Props;
 
-const _SingleValue: React.StatelessComponent<CombinedProps> = props => {
+const _SingleValue: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   return (
     <>
-      <SingleValue
+      <components.SingleValue
         data-qa-react-select-single-value
         {...props}
         className={classes.root}
       >
         {props.children}
-      </SingleValue>
+      </components.SingleValue>
       <span className={`${props.data.className} ${classes.icon}`}>
         {props.data.flag && props.data.flag()}
       </span>

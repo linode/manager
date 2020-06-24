@@ -1,4 +1,4 @@
-import { APIError } from 'linode-js-sdk/lib/types';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -91,6 +91,7 @@ const Disks: React.FC<CombinedProps> = props => {
         <Placeholder
           title="No disks detected"
           copy="The Longview agent has not detected any disks that it can monitor."
+          renderAsSecondary
         />
       );
     }

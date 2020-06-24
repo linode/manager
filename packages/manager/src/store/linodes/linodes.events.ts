@@ -1,4 +1,4 @@
-import { EventAction, EventStatus } from 'linode-js-sdk/lib/account';
+import { EventAction, EventStatus } from '@linode/api-v4/lib/account';
 import * as moment from 'moment';
 import { Dispatch } from 'redux';
 import { ApplicationState } from 'src/store';
@@ -168,7 +168,7 @@ const handleLinodeDelete = (
   id: number,
   state: ApplicationState
 ) => {
-  const found = state.__resources.linodes.results.find(i => i === id);
+  const found = state.__resources.linodes.itemsById[id];
 
   if (!found) {
     return;

@@ -1,4 +1,4 @@
-import { GrantLevel } from 'linode-js-sdk/lib/account';
+import { GrantLevel } from '@linode/api-v4/lib/account';
 import {
   cancelBackups,
   Day,
@@ -11,8 +11,8 @@ import {
   LinodeType,
   takeSnapshot,
   Window
-} from 'linode-js-sdk/lib/linodes';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/linodes';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as moment from 'moment-timezone';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path, pathOr, sortBy } from 'ramda';
@@ -563,6 +563,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
         <Placeholder
           icon={VolumeIcon}
           title="Backups"
+          renderAsSecondary
           copy={backupPlaceholderText}
           buttonProps={[
             {

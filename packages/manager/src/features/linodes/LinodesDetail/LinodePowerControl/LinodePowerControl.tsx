@@ -1,8 +1,8 @@
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 import * as classNames from 'classnames';
-import { Event } from 'linode-js-sdk/lib/account';
-import { Config, LinodeStatus } from 'linode-js-sdk/lib/linodes';
+import { Event } from '@linode/api-v4/lib/account';
+import { Config, LinodeStatus } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import Menu from 'src/components/core/Menu';
@@ -60,7 +60,7 @@ const styles = (theme: Theme) =>
       marginLeft: theme.spacing(1)
     },
     caret: {
-      color: theme.palette.primary.main,
+      color: 'inherit',
       transition: theme.transitions.create(['color']),
       position: 'relative',
       top: 2,
@@ -182,7 +182,8 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
     const isBusy = linodeInTransition(status, firstEventWithPercent);
     const isRunning = !isBusy && status === 'running';
     const isOffline = !isBusy && status === 'offline';
-    const isUnknown = !isRunning && !isOffline;
+    const isStopped = status === 'stopped';
+    const isUnknown = !isRunning && !isOffline && !isStopped;
 
     const buttonText = () => {
       if (isBusy) {
@@ -191,6 +192,8 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
         return 'Running';
       } else if (isOffline) {
         return 'Offline';
+      } else if (isStopped) {
+        return 'Stopped';
       } else {
         return 'Offline';
       }
@@ -201,7 +204,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Button
-          disabled={isBusy || isUnknown}
+          disabled={isBusy || isStopped || isUnknown}
           onClick={this.openMenu}
           aria-owns={anchorEl ? 'power' : undefined}
           aria-haspopup="true"

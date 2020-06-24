@@ -1,5 +1,5 @@
 import { shallow } from 'enzyme';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router-dom';
@@ -32,19 +32,16 @@ it('renders without crashing.', () => {
             }}
             userId={123456}
             documentation={[]}
-            markAppAsDoneLoading={jest.fn()}
             appIsLoading={false}
             toggleTheme={jest.fn()}
             toggleSpacing={jest.fn()}
             accountCapabilities={[]}
             accountLoading={false}
-            nodeBalancersLoading={false}
             linodesLoading={false}
-            volumesLoading={false}
-            domainsLoading={false}
-            bucketsLoading={false}
             accountSettingsLoading={false}
-            domainsData={[]}
+            ldClient={{} as any}
+            featureFlagsLoading={false}
+            flags={{}}
           />
         </StaticRouter>
       </LinodeThemeWrapper>

@@ -1,8 +1,9 @@
 {
   "baseUrl": "http://localhost:3000",
   "chromeWebSecurity": false,
-  "defaultCommandTimeout": 10000,
-  "pageLoadTimeout": 20000,
+  "defaultCommandTimeout": 40000,
+  "pageLoadTimeout": 40000,
+  "trashAssetsBeforeRuns": false,
   "viewportWidth": 1440,
   "viewportHeight": 900
 }

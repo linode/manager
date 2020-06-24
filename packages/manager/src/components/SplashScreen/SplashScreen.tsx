@@ -5,6 +5,7 @@ import { compose } from 'recompose';
 import { makeStyles } from 'src/components/core/styles';
 import { MapState } from 'src/store/types';
 import { srSpeak } from 'src/utilities/accessibility';
+import useFeatureFlagsLoad from 'src/hooks/useFeatureFlagLoad';
 
 import Logo from 'src/assets/logo/logo-animated.svg';
 import './keyframes.css';
@@ -41,24 +42,24 @@ const SplashScreen: React.FC<CombinedProps> = props => {
     srSpeak('Loading Linode Cloud Manager', 'polite');
   }, []);
 
-  return props.appIsLoading ? (
-    <>
-      <div
-        className={classNames({
-          [classes.root]: true
-        })}
-        aria-label="Loading Cloud Manager"
-      >
-        <div className={classes.logo}>
-          <Logo />
-          <div className="la-ball-beat la-dark">
-            <div />
-            <div />
-            <div />
-          </div>
+  const { featureFlagsLoading } = useFeatureFlagsLoad();
+
+  return props.appIsLoading || featureFlagsLoading ? (
+    <div
+      className={classNames({
+        [classes.root]: true
+      })}
+      aria-label="Loading Cloud Manager"
+    >
+      <div className={classes.logo}>
+        <Logo />
+        <div className="la-ball-beat la-dark">
+          <div />
+          <div />
+          <div />
         </div>
       </div>
-    </>
+    </div>
   ) : null;
 };
 
@@ -72,7 +73,4 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 
 const connected = connect(mapStateToProps);
 
-export default compose<CombinedProps, {}>(
-  connected,
-  React.memo
-)(SplashScreen);
+export default compose<CombinedProps, {}>(connected, React.memo)(SplashScreen);

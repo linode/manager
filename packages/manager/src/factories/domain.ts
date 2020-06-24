@@ -1,5 +1,5 @@
 import * as Factory from 'factory.ts';
-import { Domain } from 'linode-js-sdk/lib/domains/types';
+import { Domain } from '@linode/api-v4/lib/domains/types';
 
 export const domainFactory = Factory.Sync.makeFactory<Domain>({
   domain: Factory.each(id => `domain-${id}`),
@@ -15,5 +15,6 @@ export const domainFactory = Factory.Sync.makeFactory<Domain>({
   type: 'master',
   refresh_sec: 100,
   expire_sec: 100,
-  retry_sec: 100
+  retry_sec: 100,
+  updated: '2020-05-01 00:00:00'
 });

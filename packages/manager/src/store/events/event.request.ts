@@ -2,27 +2,53 @@ import {
   Event,
   getEvents as _getEvents,
   markEventSeen
-} from 'linode-js-sdk/lib/account'
+} from '@linode/api-v4/lib/account';
 import * as moment from 'moment';
 import { dateFormat } from 'src/time';
 import { generatePollingFilter } from 'src/utilities/requestFilters';
 import { ThunkActionCreator } from '../types';
 import { addEvents, updateEventsAsSeen } from './event.actions';
-import { epoch } from './event.helpers';
+import { epoch, isInProgressEvent } from './event.helpers';
 
 /**
- * Will send a filtered request for events which have been created after the most recent existing
- * event or the epoch if there are no stored events.
+ * Will send a filtered request for events which have been created on or after the most recent existing
+ * event or the epoch if there are no stored events. Exclude events already in memory with a "+neq" filter.
  */
 export const getEvents: ThunkActionCreator<Promise<Event[]>> = () => (
   dispatch,
   getState
 ) => {
-  const { mostRecentEventTime, inProgressEvents } = getState().events;
+  const {
+    mostRecentEventTime,
+    inProgressEvents,
+    events: _events
+  } = getState().events;
+
+  // Regardless of date created, we request events that are still in-progress.
+  const inIds = Object.keys(inProgressEvents).map(thisId => +thisId);
+
+  // Generate a list of event IDs for the "+neq" filter. We want to request events created
+  // on or after the most recent created date, minus any events we've already requested.
+  // This is to catch any events that may be "lost" if the request/query lands at just the
+  // right moment such that we receive some events with a specific created date, but not all.
+  const neqIds: number[] = [];
+  if (_events.length > 0) {
+    _events.forEach(thisEvent => {
+      const thisEventCreated = moment.utc(thisEvent.created).valueOf();
+
+      if (
+        thisEventCreated === mostRecentEventTime &&
+        !isInProgressEvent(thisEvent)
+      ) {
+        neqIds.push(thisEvent.id);
+      }
+    });
+  }
 
   const filters = generatePollingFilter(
     moment.utc(mostRecentEventTime).format(dateFormat),
-    Object.keys(inProgressEvents)
+    inIds,
+    neqIds
   );
 
   return (

@@ -11,11 +11,10 @@ import {
 import { initAnalytics, initTagManager } from 'src/analytics';
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
 import CookieWarning from 'src/components/CookieWarning';
-import DefaultLoader from 'src/components/DefaultLoader';
 import SnackBar from 'src/components/SnackBar';
+import SplashScreen from 'src/components/SplashScreen';
 import { GA_ID, GTM_ID, isProductionBuild } from 'src/constants';
 import 'src/exceptionReporting';
-import LoginAsCustomerCallback from 'src/layouts/LoginAsCustomerCallback';
 import Logout from 'src/layouts/Logout';
 import 'src/request';
 import store from 'src/store';
@@ -23,23 +22,13 @@ import { saveState } from 'src/utilities/subscribeStore';
 import './index.css';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
 
-import SplashScreen from 'src/components/SplashScreen';
-
-const Lish = DefaultLoader({
-  loader: () => import('src/features/Lish')
-});
-
-const App = DefaultLoader({
-  loader: () => import('./App')
-});
-
-const OAuthCallbackPage = DefaultLoader({
-  loader: () => import('src/layouts/OAuth')
-});
-
-const Cancel = DefaultLoader({
-  loader: () => import('src/features/CancelLanding')
-});
+const Lish = React.lazy(() => import('src/features/Lish'));
+const App = React.lazy(() => import('./App'));
+const Cancel = React.lazy(() => import('src/features/CancelLanding'));
+const LoginAsCustomerCallback = React.lazy(() =>
+  import('src/layouts/LoginAsCustomerCallback')
+);
+const OAuthCallbackPage = React.lazy(() => import('src/layouts/OAuth'));
 
 /**
  * Write the Redux store to localStorage after every action.
@@ -96,38 +85,38 @@ const renderCancel = () => (
 );
 
 const renderAuthentication = () => (
-  <Switch>
-    <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
-    <Route exact path="/admin/callback" component={LoginAsCustomerCallback} />
-    {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
-    <Route exact path="/nullauth" render={renderNullAuth} />
-    <Route exact path="/logout" component={Logout} />
-    <Route exact path="/cancel" render={renderCancel} />
-    <AuthenticationWrapper>
-      <Switch>
-        <Route path="/linodes/:linodeId/lish" render={renderLish} />
-        <Route render={renderApp} />
-      </Switch>
-    </AuthenticationWrapper>
-  </Switch>
+  <React.Suspense fallback={<SplashScreen />}>
+    <Switch>
+      <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
+      <Route exact path="/admin/callback" component={LoginAsCustomerCallback} />
+      {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
+      <Route exact path="/nullauth" render={renderNullAuth} />
+      <Route exact path="/logout" component={Logout} />
+      <Route exact path="/cancel" render={renderCancel} />
+      <AuthenticationWrapper>
+        <Switch>
+          <Route path="/linodes/:linodeId/lish" render={renderLish} />
+          <Route render={renderApp} />
+        </Switch>
+      </AuthenticationWrapper>
+    </Switch>
+  </React.Suspense>
 );
 
 ReactDOM.render(
-  <React.Fragment>
-    {navigator.cookieEnabled ? (
-      <Provider store={store}>
-        <Router>
-          <Switch>
-            {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
-            <Route exact path="/null" render={renderNull} />
-            <Route render={renderAuthentication} />
-          </Switch>
-        </Router>
-      </Provider>
-    ) : (
-      <CookieWarning />
-    )}
-  </React.Fragment>,
+  navigator.cookieEnabled ? (
+    <Provider store={store}>
+      <Router>
+        <Switch>
+          {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
+          <Route exact path="/null" render={renderNull} />
+          <Route render={renderAuthentication} />
+        </Switch>
+      </Router>
+    </Provider>
+  ) : (
+    <CookieWarning />
+  ),
   document.getElementById('root') as HTMLElement
 );
 

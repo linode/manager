@@ -1,4 +1,4 @@
-import { Event } from 'linode-js-sdk/lib/account';
+import { Event } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
@@ -34,7 +34,7 @@ interface LinodeDetailContextProps {
 
 type CombinedProps = LinodeDetailContextProps & WithStyles<ClassNames>;
 
-const LinodeBusyStatus: React.StatelessComponent<CombinedProps> = props => {
+const LinodeBusyStatus: React.FC<CombinedProps> = props => {
   const { classes, status, linodeEvents, linodeId } = props;
 
   const firstEventWithProgress = (linodeEvents || []).find(

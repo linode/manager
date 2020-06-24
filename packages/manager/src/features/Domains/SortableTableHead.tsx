@@ -23,7 +23,7 @@ const styles = (theme: Theme) =>
 
 type combinedProps = Omit<OrderByProps, 'data'> & WithStyles<ClassNames>;
 
-const SortableTableHead: React.StatelessComponent<combinedProps> = props => {
+const SortableTableHead: React.FC<combinedProps> = props => {
   const { order, orderBy, handleOrderChange, classes } = props;
 
   const isActive = (label: string) => label === orderBy;
@@ -58,6 +58,15 @@ const SortableTableHead: React.StatelessComponent<combinedProps> = props => {
           handleClick={handleOrderChange}
         >
           Status
+        </TableSortCell>
+        <TableSortCell
+          data-qa-domain-type-header={order}
+          active={orderBy === 'updated'}
+          label="updated"
+          direction={order}
+          handleClick={handleOrderChange}
+        >
+          Last Modified
         </TableSortCell>
         <TableCell />
       </TableRow>

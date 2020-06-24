@@ -1,4 +1,4 @@
-import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
+import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { Reducer } from 'redux';
 import {
   EntityError,
@@ -6,12 +6,12 @@ import {
 } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import {
-  addMany,
   createDefaultState,
   onCreateOrUpdate,
   onDeleteSuccess,
   onError,
   onGetAllSuccess,
+  onGetPageSuccess,
   onStart
 } from '../store.helpers.tmp';
 import {
@@ -129,13 +129,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   if (isType(action, getNodeBalancersPageActions.done)) {
     const { result } = action.payload;
 
-    const newState = addMany(result.data, state, result.results);
-    // If there are additional NBs to be requested (if results > data.length),
-    // don't set lastUpdated so that additional requests will be made when needed.
-    // @todo this logic can probably live in the helpers file since it'll be universal.
-    return result.results === result.data.length
-      ? { ...newState, lastUpdated: Date.now() }
-      : newState;
+    return onGetPageSuccess(result.data, state, result.results);
   }
 
   if (isType(action, getNodeBalancersPageActions.failed)) {

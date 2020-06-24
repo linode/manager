@@ -2,8 +2,8 @@ import {
   CreateDomainPayload,
   Domain,
   UpdateDomainPayload
-} from 'linode-js-sdk/lib/domains';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/domains';
+import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import actionCreatorFactory from 'typescript-fsa';
 
 import { GetAllData } from 'src/utilities/getAll';
@@ -41,3 +41,13 @@ export const getDomainsActions = actionCreator.async<
   GetAllData<Domain>,
   APIError[]
 >('get-all');
+
+export interface PageParams {
+  params?: any;
+  filters?: any;
+}
+export const getDomainsPageActions = actionCreator.async<
+  PageParams,
+  ResourcePage<Domain>,
+  APIError[]
+>('get-page');

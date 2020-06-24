@@ -6,8 +6,8 @@ const volume = mockVolumes[0];
 const mockState = {
   __resources: {
     linodes: {
-      results: [mockLinode.id],
-      entities: [mockLinode]
+      results: 1,
+      itemsById: { [mockLinode.id]: mockLinode }
     },
     volumes: {
       items: [volume.id],

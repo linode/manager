@@ -1,25 +1,30 @@
-import { Image } from 'linode-js-sdk/lib/images';
+import { Image } from '@linode/api-v4/lib/images';
 import {
   cloneLinode,
   CreateLinodeRequest,
-  Linode
-} from 'linode-js-sdk/lib/linodes';
-import { StackScript, UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
-import { APIError } from 'linode-js-sdk/lib/types';
+  Linode,
+  LinodeTypeClass
+} from '@linode/api-v4/lib/linodes';
+import { Region } from '@linode/api-v4/lib/regions';
+import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
+import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { StickyContainer } from 'react-sticky';
 import { compose as recompose } from 'recompose';
 
+import { REFRESH_INTERVAL } from 'src/constants';
 import regionsContainer from 'src/containers/regions.container';
 import withTypes from 'src/containers/types.container';
 import withFlags, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container';
-import withImages, { WithImages } from 'src/containers/withImages.container';
+import withImages, {
+  ImagesDispatch,
+  WithImages
+} from 'src/containers/withImages.container';
 import withLinodes from 'src/containers/withLinodes.container';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import {
@@ -97,12 +102,14 @@ interface State {
   appInstances?: StackScript[];
   appInstancesLoading: boolean;
   appInstancesError?: string;
+  disabledClasses?: LinodeTypeClass[];
 }
 
 type CombinedProps = WithSnackbarProps &
   CreateType &
   LinodeActionsProps &
   WithImages &
+  ImagesDispatch &
   WithTypesProps &
   WithLinodesProps &
   WithRegionsProps &
@@ -132,6 +139,16 @@ const defaultState: State = {
   appInstancesLoading: false
 };
 
+const getDisabledClasses = (regionID: string, regions: Region[] = []) => {
+  const selectedRegion = regions.find(thisRegion => thisRegion.id === regionID);
+  /** This approach is fine for just GPUs, which is all we have capability info for at this time.
+   *  Refactor to a switch or .map() if additional support is needed.
+   */
+  return selectedRegion?.capabilities.includes('GPU Linodes')
+    ? []
+    : (['gpu'] as LinodeTypeClass[]);
+};
+
 const trimOneClickFromLabel = (script: StackScript) => {
   return {
     ...script,
@@ -156,13 +173,14 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     selectedTypeID: this.params.typeID,
     selectedRegionID: this.params.regionID,
     selectedImageID: this.params.imageID ?? DEFAULT_IMAGE,
-    // @todo: Abstract and test.
+    // @todo: Abstract and test. UPDATE 5/21/20: lol what does this mean
     selectedLinodeID: isNaN(+this.params.linodeID)
       ? undefined
       : +this.params.linodeID,
     selectedBackupID: isNaN(+this.params.backupID)
       ? undefined
-      : +this.params.backupID
+      : +this.params.backupID,
+    disabledClasses: []
   };
 
   componentDidUpdate(prevProps: CombinedProps) {
@@ -208,9 +226,17 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       .catch(_ => {
         this.setState({
           appInstancesLoading: false,
-          appInstancesError: 'There was an error loading One-Click Apps.'
+          appInstancesError: 'There was an error loading Marketplace Apps.'
         });
       });
+
+    // If we haven't requested images yet (or in a while), request them
+    if (
+      Date.now() - this.props.imagesLastUpdated > REFRESH_INTERVAL &&
+      !this.props.imagesLoading
+    ) {
+      this.props.requestImages();
+    }
   }
 
   clearCreationState = () => {
@@ -230,7 +256,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     this.setState({ selectedBackupID: id });
   };
 
-  setRegionID = (id: string) => this.setState({ selectedRegionID: id });
+  setRegionID = (id: string) => {
+    const disabledClasses = getDisabledClasses(id, this.props.regionsData);
+    this.setState({ selectedRegionID: id, disabledClasses });
+  };
 
   setTypeID = (id: string) => this.setState({ selectedTypeID: id });
 
@@ -273,7 +302,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     defaultData?: any
   ) => {
     /**
-     * If we're switching from one cloud app to another,
+     * If we're switching from one Marketplace app to another,
      * usually the only compatible image will be Debian 9. If this
      * is the case, preselect that value.
      */
@@ -427,7 +456,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         () => ({
           errors: [
             {
-              reason: 'You must select a One-Click App.',
+              reason: 'You must select a Marketplace App.',
               field: 'stackscript_id'
             }
           ]
@@ -496,11 +525,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
      * safe to ignore possibility of "undefined"
      * null checking happens in CALinodeCreate
      */
-    const typeInfo = this.reshapeTypeInfo(
+    return this.reshapeTypeInfo(
       this.props.typesData!.find(type => type.id === selectedTypeID)
     );
-
-    return typeInfo;
   };
 
   reshapeTypeInfo = (type?: ExtendedType): TypeInfo | undefined => {
@@ -558,10 +585,34 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   };
 
   render() {
-    const { enqueueSnackbar, closeSnackbar, ...restOfProps } = this.props;
+    const {
+      enqueueSnackbar,
+      closeSnackbar,
+      regionsData,
+      ...restOfProps
+    } = this.props;
     const { label, udfs: selectedUDFs, ...restOfState } = this.state;
+
+    // If the selected type is a GPU plan, only display region
+    // options that support GPUs.
+    const selectedType = this.props.typesData?.find(
+      thisType => thisType.id === this.state.selectedTypeID
+    );
+
+    const filteredRegions =
+      selectedType?.class === 'gpu'
+        ? regionsData?.filter(thisRegion => {
+            return thisRegion.capabilities.includes('GPU Linodes');
+          })
+        : regionsData;
+
+    const regionHelperText =
+      (filteredRegions?.length ?? 0) !== (regionsData?.length ?? 0)
+        ? 'Only regions that support your selected plan are displayed.'
+        : undefined;
+
     return (
-      <StickyContainer>
+      <React.Fragment>
         <DocumentTitleSegment segment="Create a Linode" />
         <Grid container spacing={0}>
           <Grid item xs={12}>
@@ -593,11 +644,13 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             handleSubmitForm={this.submitForm}
             resetCreationState={this.clearCreationState}
             setBackupID={this.setBackupID}
+            regionsData={filteredRegions}
+            regionHelperText={regionHelperText}
             {...restOfProps}
             {...restOfState}
           />
         </Grid>
-      </StickyContainer>
+      </React.Fragment>
     );
   }
 }

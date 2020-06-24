@@ -9,7 +9,7 @@ import {
   getLinodeConfig as _getLinodeConfig,
   getLinodeConfigs as _getLinodeConfigs,
   updateLinodeConfig as _updateLinodeConfig
-} from 'linode-js-sdk/lib/linodes';
+} from '@linode/api-v4/lib/linodes';
 import { createRequestThunk } from 'src/store/store.helpers';
 import { ThunkActionCreator } from 'src/store/types';
 import { getAll } from 'src/utilities/getAll';
@@ -19,7 +19,7 @@ import {
   getAllLinodeConfigsActions,
   GetAllLinodeConfigsParams,
   getLinodeConfigActions,
-  getLinodeConfigsActions,
+  getLinodeConfigsPageActions,
   updateLinodeConfigActions
 } from './config.actions';
 import { Entity } from './config.types';
@@ -36,11 +36,12 @@ export const createLinodeConfig = createRequestThunk(
 );
 
 export const getLinodeConfigs = createRequestThunk(
-  getLinodeConfigsActions,
+  getLinodeConfigsPageActions,
   ({ linodeId }) =>
-    _getLinodeConfigs(linodeId)
-      .then(({ data }) => data)
-      .then(configs => configs.map(addLinodeIdToConfig(linodeId)))
+    _getLinodeConfigs(linodeId).then(response => ({
+      data: response.data.map(addLinodeIdToConfig(linodeId)),
+      results: response.results
+    }))
 );
 
 export const getLinodeConfig = createRequestThunk(
@@ -74,9 +75,17 @@ export const getAllLinodeConfigs: ThunkActionCreator<
   );
 
   try {
-    const { data } = await req();
-    dispatch(done({ params, result: data.map(addLinodeIdToConfig(linodeId)) }));
-    return data;
+    const response = await req();
+    dispatch(
+      done({
+        params,
+        result: {
+          data: response.data.map(addLinodeIdToConfig(linodeId)),
+          results: response.results
+        }
+      })
+    );
+    return response.data;
   } catch (error) {
     dispatch(failed({ params, error }));
     return error;

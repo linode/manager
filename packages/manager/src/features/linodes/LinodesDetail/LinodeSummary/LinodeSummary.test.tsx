@@ -4,6 +4,10 @@ import { linodes } from 'src/__data__/linodes';
 import { light } from 'src/themes';
 import { LinodeSummary } from './LinodeSummary';
 
+const request = require.requireMock('@linode/api-v4/lib/linodes');
+jest.mock('@linode/api-v4/lib/linodes');
+request.getLinodeStats = jest.fn().mockResolvedValue([]);
+
 describe('LinodeSummary', () => {
   const wrapper = shallow(
     <LinodeSummary
@@ -28,14 +32,13 @@ describe('LinodeSummary', () => {
         textWrap: '',
         headerOuter: ''
       }}
-      theme={light({
-        spacingOverride: 4
-      })}
+      theme={light(4)}
       linodeVolumes={[]}
       typesData={[]}
       imagesData={{}}
       imagesError={{}}
       imagesLoading={false}
+      imagesLastUpdated={0}
     />
   );
 

@@ -1,8 +1,18 @@
-import produce from 'immer';
-import { KubernetesCluster } from 'linode-js-sdk/lib/kubernetes';
+import { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
 import { Reducer } from 'redux';
-import { EntityError, EntityState } from 'src/store/types';
-import updateOrAdd from 'src/utilities/updateOrAdd';
+import {
+  createDefaultState,
+  onCreateOrUpdate,
+  onDeleteSuccess,
+  onError,
+  onGetAllSuccess,
+  onStart,
+  setError
+} from 'src/store/store.helpers.tmp';
+import {
+  EntityError,
+  MappedEntityState2 as MappedEntityState
+} from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import {
   deleteClusterActions,
@@ -17,110 +27,82 @@ import {
  * State
  */
 
-export type State = EntityState<KubernetesCluster, EntityError>;
+export type State = MappedEntityState<KubernetesCluster, EntityError>;
 
-export const defaultState: State = {
-  results: [],
-  entities: [],
-  loading: false,
-  lastUpdated: 0,
-  error: {}
-};
+export const defaultState: State = createDefaultState();
 
 /**
  * Reducer
  */
 const reducer: Reducer<State> = (state = defaultState, action) => {
-  return produce(state, draft => {
-    if (isType(action, requestClustersActions.started)) {
-      draft.loading = true;
-      draft.error!.read = undefined;
-    }
+  if (isType(action, requestClustersActions.started)) {
+    return onStart(state);
+  }
 
-    if (isType(action, requestClustersActions.done)) {
-      const { result } = action.payload;
-      draft.entities = result;
-      draft.results = result.map(cluster => cluster.id);
-      draft.lastUpdated = Date.now();
-      draft.loading = false;
-    }
+  if (isType(action, requestClustersActions.done)) {
+    const { result } = action.payload;
+    return onGetAllSuccess(result.data, state, result.results);
+  }
 
-    if (isType(action, requestClustersActions.failed)) {
-      const { error } = action.payload;
-      draft.error!.read = error;
-      draft.loading = false;
-    }
+  if (isType(action, requestClustersActions.failed)) {
+    const { error } = action.payload;
+    return onError({ read: error }, state);
+  }
 
-    if (isType(action, upsertCluster)) {
-      const { payload } = action;
-      const entities = updateOrAdd(payload, state.entities);
+  if (isType(action, upsertCluster)) {
+    const { payload } = action;
+    return onCreateOrUpdate(payload, state);
+  }
 
-      draft.entities = entities;
-      draft.results = entities.map(cluster => cluster.id);
-    }
+  if (isType(action, updateClusterActions.started)) {
+    return setError({ update: undefined }, state);
+  }
 
-    if (isType(action, updateClusterActions.started)) {
-      draft.error!.update = undefined;
-    }
+  if (isType(action, updateClusterActions.done)) {
+    const { result } = action.payload;
+    return onCreateOrUpdate(result, state);
+  }
 
-    if (isType(action, updateClusterActions.done)) {
-      const { result } = action.payload;
-      const update = updateOrAdd(result, state.entities);
+  if (isType(action, updateClusterActions.failed)) {
+    const { error } = action.payload;
+    return onError({ update: error }, state);
+  }
 
-      draft.entities = update;
-      draft.results = update.map(cluster => cluster.id);
-    }
+  if (isType(action, setErrors)) {
+    const newErrors = action.payload;
+    return setError(newErrors, state);
+  }
 
-    if (isType(action, updateClusterActions.failed)) {
-      const { error } = action.payload;
-      draft.error!.update = error;
-    }
+  if (isType(action, deleteClusterActions.started)) {
+    return setError({ delete: undefined }, state);
+  }
 
-    if (isType(action, setErrors)) {
-      const newErrors = action.payload;
-      draft.error = newErrors;
-    }
+  if (isType(action, deleteClusterActions.done)) {
+    const {
+      params: { clusterID }
+    } = action.payload;
+    return onDeleteSuccess(clusterID, state);
+  }
 
-    if (isType(action, deleteClusterActions.started)) {
-      draft.error!.delete = undefined;
-    }
+  if (isType(action, deleteClusterActions.failed)) {
+    const { error } = action.payload;
+    return onError({ delete: error }, state);
+  }
 
-    if (isType(action, deleteClusterActions.done)) {
-      const {
-        params: { clusterID }
-      } = action.payload;
-      const entities = state.entities.filter(({ id }) => id !== clusterID);
+  if (isType(action, requestClusterActions.started)) {
+    return setError({ read: undefined }, state);
+  }
 
-      draft.entities = entities;
-      draft.results = entities.map(c => c.id);
-    }
+  if (isType(action, requestClusterActions.done)) {
+    const { result } = action.payload;
+    return onCreateOrUpdate(result, state);
+  }
 
-    if (isType(action, deleteClusterActions.failed)) {
-      const { error } = action.payload;
-      draft.error!.delete = error;
-    }
-
-    if (isType(action, requestClusterActions.started)) {
-      draft.error!.read = undefined;
-      draft.loading = true;
-    }
-
-    if (isType(action, requestClusterActions.done)) {
-      const { result } = action.payload;
-      const entities = updateOrAdd(result, state.entities);
-
-      draft.loading = false;
-      draft.entities = entities;
-      draft.results = entities.map(cluster => cluster.id);
-      draft.lastUpdated = Date.now();
-    }
-
-    if (isType(action, requestClusterActions.failed)) {
-      const { error } = action.payload;
-      draft.error!.read = error;
-      draft.loading = false;
-    }
-  });
+  if (isType(action, requestClusterActions.failed)) {
+    const { error } = action.payload;
+    return onError({ read: error }, state);
+  }
+  return state;
 };
 
 export default reducer;

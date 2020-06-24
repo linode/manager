@@ -1,4 +1,4 @@
-import { DomainRecord } from 'linode-js-sdk/lib/domains';
+import { DomainRecord } from '@linode/api-v4/lib/domains';
 
 export const isValidDomainRecord = (
   hostname: string,
@@ -29,4 +29,10 @@ use it.`;
 export const getInitialIPs = (ipsFromProps?: string[]): string[] => {
   const ips = ipsFromProps ?? [''];
   return ips.length > 0 ? ips : [''];
+};
+
+export const isEditableNameServer = (nameServerId: number) => {
+  const nameServerDummyId = -1;
+
+  return nameServerDummyId !== nameServerId ? true : false;
 };

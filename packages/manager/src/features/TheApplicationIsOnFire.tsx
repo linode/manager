@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-const TheApplicationIsOnFire: React.StatelessComponent<{}> = props => {
+const TheApplicationIsOnFire: React.FC<{}> = props => {
   return (
     <Dialog
       open
@@ -30,7 +30,7 @@ const TheApplicationIsOnFire: React.StatelessComponent<{}> = props => {
       <DialogTitle title="Oh snap!" />
       <DialogContent>
         <Typography variant="subtitle1" style={{ marginBottom: 16 }}>
-          Something went terribly wrong. Did you try {<ReloadLink />}?
+          Something went terribly wrong. Please {<ReloadLink />} and try again.
         </Typography>
       </DialogContent>
     </Dialog>
@@ -47,7 +47,7 @@ const ReloadLink = () => {
       }}
       className={classes.restartButton}
     >
-      restarting the application
+      reload the page
     </button>
   );
 };

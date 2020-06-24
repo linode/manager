@@ -6,7 +6,7 @@ export interface Props {
   label: string;
 }
 
-export const BucketActionMenu: React.StatelessComponent<Props> = props => {
+export const BucketActionMenu: React.FC<Props> = props => {
   const createActions = () => (closeMenu: Function): Action[] => {
     return [
       {

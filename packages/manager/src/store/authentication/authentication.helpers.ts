@@ -1,4 +1,8 @@
-import { authentication } from 'src/utilities/storage';
+import {
+  authentication,
+  stackScriptInProgress,
+  supportText
+} from 'src/utilities/storage';
 
 export const clearLocalStorage = () => {
   authentication.token.set('');
@@ -6,4 +10,19 @@ export const clearLocalStorage = () => {
   authentication.expire.set('');
   authentication.nonce.set('');
   localStorage.removeItem('state');
+};
+
+export const clearUserInput = () => {
+  // Add more things here as needed, right now we only cache
+  // Support ticket title/description.
+
+  supportText.set({ title: '', description: '' });
+  stackScriptInProgress.set({
+    id: '',
+    label: '',
+    script: '',
+    rev_note: '',
+    description: '',
+    images: []
+  });
 };

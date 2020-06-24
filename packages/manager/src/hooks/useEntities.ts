@@ -1,4 +1,4 @@
-import { APIError } from 'linode-js-sdk/lib/types';
+import { APIError } from '@linode/api-v4/lib/types';
 import useDomains from './useDomains';
 import useImages from './useImages';
 import useKubernetesClusters from './useKubernetesClusters';
@@ -46,13 +46,13 @@ export const useEntities = () => {
    * or Object.value(data.itemsById).
    */
 
-  const linodes = _linodes.entities ?? [];
-  const domains = _domains.data ?? [];
+  const domains = Object.values(_domains.itemsById);
+  const linodes = Object.values(_linodes.itemsById);
   const images = (Object.values(_images.data) ?? []).filter(
     thisImage => !thisImage.is_public
   );
   const volumes = Object.values(_volumes.itemsById);
-  const kubernetesClusters = _kubernetesClusters.entities;
+  const kubernetesClusters = Object.values(_kubernetesClusters.itemsById);
   const nodeBalancers = Object.values(_nodeBalancers.itemsById);
 
   return {
@@ -70,7 +70,8 @@ export const useEntities = () => {
     },
     kubernetesClusters: {
       data: kubernetesClusters,
-      request: requestKubernetesClusters,
+      request: () =>
+        requestKubernetesClusters().then(response => response.data),
       lastUpdated: _kubernetesClusters.lastUpdated,
       error: _kubernetesClusters.error?.read
     },

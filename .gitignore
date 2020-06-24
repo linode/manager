@@ -2,8 +2,8 @@
 dist
 build
 lib
-**/linode-js-sdk/index.js
-**/linode-js-sdk/index.d.ts
+**/api-v4/index.js
+**/api-v4/index.d.ts
 
 # editor configuration
 .vscode
@@ -14,6 +14,9 @@ lib
 
 # local restart script with keys
 restart.sh
+
+# local switch script with client IDs
+switch.sh
 
 # dotenv environment variables file
 .env*
@@ -115,7 +118,13 @@ packages/manager/test-report.xml
 **/manager/config/development.json
 **/manager/config/staging.json
 **/manager/cypress/videos/
-**/manager/cypress/screenshots/
+
+# ignore all screenshots except records
+# we ignore the png files, not the whole folder recursively
+# or the record files are ignored too
+**/manager/cypress/screenshots/**/*.png
+!**/manager/cypress/screenshots/**/record*.png
+
 packages/manager/cypress/fixtures/example.json
 
 nohup.out

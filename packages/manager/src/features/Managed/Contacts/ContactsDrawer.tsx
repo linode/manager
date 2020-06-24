@@ -1,11 +1,11 @@
-import { Formik, FormikActions } from 'formik';
+import { Formik, FormikHelpers } from 'formik';
 import {
   ContactPayload,
   createContact,
   createContactSchema,
   ManagedContact,
   updateContact
-} from 'linode-js-sdk/lib/managed';
+} from '@linode/api-v4/lib/managed';
 import { pathOr, pick } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -56,7 +56,7 @@ const ContactsDrawer: React.FC<CombinedProps> = props => {
 
   const onSubmit = (
     values: ContactPayload,
-    { setErrors, setSubmitting, setStatus }: FormikActions<ContactPayload>
+    { setErrors, setSubmitting, setStatus }: FormikHelpers<ContactPayload>
   ) => {
     setStatus(undefined);
 

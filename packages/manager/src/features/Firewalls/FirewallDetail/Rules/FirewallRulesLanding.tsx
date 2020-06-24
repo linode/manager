@@ -1,4 +1,5 @@
-import { FirewallRules, FirewallRuleType } from 'linode-js-sdk/lib/firewalls';
+import { FirewallRules, FirewallRuleType } from '@linode/api-v4/lib/firewalls';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -17,12 +18,14 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import FirewallRuleDrawer, { Mode } from './FirewallRuleDrawer';
 import curriedFirewallRuleEditorReducer, {
   editorStateToRules,
+  ExtendedFirewallRule,
   hasModified as _hasModified,
   initRuleEditorState,
-  prepareRules
+  prepareRules,
+  stripExtendedFields
 } from './firewallRuleEditor';
 import FirewallRuleTable from './FirewallRuleTable';
-import { Category } from './types';
+import { Category, parseFirewallRuleError } from './shared';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
@@ -68,7 +71,9 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
   });
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   // @todo fine-grained error handling.
-  const [error, setError] = React.useState<string | undefined>();
+  const [generalErrors, setGeneralErrors] = React.useState<
+    APIError[] | undefined
+  >();
   const [discardChangesModalOpen, setDiscardChangesModalOpen] = React.useState<
     boolean
   >(false);
@@ -130,17 +135,24 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
 
   const handleUndo = (category: Category, idx: number) => {
     const dispatch = dispatchFromCategory(category);
+
     dispatch({ type: 'UNDO', idx });
   };
 
   const applyChanges = () => {
     setSubmitting(true);
-    setError(undefined);
+    setGeneralErrors(undefined);
 
-    // Gather rules from state for submission to the API.
-    const finalRules: FirewallRules = {
+    // Gather rules from state for submission to the API. Keep these around,
+    // because we may need to reference extended fields like "index" for error handling.
+    const preparedRules = {
       inbound: prepareRules(inboundState),
       outbound: prepareRules(outboundState)
+    };
+
+    const finalRules = {
+      inbound: preparedRules.inbound.map(stripExtendedFields),
+      outbound: preparedRules.outbound.map(stripExtendedFields)
     };
 
     props
@@ -152,10 +164,45 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         outboundDispatch({ type: 'RESET', rules: _rules.outbound ?? [] });
       })
       .catch(err => {
+        setSubmitting(false);
+
         const _err = getAPIErrorOrDefault(err);
 
-        setSubmitting(false);
-        setError(_err[0].reason);
+        for (const thisError of _err) {
+          const parsedError = parseFirewallRuleError(thisError);
+
+          // If we are unable to parse this error as a FirewallRuleError,
+          // consider it a general error.
+          if (parsedError === null) {
+            setGeneralErrors(prevGeneralErrors => [
+              ...(prevGeneralErrors ?? []),
+              thisError
+            ]);
+          } else {
+            const { idx, category } = parsedError;
+
+            // Refer back to the prepared list of rules to get the actual index to set the error on.
+            // This may be different than the index returned by the API, since we don't send deleted
+            // rules in the PUT request (but we still have them in state).
+            const originalRule: ExtendedFirewallRule =
+              preparedRules[category][idx];
+
+            const originalIndex = originalRule.index;
+
+            if (originalIndex === undefined) {
+              return;
+            }
+
+            const dispatch = dispatchFromCategory(
+              parsedError.category as Category
+            );
+            dispatch({
+              type: 'SET_ERROR',
+              idx: originalIndex,
+              error: parsedError
+            });
+          }
+        }
       });
   };
 
@@ -217,7 +264,9 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         permitted by a rule is blocked.
       </Typography>
 
-      {error && <Notice spacingTop={8} error text={error} />}
+      {generalErrors?.length === 1 && (
+        <Notice spacingTop={8} error text={generalErrors[0].reason} />
+      )}
 
       <div className={classes.table}>
         <FirewallRuleTable
@@ -275,7 +324,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
         handleClose={() => setDiscardChangesModalOpen(false)}
         handleDiscard={() => {
           setDiscardChangesModalOpen(false);
-          setError(undefined);
+          setGeneralErrors(undefined);
           inboundDispatch({ type: 'DISCARD_CHANGES' });
           outboundDispatch({ type: 'DISCARD_CHANGES' });
         }}

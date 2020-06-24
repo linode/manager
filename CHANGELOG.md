@@ -4,15 +4,180 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2020-06-09] - v1.11.0
+
+### Changed:
+- Clarify Linode password fields in Reset Root Password vs. Rebuild
+- Hide SSH key remove button for LISH settings when no keys are present
+- Make main content banner dismissible
+- Show error when Volumes limit has been reached but attempt is made to add a new Volume
+
+### Fixed:
+- CAA record input duplicating name/value
+
+## [2020-06-03] - @linode/api-v4 v.0.27.1
+
+### Fixed
+
+- Remove required from createDomain validation schema
+
+## [2020-06-02] - v1.10.0
+
+### Added:
+
+- Progress bar for newly-created Images
+
+### Changed:
+
+- Improve UX for GPU selection
+- Add a link to Support in all “Verification is required” errors
+- Allow clearable numeric inputs in Domain Records Drawer
+- Remove Cloud Manager version tag from Support Tickets
+
+### Fixed:
+
+- Broken SVG combination when creating a Linode
+- Profile routing didn’t handle incorrect routes
+- Firewall document title
+- ICMP port bug when editing Firewall rules
+- Update textfield to use input id for "for" attribute
+- Copy fix for Profile -> Referrals
+- Accessibility of Dashboard “View Details” links
+
+## [2020-05-21] - 1.9.0
+
+### Added:
+
+- @-expansion for Target field in Domain records
+- “Last Modified” column to Domains landing page
+- Support for Third-Party Authentication
+
+### Changed:
+
+- Default support ticket option to 'General'
+- Defer requests to Linodes and Images until after app has loaded
+- Redesign Billing section of app
+- Request Domains when hovering over Primary Nav link
+- Update behavior for TFA cancel button
+- Rename linode-js-sdk to @linode/api-v4 to prepare for NPM publication
+- Update @linode/api-v4 documentation
+- Lazy load Linodes on BackupsDashboardCard
+
+### Fixed:
+
+- Keyboard access to open Support ticket creation drawer
+- Missing SSH keys in some flows for Linode creation
+- Second column alignment for NodeBalancer on dashboard
+- Tag display on mobile viewport
+- Removed extra requests
+- Prevent crashing for unactivated users
+- Remove duplicate instance requests
+
+## [2020-05-04] - v1.8.0
+
+### Changed:
+
+- "Node Status" is now "Backend Status" on NodeBalancers list and detail view
+- Minimum payment placeholder text
+- Hide Recycle Node in the LKE Node action menu
+- Provide cluster summary information for LKE search results
+
+### Fixed:
+
+- Remove invalid credits
+- NodeBalancer Error Handling (SSL)
+- Xterm flow control errors
+- Remove stray characters in FromBackupsContent
+
+## [2020-04-20] - v1.7.0
+
+### Added:
+
+- Firewalls: Client-side form validation
+
+### Changed:
+
+- Make LKE available regardless of customer account response
+- Request OBJ Buckets per-cluster
+- Theming performance optimizations
+
+### Fixed:
+
+- Correct alignment for “Date Created” field on mobile invoice table
+- NodeBalancer error handling
+- Current size of pool was updating along with target size when resizing a Node Pool.
+
+## [2020-04-15] - v1.6.0
+
+### Added:
+
+- EnhancedNumberInput component
+
+### Changed:
+
+- Redesign of LKE interface, including Detail and Create Cluster views
+- Add LKE clusters to search results
+
+### Fixed:
+
+- Case where some long-running actions may not be updated when complete
+
+## [2020-04-10] - 1.5.1
+
+### Changed:
+
+- Update LKE schema to reflect breaking API changes (version is now k8s_version)
+
+## [2020-04-07] - 1.5.0
+
+### Changed:
+
+- [Performance] Lazy load Domains data
+- Set a timeout when requesting Gravatars
+- Preserve Support ticket text on page reload
+
+### Fixed:
+
+- Account tab crashing for some users
+- Fix handling of local storage on logout
+- Longview NGINX tab crashing for some users
+- Screen readers cannot access "Create Linode" interface
+- Values on LV Network graphs displayed incorrectly
+- Placeholder component double h1 display issue
+
+## [2020-03-30] - v.1.4.1
+
+### Fixed:
+
+- Images not available on Marketplace flow
+
+## [2020-03-30] - v1.4.0
+
+### Changed:
+
+- Change "One-Click Apps" to "Marketplace"
+- Change message in the Events table empty state
+- Allow up to 10,000 USD payment with PayPal
+- Lazy load Images
+
+### Fixed:
+
+- Improve skeleton loading screen in the Events table
+- Fix bug in Image select
+- Fix visual bug in OAuth Apps table header (dark mode)
+- Edit DNS Records containing "linode.com" substring
+
 ## [2020-03-23] - v1.3.0
 
 ### Added:
+
 - Firewalls:
   - Add, Edit, and Delete rules
   - Prompt when navigating away from unsaved rule
   - Add icon to table rows
 
 ### Changed:
+
 - Remove “Active Deploys” StackScripts table column and add “Total Deploys” column
 - Update customer referral criteria text
 - Improve syntax highlighting
@@ -24,6 +189,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Cloud Manager PDF invoices pull in customer tax ID regardless of added date
 
 ### Fixed:
+
 - Volumes creation bug
 - Accessibility warnings for password inputs
 - Remove page break on invoices

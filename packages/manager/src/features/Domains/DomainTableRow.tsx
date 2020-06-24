@@ -1,4 +1,4 @@
-import { DomainStatus } from 'linode-js-sdk/lib/domains';
+import { Domain, DomainStatus } from '@linode/api-v4/lib/domains';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -13,6 +13,7 @@ import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import ActionMenu, { Handlers } from './DomainActionMenu';
+import DateTimeDisplay from 'src/components/DateTimeDisplay';
 
 type ClassNames =
   | 'domain'
@@ -41,14 +42,7 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface Props extends Handlers {
-  domain: string;
-  id: number;
-  status: DomainStatus;
-  type: 'master' | 'slave';
-}
-
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Domain & Handlers & WithStyles<ClassNames>;
 
 class DomainTableRow extends React.Component<CombinedProps> {
   handleRowClick = (
@@ -72,6 +66,7 @@ class DomainTableRow extends React.Component<CombinedProps> {
       id,
       type,
       status,
+      updated,
       onClone,
       onRemove,
       onEdit
@@ -82,6 +77,7 @@ class DomainTableRow extends React.Component<CombinedProps> {
         key={id}
         data-qa-domain-cell={domain}
         className={`${classes.domainRow} ${'fade-in-table'}`}
+        ariaLabel={`Domain ${domain}`}
         rowLink={
           type === 'slave'
             ? e => this.handleRowClick(e, id, domain, type)
@@ -120,6 +116,9 @@ class DomainTableRow extends React.Component<CombinedProps> {
         </TableCell>
         <TableCell parentColumn="Status" data-qa-domain-status>
           {humanizeDomainStatus(status)}
+        </TableCell>
+        <TableCell parentColumn="Last Modified" data-qa-domain-lastmodified>
+          <DateTimeDisplay value={updated} />
         </TableCell>
         <TableCell>
           <ActionMenu

@@ -1,9 +1,8 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { Sticky, StickyProps } from 'react-sticky';
 import AccessPanel from 'src/components/AccessPanel';
-import CheckoutBar from 'src/components/CheckoutBar';
+import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -126,11 +125,12 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
           <Paper>
             <Placeholder
               title="My Images"
+              renderAsSecondary
               copy={
                 <Typography variant="subtitle1">
-                  You don't have any private Images. Visit the{' '}
+                  You don&#39;t have any private Images. Visit the{' '}
                   <Link to="/images">Images section</Link> to create an Image
-                  from one of your Linode's disks.
+                  from one of your Linode&#39;s disks.
                 </Typography>
               }
             />
@@ -151,6 +151,43 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
 
     const determineIDName =
       variant === 'private' ? 'image-private-create' : 'distro-create';
+
+    const displaySections = [];
+    if (imageDisplayInfo) {
+      displaySections.push(imageDisplayInfo);
+    }
+
+    if (regionDisplayInfo) {
+      displaySections.push({
+        title: regionDisplayInfo.title,
+        details: regionDisplayInfo.details
+      });
+    }
+
+    if (typeDisplayInfo) {
+      displaySections.push(typeDisplayInfo);
+    }
+
+    if (this.props.label) {
+      displaySections.push({
+        title: 'Linode Label',
+        details: this.props.label
+      });
+    }
+
+    if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
+      displaySections.push(
+        renderBackupsDisplaySection(
+          accountBackupsEnabled,
+          typeDisplayInfo.backupsMonthly
+        )
+      );
+    }
+
+    let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
+    if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
+      calculatedPrice += typeDisplayInfo.backupsMonthly;
+    }
 
     return (
       <React.Fragment>
@@ -183,8 +220,9 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
               handleSelection={this.props.updateRegionID}
               selectedID={this.props.selectedRegionID}
               copy="Determine the best location for your Linode."
-              updateFor={[this.props.selectedRegionID, errors]}
+              updateFor={[this.props.selectedRegionID, regions, errors]}
               disabled={userCannotCreateLinode}
+              helperText={this.props.regionHelperText}
             />
             <SelectPlanPanel
               error={hasErrorFor.type}
@@ -192,8 +230,13 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
               data-qa-select-plan-panel
               onSelect={this.props.updateTypeID}
               selectedID={this.props.selectedTypeID}
-              updateFor={[this.props.selectedTypeID, errors]}
+              updateFor={[
+                this.props.selectedTypeID,
+                this.props.disabledClasses,
+                errors
+              ]}
               disabled={userCannotCreateLinode}
+              disabledClasses={this.props.disabledClasses}
             />
             <LabelAndTagsPanel
               data-qa-label-and-tags-panel
@@ -232,11 +275,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
                 userSSHKeys,
                 this.props.selectedImageID
               ]}
-              users={
-                userSSHKeys.length > 0 && this.props.selectedImageID
-                  ? userSSHKeys
-                  : []
-              }
+              users={userSSHKeys}
               requestKeys={requestKeys}
             />
             <AddonsPanel
@@ -265,69 +304,16 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
               : classes.sidebarPublic)
           }
         >
-          <Sticky topOffset={-24} disableCompensation>
-            {(props: StickyProps) => {
-              const displaySections = [];
-              if (imageDisplayInfo) {
-                displaySections.push(imageDisplayInfo);
-              }
-
-              if (regionDisplayInfo) {
-                displaySections.push({
-                  title: regionDisplayInfo.title,
-                  details: regionDisplayInfo.details
-                });
-              }
-
-              if (typeDisplayInfo) {
-                displaySections.push(typeDisplayInfo);
-              }
-
-              if (this.props.label) {
-                displaySections.push({
-                  title: 'Linode Label',
-                  details: this.props.label
-                });
-              }
-
-              if (
-                hasBackups &&
-                typeDisplayInfo &&
-                typeDisplayInfo.backupsMonthly
-              ) {
-                displaySections.push(
-                  renderBackupsDisplaySection(
-                    accountBackupsEnabled,
-                    typeDisplayInfo.backupsMonthly
-                  )
-                );
-              }
-
-              let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
-              if (
-                hasBackups &&
-                typeDisplayInfo &&
-                typeDisplayInfo.backupsMonthly
-              ) {
-                calculatedPrice += typeDisplayInfo.backupsMonthly;
-              }
-
-              return (
-                <CheckoutBar
-                  data-qa-checkout-bar
-                  heading="Linode Summary"
-                  calculatedPrice={calculatedPrice}
-                  isMakingRequest={this.props.formIsSubmitting}
-                  disabled={
-                    this.props.formIsSubmitting || userCannotCreateLinode
-                  }
-                  onDeploy={this.createLinode}
-                  displaySections={displaySections}
-                  {...props}
-                />
-              );
-            }}
-          </Sticky>
+          <CheckoutBar
+            data-qa-checkout-bar
+            heading="Linode Summary"
+            calculatedPrice={calculatedPrice}
+            isMakingRequest={this.props.formIsSubmitting}
+            disabled={this.props.formIsSubmitting || userCannotCreateLinode}
+            onDeploy={this.createLinode}
+          >
+            <DisplaySectionList displaySections={displaySections} />
+          </CheckoutBar>
         </Grid>
       </React.Fragment>
     );

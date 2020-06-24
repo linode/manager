@@ -1,9 +1,8 @@
-import { UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
+import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import * as React from 'react';
 import AccessPanel from 'src/components/AccessPanel';
 import {
   createStyles,
-  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -12,7 +11,7 @@ import TextField from 'src/components/TextField';
 
 type ClassNames = 'root' | 'accessPanel';
 
-const styles = (theme: Theme) =>
+const styles = () =>
   createStyles({
     root: {},
     accessPanel: {
@@ -37,17 +36,15 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
     const { error, field, placeholder, isOptional } = this.props;
 
     return (
-      <React.Fragment>
-        <TextField
-          required={!isOptional}
-          onChange={this.handleUpdateText}
-          label={field.label}
-          errorText={error}
-          // small={isOptional}
-          helperText={placeholder}
-          value={this.props.value}
-        />
-      </React.Fragment>
+      <TextField
+        required={!isOptional}
+        onChange={this.handleUpdateText}
+        label={field.label}
+        errorText={error}
+        // small={isOptional}
+        helperText={placeholder}
+        value={this.props.value}
+      />
     );
   };
 
@@ -65,7 +62,6 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
         hideStrengthLabel
         className={!isOptional ? classes.accessPanel : ''}
         isOptional={isOptional}
-        hideHelperText
         password={this.props.value}
       />
     );

@@ -1,4 +1,4 @@
-import { Linode } from 'linode-js-sdk/lib/linodes';
+import { Linode } from '@linode/api-v4/lib/linodes';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -15,6 +15,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import { handleOpen } from 'src/store/backupDrawer';
+import { getLinodesWithoutBackups } from 'src/store/selectors/getLinodesWithBackups';
 import { MapState } from 'src/store/types';
 
 type ClassNames = 'root' | 'container' | 'buttonsContainer' | 'dismiss';
@@ -53,7 +54,7 @@ type CombinedProps = StateProps &
   DispatchProps &
   WithStyles<ClassNames>;
 
-const BackupsCTA: React.StatelessComponent<CombinedProps> = props => {
+const BackupsCTA: React.FC<CombinedProps> = props => {
   const {
     classes,
     linodesWithoutBackups,
@@ -80,8 +81,8 @@ const BackupsCTA: React.StatelessComponent<CombinedProps> = props => {
         </Grid>
         <Grid item>
           <Typography>
-            We've got your back! Click below to enable Backups for all Linodes,
-            and be sure to read our guide on Backups{` `}
+            We&#39;ve got your back! Click below to enable Backups for all
+            Linodes, and be sure to read our guide on Backups{` `}
             <a
               target="_blank"
               aria-describedby="external-site"
@@ -128,17 +129,12 @@ interface DispatchProps {
   };
 }
 
-const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => ({
-  linodesWithoutBackups: state.__resources.linodes.entities.filter(
-    l => !l.backups.enabled
-  ),
+const mapStateToProps: MapState<StateProps, {}> = state => ({
+  linodesWithoutBackups: getLinodesWithoutBackups(state.__resources),
   managed: state?.__resources?.accountSettings?.data?.managed ?? false
 });
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
-  dispatch,
-  ownProps
-) => {
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => {
   return {
     actions: {
       openBackupsDrawer: () => dispatch(handleOpen())

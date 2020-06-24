@@ -78,7 +78,7 @@ interface Props {
   className?: string;
   small?: boolean;
   isOptional?: boolean;
-  hideHelperText?: boolean;
+  passwordHelperText?: string;
 }
 
 export interface UserSSHKeyObject {
@@ -111,7 +111,7 @@ class AccessPanel extends React.Component<CombinedProps> {
       className,
       small,
       isOptional,
-      hideHelperText,
+      passwordHelperText,
       requestKeys
     } = this.props;
 
@@ -128,7 +128,7 @@ class AccessPanel extends React.Component<CombinedProps> {
       >
         <div className={!noPadding ? classes.inner : ''}>
           {error && <Notice text={error} error />}
-          <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+          <React.Suspense fallback={<SuspenseLoader />}>
             <PasswordInput
               data-qa-password-input
               className={classes.passwordInputOuter}
@@ -141,7 +141,7 @@ class AccessPanel extends React.Component<CombinedProps> {
               placeholder={placeholder || 'Enter a password.'}
               onChange={this.handleChange}
               hideStrengthLabel={hideStrengthLabel}
-              hideHelperText={hideHelperText}
+              helperText={passwordHelperText}
             />
           </React.Suspense>
           {users && (

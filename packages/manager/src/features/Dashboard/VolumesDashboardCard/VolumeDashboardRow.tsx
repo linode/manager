@@ -1,4 +1,4 @@
-import { Volume } from 'linode-js-sdk/lib/volumes';
+import { Volume } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Hidden from 'src/components/core/Hidden';
@@ -76,9 +76,7 @@ export const getLinodeLabel = (linodeId: number | null) => {
   return attachedLinode ? attachedLinode.label : null;
 };
 
-export const VolumeDashboardRow: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const VolumeDashboardRow: React.FC<CombinedProps> = props => {
   const {
     classes,
     volume: { label, linode_id, region, size }
@@ -87,7 +85,7 @@ export const VolumeDashboardRow: React.StatelessComponent<
   const attachedLinodeLabel = getLinodeLabel(linode_id);
 
   return (
-    <TableRow key={label} data-qa-volume={label}>
+    <TableRow key={label} ariaLabel={`Volume ${label}`} data-qa-volume={label}>
       <TableCell className={classes.labelCol}>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item className="py0">

@@ -13,7 +13,14 @@ import {
   RebuildFromStackScript
 } from './RebuildFromStackScript';
 
+const request = jest.requireMock('@linode/api-v4/lib/account');
+
 jest.mock('src/utilities/scrollErrorIntoView');
+jest.mock('@linode/api-v4/lib/account', () => ({
+  getUsers: jest.fn()
+}));
+
+request.getUsers = jest.fn().mockResolvedValue([]);
 
 afterEach(cleanup);
 
@@ -30,9 +37,12 @@ const props: CombinedProps = {
   requestKeys: jest.fn(),
   imagesLoading: false,
   imagesError: {},
+  imagesLastUpdated: 0,
   userSSHKeys: [],
+  disabled: false,
   closeSnackbar: jest.fn(),
   enqueueSnackbar: jest.fn(),
+  passwordHelperText: '',
   ...reactRouterProps
 };
 
@@ -60,7 +70,7 @@ describe('RebuildFromStackScript', () => {
       () => [
         getByText('A StackScript is required.'),
         getByText('An image is required.'),
-        getByText('Password cannot be blank.')
+        getByText('Password is required.')
       ],
       {}
     );

@@ -48,7 +48,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const StatsPanel: React.StatelessComponent<CombinedProps> = props => {
+export const StatsPanel: React.FC<CombinedProps> = props => {
   const {
     classes,
     error,

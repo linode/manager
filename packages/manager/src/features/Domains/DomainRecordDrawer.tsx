@@ -1,11 +1,13 @@
 import {
   createDomainRecord,
+  Domain,
   DomainRecord,
   DomainType,
   RecordType,
   updateDomainRecord
-} from 'linode-js-sdk/lib/domains';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/domains';
+import { APIError } from '@linode/api-v4/lib/types';
+import produce from 'immer';
 import {
   cond,
   defaultTo,
@@ -24,10 +26,7 @@ import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import MultipleIPInput from 'src/components/MultipleIPInput';
 import Notice from 'src/components/Notice';
-import {
-  default as _TextField,
-  Props as TextFieldProps
-} from 'src/components/TextField';
+import TextField from 'src/components/TextField';
 import {
   DomainActionsProps,
   withDomainActions
@@ -39,6 +38,7 @@ import {
   extendedIPToString,
   stringToExtendedIP
 } from 'src/utilities/ipUtils';
+import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import {
   getInitialIPs,
@@ -47,14 +47,13 @@ import {
   transferHelperText as helperText
 } from './domainUtils';
 
-const TextField: React.StatelessComponent<TextFieldProps> = props => (
-  <_TextField {...props} />
-);
-
-interface Props extends EditableRecordFields, EditableDomainFields {
+interface Props
+  extends Partial<Omit<DomainRecord, 'type'>>,
+    Partial<Omit<Domain, 'type'>> {
   open: boolean;
   onClose: () => void;
   domainId: number;
+  domain: string;
   mode: 'create' | 'edit';
   records: DomainRecord[];
   updateRecords: () => void;
@@ -69,16 +68,15 @@ interface Props extends EditableRecordFields, EditableDomainFields {
 interface EditableSharedFields {
   ttl_sec?: number;
 }
-
 interface EditableRecordFields extends EditableSharedFields {
   name?: string;
-  port?: number;
-  priority?: number;
+  port?: string;
+  priority?: string;
   protocol?: null | string;
   service?: null | string;
   tag?: null | string;
   target?: string;
-  weight?: number;
+  weight?: string;
 }
 
 interface EditableDomainFields extends EditableSharedFields {
@@ -100,15 +98,16 @@ interface State {
 
 type CombinedProps = Props & DomainActionsProps;
 
-/* tslint:disable-next-line */
-interface _TextFieldProps {
+interface AdjustedTextFieldProps {
   label: string;
   field: keyof EditableRecordFields | keyof EditableDomainFields;
   min?: number;
   max?: number;
+  placeholder?: string;
+  helperText?: string;
 }
 
-interface NumberFieldProps extends _TextFieldProps {
+interface NumberFieldProps extends AdjustedTextFieldProps {
   defaultValue?: number;
 }
 
@@ -118,22 +117,22 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
    * editable data or defaults.
    */
   static defaultFieldsState = (props: Partial<CombinedProps>) => ({
-    id: pathOr(undefined, ['id'], props),
-    name: pathOr('', ['name'], props),
-    port: pathOr(80, ['port'], props),
-    priority: pathOr(10, ['priority'], props),
-    protocol: pathOr('tcp', ['protocol'], props),
-    service: pathOr('', ['service'], props),
-    tag: pathOr('issue', ['tag'], props),
-    target: pathOr('', ['target'], props),
-    ttl_sec: pathOr(0, ['ttl_sec'], props),
-    weight: pathOr(5, ['weight'], props),
-    domain: pathOr(undefined, ['domain'], props),
-    soa_email: pathOr('', ['soa_email'], props),
+    id: props.id,
+    name: props.name ?? '',
+    port: props.port ?? '80',
+    priority: props.priority ?? '10',
+    protocol: props.protocol ?? 'tcp',
+    service: props.service ?? '',
+    tag: props.tag ?? 'issue',
+    target: props.target ?? '',
+    ttl_sec: props.ttl_sec ?? 0,
+    weight: props.weight ?? '5',
+    domain: props.domain,
+    soa_email: props.soa_email ?? '',
     axfr_ips: getInitialIPs(props.axfr_ips),
-    refresh_sec: pathOr(0, ['refresh_sec'], props),
-    retry_sec: pathOr(0, ['retry_sec'], props),
-    expire_sec: pathOr(0, ['expire_sec'], props)
+    refresh_sec: props.refresh_sec ?? 0,
+    retry_sec: props.retry_sec ?? 0,
+    expire_sec: props.expire_sec ?? 0
   });
 
   state: State = {
@@ -177,7 +176,12 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     this.updateField('axfr_ips')(axfr_ips);
   };
 
-  TextField = ({ label, field }: _TextFieldProps) => (
+  TextField = ({
+    label,
+    field,
+    helperText,
+    placeholder
+  }: AdjustedTextFieldProps) => (
     <TextField
       label={label}
       errorText={getAPIErrorsFor(
@@ -191,6 +195,8 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
         this.updateField(field)(e.target.value)
       }
+      placeholder={placeholder}
+      helperText={helperText}
       data-qa-target={label}
     />
   );
@@ -206,7 +212,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         )(field)}
         value={this.state.fields[field]}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          this.updateField(field)(+e.target.value)
+          this.updateField(field)(e.target.value)
         }
         data-qa-target={label}
         {...rest}
@@ -214,13 +220,28 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     );
   };
 
-  NameField = ({ label }: { label: string }) => (
-    <this.TextField field="name" label={label} />
-  );
-
-  TargetField = ({ label }: { label: string }) => (
-    <this.TextField field="target" label={label} />
-  );
+  NameOrTargetField = ({
+    label,
+    field
+  }: {
+    label: string;
+    field: 'name' | 'target';
+  }) => {
+    const { domain, type } = this.props;
+    const value = this.state.fields[field];
+    const hasAliasToResolve =
+      value.indexOf('@') >= 0 && shouldResolve(type, field);
+    return (
+      <this.TextField
+        field={field}
+        label={label}
+        placeholder={
+          shouldResolve(type, field) ? 'hostname or @ for root' : undefined
+        }
+        helperText={hasAliasToResolve ? resolve(value, domain) : undefined}
+      />
+    );
+  };
 
   ServiceField = () => <this.TextField field="service" label="Service" />;
 
@@ -462,7 +483,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   };
 
   onRecordCreate = () => {
-    const { records, type } = this.props;
+    const { records, domain, type } = this.props;
 
     /** Appease TS ensuring we won't use it during Record create. */
     if (type === 'master' || type === 'slave') {
@@ -470,10 +491,15 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     }
 
     this.setState({ submitting: true, errors: undefined });
-    const data = {
+    const _data = {
       type,
       ...this.filterDataByType(this.state.fields, type)
     };
+
+    // Expand @ to the Domain in appropriate fields
+    let data = resolveAlias(_data, domain, type);
+    // Convert string values to numeric, replacing '' with undefined
+    data = castFormValuesToNumeric(data);
 
     /**
      * Validation
@@ -500,7 +526,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   };
 
   onRecordEdit = () => {
-    const { type, id, domainId } = this.props;
+    const { type, id, domain, domainId } = this.props;
     const fields = this.state.fields as EditableRecordFields;
 
     /** Appease TS ensuring we won't use it during Record create. */
@@ -510,10 +536,14 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
 
     this.setState({ submitting: true, errors: undefined });
 
-    const data = {
+    const _data = {
       ...this.filterDataByType(fields, type)
     };
 
+    // Expand @ to the Domain in appropriate fields
+    let data = resolveAlias(_data, domain, type);
+    // Convert string values to numeric, replacing '' with undefined
+    data = castFormValuesToNumeric(data);
     updateDomainRecord(domainId, id, data)
       .then(this.handleRecordSubmissionSuccess)
       .catch(this.handleSubmissionErrors);
@@ -612,41 +642,69 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     // },
     AAAA: {
       fields: [
-        (idx: number) => <this.NameField label="Hostname" key={idx} />,
-        (idx: number) => <this.TargetField label="IP Address" key={idx} />,
+        (idx: number) => (
+          <this.NameOrTargetField label="Hostname" field="name" key={idx} />
+        ),
+        (idx: number) => (
+          <this.NameOrTargetField label="IP Address" field="target" key={idx} />
+        ),
         (idx: number) => <this.TTLField key={idx} />
       ]
     },
     NS: {
       fields: [
-        (idx: number) => <this.TargetField label="Name Server" key={idx} />,
-        (idx: number) => <this.NameField label="Subdomain" key={idx} />,
+        (idx: number) => (
+          <this.NameOrTargetField
+            label="Name Server"
+            field="target"
+            key={idx}
+          />
+        ),
+        (idx: number) => (
+          <this.NameOrTargetField label="Subdomain" field="name" key={idx} />
+        ),
         (idx: number) => <this.TTLField key={idx} />
       ]
     },
     MX: {
       fields: [
-        (idx: number) => <this.TargetField label="Mail Server" key={idx} />,
+        (idx: number) => (
+          <this.NameOrTargetField
+            label="Mail Server"
+            field="target"
+            key={idx}
+          />
+        ),
         ,
         (idx: number) => (
           <this.PriorityField min={0} max={255} label="Preference" key={idx} />
         ),
         (idx: number) => <this.TTLField key={idx} />,
-        (idx: number) => <this.NameField label="Subdomain" key={idx} />
+        (idx: number) => (
+          <this.NameOrTargetField label="Subdomain" field="name" key={idx} />
+        )
       ]
     },
     CNAME: {
       fields: [
-        (idx: number) => <this.NameField label="Hostname" key={idx} />,
-        (idx: number) => <this.TargetField label="Alias to" key={idx} />,
+        (idx: number) => (
+          <this.NameOrTargetField label="Hostname" field="name" key={idx} />
+        ),
+        (idx: number) => (
+          <this.NameOrTargetField label="Alias to" field="target" key={idx} />
+        ),
         (idx: number) => <this.TTLField key={idx} />,
         ,
       ]
     },
     TXT: {
       fields: [
-        (idx: number) => <this.NameField label="Hostname" key={idx} />,
-        (idx: number) => <this.TargetField label="Value" key={idx} />,
+        (idx: number) => (
+          <this.NameOrTargetField label="Hostname" field="name" key={idx} />
+        ),
+        (idx: number) => (
+          <this.NameOrTargetField label="Value" field="target" key={idx} />
+        ),
         (idx: number) => <this.TTLField key={idx} />
       ]
     },
@@ -659,15 +717,21 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         ),
         (idx: number) => <this.WeightField key={idx} />,
         (idx: number) => <this.PortField key={idx} />,
-        (idx: number) => <this.TargetField label="Target" key={idx} />,
+        (idx: number) => (
+          <this.NameOrTargetField label="Target" field="target" key={idx} />
+        ),
         (idx: number) => <this.TTLField key={idx} />
       ]
     },
     CAA: {
       fields: [
-        (idx: number) => <this.NameField label="Name" key={idx} />,
+        (idx: number) => (
+          <this.NameOrTargetField label="Name" field="name" key={idx} />
+        ),
         (idx: number) => <this.TagField key={idx} />,
-        (idx: number) => <this.TargetField label="Value" key={idx} />,
+        (idx: number) => (
+          <this.NameOrTargetField label="Value" field="target" key={idx} />
+        ),
         (idx: number) => <this.TTLField key={idx} />
       ]
     }
@@ -682,16 +746,28 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     this.props.onClose();
   };
 
-  UNSAFE_componentWillReceiveProps(nextProps: CombinedProps) {
-    this.setState({ fields: DomainRecordDrawer.defaultFieldsState(nextProps) });
+  componentDidUpdate(prevProps: CombinedProps) {
+    if (this.props.open && !prevProps.open) {
+      // Drawer is opening, set the fields according to props
+      this.setState({
+        fields: DomainRecordDrawer.defaultFieldsState(this.props)
+      });
+    }
   }
 
   render() {
     const { submitting } = this.state;
-    const { open, mode, type } = this.props;
+    const { open, mode, type, records } = this.props;
     const { fields } = this.types[type];
     const isCreating = mode === 'create';
     const isDomain = type === 'master' || type === 'slave';
+
+    const hasARecords = records.find(thisRecord =>
+      ['A', 'AAAA'].includes(thisRecord.type)
+    ); // If there are no A/AAAA records and a user tries to add an NS record, they'll see a warning message asking them to add an A/AAAA record.
+
+    const noARecordsNoticeText =
+      'Please create an A/AAAA record for this domain to avoid a Zone File invalidation.';
 
     const buttonProps: ButtonProps = {
       buttonType: 'primary',
@@ -720,7 +796,11 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
           otherErrors.map((err, index) => {
             return <Notice error key={index} text={err} />;
           })}
+        {!hasARecords && type === 'NS' && (
+          <Notice warning spacingTop={8} text={noARecordsNoticeText} />
+        )}
         {fields.map((field: any, idx: number) => field(idx))}
+
         <ActionsPanel>
           <Button {...buttonProps} data-qa-record-save />
           <Button
@@ -754,6 +834,49 @@ const typeMap = {
   PTR: 'PTR',
   SRV: 'SRV',
   TXT: 'TXT'
+};
+
+export const shouldResolve = (type: string, field: string) => {
+  switch (type) {
+    case 'AAAA':
+      return field === 'name';
+    case 'SRV':
+      return field === 'target';
+    case 'CNAME':
+      return field === 'target';
+    default:
+      return false;
+  }
+};
+
+export const resolve = (value: string, domain: string) =>
+  value.replace(/\@/, domain);
+
+export const resolveAlias = (
+  data: Record<string, any>,
+  domain: string,
+  type: string
+) => {
+  // Replace a single @ with a reference to the Domain
+  const clone = { ...data };
+  for (const [key, value] of Object.entries(clone)) {
+    if (shouldResolve(type, key) && typeof value === 'string') {
+      clone[key] = resolve(value, domain);
+    }
+  }
+  return clone;
+};
+
+const numericFields = ['port', 'weight', 'priority'];
+export const castFormValuesToNumeric = (
+  data: Record<string, any>,
+  fieldNames: string[] = numericFields
+) => {
+  return produce(data, draft => {
+    fieldNames.forEach(thisField => {
+      draft[thisField] = maybeCastToNumber(draft[thisField]);
+    });
+  });
 };
 
 const enhanced = compose<CombinedProps, Props>(withDomainActions);

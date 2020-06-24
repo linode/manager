@@ -1,4 +1,4 @@
-import { Domain, DomainRecord } from 'linode-js-sdk/lib/domains';
+import { Domain, DomainRecord } from '@linode/api-v4/lib/domains';
 
 export const domain1: Domain = {
   master_ips: [],
@@ -14,7 +14,8 @@ export const domain1: Domain = {
   retry_sec: 0,
   soa_email: 'user@host.com',
   status: 'active',
-  ttl_sec: 0
+  ttl_sec: 0,
+  updated: '2020-05-03 00:00:00'
 };
 
 export const domain2: Domain = {
@@ -31,7 +32,8 @@ export const domain2: Domain = {
   retry_sec: 0,
   soa_email: 'user@host.com',
   status: 'active',
-  ttl_sec: 0
+  ttl_sec: 0,
+  updated: '2020-05-02 00:00:00'
 };
 
 export const domain3: Domain = {
@@ -48,7 +50,8 @@ export const domain3: Domain = {
   retry_sec: 0,
   soa_email: 'user@host.com',
   status: 'active',
-  ttl_sec: 0
+  ttl_sec: 0,
+  updated: '2020-05-01 00:00:00'
 };
 
 export const domains = [domain1, domain2, domain3];

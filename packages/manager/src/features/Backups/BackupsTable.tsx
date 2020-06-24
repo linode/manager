@@ -12,8 +12,8 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowLoading from 'src/components/TableRowLoading';
-import { ExtendedLinode } from './BackupDrawer';
 import BackupLinodes from './BackupLinodes';
+import { ExtendedLinode } from './types';
 
 type ClassNames = 'root' | 'container';
 
@@ -37,7 +37,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const BackupsTable: React.StatelessComponent<CombinedProps> = props => {
+export const BackupsTable: React.FC<CombinedProps> = props => {
   const { classes, linodes, loading } = props;
 
   return (

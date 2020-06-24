@@ -1,4 +1,4 @@
-import { APIError, ResourcePage } from 'linode-js-sdk/lib/types';
+import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { clone } from 'ramda';
 import * as React from 'react';
 import { storage } from 'src/utilities/storage';

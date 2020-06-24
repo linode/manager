@@ -129,7 +129,7 @@ const styles = (theme: Theme) =>
 
 type onClickFn = (e: React.ChangeEvent<HTMLTableRowElement>) => void;
 
-interface Props {
+export interface Props {
   rowLink?: string | onClickFn;
   onClick?: onClickFn;
   onKeyUp?: any;
@@ -140,6 +140,7 @@ interface Props {
   forceIndex?: boolean;
   highlight?: boolean;
   disabled?: boolean;
+  ariaLabel?: string;
 }
 
 export type CombinedProps = Props &
@@ -191,6 +192,7 @@ export class TableRow extends React.Component<CombinedProps> {
       forceIndex,
       highlight,
       disabled,
+      ariaLabel,
       ...rest
     } = this.props;
 
@@ -214,7 +216,7 @@ export class TableRow extends React.Component<CombinedProps> {
         }
         hover={rowLink !== undefined}
         role={role}
-        aria-label={rowLink ? `View Details` : undefined}
+        aria-label={ariaLabel ?? `View Details`}
         className={classNames(className, {
           [classes.root]: true,
           [classes.selected]: selected,

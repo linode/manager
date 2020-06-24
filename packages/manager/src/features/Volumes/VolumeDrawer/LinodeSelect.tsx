@@ -1,7 +1,6 @@
-import { getLinodes, Linode } from 'linode-js-sdk/lib/linodes';
+import { getLinodes, Linode } from '@linode/api-v4/lib/linodes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import _Option from 'react-select/lib/components/Option';
 import { compose } from 'recompose';
 import FormHelperText from 'src/components/core/FormHelperText';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';

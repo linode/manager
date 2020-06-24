@@ -1,8 +1,7 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { Sticky, StickyProps } from 'react-sticky';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
-import CheckoutBar from 'src/components/CheckoutBar';
+import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -108,7 +107,41 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
 
     const hasBackups = backupsEnabled || accountBackupsEnabled;
 
+    const displaySections = [];
+    if (regionInfo) {
+      displaySections.push({
+        title: regionInfo.title,
+        details: regionInfo.details
+      });
+    }
+
+    if (typeInfo) {
+      displaySections.push(typeInfo);
+    }
+
+    if (label) {
+      displaySections.push({
+        title: 'Linode Label',
+        details: label
+      });
+    }
+
+    if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
+      displaySections.push(
+        renderBackupsDisplaySection(
+          accountBackupsEnabled,
+          typeInfo.backupsMonthly
+        )
+      );
+    }
+
+    let calculatedPrice = pathOr(0, ['monthly'], typeInfo);
+    if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
+      calculatedPrice += typeInfo.backupsMonthly;
+    }
+
     return (
+      // eslint-disable-next-line
       <React.Fragment>
         {linodes && linodes.length === 0 ? (
           <Grid
@@ -120,7 +153,9 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
           >
             <Paper>
               <Placeholder
+                data-qa-placeholder
                 icon={VolumeIcon}
+                renderAsSecondary
                 copy="You do not have any existing Linodes to clone from.
                     Please first create a Linode from either an Image or StackScript."
                 title="Clone from Existing Linode"
@@ -138,6 +173,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
             >
               <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
               <SelectLinodePanel
+                data-qa-linode-panel
                 error={hasErrorFor('linode_id')}
                 linodes={extendLinodes(linodes, images, types)}
                 selectedLinodeID={selectedLinodeID}
@@ -152,24 +188,34 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
                 }}
               />
               <SelectRegionPanel
+                data-qa-region-panel
                 error={hasErrorFor('region')}
                 regions={regions}
                 handleSelection={this.props.updateRegionID}
                 selectedID={selectedRegionID}
                 copy="Determine the best location for your Linode."
-                updateFor={[selectedRegionID, errors]}
+                updateFor={[selectedRegionID, errors, regions]}
+                helperText={this.props.regionHelperText}
                 disabled={userCannotCreateLinode}
               />
               <SelectPlanPanel
+                data-qa-select-plan-panel
                 error={hasErrorFor('type')}
                 types={types}
                 onSelect={this.props.updateTypeID}
                 selectedID={selectedTypeID}
                 selectedDiskSize={selectedDiskSize}
-                updateFor={[selectedDiskSize, selectedTypeID, errors]}
+                updateFor={[
+                  selectedDiskSize,
+                  selectedTypeID,
+                  errors,
+                  this.props.disabledClasses
+                ]}
                 disabled={userCannotCreateLinode}
+                disabledClasses={this.props.disabledClasses}
               />
               <LabelAndTagsPanel
+                data-qa-label-panel
                 labelFieldProps={{
                   label: 'Linode Label',
                   value: label || '',
@@ -180,6 +226,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
                 updateFor={[label, errors]}
               />
               <AddonsPanel
+                data-qa-addons-panel
                 backups={backupsEnabled}
                 accountBackups={accountBackupsEnabled}
                 backupsMonthly={backupsMonthlyPrice}
@@ -192,56 +239,15 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
               />
             </Grid>
             <Grid item className={`${classes.sidebar} mlSidebar`}>
-              <Sticky topOffset={-24} disableCompensation>
-                {(props: StickyProps) => {
-                  const displaySections = [];
-                  if (regionInfo) {
-                    displaySections.push({
-                      title: regionInfo.title,
-                      details: regionInfo.details
-                    });
-                  }
-
-                  if (typeInfo) {
-                    displaySections.push(typeInfo);
-                  }
-
-                  if (label) {
-                    displaySections.push({
-                      title: 'Linode Label',
-                      details: label
-                    });
-                  }
-
-                  if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
-                    displaySections.push(
-                      renderBackupsDisplaySection(
-                        accountBackupsEnabled,
-                        typeInfo.backupsMonthly
-                      )
-                    );
-                  }
-
-                  let calculatedPrice = pathOr(0, ['monthly'], typeInfo);
-                  if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
-                    calculatedPrice += typeInfo.backupsMonthly;
-                  }
-
-                  return (
-                    <CheckoutBar
-                      heading="Linode Summary"
-                      calculatedPrice={calculatedPrice}
-                      isMakingRequest={this.props.formIsSubmitting}
-                      disabled={
-                        this.props.formIsSubmitting || userCannotCreateLinode
-                      }
-                      onDeploy={this.cloneLinode}
-                      displaySections={displaySections}
-                      {...props}
-                    />
-                  );
-                }}
-              </Sticky>
+              <CheckoutBar
+                heading="Linode Summary"
+                calculatedPrice={calculatedPrice}
+                isMakingRequest={this.props.formIsSubmitting}
+                disabled={this.props.formIsSubmitting || userCannotCreateLinode}
+                onDeploy={this.cloneLinode}
+              >
+                <DisplaySectionList displaySections={displaySections} />
+              </CheckoutBar>
             </Grid>
           </React.Fragment>
         )}

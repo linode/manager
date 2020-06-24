@@ -1,5 +1,5 @@
 import produce from 'immer';
-import { Image } from 'linode-js-sdk/lib/images';
+import { Image } from '@linode/api-v4/lib/images';
 import { clone } from 'ramda';
 import { Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
@@ -17,7 +17,7 @@ import { EntitiesAsObjectState } from '../types';
 export type State = EntitiesAsObjectState<Image>;
 
 export const defaultState: State = {
-  loading: true,
+  loading: false,
   lastUpdated: 0,
   results: 0,
   data: {},

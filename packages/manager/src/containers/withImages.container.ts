@@ -1,4 +1,4 @@
-import { CreateImagePayload, Image } from 'linode-js-sdk/lib/images';
+import { CreateImagePayload, Image } from '@linode/api-v4/lib/images';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -15,6 +15,7 @@ export interface WithImages {
   imagesData: Record<string, Image>;
   imagesLoading: boolean;
   imagesError: EntityError;
+  imagesLastUpdated: number;
 }
 
 export interface ImagesDispatch {
@@ -36,24 +37,33 @@ export default <TInner extends {}, TOuter extends {}>(
     ownProps: TOuter,
     images: Record<string, Image>,
     imagesLoading: boolean,
-    imagesError: EntityError
+    imagesError: EntityError,
+    lastUpdated: number
   ) => TInner
 ) =>
   connect((state: ApplicationState, ownProps: TOuter) => {
     const {
       data: imagesData,
       error: imagesError,
-      loading
+      loading,
+      lastUpdated
     } = state.__resources.images;
 
     if (!mapImagesToProps) {
       return {
         ...ownProps,
         imagesData,
-        loading,
-        imagesError
+        imagesLoading: loading,
+        imagesError,
+        imagesLastUpdated: lastUpdated
       };
     }
 
-    return mapImagesToProps(ownProps, imagesData, loading, imagesError);
+    return mapImagesToProps(
+      ownProps,
+      imagesData,
+      loading,
+      imagesError,
+      lastUpdated
+    );
   }, mapDispatchToProps);

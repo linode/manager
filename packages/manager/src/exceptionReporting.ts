@@ -1,17 +1,27 @@
 import { captureException, configureScope, withScope } from '@sentry/browser';
-import { pathOr } from 'ramda';
 import { SENTRY_URL } from 'src/constants';
 import { initSentry } from 'src/initSentry';
 
 initSentry();
 
-const promiseRejectionsToIgnore: string[] = [
+const errorsToIgnore: string[] = [
   'Invalid OAuth Token',
-  'Not Found'
+  'Not Found',
+  'You are not authorized',
+  'safari-extension',
+  'chrome-extension',
+  // We know this is a problem. @todo: implement flow control in Lish.
+  'write data discarded, use flow control to avoid losing data',
+  // This is an error coming from the MUI Ripple effect.
+  'TouchRipple'
 ];
 
-window.addEventListener('unhandledrejection', err => {
-  if (pathOr('', ['reason', 'stack'], err).match(/launchdarkly/i)) {
+window.addEventListener('unhandledrejection', event => {
+  const _stack = event?.reason?.stack;
+  // Enforce that `stack` is a string.
+  const stack = typeof _stack === 'string' ? _stack : '';
+
+  if (stack.match(/launchdarkly/i)) {
     /**
      * This doesn't affect error reporting, but avoids some console noise
      * until we've cleaned up Sentry.
@@ -19,7 +29,9 @@ window.addEventListener('unhandledrejection', err => {
     return;
   }
 
-  const firstReason = pathOr('', [0, 'reason'], err.reason);
+  const _firstReason = event.reason?.[0]?.reason;
+  // Enforce that `firstReason` is a string.
+  const firstReason = typeof _firstReason === 'string' ? _firstReason : '';
 
   /*
     if our error is an error we want to ignore, don't report to Sentry
@@ -30,15 +42,16 @@ window.addEventListener('unhandledrejection', err => {
     to Sentry
    */
   if (
-    promiseRejectionsToIgnore.some(
-      eachString => !!firstReason.match(new RegExp(eachString, 'gmi'))
-    )
+    errorsToIgnore.some(eachString => {
+      const regex = new RegExp(eachString, 'gmi');
+      return !!firstReason.match(regex) || stack.match(regex);
+    })
   ) {
     return;
   }
 
   /* otherwise report to sentry as normal */
-  reportException(err.reason);
+  reportException(event.reason);
 });
 
 // Wrapper around Sentry's `captureException` function. A local scope is created
@@ -55,11 +68,12 @@ export const reportException = (
 
   // Log the error to the console in non-production environments.
   if (process.env.NODE_ENV !== 'production') {
-    /* tslint:disable */
+    /* eslint-disable */
     console.error('====================================');
     console.error(error);
     console.log(extra);
     console.error('====================================');
+    /* eslint-enable */
   }
 
   // Create a local scope so we can add `extra` and `tags` to this specific

@@ -1,4 +1,4 @@
-import { Disk } from 'linode-js-sdk/lib/linodes';
+import { Disk } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { compose } from 'recompose';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
@@ -30,7 +30,7 @@ const diskFromValue = (
   return thisDisk ? thisDisk : null;
 };
 
-const DiskSelect: React.StatelessComponent<CombinedProps> = props => {
+const DiskSelect: React.FC<CombinedProps> = props => {
   const {
     disabled,
     disks,

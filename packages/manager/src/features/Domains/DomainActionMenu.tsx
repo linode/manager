@@ -1,4 +1,4 @@
-import { DomainStatus } from 'linode-js-sdk/lib/domains';
+import { DomainStatus } from '@linode/api-v4/lib/domains';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
@@ -13,6 +13,7 @@ export interface Handlers {
   ) => void;
   onClone: (domain: string, id: number) => void;
   onEdit: (domain: string, id: number) => void;
+  [index: string]: any;
 }
 
 interface Props extends Handlers {

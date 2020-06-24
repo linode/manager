@@ -1,4 +1,4 @@
-import { getLinodeConfigs } from 'linode-js-sdk/lib/linodes';
+import { getLinodeConfigs } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -16,15 +16,13 @@ interface Props {
 type ConfigTuple = [number, string];
 interface State {
   configs: ConfigTuple[];
-  loading: boolean;
 }
 
 type CombinedProps = Props;
 
 class ConfigSelect extends React.Component<CombinedProps, State> {
   state: State = {
-    configs: [],
-    loading: false
+    configs: []
   };
 
   setInitialState = () => {
@@ -96,9 +94,9 @@ class ConfigSelect extends React.Component<CombinedProps, State> {
 
   render() {
     const { error, onChange, name, onBlur, value, ...rest } = this.props;
-    const { loading, configs } = this.state;
+    const { configs } = this.state;
 
-    if (!loading && configs.length <= 1) {
+    if (configs.length < 1) {
       return null;
     }
 

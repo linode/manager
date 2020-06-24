@@ -65,7 +65,11 @@ export const initSentry = () => {
         'bmi_SafeAddOnload',
         'EBCallBackMessageReceived',
         // See http://toolbar.conduit.com/Developer/HtmlAndGadget/Methods/JSInjection.aspx
-        'conduitPage'
+        'conduitPage',
+        // Don't report client network errors.
+        'ChunkLoadError',
+        // This is apparently a benign error: https://stackoverflow.com/questions/49384120/resizeobserver-loop-limit-exceeded
+        'ResizeObserver loop limit exceeded'
       ],
       whitelistUrls: [
         /** anything from either *.linode.com/* or localhost:3000 */

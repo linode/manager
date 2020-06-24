@@ -3,20 +3,44 @@ import {
   linodeBoot,
   linodeReboot,
   linodeShutdown
-} from 'linode-js-sdk/lib/linodes';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/linodes';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
+import Notice from 'src/components/Notice';
 
+import { makeStyles, Theme } from 'src/components/core/styles';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
+import ExternalLink from 'src/components/ExternalLink';
 
 import { resetEventsPolling } from 'src/eventsPolling';
 import LinodeConfigDrawer from 'src/features/LinodeConfigSelectionDrawer';
 
 export type Action = 'Reboot' | 'Power Off' | 'Power On';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    marginBottom: theme.spacing(1.25),
+    display: 'flex',
+    alignItems: 'center',
+    lineHeight: '1.25rem',
+    fontSize: '0.875rem'
+  },
+  dialog: {
+    '& .dialog-content': {
+      paddingTop: 0,
+      paddingBottom: 0
+    }
+  },
+  notice: {
+    '& .noticeText': {
+      fontSize: '0.875rem !important'
+    }
+  }
+}));
 
 interface Props {
   action?: Action;
@@ -43,6 +67,7 @@ export const selectDefaultConfig = (configs?: Config[]) =>
 
 const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = props => {
   const { linodeConfigs } = props;
+  const classes = useStyles();
   const [isTakingAction, setTakingAction] = React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [selectedConfigID, selectConfigID] = React.useState<number | undefined>(
@@ -122,6 +147,7 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = props => {
 
   return (
     <Dialog
+      className={classes.dialog}
       open={props.isOpen}
       title={`Are you sure you want to ${props.action.toLowerCase()} ${
         props.linodeLabel
@@ -137,9 +163,23 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = props => {
         />
       }
     >
-      <Typography>
+      <Typography className={classes.root}>
         Are you sure you want to {props.action.toLowerCase()} your Linode?
       </Typography>
+      {props.action === 'Power Off' && (
+        <span>
+          <Notice warning important className={classes.notice}>
+            <strong>Note: </strong>
+            Powered down Linodes will still accrue charges. See the&nbsp;
+            <ExternalLink
+              link="https://www.linode.com/docs/platform/billing-and-support/how-linode-billing-works/#if-my-linode-is-powered-off-will-i-be-billed"
+              text="Billing and Payments documentation"
+              hideIcon
+            />
+            &nbsp;for more information.
+          </Notice>
+        </span>
+      )}
     </Dialog>
   );
 };

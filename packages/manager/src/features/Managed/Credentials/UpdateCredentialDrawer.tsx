@@ -1,5 +1,5 @@
 import { Formik } from 'formik';
-import { CredentialPayload } from 'linode-js-sdk/lib/managed';
+import { CredentialPayload } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -144,7 +144,7 @@ const CredentialDrawer: React.FC<CombinedProps> = props => {
                 onBlur={handleBlur}
               />
 
-              <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+              <React.Suspense fallback={<SuspenseLoader />}>
                 <PasswordInput
                   name="password"
                   label="Password / Passphrase"
@@ -156,7 +156,6 @@ const CredentialDrawer: React.FC<CombinedProps> = props => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   // This credential could be anything so might be counterproductive to validate strength
-                  hideHelperText
                   hideValidation
                 />
               </React.Suspense>

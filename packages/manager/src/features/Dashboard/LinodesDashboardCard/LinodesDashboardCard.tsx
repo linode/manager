@@ -1,6 +1,6 @@
-import { Entity, Event } from 'linode-js-sdk/lib/account';
-import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { Entity, Event } from '@linode/api-v4/lib/account';
+import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
+import { APIError } from '@linode/api-v4/lib/types';
 import { compose, path, pathOr, prop, sortBy, take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -8,12 +8,7 @@ import { Link } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import Table from 'src/components/core/Table';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
@@ -24,6 +19,7 @@ import TableRowLoading from 'src/components/TableRowLoading';
 import ViewAllLink from 'src/components/ViewAllLink';
 import LinodeRowHeadCell from 'src/features/linodes/LinodesLanding/LinodeRow/LinodeRowHeadCell';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
+import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { ApplicationState } from 'src/store';
 import {
   isEntityEvent,
@@ -39,97 +35,71 @@ interface EntityEvent extends Omit<Event, 'entity'> {
   entity: Entity;
 }
 
-type ClassNames =
-  | 'root'
-  | 'linodeWrapper'
-  | 'labelCol'
-  | 'moreCol'
-  | 'actionsCol'
-  | 'wrapHeader';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      marginTop: 0
-    },
-    linodeWrapper: {
-      display: 'inline-flex',
-      width: 'auto'
-    },
-    labelCol: {
-      width: '60%'
-    },
-    moreCol: {
-      width: '30%'
-    },
-    actionsCol: {
-      width: '10%'
-    },
-    wrapHeader: {
-      whiteSpace: 'nowrap'
-    }
-  });
+const useStyles = makeStyles(() => ({
+  root: {
+    marginTop: 0
+  },
+  linodeWrapper: {
+    display: 'inline-flex',
+    width: 'auto'
+  },
+  labelCol: {
+    width: '60%'
+  },
+  moreCol: {
+    width: '30%'
+  },
+  actionsCol: {
+    width: '10%'
+  },
+  wrapHeader: {
+    whiteSpace: 'nowrap'
+  }
+}));
 
 interface ConnectedProps {
   types: LinodeType[];
 }
 
-type CombinedProps = ConnectedProps &
-  WithUpdatingLinodesProps &
-  WithTypesProps &
-  WithStyles<ClassNames>;
+type CombinedProps = ConnectedProps & WithUpdatingLinodesProps & WithTypesProps;
 
-class LinodesDashboardCard extends React.Component<CombinedProps> {
-  render() {
-    const { classes } = this.props;
-    return (
-      <DashboardCard
-        title="Linodes"
-        headerAction={this.renderAction}
-        className={classes.root}
-        alignHeader="flex-start"
-      >
-        <Paper>
-          <Table>
-            <TableBody>{this.renderContent()}</TableBody>
-          </Table>
-        </Paper>
-      </DashboardCard>
-    );
-  }
+const LinodesDashboardCard: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
 
-  renderAction = () => {
-    return this.props.linodeCount > 5 ? (
+  const { _loading } = useReduxLoad(['linodes', 'images']);
+
+  const renderAction = () => {
+    return props.linodeCount > 5 ? (
       <ViewAllLink
         text="View All"
         link={'/linodes'}
-        count={this.props.linodeCount}
+        count={props.linodeCount}
       />
     ) : null;
   };
 
-  renderContent = () => {
-    const { loading, linodes, error } = this.props;
-    if (loading) {
-      return this.renderLoading();
+  const renderContent = () => {
+    const { loading, linodes, error } = props;
+    if (loading || _loading) {
+      return renderLoading();
     }
 
     if (error) {
-      return this.renderErrors(error);
+      return renderErrors(error);
     }
 
     if (linodes.length > 0) {
-      return this.renderData(linodes);
+      return renderData(linodes);
     }
 
-    return this.renderEmpty();
+    return renderEmpty();
   };
 
-  renderLoading = () => {
+  const renderLoading = () => {
     return <TableRowLoading colSpan={3} />;
   };
 
-  renderErrors = (errors: APIError[]) => {
+  const renderErrors = (errors: APIError[]) => {
     let errorText: string | JSX.Element = pathOr(
       'Unable to load Linodes.',
       [0, 'reason'],
@@ -152,15 +122,18 @@ class LinodesDashboardCard extends React.Component<CombinedProps> {
     return <TableRowError colSpan={3} message={errorText} />;
   };
 
-  renderEmpty = () => <TableRowEmptyState colSpan={3} />;
+  const renderEmpty = () => <TableRowEmptyState colSpan={3} />;
 
-  renderData = (data: ExtendedLinode[]) => {
-    const { classes } = this.props;
-
+  const renderData = (data: ExtendedLinode[]) => {
     return data.map(linode => {
       const { id, label, region } = linode;
       return (
-        <TableRow key={label} rowLink={`/linodes/${id}`} data-qa-linode>
+        <TableRow
+          key={label}
+          ariaLabel={`Linode ${label}`}
+          rowLink={`/linodes/${id}`}
+          data-qa-linode
+        >
           <LinodeRowHeadCell
             loading={false}
             recentEvent={linode.recentEvent}
@@ -192,15 +165,28 @@ class LinodesDashboardCard extends React.Component<CombinedProps> {
       );
     });
   };
-}
 
-const styled = withStyles(styles);
+  return (
+    <DashboardCard
+      title="Linodes"
+      headerAction={renderAction}
+      className={classes.root}
+      alignHeader="flex-start"
+    >
+      <Paper>
+        <Table>
+          <TableBody>{renderContent()}</TableBody>
+        </Table>
+      </Paper>
+    </DashboardCard>
+  );
+};
 
 interface WithTypesProps {
   typesData: LinodeType[];
 }
 
-const withTypes = connect((state: ApplicationState, ownProps) => ({
+const withTypes = connect((state: ApplicationState) => ({
   typesData: state.__resources.types.entities
 }));
 
@@ -215,8 +201,8 @@ interface WithUpdatingLinodesProps {
   error?: APIError[];
 }
 
-const withUpdatingLinodes = connect((state: ApplicationState, ownProps: {}) => {
-  const linodes = state.__resources.linodes.entities;
+const withUpdatingLinodes = connect((state: ApplicationState) => {
+  const linodes = Object.values(state.__resources.linodes.itemsById);
   const notifications = state.__resources.notifications.data || [];
 
   const linodesWithMaintenance = addNotificationsToLinodes(
@@ -230,10 +216,10 @@ const withUpdatingLinodes = connect((state: ApplicationState, ownProps: {}) => {
       take(5),
       sortBy(prop('label'))
     )(linodesWithMaintenance),
-    linodeCount: state.__resources.linodes.entities.length,
     loading:
       state.__resources.linodes.loading &&
       state.__resources.linodes.results.length === 0,
+    linodeCount: state.__resources.linodes.results,
     error: path(['read'], state.__resources.linodes.error)
   };
 });
@@ -263,10 +249,6 @@ const isWantedEvent = (e: Event): e is EntityEvent => {
   return false;
 };
 
-const enhanced = recompose<CombinedProps, {}>(
-  withUpdatingLinodes,
-  styled,
-  withTypes
-);
+const enhanced = recompose<CombinedProps, {}>(withUpdatingLinodes, withTypes);
 
 export default enhanced(LinodesDashboardCard) as React.ComponentType<{}>;

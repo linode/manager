@@ -1,4 +1,5 @@
 const { navigateToStory } = require('../../../e2e/utils/storybook');
+const zxcvbn = require('zxcvbn');
 
 describe('Password Input Suite', () => {
   const component = 'Password Input';
@@ -6,29 +7,7 @@ describe('Password Input Suite', () => {
   const strengthIndicator = '[data-qa-strength]';
   const passwordInput = '[data-qa-hide] input';
 
-  function hideShow(show) {
-    $('[data-qa-hide] svg').click();
-    const hidden = $('[data-qa-hide]').getAttribute('data-qa-hide');
-    const type = $(passwordInput).getAttribute('type');
-
-    if (show) {
-      expect(hidden)
-        .withContext(`Password should be displayed`)
-        .toBe('false');
-      expect(type)
-        .withContext(`Incorrect type`)
-        .toBe('text');
-    } else {
-      expect(hidden)
-        .withContext(`Password should be hidden`)
-        .toBe('true');
-      expect(type)
-        .withContext(`Incorrect type`)
-        .toBe('password');
-    }
-  }
-
-  beforeAll(() => {
+  beforeEach(() => {
     navigateToStory(component, childStories[0]);
   });
 
@@ -42,28 +21,50 @@ describe('Password Input Suite', () => {
       .toBe(true);
   });
 
-  it('should update the strength when complexity of password increases', () => {
+  describe('should update the strength when complexity of password increases', () => {
     const testPasswords = ['weak', 'stronger1233', 'Stronger123#!'];
-    testPasswords.forEach((pass, index) => {
-      $(passwordInput).setValue(pass);
-      const strengthDisplays = $(strengthIndicator).isDisplayed();
-      const strength = $(strengthIndicator).getAttribute('data-qa-strength');
 
-      expect(strengthDisplays)
-        .withContext(`Password strength should be displayed`)
-        .toBe(true);
+    testPasswords.forEach(pass => {
+      const expectedStrength = zxcvbn(pass).score;
+      it(`check strength Indicator ${pass}, strength ${expectedStrength}`, () => {
+        $(passwordInput).setValue(pass);
 
-      expect(parseInt(strength, 10))
-        .withContext(`Incorrect strength indicator value`)
-        .toBe(index + 1);
+        const strengthDisplays = $(strengthIndicator).isDisplayed();
+        const strength = $(strengthIndicator).getAttribute('data-qa-strength');
+
+        expect(strengthDisplays)
+          .withContext(`Password strength should be displayed`)
+          .toBe(true);
+
+        expect(parseInt(strength, 10))
+          .withContext(
+            `Incorrect strength indicator value for ${pass}, ${expectedStrength}`
+          )
+          .toBe(expectedStrength);
+      });
     });
   });
 
-  it('should display password when click show', () => {
-    hideShow(true);
-  });
+  it('should display/hide password when click show', () => {
+    // make it show
+    $('[data-qa-hide] svg').click();
 
-  it('should hide when click hide', () => {
-    hideShow();
+    const isHidden = () => $('[data-qa-hide]').getAttribute('data-qa-hide');
+    const getType = () => $(passwordInput).getAttribute('type');
+
+    expect(isHidden())
+      .withContext(`Password should be displayed`)
+      .toBe('false');
+    expect(getType())
+      .withContext(`Incorrect type`)
+      .toBe('text');
+    // hide it again
+    $('[data-qa-hide] svg').click();
+    expect(isHidden())
+      .withContext(`Password should be hidden`)
+      .toBe('true');
+    expect(getType())
+      .withContext(`Incorrect type`)
+      .toBe('password');
   });
 });

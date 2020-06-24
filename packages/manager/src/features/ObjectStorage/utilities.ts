@@ -1,9 +1,9 @@
 import { FormikProps } from 'formik';
-import { AccountSettings } from 'linode-js-sdk/lib/account';
+import { AccountSettings } from '@linode/api-v4/lib/account';
 import {
   ObjectStorageClusterID,
   ObjectStorageObject
-} from 'linode-js-sdk/lib/object-storage';
+} from '@linode/api-v4/lib/object-storage';
 import { OBJECT_STORAGE_DELIMITER, OBJECT_STORAGE_ROOT } from 'src/constants';
 
 export const generateObjectUrl = (

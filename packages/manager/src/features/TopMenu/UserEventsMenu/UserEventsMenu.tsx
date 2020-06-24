@@ -1,4 +1,4 @@
-import { Event } from 'linode-js-sdk/lib/account';
+import { Event } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -148,7 +148,7 @@ export class UserEventsMenu extends React.Component<CombinedProps, State> {
     this.setState({ anchorEl: e.currentTarget });
   };
 
-  closeMenu = (e: React.MouseEvent<HTMLElement>) => {
+  closeMenu = (_: React.MouseEvent<HTMLElement>) => {
     const { markAllSeen } = this.props;
     markAllSeen();
     this.setState({ anchorEl: undefined });

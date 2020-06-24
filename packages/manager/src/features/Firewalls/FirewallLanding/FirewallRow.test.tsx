@@ -17,6 +17,8 @@ import {
 
 afterEach(cleanup);
 
+jest.mock('@linode/api-v4/lib/firewalls');
+
 describe('FirewallRow', () => {
   describe('Utility functions', () => {
     it('should return correct number of inbound and outbound rules', () => {

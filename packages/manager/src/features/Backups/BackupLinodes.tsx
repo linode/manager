@@ -1,4 +1,4 @@
-import { LinodeType } from 'linode-js-sdk/lib/linodes';
+import { LinodeType } from '@linode/api-v4/lib/linodes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import {
@@ -11,7 +11,7 @@ import Typography from 'src/components/core/Typography';
 import { displayPrice as _displayPrice } from 'src/components/DisplayPrice/DisplayPrice';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import { ExtendedLinode } from './BackupDrawer';
+import { ExtendedLinode } from './types';
 
 type ClassNames = 'root' | 'error';
 
@@ -42,7 +42,7 @@ const getLabel = (type?: LinodeType) => pathOr('Unknown', ['label'], type);
 const getPrice = (type?: LinodeType) =>
   pathOr('Unavailable', ['addons', 'backups', 'price', 'monthly'], type);
 
-export const BackupLinodes: React.StatelessComponent<CombinedProps> = props => {
+export const BackupLinodes: React.FC<CombinedProps> = props => {
   const { classes, linodes } = props;
   return (
     <React.Fragment>

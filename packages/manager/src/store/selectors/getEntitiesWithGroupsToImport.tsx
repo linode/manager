@@ -1,5 +1,5 @@
-import { Domain } from 'linode-js-sdk/lib/domains';
-import { Linode } from 'linode-js-sdk/lib/linodes';
+import { Domain } from '@linode/api-v4/lib/domains';
+import { Linode } from '@linode/api-v4/lib/linodes';
 import { lensPath, view } from 'ramda';
 import { createSelector } from 'reselect';
 import { ApplicationState } from 'src/store';
@@ -47,9 +47,9 @@ export const extractProps = (entity: GroupedEntity) => ({
 });
 
 const linodeSelector = (state: ApplicationState) =>
-  state.__resources.linodes.entities;
+  Object.values(state.__resources.linodes.itemsById);
 const domainSelector = (state: ApplicationState) =>
-  state.__resources.domains.data || [];
+  Object.values(state.__resources.domains.itemsById) || [];
 
 // Selector that returns Linodes and Domains that have a GROUP without
 // corresponding TAG.

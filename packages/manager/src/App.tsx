@@ -1,16 +1,15 @@
-import { Account, AccountCapability } from 'linode-js-sdk/lib/account';
-import { Domain } from 'linode-js-sdk/lib/domains';
-import { Image } from 'linode-js-sdk/lib/images';
-import { Linode } from 'linode-js-sdk/lib/linodes';
-import { Region } from 'linode-js-sdk/lib/regions';
-import { APIError } from 'linode-js-sdk/lib/types';
+import '@reach/menu-button/styles.css';
+import { Account, AccountCapability } from '@linode/api-v4/lib/account';
+import { Image } from '@linode/api-v4/lib/images';
+import { Linode } from '@linode/api-v4/lib/linodes';
+import { Region } from '@linode/api-v4/lib/regions';
+import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps } from 'react-redux';
+import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { Action, compose } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
+import { compose } from 'redux';
 import { Subscription } from 'rxjs/Subscription';
 import {
   DocumentTitleSegment,
@@ -18,22 +17,18 @@ import {
 } from 'src/components/DocumentTitle';
 
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
+import withFeatureFlagConsumer, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container';
 import { events$ } from 'src/events';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 
-import { ApplicationState } from 'src/store';
 import composeState from 'src/utilities/composeState';
-import { configureErrorReportingUser } from './exceptionReporting';
 import { MapState } from './store/types';
-import { isKubernetesEnabled as _isKubernetesEnabled } from './utilities/accountCapabilities';
-
-import DataLoadedListener from 'src/components/DataLoadedListener';
-import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
 
 import IdentifyUser from './IdentifyUser';
-
-import { initGTMUser } from './analytics';
 import MainContent from './MainContent';
+import MainContent_CMR from './MainContent_CMR';
 
 interface Props {
   toggleTheme: () => void;
@@ -46,14 +41,13 @@ interface State {
   menuOpen: boolean;
   welcomeBanner: boolean;
   hasError: boolean;
-  flagsLoaded: boolean;
 }
 
 type CombinedProps = Props &
-  DispatchProps &
   StateProps &
   RouteComponentProps &
-  WithSnackbarProps;
+  WithSnackbarProps &
+  FeatureFlagConsumerProps;
 
 export class App extends React.Component<CombinedProps, State> {
   composeState = composeState;
@@ -63,12 +57,7 @@ export class App extends React.Component<CombinedProps, State> {
   state: State = {
     menuOpen: false,
     welcomeBanner: false,
-    hasError: false,
-    flagsLoaded: false
-  };
-
-  setFlagsLoaded = () => {
-    this.setState({ flagsLoaded: true });
+    hasError: false
   };
 
   componentDidCatch() {
@@ -84,18 +73,6 @@ export class App extends React.Component<CombinedProps, State> {
         (window as any).ga('send', 'pageview', pathname);
       }
     });
-
-    // Configure error reporting to include user information.
-    if (this.props.userId && this.props.username) {
-      configureErrorReportingUser(
-        String(this.props.userId),
-        this.props.username
-      );
-    }
-
-    if (this.props.euuid) {
-      initGTMUser(this.props.euuid);
-    }
 
     /*
      * We want to listen for migration events site-wide
@@ -151,10 +128,6 @@ export class App extends React.Component<CombinedProps, State> {
       accountCapabilities,
       accountLoading,
       accountError,
-      linodesLoading,
-      domainsLoading,
-      accountSettingsError,
-      accountSettingsLoading,
       userId,
       username
     } = this.props;
@@ -203,58 +176,43 @@ export class App extends React.Component<CombinedProps, State> {
         <IdentifyUser
           userID={userId}
           username={username}
-          setFlagsLoaded={this.setFlagsLoaded}
           accountError={accountError}
           accountCountry={accountData ? accountData.country : undefined}
           taxID={accountData ? accountData.tax_id : undefined}
-        />
-        <DataLoadedListener
-          markAppAsLoaded={this.props.markAppAsDoneLoading}
-          flagsHaveLoaded={this.state.flagsLoaded}
-          linodesLoadedOrErrorExists={
-            linodesLoading === false || linodes?.length > 0 || !!linodesError
-          }
-          domainsLoadedOrErrorExists={
-            domainsLoading === false || domainsData.length > 0 || !!domainsError
-          }
-          profileLoadedOrErrorExists={!!this.props.userId || !!profileError}
-          accountLoadedOrErrorExists={
-            accountLoading === false || !!accountError
-          }
-          accountSettingsLoadedOrErrorExists={
-            accountSettingsLoading === false || !!accountSettingsError
-          }
-          appIsLoaded={!this.props.appIsLoading}
+          euuid={this.props.euuid}
         />
         <DocumentTitleSegment segment="Linode Manager" />
-        <MainContent
-          accountCapabilities={accountCapabilities}
-          accountError={accountError}
-          accountLoading={accountLoading}
-          history={this.props.history}
-          location={this.props.location}
-          toggleSpacing={toggleSpacing}
-          toggleTheme={toggleTheme}
-          appIsLoading={this.props.appIsLoading}
-          isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
-          username={username}
-        />
+        {this.props.featureFlagsLoading ? null : this.props.flags.cmr ? (
+          <MainContent_CMR
+            accountCapabilities={accountCapabilities}
+            accountError={accountError}
+            accountLoading={accountLoading}
+            history={this.props.history}
+            location={this.props.location}
+            toggleSpacing={toggleSpacing}
+            toggleTheme={toggleTheme}
+            appIsLoading={this.props.appIsLoading}
+            isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
+            username={username}
+          />
+        ) : (
+          <MainContent
+            accountCapabilities={accountCapabilities}
+            accountError={accountError}
+            accountLoading={accountLoading}
+            history={this.props.history}
+            location={this.props.location}
+            toggleSpacing={toggleSpacing}
+            toggleTheme={toggleTheme}
+            appIsLoading={this.props.appIsLoading}
+            isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
+            username={username}
+          />
+        )}
       </React.Fragment>
     );
   }
 }
-
-interface DispatchProps {
-  markAppAsDoneLoading: () => void;
-}
-
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
-  dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
-) => {
-  return {
-    markAppAsDoneLoading: () => dispatch(handleLoadingDone())
-  };
-};
 
 interface StateProps {
   /** Profile */
@@ -270,13 +228,9 @@ interface StateProps {
   isLoggedInAsCustomer: boolean;
   accountCapabilities: AccountCapability[];
   linodesLoading: boolean;
-  volumesLoading: boolean;
-  domainsLoading: boolean;
-  bucketsLoading: boolean;
   accountLoading: boolean;
   accountSettingsLoading: boolean;
   accountSettingsError?: APIError[];
-  nodeBalancersLoading: boolean;
   linodesError?: APIError[];
   volumesError?: APIError[];
   nodeBalancersError?: APIError[];
@@ -291,12 +245,13 @@ interface StateProps {
   regionsError?: APIError[];
   appIsLoading: boolean;
   euuid?: string;
+  featureFlagsLoading: boolean;
 }
 
 const mapStateToProps: MapState<StateProps, Props> = state => ({
   /** Profile */
   profileError: path(['read'], state.__resources.profile.error),
-  linodes: state.__resources.linodes.entities,
+  linodes: Object.values(state.__resources.linodes.itemsById),
   linodesError: path(['read'], state.__resources.linodes.error),
   domainsError: state.__resources.domains.error.read,
   imagesError: path(['read'], state.__resources.images.error),
@@ -304,8 +259,6 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
   settingsError: state.__resources.accountSettings.error.read,
   typesError: state.__resources.types.error,
   regionsError: state.__resources.regions.error,
-  volumesError: path(['read'], state.__resources.volumes.error),
-  bucketsError: state.__resources.buckets.error,
   userId: path(['data', 'uid'], state.__resources.profile),
   username: pathOr('', ['data', 'username'], state.__resources.profile),
   accountData: state.__resources.account.data,
@@ -330,25 +283,22 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
     state
   ),
   linodesLoading: state.__resources.linodes.loading,
-  volumesLoading: state.__resources.volumes.loading,
-  domainsLoading: state.__resources.domains.loading,
-  domainsData: state.__resources.domains.data || [],
-  bucketsLoading: state.__resources.buckets.loading,
   accountLoading: state.__resources.account.loading,
-  nodeBalancersLoading: state.__resources.nodeBalancers.loading,
   accountError: path(['read'], state.__resources.account.error),
   nodeBalancersError: path(['read'], state.__resources.nodeBalancers.error),
   appIsLoading: state.initialLoad.appIsLoading,
+  featureFlagsLoading: state.featureFlagsLoad.featureFlagsLoading,
   euuid: state.__resources.account.data?.euuid
 });
 
-export const connected = connect(mapStateToProps, mapDispatchToProps);
+export const connected = connect(mapStateToProps);
 
 export default compose(
   connected,
   withDocumentTitleProvider,
   withSnackbar,
-  withFeatureFlagProvider
+  withFeatureFlagProvider,
+  withFeatureFlagConsumer
 )(App);
 
 export const hasOauthError = (...args: (Error | APIError[] | undefined)[]) => {

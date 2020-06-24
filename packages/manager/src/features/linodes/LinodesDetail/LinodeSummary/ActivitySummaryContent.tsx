@@ -1,4 +1,4 @@
-import { Event } from 'linode-js-sdk/lib/account';
+import { Event } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/core/Grid';
@@ -31,9 +31,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const ActivitySummaryContent: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const ActivitySummaryContent: React.FC<CombinedProps> = props => {
   const { classes, error, loading, events } = props;
   if (error) {
     return <ErrorState data-qa-activity-error errorText={error} />;

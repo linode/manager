@@ -1,11 +1,11 @@
-import { GrantLevel } from 'linode-js-sdk/lib/account';
+import { GrantLevel } from '@linode/api-v4/lib/account';
 import {
   Disk,
   LinodeStatus,
   LinodeType,
   resizeLinode
-} from 'linode-js-sdk/lib/linodes';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/linodes';
+import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -37,6 +37,7 @@ import { linodeInTransition } from 'src/features/linodes/transitions';
 import { ApplicationState } from 'src/store';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import HostMaintenanceError from '../HostMaintenanceError';
 import LinodePermissionsError from '../LinodePermissionsError';
 import ResizeConfirmation from './ResizeConfirmationDialog';
 
@@ -264,13 +265,17 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       linodeLabel,
       permissions,
       classes,
-      linodeDisks
+      linodeDisks,
+      linodeStatus
     } = this.props;
     const type = [...currentTypesData, ...deprecatedTypesData].find(
       t => t.id === linodeType
     );
 
-    const disabled = permissions === 'read_only';
+    const hostMaintenance = linodeStatus === 'stopped';
+    const unauthorized = permissions === 'read_only';
+
+    const disabled = hostMaintenance || unauthorized;
 
     const currentPlanHeading = linodeType
       ? type
@@ -293,7 +298,8 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       <div id="tabpanel-resize" role="tabpanel" aria-labelledby="tab-resize">
         <DocumentTitleSegment segment={`${linodeLabel} - Resize`} />
         <Paper className={classes.root}>
-          {disabled && <LinodePermissionsError />}
+          {unauthorized && <LinodePermissionsError />}
+          {hostMaintenance && <HostMaintenanceError />}
           <Typography
             role="heading"
             aria-level={2}
@@ -304,9 +310,10 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             Resize
           </Typography>
           <Typography data-qa-description>
-            If you're expecting a temporary burst of traffic to your website, or
-            if you're not using your Linode as much as you thought, you can
-            temporarily or permanently resize your Linode to a different plan.{' '} 
+            If you&apos;re expecting a temporary burst of traffic to your
+            website, or if you&apos;re not using your Linode as much as you
+            thought, you can temporarily or permanently resize your Linode to a
+            different plan.{' '}
             <ExternalLink
               fixedIcon
               text="Learn more."
@@ -347,16 +354,19 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             }
             onChange={this.handleToggleAutoDisksResize}
             text={
-              !_shouldEnableAutoResizeDiskOption ? (
-                `Would you like your disk on this Linode automatically resized to
-            scale with this Linode's new size? We recommend you keep this option enabled.`
-              ) : (
-                <Typography>
-                  Would you like the disk <strong>{diskToResize}</strong> to be
-                  automatically scaled with this Linode's new size? We recommend
-                  you keep this option enabled.
-                </Typography>
-              )
+              <Typography>
+                Would you like{' '}
+                {_shouldEnableAutoResizeDiskOption ? (
+                  <strong>{diskToResize}</strong>
+                ) : (
+                  'your disk'
+                )}{' '}
+                to be automatically scaled with this Linode&apos;s new size? We
+                recommend you keep this option enabled when available. Automatic
+                resizing is only available when moving to a larger plan, and
+                when you have a single ext disk (or one ext and one swap disk)
+                on your Linode.
+              </Typography>
             }
           />
         </Paper>
@@ -391,7 +401,7 @@ interface WithTypesProps {
   deprecatedTypesData: ExtendedType[];
 }
 
-const withTypes = connect((state: ApplicationState, ownProps) => ({
+const withTypes = connect((state: ApplicationState) => ({
   currentTypesData: state.__resources.types.entities
     .filter(eachType => eachType.successor === null)
     .map(LinodeResize.extendType),

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PlaceholderProps } from 'react-select/lib/components/Placeholder';
+import { PlaceholderProps } from 'react-select';
 import {
   createStyles,
   Theme,
@@ -26,7 +26,7 @@ interface Props extends PlaceholderProps<any> {}
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const SelectPlaceholder: React.StatelessComponent<CombinedProps> = props => {
+const SelectPlaceholder: React.FC<CombinedProps> = props => {
   return (
     <Typography
       className={props.classes.root}

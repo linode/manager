@@ -2,6 +2,7 @@ import {
   cleanup,
   fireEvent,
   render,
+  wait,
   waitForElement
 } from '@testing-library/react';
 import * as React from 'react';
@@ -12,6 +13,13 @@ import { CombinedProps, RebuildFromImage } from './RebuildFromImage';
 
 jest.mock('src/utilities/scrollErrorIntoView');
 jest.mock('src/components/EnhancedSelect/Select');
+jest.mock('src/hooks/useReduxLoad', () => ({
+  useReduxLoad: () => jest.fn().mockReturnValue({ _loading: false })
+}));
+jest.mock('src/hooks/useImages', () => ({
+  useImages: jest.fn().mockResolvedValue({ error: {} })
+}));
+
 afterEach(cleanup);
 
 const props: CombinedProps = {
@@ -20,11 +28,14 @@ const props: CombinedProps = {
   imagesData: images,
   imagesError: {},
   imagesLoading: false,
+  imagesLastUpdated: 0,
   userSSHKeys: [],
   closeSnackbar: jest.fn(),
   enqueueSnackbar: jest.fn(),
   permissions: 'read_write',
+  passwordHelperText: '',
   requestKeys: jest.fn(),
+  disabled: false,
   ...reactRouterProps
 };
 
@@ -44,7 +55,7 @@ describe('RebuildFromImage', () => {
     await waitForElement(
       () => [
         getByText('An image is required.'),
-        getByText('Password cannot be blank.')
+        getByText('Password is required.')
       ],
       {}
     );
@@ -60,9 +71,11 @@ describe('RebuildFromImage', () => {
 
     fireEvent.blur(getByTestId('select'));
 
-    fireEvent.change(getByPlaceholderText('Enter a password.'), {
-      target: { value: 'AAbbCC1234!!' }
-    });
+    await wait(() =>
+      fireEvent.change(getByPlaceholderText('Enter a password.'), {
+        target: { value: 'xE7%9hX#hJsM' }
+      })
+    );
     fireEvent.click(getByTestId('rebuild-button'));
 
     await waitForElement(() => getByText('Confirm Linode Rebuild'), {});

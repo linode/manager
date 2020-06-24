@@ -1,30 +1,21 @@
-import { Notification } from 'linode-js-sdk/lib/account';
-import { Linode } from 'linode-js-sdk/lib/linodes';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { Notification } from '@linode/api-v4/lib/account';
+import { Linode } from '@linode/api-v4/lib/linodes';
+import { APIError } from '@linode/api-v4/lib/types';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import AbuseTicketBanner from 'src/components/AbuseTicketBanner';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-  WithTheme
-} from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import PromotionalOfferCard from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
 import TaxBanner from 'src/components/TaxBanner';
-import TagImportDrawer from 'src/features/TagImport';
 import useFlags from 'src/hooks/useFlags';
 import { handleOpen } from 'src/store/backupDrawer';
 import { addNotificationsToLinodes } from 'src/store/linodes/linodes.helpers';
-import { openDrawer as openGroupDrawer } from 'src/store/tagImportDrawer';
 import { MapState } from 'src/store/types';
 import { formatNotifications } from 'src/utilities/formatNotifications';
 import BackupsDashboardCard from './BackupsDashboardCard';
@@ -37,13 +28,6 @@ import NodeBalancersDashboardCard from './NodeBalancersDashboardCard';
 import PromotionsBanner from './PromotionsBanner';
 import TransferDashboardCard from './TransferDashboardCard';
 import VolumesDashboardCard from './VolumesDashboardCard';
-
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
 
 interface StateProps {
   accountBackups: boolean;
@@ -60,17 +44,12 @@ interface StateProps {
 interface DispatchProps {
   actions: {
     openBackupDrawer: () => void;
-    openImportDrawer: () => void;
   };
 }
 
-type CombinedProps = StateProps &
-  DispatchProps &
-  WithStyles<ClassNames> &
-  WithTheme &
-  RouteComponentProps<{}>;
+type CombinedProps = StateProps & DispatchProps & RouteComponentProps<{}>;
 
-export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
+export const Dashboard: React.FC<CombinedProps> = props => {
   const {
     accountBackups,
     actions: { openBackupDrawer },
@@ -140,13 +119,12 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
           <BlogDashboardCard />
         </Grid>
       </Grid>
-      <TagImportDrawer />
     </React.Fragment>
   );
 };
 
-const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
-  const linodes = state.__resources.linodes.entities;
+const mapStateToProps: MapState<StateProps, {}> = state => {
+  const linodes = Object.values(state.__resources.linodes.itemsById);
   const notifications = state.__resources.notifications.data || [];
 
   const linodesWithMaintenance = addNotificationsToLinodes(
@@ -179,22 +157,16 @@ const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
-  dispatch,
-  ownProps
-) => {
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => {
   return {
     actions: {
-      openBackupDrawer: () => dispatch(handleOpen()),
-      openImportDrawer: () => dispatch(openGroupDrawer())
+      openBackupDrawer: () => dispatch(handleOpen())
     }
   };
 };
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const styled = withStyles(styles, { withTheme: true });
-
-const enhanced = compose<CombinedProps, {}>(styled, connected)(Dashboard);
+const enhanced = compose<CombinedProps, {}>(connected)(Dashboard);
 
 export default enhanced;

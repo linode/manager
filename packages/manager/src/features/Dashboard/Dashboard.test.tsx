@@ -19,7 +19,7 @@ const props = {
   backupError: undefined,
   entitiesWithGroupsToImport: { linodes: [], domains: [] },
   classes: { root: '' },
-  theme: light({ spacingOverride: 8 })
+  theme: light(8)
 };
 
 jest.mock('src/store');
@@ -29,15 +29,15 @@ const component = shallow(<Dashboard {...props} {...reactRouterProps} />);
 describe('Dashboard view', () => {
   describe('Backups CTA card', () => {
     it('display for non-managed users', () => {
-      expect(
-        component.find('withRouter(WithStyles(BackupsDashboardCard))')
-      ).toHaveLength(1);
+      expect(component.find('withRouter(BackupsDashboardCard)')).toHaveLength(
+        1
+      );
     });
     it('should never display for managed users', () => {
       component.setProps({ managed: true });
-      expect(
-        component.find('withRouter(WithStyles(BackupsDashboardCard))')
-      ).toHaveLength(0);
+      expect(component.find('withRouter(BackupsDashboardCard)')).toHaveLength(
+        0
+      );
     });
   });
 });

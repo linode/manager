@@ -1,5 +1,5 @@
-import { TrustedDevice } from 'linode-js-sdk/lib/profile';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { TrustedDevice } from '@linode/api-v4/lib/profile';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import Button from 'src/components/core/Button';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
@@ -48,7 +48,7 @@ class TrustedDevicesTable extends React.PureComponent<CombinedProps, {}> {
       <React.Fragment>
         {data.map(eachDevice => {
           return (
-            <TableRow key={eachDevice.id}>
+            <TableRow ariaLabel={`Device ${eachDevice.id}`} key={eachDevice.id}>
               <TableCell parentColumn="Device">
                 {eachDevice.user_agent}
               </TableCell>

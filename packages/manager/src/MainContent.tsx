@@ -1,9 +1,11 @@
 import * as classnames from 'classnames';
-import { AccountCapability } from 'linode-js-sdk/lib/account';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { AccountCapability } from '@linode/api-v4/lib/account';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 import { compose } from 'recompose';
+import { isEmpty } from 'ramda';
+import MainContentBanner from 'src/components/MainContentBanner';
 import Box from 'src/components/core/Box';
 import {
   makeStyles,
@@ -19,8 +21,8 @@ import Footer from 'src/features/Footer';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
+import useFlags from 'src/hooks/useFlags';
 
-import DefaultLoader from 'src/components/DefaultLoader';
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
@@ -30,13 +32,13 @@ import SuspenseLoader from 'src/components/SuspenseLoader';
 import withGlobalErrors, {
   Props as GlobalErrorProps
 } from 'src/containers/globalErrors.container';
-import withFeatureFlags, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container.ts';
+import withPreferences, {
+  Props as PreferencesProps
+} from 'src/containers/preferences.container';
 
 import Logo from 'src/assets/logo/logo-text.svg';
-
-import { isKubernetesEnabled as _isKubernetesEnabled } from './utilities/accountCapabilities';
+import { FlagSet } from './featureFlags';
+import { UserPreferences } from './store/preferences/preferences.actions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appFrame: {
@@ -118,102 +120,47 @@ interface Props {
   isLoggedInAsCustomer: boolean;
 }
 
-type CombinedProps = Props &
-  GlobalErrorProps &
-  WithTheme &
-  FeatureFlagConsumerProps;
+type CombinedProps = Props & GlobalErrorProps & WithTheme & PreferencesProps;
 
-const Account = DefaultLoader({
-  loader: () => import('src/features/Account')
-});
-
-const LinodesRoutes = DefaultLoader({
-  loader: () => import('src/features/linodes')
-});
-
-const Volumes = DefaultLoader({
-  loader: () => import('src/features/Volumes')
-});
-
-const Domains = DefaultLoader({
-  loader: () => import('src/features/Domains')
-});
-
-const Images = DefaultLoader({
-  loader: () => import('src/features/Images')
-});
-
-const Kubernetes = DefaultLoader({
-  loader: () => import('src/features/Kubernetes')
-});
-
-const ObjectStorage = DefaultLoader({
-  loader: () => import('src/features/ObjectStorage')
-});
-
-const Profile = DefaultLoader({
-  loader: () => import('src/features/Profile')
-});
-
-const NodeBalancers = DefaultLoader({
-  loader: () => import('src/features/NodeBalancers')
-});
-
-const StackScripts = DefaultLoader({
-  loader: () => import('src/features/StackScripts')
-});
-
-const SupportTickets = DefaultLoader({
-  loader: () => import('src/features/Support/SupportTickets')
-});
-
-const SupportTicketDetail = DefaultLoader({
-  loader: () => import('src/features/Support/SupportTicketDetail')
-});
-
-const Longview = DefaultLoader({
-  loader: () => import('src/features/Longview')
-});
-
-const Managed = DefaultLoader({
-  loader: () => import('src/features/Managed')
-});
-
-const Dashboard = DefaultLoader({
-  loader: () => import('src/features/Dashboard')
-});
-
-const Help = DefaultLoader({
-  loader: () => import('src/features/Help')
-});
-
-const SupportSearchLanding = DefaultLoader({
-  loader: () => import('src/features/Help/SupportSearchLanding')
-});
-
-const SearchLanding = DefaultLoader({
-  loader: () => import('src/features/Search')
-});
-
-const EventsLanding = DefaultLoader({
-  loader: () => import('src/features/Events/EventsLanding')
-});
-
-const AccountActivationLanding = DefaultLoader({
-  loader: () =>
-    import('src/components/AccountActivation/AccountActivationLanding')
-});
-
-const Firewalls = DefaultLoader({
-  loader: () => import('src/features/Firewalls')
-});
+const Account = React.lazy(() => import('src/features/Account'));
+const LinodesRoutes = React.lazy(() => import('src/features/linodes'));
+const Volumes = React.lazy(() => import('src/features/Volumes'));
+const Domains = React.lazy(() => import('src/features/Domains'));
+const Images = React.lazy(() => import('src/features/Images'));
+const Kubernetes = React.lazy(() => import('src/features/Kubernetes'));
+const ObjectStorage = React.lazy(() => import('src/features/ObjectStorage'));
+const Profile = React.lazy(() => import('src/features/Profile'));
+const NodeBalancers = React.lazy(() => import('src/features/NodeBalancers'));
+const StackScripts = React.lazy(() => import('src/features/StackScripts'));
+const SupportTickets = React.lazy(() =>
+  import('src/features/Support/SupportTickets')
+);
+const SupportTicketDetail = React.lazy(() =>
+  import('src/features/Support/SupportTicketDetail')
+);
+const Longview = React.lazy(() => import('src/features/Longview'));
+const Managed = React.lazy(() => import('src/features/Managed'));
+const Dashboard = React.lazy(() => import('src/features/Dashboard'));
+const Help = React.lazy(() => import('src/features/Help'));
+const SupportSearchLanding = React.lazy(() =>
+  import('src/features/Help/SupportSearchLanding')
+);
+const SearchLanding = React.lazy(() => import('src/features/Search'));
+const EventsLanding = React.lazy(() =>
+  import('src/features/Events/EventsLanding')
+);
+const AccountActivationLanding = React.lazy(() =>
+  import('src/components/AccountActivation/AccountActivationLanding')
+);
+const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 
 const MainContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const flags = useFlags();
 
   const [menuIsOpen, toggleMenu] = React.useState<boolean>(false);
 
-  const isKubernetesEnabled = _isKubernetesEnabled(props.accountCapabilities);
+  const [bannerDismissed, setBannerDismissed] = React.useState<boolean>(false);
 
   /**
    * this is the case where the user has successfully completed signup
@@ -260,6 +207,14 @@ const MainContent: React.FC<CombinedProps> = props => {
     );
   }
 
+  const shouldDisplayMainContentBanner =
+    !bannerDismissed &&
+    checkFlagsForMainContentBanner(flags) &&
+    !checkPreferencesForBannerDismissal(
+      props.preferences,
+      flags?.mainContentBanner?.key
+    );
+
   /**
    * otherwise just show the rest of the app.
    */
@@ -282,6 +237,15 @@ const MainContent: React.FC<CombinedProps> = props => {
               [classes.hidden]: props.appIsLoading
             })}
           >
+            {shouldDisplayMainContentBanner && (
+              <MainContentBanner
+                bannerText={flags.mainContentBanner?.text ?? ''}
+                url={flags.mainContentBanner?.link?.url ?? ''}
+                linkText={flags.mainContentBanner?.link?.text ?? ''}
+                bannerKey={flags.mainContentBanner?.key ?? ''}
+                onClose={() => setBannerDismissed(true)}
+              />
+            )}
             <SideMenu
               open={menuIsOpen}
               desktopOpen={desktopMenuIsOpen || false}
@@ -310,7 +274,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                 <Grid container spacing={0} className={classes.grid}>
                   <Grid item className={classes.switchWrapper}>
                     <RegionStatusBanner />
-                    <React.Suspense fallback={<SuspenseLoader delay={300} />}>
+                    <React.Suspense fallback={<SuspenseLoader />}>
                       <Switch>
                         <Route path="/linodes" component={LinodesRoutes} />
                         <Route path="/volumes" component={Volumes} />
@@ -329,9 +293,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                           path="/object-storage"
                           component={ObjectStorage}
                         />
-                        {isKubernetesEnabled && (
-                          <Route path="/kubernetes" component={Kubernetes} />
-                        )}
+                        <Route path="/kubernetes" component={Kubernetes} />
                         <Route path="/account" component={Account} />
                         <Route
                           exact
@@ -356,7 +318,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                           component={SupportSearchLanding}
                         />
                         <Route path="/events" component={EventsLanding} />
-                        {props.flags.firewalls && (
+                        {flags.firewalls && (
                           <Route path="/firewalls" component={Firewalls} />
                         )}
                         <Redirect exact from="/" to="/dashboard" />
@@ -384,5 +346,23 @@ export default compose<CombinedProps, Props>(
   React.memo,
   withGlobalErrors(),
   withTheme,
-  withFeatureFlags
+  withPreferences()
 )(MainContent);
+
+// =============================================================================
+// Utilities
+// =============================================================================
+export const checkFlagsForMainContentBanner = (flags: FlagSet) => {
+  return Boolean(
+    flags.mainContentBanner &&
+      !isEmpty(flags.mainContentBanner) &&
+      flags.mainContentBanner.key
+  );
+};
+
+export const checkPreferencesForBannerDismissal = (
+  preferences: UserPreferences,
+  key = 'defaultKey'
+) => {
+  return Boolean(preferences?.main_content_banner_dismissal?.[key]);
+};

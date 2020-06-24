@@ -47,6 +47,8 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     visually: any;
     font?: any;
     animateCircleIcon?: any;
+    addCircleHoverEffect?: any;
+
     notificationList: any;
     status: any;
   }
@@ -61,6 +63,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     visually?: any;
     font?: any;
     animateCircleIcon?: any;
+    addCircleHoverEffect?: any;
     notificationList?: any;
     status?: any;
   }
@@ -97,6 +100,15 @@ const iconCircleAnimation = {
   },
   '& .insidePath *': {
     transition: 'fill .2s ease-in-out .2s, stroke .2s ease-in-out .2s',
+    stroke: 'white'
+  }
+};
+
+const iconCircleHoverEffect = {
+  '& .circle': {
+    fill: primaryColors.main
+  },
+  '& .insidePath *': {
     stroke: 'white'
   }
 };
@@ -184,10 +196,11 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       pureWhite: '#fff',
       tableHeader: '#fbfbfb',
       primaryNavActive: '#f4f4f4',
-      primaryNavActiveBG: '#272b31',
+      primaryNavActiveBG: '#515861',
       primaryNavBorder: '#f4f4f4',
-      primaryNavPaper: '#32363c',
-      topMenu: '#fff'
+      primaryNavPaper: '#3a3f46',
+      topMenu: '#fff',
+      billingHeader: '#f5f9ff'
     },
     color: {
       headline: primaryColors.headline,
@@ -203,6 +216,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       grey3: '#ccc',
       grey4: '#8C929D',
       grey5: '#f5f5f5',
+      grey6: '#e3e5e8',
       white: '#fff',
       black: '#222',
       blue: primaryColors.main,
@@ -221,7 +235,9 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       label: '#555',
       disabledText: '#c9cacb',
       kubeLabel: '#272b31',
-      primaryNavText: '#c9cacb'
+      primaryNavText: '#fff',
+      borderBilling: '#cce2ff',
+      billingText: '#313335'
     },
     graphs: {
       load: `rgba(255, 220, 77, ${graphTransparency})`,
@@ -292,6 +308,9 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
     },
     animateCircleIcon: {
       ...iconCircleAnimation
+    },
+    addCircleHoverEffect: {
+      ...iconCircleHoverEffect
     },
     notificationList: {
       padding: '16px 32px 16px 23px',
@@ -562,18 +581,6 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
             width: 12,
             height: 12,
             borderRadius: '50%'
-          },
-          [breakpoints.down('xs')]: {
-            marginLeft: 8,
-            marginRight: -8,
-            marginTop: -6,
-            color: 'white !important',
-            '& svg': {
-              width: 20,
-              height: 20,
-              borderRadius: '50%',
-              backgroundColor: primaryColors.main
-            }
           }
         }
       },
@@ -1229,9 +1236,6 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           padding: spacingUnit + 2,
           borderTop: `1px solid ${primaryColors.divider}`,
           borderBottom: `1px solid ${primaryColors.divider}`,
-          '&:first-child': {
-            paddingLeft: 15
-          },
           '&:last-child': {
             paddingRight: spacingUnit + 2
           },
@@ -1245,8 +1249,6 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           fontSize: '.9rem',
           lineHeight: 1.1,
           '&.emptyCell': {
-            display: 'inline-block',
-            width: '100%',
             height: 48
           }
         },

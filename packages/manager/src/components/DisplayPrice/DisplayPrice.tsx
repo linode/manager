@@ -28,19 +28,21 @@ const styles = (theme: Theme) =>
 interface Props {
   price: number;
   interval?: string;
+  fontSize?: string; // optional override
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const displayPrice = (v: number) => `$${v.toFixed(2)}`;
 
-export const DisplayPrice: React.StatelessComponent<CombinedProps> = props => {
-  const { classes, interval, price } = props;
+export const DisplayPrice: React.FC<CombinedProps> = props => {
+  const { classes, fontSize, interval, price } = props;
   return (
     <React.Fragment>
       <Typography
         variant="h3"
         className={classes.price}
+        style={Boolean(fontSize) ? { fontSize } : undefined}
         qa-data-price={displayPrice(price)}
       >
         <Currency quantity={price} data-qa-currency-component />

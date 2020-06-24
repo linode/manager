@@ -1,4 +1,5 @@
 import * as classnames from 'classnames';
+import { prop, uniqBy } from 'ramda';
 import * as React from 'react';
 import Undo from 'src/assets/icons/undo.svg';
 import AddNewLink from 'src/components/AddNewLink';
@@ -20,8 +21,8 @@ import {
 import capitalize from 'src/utilities/capitalize';
 import FirewallRuleActionMenu from './FirewallRuleActionMenu';
 import { Mode } from './FirewallRuleDrawer';
-import { FirewallRuleWithStatus, RuleStatus } from './firewallRuleEditor';
-import { Category } from './types';
+import { ExtendedFirewallRule, RuleStatus } from './firewallRuleEditor';
+import { Category, FirewallRuleError } from './shared';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -45,6 +46,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   highlight: {
     backgroundColor: theme.bg.lightBlue
+  },
+  error: {
+    '& p': { color: theme.color.red }
   }
 }));
 
@@ -55,6 +59,7 @@ interface RuleRow {
   addresses: string;
   id: number;
   status: RuleStatus;
+  errors?: FirewallRuleError[];
 }
 
 // =============================================================================
@@ -63,7 +68,7 @@ interface RuleRow {
 interface Props {
   category: Category;
   openRuleDrawer: (category: Category, mode: Mode) => void;
-  rulesWithStatus: FirewallRuleWithStatus[];
+  rulesWithStatus: ExtendedFirewallRule[];
   triggerDeleteFirewallRule: (idx: number) => void;
   triggerOpenRuleDrawerForEditing: (idx: number) => void;
   triggerUndo: (idx: number) => void;
@@ -122,6 +127,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
               <TableHead>
                 <TableRow>
                   <TableSortCell
+                    style={{ width: '15%' }}
                     active={orderBy === 'type'}
                     label="type"
                     direction={order}
@@ -130,6 +136,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
                     Type
                   </TableSortCell>
                   <TableSortCell
+                    style={{ width: '15%' }}
                     active={orderBy === 'protocol'}
                     label="protocol"
                     direction={order}
@@ -138,6 +145,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
                     Protocol
                   </TableSortCell>
                   <TableSortCell
+                    style={{ width: '20%' }}
                     active={orderBy === 'ports'}
                     label="ports"
                     direction={order}
@@ -146,6 +154,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
                     Port Range
                   </TableSortCell>
                   <TableSortCell
+                    style={{ width: '40%' }}
                     active={orderBy === 'addresses'}
                     label="addresses"
                     direction={order}
@@ -153,7 +162,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
                   >
                     {capitalize(addressColumnLabel)}
                   </TableSortCell>
-                  <TableCell />
+                  <TableCell style={{ borderBottom: 0 }} />
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -205,7 +214,8 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
       status,
       triggerDeleteFirewallRule,
       triggerOpenRuleDrawerForEditing,
-      triggerUndo
+      triggerUndo,
+      errors
     } = props;
 
     const actionMenuProps = {
@@ -221,10 +231,18 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
         disabled={status === 'PENDING_DELETION'}
       >
         <TableCell>{type}</TableCell>
-        <TableCell>{protocol}</TableCell>
-        <TableCell>{ports}</TableCell>
-        <TableCell>{addresses}</TableCell>
-        <TableCell style={{ width: '10%' }}>
+        <TableCell>
+          {protocol}
+          <ConditionalError errors={errors} formField="protocol" />
+        </TableCell>
+        <TableCell>
+          {ports}
+          <ConditionalError errors={errors} formField="ports" />
+        </TableCell>
+        <TableCell>
+          {addresses} <ConditionalError errors={errors} formField="addresses" />
+        </TableCell>
+        <TableCell>
           {status !== 'NOT_MODIFIED' ? (
             <div className={classes.undoButtonContainer}>
               <button
@@ -233,7 +251,6 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
                   [classes.highlight]: status !== 'PENDING_DELETION'
                 })}
                 onClick={() => triggerUndo(id)}
-                role="button"
                 aria-label="Undo change to Firewall Rule"
               >
                 <Undo />
@@ -252,26 +269,55 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
   }
 );
 
+interface ConditionalErrorProps {
+  formField: string;
+  errors?: FirewallRuleError[];
+}
+
+export const ConditionalError: React.FC<ConditionalErrorProps> = React.memo(
+  props => {
+    const classes = useStyles();
+
+    const { formField, errors } = props;
+
+    // It's possible to have multiple IP errors, but we only want to display ONE in the table row.
+    const uniqueByFormField = uniqBy(prop('formField'), errors ?? []);
+
+    return (
+      <>
+        {uniqueByFormField.map(thisError => {
+          if (formField !== thisError.formField || !thisError.reason) {
+            return null;
+          }
+          return (
+            <div key={thisError.idx} className={classes.error}>
+              <Typography variant="body2">{thisError.reason}</Typography>
+            </div>
+          );
+        })}
+      </>
+    );
+  }
+);
+
 // =============================================================================
 // Utilities
 // =============================================================================
 /**
- * Transforms a FirewallRuleType to the higher-level RuleRow. We do this so
+ * Transforms Extended Firewall Rules to the higher-level RuleRow. We do this so
  * downstream components don't have worry about transforming individual pieces
  * of data. This also allows us to sort each column of the RuleTable.
  */
 export const firewallRuleToRowData = (
-  firewallRules: FirewallRuleWithStatus[]
+  firewallRules: ExtendedFirewallRule[]
 ): RuleRow[] => {
   return firewallRules.map((thisRule, idx) => {
     const ruleType = ruleToPredefinedFirewall(thisRule);
 
     return {
+      ...thisRule,
       type: generateRuleLabel(ruleType),
-      protocol: thisRule.protocol,
       addresses: generateAddressesLabel(thisRule.addresses),
-      ports: thisRule.ports,
-      status: thisRule.status,
       id: idx
     };
   });

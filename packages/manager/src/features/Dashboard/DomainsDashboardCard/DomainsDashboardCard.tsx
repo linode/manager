@@ -1,6 +1,6 @@
-import { Entity, Event } from 'linode-js-sdk/lib/account';
-import { Domain } from 'linode-js-sdk/lib/domains';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { Entity, Event } from '@linode/api-v4/lib/account';
+import { Domain } from '@linode/api-v4/lib/domains';
+import { APIError } from '@linode/api-v4/lib/types';
 import { compose, prop, sortBy, take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -24,12 +24,17 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import ViewAllLink from 'src/components/ViewAllLink';
-import { ApplicationState } from 'src/store';
+import { REFRESH_INTERVAL } from 'src/constants';
+import withDomains, {
+  DomainActionsProps
+} from 'src/containers/domains.container';
+import withEvents, { EventsProps } from 'src/containers/events.container';
 import { openForEditing } from 'src/store/domainDrawer';
 import {
   isEntityEvent,
   isInProgressEvent
 } from 'src/store/events/event.helpers';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import DashboardCard from '../DashboardCard';
 
 interface EntityEvent extends Omit<Event, 'entity'> {
@@ -72,13 +77,6 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface State {
-  loading: boolean;
-  errors?: APIError[];
-  data?: Domain[];
-  results?: number;
-}
-
 interface Props {
   domain: string;
   id: number;
@@ -89,66 +87,66 @@ interface Props {
 type CombinedProps = Props &
   WithStyles<ClassNames> &
   WithUpdatingDomainsProps &
+  DomainActionsProps &
   DispatchProps;
 
-class DomainsDashboardCard extends React.Component<CombinedProps, State> {
-  render() {
-    return (
-      <DashboardCard
-        title="Domains"
-        headerAction={this.renderAction}
-        alignHeader="flex-start"
-      >
-        <Paper>
-          <Table>
-            <TableBody>{this.renderContent()}</TableBody>
-          </Table>
-        </Paper>
-      </DashboardCard>
-    );
-  }
+const DomainsDashboardCard: React.FC<CombinedProps> = props => {
+  React.useEffect(() => {
+    if (Date.now() - props.lastUpdated > REFRESH_INTERVAL) {
+      props.getDomainsPage({ page: 1, page_size: 25 });
+    }
+  }, []);
 
-  renderAction = () =>
-    this.props.domainCount > 5 ? (
+  const renderAction = () =>
+    props.domainCount > 5 ? (
       <ViewAllLink
         text="View All"
         link={'/domains'}
-        count={this.props.domainCount}
+        count={props.domainCount}
       />
     ) : null;
 
-  renderContent = () => {
-    const { loading, domains, error } = this.props;
-    if (loading && domains.length === 0) {
-      return this.renderLoading();
-    }
-
-    if (error) {
-      return this.renderErrors(error);
-    }
-
-    if (domains.length > 0) {
-      return this.renderData(domains);
-    }
-
-    return this.renderEmpty();
-  };
-
-  renderLoading = () => {
+  const renderLoading = () => {
     return <TableRowLoading colSpan={2} />;
   };
 
-  renderErrors = (errors: APIError[]) => (
-    <TableRowError colSpan={3} message={`Unable to load domains.`} />
+  const renderErrors = (errors: APIError[]) => (
+    <TableRowError
+      colSpan={3}
+      message={
+        getAPIErrorOrDefault(errors, `Unable to load Domains.`)[0].reason
+      }
+    />
   );
 
-  renderEmpty = () => <TableRowEmptyState colSpan={2} />;
+  const renderEmpty = () => <TableRowEmptyState colSpan={2} />;
 
-  renderData = (data: Domain[]) => {
-    const { classes } = this.props;
+  const renderContent = () => {
+    const { loading, domains, error } = props;
+    if (loading && domains.length === 0) {
+      return renderLoading();
+    }
+
+    if (error) {
+      return renderErrors(error);
+    }
+
+    if (domains.length > 0) {
+      return renderData(domains);
+    }
+
+    return renderEmpty();
+  };
+
+  const renderData = (data: Domain[]) => {
+    const { classes } = props;
 
     return data.map(({ id, domain, type, status }) => (
-      <TableRow key={domain} rowLink={`/domains/${id}`}>
+      <TableRow
+        key={domain}
+        ariaLabel={`Domain ${domain}`}
+        rowLink={`/domains/${id}`}
+      >
         <TableCell className={classes.labelCol}>
           <Grid container wrap="nowrap" alignItems="center">
             <Grid item className="py0">
@@ -189,28 +187,50 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
       </TableRow>
     ));
   };
-}
+
+  return (
+    <DashboardCard
+      title="Domains"
+      headerAction={renderAction}
+      alignHeader="flex-start"
+    >
+      <Paper>
+        <Table>
+          <TableBody>{renderContent()}</TableBody>
+        </Table>
+      </Paper>
+    </DashboardCard>
+  );
+};
 
 const styled = withStyles(styles);
 interface WithUpdatingDomainsProps {
   domains: Domain[];
   domainCount: number;
   loading: boolean;
+  lastUpdated: number;
   error?: APIError[];
 }
 
-const withUpdatingDomains = connect(
-  (state: ApplicationState, ownProps: {}): WithUpdatingDomainsProps => {
-    const domainState = state.__resources.domains;
+const withUpdatingDomains = withDomains<WithUpdatingDomainsProps, EventsProps>(
+  (
+    ownProps,
+    domainsData,
+    domainsLoading,
+    domainsError,
+    domainsResults,
+    domainLastUpdated
+  ): WithUpdatingDomainsProps => {
     return {
       domains: compose(
-        mergeEvents(state.events.events),
+        mergeEvents(ownProps.eventsData),
         take(5),
         sortBy(prop('domain'))
-      )(domainState.data),
-      loading: domainState.loading,
-      domainCount: domainState.results || 0,
-      error: domainState.error.read
+      )(domainsData),
+      loading: domainsLoading,
+      domainCount: domainsResults,
+      error: domainsError.read,
+      lastUpdated: domainLastUpdated
     };
   }
 );
@@ -248,6 +268,7 @@ const connected = connect(undefined, { openForEditing });
 
 const enhanced = recompose<CombinedProps, {}>(
   connected,
+  withEvents(),
   withUpdatingDomains,
   styled
 );

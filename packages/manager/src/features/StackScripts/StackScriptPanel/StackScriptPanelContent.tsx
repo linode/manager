@@ -1,10 +1,10 @@
-import { Image } from 'linode-js-sdk/lib/images';
+import { Image } from '@linode/api-v4/lib/images';
 import {
   deleteStackScript,
   StackScript,
   updateStackScript
-} from 'linode-js-sdk/lib/stackscripts';
-import { ResourcePage } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/stackscripts';
+import { ResourcePage } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import StackScriptBase, {
@@ -19,6 +19,8 @@ import Typography from 'src/components/core/Typography';
 
 interface DialogVariantProps {
   open: boolean;
+  submitting: boolean;
+  error?: string;
 }
 interface DialogState {
   makePublic: DialogVariantProps;
@@ -51,10 +53,12 @@ class StackScriptPanelContent extends React.Component<CombinedProps, State> {
     successMessage: '',
     dialog: {
       makePublic: {
-        open: false
+        open: false,
+        submitting: false
       },
       delete: {
-        open: false
+        open: false,
+        submitting: false
       },
       stackScriptID: undefined,
       stackScriptLabel: ''
@@ -75,10 +79,12 @@ class StackScriptPanelContent extends React.Component<CombinedProps, State> {
     this.setState({
       dialog: {
         delete: {
-          open: true
+          open: true,
+          submitting: false
         },
         makePublic: {
-          open: false
+          open: false,
+          submitting: false
         },
         stackScriptID: id,
         stackScriptLabel: label
@@ -90,10 +96,12 @@ class StackScriptPanelContent extends React.Component<CombinedProps, State> {
     this.setState({
       dialog: {
         delete: {
-          open: false
+          open: false,
+          submitting: false
         },
         makePublic: {
-          open: true
+          open: true,
+          submitting: false
         },
         stackScriptID: id,
         stackScriptLabel: label
@@ -106,28 +114,43 @@ class StackScriptPanelContent extends React.Component<CombinedProps, State> {
       dialog: {
         ...this.state.dialog,
         delete: {
-          open: false
+          open: false,
+          submitting: false
         },
         makePublic: {
-          open: false
+          open: false,
+          submitting: false
         }
       }
     });
   };
 
   handleDeleteStackScript = () => {
+    const { dialog } = this.state;
+    this.setState({
+      dialog: {
+        ...dialog,
+        delete: {
+          ...dialog.delete,
+          submitting: true,
+          error: undefined
+        }
+      }
+    });
     deleteStackScript(this.state.dialog.stackScriptID!)
-      .then(response => {
+      .then(_ => {
         if (!this.mounted) {
           return;
         }
         this.setState({
           dialog: {
             delete: {
-              open: false
+              open: false,
+              submitting: false
             },
             makePublic: {
-              open: false
+              open: false,
+              submitting: false
             },
             stackScriptID: undefined,
             stackScriptLabel: ''
@@ -141,17 +164,16 @@ class StackScriptPanelContent extends React.Component<CombinedProps, State> {
         }
         this.setState({
           dialog: {
+            ...dialog,
             delete: {
-              open: false
+              open: true,
+              submitting: false,
+              error: e[0].reason
             },
             makePublic: {
-              open: false
-            },
-            stackScriptID: undefined,
-            stackScriptLabel: ''
-          },
-          fieldError: {
-            reason: 'Unable to complete your request at this time'
+              open: false,
+              submitting: false
+            }
           }
         });
       });
@@ -162,7 +184,7 @@ class StackScriptPanelContent extends React.Component<CombinedProps, State> {
     const { currentFilter } = this.props;
 
     updateStackScript(dialog.stackScriptID!, { is_public: true })
-      .then(response => {
+      .then(_ => {
         if (!this.mounted) {
           return;
         }
@@ -170,10 +192,12 @@ class StackScriptPanelContent extends React.Component<CombinedProps, State> {
           successMessage: `${dialog.stackScriptLabel} successfully published to the public library`,
           dialog: {
             delete: {
-              open: false
+              open: false,
+              submitting: false
             },
             makePublic: {
-              open: false
+              open: false,
+              submitting: false
             },
             stackScriptID: undefined,
             stackScriptLabel: ''
@@ -181,17 +205,19 @@ class StackScriptPanelContent extends React.Component<CombinedProps, State> {
         });
         this.props.getDataAtPage(1, currentFilter, true);
       })
-      .catch(e => {
+      .catch(_ => {
         if (!this.mounted) {
           return;
         }
         this.setState({
           dialog: {
             delete: {
-              open: false
+              open: false,
+              submitting: false
             },
             makePublic: {
-              open: false
+              open: false,
+              submitting: false
             },
             stackScriptID: undefined,
             stackScriptLabel: ''
@@ -205,39 +231,36 @@ class StackScriptPanelContent extends React.Component<CombinedProps, State> {
 
   renderConfirmMakePublicActions = () => {
     return (
-      <React.Fragment>
-        <ActionsPanel>
-          <Button buttonType="cancel" onClick={this.handleCloseDialog}>
-            Cancel
-          </Button>
-          <Button
-            buttonType="secondary"
-            destructive
-            onClick={this.handleMakePublic}
-          >
-            Yes, make me a star!
-          </Button>
-        </ActionsPanel>
-      </React.Fragment>
+      <ActionsPanel>
+        <Button buttonType="cancel" onClick={this.handleCloseDialog}>
+          Cancel
+        </Button>
+        <Button
+          buttonType="secondary"
+          destructive
+          onClick={this.handleMakePublic}
+        >
+          Yes, make me a star!
+        </Button>
+      </ActionsPanel>
     );
   };
 
   renderConfirmDeleteActions = () => {
     return (
-      <React.Fragment>
-        <ActionsPanel>
-          <Button buttonType="cancel" onClick={this.handleCloseDialog}>
-            Cancel
-          </Button>
-          <Button
-            buttonType="secondary"
-            destructive
-            onClick={this.handleDeleteStackScript}
-          >
-            Delete
-          </Button>
-        </ActionsPanel>
-      </React.Fragment>
+      <ActionsPanel>
+        <Button buttonType="cancel" onClick={this.handleCloseDialog}>
+          Cancel
+        </Button>
+        <Button
+          buttonType="secondary"
+          destructive
+          onClick={this.handleDeleteStackScript}
+          loading={this.state.dialog.delete.submitting}
+        >
+          Delete
+        </Button>
+      </ActionsPanel>
     );
   };
 
@@ -250,6 +273,7 @@ class StackScriptPanelContent extends React.Component<CombinedProps, State> {
         open={dialog.delete.open}
         actions={this.renderConfirmDeleteActions}
         onClose={this.handleCloseDialog}
+        error={dialog.delete.error}
       >
         <Typography>
           Are you sure you want to delete this StackScript?

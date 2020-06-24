@@ -1,16 +1,16 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import ReactSelect from 'react-select';
+import ReactSelect, { Props as SelectProps } from 'react-select';
 import CreatableSelect, {
   Props as CreatableSelectProps
-} from 'react-select/lib/Creatable';
-import { Props as SelectProps } from 'react-select/lib/Select';
+} from 'react-select/creatable';
 import { withStyles, WithStyles } from 'src/components/core/styles';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 /* TODO will be refactoring enhanced select to be an abstraction.
 Styles added in this file and the below imports will be utilized for the abstraction. */
 import DropdownIndicator from './components/DropdownIndicator';
+import Input from './components/Input';
 import LoadingIndicator from './components/LoadingIndicator';
 import MenuList from './components/MenuList';
 import MultiValueLabel from './components/MultiValueLabel';
@@ -58,7 +58,8 @@ const _components = {
   MenuList,
   Option,
   DropdownIndicator,
-  LoadingIndicator
+  LoadingIndicator,
+  Input
 };
 
 type CombinedProps = WithStyles<ClassNames> & BaseSelectProps & CreatableProps;
@@ -93,7 +94,7 @@ export interface BaseSelectProps
   /** retyped this */
   value?: Item | Item[] | null;
   /** making this required */
-  onChange: (selected: Item | Item[] | null, actionMeta: ActionMeta) => void;
+  onChange: (selected: Item | Item[] | null, actionMeta?: ActionMeta) => void;
   /** alias for onCreateOption */
   createNew?: (inputValue: string) => void;
   loadOptions?: (inputValue: string) => Promise<Item | Item[]> | undefined;
@@ -112,6 +113,23 @@ export interface BaseSelectProps
 interface CreatableProps extends CreatableSelectProps<any> {}
 
 class Select extends React.PureComponent<CombinedProps, {}> {
+  // React-Select changed the behavior of clearing isMulti Selects in v3.
+  // Previously, once the Select was empty, the value was `[]`. Now, it is `null`.
+  // This breaks many of our components, which rely on e.g. mapping through the value (which is
+  // always assumed in be an array.)
+  //
+  // This essentially reverts the behavior of the v3 React-Select update. Long term, we should
+  // probably re-write our component handlers to expect EITHER an array OR `null`.
+  _onChange = (selected: Item | Item[] | null, actionMeta?: ActionMeta) => {
+    const { isMulti, onChange } = this.props;
+
+    if (isMulti && !selected) {
+      return onChange([], actionMeta);
+    }
+
+    onChange(selected, actionMeta);
+  };
+
   render() {
     const {
       classes,
@@ -172,7 +190,7 @@ class Select extends React.PureComponent<CombinedProps, {}> {
       <BaseSelect
         {...restOfProps}
         // If isClearable hasn't been supplied, default to true
-        isClearable={isClearable === undefined ? true : isClearable}
+        isClearable={isClearable ?? true}
         isSearchable
         blurInputOnSelect={blurInputOnSelect}
         isLoading={isLoading}
@@ -201,11 +219,14 @@ class Select extends React.PureComponent<CombinedProps, {}> {
           InputLabelProps: {
             shrink: true
           },
-          className: classNames({
-            [classes.medium]: medium,
-            [classes.small]: small,
-            [classes.inline]: inline
-          })
+          className: classNames(
+            {
+              [classes.medium]: medium,
+              [classes.small]: small,
+              [classes.inline]: inline
+            },
+            className
+          )
         }}
         /**
          * react-select wants you to pass "null" to clear out the value
@@ -215,7 +236,7 @@ class Select extends React.PureComponent<CombinedProps, {}> {
         onBlur={onBlur}
         options={options}
         components={combinedComponents}
-        onChange={onChange}
+        onChange={this._onChange}
         onInputChange={onInputChange}
         onCreateOption={createNew}
         placeholder={placeholder || 'Select a value...'}

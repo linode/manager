@@ -1,7 +1,7 @@
 import {
   getNodeBalancerStats,
   NodeBalancerStats
-} from 'linode-js-sdk/lib/nodebalancers';
+} from '@linode/api-v4/lib/nodebalancers';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -22,7 +22,7 @@ import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
 import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
 import { formatBitsPerSecond } from 'src/features/Longview/shared/utilities';
-import { ExtendedNodeBalancer } from 'src/services/nodebalancers';
+import { ExtendedNodeBalancer } from 'src/features/NodeBalancers/types';
 import { ApplicationState } from 'src/store';
 import { initAll } from 'src/utilities/initAll';
 import { formatNumber, getMetrics } from 'src/utilities/statMetrics';
@@ -340,17 +340,15 @@ class TablesPanel extends React.Component<CombinedProps, State> {
     const { statsError, loadingStats } = this.state;
     return (
       <React.Fragment>
-        <React.Fragment>
-          <div className={classes.graphControls}>
-            <Typography variant="h2">Graphs</Typography>
-          </div>
-          <Paper className={classes.panel}>
-            {this.renderConnectionsChart(statsError, loadingStats)}
-          </Paper>
-          <Paper className={classes.panel}>
-            {this.renderTrafficChart(statsError, loadingStats)}
-          </Paper>
-        </React.Fragment>
+        <div className={classes.graphControls}>
+          <Typography variant="h2">Graphs</Typography>
+        </div>
+        <Paper className={classes.panel}>
+          {this.renderConnectionsChart(statsError, loadingStats)}
+        </Paper>
+        <Paper className={classes.panel}>
+          {this.renderTrafficChart(statsError, loadingStats)}
+        </Paper>
       </React.Fragment>
     );
   }

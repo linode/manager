@@ -1,20 +1,26 @@
-import { render } from '@testing-library/react';
+import { render, cleanup } from '@testing-library/react';
 import * as React from 'react';
 import { domains } from 'src/__data__/domains';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import { wrapWithTheme } from 'src/utilities/testHelpers';
+import { wrapWithTheme, assertOrder } from 'src/utilities/testHelpers';
 import { CombinedProps, DomainsLanding } from './DomainsLanding';
+
+afterEach(cleanup);
 
 const props: CombinedProps = {
   domainsData: domains,
   domainsLoading: false,
   domainsError: {},
+  domainsLastUpdated: 0,
+  domainsResults: domains.length,
   isRestrictedUser: false,
   howManyLinodesOnAccount: 0,
-  shouldGroupDomains: true,
+  shouldGroupDomains: false,
   createDomain: jest.fn(),
   updateDomain: jest.fn(),
   deleteDomain: jest.fn(),
+  getAllDomains: jest.fn(),
+  getDomainsPage: jest.fn(),
   upsertDomain: jest.fn(),
   linodesLoading: false,
   openForCloning: jest.fn(),
@@ -49,5 +55,15 @@ describe('Domains Landing', () => {
   it('should render a notice when there are no Linodes but at least 1 domain', () => {
     const { getByText } = render(wrapWithTheme(<DomainsLanding {...props} />));
     expect(getByText(/not being served/));
+  });
+
+  it('should sort by Domain name ascending by default', () => {
+    const { container } = render(wrapWithTheme(<DomainsLanding {...props} />));
+
+    assertOrder(container, '[data-qa-label]', [
+      'domain1.com',
+      'domain2.com',
+      'domain3.com'
+    ]);
   });
 });

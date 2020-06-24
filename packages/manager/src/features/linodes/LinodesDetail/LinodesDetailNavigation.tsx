@@ -1,4 +1,4 @@
-import { Config } from 'linode-js-sdk/lib/linodes';
+import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import {
   matchPath,
@@ -12,54 +12,27 @@ import { compose } from 'recompose';
 import AppBar from 'src/components/core/AppBar';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLink from 'src/components/TabLink';
 import VolumesLanding from 'src/features/Volumes/VolumesLanding';
 import { withLinodeDetailContext } from './linodeDetailContext';
 
-import DefaultLoader from 'src/components/DefaultLoader';
-
-const LinodeSummary = DefaultLoader({
-  loader: () => import('./LinodeSummary')
-});
-
-const LinodeSettings = DefaultLoader({
-  loader: () => import('./LinodeSettings')
-});
-
-const LinodeResize = DefaultLoader({
-  loader: () => import('./LinodeResize')
-});
-
-const LinodeRescue = DefaultLoader({
-  loader: () => import('./LinodeRescue')
-});
-
-const LinodeRebuild = DefaultLoader({
-  loader: () => import('./LinodeRebuild')
-});
-
-const LinodeNetworking = DefaultLoader({
-  loader: () => import('./LinodeNetworking')
-});
-
-const LinodeActivity = DefaultLoader({
-  loader: () => import('./LinodeActivity')
-});
-
-const LinodeAdvanced = DefaultLoader({
-  loader: () => import('./LinodeAdvanced')
-});
-
-const LinodeBackup = DefaultLoader({
-  loader: () => import('./LinodeBackup')
-});
+const LinodeSummary = React.lazy(() => import('./LinodeSummary'));
+const LinodeSettings = React.lazy(() => import('./LinodeSettings'));
+const LinodeResize = React.lazy(() => import('./LinodeResize'));
+const LinodeRescue = React.lazy(() => import('./LinodeRescue'));
+const LinodeRebuild = React.lazy(() => import('./LinodeRebuild'));
+const LinodeNetworking = React.lazy(() => import('./LinodeNetworking'));
+const LinodeActivity = React.lazy(() => import('./LinodeActivity'));
+const LinodeAdvanced = React.lazy(() => import('./LinodeAdvanced'));
+const LinodeBackup = React.lazy(() => import('./LinodeBackup'));
 
 type CombinedProps = ContextProps &
   RouteComponentProps<{
     linodeId: string;
   }>;
 
-const LinodesDetailNavigation: React.StatelessComponent<CombinedProps> = props => {
+const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
   const {
     match: { url },
     linodeLabel,
@@ -126,7 +99,11 @@ const LinodesDetailNavigation: React.StatelessComponent<CombinedProps> = props =
     <>
       <AppBar position="static" color="default" role="tablist">
         <Tabs
-          value={tabs.findIndex(tab => matches(tab.routeName))}
+          // Prevent console error for -1 as invalid tab index if we're redirecting from e.g. /linodes/invalid-route
+          value={Math.max(
+            tabs.findIndex(tab => matches(tab.routeName)),
+            0
+          )}
           onChange={handleTabChange}
           indicatorColor="primary"
           textColor="primary"
@@ -150,77 +127,79 @@ const LinodesDetailNavigation: React.StatelessComponent<CombinedProps> = props =
           ))}
         </Tabs>
       </AppBar>
-      <Switch>
-        <Route
-          exact
-          path={`/linodes/:linodeId/summary`}
-          component={LinodeSummary}
-        />
-        <Route
-          exact
-          path={`/linodes/:linodeId/volumes`}
-          render={routeProps => (
-            <div
-              id="tabpanel-volumes"
-              role="tabpanel"
-              aria-labelledby="tab-volumes"
-            >
-              <VolumesLanding
-                linodeId={linodeId}
-                linodeLabel={linodeLabel}
-                linodeRegion={linodeRegion}
-                linodeConfigs={linodeConfigs}
-                readOnly={readOnly}
-                fromLinodes
-                removeBreadCrumb
-                {...routeProps}
-              />
-            </div>
-          )}
-        />
-        <Route
-          exact
-          path={`/linodes/:linodeId/networking`}
-          component={LinodeNetworking}
-        />
-        <Route
-          exact
-          path={`/linodes/:linodeId/resize`}
-          component={LinodeResize}
-        />
-        <Route
-          exact
-          path={`/linodes/:linodeId/rescue`}
-          component={LinodeRescue}
-        />
-        <Route
-          exact
-          path={`/linodes/:linodeId/rebuild`}
-          component={LinodeRebuild}
-        />
-        <Route
-          exact
-          path={`/linodes/:linodeId/backup`}
-          component={LinodeBackup}
-        />
-        <Route
-          exact
-          path={`/linodes/:linodeId/activity`}
-          component={LinodeActivity}
-        />
-        <Route
-          exact
-          path={`/linodes/:linodeId/settings`}
-          component={LinodeSettings}
-        />
-        <Route
-          exact
-          path={`/linodes/:linodeId/advanced`}
-          component={LinodeAdvanced}
-        />
-        {/* 404 */}
-        <Redirect to={`${url}/summary`} />
-      </Switch>
+      <React.Suspense fallback={<SuspenseLoader />}>
+        <Switch>
+          <Route
+            exact
+            path={`/linodes/:linodeId/summary`}
+            component={LinodeSummary}
+          />
+          <Route
+            exact
+            path={`/linodes/:linodeId/volumes`}
+            render={routeProps => (
+              <div
+                id="tabpanel-volumes"
+                role="tabpanel"
+                aria-labelledby="tab-volumes"
+              >
+                <VolumesLanding
+                  linodeId={linodeId}
+                  linodeLabel={linodeLabel}
+                  linodeRegion={linodeRegion}
+                  linodeConfigs={linodeConfigs}
+                  readOnly={readOnly}
+                  fromLinodes
+                  removeBreadCrumb
+                  {...routeProps}
+                />
+              </div>
+            )}
+          />
+          <Route
+            exact
+            path={`/linodes/:linodeId/networking`}
+            component={LinodeNetworking}
+          />
+          <Route
+            exact
+            path={`/linodes/:linodeId/resize`}
+            component={LinodeResize}
+          />
+          <Route
+            exact
+            path={`/linodes/:linodeId/rescue`}
+            component={LinodeRescue}
+          />
+          <Route
+            exact
+            path={`/linodes/:linodeId/rebuild`}
+            component={LinodeRebuild}
+          />
+          <Route
+            exact
+            path={`/linodes/:linodeId/backup`}
+            component={LinodeBackup}
+          />
+          <Route
+            exact
+            path={`/linodes/:linodeId/activity`}
+            component={LinodeActivity}
+          />
+          <Route
+            exact
+            path={`/linodes/:linodeId/settings`}
+            component={LinodeSettings}
+          />
+          <Route
+            exact
+            path={`/linodes/:linodeId/advanced`}
+            component={LinodeAdvanced}
+          />
+          {/* 404 */}
+          <Redirect to={`${url}/summary`} />
+        </Switch>
+      </React.Suspense>
     </>
   );
 };

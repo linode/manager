@@ -1,7 +1,7 @@
-import { Grant } from 'linode-js-sdk/lib/account';
-import { Image } from 'linode-js-sdk/lib/images';
-import { StackScript } from 'linode-js-sdk/lib/stackscripts';
-import { APIError, ResourcePage } from 'linode-js-sdk/lib/types';
+import { Grant } from '@linode/api-v4/lib/account';
+import { Image } from '@linode/api-v4/lib/images';
+import { StackScript } from '@linode/api-v4/lib/stackscripts';
+import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { stringify } from 'qs';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -82,7 +82,7 @@ type CombinedProps = StyleProps &
 
 interface HelperFunctions {
   getDataAtPage: (page: number, filter?: any, isSorting?: boolean) => any;
-  getNext: (e?: any) => void;
+  getNext: () => void;
 }
 
 export type StateProps = HelperFunctions & State;
@@ -149,7 +149,11 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
       isSorting: boolean = false
     ) => {
       const { currentUser, category, request, stackScriptGrants } = this.props;
-      this.setState({ gettingMoreStackScripts: true, isSorting });
+      this.setState({
+        gettingMoreStackScripts: true,
+        isSorting,
+        currentPage: page
+      });
 
       const filteredUser = category === 'linode' ? 'linode' : currentUser;
 
@@ -228,7 +232,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
         });
     };
 
-    getNext = (e?: any) => {
+    getNext = () => {
       if (!this.mounted) {
         return;
       }
@@ -486,6 +490,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
               {userCannotCreateStackScripts ? (
                 <Placeholder
                   icon={StackScriptsIcon}
+                  renderAsSecondary
                   title="StackScripts"
                   copy="You don't have any StackScripts to select from."
                   className={classes.stackscriptPlaceholder}
@@ -493,6 +498,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
               ) : (
                 <Placeholder
                   icon={StackScriptsIcon}
+                  renderAsSecondary
                   title="StackScripts"
                   copy={<EmptyCopy />}
                   buttonProps={[

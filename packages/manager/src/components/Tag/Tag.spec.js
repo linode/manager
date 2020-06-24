@@ -1,13 +1,11 @@
-const { navigateToStory, executeInAllStories } = require('../../../e2e/utils/storybook');
+const {
+  navigateToStory,
+  executeInAllStories
+} = require('../../../e2e/utils/storybook');
 
 describe('Tags Suite', () => {
   const component = 'Tags';
-  const childStories = [
-    'primary',
-    'white',
-    'gray',
-    'editable',
-  ];
+  const childStories = ['primary', 'white', 'gray', 'editable'];
   const tag = '[data-qa-tag]';
 
   it('should display tag in each story', () => {

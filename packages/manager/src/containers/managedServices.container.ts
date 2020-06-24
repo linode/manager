@@ -1,7 +1,7 @@
 import {
   ManagedServiceMonitor,
   ManagedServicePayload
-} from 'linode-js-sdk/lib/managed';
+} from '@linode/api-v4/lib/managed';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -58,30 +58,27 @@ export default <TInner extends {}, TOuter extends {}>(
     managedError?: EntityError
   ) => TInner
 ) =>
-  connect(
-    (state: ApplicationState, ownProps: TOuter) => {
-      const monitors = state.__resources.managed.entities;
-      const managedLoading = state.__resources.managed.loading;
-      const managedError = state.__resources.managed.error;
-      const lastUpdated = state.__resources.managed.lastUpdated;
+  connect((state: ApplicationState, ownProps: TOuter) => {
+    const monitors = Object.values(state.__resources.managed.itemsById);
+    const managedLoading = state.__resources.managed.loading;
+    const managedError = state.__resources.managed.error;
+    const lastUpdated = state.__resources.managed.lastUpdated;
 
-      if (mapManagedServicesToProps) {
-        return mapManagedServicesToProps(
-          ownProps,
-          managedLoading,
-          lastUpdated,
-          monitors,
-          managedError
-        );
-      }
-
-      return {
-        ...ownProps,
-        monitors,
+    if (mapManagedServicesToProps) {
+      return mapManagedServicesToProps(
+        ownProps,
         managedLoading,
-        managedError,
-        lastUpdated
-      };
-    },
-    mapDispatchToProps
-  );
+        lastUpdated,
+        monitors,
+        managedError
+      );
+    }
+
+    return {
+      ...ownProps,
+      monitors,
+      managedLoading,
+      managedError,
+      lastUpdated
+    };
+  }, mapDispatchToProps);

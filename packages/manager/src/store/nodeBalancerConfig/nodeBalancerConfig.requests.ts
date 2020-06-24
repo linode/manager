@@ -4,16 +4,14 @@ import {
   getNodeBalancerConfigs as _getNodeBalancerConfigs,
   NodeBalancerConfig,
   updateNodeBalancerConfig as _updateNodeBalancerConfig
-} from 'linode-js-sdk/lib/nodebalancers';
+} from '@linode/api-v4/lib/nodebalancers';
 import { getAll } from 'src/utilities/getAll';
-import { createRequestThunk, getAddRemoved } from '../store.helpers';
+import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';
 import {
-  addNodeBalancerConfigs,
   createNodeBalancerConfigActions,
   deleteNodeBalancerConfigActions,
   getAllNodeBalancerConfigsActions,
-  removeNodeBalancerConfigs,
   updateNodeBalancerConfigActions
 } from './nodeBalancerConfig.actions';
 
@@ -22,8 +20,7 @@ const getNodeBalancerConfigs = (nodeBalancerId: number) =>
 
 export const getAllNodeBalancerConfigs = createRequestThunk(
   getAllNodeBalancerConfigsActions,
-  ({ nodeBalancerId }) =>
-    getNodeBalancerConfigs(nodeBalancerId)().then(({ data }) => data)
+  ({ nodeBalancerId }) => getNodeBalancerConfigs(nodeBalancerId)()
 );
 
 export const createNodeBalancerConfig = createRequestThunk(
@@ -41,7 +38,7 @@ export const updateNodeBalancerConfig = createRequestThunk(
 export const deleteNodeBalancerConfig: ThunkActionCreator<
   Promise<{}>,
   { nodeBalancerConfigId: number; nodeBalancerId: number }
-> = params => (dispatch, getStore) => {
+> = params => dispatch => {
   const { nodeBalancerConfigId, nodeBalancerId } = params;
   const { started, done, failed } = deleteNodeBalancerConfigActions;
 
@@ -56,38 +53,4 @@ export const deleteNodeBalancerConfig: ThunkActionCreator<
       dispatch(failed({ params, error }));
       return Promise.reject(error);
     });
-};
-
-/**
- * Get a fresh list of configs for the NodeBalancer from the API and remove orphaned configs and
- * add found configs.
- *
- * An orphaned config is one which exists in the STORE but not in the API.
- * A new config is one which exists in the API but not in the STORE.
- */
-export const updateNodeBalancerConfigs: ThunkActionCreator<
-  void,
-  number
-> = nodeBalancerId => (dispatch, getStore) => {
-  const {
-    nodeBalancerConfigs: { itemsById: nodeBalancerConfigs }
-  } = getStore().__resources;
-
-  const storedConfigs = Object.values(nodeBalancerConfigs).filter(
-    ({ nodebalancer_id }) => nodebalancer_id === nodeBalancerId
-  );
-
-  return getAll<NodeBalancerConfig>(() =>
-    _getNodeBalancerConfigs(nodeBalancerId)
-  )().then(({ data }) => {
-    const [added, removed] = getAddRemoved(storedConfigs, data);
-
-    if (removed.length > 0) {
-      dispatch(removeNodeBalancerConfigs(removed.map(({ id }) => id)));
-    }
-
-    if (added.length > 0) {
-      dispatch(addNodeBalancerConfigs(added));
-    }
-  });
 };

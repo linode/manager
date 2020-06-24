@@ -1,4 +1,4 @@
-import { Config, Linode } from 'linode-js-sdk/lib/linodes';
+import { Config, Linode } from '@linode/api-v4/lib/linodes';
 import { compose } from 'ramda';
 import * as React from 'react';
 import {
@@ -81,7 +81,7 @@ interface Props {
 
 type CombinedProps = Props & OrderByProps & WithStyles<ClassNames>;
 
-const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = props => {
+const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
   const {
     data,
     display,

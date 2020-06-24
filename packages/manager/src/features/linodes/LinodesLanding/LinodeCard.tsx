@@ -1,10 +1,10 @@
-import { Event, Notification } from 'linode-js-sdk/lib/account';
+import { Event, Notification } from '@linode/api-v4/lib/account';
 import {
   Config,
   getLinodeConfigs,
   LinodeBackups,
   LinodeStatus
-} from 'linode-js-sdk/lib/linodes';
+} from '@linode/api-v4/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -308,7 +308,7 @@ export default compose<CombinedProps, Props>(
   withSnackbar
 )(LinodeCard) as React.ComponentType<Props>;
 
-const ProgressDisplay: React.StatelessComponent<{
+const ProgressDisplay: React.FC<{
   progress: null | number;
   text: string;
   classes: {
@@ -338,7 +338,7 @@ const ProgressDisplay: React.StatelessComponent<{
   );
 };
 
-export const RenderTitle: React.StatelessComponent<{
+export const RenderTitle: React.FC<{
   classes: {
     linkWrapper: string;
     StatusIndicatorWrapper: string;
@@ -395,7 +395,7 @@ export const RenderTitle: React.StatelessComponent<{
 
 RenderTitle.displayName = `RenderTitle`;
 
-export const RenderFlag: React.StatelessComponent<{
+export const RenderFlag: React.FC<{
   mutationAvailable: boolean;
   linodeNotifications: Notification[];
   classes: any;

@@ -1,15 +1,16 @@
-import { Form, Formik } from 'formik';
-import { AccountSettings } from 'linode-js-sdk/lib/account';
+import { Formik } from 'formik';
+import { AccountSettings } from '@linode/api-v4/lib/account';
 import {
   CreateBucketSchema,
   ObjectStorageBucket
-} from 'linode-js-sdk/lib/object-storage';
+} from '@linode/api-v4/lib/object-storage';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+import Form from 'src/components/core/Form';
 import {
   createStyles,
   Theme,
@@ -67,7 +68,7 @@ type CombinedProps = Props &
   ReduxStateProps &
   DispatchProps;
 
-export const CreateBucketForm: React.StatelessComponent<CombinedProps> = props => {
+export const CreateBucketForm: React.FC<CombinedProps> = props => {
   const {
     isRestrictedUser,
     onClose,
@@ -106,7 +107,7 @@ export const CreateBucketForm: React.StatelessComponent<CombinedProps> = props =
           cluster
         })
           .then(({ label: bucketLabel }) => {
-            resetForm(initialValues);
+            resetForm({ values: initialValues });
             setSubmitting(false);
             onSuccess(bucketLabel);
 

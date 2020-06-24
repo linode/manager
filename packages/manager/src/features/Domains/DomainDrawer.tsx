@@ -2,12 +2,12 @@ import {
   cloneDomain,
   createDomainRecord,
   Domain
-} from 'linode-js-sdk/lib/domains';
-import { Linode } from 'linode-js-sdk/lib/linodes';
-import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
-import { APIError } from 'linode-js-sdk/lib/types';
+} from '@linode/api-v4/lib/domains';
+import { Linode } from '@linode/api-v4/lib/linodes';
+import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
+import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { path, pathOr } from 'ramda';
+import { path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -100,11 +100,11 @@ type CombinedProps = WithStyles<ClassNames> &
   StateProps &
   WithSnackbarProps;
 
-const generateDefaultDomainRecords = (
+export const generateDefaultDomainRecords = (
   domain: string,
   domainID: number,
   ipv4?: string,
-  ipv6?: string
+  ipv6?: string | null
 ) => {
   /**
    * at this point, the IPv6 is including the prefix and we need to strip that
@@ -310,6 +310,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
           label="Domain"
           onChange={this.updateLabel}
           data-qa-domain-name
+          data-testid="domain-name-input"
         />
         {mode === CLONING && (
           <TextField
@@ -328,6 +329,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
             label="SOA Email Address"
             onChange={this.updateEmailAddress}
             data-qa-soa-email
+            data-testid="soa-email-input"
             disabled={disabled}
           />
         )}
@@ -446,6 +448,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
             buttonType="primary"
             onClick={this.submit}
             data-qa-submit
+            data-testid="create-domain-submit"
             loading={submitting}
             disabled={disabled}
           >
@@ -533,30 +536,29 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
      * In this case, the user wants default domain records created, but
      * they haven't supplied a Linode or NodeBalancer
      */
-    if (defaultRecordsSetting === 'linode') {
-      if (!selectedDefaultLinode) {
-        return this.setState({
-          errors: [
-            {
-              reason: 'Please select a Linode.',
-              field: 'defaultLinode'
-            }
-          ]
-        });
-      }
+    if (defaultRecordsSetting === 'linode' && !selectedDefaultLinode) {
+      return this.setState({
+        errors: [
+          {
+            reason: 'Please select a Linode.',
+            field: 'defaultLinode'
+          }
+        ]
+      });
     }
 
-    if (defaultRecordsSetting === 'nodebalancer') {
-      if (!selectedDefaultNodeBalancer) {
-        return this.setState({
-          errors: [
-            {
-              reason: 'Please select a NodeBalancer.',
-              field: 'defaultNodeBalancer'
-            }
-          ]
-        });
-      }
+    if (
+      defaultRecordsSetting === 'nodebalancer' &&
+      !selectedDefaultNodeBalancer
+    ) {
+      return this.setState({
+        errors: [
+          {
+            reason: 'Please select a NodeBalancer.',
+            field: 'defaultNodeBalancer'
+          }
+        ]
+      });
     }
 
     const data =
@@ -828,14 +830,12 @@ interface StateProps {
 }
 
 const mapStateToProps = (state: ApplicationState) => {
-  const id = path(['domainDrawer', 'id'], state);
-  const domainEntities = pathOr([], ['__resources', 'domains', 'data'], state);
-  const domainProps = domainEntities.find(
-    (domain: Domain) => domain.id === path(['domainDrawer', 'id'], state)
-  );
+  const id = state.domainDrawer?.id ?? '0';
+  const domainEntities = state.__resources.domains.itemsById;
+  const domainProps = domainEntities[String(id)];
   return {
-    mode: pathOr(CREATING, ['domainDrawer', 'mode'], state),
-    open: pathOr(false, ['domainDrawer', 'open'], state),
+    mode: state.domainDrawer?.mode ?? CREATING,
+    open: state.domainDrawer?.open ?? false,
     domain: path(['domainDrawer', 'domain'], state),
     domainProps,
     id,

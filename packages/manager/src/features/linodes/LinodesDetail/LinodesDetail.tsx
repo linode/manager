@@ -8,7 +8,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import DefaultLoader from 'src/components/DefaultLoader';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { WithTypes } from 'src/store/linodeType/linodeType.containers';
 import { ThunkDispatch } from 'src/store/types';
@@ -21,21 +21,12 @@ import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
 import linodesDetailContainer, { InnerProps } from './LinodesDetail.container';
 import reloadableWithRouter from './reloadableWithRouter';
 
-const CloneLanding = DefaultLoader({
-  loader: () => import('../CloneLanding')
-});
-
-const LinodesDetailHeader = DefaultLoader({
-  loader: () => import('./LinodesDetailHeader')
-});
-
-const LinodesDetailNavigation = DefaultLoader({
-  loader: () => import('./LinodesDetailNavigation')
-});
-
-const MigrateLanding = DefaultLoader({
-  loader: () => import('../MigrateLanding')
-});
+const CloneLanding = React.lazy(() => import('../CloneLanding'));
+const LinodesDetailHeader = React.lazy(() => import('./LinodesDetailHeader'));
+const LinodesDetailNavigation = React.lazy(() =>
+  import('./LinodesDetailNavigation')
+);
+const MigrateLanding = React.lazy(() => import('../MigrateLanding'));
 
 interface MatchProps {
   linodeId?: string;
@@ -61,7 +52,7 @@ const styles = (theme: Theme) =>
     }
   });
 
-const LinodeDetail: React.StatelessComponent<CombinedProps> = props => {
+const LinodeDetail: React.FC<CombinedProps> = props => {
   const {
     dispatch,
     linode,
@@ -74,7 +65,7 @@ const LinodeDetail: React.StatelessComponent<CombinedProps> = props => {
    * Other portions of loading state handled by maybeRenderLoading
    * (Linode info, configs, disks, etc.)
    */
-  const { _loading } = useReduxLoad(['volumes']);
+  const { _loading } = useReduxLoad(['volumes', 'images']);
 
   if (props.loading || _loading) {
     return <CircleProgress />;
@@ -83,24 +74,26 @@ const LinodeDetail: React.StatelessComponent<CombinedProps> = props => {
   return (
     <LinodeDetailContextProvider value={ctx}>
       {/* <pre>{JSON.stringify(linode, null, 2)}</pre> */}
-      <Switch>
-        {/*
-        Currently, the "Clone Configs and Disks" feature exists OUTSIDE of LinodeDetail.
-        Or... at least it appears that way to the user. We would like it to live WITHIN
-        LinodeDetail, though, because we'd like to use the same context, so we don't
-        have to reload all the configs, disks, etc. once we get to the CloneLanding page.
-        */}
-        <Route path={`${path}/clone`} component={CloneLanding} />
-        <Route path={`${path}/migrate`} component={MigrateLanding} />
-        <Route
-          render={() => (
-            <React.Fragment>
-              <LinodesDetailHeader />
-              <LinodesDetailNavigation />
-            </React.Fragment>
-          )}
-        />
-      </Switch>
+      <React.Suspense fallback={<SuspenseLoader />}>
+        <Switch>
+          {/*
+          Currently, the "Clone Configs and Disks" feature exists OUTSIDE of LinodeDetail.
+          Or... at least it appears that way to the user. We would like it to live WITHIN
+          LinodeDetail, though, because we'd like to use the same context, so we don't
+          have to reload all the configs, disks, etc. once we get to the CloneLanding page.
+          */}
+          <Route path={`${path}/clone`} component={CloneLanding} />
+          <Route path={`${path}/migrate`} component={MigrateLanding} />
+          <Route
+            render={() => (
+              <React.Fragment>
+                <LinodesDetailHeader />
+                <LinodesDetailNavigation />
+              </React.Fragment>
+            )}
+          />
+        </Switch>
+      </React.Suspense>
     </LinodeDetailContextProvider>
   );
 };

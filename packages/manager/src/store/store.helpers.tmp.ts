@@ -1,5 +1,5 @@
 // @todo rename this file to store.helpers when all reducers are using MappedEntityState2
-import { APIError } from 'linode-js-sdk/lib/types';
+import { APIError } from '@linode/api-v4/lib/types';
 import { assoc, omit } from 'ramda';
 import {
   Entity,
@@ -16,7 +16,7 @@ export const addEntityRecord = <T extends Entity>(
 ): EntityMap<T> => assoc(String(current.id), current, result);
 
 export const onStart = <S>(state: S) =>
-  Object.assign({}, state, { loading: true, error: {} });
+  Object.assign({}, state, { loading: true, error: { read: undefined } });
 
 export const onGetAllSuccess = <E extends Entity, S>(
   items: E[],
@@ -34,14 +34,21 @@ export const onGetAllSuccess = <E extends Entity, S>(
     )
   });
 
+export const setError = <E extends Entity>(
+  error: EntityError,
+  state: MappedEntityState<E, EntityError>
+) => {
+  return Object.assign({}, state, { error: { ...state.error, ...error } });
+};
+
 export const onError = <S = {}, E = APIError[] | undefined>(
   error: E,
   state: S
 ) => Object.assign({}, state, { error, loading: false });
 
 export const createDefaultState = <E extends Entity, O extends EntityError>(
-  override: Partial<MappedEntityState<E, O>>,
-  defaultError?: O
+  override: Partial<MappedEntityState<E, O>> = {},
+  defaultError: O = {} as O
 ): MappedEntityState<E, O> => ({
   itemsById: {},
   loading: false,
@@ -110,6 +117,21 @@ export const getAddRemoved = <E extends Entity>(
   const removed = existingList.filter(({ id }) => !newIds.includes(String(id)));
 
   return [added, removed];
+};
+
+export const onGetPageSuccess = <E extends Entity>(
+  items: E[],
+  state: MappedEntityState<E, EntityError>,
+  results: number
+): MappedEntityState<E, EntityError> => {
+  const isFullRequest = results === items.length;
+  const newState = addMany(items, state, results);
+  return isFullRequest
+    ? {
+        ...newState,
+        lastUpdated: Date.now()
+      }
+    : newState;
 };
 
 export const createRequestThunk = <Req extends any, Res extends any, Err>(

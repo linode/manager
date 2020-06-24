@@ -6,10 +6,10 @@ import {
   getServices,
   ManagedServicePayload,
   updateServiceMonitor as _update
-} from 'linode-js-sdk/lib/managed';
+} from '@linode/api-v4/lib/managed';
 import { omit } from 'ramda';
 import { getAll } from 'src/utilities/getAll';
-import { createRequestThunk } from '../store.helpers';
+import { createRequestThunk } from '../store.helpers.tmp';
 import {
   createServiceMonitorActions,
   deleteServiceMonitorActions,
@@ -28,7 +28,7 @@ const enableService = (params: MonitorPayload) => _enable(params.monitorID);
 const updateService = (params: MonitorPayload & ManagedServicePayload) =>
   _update(params.monitorID, omit(['monitorID'], params));
 
-const getAllServices = () => _getAll().then(({ data }) => data);
+const getAllServices = () => _getAll();
 
 export const requestManagedServices = createRequestThunk(
   requestServicesActions,

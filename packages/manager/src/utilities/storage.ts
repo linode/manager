@@ -1,3 +1,4 @@
+import { StackScriptPayload } from '@linode/api-v4/lib/stackscripts/types';
 const localStorageCache = {};
 
 export const getStorage = (key: string, fallback?: any) => {
@@ -10,7 +11,7 @@ export const getStorage = (key: string, fallback?: any) => {
    * Basically, if localstorage doesn't exist,
    * return whatever we set as a fallback
    */
-  if (item === null && !!fallback) {
+  if ((item === null || item === undefined) && !!fallback) {
     return fallback;
   }
 
@@ -44,12 +45,23 @@ const TOKEN = 'authentication/token';
 const NONCE = 'authentication/nonce';
 const SCOPES = 'authentication/scopes';
 const EXPIRE = 'authentication/expire';
+const SUPPORT = 'support';
+const STACKSCRIPT = 'stackscript';
 
 export type PageSize = number;
 
 interface AuthGetAndSet {
   get: () => any;
   set: (value: string) => void;
+}
+
+interface SupportText {
+  title: string;
+  description: string;
+}
+
+interface StackScriptData extends StackScriptPayload {
+  id: number | string;
 }
 
 export interface Storage {
@@ -70,6 +82,14 @@ export interface Storage {
   BackupsCtaDismissed: {
     get: () => boolean;
     set: (v: 'true' | 'false') => void;
+  };
+  supportText: {
+    get: () => SupportText;
+    set: (v: SupportText) => void;
+  };
+  stackScriptInProgress: {
+    get: () => StackScriptData;
+    set: (s: StackScriptData) => void;
   };
 }
 
@@ -114,7 +134,26 @@ export const storage: Storage = {
   BackupsCtaDismissed: {
     get: () => getStorage(BACKUPSCTA_DISMISSED),
     set: () => setStorage(BACKUPSCTA_DISMISSED, 'true')
+  },
+  supportText: {
+    get: () => getStorage(SUPPORT, { title: '', description: '' }),
+    set: v => setStorage(SUPPORT, JSON.stringify(v))
+  },
+  stackScriptInProgress: {
+    get: () =>
+      getStorage(STACKSCRIPT, {
+        id: -1,
+        script: '',
+        label: '',
+        images: []
+      }),
+    set: s => setStorage(STACKSCRIPT, JSON.stringify(s))
   }
 };
 
-export const { authentication, BackupsCtaDismissed } = storage;
+export const {
+  authentication,
+  BackupsCtaDismissed,
+  stackScriptInProgress,
+  supportText
+} = storage;

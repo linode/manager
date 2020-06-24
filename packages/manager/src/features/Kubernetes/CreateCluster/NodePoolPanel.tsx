@@ -1,30 +1,23 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
-import Notice from 'src/components/Notice';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-import TextField from 'src/components/TextField';
-
-import SelectPlanPanel, {
-  ExtendedType
-} from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-
-import { getMonthlyPrice, nodeWarning } from '.././kubeUtils';
+import SelectPlanQuantityPanel, {
+  ExtendedType,
+  ExtendedTypeWithCount
+} from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel';
+import { getMonthlyPrice } from '.././kubeUtils';
 import { PoolNodeWithPrice } from '.././types';
-import NodePoolDisplayTable from './NodePoolDisplayTable';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(3),
     '& .tabbedPanel': {
-      marginTop: 0
+      marginTop: 0,
+      paddingTop: 0
     }
   },
   title: {
@@ -47,19 +40,20 @@ interface Props {
   typesLoading: boolean;
   typesError?: string;
   apiError?: string;
-  selectedType?: string;
-  nodeCount: number;
-  hideTable?: boolean;
-  addNodePool: (pool: PoolNodeWithPrice) => void;
-  handleTypeSelect: (newType?: string) => void;
-  updateNodeCount: (newCount: number) => void;
-  // Props only needed if hideTable is false
-  pools?: PoolNodeWithPrice[];
-  deleteNodePool?: (poolIdx: number) => void;
-  updatePool?: (poolIdx: number, updatedPool: PoolNodeWithPrice) => void;
+  isOnCreate?: boolean;
+  addNodePool: (pool: Partial<PoolNodeWithPrice>) => any; // Has to accept both extended and non-extended pools
 }
 
 type CombinedProps = Props;
+
+export const addCountToTypes = (
+  types: ExtendedType[]
+): ExtendedTypeWithCount[] => {
+  return types.map(thisType => ({
+    ...thisType,
+    count: 0
+  }));
+};
 
 export const NodePoolPanel: React.FunctionComponent<CombinedProps> = props => {
   const classes = useStyles();
@@ -85,130 +79,54 @@ const RenderLoadingOrContent: React.FunctionComponent<CombinedProps> = props => 
 };
 
 const Panel: React.FunctionComponent<CombinedProps> = props => {
-  const [typeError, setTypeError] = React.useState<string | undefined>(
-    undefined
+  const { addNodePool, apiError, types, isOnCreate } = props;
+
+  const [_types, setNewType] = React.useState<ExtendedTypeWithCount[]>(
+    addCountToTypes(types)
   );
-  const [countError, setCountError] = React.useState<string | undefined>(
-    undefined
-  );
-  const classes = useStyles();
-  const {
-    addNodePool,
-    apiError,
-    deleteNodePool,
-    handleTypeSelect,
-    hideTable,
-    pools,
-    selectedType,
-    nodeCount,
-    updateNodeCount,
-    updatePool,
-    types
-  } = props;
+  const [selectedType, setSelectedType] = React.useState<string | undefined>();
 
-  if (!hideTable && !(pools && updatePool && deleteNodePool)) {
-    /**
-     * These props are required when showing the table,
-     * which will be the case when hideTable is false or undefined
-     * (i.e. omitted since it's an optional prop).
-     */
-    throw new Error(
-      'You must provide pools, update and delete functions when displaying the table in NodePoolPanel.'
-    );
-  }
-
-  const submitForm = () => {
-    /** Do simple client validation for the two input fields */
-    setTypeError(undefined);
-    setCountError(undefined);
-    if (!selectedType) {
-      setTypeError('Please select a type.');
-      return;
-    }
-    if (typeof nodeCount !== 'number') {
-      setCountError('Invalid value.');
-      return;
-    }
-
+  const submitForm = (selectedPlanType: string, nodeCount: number) => {
     /**
      * Add pool and reset form state.
      */
     addNodePool({
       id: Math.random(),
-      type: selectedType,
+      type: selectedPlanType,
       count: nodeCount,
-      totalMonthlyPrice: getMonthlyPrice(selectedType, nodeCount, types)
+      totalMonthlyPrice: getMonthlyPrice(selectedPlanType, nodeCount, types)
     });
-    handleTypeSelect(undefined);
-    updateNodeCount(3);
+    updatePlanCount(selectedPlanType, 0);
+    setSelectedType(undefined);
   };
 
-  const selectType = (newType: string) => {
-    setTypeError(undefined);
-    handleTypeSelect(newType);
+  const updatePlanCount = (planId: string, newCount: number) => {
+    const newTypes = _types.map((thisType: ExtendedTypeWithCount) => {
+      if (thisType.id === planId) {
+        return { ...thisType, count: newCount };
+      }
+      return thisType;
+    });
+    setNewType(newTypes);
+    setSelectedType(planId);
   };
-
-  // If the user is about to create a cluster with a single node,
-  // we want to show a warning.
-  const showSingleNodeWarning =
-    pools?.reduce((acc, thisPool) => {
-      return acc + thisPool.count;
-    }, 0) === 1;
 
   return (
     <Grid container direction="column">
       <Grid item>
-        <SelectPlanPanel
-          types={types.filter(t => t.class !== 'nanode' && t.class !== 'gpu')} // No Nanodes or GPUs in clusters
+        <SelectPlanQuantityPanel
+          types={_types.filter(t => t.class !== 'nanode' && t.class !== 'gpu')} // No Nanodes or GPUs in clusters
           selectedID={selectedType}
-          onSelect={selectType}
-          error={apiError || typeError}
+          onSelect={(newType: string) => setSelectedType(newType)}
+          error={apiError}
           header="Add Node Pools"
           copy="Add groups of Linodes to your cluster with a chosen size."
+          updatePlanCount={updatePlanCount}
+          submitForm={submitForm}
+          isOnCreate={isOnCreate}
+          resetValues={() => null} // In this flow we don't want to clear things on tab changes
         />
       </Grid>
-      <Grid item className={classes.gridItem}>
-        <Typography variant="h3">Number of Linodes</Typography>
-        <TextField
-          tiny
-          type="number"
-          min={0}
-          max={100}
-          label="Number of Linodes"
-          hideLabel
-          value={nodeCount}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            updateNodeCount(Math.max(+e.target.value, 0))
-          }
-          errorText={countError}
-        />
-      </Grid>
-      <Grid item className={classes.gridItem}>
-        <Button buttonType="secondary" onClick={submitForm}>
-          Add Node Pool
-        </Button>
-      </Grid>
-      {!hideTable && (
-        /* We checked for these props above so it's safe to assume they're defined. */
-        <>
-          {showSingleNodeWarning && (
-            <Grid item className={classes.notice}>
-              <Notice warning text={nodeWarning} spacingBottom={0} />
-            </Grid>
-          )}
-          <Grid item className={classes.gridItem}>
-            <NodePoolDisplayTable
-              small
-              editable
-              loading={false} // When creating we never need to load node pools from the API
-              pools={pools || []}
-              types={types}
-              handleDelete={(poolIdx: number) => deleteNodePool!(poolIdx)}
-              updatePool={updatePool!}
-            />
-          </Grid>
-        </>
-      )}
     </Grid>
   );
 };

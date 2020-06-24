@@ -1,12 +1,11 @@
-import { Image } from 'linode-js-sdk/lib/images';
-import { UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
+import { Image } from '@linode/api-v4/lib/images';
+import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { assocPath, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
-import { Sticky, StickyProps } from 'react-sticky';
 import { compose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
-import CheckoutBar from 'src/components/CheckoutBar';
+import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -236,6 +235,43 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
     const hasBackups = backupsEnabled || accountBackupsEnabled;
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
 
+    const displaySections = [];
+    if (imageDisplayInfo) {
+      displaySections.push(imageDisplayInfo);
+    }
+
+    if (regionDisplayInfo) {
+      displaySections.push({
+        title: regionDisplayInfo.title,
+        details: regionDisplayInfo.details
+      });
+    }
+
+    if (typeDisplayInfo) {
+      displaySections.push(typeDisplayInfo);
+    }
+
+    if (label) {
+      displaySections.push({
+        title: 'Linode Label',
+        details: label
+      });
+    }
+
+    if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
+      displaySections.push(
+        renderBackupsDisplaySection(
+          accountBackupsEnabled,
+          typeDisplayInfo.backupsMonthly
+        )
+      );
+    }
+
+    let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
+    if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
+      calculatedPrice += typeDisplayInfo.backupsMonthly;
+    }
+
     return (
       <React.Fragment>
         <Grid
@@ -303,7 +339,8 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
             regions={regionsData}
             handleSelection={updateRegionID}
             selectedID={selectedRegionID}
-            updateFor={[selectedRegionID, errors]}
+            updateFor={[selectedRegionID, errors, regionsData]}
+            helperText={this.props.regionHelperText}
             copy="Determine the best location for your Linode."
             disabled={userCannotCreateLinode}
           />
@@ -314,6 +351,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
             updateFor={[selectedTypeID, errors]}
             selectedID={selectedTypeID}
             disabled={userCannotCreateLinode}
+            disabledClasses={this.props.disabledClasses}
           />
           <LabelAndTagsPanel
             labelFieldProps={{
@@ -351,9 +389,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
               ]}
               password={password}
               handleChange={updatePassword}
-              users={
-                userSSHKeys.length > 0 && selectedImageID ? userSSHKeys : []
-              }
+              users={userSSHKeys}
               requestKeys={requestKeys}
             />
           </form>
@@ -369,70 +405,18 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
           />
         </Grid>
         <Grid item className={`${classes.sidebar} mlSidebar`}>
-          <Sticky topOffset={-24} disableCompensation>
-            {(stickyProps: StickyProps) => {
-              const displaySections = [];
-              if (imageDisplayInfo) {
-                displaySections.push(imageDisplayInfo);
-              }
-
-              if (regionDisplayInfo) {
-                displaySections.push({
-                  title: regionDisplayInfo.title,
-                  details: regionDisplayInfo.details
-                });
-              }
-
-              if (typeDisplayInfo) {
-                displaySections.push(typeDisplayInfo);
-              }
-
-              if (label) {
-                displaySections.push({
-                  title: 'Linode Label',
-                  details: label
-                });
-              }
-
-              if (
-                hasBackups &&
-                typeDisplayInfo &&
-                typeDisplayInfo.backupsMonthly
-              ) {
-                displaySections.push(
-                  renderBackupsDisplaySection(
-                    accountBackupsEnabled,
-                    typeDisplayInfo.backupsMonthly
-                  )
-                );
-              }
-
-              let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
-              if (
-                hasBackups &&
-                typeDisplayInfo &&
-                typeDisplayInfo.backupsMonthly
-              ) {
-                calculatedPrice += typeDisplayInfo.backupsMonthly;
-              }
-
-              return (
-                <div>
-                  <CheckoutBar
-                    heading="Linode Summary"
-                    calculatedPrice={calculatedPrice}
-                    isMakingRequest={formIsSubmitting}
-                    disabled={formIsSubmitting || userCannotCreateLinode}
-                    onDeploy={this.handleCreateLinode}
-                    displaySections={displaySections}
-                  />
-                  {this.props.documentation.length > 0 && (
-                    <DocsSidebar docs={this.props.documentation} />
-                  )}
-                </div>
-              );
-            }}
-          </Sticky>
+          <CheckoutBar
+            heading="Linode Summary"
+            calculatedPrice={calculatedPrice}
+            isMakingRequest={formIsSubmitting}
+            disabled={formIsSubmitting || userCannotCreateLinode}
+            onDeploy={this.handleCreateLinode}
+          >
+            <DisplaySectionList displaySections={displaySections} />
+          </CheckoutBar>
+          {this.props.documentation.length > 0 && (
+            <DocsSidebar docs={this.props.documentation} />
+          )}
         </Grid>
         <AppDetailDrawer
           open={this.state.detailDrawerOpen}

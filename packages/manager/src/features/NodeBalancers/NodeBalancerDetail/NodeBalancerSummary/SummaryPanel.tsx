@@ -14,11 +14,10 @@ import summaryPanelStyles, {
   StyleProps
 } from 'src/containers/SummaryPanels.styles';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
+import { ExtendedNodeBalancer } from 'src/features/NodeBalancers/types';
 import { formatRegion } from 'src/utilities';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { NodeBalancerConsumer } from '../context';
-
-import { ExtendedNodeBalancer } from 'src/services/nodebalancers';
 
 type ClassNames =
   | 'NBsummarySection'
@@ -53,7 +52,7 @@ interface Props {
 
 type CombinedProps = Props & StyleProps & WithStyles<ClassNames>;
 
-const SummaryPanel: React.StatelessComponent<CombinedProps> = props => {
+const SummaryPanel: React.FC<CombinedProps> = props => {
   const { nodeBalancer, classes } = props;
 
   return (
@@ -62,9 +61,7 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = props => {
         return (
           <div className={classes.root}>
             <Paper
-              className={`${classes.summarySection} ${
-                classes.NBsummarySection
-              }`}
+              className={`${classes.summarySection} ${classes.NBsummarySection}`}
             >
               <Typography variant="h3" className={classes.title} data-qa-title>
                 NodeBalancer Details
@@ -76,9 +73,7 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = props => {
                   {nodeBalancer.configPorts.map(({ port, configId }, i) => (
                     <React.Fragment key={configId}>
                       <Link
-                        to={`/nodebalancers/${
-                          nodeBalancer.id
-                        }/configurations/${configId}`}
+                        to={`/nodebalancers/${nodeBalancer.id}/configurations/${configId}`}
                         className="secondaryLink"
                       >
                         {port}
@@ -90,7 +85,7 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = props => {
               </div>
               <div className={classes.section}>
                 <Typography variant="body1" data-qa-node-status>
-                  <strong>Node Status: </strong>
+                  <strong>Backend Status: </strong>
                   {`${nodeBalancer.up} up, ${nodeBalancer.down} down`}
                 </Typography>
               </div>

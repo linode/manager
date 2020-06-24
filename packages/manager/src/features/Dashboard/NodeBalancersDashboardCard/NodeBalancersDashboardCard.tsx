@@ -1,5 +1,5 @@
-import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
+import { APIError } from '@linode/api-v4/lib/types';
 import { take } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -69,10 +69,10 @@ const styles = (theme: Theme) =>
       }
     },
     labelCol: {
-      width: '70%'
+      width: '75%'
     },
     moreCol: {
-      width: '30%'
+      width: '25%'
     },
     actionsCol: {
       width: '10%'
@@ -160,7 +160,11 @@ const NodeBalancersDashboardCard: React.FunctionComponent<CombinedProps> = props
 
   const renderData = () => {
     return data.map(({ id, label, region, hostname }) => (
-      <TableRow key={label} rowLink={`/nodebalancers/${id}`}>
+      <TableRow
+        key={label}
+        ariaLabel={`NodeBalancer ${label}`}
+        rowLink={`/nodebalancers/${id}`}
+      >
         <TableCell className={classes.labelCol}>
           <Grid container wrap="nowrap" alignItems="center">
             <Grid item className="py0">

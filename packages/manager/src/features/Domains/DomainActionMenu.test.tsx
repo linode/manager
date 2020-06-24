@@ -1,5 +1,5 @@
 import { cleanup } from '@testing-library/react';
-import { DomainStatus } from 'linode-js-sdk/lib/domains';
+import { DomainStatus } from '@linode/api-v4/lib/domains';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { DomainActionMenu } from './DomainActionMenu';

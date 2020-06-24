@@ -1,5 +1,5 @@
-import { FirewallDevice } from 'linode-js-sdk/lib/firewalls/types';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { FirewallDevice } from '@linode/api-v4/lib/firewalls/types';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
@@ -36,69 +36,67 @@ const FirewallTable: React.FC<CombinedProps> = props => {
       : undefined;
 
   return (
-    <React.Fragment>
-      <OrderBy data={devices} orderBy={'entity:label'} order={'asc'}>
-        {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-          <Paginate data={orderedData}>
-            {({
-              data: paginatedAndOrderedData,
-              count,
-              handlePageChange,
-              handlePageSizeChange,
-              page,
-              pageSize
-            }) => (
-              <>
-                <Paper>
-                  <Table aria-label="List of Linodes attached to this Firewall">
-                    <TableHead>
-                      <TableRow>
-                        <TableSortCell
-                          active={orderBy === 'entity:label'}
-                          label={'entity:label'}
-                          direction={order}
-                          handleClick={handleOrderChange}
-                          data-qa-firewall-device-linode-header
-                        >
-                          Linode
-                        </TableSortCell>
-                        <TableCell />
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableContentWrapper
-                        length={paginatedAndOrderedData.length}
-                        loading={loading && lastUpdated === 0}
-                        error={_error}
-                        lastUpdated={lastUpdated}
+    <OrderBy data={devices} orderBy={'entity:label'} order={'asc'}>
+      {({ data: orderedData, handleOrderChange, order, orderBy }) => (
+        <Paginate data={orderedData}>
+          {({
+            data: paginatedAndOrderedData,
+            count,
+            handlePageChange,
+            handlePageSizeChange,
+            page,
+            pageSize
+          }) => (
+            <>
+              <Paper>
+                <Table aria-label="List of Linodes attached to this Firewall">
+                  <TableHead>
+                    <TableRow>
+                      <TableSortCell
+                        active={orderBy === 'entity:label'}
+                        label={'entity:label'}
+                        direction={order}
+                        handleClick={handleOrderChange}
+                        data-qa-firewall-device-linode-header
                       >
-                        {paginatedAndOrderedData.map(thisDevice => (
-                          <FirewallDeviceRow
-                            key={`device-row-${thisDevice.id}`}
-                            deviceLabel={thisDevice.entity.label}
-                            deviceID={thisDevice.id}
-                            entityID={thisDevice.entity.id}
-                            triggerRemoveDevice={triggerRemoveDevice}
-                          />
-                        ))}
-                      </TableContentWrapper>
-                    </TableBody>
-                  </Table>
-                </Paper>
-                <PaginationFooter
-                  count={count}
-                  handlePageChange={handlePageChange}
-                  handleSizeChange={handlePageSizeChange}
-                  page={page}
-                  pageSize={pageSize}
-                  eventCategory="Firewall Devices Table"
-                />
-              </>
-            )}
-          </Paginate>
-        )}
-      </OrderBy>
-    </React.Fragment>
+                        Linode
+                      </TableSortCell>
+                      <TableCell />
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableContentWrapper
+                      length={paginatedAndOrderedData.length}
+                      loading={loading && lastUpdated === 0}
+                      error={_error}
+                      lastUpdated={lastUpdated}
+                    >
+                      {paginatedAndOrderedData.map(thisDevice => (
+                        <FirewallDeviceRow
+                          key={`device-row-${thisDevice.id}`}
+                          deviceLabel={thisDevice.entity.label}
+                          deviceID={thisDevice.id}
+                          entityID={thisDevice.entity.id}
+                          triggerRemoveDevice={triggerRemoveDevice}
+                        />
+                      ))}
+                    </TableContentWrapper>
+                  </TableBody>
+                </Table>
+              </Paper>
+              <PaginationFooter
+                count={count}
+                handlePageChange={handlePageChange}
+                handleSizeChange={handlePageSizeChange}
+                page={page}
+                pageSize={pageSize}
+                eventCategory="Firewall Devices Table"
+              />
+            </>
+          )}
+        </Paginate>
+      )}
+    </OrderBy>
   );
 };
 

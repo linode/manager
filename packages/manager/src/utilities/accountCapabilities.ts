@@ -1,11 +1,6 @@
-import { AccountCapability } from 'linode-js-sdk/lib/account'
+import { AccountCapability } from '@linode/api-v4/lib/account';
 
 import { curry } from 'ramda';
-
-import {
-  isKubernetesEnabledForEnvironment,
-  isObjectStorageEnabledForEnvironment
-} from 'src/constants';
 
 /**
  * Determines if a feature should be enabled. If the feature is returned from account.capabilities or if it is explicitly enabled
@@ -23,7 +18,7 @@ import {
  * isMyFeatureEnabled(['Feature one', 'Feature two']) // true
  */
 
-const isFeatureEnabled = curry(
+export const isFeatureEnabled = curry(
   (
     featureName: AccountCapability,
     environmentVar: boolean,
@@ -31,14 +26,4 @@ const isFeatureEnabled = curry(
   ) => {
     return environmentVar || capabilities.indexOf(featureName) > -1;
   }
-);
-
-export const isObjectStorageEnabled = isFeatureEnabled(
-  'Object Storage',
-  isObjectStorageEnabledForEnvironment
-);
-
-export const isKubernetesEnabled = isFeatureEnabled(
-  'Kubernetes',
-  isKubernetesEnabledForEnvironment
 );

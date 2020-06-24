@@ -63,18 +63,14 @@ class NodeBalancerDetail extends Page {
       .toBe(true);
     expect(this.hostName.getText())
       .withContext(
-        `${assertLog.incorrectRegExVal} for "${
-          this.hostName.selector
-        }" selector`
+        `${assertLog.incorrectRegExVal} for "${this.hostName.selector}" selector`
       )
       .toMatch(/.*\.nodebalancer\.linode\.com/gi);
     expect(this.nodeStatus.getText())
       .withContext(
-        `${assertLog.incorrectRegExVal} for "${
-          this.nodeStatus.selector
-        }" selector`
+        `${assertLog.incorrectRegExVal} for "${this.nodeStatus.selector}" selector`
       )
-      .toMatch(/Node Status\: \d* up, \d* down$/m);
+      .toMatch(/Backend Status\: \d* up, \d* down$/m);
     expect(this.transferred.getText())
       .withContext(
         `${assertLog.incorrectText} for "${this.transferred.selector}" selector`

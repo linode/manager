@@ -1,5 +1,5 @@
-import { Disk } from 'linode-js-sdk/lib/linodes';
-import { Volume } from 'linode-js-sdk/lib/volumes';
+import { Disk } from '@linode/api-v4/lib/linodes';
+import { Volume } from '@linode/api-v4/lib/volumes';
 import { defaultTo } from 'ramda';
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
@@ -30,7 +30,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const DeviceSelection: React.StatelessComponent<CombinedProps> = props => {
+const DeviceSelection: React.FC<CombinedProps> = props => {
   const { devices, onChange, getSelected, slots, rescue, disabled } = props;
 
   const counter = defaultTo(0, props.counter) as number;

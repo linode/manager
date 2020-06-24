@@ -1,4 +1,4 @@
-import { Event } from 'linode-js-sdk/lib/account';
+import { Event } from '@linode/api-v4/lib/account';
 import { path } from 'ramda';
 import { isProductionBuild } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
@@ -645,12 +645,11 @@ export default (e: Event): string => {
   if (!fn) {
     /** log unknown events to the console */
     if (!isProductionBuild) {
-      /* tslint:disable */
+      /* eslint-disable no-console */
       console.error('============================================');
       console.error('Unknown API Event Received');
       console.log(e);
       console.error('============================================');
-      /* tslint:enable */
     }
 
     /** finally return some default fallback text */

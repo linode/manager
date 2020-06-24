@@ -2,12 +2,11 @@ import {
   getLinodeBackups,
   Linode,
   LinodeBackupsResponse
-} from 'linode-js-sdk/lib/linodes';
+} from '@linode/api-v4/lib/linodes';
 import { compose as ramdaCompose, pathOr } from 'ramda';
 import * as React from 'react';
-import { Sticky, StickyProps } from 'react-sticky';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
-import CheckoutBar from 'src/components/CheckoutBar';
+import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -230,6 +229,40 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 
     const hasBackups = Boolean(backupsEnabled || accountBackupsEnabled);
 
+    const displaySections = [];
+
+    if (regionDisplayInfo) {
+      displaySections.push({
+        title: regionDisplayInfo.title,
+        details: regionDisplayInfo.details
+      });
+    }
+
+    if (typeDisplayInfo) {
+      displaySections.push(typeDisplayInfo);
+    }
+
+    if (label) {
+      displaySections.push({
+        title: 'Linode Label',
+        details: label
+      });
+    }
+
+    if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
+      displaySections.push(
+        renderBackupsDisplaySection(
+          accountBackupsEnabled,
+          typeDisplayInfo.backupsMonthly
+        )
+      );
+    }
+
+    let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
+    if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
+      calculatedPrice += typeDisplayInfo.backupsMonthly;
+    }
+
     return (
       <React.Fragment>
         <Grid
@@ -245,6 +278,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                 icon={VolumeIcon}
                 copy="You do not have backups enabled for your Linodes. Please visit the Backups panel in the Linode Details view."
                 title="Create from Backup"
+                renderAsSecondary
               />
             </Paper>
           ) : (
@@ -291,8 +325,14 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                 onSelect={updateTypeID}
                 selectedID={selectedTypeID}
                 selectedDiskSize={selectedDiskSize}
-                updateFor={[selectedTypeID, selectedDiskSize, errors]}
+                updateFor={[
+                  selectedTypeID,
+                  selectedDiskSize,
+                  errors,
+                  this.props.disabledClasses
+                ]}
                 disabled={disabled}
+                disabledClasses={this.props.disabledClasses}
               />
               <LabelAndTagsPanel
                 labelFieldProps={{
@@ -327,63 +367,15 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
           <React.Fragment />
         ) : (
           <Grid item className={`${classes.sidebar} mlSidebar`}>
-            <Sticky topOffset={-24} disableCompensation>
-              {(props: StickyProps) => {
-                const displaySections = [];
-
-                if (regionDisplayInfo) {
-                  displaySections.push({
-                    title: regionDisplayInfo.title,
-                    details: regionDisplayInfo.details
-                  });
-                }
-
-                if (typeDisplayInfo) {
-                  displaySections.push(typeDisplayInfo);
-                }
-
-                if (label) {
-                  displaySections.push({
-                    title: 'Linode Label',
-                    details: label
-                  });
-                }
-
-                if (
-                  hasBackups &&
-                  typeDisplayInfo &&
-                  typeDisplayInfo.backupsMonthly
-                ) {
-                  displaySections.push(
-                    renderBackupsDisplaySection(
-                      accountBackupsEnabled,
-                      typeDisplayInfo.backupsMonthly
-                    )
-                  );
-                }
-
-                let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
-                if (
-                  hasBackups &&
-                  typeDisplayInfo &&
-                  typeDisplayInfo.backupsMonthly
-                ) {
-                  calculatedPrice += typeDisplayInfo.backupsMonthly;
-                }
-
-                return (
-                  <CheckoutBar
-                    heading="Linode Summary"
-                    calculatedPrice={calculatedPrice}
-                    isMakingRequest={this.props.formIsSubmitting}
-                    disabled={this.props.formIsSubmitting || disabled}
-                    onDeploy={this.createLinode}
-                    displaySections={displaySections}
-                    {...props}
-                  />
-                );
-              }}
-            </Sticky>
+            <CheckoutBar
+              heading="Linode Summary"
+              calculatedPrice={calculatedPrice}
+              isMakingRequest={this.props.formIsSubmitting}
+              disabled={this.props.formIsSubmitting || disabled}
+              onDeploy={this.createLinode}
+            >
+              <DisplaySectionList displaySections={displaySections} />
+            </CheckoutBar>
           </Grid>
         )}
       </React.Fragment>

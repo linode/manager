@@ -2,13 +2,10 @@ import {
   Account,
   AccountSettings,
   Notification
-} from 'linode-js-sdk/lib/account';
-import { Domain } from 'linode-js-sdk/lib/domains';
-import { Image } from 'linode-js-sdk/lib/images';
-import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes';
-import { ObjectStorageCluster } from 'linode-js-sdk/lib/object-storage';
-import { Profile } from 'linode-js-sdk/lib/profile';
-import { Region } from 'linode-js-sdk/lib/regions';
+} from '@linode/api-v4/lib/account';
+import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
+import { Profile } from '@linode/api-v4/lib/profile';
+import { Region } from '@linode/api-v4/lib/regions';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { Action } from 'redux';
@@ -22,9 +19,7 @@ import { MapState } from 'src/store/types';
 
 import { requestAccount } from 'src/store/account/account.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
-import { requestClusters } from 'src/store/clusters/clusters.actions';
-import { requestDomains } from 'src/store/domains/domains.requests';
-import { requestImages } from 'src/store/image/image.requests';
+import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
 import { requestTypes } from 'src/store/linodeType/linodeType.requests';
 import { requestNotifications } from 'src/store/notification/notification.requests';
@@ -43,28 +38,69 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     isAuthenticated: false
   };
 
+  /**
+   * We make a series of requests for data on app load. The flow is:
+   * 1. App begins load; users see splash screen
+   * 2. Initial requests (in makeInitialRequests) are made (account, profile, etc.)
+   * 3. Initial requests complete; app is marked as done loading
+   * 4. As splash screen goes away, secondary requests (in makeSecondaryRequests -- Linodes, types, regions)
+   * are kicked off
+   */
   makeInitialRequests = async () => {
-    // When loading lish we avoid all this extra data loading
+    // When loading Lish we avoid all this extra data loading
     if (window.location?.pathname?.includes('/lish/')) {
       return;
     }
 
-    // Initial Requests
+    // Initial Requests: Things we need immediately (before rendering the app)
     const dataFetchingPromises: Promise<any>[] = [
+      // Grants/what a user has permission to view
       this.props.requestAccount(),
-      this.props.requestDomains(),
-      this.props.requestImages(),
+
+      // Username and whether a user is restricted
       this.props.requestProfile(),
-      this.props.requestLinodes(),
-      this.props.requestNotifications(),
-      this.props.requestSettings(),
-      this.props.requestTypes(),
-      this.props.requestRegions()
+
+      // Is a user managed
+      this.props.requestSettings()
     ];
+
+    // Start events polling
+    startEventsInterval();
 
     try {
       await Promise.all(dataFetchingPromises);
-    } catch (error) {
+    } catch {
+      /** We choose to do nothing, relying on the Redux error state. */
+    } finally {
+      this.props.markAppAsDoneLoading();
+      this.makeSecondaryRequests();
+    }
+  };
+
+  /** Secondary Requests (non-blocking)
+   * Make these once the user is past the
+   * splash screen, since they aren't needed
+   * for navigation, basic display, etc.
+   */
+  makeSecondaryRequests = async () => {
+    const { linodesLoading, linodesLastUpdated, requestLinodes } = this.props;
+    if (!linodesLoading && linodesLastUpdated === 0) {
+      // Only request Linodes if we haven't done that somewhere else already
+      requestLinodes().catch(_ => null);
+    }
+    try {
+      await Promise.all([
+        this.props.requestTypes(),
+        /**
+         * We have cached Regions data that can be used
+         * until the real data comes in; the only
+         * likely difference will be the status of each
+         * Region.
+         */
+        this.props.requestRegions(),
+        this.props.requestNotifications()
+      ]);
+    } catch {
       /** We choose to do nothing, relying on the Redux error state. */
     }
   };
@@ -75,7 +111,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
      * set redux state to what's in local storage
      * or expire the tokens if the expiry time is in the past
      *
-     * if nothing exist in local storage, we get shot off to login
+     * if nothing exists in local storage, we get shot off to login
      */
     initSession();
 
@@ -87,7 +123,6 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       this.setState({ showChildren: true });
 
       this.makeInitialRequests();
-      startEventsInterval();
     }
   }
 
@@ -96,14 +131,13 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
    * and redux has now been synced with what is in local storage
    */
   componentDidUpdate(prevProps: CombinedProps) {
-    /** if we were previously not authed and now we are authed */
+    /** if we were previously not authenticated and now we are */
     if (
       !prevProps.isAuthenticated &&
       this.props.isAuthenticated &&
       !this.state.showChildren
     ) {
       this.makeInitialRequests();
-      startEventsInterval();
 
       return this.setState({ showChildren: true });
     }
@@ -117,30 +151,33 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
   render() {
     const { children } = this.props;
     const { showChildren } = this.state;
+    // eslint-disable-next-line
     return <React.Fragment>{showChildren ? children : null}</React.Fragment>;
   }
 }
 
 interface StateProps {
   isAuthenticated: boolean;
+  linodesLoading: boolean;
+  linodesLastUpdated: number;
 }
 
 const mapStateToProps: MapState<StateProps, {}> = state => ({
-  isAuthenticated: Boolean(state.authentication.token)
+  isAuthenticated: Boolean(state.authentication.token),
+  linodesLoading: state.__resources.linodes.loading,
+  linodesLastUpdated: state.__resources.linodes.lastUpdated
 });
 
 interface DispatchProps {
   initSession: () => void;
   requestAccount: () => Promise<Account>;
-  requestDomains: () => Promise<Domain[]>;
-  requestImages: () => Promise<Image[]>;
   requestLinodes: () => Promise<GetAllData<Linode>>;
   requestNotifications: () => Promise<Notification[]>;
   requestSettings: () => Promise<AccountSettings>;
   requestTypes: () => Promise<LinodeType[]>;
   requestRegions: () => Promise<Region[]>;
   requestProfile: () => Promise<Profile>;
-  requestClusters: () => Promise<ObjectStorageCluster[]>;
+  markAppAsDoneLoading: () => void;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
@@ -148,15 +185,13 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 ) => ({
   initSession: () => dispatch(handleInitTokens()),
   requestAccount: () => dispatch(requestAccount()),
-  requestDomains: () => dispatch(requestDomains()),
-  requestImages: () => dispatch(requestImages()),
   requestLinodes: () => dispatch(requestLinodes({})),
   requestNotifications: () => dispatch(requestNotifications()),
   requestSettings: () => dispatch(requestAccountSettings()),
   requestTypes: () => dispatch(requestTypes()),
   requestRegions: () => dispatch(requestRegions()),
   requestProfile: () => dispatch(requestProfile()),
-  requestClusters: () => dispatch(requestClusters())
+  markAppAsDoneLoading: () => dispatch(handleLoadingDone())
 });
 
 const connected = connect(mapStateToProps, mapDispatchToProps);

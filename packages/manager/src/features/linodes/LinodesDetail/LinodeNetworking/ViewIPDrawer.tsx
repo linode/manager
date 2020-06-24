@@ -1,4 +1,4 @@
-import { IPAddress } from 'linode-js-sdk/lib/networking';
+import { IPAddress } from '@linode/api-v4/lib/networking';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -32,7 +32,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ViewIPDrawer: React.StatelessComponent<CombinedProps> = props => {
+const ViewIPDrawer: React.FC<CombinedProps> = props => {
   const { classes } = props;
 
   return (

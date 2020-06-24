@@ -1,4 +1,4 @@
-import { ManagedLinodeSetting } from 'linode-js-sdk/lib/managed';
+import { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -20,6 +20,7 @@ export const SSHAccessRow: React.FunctionComponent<Props> = props => {
       key={linodeSetting.id}
       data-qa-monitor-cell={linodeSetting.id}
       data-testid={'linode-row'}
+      ariaLabel={linodeSetting.label}
     >
       <TableCell parentColumn="Linode" data-qa-managed-linode>
         {linodeSetting.label}

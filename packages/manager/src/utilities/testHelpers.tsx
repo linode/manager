@@ -1,5 +1,7 @@
-import { render, RenderResult } from '@testing-library/react';
-import { ResourcePage } from 'linode-js-sdk/lib/types';
+import { MatcherFunction, render, RenderResult } from '@testing-library/react';
+import { Provider as LDProvider } from 'launchdarkly-react-client-sdk/lib/context';
+import { mergeDeepRight } from 'ramda';
+import { ResourcePage } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouterProps } from 'react-router';
@@ -8,13 +10,15 @@ import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-import store, { ApplicationState } from 'src/store';
+import store, { ApplicationState, defaultState } from 'src/store';
+import { DeepPartial } from 'redux';
+import { FlagSet } from 'src/featureFlags';
 
-export let createPromiseLoaderResponse: <T>(r: T) => PromiseLoaderResponse<T>;
-createPromiseLoaderResponse = response => ({ response });
+export const createPromiseLoaderResponse: <T>(
+  r: T
+) => PromiseLoaderResponse<T> = response => ({ response });
 
-export let createResourcePage: <T>(data: T[]) => ResourcePage<T>;
-createResourcePage = data => ({
+export const createResourcePage: <T>(data: T[]) => ResourcePage<T> = data => ({
   data,
   page: 0,
   pages: 0,
@@ -24,7 +28,8 @@ createResourcePage = data => ({
 
 interface Options {
   MemoryRouter?: MemoryRouterProps;
-  customStore?: Partial<ApplicationState>;
+  customStore?: DeepPartial<ApplicationState>;
+  flags?: FlagSet;
 }
 
 /**
@@ -32,15 +37,10 @@ interface Options {
  * renderWithTheme() helper function, since the whole app is wrapped with
  * the TogglePreference component
  */
-export const baseStore = (customStore: Partial<ApplicationState> = {}) =>
-  configureStore<Partial<ApplicationState>>([thunk])({
-    preferences: {
-      data: {},
-      loading: false,
-      lastUpdated: 0
-    },
-    ...customStore
-  });
+export const baseStore = (customStore: DeepPartial<ApplicationState> = {}) =>
+  configureStore<DeepPartial<ApplicationState>>([thunk])(
+    mergeDeepRight(defaultState, customStore)
+  );
 
 export const wrapWithTheme = (ui: any, options: Options = {}) => {
   const { customStore } = options;
@@ -48,7 +48,9 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
   return (
     <Provider store={storeToPass}>
       <LinodeThemeWrapper theme="dark" spacing="normal">
-        <MemoryRouter {...options.MemoryRouter}>{ui}</MemoryRouter>
+        <LDProvider value={{ flags: options.flags ?? {} }}>
+          <MemoryRouter {...options.MemoryRouter}>{ui}</MemoryRouter>
+        </LDProvider>
       </LinodeThemeWrapper>
     </Provider>
   );
@@ -71,6 +73,8 @@ export const renderWithTheme = (ui: any, options: Options = {}) => {
 };
 
 declare global {
+  // export would be better, but i m aligning with how the namespace is declared by jest-axe
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace jest {
     interface Matchers<R, T> {
       toPassAxeCheck(): R;
@@ -89,7 +93,6 @@ export const toPassAxeCheck = {
     // Here i want to use forEach but tslint has a bug saying not all my pth return a value,
     // which is intended as i want to return only if there is an error, if not keep traversing
     // Also i could have used For .. Of but this was making tslint think e was a string...
-    // tslint:disable-next-line: prefer-for-of
     for (let i = 0; i < anchors.length; i++) {
       const e = anchors[i];
       const hasHref = e.hasAttribute('href');
@@ -139,4 +142,37 @@ export const includesActions = (
       ? expect(query(action)).toBeInTheDocument()
       : expect(query(action)).not.toBeInTheDocument();
   }
+};
+
+type Query = (f: MatcherFunction) => HTMLElement;
+
+/** H/T to https://stackoverflow.com/questions/55509875/how-to-query-by-text-string-which-contains-html-tags-using-react-testing-library */
+export const withMarkup = (query: Query) => (text: string): HTMLElement =>
+  query((content: string, node: HTMLElement) => {
+    const hasText = (node: HTMLElement) => node.textContent === text;
+    const childrenDontHaveText = Array.from(node.children).every(
+      child => !hasText(child as HTMLElement)
+    );
+    return hasText(node) && childrenDontHaveText;
+  });
+
+/**
+ * Assert that HTML elements appear in a specific order. `selectorAttribute` must select the parent
+ * node of each piece of text content you are selecting.
+ *
+ * Example usage:
+ * const { container } = render(<MyComponent />);
+ * assertOrder(container, '[data-qa-label]', ['el1', 'el2', 'el3']);
+ *
+ * Thanks to https://spectrum.chat/testing-library/general/how-to-test-the-order-of-elements~23c8eaee-0fab-4bc6-8ca9-aa00a9582f8c?m=MTU3MjU0NTM0MTgyNw==
+ */
+export const assertOrder = (
+  container: HTMLElement,
+  selectorAttribute: string,
+  expectedOrder: string[]
+) => {
+  const elements = container.querySelectorAll(selectorAttribute);
+  expect(Array.from(elements).map(el => el.textContent)).toMatchObject(
+    expectedOrder
+  );
 };

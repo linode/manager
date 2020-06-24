@@ -1,5 +1,5 @@
-import { ZoneName } from 'linode-js-sdk/lib/networking';
-import { ObjectStorageClusterID } from 'linode-js-sdk/lib/object-storage';
+import { ZoneName } from '@linode/api-v4/lib/networking';
+import { ObjectStorageClusterID } from '@linode/api-v4/lib/object-storage';
 
 const PRODUCTION = 'production';
 
@@ -32,7 +32,9 @@ export const LAUNCH_DARKLY_API_KEY =
   process.env.REACT_APP_LAUNCH_DARKLY_ID || '';
 
 /** If it's hitting the prod API */
-export const isProdAPI = RegExp('api.linode.com/v4').test(API_ROOT);
+export const isProdAPI = RegExp(
+  /api.linode.com\/v4|cloud.linode.com\/api\/v4/
+).test(API_ROOT);
 
 // Maximum page size allowed by the API. Used in the `getAll()` helper function
 // to request as many items at once as possible.
@@ -191,7 +193,8 @@ export const objectStorageClusterDisplay: Record<
   string
 > = {
   'us-east-1': 'Newark, NJ',
-  'eu-central-1': 'Frankfurt, DE'
+  'eu-central-1': 'Frankfurt, DE',
+  'ap-south-1': 'Singapore, SG'
 };
 
 export type ContinentKey = 'NA' | 'EU' | 'AS';
