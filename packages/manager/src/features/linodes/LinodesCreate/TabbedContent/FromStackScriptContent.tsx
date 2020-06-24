@@ -4,7 +4,6 @@ import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { ResourcePage } from '@linode/api-v4/lib/types';
 import { assocPath } from 'ramda';
 import * as React from 'react';
-// import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -147,38 +146,38 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
     this.props.handleSelectUDFs({ ...this.props.selectedUDFs, ...newUDFData });
   };
 
-  handleCreateLinode = () => {
-    const {
-      backupsEnabled,
-      password,
-      privateIPEnabled,
-      userSSHKeys,
-      handleSubmitForm,
-      selectedImageID,
-      selectedRegionID,
-      selectedStackScriptID,
-      selectedTypeID,
-      selectedUDFs,
-      tags
-    } = this.props;
+  // handleCreateLinode = () => {
+  //   const {
+  //     backupsEnabled,
+  //     password,
+  //     privateIPEnabled,
+  //     userSSHKeys,
+  //     handleSubmitForm,
+  //     selectedImageID,
+  //     selectedRegionID,
+  //     selectedStackScriptID,
+  //     selectedTypeID,
+  //     selectedUDFs,
+  //     tags
+  //   } = this.props;
 
-    handleSubmitForm({
-      region: selectedRegionID,
-      type: selectedTypeID,
-      stackscript_id: selectedStackScriptID,
-      stackscript_data: selectedUDFs,
-      label: this.props.label /* optional */,
-      root_pass: password /* required if image ID is provided */,
-      image: selectedImageID /* optional */,
-      backups_enabled: backupsEnabled /* optional */,
-      booted: true,
-      private_ip: privateIPEnabled,
-      authorized_users: userSSHKeys
-        .filter(u => u.selected)
-        .map(u => u.username),
-      tags: tags ? tags.map((item: Tag) => item.value) : []
-    });
-  };
+  //   handleSubmitForm({
+  //     region: selectedRegionID,
+  //     type: selectedTypeID,
+  //     stackscript_id: selectedStackScriptID,
+  //     stackscript_data: selectedUDFs,
+  //     label: this.props.label /* optional */,
+  //     root_pass: password /* required if image ID is provided */,
+  //     image: selectedImageID /* optional */,
+  //     backups_enabled: backupsEnabled /* optional */,
+  //     booted: true,
+  //     private_ip: privateIPEnabled,
+  //     authorized_users: userSSHKeys
+  //       .filter(u => u.selected)
+  //       .map(u => u.username),
+  //     tags: tags ? tags.map((item: Tag) => item.value) : []
+  //   });
+  // };
 
   render() {
     const {
@@ -255,11 +254,6 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
       );
     }
 
-    // let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
-    // if (hasBackups && typeDisplayInfo && backupsMonthlyPrice) {
-    //   calculatedPrice += backupsMonthlyPrice;
-    // }
-
     return (
       <React.Fragment>
         <Grid
@@ -299,6 +293,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
               />
             )}
             {!disabled && compatibleImages && compatibleImages.length > 0 ? (
+              // @todo: selectedImageID is not actually getting the image
               <ImageSelect
                 data-qa-select-image-panel
                 title="Select an Image"
@@ -328,17 +323,6 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
             )}
           </form>
         </Grid>
-        {/* <Grid item className={`${classes.sidebar} mlSidebar`}>
-          <CheckoutBar
-            heading="Linode Summary"
-            calculatedPrice={calculatedPrice}
-            isMakingRequest={this.props.formIsSubmitting}
-            disabled={this.props.formIsSubmitting || disabled}
-            onDeploy={this.handleCreateLinode}
-          >
-            <DisplaySectionList displaySections={displaySections} />
-          </CheckoutBar>
-        </Grid> */}
         <StackScriptDrawer />
       </React.Fragment>
     );

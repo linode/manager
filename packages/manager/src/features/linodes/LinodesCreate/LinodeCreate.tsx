@@ -68,7 +68,7 @@ const styles = (theme: Theme) =>
     stackScriptWrapper: {
       padding: theme.spacing(3),
       '& [role="tablist"]': {
-        marginBottom: theme.spacing
+        marginBottom: theme.spacing()
       }
     },
     imageSelect: {
@@ -237,7 +237,6 @@ export class LinodeCreate extends React.PureComponent<
       regionsData,
       typesData,
       imagesData,
-      updateImageID,
       label,
       linodesData,
       selectedImageID,
