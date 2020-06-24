@@ -76,6 +76,7 @@ const humanizeLargeData = (value: number) => {
 
 const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
   const inputEl: React.RefObject<any> = React.useRef(null);
+  const chartInstance: React.MutableRefObject<any> = React.useRef(null);
   const [legendRendered, setLegendRendered] = React.useState(false);
   const [hiddenDatasets, setHiddenDatasets] = React.useState<number[]>([]);
 
@@ -123,7 +124,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
     const finalChartOptions: ChartOptions = {
       maintainAspectRatio: false,
       responsive: true,
-      animation: undefined,
+      animation: { duration: 0 },
       legend: {
         display: _nativeLegend,
         position: _nativeLegend ? 'bottom' : undefined
@@ -159,8 +160,8 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
                     minute: 'HH:mm'
                   }
                 : {
-                    hour: 'MMM DD',
-                    minute: 'MMM DD'
+                    hour: 'LLL dd',
+                    minute: 'LLL dd'
                   }
             },
             adapters: {
@@ -220,7 +221,6 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
         });
         return acc;
       }, []);
-
       return {
         label: dataSet.label,
         borderColor: dataSet.borderColor,
@@ -238,7 +238,11 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
     // we use a reference to access it.
     // https://dev.to/vcanales/using-chart-js-in-a-function-component-with-react-hooks-246l
     if (inputEl.current) {
-      new Chart(inputEl.current.getContext('2d'), {
+      if (chartInstance.current) {
+        chartInstance.current.destroy();
+        chartInstance.current = null;
+      }
+      chartInstance.current = new Chart(inputEl.current.getContext('2d'), {
         type: 'line',
         data: {
           datasets: _formatData()
