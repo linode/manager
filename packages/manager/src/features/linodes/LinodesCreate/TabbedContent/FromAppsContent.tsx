@@ -369,7 +369,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
             }}
             updateFor={[tags, label, errors]}
           />
-          <form>
+          <form autoComplete="off">
             <AccessPanel
               /* disable the password field if we haven't selected an image */
               disabled={!selectedImageID}

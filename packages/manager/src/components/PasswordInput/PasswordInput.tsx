@@ -86,7 +86,7 @@ const PasswordInput: React.FC<CombinedProps> = props => {
           type="text"
           name="name"
           aria-hidden="true"
-          autoComplete="username"
+          autoComplete="off"
           className={classes.usernameInput}
           value="root"
           readOnly
