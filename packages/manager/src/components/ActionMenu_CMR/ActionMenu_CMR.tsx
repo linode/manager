@@ -45,7 +45,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   buttonLabel: {
     margin: `0 0 0 ${theme.spacing()}px`
   },
-  icon: {},
+  icon: {
+    '&:hover': {
+      backgroundColor: '#3683dc',
+      color: 'white'
+    }
+  },
   popover: {
     '&[data-reach-menu-popover]': {
       right: 0,

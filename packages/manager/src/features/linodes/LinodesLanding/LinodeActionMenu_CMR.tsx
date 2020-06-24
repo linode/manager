@@ -35,11 +35,14 @@ const useStyles = makeStyles(() => ({
     width: '6.5em',
     '&:hover': {
       backgroundColor: '#3683dc',
-      color: 'white'
+      '& span': {
+        color: '#ffffff'
+      }
+    },
+    textAlign: 'center',
+    '& span': {
+      color: '#3683dc'
     }
-  },
-  typography: {
-    textAlign: 'center'
   },
   action: {
     marginLeft: 10
@@ -200,13 +203,6 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
               ...readOnlyProps
             },
         {
-          title: 'Add a Tag',
-          onClick: () => {
-            console.log('Add a Tag functionality');
-          },
-          ...readOnlyProps
-        },
-        {
           title: 'Clone',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendLinodeActionMenuItemEvent('Clone');
@@ -223,7 +219,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         {
           title: 'Resize',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            sendLinodeActionMenuItemEvent('Navigate to Resize Page');
+            sendLinodeActionMenuItemEvent('Navigate to Resize Page'); // Figure out why Resize redirect isn't working
             push(`/linodes/${linodeId}/resize`);
             e.preventDefault();
             e.stopPropagation();
@@ -309,7 +305,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
   return (
     <>
       <Link className={classes.link} to={`/linodes/${linodeId}`}>
-        <div className={classes.typography}>Details</div>
+        <span>Details</span>
       </Link>
       {linodeStatus === 'running' && (
         <Link
@@ -322,7 +318,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
             openPowerActionDialog('Power Off', linodeId, linodeLabel, []);
           }}
         >
-          <div className={classes.typography}>Power Off</div>
+          <span>Power Off</span>
         </Link>
       )}
       {linodeStatus === 'offline' && (
@@ -336,7 +332,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
             openPowerActionDialog('Power On', linodeId, linodeLabel, configs);
           }}
         >
-          Power On
+          <span>Power On</span>
         </Link>
       )}
       <ActionMenu
