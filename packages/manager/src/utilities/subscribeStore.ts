@@ -9,10 +9,8 @@ export const loadState = () => {
     const state = localStorage.getItem('state');
     const updated = localStorage.getItem('state-updated');
     /** Don't load from the cache if it's old data */
-    if (updated) {
-      if (moment(updated).diff(moment(), 'days') > 5) {
-        return undefined;
-      }
+    if (updated && moment(updated).diff(moment(), 'days')) {
+      return undefined;
     }
     if (state === null) {
       return undefined;
@@ -62,8 +60,7 @@ const _saveState = (state: ApplicationState) => {
       'entities',
       'items',
       'results',
-      'itemsById',
-      'error' // error is an object in most cases so this will eval to the correct default {}
+      'itemsById'
     ],
     state
   );
@@ -77,6 +74,7 @@ const _saveState = (state: ApplicationState) => {
   }
 };
 
+// eslint-disable-next-line
 window.addEventListener('unhandledrejection', _ => {
   /**
    * I'm worried that a stale cache could cause the app
