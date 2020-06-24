@@ -396,6 +396,20 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/plesk_color.svg'
   },
   {
+    name: 'Percona',
+    description: `Percona Monitoring and Management (PMM) is an open source GUI for managing and monitoring the performance of your MySQL, MariaDB, PostgreSQL, and MongoDB databases. This tool helps you optimize your database’s performance, manage your database instances, and keep track of and identify security issues.`,
+    summary:
+      'An open source analytics and performance monitoring solution for databases with a focus on user-friendly metrics visualizations.',
+    related_info: [
+      {
+        title: 'Percona Monitoring and Management',
+        href:
+          'https://www.percona.com/software/database-tools/percona-monitoring-and-management'
+      }
+    ],
+    logo_url: 'assets/percona_color.svg'
+  },
+  {
     name: 'Redis',
     description: `Redis is an open-source, in-memory, data-structure store, with the optional ability to write and persist data to a disk, which can be used as a key-value database, cache, and message broker. Redis features
  built-in transactions, replication, and support for a variety of data structures such as strings, hashes, lists, sets, and others.`,
