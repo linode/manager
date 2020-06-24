@@ -1,15 +1,19 @@
 import { cleanup, fireEvent, render, wait } from '@testing-library/react';
 import * as React from 'react';
+import { diskFactory } from 'src/factories/disk';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
-import LinodeDiskDrawer from './LinodeDiskDrawer';
+import LinodeDiskDrawer, { Props } from './LinodeDiskDrawer';
+
+const disk = diskFactory.build();
 
 afterEach(() => {
   cleanup();
   jest.clearAllMocks();
 });
 
-const props = {
+const props: Props = {
+  disk,
   mode: 'create' as any,
   maximumSize: 100,
   open: true,

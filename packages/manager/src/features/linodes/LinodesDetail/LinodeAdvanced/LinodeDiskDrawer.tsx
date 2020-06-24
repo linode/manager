@@ -52,7 +52,7 @@ type FileSystem = 'raw' | 'swap' | 'ext3' | 'ext4' | 'initrd' | '_none_';
 
 type DrawerMode = 'create' | 'rename' | 'resize';
 
-interface Props {
+export interface Props {
   mode: DrawerMode;
   disk?: Disk;
   open: boolean;
