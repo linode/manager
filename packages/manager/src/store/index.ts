@@ -241,7 +241,7 @@ export interface ApplicationState {
 }
 
 const defaultStateFromLocalStorage = loadState();
-const normalDefaultState = {
+export const normalDefaultState = {
   __resources: __resourcesDefaultState,
   authentication: authenticationDefaultState,
   backups: backupsDefaultState,
@@ -272,7 +272,7 @@ const normalDefaultState = {
  * default state.
  */
 
-const defaultState: ApplicationState = defaultStateFromLocalStorage
+export const defaultState: ApplicationState = defaultStateFromLocalStorage
   ? mergeDeepRight(normalDefaultState, defaultStateFromLocalStorage)
   : normalDefaultState;
 

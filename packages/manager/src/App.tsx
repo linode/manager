@@ -112,8 +112,6 @@ export class App extends React.Component<CombinedProps, State> {
       toggleSpacing,
       toggleTheme,
       linodesError,
-      linodes,
-      domainsData,
       domainsError,
       typesError,
       imagesError,
@@ -217,7 +215,6 @@ export class App extends React.Component<CombinedProps, State> {
 interface StateProps {
   /** Profile */
   linodes: Linode[];
-  domainsData: Domain[];
   images?: Image[];
   types?: string[];
   regions?: Region[];

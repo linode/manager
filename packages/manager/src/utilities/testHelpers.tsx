@@ -10,7 +10,7 @@ import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-import store, { ApplicationState, defaultState } from 'src/store';
+import store, { ApplicationState, normalDefaultState } from 'src/store';
 import { DeepPartial } from 'redux';
 import { FlagSet } from 'src/featureFlags';
 
@@ -39,7 +39,7 @@ interface Options {
  */
 export const baseStore = (customStore: DeepPartial<ApplicationState> = {}) =>
   configureStore<DeepPartial<ApplicationState>>([thunk])(
-    mergeDeepRight(defaultState, customStore)
+    mergeDeepRight(normalDefaultState, customStore)
   );
 
 export const wrapWithTheme = (ui: any, options: Options = {}) => {

@@ -218,7 +218,7 @@ const withUpdatingLinodes = connect((state: ApplicationState) => {
     )(linodesWithMaintenance),
     loading:
       state.__resources.linodes.loading &&
-      state.__resources.linodes.results.length === 0,
+      state.__resources.linodes.results === 0,
     linodeCount: state.__resources.linodes.results,
     error: path(['read'], state.__resources.linodes.error)
   };
