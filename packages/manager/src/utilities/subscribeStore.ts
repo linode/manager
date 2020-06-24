@@ -33,35 +33,7 @@ const _saveState = (state: ApplicationState) => {
    * in our cache.
    */
   const _state = selectiveCopyObject(
-    [
-      '__resources',
-      'linodes',
-      'linodeConfigs',
-      'linodeDisks',
-      'volumes',
-      'domains',
-      'images',
-      'kubernetes',
-      'nodePools',
-      'managed',
-      'managedIssues',
-      'nodeBalancers',
-      'nodeBalancerConfigs',
-      'regions',
-      'types',
-      'clusters',
-      'buckets',
-      'backups',
-      'firewalls',
-      'longviewClients',
-      'longviewStats',
-      // When we recurse, we don't want to store error or loading state information
-      'data',
-      'entities',
-      'items',
-      'results',
-      'itemsById'
-    ],
+    ['lastUpdated', 'error', 'loading', 'account', 'profile'],
     state
   );
 
