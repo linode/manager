@@ -15,7 +15,7 @@ const rootPasswordValidation = string().test(
 
 export const ResizeLinodeDiskSchema = object({
   size: number()
-    .required()
+    .required('Size is required.')
     .min(1)
 });
 
@@ -242,3 +242,19 @@ export const CreateLinodeDiskSchema = object({
   stackscript_id: number(),
   stackscript_data
 });
+
+export const UpdateLinodeDiskSchema = object({
+  label: string()
+    .notRequired()
+    .min(1, 'Label must be between 1 and 48 characters.')
+    .max(48, 'Label must be between 1 and 48 characters.'),
+  filesystem: mixed()
+    .notRequired()
+    .oneOf(['raw', 'swap', 'ext3', 'ext4', 'initrd'])
+});
+
+export const CreateLinodeDiskFromImageSchema = CreateLinodeDiskSchema.clone().shape(
+  {
+    image: string().required('An image is required.')
+  }
+);
