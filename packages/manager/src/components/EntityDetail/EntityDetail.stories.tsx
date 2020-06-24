@@ -38,8 +38,8 @@ const Body = (
     distro={'Arch Linux'}
     numVolumes={2}
     region="us-east"
-    ipv4={['192.168.0.0', '192.168.0.1']}
-    ipv6="2600:3c00::f03c:92ff:fee2:6c40/64"
+    ipv4={['192.168.0.0']}
+    ipv6={null}
     username="linode-user"
     linodeLabel="my-linode"
     openLishConsole={() => null}
@@ -54,7 +54,7 @@ const Footer = (
 );
 
 storiesOf('EntityDetail', module).add('Linode', () => (
-  <div style={{ width: 1280, padding: 20 }}>
+  <div style={{ width: 1280, margin: 20 }}>
     <EntityDetail header={LinodeEntityHeader} body={Body} footer={Footer} />
   </div>
 ));

@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignSelf: 'center'
   },
   ipContainer: {
-    marginLeft: 'auto'
+    marginLeft: 20
   },
   ipLabel: {
     fontWeight: 'bold'

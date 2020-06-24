@@ -7,8 +7,8 @@ import formatDate from 'src/utilities/formatDate';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '& div': {
-      paddingTop: `0px !important`,
-      paddingBottom: `0px !important`
+      // paddingTop: `0px !important`,
+      // paddingBottom: `0px !important`
     }
   },
   detailsSection: {

@@ -1,7 +1,4 @@
 import * as React from 'react';
-
-import Grid from 'src/components/Grid';
-import Paper from 'src/components/core/Paper';
 import { makeStyles } from 'src/components/core/styles';
 import HeaderBreadCrumb, { BreadCrumbProps } from './HeaderBreadCrumb';
 
@@ -11,6 +8,9 @@ export interface HeaderProps extends BreadCrumbProps {
 }
 
 const useStyles = makeStyles(() => ({
+  root: {
+    justifyContent: 'space-between'
+  },
   chip: {
     '& .MuiChip-root': {
       height: 30,
@@ -19,7 +19,7 @@ const useStyles = makeStyles(() => ({
       marginRight: 10,
       fontSize: '.875rem',
       letterSpacing: '.5px',
-      minWidth: 140
+      minWidth: 130
     }
   }
 }));
@@ -29,26 +29,18 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
   const classes = useStyles();
 
   return (
-    <Paper>
-      <Grid container alignItems="center" justify="space-between">
-        <Grid item>
-          <Grid container direction="row" alignItems="center">
-            <HeaderBreadCrumb
-              iconType={iconType}
-              title={title}
-              parentLink={parentLink}
-              parentText={parentText}
-            />
-            {body && (
-              <Grid className={classes.chip} item>
-                {body}
-              </Grid>
-            )}
-          </Grid>
-        </Grid>
-        <Grid item>{actions}</Grid>
-      </Grid>
-    </Paper>
+    <div className={`${classes.root} flexCenter`}>
+      <div className="flexCenter">
+        <HeaderBreadCrumb
+          iconType={iconType}
+          title={title}
+          parentLink={parentLink}
+          parentText={parentText}
+        />
+        {body && <div className={classes.chip}>{body}</div>}
+      </div>
+      <div>{actions}</div>
+    </div>
   );
 };
 

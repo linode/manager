@@ -1,8 +1,7 @@
 import * as React from 'react';
-
-import Grid from 'src/components/Grid';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from 'src/components/core/styles';
+import Grid from 'src/components/Grid';
 
 export interface EntityDetailProps {
   header: JSX.Element;
@@ -11,9 +10,11 @@ export interface EntityDetailProps {
 }
 
 const useStyles = makeStyles(() => ({
-  header: {},
+  header: {
+    padding: `0px 20px 0px 0px !important`
+  },
   body: {
-    padding: '20px !important',
+    padding: '20px 20px 20px 20px !important',
     borderTop: `1px solid #F4F5F6`,
     borderBottom: `1px solid #F4F5F6`
   },
@@ -21,7 +22,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    padding: `11px 20px 11px 20px !important`
+    padding: `11px 20px !important`
   }
 }));
 
@@ -30,8 +31,8 @@ export const EntityDetail: React.FC<EntityDetailProps> = props => {
   const classes = useStyles();
 
   return (
-    <Paper>
-      <Grid container direction="column">
+    <Grid container direction="column">
+      <Paper>
         <Grid item xs={12} className={classes.header}>
           {header}
         </Grid>
@@ -41,8 +42,8 @@ export const EntityDetail: React.FC<EntityDetailProps> = props => {
         <Grid item xs={12} className={classes.footer}>
           {footer}
         </Grid>
-      </Grid>
-    </Paper>
+      </Paper>
+    </Grid>
   );
 };
 

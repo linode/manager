@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EntityIcon, { Variant } from 'src/components/EntityIcon';
-import Grid from 'src/components/Grid';
-import { makeStyles, Theme } from 'src/components/core/styles';
 
 export interface BreadCrumbProps {
   title: string;
@@ -17,7 +16,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
     backgroundColor: theme.bg.lightBlue,
     marginRight: theme.spacing(2),
+    paddingTop: 5,
     paddingRight: theme.spacing(),
+    paddingBottom: 5,
     paddingLeft: theme.spacing(),
     '&:before': {
       content: '""',
@@ -62,12 +63,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   parentLinkText: {
-    color: theme.color.blue
+    color: theme.color.blue,
+    paddingLeft: 16
   },
   parentTitleText: {
     color: '#3683dc',
-    paddingLeft: theme.spacing(),
-    paddingRight: theme.spacing(2) - 2
+    paddingLeft: 15,
+    paddingRight: 24
   },
   titleText: {
     paddingRight: theme.spacing(2) - 2
@@ -81,41 +83,28 @@ export const HeaderBreadCrumb: React.FC<BreadCrumbProps> = props => {
   if (parentLink) {
     return (
       <>
-        <Grid item>
-          <div className={classes.headerWithLink}>
-            <Grid container alignItems="center" justify="center">
-              <Grid item>
-                <EntityIcon variant={iconType} />
-              </Grid>
-              <Grid item>
-                <Link to={parentLink}>
-                  <Typography variant="h2" className={classes.parentLinkText}>
-                    {parentText}
-                  </Typography>
-                </Link>
-              </Grid>
-            </Grid>
-          </div>
-          <div className={classes.border}></div>
-        </Grid>
-        <Grid item>
-          <Typography variant="h2" className={classes.parentTitleText}>
-            {title}
-          </Typography>
-        </Grid>
+        <div className={`${classes.headerWithLink} flexCenter`}>
+          <EntityIcon variant={iconType} />
+          <Link to={parentLink}>
+            <Typography variant="h2" className={classes.parentLinkText}>
+              {parentText}
+            </Typography>
+          </Link>
+        </div>
+
+        <div className={classes.border} />
+        <Typography variant="h2" className={classes.parentTitleText}>
+          {title}
+        </Typography>
       </>
     );
   }
   return (
     <>
-      <Grid item>
-        <EntityIcon variant={iconType} />
-      </Grid>
-      <Grid item>
-        <Typography variant="h2" className={classes.titleText}>
-          {title}s
-        </Typography>
-      </Grid>
+      <EntityIcon variant={iconType} />
+      <Typography variant="h2" className={classes.titleText}>
+        {title}s
+      </Typography>
     </>
   );
 };
