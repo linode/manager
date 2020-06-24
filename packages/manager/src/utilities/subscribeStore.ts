@@ -33,7 +33,7 @@ const _saveState = (state: ApplicationState) => {
    * in our cache.
    */
   const _state = selectiveCopyObject(
-    ['lastUpdated', 'error', 'loading', 'account', 'profile'],
+    ['lastUpdated', 'error', 'loading', 'account', 'profile', 'authentication'],
     state
   );
 
