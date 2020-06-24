@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import { Config } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as moment from 'moment-timezone';
@@ -25,6 +26,9 @@ import withBackupCta, {
   BackupCTAProps
 } from 'src/containers/withBackupCTA.container';
 import withImages, { WithImages } from 'src/containers/withImages.container';
+import withFeatureFlagConsumer, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import { BackupsCTA } from 'src/features/Backups';
 import { ApplicationState } from 'src/store';
@@ -57,6 +61,8 @@ import PowerDialogOrDrawer, { Action } from '../PowerActionsDialogOrDrawer';
 import DeleteDialog from './DeleteDialog';
 
 import CSVLink from 'src/components/DownloadCSV';
+import Chip from 'src/components/core/Chip';
+import LandingHeader from 'src/components/LandingHeader';
 
 interface State {
   powerDialogOpen: boolean;
@@ -83,7 +89,8 @@ type CombinedProps = WithImages &
   StyleProps &
   SetDocsProps &
   WithSnackbarProps &
-  BackupCTAProps;
+  BackupCTAProps &
+  FeatureFlagConsumerProps;
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
   state: State = {
@@ -221,6 +228,26 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       { label: 'Tags', key: 'tags' }
     ];
 
+    const linodesRunningCount = linodesData.filter(
+      linode => linode.status === 'running'
+    ).length;
+
+    const linodesPendingCount = linodesData.filter(
+      linode =>
+        linode.status !== 'running' &&
+        linode.status !== 'offline' &&
+        linode.status !== 'stopped'
+    ).length;
+
+    const linodesOfflineCount = linodesData.filter(
+      linode => linode.status === 'offline' || linode.status === 'stopped'
+    ).length;
+
+    const chipProps = {
+      component: 'span',
+      clickable: false
+    };
+
     return (
       <React.Fragment>
         {this.props.someLinodesHaveScheduledMaintenance && (
@@ -273,53 +300,93 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                       }: ToggleProps<'list' | 'grid'>) => {
                         return (
                           <React.Fragment>
-                            <Grid
-                              container
-                              alignItems="center"
-                              justify="space-between"
-                              item
-                              xs={12}
-                              style={{ paddingBottom: 0 }}
-                            >
-                              <Grid item className={classes.title}>
-                                <Breadcrumb
-                                  pathname={location.pathname}
-                                  data-qa-title
-                                  labelTitle="Linodes"
-                                  className={classes.title}
+                            {this.props.flags.cmr ? (
+                              <LandingHeader
+                                title="Linode"
+                                onAddNew={() =>
+                                  this.props.history.push('/linodes/create')
+                                }
+                                iconType="linode"
+                                docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
+                                body={
+                                  <Grid item>
+                                    <Chip
+                                      className={classNames({
+                                        [classes.chip]: true,
+                                        [classes.chipRunning]: true
+                                      })}
+                                      label={`${linodesRunningCount} RUNNING`}
+                                      {...chipProps}
+                                    />
+                                    <Chip
+                                      className={classNames({
+                                        [classes.chip]: true,
+                                        [classes.chipPending]: true
+                                      })}
+                                      label={`${linodesPendingCount} PENDING`}
+                                      {...chipProps}
+                                    />
+                                    <Chip
+                                      className={classNames({
+                                        [classes.chip]: true,
+                                        [classes.chipOffline]: true
+                                      })}
+                                      label={`${linodesOfflineCount} OFFLINE`}
+                                      {...chipProps}
+                                    />
+                                  </Grid>
+                                }
+                              />
+                            ) : (
+                              <Grid
+                                container
+                                alignItems="center"
+                                justify="space-between"
+                                item
+                                xs={12}
+                                style={{ paddingBottom: 0 }}
+                              >
+                                <Grid item className={classes.title}>
+                                  <Breadcrumb
+                                    pathname={location.pathname}
+                                    data-qa-title
+                                    labelTitle="Linodes"
+                                    className={classes.title}
+                                  />
+                                </Grid>
+                                <Hidden xsDown>
+                                  <FormControlLabel
+                                    className={classes.tagGroup}
+                                    control={
+                                      <Toggle
+                                        className={
+                                          linodesAreGrouped
+                                            ? ' checked'
+                                            : ' unchecked'
+                                        }
+                                        onChange={toggleGroupLinodes}
+                                        checked={linodesAreGrouped as boolean}
+                                      />
+                                    }
+                                    label="Group by Tag:"
+                                  />
+                                  <ToggleBox
+                                    handleClick={toggleLinodeView}
+                                    status={linodeViewPreference}
+                                  />
+                                </Hidden>
+
+                                <AddNewLink
+                                  onClick={_ => {
+                                    this.props.history.push('/linodes/create');
+                                  }}
+                                  label="Add a Linode"
+                                  className={classes.addNewLink}
                                 />
                               </Grid>
-                              <Hidden xsDown>
-                                <FormControlLabel
-                                  className={classes.tagGroup}
-                                  control={
-                                    <Toggle
-                                      className={
-                                        linodesAreGrouped
-                                          ? ' checked'
-                                          : ' unchecked'
-                                      }
-                                      onChange={toggleGroupLinodes}
-                                      checked={linodesAreGrouped as boolean}
-                                    />
-                                  }
-                                  label="Group by Tag:"
-                                />
-                                <ToggleBox
-                                  handleClick={toggleLinodeView}
-                                  status={linodeViewPreference}
-                                />
-                              </Hidden>
+                            )}
 
-                              <AddNewLink
-                                onClick={_ => {
-                                  this.props.history.push('/linodes/create');
-                                }}
-                                label="Add a Linode"
-                                className={classes.addNewLink}
-                              />
-                            </Grid>
-                            <Grid item xs={12}>
+                            <Grid item xs={12} className={'px0'}>
                               <OrderBy
                                 data={linodesData.map(linode => {
                                   return {
@@ -522,7 +589,8 @@ export const enhanced = compose<CombinedProps, {}>(
   connected,
   withImages(),
   withBackupCta,
-  styled
+  styled,
+  withFeatureFlagConsumer
 );
 
 export default enhanced(ListLinodes);
