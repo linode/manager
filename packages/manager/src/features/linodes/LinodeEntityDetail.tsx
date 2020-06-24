@@ -6,6 +6,8 @@ import MapPin from 'src/assets/icons/map-pin-icon.svg';
 import MiniKube from 'src/assets/icons/mini-kube.svg';
 import RamIcon from 'src/assets/icons/ram-sticks.svg';
 import VolumeIcon from 'src/assets/icons/volume.svg';
+import ActionMenu from 'src/components/ActionMenu';
+import Chip from 'src/components/core/Chip';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -15,11 +17,110 @@ import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { dcDisplayNames } from 'src/constants';
+import formatDate from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
+import EntityHeader from 'src/components/EntityHeader';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
+import EntityDetail from 'src/components/EntityDetail';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
+interface LinodeEntityDetailProps {
+  linode: Linode;
+  distro: string;
+  numVolumes: number;
+  username: string;
+  openLishConsole: () => void;
+}
+
+const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
+  const { linode, distro, numVolumes, username, openLishConsole } = props;
+
+  return (
+    <EntityDetail
+      header={
+        <Header linodeLabel={linode.label} linodeStatus={linode.status} />
+      }
+      body={
+        <Body
+          linodeLabel={linode.label}
+          numCPUs={linode.specs.vcpus}
+          gbRAM={linode.specs.memory / 1024}
+          gbStorage={linode.specs.disk / 1024}
+          distro={distro}
+          numVolumes={numVolumes}
+          region={linode.region}
+          ipv4={linode.ipv4}
+          ipv6={linode.ipv6}
+          username={username}
+          openLishConsole={openLishConsole}
+        />
+      }
+      footer={
+        <Footer
+          linodeId={linode.id}
+          linodeCreated={linode.created}
+          linodeTags={linode.tags}
+        />
+      }
+    />
+  );
+};
+
+export default React.memo(LinodeEntityDetail);
+
+// =============================================================================
+// Header
+// =============================================================================
+interface HeaderProps {
+  linodeLabel: string;
+  linodeStatus: Linode['status'];
+}
+
+const Header: React.FC<HeaderProps> = props => {
+  const { linodeLabel, linodeStatus } = props;
+  return (
+    <EntityHeader
+      title={linodeLabel}
+      parentLink="/linodes"
+      parentText="Linodes"
+      iconType="linode"
+      actions={
+        <ActionMenu ariaLabel="linode-detail" createActions={() => []} />
+      }
+      body={
+        <Chip
+          style={{
+            backgroundColor: '#00b159',
+            color: 'white',
+            fontSize: '1.1 rem',
+            padding: '10px'
+          }}
+          label={linodeStatus.toUpperCase()}
+          component="span"
+          clickable={false}
+        />
+      }
+    />
+  );
+};
+
+// =============================================================================
+// Body
+// =============================================================================
+export interface BodyProps {
+  numCPUs: number;
+  gbRAM: number;
+  gbStorage: number;
+  distro: string;
+  numVolumes: number;
+  region: string;
+  ipv4: Linode['ipv4'];
+  ipv6: Linode['ipv6'];
+  username: string;
+  linodeLabel: string;
+  openLishConsole: () => void;
+}
+
+const useBodyStyles = makeStyles((theme: Theme) => ({
   item: {
     '&:last-of-type': {
       paddingBottom: 0
@@ -109,21 +210,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-export interface LinodeEntityDetailBodyProps {
-  numCPUs: number;
-  gbRAM: number;
-  gbStorage: number;
-  distro: string;
-  numVolumes: number;
-  region: string;
-  ipv4: Linode['ipv4'];
-  ipv6: Linode['ipv6'];
-  username: string;
-  linodeLabel: string;
-  openLishConsole: () => void;
-}
-
-export const LinodeEntityDetailBody: React.FC<LinodeEntityDetailBodyProps> = props => {
+export const Body: React.FC<BodyProps> = React.memo(props => {
   const {
     numCPUs,
     gbRAM,
@@ -138,15 +225,12 @@ export const LinodeEntityDetailBody: React.FC<LinodeEntityDetailBodyProps> = pro
     openLishConsole
   } = props;
 
-  const classes = useStyles();
+  const classes = useBodyStyles();
+
   return (
-    <Grid
-      container
-      direction="row"
-      justify="space-between"
-      className={classes.root}
-    >
+    <Grid container direction="row" justify="space-between">
       <Grid item>
+        {/* @todo: Rewrite this code to make it dynamic. It's very similar to the LKE display. */}
         <Grid container>
           <Grid item className={classes.specColumn}>
             <Grid container item wrap="nowrap" className={classes.item}>
@@ -284,6 +368,54 @@ export const LinodeEntityDetailBody: React.FC<LinodeEntityDetailBodyProps> = pro
       </Grid>
     </Grid>
   );
-};
+});
 
-export default LinodeEntityDetailBody;
+// =============================================================================
+// Footer
+// =============================================================================
+interface FooterProps {
+  linodeId: number;
+  linodeCreated: string;
+  linodeTags: string[];
+}
+
+const useFooterStyles = makeStyles((theme: Theme) => ({
+  detailsSection: {
+    display: 'flex'
+  },
+  linodeId: {
+    paddingRight: 10,
+    borderRight: `1px solid ${theme.color.grey6}`
+  },
+  linodeCreated: {
+    paddingLeft: 10
+  },
+  linodeTags: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end'
+  }
+}));
+
+export const Footer: React.FC<FooterProps> = React.memo(props => {
+  const { linodeId, linodeCreated } = props;
+
+  const classes = useFooterStyles();
+  return (
+    <Grid container>
+      <Grid item xs={6}>
+        <div className={classes.detailsSection}>
+          <Typography className={classes.linodeId}>
+            Linode ID {linodeId}
+          </Typography>
+          <Typography className={classes.linodeCreated}>
+            Created {formatDate(linodeCreated)}
+          </Typography>
+        </div>
+      </Grid>
+      <Grid item xs={6} className={classes.linodeTags}>
+        <div>Linode Tags</div>
+      </Grid>
+    </Grid>
+  );
+});

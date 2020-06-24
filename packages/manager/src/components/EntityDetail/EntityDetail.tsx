@@ -1,3 +1,11 @@
+/**
+ * EntityDetail provides a framework for the "Detail Summary" components found on:
+ *  1. Detail Pages
+ *  2. List Pages
+ *  3. Dashboard
+ * Provide a Header, Body, and Footer and this component provides the proper positioning for each.
+ */
+
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles } from 'src/components/core/styles';
