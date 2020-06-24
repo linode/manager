@@ -17,6 +17,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
     backgroundColor: theme.bg.lightBlue,
     marginRight: theme.spacing(2),
+    paddingRight: theme.spacing(),
+    paddingLeft: theme.spacing(),
     '&:before': {
       content: '""',
       position: 'absolute',
@@ -79,19 +81,21 @@ export const HeaderBreadCrumb: React.FC<BreadCrumbProps> = props => {
   if (parentLink) {
     return (
       <>
-        <Grid item className={classes.headerWithLink}>
-          <Grid container alignItems="center" justify="center">
-            <Grid item>
-              <EntityIcon variant={iconType} />
+        <Grid item>
+          <div className={classes.headerWithLink}>
+            <Grid container alignItems="center" justify="center">
+              <Grid item>
+                <EntityIcon variant={iconType} />
+              </Grid>
+              <Grid item>
+                <Link to={parentLink}>
+                  <Typography variant="h2" className={classes.parentLinkText}>
+                    {parentText}
+                  </Typography>
+                </Link>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Link to={parentLink}>
-                <Typography variant="h2" className={classes.parentLinkText}>
-                  {parentText}
-                </Typography>
-              </Link>
-            </Grid>
-          </Grid>
+          </div>
           <div className={classes.border}></div>
         </Grid>
         <Grid item>

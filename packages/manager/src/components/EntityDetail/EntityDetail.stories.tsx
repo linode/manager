@@ -8,30 +8,26 @@ import LinodeEntityDetailBody from 'src/features/linodes/LinodeEntityDetailBody'
 import LinodeEntityDetailFooter from 'src/features/linodes/LinodeEntityDetailFooter';
 
 const LinodeEntityHeader = (
-  <div style={{ padding: '12px' }}>
-    <EntityHeader
-      title="My-linode-12345"
-      parentLink="/linodes"
-      parentText="Linodes"
-      iconType="linode"
-      actions={
-        <ActionMenu ariaLabel="linode-detail" createActions={() => []} />
-      }
-      body={
-        <Chip
-          style={{
-            backgroundColor: '#00b159',
-            color: 'white',
-            fontSize: '1.1 rem',
-            padding: '10px'
-          }}
-          label={'RUNNING'}
-          component="span"
-          clickable={false}
-        />
-      }
-    />
-  </div>
+  <EntityHeader
+    title="My-linode-12345"
+    parentLink="/linodes"
+    parentText="Linodes"
+    iconType="linode"
+    actions={<ActionMenu ariaLabel="linode-detail" createActions={() => []} />}
+    body={
+      <Chip
+        style={{
+          backgroundColor: '#00b159',
+          color: 'white',
+          fontSize: '1.1 rem',
+          padding: '10px'
+        }}
+        label={'RUNNING'}
+        component="span"
+        clickable={false}
+      />
+    }
+  />
 );
 
 const Body = (
@@ -44,12 +40,21 @@ const Body = (
     region="us-east"
     ipv4={['192.168.0.0', '192.168.0.1']}
     ipv6="2600:3c00::f03c:92ff:fee2:6c40/64"
+    username="linode-user"
+    linodeLabel="my-linode"
+    openLishConsole={() => null}
   />
 );
-const Footer = <LinodeEntityDetailFooter />;
+const Footer = (
+  <LinodeEntityDetailFooter
+    linodeId={50091}
+    linodeCreated="2020-06-12T23:43:00"
+    linodeTags={[]}
+  />
+);
 
 storiesOf('EntityDetail', module).add('Linode', () => (
-  <div style={{ padding: '12px' }}>
+  <div style={{ width: 1280, padding: 20 }}>
     <EntityDetail header={LinodeEntityHeader} body={Body} footer={Footer} />
   </div>
 ));
