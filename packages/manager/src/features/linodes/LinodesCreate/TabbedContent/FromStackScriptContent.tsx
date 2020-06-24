@@ -4,7 +4,6 @@ import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { ResourcePage } from '@linode/api-v4/lib/types';
 import { assocPath } from 'ramda';
 import * as React from 'react';
-// import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -255,11 +254,6 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
       );
     }
 
-    // let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
-    // if (hasBackups && typeDisplayInfo && backupsMonthlyPrice) {
-    //   calculatedPrice += backupsMonthlyPrice;
-    // }
-
     return (
       <React.Fragment>
         <Grid
@@ -328,17 +322,6 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
             )}
           </form>
         </Grid>
-        {/* <Grid item className={`${classes.sidebar} mlSidebar`}>
-          <CheckoutBar
-            heading="Linode Summary"
-            calculatedPrice={calculatedPrice}
-            isMakingRequest={this.props.formIsSubmitting}
-            disabled={this.props.formIsSubmitting || disabled}
-            onDeploy={this.handleCreateLinode}
-          >
-            <DisplaySectionList displaySections={displaySections} />
-          </CheckoutBar>
-        </Grid> */}
         <StackScriptDrawer />
       </React.Fragment>
     );

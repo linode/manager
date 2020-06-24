@@ -48,6 +48,7 @@ import {
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
+import Typography from 'src/components/core/Typography';
 import TabLinkList, { Tab } from 'src/components/TabLinkList';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
 
@@ -68,7 +69,8 @@ const styles = (theme: Theme) =>
     stackScriptWrapper: {
       padding: theme.spacing(3),
       '& [role="tablist"]': {
-        marginBottom: theme.spacing
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing()
       }
     },
     imageSelect: {
@@ -204,20 +206,24 @@ export class LinodeCreate extends React.PureComponent<
 
   createLinode = () => {
     this.props.handleSubmitForm({
-      type: this.props.selectedTypeID,
-      region: this.props.selectedRegionID,
       image: this.props.selectedImageID,
-      root_pass: this.props.password,
+      region: this.props.selectedRegionID,
+      type: this.props.selectedTypeID,
+      label: this.props.label,
       tags: this.props.tags
         ? this.props.tags.map(eachTag => eachTag.label)
         : [],
-      backups_enabled: this.props.backupsEnabled,
-      booted: true,
-      label: this.props.label,
-      private_ip: this.props.privateIPEnabled,
+      root_pass: this.props.password,
       authorized_users: this.props.userSSHKeys
         .filter(u => u.selected)
-        .map(u => u.username)
+        .map(u => u.username),
+      booted: true,
+      backups_enabled: this.props.backupsEnabled,
+      private_ip: this.props.privateIPEnabled,
+
+      // StackScripts
+      stackscript_id: this.props.selectedStackScriptID,
+      stackscript_data: this.props.selectedUDFs
     });
   };
 
@@ -255,6 +261,10 @@ export class LinodeCreate extends React.PureComponent<
       regionDisplayInfo,
       imageDisplayInfo,
       accountBackupsEnabled,
+
+      // StackScripts
+      selectedStackScriptID,
+      selectedUDFs,
       ...rest
     } = this.props;
 
@@ -356,6 +366,7 @@ export class LinodeCreate extends React.PureComponent<
                 <SafeTabPanel index={2}>
                   <Tabs defaultIndex={0}>
                     <Paper className={classes.stackScriptWrapper}>
+                      <Typography variant="h2">Create From:</Typography>
                       <TabLinkList tabs={this.stackScriptTabs} />
                       <TabPanels className={classes.imageSelect}>
                         <SafeTabPanel index={0}>
@@ -447,7 +458,6 @@ export class LinodeCreate extends React.PureComponent<
               disabled={userCannotCreateLinode}
               disabledClasses={this.props.disabledClasses}
             />
-
             <LabelAndTagsPanel
               labelFieldProps={{
                 label: 'Linode Label',
