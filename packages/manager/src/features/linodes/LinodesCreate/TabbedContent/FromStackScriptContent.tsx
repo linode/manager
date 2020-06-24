@@ -146,38 +146,38 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
     this.props.handleSelectUDFs({ ...this.props.selectedUDFs, ...newUDFData });
   };
 
-  handleCreateLinode = () => {
-    const {
-      backupsEnabled,
-      password,
-      privateIPEnabled,
-      userSSHKeys,
-      handleSubmitForm,
-      selectedImageID,
-      selectedRegionID,
-      selectedStackScriptID,
-      selectedTypeID,
-      selectedUDFs,
-      tags
-    } = this.props;
+  // handleCreateLinode = () => {
+  //   const {
+  //     backupsEnabled,
+  //     password,
+  //     privateIPEnabled,
+  //     userSSHKeys,
+  //     handleSubmitForm,
+  //     selectedImageID,
+  //     selectedRegionID,
+  //     selectedStackScriptID,
+  //     selectedTypeID,
+  //     selectedUDFs,
+  //     tags
+  //   } = this.props;
 
-    handleSubmitForm({
-      region: selectedRegionID,
-      type: selectedTypeID,
-      stackscript_id: selectedStackScriptID,
-      stackscript_data: selectedUDFs,
-      label: this.props.label /* optional */,
-      root_pass: password /* required if image ID is provided */,
-      image: selectedImageID /* optional */,
-      backups_enabled: backupsEnabled /* optional */,
-      booted: true,
-      private_ip: privateIPEnabled,
-      authorized_users: userSSHKeys
-        .filter(u => u.selected)
-        .map(u => u.username),
-      tags: tags ? tags.map((item: Tag) => item.value) : []
-    });
-  };
+  //   handleSubmitForm({
+  //     region: selectedRegionID,
+  //     type: selectedTypeID,
+  //     stackscript_id: selectedStackScriptID,
+  //     stackscript_data: selectedUDFs,
+  //     label: this.props.label /* optional */,
+  //     root_pass: password /* required if image ID is provided */,
+  //     image: selectedImageID /* optional */,
+  //     backups_enabled: backupsEnabled /* optional */,
+  //     booted: true,
+  //     private_ip: privateIPEnabled,
+  //     authorized_users: userSSHKeys
+  //       .filter(u => u.selected)
+  //       .map(u => u.username),
+  //     tags: tags ? tags.map((item: Tag) => item.value) : []
+  //   });
+  // };
 
   render() {
     const {
@@ -292,6 +292,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
                 udf_data={udf_data || {}}
               />
             )}
+            {console.log(selectedImageID)}
             {!disabled && compatibleImages && compatibleImages.length > 0 ? (
               <ImageSelect
                 data-qa-select-image-panel
