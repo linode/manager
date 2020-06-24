@@ -22,26 +22,12 @@ export const loadState = () => {
      * If something didn't parse here we should clear out localStorage
      * to be safe
      */
-    localStorage.removeItem('state');
+    clearAllState();
     return undefined;
   }
 };
 
 const _saveState = (state: ApplicationState) => {
-  const uid = localStorage.getItem('state-id');
-  const idFromState = state?.__resources.account?.data?.euuid;
-  if (idFromState && idFromState !== uid) {
-    /**
-     * Likely situation here is:
-     * 1. We loaded the cache
-     * 2. Request to /account was completed
-     * 3. We updated Redux to reflect new account data
-     * 4. Oops: this is a different user than one that cached the data
-     *
-     * We want to blow everything out in this case.
-     */
-    clearAllState();
-  }
   /**
    * Don't store account/profile/auth data
    * in our cache.
