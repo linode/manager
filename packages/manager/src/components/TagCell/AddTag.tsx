@@ -1,5 +1,6 @@
 import { getTags } from '@linode/api-v4/lib/tags';
 import * as React from 'react';
+import * as classNames from 'classnames';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -8,6 +9,11 @@ const useStyles = makeStyles((_: Theme) => ({
   root: {
     width: '100%',
     padding: '0'
+  },
+  hasFixedMenu: {
+    '& .react-select__menu': {
+      margin: '2px 0 0 0'
+    }
   }
 }));
 
@@ -15,13 +21,14 @@ interface Props {
   tags: string[];
   onClose: () => void;
   addTag: (tag: string) => void;
+  fixedMenu?: boolean;
 }
 
 export type CombinedProps = Props;
 
 export const AddTag: React.FC<Props> = props => {
   const classes = useStyles();
-  const { addTag, onClose, tags } = props;
+  const { addTag, onClose, tags, fixedMenu } = props;
   const [accountTags, setAccountTags] = React.useState<Item<string>[]>([]);
   React.useEffect(() => {
     getTags()
@@ -49,7 +56,10 @@ export const AddTag: React.FC<Props> = props => {
   return (
     <Select
       small
-      className={classes.root}
+      className={classNames({
+        [classes.root]: true,
+        [classes.hasFixedMenu]: fixedMenu
+      })}
       onChange={handleAddTag}
       options={tagOptions}
       variant="creatable"
@@ -61,6 +71,7 @@ export const AddTag: React.FC<Props> = props => {
       autoFocus
       createOptionPosition="first"
       blurInputOnSelect={true}
+      menuPosition={fixedMenu ? 'fixed' : 'absolute'}
     />
   );
 };
