@@ -30,13 +30,19 @@ import {
 } from 'src/utilities/ga';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  inlineActions: {
+    display: 'flex',
+    alignItems: 'center',
+    justify: 'center'
+  },
   link: {
-    padding: '10px 15px',
+    padding: '12.5px 15px',
     width: '6.5em',
+    textAlign: 'center',
     '&:hover': {
       backgroundColor: '#3683dc',
       '& span': {
-        color: '#ffffff'
+        color: theme.color.white
       }
     },
     '& span': {
@@ -45,11 +51,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   action: {
     marginLeft: 10
-  },
-  inlineActions: {
-    display: 'flex',
-    alignItems: 'center',
-    justify: 'center'
   },
   powerOnOrOff: {
     background: 'none',
@@ -60,7 +61,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '6.5em',
     '&:hover': {
       backgroundColor: '#3683dc',
-      color: '#ffffff'
+      color: theme.color.white
     },
     '&[disabled]': {
       color: '#cdd0d5',
@@ -69,7 +70,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         backgroundColor: 'inherit'
       }
     },
-    padding: '10px 0px'
+    padding: '12.5px 0px'
   }
 }));
 

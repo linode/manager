@@ -37,11 +37,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       cursor: 'pointer',
       '&:hover': {
         backgroundColor: '#3683dc',
-        color: 'white'
+        color: theme.color.white
       },
       '&[aria-expanded="true"]': {
         backgroundColor: '#3683dc',
-        color: '#fff',
+        color: theme.color.white,
         width: '100%'
       }
     }
@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       borderRadius: 3,
       border: 'none',
       fontSize: 14,
-      color: '#fff',
+      color: theme.color.white,
       textAlign: 'left'
     }
   },
@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: theme.spacing(1) + 2,
       borderBottom: '1px solid #5294e0',
       background: '#3683dc',
-      color: '#fff',
+      color: theme.color.white,
       borderRadius: 3
     },
     '&[data-reach-menu-item][data-selected]': {
@@ -91,7 +91,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   tooltip: {
-    color: '#fff',
+    color: theme.color.white,
     padding: '0 12px'
   }
 }));
