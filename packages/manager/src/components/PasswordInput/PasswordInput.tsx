@@ -2,7 +2,6 @@ import { isEmpty } from 'ramda';
 import * as React from 'react';
 
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import * as zxcvbn from 'zxcvbn';
@@ -14,7 +13,6 @@ type Props = TextFieldProps & {
   required?: boolean;
   disabledReason?: string;
   hideStrengthLabel?: boolean;
-  hideHelperText?: boolean;
   hideValidation?: boolean;
 };
 
@@ -73,7 +71,6 @@ const PasswordInput: React.FC<CombinedProps> = props => {
     required,
     disabledReason,
     hideStrengthLabel,
-    hideHelperText,
     hideValidation,
     ...rest
   } = props;
@@ -83,59 +80,35 @@ const PasswordInput: React.FC<CombinedProps> = props => {
   const strength = React.useMemo(() => maybeStrength(value), [value]);
 
   return (
-    <React.Fragment>
-      <Grid container className={classes.container}>
+    <Grid container className={classes.container}>
+      <Grid item xs={12}>
+        <input
+          type="text"
+          name="name"
+          aria-hidden="true"
+          autoComplete="off"
+          className={classes.usernameInput}
+          value="root"
+          readOnly
+        />
+        <HideShowText
+          {...rest}
+          tooltipText={disabledReason}
+          value={value}
+          onChange={onChange}
+          fullWidth
+          required={required}
+        />
+      </Grid>
+      {!hideValidation && (
         <Grid item xs={12}>
-          <input
-            type="text"
-            name="name"
-            aria-hidden="true"
-            autoComplete="username"
-            className={classes.usernameInput}
-            value="root"
-            readOnly
-          />
-          <HideShowText
-            {...rest}
-            tooltipText={disabledReason}
-            value={value}
-            onChange={onChange}
-            fullWidth
-            required={required}
+          <StrengthIndicator
+            strength={strength}
+            hideStrengthLabel={hideStrengthLabel}
           />
         </Grid>
-        {!hideValidation && (
-          <Grid item xs={12}>
-            <StrengthIndicator
-              strength={strength}
-              hideStrengthLabel={hideStrengthLabel}
-            />
-          </Grid>
-        )}
-        {!hideHelperText && (
-          <Grid item xs={12}>
-            <div className={classes.requirementsListOuter}>
-              <Typography>Password must:</Typography>
-              <ul className={classes.requirementsList}>
-                <li>
-                  <Typography component={'span'}>
-                    Be at least <strong>6 characters</strong>
-                  </Typography>
-                </li>
-                <li>
-                  <Typography component={'span'}>
-                    Contain at least{' '}
-                    <strong>two of the following character classes</strong>:
-                    uppercase letters, lowercase letters, numbers, and
-                    punctuation.
-                  </Typography>
-                </li>
-              </ul>
-            </div>
-          </Grid>
-        )}
-      </Grid>
-    </React.Fragment>
+      )}
+    </Grid>
   );
 };
 

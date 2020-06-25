@@ -2,7 +2,7 @@ import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableCell from 'src/components/core/TableCell';
 import Typography from 'src/components/core/Typography';
-import OrderBy from 'src/components/OrderBy';
+import OrderBy, { OrderByProps } from 'src/components/OrderBy';
 import TableSortCell from 'src/components/TableSortCell';
 import GroupedEntitiesByTag from './GroupedEntitiesByTag';
 import ListEntities from './ListEntities';
@@ -23,19 +23,28 @@ interface Props {
   headers: HeaderCell[];
   groupByTag: boolean;
   row: EntityTableRow<any>;
+  initialOrder?: {
+    order: OrderByProps['order'];
+    orderBy: OrderByProps['orderBy'];
+  };
 }
 
 export type CombinedProps = Props;
 
 export const LandingTable: React.FC<Props> = props => {
-  const { entity, headers, groupByTag, row } = props;
+  const { entity, headers, groupByTag, row, initialOrder } = props;
   const classes = useStyles();
   return (
-    <OrderBy data={row.data} orderBy={'label'} order={'asc'}>
+    <OrderBy
+      data={row.data}
+      orderBy={initialOrder?.orderBy}
+      order={initialOrder?.order}
+    >
       {({ data: orderedData, handleOrderChange, order, orderBy }) => {
         const headerCells = headers.map((thisCell: HeaderCell) => {
           return thisCell.sortable ? (
             <TableSortCell
+              key={thisCell.dataColumn}
               active={orderBy === thisCell.dataColumn}
               label={thisCell.dataColumn}
               direction={order}
@@ -47,6 +56,7 @@ export const LandingTable: React.FC<Props> = props => {
             </TableSortCell>
           ) : (
             <TableCell
+              key={thisCell.dataColumn}
               data-testid={`${thisCell.label}-header-cell`}
               style={{ width: thisCell.widthPercent }}
             >

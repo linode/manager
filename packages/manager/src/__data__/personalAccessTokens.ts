@@ -1,13 +1,12 @@
+import { DateTime } from 'luxon';
 import { Token } from '@linode/api-v4/lib/profile';
-import * as moment from 'moment';
 
 export const personalAccessTokens: Token[] = [
   {
     created: '2018-04-09T20:00:00',
-    expiry: moment
-      .utc()
-      .subtract(1, 'day')
-      .format(),
+    expiry: DateTime.utc()
+      .minus({ days: 1 })
+      .toISO(),
     id: 1,
     token: 'aa588915b6368b80',
     scopes: 'account:read_write',
@@ -15,10 +14,9 @@ export const personalAccessTokens: Token[] = [
   },
   {
     created: '2017-04-09T20:00:00',
-    expiry: moment
-      .utc()
-      .add(3, 'months')
-      .format(),
+    expiry: DateTime.utc()
+      .plus({ months: 3 })
+      .toISO(),
     id: 2,
     token: 'ae8adb9a37263b4d',
     scopes: 'account:read_only',
@@ -26,10 +24,9 @@ export const personalAccessTokens: Token[] = [
   },
   {
     created: '2018-04-09T20:00:00',
-    expiry: moment
-      .utc()
-      .add(1, 'year')
-      .format(),
+    expiry: DateTime.utc()
+      .plus({ years: 1 })
+      .toISO(),
     id: 3,
     token: '019774b077bb5fda',
     scopes: 'account:read_write',
@@ -37,10 +34,9 @@ export const personalAccessTokens: Token[] = [
   },
   {
     created: '2011-04-09T20:00:00',
-    expiry: moment
-      .utc()
-      .add(1, 'year')
-      .format(),
+    expiry: DateTime.utc()
+      .plus({ years: 1 })
+      .toISO(),
     id: 4,
     token: '019774b077bb5fda',
     scopes: 'account:read_write',
