@@ -174,12 +174,12 @@ export class SelectPlanPanel extends React.Component<
             </TableCell>
             <TableCell data-qa-monthly> ${type.price.monthly}</TableCell>
             <TableCell data-qa-hourly>{`$` + type.price.hourly}</TableCell>
+            <TableCell data-qa-ram>
+              {convertMegabytesTo(type.memory, true)}
+            </TableCell>
             <TableCell data-qa-cpu>{type.vcpus}</TableCell>
             <TableCell data-qa-storage>
               {convertMegabytesTo(type.disk, true)}
-            </TableCell>
-            <TableCell data-qa-ram>
-              {convertMegabytesTo(type.memory, true)}
             </TableCell>
             <TableCell>
               <div className={classes.enhancedInputOuter}>
@@ -241,9 +241,9 @@ export class SelectPlanPanel extends React.Component<
           <TableCell data-qa-plan-header>Plan</TableCell>
           <TableCell data-qa-monthly-header>Monthly</TableCell>
           <TableCell data-qa-hourly-header>Hourly</TableCell>
+          <TableCell data-qa-ram-header>RAM</TableCell>
           <TableCell data-qa-cpu-header>CPUs</TableCell>
           <TableCell data-qa-storage-header>Storage</TableCell>
-          <TableCell data-qa-ram-header>Ram</TableCell>
           <TableCell>
             <p className="visually-hidden">Quantity</p>
           </TableCell>
