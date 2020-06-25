@@ -35,6 +35,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: theme.spacing(1) + 2,
       color: '#3683dc',
       cursor: 'pointer',
+      '&:hover': {
+        backgroundColor: '#3683dc',
+        color: 'white'
+      },
       '&[aria-expanded="true"]': {
         backgroundColor: '#3683dc',
         color: '#fff',
@@ -44,12 +48,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   buttonLabel: {
     margin: `0 0 0 ${theme.spacing()}px`
-  },
-  icon: {
-    '&:hover': {
-      backgroundColor: '#3683dc',
-      color: 'white'
-    }
   },
   popover: {
     '&[data-reach-menu-popover]': {
@@ -132,7 +130,7 @@ const ActionMenu: React.FC<CombinedProps> = props => {
     <div className={classes.wrapper}>
       <Menu>
         <MenuButton className={classes.button} aria-label={ariaLabel}>
-          <MoreHoriz aria-hidden className={classes.icon} type="primary" />
+          <MoreHoriz aria-hidden type="primary" />
           {inlineLabel && <p className={classes.buttonLabel}>{inlineLabel}</p>}
         </MenuButton>
         <MenuPopover className={classes.popover} portal={true}>
