@@ -218,6 +218,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       grey5: '#f5f5f5',
       grey6: '#e3e5e8',
       grey7: '#fafafa',
+      grey8: '#828a97',
       white: '#fff',
       black: '#222',
       blue: primaryColors.main,

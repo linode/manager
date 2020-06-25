@@ -16,10 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
     backgroundColor: theme.bg.lightBlue,
     marginRight: theme.spacing(2),
-    paddingTop: 5,
-    paddingRight: theme.spacing(),
-    paddingBottom: 5,
-    paddingLeft: theme.spacing(),
+    padding: `5px ${theme.spacing()}px`,
     '&:before': {
       content: '""',
       position: 'absolute',

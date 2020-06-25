@@ -19,10 +19,10 @@ export interface EntityDetailProps {
 
 const useStyles = makeStyles(() => ({
   header: {
-    padding: `0px 20px 0px 0px !important`
+    paddingRight: `20px !important`
   },
   body: {
-    padding: '20px 20px 20px 20px !important',
+    padding: 20,
     borderTop: `1px solid #F4F5F6`,
     borderBottom: `1px solid #F4F5F6`
   },
@@ -30,7 +30,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    padding: `11px 20px !important`
+    padding: `11px 20px`
   }
 }));
 

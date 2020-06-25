@@ -5,12 +5,13 @@ import DiskIcon from 'src/assets/icons/disk.svg';
 import MapPin from 'src/assets/icons/map-pin-icon.svg';
 import RamIcon from 'src/assets/icons/ram-sticks.svg';
 import VolumeIcon from 'src/assets/icons/volume.svg';
-import ActionMenu from 'src/components/ActionMenu';
+import ActionMenu from 'src/components/ActionMenu_CMR';
 import Chip from 'src/components/core/Chip';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Table from 'src/components/core/Table';
+import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
@@ -25,6 +26,10 @@ import formatDate from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
 import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
+import IconTextLink from 'src/components/IconTextLink';
+import ViewDetailsIcon from 'src/assets/icons/viewDetails.svg';
+import PowerOnIcon from 'src/assets/icons/powerOn.svg';
+import RebootIcon from 'src/assets/icons/reboot.svg';
 
 interface LinodeEntityDetailProps {
   linode: Linode;
@@ -88,8 +93,33 @@ interface HeaderProps {
   linodeStatus: Linode['status'];
 }
 
+const useHeaderStyles = makeStyles((theme: Theme) => ({
+  actions: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  actionItem: {
+    marginLeft: 18,
+    // @todo: should be semi-bold
+    font: theme.font.bold,
+    '& svg': {
+      height: 20,
+      width: 20,
+      fill: theme.color.blue,
+      marginRight: 10
+    }
+  },
+  actionMenu: {
+    marginLeft: 30
+  }
+}));
+
 const Header: React.FC<HeaderProps> = props => {
   const { linodeLabel, linodeStatus } = props;
+
+  const classes = useHeaderStyles();
+
   return (
     <EntityHeader
       title={linodeLabel}
@@ -97,7 +127,33 @@ const Header: React.FC<HeaderProps> = props => {
       parentText="Linodes"
       iconType="linode"
       actions={
-        <ActionMenu ariaLabel="linode-detail" createActions={() => []} />
+        <div className={classes.actions}>
+          <IconTextLink
+            className={classes.actionItem}
+            SideIcon={ViewDetailsIcon}
+            text="View Details"
+            title="View Details"
+          />
+          <IconTextLink
+            className={classes.actionItem}
+            SideIcon={PowerOnIcon}
+            text="Power Off"
+            title="Power Off"
+          />
+          <IconTextLink
+            className={classes.actionItem}
+            SideIcon={RebootIcon}
+            text="Reboot"
+            title="Reboot"
+          />
+          <span className={classes.actionMenu}>
+            <ActionMenu
+              inlineLabel="More Actions"
+              ariaLabel="linode-detail"
+              createActions={() => []}
+            />
+          </span>
+        </div>
       }
       body={
         <Chip
@@ -151,6 +207,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   },
   iconSharedOuter: {
     textAlign: 'center',
+    justifyContent: 'center',
     flexBasis: '28%',
     paddingRight: `4px !important`,
     paddingLeft: `4px !important`,
@@ -369,24 +426,26 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
 
       <Grid item className={classes.accessTableContainer}>
         <Table className={classes.accessTable}>
-          <TableRow>
-            <TableCell>SSH Access</TableCell>
-            <TableCell className={classes.code}>{sshLink(ipv4[0])}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>LISH via SSH</TableCell>
-            <TableCell className={classes.code}>
-              {lishLink(username, region, linodeLabel)}
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>LISH via Web</TableCell>
-            <TableCell>
-              <button className={classes.button} onClick={openLishConsole}>
-                Launch Console
-              </button>
-            </TableCell>
-          </TableRow>
+          <TableBody>
+            <TableRow>
+              <TableCell>SSH Access</TableCell>
+              <TableCell className={classes.code}>{sshLink(ipv4[0])}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>LISH via SSH</TableCell>
+              <TableCell className={classes.code}>
+                {lishLink(username, region, linodeLabel)}
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>LISH via Web</TableCell>
+              <TableCell>
+                <button className={classes.button} onClick={openLishConsole}>
+                  Launch Console
+                </button>
+              </TableCell>
+            </TableRow>
+          </TableBody>
         </Table>
       </Grid>
     </Grid>
@@ -408,10 +467,12 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
   },
   linodeId: {
     paddingRight: 10,
-    borderRight: `1px solid ${theme.color.grey6}`
+    borderRight: `1px solid ${theme.color.grey6}`,
+    color: theme.color.grey8
   },
   linodeCreated: {
-    paddingLeft: 10
+    paddingLeft: 10,
+    color: theme.color.grey8
   },
   linodeTags: {
     display: 'flex',
@@ -432,7 +493,8 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
             Linode ID {linodeId}
           </Typography>
           <Typography className={classes.linodeCreated}>
-            Created {formatDate(linodeCreated)}
+            Created {/* @todo: rewrite this when the Luxon PR is merged. */}
+            {formatDate(linodeCreated, { format: 'DD-MMM-YYYY HH:mm' })}
           </Typography>
         </div>
       </Grid>
