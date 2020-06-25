@@ -9,7 +9,8 @@ import Request, {
 import { ResourcePage as Page } from '../types';
 import {
   CreateLinodeDiskSchema,
-  ResizeLinodeDiskSchema
+  ResizeLinodeDiskSchema,
+  UpdateLinodePasswordSchema
 } from './linodes.schema';
 import { Disk, LinodeDiskCreationData } from './types';
 
@@ -147,5 +148,5 @@ export const changeLinodeDiskPassword = (
   Request<Disk>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/disks/${diskId}/password`),
     setMethod('POST'),
-    setData({ password })
+    setData({ password }, UpdateLinodePasswordSchema)
   ).then(response => response.data);

@@ -1,16 +1,13 @@
+/* eslint-disable @typescript-eslint/no-this-alias */
 const fs = require('fs');
 const path = require('path');
-// const mkdirp = require('mkdirp');
-
-const { PNG } = require('pngjs');
-const pixelmatch = require('pixelmatch');
-
+const Jimp = require('jimp');
 function compareSnapshotsPlugin(args) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, _reject) => {
     /* eslint-disable func-names */
     const expectedImage = path.resolve(args.expectedImage);
     const actualImage = path.resolve(args.actualImage);
-    console.log(`Checking is file exist [${actualImage}, ${expectedImage}]`);
+    // console.log(`Checking is file exist [${actualImage}, ${expectedImage}]`);
     if (!fs.existsSync(expectedImage)) {
       console.error(`did not find ${expectedImage}`);
       resolve({
@@ -30,44 +27,41 @@ function compareSnapshotsPlugin(args) {
       console.log(`found ${actualImage}`);
     }
 
-    fs.createReadStream(actualImage)
-      .pipe(new PNG())
-      .on('parsed', function() {
-        const imgActual = this;
-        fs.createReadStream(expectedImage)
-          .pipe(new PNG())
-          .on('parsed', function() {
-            const imgExpected = this;
-            const diff = new PNG({
-              width: imgActual.width,
-              height: imgActual.height
-            });
+    Jimp.read(actualImage).then(imgActual => {
+      Jimp.read(expectedImage).then(imgExpected => {
+        const wRatio = imgActual.bitmap.width / imgExpected.bitmap.width;
+        const hRatio = imgActual.bitmap.height / imgExpected.bitmap.height;
 
-            const mismatchedPixels = pixelmatch(
-              imgActual.data,
-              imgExpected.data,
-              diff.data,
-              imgActual.width,
-              imgActual.height,
-              { threshold: 0.1 }
-            );
+        const isScaled = wRatio == hRatio;
+        if (isScaled) {
+          console.warn(
+            `detected a ratio of ${wRatio} between the expected image and the actual one, using scaled comparison`
+          );
+        }
+        if (
+          !isScaled &&
+          (imgActual.bitmap.width != imgExpected.bitmap.width ||
+            imgActual.bitmap.height != imgExpected.btimap.height)
+        ) {
+          const err = `The images have different sizes (expected): w: ${imgActual.width} (${imgExpected.width}) x h: ${imgActual.height} (${imgExpected.height})`;
+          console.error(err);
+          throw err;
+        }
+        const diff = Jimp.diff(
+          imgExpected.quality(100).scale(wRatio),
+          imgActual
+        );
 
-            diff
-              .pack()
-              .pipe(fs.createWriteStream(path.resolve(args.diffImage)));
-
-            resolve({
-              result: {
-                mismatchedPixels,
-                percentage:
-                  (mismatchedPixels / imgActual.width / imgActual.height) ** 0.5
-              }
-            });
-          })
-          .on('error', error => reject(error));
-      })
-      .on('error', error => reject(error));
-    /* eslint-enable func-names */
+        diff.image.write(args.diffImage);
+        console.error(`diff ${diff.percent}`);
+        resolve({
+          result: {
+            percentage: diff.percent,
+            scaled: isScaled
+          }
+        });
+      });
+    });
   });
 }
 
@@ -77,7 +71,9 @@ function deleteVisualRegFiles(args) {
       new Promise((resolve, reject) => {
         const f = path.resolve(file);
         // console.log('file:'+f)
-        if (!fs.existsSync(f)) resolve({ path: f });
+        if (!fs.existsSync(f)) {
+          resolve({ path: f });
+        }
         // console.log('file exists, deleting it');
         fs.unlink(f, err => {
           if (err) {

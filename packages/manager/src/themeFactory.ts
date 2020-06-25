@@ -84,6 +84,7 @@ const primaryColors = {
 
 const primaryFonts = {
   normal: '"LatoWeb", sans-serif',
+  semiBold: '"LatoWebSemiBold", sans-serif',
   bold: '"LatoWebBold", sans-serif'
 };
 
@@ -306,6 +307,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
     },
     font: {
       normal: primaryFonts.normal,
+      semiBold: primaryFonts.semiBold,
       bold: spacingUnit === 4 ? primaryFonts.normal : primaryFonts.bold
     },
     animateCircleIcon: {
