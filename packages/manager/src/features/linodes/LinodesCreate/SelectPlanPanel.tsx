@@ -215,12 +215,12 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
                 `$` + type.price.hourly
               )}
             </TableCell>
+            <TableCell data-qa-ram>
+              {convertMegabytesTo(type.memory, true)}
+            </TableCell>
             <TableCell data-qa-cpu>{type.vcpus}</TableCell>
             <TableCell data-qa-storage>
               {convertMegabytesTo(type.disk, true)}
-            </TableCell>
-            <TableCell data-qa-ram>
-              {convertMegabytesTo(type.memory, true)}
             </TableCell>
           </TableRow>
         </Hidden>
