@@ -6,7 +6,7 @@ import HeaderBreadCrumb, { BreadCrumbProps } from './HeaderBreadCrumb';
 export interface HeaderProps extends BreadCrumbProps {
   actions: JSX.Element;
   body: JSX.Element;
-  title: string;
+  title: string | JSX.Element;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({

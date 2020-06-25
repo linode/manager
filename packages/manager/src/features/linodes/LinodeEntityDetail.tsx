@@ -1,15 +1,15 @@
 import { Linode } from '@linode/api-v4/lib/linodes/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import ConsoleIcon from 'src/assets/icons/console.svg';
 import CPUIcon from 'src/assets/icons/cpu-icon.svg';
 import DiskIcon from 'src/assets/icons/disk.svg';
-import MapPin from 'src/assets/icons/map-pin-icon.svg';
 import PowerOnIcon from 'src/assets/icons/powerOn.svg';
 import RamIcon from 'src/assets/icons/ram-sticks.svg';
 import RebootIcon from 'src/assets/icons/reboot.svg';
-import ViewDetailsIcon from 'src/assets/icons/viewDetails.svg';
 import VolumeIcon from 'src/assets/icons/volume.svg';
 import ActionMenu from 'src/components/ActionMenu_CMR';
+import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import Chip from 'src/components/core/Chip';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
@@ -20,16 +20,16 @@ import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import EntityDetail from 'src/components/EntityDetail';
-import EntityHeader from 'src/components/EntityHeader';
+import HeaderBreadCrumb from 'src/components/EntityHeader/HeaderBreadCrumb';
 import Grid from 'src/components/Grid';
 import IconTextLink from 'src/components/IconTextLink';
 import { distroIcons } from 'src/components/ImageSelect/icons';
 import { dcDisplayNames } from 'src/constants';
 import useImages from 'src/hooks/useImages';
 import useReduxLoad from 'src/hooks/useReduxLoad';
+import { useTypes } from 'src/hooks/useTypes';
 import formatDate from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
-import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 
 interface LinodeEntityDetailProps {
@@ -42,20 +42,31 @@ interface LinodeEntityDetailProps {
 const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
   const { linode, numVolumes, username, openLishConsole } = props;
 
-  useReduxLoad(['images']);
+  useReduxLoad(['images', 'types']);
   const { images } = useImages();
+  const { types } = useTypes();
 
   const imageSlug = linode.image;
 
   const imageVendor =
     imageSlug && images.data[imageSlug] ? images.data[imageSlug].vendor : null;
 
-  const imageLabel = safeGetImageLabel(images.data, linode.image);
+  const linodeType = Boolean(linode.type)
+    ? types.entities.find(thisType => thisType.id === linode.type) ?? null
+    : null;
+
+  const linodePlan = linodeType?.label ?? null;
+
+  const linodeRegionDisplay = dcDisplayNames[linode.region] ?? null;
 
   return (
     <EntityDetail
       header={
-        <Header linodeLabel={linode.label} linodeStatus={linode.status} />
+        <Header
+          imageVendor={imageVendor}
+          linodeLabel={linode.label}
+          linodeStatus={linode.status}
+        />
       }
       body={
         <Body
@@ -63,8 +74,6 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
           numCPUs={linode.specs.vcpus}
           gbRAM={linode.specs.memory / 1024}
           gbStorage={linode.specs.disk / 1024}
-          imageLabel={imageLabel}
-          imageVendor={imageVendor}
           numVolumes={numVolumes}
           region={linode.region}
           ipv4={linode.ipv4}
@@ -76,6 +85,8 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
       }
       footer={
         <Footer
+          linodePlan={linodePlan}
+          linodeRegionDisplay={linodeRegionDisplay}
           linodeId={linode.id}
           linodeCreated={linode.created}
           linodeTags={linode.tags}
@@ -91,11 +102,23 @@ export default React.memo(LinodeEntityDetail);
 // Header
 // =============================================================================
 interface HeaderProps {
+  imageVendor: string | null;
   linodeLabel: string;
   linodeStatus: Linode['status'];
 }
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
+  root: {
+    backgroundColor: theme.bg.white
+  },
+  linodeLabel: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  distroIcon: {
+    fontSize: 25,
+    marginRight: 10
+  },
   actions: {
     display: 'flex',
     flexDirection: 'row',
@@ -103,13 +126,17 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'flex-end'
   },
   actionItem: {
-    marginLeft: 18,
-    font: theme.font.semiBold,
+    marginRight: 10,
+    marginBottom: 0,
+    padding: 10,
     '& svg': {
       height: 20,
       width: 20,
       fill: theme.color.blue,
       marginRight: 10
+    },
+    '& span': {
+      fontFamily: `${theme.font.normal} !important`
     }
   },
   actionMenu: {
@@ -118,59 +145,79 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Header: React.FC<HeaderProps> = props => {
-  const { linodeLabel, linodeStatus } = props;
+  const { imageVendor, linodeLabel, linodeStatus } = props;
 
   const classes = useHeaderStyles();
 
+  const distroIconClassName =
+    imageVendor !== null ? `fl-${distroIcons[imageVendor]}` : 'fl-tux';
+
   return (
-    <EntityHeader
-      title={linodeLabel}
-      parentLink="/linodes"
-      parentText="Linodes"
-      iconType="linode"
-      actions={
-        <>
-          <IconTextLink
-            className={classes.actionItem}
-            SideIcon={ViewDetailsIcon}
-            text="View Details"
-            title="View Details"
+    // @todo: cleanup the markup here.
+    <Grid container className={classes.root}>
+      <Grid item xs={3}>
+        <Grid container direction="row" alignItems="center">
+          <HeaderBreadCrumb
+            title={
+              <div className={classes.linodeLabel}>
+                <span
+                  title={imageVendor ?? 'Custom image'}
+                  className={`${classes.distroIcon} ${distroIconClassName}`}
+                />
+                {linodeLabel}
+              </div>
+            }
+            parentLink="/linodes"
+            parentText="Linodes"
+            iconType="linode"
           />
-          <IconTextLink
-            className={classes.actionItem}
-            SideIcon={PowerOnIcon}
-            text="Power Off"
-            title="Power Off"
+        </Grid>
+      </Grid>
+      <Grid container item xs={9} justify="flex-end" alignItems="center">
+        <Grid item>
+          <Chip
+            style={{
+              backgroundColor: '#17cf73',
+              color: 'white',
+              fontSize: '1.1 rem',
+              alignSelf: 'flex-end',
+              height: 30,
+              borderRadius: 15,
+              letterSpacing: '.5px',
+              minWidth: 120,
+              marginRight: 30
+            }}
+            label={linodeStatus.toUpperCase()}
+            component="span"
+            clickable={false}
           />
-          <IconTextLink
-            className={classes.actionItem}
-            SideIcon={RebootIcon}
-            text="Reboot"
-            title="Reboot"
-          />
-          <span className={classes.actionMenu}>
-            <ActionMenu
-              inlineLabel="More Actions"
-              ariaLabel="linode-detail"
-              createActions={() => []}
-            />
-          </span>
-        </>
-      }
-      body={
-        <Chip
-          style={{
-            backgroundColor: '#00b159',
-            color: 'white',
-            fontSize: '1.1 rem',
-            padding: '10px'
-          }}
-          label={linodeStatus.toUpperCase()}
-          component="span"
-          clickable={false}
+        </Grid>
+        <IconTextLink
+          className={classes.actionItem}
+          SideIcon={PowerOnIcon}
+          text="Power Off"
+          title="Power Off"
         />
-      }
-    />
+        <IconTextLink
+          className={classes.actionItem}
+          SideIcon={RebootIcon}
+          text="Reboot"
+          title="Reboot"
+        />
+        <IconTextLink
+          className={classes.actionItem}
+          SideIcon={ConsoleIcon}
+          text="Launch Console"
+          title="Launch Console"
+        />
+        <ActionMenu
+          inlineLabel="More Actions"
+          ariaLabel="linode-detail"
+          createActions={() => []}
+        />
+        <DocumentationButton href="https://www.linode.com/" />
+      </Grid>
+    </Grid>
   );
 };
 
@@ -181,8 +228,6 @@ export interface BodyProps {
   numCPUs: number;
   gbRAM: number;
   gbStorage: number;
-  imageLabel: string;
-  imageVendor: string | null;
   numVolumes: number;
   region: string;
   ipv4: Linode['ipv4'];
@@ -205,9 +250,6 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     height: 25,
     objectFit: 'contain'
   },
-  specColumn: {
-    marginRight: 50
-  },
   iconSharedOuter: {
     textAlign: 'center',
     justifyContent: 'center',
@@ -219,9 +261,6 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     flexBasis: '72%',
     minWidth: 115,
     alignSelf: 'center'
-  },
-  distroIcon: {
-    fontSize: 25
   },
   ipContainer: {
     marginLeft: 20
@@ -288,29 +327,23 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
     numCPUs,
     gbRAM,
     gbStorage,
-    imageLabel,
-    imageVendor,
     numVolumes,
     region,
     ipv4,
     ipv6,
     linodeId,
     username,
-    linodeLabel,
-    openLishConsole
+    linodeLabel
   } = props;
 
   const classes = useBodyStyles();
-
-  const distroIconClassName =
-    imageVendor !== null ? `fl-${distroIcons[imageVendor]}` : 'fl-tux';
 
   return (
     <Grid container direction="row" justify="space-between">
       <Grid item>
         {/* @todo: Rewrite this code to make it dynamic. It's very similar to the LKE display. */}
         <Grid container>
-          <Grid item className={classes.specColumn}>
+          <Grid item>
             <Grid container item wrap="nowrap" className={classes.item}>
               <Grid item className={classes.iconSharedOuter}>
                 <CPUIcon className={classes.iconsSharedStyling} />
@@ -338,7 +371,9 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
                 <Typography>{gbRAM} RAM</Typography>
               </Grid>
             </Grid>
+          </Grid>
 
+          <Grid item>
             <Grid
               container
               item
@@ -352,26 +387,6 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
 
               <Grid item className={classes.iconTextOuter}>
                 <Typography>{gbStorage} GB Storage</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-
-          <Grid item>
-            <Grid
-              container
-              item
-              wrap="nowrap"
-              alignItems="center"
-              className={classes.item}
-            >
-              <Grid item className={classes.iconSharedOuter}>
-                <span
-                  className={`${classes.iconsSharedStyling} ${classes.distroIcon} ${distroIconClassName}`}
-                />
-              </Grid>
-
-              <Grid item className={classes.iconTextOuter}>
-                <Typography>{imageLabel}</Typography>
               </Grid>
             </Grid>
 
@@ -389,24 +404,6 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
               <Grid item className={classes.iconTextOuter}>
                 <Typography>
                   {pluralize('Volume', 'Volumes', numVolumes)}
-                </Typography>
-              </Grid>
-            </Grid>
-
-            <Grid
-              container
-              item
-              wrap="nowrap"
-              alignItems="center"
-              className={classes.item}
-            >
-              <Grid item className={classes.iconSharedOuter}>
-                <MapPin className={classes.iconsSharedStyling} />
-              </Grid>
-
-              <Grid item className={classes.iconTextOuter}>
-                <Typography>
-                  {dcDisplayNames[region] ?? 'Unknown Region'}
                 </Typography>
               </Grid>
             </Grid>
@@ -445,14 +442,6 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
                 {lishLink(username, region, linodeLabel)}
               </TableCell>
             </TableRow>
-            <TableRow>
-              <TableCell>LISH via Web</TableCell>
-              <TableCell>
-                <button className={classes.button} onClick={openLishConsole}>
-                  Launch Console
-                </button>
-              </TableCell>
-            </TableRow>
           </TableBody>
         </Table>
       </Grid>
@@ -464,6 +453,8 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
 // Footer
 // =============================================================================
 interface FooterProps {
+  linodePlan: string | null;
+  linodeRegionDisplay: string | null;
   linodeId: number;
   linodeCreated: string;
   linodeTags: string[];
@@ -471,10 +462,16 @@ interface FooterProps {
 
 const useFooterStyles = makeStyles((theme: Theme) => ({
   detailsSection: {
-    display: 'flex'
+    display: 'flex',
+    alignItems: 'center',
+    lineHeight: 1,
+    '& a': {
+      color: theme.color.blue,
+      fontFamily: theme.font.bold
+    }
   },
-  linodeId: {
-    paddingRight: 10,
+  listItem: {
+    padding: `0px 10px`,
     borderRight: `1px solid ${theme.color.grey6}`,
     color: theme.color.grey8
   },
@@ -490,14 +487,30 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const Footer: React.FC<FooterProps> = React.memo(props => {
-  const { linodeId, linodeCreated } = props;
+  const { linodePlan, linodeRegionDisplay, linodeId, linodeCreated } = props;
 
   const classes = useFooterStyles();
   return (
     <Grid container>
       <Grid item xs={6}>
         <div className={classes.detailsSection}>
-          <Typography className={classes.linodeId}>
+          {linodePlan && (
+            <Link
+              to={`/linodes/${linodeId}/resize`}
+              className={classes.listItem}
+            >
+              {linodePlan}
+            </Link>
+          )}
+          {linodeRegionDisplay && (
+            <Link
+              to={`/linodes/${linodeId}/migrate`}
+              className={classes.listItem}
+            >
+              {linodeRegionDisplay}
+            </Link>
+          )}
+          <Typography className={classes.listItem}>
             Linode ID {linodeId}
           </Typography>
           <Typography className={classes.linodeCreated}>

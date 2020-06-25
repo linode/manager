@@ -18,7 +18,7 @@ export interface EntityDetailProps {
 
 const useStyles = makeStyles(() => ({
   header: {
-    maxHeight: 56
+    maxHeight: 50
   },
   body: {
     padding: `20px !important`,
@@ -31,7 +31,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    padding: `8px 15px !important`
+    padding: `0 12px !important`
   }
 }));
 

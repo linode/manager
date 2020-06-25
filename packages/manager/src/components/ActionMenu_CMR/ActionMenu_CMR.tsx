@@ -30,7 +30,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       alignItems: 'center',
       background: 'none',
       fontSize: '1rem',
-      fontWeight: 'bold',
       border: 'none',
       padding: theme.spacing(1) + 2,
       color: '#3683dc',
@@ -42,7 +41,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   buttonLabel: {
-    margin: `0 0 0 ${theme.spacing() + 2}px`
+    margin: `0 0 0 ${theme.spacing() + 2}px`,
+    fontFamily: theme.font.normal,
+    lineHeight: 1
   },
   icon: {},
   popover: {
