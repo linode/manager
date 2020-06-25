@@ -3,7 +3,6 @@ import * as React from 'react';
 import CPUIcon from 'src/assets/icons/cpu-icon.svg';
 import DiskIcon from 'src/assets/icons/disk.svg';
 import MapPin from 'src/assets/icons/map-pin-icon.svg';
-import MiniKube from 'src/assets/icons/mini-kube.svg';
 import RamIcon from 'src/assets/icons/ram-sticks.svg';
 import VolumeIcon from 'src/assets/icons/volume.svg';
 import ActionMenu from 'src/components/ActionMenu';
@@ -15,24 +14,37 @@ import Table from 'src/components/core/Table';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
+import EntityDetail from 'src/components/EntityDetail';
+import EntityHeader from 'src/components/EntityHeader';
 import Grid from 'src/components/Grid';
+import { distroIcons } from 'src/components/ImageSelect/icons';
 import { dcDisplayNames } from 'src/constants';
+import useImages from 'src/hooks/useImages';
+import useReduxLoad from 'src/hooks/useReduxLoad';
 import formatDate from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
-import EntityHeader from 'src/components/EntityHeader';
+import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
-import EntityDetail from 'src/components/EntityDetail';
 
 interface LinodeEntityDetailProps {
   linode: Linode;
-  distro: string;
   numVolumes: number;
   username: string;
   openLishConsole: () => void;
 }
 
 const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
-  const { linode, distro, numVolumes, username, openLishConsole } = props;
+  const { linode, numVolumes, username, openLishConsole } = props;
+
+  useReduxLoad(['images']);
+  const { images } = useImages();
+
+  const imageSlug = linode.image;
+
+  const imageVendor =
+    imageSlug && images.data[imageSlug] ? images.data[imageSlug].vendor : null;
+
+  const imageLabel = safeGetImageLabel(images.data, linode.image);
 
   return (
     <EntityDetail
@@ -45,7 +57,8 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
           numCPUs={linode.specs.vcpus}
           gbRAM={linode.specs.memory / 1024}
           gbStorage={linode.specs.disk / 1024}
-          distro={distro}
+          imageLabel={imageLabel}
+          imageVendor={imageVendor}
           numVolumes={numVolumes}
           region={linode.region}
           ipv4={linode.ipv4}
@@ -110,7 +123,8 @@ export interface BodyProps {
   numCPUs: number;
   gbRAM: number;
   gbStorage: number;
-  distro: string;
+  imageLabel: string;
+  imageVendor: string | null;
   numVolumes: number;
   region: string;
   ipv4: Linode['ipv4'];
@@ -148,6 +162,9 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     paddingRight: `4px !important`,
     paddingLeft: `4px !important`,
     alignSelf: 'center'
+  },
+  distroIcon: {
+    fontSize: 25
   },
   ipContainer: {
     marginLeft: 20
@@ -215,7 +232,8 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
     numCPUs,
     gbRAM,
     gbStorage,
-    distro,
+    imageLabel,
+    imageVendor,
     numVolumes,
     region,
     ipv4,
@@ -226,6 +244,9 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
   } = props;
 
   const classes = useBodyStyles();
+
+  const distroIconClassName =
+    imageVendor !== null ? `fl-${distroIcons[imageVendor]}` : 'fl-tux';
 
   return (
     <Grid container direction="row" justify="space-between">
@@ -287,11 +308,13 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
               className={classes.item}
             >
               <Grid item className={classes.iconSharedOuter}>
-                <MiniKube className={classes.iconsSharedStyling} />
+                <span
+                  className={`${classes.iconsSharedStyling} ${classes.distroIcon} ${distroIconClassName}`}
+                />
               </Grid>
 
               <Grid item className={classes.iconTextOuter}>
-                <Typography>{distro}</Typography>
+                <Typography>{imageLabel}</Typography>
               </Grid>
             </Grid>
 
