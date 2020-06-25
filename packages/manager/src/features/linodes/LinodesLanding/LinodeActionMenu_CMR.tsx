@@ -299,17 +299,26 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
       if (linodeStatus === 'running') {
         actions.unshift({
           title: 'Reboot',
-          disabled: !hasMadeConfigsRequest || readOnly || Boolean(configsError),
+          disabled:
+            !hasMadeConfigsRequest ||
+            readOnly ||
+            Boolean(configsError?.[0]?.reason),
           tooltip: readOnly
             ? "You don't have permission to modify this Linode."
             : configsError
             ? 'Could not load configs for this Linode.'
             : undefined,
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            sendLinodeActionMenuItemEvent('Reboot Linode');
-            e.preventDefault();
-            e.stopPropagation();
-            openPowerActionDialog('Reboot', linodeId, linodeLabel, configs);
+            if (
+              hasMadeConfigsRequest &&
+              !readOnly &&
+              !configsError?.[0]?.reason
+            ) {
+              sendLinodeActionMenuItemEvent('Reboot Linode');
+              e.preventDefault();
+              e.stopPropagation();
+              openPowerActionDialog('Reboot', linodeId, linodeLabel, configs);
+            }
           },
           ...readOnlyProps
         });
