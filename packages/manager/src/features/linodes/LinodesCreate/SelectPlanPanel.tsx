@@ -249,9 +249,9 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
           <TableCell data-qa-plan-header>Linode Plan</TableCell>
           <TableCell data-qa-monthly-header>Monthly</TableCell>
           <TableCell data-qa-hourly-header>Hourly</TableCell>
+          <TableCell data-qa-ram-header>RAM</TableCell>
           <TableCell data-qa-cpu-header>CPUs</TableCell>
           <TableCell data-qa-storage-header>Storage</TableCell>
-          <TableCell data-qa-ram-header>Ram</TableCell>
         </TableRow>
       </TableHead>
     );
