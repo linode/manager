@@ -112,7 +112,7 @@ type CombinedProps = Props;
 
 const ActionMenu: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const { createActions } = props;
+  const { createActions, toggleOpenCallback } = props;
 
   const [actions, setActions] = React.useState<Action[]>([]);
 
@@ -122,6 +122,18 @@ const ActionMenu: React.FC<CombinedProps> = props => {
 
   const { ariaLabel, inlineLabel } = props;
 
+  const handleClick = () => {
+    if (toggleOpenCallback) {
+      toggleOpenCallback();
+    }
+  };
+
+  const handleKeyPress = () => {
+    if (toggleOpenCallback) {
+      toggleOpenCallback();
+    }
+  }; // add a check for key code
+
   if (typeof actions === 'undefined') {
     return null;
   }
@@ -129,7 +141,12 @@ const ActionMenu: React.FC<CombinedProps> = props => {
   return (
     <div className={classes.wrapper}>
       <Menu>
-        <MenuButton className={classes.button} aria-label={ariaLabel}>
+        <MenuButton
+          className={classes.button}
+          aria-label={ariaLabel}
+          onMouseDown={handleClick}
+          onKeyDown={handleKeyPress}
+        >
           <MoreHoriz aria-hidden type="primary" />
           {inlineLabel && <p className={classes.buttonLabel}>{inlineLabel}</p>}
         </MenuButton>
