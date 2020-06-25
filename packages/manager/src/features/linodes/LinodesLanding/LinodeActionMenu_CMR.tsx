@@ -15,7 +15,7 @@ import { lishLaunch } from 'src/features/Lish/lishUtils';
 import ActionMenu, {
   Action
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import regionsContainer, {
   DefaultProps as WithRegionsProps
 } from 'src/containers/regions.container';
@@ -29,7 +29,7 @@ import {
   sendMigrationNavigationEvent
 } from 'src/utilities/ga';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   link: {
     padding: '10px 15px',
     width: '6.5em',
@@ -39,13 +39,37 @@ const useStyles = makeStyles(() => ({
         color: '#ffffff'
       }
     },
-    textAlign: 'center',
     '& span': {
       color: '#3683dc'
     }
   },
   action: {
     marginLeft: 10
+  },
+  inlineActions: {
+    display: 'flex',
+    alignItems: 'center',
+    justify: 'center'
+  },
+  powerOnOrOff: {
+    background: 'none',
+    color: theme.palette.primary.main,
+    border: 'none',
+    font: 'inherit',
+    cursor: 'pointer',
+    width: '6.5em',
+    '&:hover': {
+      backgroundColor: '#3683dc',
+      color: '#ffffff'
+    },
+    '&[disabled]': {
+      color: '#cdd0d5',
+      cursor: 'default',
+      '&:hover': {
+        backgroundColor: 'inherit'
+      }
+    },
+    padding: '10px 0px'
   }
 }));
 
@@ -278,7 +302,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
       if (linodeStatus === 'running') {
         actions.unshift({
           title: 'Reboot',
-          disabled: !hasMadeConfigsRequest || readOnly,
+          disabled: !hasMadeConfigsRequest || readOnly || Boolean(configsError),
           // isLoading: !hasMadeConfigsRequest,
           tooltip: readOnly
             ? "You don't have permission to modify this Linode."
@@ -304,37 +328,29 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      <Link className={classes.link} to={`/linodes/${linodeId}`}>
-        <span>Details</span>
-      </Link>
-      {linodeStatus === 'running' && (
-        <Link
-          className={classes.link}
-          to=""
+      <div className={classes.inlineActions}>
+        <Link className={classes.link} to={`/linodes/${linodeId}`}>
+          <span>Details</span>
+        </Link>
+        <button
+          className={classes.powerOnOrOff}
           onClick={e => {
-            sendLinodeActionMenuItemEvent('Power Off Linode');
+            const actionWord = linodeStatus === 'running' ? 'Off' : 'On';
+            sendLinodeActionMenuItemEvent(`Power ${actionWord} Linode`);
             e.preventDefault();
             e.stopPropagation();
-            openPowerActionDialog('Power Off', linodeId, linodeLabel, []);
+            openPowerActionDialog(
+              `Power ${actionWord}` as BootAction,
+              linodeId,
+              linodeLabel,
+              linodeStatus === 'running' ? configs : []
+            );
           }}
+          disabled={!['running', 'offline'].includes(linodeStatus)}
         >
-          <span>Power Off</span>
-        </Link>
-      )}
-      {linodeStatus === 'offline' && (
-        <Link
-          className={classes.link}
-          to=""
-          onClick={e => {
-            sendLinodeActionMenuItemEvent('Power On Linode');
-            e.preventDefault();
-            e.stopPropagation();
-            openPowerActionDialog('Power On', linodeId, linodeLabel, configs);
-          }}
-        >
-          <span>Power On</span>
-        </Link>
-      )}
+          {linodeStatus === 'running' ? 'Power Off' : 'Power On'}
+        </button>
+      </div>
       <ActionMenu
         className={classes.action}
         toggleOpenCallback={toggleOpenActionMenu}

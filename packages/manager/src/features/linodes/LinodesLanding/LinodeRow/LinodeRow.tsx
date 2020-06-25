@@ -132,6 +132,8 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     />
   );
 
+  const ActionMenu = flags.cmr ? LinodeActionMenu_CMR : LinodeActionMenu;
+
   return (
     <React.Fragment>
       {loading && (
@@ -213,31 +215,17 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
               linodeNotifications={linodeNotifications}
               classes={classes}
             />
-            {flags.cmr ? (
-              <LinodeActionMenu_CMR
-                linodeId={id}
-                linodeLabel={label}
-                linodeRegion={region}
-                linodeType={type}
-                linodeStatus={status}
-                linodeBackups={backups}
-                openDeleteDialog={openDeleteDialog}
-                openPowerActionDialog={openPowerActionDialog}
-                noImage={!image}
-              />
-            ) : (
-              <LinodeActionMenu
-                linodeId={id}
-                linodeLabel={label}
-                linodeRegion={region}
-                linodeType={type}
-                linodeStatus={status}
-                linodeBackups={backups}
-                openDeleteDialog={openDeleteDialog}
-                openPowerActionDialog={openPowerActionDialog}
-                noImage={!image}
-              />
-            )}
+            <ActionMenu
+              linodeId={id}
+              linodeLabel={label}
+              linodeRegion={region}
+              linodeType={type}
+              linodeStatus={status}
+              linodeBackups={backups}
+              openDeleteDialog={openDeleteDialog}
+              openPowerActionDialog={openPowerActionDialog}
+              noImage={!image}
+            />
           </div>
         </TableCell>
       </TableRow>
