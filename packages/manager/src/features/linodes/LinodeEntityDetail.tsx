@@ -425,9 +425,8 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
             <>
               ... plus{' '}
               <Link to={`linodes/${linodeId}/networking`}>
-                {ipv4.length - 3}
+                {ipv4.length - 3} more
               </Link>{' '}
-              more
             </>
           )}
         </List>
