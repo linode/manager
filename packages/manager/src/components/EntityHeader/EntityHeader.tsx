@@ -37,7 +37,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
       justify="space-between"
       className={classes.root}
     >
-      <Grid item>
+      <Grid item xs={6}>
         <Grid container direction="row" alignItems="center">
           <HeaderBreadCrumb
             iconType={iconType}
@@ -52,7 +52,9 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
           )}
         </Grid>
       </Grid>
-      <Grid item>{actions}</Grid>
+      <Grid container item xs={6} justify="flex-end" alignItems="center">
+        {actions}
+      </Grid>
     </Grid>
   );
 };

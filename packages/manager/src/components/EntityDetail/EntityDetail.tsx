@@ -7,7 +7,6 @@
  */
 
 import * as React from 'react';
-import Paper from 'src/components/core/Paper';
 import { makeStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 
@@ -19,18 +18,20 @@ export interface EntityDetailProps {
 
 const useStyles = makeStyles(() => ({
   header: {
-    paddingRight: `20px !important`
+    maxHeight: 56
   },
   body: {
-    padding: 20,
+    padding: `20px !important`,
+    backgroundColor: 'white',
     borderTop: `1px solid #F4F5F6`,
     borderBottom: `1px solid #F4F5F6`
   },
   footer: {
+    backgroundColor: 'white',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    padding: `11px 20px`
+    padding: `8px 15px !important`
   }
 }));
 
@@ -39,19 +40,17 @@ export const EntityDetail: React.FC<EntityDetailProps> = props => {
   const classes = useStyles();
 
   return (
-    <Paper>
-      <Grid container direction="column">
-        <Grid item xs={12} className={classes.header}>
-          {header}
-        </Grid>
-        <Grid item xs={12} className={classes.body}>
-          {body}
-        </Grid>
-        <Grid item xs={12} className={classes.footer}>
-          {footer}
-        </Grid>
+    <Grid container direction="column">
+      <Grid item xs={12} className={classes.header}>
+        {header}
       </Grid>
-    </Paper>
+      <Grid item xs={12} className={classes.body}>
+        {body}
+      </Grid>
+      <Grid item xs={12} className={classes.footer}>
+        {footer}
+      </Grid>
+    </Grid>
   );
 };
 

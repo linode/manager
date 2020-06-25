@@ -97,12 +97,12 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   actions: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'flex-end'
   },
   actionItem: {
     marginLeft: 18,
-    // @todo: should be semi-bold
-    font: theme.font.bold,
+    font: theme.font.semiBold,
     '& svg': {
       height: 20,
       width: 20,
@@ -127,7 +127,7 @@ const Header: React.FC<HeaderProps> = props => {
       parentText="Linodes"
       iconType="linode"
       actions={
-        <div className={classes.actions}>
+        <>
           <IconTextLink
             className={classes.actionItem}
             SideIcon={ViewDetailsIcon}
@@ -153,7 +153,7 @@ const Header: React.FC<HeaderProps> = props => {
               createActions={() => []}
             />
           </span>
-        </div>
+        </>
       }
       body={
         <Chip
@@ -209,15 +209,12 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
     justifyContent: 'center',
     flexBasis: '28%',
-    paddingRight: `4px !important`,
-    paddingLeft: `4px !important`,
-    display: 'flex'
+    display: 'flex',
+    padding: 2
   },
   iconTextOuter: {
     flexBasis: '72%',
     minWidth: 115,
-    paddingRight: `4px !important`,
-    paddingLeft: `4px !important`,
     alignSelf: 'center'
   },
   distroIcon: {
@@ -240,9 +237,8 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   button: {
     backgroundColor: 'inherit',
     border: 'none',
-    fontFamily: 'inherit',
     fontSize: 'inherit',
-    fontWeight: 'bold', // @todo: should be semi-bold
+    fontFamily: theme.font.semiBold,
     color: theme.color.blue,
     padding: 0,
     cursor: 'pointer'
