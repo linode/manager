@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { compose } from 'recompose';
 import BackupStatus from 'src/components/BackupStatus';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableCell from 'src/components/TableCell';
@@ -15,8 +16,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  mostRecentBackup: string | null;
   linodeId: number;
+  mostRecentBackup: string | null;
   backupsEnabled: boolean;
 }
 
@@ -38,4 +39,4 @@ const LinodeRowBackupCell: React.FC<CombinedProps> = props => {
   );
 };
 
-export default LinodeRowBackupCell;
+export default compose<CombinedProps, Props>(React.memo)(LinodeRowBackupCell);

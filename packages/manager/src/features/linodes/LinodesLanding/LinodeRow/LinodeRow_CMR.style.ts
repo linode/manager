@@ -33,7 +33,7 @@ const styles = (theme: Theme) =>
     actionCell: {
       paddingTop: 0,
       paddingBottom: 0,
-      width: '25%',
+      width: '22%',
       textAlign: 'right',
       '& button': {
         maxHeight: 20,
@@ -83,7 +83,7 @@ const styles = (theme: Theme) =>
       display: 'inline-block'
     },
     statusCell: {
-      width: '14%',
+      width: '17%',
       [theme.breakpoints.down('sm')]: {
         width: '100%'
       }

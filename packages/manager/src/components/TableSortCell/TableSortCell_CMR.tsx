@@ -5,30 +5,34 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import TableCell, { TableCellProps } from 'src/components/core/TableCell';
 import TableSortLabel from 'src/components/core/TableSortLabel';
 
-import Sort from 'src/assets/icons/sort.svg';
-import SortUp from 'src/assets/icons/sortUp.svg';
+import Sort from 'src/assets/icons/unsorted.svg';
+import SortUp from 'src/assets/icons/sort-up.svg';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    borderRight: '1px solid #f4f4f4',
+    borderRight: `1px solid ${theme.color.divider}`,
     padding: '10px 15px',
     '&:first-child': {
-      borderLeft: '1px solid #f4f4f4'
+      borderLeft: `1px solid ${theme.color.divider}`
     },
     '&:hover': {
       backgroundColor: '#3683dc',
       cursor: 'pointer',
       '& span': {
-        color: 'white'
+        color: theme.color.white
       },
       '& .MuiTableSortLabel-icon': {
-        color: 'white !important'
+        color: `${theme.color.white} !important`
+      },
+      '& svg g': {
+        fill: theme.color.white
       }
     }
   },
   label: {
     color: theme.palette.text.primary,
-    minHeight: 20
+    minHeight: 20,
+    transition: 'none'
   },
   initialIcon: {
     margin: '2px 4px 0 5px'
