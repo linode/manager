@@ -191,12 +191,12 @@ export class LinodeCreate extends React.PureComponent<
 
   stackScriptTabs: Tab[] = [
     {
-      title: 'Account StackScripts',
-      routeName: `${this.props.match.url}?type=StackScripts/Account`
-    },
-    {
       title: 'Community StackScripts',
       routeName: `${this.props.match.url}?type=StackScripts/Community`
+    },
+    {
+      title: 'Account StackScripts',
+      routeName: `${this.props.match.url}?type=StackScripts/Account`
     }
   ];
 
@@ -369,14 +369,14 @@ export class LinodeCreate extends React.PureComponent<
                       <TabPanels className={classes.imageSelect}>
                         <SafeTabPanel index={0}>
                           <FromStackScriptContent
-                            category="account"
+                            category="community"
                             accountBackupsEnabled={
                               this.props.accountBackupsEnabled
                             }
                             userCannotCreateLinode={
                               this.props.userCannotCreateLinode
                             }
-                            request={getMineAndAccountStackScripts}
+                            request={getCommunityStackscripts}
                             header={'Select a StackScript'}
                             imagesData={imagesData!}
                             regionsData={regionsData!}
@@ -386,14 +386,14 @@ export class LinodeCreate extends React.PureComponent<
                         </SafeTabPanel>
                         <SafeTabPanel index={1}>
                           <FromStackScriptContent
-                            category="community"
+                            category="account"
                             accountBackupsEnabled={
                               this.props.accountBackupsEnabled
                             }
                             userCannotCreateLinode={
                               this.props.userCannotCreateLinode
                             }
-                            request={getCommunityStackscripts}
+                            request={getMineAndAccountStackScripts}
                             header={'Select a StackScript'}
                             imagesData={imagesData!}
                             regionsData={regionsData!}
