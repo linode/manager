@@ -1,9 +1,13 @@
 import { Linode } from '@linode/api-v4/lib/linodes/types';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import CPUIcon from 'src/assets/icons/cpu-icon.svg';
 import DiskIcon from 'src/assets/icons/disk.svg';
 import MapPin from 'src/assets/icons/map-pin-icon.svg';
+import PowerOnIcon from 'src/assets/icons/powerOn.svg';
 import RamIcon from 'src/assets/icons/ram-sticks.svg';
+import RebootIcon from 'src/assets/icons/reboot.svg';
+import ViewDetailsIcon from 'src/assets/icons/viewDetails.svg';
 import VolumeIcon from 'src/assets/icons/volume.svg';
 import ActionMenu from 'src/components/ActionMenu_CMR';
 import Chip from 'src/components/core/Chip';
@@ -18,6 +22,7 @@ import Typography from 'src/components/core/Typography';
 import EntityDetail from 'src/components/EntityDetail';
 import EntityHeader from 'src/components/EntityHeader';
 import Grid from 'src/components/Grid';
+import IconTextLink from 'src/components/IconTextLink';
 import { distroIcons } from 'src/components/ImageSelect/icons';
 import { dcDisplayNames } from 'src/constants';
 import useImages from 'src/hooks/useImages';
@@ -26,10 +31,6 @@ import formatDate from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
 import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
-import IconTextLink from 'src/components/IconTextLink';
-import ViewDetailsIcon from 'src/assets/icons/viewDetails.svg';
-import PowerOnIcon from 'src/assets/icons/powerOn.svg';
-import RebootIcon from 'src/assets/icons/reboot.svg';
 
 interface LinodeEntityDetailProps {
   linode: Linode;
@@ -68,6 +69,7 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
           region={linode.region}
           ipv4={linode.ipv4}
           ipv6={linode.ipv6}
+          linodeId={linode.id}
           username={username}
           openLishConsole={openLishConsole}
         />
@@ -185,6 +187,7 @@ export interface BodyProps {
   region: string;
   ipv4: Linode['ipv4'];
   ipv6: Linode['ipv6'];
+  linodeId: number;
   username: string;
   linodeLabel: string;
   openLishConsole: () => void;
@@ -291,6 +294,7 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
     region,
     ipv4,
     ipv6,
+    linodeId,
     username,
     linodeLabel,
     openLishConsole
@@ -413,10 +417,19 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
       <Grid item className={classes.ipContainer}>
         <Typography className={classes.ipLabel}>IP Addresses</Typography>
         <List className={classes.ipList}>
-          {ipv4.map(thisIP => {
+          {ipv4.slice(0, 3).map(thisIP => {
             return <ListItem key={thisIP}>{thisIP}</ListItem>;
           })}
           {ipv6 && <ListItem>{ipv6}</ListItem>}
+          {ipv4.length > 3 && (
+            <>
+              ... plus{' '}
+              <Link to={`linodes/${linodeId}/networking`}>
+                {ipv4.length - 3}
+              </Link>{' '}
+              more
+            </>
+          )}
         </List>
       </Grid>
 
@@ -489,8 +502,8 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
             Linode ID {linodeId}
           </Typography>
           <Typography className={classes.linodeCreated}>
-            Created {/* @todo: rewrite this when the Luxon PR is merged. */}
-            {formatDate(linodeCreated, { format: 'DD-MMM-YYYY HH:mm' })}
+            Created{' '}
+            {formatDate(linodeCreated, { format: 'dd-LLL-y HH:mm ZZZZ' })}
           </Typography>
         </div>
       </Grid>
