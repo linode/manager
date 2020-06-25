@@ -164,7 +164,6 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
               <>
                 {StatusIcon}
                 <ProgressDisplay
-                  key={id}
                   className={classes.progressDisplay}
                   progress={recentEvent.percent_complete}
                   text={transitionText(status, id, recentEvent)}
