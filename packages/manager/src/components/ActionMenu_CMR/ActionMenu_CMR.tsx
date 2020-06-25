@@ -72,6 +72,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   item: {
     '&[data-reach-menu-item]': {
       padding: theme.spacing(1) + 2,
+      paddingLeft: '16px',
       borderBottom: '1px solid #5294e0',
       background: '#3683dc',
       color: theme.color.white,
@@ -128,11 +129,11 @@ const ActionMenu: React.FC<CombinedProps> = props => {
     }
   };
 
-  const handleKeyPress = () => {
-    if (toggleOpenCallback) {
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (toggleOpenCallback && e.keyCode === 13) {
       toggleOpenCallback();
     }
-  }; // add a check for key code
+  };
 
   if (typeof actions === 'undefined') {
     return null;

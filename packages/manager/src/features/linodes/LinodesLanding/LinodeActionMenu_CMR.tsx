@@ -180,8 +180,6 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         : undefined
     };
 
-    // const noConfigs = hasMadeConfigsRequest && configs.length === 0;
-
     return (): Action[] => {
       const actions: Action[] = [
         {
@@ -192,7 +190,6 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
             e.preventDefault();
             e.stopPropagation();
           },
-          //   ariaDescribedBy: 'new-window',
           ...readOnlyProps
         },
         {
@@ -244,7 +241,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         {
           title: 'Resize',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            sendLinodeActionMenuItemEvent('Navigate to Resize Page'); // Figure out why Resize redirect isn't working
+            sendLinodeActionMenuItemEvent('Navigate to Resize Page');
             push(`/linodes/${linodeId}/resize`);
             e.preventDefault();
             e.stopPropagation();
@@ -294,7 +291,6 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
             e.preventDefault();
             e.stopPropagation();
             openDeleteDialog(linodeId, linodeLabel);
-            // closeMenu();
           },
           ...readOnlyProps
         }
@@ -304,7 +300,6 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         actions.unshift({
           title: 'Reboot',
           disabled: !hasMadeConfigsRequest || readOnly || Boolean(configsError),
-          // isLoading: !hasMadeConfigsRequest,
           tooltip: readOnly
             ? "You don't have permission to modify this Linode."
             : configsError
@@ -315,7 +310,6 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
             e.preventDefault();
             e.stopPropagation();
             openPowerActionDialog('Reboot', linodeId, linodeLabel, configs);
-            //   closeMenu();
           },
           ...readOnlyProps
         });
