@@ -14,11 +14,11 @@
 /* Webfont: Lato-SemiBold */
 @font-face {
   font-family: 'LatoWebSemiBold';
-  src: url('fonts/Lato-SemiBold.eot'); /* IE9 Compat Modes */
-  src: url('fonts/Lato-SemiBold.eot?#iefix') format('embedded-opentype'),
-    /* IE6-IE8 */ url('fonts/Lato-SemiBold.woff2') format('woff2'),
-    /* Modern Browsers */ url('fonts/Lato-SemiBold.woff') format('woff'),
-    /* Modern Browsers */ url('fonts/Lato-SemiBold.ttf') format('truetype');
+  src: url('fonts/Lato-Semibold.eot'); /* IE9 Compat Modes */
+  src: url('fonts/Lato-Semibold.eot?#iefix') format('embedded-opentype'),
+    /* IE6-IE8 */ url('fonts/Lato-Semibold.woff2') format('woff2'),
+    /* Modern Browsers */ url('fonts/Lato-Semibold.woff') format('woff'),
+    /* Modern Browsers */ url('fonts/Lato-Semibold.ttf') format('truetype');
   font-style: normal;
   font-weight: normal;
   text-rendering: optimizeLegibility;
