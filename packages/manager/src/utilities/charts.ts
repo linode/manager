@@ -1,4 +1,4 @@
-import { defaults as chartDefaults } from 'react-chartjs-2';
+import { defaults as chartDefaults } from 'chart.js';
 
 export const setUpCharts = () => {
   (chartDefaults as any).global.defaultFontFamily = '"LatoWeb", sans-serif';

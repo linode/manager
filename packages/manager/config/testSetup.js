@@ -14,16 +14,16 @@ const localStorageMock = (function() {
   // eslint-disable-line wrap-iife
   let store = {};
   return {
-    clear: function() {
+    clear() {
       store = {};
     },
-    getItem: function(key) {
+    getItem(key) {
       return store[key];
     },
-    removeItem: function(key) {
+    removeItem(key) {
       delete store[key];
     },
-    setItem: function(key, value) {
+    setItem(key, value) {
       store[key] = value.toString();
     }
   };
@@ -64,15 +64,14 @@ HTMLCanvasElement.prototype.getContext = () => {
  * reminding us that function components can't
  * have Refs.
  */
-class Line extends React.Component {
-  render() {
-    return null;
-  }
-}
 
-jest.mock('react-chartjs-2', () => ({
-  Doughnut: () => null,
-  Line,
+jest.mock('chart.js', () => ({
+  Chart: jest.fn(),
+  _adapters: {
+    _date: {
+      override: jest.fn()
+    }
+  },
   defaults: {
     global: {
       defaultFontFamily: '',
