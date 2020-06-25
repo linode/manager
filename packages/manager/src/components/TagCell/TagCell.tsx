@@ -11,8 +11,7 @@ import AddTag from './AddTag';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    position: 'relative',
-    overflow: 'hidden'
+    position: 'relative'
   },
   menuItem: {
     width: '30px',
@@ -37,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer'
   },
   tagList: {
-    overflow: 'scroll',
+    overflow: 'hidden',
     whiteSpace: 'nowrap',
     position: 'relative',
     display: 'flex',
@@ -57,6 +56,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   button: {
     padding: 0
+  },
+  tagInput: {
+    overflow: 'visible !important'
   }
 }));
 
@@ -104,16 +106,17 @@ export const TagCell: React.FC<Props> = props => {
   );
 
   return (
-    <TableCell className={classes.root}>
+    <TableCell
+      className={classes.root}
+      style={{ overflow: addingTag ? 'visible' : 'hidden' }}
+    >
       <Grid container direction="row" alignItems="center" wrap="nowrap">
         {addingTag ? (
-          <Grid item xs={12}>
-            <AddTag
-              tags={tags}
-              onClose={() => setAddingTag(false)}
-              addTag={addTag}
-            />
-          </Grid>
+          <AddTag
+            tags={tags}
+            onClose={() => setAddingTag(false)}
+            addTag={addTag}
+          />
         ) : (
           <>
             <Grid

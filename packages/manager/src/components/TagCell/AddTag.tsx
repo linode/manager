@@ -6,7 +6,8 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((_: Theme) => ({
   root: {
-    width: '100%'
+    width: '100%',
+    padding: '0'
   }
 }));
 
@@ -47,6 +48,7 @@ export const AddTag: React.FC<Props> = props => {
   };
   return (
     <Select
+      small
       className={classes.root}
       onChange={handleAddTag}
       options={tagOptions}
