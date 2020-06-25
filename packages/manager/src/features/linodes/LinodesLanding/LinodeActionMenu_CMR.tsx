@@ -339,18 +339,19 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         <button
           className={classes.powerOnOrOff}
           onClick={e => {
-            const actionWord = linodeStatus === 'running' ? 'Off' : 'On';
-            sendLinodeActionMenuItemEvent(`Power ${actionWord} Linode`);
+            const action =
+              linodeStatus === 'running' ? 'Power Off' : 'Power On';
+            sendLinodeActionMenuItemEvent(`${action} Linode`);
             e.preventDefault();
             e.stopPropagation();
             openPowerActionDialog(
-              `Power ${actionWord}` as BootAction,
+              `${action}` as BootAction,
               linodeId,
               linodeLabel,
               linodeStatus === 'running' ? configs : []
             );
           }}
-          disabled={!['running', 'offline'].includes(linodeStatus)}
+          disabled={!['running', 'offline', 'stopped'].includes(linodeStatus)}
         >
           {linodeStatus === 'running' ? 'Power Off' : 'Power On'}
         </button>
