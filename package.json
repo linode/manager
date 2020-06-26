@@ -5,6 +5,7 @@
   "devDependencies": {
     "audit-ci": "^2.4.2",
     "husky": "^3.0.1",
+    "patch-package": "^6.1.0",
     "postinstall": "^0.6.0",
     "typescript": "~3.9.2",
     "wait-on": "^4.0.0"
@@ -20,7 +21,7 @@
     "cost-of-modules": "yarn global add cost-of-modules && cost-of-modules --less --no-install --include-dev",
     "install:all": "yarn install --frozen-lockfile",
     "upgrade:sdk": "yarn workspace @linode/api-v4 version --no-git-tag-version --no-commit-hooks && yarn workspace linode-manager upgrade @linode/api-v4",
-    "postinstall": "yarn workspaces run postinstall",
+    "postinstall": "yarn workspaces run postinstall && patch-package",
     "build:sdk": "yarn workspace @linode/api-v4 build",
     "build": "yarn build:sdk && yarn workspace linode-manager build",
     "build:analyze": "yarn build --bundle-analyze",
