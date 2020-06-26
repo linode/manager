@@ -87,7 +87,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   titleText: {
     display: 'flex',
     alignItems: 'center',
-    paddingRight: theme.spacing(2) - 2
+    paddingRight: theme.spacing(2) - 2,
+    lineHeight: 1.2
   }
 }));
 

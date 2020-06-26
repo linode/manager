@@ -18,7 +18,7 @@ export interface EntityDetailProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
-    maxHeight: 50
+    height: 50
   },
   body: {
     padding: `20px !important`,
