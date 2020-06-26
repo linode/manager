@@ -30,15 +30,7 @@ const styles = (theme: Theme) =>
       margin: theme.spacing(2)
     },
     link: {
-      background: 'none',
-      color: theme.palette.primary.main,
-      border: 'none',
-      padding: 0,
-      font: 'inherit',
-      cursor: 'pointer',
-      '&:hover': {
-        textDecoration: 'underline'
-      }
+      ...theme.applyLinkStyles
     },
     errorState: {
       '& *': {
@@ -188,7 +180,6 @@ class Glish extends React.Component<CombinedProps, State> {
           [classes.link]: true
         })}
         onClick={this.linodeOnClick(linodeID)}
-        role="button"
         title={linodeLabel}
       >
         {linodeLabel}

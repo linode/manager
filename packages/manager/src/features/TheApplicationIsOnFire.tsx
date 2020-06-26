@@ -7,15 +7,7 @@ import DialogTitle from 'src/components/DialogTitle';
 
 const useStyles = makeStyles((theme: Theme) => ({
   restartButton: {
-    background: 'none',
-    color: theme.palette.primary.main,
-    border: 'none',
-    padding: 0,
-    font: 'inherit',
-    cursor: 'pointer',
-    '&:hover': {
-      textDecoration: 'underline'
-    }
+    ...theme.applyLinkStyles
   }
 }));
 
