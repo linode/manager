@@ -7,7 +7,7 @@
  */
 
 import * as React from 'react';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 
 export interface EntityDetailProps {
@@ -16,18 +16,18 @@ export interface EntityDetailProps {
   footer: JSX.Element;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   header: {
     maxHeight: 50
   },
   body: {
     padding: `20px !important`,
-    backgroundColor: 'white',
+    backgroundColor: theme.color.white,
     borderTop: `1px solid #F4F5F6`,
     borderBottom: `1px solid #F4F5F6`
   },
   footer: {
-    backgroundColor: 'white',
+    backgroundColor: theme.color.white,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',

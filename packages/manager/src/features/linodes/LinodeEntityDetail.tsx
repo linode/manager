@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 import ConsoleIcon from 'src/assets/icons/console.svg';
 import CPUIcon from 'src/assets/icons/cpu-icon.svg';
 import DiskIcon from 'src/assets/icons/disk.svg';
-import PowerOnIcon from 'src/assets/icons/powerOn.svg';
 import RamIcon from 'src/assets/icons/ram-sticks.svg';
 import RebootIcon from 'src/assets/icons/reboot.svg';
+import ViewDetailsIcon from 'src/assets/icons/viewDetails.svg';
 import VolumeIcon from 'src/assets/icons/volume.svg';
 import ActionMenu from 'src/components/ActionMenu_CMR';
 import DocumentationButton from 'src/components/CMR_DocumentationButton';
@@ -20,7 +20,7 @@ import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import EntityDetail from 'src/components/EntityDetail';
-import HeaderBreadCrumb from 'src/components/EntityHeader/HeaderBreadCrumb';
+import EntityHeader from 'src/components/EntityHeader';
 import Grid from 'src/components/Grid';
 import IconTextLink from 'src/components/IconTextLink';
 import { distroIcons } from 'src/components/ImageSelect/icons';
@@ -32,7 +32,10 @@ import formatDate from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 
+type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
+
 interface LinodeEntityDetailProps {
+  variant: LinodeEntityDetailVariant;
   linode: Linode;
   numVolumes: number;
   username: string;
@@ -40,7 +43,7 @@ interface LinodeEntityDetailProps {
 }
 
 const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
-  const { linode, numVolumes, username, openLishConsole } = props;
+  const { variant, linode, numVolumes, username, openLishConsole } = props;
 
   useReduxLoad(['images', 'types']);
   const { images } = useImages();
@@ -63,8 +66,10 @@ const LinodeEntityDetail: React.FC<LinodeEntityDetailProps> = props => {
     <EntityDetail
       header={
         <Header
+          variant={variant}
           imageVendor={imageVendor}
           linodeLabel={linode.label}
+          linodeId={linode.id}
           linodeStatus={linode.status}
         />
       }
@@ -102,8 +107,10 @@ export default React.memo(LinodeEntityDetail);
 // Header
 // =============================================================================
 interface HeaderProps {
+  variant: LinodeEntityDetailVariant;
   imageVendor: string | null;
   linodeLabel: string;
+  linodeId: number;
   linodeStatus: Linode['status'];
 }
 
@@ -111,19 +118,25 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: theme.bg.white
   },
-  linodeLabel: {
+  linodeLabelWithDistro: {
     display: 'flex',
     alignItems: 'center'
+  },
+  linodeLabel: {
+    marginLeft: 7,
+    color: theme.color.blue
   },
   distroIcon: {
     fontSize: 25,
     marginRight: 10
   },
-  actions: {
+  body: {
+    marginLeft: 'auto',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    padding: `0 !important`
   },
   actionItem: {
     marginRight: 10,
@@ -145,79 +158,109 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Header: React.FC<HeaderProps> = props => {
-  const { imageVendor, linodeLabel, linodeStatus } = props;
+  const { variant, imageVendor, linodeLabel, linodeId, linodeStatus } = props;
 
   const classes = useHeaderStyles();
 
   const distroIconClassName =
     imageVendor !== null ? `fl-${distroIcons[imageVendor]}` : 'fl-tux';
 
+  const isDetails = variant === 'details';
+
   return (
-    // @todo: cleanup the markup here.
-    <Grid container className={classes.root}>
-      <Grid item xs={3}>
-        <Grid container direction="row" alignItems="center">
-          <HeaderBreadCrumb
-            title={
-              <div className={classes.linodeLabel}>
-                <span
-                  title={imageVendor ?? 'Custom image'}
-                  className={`${classes.distroIcon} ${distroIconClassName}`}
-                />
-                {linodeLabel}
-              </div>
-            }
-            parentLink="/linodes"
-            parentText="Linodes"
-            iconType="linode"
+    <EntityHeader
+      parentLink={isDetails ? '/linodes' : undefined}
+      parentText={isDetails ? 'Linodes' : undefined}
+      iconType="linode"
+      title={
+        isDetails ? (
+          <div className={classes.linodeLabelWithDistro}>
+            <span
+              title={imageVendor ?? 'Custom image'}
+              className={`${classes.distroIcon} ${distroIconClassName}`}
+            />
+            {linodeLabel}
+          </div>
+        ) : (
+          <>
+            <Link
+              to={`linode/instances/${linodeId}`}
+              className={classes.linodeLabel}
+            >
+              {linodeLabel}
+            </Link>
+            <Chip
+              style={{
+                marginLeft: 30,
+                backgroundColor: '#17cf73',
+                color: 'white',
+                fontSize: '1.1 rem',
+                height: 30,
+                borderRadius: 15,
+                letterSpacing: '.5px',
+                minWidth: 120,
+                marginRight: 30
+              }}
+              label={linodeStatus.toUpperCase()}
+              component="span"
+              clickable={false}
+            />
+          </>
+        )
+      }
+      bodyClassName={classes.body}
+      body={
+        <>
+          {isDetails && (
+            <Chip
+              style={{
+                backgroundColor: '#17cf73',
+                color: 'white',
+                fontSize: '1.1 rem',
+                height: 30,
+                borderRadius: 15,
+                letterSpacing: '.5px',
+                minWidth: 120,
+                marginRight: 30
+              }}
+              label={linodeStatus.toUpperCase()}
+              component="span"
+              clickable={false}
+            />
+          )}
+
+          {!isDetails && (
+            <IconTextLink
+              className={classes.actionItem}
+              SideIcon={ViewDetailsIcon}
+              text="ViewDetails"
+              title="ViewDetails"
+            />
+          )}
+
+          <IconTextLink
+            className={classes.actionItem}
+            SideIcon={RebootIcon}
+            text="Reboot"
+            title="Reboot"
           />
-        </Grid>
-      </Grid>
-      <Grid container item xs={9} justify="flex-end" alignItems="center">
-        <Grid item>
-          <Chip
-            style={{
-              backgroundColor: '#17cf73',
-              color: 'white',
-              fontSize: '1.1 rem',
-              alignSelf: 'flex-end',
-              height: 30,
-              borderRadius: 15,
-              letterSpacing: '.5px',
-              minWidth: 120,
-              marginRight: 30
-            }}
-            label={linodeStatus.toUpperCase()}
-            component="span"
-            clickable={false}
+          {isDetails && (
+            <IconTextLink
+              className={classes.actionItem}
+              SideIcon={ConsoleIcon}
+              text="Launch Console"
+              title="Launch Console"
+            />
+          )}
+          <ActionMenu
+            inlineLabel="More Actions"
+            ariaLabel="linode-detail"
+            createActions={() => []}
           />
-        </Grid>
-        <IconTextLink
-          className={classes.actionItem}
-          SideIcon={PowerOnIcon}
-          text="Power Off"
-          title="Power Off"
-        />
-        <IconTextLink
-          className={classes.actionItem}
-          SideIcon={RebootIcon}
-          text="Reboot"
-          title="Reboot"
-        />
-        <IconTextLink
-          className={classes.actionItem}
-          SideIcon={ConsoleIcon}
-          text="Launch Console"
-          title="Launch Console"
-        />
-        <ActionMenu
-          inlineLabel="More Actions"
-          ariaLabel="linode-detail"
-          createActions={() => []}
-        />
-        <DocumentationButton href="https://www.linode.com/" />
-      </Grid>
-    </Grid>
+          {isDetails && <DocumentationButton href="https://www.linode.com/" />}
+        </>
+      }
+    />
   );
 };
 
@@ -254,8 +297,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
     justifyContent: 'center',
     flexBasis: '28%',
-    display: 'flex',
-    padding: 2
+    display: 'flex'
   },
   iconTextOuter: {
     flexBasis: '72%',
@@ -263,10 +305,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     alignSelf: 'center'
   },
   ipContainer: {
-    marginLeft: 20
-  },
-  ipLabel: {
-    fontWeight: 'bold'
+    paddingLeft: '40px !important'
   },
   ipList: {
     marginTop: 4,
@@ -314,7 +353,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     }
   },
   accessTableContainer: {
-    paddingTop: `6px !important`
+    overFlowX: 'hidden'
   },
   code: {
     // @todo: use font from designs
@@ -339,12 +378,23 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
   const classes = useBodyStyles();
 
   return (
-    <Grid container direction="row" justify="space-between">
+    <Grid
+      container
+      direction="row"
+      justify="space-between"
+      className={classes.accessTableContainer}
+    >
       <Grid item>
         {/* @todo: Rewrite this code to make it dynamic. It's very similar to the LKE display. */}
         <Grid container>
           <Grid item>
-            <Grid container item wrap="nowrap" className={classes.item}>
+            <Grid
+              container
+              item
+              wrap="nowrap"
+              alignItems="center"
+              className={classes.item}
+            >
               <Grid item className={classes.iconSharedOuter}>
                 <CPUIcon className={classes.iconsSharedStyling} />
               </Grid>
@@ -410,9 +460,7 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
           </Grid>
         </Grid>
       </Grid>
-
-      <Grid item className={classes.ipContainer}>
-        <Typography className={classes.ipLabel}>IP Addresses</Typography>
+      <Grid item>
         <List className={classes.ipList}>
           {ipv4.slice(0, 3).map(thisIP => {
             return <ListItem key={thisIP}>{thisIP}</ListItem>;
@@ -428,8 +476,7 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
           )}
         </List>
       </Grid>
-
-      <Grid item className={classes.accessTableContainer}>
+      <Grid item>
         <Table className={classes.accessTable}>
           <TableBody>
             <TableRow>

@@ -1,12 +1,14 @@
 import * as React from 'react';
+import * as classnames from 'classnames';
 import Grid from 'src/components/Grid';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import HeaderBreadCrumb, { BreadCrumbProps } from './HeaderBreadCrumb';
 
 export interface HeaderProps extends BreadCrumbProps {
-  actions: JSX.Element;
-  body: JSX.Element;
+  actions?: JSX.Element;
+  body?: JSX.Element;
   title: string | JSX.Element;
+  bodyClassName?: string;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -27,7 +29,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const EntityHeader: React.FC<HeaderProps> = props => {
-  const { actions, body, iconType, parentLink, parentText, title } = props;
+  const {
+    actions,
+    body,
+    iconType,
+    parentLink,
+    parentText,
+    title,
+    bodyClassName
+  } = props;
   const classes = useStyles();
 
   return (
@@ -37,7 +47,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
       justify="space-between"
       className={classes.root}
     >
-      <Grid item xs={6}>
+      <Grid item xs={Boolean(actions) ? 6 : 12}>
         <Grid container direction="row" alignItems="center">
           <HeaderBreadCrumb
             iconType={iconType}
@@ -46,15 +56,23 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
             parentText={parentText}
           />
           {body && (
-            <Grid className={classes.contentOuter} item>
+            <Grid
+              className={classnames({
+                [classes.contentOuter]: true,
+                [bodyClassName ?? '']: Boolean(bodyClassName)
+              })}
+              item
+            >
               {body}
             </Grid>
           )}
         </Grid>
       </Grid>
-      <Grid container item xs={6} justify="flex-end" alignItems="center">
-        {actions}
-      </Grid>
+      {Boolean(actions) && (
+        <Grid container item xs={6} justify="flex-end" alignItems="center">
+          {actions}
+        </Grid>
+      )}
     </Grid>
   );
 };

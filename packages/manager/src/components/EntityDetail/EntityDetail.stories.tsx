@@ -8,7 +8,19 @@ import store from 'src/store';
 storiesOf('EntityDetail', module).add('Linode', () => (
   <Provider store={store}>
     <div style={{ width: 1280, margin: 20 }}>
+      <h2>Linode Details:</h2>
       <LinodeEntityDetail
+        variant="details"
+        linode={linodeFactory.build()}
+        numVolumes={2}
+        username="linode-user"
+        openLishConsole={() => null}
+      />
+    </div>
+    <div style={{ width: 1280, margin: 20 }}>
+      <h2 style={{ marginTop: 60 }}>Dashboard/Linodes Landing</h2>
+      <LinodeEntityDetail
+        variant="landing"
         linode={linodeFactory.build()}
         numVolumes={2}
         username="linode-user"

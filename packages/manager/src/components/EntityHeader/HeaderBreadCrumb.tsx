@@ -10,6 +10,7 @@ export interface BreadCrumbProps {
   iconType: Variant;
   parentLink?: string;
   parentText?: string;
+  displayIcon?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -17,6 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: `5px !important`
   },
   headerWithLink: {
+    flexWrap: 'nowrap',
     position: 'relative',
     backgroundColor: theme.bg.lightBlue,
     marginRight: theme.spacing(2),
@@ -88,14 +90,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const HeaderBreadCrumb: React.FC<BreadCrumbProps> = props => {
-  const { iconType, parentLink, parentText, title } = props;
+  const { iconType, parentLink, parentText, title, displayIcon } = props;
   const classes = useStyles();
 
   if (parentLink) {
     return (
       <>
         <Grid item className={classes.headerWithLink}>
-          <Grid container alignItems="center" justify="center">
+          <Grid wrap="nowrap" container alignItems="center" justify="center">
             <Grid item className={classes.iconContainer}>
               <EntityIcon variant={iconType} />
             </Grid>
@@ -120,12 +122,15 @@ export const HeaderBreadCrumb: React.FC<BreadCrumbProps> = props => {
   }
   return (
     <>
-      <Grid item>
-        <EntityIcon variant={iconType} />
-      </Grid>
+      {typeof displayIcon === 'undefined' ||
+        (Boolean(displayIcon) && (
+          <Grid item>
+            <EntityIcon variant={iconType} />
+          </Grid>
+        ))}
       <Grid item>
         <Typography variant="h2" className={classes.titleText}>
-          {title}s
+          {title}
         </Typography>
       </Grid>
     </>
