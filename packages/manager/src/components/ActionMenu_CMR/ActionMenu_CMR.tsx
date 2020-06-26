@@ -45,7 +45,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: theme.font.normal,
     lineHeight: 1
   },
-  icon: {},
+  icon: {
+    '& svg': {
+      fill: theme.color.blue
+    }
+  },
   popover: {
     '&[data-reach-menu-popover]': {
       right: 0,
