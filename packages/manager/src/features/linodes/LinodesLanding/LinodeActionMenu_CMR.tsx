@@ -235,8 +235,8 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
             e.preventDefault();
             e.stopPropagation();
           },
-          ...readOnlyProps,
-          ...maintenanceProps
+          ...maintenanceProps,
+          ...readOnlyProps
         },
         {
           title: 'Resize',
@@ -246,8 +246,8 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
             e.preventDefault();
             e.stopPropagation();
           },
-          ...readOnlyProps,
-          ...maintenanceProps
+          ...maintenanceProps,
+          ...readOnlyProps
         },
         {
           title: 'Rebuild',
@@ -257,8 +257,8 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
             e.preventDefault();
             e.stopPropagation();
           },
-          ...readOnlyProps,
-          ...maintenanceProps
+          ...maintenanceProps,
+          ...readOnlyProps
         },
         {
           title: 'Rescue',
@@ -268,8 +268,8 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
             e.preventDefault();
             e.stopPropagation();
           },
-          ...readOnlyProps,
-          ...maintenanceProps
+          ...maintenanceProps,
+          ...readOnlyProps
         },
         {
           title: 'Migrate',
