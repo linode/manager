@@ -33,11 +33,11 @@ const styles = (theme: Theme) =>
     actionCell: {
       paddingTop: 0,
       paddingBottom: 0,
+      paddingLeft: 0,
       width: '22%',
       textAlign: 'right',
       '& button': {
-        maxHeight: 20,
-        width: 30
+        lineHeight: '1.25rem'
       },
       [theme.breakpoints.down('sm')]: {
         width: '100%'
@@ -45,7 +45,7 @@ const styles = (theme: Theme) =>
     },
     actionInner: {
       display: 'flex',
-      justifyContent: 'flex-end',
+      justifyContent: 'flex-start',
       '& a': {
         lineHeight: '1.25rem'
       }

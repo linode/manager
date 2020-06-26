@@ -53,11 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 10
   },
   powerOnOrOff: {
-    background: 'none',
-    color: theme.palette.primary.main,
-    border: 'none',
-    font: 'inherit',
-    cursor: 'pointer',
+    ...theme.applyLinkStyles,
     width: '6.5em',
     '&:hover': {
       backgroundColor: '#3683dc',

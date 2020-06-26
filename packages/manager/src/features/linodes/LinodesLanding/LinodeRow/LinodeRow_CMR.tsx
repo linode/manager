@@ -19,7 +19,7 @@ import hasMutationAvailable, {
   HasMutationAvailable
 } from '../hasMutationAvailable';
 import IPAddress from '../IPAddress';
-import LinodeActionMenu from '../LinodeActionMenu';
+import LinodeActionMenu from '../LinodeActionMenu_CMR';
 import RegionIndicator from '../RegionIndicator';
 import withNotifications, { WithNotifications } from '../withNotifications';
 import withRecentEvent, { WithRecentEvent } from '../withRecentEvent';
