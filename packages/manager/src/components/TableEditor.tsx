@@ -52,7 +52,7 @@ const useStyles = makeStyles(() => ({
     color: '#32363c'
   },
   optionOuter: {
-    marginBottom: 10,
+    marginBottom: 8,
     display: 'flex',
     alignItems: 'center',
     cursor: 'pointer',
@@ -86,6 +86,7 @@ const useStyles = makeStyles(() => ({
   optionLabel: {
     marginLeft: 12,
     fontSize: 14,
+    lineHeight: 1,
     color: '#1f61ad',
     cursor: 'pointer'
   }
