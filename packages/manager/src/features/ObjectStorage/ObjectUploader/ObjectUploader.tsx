@@ -247,6 +247,7 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
       const onUploadProgress = onUploadProgressFactory(dispatch, path);
 
       const handleSuccess = () => {
+        // Get the Bucket again so the updated size is reflected on the Landing page.
         debouncedGetBucket({
           cluster: props.clusterId,
           label: props.bucketName

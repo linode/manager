@@ -38,6 +38,9 @@ import { getQueryParam } from 'src/utilities/queryParams';
 import { truncateMiddle } from 'src/utilities/truncate';
 import ObjectUploader from '../ObjectUploader';
 import { deleteObject } from '../requests';
+import bucketRequestsContainer, {
+  BucketsRequests
+} from 'src/containers/bucketRequests.container';
 import {
   displayName,
   ExtendedObject,
@@ -108,7 +111,8 @@ interface MatchProps {
 
 type CombinedProps = RouteComponentProps<MatchProps> &
   WithStyles<ClassNames> &
-  WithSnackbarProps;
+  WithSnackbarProps &
+  BucketsRequests;
 
 interface State {
   data: ExtendedObject[];
@@ -287,6 +291,8 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
       );
 
       await deleteObject(url);
+      // Get the Bucket again so the updated size is reflected on the Landing page.
+      this.props.getBucket({ cluster: clusterId, label: bucketName });
 
       this.setState({
         deleteObjectLoading: false,
@@ -542,6 +548,10 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, {}>(styled, withSnackbar);
+const enhanced = compose<CombinedProps, {}>(
+  styled,
+  withSnackbar,
+  bucketRequestsContainer
+);
 
 export default enhanced(BucketDetail);
