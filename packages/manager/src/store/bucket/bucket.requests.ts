@@ -1,6 +1,7 @@
 import {
   createBucket as _createBucket,
   deleteBucket as _deleteBucket,
+  getBucket as _getBucket,
   getBucketsInCluster,
   ObjectStorageBucket,
   ObjectStorageBucketRequestPayload,
@@ -14,7 +15,8 @@ import { ThunkActionCreator } from '../types';
 import {
   createBucketActions,
   deleteBucketActions,
-  getAllBucketsForAllClustersActions
+  getAllBucketsForAllClustersActions,
+  getBucketActions
 } from './bucket.actions';
 import { BucketError } from './types';
 
@@ -109,3 +111,13 @@ export const deleteBucket = createRequestThunk<
   {},
   APIError[]
 >(deleteBucketActions, data => _deleteBucket(data));
+
+/*
+ * Get a Bucket
+ */
+export type GetBucketRequest = ObjectStorageBucketRequestPayload;
+export const getBucket = createRequestThunk<
+  ObjectStorageBucketRequestPayload,
+  {},
+  APIError[]
+>(getBucketActions, data => _getBucket(data.cluster, data.label));

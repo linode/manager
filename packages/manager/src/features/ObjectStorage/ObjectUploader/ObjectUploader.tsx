@@ -15,6 +15,7 @@ import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { uploadObject } from '../requests';
 import FileUpload from './FileUpload';
+import { debounce } from 'throttle-debounce';
 import {
   curriedObjectUploaderReducer,
   defaultState,
@@ -24,6 +25,9 @@ import {
   ObjectUploaderAction,
   pathOrFileName
 } from './reducer';
+import bucketRequestsContainer, {
+  BucketsRequests
+} from 'src/containers/bucketRequests.container';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -144,7 +148,7 @@ interface Props {
   maybeAddObjectToTable: (path: string, sizeInBytes: number) => void;
 }
 
-type CombinedProps = Props & WithSnackbarProps;
+type CombinedProps = Props & WithSnackbarProps & BucketsRequests;
 
 const ObjectUploader: React.FC<CombinedProps> = props => {
   const { clusterId, bucketName, prefix } = props;
@@ -206,6 +210,9 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
     return queuedUploads.slice(0, MAX_PARALLEL_UPLOADS - state.numInProgress);
   }, [state.numQueued, state.numInProgress]);
 
+  const debouncedGetBucket = React.useRef(debounce(400, false, props.getBucket))
+    .current;
+
   // When `nextBatch` changes, upload the files.
   React.useEffect(() => {
     if (nextBatch.length === 0) {
@@ -240,6 +247,11 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
       const onUploadProgress = onUploadProgressFactory(dispatch, path);
 
       const handleSuccess = () => {
+        debouncedGetBucket({
+          cluster: props.clusterId,
+          label: props.bucketName
+        });
+
         // We may want to add the object to the table, depending on the prefix
         // the user is currently viewing. Do this in the parent, which has the
         // current prefix in scope.
@@ -399,7 +411,8 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
 
 const enhanced = compose<CombinedProps, Props>(
   withSnackbar,
-  React.memo
+  React.memo,
+  bucketRequestsContainer
 );
 
 export default enhanced(ObjectUploader);
